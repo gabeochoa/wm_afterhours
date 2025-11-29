@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 struct ExampleScreen {
   std::string name;
@@ -42,6 +43,14 @@ struct ExampleScreenRegistry {
     for (const auto &[name, screen] : screens) {
       std::cout << "  --" << name << "    " << screen.description << "\n";
     }
+  }
+
+  std::vector<std::string> get_screen_names() const {
+    std::vector<std::string> names;
+    for (const auto &[name, screen] : screens) {
+      names.push_back(name);
+    }
+    return names;
   }
 
 private:

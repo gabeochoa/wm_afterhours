@@ -189,7 +189,57 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   }
 }
 
-void run_screen_demo(const std::string &screen_name, bool hold_on_end) {
+struct ScreenCyclerSystem : afterhours::System<> {
+  afterhours::SystemBase *current_screen = nullptr;
+  afterhours::SystemManager *systems_ptr = nullptr;
+
+  virtual void once(const float dt) override {
+    if (!current_screen || !systems_ptr) {
+      return;
+    }
+    current_screen->once(dt);
+  }
+
+  virtual void for_each(afterhours::Entity &entity, const float dt) override {
+    if (!current_screen) {
+      return;
+    }
+    current_screen->for_each(entity, dt);
+  }
+
+  virtual void for_each(const afterhours::Entity &entity,
+                        const float dt) const override {
+    if (!current_screen) {
+      return;
+    }
+    current_screen->for_each(entity, dt);
+  }
+
+  virtual void for_each_derived(afterhours::Entity &entity,
+                                const float dt) override {
+    if (!current_screen) {
+      return;
+    }
+    current_screen->for_each_derived(entity, dt);
+  }
+
+  virtual void for_each_derived(const afterhours::Entity &entity,
+                                const float dt) const override {
+    if (!current_screen) {
+      return;
+    }
+    current_screen->for_each_derived(entity, dt);
+  }
+
+  virtual void after(const float dt) override {
+    if (!current_screen) {
+      return;
+    }
+    current_screen->after(dt);
+  }
+};
+
+void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                      Settings::get().get_screen_height());
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
@@ -199,6 +249,21 @@ void run_screen_demo(const std::string &screen_name, bool hold_on_end) {
       afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
           .string()
           .c_str());
+
+  std::vector<std::string> screen_names =
+      ExampleScreenRegistry::get().get_screen_names();
+  if (screen_names.empty()) {
+    std::cerr << "ERROR: No screens available" << std::endl;
+    return;
+  }
+
+  int current_screen_index = 0;
+  for (size_t i = 0; i < screen_names.size(); i++) {
+    if (screen_names[i] == screen_name) {
+      current_screen_index = static_cast<int>(i);
+      break;
+    }
+  }
 
   afterhours::SystemManager systems;
 
@@ -228,38 +293,59 @@ void run_screen_demo(const std::string &screen_name, bool hold_on_end) {
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
-  {
-    afterhours::ui::register_before_ui_updates<InputAction>(systems);
+  std::unique_ptr<afterhours::SystemBase> current_screen_system;
+  std::unique_ptr<ScreenCyclerSystem> cycler_system =
+      std::make_unique<ScreenCyclerSystem>();
+  cycler_system->systems_ptr = &systems;
+  ScreenCyclerSystem *cycler_ptr = cycler_system.get();
 
-    auto screen_system =
-        ExampleScreenRegistry::get().create_screen(screen_name);
-    if (!screen_system) {
-      std::cerr << "ERROR: Failed to create screen: " << screen_name
+  auto load_screen = [&](int index) {
+    if (index < 0 || index >= static_cast<int>(screen_names.size())) {
+      return;
+    }
+    std::string new_screen_name = screen_names[index];
+    current_screen_system =
+        ExampleScreenRegistry::get().create_screen(new_screen_name);
+    if (!current_screen_system) {
+      std::cerr << "ERROR: Failed to create screen: " << new_screen_name
                 << std::endl;
       return;
     }
-    systems.register_update_system(std::move(screen_system));
+    cycler_ptr->current_screen = current_screen_system.get();
+    std::cout << "Switched to screen: " << new_screen_name << std::endl;
+  };
+
+  {
+    afterhours::ui::register_before_ui_updates<InputAction>(systems);
+
+    load_screen(current_screen_index);
+    if (!current_screen_system) {
+      std::cerr << "ERROR: Failed to create initial screen: " << screen_name
+                << std::endl;
+      return;
+    }
+    systems.register_update_system(std::move(cycler_system));
 
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
 
-  int frame_count = 0;
-  bool demo_complete = false;
   while (running && !raylib::WindowShouldClose()) {
     if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       running = false;
     }
+
+    if (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN)) {
+      current_screen_index = (current_screen_index + 1) % screen_names.size();
+      load_screen(current_screen_index);
+    }
+    if (raylib::IsKeyPressed(raylib::KEY_PAGE_UP)) {
+      current_screen_index = static_cast<int>(
+          (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
+          static_cast<int>(screen_names.size()));
+      load_screen(current_screen_index);
+    }
+
     float dt = raylib::GetFrameTime();
     systems.run(dt);
-    frame_count++;
-    if (frame_count >= 5 && !demo_complete) {
-      demo_complete = true;
-      if (hold_on_end) {
-        std::cout << "Demo complete. Window will stay open. Press ESC to exit."
-                  << std::endl;
-      } else {
-        break; // Exit after 5 frames if not holding
-      }
-    }
   }
 }

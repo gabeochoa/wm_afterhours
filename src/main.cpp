@@ -125,6 +125,14 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  std::vector<std::string> screen_names =
+      ExampleScreenRegistry::get().get_screen_names();
+  if (screen_names.empty()) {
+    std::cout << "No screens available. Run with --list-screens to see "
+                 "available screens.\n";
+    return 1;
+  }
+
   int screenWidth, screenHeight;
   cmdl({"-w", "--width"}, 1280) >> screenWidth;
   cmdl({"-h", "--height"}, 720) >> screenHeight;
@@ -136,7 +144,8 @@ int main(int argc, char *argv[]) {
       .make_singleton();
   Settings::get().refresh_settings();
 
-  game();
+  bool hold_on_end = cmdl["--hold-on-end"];
+  run_screen_demo(screen_names[0], hold_on_end);
 
   Settings::get().write_save_file();
 
