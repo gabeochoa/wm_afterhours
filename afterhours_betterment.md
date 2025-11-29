@@ -26,7 +26,7 @@ Ideas for making the afterhours UI framework better or easier to use, based on e
 - Provide helper functions like `with_default_font()` that use the system default
 
 ### 4. Positioning Helpers
-**Issue**: Using `screen_pct()` for positioning requires manual calculation of percentages. For absolute positioning, need to use `with_absolute_position()` and then calculate positions manually.
+**Issue**: Using `screen_pct()` for positioning requires manual calculation of percentages. For absolute- [ ] **Input Mocking for Testing**: `afterhours` is tightly coupled to `raylib` input functions (e.g., `IsMouseButtonPressed`), making it difficult to mock input for integration tests. We need an input abstraction layer or a way to inject input state so we can simulate clicks and key presses without relying on global Raylib state or OS-level input simulation. Currently, we have to resort to invasive hacks or modifying the library to support testing. manually.
 
 **Suggestion**: 
 - Provide helper functions like `position_top_left(x, y)`, `position_center()`, `position_bottom_right(x, y)` that handle absolute positioning more intuitively

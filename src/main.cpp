@@ -9,6 +9,12 @@ backward::SignalHandling sh;
 #include "game.h"
 #include "preload.h"
 #include "settings.h"
+#include "systems/ExampleColors.h"
+#include "systems/ExampleLayout.h"
+#include "systems/ExampleScreenRegistry.h"
+#include "systems/ExampleSimpleButton.h"
+#include "systems/ExampleTabbing.h"
+#include "systems/ExampleText.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
 #include <iostream>
@@ -30,7 +36,13 @@ int main(int argc, char *argv[]) {
     std::cout << "  --list-tests                 List all available tests\n";
     std::cout << "  --run-test <name>            Run a specific test\n";
     std::cout
-        << "  --slow-test                  Run test in slow mode (visible)\n";
+        << "  --slow                       Run test in slow mode (visible)\n";
+    std::cout << "  --hold-on-end                Keep window open after test "
+                 "finishes\n";
+    std::cout << "  --list-screens               List all available example "
+                 "screens\n";
+    std::cout << "  --<screen_name>              Show example screen (e.g., "
+                 "--simple_button)\n";
     return 0;
   }
 
@@ -43,9 +55,57 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  if (cmdl["--list-screens"]) {
+    ExampleScreenRegistry::get().list_screens();
+    return 0;
+  }
+
+  std::string screen_name;
+  for (const auto &arg : cmdl.flags()) {
+    // argh returns flags without the "--" prefix
+    if (arg != "help" && arg != "list-tests" && arg != "list-screens" &&
+        arg != "slow" && arg != "hold-on-end" && arg != "run-test") {
+      // Remove "--" prefix if present (in case it's there)
+      if (arg.size() >= 2 && arg[0] == '-' && arg[1] == '-') {
+        screen_name = arg.substr(2);
+      } else {
+        screen_name = arg;
+      }
+      break;
+    }
+  }
+
+  if (!screen_name.empty()) {
+    if (ExampleScreenRegistry::get().has_screen(screen_name)) {
+      int screenWidth, screenHeight;
+      cmdl({"-w", "--width"}, 1280) >> screenWidth;
+      cmdl({"-h", "--height"}, 720) >> screenHeight;
+
+      Settings::get().load_save_file(screenWidth, screenHeight);
+
+      Preload::get() //
+          .init("Break Ross")
+          .make_singleton();
+      Settings::get().refresh_settings();
+
+      bool hold_on_end = cmdl["--hold-on-end"];
+
+      run_screen_demo(screen_name, hold_on_end);
+
+      Settings::get().write_save_file();
+
+      return 0;
+    } else {
+      std::cout << "Unknown screen: " << screen_name << "\n";
+      std::cout << "Use --list-screens to see available screens\n";
+      return 1;
+    }
+  }
+
   std::string test_name;
   if (cmdl({"--run-test"}) >> test_name) {
-    bool slow_mode = cmdl["--slow-test"];
+    bool slow_mode = cmdl["--slow"];
+    bool hold_on_end = cmdl["--hold-on-end"];
 
     int screenWidth, screenHeight;
     cmdl({"-w", "--width"}, 1280) >> screenWidth;
@@ -58,7 +118,7 @@ int main(int argc, char *argv[]) {
         .make_singleton();
     Settings::get().refresh_settings();
 
-    run_test(test_name, slow_mode);
+    run_test(test_name, slow_mode, hold_on_end);
 
     Settings::get().write_save_file();
 
