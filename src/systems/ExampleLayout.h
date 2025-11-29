@@ -49,7 +49,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
 
     div(context, mk(container.ent(), 3),
         ComponentConfig{}
-            .with_label("Layout Example")
+            .with_label("Screen: layout - Layout Example")
             .with_size(ComponentSize{screen_pct(0.7f), screen_pct(0.15f)})
             .with_custom_color(afterhours::Color{60, 60, 60, 255})
             .with_margin(Margin{.top = screen_pct(0.01f),

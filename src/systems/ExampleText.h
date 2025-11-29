@@ -48,7 +48,7 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
     float title_y = y_pos - 60.0f;
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label("Text Rendering Examples")
+            .with_label("Screen: text - Text Rendering Examples")
             .with_size(
                 ComponentSize{pixels(screen_width * 0.6f), pixels(40.0f)})
             .with_absolute_position()

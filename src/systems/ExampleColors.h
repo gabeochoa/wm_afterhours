@@ -44,7 +44,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     float title_y = start_y - 60.0f;
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label("Color Examples")
+            .with_label("Screen: colors - Color Examples")
             .with_size(
                 ComponentSize{pixels(screen_width * 0.6f), pixels(40.0f)})
             .with_absolute_position()

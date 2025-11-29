@@ -38,6 +38,19 @@ struct ExampleSimpleButton : afterhours::System<UIContext<InputAction>> {
       log_info("Button clicked! Count: {}", button_click_count);
     }
 
+    float title_y = button_y - 80.0f;
+    div(context, mk(entity, 100),
+        ComponentConfig{}
+            .with_label("Screen: simple_button")
+            .with_size(
+                ComponentSize{pixels(screen_width * 0.6f), pixels(40.0f)})
+            .with_absolute_position()
+            .with_translate((screen_width - screen_width * 0.6f) / 2.0f,
+                            title_y)
+            .with_custom_color(afterhours::Color{40, 40, 40, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_debug_name("title"));
+
     float counter_y = button_y + button_height + 20.0f;
     float counter_height = 30.0f;
     std::string counter_text = "Clicks: " + std::to_string(button_click_count);

@@ -1,0 +1,34 @@
+{
+  "elements": [
+    {
+      "debug_name": "click_counter",
+      "has_focus": false,
+      "height": -1.0,
+      "label": "Clicks: 0",
+      "visible": false,
+      "width": -1.0,
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "debug_name": "sophie",
+      "has_focus": false,
+      "height": -1.0,
+      "label": "",
+      "visible": false,
+      "width": -1.0,
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "debug_name": "test_button",
+      "has_focus": false,
+      "height": -1.0,
+      "label": "Click Me",
+      "visible": false,
+      "width": -1.0,
+      "x": 0.0,
+      "y": 0.0
+    }
+  ]
+}
