@@ -64,6 +64,12 @@ Preload &Preload::make_singleton() {
     window_manager::add_singleton_components(sophie, 200);
     ui::add_singleton_components<InputAction>(sophie);
 
+    std::string font_path =
+        files::get_resource_path("fonts", "Gaegu-Bold.ttf").string();
+    sophie.get<ui::FontManager>()
+        .load_font(ui::UIComponent::DEFAULT_FONT, font_path.c_str())
+        .load_font(ui::UIComponent::SYMBOL_FONT, font_path.c_str());
+
     ui::imm::ThemeDefaults::get()
         .set_theme_color(ui::Theme::Usage::Primary, colors::UI_GREEN)
         .set_theme_color(ui::Theme::Usage::Error, colors::UI_RED)
