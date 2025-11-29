@@ -17,6 +17,7 @@ struct SnapshotResult {
 
 struct UIState {
   struct Element {
+    int entity_id = -1;
     std::string label;
     float x = 0.0f;
     float y = 0.0f;
@@ -25,6 +26,36 @@ struct UIState {
     bool visible = false;
     bool has_focus = false;
     std::string debug_name;
+    
+    bool is_absolute = false;
+    bool should_hide = false;
+    int parent_id = -1;
+    std::vector<int> children_ids;
+    
+    float computed_x = 0.0f;
+    float computed_y = 0.0f;
+    float computed_rel_x = 0.0f;
+    float computed_rel_y = 0.0f;
+    
+    float margin_top = 0.0f;
+    float margin_left = 0.0f;
+    float margin_bottom = 0.0f;
+    float margin_right = 0.0f;
+    float margin_x = 0.0f;
+    float margin_y = 0.0f;
+    
+    float padding_top = 0.0f;
+    float padding_left = 0.0f;
+    float padding_bottom = 0.0f;
+    float padding_right = 0.0f;
+    float padding_x = 0.0f;
+    float padding_y = 0.0f;
+    
+    std::string flex_direction = "Column";
+    
+    float translate_x = 0.0f;
+    float translate_y = 0.0f;
+    float scale = 1.0f;
   };
   std::vector<Element> elements;
 };
