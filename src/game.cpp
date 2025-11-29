@@ -61,12 +61,12 @@ void game() {
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::ui::register_render_systems<InputAction>(
+        systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
-    afterhours::ui::register_render_systems<InputAction>(
-        systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
@@ -135,6 +135,8 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::ui::register_render_systems<InputAction>(
+        systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
@@ -147,8 +149,6 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     }
 
     systems.register_render_system(std::make_unique<RenderTestFeedback>());
-    afterhours::ui::register_render_systems<InputAction>(
-        systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
@@ -282,10 +282,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
-
     afterhours::ui::register_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
-
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
