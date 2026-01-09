@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ui-tester": {
+      "command": "./output/ui_tester.exe",
+      "args": ["--mcp", "--simple_button"],
+      "env": {}
+    }
+  }
+}

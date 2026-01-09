@@ -19,7 +19,16 @@ backward::SignalHandling sh;
 #include "testing/tests/all_tests.h"
 #include <iostream>
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+#include "engine/input_injector.h"
+#include <afterhours/src/plugins/mcp_server.h>
+#endif
+
 using namespace afterhours;
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+bool g_mcp_mode = false;
+#endif
 
 int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
@@ -43,8 +52,15 @@ int main(int argc, char *argv[]) {
                  "screens\n";
     std::cout << "  --<screen_name>              Show example screen (e.g., "
                  "--simple_button)\n";
+#ifdef AFTER_HOURS_ENABLE_MCP
+    std::cout << "  --mcp                        Enable MCP server mode\n";
+#endif
     return 0;
   }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+  g_mcp_mode = cmdl["--mcp"];
+#endif
 
   if (cmdl["--list-tests"]) {
     TestRegistry &registry = TestRegistry::get();
@@ -64,7 +80,8 @@ int main(int argc, char *argv[]) {
   for (const auto &arg : cmdl.flags()) {
     // argh returns flags without the "--" prefix
     if (arg != "help" && arg != "list-tests" && arg != "list-screens" &&
-        arg != "slow" && arg != "hold-on-end" && arg != "run-test") {
+        arg != "slow" && arg != "hold-on-end" && arg != "run-test" &&
+        arg != "mcp") {
       // Remove "--" prefix if present (in case it's there)
       if (arg.size() >= 2 && arg[0] == '-' && arg[1] == '-') {
         screen_name = arg.substr(2);

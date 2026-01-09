@@ -39,6 +39,56 @@ Examples:
 - Use `make clean` to clean build artifacts
 - Use `make run` to build and run game
 
+## MCP Server (Model Context Protocol)
+
+The project includes MCP support for AI-assisted testing and automation. MCP allows external tools (like Cursor) to take screenshots and control the game via keyboard/mouse input.
+
+### Building with MCP
+```bash
+make ENABLE_MCP=1
+```
+
+### Running with MCP
+```bash
+./output/ui_tester.exe --mcp --simple_button
+```
+
+### Available MCP Tools
+- `screenshot` - Capture current game frame as PNG
+- `get_screen_size` - Get screen dimensions (returns JSON: `{"width": 1280, "height": 720}`)
+- `mouse_move` - Move cursor to coordinates: `{"x": 100, "y": 200}`
+- `mouse_click` - Click at coordinates: `{"x": 100, "y": 200, "button": "left"}`
+- `key_press` - Press and release a key: `{"key": "enter"}`
+- `key_down` / `key_up` - Hold or release a key
+
+### Key Names for Input
+Letters: `a`-`z`, Numbers: `0`-`9`, Special: `space`, `enter`, `escape`, `tab`, `backspace`, `up`, `down`, `left`, `right`, `shift`, `ctrl`, `alt`
+
+### Cursor Integration
+The `.cursor/mcp.json` file configures Cursor to use the MCP server:
+```json
+{
+  "mcpServers": {
+    "ui-tester": {
+      "command": "./output/ui_tester.exe",
+      "args": ["--mcp", "--simple_button"],
+      "env": {}
+    }
+  }
+}
+```
+
+### Testing MCP
+Run the test script to verify MCP functionality:
+```bash
+python3 test_mcp.py
+```
+
+### MCP Implementation Files
+- `vendor/afterhours/src/plugins/mcp_server.h` - MCP protocol handler
+- `src/engine/input_injector.h/cpp` - Input simulation module
+- `src/game.cpp` - MCP integration in game loop
+
 ## Debugging
 - Use `log_info()`, `log_warn()`, `log_error()` for logging
 - Add debug logs for complex systems

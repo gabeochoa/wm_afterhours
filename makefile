@@ -76,9 +76,15 @@ ifeq ($(COVERAGE),1)
     endif
 endif
 
+# MCP support
+MCP_CXXFLAGS :=
+ifeq ($(ENABLE_MCP),1)
+    MCP_CXXFLAGS := -DAFTER_HOURS_ENABLE_MCP
+endif
+
 # Combine all CXXFLAGS
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
-    $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(RAYLIB_FLAGS)
+    $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(RAYLIB_FLAGS)
 
 # Include directories
 INCLUDES := -Ivendor/
@@ -96,6 +102,7 @@ MAIN_SRC += $(wildcard src/components/*.cpp)
 MAIN_SRC += $(wildcard src/systems/*.cpp)
 MAIN_SRC += $(wildcard src/ui/*.cpp)
 MAIN_SRC += $(wildcard src/testing/*.cpp)
+MAIN_SRC += $(wildcard src/engine/*.cpp)
 
 # Object files
 MAIN_OBJS := $(MAIN_SRC:src/%.cpp=$(OBJ_DIR)/main/%.o)

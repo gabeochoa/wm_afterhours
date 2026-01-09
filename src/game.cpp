@@ -25,6 +25,64 @@
 #include <iostream>
 #include <thread>
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+#include "engine/input_injector.h"
+#include <afterhours/src/plugins/mcp_server.h>
+
+extern bool g_mcp_mode;
+
+namespace {
+std::vector<uint8_t> capture_screenshot_png() {
+  raylib::Image image = raylib::LoadImageFromTexture(mainRT.texture);
+  if (image.data == nullptr) {
+    return {};
+  }
+  raylib::ImageFlipVertical(&image);
+
+  int file_size = 0;
+  unsigned char *png_data = raylib::ExportImageToMemory(image, ".png", &file_size);
+  raylib::UnloadImage(image);
+
+  if (png_data == nullptr || file_size <= 0) {
+    return {};
+  }
+
+  std::vector<uint8_t> result(png_data, png_data + file_size);
+  raylib::MemFree(png_data);
+  return result;
+}
+
+void init_mcp() {
+  if (!g_mcp_mode) {
+    return;
+  }
+
+  afterhours::mcp::MCPConfig config;
+  config.get_screen_size = []() {
+    return std::make_pair(Settings::get().get_screen_width(),
+                          Settings::get().get_screen_height());
+  };
+  config.capture_screenshot = capture_screenshot_png;
+  config.mouse_move = [](int x, int y) {
+    input_injector::set_mouse_position(x, y);
+  };
+  config.mouse_click = [](int x, int y, int /* button */) {
+    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f, 1.0f};
+    input_injector::schedule_mouse_click_at(rect);
+    input_injector::inject_scheduled_click();
+  };
+  config.key_down = [](int keycode) {
+    input_injector::set_key_down(keycode);
+  };
+  config.key_up = [](int keycode) {
+    input_injector::set_key_up(keycode);
+  };
+
+  afterhours::mcp::init(config);
+}
+} // namespace
+#endif
+
 bool running = true;
 raylib::RenderTexture2D mainRT;
 raylib::RenderTexture2D screenRT;
@@ -250,6 +308,10 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
           .string()
           .c_str());
 
+#ifdef AFTER_HOURS_ENABLE_MCP
+  init_mcp();
+#endif
+
   std::vector<std::string> screen_names =
       ExampleScreenRegistry::get().get_screen_names();
   if (screen_names.empty()) {
@@ -328,6 +390,13 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   }
 
   while (running && !raylib::WindowShouldClose()) {
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (g_mcp_mode) {
+      // Process any pending input injections BEFORE systems run
+      input_injector::update_key_hold(raylib::GetFrameTime());
+    }
+#endif
+
     if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       running = false;
     }
@@ -345,5 +414,23 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     float dt = raylib::GetFrameTime();
     systems.run(dt);
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (g_mcp_mode) {
+      // Release click state AFTER systems processed it
+      input_injector::release_scheduled_click();
+      input_injector::reset_frame();
+      
+      // Process MCP commands AFTER rendering so screenshots capture the current frame
+      // New clicks scheduled here will be processed in the NEXT frame
+      afterhours::mcp::update();
+    }
+#endif
   }
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+  if (g_mcp_mode) {
+    afterhours::mcp::shutdown();
+  }
+#endif
 }

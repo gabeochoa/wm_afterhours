@@ -1,4 +1,5 @@
 #include "test_input.h"
+#include "../engine/input_injector.h"
 #include "../rl.h"
 
 // Undefine macros to avoid recursion and allow implementation
@@ -21,6 +22,7 @@ void push_key(int key) {
   press.key = key;
   press.is_char = false;
   input_queue.push(press);
+  input_injector::set_key_down(key);
 }
 
 void push_char(char c) {
@@ -41,6 +43,10 @@ bool key_consumed_this_frame = false;
 bool char_consumed_this_frame = false;
 
 bool is_key_pressed(int key) {
+  if (input_injector::consume_synthetic_press(key)) {
+    return true;
+  }
+
   if (!test_mode || input_queue.empty() || key_consumed_this_frame) {
     return raylib::IsKeyPressed_Real(key);
   }
@@ -74,13 +80,14 @@ void reset_frame() {
   char_consumed_this_frame = false;
   mouse_state.left_button_pressed_this_frame = false;
   mouse_state.left_button_released_this_frame = false;
+  input_injector::reset_frame();
 }
 
 void set_mouse_position(vec2 pos) {
   mouse_state.position = pos;
   mouse_state.simulation_active = true;
-  // Also update real mouse position for things that bypass our hooks
-  raylib::SetMousePosition(static_cast<int>(pos.x), static_cast<int>(pos.y));
+  input_injector::set_mouse_position(static_cast<int>(pos.x),
+                                     static_cast<int>(pos.y));
 }
 
 void simulate_mouse_button_press(int button) {
@@ -106,7 +113,7 @@ vec2 get_mouse_position() {
       mouse_state.position.has_value()) {
     return mouse_state.position.value();
   }
-  return raylib::GetMousePosition_Real();
+  return input_injector::get_mouse_position();
 }
 
 bool is_mouse_button_pressed(int button) {
@@ -114,7 +121,7 @@ bool is_mouse_button_pressed(int button) {
       button == raylib::MOUSE_BUTTON_LEFT) {
     return mouse_state.left_button_pressed_this_frame;
   }
-  return raylib::IsMouseButtonPressed_Real(button);
+  return input_injector::is_mouse_button_pressed(button);
 }
 
 bool is_mouse_button_down(int button) {
@@ -122,7 +129,7 @@ bool is_mouse_button_down(int button) {
       button == raylib::MOUSE_BUTTON_LEFT) {
     return mouse_state.left_button_held;
   }
-  return raylib::IsMouseButtonDown_Real(button);
+  return input_injector::is_mouse_button_down(button);
 }
 
 bool is_mouse_button_released(int button) {
@@ -130,7 +137,7 @@ bool is_mouse_button_released(int button) {
       button == raylib::MOUSE_BUTTON_LEFT) {
     return mouse_state.left_button_released_this_frame;
   }
-  return raylib::IsMouseButtonReleased_Real(button);
+  return input_injector::is_mouse_button_released(button);
 }
 
 bool is_mouse_button_up(int button) {
