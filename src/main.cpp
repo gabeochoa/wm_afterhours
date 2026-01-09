@@ -25,8 +25,8 @@ int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
 
   if (cmdl["--help"]) {
-    std::cout << "Break Ross \n\n";
-    std::cout << "Usage: break_ross [OPTIONS]\n\n";
+    std::cout << "UI Tester \n\n";
+    std::cout << "Usage: ui_tester [OPTIONS]\n\n";
     std::cout << "Options:\n";
     std::cout << "  --help                        Show this help message\n";
     std::cout
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
       Settings::get().load_save_file(screenWidth, screenHeight);
 
       Preload::get() //
-          .init("Break Ross")
+          .init("UI Tester")
           .make_singleton();
       Settings::get().refresh_settings();
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
     Settings::get().load_save_file(screenWidth, screenHeight);
 
     Preload::get() //
-        .init("Break Ross")
+        .init("UI Tester")
         .make_singleton();
     Settings::get().refresh_settings();
 
@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
   Settings::get().load_save_file(screenWidth, screenHeight);
 
   Preload::get() //
-      .init("Break Ross")
+      .init("UI Tester")
       .make_singleton();
   Settings::get().refresh_settings();
 

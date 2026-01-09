@@ -105,7 +105,7 @@ MAIN_OBJS += $(OBJ_DIR)/main/vendor_afterhours_files.o
 MAIN_DEPS := $(MAIN_OBJS:.o=.d)
 
 # Output executable
-MAIN_EXE := $(OUTPUT_DIR)/break_ross$(EXT)
+MAIN_EXE := $(OUTPUT_DIR)/ui_tester$(EXT)
 
 # Create directories
 $(OUTPUT_DIR)/.stamp:

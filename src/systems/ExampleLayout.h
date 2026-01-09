@@ -17,8 +17,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.8f), screen_pct(0.6f)})
                 .with_custom_color(afterhours::Color{40, 40, 40, 255})
-                .with_padding(Padding{screen_pct(0.02f), screen_pct(0.02f),
-                                      screen_pct(0.02f), screen_pct(0.02f)})
+                .with_padding(Spacing::sm)
                 .with_debug_name("main_container"));
 
     div(context, mk(container.ent(), 0),
@@ -26,9 +25,9 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{screen_pct(0.3f), screen_pct(0.2f)})
             .with_custom_color(afterhours::Color{100, 50, 50, 255})
             .with_margin(Margin{.top = pixels(0),
-                                .right = screen_pct(0.01f),
                                 .bottom = pixels(0),
-                                .left = pixels(0)})
+                                .left = pixels(0),
+                                .right = DefaultSpacing::tiny()})
             .with_debug_name("left_box"));
 
     div(context, mk(container.ent(), 1),
@@ -36,9 +35,9 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{screen_pct(0.3f), screen_pct(0.2f)})
             .with_custom_color(afterhours::Color{50, 100, 50, 255})
             .with_margin(Margin{.top = pixels(0),
-                                .right = screen_pct(0.01f),
                                 .bottom = pixels(0),
-                                .left = pixels(0)})
+                                .left = pixels(0),
+                                .right = DefaultSpacing::tiny()})
             .with_debug_name("middle_box"));
 
     div(context, mk(container.ent(), 2),
@@ -52,10 +51,10 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_label("Layout Example")
             .with_size(ComponentSize{screen_pct(0.7f), screen_pct(0.15f)})
             .with_custom_color(afterhours::Color{60, 60, 60, 255})
-            .with_margin(Margin{.top = screen_pct(0.01f),
-                                .right = pixels(0),
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
-                                .left = pixels(0)})
+                                .left = pixels(0),
+                                .right = pixels(0)})
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_debug_name("title"));
   }

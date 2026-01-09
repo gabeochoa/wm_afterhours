@@ -37,6 +37,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(x, start_y)
               .with_custom_color(colors[i])
+              .with_padding(Spacing::xs)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_debug_name("color_box_" + std::to_string(i)));
     }
@@ -51,6 +52,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_translate((screen_width - screen_width * 0.6f) / 2.0f,
                             title_y)
             .with_custom_color(afterhours::Color{30, 30, 30, 200})
+            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_debug_name("title"));
   }

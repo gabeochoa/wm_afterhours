@@ -109,19 +109,23 @@ struct TestApp {
 
   static afterhours::Entity *
   find_ui_element_by_label(const std::string &label) {
-    for (afterhours::Entity &entity :
-         afterhours::EntityQuery()
-             .whereHasComponent<afterhours::ui::HasLabel>()
-             .gen()) {
-      if (entity.has<afterhours::ui::HasLabel>()) {
-        const afterhours::ui::HasLabel &has_label =
-            entity.get<afterhours::ui::HasLabel>();
-        if (has_label.label == label) {
-          return &entity;
-        }
-      }
-    }
-    return nullptr;
+    afterhours::OptEntity opt = afterhours::EntityQuery()
+                                    .whereHasComponent<afterhours::ui::HasLabel>()
+                                    .whereLambda([&label](const afterhours::Entity &e) {
+                                      return e.get<afterhours::ui::HasLabel>().label == label;
+                                    })
+                                    .gen_first();
+    return opt.has_value() ? &opt.asE() : nullptr;
+  }
+
+  static std::optional<afterhours::EntityHandle>
+  find_ui_element_handle_by_label(const std::string &label) {
+    return afterhours::EntityQuery()
+        .whereHasComponent<afterhours::ui::HasLabel>()
+        .whereLambda([&label](const afterhours::Entity &e) {
+          return e.get<afterhours::ui::HasLabel>().label == label;
+        })
+        .gen_first_handle();
   }
 
   static void click_ui_element(afterhours::Entity &entity) {

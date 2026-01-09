@@ -78,6 +78,8 @@ Preload &Preload::make_singleton() {
         .set_theme_color(ui::Theme::Usage::Secondary, raylib::YELLOW)
         .set_theme_color(ui::Theme::Usage::Accent, raylib::GREEN);
 
+    ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
+
     sophie.addComponent<ui::AutoLayoutRoot>();
     sophie.addComponent<ui::UIComponentDebug>("sophie");
     sophie.addComponent<ui::UIComponent>(sophie.id)

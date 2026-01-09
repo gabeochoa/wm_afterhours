@@ -34,7 +34,7 @@ Examples:
 
 ## Build System
 - Use `make` to build project
-- Game executable is `break_rows.exe`
+- Executable is `ui_tester.exe`
 - Run `make` to build game
 - Use `make clean` to clean build artifacts
 - Use `make run` to build and run game
