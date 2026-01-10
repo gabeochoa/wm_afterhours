@@ -41,7 +41,7 @@ struct ExampleScreenRegistry {
   void list_screens() const {
     std::cout << "Available example screens:\n";
     for (const auto &[name, screen] : screens) {
-      std::cout << "  --" << name << "    " << screen.description << "\n";
+      std::cout << "  --screen=" << name << "    " << screen.description << "\n";
     }
   }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../external.h"
-#include "../input_mapping.h"
-#include "ExampleScreenRegistry.h"
+#include "../../external.h"
+#include "../../input_mapping.h"
+#include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -58,3 +58,4 @@ struct ExampleSimpleButton : afterhours::System<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(simple_button,
                         "Simple button example with click counter",
                         ExampleSimpleButton)
+

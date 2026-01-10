@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../external.h"
-#include "../input_mapping.h"
-#include "ExampleScreenRegistry.h"
+#include "../../external.h"
+#include "../../input_mapping.h"
+#include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -64,3 +64,4 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
 
 REGISTER_EXAMPLE_SCREEN(text, "Text rendering examples with different sizes",
                         ExampleText)
+
