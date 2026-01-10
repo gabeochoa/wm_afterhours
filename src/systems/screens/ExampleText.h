@@ -29,7 +29,7 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
     TextExample examples[] = {
         {"Large Text (32px)", 32.0f, afterhours::Color{255, 255, 255, 255}},
         {"Medium Text (24px)", 24.0f, afterhours::Color{200, 200, 200, 255}},
-        {"Small Text (18px)", 18.0f, afterhours::Color{150, 150, 150, 255}},
+        {"Small Text (20px)", 20.0f, afterhours::Color{150, 150, 150, 255}},
         {"Colored Text", 20.0f, afterhours::Color{100, 200, 255, 255}},
     };
 
