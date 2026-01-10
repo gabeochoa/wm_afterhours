@@ -33,179 +33,191 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Military/tactical theme - darker, more aggressive colors
     Theme theme;
-    theme.font = afterhours::Color{220, 220, 210, 255};      // Off-white/tan
-    theme.darkfont = afterhours::Color{10, 10, 10, 255};     // Near black
-    theme.font_muted = afterhours::Color{120, 115, 100, 255};
-    theme.background = afterhours::Color{15, 15, 12, 255};   // Dark olive-black
-    theme.surface = afterhours::Color{28, 28, 22, 255};      // Dark olive
-    theme.primary = afterhours::Color{45, 45, 35, 255};      // Military gray-green
-    theme.secondary = afterhours::Color{60, 55, 45, 255};    // Tan-brown
-    theme.accent = afterhours::Color{180, 120, 40, 255};     // Orange/gold accent
-    theme.error = afterhours::Color{180, 50, 50, 255};
+    theme.font = afterhours::Color{240, 240, 235, 255};
+    theme.darkfont = afterhours::Color{15, 15, 12, 255};
+    theme.font_muted = afterhours::Color{140, 140, 130, 255};
+    theme.background = afterhours::Color{12, 14, 18, 255};
+    theme.surface = afterhours::Color{24, 28, 36, 255};
+    theme.primary = afterhours::Color{38, 44, 56, 255};
+    theme.secondary = afterhours::Color{52, 60, 72, 255};
+    theme.accent = afterhours::Color{255, 160, 40, 255};
+    theme.error = afterhours::Color{220, 60, 60, 255};
     context.theme = theme;
 
-    // Full screen dark background - no padding to prevent shifting
-    auto main =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                .with_custom_background(theme.background)
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("main"));
+    // Layout constants - all elements contained in card
+    constexpr float CARD_WIDTH = 1000.0f;
+    constexpr float HEADER_H = 50.0f;
+    constexpr float CONTENT_H = 400.0f;
+    constexpr float FOOTER_H = 50.0f;
+    constexpr float INNER_PAD = 20.0f;
+    constexpr float SECTION_GAP = 12.0f;
+    constexpr float CARD_HEIGHT = HEADER_H + CONTENT_H + FOOTER_H + INNER_PAD * 2 + SECTION_GAP * 2;
+    constexpr float LEFT_COL = 560.0f;
+    constexpr float RIGHT_COL = 380.0f;
+    constexpr float COL_GAP = 20.0f;
 
-    // ========== HEADER - Mission Brief ==========
-    auto header =
-        div(context, mk(main.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
-                .disable_rounded_corners()
-                .with_debug_name("header"));
+    // Full screen background
+    auto main = div(context, mk(entity, 0),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                        .with_custom_background(theme.background)
+                        .with_flex_direction(FlexDirection::Column)
+                        .with_padding(Spacing::lg)
+                        .with_debug_name("main"));
+
+    // Single unified card container
+    auto card = div(context, mk(main.ent(), 0),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{pixels(CARD_WIDTH), pixels(CARD_HEIGHT)})
+                        .with_custom_background(theme.surface)
+                        .with_padding(Padding{.top = pixels(INNER_PAD), .right = pixels(INNER_PAD),
+                                               .bottom = pixels(INNER_PAD), .left = pixels(INNER_PAD)})
+                        .with_flex_direction(FlexDirection::Column)
+                        .with_debug_name("card"));
+
+    // ========== HEADER ROW ==========
+    auto header = div(context, mk(card.ent(), 0),
+                      ComponentConfig{}
+                          .with_size(ComponentSize{pixels(CARD_WIDTH - INNER_PAD * 2), pixels(50)})
+                          .with_custom_background(theme.primary)
+                          .with_padding(Spacing::sm)
+                          .with_flex_direction(FlexDirection::Row)
+                          .with_debug_name("header"));
 
     div(context, mk(header.ent(), 0),
         ComponentConfig{}
             .with_label("OPERATION: BLACKOUT")
-            .with_size(ComponentSize{pixels(380), pixels(55)})
+            .with_size(ComponentSize{pixels(280), pixels(38)})
             .with_background(Theme::Usage::Accent)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_text_color(Theme::Usage::DarkFont)
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_padding(Spacing::sm)
-            .disable_rounded_corners()
             .with_debug_name("mission_name"));
 
     div(context, mk(header.ent(), 1),
         ComponentConfig{}
             .with_label("EXTRACTION")
-            .with_size(ComponentSize{pixels(160), pixels(45)})
-            .with_custom_background(afterhours::Color{80, 30, 30, 255})
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_margin(Spacing::sm)
-            .disable_rounded_corners()
+            .with_size(ComponentSize{pixels(130), pixels(38)})
+            .with_custom_background(afterhours::Color{140, 40, 40, 255})
+            .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+            .with_margin(Margin{.left = pixels(12)})
+            .with_padding(Spacing::sm)
             .with_debug_name("mission_type"));
 
     div(context, mk(header.ent(), 2),
         ComponentConfig{}
             .with_label("SQUAD: 4/4")
-            .with_size(ComponentSize{pixels(140), pixels(45)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_margin(Spacing::sm)
-            .disable_rounded_corners()
+            .with_size(ComponentSize{pixels(120), pixels(38)})
+            .with_background(Theme::Usage::Secondary)
+            .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+            .with_margin(Margin{.left = pixels(12)})
+            .with_padding(Spacing::sm)
             .with_debug_name("squad"));
 
-    // ========== MAIN CONTENT ==========
-    auto content =
-        div(context, mk(main.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(420)})
-                .with_custom_background(theme.background)
-                .with_flex_direction(FlexDirection::Row)
-                .with_margin(Margin{.top = DefaultSpacing::small()})
-                .with_debug_name("content"));
+    // ========== CONTENT ROW (Two columns) ==========
+    auto content = div(context, mk(card.ent(), 1),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{pixels(CARD_WIDTH - INNER_PAD * 2), pixels(CONTENT_H)})
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_margin(Margin{.top = pixels(SECTION_GAP)})
+                           .with_debug_name("content"));
 
-    // LEFT - Weapon Selection
-    auto weapon_panel =
-        div(context, mk(content.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(520), pixels(400)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::xs)
-                .disable_rounded_corners()
-                .with_debug_name("weapon_panel"));
+    // LEFT COLUMN - Weapons
+    auto left_col = div(context, mk(content.ent(), 0),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{pixels(LEFT_COL), pixels(CONTENT_H)})
+                            .with_custom_background(theme.primary)
+                            .with_padding(Spacing::md)
+                            .with_flex_direction(FlexDirection::Column)
+                            .with_debug_name("left_col"));
 
-    // PRIMARY WEAPON header
-    div(context, mk(weapon_panel.ent(), 0),
+    constexpr float LEFT_INNER = LEFT_COL - 32.0f;
+
+    div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("PRIMARY WEAPON")
-            .with_size(ComponentSize{pixels(460), pixels(40)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_padding(Spacing::xs)
-            .disable_rounded_corners()
+            .with_size(ComponentSize{pixels(LEFT_INNER), pixels(32)})
+            .with_background(Theme::Usage::Secondary)
+            .with_custom_text_color(theme.accent)
+            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+            .with_padding(Spacing::sm)
             .with_skip_tabbing(true)
-            .with_debug_name("weapon_section_label"));
+            .with_debug_name("weapon_lbl"));
 
-    // Weapon buttons with better contrast
+    // Weapon buttons
     for (size_t i = 0; i < weapons.size(); i++) {
       bool sel = (i == selected_weapon);
-      if (button(context, mk(weapon_panel.ent(), 1 + static_cast<int>(i)),
+      if (button(context, mk(left_col.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(weapons[i].name)
-                     .with_size(ComponentSize{pixels(460), pixels(44)})
-                     .with_custom_background(sel ? theme.accent : theme.primary)
-                     .with_auto_text_color(true)
-                     .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-                     .with_margin(Spacing::xs)
-                     .disable_rounded_corners()
+                     .with_size(ComponentSize{pixels(LEFT_INNER), pixels(40)})
+                     .with_custom_background(sel ? theme.accent : theme.secondary)
+                     .with_custom_text_color(sel ? theme.darkfont : theme.font)
+                     .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+                     .with_margin(Margin{.top = pixels(8)})
                      .with_debug_name("weapon_" + std::to_string(i)))) {
         selected_weapon = i;
       }
     }
 
-    // Stats for selected weapon
+    // Stats section
     auto &w = weapons[selected_weapon];
-    auto stats = div(
-        context, mk(weapon_panel.ent(), 10),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(460), pixels(110)})
-            .with_custom_background(afterhours::colors::darken(theme.surface, 0.7f))
-            .with_padding(Spacing::sm)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .disable_rounded_corners()
-            .with_debug_name("stats"));
+    auto stats = div(context, mk(left_col.ent(), 10),
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(LEFT_INNER), pixels(100)})
+                         .with_custom_background(theme.background)
+                         .with_padding(Spacing::md)
+                         .with_flex_direction(FlexDirection::Column)
+                         .with_margin(Margin{.top = pixels(16)})
+                         .with_debug_name("stats"));
 
-    // Stat bars
+    constexpr float STAT_BAR_W = 320.0f;
+
     auto draw_stat = [&](int idx, const std::string &name, int value) {
       auto row = div(context, mk(stats.ent(), idx),
                      ComponentConfig{}
-                         .with_size(ComponentSize{pixels(430), pixels(30)})
-                         .with_custom_background(
-                             afterhours::colors::darken(theme.surface, 0.7f))
+                         .with_size(ComponentSize{pixels(LEFT_INNER - 32), pixels(24)})
                          .with_flex_direction(FlexDirection::Row)
+                         .with_margin(idx > 0 ? Margin{.top = pixels(6)} : Margin{})
                          .with_debug_name(name + "_row"));
 
+      // Label
       div(context, mk(row.ent(), 0),
           ComponentConfig{}
               .with_label(name)
-              .with_size(ComponentSize{pixels(100), pixels(28)})
-              .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-              .with_debug_name(name + "_label"));
+              .with_size(ComponentSize{pixels(48), pixels(20)})
+              .with_custom_text_color(theme.font_muted)
+              .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+              .with_debug_name(name + "_lbl"));
 
       // Bar background
-      div(context, mk(row.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(220), pixels(18)})
-              .with_custom_background(afterhours::Color{20, 20, 18, 255})
-              .disable_rounded_corners()
-              .with_debug_name(name + "_bg"));
+      auto bar_bg = div(context, mk(row.ent(), 1),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{pixels(STAT_BAR_W), pixels(14)})
+                            .with_custom_background(theme.primary)
+                            .with_margin(Margin{.left = pixels(8), .top = pixels(3)})
+                            .with_debug_name(name + "_bg"));
 
-      // Bar fill
-      div(context, mk(row.ent(), 2),
+      // Bar fill (contained inside bar_bg)
+      float fill_pct = static_cast<float>(value) / 100.0f;
+      float fill_w = STAT_BAR_W * fill_pct;
+      div(context, mk(bar_bg.ent(), 0),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(value * 2.2f), pixels(18)})
+              .with_size(ComponentSize{pixels(fill_w), pixels(14)})
               .with_background(Theme::Usage::Accent)
-              .with_margin(Margin{.left = pixels(-220)})
-              .disable_rounded_corners()
               .with_debug_name(name + "_fill"));
 
-      div(context, mk(row.ent(), 3),
+      // Value text
+      div(context, mk(row.ent(), 2),
           ComponentConfig{}
               .with_label(std::to_string(value))
-              .with_size(ComponentSize{pixels(50), pixels(28)})
+              .with_size(ComponentSize{pixels(40), pixels(20)})
               .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+              .with_margin(Margin{.left = pixels(12)})
               .with_debug_name(name + "_val"));
     };
 
@@ -213,163 +225,150 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     draw_stat(1, "ACC", w.accuracy);
     draw_stat(2, "ROF", w.fire_rate);
 
-    // RIGHT - Gear & Perks
-    auto gear_panel =
-        div(context, mk(content.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(400), pixels(400)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::xs)
-                .disable_rounded_corners()
-                .with_debug_name("gear_panel"));
+    // RIGHT COLUMN - Gear & Perks
+    auto right_col = div(context, mk(content.ent(), 1),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{pixels(RIGHT_COL), pixels(CONTENT_H)})
+                             .with_custom_background(theme.primary)
+                             .with_padding(Spacing::md)
+                             .with_flex_direction(FlexDirection::Column)
+                             .with_margin(Margin{.left = pixels(COL_GAP)})
+                             .with_debug_name("right_col"));
 
-    // SECONDARY WEAPON - Navigation bar
-    div(context, mk(gear_panel.ent(), 0),
+    constexpr float RIGHT_INNER = RIGHT_COL - 32.0f;
+
+    // SECONDARY weapon
+    div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
             .with_label("SECONDARY")
-            .with_size(ComponentSize{pixels(340), pixels(35)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_padding(Spacing::xs)
-            .disable_rounded_corners()
+            .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(28)})
+            .with_background(Theme::Usage::Secondary)
+            .with_custom_text_color(theme.accent)
+            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+            .with_padding(Spacing::sm)
             .with_skip_tabbing(true)
-            .with_debug_name("secondary_label"));
+            .with_debug_name("secondary_lbl"));
 
-    navigation_bar(context, mk(gear_panel.ent(), 1), secondary_weapons,
+    navigation_bar(context, mk(right_col.ent(), 1), secondary_weapons,
                    selected_secondary,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(340), pixels(40)})
-                       .with_background(Theme::Usage::Primary)
-                       .with_auto_text_color(true)
-                       .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-                       .with_margin(Spacing::xs)
-                       .disable_rounded_corners()
+                       .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
+                       .with_background(Theme::Usage::Secondary)
+                       .with_text_color(Theme::Usage::Font)
+                       .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+                       .with_margin(Margin{.top = pixels(8)})
                        .with_debug_name("secondary_nav"));
 
-    // TACTICAL GEAR section
-    div(context, mk(gear_panel.ent(), 5),
+    // TACTICAL GEAR - visible header
+    div(context, mk(right_col.ent(), 5),
         ComponentConfig{}
             .with_label("TACTICAL GEAR")
-            .with_size(ComponentSize{pixels(340), pixels(35)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_padding(Spacing::xs)
-            .disable_rounded_corners()
+            .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(32)})
+            .with_background(Theme::Usage::Accent)
+            .with_text_color(Theme::Usage::DarkFont)
+            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+            .with_margin(Margin{.top = pixels(12)})
             .with_skip_tabbing(true)
-            .with_debug_name("gear_label"));
+            .with_debug_name("gear_lbl"));
 
-    // Gear buttons - 2x2 grid style
-    auto gear_row1 = div(context, mk(gear_panel.ent(), 6),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{pixels(340), pixels(40)})
-                             .with_flex_direction(FlexDirection::Row)
-                             .with_debug_name("gear_row1"));
+    constexpr float GEAR_BTN_W = (RIGHT_INNER - 12.0f) / 2.0f;
 
-    for (size_t i = 0; i < 2 && i < gear.size(); i++) {
-      button(context, mk(gear_row1.ent(), static_cast<int>(i)),
+    auto gr1 = div(context, mk(right_col.ent(), 6),
+                   ComponentConfig{}
+                       .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
+                       .with_flex_direction(FlexDirection::Row)
+                       .with_margin(Margin{.top = pixels(8)})
+                       .with_debug_name("gr1"));
+
+    for (size_t i = 0; i < 2; i++) {
+      button(context, mk(gr1.ent(), static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(gear[i])
-                 .with_size(ComponentSize{pixels(165), pixels(40)})
+                 .with_size(ComponentSize{pixels(GEAR_BTN_W), pixels(32)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-                 .with_margin(Spacing::xs)
-                 .disable_rounded_corners()
-                 .with_debug_name("gear_" + std::to_string(i)));
+                 .with_custom_text_color(theme.font)
+                 .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+                 .with_margin(i == 0 ? Margin{} : Margin{.left = pixels(12)})
+                 .with_debug_name("g_" + std::to_string(i)));
     }
 
-    auto gear_row2 = div(context, mk(gear_panel.ent(), 7),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{pixels(340), pixels(40)})
-                             .with_flex_direction(FlexDirection::Row)
-                             .with_debug_name("gear_row2"));
+    auto gr2 = div(context, mk(right_col.ent(), 7),
+                   ComponentConfig{}
+                       .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
+                       .with_flex_direction(FlexDirection::Row)
+                       .with_margin(Margin{.top = pixels(8)})
+                       .with_debug_name("gr2"));
 
-    for (size_t i = 2; i < 4 && i < gear.size(); i++) {
-      button(context, mk(gear_row2.ent(), static_cast<int>(i)),
+    for (size_t i = 2; i < 4; i++) {
+      button(context, mk(gr2.ent(), static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(gear[i])
-                 .with_size(ComponentSize{pixels(165), pixels(40)})
+                 .with_size(ComponentSize{pixels(GEAR_BTN_W), pixels(32)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-                 .with_margin(Spacing::xs)
-                 .disable_rounded_corners()
-                 .with_debug_name("gear_" + std::to_string(i)));
+                 .with_custom_text_color(theme.font)
+                 .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+                 .with_margin(i == 2 ? Margin{} : Margin{.left = pixels(12)})
+                 .with_debug_name("g_" + std::to_string(i)));
     }
 
-    // PERK section
-    div(context, mk(gear_panel.ent(), 10),
+    // PERK - visible header
+    div(context, mk(right_col.ent(), 10),
         ComponentConfig{}
             .with_label("PERK")
-            .with_size(ComponentSize{pixels(340), pixels(35)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_padding(Spacing::xs)
-            .disable_rounded_corners()
+            .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(32)})
+            .with_background(Theme::Usage::Accent)
+            .with_text_color(Theme::Usage::DarkFont)
+            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+            .with_margin(Margin{.top = pixels(12)})
             .with_skip_tabbing(true)
-            .with_debug_name("perk_label"));
+            .with_debug_name("perk_lbl"));
 
-    // Perk dropdown
-    dropdown(context, mk(gear_panel.ent(), 11), perks, selected_perk,
+    dropdown(context, mk(right_col.ent(), 11), perks, selected_perk,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(340), pixels(40)})
+                 .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
                  .with_background(Theme::Usage::Accent)
-                 .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-                 .with_margin(Spacing::xs)
-                 .disable_rounded_corners()
-                 .with_debug_name("perk_dropdown"));
+                 .with_text_color(Theme::Usage::DarkFont)
+                 .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+                 .with_margin(Margin{.top = pixels(8)})
+                 .with_debug_name("perk_dd"));
 
-    // ========== FOOTER - Action buttons ==========
-    auto footer =
-        div(context, mk(main.ent(), 2),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(65)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
-                .with_margin(Margin{.top = DefaultSpacing::small()})
-                .disable_rounded_corners()
-                .with_debug_name("footer"));
+    // ========== FOOTER ROW ==========
+    auto footer = div(context, mk(card.ent(), 2),
+                      ComponentConfig{}
+                          .with_size(ComponentSize{pixels(CARD_WIDTH - INNER_PAD * 2), pixels(FOOTER_H)})
+                          .with_custom_background(theme.secondary)
+                          .with_padding(Spacing::sm)
+                          .with_flex_direction(FlexDirection::Row)
+                          .with_margin(Margin{.top = pixels(SECTION_GAP)})
+                          .with_debug_name("footer"));
 
     button(context, mk(footer.ent(), 0),
            ComponentConfig{}
                .with_label("BACK")
-               .with_size(ComponentSize{pixels(120), pixels(45)})
+               .with_size(ComponentSize{pixels(100), pixels(38)})
                .with_background(Theme::Usage::Secondary)
-               .with_auto_text_color(true)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-               .with_margin(Spacing::sm)
-               .disable_rounded_corners()
+               .with_custom_text_color(theme.font)
+               .with_font(UIComponent::DEFAULT_FONT, 19.0f)
                .with_debug_name("back"));
 
     button(context, mk(footer.ent(), 1),
            ComponentConfig{}
                .with_label("SAVE LOADOUT")
-               .with_size(ComponentSize{pixels(180), pixels(45)})
-               .with_background(Theme::Usage::Primary)
-               .with_auto_text_color(true)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-               .with_margin(Spacing::sm)
-               .disable_rounded_corners()
+               .with_size(ComponentSize{pixels(150), pixels(38)})
+               .with_background(Theme::Usage::Secondary)
+               .with_custom_text_color(theme.font)
+               .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+               .with_margin(Margin{.left = pixels(12)})
                .with_debug_name("save"));
 
     button(context, mk(footer.ent(), 2),
            ComponentConfig{}
                .with_label("DEPLOY >>")
-               .with_size(ComponentSize{pixels(200), pixels(50)})
+               .with_size(ComponentSize{pixels(150), pixels(38)})
                .with_background(Theme::Usage::Accent)
-               .with_auto_text_color(true)
-               .with_font(UIComponent::DEFAULT_FONT, 24.0f)
-               .with_margin(Spacing::sm)
-               .disable_rounded_corners()
+               .with_text_color(Theme::Usage::DarkFont)
+               .with_font(UIComponent::DEFAULT_FONT, 19.0f)
+               .with_margin(Margin{.left = pixels(12)})
                .with_debug_name("deploy"));
   }
 };
