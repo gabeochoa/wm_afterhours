@@ -28,17 +28,18 @@ inline Theme cozy_kraft() {
 }
 
 // Neon Dark - Cyberpunk/tactical shooter aesthetic
+// Dark enough colors to provide good contrast with light text
 inline Theme neon_dark() {
     return Theme(
-        Color{255, 255, 255, 255},   // font - white
-        Color{15, 15, 20, 255},      // darkfont - near black
-        Color{140, 140, 150, 255},   // font_muted - gray
-        Color{15, 15, 20, 255},      // background - near black
-        Color{25, 25, 35, 255},      // surface - dark purple-gray
-        Color{0, 255, 255, 255},     // primary - cyan
-        Color{128, 0, 255, 255},     // secondary - purple
-        Color{255, 0, 128, 255},     // accent - hot pink
-        Color{255, 50, 50, 255}      // error - bright red
+        Color{230, 250, 255, 255},   // font - cool white (readable on dark)
+        Color{10, 15, 20, 255},      // darkfont - near black (for bright backgrounds)
+        Color{100, 120, 140, 255},   // font_muted - cool gray
+        Color{6, 8, 14, 255},        // background - deep blue-black
+        Color{14, 18, 28, 255},      // surface - dark blue-gray
+        Color{0, 110, 140, 255},     // primary - dark teal (high contrast with white)
+        Color{80, 50, 140, 255},     // secondary - dark purple
+        Color{200, 40, 90, 255},     // accent - dark pink/magenta
+        Color{200, 60, 60, 255}      // error - muted red
     );
 }
 
