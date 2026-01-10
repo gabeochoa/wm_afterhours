@@ -67,6 +67,5 @@ struct ExampleTabbing : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(tabbing, "System Demos", "Keyboard tabbing navigation example",
-                        ExampleTabbing)
-
+REGISTER_EXAMPLE_SCREEN(tabbing, "System Demos",
+                        "Keyboard tabbing navigation example", ExampleTabbing)

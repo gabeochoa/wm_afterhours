@@ -21,9 +21,10 @@ using namespace afterhours;
 extern bool g_mcp_mode;
 
 // Custom log callback that writes to stderr instead of stdout
-static void mcp_trace_log_callback(int logLevel, const char *text, va_list args) {
+static void mcp_trace_log_callback(int logLevel, const char *text,
+                                   va_list args) {
   if (logLevel < raylib::LOG_ERROR) {
-    return;  // In MCP mode, only log errors
+    return; // In MCP mode, only log errors
   }
   char buffer[1024];
   vsnprintf(buffer, sizeof(buffer), text, args);

@@ -22,27 +22,40 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
   float slider_value = 0.5f;
   bool checkbox_state = true;
   size_t dropdown_index = 0;
-  std::vector<std::string> dropdown_options = {"Option A", "Option B", "Option C"};
+  std::vector<std::string> dropdown_options = {"Option A", "Option B",
+                                               "Option C"};
 
   Theme get_theme_for_choice(ThemeChoice choice) {
     switch (choice) {
-      case ThemeChoice::CozyKraft: return theme_presets::cozy_kraft();
-      case ThemeChoice::NeonDark: return theme_presets::neon_dark();
-      case ThemeChoice::OceanNavy: return theme_presets::ocean_navy();
-      case ThemeChoice::Midnight: return theme_presets::midnight();
-      case ThemeChoice::SageNatural: return theme_presets::sage_natural();
-      default: return theme_presets::ocean_navy();
+    case ThemeChoice::CozyKraft:
+      return theme_presets::cozy_kraft();
+    case ThemeChoice::NeonDark:
+      return theme_presets::neon_dark();
+    case ThemeChoice::OceanNavy:
+      return theme_presets::ocean_navy();
+    case ThemeChoice::Midnight:
+      return theme_presets::midnight();
+    case ThemeChoice::SageNatural:
+      return theme_presets::sage_natural();
+    default:
+      return theme_presets::ocean_navy();
     }
   }
 
   std::string get_theme_name(ThemeChoice choice) {
     switch (choice) {
-      case ThemeChoice::CozyKraft: return "Cozy Kraft";
-      case ThemeChoice::NeonDark: return "Neon Dark";
-      case ThemeChoice::OceanNavy: return "Ocean Navy";
-      case ThemeChoice::Midnight: return "Midnight";
-      case ThemeChoice::SageNatural: return "Sage Natural";
-      default: return "Unknown";
+    case ThemeChoice::CozyKraft:
+      return "Cozy Kraft";
+    case ThemeChoice::NeonDark:
+      return "Neon Dark";
+    case ThemeChoice::OceanNavy:
+      return "Ocean Navy";
+    case ThemeChoice::Midnight:
+      return "Midnight";
+    case ThemeChoice::SageNatural:
+      return "Sage Natural";
+    default:
+      return "Unknown";
     }
   }
 
@@ -52,23 +65,25 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Full screen background
-    auto main = div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::lg)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("main"));
+    auto main =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::lg)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("main"));
 
     // ========== HEADER ==========
-    auto header = div(context, mk(main.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(80)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Row)
-            .with_soft_shadow(3.0f, 4.0f, 10.0f)
-            .with_debug_name("header"));
+    auto header =
+        div(context, mk(main.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.9f), pixels(80)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Row)
+                .with_soft_shadow(3.0f, 4.0f, 10.0f)
+                .with_debug_name("header"));
 
     div(context, mk(header.ent(), 0),
         ComponentConfig{}
@@ -89,24 +104,26 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("current_theme"));
 
     // ========== MAIN CONTENT ==========
-    auto content = div(context, mk(main.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(420)})
-            .with_custom_color(theme.background)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("content"));
+    auto content =
+        div(context, mk(main.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.9f), pixels(420)})
+                .with_custom_color(theme.background)
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("content"));
 
     // LEFT - Theme Selection
-    auto selector_panel = div(context, mk(content.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(400)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Spacing::sm)
-            .with_soft_shadow(4.0f, 6.0f, 12.0f)
-            .with_debug_name("selector_panel"));
+    auto selector_panel =
+        div(context, mk(content.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(280), pixels(400)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_soft_shadow(4.0f, 6.0f, 12.0f)
+                .with_debug_name("selector_panel"));
 
     div(context, mk(selector_panel.ent(), 0),
         ComponentConfig{}
@@ -118,40 +135,39 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("selector_title"));
 
     // Theme buttons
-    auto theme_choices = {
-      ThemeChoice::CozyKraft,
-      ThemeChoice::NeonDark,
-      ThemeChoice::OceanNavy,
-      ThemeChoice::Midnight,
-      ThemeChoice::SageNatural
-    };
+    auto theme_choices = {ThemeChoice::CozyKraft, ThemeChoice::NeonDark,
+                          ThemeChoice::OceanNavy, ThemeChoice::Midnight,
+                          ThemeChoice::SageNatural};
 
     int btn_idx = 1;
     for (auto choice : theme_choices) {
       bool selected = (choice == current_theme);
-      if (button(context, mk(selector_panel.ent(), btn_idx),
-                 ComponentConfig{}
-                     .with_label(get_theme_name(choice))
-                     .with_size(ComponentSize{pixels(240), pixels(48)})
-                     .with_color_usage(selected ? Theme::Usage::Accent : Theme::Usage::Secondary)
-                     .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                     .with_margin(Spacing::sm)
-                     .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {
+      if (button(
+              context, mk(selector_panel.ent(), btn_idx),
+              ComponentConfig{}
+                  .with_label(get_theme_name(choice))
+                  .with_size(ComponentSize{pixels(240), pixels(48)})
+                  .with_color_usage(selected ? Theme::Usage::Accent
+                                             : Theme::Usage::Secondary)
+                  .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                  .with_margin(Spacing::sm)
+                  .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {
         current_theme = choice;
       }
       btn_idx++;
     }
 
     // RIGHT - Component Preview
-    auto preview_panel = div(context, mk(content.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(550), pixels(400)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Spacing::sm)
-            .with_soft_shadow(4.0f, 6.0f, 12.0f)
-            .with_debug_name("preview_panel"));
+    auto preview_panel =
+        div(context, mk(content.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(550), pixels(400)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_soft_shadow(4.0f, 6.0f, 12.0f)
+                .with_debug_name("preview_panel"));
 
     div(context, mk(preview_panel.ent(), 0),
         ComponentConfig{}
@@ -164,12 +180,12 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
 
     // Buttons row
     auto btn_row = div(context, mk(preview_panel.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(500), pixels(60)})
-            .with_custom_color(theme.surface)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Spacing::sm)
-            .with_debug_name("btn_row"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{pixels(500), pixels(60)})
+                           .with_custom_color(theme.surface)
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_margin(Spacing::sm)
+                           .with_debug_name("btn_row"));
 
     button(context, mk(btn_row.ent(), 0),
            ComponentConfig{}
@@ -230,7 +246,8 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                  .with_debug_name("preview_checkbox"));
 
     // Dropdown
-    dropdown(context, mk(preview_panel.ent(), 4), dropdown_options, dropdown_index,
+    dropdown(context, mk(preview_panel.ent(), 4), dropdown_options,
+             dropdown_index,
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(400), pixels(45)})
                  .with_color_usage(Theme::Usage::Secondary)
@@ -239,13 +256,14 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                  .with_debug_name("preview_dropdown"));
 
     // Cards with shadows demo
-    auto cards_row = div(context, mk(preview_panel.ent(), 5),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(500), pixels(100)})
-            .with_custom_color(theme.surface)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("cards_row"));
+    auto cards_row =
+        div(context, mk(preview_panel.ent(), 5),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(500), pixels(100)})
+                .with_custom_color(theme.surface)
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("cards_row"));
 
     div(context, mk(cards_row.ent(), 0),
         ComponentConfig{}
@@ -279,5 +297,5 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(themes, "Tools", "Real-time theme switching demo", ThemesScreen)
-
+REGISTER_EXAMPLE_SCREEN(themes, "Tools", "Real-time theme switching demo",
+                        ThemesScreen)

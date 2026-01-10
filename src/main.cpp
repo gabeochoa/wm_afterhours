@@ -40,14 +40,15 @@ using namespace afterhours;
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 bool g_mcp_mode = false;
-int g_saved_stdout_fd = -1;  // Used by MCP to write JSON to original stdout
+int g_saved_stdout_fd = -1; // Used by MCP to write JSON to original stdout
 #endif
 
 int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
 
 #ifdef AFTER_HOURS_ENABLE_MCP
-  // Check for MCP mode EARLY and redirect stdout to stderr to keep stdout clean for JSON protocol
+  // Check for MCP mode EARLY and redirect stdout to stderr to keep stdout clean
+  // for JSON protocol
   if (cmdl["--mcp"]) {
     g_mcp_mode = true;
 #ifndef _WIN32

@@ -8,12 +8,12 @@
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
 #include "systems/RenderRenderTexture.h"
+#include "systems/RenderScreenHUD.h"
 #include "systems/RenderSystemHelpers.h"
 #include "systems/RenderTestFeedback.h"
 #include "systems/SetupSimpleButtonTest.h"
 #include "systems/SetupTabbingTest.h"
 #include "systems/TestSystem.h"
-#include "systems/RenderScreenHUD.h"
 #include "systems/UpdateRenderTexture.h"
 #include "testing/test_app.h"
 #include "testing/test_input.h"
@@ -40,49 +40,41 @@ extern int g_saved_stdout_fd;
 namespace {
 
 // Build JSON representation of UI component tree
-nlohmann::json build_ui_tree_json(afterhours::Entity &entity, 
-                                   afterhours::ui::UIComponent &cmp) {
+nlohmann::json build_ui_tree_json(afterhours::Entity &entity,
+                                  afterhours::ui::UIComponent &cmp) {
   nlohmann::json node;
   node["id"] = cmp.id;
-  
+
   if (entity.has<afterhours::ui::UIComponentDebug>()) {
     node["name"] = entity.get<afterhours::ui::UIComponentDebug>().name();
   }
-  
-  node["rect"] = {
-    {"x", cmp.rect().x},
-    {"y", cmp.rect().y},
-    {"width", cmp.rect().width},
-    {"height", cmp.rect().height}
-  };
-  
-  node["computed"] = {
-    {"width", cmp.computed[afterhours::ui::Axis::X]},
-    {"height", cmp.computed[afterhours::ui::Axis::Y]}
-  };
-  
-  node["relative_pos"] = {
-    {"x", cmp.computed_rel[afterhours::ui::Axis::X]},
-    {"y", cmp.computed_rel[afterhours::ui::Axis::Y]}
-  };
-  
+
+  node["rect"] = {{"x", cmp.rect().x},
+                  {"y", cmp.rect().y},
+                  {"width", cmp.rect().width},
+                  {"height", cmp.rect().height}};
+
+  node["computed"] = {{"width", cmp.computed[afterhours::ui::Axis::X]},
+                      {"height", cmp.computed[afterhours::ui::Axis::Y]}};
+
+  node["relative_pos"] = {{"x", cmp.computed_rel[afterhours::ui::Axis::X]},
+                          {"y", cmp.computed_rel[afterhours::ui::Axis::Y]}};
+
   node["padding"] = {
-    {"left", cmp.computed_padd[afterhours::ui::Axis::left]},
-    {"top", cmp.computed_padd[afterhours::ui::Axis::top]},
-    {"right", cmp.computed_padd[afterhours::ui::Axis::right]},
-    {"bottom", cmp.computed_padd[afterhours::ui::Axis::bottom]}
-  };
-  
+      {"left", cmp.computed_padd[afterhours::ui::Axis::left]},
+      {"top", cmp.computed_padd[afterhours::ui::Axis::top]},
+      {"right", cmp.computed_padd[afterhours::ui::Axis::right]},
+      {"bottom", cmp.computed_padd[afterhours::ui::Axis::bottom]}};
+
   node["margin"] = {
-    {"left", cmp.computed_margin[afterhours::ui::Axis::left]},
-    {"top", cmp.computed_margin[afterhours::ui::Axis::top]},
-    {"right", cmp.computed_margin[afterhours::ui::Axis::right]},
-    {"bottom", cmp.computed_margin[afterhours::ui::Axis::bottom]}
-  };
-  
+      {"left", cmp.computed_margin[afterhours::ui::Axis::left]},
+      {"top", cmp.computed_margin[afterhours::ui::Axis::top]},
+      {"right", cmp.computed_margin[afterhours::ui::Axis::right]},
+      {"bottom", cmp.computed_margin[afterhours::ui::Axis::bottom]}};
+
   node["absolute"] = cmp.absolute;
   node["visible"] = cmp.was_rendered_to_screen;
-  
+
   // Add children recursively
   nlohmann::json children_arr = nlohmann::json::array();
   for (afterhours::EntityID child_id : cmp.children) {
@@ -95,27 +87,27 @@ nlohmann::json build_ui_tree_json(afterhours::Entity &entity,
     }
   }
   node["children"] = children_arr;
-  
+
   return node;
 }
 
 std::string dump_ui_tree() {
   nlohmann::json result;
   result["tree"] = nlohmann::json::array();
-  
+
   // Find all root UI components (those with AutoLayoutRoot)
   auto roots = afterhours::EntityQuery()
-    .whereHasComponent<afterhours::ui::AutoLayoutRoot>()
-    .whereHasComponent<afterhours::ui::UIComponent>()
-    .gen();
-  
+                   .whereHasComponent<afterhours::ui::AutoLayoutRoot>()
+                   .whereHasComponent<afterhours::ui::UIComponent>()
+                   .gen();
+
   for (auto &entity_ref : roots) {
     afterhours::Entity &entity = entity_ref.get();
     auto &cmp = entity.get<afterhours::ui::UIComponent>();
     result["tree"].push_back(build_ui_tree_json(entity, cmp));
   }
-  
-  return result.dump(2);  // Pretty print with 2-space indent
+
+  return result.dump(2); // Pretty print with 2-space indent
 }
 
 std::vector<uint8_t> capture_screenshot_png() {
@@ -126,7 +118,8 @@ std::vector<uint8_t> capture_screenshot_png() {
   raylib::ImageFlipVertical(&image);
 
   int file_size = 0;
-  unsigned char *png_data = raylib::ExportImageToMemory(image, ".png", &file_size);
+  unsigned char *png_data =
+      raylib::ExportImageToMemory(image, ".png", &file_size);
   raylib::UnloadImage(image);
 
   if (png_data == nullptr || file_size <= 0) {
@@ -153,16 +146,13 @@ void init_mcp() {
     input_injector::set_mouse_position(x, y);
   };
   config.mouse_click = [](int x, int y, int /* button */) {
-    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f, 1.0f};
+    raylib::Rectangle rect{static_cast<float>(x), static_cast<float>(y), 1.0f,
+                           1.0f};
     input_injector::schedule_mouse_click_at(rect);
     input_injector::inject_scheduled_click();
   };
-  config.key_down = [](int keycode) {
-    input_injector::set_key_down(keycode);
-  };
-  config.key_up = [](int keycode) {
-    input_injector::set_key_up(keycode);
-  };
+  config.key_down = [](int keycode) { input_injector::set_key_down(keycode); };
+  config.key_up = [](int keycode) { input_injector::set_key_up(keycode); };
   config.dump_ui_tree = dump_ui_tree;
 
   afterhours::mcp::init(config, g_saved_stdout_fd);
@@ -287,7 +277,8 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
       systems.register_update_system(std::make_unique<SetupSimpleButtonTest>());
     }
 
-    // Register UI post-update systems (HandleClicks, HandleTabbing, layout, etc.)
+    // Register UI post-update systems (HandleClicks, HandleTabbing, layout,
+    // etc.)
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
 
@@ -473,7 +464,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     // Update HUD state
     ScreenHUDState::current_screen_name = new_screen_name;
-    ScreenHUDState::current_screen_description = 
+    ScreenHUDState::current_screen_description =
         ExampleScreenRegistry::get().get_screen_description(new_screen_name);
     ScreenHUDState::current_index = index;
 
@@ -507,7 +498,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     if (g_mcp_mode) {
       // Process any pending input injections BEFORE systems run
       input_injector::update_key_hold(raylib::GetFrameTime());
-      
+
       // Check if exit was requested via MCP
       if (afterhours::mcp::exit_requested()) {
         running = false;
@@ -542,9 +533,9 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
       // Release click state AFTER systems processed it
       input_injector::release_scheduled_click();
       input_injector::reset_frame();
-      
-      // Process MCP commands AFTER rendering so screenshots capture the current frame
-      // New clicks scheduled here will be processed in the NEXT frame
+
+      // Process MCP commands AFTER rendering so screenshots capture the current
+      // frame New clicks scheduled here will be processed in the NEXT frame
       afterhours::mcp::update();
     }
 #endif

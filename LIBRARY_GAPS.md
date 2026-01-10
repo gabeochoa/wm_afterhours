@@ -4,29 +4,54 @@ Issues and limitations discovered during UI Showcase development.
 
 ---
 
-## 1. Font Configuration Not in Theme
+## 1. ~~Font Configuration Not in Theme~~ (RESOLVED)
 
 **Location:** Theme struct in `vendor/afterhours/src/plugins/ui/theme.h`
 
-**Issue:** Themes define colors but not fonts. Each screen must manually configure fonts, which cannot be changed when switching themes.
+**Status:** RESOLVED - Font configuration added to Theme.
 
-**Current Workaround:**
+**Solution:** Added `FontConfig` struct and per-language font configuration to `Theme`:
 ```cpp
-// In each screen's setup:
-// TODO: Add font configuration when fonts are selected
-auto theme = afterhours::ui::theme_presets::ocean_navy();
-```
+struct FontConfig {
+    std::string font_name;      // Key in FontManager
+    float size_scale = 1.0f;    // Multiplier for this font's visual size
+};
 
-**Suggested Fix:** Add font family and default sizes to the `Theme` struct:
-```cpp
 struct Theme {
     // ... existing color fields ...
-    std::string font_family;
-    float font_size_sm;
-    float font_size_md;
-    float font_size_lg;
+    
+    // Per-language font configuration
+    std::map<translation::Language, FontConfig> language_fonts;
+    
+    // Base font sizes (in pixels)
+    float font_size_sm = 14.f;
+    float font_size_md = 18.f;
+    float font_size_lg = 28.f;
+    float font_size_xl = 36.f;
+    
+    // Helpers
+    const FontConfig& get_font_config(translation::Language lang) const;
+    float get_scaled_font_size(translation::Language lang, float base_size) const;
+    std::string get_font_name(translation::Language lang) const;
 };
 ```
+
+**Usage:**
+```cpp
+Theme theme;
+theme.language_fonts = {
+    {Language::English,  {"Gaegu-Bold", 1.0f}},
+    {Language::Korean,   {"NotoSansKR", 0.95f}},
+    {Language::Japanese, {"Sazanami", 0.92f}},
+};
+
+// At render time:
+Language lang = TranslationPlugin::get_language();
+std::string font_name = theme.get_font_name(lang);
+float size = theme.get_scaled_font_size(lang, theme.font_size_md);
+```
+
+**TODO:** Investigate using FontID enum instead of strings for type safety.
 
 ---
 
@@ -108,12 +133,12 @@ struct Theme {
 
 ## Priority
 
-| Gap | Severity | User Impact |
-|-----|----------|-------------|
-| Font in Theme | Medium | Theming feels incomplete |
-| Dropdown close | High | Poor UX, confusing behavior |
-| Styling defaults | Low | Internal architecture issue |
-| Focus ring | Medium | Accessibility concern |
-| Corner merging | Low | Minor customization limit |
-| Tabbing + values | Medium | Complex widget support |
+| Gap | Severity | User Impact | Status |
+|-----|----------|-------------|--------|
+| Font in Theme | Medium | Theming feels incomplete | RESOLVED |
+| Dropdown close | High | Poor UX, confusing behavior | Open |
+| Styling defaults | Low | Internal architecture issue | Open |
+| Focus ring | Medium | Accessibility concern | Open |
+| Corner merging | Low | Minor customization limit | Open |
+| Tabbing + values | Medium | Complex widget support | Open |
 

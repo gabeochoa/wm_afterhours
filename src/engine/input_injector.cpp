@@ -89,9 +89,7 @@ void set_key_up(int keycode) {
   }
 }
 
-void inject_key_press(int keycode) {
-  set_key_down(keycode);
-}
+void inject_key_press(int keycode) { set_key_down(keycode); }
 
 bool consume_synthetic_press(int keycode) {
   if (keycode < 0 ||
@@ -169,4 +167,3 @@ void reset_frame() {
 }
 
 } // namespace input_injector
-

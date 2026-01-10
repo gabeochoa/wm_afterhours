@@ -20,14 +20,14 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Main container
-    auto main_container = div(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("buttons_main"));
+    auto main_container =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("buttons_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
@@ -191,13 +191,17 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("group_label"));
 
     // Create individual buttons styled as a group
-    std::array<std::string_view, 4> group_labels = {"One", "Two", "Three", "Four"};
+    std::array<std::string_view, 4> group_labels = {"One", "Two", "Three",
+                                                    "Four"};
     for (size_t i = 0; i < group_labels.size(); i++) {
       auto corners = RoundedCorners();
-      if (i == 0) corners = corners.sharp(TOP_RIGHT).sharp(BOTTOM_RIGHT);
-      else if (i == group_labels.size() - 1) corners = corners.sharp(TOP_LEFT).sharp(BOTTOM_LEFT);
-      else corners = corners.all_sharp();
-      
+      if (i == 0)
+        corners = corners.sharp(TOP_RIGHT).sharp(BOTTOM_RIGHT);
+      else if (i == group_labels.size() - 1)
+        corners = corners.sharp(TOP_LEFT).sharp(BOTTOM_LEFT);
+      else
+        corners = corners.all_sharp();
+
       if (button(context, mk(row3.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(std::string(group_labels[i]))
@@ -289,6 +293,6 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(buttons, "Component Galleries", "Button component gallery with states and sizes",
+REGISTER_EXAMPLE_SCREEN(buttons, "Component Galleries",
+                        "Button component gallery with states and sizes",
                         ButtonsGallery)
-

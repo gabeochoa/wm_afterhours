@@ -17,14 +17,14 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Main container
-    auto main_container = div(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.9f), screen_pct(0.85f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("colors_main"));
+    auto main_container =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.9f), screen_pct(0.85f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("colors_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
@@ -108,11 +108,11 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
                         .with_debug_name("row2"));
 
     afterhours::Color custom_colors[] = {
-        afterhours::Color{255, 100, 100, 255},  // Red
-        afterhours::Color{100, 200, 100, 255},  // Green
-        afterhours::Color{100, 150, 255, 255},  // Blue
-        afterhours::Color{255, 200, 100, 255},  // Yellow
-        afterhours::Color{200, 100, 255, 255},  // Purple
+        afterhours::Color{255, 100, 100, 255}, // Red
+        afterhours::Color{100, 200, 100, 255}, // Green
+        afterhours::Color{100, 150, 255, 255}, // Blue
+        afterhours::Color{255, 200, 100, 255}, // Yellow
+        afterhours::Color{200, 100, 255, 255}, // Purple
     };
     std::string custom_labels[] = {"Red", "Green", "Blue", "Yellow", "Purple"};
 
@@ -130,7 +130,8 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     // Info text
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
-            .with_label("Using Midnight theme. Top row: theme colors. Bottom row: custom colors.")
+            .with_label("Using Midnight theme. Top row: theme colors. Bottom "
+                        "row: custom colors.")
             .with_size(ComponentSize{screen_pct(0.8f), pixels(40)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
@@ -144,5 +145,5 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(colors, "System Demos", "Color system examples", ExampleColors)
-
+REGISTER_EXAMPLE_SCREEN(colors, "System Demos", "Color system examples",
+                        ExampleColors)

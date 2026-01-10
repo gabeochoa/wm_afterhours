@@ -22,9 +22,9 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
   };
 
   std::vector<Department> departments = {
-    {"Engineering", 45, 92},
-    {"Sales", 32, 78},
-    {"Marketing", 18, 85},
+      {"Engineering", 45, 92},
+      {"Sales", 32, 78},
+      {"Marketing", 18, 85},
   };
 
   struct Project {
@@ -33,13 +33,16 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
   };
 
   std::vector<Project> projects = {
-    {"Product Launch 2.0", 75},
-    {"Market Expansion", 45},
+      {"Product Launch 2.0", 75},
+      {"Market Expansion", 45},
   };
 
   std::string format_money(int64_t amt) {
-    if (amt >= 1000000) return "$" + std::to_string(amt / 1000000) + "." + std::to_string((amt % 1000000) / 100000) + "M";
-    if (amt >= 1000) return "$" + std::to_string(amt / 1000) + "K";
+    if (amt >= 1000000)
+      return "$" + std::to_string(amt / 1000000) + "." +
+             std::to_string((amt % 1000000) / 100000) + "M";
+    if (amt >= 1000)
+      return "$" + std::to_string(amt / 1000) + "K";
     return "$" + std::to_string(amt);
   }
 
@@ -49,22 +52,24 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Full screen
-    auto main = div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::lg)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("main"));
+    auto main =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::lg)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("main"));
 
     // ========== HEADER - Company & Metrics ==========
-    auto header = div(context, mk(main.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.92f), pixels(100)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Row)
-            .with_debug_name("header"));
+    auto header =
+        div(context, mk(main.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.92f), pixels(100)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Row)
+                .with_debug_name("header"));
 
     div(context, mk(header.ent(), 0),
         ComponentConfig{}
@@ -77,21 +82,21 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
 
     // Metrics row
     auto metrics = div(context, mk(header.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(600), pixels(70)})
-            .with_custom_color(theme.surface)
-            .with_flex_direction(FlexDirection::Row)
-            .with_debug_name("metrics"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{pixels(600), pixels(70)})
+                           .with_custom_color(theme.surface)
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_debug_name("metrics"));
 
     // Cash
     auto cash_card = div(context, mk(metrics.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(140), pixels(55)})
-            .with_color_usage(Theme::Usage::Secondary)
-            .with_flex_direction(FlexDirection::Column)
-            .with_padding(Spacing::xs)
-            .with_margin(Spacing::xs)
-            .with_debug_name("cash_card"));
+                         ComponentConfig{}
+                             .with_size(ComponentSize{pixels(140), pixels(55)})
+                             .with_color_usage(Theme::Usage::Secondary)
+                             .with_flex_direction(FlexDirection::Column)
+                             .with_padding(Spacing::xs)
+                             .with_margin(Spacing::xs)
+                             .with_debug_name("cash_card"));
     div(context, mk(cash_card.ent(), 0),
         ComponentConfig{}
             .with_label("CASH")
@@ -109,13 +114,13 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
 
     // Revenue
     auto rev_card = div(context, mk(metrics.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(150), pixels(55)})
-            .with_color_usage(Theme::Usage::Accent)
-            .with_flex_direction(FlexDirection::Column)
-            .with_padding(Spacing::xs)
-            .with_margin(Spacing::xs)
-            .with_debug_name("rev_card"));
+                        ComponentConfig{}
+                            .with_size(ComponentSize{pixels(150), pixels(55)})
+                            .with_color_usage(Theme::Usage::Accent)
+                            .with_flex_direction(FlexDirection::Column)
+                            .with_padding(Spacing::xs)
+                            .with_margin(Spacing::xs)
+                            .with_debug_name("rev_card"));
     div(context, mk(rev_card.ent(), 0),
         ComponentConfig{}
             .with_label("REVENUE")
@@ -133,13 +138,13 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
 
     // Employees
     auto emp_card = div(context, mk(metrics.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(120), pixels(55)})
-            .with_color_usage(Theme::Usage::Primary)
-            .with_flex_direction(FlexDirection::Column)
-            .with_padding(Spacing::xs)
-            .with_margin(Spacing::xs)
-            .with_debug_name("emp_card"));
+                        ComponentConfig{}
+                            .with_size(ComponentSize{pixels(120), pixels(55)})
+                            .with_color_usage(Theme::Usage::Primary)
+                            .with_flex_direction(FlexDirection::Column)
+                            .with_padding(Spacing::xs)
+                            .with_margin(Spacing::xs)
+                            .with_debug_name("emp_card"));
     div(context, mk(emp_card.ent(), 0),
         ComponentConfig{}
             .with_label("STAFF")
@@ -156,23 +161,25 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("emp_value"));
 
     // ========== MAIN CONTENT ==========
-    auto content = div(context, mk(main.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.92f), pixels(340)})
-            .with_custom_color(theme.background)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("content"));
+    auto content =
+        div(context, mk(main.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.92f), pixels(340)})
+                .with_custom_color(theme.background)
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("content"));
 
     // LEFT - Departments
-    auto dept_panel = div(context, mk(content.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(420), pixels(320)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Spacing::sm)
-            .with_debug_name("dept_panel"));
+    auto dept_panel =
+        div(context, mk(content.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(420), pixels(320)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_debug_name("dept_panel"));
 
     div(context, mk(dept_panel.ent(), 0),
         ComponentConfig{}
@@ -184,15 +191,16 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("dept_header"));
 
     for (size_t i = 0; i < departments.size(); i++) {
-      auto& d = departments[i];
+      auto &d = departments[i];
       auto row = div(context, mk(dept_panel.ent(), 1 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(360), pixels(65)})
-              .with_custom_color(afterhours::colors::darken(theme.surface, 0.85f))
-              .with_padding(Spacing::sm)
-              .with_flex_direction(FlexDirection::Row)
-              .with_margin(Spacing::sm)
-              .with_debug_name("dept_" + std::to_string(i)));
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(360), pixels(65)})
+                         .with_custom_color(
+                             afterhours::colors::darken(theme.surface, 0.85f))
+                         .with_padding(Spacing::sm)
+                         .with_flex_direction(FlexDirection::Row)
+                         .with_margin(Spacing::sm)
+                         .with_debug_name("dept_" + std::to_string(i)));
 
       div(context, mk(row.ent(), 0),
           ComponentConfig{}
@@ -214,20 +222,22 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(std::to_string(d.efficiency) + "%")
               .with_size(ComponentSize{pixels(70), pixels(45)})
-              .with_color_usage(d.efficiency >= 85 ? Theme::Usage::Secondary : Theme::Usage::Accent)
+              .with_color_usage(d.efficiency >= 85 ? Theme::Usage::Secondary
+                                                   : Theme::Usage::Accent)
               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
               .with_debug_name("dept_eff"));
     }
 
     // RIGHT - Projects
-    auto proj_panel = div(context, mk(content.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(380), pixels(320)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Spacing::sm)
-            .with_debug_name("proj_panel"));
+    auto proj_panel =
+        div(context, mk(content.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(380), pixels(320)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_debug_name("proj_panel"));
 
     div(context, mk(proj_panel.ent(), 0),
         ComponentConfig{}
@@ -239,15 +249,16 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("proj_header"));
 
     for (size_t i = 0; i < projects.size(); i++) {
-      auto& p = projects[i];
+      auto &p = projects[i];
       auto card = div(context, mk(proj_panel.ent(), 1 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(320), pixels(95)})
-              .with_custom_color(afterhours::colors::darken(theme.surface, 0.85f))
-              .with_padding(Spacing::md)
-              .with_flex_direction(FlexDirection::Column)
-              .with_margin(Spacing::sm)
-              .with_debug_name("proj_" + std::to_string(i)));
+                      ComponentConfig{}
+                          .with_size(ComponentSize{pixels(320), pixels(95)})
+                          .with_custom_color(
+                              afterhours::colors::darken(theme.surface, 0.85f))
+                          .with_padding(Spacing::md)
+                          .with_flex_direction(FlexDirection::Column)
+                          .with_margin(Spacing::sm)
+                          .with_debug_name("proj_" + std::to_string(i)));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -268,7 +279,8 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
       div(context, mk(card.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(p.progress * 2.8f), pixels(22)})
-              .with_color_usage(p.progress >= 70 ? Theme::Usage::Secondary : Theme::Usage::Accent)
+              .with_color_usage(p.progress >= 70 ? Theme::Usage::Secondary
+                                                 : Theme::Usage::Accent)
               .with_margin(Margin{.top = pixels(-22)})
               .with_debug_name("prog_fill"));
 
@@ -282,14 +294,15 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
     }
 
     // ========== FOOTER ==========
-    auto footer = div(context, mk(main.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.7f), pixels(70)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("footer"));
+    auto footer =
+        div(context, mk(main.ent(), 2),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.7f), pixels(70)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("footer"));
 
     button(context, mk(footer.ent(), 0),
            ComponentConfig{}
@@ -329,4 +342,5 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(empire_tycoon, "Game Mockups", "Business tycoon dashboard", EmpireTycoonScreen)
+REGISTER_EXAMPLE_SCREEN(empire_tycoon, "Game Mockups",
+                        "Business tycoon dashboard", EmpireTycoonScreen)

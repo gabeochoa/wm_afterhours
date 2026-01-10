@@ -58,4 +58,3 @@ struct ExampleSimpleButton : afterhours::System<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(simple_button, "Tools",
                         "Simple button example with click counter",
                         ExampleSimpleButton)
-

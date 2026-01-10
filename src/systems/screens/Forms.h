@@ -30,8 +30,8 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
   std::vector<std::string> resolutions = {"640x480", "1280x720", "1920x1080",
                                           "2560x1440", "3840x2160"};
   std::vector<std::string> quality_options = {"Low", "Medium", "High", "Ultra"};
-  std::vector<std::string> languages = {"English", "Spanish", "French",
-                                        "German", "Japanese", "Korean"};
+  std::vector<std::string> languages = {"English", "Spanish",  "French",
+                                        "German",  "Japanese", "Korean"};
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -41,14 +41,14 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Main container
-    auto main_container = div(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("forms_main"));
+    auto main_container =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("forms_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
@@ -65,27 +65,28 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // Content area - two columns
-    auto content = div(context, mk(main_container.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{screen_pct(0.9f), pixels(450)})
-                           .with_custom_color(theme.surface)
-                           .with_padding(Spacing::md)
-                           .with_flex_direction(FlexDirection::Row)
-                           .with_debug_name("content"));
+    auto content =
+        div(context, mk(main_container.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.9f), pixels(450)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Row)
+                .with_debug_name("content"));
 
     // Left column - Sliders
-    auto left_col =
-        div(context, mk(content.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.42f), pixels(400)})
-                .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.top = pixels(0),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = DefaultSpacing::small()})
-                .with_debug_name("left_column"));
+    auto left_col = div(
+        context, mk(content.ent(), 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.42f), pixels(400)})
+            .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
+            .with_padding(Spacing::sm)
+            .with_flex_direction(FlexDirection::Column)
+            .with_margin(Margin{.top = pixels(0),
+                                .bottom = pixels(0),
+                                .left = pixels(0),
+                                .right = DefaultSpacing::small()})
+            .with_debug_name("left_column"));
 
     // Sliders section header
     div(context, mk(left_col.ent(), 0),
@@ -168,14 +169,14 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_debug_name("quality_dropdown"));
 
     // Right column - Checkboxes
-    auto right_col =
-        div(context, mk(content.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.42f), pixels(400)})
-                .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("right_column"));
+    auto right_col = div(
+        context, mk(content.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.42f), pixels(400)})
+            .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
+            .with_padding(Spacing::sm)
+            .with_flex_direction(FlexDirection::Column)
+            .with_debug_name("right_column"));
 
     // Checkboxes section header
     div(context, mk(right_col.ent(), 0),
@@ -282,6 +283,6 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(forms, "Component Galleries", "Form components: sliders, checkboxes, dropdowns",
+REGISTER_EXAMPLE_SCREEN(forms, "Component Galleries",
+                        "Form components: sliders, checkboxes, dropdowns",
                         FormsGallery)
-

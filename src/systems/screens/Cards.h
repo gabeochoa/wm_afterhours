@@ -18,14 +18,14 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Main container
-    auto main_container = div(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("cards_main"));
+    auto main_container =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("cards_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
@@ -71,7 +71,8 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
 
     div(context, mk(card1.ent(), 1),
         ComponentConfig{}
-            .with_label("A simple card with surface color and default rounded corners.")
+            .with_label(
+                "A simple card with surface color and default rounded corners.")
             .with_size(ComponentSize{pixels(160), pixels(80)})
             .with_color_usage(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 12.0f)
@@ -143,10 +144,9 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
                          .with_padding(Spacing::md)
                          .with_flex_direction(FlexDirection::Column)
                          .with_margin(Spacing::sm)
-                         .with_rounded_corners(RoundedCorners()
-                                                  .all_sharp()
-                                                  .round(TOP_LEFT)
-                                                  .round(BOTTOM_RIGHT))
+                         .with_rounded_corners(
+                             RoundedCorners().all_sharp().round(TOP_LEFT).round(
+                                 BOTTOM_RIGHT))
                          .with_debug_name("card4_custom_radius"));
 
     div(context, mk(card4.ent(), 0),
@@ -245,15 +245,16 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("inner3"));
 
     // Info panel with different opacity
-    auto info_panel = div(context, mk(row2.ent(), 1),
-                          ComponentConfig{}
-                              .with_size(ComponentSize{pixels(300), pixels(200)})
-                              .with_custom_color(afterhours::colors::opacity_pct(
-                                  theme.primary, 0.3f))
-                              .with_padding(Spacing::md)
-                              .with_flex_direction(FlexDirection::Column)
-                              .with_margin(Spacing::sm)
-                              .with_debug_name("info_panel"));
+    auto info_panel =
+        div(context, mk(row2.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(300), pixels(200)})
+                .with_custom_color(
+                    afterhours::colors::opacity_pct(theme.primary, 0.3f))
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_debug_name("info_panel"));
 
     div(context, mk(info_panel.ent(), 0),
         ComponentConfig{}
@@ -266,9 +267,9 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
-            .with_label(
-                "This panel uses opacity to create a translucent overlay effect. "
-                "Useful for HUDs and popup dialogs.")
+            .with_label("This panel uses opacity to create a translucent "
+                        "overlay effect. "
+                        "Useful for HUDs and popup dialogs.")
             .with_size(ComponentSize{pixels(260), pixels(120)})
             .with_color_usage(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 12.0f)
@@ -350,6 +351,6 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(cards, "Component Galleries", "Card layouts, nesting, and corner styles",
+REGISTER_EXAMPLE_SCREEN(cards, "Component Galleries",
+                        "Card layouts, nesting, and corner styles",
                         CardsGallery)
-

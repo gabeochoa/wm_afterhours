@@ -40,11 +40,12 @@ struct RenderScreenHUD : afterhours::System<> {
     float padding = 10.0f;
     float line_height = font_size + 4.0f;
     float desc_line_height = desc_font_size + 2.0f;
-    
+
     // If we have a description, the HUD is two lines tall
     bool has_description = !ScreenHUDState::current_screen_description.empty();
-    float total_height = has_description ? (line_height + desc_line_height) : line_height;
-    
+    float total_height =
+        has_description ? (line_height + desc_line_height) : line_height;
+
     float y_pos = screen_height - total_height - padding;
 
     // Draw background rectangle for better readability
@@ -54,19 +55,19 @@ struct RenderScreenHUD : afterhours::System<> {
         raylib::MeasureTextEx(uiFont, nav_text.c_str(), font_size, 1.0f);
 
     float top_line_width = text_size.x + 20.0f + nav_size.x;
-    
+
     // Measure description if present
     float desc_width = 0.0f;
     if (has_description) {
       raylib::Vector2 desc_size = raylib::MeasureTextEx(
-          uiFont, ScreenHUDState::current_screen_description.c_str(), 
+          uiFont, ScreenHUDState::current_screen_description.c_str(),
           desc_font_size, 1.0f);
       desc_width = desc_size.x;
     }
-    
+
     float bg_width = std::max(top_line_width, desc_width) + 10.0f;
-    raylib::Rectangle bg_rect = {padding - 5.0f, y_pos - 3.0f,
-                                 bg_width, total_height + 6.0f};
+    raylib::Rectangle bg_rect = {padding - 5.0f, y_pos - 3.0f, bg_width,
+                                 total_height + 6.0f};
 
     raylib::DrawRectangleRec(bg_rect, raylib::Color{0, 0, 0, 180});
 
@@ -83,7 +84,8 @@ struct RenderScreenHUD : afterhours::System<> {
     // Draw description on second line (muted color)
     if (has_description) {
       float desc_y = y_pos + line_height;
-      raylib::DrawTextEx(uiFont, ScreenHUDState::current_screen_description.c_str(),
+      raylib::DrawTextEx(uiFont,
+                         ScreenHUDState::current_screen_description.c_str(),
                          raylib::Vector2{padding, desc_y}, desc_font_size, 1.0f,
                          raylib::Color{160, 160, 160, 255});
     }

@@ -50,27 +50,24 @@ struct ExampleScreenRegistry {
 
   void list_screens() const {
     // Group screens by category
-    std::map<std::string, std::vector<const ExampleScreen*>> by_category;
+    std::map<std::string, std::vector<const ExampleScreen *>> by_category;
     for (const auto &[name, screen] : screens) {
       by_category[screen.category].push_back(&screen);
     }
 
     // Define category order
     std::vector<std::string> category_order = {
-      "Game Mockups",
-      "Component Galleries",
-      "System Demos",
-      "Tools"
-    };
+        "Game Mockups", "Component Galleries", "System Demos", "Tools"};
 
     std::cout << "Available example screens:\n\n";
-    
-    for (const auto& category : category_order) {
+
+    for (const auto &category : category_order) {
       auto it = by_category.find(category);
-      if (it == by_category.end()) continue;
-      
+      if (it == by_category.end())
+        continue;
+
       std::cout << "  " << category << ":\n";
-      for (const auto* screen : it->second) {
+      for (const auto *screen : it->second) {
         std::cout << "    --screen=" << screen->name;
         // Pad to align descriptions
         int padding = 20 - static_cast<int>(screen->name.length());
@@ -85,14 +82,17 @@ struct ExampleScreenRegistry {
     }
 
     // Print any screens in unknown categories
-    for (const auto& [category, screen_list] : by_category) {
+    for (const auto &[category, screen_list] : by_category) {
       bool found = false;
-      for (const auto& c : category_order) {
-        if (c == category) { found = true; break; }
+      for (const auto &c : category_order) {
+        if (c == category) {
+          found = true;
+          break;
+        }
       }
       if (!found) {
         std::cout << "  " << category << ":\n";
-        for (const auto* screen : screen_list) {
+        for (const auto *screen : screen_list) {
           std::cout << "    --screen=" << screen->name;
           int padding = 20 - static_cast<int>(screen->name.length());
           if (padding > 0) {

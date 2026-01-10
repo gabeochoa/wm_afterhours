@@ -95,15 +95,15 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
                 .with_debug_name("col_demo_container"));
 
     // Left column with stacked items
-    auto left_col =
-        div(context, mk(col_container.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.35f), pixels(190)})
-                .with_custom_color(afterhours::colors::darken(theme.surface, 0.95f))
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::xs)
-                .with_debug_name("stacked_column"));
+    auto left_col = div(
+        context, mk(col_container.ent(), 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.35f), pixels(190)})
+            .with_custom_color(afterhours::colors::darken(theme.surface, 0.95f))
+            .with_padding(Spacing::sm)
+            .with_flex_direction(FlexDirection::Column)
+            .with_margin(Spacing::xs)
+            .with_debug_name("stacked_column"));
 
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
@@ -163,6 +163,5 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(layout, "System Demos", "Layout system example with containers",
-                        ExampleLayout)
-
+REGISTER_EXAMPLE_SCREEN(layout, "System Demos",
+                        "Layout system example with containers", ExampleLayout)

@@ -27,7 +27,8 @@ TEST(tabbing) {
   TestApp::expect_focus("Button 3");
 
   // Press Enter to click Button 3
-  // Need to wait several frames for: input processing, click detection, label update
+  // Need to wait several frames for: input processing, click detection, label
+  // update
   TestApp::simulate_enter();
   co_await TestApp::wait_for_frames(5);
   TestApp::expect_ui_exists("Button 3 (1)");

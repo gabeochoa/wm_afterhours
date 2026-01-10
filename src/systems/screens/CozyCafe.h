@@ -18,11 +18,8 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
   int customers_today = 23;
   int reputation = 4;
 
-  std::vector<std::string> daily_specials = {
-    "Lavender Latte",
-    "Honey Toast", 
-    "Matcha Cake"
-  };
+  std::vector<std::string> daily_specials = {"Lavender Latte", "Honey Toast",
+                                             "Matcha Cake"};
 
   struct Customer {
     std::string name;
@@ -31,8 +28,8 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
   };
 
   std::vector<Customer> waiting_customers = {
-    {"Emma", "Cappuccino", 2},
-    {"Oliver", "Croissant", 5},
+      {"Emma", "Cappuccino", 2},
+      {"Oliver", "Croissant", 5},
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -41,22 +38,24 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
     context.theme = theme;
 
     // Full screen warm background
-    auto main = div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_color(theme.background)
-            .with_padding(Spacing::lg)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("main"));
+    auto main =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                .with_custom_color(theme.background)
+                .with_padding(Spacing::lg)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("main"));
 
     // ========== HEADER - Big beautiful title ==========
-    auto header = div(context, mk(main.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(100)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Row)
-            .with_debug_name("header"));
+    auto header =
+        div(context, mk(main.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.9f), pixels(100)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Row)
+                .with_debug_name("header"));
 
     // Big cafe name
     div(context, mk(header.ent(), 0),
@@ -70,11 +69,11 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
 
     // Stats badges
     auto stats = div(context, mk(header.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(450), pixels(70)})
-            .with_custom_color(theme.surface)
-            .with_flex_direction(FlexDirection::Row)
-            .with_debug_name("stats"));
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(450), pixels(70)})
+                         .with_custom_color(theme.surface)
+                         .with_flex_direction(FlexDirection::Row)
+                         .with_debug_name("stats"));
 
     div(context, mk(stats.ent(), 0),
         ComponentConfig{}
@@ -86,7 +85,8 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("gold"));
 
     std::string stars = "";
-    for (int i = 0; i < reputation; i++) stars += "*";
+    for (int i = 0; i < reputation; i++)
+      stars += "*";
     div(context, mk(stats.ent(), 1),
         ComponentConfig{}
             .with_label(stars)
@@ -106,23 +106,25 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
             .with_debug_name("customers"));
 
     // ========== MAIN CONTENT - Two columns ==========
-    auto content = div(context, mk(main.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(340)})
-            .with_custom_color(theme.background)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("content"));
+    auto content =
+        div(context, mk(main.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.9f), pixels(340)})
+                .with_custom_color(theme.background)
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("content"));
 
     // LEFT - Today's Menu
-    auto menu_panel = div(context, mk(content.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(420), pixels(320)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Spacing::sm)
-            .with_debug_name("menu_panel"));
+    auto menu_panel =
+        div(context, mk(content.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(420), pixels(320)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_debug_name("menu_panel"));
 
     div(context, mk(menu_panel.ent(), 0),
         ComponentConfig{}
@@ -140,7 +142,8 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(daily_specials[i])
                      .with_size(ComponentSize{pixels(360), pixels(55)})
-                     .with_color_usage(selected ? Theme::Usage::Accent : Theme::Usage::Secondary)
+                     .with_color_usage(selected ? Theme::Usage::Accent
+                                                : Theme::Usage::Secondary)
                      .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                      .with_margin(Spacing::sm)
                      .with_debug_name("special_" + std::to_string(i)))) {
@@ -159,14 +162,15 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                .with_debug_name("promote"));
 
     // RIGHT - Customers waiting
-    auto customer_panel = div(context, mk(content.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(380), pixels(320)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Spacing::sm)
-            .with_debug_name("customer_panel"));
+    auto customer_panel =
+        div(context, mk(content.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(380), pixels(320)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Spacing::sm)
+                .with_debug_name("customer_panel"));
 
     div(context, mk(customer_panel.ent(), 0),
         ComponentConfig{}
@@ -179,15 +183,16 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
 
     // Customer list
     for (size_t i = 0; i < waiting_customers.size(); i++) {
-      auto& c = waiting_customers[i];
+      auto &c = waiting_customers[i];
       auto row = div(context, mk(customer_panel.ent(), 1 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(320), pixels(60)})
-              .with_custom_color(afterhours::colors::darken(theme.surface, 0.95f))
-              .with_padding(Spacing::sm)
-              .with_flex_direction(FlexDirection::Row)
-              .with_margin(Spacing::sm)
-              .with_debug_name("customer_" + std::to_string(i)));
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(320), pixels(60)})
+                         .with_custom_color(
+                             afterhours::colors::darken(theme.surface, 0.95f))
+                         .with_padding(Spacing::sm)
+                         .with_flex_direction(FlexDirection::Row)
+                         .with_margin(Spacing::sm)
+                         .with_debug_name("customer_" + std::to_string(i)));
 
       div(context, mk(row.ent(), 0),
           ComponentConfig{}
@@ -225,14 +230,15 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                .with_debug_name("serve"));
 
     // ========== FOOTER - Settings ==========
-    auto footer = div(context, mk(main.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.7f), pixels(70)})
-            .with_custom_color(theme.surface)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Row)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("footer"));
+    auto footer =
+        div(context, mk(main.ent(), 2),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.7f), pixels(70)})
+                .with_custom_color(theme.surface)
+                .with_padding(Spacing::md)
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("footer"));
 
     // Volume slider
     slider(context, mk(footer.ent(), 0), music_volume,
@@ -267,4 +273,5 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(cozy_cafe, "Game Mockups", "Cozy cafe simulation game menu", CozyCafeScreen)
+REGISTER_EXAMPLE_SCREEN(cozy_cafe, "Game Mockups",
+                        "Cozy cafe simulation game menu", CozyCafeScreen)
