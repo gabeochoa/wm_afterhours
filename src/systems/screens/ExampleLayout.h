@@ -163,6 +163,6 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(layout, "Layout system example with containers",
+REGISTER_EXAMPLE_SCREEN(layout, "System Demos", "Layout system example with containers",
                         ExampleLayout)
 

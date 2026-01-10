@@ -279,5 +279,5 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(themes, "Real-time theme switching demo", ThemesScreen)
+REGISTER_EXAMPLE_SCREEN(themes, "Tools", "Real-time theme switching demo", ThemesScreen)
 

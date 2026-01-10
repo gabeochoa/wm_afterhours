@@ -350,6 +350,6 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(cards, "Card layouts, nesting, and corner styles",
+REGISTER_EXAMPLE_SCREEN(cards, "Component Galleries", "Card layouts, nesting, and corner styles",
                         CardsGallery)
 

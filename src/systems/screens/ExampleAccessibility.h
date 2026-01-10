@@ -173,7 +173,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
     }
 };
 
-REGISTER_EXAMPLE_SCREEN(accessibility,
+REGISTER_EXAMPLE_SCREEN(accessibility, "System Demos",
                         "Demonstrates Garnish accessibility features",
                         ExampleAccessibility)
 

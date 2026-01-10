@@ -9,6 +9,7 @@
 
 struct ExampleScreen {
   std::string name;
+  std::string category;
   std::string description;
   std::function<std::unique_ptr<afterhours::SystemBase>()> create_system;
 };
@@ -20,9 +21,10 @@ struct ExampleScreenRegistry {
   }
 
   void register_screen(
-      const std::string &flag_name, const std::string &description,
+      const std::string &flag_name, const std::string &category,
+      const std::string &description,
       std::function<std::unique_ptr<afterhours::SystemBase>()> create_func) {
-    screens[flag_name] = {flag_name, description, create_func};
+    screens[flag_name] = {flag_name, category, description, create_func};
   }
 
   bool has_screen(const std::string &flag_name) const {
@@ -38,10 +40,70 @@ struct ExampleScreenRegistry {
     return it->second.create_system();
   }
 
+  std::string get_screen_description(const std::string &flag_name) const {
+    auto it = screens.find(flag_name);
+    if (it == screens.end()) {
+      return "";
+    }
+    return it->second.description;
+  }
+
   void list_screens() const {
-    std::cout << "Available example screens:\n";
+    // Group screens by category
+    std::map<std::string, std::vector<const ExampleScreen*>> by_category;
     for (const auto &[name, screen] : screens) {
-      std::cout << "  --screen=" << name << "    " << screen.description << "\n";
+      by_category[screen.category].push_back(&screen);
+    }
+
+    // Define category order
+    std::vector<std::string> category_order = {
+      "Game Mockups",
+      "Component Galleries",
+      "System Demos",
+      "Tools"
+    };
+
+    std::cout << "Available example screens:\n\n";
+    
+    for (const auto& category : category_order) {
+      auto it = by_category.find(category);
+      if (it == by_category.end()) continue;
+      
+      std::cout << "  " << category << ":\n";
+      for (const auto* screen : it->second) {
+        std::cout << "    --screen=" << screen->name;
+        // Pad to align descriptions
+        int padding = 20 - static_cast<int>(screen->name.length());
+        if (padding > 0) {
+          std::cout << std::string(padding, ' ');
+        } else {
+          std::cout << "  ";
+        }
+        std::cout << screen->description << "\n";
+      }
+      std::cout << "\n";
+    }
+
+    // Print any screens in unknown categories
+    for (const auto& [category, screen_list] : by_category) {
+      bool found = false;
+      for (const auto& c : category_order) {
+        if (c == category) { found = true; break; }
+      }
+      if (!found) {
+        std::cout << "  " << category << ":\n";
+        for (const auto* screen : screen_list) {
+          std::cout << "    --screen=" << screen->name;
+          int padding = 20 - static_cast<int>(screen->name.length());
+          if (padding > 0) {
+            std::cout << std::string(padding, ' ');
+          } else {
+            std::cout << "  ";
+          }
+          std::cout << screen->description << "\n";
+        }
+        std::cout << "\n";
+      }
     }
   }
 
@@ -57,11 +119,11 @@ private:
   std::map<std::string, ExampleScreen> screens;
 };
 
-#define REGISTER_EXAMPLE_SCREEN(flag_name, description, system_type)           \
+#define REGISTER_EXAMPLE_SCREEN(flag_name, category, description, system_type) \
   static struct ExampleScreenRegistrar_##flag_name {                           \
     ExampleScreenRegistrar_##flag_name() {                                     \
       ExampleScreenRegistry::get().register_screen(                            \
-          #flag_name, description,                                             \
+          #flag_name, category, description,                                   \
           []() -> std::unique_ptr<afterhours::SystemBase> {                    \
             auto ptr = std::make_unique<system_type>();                        \
             return std::unique_ptr<afterhours::SystemBase>(ptr.release());     \

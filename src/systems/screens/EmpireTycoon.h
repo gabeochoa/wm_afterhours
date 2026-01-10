@@ -329,4 +329,4 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(empire_tycoon, "Business tycoon dashboard", EmpireTycoonScreen)
+REGISTER_EXAMPLE_SCREEN(empire_tycoon, "Game Mockups", "Business tycoon dashboard", EmpireTycoonScreen)

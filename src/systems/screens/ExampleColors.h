@@ -144,5 +144,5 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(colors, "Color system examples", ExampleColors)
+REGISTER_EXAMPLE_SCREEN(colors, "System Demos", "Color system examples", ExampleColors)
 

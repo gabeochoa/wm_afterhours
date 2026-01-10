@@ -289,6 +289,6 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(buttons, "Button component gallery with states and sizes",
+REGISTER_EXAMPLE_SCREEN(buttons, "Component Galleries", "Button component gallery with states and sizes",
                         ButtonsGallery)
 

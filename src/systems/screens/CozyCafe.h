@@ -267,4 +267,4 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(cozy_cafe, "Cozy cafe simulation game menu", CozyCafeScreen)
+REGISTER_EXAMPLE_SCREEN(cozy_cafe, "Game Mockups", "Cozy cafe simulation game menu", CozyCafeScreen)

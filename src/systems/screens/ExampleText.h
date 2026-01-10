@@ -62,6 +62,6 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(text, "Text rendering examples with different sizes",
+REGISTER_EXAMPLE_SCREEN(text, "System Demos", "Text rendering examples with different sizes",
                         ExampleText)
 

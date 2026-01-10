@@ -282,6 +282,6 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(forms, "Form components: sliders, checkboxes, dropdowns",
+REGISTER_EXAMPLE_SCREEN(forms, "Component Galleries", "Form components: sliders, checkboxes, dropdowns",
                         FormsGallery)
 

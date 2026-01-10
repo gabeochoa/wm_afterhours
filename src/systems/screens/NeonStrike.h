@@ -283,4 +283,4 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(neon_strike, "Tactical shooter loadout screen", NeonStrikeScreen)
+REGISTER_EXAMPLE_SCREEN(neon_strike, "Game Mockups", "Tactical shooter loadout screen", NeonStrikeScreen)
