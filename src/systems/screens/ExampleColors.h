@@ -21,7 +21,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.9f), screen_pct(0.85f)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("colors_main"));
@@ -31,7 +31,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Theme Color Swatches")
             .with_size(ComponentSize{pixels(1000), pixels(50)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_margin(Margin{.top = pixels(0),
@@ -44,7 +44,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{pixels(1000), pixels(120)})
-                        .with_custom_color(theme.surface)
+                        .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row1"));
@@ -53,7 +53,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Primary")
             .with_size(ComponentSize{pixels(110), pixels(90)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_primary"));
@@ -62,7 +62,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Secondary")
             .with_size(ComponentSize{pixels(110), pixels(90)})
-            .with_color_usage(Theme::Usage::Secondary)
+            .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_secondary"));
@@ -71,7 +71,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Accent")
             .with_size(ComponentSize{pixels(110), pixels(90)})
-            .with_color_usage(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Accent)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_accent"));
@@ -80,7 +80,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Surface")
             .with_size(ComponentSize{pixels(110), pixels(90)})
-            .with_color_usage(Theme::Usage::Surface)
+            .with_background(Theme::Usage::Surface)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_surface"));
@@ -89,7 +89,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Error")
             .with_size(ComponentSize{pixels(110), pixels(90)})
-            .with_color_usage(Theme::Usage::Error)
+            .with_background(Theme::Usage::Error)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_error"));
@@ -98,7 +98,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{pixels(1000), pixels(120)})
-                        .with_custom_color(theme.surface)
+                        .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
@@ -121,7 +121,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(custom_labels[i])
               .with_size(ComponentSize{pixels(110), pixels(90)})
-              .with_custom_color(custom_colors[i])
+              .with_custom_background(custom_colors[i])
               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
               .with_margin(Spacing::xs)
               .with_debug_name("custom_" + std::to_string(i)));
@@ -133,7 +133,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_label("Using Midnight theme. Top row: theme colors. Bottom "
                         "row: custom colors.")
             .with_size(ComponentSize{pixels(1000), pixels(40)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Margin{.top = DefaultSpacing::small(),

@@ -45,7 +45,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("forms_main"));
@@ -55,7 +55,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Form Components Gallery")
             .with_size(ComponentSize{pixels(1100), pixels(50)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
             .with_margin(Margin{.top = pixels(0),
@@ -69,7 +69,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(450)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_debug_name("content"));
@@ -79,7 +79,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         context, mk(content.ent(), 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(520), pixels(400)})
-            .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
+            .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
             .with_margin(Margin{.top = pixels(0),
@@ -93,7 +93,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Sliders")
             .with_size(ComponentSize{pixels(350), pixels(32)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
@@ -105,7 +105,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Volume")
                .with_size(ComponentSize{pixels(350), pixels(40)})
-               .with_color_usage(Theme::Usage::Primary)
+               .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("volume_slider"),
@@ -116,7 +116,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Brightness")
                .with_size(ComponentSize{pixels(350), pixels(40)})
-               .with_color_usage(Theme::Usage::Accent)
+               .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("brightness_slider"),
@@ -127,7 +127,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Difficulty")
                .with_size(ComponentSize{pixels(350), pixels(40)})
-               .with_color_usage(Theme::Usage::Secondary)
+               .with_background(Theme::Usage::Secondary)
                .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("difficulty_slider"),
@@ -138,7 +138,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Dropdowns")
             .with_size(ComponentSize{pixels(350), pixels(32)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
@@ -153,7 +153,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Resolution")
                  .with_size(ComponentSize{pixels(350), pixels(40)})
-                 .with_color_usage(Theme::Usage::Primary)
+                 .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("resolution_dropdown"));
@@ -163,7 +163,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Quality")
                  .with_size(ComponentSize{pixels(350), pixels(40)})
-                 .with_color_usage(Theme::Usage::Accent)
+                 .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("quality_dropdown"));
@@ -173,7 +173,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         context, mk(content.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(520), pixels(400)})
-            .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
+            .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("right_column"));
@@ -183,7 +183,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Checkboxes")
             .with_size(ComponentSize{pixels(250), pixels(32)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
@@ -195,7 +195,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Enable Music")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
-                 .with_color_usage(Theme::Usage::Primary)
+                 .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("music_checkbox"));
@@ -204,7 +204,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Enable Sound Effects")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
-                 .with_color_usage(Theme::Usage::Primary)
+                 .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("sfx_checkbox"));
@@ -214,7 +214,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Fullscreen")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
-                 .with_color_usage(Theme::Usage::Accent)
+                 .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("fullscreen_checkbox"));
@@ -223,7 +223,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("V-Sync")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
-                 .with_color_usage(Theme::Usage::Accent)
+                 .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("vsync_checkbox"));
@@ -232,7 +232,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Show FPS Counter")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
-                 .with_color_usage(Theme::Usage::Secondary)
+                 .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("fps_checkbox"));
@@ -243,7 +243,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Disabled Option")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
-                 .with_color_usage(Theme::Usage::Primary)
+                 .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
@@ -254,7 +254,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Language")
                  .with_size(ComponentSize{pixels(250), pixels(40)})
-                 .with_color_usage(Theme::Usage::Secondary)
+                 .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Margin{.top = DefaultSpacing::medium(),
                                      .bottom = pixels(0),
@@ -272,7 +272,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status)
             .with_size(ComponentSize{pixels(1100), pixels(40)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Margin{.top = DefaultSpacing::small(),

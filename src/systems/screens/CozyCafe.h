@@ -42,7 +42,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));
@@ -52,7 +52,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(100)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_debug_name("header"));
@@ -62,7 +62,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Blossom Cafe")
             .with_size(ComponentSize{pixels(400), pixels(70)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 48.0f)
             .with_padding(Spacing::sm)
             .with_debug_name("title"));
@@ -71,7 +71,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
     auto stats = div(context, mk(header.ent(), 1),
                      ComponentConfig{}
                          .with_size(ComponentSize{pixels(450), pixels(70)})
-                         .with_custom_color(theme.surface)
+                         .with_custom_background(theme.surface)
                          .with_flex_direction(FlexDirection::Row)
                          .with_debug_name("stats"));
 
@@ -79,7 +79,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("$ " + std::to_string(gold_coins))
             .with_size(ComponentSize{pixels(130), pixels(50)})
-            .with_color_usage(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Accent)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
             .with_margin(Spacing::sm)
             .with_debug_name("gold"));
@@ -91,7 +91,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(stars)
             .with_size(ComponentSize{pixels(120), pixels(50)})
-            .with_color_usage(Theme::Usage::Secondary)
+            .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 32.0f)
             .with_margin(Spacing::sm)
             .with_debug_name("stars"));
@@ -100,7 +100,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(std::to_string(customers_today) + " served")
             .with_size(ComponentSize{pixels(150), pixels(50)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::sm)
             .with_debug_name("customers"));
@@ -110,7 +110,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(340)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
                 .with_debug_name("content"));
@@ -120,7 +120,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(420), pixels(320)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
@@ -130,7 +130,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Today's Specials")
             .with_size(ComponentSize{pixels(360), pixels(45)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 26.0f)
             .with_padding(Spacing::xs)
             .with_debug_name("menu_title"));
@@ -142,7 +142,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(daily_specials[i])
                      .with_size(ComponentSize{pixels(360), pixels(55)})
-                     .with_color_usage(selected ? Theme::Usage::Accent
+                     .with_background(selected ? Theme::Usage::Accent
                                                 : Theme::Usage::Secondary)
                      .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                      .with_margin(Spacing::sm)
@@ -156,7 +156,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Promote Special!")
                .with_size(ComponentSize{pixels(360), pixels(45)})
-               .with_color_usage(Theme::Usage::Primary)
+               .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                .with_margin(Margin{.top = DefaultSpacing::medium()})
                .with_debug_name("promote"));
@@ -166,7 +166,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(380), pixels(320)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
@@ -176,7 +176,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Customers")
             .with_size(ComponentSize{pixels(320), pixels(45)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 26.0f)
             .with_padding(Spacing::xs)
             .with_debug_name("customer_title"));
@@ -187,7 +187,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
       auto row = div(context, mk(customer_panel.ent(), 1 + static_cast<int>(i)),
                      ComponentConfig{}
                          .with_size(ComponentSize{pixels(320), pixels(60)})
-                         .with_custom_color(
+                         .with_custom_background(
                              afterhours::colors::darken(theme.surface, 0.95f))
                          .with_padding(Spacing::sm)
                          .with_flex_direction(FlexDirection::Row)
@@ -198,7 +198,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(c.name)
               .with_size(ComponentSize{pixels(90), pixels(45)})
-              .with_color_usage(Theme::Usage::Secondary)
+              .with_background(Theme::Usage::Secondary)
               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("name"));
 
@@ -206,7 +206,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(c.order)
               .with_size(ComponentSize{pixels(130), pixels(45)})
-              .with_color_usage(Theme::Usage::Primary)
+              .with_background(Theme::Usage::Primary)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_debug_name("order"));
 
@@ -214,7 +214,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(std::to_string(c.wait_time) + "m")
               .with_size(ComponentSize{pixels(60), pixels(45)})
-              .with_color_usage(Theme::Usage::Accent)
+              .with_background(Theme::Usage::Accent)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_debug_name("wait"));
     }
@@ -224,7 +224,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Serve Next")
                .with_size(ComponentSize{pixels(320), pixels(55)})
-               .with_color_usage(Theme::Usage::Accent)
+               .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                .with_margin(Margin{.top = DefaultSpacing::medium()})
                .with_debug_name("serve"));
@@ -234,7 +234,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(900), pixels(70)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -245,7 +245,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Music")
                .with_size(ComponentSize{pixels(250), pixels(45)})
-               .with_color_usage(Theme::Usage::Secondary)
+               .with_background(Theme::Usage::Secondary)
                .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("music"),
@@ -256,7 +256,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Settings")
                .with_size(ComponentSize{pixels(120), pixels(45)})
-               .with_color_usage(Theme::Usage::Primary)
+               .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("settings"));
@@ -266,7 +266,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Save & Exit")
                .with_size(ComponentSize{pixels(140), pixels(45)})
-               .with_color_usage(Theme::Usage::Accent)
+               .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("save"));

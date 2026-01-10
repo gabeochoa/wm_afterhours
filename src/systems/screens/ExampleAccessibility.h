@@ -58,7 +58,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300.0f), pixels(35.0f)})
             .with_absolute_position()
             .with_translate((screen_width - 300.0f) / 2.0f, start_y)
-            .with_custom_color(status_color)
+            .with_custom_background(status_color)
             .with_auto_text_color()
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("theme_status"));
@@ -85,7 +85,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
                    ComponentSize{pixels(button_width), pixels(button_height)})
                .with_absolute_position()
                .with_translate(center_x, start_y)
-               .with_custom_color(afterhours::Color{230, 230, 230, 255})
+               .with_custom_background(afterhours::Color{230, 230, 230, 255})
                .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                .with_debug_name("light_no_auto"));
 
@@ -99,7 +99,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
                    ComponentSize{pixels(button_width), pixels(button_height)})
                .with_absolute_position()
                .with_translate(center_x, start_y)
-               .with_custom_color(afterhours::Color{40, 40, 60, 255})
+               .with_custom_background(afterhours::Color{40, 40, 60, 255})
                .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                .with_debug_name("dark_no_auto"));
 
@@ -125,7 +125,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
                    ComponentSize{pixels(button_width), pixels(button_height)})
                .with_absolute_position()
                .with_translate(center_x, start_y)
-               .with_custom_color(afterhours::Color{230, 230, 230, 255})
+               .with_custom_background(afterhours::Color{230, 230, 230, 255})
                .with_auto_text_color()
                .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                .with_debug_name("light_auto"));
@@ -140,7 +140,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
                    ComponentSize{pixels(button_width), pixels(button_height)})
                .with_absolute_position()
                .with_translate(center_x, start_y)
-               .with_custom_color(afterhours::Color{40, 40, 60, 255})
+               .with_custom_background(afterhours::Color{40, 40, 60, 255})
                .with_auto_text_color()
                .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                .with_debug_name("dark_auto"));
@@ -163,7 +163,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(130.0f), pixels(button_height)})
               .with_absolute_position()
               .with_translate(center_x - 150.0f + i * 145.0f, start_y)
-              .with_custom_color(colors[i])
+              .with_custom_background(colors[i])
               .with_auto_text_color()
               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
               .with_debug_name("color_demo_" + std::to_string(i)));

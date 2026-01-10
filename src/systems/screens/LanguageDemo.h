@@ -73,7 +73,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));
@@ -83,7 +83,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(80)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Spacing::xs)
@@ -94,7 +94,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(sample.title)
             .with_size(ComponentSize{pixels(280), pixels(60)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(font_config.font_name, 32.0f * font_config.size_scale)
             .with_debug_name("title"));
 
@@ -111,7 +111,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(65), pixels(45)})
                    .with_margin(Spacing::xs)
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                   .with_color_usage(current_language == Language::English
+                   .with_background(current_language == Language::English
                                          ? Theme::Usage::Primary
                                          : Theme::Usage::Secondary))) {
       current_language = Language::English;
@@ -123,7 +123,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(65), pixels(45)})
                    .with_margin(Spacing::xs)
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                   .with_color_usage(current_language == Language::Korean
+                   .with_background(current_language == Language::Korean
                                          ? Theme::Usage::Primary
                                          : Theme::Usage::Secondary))) {
       current_language = Language::Korean;
@@ -135,7 +135,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(65), pixels(45)})
                    .with_margin(Spacing::xs)
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                   .with_color_usage(current_language == Language::Japanese
+                   .with_background(current_language == Language::Japanese
                                          ? Theme::Usage::Primary
                                          : Theme::Usage::Secondary))) {
       current_language = Language::Japanese;
@@ -155,7 +155,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(520), pixels(460)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
@@ -166,7 +166,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(sample.greeting)
             .with_size(ComponentSize{pixels(480), pixels(50)})
-            .with_color_usage(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Accent)
             .with_font(font_config.font_name, 32.0f * font_config.size_scale)
             .with_margin(Spacing::xs)
             .with_debug_name("greeting"));
@@ -179,7 +179,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
                  .with_size(ComponentSize{pixels(200), pixels(40)})
                  .with_margin(Spacing::xs)
                  .with_font(font_config.font_name, scaled_size)
-                 .with_color_usage(Theme::Usage::Primary));
+                 .with_background(Theme::Usage::Primary));
     }
 
     // Continue button
@@ -189,14 +189,14 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
                .with_size(ComponentSize{pixels(200), pixels(42)})
                .with_margin(Spacing::sm)
                .with_font(font_config.font_name, 20.0f * font_config.size_scale)
-               .with_color_usage(Theme::Usage::Accent));
+               .with_background(Theme::Usage::Accent));
 
     // Right panel - all languages comparison (540px wide, 460px tall)
     auto right_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(540), pixels(460)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
@@ -207,7 +207,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("All Languages")
             .with_size(ComponentSize{pixels(500), pixels(42)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("all_lang_title"));
@@ -218,7 +218,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("EN: " + en.greeting + " - " + en.menu_items[0])
             .with_size(ComponentSize{pixels(500), pixels(42)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_font("Gaegu-Bold", 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("en_sample"));
@@ -229,7 +229,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("KO: " + ko.greeting + " - " + ko.menu_items[0])
             .with_size(ComponentSize{pixels(500), pixels(42)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_font("NotoSansKR", 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("ko_sample"));
@@ -240,7 +240,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("JA: " + ja.greeting + " - " + ja.menu_items[0])
             .with_size(ComponentSize{pixels(500), pixels(42)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_font("Sazanami", 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("ja_sample"));
@@ -250,7 +250,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(60)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::xs)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
@@ -265,7 +265,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("Active: " + lang_name + " | Font: " +
                         font_config.font_name)
             .with_size(ComponentSize{pixels(500), pixels(26)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("lang_indicator"));
 
@@ -273,7 +273,7 @@ struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Press 1/2/3 to switch languages")
             .with_size(ComponentSize{pixels(350), pixels(20)})
-            .with_custom_color(theme.surface)
+            .with_custom_background(theme.surface)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_debug_name("instructions"));
   }

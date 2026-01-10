@@ -39,7 +39,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));
@@ -49,7 +49,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(90)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .disable_rounded_corners()
@@ -59,7 +59,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("OPERATION: BLACKOUT")
             .with_size(ComponentSize{pixels(450), pixels(60)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 36.0f)
             .with_padding(Spacing::sm)
             .disable_rounded_corners()
@@ -69,7 +69,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("EXTRACTION")
             .with_size(ComponentSize{pixels(180), pixels(50)})
-            .with_color_usage(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Accent)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::md)
             .with_debug_name("mission_type"));
@@ -78,7 +78,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SQUAD: 4/4")
             .with_size(ComponentSize{pixels(150), pixels(50)})
-            .with_color_usage(Theme::Usage::Secondary)
+            .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Spacing::md)
             .with_debug_name("squad"));
@@ -88,7 +88,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1100), pixels(380)})
-                .with_custom_color(theme.background)
+                .with_custom_background(theme.background)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
                 .with_debug_name("content"));
@@ -98,7 +98,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(480), pixels(360)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
@@ -109,7 +109,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("< PRIMARY WEAPON >")
             .with_size(ComponentSize{pixels(420), pixels(45)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_padding(Spacing::xs)
             .disable_rounded_corners()
@@ -122,7 +122,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(weapons[i].name)
                      .with_size(ComponentSize{pixels(420), pixels(50)})
-                     .with_color_usage(sel ? Theme::Usage::Accent
+                     .with_background(sel ? Theme::Usage::Accent
                                            : Theme::Usage::Primary)
                      .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                      .with_margin(Spacing::sm)
@@ -138,7 +138,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         context, mk(weapon_panel.ent(), 10),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(400), pixels(100)})
-            .with_custom_color(afterhours::colors::darken(theme.surface, 0.8f))
+            .with_custom_background(afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
             .with_margin(Spacing::sm)
@@ -150,7 +150,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
       auto row = div(context, mk(stats.ent(), idx),
                      ComponentConfig{}
                          .with_size(ComponentSize{pixels(370), pixels(28)})
-                         .with_custom_color(
+                         .with_custom_background(
                              afterhours::colors::darken(theme.surface, 0.8f))
                          .with_flex_direction(FlexDirection::Row)
                          .with_debug_name(name + "_row"));
@@ -159,7 +159,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(name)
               .with_size(ComponentSize{pixels(90), pixels(24)})
-              .with_color_usage(Theme::Usage::Font)
+              .with_background(Theme::Usage::Font)
               .with_font(UIComponent::DEFAULT_FONT, 13.0f)
               .with_debug_name(name + "_label"));
 
@@ -167,7 +167,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
       div(context, mk(row.ent(), 1),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(180), pixels(16)})
-              .with_custom_color(afterhours::Color{30, 30, 40, 255})
+              .with_custom_background(afterhours::Color{30, 30, 40, 255})
               .disable_rounded_corners()
               .with_debug_name(name + "_bg"));
 
@@ -175,7 +175,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
       div(context, mk(row.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(value * 1.8f), pixels(16)})
-              .with_color_usage(Theme::Usage::Accent)
+              .with_background(Theme::Usage::Accent)
               .with_margin(Margin{.left = pixels(-180)})
               .disable_rounded_corners()
               .with_debug_name(name + "_fill"));
@@ -184,7 +184,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(std::to_string(value))
               .with_size(ComponentSize{pixels(40), pixels(24)})
-              .with_color_usage(Theme::Usage::Font)
+              .with_background(Theme::Usage::Font)
               .with_font(UIComponent::DEFAULT_FONT, 13.0f)
               .with_debug_name(name + "_val"));
     };
@@ -198,7 +198,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(360), pixels(360)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
@@ -209,7 +209,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("< TACTICAL GEAR >")
             .with_size(ComponentSize{pixels(300), pixels(40)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_padding(Spacing::xs)
             .disable_rounded_corners()
@@ -221,7 +221,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(gear[i])
                  .with_size(ComponentSize{pixels(300), pixels(36)})
-                 .with_color_usage(Theme::Usage::Secondary)
+                 .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_margin(Spacing::xs)
                  .disable_rounded_corners()
@@ -232,7 +232,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("< PERK >")
             .with_size(ComponentSize{pixels(300), pixels(36)})
-            .with_color_usage(Theme::Usage::Primary)
+            .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.top = DefaultSpacing::medium()})
             .disable_rounded_corners()
@@ -242,7 +242,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
     dropdown(context, mk(gear_panel.ent(), 11), perks, selected_perk,
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(300), pixels(45)})
-                 .with_color_usage(Theme::Usage::Accent)
+                 .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                  .with_margin(Spacing::sm)
                  .disable_rounded_corners()
@@ -253,7 +253,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
         div(context, mk(main.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(900), pixels(70)})
-                .with_custom_color(theme.surface)
+                .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -264,7 +264,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("< BACK")
                .with_size(ComponentSize{pixels(120), pixels(45)})
-               .with_color_usage(Theme::Usage::Secondary)
+               .with_background(Theme::Usage::Secondary)
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                .with_margin(Spacing::sm)
                .disable_rounded_corners()
@@ -274,7 +274,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("SAVE LOADOUT")
                .with_size(ComponentSize{pixels(160), pixels(45)})
-               .with_color_usage(Theme::Usage::Primary)
+               .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                .with_margin(Spacing::sm)
                .disable_rounded_corners()
@@ -284,7 +284,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label(">> DEPLOY <<")
                .with_size(ComponentSize{pixels(200), pixels(50)})
-               .with_color_usage(Theme::Usage::Accent)
+               .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                .with_margin(Spacing::sm)
                .disable_rounded_corners()

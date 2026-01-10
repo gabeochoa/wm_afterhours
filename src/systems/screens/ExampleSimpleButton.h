@@ -29,7 +29,7 @@ struct ExampleSimpleButton : afterhours::System<UIContext<InputAction>> {
                                             pixels(button_height)})
                    .with_absolute_position()
                    .with_translate(button_x, button_y)
-                   .with_custom_color(afterhours::Color{100, 100, 200, 255})
+                   .with_custom_background(afterhours::Color{100, 100, 200, 255})
                    .with_font(UIComponent::DEFAULT_FONT, 24.0f)
                    .with_debug_name("example_button"));
 
@@ -49,7 +49,7 @@ struct ExampleSimpleButton : afterhours::System<UIContext<InputAction>> {
                 ComponentSize{pixels(button_width), pixels(counter_height)})
             .with_absolute_position()
             .with_translate(button_x, counter_y)
-            .with_custom_color(afterhours::Color{50, 50, 50, 200})
+            .with_custom_background(afterhours::Color{50, 50, 50, 200})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("click_counter"));
   }

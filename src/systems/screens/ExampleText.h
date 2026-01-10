@@ -40,7 +40,7 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(text_width), pixels(text_height)})
               .with_absolute_position()
               .with_translate(start_x, y_pos + i * spacing)
-              .with_custom_color(afterhours::Color{30, 30, 30, 200})
+              .with_custom_background(afterhours::Color{30, 30, 30, 200})
               .with_padding(Spacing::xs)
               .with_font(UIComponent::DEFAULT_FONT, examples[i].font_size)
               .with_debug_name("text_example_" + std::to_string(i)));
@@ -55,7 +55,7 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((screen_width - screen_width * 0.6f) / 2.0f,
                             title_y)
-            .with_custom_color(afterhours::Color{40, 40, 40, 255})
+            .with_custom_background(afterhours::Color{40, 40, 40, 255})
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
             .with_debug_name("title"));
