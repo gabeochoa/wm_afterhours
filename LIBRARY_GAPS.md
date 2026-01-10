@@ -55,7 +55,103 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 
 ---
 
-## 2. Dropdown Close Behavior
+## 2. `screen_pct()` Calculates from Full Screen, Not Parent
+
+**Location:** `vendor/afterhours/src/plugins/ui/size.h`
+
+**Issue:** When using `screen_pct()` for nested elements, it calculates the percentage from the full screen dimensions, not the parent container. This causes nested elements to overflow their parents unexpectedly.
+
+**Example Problem:**
+```cpp
+// Parent is 50% of screen width
+auto parent = div(context, mk(entity, 0),
+    ComponentConfig{}.with_size({screen_pct(0.5f), screen_pct(0.5f)}));
+
+// Child ALSO becomes 50% of SCREEN, not 50% of parent
+// So child is same size as parent, not half of parent
+auto child = div(context, mk(parent.ent(), 0),
+    ComponentConfig{}.with_size({screen_pct(0.5f), screen_pct(0.5f)}));
+```
+
+**Current Workaround:** Use fixed `pixels()` for nested containers, or carefully calculate cumulative percentages.
+
+**Suggested Fix:** Add `parent_pct()` sizing option that calculates relative to parent bounds, or change `screen_pct()` to be relative to parent when nested.
+
+---
+
+## 3. Text Color vs Background Color Confusion in `div`
+
+**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h`
+
+**Issue:** For `div` elements with labels, `with_color_usage()` affects background color, not text color. This is counterintuitive and causes text to be invisible (white text on white background).
+
+**Example Problem:**
+```cpp
+// Expecting this to set TEXT color to Font color
+div(context, mk(parent.ent(), 0),
+    ComponentConfig{}
+        .with_label("Some text")
+        .with_color_usage(Theme::Usage::Font));  // Actually sets BACKGROUND!
+```
+
+**Current Workaround:** Use `with_custom_color()` to explicitly set background to match parent surface, or avoid `with_color_usage()` on text divs entirely.
+
+**Suggested Fix:** Clarify API or add `with_text_color()` separate from `with_background_color()`.
+
+---
+
+## 4. Font Size 0 Warnings with No Visual Feedback
+
+**Location:** `vendor/afterhours/src/plugins/font_helper.h` (line 133)
+
+**Issue:** The `position_text` auto-sizer produces font size 0 when containers are too small relative to text content. This causes text to silently not render with only a console warning.
+
+**Symptoms:**
+- Text doesn't appear in UI
+- Console shows: `Invalid font size 0 passed to measure_text_utf8`
+- No visual indication of what's wrong
+
+**Current Workaround:** Make containers larger, or use fixed font sizes instead of auto-sizing.
+
+**Suggested Fix:** Add minimum font size clamping, or visual debug indicator when text can't fit.
+
+---
+
+## 5. Missing Flexbox Alignment Properties
+
+**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h`
+
+**Issue:** `with_justify_content()` and `with_align_items()` are not available in the imm `ComponentConfig` API, making it difficult to center content within containers.
+
+**Current Workaround:** Use manual spacing/padding or fixed positioning.
+
+**Suggested Fix:** Add these standard flexbox properties to `ComponentConfig`.
+
+---
+
+## 6. CJK Font Loading Requires Special Handling
+
+**Location:** `vendor/afterhours/src/plugins/ui/font_manager.h`
+
+**Issue:** Standard `load_font()` only loads ASCII glyphs (codepoints 32-126). CJK characters require using `load_font_with_codepoints()` which is not obvious from the API.
+
+**Example Problem:**
+```cpp
+// This won't render Korean/Japanese/Chinese characters
+font_manager.load_font("NotoSansKR", korean_font_path);
+
+// Must use this instead (not obvious!)
+font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path, 
+    0x0000, 0xFFFF);  // Or specific CJK ranges
+```
+
+**Current Workaround:** Manually use `load_font_with_codepoints()` for any non-ASCII fonts.
+
+**Suggested Fix:** Either auto-detect font requirements, or clearly document this in the API. Consider making `load_font()` load more codepoints by default.
+
+---
+
+## 7. Dropdown Close Behavior
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~760)
 
@@ -67,7 +163,7 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 
 ---
 
-## 3. Circular Dependency with Styling Defaults
+## 8. Circular Dependency with Styling Defaults
 
 **Location:** `vendor/afterhours/src/plugins/ui/context.h` (lines 60-61)
 
@@ -83,7 +179,7 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 
 ---
 
-## 4. Focus Ring Positioning on Checkbox
+## 9. Focus Ring Positioning on Checkbox
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~220)
 
@@ -99,7 +195,7 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 
 ---
 
-## 5. Checkbox Corner Config Merging
+## 10. Checkbox Corner Config Merging
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~258)
 
@@ -115,7 +211,7 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 
 ---
 
-## 6. Tabbing with Value Controls
+## 11. Tabbing with Value Controls
 
 **Location:** `vendor/afterhours/src/plugins/ui/context.h` (line ~123)
 
@@ -136,6 +232,11 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 | Gap | Severity | User Impact | Status |
 |-----|----------|-------------|--------|
 | Font in Theme | Medium | Theming feels incomplete | RESOLVED |
+| `screen_pct()` nesting | High | Layout overflow, hard to debug | Open |
+| Text vs Background color | High | Invisible text, confusing API | Open |
+| Font size 0 warnings | Medium | Silent failures, hard to debug | Open |
+| Missing flexbox alignment | Medium | Can't center content easily | Open |
+| CJK font loading | Medium | Non-ASCII text doesn't render | Open |
 | Dropdown close | High | Poor UX, confusing behavior | Open |
 | Styling defaults | Low | Internal architecture issue | Open |
 | Focus ring | Medium | Accessibility concern | Open |

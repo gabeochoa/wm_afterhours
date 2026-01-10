@@ -21,6 +21,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ExampleTabbing.h"
 #include "systems/screens/ExampleText.h"
 #include "systems/screens/Forms.h"
+#include "systems/screens/LanguageDemo.h"
 #include "systems/screens/NeonStrike.h"
 #include "systems/screens/Themes.h"
 #include "testing/test_macros.h"

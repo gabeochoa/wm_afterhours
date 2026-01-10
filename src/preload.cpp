@@ -82,6 +82,48 @@ Preload &Preload::init(const char *title) {
   return *this;
 }
 
+// Generate codepoint array for a Unicode range
+static std::vector<int> generate_codepoint_range(int start, int end) {
+  std::vector<int> codepoints;
+  for (int i = start; i <= end; ++i) {
+    codepoints.push_back(i);
+  }
+  return codepoints;
+}
+
+// Build codepoints for Korean: Hangul Syllables + Hangul Jamo + ASCII
+static std::vector<int> get_korean_codepoints() {
+  std::vector<int> codepoints;
+  // ASCII (0x0020-0x007F)
+  auto ascii = generate_codepoint_range(0x0020, 0x007F);
+  codepoints.insert(codepoints.end(), ascii.begin(), ascii.end());
+  // Hangul Jamo (0x1100-0x11FF)
+  auto jamo = generate_codepoint_range(0x1100, 0x11FF);
+  codepoints.insert(codepoints.end(), jamo.begin(), jamo.end());
+  // Hangul Syllables (0xAC00-0xD7AF) - most common Korean characters
+  auto syllables = generate_codepoint_range(0xAC00, 0xD7AF);
+  codepoints.insert(codepoints.end(), syllables.begin(), syllables.end());
+  return codepoints;
+}
+
+// Build codepoints for Japanese: Hiragana + Katakana + common Kanji + ASCII
+static std::vector<int> get_japanese_codepoints() {
+  std::vector<int> codepoints;
+  // ASCII (0x0020-0x007F)
+  auto ascii = generate_codepoint_range(0x0020, 0x007F);
+  codepoints.insert(codepoints.end(), ascii.begin(), ascii.end());
+  // Hiragana (0x3040-0x309F)
+  auto hiragana = generate_codepoint_range(0x3040, 0x309F);
+  codepoints.insert(codepoints.end(), hiragana.begin(), hiragana.end());
+  // Katakana (0x30A0-0x30FF)
+  auto katakana = generate_codepoint_range(0x30A0, 0x30FF);
+  codepoints.insert(codepoints.end(), katakana.begin(), katakana.end());
+  // Common CJK Unified Ideographs subset (0x4E00-0x9FFF) - full range
+  auto kanji = generate_codepoint_range(0x4E00, 0x9FFF);
+  codepoints.insert(codepoints.end(), kanji.begin(), kanji.end());
+  return codepoints;
+}
+
 Preload &Preload::make_singleton() {
   auto &sophie = EntityHelper::createEntity();
   {
@@ -89,11 +131,35 @@ Preload &Preload::make_singleton() {
     window_manager::add_singleton_components(sophie, 200);
     ui::add_singleton_components<InputAction>(sophie);
 
-    std::string font_path =
+    // Load fonts for all supported languages
+    std::string english_font =
         files::get_resource_path("fonts", "Gaegu-Bold.ttf").string();
-    sophie.get<ui::FontManager>()
-        .load_font(ui::UIComponent::DEFAULT_FONT, font_path.c_str())
-        .load_font(ui::UIComponent::SYMBOL_FONT, font_path.c_str());
+    std::string korean_font =
+        files::get_resource_path("fonts", "NotoSansMonoCJKkr-Bold.otf")
+            .string();
+    std::string japanese_font =
+        files::get_resource_path("fonts", "Sazanami-Hanazono-Mincho.ttf")
+            .string();
+
+    // Get codepoints for CJK fonts
+    auto korean_cps = get_korean_codepoints();
+    auto japanese_cps = get_japanese_codepoints();
+
+    sophie
+        .get<ui::FontManager>()
+        // Default font (used when no language-specific font is set)
+        .load_font(ui::UIComponent::DEFAULT_FONT, english_font.c_str())
+        .load_font(ui::UIComponent::SYMBOL_FONT, english_font.c_str())
+        // English font (ASCII only)
+        .load_font("Gaegu-Bold", english_font.c_str())
+        // Korean font with Hangul codepoints
+        .load_font_with_codepoints("NotoSansKR", korean_font.c_str(),
+                                   korean_cps.data(),
+                                   static_cast<int>(korean_cps.size()))
+        // Japanese font with Hiragana/Katakana/Kanji codepoints
+        .load_font_with_codepoints("Sazanami", japanese_font.c_str(),
+                                   japanese_cps.data(),
+                                   static_cast<int>(japanese_cps.size()));
 
     ui::imm::ThemeDefaults::get()
         .set_theme_color(ui::Theme::Usage::Primary, colors::UI_GREEN)

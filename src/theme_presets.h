@@ -1,5 +1,6 @@
 #pragma once
 
+#include <afterhours/src/plugins/translation.h>
 #include <afterhours/src/plugins/ui/theme.h>
 #include <afterhours/src/plugins/ui/theme_defaults.h>
 
@@ -9,28 +10,47 @@ namespace ui {
 // Theme presets for the UI showcase
 // Each preset includes: font, darkfont, font_muted, background, surface,
 // primary, secondary, accent, error
+// And now also: language_fonts for per-language font configuration
 
 namespace theme_presets {
 
+// Font name constants (must match keys used in FontManager::load_font)
+inline constexpr const char *FONT_ENGLISH = "Gaegu-Bold";
+inline constexpr const char *FONT_KOREAN = "NotoSansKR";
+inline constexpr const char *FONT_JAPANESE = "Sazanami";
+
+// Helper to add default language fonts to a theme
+inline void add_default_language_fonts(Theme &theme) {
+  using Lang = translation::Language;
+  theme.language_fonts = {
+      {Lang::English, FontConfig{FONT_ENGLISH, 1.0f}},
+      {Lang::Korean,
+       FontConfig{FONT_KOREAN, 0.95f}}, // Korean renders slightly larger
+      {Lang::Japanese,
+       FontConfig{FONT_JAPANESE, 0.92f}}, // Japanese needs slight scaling
+  };
+}
+
 // Cozy Kraft - Warm, paper-like aesthetic for cozy/casual games
 inline Theme cozy_kraft() {
-  return Theme(
-      Color{92, 64, 51, 255},    // font - sepia brown
-      Color{245, 240, 230, 255}, // darkfont - cream (for dark backgrounds)
-      Color{139, 119, 101, 255}, // font_muted - light brown
-      Color{245, 240, 230, 255}, // background - cream
-      Color{255, 250, 240, 255}, // surface - warm white
-      Color{196, 167, 125, 255}, // primary - kraft brown
-      Color{180, 200, 170, 255}, // secondary - sage
-      Color{212, 165, 165, 255}, // accent - dusty rose
-      Color{180, 80, 80, 255}    // error - muted red
+  Theme t(Color{92, 64, 51, 255},    // font - sepia brown
+          Color{245, 240, 230, 255}, // darkfont - cream (for dark backgrounds)
+          Color{139, 119, 101, 255}, // font_muted - light brown
+          Color{245, 240, 230, 255}, // background - cream
+          Color{255, 250, 240, 255}, // surface - warm white
+          Color{196, 167, 125, 255}, // primary - kraft brown
+          Color{180, 200, 170, 255}, // secondary - sage
+          Color{212, 165, 165, 255}, // accent - dusty rose
+          Color{180, 80, 80, 255}    // error - muted red
   );
+  add_default_language_fonts(t);
+  return t;
 }
 
 // Neon Dark - Cyberpunk/tactical shooter aesthetic
 // Dark enough colors to provide good contrast with light text
 inline Theme neon_dark() {
-  return Theme(
+  Theme t(
       Color{230, 250, 255, 255}, // font - cool white (readable on dark)
       Color{10, 15, 20, 255}, // darkfont - near black (for bright backgrounds)
       Color{100, 120, 140, 255}, // font_muted - cool gray
@@ -41,48 +61,56 @@ inline Theme neon_dark() {
       Color{200, 40, 90, 255}, // accent - dark pink/magenta
       Color{200, 60, 60, 255}  // error - muted red
   );
+  add_default_language_fonts(t);
+  return t;
 }
 
 // Ocean Navy - Professional/business/tycoon aesthetic
 inline Theme ocean_navy() {
-  return Theme(Color{255, 255, 255, 255}, // font - white
-               Color{15, 30, 55, 255},    // darkfont - deep navy
-               Color{160, 175, 200, 255}, // font_muted - light blue-gray
-               Color{15, 30, 55, 255},    // background - deep navy
-               Color{25, 45, 80, 255},    // surface - navy
-               Color{59, 130, 246, 255},  // primary - blue
-               Color{34, 197, 94, 255},   // secondary - green
-               Color{251, 191, 36, 255},  // accent - gold
-               Color{239, 68, 68, 255}    // error - red
+  Theme t(Color{255, 255, 255, 255}, // font - white
+          Color{15, 30, 55, 255},    // darkfont - deep navy
+          Color{160, 175, 200, 255}, // font_muted - light blue-gray
+          Color{15, 30, 55, 255},    // background - deep navy
+          Color{25, 45, 80, 255},    // surface - navy
+          Color{59, 130, 246, 255},  // primary - blue
+          Color{34, 197, 94, 255},   // secondary - green
+          Color{251, 191, 36, 255},  // accent - gold
+          Color{239, 68, 68, 255}    // error - red
   );
+  add_default_language_fonts(t);
+  return t;
 }
 
 // Midnight - Dark, dramatic aesthetic
 inline Theme midnight() {
-  return Theme(Color{255, 255, 255, 255}, // font - white
-               Color{0, 0, 0, 255},       // darkfont - pure black
-               Color{120, 120, 120, 255}, // font_muted - gray
-               Color{0, 0, 0, 255},       // background - pure black
-               Color{20, 20, 20, 255},    // surface - near black
-               Color{185, 28, 28, 255},   // primary - deep red
-               Color{100, 100, 100, 255}, // secondary - dark gray
-               Color{255, 214, 10, 255},  // accent - yellow
-               Color{255, 100, 100, 255}  // error - light red
+  Theme t(Color{255, 255, 255, 255}, // font - white
+          Color{0, 0, 0, 255},       // darkfont - pure black
+          Color{120, 120, 120, 255}, // font_muted - gray
+          Color{0, 0, 0, 255},       // background - pure black
+          Color{20, 20, 20, 255},    // surface - near black
+          Color{185, 28, 28, 255},   // primary - deep red
+          Color{100, 100, 100, 255}, // secondary - dark gray
+          Color{255, 214, 10, 255},  // accent - yellow
+          Color{255, 100, 100, 255}  // error - light red
   );
+  add_default_language_fonts(t);
+  return t;
 }
 
 // Sage Natural - Organic, nature-inspired aesthetic
 inline Theme sage_natural() {
-  return Theme(Color{55, 65, 81, 255},    // font - charcoal
-               Color{212, 229, 210, 255}, // darkfont - sage green
-               Color{107, 114, 128, 255}, // font_muted - gray
-               Color{212, 229, 210, 255}, // background - sage green
-               Color{250, 250, 249, 255}, // surface - warm white
-               Color{77, 124, 77, 255},   // primary - forest green
-               Color{139, 90, 43, 255},   // secondary - brown
-               Color{198, 123, 92, 255},  // accent - terracotta
-               Color{185, 28, 28, 255}    // error - deep red
+  Theme t(Color{55, 65, 81, 255},    // font - charcoal
+          Color{212, 229, 210, 255}, // darkfont - sage green
+          Color{107, 114, 128, 255}, // font_muted - gray
+          Color{212, 229, 210, 255}, // background - sage green
+          Color{250, 250, 249, 255}, // surface - warm white
+          Color{77, 124, 77, 255},   // primary - forest green
+          Color{139, 90, 43, 255},   // secondary - brown
+          Color{198, 123, 92, 255},  // accent - terracotta
+          Color{185, 28, 28, 255}    // error - deep red
   );
+  add_default_language_fonts(t);
+  return t;
 }
 
 // Apply a theme preset globally
