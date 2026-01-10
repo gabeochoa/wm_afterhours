@@ -55,27 +55,43 @@ float size = theme.get_scaled_font_size(lang, theme.font_size_md);
 
 ---
 
-## 2. `screen_pct()` Calculates from Full Screen, Not Parent
+## 2. Sizing API: `screen_pct()` vs `percent()` (NOT A GAP - Documentation)
 
-**Location:** `vendor/afterhours/src/plugins/ui/size.h`
+**Location:** `vendor/afterhours/src/plugins/autolayout.h`
 
-**Issue:** When using `screen_pct()` for nested elements, it calculates the percentage from the full screen dimensions, not the parent container. This causes nested elements to overflow their parents unexpectedly.
+**Clarification:** There are TWO different percentage-based sizing functions:
 
-**Example Problem:**
+- **`screen_pct(value)`** - Percentage of **screen** dimensions (uses `Dim::ScreenPercent`)
+- **`percent(value)`** - Percentage of **parent** dimensions (uses `Dim::Percent`)
+
+**Common Mistake:**
 ```cpp
 // Parent is 50% of screen width
 auto parent = div(context, mk(entity, 0),
     ComponentConfig{}.with_size({screen_pct(0.5f), screen_pct(0.5f)}));
 
-// Child ALSO becomes 50% of SCREEN, not 50% of parent
-// So child is same size as parent, not half of parent
+// WRONG: Using screen_pct() makes child 50% of SCREEN, not parent
 auto child = div(context, mk(parent.ent(), 0),
     ComponentConfig{}.with_size({screen_pct(0.5f), screen_pct(0.5f)}));
 ```
 
-**Current Workaround:** Use fixed `pixels()` for nested containers, or carefully calculate cumulative percentages.
+**Correct Usage:**
+```cpp
+// Parent is 50% of screen width
+auto parent = div(context, mk(entity, 0),
+    ComponentConfig{}.with_size({screen_pct(0.5f), screen_pct(0.5f)}));
 
-**Suggested Fix:** Add `parent_pct()` sizing option that calculates relative to parent bounds, or change `screen_pct()` to be relative to parent when nested.
+// CORRECT: Using percent() makes child 50% of PARENT
+auto child = div(context, mk(parent.ent(), 0),
+    ComponentConfig{}.with_size({percent(0.5f), percent(0.5f)}));
+```
+
+**Summary of sizing functions:**
+- `pixels(value)` - Fixed pixel size
+- `percent(value)` - Percentage of parent container
+- `screen_pct(value)` - Percentage of screen dimensions
+- `children()` - Size based on children content
+- `h720(px)` / `w1280(px)` - Resolution-independent pixels (scaled from 720p/1280p baseline)
 
 ---
 
