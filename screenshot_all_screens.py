@@ -51,12 +51,37 @@ class MCPClient:
         )
         log(f"Process started with PID: {self.proc.pid}")
         
+        # Collect validation warnings and errors
+        self.validation_warnings = []
+        self.validation_errors = []
+        
         # Start a thread to drain stderr to prevent blocking
         import threading
         def drain_stderr():
             try:
                 for line in self.proc.stderr:
-                    log_debug(f"[stderr] {line.rstrip()[:60]}")
+                    stripped = line.rstrip()
+                    # Remove ANSI color codes for cleaner matching
+                    clean_line = re.sub(r'\x1b\[[0-9;]*m', '', stripped)
+                    
+                    # Capture UI validation messages (look for validation keywords)
+                    is_validation = any(kw in clean_line for kw in [
+                        '[UI Validation]', 'ContrastRatio', 'ScreenBounds', 
+                        'ChildContainment', 'MinFontSize', 'validation'
+                    ])
+                    
+                    if is_validation:
+                        if 'LOG_WARN' in clean_line or 'WARN' in clean_line:
+                            self.validation_warnings.append(clean_line)
+                        elif 'LOG_ERROR' in clean_line or 'ERROR' in clean_line:
+                            self.validation_errors.append(clean_line)
+                        else:
+                            self.validation_warnings.append(clean_line)
+                    # Capture general errors (not validation-specific)
+                    elif 'LOG_ERROR' in clean_line or '[ERROR]' in clean_line:
+                        self.validation_errors.append(clean_line)
+                    # Show truncated debug output for other lines
+                    log_debug(f"[stderr] {stripped[:60]}")
             except:
                 pass
         self.stderr_thread = threading.Thread(target=drain_stderr, daemon=True)
@@ -64,6 +89,10 @@ class MCPClient:
         self.request_id = 0
         self.current_screen_index = 0
         self.screen_names = []
+    
+    def get_validation_summary(self):
+        """Return collected validation warnings and errors."""
+        return self.validation_warnings, self.validation_errors
         
     def set_screen_names(self, names):
         self.screen_names = names
@@ -334,6 +363,9 @@ def main():
         
         elapsed = time.time() - start_time
         
+        # Get validation summary before closing
+        warnings, errors = client.get_validation_summary()
+        
         # Clean exit
         client.close()
         client = None
@@ -345,6 +377,34 @@ def main():
         for screen, success in results.items():
             status = "✓" if success else "✗"
             print(f"  {status} {screen}", file=sys.stderr)
+        
+        # Print validation summary
+        if warnings or errors:
+            print("\n" + "=" * 60, file=sys.stderr)
+            print("VALIDATION SUMMARY", file=sys.stderr)
+            print("=" * 60, file=sys.stderr)
+            
+            if errors:
+                print(f"\n❌ ERRORS ({len(errors)}):", file=sys.stderr)
+                # Deduplicate similar errors
+                unique_errors = list(dict.fromkeys(errors))
+                for err in unique_errors[:20]:  # Show max 20
+                    print(f"  {err}", file=sys.stderr)
+                if len(unique_errors) > 20:
+                    print(f"  ... and {len(unique_errors) - 20} more", file=sys.stderr)
+            
+            if warnings:
+                print(f"\n⚠️  WARNINGS ({len(warnings)}):", file=sys.stderr)
+                # Deduplicate similar warnings
+                unique_warnings = list(dict.fromkeys(warnings))
+                for warn in unique_warnings[:20]:  # Show max 20
+                    print(f"  {warn}", file=sys.stderr)
+                if len(unique_warnings) > 20:
+                    print(f"  ... and {len(unique_warnings) - 20} more", file=sys.stderr)
+            
+            print("=" * 60, file=sys.stderr)
+        else:
+            print("\n✅ No validation warnings or errors detected!", file=sys.stderr)
         
         return 0 if all(results.values()) else 1
             

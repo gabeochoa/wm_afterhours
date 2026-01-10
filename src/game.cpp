@@ -22,9 +22,26 @@
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>
+#include <afterhours/src/plugins/ui/validation_systems.h>
 #include <chrono>
 #include <iostream>
 #include <thread>
+
+// Configure UI validation for design rule enforcement
+// Call this before running any screens
+static void configure_validation() {
+  auto &config =
+      afterhours::ui::imm::UIStylingDefaults::get().get_validation_config_mut();
+  config.mode = afterhours::ui::ValidationMode::Warn;
+  config.enforce_screen_bounds = true;
+  config.enforce_child_containment = true;
+  config.enforce_contrast_ratio = true;
+  config.enforce_min_font_size = true;
+  config.safe_area_margin = 16.0f;
+  config.min_font_size = 12.0f;
+  config.min_contrast_ratio = 4.5f;
+  config.highlight_violations = true; // Draw red borders on violations
+}
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include "engine/input_injector.h"
@@ -166,6 +183,9 @@ raylib::RenderTexture2D screenRT;
 raylib::Font uiFont;
 
 void game() {
+  // Configure UI validation for design rule enforcement
+  configure_validation();
+
   mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                      Settings::get().get_screen_height());
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
@@ -205,6 +225,8 @@ void game() {
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
+  afterhours::ui::validation::register_systems<InputAction>(systems);
+
   while (running && !raylib::WindowShouldClose()) {
     if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       running = false;
@@ -228,6 +250,8 @@ void game() {
 }
 
 void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
+  configure_validation();
+
   TestRegistry &registry = TestRegistry::get();
   auto it = registry.tests.find(test_name);
   if (it == registry.tests.end()) {
@@ -294,6 +318,8 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     systems.register_render_system(std::make_unique<RenderTestFeedback>());
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
+
+  afterhours::ui::validation::register_systems<InputAction>(systems);
 
   TestApp test = it->second();
   test_system_ptr->set_test(test_name, std::move(test));
@@ -383,6 +409,8 @@ struct ScreenCyclerSystem : afterhours::System<> {
 };
 
 void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
+  configure_validation();
+
   mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                      Settings::get().get_screen_height());
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
@@ -512,6 +540,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
+
+  afterhours::ui::validation::register_systems<InputAction>(systems);
 
   while (running && !raylib::WindowShouldClose()) {
 #ifdef AFTER_HOURS_ENABLE_MCP

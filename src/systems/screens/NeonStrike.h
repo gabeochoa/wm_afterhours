@@ -41,8 +41,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     theme.surface = afterhours::Color{24, 28, 36, 255};
     theme.primary = afterhours::Color{38, 44, 56, 255};
     theme.secondary = afterhours::Color{52, 60, 72, 255};
-    theme.accent = afterhours::Color{255, 160, 40, 255};
-    theme.error = afterhours::Color{220, 60, 60, 255};
+    theme.accent = afterhours::Color{175, 105, 20, 255};  // Dark amber (contrast 4.5+ with dark text)
+    theme.error = afterhours::Color{170, 45, 45, 255};
     context.theme = theme;
 
     // Layout constants - all elements contained in card

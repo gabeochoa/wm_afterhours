@@ -142,6 +142,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Small")
                    .with_size(ComponentSize{pixels(80), pixels(32)})
                    .with_background(Theme::Usage::Primary)
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_padding(Spacing::xs)
                    .with_margin(Spacing::xs)
@@ -155,6 +156,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Medium")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Primary)
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_medium"))) {
@@ -167,6 +169,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Large Button")
                    .with_size(ComponentSize{pixels(180), pixels(60)})
                    .with_background(Theme::Usage::Primary)
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_large"))) {
@@ -212,6 +215,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                      .with_label(std::string(group_labels[i]))
                      .with_size(ComponentSize{pixels(90), pixels(45)})
                      .with_background(Theme::Usage::Primary)
+                     .with_auto_text_color(true)
                      .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                      .with_rounded_corners(corners)
                      .with_debug_name("btn_group_" + std::to_string(i)))) {
@@ -247,18 +251,20 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Coral")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_custom_background(afterhours::Color{255, 127, 80, 255})
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_coral"))) {
       click_counts[10]++;
     }
 
-    // Custom color button - teal
+    // Custom color button - teal (darker for better contrast)
     if (button(context, mk(row4.ent(), 2),
                ComponentConfig{}
                    .with_label("Teal")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
-                   .with_custom_background(afterhours::Color{0, 128, 128, 255})
+                   .with_custom_background(afterhours::Color{0, 100, 100, 255})
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_teal"))) {
@@ -271,6 +277,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_label("Sharp")
                .with_size(ComponentSize{pixels(120), pixels(45)})
                .with_background(Theme::Usage::Primary)
+               .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
                .disable_rounded_corners()
