@@ -102,6 +102,15 @@ class MCPClient:
     def key_press(self, key):
         return self.call_tool("key_press", {"key": key})
     
+    def ping(self):
+        """Check if the MCP server is responding."""
+        response = self.call_tool("ping")
+        if response and "result" in response:
+            content = response["result"]["content"][0]
+            if content.get("text") == "pong":
+                return True
+        return False
+    
     def close(self):
         self.proc.stdin.close()
         self.proc.terminate()
@@ -120,7 +129,16 @@ def main():
         print(f"Init response: {json.dumps(init_response, indent=2)}", file=sys.stderr)
         
         # Give the game a moment to render
-        time.sleep(0.5)
+        time.sleep(0.3)
+        
+        # Ping to verify server is ready
+        print("\n=== Pinging MCP server ===", file=sys.stderr)
+        if client.ping():
+            print("Server responded: pong", file=sys.stderr)
+        else:
+            print("Ping failed!", file=sys.stderr)
+        
+        time.sleep(0.2)
         
         # Get screen size
         print("\n=== Getting screen size ===", file=sys.stderr)
