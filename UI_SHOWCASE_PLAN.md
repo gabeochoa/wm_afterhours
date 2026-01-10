@@ -134,9 +134,9 @@ Final polish and interactive theme demo.
   - Preview panel showing sample components
   - Immediate visual feedback
 
-- [ ] **5.2** Update `--list-screens` output to show organized categories
-- [ ] **5.3** Add screen descriptions to HUD (optional subtitle)
-- [ ] **5.4** Document discovered library gaps in `LIBRARY_GAPS.md`
+- [x] **5.2** Update `--list-screens` output to show organized categories
+- [x] **5.3** Add screen descriptions to HUD (optional subtitle)
+- [x] **5.4** Document discovered library gaps in `LIBRARY_GAPS.md`
 
 ### Files Created
 - `src/systems/screens/Themes.h`
