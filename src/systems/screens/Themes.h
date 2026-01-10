@@ -78,7 +78,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
     auto header =
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.9f), pixels(80)})
+                .with_size(ComponentSize{pixels(1100), pixels(80)})
                 .with_custom_color(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
@@ -107,7 +107,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
     auto content =
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.9f), pixels(420)})
+                .with_size(ComponentSize{pixels(1100), pixels(420)})
                 .with_custom_color(theme.background)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})

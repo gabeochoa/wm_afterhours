@@ -30,7 +30,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Layout System Demo")
-            .with_size(ComponentSize{screen_pct(0.8f), pixels(50)})
+            .with_size(ComponentSize{pixels(1000), pixels(50)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
@@ -44,7 +44,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     auto row_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.8f), pixels(150)})
+                .with_size(ComponentSize{pixels(1000), pixels(150)})
                 .with_custom_color(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
@@ -53,7 +53,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(row_container.ent(), 0),
         ComponentConfig{}
             .with_label("Left Panel")
-            .with_size(ComponentSize{screen_pct(0.25f), pixels(120)})
+            .with_size(ComponentSize{pixels(300), pixels(120)})
             .with_color_usage(Theme::Usage::Primary)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -63,7 +63,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(row_container.ent(), 1),
         ComponentConfig{}
             .with_label("Center Panel")
-            .with_size(ComponentSize{screen_pct(0.25f), pixels(120)})
+            .with_size(ComponentSize{pixels(300), pixels(120)})
             .with_color_usage(Theme::Usage::Secondary)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -73,7 +73,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(row_container.ent(), 2),
         ComponentConfig{}
             .with_label("Right Panel")
-            .with_size(ComponentSize{screen_pct(0.25f), pixels(120)})
+            .with_size(ComponentSize{pixels(300), pixels(120)})
             .with_color_usage(Theme::Usage::Accent)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -84,7 +84,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     auto col_container =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.8f), pixels(220)})
+                .with_size(ComponentSize{pixels(1000), pixels(220)})
                 .with_custom_color(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
@@ -98,7 +98,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     auto left_col = div(
         context, mk(col_container.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.35f), pixels(190)})
+            .with_size(ComponentSize{pixels(450), pixels(190)})
             .with_custom_color(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
@@ -108,7 +108,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("Stacked Item 1")
-            .with_size(ComponentSize{screen_pct(0.3f), pixels(50)})
+            .with_size(ComponentSize{pixels(380), pixels(50)})
             .with_color_usage(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
@@ -117,7 +117,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 1),
         ComponentConfig{}
             .with_label("Stacked Item 2")
-            .with_size(ComponentSize{screen_pct(0.3f), pixels(50)})
+            .with_size(ComponentSize{pixels(380), pixels(50)})
             .with_color_usage(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
@@ -126,7 +126,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
             .with_label("Stacked Item 3")
-            .with_size(ComponentSize{screen_pct(0.3f), pixels(50)})
+            .with_size(ComponentSize{pixels(380), pixels(50)})
             .with_color_usage(Theme::Usage::Accent)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Spacing::xs)
@@ -138,7 +138,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_label("FlexDirection::Column stacks elements vertically. "
                         "FlexDirection::Row arranges them horizontally. "
                         "Use margins and padding to control spacing.")
-            .with_size(ComponentSize{screen_pct(0.38f), pixels(190)})
+            .with_size(ComponentSize{pixels(480), pixels(190)})
             .with_custom_color(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -150,7 +150,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
-            .with_size(ComponentSize{screen_pct(0.8f), pixels(35)})
+            .with_size(ComponentSize{pixels(1000), pixels(35)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 12.0f)

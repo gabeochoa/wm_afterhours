@@ -31,7 +31,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Cards & Panels Gallery")
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(50)})
+            .with_size(ComponentSize{pixels(1100), pixels(50)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
@@ -44,7 +44,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
     // Row 1: Basic cards with different styles
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.9f), pixels(180)})
+                        .with_size(ComponentSize{pixels(1100), pixels(180)})
                         .with_color_usage(Theme::Usage::None)
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
@@ -170,7 +170,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
     // Row 2: Nested cards
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.9f), pixels(220)})
+                        .with_size(ComponentSize{pixels(1100), pixels(220)})
                         .with_color_usage(Theme::Usage::None)
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
@@ -279,7 +279,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
     // Row 3: Theme comparison
     auto row3 = div(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.9f), pixels(100)})
+                        .with_size(ComponentSize{pixels(1100), pixels(100)})
                         .with_custom_color(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)

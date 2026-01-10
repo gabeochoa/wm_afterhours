@@ -30,7 +30,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Theme Color Swatches")
-            .with_size(ComponentSize{screen_pct(0.8f), pixels(50)})
+            .with_size(ComponentSize{pixels(1000), pixels(50)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
@@ -43,7 +43,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     // Color row 1: Theme colors
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.8f), pixels(120)})
+                        .with_size(ComponentSize{pixels(1000), pixels(120)})
                         .with_custom_color(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -97,7 +97,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
     // Color row 2: Custom colors
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.8f), pixels(120)})
+                        .with_size(ComponentSize{pixels(1000), pixels(120)})
                         .with_custom_color(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -132,7 +132,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Using Midnight theme. Top row: theme colors. Bottom "
                         "row: custom colors.")
-            .with_size(ComponentSize{screen_pct(0.8f), pixels(40)})
+            .with_size(ComponentSize{pixels(1000), pixels(40)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)

@@ -48,7 +48,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
     auto header =
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), pixels(90)})
+                .with_size(ComponentSize{pixels(1100), pixels(90)})
                 .with_custom_color(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
@@ -87,7 +87,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
     auto content =
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), pixels(380)})
+                .with_size(ComponentSize{pixels(1100), pixels(380)})
                 .with_custom_color(theme.background)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -252,7 +252,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
     auto footer =
         div(context, mk(main.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.7f), pixels(70)})
+                .with_size(ComponentSize{pixels(900), pixels(70)})
                 .with_custom_color(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)

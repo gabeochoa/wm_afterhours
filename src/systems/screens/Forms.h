@@ -54,7 +54,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Form Components Gallery")
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(50)})
+            .with_size(ComponentSize{pixels(1100), pixels(50)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
@@ -68,7 +68,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     auto content =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.9f), pixels(450)})
+                .with_size(ComponentSize{pixels(1100), pixels(450)})
                 .with_custom_color(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
@@ -78,7 +78,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     auto left_col = div(
         context, mk(content.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.42f), pixels(400)})
+            .with_size(ComponentSize{pixels(520), pixels(400)})
             .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
@@ -172,7 +172,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     auto right_col = div(
         context, mk(content.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.42f), pixels(400)})
+            .with_size(ComponentSize{pixels(520), pixels(400)})
             .with_custom_color(afterhours::colors::darken(theme.surface, 0.9f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
@@ -271,7 +271,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{screen_pct(0.9f), pixels(40)})
+            .with_size(ComponentSize{pixels(1100), pixels(40)})
             .with_custom_color(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
