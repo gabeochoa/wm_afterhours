@@ -9,7 +9,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct FormsGallery : afterhours::System<UIContext<InputAction>> {
+struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
   // Slider values
   float volume_slider = 0.75f;
   float brightness_slider = 0.5f;
@@ -54,7 +54,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Form Components Gallery")
-            .with_size(ComponentSize{pixels(1100), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
@@ -68,7 +68,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     auto content =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1100), pixels(450)})
+                .with_size(ComponentSize{percent(1.0f), pixels(450)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
@@ -271,7 +271,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{pixels(1100), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)

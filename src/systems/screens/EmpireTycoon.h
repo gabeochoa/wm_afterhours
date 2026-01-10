@@ -9,7 +9,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
+struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   int64_t cash = 2847500;
   int64_t revenue = 485000;
   int employees = 156;
@@ -57,7 +57,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                 .with_custom_background(theme.background)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));
 
@@ -76,6 +76,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("NEXUS INDUSTRIES")
             .with_size(ComponentSize{pixels(380), pixels(70)})
             .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 36.0f)
             .with_padding(Spacing::sm)
             .with_debug_name("company_name"));

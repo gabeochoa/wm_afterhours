@@ -452,6 +452,25 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     if (index < 0 || index >= static_cast<int>(screen_names.size())) {
       return;
     }
+
+    // Reset the UIContext focus state and mark old UI as not rendered
+    // This prevents tabbing/clicking on elements from old screens
+    auto *ui_context =
+        afterhours::EntityHelper::get_singleton_cmp<
+            afterhours::ui::UIContext<InputAction>>();
+    if (ui_context) {
+      ui_context->reset();
+    }
+
+    // Mark all UI entities as not rendered to prevent input handling
+    for (const auto &e : afterhours::EntityHelper::get_entities()) {
+      if (!e)
+        continue;
+      if (e->has<afterhours::ui::UIComponent>()) {
+        e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
+      }
+    }
+
     std::string new_screen_name = screen_names[index];
     current_screen_system =
         ExampleScreenRegistry::get().create_screen(new_screen_name);
@@ -461,6 +480,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
       return;
     }
     cycler_ptr->current_screen = current_screen_system.get();
+    g_current_screen = current_screen_system.get();
 
     // Update HUD state
     ScreenHUDState::current_screen_name = new_screen_name;

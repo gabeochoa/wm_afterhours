@@ -9,7 +9,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
+struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
   // Game state
   float music_volume = 0.7f;
   bool notifications_on = true;
@@ -43,7 +43,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                 .with_custom_background(theme.background)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));
 
@@ -63,6 +63,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("Blossom Cafe")
             .with_size(ComponentSize{pixels(400), pixels(70)})
             .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 48.0f)
             .with_padding(Spacing::sm)
             .with_debug_name("title"));

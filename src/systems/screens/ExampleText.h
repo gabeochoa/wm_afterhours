@@ -8,7 +8,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct ExampleText : afterhours::System<UIContext<InputAction>> {
+struct ExampleText : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     int screen_width = Settings::get().get_screen_width();
@@ -41,6 +41,7 @@ struct ExampleText : afterhours::System<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(start_x, y_pos + i * spacing)
               .with_custom_background(afterhours::Color{30, 30, 30, 200})
+              .with_custom_text_color(examples[i].color)
               .with_padding(Spacing::xs)
               .with_font(UIComponent::DEFAULT_FONT, examples[i].font_size)
               .with_debug_name("text_example_" + std::to_string(i)));

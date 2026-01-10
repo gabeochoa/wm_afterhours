@@ -8,7 +8,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct ExampleTabbing : afterhours::System<UIContext<InputAction>> {
+struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
   int focused_button = 0;
   std::vector<int> button_clicks = {0, 0, 0, 0};
 
@@ -42,7 +42,8 @@ struct ExampleTabbing : afterhours::System<UIContext<InputAction>> {
                      .with_custom_background(afterhours::Color{
                          static_cast<unsigned char>(80 + i * 20), 100,
                          static_cast<unsigned char>(150 + i * 20), 255})
-                     .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                     .with_auto_text_color(true)
+                     .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                      .with_debug_name("tab_button_" + std::to_string(i)));
 
       if (button_result) {

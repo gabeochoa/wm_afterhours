@@ -9,7 +9,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
+struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
   enum struct ThemeChoice {
     CozyKraft,
     NeonDark,

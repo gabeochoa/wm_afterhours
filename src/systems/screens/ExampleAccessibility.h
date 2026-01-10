@@ -12,7 +12,7 @@ using namespace afterhours::ui::imm;
 // - Auto-contrast text color selection
 // - Theme validation
 // - WCAG compliance indicators
-struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
+struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
   bool validated_theme = false;
   bool theme_is_accessible = false;
 

@@ -9,7 +9,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct ExampleColors : afterhours::System<UIContext<InputAction>> {
+struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     // Apply midnight theme for this screen

@@ -8,7 +8,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct ExampleSimpleButton : afterhours::System<UIContext<InputAction>> {
+struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
   int button_click_count = 0;
 
   void for_each_with(afterhours::Entity &entity,

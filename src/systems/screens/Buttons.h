@@ -9,7 +9,7 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
+struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
   int click_counts[12] = {0};
 
   void for_each_with(afterhours::Entity &entity,
@@ -33,8 +33,9 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Button Gallery")
-            .with_size(ComponentSize{pixels(1100), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_custom_background(theme.surface)
+            .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
             .with_margin(Margin{.top = pixels(0),
@@ -46,7 +47,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
     // Row 1: Basic button states
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{pixels(1100), pixels(80)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(80)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -68,6 +69,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
                    .with_label("Normal")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Primary)
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_normal"))) {
@@ -80,6 +82,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
                    .with_label("Accent")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Accent)
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_accent"))) {
@@ -92,6 +95,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
                    .with_label("Secondary")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Secondary)
+                   .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_secondary"))) {
@@ -104,6 +108,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
                .with_label("Disabled")
                .with_size(ComponentSize{pixels(120), pixels(45)})
                .with_background(Theme::Usage::Primary)
+               .with_auto_text_color(true)
                .with_disabled(true)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
@@ -112,7 +117,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
     // Row 2: Different sizes
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
-                        .with_size(ComponentSize{pixels(1100), pixels(90)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -171,7 +176,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
     // Row 3: Button group - need more height to accommodate the group
     auto row3 = div(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
-                        .with_size(ComponentSize{pixels(1100), pixels(100)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(100)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -281,7 +286,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
             .with_label(counter_text)
-            .with_size(ComponentSize{pixels(1100), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)

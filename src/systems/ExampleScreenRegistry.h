@@ -7,6 +7,18 @@
 #include <string>
 #include <vector>
 
+// Global pointer to track the current active screen system
+// Set by ScreenCyclerSystem when switching screens
+inline afterhours::SystemBase *g_current_screen = nullptr;
+
+// Base class for screen systems that only runs when this screen is active
+template <typename... Components>
+struct ScreenSystem : afterhours::System<Components...> {
+  virtual bool should_run(const float) const override {
+    return g_current_screen == this;
+  }
+};
+
 struct ExampleScreen {
   std::string name;
   std::string category;

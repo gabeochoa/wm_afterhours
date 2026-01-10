@@ -76,7 +76,8 @@ ifeq ($(COVERAGE),1)
     endif
 endif
 
-# MCP support
+# MCP support (enabled by default, disable with ENABLE_MCP=0)
+ENABLE_MCP ?= 1
 MCP_CXXFLAGS :=
 ifeq ($(ENABLE_MCP),1)
     MCP_CXXFLAGS := -DAFTER_HOURS_ENABLE_MCP
@@ -89,8 +90,8 @@ ACCESSIBILITY_CXXFLAGS := -DAFTERHOURS_ENFORCE_MIN_FONT_SIZE
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
     $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) $(RAYLIB_FLAGS)
 
-# Include directories
-INCLUDES := -Ivendor/
+# Include directories (use -isystem for vendor to suppress their warnings)
+INCLUDES := -isystem vendor/
 
 # Library flags
 LDFLAGS := -L. -Lvendor/ $(RAYLIB_LIB) $(FRAMEWORKS) $(COVERAGE_LDFLAGS)

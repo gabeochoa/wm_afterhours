@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 using namespace afterhours::translation;
 
-struct LanguageDemoScreen : afterhours::System<UIContext<InputAction>> {
+struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
   Language current_language = Language::English;
 
   struct LanguageSample {
