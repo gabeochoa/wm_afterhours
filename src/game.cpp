@@ -13,6 +13,7 @@
 #include "systems/SetupSimpleButtonTest.h"
 #include "systems/SetupTabbingTest.h"
 #include "systems/TestSystem.h"
+#include "systems/RenderScreenHUD.h"
 #include "systems/UpdateRenderTexture.h"
 #include "testing/test_app.h"
 #include "testing/test_input.h"
@@ -28,10 +29,93 @@
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include "engine/input_injector.h"
 #include <afterhours/src/plugins/mcp_server.h>
+#include <nlohmann/json.hpp>
+#include <sstream>
 
 extern bool g_mcp_mode;
+extern int g_saved_stdout_fd;
 
 namespace {
+
+// Build JSON representation of UI component tree
+nlohmann::json build_ui_tree_json(afterhours::Entity &entity, 
+                                   afterhours::ui::UIComponent &cmp) {
+  nlohmann::json node;
+  node["id"] = cmp.id;
+  
+  if (entity.has<afterhours::ui::UIComponentDebug>()) {
+    node["name"] = entity.get<afterhours::ui::UIComponentDebug>().name();
+  }
+  
+  node["rect"] = {
+    {"x", cmp.rect().x},
+    {"y", cmp.rect().y},
+    {"width", cmp.rect().width},
+    {"height", cmp.rect().height}
+  };
+  
+  node["computed"] = {
+    {"width", cmp.computed[afterhours::ui::Axis::X]},
+    {"height", cmp.computed[afterhours::ui::Axis::Y]}
+  };
+  
+  node["relative_pos"] = {
+    {"x", cmp.computed_rel[afterhours::ui::Axis::X]},
+    {"y", cmp.computed_rel[afterhours::ui::Axis::Y]}
+  };
+  
+  node["padding"] = {
+    {"left", cmp.computed_padd[afterhours::ui::Axis::left]},
+    {"top", cmp.computed_padd[afterhours::ui::Axis::top]},
+    {"right", cmp.computed_padd[afterhours::ui::Axis::right]},
+    {"bottom", cmp.computed_padd[afterhours::ui::Axis::bottom]}
+  };
+  
+  node["margin"] = {
+    {"left", cmp.computed_margin[afterhours::ui::Axis::left]},
+    {"top", cmp.computed_margin[afterhours::ui::Axis::top]},
+    {"right", cmp.computed_margin[afterhours::ui::Axis::right]},
+    {"bottom", cmp.computed_margin[afterhours::ui::Axis::bottom]}
+  };
+  
+  node["absolute"] = cmp.absolute;
+  node["visible"] = cmp.was_rendered_to_screen;
+  
+  // Add children recursively
+  nlohmann::json children_arr = nlohmann::json::array();
+  for (afterhours::EntityID child_id : cmp.children) {
+    try {
+      auto &child_ent = afterhours::ui::AutoLayout::to_ent_static(child_id);
+      auto &child_cmp = afterhours::ui::AutoLayout::to_cmp_static(child_id);
+      children_arr.push_back(build_ui_tree_json(child_ent, child_cmp));
+    } catch (...) {
+      // Skip invalid children
+    }
+  }
+  node["children"] = children_arr;
+  
+  return node;
+}
+
+std::string dump_ui_tree() {
+  nlohmann::json result;
+  result["tree"] = nlohmann::json::array();
+  
+  // Find all root UI components (those with AutoLayoutRoot)
+  auto roots = afterhours::EntityQuery()
+    .whereHasComponent<afterhours::ui::AutoLayoutRoot>()
+    .whereHasComponent<afterhours::ui::UIComponent>()
+    .gen();
+  
+  for (auto &entity_ref : roots) {
+    afterhours::Entity &entity = entity_ref.get();
+    auto &cmp = entity.get<afterhours::ui::UIComponent>();
+    result["tree"].push_back(build_ui_tree_json(entity, cmp));
+  }
+  
+  return result.dump(2);  // Pretty print with 2-space indent
+}
+
 std::vector<uint8_t> capture_screenshot_png() {
   raylib::Image image = raylib::LoadImageFromTexture(mainRT.texture);
   if (image.data == nullptr) {
@@ -77,8 +161,9 @@ void init_mcp() {
   config.key_up = [](int keycode) {
     input_injector::set_key_up(keycode);
   };
+  config.dump_ui_tree = dump_ui_tree;
 
-  afterhours::mcp::init(config);
+  afterhours::mcp::init(config, g_saved_stdout_fd);
 }
 } // namespace
 #endif
@@ -350,8 +435,12 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
+    systems.register_render_system(std::make_unique<RenderScreenHUD>());
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
+
+  // Initialize HUD state
+  ScreenHUDState::total_screens = static_cast<int>(screen_names.size());
 
   std::unique_ptr<afterhours::SystemBase> current_screen_system;
   std::unique_ptr<ScreenCyclerSystem> cycler_system =
@@ -372,7 +461,20 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
       return;
     }
     cycler_ptr->current_screen = current_screen_system.get();
+
+    // Update HUD state
+    ScreenHUDState::current_screen_name = new_screen_name;
+    ScreenHUDState::current_index = index;
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+    if (g_mcp_mode) {
+      std::cerr << "Switched to screen: " << new_screen_name << std::endl;
+    } else {
+      std::cout << "Switched to screen: " << new_screen_name << std::endl;
+    }
+#else
     std::cout << "Switched to screen: " << new_screen_name << std::endl;
+#endif
   };
 
   {
@@ -394,6 +496,12 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     if (g_mcp_mode) {
       // Process any pending input injections BEFORE systems run
       input_injector::update_key_hold(raylib::GetFrameTime());
+      
+      // Check if exit was requested via MCP
+      if (afterhours::mcp::exit_requested()) {
+        running = false;
+        break;
+      }
     }
 #endif
 
@@ -401,11 +509,14 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
       running = false;
     }
 
-    if (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN)) {
+    // Screen navigation: . or PageDown = next, , or PageUp = previous
+    if (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN) ||
+        raylib::IsKeyPressed(raylib::KEY_PERIOD)) {
       current_screen_index = (current_screen_index + 1) % screen_names.size();
       load_screen(current_screen_index);
     }
-    if (raylib::IsKeyPressed(raylib::KEY_PAGE_UP)) {
+    if (raylib::IsKeyPressed(raylib::KEY_PAGE_UP) ||
+        raylib::IsKeyPressed(raylib::KEY_COMMA)) {
       current_screen_index = static_cast<int>(
           (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
           static_cast<int>(screen_names.size()));

@@ -1,5 +1,7 @@
 #include "preload.h"
 
+#include <cstdarg>
+#include <cstdio>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -14,6 +16,20 @@
 #include <afterhours/src/plugins/ui/theme_defaults.h>
 
 using namespace afterhours;
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+extern bool g_mcp_mode;
+
+// Custom log callback that writes to stderr instead of stdout
+static void mcp_trace_log_callback(int logLevel, const char *text, va_list args) {
+  if (logLevel < raylib::LOG_ERROR) {
+    return;  // In MCP mode, only log errors
+  }
+  char buffer[1024];
+  vsnprintf(buffer, sizeof(buffer), text, args);
+  fprintf(stderr, "%s\n", buffer);
+}
+#endif
 
 static void load_gamepad_mappings() {
   std::ifstream ifs(
@@ -35,12 +51,20 @@ Preload &Preload::init(const char *title) {
   int width = Settings::get().get_screen_width();
   int height = Settings::get().get_screen_height();
 
+  // In MCP mode, redirect raylib logs to stderr to keep stdout clean for JSON
+#ifdef AFTER_HOURS_ENABLE_MCP
+  if (g_mcp_mode) {
+    raylib::SetTraceLogCallback(mcp_trace_log_callback);
+  }
+#endif
+
+  // Set log level BEFORE InitWindow to suppress init messages
+  raylib::SetTraceLogLevel(raylib::LOG_ERROR);
+
   raylib::InitWindow(width, height, title);
   raylib::SetWindowSize(width, height);
   raylib::SetWindowState(raylib::FLAG_WINDOW_RESIZABLE);
 
-  raylib::TraceLogLevel logLevel = raylib::LOG_ERROR;
-  raylib::SetTraceLogLevel(logLevel);
   raylib::SetTargetFPS(200);
 
   raylib::SetAudioStreamBufferSizeDefault(4096);

@@ -9,29 +9,50 @@ backward::SignalHandling sh;
 #include "game.h"
 #include "preload.h"
 #include "settings.h"
-#include "systems/ExampleColors.h"
-#include "systems/ExampleLayout.h"
 #include "systems/ExampleScreenRegistry.h"
-#include "systems/ExampleSimpleButton.h"
-#include "systems/ExampleTabbing.h"
-#include "systems/ExampleText.h"
+#include "systems/screens/Buttons.h"
+#include "systems/screens/Cards.h"
+#include "systems/screens/ExampleColors.h"
+#include "systems/screens/ExampleLayout.h"
+#include "systems/screens/ExampleSimpleButton.h"
+#include "systems/screens/ExampleTabbing.h"
+#include "systems/screens/ExampleText.h"
+#include "systems/screens/Forms.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
+#include <cstdio>
 #include <iostream>
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include "engine/input_injector.h"
 #include <afterhours/src/plugins/mcp_server.h>
+#ifndef _WIN32
+#include <unistd.h>
+#endif
 #endif
 
 using namespace afterhours;
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 bool g_mcp_mode = false;
+int g_saved_stdout_fd = -1;  // Used by MCP to write JSON to original stdout
 #endif
 
 int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
+
+#ifdef AFTER_HOURS_ENABLE_MCP
+  // Check for MCP mode EARLY and redirect stdout to stderr to keep stdout clean for JSON protocol
+  if (cmdl["--mcp"]) {
+    g_mcp_mode = true;
+#ifndef _WIN32
+    // Save original stdout and redirect it to stderr
+    // MCP will use write() directly to the saved fd
+    g_saved_stdout_fd = dup(STDOUT_FILENO);
+    dup2(STDERR_FILENO, STDOUT_FILENO);
+#endif
+  }
+#endif
 
   if (cmdl["--help"]) {
     std::cout << "UI Tester \n\n";
@@ -50,17 +71,15 @@ int main(int argc, char *argv[]) {
                  "finishes\n";
     std::cout << "  --list-screens               List all available example "
                  "screens\n";
-    std::cout << "  --<screen_name>              Show example screen (e.g., "
-                 "--simple_button)\n";
+    std::cout << "  --screen=<name>              Show example screen (e.g., "
+                 "--screen=simple_button)\n";
+    std::cout << "                               Navigation: , (prev) . (next) "
+                 "PageUp/PageDown\n";
 #ifdef AFTER_HOURS_ENABLE_MCP
     std::cout << "  --mcp                        Enable MCP server mode\n";
 #endif
     return 0;
   }
-
-#ifdef AFTER_HOURS_ENABLE_MCP
-  g_mcp_mode = cmdl["--mcp"];
-#endif
 
   if (cmdl["--list-tests"]) {
     TestRegistry &registry = TestRegistry::get();
@@ -76,19 +95,25 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  // Try --screen=<name> format first (preferred)
   std::string screen_name;
-  for (const auto &arg : cmdl.flags()) {
-    // argh returns flags without the "--" prefix
-    if (arg != "help" && arg != "list-tests" && arg != "list-screens" &&
-        arg != "slow" && arg != "hold-on-end" && arg != "run-test" &&
-        arg != "mcp") {
-      // Remove "--" prefix if present (in case it's there)
-      if (arg.size() >= 2 && arg[0] == '-' && arg[1] == '-') {
-        screen_name = arg.substr(2);
-      } else {
-        screen_name = arg;
+  cmdl({"--screen"}) >> screen_name;
+
+  // Fallback: support legacy --<name> format for backwards compatibility
+  if (screen_name.empty()) {
+    for (const auto &arg : cmdl.flags()) {
+      // argh returns flags without the "--" prefix
+      if (arg != "help" && arg != "list-tests" && arg != "list-screens" &&
+          arg != "slow" && arg != "hold-on-end" && arg != "run-test" &&
+          arg != "mcp" && arg != "screen") {
+        // Remove "--" prefix if present (in case it's there)
+        if (arg.size() >= 2 && arg[0] == '-' && arg[1] == '-') {
+          screen_name = arg.substr(2);
+        } else {
+          screen_name = arg;
+        }
+        break;
       }
-      break;
     }
   }
 
