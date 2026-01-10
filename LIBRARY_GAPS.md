@@ -95,24 +95,33 @@ auto child = div(context, mk(parent.ent(), 0),
 
 ---
 
-## 3. Text Color vs Background Color Confusion in `div`
+## 3. Text Color vs Background Color Confusion in `div` (RESOLVED)
 
-**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h`
+**Location:** `vendor/afterhours/src/plugins/ui/component_config.h`
 
-**Issue:** For `div` elements with labels, `with_color_usage()` affects background color, not text color. This is counterintuitive and causes text to be invisible (white text on white background).
+**Status:** FIXED - API has been clarified with explicit naming.
 
-**Example Problem:**
+**The Problem Was:** `with_color_usage()` set background color, but the name was ambiguous.
+
+**Solution:** New explicit APIs added, old ones deprecated:
+
+| Old API (deprecated) | New API |
+|---------------------|---------|
+| `with_color_usage()` | `with_background()` |
+| `with_custom_color()` | `with_custom_background()` |
+| *(new)* | `with_text_color()` |
+| *(new)* | `with_custom_text_color()` |
+
+**Correct Usage:**
 ```cpp
-// Expecting this to set TEXT color to Font color
 div(context, mk(parent.ent(), 0),
     ComponentConfig{}
         .with_label("Some text")
-        .with_color_usage(Theme::Usage::Font));  // Actually sets BACKGROUND!
+        .with_background(Theme::Usage::Primary)    // Sets BACKGROUND (clear!)
+        .with_text_color(Theme::Usage::Accent));   // Sets TEXT (new!)
 ```
 
-**Current Workaround:** Use `with_custom_color()` to explicitly set background to match parent surface, or avoid `with_color_usage()` on text divs entirely.
-
-**Suggested Fix:** Clarify API or add `with_text_color()` separate from `with_background_color()`.
+Old code using `with_color_usage()` still works but shows compiler deprecation warnings guiding migration.
 
 ---
 
