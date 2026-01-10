@@ -32,8 +32,10 @@
 #include <nlohmann/json.hpp>
 #include <sstream>
 
+#ifdef AFTER_HOURS_ENABLE_MCP
 extern bool g_mcp_mode;
 extern int g_saved_stdout_fd;
+#endif
 
 namespace {
 
