@@ -473,6 +473,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     // Update HUD state
     ScreenHUDState::current_screen_name = new_screen_name;
+    ScreenHUDState::current_screen_description = 
+        ExampleScreenRegistry::get().get_screen_description(new_screen_name);
     ScreenHUDState::current_index = index;
 
 #ifdef AFTER_HOURS_ENABLE_MCP
