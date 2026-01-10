@@ -157,7 +157,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Promote Special!")
                .with_size(ComponentSize{pixels(360), pixels(45)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Margin{.top = DefaultSpacing::medium()})
                .with_debug_name("promote"));
 
@@ -207,7 +207,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
               .with_label(c.order)
               .with_size(ComponentSize{pixels(130), pixels(45)})
               .with_background(Theme::Usage::Primary)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("order"));
 
       div(context, mk(row.ent(), 2),
@@ -215,7 +215,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
               .with_label(std::to_string(c.wait_time) + "m")
               .with_size(ComponentSize{pixels(60), pixels(45)})
               .with_background(Theme::Usage::Accent)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("wait"));
     }
 
@@ -246,7 +246,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Music")
                .with_size(ComponentSize{pixels(250), pixels(45)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("music"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -257,7 +257,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Settings")
                .with_size(ComponentSize{pixels(120), pixels(45)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("settings"));
 
@@ -267,7 +267,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Save & Exit")
                .with_size(ComponentSize{pixels(140), pixels(45)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("save"));
   }

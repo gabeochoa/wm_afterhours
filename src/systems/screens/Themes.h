@@ -149,7 +149,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                   .with_size(ComponentSize{pixels(240), pixels(48)})
                   .with_background(selected ? Theme::Usage::Accent
                                              : Theme::Usage::Secondary)
-                  .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                  .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                   .with_margin(Spacing::sm)
                   .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {
         current_theme = choice;
@@ -192,7 +192,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Primary")
                .with_size(ComponentSize{pixels(110), pixels(45)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
                .with_debug_name("btn_primary"));
 
@@ -201,7 +201,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Secondary")
                .with_size(ComponentSize{pixels(110), pixels(45)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
                .with_debug_name("btn_secondary"));
 
@@ -210,7 +210,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Accent")
                .with_size(ComponentSize{pixels(110), pixels(45)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
                .with_debug_name("btn_accent"));
 
@@ -219,7 +219,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Disabled")
                .with_size(ComponentSize{pixels(110), pixels(45)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
                .with_disabled(true)
                .with_debug_name("btn_disabled"));
@@ -230,7 +230,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("Slider Value")
                .with_size(ComponentSize{pixels(400), pixels(50)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("preview_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -241,7 +241,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
                  .with_label("Checkbox Option")
                  .with_size(ComponentSize{pixels(400), pixels(45)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("preview_checkbox"));
 
@@ -251,7 +251,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(400), pixels(45)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("preview_dropdown"));
 
@@ -270,7 +270,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("Hard Shadow")
             .with_size(ComponentSize{pixels(140), pixels(80)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::sm)
             .with_hard_shadow(4.0f, 4.0f)
             .with_debug_name("card_hard"));
@@ -280,7 +280,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("Soft Shadow")
             .with_size(ComponentSize{pixels(140), pixels(80)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::sm)
             .with_soft_shadow(4.0f, 6.0f, 12.0f)
             .with_debug_name("card_soft"));
@@ -290,7 +290,7 @@ struct ThemesScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("Accent Card")
             .with_size(ComponentSize{pixels(140), pixels(80)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::sm)
             .with_soft_shadow(3.0f, 5.0f, 8.0f)
             .with_debug_name("card_accent"));

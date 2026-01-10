@@ -56,7 +56,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(120)})
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("left_panel"));
 
@@ -66,7 +66,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(120)})
             .with_background(Theme::Usage::Secondary)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("center_panel"));
 
@@ -76,7 +76,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(120)})
             .with_background(Theme::Usage::Accent)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("right_panel"));
 
@@ -110,7 +110,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_label("Stacked Item 1")
             .with_size(ComponentSize{pixels(380), pixels(50)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("stack1"));
 
@@ -119,7 +119,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_label("Stacked Item 2")
             .with_size(ComponentSize{pixels(380), pixels(50)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("stack2"));
 
@@ -128,7 +128,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_label("Stacked Item 3")
             .with_size(ComponentSize{pixels(380), pixels(50)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("stack3"));
 
@@ -141,7 +141,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(480), pixels(190)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("description"));
@@ -153,7 +153,7 @@ struct ExampleLayout : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(1000), pixels(35)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Margin{.top = DefaultSpacing::small(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),

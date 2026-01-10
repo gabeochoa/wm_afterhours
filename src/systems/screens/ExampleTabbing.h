@@ -62,7 +62,7 @@ struct ExampleTabbing : afterhours::System<UIContext<InputAction>> {
                             instruction_y)
             .with_custom_background(afterhours::Color{30, 30, 30, 200})
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("instructions"));
   }
 };

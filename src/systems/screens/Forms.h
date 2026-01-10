@@ -95,7 +95,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_margin(Spacing::xs)
             .with_debug_name("sliders_header"));
@@ -106,7 +106,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                .with_label("Volume")
                .with_size(ComponentSize{pixels(350), pixels(40)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("volume_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -117,7 +117,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                .with_label("Brightness")
                .with_size(ComponentSize{pixels(350), pixels(40)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("brightness_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -128,7 +128,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                .with_label("Difficulty")
                .with_size(ComponentSize{pixels(350), pixels(40)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("difficulty_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -140,7 +140,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_margin(Margin{.top = DefaultSpacing::medium(),
                                 .bottom = DefaultSpacing::small(),
@@ -154,7 +154,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Resolution")
                  .with_size(ComponentSize{pixels(350), pixels(40)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("resolution_dropdown"));
 
@@ -164,7 +164,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Quality")
                  .with_size(ComponentSize{pixels(350), pixels(40)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("quality_dropdown"));
 
@@ -185,7 +185,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_margin(Spacing::xs)
             .with_debug_name("checkboxes_header"));
@@ -196,7 +196,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Enable Music")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("music_checkbox"));
 
@@ -205,7 +205,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Enable Sound Effects")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("sfx_checkbox"));
 
@@ -215,7 +215,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Fullscreen")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("fullscreen_checkbox"));
 
@@ -224,7 +224,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("V-Sync")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("vsync_checkbox"));
 
@@ -233,7 +233,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Show FPS Counter")
                  .with_size(ComponentSize{pixels(250), pixels(36)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("fps_checkbox"));
 
@@ -245,7 +245,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_size(ComponentSize{pixels(250), pixels(36)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
                  .with_debug_name("disabled_checkbox"));
 
@@ -255,7 +255,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
                  .with_label("Language")
                  .with_size(ComponentSize{pixels(250), pixels(40)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Margin{.top = DefaultSpacing::medium(),
                                      .bottom = pixels(0),
                                      .left = pixels(0),
@@ -274,7 +274,7 @@ struct FormsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(1100), pixels(40)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Margin{.top = DefaultSpacing::small(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),

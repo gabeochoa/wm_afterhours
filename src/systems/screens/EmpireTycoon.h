@@ -102,7 +102,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("CASH")
             .with_size(ComponentSize{pixels(120), pixels(20)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("cash_label"));
     div(context, mk(cash_card.ent(), 1),
         ComponentConfig{}
@@ -126,7 +126,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("REVENUE")
             .with_size(ComponentSize{pixels(130), pixels(20)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("rev_label"));
     div(context, mk(rev_card.ent(), 1),
         ComponentConfig{}
@@ -150,7 +150,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
             .with_label("STAFF")
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("emp_label"));
     div(context, mk(emp_card.ent(), 1),
         ComponentConfig{}
@@ -207,7 +207,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
               .with_label(d.name)
               .with_size(ComponentSize{pixels(140), pixels(45)})
               .with_background(Theme::Usage::Primary)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("dept_name"));
 
       div(context, mk(row.ent(), 1),
@@ -215,7 +215,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
               .with_label(std::to_string(d.staff) + " staff")
               .with_size(ComponentSize{pixels(90), pixels(45)})
               .with_background(Theme::Usage::Secondary)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("dept_staff"));
 
       div(context, mk(row.ent(), 2),
@@ -224,7 +224,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(70), pixels(45)})
               .with_background(d.efficiency >= 85 ? Theme::Usage::Secondary
                                                    : Theme::Usage::Accent)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("dept_eff"));
     }
 
@@ -265,7 +265,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
               .with_label(p.name)
               .with_size(ComponentSize{pixels(280), pixels(30)})
               .with_background(Theme::Usage::Primary)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("proj_name"));
 
       // Progress bar bg
@@ -289,7 +289,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
               .with_label(std::to_string(p.progress) + "% complete")
               .with_size(ComponentSize{pixels(280), pixels(22)})
               .with_background(Theme::Usage::Font)
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_debug_name("prog_text"));
     }
 
@@ -309,7 +309,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("HIRE")
                .with_size(ComponentSize{pixels(100), pixels(45)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("hire"));
 
@@ -318,7 +318,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("BUILD")
                .with_size(ComponentSize{pixels(100), pixels(45)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("build"));
 
@@ -327,7 +327,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
                .with_label("RESEARCH")
                .with_size(ComponentSize{pixels(130), pixels(45)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("research"));
 

@@ -65,7 +65,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Basic Card")
             .with_size(ComponentSize{pixels(160), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card1_title"));
 
@@ -75,7 +75,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
                 "A simple card with surface color and default rounded corners.")
             .with_size(ComponentSize{pixels(160), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card1_body"));
 
@@ -94,7 +94,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Primary Card")
             .with_size(ComponentSize{pixels(160), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card2_title"));
 
@@ -103,7 +103,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Uses the theme's primary color for emphasis.")
             .with_size(ComponentSize{pixels(160), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card2_body"));
 
@@ -123,7 +123,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Sharp Corners")
             .with_size(ComponentSize{pixels(160), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card3_title"));
 
@@ -132,7 +132,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("No rounded corners for a different aesthetic.")
             .with_size(ComponentSize{pixels(160), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card3_body"));
 
@@ -154,7 +154,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Custom Corners")
             .with_size(ComponentSize{pixels(160), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card4_title"));
 
@@ -163,7 +163,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Only top-left and bottom-right corners are rounded.")
             .with_size(ComponentSize{pixels(160), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("card4_body"));
 
@@ -196,7 +196,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Nested Cards")
             .with_size(ComponentSize{pixels(380), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("nested_title"));
 
@@ -215,7 +215,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pixels(100)})
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("inner1"));
@@ -227,7 +227,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pixels(100)})
             .with_background(Theme::Usage::Secondary)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("inner2"));
@@ -239,7 +239,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pixels(100)})
             .with_background(Theme::Usage::Accent)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("inner3"));
@@ -261,7 +261,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Semi-Transparent Panel")
             .with_size(ComponentSize{pixels(260), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("info_title"));
 
@@ -272,7 +272,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
                         "Useful for HUDs and popup dialogs.")
             .with_size(ComponentSize{pixels(260), pixels(120)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("info_body"));
 
@@ -294,7 +294,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Theme Colors:")
             .with_size(ComponentSize{pixels(120), pixels(60)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("theme_label"));
 
@@ -304,7 +304,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Primary")
             .with_size(ComponentSize{pixels(100), pixels(60)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_primary"));
@@ -314,7 +314,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Secondary")
             .with_size(ComponentSize{pixels(100), pixels(60)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_secondary"));
@@ -324,7 +324,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Accent")
             .with_size(ComponentSize{pixels(100), pixels(60)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_accent"));
@@ -334,7 +334,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Surface")
             .with_size(ComponentSize{pixels(100), pixels(60)})
             .with_background(Theme::Usage::Surface)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_surface"));
@@ -344,7 +344,7 @@ struct CardsGallery : afterhours::System<UIContext<InputAction>> {
             .with_label("Background")
             .with_size(ComponentSize{pixels(100), pixels(60)})
             .with_background(Theme::Usage::Background)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_background"));

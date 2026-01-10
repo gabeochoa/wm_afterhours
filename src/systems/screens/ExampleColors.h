@@ -54,7 +54,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_label("Primary")
             .with_size(ComponentSize{pixels(110), pixels(90)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_primary"));
 
@@ -63,7 +63,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_label("Secondary")
             .with_size(ComponentSize{pixels(110), pixels(90)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_secondary"));
 
@@ -72,7 +72,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_label("Accent")
             .with_size(ComponentSize{pixels(110), pixels(90)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_accent"));
 
@@ -81,7 +81,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_label("Surface")
             .with_size(ComponentSize{pixels(110), pixels(90)})
             .with_background(Theme::Usage::Surface)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_surface"));
 
@@ -90,7 +90,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_label("Error")
             .with_size(ComponentSize{pixels(110), pixels(90)})
             .with_background(Theme::Usage::Error)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Spacing::xs)
             .with_debug_name("swatch_error"));
 
@@ -122,7 +122,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
               .with_label(custom_labels[i])
               .with_size(ComponentSize{pixels(110), pixels(90)})
               .with_custom_background(custom_colors[i])
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_margin(Spacing::xs)
               .with_debug_name("custom_" + std::to_string(i)));
     }
@@ -135,7 +135,7 @@ struct ExampleColors : afterhours::System<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(1000), pixels(40)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Margin{.top = DefaultSpacing::small(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
