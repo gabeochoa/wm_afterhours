@@ -136,7 +136,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
     // Menu items - BIG buttons
     for (size_t i = 0; i < daily_specials.size(); i++) {
       bool selected = (i == selected_special);
-      if (button(context, mk(menu_panel.ent(), 1 + i),
+      if (button(context, mk(menu_panel.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(daily_specials[i])
                      .with_size(ComponentSize{pixels(360), pixels(55)})
@@ -180,7 +180,7 @@ struct CozyCafeScreen : afterhours::System<UIContext<InputAction>> {
     // Customer list
     for (size_t i = 0; i < waiting_customers.size(); i++) {
       auto& c = waiting_customers[i];
-      auto row = div(context, mk(customer_panel.ent(), 1 + i),
+      auto row = div(context, mk(customer_panel.ent(), 1 + static_cast<int>(i)),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(320), pixels(60)})
               .with_custom_color(afterhours::colors::darken(theme.surface, 0.95f))

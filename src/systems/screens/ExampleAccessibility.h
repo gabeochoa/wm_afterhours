@@ -19,7 +19,7 @@ struct ExampleAccessibility : afterhours::System<UIContext<InputAction>> {
     void for_each_with(afterhours::Entity &entity,
                        UIContext<InputAction> &context, float) override {
         int screen_width = Settings::get().get_screen_width();
-        int screen_height = Settings::get().get_screen_height();
+        (void)screen_width;  // Used for layout calculations if needed
 
         // Validate theme once on first frame
         if (!validated_theme) {

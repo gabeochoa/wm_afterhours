@@ -28,22 +28,29 @@ struct TestSystem : afterhours::System<> {
   }
 
   void once(float) override {
-    test_input::reset_frame();
+    // Increment frame counter at the start
     test_app::frame_counter++;
 
     if (!current_test.has_value()) {
+      test_input::reset_frame();
       return;
     }
 
     if (test_complete) {
+      test_input::reset_frame();
       return;
     }
 
     if (current_test->handle && !current_test->handle.done()) {
-      current_test->resume();
+      // Only resume if the coroutine is ready to continue (not waiting)
+      if (current_test->handle.promise().should_continue()) {
+        // Clear the wait flag before resuming
+        current_test->handle.promise().wait_until_frame = 0;
+        current_test->resume();
 
-      if (test_input::slow_test_mode) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        if (test_input::slow_test_mode) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        }
       }
     }
 
@@ -56,6 +63,9 @@ struct TestSystem : afterhours::System<> {
       }
       current_test.reset();
     }
+
+    // Reset frame state at the END so UI systems can process inputs this frame
+    test_input::reset_frame();
   }
 
   bool is_complete() const { return test_complete; }

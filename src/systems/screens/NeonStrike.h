@@ -114,7 +114,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
     // Weapon buttons
     for (size_t i = 0; i < weapons.size(); i++) {
       bool sel = (i == selected_weapon);
-      if (button(context, mk(weapon_panel.ent(), 1 + i),
+      if (button(context, mk(weapon_panel.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(weapons[i].name)
                      .with_size(ComponentSize{pixels(420), pixels(50)})
@@ -209,7 +209,7 @@ struct NeonStrikeScreen : afterhours::System<UIContext<InputAction>> {
 
     // Gear buttons
     for (size_t i = 0; i < gear.size(); i++) {
-      button(context, mk(gear_panel.ent(), 1 + i),
+      button(context, mk(gear_panel.ent(), 1 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(gear[i])
                  .with_size(ComponentSize{pixels(300), pixels(36)})

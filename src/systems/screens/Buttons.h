@@ -198,7 +198,7 @@ struct ButtonsGallery : afterhours::System<UIContext<InputAction>> {
       else if (i == group_labels.size() - 1) corners = corners.sharp(TOP_LEFT).sharp(BOTTOM_LEFT);
       else corners = corners.all_sharp();
       
-      if (button(context, mk(row3.ent(), 1 + i),
+      if (button(context, mk(row3.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(std::string(group_labels[i]))
                      .with_size(ComponentSize{pixels(90), pixels(45)})

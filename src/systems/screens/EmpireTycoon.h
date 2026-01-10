@@ -185,7 +185,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
 
     for (size_t i = 0; i < departments.size(); i++) {
       auto& d = departments[i];
-      auto row = div(context, mk(dept_panel.ent(), 1 + i),
+      auto row = div(context, mk(dept_panel.ent(), 1 + static_cast<int>(i)),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(360), pixels(65)})
               .with_custom_color(afterhours::colors::darken(theme.surface, 0.85f))
@@ -240,7 +240,7 @@ struct EmpireTycoonScreen : afterhours::System<UIContext<InputAction>> {
 
     for (size_t i = 0; i < projects.size(); i++) {
       auto& p = projects[i];
-      auto card = div(context, mk(proj_panel.ent(), 1 + i),
+      auto card = div(context, mk(proj_panel.ent(), 1 + static_cast<int>(i)),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(320), pixels(95)})
               .with_custom_color(afterhours::colors::darken(theme.surface, 0.85f))

@@ -21,6 +21,7 @@ struct TestApp {
   struct promise_type {
     std::string error_message;
     bool done = false;
+    int wait_until_frame = 0;  // If > 0, don't continue until frame_counter >= this
 
     TestApp get_return_object() {
       return TestApp{std::coroutine_handle<promise_type>::from_promise(*this)};
@@ -37,6 +38,13 @@ struct TestApp {
       done = true;
     }
     void return_void() { done = true; }
+    
+    bool should_continue() const {
+      if (wait_until_frame > 0 && test_app::frame_counter < wait_until_frame) {
+        return false;
+      }
+      return true;
+    }
   };
 
   std::coroutine_handle<promise_type> handle;
@@ -135,11 +143,26 @@ struct TestApp {
 
     const afterhours::ui::UIComponent &ui_comp =
         entity.get<afterhours::ui::UIComponent>();
-    float center_x = ui_comp.x() + ui_comp.width() / 2.0f;
-    float center_y = ui_comp.y() + ui_comp.height() / 2.0f;
+    
+    // Get the base rect
+    RectangleType rect = ui_comp.rect();
+    
+    // Apply translation modifiers if present (from with_translate)
+    if (entity.has<afterhours::ui::HasUIModifiers>()) {
+      rect = entity.get<afterhours::ui::HasUIModifiers>().apply_modifier(rect);
+    }
+    
+    float center_x = rect.x + rect.width / 2.0f;
+    float center_y = rect.y + rect.height / 2.0f;
 
+    // Set mouse position and press button
     test_input::set_mouse_position(vec2{center_x, center_y});
     test_input::simulate_mouse_button_press(raylib::MOUSE_BUTTON_LEFT);
+  }
+
+  // Schedule a mouse release for the next frame (call after click_ui_element and waiting)
+  static void release_mouse_button() {
+    test_input::simulate_mouse_button_release(raylib::MOUSE_BUTTON_LEFT);
   }
 
   static void click_button(const std::string &label) {
@@ -181,7 +204,10 @@ struct TestApp {
     }
 
     bool await_ready() const { return test_app::frame_counter >= target_frame; }
-    void await_suspend(std::coroutine_handle<promise_type>) {}
+    void await_suspend(std::coroutine_handle<promise_type> h) {
+      // Set the wait_until_frame in the promise so TestSystem knows not to continue
+      h.promise().wait_until_frame = target_frame;
+    }
     void await_resume() {}
   };
 

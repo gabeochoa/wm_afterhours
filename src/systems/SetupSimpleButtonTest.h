@@ -11,7 +11,6 @@ struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context,
                      float) override {
-    log_info("SetupSimpleButtonTest running");
     int screen_width = Settings::get().get_screen_width();
     int screen_height = Settings::get().get_screen_height();
 

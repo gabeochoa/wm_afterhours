@@ -32,9 +32,9 @@ Add theming infrastructure to afterhours library.
 
 - [x] **2.1** Extend existing `Theme` struct to add `surface` and `font_muted` colors (minimal breaking change)
 - [x] **2.2** Create `theme_presets.h` with 5 preset themes and `apply()` function
-- [ ] **2.3** Add `HasShadow` component supporting both hard offset and soft blur styles
-- [ ] **2.4** Update `rendering.h` to draw shadows before elements
-- [ ] **2.5** Add `.with_shadow()` to ComponentConfig builder
+- [x] **2.3** Add `HasShadow` component supporting both hard offset and soft blur styles
+- [x] **2.4** Update `rendering.h` to draw shadows before elements
+- [x] **2.5** Add `.with_shadow()` to ComponentConfig builder
 - [x] **2.6** Include `theme_presets.h` in main `ui.h`
 
 ### Additional Files Modified
@@ -58,19 +58,19 @@ Create three visually distinct game menu mockups.
 
 ### Tasks
 
-- [ ] **3.1** Create `CozyCafe.h` - Cozy cafe sim menu
+- [x] **3.1** Create `CozyCafe.h` - Cozy cafe sim menu
   - Kraft/cream theme
   - Daily specials panel, customer list, inventory grid
   - Soft shadows, rounded corners, warm feel
   - Components: buttons, dropdowns, sliders (volume)
 
-- [ ] **3.2** Create `NeonStrike.h` - Tactical shooter loadout screen
+- [x] **3.2** Create `NeonStrike.h` - Tactical shooter loadout screen
   - Neon dark theme (cyan/magenta on black)
   - Weapon select, loadout slots, mission briefing
   - Sharp edges, high contrast, glowing accents
   - Components: buttons, stat bars, dropdown
 
-- [ ] **3.3** Create `EmpireTycoon.h` - Business tycoon dashboard
+- [x] **3.3** Create `EmpireTycoon.h` - Business tycoon dashboard
   - Ocean navy theme (navy/gold)
   - Financial overview, build menu, employee panel
   - Clean grids, professional look, data-heavy
@@ -129,7 +129,7 @@ Final polish and interactive theme demo.
 
 ### Tasks
 
-- [ ] **5.1** Create `Themes.h` - Real-time theme switching screen
+- [x] **5.1** Create `Themes.h` - Real-time theme switching screen
   - Buttons to switch between all 5 presets
   - Preview panel showing sample components
   - Immediate visual feedback

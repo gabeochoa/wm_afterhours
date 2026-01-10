@@ -1,4 +1,5 @@
 #include "test_input.h"
+#include "test_input_fwd.h"
 #include "../engine/input_injector.h"
 #include "../rl.h"
 
@@ -22,7 +23,8 @@ void push_key(int key) {
   press.key = key;
   press.is_char = false;
   input_queue.push(press);
-  input_injector::set_key_down(key);
+  // Note: Don't call input_injector::set_key_down here, as that causes double-processing
+  // The key will be processed via the queue in is_key_pressed
 }
 
 void push_char(char c) {
@@ -114,6 +116,11 @@ vec2 get_mouse_position() {
     return mouse_state.position.value();
   }
   return input_injector::get_mouse_position();
+}
+
+test_input_vec2 get_mouse_position_fwd() {
+  vec2 pos = get_mouse_position();
+  return test_input_vec2{pos.x, pos.y};
 }
 
 bool is_mouse_button_pressed(int button) {

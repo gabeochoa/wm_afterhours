@@ -18,7 +18,8 @@ TEST(snapshot_test) {
   co_await TestApp::wait_for_frames(2);
 
   TestApp::click_button("Click Me");
-
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
   co_await TestApp::wait_for_frames(2);
 
   TestApp::expect_ui_exists("Clicks: 1");

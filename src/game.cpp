@@ -276,6 +276,19 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     auto test_system = std::make_unique<TestSystem>();
     test_system_ptr = test_system.get();
     systems.register_update_system(std::move(test_system));
+
+    // Register UI pre-update systems (clears, resets)
+    afterhours::ui::register_before_ui_updates<InputAction>(systems);
+
+    // Register the test UI so buttons exist when processed
+    if (test_name == "tabbing") {
+      systems.register_update_system(std::make_unique<SetupTabbingTest>());
+    } else {
+      systems.register_update_system(std::make_unique<SetupSimpleButtonTest>());
+    }
+
+    // Register UI post-update systems (HandleClicks, HandleTabbing, layout, etc.)
+    afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
 
   {
@@ -286,12 +299,6 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
-
-    if (test_name == "tabbing") {
-      systems.register_update_system(std::make_unique<SetupTabbingTest>());
-    } else {
-      systems.register_update_system(std::make_unique<SetupSimpleButtonTest>());
-    }
 
     systems.register_render_system(std::make_unique<RenderTestFeedback>());
     systems.register_render_system(std::make_unique<EndDrawing>());
