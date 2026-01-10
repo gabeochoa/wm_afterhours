@@ -165,7 +165,11 @@ Preload &Preload::make_singleton() {
         .set_theme_color(ui::Theme::Usage::Primary, colors::UI_GREEN)
         .set_theme_color(ui::Theme::Usage::Error, colors::UI_RED)
         .set_theme_color(ui::Theme::Usage::Font, colors::UI_WHITE)
+        .set_theme_color(ui::Theme::Usage::DarkFont,
+                         afterhours::Color{30, 30, 30, 255}) // Dark text for light backgrounds
         .set_theme_color(ui::Theme::Usage::Background, colors::UI_BLACK)
+        .set_theme_color(ui::Theme::Usage::Surface,
+                         afterhours::Color{40, 40, 50, 255}) // Slightly lighter than background
         .set_theme_color(ui::Theme::Usage::Secondary, raylib::YELLOW)
         .set_theme_color(ui::Theme::Usage::Accent, raylib::GREEN);
 
