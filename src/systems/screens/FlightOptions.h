@@ -19,7 +19,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_cyan{85, 175, 225, 255};
   afterhours::Color text_bright{165, 215, 245, 255};
   afterhours::Color text_muted{75, 95, 120, 255};
-  afterhours::Color highlight_line{45, 130, 185, 255};
+  afterhours::Color highlight_line{35, 105, 160, 255};  // Darkened for WCAG AA contrast
   afterhours::Color grid_color{20, 35, 55, 180};
 
   std::vector<std::string> categories = {
@@ -38,8 +38,9 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
-    theme.font = text_bright;
-    theme.darkfont = bg_dark;
+    // Use pure white/black for auto_text_color to achieve WCAG AA contrast
+    theme.font = afterhours::Color{255, 255, 255, 255};  // Pure white for dark bgs
+    theme.darkfont = afterhours::Color{10, 15, 25, 255}; // Near-black for light bgs
     theme.font_muted = text_muted;
     theme.background = bg_dark;
     theme.surface = afterhours::Color{12, 18, 30, 255};

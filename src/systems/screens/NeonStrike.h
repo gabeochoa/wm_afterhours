@@ -220,7 +220,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w - 255.0f, 52.0f)
             .with_custom_background(gold_accent)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("BlackOpsOne", 16.0f)
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("objective"));

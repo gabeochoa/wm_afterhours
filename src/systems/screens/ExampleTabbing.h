@@ -11,9 +11,20 @@ using namespace afterhours::ui::imm;
 struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
   int focused_button = 0;
   std::vector<int> button_clicks = {0, 0, 0, 0};
+  bool theme_initialized = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    // Set up theme with proper contrasting colors for auto_text_color
+    if (!theme_initialized) {
+      theme_initialized = true;
+      Theme theme;
+      theme.font = afterhours::Color{255, 255, 255, 255};
+      theme.darkfont = afterhours::Color{30, 30, 30, 255};
+      theme.background = afterhours::Color{40, 40, 50, 255};
+      context.theme = theme;
+    }
+
     int screen_width = Settings::get().get_screen_width();
     int screen_height = Settings::get().get_screen_height();
 
@@ -39,9 +50,9 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
                                               pixels(button_height)})
                      .with_absolute_position()
                      .with_translate(start_x, button_y)
-                     .with_custom_background(afterhours::Color{
-                         static_cast<unsigned char>(80 + i * 20), 100,
-                         static_cast<unsigned char>(150 + i * 20), 255})
+                    .with_custom_background(afterhours::Color{
+                        static_cast<unsigned char>(50 + i * 15), 80,
+                        static_cast<unsigned char>(120 + i * 15), 255})  // Darker colors for better contrast
                      .with_auto_text_color(true)
                      .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                      .with_debug_name("tab_button_" + std::to_string(i)));

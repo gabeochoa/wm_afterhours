@@ -83,7 +83,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(280), pixels(55)})
             .with_absolute_position()
             .with_translate(title_x, title_y)
-            .with_font("EqProRounded", 48.0f)
+            .with_font("Fredoka", 48.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("title_rubber"));
 
@@ -94,7 +94,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(55)})
             .with_absolute_position()
             .with_translate(title_x, title_y + 50.0f)
-            .with_font("EqProRounded", 48.0f)
+            .with_font("Fredoka", 48.0f)
             .with_custom_text_color(accent_green)
             .with_debug_name("title_bandits"));
 

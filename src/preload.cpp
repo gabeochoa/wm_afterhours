@@ -147,6 +147,13 @@ Preload &Preload::make_singleton() {
         files::get_resource_path("fonts", "EBGaramond-Regular.ttf").string();
     std::string symbols_font =
         files::get_resource_path("fonts", "SymbolsNerdFont-Regular.ttf").string();
+    // New fonts for better inspiration matching
+    std::string fredoka_font =
+        files::get_resource_path("fonts", "Fredoka-VariableFont_wdth,wght.ttf").string();
+    std::string blackops_font =
+        files::get_resource_path("fonts", "BlackOpsOne-Regular.ttf").string();
+    std::string atkinson_font =
+        files::get_resource_path("fonts", "AtkinsonHyperlegible-Regular.ttf").string();
 
     // Get codepoints for CJK fonts
     auto korean_cps = get_korean_codepoints();
@@ -165,6 +172,12 @@ Preload &Preload::make_singleton() {
         .load_font("Garamond", garamond_font.c_str())
         // Symbols/icons font
         .load_font("NerdSymbols", symbols_font.c_str())
+        // Fredoka for thick cartoon/bubble style (Tycoon, Angry Birds, Rubber Bandits)
+        .load_font("Fredoka", fredoka_font.c_str())
+        // Black Ops One for military/stencil style (Shooter HUD)
+        .load_font("BlackOpsOne", blackops_font.c_str())
+        // Atkinson Hyperlegible for accessibility
+        .load_font("Atkinson", atkinson_font.c_str())
         // Korean font with Hangul codepoints
         .load_font_with_codepoints("NotoSansKR", korean_font.c_str(),
                                    korean_cps.data(),

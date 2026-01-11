@@ -282,7 +282,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(quest_x + 40.0f, quest_y + 50.0f)
             .with_custom_background(slider_orange)
-            .with_font("EqProRounded", 11.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -384,7 +384,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(120), pixels(18)})
               .with_absolute_position()
               .with_translate(chat_x, chat_y)
-              .with_font("EqProRounded", 11.0f)
+              .with_font("EqProRounded", 12.0f)
               .with_custom_text_color(slider_orange)
               .with_debug_name("chat_user_" + std::to_string(i)));
 
@@ -395,7 +395,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(80), pixels(18)})
               .with_absolute_position()
               .with_translate(chat_x + 110.0f, chat_y)
-              .with_font("EqProRounded", 11.0f)
+              .with_font("EqProRounded", 12.0f)
               .with_custom_text_color(text_white)
               .with_debug_name("chat_msg_" + std::to_string(i)));
     }
@@ -432,7 +432,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), pixels(18)})
             .with_absolute_position()
             .with_translate((float)screen_w - 100.0f, (float)screen_h - 28.0f)
-            .with_font("EqProRounded", 11.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(slider_orange)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("vehicle_name"));
@@ -505,7 +505,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(90), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 98.0f, y + 11.0f)
-            .with_font("EqProRounded", 11.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));

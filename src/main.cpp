@@ -31,6 +31,7 @@ backward::SignalHandling sh;
 #include "systems/screens/NeonStrike.h"
 #include "systems/screens/Themes.h"
 #include "systems/screens/AngryBirdsSettings.h"
+#include "systems/screens/AutoTextColorShowcase.h"
 #include "systems/screens/MiniMotorwaysSettings.h"
 #include "systems/screens/PowerWashSettings.h"
 #include "systems/screens/SportsSettings.h"

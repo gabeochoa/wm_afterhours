@@ -106,7 +106,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(50)})
             .with_absolute_position()
             .with_translate(panel_x + panel_w / 2.0f - 100.0f, panel_y + 15.0f)
-            .with_font("EqProRounded", 38.0f)
+            .with_font("Fredoka", 38.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -319,7 +319,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(280), pixels(22)})
             .with_absolute_position()
             .with_translate(left_btn_x, btn_y3 + 10.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("build_id"));
 
@@ -329,7 +329,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(20)})
             .with_absolute_position()
             .with_translate(left_btn_x, btn_y3 + 32.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("version"));
 
@@ -339,7 +339,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(20)})
             .with_absolute_position()
             .with_translate(left_btn_x, btn_y3 + 52.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("player_id"));
 
