@@ -945,29 +945,7 @@ ElementResult radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ---
 
-## 21. Missing Widget: Separator
-
-**Status:** Not implemented
-
-**ImGui Equivalent:** `Separator()`
-
-**Issue:** No visual divider between UI sections. Currently must use empty divs with background color.
-
-**Suggested Implementation:**
-```cpp
-ElementResult separator(HasUIContext auto &ctx, EntityParent ep_pair,
-                        ComponentConfig config = ComponentConfig());
-```
-
-**Features Needed:**
-- Horizontal line by default
-- Vertical option
-- Themeable color
-- Optional label in middle ("--- Section ---")
-
----
-
-## 22. Missing Widget: Color Picker
+## 21. Missing Widget: Color Picker
 
 **Status:** Not implemented
 
@@ -1156,7 +1134,6 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | Gap | Effort | Description | Status |
 |-----|--------|-------------|--------|
 | **Auto text color default** | Trivial | Change default boolean in `component_init.h` | Open |
-| **Separator** | Trivial | Simple horizontal/vertical line widget | Missing |
 | **mk() auto-increment** | Trivial | Add per-call-site counter (see U1 proposal) | Proposed |
 | Font in Theme | Trivial | - | RESOLVED |
 | Text vs Background color | Trivial | - | RESOLVED |
