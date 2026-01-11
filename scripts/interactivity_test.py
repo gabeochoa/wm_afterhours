@@ -370,6 +370,138 @@ SCREEN_TESTS: Dict[str, ScreenTestConfig] = {
             ),
         ]
     ),
+    
+    "angry_birds_settings": ScreenTestConfig(
+        screen_name="angry_birds_settings",
+        interactions=[
+            InteractionTest(
+                name="Music Toggle",
+                element_pattern="toggle_0",
+                action="click",
+                description="Toggle music on/off"
+            ),
+            InteractionTest(
+                name="Sound Toggle",
+                element_pattern="toggle_1",
+                action="click",
+                description="Toggle sound on/off"
+            ),
+            InteractionTest(
+                name="Vibration Toggle",
+                element_pattern="toggle_2",
+                action="click",
+                description="Toggle vibration on/off"
+            ),
+            InteractionTest(
+                name="Notifications Button",
+                element_pattern="notifications_btn",
+                action="click",
+                description="Toggle notifications on/off"
+            ),
+        ]
+    ),
+    
+    "empire_tycoon": ScreenTestConfig(
+        screen_name="empire_tycoon",
+        interactions=[
+            InteractionTest(
+                name="Tab 0",
+                element_pattern="tab_0",
+                action="click",
+                description="Select first navigation tab"
+            ),
+            InteractionTest(
+                name="Tab 1",
+                element_pattern="tab_1",
+                action="click",
+                description="Select second navigation tab"
+            ),
+            InteractionTest(
+                name="Tab 2",
+                element_pattern="tab_2",
+                action="click",
+                description="Select third navigation tab"
+            ),
+        ]
+    ),
+    
+    "islands_trains_settings": ScreenTestConfig(
+        screen_name="islands_trains_settings",
+        interactions=[
+            InteractionTest(
+                name="Mode Left Arrow",
+                element_pattern="chevron_l_110",
+                action="click",
+                description="Cycle display mode left"
+            ),
+            InteractionTest(
+                name="Mode Right Arrow",
+                element_pattern="chevron_r_110",
+                action="click",
+                description="Cycle display mode right"
+            ),
+            InteractionTest(
+                name="Cam Pan Left",
+                element_pattern="chevron_l_140",
+                action="click",
+                description="Decrease cam panning speed"
+            ),
+            InteractionTest(
+                name="Cam Pan Right",
+                element_pattern="chevron_r_140",
+                action="click",
+                description="Increase cam panning speed"
+            ),
+        ]
+    ),
+    
+    "dead_space_settings": ScreenTestConfig(
+        screen_name="dead_space_settings",
+        interactions=[
+            InteractionTest(
+                name="Initial Menu Item",
+                element_pattern="initial_0",
+                action="click",
+                description="Select first menu item"
+            ),
+            InteractionTest(
+                name="Settings Menu Item",
+                element_pattern="setting_0",
+                action="click",
+                description="Select Controls setting"
+            ),
+        ]
+    ),
+    
+    "flight_options": ScreenTestConfig(
+        screen_name="flight_options",
+        interactions=[
+            InteractionTest(
+                name="Category Selection",
+                element_pattern="tab_*",
+                action="click",
+                description="Select a category tab"
+            ),
+        ]
+    ),
+    
+    "cozy_cafe": ScreenTestConfig(
+        screen_name="cozy_cafe",
+        interactions=[
+            InteractionTest(
+                name="Menu Item",
+                element_pattern="*_110",
+                action="click",
+                description="Select first daily special"
+            ),
+            InteractionTest(
+                name="Inventory Button",
+                element_pattern="inventory_btn",
+                action="click",
+                description="Click inventory button"
+            ),
+        ]
+    ),
 }
 
 
