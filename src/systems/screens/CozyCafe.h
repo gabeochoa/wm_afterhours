@@ -171,19 +171,21 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("rating_label"));
     
     // Star rating icons (4 filled, 1 empty = 4/5 stars)
-    if (star_filled_tex.id != 0) {
-      float star_x = 625.0f;
-      for (int i = 0; i < 5; i++) {
-        bool is_filled = (i < 4);
-        auto &tex = is_filled ? star_filled_tex : star_empty_tex;
-        afterhours::texture_manager::Rectangle src{0, 0, (float)tex.width, (float)tex.height};
-        sprite(context, mk(entity, 33 + i), tex, src,
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(18), pixels(18)})
-                .with_absolute_position()
-                .with_translate(star_x + (float)i * 20.0f, 29.0f)
-                .with_debug_name("star_" + std::to_string(i)));
-      }
+    // Using colored rectangles as simple star representation
+    afterhours::Color star_gold{215, 175, 95, 255};
+    afterhours::Color star_empty_color{190, 180, 165, 255};
+    float star_x = 628.0f;
+    for (int i = 0; i < 5; i++) {
+      bool is_filled = (i < 4);
+      div(context, mk(entity, 33 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(16), pixels(16)})
+              .with_absolute_position()
+              .with_translate(star_x + (float)i * 19.0f, 30.0f)
+              .with_custom_background(is_filled ? star_gold : star_empty_color)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.3f)
+              .with_debug_name("star_" + std::to_string(i)));
     }
 
     div(context, mk(entity, 32),
@@ -197,11 +199,16 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("served"));
 
     // ========== LEFT PANEL: Today's Specials ==========
+    float left_panel_x = 35.0f;
+    float panel_y = 95.0f;
+    float left_panel_w = 380.0f;
+    float panel_h = 390.0f;
+    
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(340), pixels(370)})
+            .with_size(ComponentSize{pixels(static_cast<int>(left_panel_w)), pixels(static_cast<int>(panel_h))})
             .with_absolute_position()
-            .with_translate(35.0f, 90.0f)
+            .with_translate(left_panel_x, panel_y)
             .with_custom_background(cream_surface)
             .with_border(brown_border, 3.0f)
             .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 45})
@@ -212,11 +219,11 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 101),
         ComponentConfig{}
             .with_label("Today's Specials")
-            .with_size(ComponentSize{pixels(334), pixels(48)})
+            .with_size(ComponentSize{pixels(static_cast<int>(left_panel_w - 6)), pixels(52)})
             .with_absolute_position()
-            .with_translate(38.0f, 93.0f)
+            .with_translate(left_panel_x + 3.0f, panel_y + 3.0f)
             .with_custom_background(brown_header)
-            .with_font("Gaegu-Bold", 26.0f)
+            .with_font("Gaegu-Bold", 28.0f)
             .with_custom_text_color(cream_surface)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -224,7 +231,8 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Menu items - styled as pill buttons with colored fills
     afterhours::Color menu_colors[] = {pink_btn, mint_btn, tan_btn};
-    float menu_y = 158.0f;
+    float menu_y = panel_y + 70.0f;
+    float menu_btn_w = left_panel_w - 50.0f;
     for (size_t i = 0; i < daily_specials.size(); i++) {
       bool selected = (i == selected_special);
       afterhours::Color btn_bg = menu_colors[i];
@@ -232,12 +240,12 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 110 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(daily_specials[i])
-                     .with_size(ComponentSize{pixels(300), pixels(48)})
+                     .with_size(ComponentSize{pixels(static_cast<int>(menu_btn_w)), pixels(52)})
                      .with_absolute_position()
-                     .with_translate(55.0f, menu_y + (float)i * 58.0f)
+                     .with_translate(left_panel_x + 25.0f, menu_y + (float)i * 62.0f)
                      .with_custom_background(btn_bg)
                      .with_border(brown_border, selected ? 3.0f : 2.0f)
-                     .with_font("Gaegu-Bold", 22.0f)
+                     .with_font("Gaegu-Bold", 24.0f)
                      .with_custom_text_color(dark_text)
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(0.5f)
@@ -248,15 +256,16 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Promote Special button
+    float promote_y = panel_y + panel_h - 70.0f;
     button(context, mk(entity, 120),
            ComponentConfig{}
                .with_label("Promote Special")
-               .with_size(ComponentSize{pixels(260), pixels(42)})
+               .with_size(ComponentSize{pixels(static_cast<int>(menu_btn_w - 40)), pixels(46)})
                .with_absolute_position()
-               .with_translate(55.0f, 350.0f)
+               .with_translate(left_panel_x + 25.0f, promote_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
-               .with_font("Gaegu-Bold", 18.0f)
+               .with_font("Gaegu-Bold", 20.0f)
                .with_custom_text_color(dark_text)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
@@ -268,18 +277,21 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle clock_src{0, 0, (float)clock_tex.width, (float)clock_tex.height};
       sprite(context, mk(entity, 121), clock_tex, clock_src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(24), pixels(24)})
+              .with_size(ComponentSize{pixels(26), pixels(26)})
               .with_absolute_position()
-              .with_translate(320.0f, 359.0f)
+              .with_translate(left_panel_x + menu_btn_w - 35.0f, promote_y + 10.0f)
               .with_debug_name("clock_icon"));
     }
 
     // ========== RIGHT PANEL: Customers ==========
+    float right_panel_x = left_panel_x + left_panel_w + 20.0f;
+    float right_panel_w = 420.0f;
+    
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(380), pixels(370)})
+            .with_size(ComponentSize{pixels(static_cast<int>(right_panel_w)), pixels(static_cast<int>(panel_h))})
             .with_absolute_position()
-            .with_translate(395.0f, 90.0f)
+            .with_translate(right_panel_x, panel_y)
             .with_custom_background(cream_surface)
             .with_border(sage_header, 4.0f)
             .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 45})
@@ -290,39 +302,39 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 201),
         ComponentConfig{}
             .with_label("Customers")
-            .with_size(ComponentSize{pixels(372), pixels(48)})
+            .with_size(ComponentSize{pixels(static_cast<int>(right_panel_w - 8)), pixels(52)})
             .with_absolute_position()
-            .with_translate(399.0f, 94.0f)
+            .with_translate(right_panel_x + 4.0f, panel_y + 4.0f)
             .with_custom_background(sage_header)
-            .with_font("Gaegu-Bold", 28.0f)
+            .with_font("Gaegu-Bold", 30.0f)
             .with_custom_text_color(dark_text)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
             .with_debug_name("customers_header"));
 
     // Customer rows
-    float cust_y = 160.0f;
+    float cust_y = panel_y + 75.0f;
     for (size_t i = 0; i < waiting_customers.size(); i++) {
       auto &c = waiting_customers[i];
-      float row_y = cust_y + (float)i * 75.0f;
+      float row_y = cust_y + (float)i * 80.0f;
 
       // Name - Order
       div(context, mk(entity, 210 + static_cast<int>(i) * 10),
           ComponentConfig{}
               .with_label(c.name + " - " + c.order)
-              .with_size(ComponentSize{pixels(200), pixels(28)})
+              .with_size(ComponentSize{pixels(220), pixels(32)})
               .with_absolute_position()
-              .with_translate(415.0f, row_y)
-              .with_font("Gaegu-Bold", 20.0f)
+              .with_translate(right_panel_x + 20.0f, row_y)
+              .with_font("Gaegu-Bold", 22.0f)
               .with_custom_text_color(dark_text)
               .with_debug_name("cust_" + std::to_string(i)));
 
       // Progress bar bg
       div(context, mk(entity, 211 + static_cast<int>(i) * 10),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(65), pixels(22)})
+              .with_size(ComponentSize{pixels(70), pixels(24)})
               .with_absolute_position()
-              .with_translate(640.0f, row_y + 2.0f)
+              .with_translate(right_panel_x + 255.0f, row_y + 4.0f)
               .with_custom_background(brown_header)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.4f)
@@ -332,10 +344,10 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       if (c.progress > 0.0f) {
         div(context, mk(entity, 212 + static_cast<int>(i) * 10),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(58 * c.progress)),
-                                         pixels(16)})
+                .with_size(ComponentSize{pixels(static_cast<int>(62 * c.progress)),
+                                         pixels(18)})
                 .with_absolute_position()
-                .with_translate(644.0f, row_y + 5.0f)
+                .with_translate(right_panel_x + 259.0f, row_y + 7.0f)
                 .with_custom_background(afterhours::Color{175, 200, 165, 255})
                 .with_rounded_corners(std::bitset<4>(0b1111))
                 .with_roundness(0.4f)
@@ -347,11 +359,11 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 213 + static_cast<int>(i) * 10),
           ComponentConfig{}
               .with_label(std::to_string(c.wait_time) + "m")
-              .with_size(ComponentSize{pixels(42), pixels(26)})
+              .with_size(ComponentSize{pixels(48), pixels(28)})
               .with_absolute_position()
-              .with_translate(720.0f, row_y)
+              .with_translate(right_panel_x + 340.0f, row_y + 2.0f)
               .with_custom_background(time_bg)
-              .with_font("Gaegu-Bold", 15.0f)
+              .with_font("Gaegu-Bold", 16.0f)
               .with_custom_text_color(cream_surface)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.4f)
@@ -360,15 +372,16 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Serve Next button
+    float serve_btn_y = panel_y + panel_h - 70.0f;
     button(context, mk(entity, 250),
            ComponentConfig{}
                .with_label("Serve Next")
-               .with_size(ComponentSize{pixels(340), pixels(48)})
+               .with_size(ComponentSize{pixels(static_cast<int>(right_panel_w - 40)), pixels(52)})
                .with_absolute_position()
-               .with_translate(420.0f, 355.0f)
+               .with_translate(right_panel_x + 20.0f, serve_btn_y)
                .with_custom_background(rose_btn)
                .with_border(sage_header, 3.0f)
-               .with_font("Gaegu-Bold", 26.0f)
+               .with_font("Gaegu-Bold", 28.0f)
                .with_custom_text_color(dark_text)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
@@ -376,11 +389,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                .with_debug_name("serve_next"));
 
     // ========== MUSIC SLIDER ==========
+    float slider_y = panel_y + panel_h + 15.0f;
+    float slider_w = 300.0f;
+    
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(22)})
+            .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(24)})
             .with_absolute_position()
-            .with_translate(35.0f, 490.0f)
+            .with_translate(left_panel_x, slider_y)
             .with_custom_background(brown_header)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
@@ -388,10 +404,10 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 301),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(260 * music_volume)),
-                                     pixels(16)})
+            .with_size(ComponentSize{pixels(static_cast<int>((slider_w - 20) * music_volume)),
+                                     pixels(18)})
             .with_absolute_position()
-            .with_translate(38.0f, 493.0f)
+            .with_translate(left_panel_x + 3.0f, slider_y + 3.0f)
             .with_custom_background(sage_header)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
@@ -400,9 +416,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Slider handle
     div(context, mk(entity, 302),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(18), pixels(26)})
+            .with_size(ComponentSize{pixels(20), pixels(28)})
             .with_absolute_position()
-            .with_translate(35.0f + 260.0f * music_volume, 488.0f)
+            .with_translate(left_panel_x + (slider_w - 20) * music_volume, slider_y - 2.0f)
             .with_custom_background(sage_header)
             .with_border(brown_header, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -412,40 +428,46 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 303),
         ComponentConfig{}
             .with_label("Music: " + std::to_string(static_cast<int>(music_volume * 100)) + "%")
-            .with_size(ComponentSize{pixels(110), pixels(22)})
+            .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position()
-            .with_translate(35.0f, 520.0f)
-            .with_font("Gaegu-Bold", 17.0f)
+            .with_translate(left_panel_x, slider_y + 32.0f)
+            .with_font("Gaegu-Bold", 18.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("music_label"));
 
     // ========== CHAT BOX ==========
+    float chat_y = slider_y + 65.0f;
+    float chat_w = 350.0f;
+    
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(330), pixels(65)})
+            .with_size(ComponentSize{pixels(static_cast<int>(chat_w)), pixels(70)})
             .with_absolute_position()
-            .with_translate(35.0f, 560.0f)
+            .with_translate(left_panel_x, chat_y)
             .with_custom_background(cream_surface)
             .with_border(brown_border, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_debug_name("chat_box"));
 
     // Chat avatar 1 (guildmate)
+    float chat_line1_y = chat_y + 10.0f;
+    float chat_line2_y = chat_y + 38.0f;
+    
     if (avatar_guildmate_tex.id != 0) {
       afterhours::texture_manager::Rectangle src{0, 0, (float)avatar_guildmate_tex.width, (float)avatar_guildmate_tex.height};
       sprite(context, mk(entity, 405), avatar_guildmate_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(24), pixels(24)})
+              .with_size(ComponentSize{pixels(26), pixels(26)})
               .with_absolute_position()
-              .with_translate(44.0f, 569.0f)
+              .with_translate(left_panel_x + 10.0f, chat_line1_y)
               .with_debug_name("avatar1"));
     } else {
       div(context, mk(entity, 405),
           ComponentConfig{}
               .with_label("@")
-              .with_size(ComponentSize{pixels(22), pixels(22)})
+              .with_size(ComponentSize{pixels(24), pixels(24)})
               .with_absolute_position()
-              .with_translate(45.0f, 570.0f)
+              .with_translate(left_panel_x + 10.0f, chat_line1_y)
               .with_custom_background(afterhours::Color{180, 160, 140, 255})
               .with_font("Gaegu-Bold", 12.0f)
               .with_custom_text_color(cream_surface)
@@ -458,10 +480,10 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("Guildmate23: need help with t...")
-            .with_size(ComponentSize{pixels(280), pixels(20)})
+            .with_size(ComponentSize{pixels(300), pixels(22)})
             .with_absolute_position()
-            .with_translate(72.0f, 572.0f)
-            .with_font("Gaegu-Bold", 13.0f)
+            .with_translate(left_panel_x + 42.0f, chat_line1_y + 2.0f)
+            .with_font("Gaegu-Bold", 14.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("chat1"));
 
@@ -470,17 +492,17 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle src{0, 0, (float)avatar_devteam_tex.width, (float)avatar_devteam_tex.height};
       sprite(context, mk(entity, 406), avatar_devteam_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(24), pixels(24)})
+              .with_size(ComponentSize{pixels(26), pixels(26)})
               .with_absolute_position()
-              .with_translate(44.0f, 597.0f)
+              .with_translate(left_panel_x + 10.0f, chat_line2_y)
               .with_debug_name("avatar2"));
     } else {
       div(context, mk(entity, 406),
           ComponentConfig{}
               .with_label("D")
-              .with_size(ComponentSize{pixels(22), pixels(22)})
+              .with_size(ComponentSize{pixels(24), pixels(24)})
               .with_absolute_position()
-              .with_translate(45.0f, 598.0f)
+              .with_translate(left_panel_x + 10.0f, chat_line2_y)
               .with_custom_background(afterhours::Color{120, 150, 180, 255})
               .with_font("Gaegu-Bold", 12.0f)
               .with_custom_text_color(cream_surface)
@@ -493,25 +515,27 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 402),
         ComponentConfig{}
             .with_label("DevTeam_Support: Check out the new...")
-            .with_size(ComponentSize{pixels(280), pixels(20)})
+            .with_size(ComponentSize{pixels(300), pixels(22)})
             .with_absolute_position()
-            .with_translate(72.0f, 600.0f)
-            .with_font("Gaegu-Bold", 13.0f)
+            .with_translate(left_panel_x + 42.0f, chat_line2_y + 2.0f)
+            .with_font("Gaegu-Bold", 14.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("chat2"));
 
     // ========== BOTTOM RIGHT: Icons with Badges ==========
-    float icon_x = 560.0f;
-    float icon_size = 52.0f;
-    float icon_img_size = 32.0f;
+    float icon_x = right_panel_x + right_panel_w - 230.0f;
+    float icon_y = chat_y + 5.0f;
+    float icon_size = 58.0f;
+    float icon_img_size = 36.0f;
     float icon_offset = (icon_size - icon_img_size) / 2.0f;
+    float icon_spacing = 78.0f;
     
     // Inventory icon with badge
     button(context, mk(entity, 500),
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(icon_size), pixels(icon_size)})
+               .with_size(ComponentSize{pixels(static_cast<int>(icon_size)), pixels(static_cast<int>(icon_size))})
                .with_absolute_position()
-               .with_translate(icon_x, 560.0f)
+               .with_translate(icon_x, icon_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -520,20 +544,20 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle src{0, 0, (float)icon_inventory_tex.width, (float)icon_inventory_tex.height};
       sprite(context, mk(entity, 501), icon_inventory_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(icon_img_size), pixels(icon_img_size)})
+              .with_size(ComponentSize{pixels(static_cast<int>(icon_img_size)), pixels(static_cast<int>(icon_img_size))})
               .with_absolute_position()
-              .with_translate(icon_x + icon_offset, 560.0f + icon_offset)
+              .with_translate(icon_x + icon_offset, icon_y + icon_offset)
               .with_debug_name("inventory_icon"));
     }
     ui_workarounds::notification_badge(context, entity, 502, "2", 
-        icon_x + icon_size - 12.0f, 560.0f - 4.0f, 18.0f, badge_red);
+        icon_x + icon_size - 14.0f, icon_y - 5.0f, 20.0f, badge_red);
     div(context, mk(entity, 503),
         ComponentConfig{}
             .with_label("Inventory")
-            .with_size(ComponentSize{pixels(icon_size), pixels(16)})
+            .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 10)), pixels(18)})
             .with_absolute_position()
-            .with_translate(icon_x, 560.0f + icon_size + 2.0f)
-            .with_font("Gaegu-Bold", 12.0f)
+            .with_translate(icon_x - 5.0f, icon_y + icon_size + 4.0f)
+            .with_font("Gaegu-Bold", 13.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("inventory_label"));
@@ -541,9 +565,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Research icon with badge
     button(context, mk(entity, 510),
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(icon_size), pixels(icon_size)})
+               .with_size(ComponentSize{pixels(static_cast<int>(icon_size)), pixels(static_cast<int>(icon_size))})
                .with_absolute_position()
-               .with_translate(icon_x + 75.0f, 560.0f)
+               .with_translate(icon_x + icon_spacing, icon_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -552,20 +576,20 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle src{0, 0, (float)icon_research_tex.width, (float)icon_research_tex.height};
       sprite(context, mk(entity, 511), icon_research_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(icon_img_size), pixels(icon_img_size)})
+              .with_size(ComponentSize{pixels(static_cast<int>(icon_img_size)), pixels(static_cast<int>(icon_img_size))})
               .with_absolute_position()
-              .with_translate(icon_x + 75.0f + icon_offset, 560.0f + icon_offset)
+              .with_translate(icon_x + icon_spacing + icon_offset, icon_y + icon_offset)
               .with_debug_name("research_icon"));
     }
     ui_workarounds::notification_badge(context, entity, 512, "!", 
-        icon_x + 75.0f + icon_size - 12.0f, 560.0f - 4.0f, 18.0f, badge_red);
+        icon_x + icon_spacing + icon_size - 14.0f, icon_y - 5.0f, 20.0f, badge_red);
     div(context, mk(entity, 513),
         ComponentConfig{}
             .with_label("Research")
-            .with_size(ComponentSize{pixels(icon_size), pixels(16)})
+            .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 10)), pixels(18)})
             .with_absolute_position()
-            .with_translate(icon_x + 75.0f, 560.0f + icon_size + 2.0f)
-            .with_font("Gaegu-Bold", 12.0f)
+            .with_translate(icon_x + icon_spacing - 5.0f, icon_y + icon_size + 4.0f)
+            .with_font("Gaegu-Bold", 13.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("research_label"));
@@ -573,9 +597,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Crafting icon (no badge)
     button(context, mk(entity, 520),
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(icon_size), pixels(icon_size)})
+               .with_size(ComponentSize{pixels(static_cast<int>(icon_size)), pixels(static_cast<int>(icon_size))})
                .with_absolute_position()
-               .with_translate(icon_x + 150.0f, 560.0f)
+               .with_translate(icon_x + icon_spacing * 2, icon_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -584,18 +608,18 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle src{0, 0, (float)icon_crafting_tex.width, (float)icon_crafting_tex.height};
       sprite(context, mk(entity, 521), icon_crafting_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(icon_img_size), pixels(icon_img_size)})
+              .with_size(ComponentSize{pixels(static_cast<int>(icon_img_size)), pixels(static_cast<int>(icon_img_size))})
               .with_absolute_position()
-              .with_translate(icon_x + 150.0f + icon_offset, 560.0f + icon_offset)
+              .with_translate(icon_x + icon_spacing * 2 + icon_offset, icon_y + icon_offset)
               .with_debug_name("crafting_icon"));
     }
     div(context, mk(entity, 522),
         ComponentConfig{}
             .with_label("Crafting")
-            .with_size(ComponentSize{pixels(icon_size), pixels(16)})
+            .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 10)), pixels(18)})
             .with_absolute_position()
-            .with_translate(icon_x + 150.0f, 560.0f + icon_size + 2.0f)
-            .with_font("Gaegu-Bold", 12.0f)
+            .with_translate(icon_x + icon_spacing * 2 - 5.0f, icon_y + icon_size + 4.0f)
+            .with_font("Gaegu-Bold", 13.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("crafting_label"));
