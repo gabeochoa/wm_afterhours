@@ -602,19 +602,13 @@ if (is_selected) {
 
 ---
 
-## 9. Checkbox Corner Config Merging
+## 9. Checkbox Corner Config Merging ✅ FIXED
 
-**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~258)
+**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~395)
 
 **Issue:** No way to merge user-provided corner configuration with internal checkbox styling.
 
-**Code Comment:**
-```cpp
-// TODO - if the user wants to mess with the corners, how can we merge
-// these
-```
-
-**Suggested Fix:** Allow corner config to be passed through and merged with component defaults.
+**Fix Applied:** The checkbox function now checks if the user has provided custom corner configuration via `config.rounded_corners.has_value()`. If the user specified their own corners, those are respected and the internal defaults are not applied. This allows users to fully customize checkbox corner styling when needed.
 
 ---
 
@@ -634,48 +628,17 @@ if (is_selected) {
 
 ---
 
-## 11. Auto Text Color Should Be Default Behavior
+## 11. Auto Text Color Should Be Default Behavior ✅ FIXED
 
 **Location:** `vendor/afterhours/src/plugins/ui/component_config.h` and `rendering.h`
 
-**Issue:** When a background color is set via `with_background()` or `with_custom_background()`, but no text color is specified, the text uses the theme's default font color. This frequently results in invisible or low-contrast text (e.g., dark text on dark backgrounds).
+**Issue:** When a background color is set via `with_background()` or `with_custom_background()`, but no text color is specified, the text uses the theme's default font color.
 
-**Current Behavior:**
-```cpp
-// This can produce invisible text if theme.font is dark and Primary is also dark
-div(context, mk(entity, 0),
-    ComponentConfig{}
-        .with_label("Some text")
-        .with_background(Theme::Usage::Primary));
-```
+**Fix Applied:** `auto_text_color` now defaults to `true` in `ComponentConfig`. The `apply_label()` function in `component_init.h` automatically sets a background hint when `auto_text_color` is enabled, allowing the renderer to pick the best contrast color between `theme.font` and `theme.darkfont`.
 
-**Required Workaround:**
-```cpp
-// Must manually add auto_text_color to every element with a background
-div(context, mk(entity, 0),
-    ComponentConfig{}
-        .with_label("Some text")
-        .with_background(Theme::Usage::Primary)
-        .with_auto_text_color(true));  // Easy to forget!
-```
-
-**Suggested Fix:** Enable auto-contrast text color by default when:
-1. A background color is specified (via `with_background()` or `with_custom_background()`)
-2. No explicit text color is set (via `with_text_color()` or `with_custom_text_color()`)
-
-This should be the default in `apply_label()` in `component_config.h`:
-```cpp
-// In apply_label(), when no explicit text color is set:
-if (!config.has_explicit_text_color() && entity.has<HasColor>()) {
-    lbl.set_background_hint(entity.get<HasColor>().color());
-}
-```
-
-**Benefits:**
-- Eliminates the most common cause of invisible text
-- Backwards compatible (explicit text colors still work)
-- Follows "sensible defaults" principle
-- Reduces boilerplate in UI code
+Users can still override with:
+- `with_auto_text_color(false)` to disable
+- `with_text_color()` or `with_custom_text_color()` for explicit colors
 
 ---
 
