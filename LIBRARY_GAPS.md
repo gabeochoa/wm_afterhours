@@ -125,25 +125,95 @@ div(context, mk(entity), config);  // Different line = different ID
 div(context, mk(entity), config);  // Each call gets unique hash
 ```
 
-**When Manual IDs ARE Needed:**
+**Current Limitation - Loops Still Need Manual IDs:**
 ```cpp
-// Loops require explicit indices since all iterations share same source line
+// Currently loops require explicit indices since all iterations share same source line
 for (size_t i = 0; i < items.size(); ++i) {
     div(context, mk(entity, i), config);  // Need index to differentiate
 }
 ```
 
-**Library Implementation (entity_management.h lines 25-33):**
+### Proposed Enhancement: Auto-Increment Per Call Site
+
+The library could automatically handle loops by tracking a counter per (parent + call site) that increments during the frame and resets at frame start.
+
+**Proposed Implementation:**
 ```cpp
+// In entity_management.h
+
+struct CallSiteKey {
+    EntityID parent_id;
+    const char* file;
+    int line;
+    int column;
+    
+    bool operator==(const CallSiteKey&) const = default;
+};
+
+struct CallSiteKeyHash {
+    size_t operator()(const CallSiteKey& k) const noexcept {
+        size_t h = std::hash<EntityID>{}(k.parent_id);
+        h ^= std::hash<const char*>{}(k.file) + 0x9e3779b9 + (h << 6) + (h >> 2);
+        h ^= std::hash<int>{}(k.line) + 0x9e3779b9 + (h << 6) + (h >> 2);
+        h ^= std::hash<int>{}(k.column) + 0x9e3779b9 + (h << 6) + (h >> 2);
+        return h;
+    }
+};
+
+static std::unordered_map<CallSiteKey, size_t, CallSiteKeyHash> call_site_counters;
+
+static void reset_call_site_counters() { 
+    call_site_counters.clear(); 
+}
+
 static EntityParent mk(Entity &parent, EntityID otherID = -1,
    const std::source_location location = std::source_location::current()) {
+  
+  CallSiteKey key{parent.id, location.file_name(), 
+                  static_cast<int>(location.line()), 
+                  static_cast<int>(location.column())};
+  
+  // Auto-increment if no explicit ID provided
+  EntityID effective_id = (otherID == -1) 
+      ? static_cast<EntityID>(call_site_counters[key]++) 
+      : otherID;
+  
   std::stringstream pre_hash;
-  pre_hash << parent.id << otherID << "file: " << location.file_name() 
+  pre_hash << parent.id << effective_id << "file: " << location.file_name() 
            << '(' << location.line() << ':' << location.column() << ")";
+  
   UI_UUID hash = std::hash<std::string>{}(pre_hash.str());
-  // Returns existing entity if hash matches, otherwise creates new
+  // ... rest unchanged
 }
 ```
+
+**Required: Reset counters at frame start (in systems.h):**
+```cpp
+template <typename InputAction>
+struct BeginUIContextManager : System<UIContext<InputAction>> {
+    virtual void for_each_with(Entity&, UIContext<InputAction>&, float) override {
+        imm::reset_call_site_counters();  // Add this line
+        // ... existing code
+    }
+};
+```
+
+**With this enhancement, loops would just work:**
+```cpp
+// No manual index needed!
+for (const auto& item : items) {
+    div(context, mk(entity), config);  // Auto-increments: 0, 1, 2, ...
+}
+
+// Frame 1: Creates entities with effective_id 0, 1, 2, 3, 4
+// Frame 2: Counter resets, matches same entities 0, 1, 2, 3, 4
+```
+
+**Benefits:**
+- Eliminates entire class of "forgot loop index" bugs
+- No manual ID tracking ever needed
+- Backwards compatible (explicit IDs still work)
+- Minimal performance overhead (one map lookup per `mk()` call)
 
 ---
 
