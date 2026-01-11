@@ -472,19 +472,7 @@ Old code using `with_color_usage()` still works but shows compiler deprecation w
 
 ---
 
-## 5. Missing Flexbox Alignment Properties
-
-**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h`
-
-**Issue:** `with_justify_content()` and `with_align_items()` are not available in the imm `ComponentConfig` API, making it difficult to center content within containers.
-
-**Current Workaround:** Use manual spacing/padding or fixed positioning.
-
-**Suggested Fix:** Add these standard flexbox properties to `ComponentConfig`.
-
----
-
-## 6. CJK Font Loading Requires Special Handling
+## 5. CJK Font Loading Requires Special Handling
 
 **Location:** `vendor/afterhours/src/plugins/ui/font_manager.h`
 
@@ -506,7 +494,7 @@ font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path,
 
 ---
 
-## 7. Dropdown Close Behavior
+## 6. Dropdown Close Behavior
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~760)
 
@@ -518,7 +506,7 @@ font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path,
 
 ---
 
-## 8. Circular Dependency with Styling Defaults
+## 7. Circular Dependency with Styling Defaults
 
 **Location:** `vendor/afterhours/src/plugins/ui/context.h` (lines 60-61)
 
@@ -534,7 +522,7 @@ font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path,
 
 ---
 
-## 9. Focus Ring Positioning on Checkbox
+## 8. Focus Ring Positioning on Checkbox
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~220)
 
@@ -632,7 +620,7 @@ if (is_selected) {
 
 ---
 
-## 10. Checkbox Corner Config Merging
+## 9. Checkbox Corner Config Merging
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~258)
 
@@ -648,7 +636,7 @@ if (is_selected) {
 
 ---
 
-## 11. Tabbing with Value Controls
+## 10. Tabbing with Value Controls
 
 **Location:** `vendor/afterhours/src/plugins/ui/context.h` (line ~123)
 
@@ -664,7 +652,7 @@ if (is_selected) {
 
 ---
 
-## 12. Auto Text Color Should Be Default Behavior
+## 11. Auto Text Color Should Be Default Behavior
 
 **Location:** `vendor/afterhours/src/plugins/ui/component_config.h` and `rendering.h`
 

@@ -41,7 +41,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)})
             .with_debug_name("title"));
 
-    // Row layout demo - use percent width
+    // Row layout demo - JustifyContent::SpaceBetween distributes panels evenly
     auto row_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
@@ -49,43 +49,42 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
+                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_align_items(AlignItems::Center)
                 .with_debug_name("row_container"));
 
-    // Three equal panels using percent sizing within the row
+    // Three panels - SpaceBetween distributes remaining space evenly
     div(context, mk(row_container.ent(), 0),
         ComponentConfig{}
             .with_label("Left Panel")
-            .with_size(ComponentSize{percent(0.32f), pixels(110)})
+            .with_size(ComponentSize{percent(0.28f), pixels(110)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("left_panel"));
 
     div(context, mk(row_container.ent(), 1),
         ComponentConfig{}
             .with_label("Center Panel")
-            .with_size(ComponentSize{percent(0.32f), pixels(110)})
+            .with_size(ComponentSize{percent(0.28f), pixels(110)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("center_panel"));
 
     div(context, mk(row_container.ent(), 2),
         ComponentConfig{}
             .with_label("Right Panel")
-            .with_size(ComponentSize{percent(0.32f), pixels(110)})
+            .with_size(ComponentSize{percent(0.28f), pixels(110)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("right_panel"));
 
-    // Column layout demo - use percent width
+    // Column layout demo - SpaceBetween distributes the two columns evenly
     auto col_container =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
@@ -93,6 +92,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
+                .with_justify_content(JustifyContent::SpaceBetween)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),

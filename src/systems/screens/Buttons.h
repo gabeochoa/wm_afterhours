@@ -51,6 +51,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
                         .with_debug_name("row1_states"));
 
     // Section label
@@ -114,13 +115,14 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs)
                .with_debug_name("btn_disabled"));
 
-    // Row 2: Different sizes
+    // Row 2: Different sizes - AlignItems::Center vertically centers buttons
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(90)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),
                                             .left = pixels(0),
@@ -183,6 +185,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),
                                             .left = pixels(0),
@@ -230,6 +233,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),
                                             .left = pixels(0),
