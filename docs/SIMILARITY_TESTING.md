@@ -22,8 +22,8 @@ We use image diffing to calculate how closely our rendered UI screens match the 
 | Empire Tycoon | `example_tycoon_game.png` | `EmpireTycoon.h` | 51.3% |
 | Angry Birds | `example_angry_birds.jpg` | `AngryBirdsSettings.h` | 35.0% |
 | Cross Tag | `example_cross_tag.jpg` | `FighterMenu.h` | 24.5% |
-| Islands & Trains | `example_islands_trains.jpg` | `IslandsTrainsSettings.h` | Missing |
-| Parcel Corps | `example_parcel_coro.jpg` | `ParcelCorpsSettings.h` | Missing |
+| Islands & Trains | `example_islands_trains.jpg` | `IslandsTrainsSettings.h` | 68.5% |
+| Parcel Corps | `example_parcel_coro.jpg` | `ParcelCorpsSettings.h` | 35.0% |
 
 ## How to Run the Comparison
 
@@ -91,6 +91,8 @@ This compares each screenshot against its inspiration image and outputs:
 | Diff images | `output/diffs/` |
 | Diff script | `scripts/image_diff.py` |
 | Screenshot automation | `screenshot_all_screens.py` |
+| Library gaps documentation | `LIBRARY_GAPS.md` |
+| Workaround implementations | `src/ui_workarounds/` |
 
 ## Improving Similarity Scores
 
@@ -104,11 +106,95 @@ This compares each screenshot against its inspiration image and outputs:
 2. Add shadows, borders, and rounded corners
 3. Use workarounds for missing features (see `src/ui_workarounds/`)
 
-### Known Limitations (Document in LIBRARY_GAPS.md)
+### Known Limitations
+See `LIBRARY_GAPS.md` for full documentation. Common gaps with existing workarounds:
 - Gradient backgrounds → use `GradientBackground.h` workaround
 - Text outlines → use `TextOutline.h` workaround  
 - Notification badges → use `NotificationBadge.h` workaround
 - Decorative frames → use `DecorativeFrame.h` workaround
+
+## Handling Missing Library Features
+
+When replicating inspiration images, you'll often encounter visual effects the UI library doesn't support natively. Follow this workflow:
+
+### Step 1: Identify the Gap
+
+While implementing a screen, note what you can't achieve:
+- Visual effect that doesn't exist (gradients, text outlines, shadows)
+- Missing widget type (sliders, progress bars, modals)
+- Layout behavior that's unsupported
+
+### Step 2: Document in LIBRARY_GAPS.md
+
+Add a new entry to `/Users/gabeochoa/p/wm_afterhours/LIBRARY_GAPS.md`:
+
+```markdown
+## [Number]. Missing Feature: [Feature Name]
+
+**Status:** Not implemented
+
+**Issue:** [Describe what's missing and why it's needed]
+
+**Inspiration Example:** [Which screen/mockup needs this feature]
+
+**Suggested Implementation:**
+```cpp
+// Show ideal API if it existed
+```
+
+**Workaround:** [Brief description or "None available"]
+```
+
+### Step 3: Build a Workaround (if possible)
+
+Create a workaround file in `src/ui_workarounds/`:
+
+1. **Name it descriptively:** `TextOutline.h`, `GradientBackground.h`, etc.
+2. **Make it reusable:** Accept configurable parameters
+3. **Document limitations:** Note what's approximate vs exact
+
+**Example workaround structure:**
+```cpp
+// src/ui_workarounds/YourWorkaround.h
+#pragma once
+#include "../components.h"
+
+namespace ui_workarounds {
+
+// Simulates [feature] by [technique]
+// Limitations: [what doesn't match the ideal]
+inline void render_feature(HasUIContext auto& ctx, EntityParent parent,
+                           /* parameters */) {
+    // Implementation using available primitives
+}
+
+} // namespace ui_workarounds
+```
+
+### Step 4: Update LIBRARY_GAPS.md with Workaround Reference
+
+After creating a workaround, update:
+1. The gap entry's **Workaround** field
+2. The **Workaround Files Reference** table at the bottom
+
+```markdown
+| `src/ui_workarounds/YourWorkaround.h` | #[gap number] | [Brief description] |
+```
+
+### Step 5: Use in Your Screen
+
+```cpp
+#include "ui_workarounds/YourWorkaround.h"
+
+// In your screen's render code:
+ui_workarounds::render_feature(context, parent, /* params */);
+```
+
+### When NOT to Create a Workaround
+
+- **Too complex:** If the workaround would be >100 lines, document as a library feature request instead
+- **Performance critical:** Workarounds often have overhead; note if native support is needed
+- **Fundamental limitation:** Some things (e.g., true radial gradients) may not be approximable
 
 ## The Image Diff Algorithm
 

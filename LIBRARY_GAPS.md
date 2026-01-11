@@ -220,6 +220,88 @@ font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path,
 
 ---
 
+## 9b. Focus Ring Style Configuration
+
+**Location:** `vendor/afterhours/src/plugins/ui/rendering.h` (lines 463-478)
+
+**Issue:** Only a single focus ring style is supported (outline rectangle). Games use many different focus indication styles, and the current implementation forces all elements to use the same outline style.
+
+**Current Implementation:**
+```cpp
+if (context.visual_focus_id == entity.id) {
+  Color focus_col = context.theme.from_usage(Theme::Usage::Accent);
+  // ...
+  if (corner_settings.any()) {
+    draw_rectangle_rounded(focus_rect, roundness, segments, focus_col, corner_settings);
+  } else {
+    draw_rectangle_outline(focus_rect, focus_col);
+  }
+}
+```
+
+**Inspiration Examples:**
+- **Dead Space Settings**: Uses a teal highlight bar on the left edge of selected items
+- **Fighter Menu**: Changes background color when focused (no visible ring)
+- **Kirby Options**: Scales element up + adds thicker border when selected
+- **Cozy Cafe**: Increases border thickness on selected items
+- **Mini Motorways**: Uses a subtle glow/shadow effect around focused elements
+
+**Suggested Implementation:**
+
+Add `FocusRingStyle` enum and per-element configuration:
+```cpp
+enum class FocusRingStyle {
+  None,           // Disable focus ring (for custom focus handling)
+  Outline,        // Current default - rectangle outline around element
+  Fill,           // Change background color when focused
+  HighlightBar,   // Colored bar on edge (left, right, top, or bottom)
+  Glow,           // Soft outer glow/shadow effect
+  Underline,      // Line under the element
+  Scale,          // Element becomes slightly larger when focused
+  Bracket,        // Decorative brackets around element (e.g., "> Option <")
+};
+
+// Per-element configuration
+ComponentConfig{}
+    .with_focus_style(FocusRingStyle::HighlightBar)
+    .with_focus_color(Theme::Usage::Accent)  // or with_custom_focus_color(...)
+    .with_focus_edge(Edge::Left)             // for HighlightBar style
+    .with_focus_thickness(4.0f);             // bar/underline thickness
+
+// Or theme-level default
+struct Theme {
+    FocusRingStyle default_focus_style = FocusRingStyle::Outline;
+    float focus_ring_thickness = 2.0f;
+    float focus_glow_radius = 8.0f;
+    float focus_scale_factor = 1.05f;
+    // ... etc
+};
+```
+
+**Additional Features Needed:**
+- Animate focus transitions (fade in/out, scale animation)
+- Support combining styles (e.g., glow + scale)
+- Per-direction configuration for HighlightBar (left/right/top/bottom)
+- Focus ring offset from element bounds
+
+**Current Workaround:** Manually implement focus indication in each screen by:
+1. Setting `skip_when_tabbing = true` on library elements
+2. Tracking selection state manually
+3. Applying custom styling based on selection state
+4. Example from Dead Space:
+```cpp
+// Highlight bar on selected
+if (is_selected) {
+    div(context, mk(row.ent(), 1000),
+        ComponentConfig{}
+            .with_absolute()
+            .with_size({pixels(4), percent(1.0f)})
+            .with_custom_background(teal_highlight));
+}
+```
+
+---
+
 ## 10. Checkbox Corner Config Merging
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~258)
@@ -719,7 +801,8 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | CJK font loading | Medium | Non-ASCII text doesn't render | Open |
 | Dropdown close | High | Poor UX, confusing behavior | Open |
 | Styling defaults | Low | Internal architecture issue | Open |
-| Focus ring | Medium | Accessibility concern | Open |
+| Focus ring position | Medium | Accessibility concern | Open |
+| **Focus ring styles** | **High** | **Can't match game focus patterns** | Open |
 | Corner merging | Low | Minor customization limit | Open |
 | Tabbing + values | Medium | Complex widget support | Open |
 | Screen switch cleanup | High | Tabbing to hidden elements | **Fixed in game.cpp** |
