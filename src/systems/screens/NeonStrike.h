@@ -339,11 +339,11 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 201),
         ComponentConfig{}
             .with_label("@ KILLSTREAK")
-            .with_size(ComponentSize{pixels(110), pixels(18)})
+            .with_size(ComponentSize{pixels(115), pixels(20)})
             .with_absolute_position()
-            .with_translate(30.0f, bl_y + 4.0f)
-            .with_font("EqProRounded", 19.0f)
-            .with_custom_text_color(text_muted)
+            .with_translate(28.0f, bl_y + 3.0f)
+            .with_font("EqProRounded", 14.0f)
+            .with_custom_text_color(text_tan)
             .with_debug_name("ks_text"));
 
     // Killstreak progress boxes
@@ -508,11 +508,11 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 312),
         ComponentConfig{}
             .with_label("80 HEALTH")
-            .with_size(ComponentSize{pixels(120), pixels(16)})
+            .with_size(ComponentSize{pixels(120), pixels(20)})
             .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 8.0f)
-            .with_font("EqProRounded", 19.0f)
-            .with_custom_text_color(text_muted)
+            .with_translate(health_x + 50.0f, health_y + 6.0f)
+            .with_font("EqProRounded", 16.0f)
+            .with_custom_text_color(text_tan)
             .with_debug_name("health_label"));
 
     // Health bar bg

@@ -21,7 +21,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color header_bar{45, 80, 130, 255};        // Header bar
   afterhours::Color text_white{235, 240, 245, 255};      // White text
   afterhours::Color text_cyan{145, 215, 245, 255};       // Cyan accent text
-  afterhours::Color text_muted{125, 155, 185, 255};      // Muted text
+  afterhours::Color text_muted{165, 190, 215, 255};      // Muted text (lighter for readability)
   afterhours::Color dropdown_bg{55, 90, 140, 255};       // Dropdown background
   afterhours::Color dropdown_border{75, 120, 175, 255};  // Dropdown border
   afterhours::Color tab_selected{65, 105, 165, 255};     // Selected tab
@@ -31,21 +31,56 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   struct SettingRow {
     std::string label;
-    std::string value;
-    bool has_dropdown;
+    std::vector<std::string> options;
+    size_t option_idx;
   };
 
   std::vector<SettingRow> video_settings = {
-      {"Screen Resolution", "2560 x 1440", true},
-      {"Window Mode", "Borderless Windowed", true},
-      {"Target Framerate", "Unlimited", true},
-      {"Vsync", "On", true},
-      {"Anti-Aliasing", "2x", true},
-      {"SSAO", "2x", true},
-      {"Render Scale", "Off", true},
-      {"Model Quality", "High", true},
-      {"Texture Quality", "Highest", true},
+      {"Screen Resolution", {"1920 x 1080", "2560 x 1440", "3840 x 2160"}, 1},
+      {"Window Mode", {"Fullscreen", "Borderless Windowed", "Windowed"}, 1},
+      {"Target Framerate", {"30", "60", "120", "Unlimited"}, 3},
+      {"Vsync", {"Off", "On"}, 1},
+      {"Anti-Aliasing", {"Off", "2x", "4x", "8x"}, 1},
+      {"SSAO", {"Off", "2x", "4x"}, 1},
+      {"Render Scale", {"Off", "75%", "100%", "125%"}, 0},
+      {"Model Quality", {"Low", "Medium", "High", "Ultra"}, 2},
+      {"Texture Quality", {"Low", "Medium", "High", "Highest"}, 3},
   };
+  
+  std::vector<SettingRow> general_settings = {
+      {"Language", {"English", "Spanish", "French", "German"}, 0},
+      {"Subtitles", {"Off", "On"}, 1},
+      {"Colorblind Mode", {"Off", "Deuteranopia", "Protanopia", "Tritanopia"}, 0},
+  };
+  
+  std::vector<SettingRow> gameplay_settings = {
+      {"Difficulty", {"Easy", "Normal", "Hard"}, 1},
+      {"Camera Sensitivity", {"Low", "Medium", "High"}, 1},
+      {"Invert Y Axis", {"Off", "On"}, 0},
+  };
+  
+  std::vector<SettingRow> audio_settings = {
+      {"Master Volume", {"0%", "25%", "50%", "75%", "100%"}, 4},
+      {"Music Volume", {"0%", "25%", "50%", "75%", "100%"}, 3},
+      {"SFX Volume", {"0%", "25%", "50%", "75%", "100%"}, 4},
+      {"Voice Volume", {"0%", "25%", "50%", "75%", "100%"}, 4},
+  };
+  
+  std::vector<SettingRow> controls_settings = {
+      {"Controller Vibration", {"Off", "On"}, 1},
+      {"Button Layout", {"Default", "Alternate A", "Alternate B"}, 0},
+  };
+  
+  std::vector<SettingRow>& get_current_settings() {
+    switch (selected_tab) {
+      case 0: return general_settings;
+      case 1: return gameplay_settings;
+      case 2: return video_settings;
+      case 3: return audio_settings;
+      case 4: return controls_settings;
+      default: return video_settings;
+    }
+  }
 
   // Currency/resource display values
   int time_val = 10;
@@ -163,15 +198,22 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float label_w = 200.0f;
     float dropdown_w = 220.0f;
 
-    for (size_t i = 0; i < video_settings.size(); i++) {
+    auto& current_settings = get_current_settings();
+    
+    // Reset selected_row if it's out of bounds for current tab
+    if (selected_row >= current_settings.size()) {
+      selected_row = 0;
+    }
+
+    for (size_t i = 0; i < current_settings.size(); i++) {
       float ry = row_y + (float)i * row_h;
       bool is_selected = (i == selected_row);
       afterhours::Color label_color = is_selected ? text_white : text_muted;
 
-      // Label
-      if (button(context, mk(entity, 50 + static_cast<int>(i) * 2),
+      // Label - clicking selects the row
+      if (button(context, mk(entity, 50 + static_cast<int>(i) * 4),
                  ComponentConfig{}
-                     .with_label(video_settings[i].label)
+                     .with_label(current_settings[i].label)
                      .with_size(ComponentSize{pixels(static_cast<int>(label_w)), pixels(28)})
                      .with_absolute_position()
                      .with_translate(row_x, ry)
@@ -181,33 +223,61 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         selected_row = i;
       }
 
-      // Dropdown value
+      // Dropdown with < > arrows for cycling values
       afterhours::Color dd_bg = is_selected ? dropdown_bg : panel_blue;
       afterhours::Color dd_border = is_selected ? dropdown_border : panel_border;
+      afterhours::Color arrow_color = is_selected ? text_white : text_muted;
+      
+      // Left arrow <
+      if (button(context, mk(entity, 51 + static_cast<int>(i) * 4),
+                 ComponentConfig{}
+                     .with_label("<")
+                     .with_size(ComponentSize{pixels(24), pixels(28)})
+                     .with_absolute_position()
+                     .with_translate(row_x + label_w + 40.0f, ry)
+                     .with_custom_background(dd_bg)
+                     .with_border(dd_border, 1.0f)
+                     .with_font("EqProRounded", 16.0f)
+                     .with_custom_text_color(arrow_color)
+                     .with_alignment(TextAlignment::Center)
+                     .with_debug_name("left_" + std::to_string(i)))) {
+        selected_row = i;
+        auto& setting = current_settings[i];
+        setting.option_idx = (setting.option_idx == 0) 
+            ? setting.options.size() - 1 
+            : setting.option_idx - 1;
+      }
 
-      div(context, mk(entity, 51 + static_cast<int>(i) * 2),
+      // Value display
+      div(context, mk(entity, 52 + static_cast<int>(i) * 4),
           ComponentConfig{}
-              .with_label(video_settings[i].value)
-              .with_size(ComponentSize{pixels(static_cast<int>(dropdown_w)), pixels(28)})
+              .with_label(current_settings[i].options[current_settings[i].option_idx])
+              .with_size(ComponentSize{pixels(static_cast<int>(dropdown_w - 54)), pixels(28)})
               .with_absolute_position()
-              .with_translate(row_x + label_w + 40.0f, ry)
+              .with_translate(row_x + label_w + 66.0f, ry)
               .with_custom_background(dd_bg)
-              .with_border(dd_border, 1.0f)
               .with_font("EqProRounded", 14.0f)
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("value_" + std::to_string(i)));
-
-      // Dropdown arrow
-      div(context, mk(entity, 100 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label("v")
-              .with_size(ComponentSize{pixels(20), pixels(20)})
-              .with_absolute_position()
-              .with_translate(row_x + label_w + 40.0f + dropdown_w - 25.0f, ry + 4.0f)
-              .with_font("EqProRounded", 14.0f)
-              .with_custom_text_color(text_muted)
-              .with_debug_name("arrow_" + std::to_string(i)));
+      
+      // Right arrow >
+      if (button(context, mk(entity, 53 + static_cast<int>(i) * 4),
+                 ComponentConfig{}
+                     .with_label(">")
+                     .with_size(ComponentSize{pixels(24), pixels(28)})
+                     .with_absolute_position()
+                     .with_translate(row_x + label_w + 40.0f + dropdown_w - 26.0f, ry)
+                     .with_custom_background(dd_bg)
+                     .with_border(dd_border, 1.0f)
+                     .with_font("EqProRounded", 16.0f)
+                     .with_custom_text_color(arrow_color)
+                     .with_alignment(TextAlignment::Center)
+                     .with_debug_name("right_" + std::to_string(i)))) {
+        selected_row = i;
+        auto& setting = current_settings[i];
+        setting.option_idx = (setting.option_idx + 1) % setting.options.size();
+      }
     }
 
     // ========== HELP TEXT PANEL ==========
@@ -226,55 +296,51 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(panel_border, 2.0f)
             .with_debug_name("help_panel"));
 
+    // Dynamic help text based on selected setting
+    std::string setting_name = current_settings[selected_row].label;
+    std::string help_line1 = "Adjust the " + setting_name;
+    std::string help_line2 = "setting to your preference.";
+    std::string current_val = "Current: " + current_settings[selected_row].options[current_settings[selected_row].option_idx];
+
     div(context, mk(entity, 151),
         ComponentConfig{}
-            .with_label("Turn MSAA on or off and choose")
+            .with_label(setting_name)
+            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)), pixels(28)})
+            .with_absolute_position()
+            .with_translate(help_x + 15.0f, help_y + 15.0f)
+            .with_font("EqProRounded", 18.0f)
+            .with_custom_text_color(text_cyan)
+            .with_debug_name("help_title"));
+
+    div(context, mk(entity, 152),
+        ComponentConfig{}
+            .with_label(help_line1)
             .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)), pixels(25)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 20.0f)
+            .with_translate(help_x + 15.0f, help_y + 50.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("help1"));
 
-    div(context, mk(entity, 152),
+    div(context, mk(entity, 153),
         ComponentConfig{}
-            .with_label("from different anti-aliasing")
+            .with_label(help_line2)
             .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)), pixels(25)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 42.0f)
+            .with_translate(help_x + 15.0f, help_y + 72.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("help2"));
 
-    div(context, mk(entity, 153),
-        ComponentConfig{}
-            .with_label("amounts.")
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)), pixels(25)})
-            .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 64.0f)
-            .with_font("EqProRounded", 14.0f)
-            .with_custom_text_color(text_white)
-            .with_debug_name("help3"));
-
     div(context, mk(entity, 154),
         ComponentConfig{}
-            .with_label("Multisample Anti-Aliasing smooths")
+            .with_label(current_val)
             .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)), pixels(25)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 95.0f)
+            .with_translate(help_x + 15.0f, help_y + 110.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_muted)
-            .with_debug_name("help4"));
-
-    div(context, mk(entity, 155),
-        ComponentConfig{}
-            .with_label("the image, reducing jagged lines...")
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)), pixels(25)})
-            .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 115.0f)
-            .with_font("EqProRounded", 14.0f)
-            .with_custom_text_color(text_muted)
-            .with_debug_name("help5"));
+            .with_debug_name("help_current"));
 
     // ========== BOTTOM TAB BAR ==========
     float tab_y = panel_y + panel_h + 15.0f;

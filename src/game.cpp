@@ -295,10 +295,30 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     afterhours::ui::register_before_ui_updates<InputAction>(systems);
 
     // Register the test UI so buttons exist when processed
-    if (test_name == "tabbing") {
-      systems.register_update_system(std::make_unique<SetupTabbingTest>());
-    } else {
-      systems.register_update_system(std::make_unique<SetupSimpleButtonTest>());
+    // Check if test name starts with a registered screen name
+    bool screen_found = false;
+    for (const auto &screen_name :
+         ExampleScreenRegistry::get().get_screen_names()) {
+      if (test_name.find(screen_name + "_") == 0 ||
+          test_name == screen_name) {
+        auto screen = ExampleScreenRegistry::get().create_screen(screen_name);
+        if (screen) {
+          // Set as current screen so ScreenSystem runs
+          g_current_screen = screen.get();
+          systems.register_update_system(std::move(screen));
+          screen_found = true;
+          break;
+        }
+      }
+    }
+
+    if (!screen_found) {
+      // Fall back to built-in test setups
+      if (test_name == "tabbing") {
+        systems.register_update_system(std::make_unique<SetupTabbingTest>());
+      } else {
+        systems.register_update_system(std::make_unique<SetupSimpleButtonTest>());
+      }
     }
 
     // Register UI post-update systems (HandleClicks, HandleTabbing, layout,

@@ -44,6 +44,14 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::vector<std::string> languages = {"King's English", "American", "Deutsch", "Français"};
   
+  // MSAA options and current selection
+  std::vector<std::string> msaa_options = {"Off", "2x", "4x", "8x"};
+  size_t msaa_idx = 1;  // Default: 2x
+  
+  // Texture Quality options and current selection
+  std::vector<std::string> texture_options = {"Low", "Medium", "High", "Ultra"};
+  size_t texture_idx = 2;  // Default: High
+  
   // Chat messages
   std::vector<std::pair<std::string, std::string>> chat_messages = {
       {"reveredsoup", "you did it :)"},
@@ -81,7 +89,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== PHONE FRAME ==========
     float phone_w = 320.0f;
-    float phone_h = 560.0f;
+    float phone_h = 520.0f;  // Reduced height to prevent overflow
     float phone_x = 50.0f;
     float phone_y = ((float)screen_h - phone_h) / 2.0f;
 
@@ -166,10 +174,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== SETTINGS ROWS ==========
     float row_x = screen_x + 8.0f;
-    float row_start_y = status_y + 85.0f;
+    float row_start_y = status_y + 75.0f;
     float row_w = screen_inner_w - 16.0f;
-    float row_h = 44.0f;
-    float row_gap = 3.0f;
+    float row_h = 38.0f;  // Reduced row height
+    float row_gap = 2.0f;
 
     // Language selector row (purple globe icon)
     render_language_row(context, entity, 100, row_x, row_start_y, row_w, row_h);
@@ -197,13 +205,13 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     render_toggle_row_rainbow(context, entity, 130, row_x, section2_y + row_h + row_gap, row_w, row_h,
                       "Full Screen", fullscreen);
 
-    // MSAA (blue icon)
-    render_display_row(context, entity, 140, row_x, section2_y + 2 * (row_h + row_gap), row_w, row_h,
-                       "MSAA", "2x", icon_blue);
+    // MSAA (blue icon) - interactive
+    render_selector_row(context, entity, 140, row_x, section2_y + 2 * (row_h + row_gap), row_w, row_h,
+                       "MSAA", msaa_options, msaa_idx, icon_blue);
 
-    // Texture Quality (green gem icon)
-    render_display_row(context, entity, 150, row_x, section2_y + 3 * (row_h + row_gap), row_w, row_h,
-                       "Texture Quality", "High", icon_green);
+    // Texture Quality (green gem icon) - interactive
+    render_selector_row(context, entity, 150, row_x, section2_y + 3 * (row_h + row_gap), row_w, row_h,
+                       "Texture Quality", texture_options, texture_idx, icon_green);
 
     // Motion Blur toggle (red/pink X icon)
     render_toggle_row_with_icon(context, entity, 160, row_x, section2_y + 4 * (row_h + row_gap), row_w, row_h,
@@ -451,75 +459,71 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_debug_name("lang_row"));
 
-    // Globe icon (purple)
+    // Globe icon (purple) - consistent size
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("@")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + 10.0f, y + 9.0f)
+            .with_translate(x + 8.0f, y + 7.0f)
             .with_custom_background(icon_purple)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("lang_icon"));
 
-    // Label
+    // Label - consistent font size
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
-            .with_label("Text Language")
-            .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
+            .with_label("Language")
+            .with_size(ComponentSize{pixels(80), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 42.0f, y + 11.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_translate(x + 38.0f, y + 9.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("lang_label"));
 
     // Left chevron
-    div(context, mk(entity, base_id + 3),
-        ComponentConfig{}
-            .with_label("<")
-            .with_size(ComponentSize{pixels(16), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 140.0f, y + 10.0f)
-            .with_font("EqProRounded", 16.0f)
-            .with_custom_text_color(text_muted)
-            .with_debug_name("lang_left"));
-
-    // UK Flag representation (simple red/blue/white)
-    div(context, mk(entity, base_id + 6),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(18), pixels(12)})
-            .with_absolute_position()
-            .with_translate(x + w - 120.0f, y + 16.0f)
-            .with_custom_background(icon_blue)
-            .with_border(icon_red, 2.0f)
-            .with_debug_name("uk_flag"));
+    if (button(context, mk(entity, base_id + 3),
+               ComponentConfig{}
+                   .with_label("<")
+                   .with_size(ComponentSize{pixels(18), pixels(22)})
+                   .with_absolute_position()
+                   .with_translate(x + w - 115.0f, y + 8.0f)
+                   .with_font("EqProRounded", 14.0f)
+                   .with_custom_text_color(text_muted)
+                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_debug_name("lang_left"))) {
+      language_idx = (language_idx == 0) ? static_cast<int>(languages.size()) - 1 : language_idx - 1;
+    }
 
     // Language value
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
-            .with_label("King's English")
-            .with_size(ComponentSize{pixels(90), pixels(static_cast<int>(h))})
+            .with_label(languages[language_idx])
+            .with_size(ComponentSize{pixels(80), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 98.0f, y + 11.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_translate(x + w - 95.0f, y + 9.0f)
+            .with_font("EqProRounded", 11.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));
 
     // Right chevron
-    div(context, mk(entity, base_id + 5),
-        ComponentConfig{}
-            .with_label(">")
-            .with_size(ComponentSize{pixels(16), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 14.0f, y + 10.0f)
-            .with_font("EqProRounded", 16.0f)
-            .with_custom_text_color(text_muted)
-            .with_debug_name("lang_right"));
+    if (button(context, mk(entity, base_id + 5),
+               ComponentConfig{}
+                   .with_label(">")
+                   .with_size(ComponentSize{pixels(18), pixels(22)})
+                   .with_absolute_position()
+                   .with_translate(x + w - 16.0f, y + 8.0f)
+                   .with_font("EqProRounded", 14.0f)
+                   .with_custom_text_color(text_muted)
+                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_debug_name("lang_right"))) {
+      language_idx = (language_idx + 1) % languages.size();
+    }
   }
 
   void render_toggle_row_with_icon(UIContext<InputAction> &context, afterhours::Entity &entity,
@@ -539,15 +543,15 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       value = !value;  // Toggle the boolean on click
     }
 
-    // Icon (colored circle with symbol)
+    // Icon (colored circle with symbol) - consistent size
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label(icon_symbol)
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + 10.0f, y + 9.0f)
+            .with_translate(x + 8.0f, y + 7.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -558,32 +562,32 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(140), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 42.0f, y + 11.0f)
+            .with_translate(x + 38.0f, y + 9.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("toggle_label_" + std::to_string(base_id)));
 
-    // Toggle track
+    // Toggle track - smaller to fit reduced row height
     afterhours::Color track_color = value ? toggle_green : toggle_track;
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(44), pixels(24)})
+            .with_size(ComponentSize{pixels(40), pixels(20)})
             .with_absolute_position()
-            .with_translate(x + w - 56.0f, y + 10.0f)
+            .with_translate(x + w - 50.0f, y + 9.0f)
             .with_custom_background(track_color)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("toggle_track_" + std::to_string(base_id)));
 
     // Toggle knob
-    float knob_x = value ? (x + w - 34.0f) : (x + w - 54.0f);
+    float knob_x = value ? (x + w - 30.0f) : (x + w - 48.0f);
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_size(ComponentSize{pixels(16), pixels(16)})
             .with_absolute_position()
-            .with_translate(knob_x, y + 12.0f)
+            .with_translate(knob_x, y + 11.0f)
             .with_custom_background(text_white)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -607,12 +611,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       value = !value;  // Toggle the boolean on click
     }
 
-    // Rainbow icon (multicolor circle using nested elements)
+    // Rainbow icon (multicolor circle using nested elements) - consistent size
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + 10.0f, y + 9.0f)
+            .with_translate(x + 8.0f, y + 7.0f)
             .with_custom_background(icon_rainbow1)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -620,9 +624,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_size(ComponentSize{pixels(14), pixels(14)})
             .with_absolute_position()
-            .with_translate(x + 15.0f, y + 14.0f)
+            .with_translate(x + 13.0f, y + 12.0f)
             .with_custom_background(icon_rainbow2)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -630,9 +634,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 6),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(8), pixels(8)})
+            .with_size(ComponentSize{pixels(6), pixels(6)})
             .with_absolute_position()
-            .with_translate(x + 19.0f, y + 18.0f)
+            .with_translate(x + 17.0f, y + 16.0f)
             .with_custom_background(icon_rainbow3)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -642,36 +646,118 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(140), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 42.0f, y + 11.0f)
+            .with_translate(x + 38.0f, y + 9.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("toggle_label_" + std::to_string(base_id)));
 
-    // Toggle track
+    // Toggle track - smaller for reduced row height
     afterhours::Color track_color = value ? toggle_green : toggle_track;
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(44), pixels(24)})
+            .with_size(ComponentSize{pixels(40), pixels(20)})
             .with_absolute_position()
-            .with_translate(x + w - 56.0f, y + 10.0f)
+            .with_translate(x + w - 50.0f, y + 9.0f)
             .with_custom_background(track_color)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("toggle_track_" + std::to_string(base_id)));
 
     // Toggle knob
-    float knob_x = value ? (x + w - 34.0f) : (x + w - 54.0f);
+    float knob_x = value ? (x + w - 30.0f) : (x + w - 48.0f);
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_size(ComponentSize{pixels(16), pixels(16)})
             .with_absolute_position()
-            .with_translate(knob_x, y + 12.0f)
+            .with_translate(knob_x, y + 11.0f)
             .with_custom_background(text_white)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("toggle_knob_" + std::to_string(base_id)));
+  }
+
+  void render_selector_row(UIContext<InputAction> &context, afterhours::Entity &entity,
+                           int base_id, float x, float y, float w, float h,
+                           const std::string &label, const std::vector<std::string> &options,
+                           size_t &option_idx, afterhours::Color icon_color) {
+    // Row background
+    div(context, mk(entity, base_id),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+            .with_absolute_position()
+            .with_translate(x, y)
+            .with_custom_background(row_dark)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.15f)
+            .with_debug_name("selector_row_" + std::to_string(base_id)));
+
+    // Icon
+    div(context, mk(entity, base_id + 1),
+        ComponentConfig{}
+            .with_label("*")
+            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_absolute_position()
+            .with_translate(x + 8.0f, y + 7.0f)
+            .with_custom_background(icon_color)
+            .with_font("EqProRounded", 12.0f)
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("selector_icon_" + std::to_string(base_id)));
+
+    // Label
+    div(context, mk(entity, base_id + 2),
+        ComponentConfig{}
+            .with_label(label)
+            .with_size(ComponentSize{pixels(100), pixels(static_cast<int>(h))})
+            .with_absolute_position()
+            .with_translate(x + 38.0f, y + 9.0f)
+            .with_font("EqProRounded", 14.0f)
+            .with_custom_text_color(text_white)
+            .with_debug_name("selector_label_" + std::to_string(base_id)));
+
+    // Left arrow <
+    if (button(context, mk(entity, base_id + 3),
+               ComponentConfig{}
+                   .with_label("<")
+                   .with_size(ComponentSize{pixels(20), pixels(22)})
+                   .with_absolute_position()
+                   .with_translate(x + w - 95.0f, y + 8.0f)
+                   .with_font("EqProRounded", 14.0f)
+                   .with_custom_text_color(text_muted)
+                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_debug_name("selector_left_" + std::to_string(base_id)))) {
+      option_idx = (option_idx == 0) ? options.size() - 1 : option_idx - 1;
+    }
+
+    // Value
+    div(context, mk(entity, base_id + 4),
+        ComponentConfig{}
+            .with_label(options[option_idx])
+            .with_size(ComponentSize{pixels(50), pixels(static_cast<int>(h))})
+            .with_absolute_position()
+            .with_translate(x + w - 72.0f, y + 9.0f)
+            .with_font("EqProRounded", 14.0f)
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("selector_value_" + std::to_string(base_id)));
+
+    // Right arrow >
+    if (button(context, mk(entity, base_id + 5),
+               ComponentConfig{}
+                   .with_label(">")
+                   .with_size(ComponentSize{pixels(20), pixels(22)})
+                   .with_absolute_position()
+                   .with_translate(x + w - 22.0f, y + 8.0f)
+                   .with_font("EqProRounded", 14.0f)
+                   .with_custom_text_color(text_muted)
+                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_debug_name("selector_right_" + std::to_string(base_id)))) {
+      option_idx = (option_idx + 1) % options.size();
+    }
   }
 
   void render_display_row(UIContext<InputAction> &context, afterhours::Entity &entity,
@@ -693,11 +779,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + 10.0f, y + 9.0f)
+            .with_translate(x + 8.0f, y + 7.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -708,9 +794,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(140), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 42.0f, y + 11.0f)
+            .with_translate(x + 38.0f, y + 9.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("display_label_" + std::to_string(base_id)));
@@ -719,9 +805,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
             .with_label(value)
-            .with_size(ComponentSize{pixels(95), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(85), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 105.0f, y + 11.0f)
+            .with_translate(x + w - 92.0f, y + 9.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
@@ -742,12 +828,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_debug_name("display_row_" + std::to_string(base_id)));
 
-    // Rainbow icon (multicolor circle)
+    // Rainbow icon (multicolor circle) - smaller to match other icons
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + 10.0f, y + 9.0f)
+            .with_translate(x + 8.0f, y + 7.0f)
             .with_custom_background(icon_rainbow1)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -755,9 +841,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_size(ComponentSize{pixels(14), pixels(14)})
             .with_absolute_position()
-            .with_translate(x + 15.0f, y + 14.0f)
+            .with_translate(x + 13.0f, y + 12.0f)
             .with_custom_background(icon_rainbow2)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -765,9 +851,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 6),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(8), pixels(8)})
+            .with_size(ComponentSize{pixels(6), pixels(6)})
             .with_absolute_position()
-            .with_translate(x + 19.0f, y + 18.0f)
+            .with_translate(x + 17.0f, y + 16.0f)
             .with_custom_background(icon_rainbow3)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -777,9 +863,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(140), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 42.0f, y + 11.0f)
+            .with_translate(x + 38.0f, y + 9.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("display_label_" + std::to_string(base_id)));
@@ -788,9 +874,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
             .with_label(value)
-            .with_size(ComponentSize{pixels(95), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(85), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 105.0f, y + 11.0f)
+            .with_translate(x + w - 92.0f, y + 9.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
@@ -816,11 +902,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + 10.0f, y + 9.0f)
+            .with_translate(x + 8.0f, y + 7.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -831,21 +917,21 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(95), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 42.0f, y + 11.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_translate(x + 38.0f, y + 9.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("volume_label_" + std::to_string(base_id)));
 
     // Use the interactive slider() function
-    float slider_w = 125.0f;
-    float slider_x = x + w - slider_w - 12.0f;
+    float slider_w = 110.0f;
+    float slider_x = x + w - slider_w - 10.0f;
     slider(context, mk(entity, base_id + 3), value,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(14)})
+               .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(12)})
                .with_absolute_position()
-               .with_translate(slider_x, y + 15.0f)
+               .with_translate(slider_x, y + 13.0f)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
                .with_debug_name("volume_slider_" + std::to_string(base_id)));

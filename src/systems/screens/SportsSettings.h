@@ -52,12 +52,75 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       {"Graphics quality", false, 0.0f, 0, 0, {"Low", "Medium", "High", "Ultra"}, 3},
       {"Texture quality", false, 0.0f, 0, 0, {"Low", "Medium", "High", "Ultra"}, 3},
   };
+  
+  std::vector<SettingRow> gameplay_settings = {
+      {"Difficulty", false, 0.0f, 0, 0, {"Beginner", "Amateur", "Semi-Pro", "Professional", "World Class", "Legendary"}, 3},
+      {"Game Speed", true, 0.5f, 0, 100, {}, 0},
+      {"Match Length", false, 0.0f, 0, 0, {"4 min", "6 min", "8 min", "10 min", "15 min", "20 min"}, 2},
+      {"Camera Type", false, 0.0f, 0, 0, {"Broadcast", "Co-op", "Dynamic", "End to End", "Pro"}, 0},
+      {"Camera Height", true, 0.5f, 0, 20, {}, 0},
+      {"Camera Zoom", true, 0.5f, 0, 20, {}, 0},
+      {"Ball Indicator", false, 0.0f, 0, 0, {"Off", "On"}, 1},
+      {"Player Names", false, 0.0f, 0, 0, {"Off", "Always", "When Controlled"}, 2},
+  };
+  
+  std::vector<SettingRow> audio_settings = {
+      {"Master Volume", true, 0.8f, 0, 100, {}, 0},
+      {"Music Volume", true, 0.7f, 0, 100, {}, 0},
+      {"Commentary Volume", true, 0.9f, 0, 100, {}, 0},
+      {"Crowd Volume", true, 0.85f, 0, 100, {}, 0},
+      {"SFX Volume", true, 0.75f, 0, 100, {}, 0},
+      {"Commentary Language", false, 0.0f, 0, 0, {"English", "Spanish", "French", "German", "Italian"}, 0},
+      {"Crowd Chants", false, 0.0f, 0, 0, {"Off", "On"}, 1},
+  };
+  
+  std::vector<SettingRow> controls_settings = {
+      {"Vibration", false, 0.0f, 0, 0, {"Off", "On"}, 1},
+      {"Vibration Strength", true, 0.7f, 0, 100, {}, 0},
+      {"Auto Switch", false, 0.0f, 0, 0, {"Off", "Ball Only", "Air Balls", "All"}, 2},
+      {"Pass Assistance", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 2},
+      {"Shot Assistance", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 1},
+      {"Through Ball", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 1},
+      {"Crossing", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 2},
+  };
+  
+  std::vector<SettingRow>& get_current_settings() {
+    switch (selected_tab) {
+      case 0: return gameplay_settings;
+      case 1: return graphics_settings;
+      case 2: return audio_settings;
+      case 3: return controls_settings;
+      default: return graphics_settings;
+    }
+  }
+  
+  std::string get_section_header() {
+    switch (selected_tab) {
+      case 0: return "GAMEPLAY";
+      case 1: return "GRAPHICS";
+      case 2: return "AUDIO";
+      case 3: return "CONTROLS";
+      default: return "GRAPHICS";
+    }
+  }
 
-  // Helper to format slider value for display
+  // Helper to format slider value for display - works with current tab's settings
   std::string format_slider_value(size_t index, float pct) {
-    auto& setting = graphics_settings[index];
+    std::vector<SettingRow>* settings_ptr = nullptr;
+    switch (selected_tab) {
+      case 0: settings_ptr = &gameplay_settings; break;
+      case 1: settings_ptr = &graphics_settings; break;
+      case 2: settings_ptr = &audio_settings; break;
+      case 3: settings_ptr = &controls_settings; break;
+      default: settings_ptr = &graphics_settings; break;
+    }
+    
+    if (index >= settings_ptr->size()) return "---";
+    auto& setting = (*settings_ptr)[index];
     int val = setting.min_val + static_cast<int>(pct * (setting.max_val - setting.min_val));
-    if (index == 5) {  // Gamma - divide by 10 for decimal display
+    
+    // Special case for gamma in graphics tab
+    if (selected_tab == 1 && index == 5) {  // Gamma - divide by 10 for decimal display
       return fmt::format("{:.1f}", val / 10.0f);
     }
     return std::to_string(val);
@@ -82,6 +145,50 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
+    // ========== SYNC SELECTION WITH FOCUS ==========
+    // Update selected_row based on focus FIRST (before keyboard handling)
+    // This ensures arrow keys work on the currently focused row
+    auto& current_settings = get_current_settings();
+    auto focus_id = context.focus_id;
+    auto opt_focused = afterhours::EntityHelper::getEntityForID(focus_id);
+    if (opt_focused.has_value()) {
+      auto& focused = opt_focused.asE();
+      if (focused.has<afterhours::ui::HasLabel>()) {
+        auto& label = focused.get<afterhours::ui::HasLabel>().label;
+        for (size_t i = 0; i < current_settings.size(); i++) {
+          if (label == current_settings[i].label) {
+            selected_row = i;
+            break;
+          }
+        }
+      }
+    }
+
+    // ========== KEYBOARD INPUT HANDLING ==========
+    // Handle left/right arrow keys to change value when a row is selected
+    if (selected_row < current_settings.size()) {
+      auto& setting = current_settings[selected_row];
+      float step = 0.05f;  // 5% per press for sliders
+
+      if (context.pressed(InputAction::WidgetLeft)) {
+        if (setting.is_slider) {
+          setting.slider_pct = std::max(0.0f, setting.slider_pct - step);
+        } else if (!setting.options.empty()) {
+          setting.option_idx = (setting.option_idx == 0) 
+              ? setting.options.size() - 1 
+              : setting.option_idx - 1;
+        }
+      }
+
+      if (context.pressed(InputAction::WidgetRight)) {
+        if (setting.is_slider) {
+          setting.slider_pct = std::min(1.0f, setting.slider_pct + step);
+        } else if (!setting.options.empty()) {
+          setting.option_idx = (setting.option_idx + 1) % setting.options.size();
+        }
+      }
+    }
+
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
         ComponentConfig{}
@@ -95,7 +202,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_h = 35.0f;
     float tab_start_x = 70.0f;
 
-    // LB button - cycle tabs left
+    // LB button - cycle tabs left (skip tabbing - use keyboard shortcut)
     if (button(context, mk(entity, 5),
                ComponentConfig{}
                    .with_label("LB")
@@ -104,9 +211,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_translate(tab_start_x - 50.0f, tab_y + 4.0f)
                    .with_custom_background(panel_dark)
                    .with_border(text_muted, 1.0f)
-                   .with_font("EqProRounded", 19.0f)
+                   .with_font("EqProRounded", 16.0f)
                    .with_custom_text_color(text_white)
                    .with_alignment(TextAlignment::Center)
+                   .with_skip_tabbing(true)
                    .with_debug_name("lb_btn"))) {
       if (selected_tab > 0) {
         selected_tab--;
@@ -121,6 +229,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Use white for selected (on dark bg), muted for unselected
       afterhours::Color tab_text = is_selected ? text_white : text_muted;
 
+      // Tab buttons skip tabbing - use LB/RB or click to switch
       if (button(context, mk(entity, 10 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(tabs[i])
@@ -128,10 +237,11 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                               pixels(static_cast<int>(tab_h))})
                      .with_absolute_position()
                      .with_translate(tx, tab_y)
-                     .with_font("EqProRounded", 19.0f)  // Increase to meet minimum
+                     .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(tab_text)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})  // Transparent bg
                      .with_alignment(TextAlignment::Center)
+                     .with_skip_tabbing(true)
                      .with_debug_name("tab_" + std::to_string(i)))) {
         selected_tab = i;
       }
@@ -148,7 +258,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // RB button - cycle tabs right
+    // RB button - cycle tabs right (skip tabbing - use keyboard shortcut)
     if (button(context, mk(entity, 6),
                ComponentConfig{}
                    .with_label("RB")
@@ -157,9 +267,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_translate(tab_start_x + (float)tabs.size() * tab_w, tab_y + 4.0f)
                    .with_custom_background(panel_dark)
                    .with_border(text_muted, 1.0f)
-                   .with_font("EqProRounded", 19.0f)
+                   .with_font("EqProRounded", 16.0f)
                    .with_custom_text_color(text_white)
                    .with_alignment(TextAlignment::Center)
+                   .with_skip_tabbing(true)
                    .with_debug_name("rb_btn"))) {
       selected_tab = (selected_tab + 1) % tabs.size();
     }
@@ -169,7 +280,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 30),
         ComponentConfig{}
-            .with_label("GRAPHICS")
+            .with_label(get_section_header())
             .with_size(ComponentSize{pixels(150), pixels(30)})
             .with_absolute_position()
             .with_translate(40.0f, header_y)
@@ -183,42 +294,17 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float panel_w = 450.0f;
     float row_h = 42.0f;
 
-    for (size_t i = 0; i < graphics_settings.size(); i++) {
+    // Reset selected_row if out of bounds for current tab
+    if (selected_row >= current_settings.size()) {
+      selected_row = 0;
+    }
+
+    // Each row is a single tabbable element - the entire row is selectable
+    for (size_t i = 0; i < current_settings.size(); i++) {
       float ry = panel_y + (float)i * row_h;
       bool is_selected = (i == selected_row);
-      auto& setting = graphics_settings[i];
+      auto& setting = current_settings[i];
 
-      // Row background for selected (render behind text with lower layer)
-      if (is_selected) {
-        div(context, mk(entity, 50 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), 
-                                         pixels(static_cast<int>(row_h - 2))})
-                .with_absolute_position()
-                .with_translate(panel_x - 10.0f, ry)
-                .with_custom_background(highlight_row)
-                .with_render_layer(-1)  // Behind other elements
-                .with_debug_name("row_bg_" + std::to_string(i)));
-      }
-
-      // Label - use dark text on green button for good contrast
-      afterhours::Color label_color = is_selected ? bg_dark : panel_dark;
-      if (button(context, mk(entity, 100 + static_cast<int>(i) * 3),
-                 ComponentConfig{}
-                     .with_label(setting.label)
-                     .with_size(ComponentSize{pixels(220), pixels(28)})
-                     .with_absolute_position()
-                     .with_translate(panel_x, ry + 6.0f)
-                     .with_font("EqProRounded", 19.0f)  // Increase to meet minimum
-                     .with_custom_text_color(label_color)
-                     .with_debug_name("label_" + std::to_string(i)))) {
-        selected_row = i;
-      }
-
-      // Value display with interactive < > arrows
-      afterhours::Color value_color = is_selected ? accent_green : text_muted;
-      afterhours::Color arrow_color = is_selected ? text_white : text_muted;
-      
       // Get display value based on type
       std::string display_value;
       if (setting.is_slider) {
@@ -229,21 +315,66 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         display_value = "---";
       }
       
+      // Colors based on selection state - always use readable colors
+      afterhours::Color label_color = is_selected ? text_white : text_muted;
+      afterhours::Color value_color = is_selected ? accent_green : text_muted;
+      afterhours::Color arrow_color = is_selected ? text_white : text_muted;
+      
+      // Row background - render first (behind everything)
+      div(context, mk(entity, 50 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), 
+                                       pixels(static_cast<int>(row_h - 2))})
+              .with_absolute_position()
+              .with_translate(panel_x - 10.0f, ry)
+              .with_custom_background(is_selected ? highlight_row : afterhours::Color{35, 45, 55, 255})
+              .with_render_layer(-1)
+              .with_debug_name("row_bg_" + std::to_string(i)));
+      
+      // Selection indicator - left border accent
+      if (is_selected) {
+        div(context, mk(entity, 60 + static_cast<int>(i)),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(4), 
+                                         pixels(static_cast<int>(row_h - 8))})
+                .with_absolute_position()
+                .with_translate(panel_x - 15.0f, ry + 3.0f)
+                .with_custom_background(accent_green)
+                .with_render_layer(1)
+                .with_debug_name("row_accent_" + std::to_string(i)));
+      }
+      
+      // Label button - click to select row (this is tabbable)
+      if (button(context, mk(entity, 100 + static_cast<int>(i)),
+                 ComponentConfig{}
+                     .with_label(setting.label)
+                     .with_size(ComponentSize{pixels(220), pixels(static_cast<int>(row_h - 4))})
+                     .with_absolute_position()
+                     .with_translate(panel_x, ry + 2.0f)
+                     .with_font("EqProRounded", 16.0f)
+                     .with_custom_text_color(label_color)
+                     .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                     .with_debug_name("label_" + std::to_string(i)))) {
+        selected_row = i;
+      }
+
       float value_x = panel_x + 240.0f;
       float arrow_size = 24.0f;
       float step = 0.05f;  // 5% per click for sliders
       
-      // Left arrow < button
-      if (button(context, mk(entity, 400 + static_cast<int>(i) * 3),
+      // Left arrow < (skip tabbing - use row's keyboard handling) - render above button
+      if (button(context, mk(entity, 300 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label("<")
                      .with_size(ComponentSize{pixels(static_cast<int>(arrow_size)), pixels(28)})
                      .with_absolute_position()
                      .with_translate(value_x, ry + 6.0f)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                     .with_debug_name("value_left_" + std::to_string(i)))) {
+                     .with_skip_tabbing(true)
+                     .with_render_layer(2)
+                     .with_debug_name("left_" + std::to_string(i)))) {
         selected_row = i;
         if (setting.is_slider) {
           setting.slider_pct = std::max(0.0f, setting.slider_pct - step);
@@ -254,32 +385,33 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }
       }
       
-      // Value text (clickable to select row)
-      if (button(context, mk(entity, 401 + static_cast<int>(i) * 3),
-                 ComponentConfig{}
-                     .with_label(display_value)
-                     .with_size(ComponentSize{pixels(130), pixels(28)})
-                     .with_absolute_position()
-                     .with_translate(value_x + arrow_size + 5.0f, ry + 6.0f)
-                     .with_font("EqProRounded", 19.0f)
-                     .with_custom_text_color(value_color)
-                     .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                     .with_alignment(TextAlignment::Center)
-                     .with_debug_name("value_" + std::to_string(i)))) {
-        selected_row = i;
-      }
+      // Value display text (skip tabbing) - render above button
+      div(context, mk(entity, 301 + static_cast<int>(i) * 3),
+          ComponentConfig{}
+              .with_label(display_value)
+              .with_size(ComponentSize{pixels(130), pixels(28)})
+              .with_absolute_position()
+              .with_translate(value_x + arrow_size + 5.0f, ry + 6.0f)
+              .with_font("EqProRounded", 16.0f)
+              .with_custom_text_color(value_color)
+              .with_alignment(TextAlignment::Center)
+              .with_skip_tabbing(true)
+              .with_render_layer(2)
+              .with_debug_name("value_" + std::to_string(i)));
       
-      // Right arrow > button
-      if (button(context, mk(entity, 402 + static_cast<int>(i) * 3),
+      // Right arrow > (skip tabbing - use row's keyboard handling) - render above button
+      if (button(context, mk(entity, 302 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label(">")
                      .with_size(ComponentSize{pixels(static_cast<int>(arrow_size)), pixels(28)})
                      .with_absolute_position()
                      .with_translate(value_x + arrow_size + 140.0f, ry + 6.0f)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                     .with_debug_name("value_right_" + std::to_string(i)))) {
+                     .with_skip_tabbing(true)
+                     .with_render_layer(2)
+                     .with_debug_name("right_" + std::to_string(i)))) {
         selected_row = i;
         if (setting.is_slider) {
           setting.slider_pct = std::min(1.0f, setting.slider_pct + step);
@@ -290,11 +422,12 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Slider visual (syncs with arrows)
       if (setting.is_slider) {
-        slider(context, mk(entity, 200 + static_cast<int>(i)), setting.slider_pct,
+        slider(context, mk(entity, 500 + static_cast<int>(i)), setting.slider_pct,
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(130), pixels(12)})
                    .with_absolute_position()
                    .with_translate(value_x + arrow_size + 170.0f, ry + 13.0f)
+                   .with_skip_tabbing(true)
                    .with_debug_name("slider_" + std::to_string(i)));
       }
     }
@@ -303,10 +436,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float help_x = panel_x + panel_w + 100.0f;
     float help_y = 85.0f;
     float help_w = 350.0f;
+    
+    auto& selected_setting = current_settings[selected_row];
+    std::string current_val = selected_setting.is_slider 
+        ? format_slider_value(selected_row, selected_setting.slider_pct)
+        : (selected_setting.options.empty() ? "---" : selected_setting.options[selected_setting.option_idx]);
 
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_label(graphics_settings[selected_row].label)
+            .with_label(selected_setting.label)
             .with_size(ComponentSize{pixels(static_cast<int>(help_w)), pixels(35)})
             .with_absolute_position()
             .with_translate(help_x, help_y)
@@ -316,7 +454,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 301),
         ComponentConfig{}
-            .with_label("The maximum number of frames the game will try to display")
+            .with_label("Adjust this setting to customize your")
             .with_size(ComponentSize{pixels(static_cast<int>(help_w)), pixels(50)})
             .with_absolute_position()
             .with_translate(help_x, help_y + 40.0f)
@@ -326,7 +464,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 302),
         ComponentConfig{}
-            .with_label("per second")
+            .with_label("gaming experience.")
             .with_size(ComponentSize{pixels(static_cast<int>(help_w)), pixels(30)})
             .with_absolute_position()
             .with_translate(help_x, help_y + 70.0f)
@@ -336,7 +474,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 303),
         ComponentConfig{}
-            .with_label("Default value: 120")
+            .with_label("Current: " + current_val)
             .with_size(ComponentSize{pixels(static_cast<int>(help_w)), pixels(30)})
             .with_absolute_position()
             .with_translate(help_x, help_y + 110.0f)
