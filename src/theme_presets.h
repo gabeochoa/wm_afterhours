@@ -32,20 +32,25 @@ inline void add_default_language_fonts(Theme &theme) {
 }
 
 // Cozy Kraft - Warm, paper-like aesthetic for cozy/casual games
+// Matches "Blossom Cafe" inspiration image
 inline Theme cozy_kraft() {
   Theme t(Color{62, 44, 35, 255},    // font - dark sepia brown (contrast 7.5:1)
           Color{245, 240, 230, 255}, // darkfont - cream (for dark backgrounds)
           Color{100, 85, 72, 255},   // font_muted - medium brown (contrast 4.6:1)
-          Color{245, 240, 230, 255}, // background - cream
-          Color{255, 250, 240, 255}, // surface - warm white
-          Color{140, 100, 55, 255},  // primary - darker kraft brown (contrast 4.5:1)
-          Color{85, 120, 70, 255},   // secondary - darker sage (contrast 4.6:1)
-          Color{165, 90, 90, 255},   // accent - darker dusty rose (contrast 4.5:1)
+          Color{215, 195, 175, 255}, // background - kraft paper tan
+          Color{255, 250, 242, 255}, // surface - warm cream white
+          Color{125, 105, 85, 255},  // primary - warm brown (panel titles)
+          Color{165, 200, 165, 255}, // secondary - sage/mint green (menu buttons)
+          Color{225, 165, 165, 255}, // accent - dusty rose/pink (serve button)
           Color{140, 50, 50, 255}    // error - darker red (contrast 5.5:1)
   );
+  t.roundness = 0.15f; // Subtle rounding to match cozy aesthetic
   add_default_language_fonts(t);
   return t;
 }
+
+// Cozy Kraft border color - matches panel outlines
+inline Color cozy_border_color() { return Color{139, 119, 101, 255}; }
 
 // Neon Dark - Cyberpunk/tactical shooter aesthetic
 // All colors meet WCAG AA 4.5:1 contrast with light text

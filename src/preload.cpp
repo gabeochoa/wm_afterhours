@@ -140,6 +140,13 @@ Preload &Preload::make_singleton() {
     std::string japanese_font =
         files::get_resource_path("fonts", "Sazanami-Hanazono-Mincho.ttf")
             .string();
+    // New fonts for game screens
+    std::string rounded_font =
+        files::get_resource_path("fonts", "eqprorounded-regular.ttf").string();
+    std::string garamond_font =
+        files::get_resource_path("fonts", "EBGaramond-Regular.ttf").string();
+    std::string symbols_font =
+        files::get_resource_path("fonts", "SymbolsNerdFont-Regular.ttf").string();
 
     // Get codepoints for CJK fonts
     auto korean_cps = get_korean_codepoints();
@@ -152,6 +159,12 @@ Preload &Preload::make_singleton() {
         .load_font(ui::UIComponent::SYMBOL_FONT, english_font.c_str())
         // English font (ASCII only)
         .load_font("Gaegu-Bold", english_font.c_str())
+        // Rounded font for cartoon/tycoon style
+        .load_font("EqProRounded", rounded_font.c_str())
+        // Garamond for elegant/cozy style
+        .load_font("Garamond", garamond_font.c_str())
+        // Symbols/icons font
+        .load_font("NerdSymbols", symbols_font.c_str())
         // Korean font with Hangul codepoints
         .load_font_with_codepoints("NotoSansKR", korean_font.c_str(),
                                    korean_cps.data(),
