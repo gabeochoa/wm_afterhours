@@ -739,3 +739,197 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | **List Box** | **Medium** | **Dropdown doesn't scale** | Missing |
 | **Table** | **Medium** | **No data grid** | Missing |
 
+
+---
+
+# Visual Effects Gaps (Discovered matching UI inspirations)
+
+## 29. Missing Feature: Text Stroke / Outline
+
+**Status:** Not implemented
+
+**Issue:** Cannot render text with an outline/stroke effect. This is critical for game UI titles and badges where text needs to stand out against varying backgrounds.
+
+**Inspiration Example:** "DREAM INCORPORATED" title in tycoon game needs white text with blue outline for legibility and style.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_label("DREAM")
+    .with_text_stroke(Color{90, 160, 210, 255}, 2.0f);  // color, thickness
+```
+
+**Workaround:** Render text multiple times at offsets to simulate outline (implemented in `src/ui_workarounds/TextOutline.h`)
+
+---
+
+## 30. Missing Feature: Gradient Backgrounds
+
+**Status:** Not implemented
+
+**Issue:** Cannot render gradient fills (linear, radial). Solid colors limit visual depth and polish.
+
+**Inspiration Example:** Sky backgrounds, button highlights, panel depth effects all benefit from gradients.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_gradient_background(
+        GradientType::Linear,
+        Color{155, 195, 235, 255},  // start
+        Color{200, 220, 245, 255},  // end
+        0.0f);                       // angle in degrees
+```
+
+**Workaround:** Layer multiple semi-transparent divs to approximate gradients.
+
+---
+
+## 31. Missing Feature: Decorative/Irregular Borders
+
+**Status:** Limited - only uniform rectangular borders with optional rounded corners
+
+**Issue:** Cannot create decorative frames like scalloped edges, hand-drawn borders, or irregular outlines common in cozy game aesthetics.
+
+**Inspiration Example:** The kraft paper frame in the cozy cafe has a slightly irregular, textured border appearance.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_border_style(BorderStyle::Scalloped)  // or Dashed, Dotted, Double
+    .with_border_image(texture);                 // 9-slice border image
+```
+
+**Workaround:** Use 9-slice border images via `with_texture()` on border elements.
+
+---
+
+## 32. Missing Feature: Circular Progress Indicator
+
+**Status:** Not implemented (only linear progress via manual div stacking)
+
+**Issue:** Cannot render circular/radial progress indicators. Common in game UIs for cooldowns, gauges, and status indicators.
+
+**Inspiration Example:** Happiness and Resources gauges in tycoon game use circular progress style.
+
+**Suggested Implementation:**
+```cpp
+circular_progress(context, mk(entity, 0),
+    0.75f,  // value 0-1
+    ComponentConfig{}
+        .with_size(pixels(50), pixels(50))
+        .with_custom_background(fill_color)
+        .with_border(track_color, 4.0f));
+```
+
+**Workaround:** Approximate with pie-slice divs or use icon images.
+
+---
+
+## 33. Missing Feature: Icon Font / Symbol Rendering
+
+**Status:** Limited - Unicode symbols don't render if font lacks codepoints
+
+**Issue:** Loading custom icon fonts (like Font Awesome, Material Icons, Nerd Fonts) requires manually loading all needed codepoints. No automatic codepoint detection from font files.
+
+**Inspiration Example:** All three game mockups need distinct icon sets (coffee beans, gears, weapons, etc.)
+
+**Current Limitation:**
+```cpp
+// Standard load_font only gets ASCII 32-126
+font_manager.load_font("Icons", icon_font_path);  // Icons won't render!
+
+// Must manually specify codepoints
+font_manager.load_font_with_codepoints("Icons", icon_font_path,
+    codepoints.data(), codepoints.size());
+```
+
+**Suggested Fix:** 
+1. Add `load_font_full(name, path)` that loads all codepoints in the font
+2. Or add `load_font_range(name, path, start, end)` for Unicode ranges
+3. Or auto-detect needed codepoints from font file
+
+---
+
+## 34. Missing Feature: Drop Shadow on Text
+
+**Status:** Not implemented (only panel shadows via `with_soft_shadow`)
+
+**Issue:** Cannot add drop shadows to text for depth and legibility. The existing `with_soft_shadow` only applies to the element's box, not the text within.
+
+**Inspiration Example:** Title text in game UIs often has subtle drop shadows for depth.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_label("Title")
+    .with_text_shadow(Color{0, 0, 0, 100}, 2.0f, 2.0f);  // color, offset_x, offset_y
+```
+
+**Workaround:** Render text twice - once offset in shadow color, once in normal position (implemented in `src/ui_workarounds/TextShadow.h`)
+
+---
+
+## 35. Missing Feature: Notification Badges
+
+**Status:** Not implemented
+
+**Issue:** Cannot add notification badges (small circles with numbers or symbols) to icons/buttons. Common pattern for unread counts, alerts, and status indicators.
+
+**Inspiration Example:** Cozy Cafe icons have red badges with "2" and "!" to indicate notifications.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_notification_badge("2", Color{200, 60, 60, 255});
+// Automatically positions at top-right of element
+```
+
+**Workaround:** Manually position small circular divs with absolute positioning (implemented in `src/ui_workarounds/NotificationBadge.h`)
+
+---
+
+## 36. Missing Feature: Decorative Frame/Border
+
+**Status:** Not implemented
+
+**Issue:** Cannot create decorative frames around screens or panels with depth effects (multiple border layers, corner accents).
+
+**Inspiration Example:** The kraft paper frame in Cozy Cafe has corner accents and layered borders for a scrapbook feel.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_decorative_frame(FrameStyle::KraftPaper, 12.0f);  // style, thickness
+```
+
+**Workaround:** Layer multiple divs to create frame effect (implemented in `src/ui_workarounds/DecorativeFrame.h`)
+
+---
+
+# Workaround Files Reference
+
+The following workaround files have been created to compensate for missing library features. These should be migrated to native library features when available:
+
+| File | Gap | Description |
+|------|-----|-------------|
+| `src/ui_workarounds/TextOutline.h` | #29 | Renders text multiple times at offsets to simulate outline |
+| `src/ui_workarounds/TextShadow.h` | #34 | Renders text twice for drop shadow effect |
+| `src/ui_workarounds/GradientBackground.h` | #30 | Layers horizontal strips to approximate vertical gradient |
+| `src/ui_workarounds/NotificationBadge.h` | #35 | Creates positioned circular badges with text |
+| `src/ui_workarounds/DecorativeFrame.h` | #36 | Creates layered borders with corner accents |
+
+---
+
+# Updated Priority Table (Visual Effects)
+
+| Gap | Severity | User Impact | Status |
+|-----|----------|-------------|--------|
+| **Text Stroke/Outline** | **High** | **Can't match game title styles** | Workaround |
+| **Gradient Backgrounds** | **Medium** | **Flat colors lack depth** | Workaround |
+| **Decorative Borders** | **Low** | **Can approximate with images** | Workaround |
+| **Circular Progress** | **Medium** | **No radial gauges** | Missing |
+| **Icon Font Loading** | **High** | **Icons show as ?** | Limited |
+| **Text Drop Shadow** | **Medium** | **Text lacks depth** | Workaround |
+| **Notification Badges** | **Medium** | **No alert indicators** | Workaround |
+| **Decorative Frame** | **Low** | **No scrapbook-style borders** | Workaround |

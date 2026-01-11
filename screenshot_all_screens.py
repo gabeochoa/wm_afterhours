@@ -269,6 +269,10 @@ def get_screen_count(executable):
             count += 1
             screen_names.append(match.group(1))
     
+    # IMPORTANT: Sort alphabetically - this matches the internal order
+    # used by page_down cycling (std::map<std::string> is alphabetically ordered)
+    screen_names.sort()
+    
     log(f"Found {count} screens")
     return count, screen_names
 
@@ -345,8 +349,8 @@ def main():
             screen_name = client.get_current_screen_name()
             log(f"[{i+1}/{screen_count}] Capturing: {screen_name}")
             
-            # Wait for screen to render
-            time.sleep(0.4)
+            # Wait for screen to render fully
+            time.sleep(0.6)
             
             # Take screenshot
             screenshot_path = os.path.join(output_dir, f"{screen_name}.png")
@@ -359,7 +363,7 @@ def main():
             # Navigate to next screen (unless this is the last one)
             if i < screen_count - 1:
                 client.next_screen()
-                time.sleep(0.3)  # Brief pause for screen transition
+                time.sleep(1.2)  # Longer pause for screen transition to complete
         
         elapsed = time.time() - start_time
         
