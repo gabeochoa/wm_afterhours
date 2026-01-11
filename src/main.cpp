@@ -39,6 +39,7 @@ backward::SignalHandling sh;
 #include "systems/screens/RubberBanditsMenu.h"
 #include "systems/screens/IslandsTrainsSettings.h"
 #include "systems/screens/ParcelCorpsSettings.h"
+#include "systems/screens/ExampleTextOverflow.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
 #include <cstdio>

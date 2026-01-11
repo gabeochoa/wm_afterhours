@@ -86,9 +86,19 @@ endif
 # Accessibility enforcement (warn and clamp small font sizes)
 ACCESSIBILITY_CXXFLAGS := -DAFTERHOURS_ENFORCE_MIN_FONT_SIZE
 
+# Debug text overflow (show red indicators when text can't fit in containers)
+# Enabled by default, disable with DEBUG_TEXT_OVERFLOW=0
+DEBUG_TEXT_OVERFLOW ?= 1
+ifeq ($(DEBUG_TEXT_OVERFLOW),1)
+    DEBUG_TEXT_OVERFLOW_CXXFLAGS := -DAFTERHOURS_DEBUG_TEXT_OVERFLOW
+else
+    DEBUG_TEXT_OVERFLOW_CXXFLAGS :=
+endif
+
 # Combine all CXXFLAGS
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
-    $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) $(RAYLIB_FLAGS)
+    $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) \
+    $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS)
 
 # Include directories (use -isystem for vendor to suppress their warnings)
 INCLUDES := -isystem vendor/

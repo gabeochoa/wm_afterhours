@@ -472,23 +472,6 @@ Old code using `with_color_usage()` still works but shows compiler deprecation w
 
 ---
 
-## 4. Font Size 0 Warnings with No Visual Feedback
-
-**Location:** `vendor/afterhours/src/plugins/font_helper.h` (line 133)
-
-**Issue:** The `position_text` auto-sizer produces font size 0 when containers are too small relative to text content. This causes text to silently not render with only a console warning.
-
-**Symptoms:**
-- Text doesn't appear in UI
-- Console shows: `Invalid font size 0 passed to measure_text_utf8`
-- No visual indication of what's wrong
-
-**Current Workaround:** Make containers larger, or use fixed font sizes instead of auto-sizing.
-
-**Suggested Fix:** Add minimum font size clamping, or visual debug indicator when text can't fit.
-
----
-
 ## 5. Missing Flexbox Alignment Properties
 
 **Location:** `vendor/afterhours/src/plugins/ui/imm_components.h`

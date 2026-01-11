@@ -68,7 +68,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(48)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + 25.0f)
-            .with_font("EBGaramond", 36.0f)
+            .with_font("Garamond", 36.0f)
             .with_custom_text_color(gold_accent)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -106,7 +106,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(48)})
             .with_absolute_position()
             .with_translate(left_col, content_y + 30.0f)
-            .with_font("EBGaramond", 42.0f)
+            .with_font("Garamond", 42.0f)
             .with_custom_text_color(cream_text)
             .with_debug_name("display_text"));
 
@@ -116,7 +116,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(36)})
             .with_absolute_position()
             .with_translate(left_col, content_y + 85.0f)
-            .with_font("EBGaramond", 32.0f)
+            .with_font("Garamond", 32.0f)
             .with_custom_text_color(silver_text)
             .with_debug_name("headline_text"));
 
@@ -126,7 +126,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(30)})
             .with_absolute_position()
             .with_translate(left_col, content_y + 130.0f)
-            .with_font("EBGaramond", 26.0f)
+            .with_font("Garamond", 26.0f)
             .with_custom_text_color(silver_text)
             .with_debug_name("subheading_text"));
 
@@ -201,7 +201,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(col_w - 20), pixels(28)})
               .with_absolute_position()
               .with_translate(right_col + 12.0f, content_y + 38.0f + i * 52.0f)
-              .with_font("EBGaramond", 22.0f)
+              .with_font("Garamond", 22.0f)
               .with_custom_text_color(examples[i].color)
               .with_debug_name("color_text_" + std::to_string(i)));
     }
