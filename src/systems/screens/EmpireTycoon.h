@@ -15,6 +15,7 @@ using namespace afterhours::ui::imm;
 
 struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   int64_t cash = 1250980;
+  size_t selected_tab = 0;  // Navigation tab selection
   
   // Loaded textures
   bool textures_loaded = false;
@@ -441,17 +442,25 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       auto& [tex_ptr, fallback, label, bg_color] = tabs[i];
 
       // Tab button background - larger with thicker border
-      button(context, mk(entity, 100 + static_cast<int>(i)),
+      bool tab_selected = (i == selected_tab);
+      afterhours::Color border_color = tab_selected 
+          ? afterhours::Color{255, 200, 50, 255}   // Gold border when selected
+          : afterhours::Color{140, 160, 180, 255};
+      float border_width = tab_selected ? 5.0f : 3.0f;
+      
+      if (button(context, mk(entity, 100 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(static_cast<int>(tab_width)), pixels(static_cast<int>(tab_height))})
                  .with_absolute_position()
                  .with_translate(nav_x, tab_y)
                  .with_custom_background(bg_color)
-                 .with_border(afterhours::Color{140, 160, 180, 255}, 3.0f)
+                 .with_border(border_color, border_width)
                  .with_rounded_corners(std::bitset<4>(0b1111))
                  .with_roundness(0.25f)
                  .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 50})
-                 .with_debug_name("tab_" + std::to_string(i)));
+                 .with_debug_name("tab_" + std::to_string(i)))) {
+        selected_tab = i;
+      }
 
       // Icon image or fallback text - larger
       if (tex_ptr && tex_ptr->id != 0) {

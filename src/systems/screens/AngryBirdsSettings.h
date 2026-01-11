@@ -220,8 +220,12 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float btn_w = 280.0f;
     float btn_h = 55.0f;
 
-    // Notifications: OFF
-    div(context, mk(entity, 50),
+    // Notifications: ON/OFF (clickable)
+    std::string notif_text = notifications_off ? "Notifications: OFF" : "Notifications: ON";
+    afterhours::Color notif_icon_color = notifications_off ? close_red : btn_green;
+    std::string notif_icon = notifications_off ? "Ø" : "✓";
+    
+    if (button(context, mk(entity, 50),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(btn_w)), pixels(static_cast<int>(btn_h))})
             .with_absolute_position()
@@ -231,22 +235,24 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_soft_shadow(2.0f, 4.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
-            .with_debug_name("notifications_bg"));
+            .with_debug_name("notifications_btn"))) {
+      notifications_off = !notifications_off;
+    }
 
     div(context, mk(entity, 51),
         ComponentConfig{}
-            .with_label("Ø")
+            .with_label(notif_icon)
             .with_size(ComponentSize{pixels(30), pixels(30)})
             .with_absolute_position()
             .with_translate(left_btn_x + 20.0f, btn_y1 + 12.0f)
             .with_font("EqProRounded", 24.0f)
-            .with_custom_text_color(close_red)
+            .with_custom_text_color(notif_icon_color)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("notif_icon"));
 
     div(context, mk(entity, 52),
         ComponentConfig{}
-            .with_label("Notifications: OFF")
+            .with_label(notif_text)
             .with_size(ComponentSize{pixels(200), pixels(35)})
             .with_absolute_position()
             .with_translate(left_btn_x + 55.0f, btn_y1 + 10.0f)

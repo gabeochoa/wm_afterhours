@@ -171,13 +171,13 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     float display_row_y = content_y + 22.0f;
     
-    // Mode row
+    // Mode row - interactive
     render_selector_row(context, entity, 110, content_x, display_row_y, row_w, row_h,
-                        "Mode", modes[display_mode]);
+                        "Mode", display_mode, static_cast<int>(modes.size()));
     
-    // Resolution row
+    // Resolution row - interactive
     render_selector_row(context, entity, 120, content_x, display_row_y + row_h + section_gap, row_w, row_h,
-                        "Resolution", resolutions[resolution]);
+                        "Resolution", resolution, static_cast<int>(resolutions.size()));
 
     // ========== CONTROLS SECTION ==========
     float controls_y = display_row_y + 2 * (row_h + section_gap) + section_header_gap;
@@ -280,7 +280,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void render_selector_row(UIContext<InputAction> &context, afterhours::Entity &entity,
                            int base_id, float x, float y, float w, float h,
-                           const std::string &label, const std::string &value) {
+                           const std::string &label, int &value_idx, int max_options) {
     // Row background - pill shaped with subtle roundness
     div(context, mk(entity, base_id),
         ComponentConfig{}
@@ -303,22 +303,33 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
 
-    // Left chevron (<)
-    div(context, mk(entity, base_id + 2),
+    // Left chevron (<) - clickable
+    if (button(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label("<")
-            .with_size(ComponentSize{pixels(20), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(28), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 165.0f, y + 7.0f)
             .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(arrow_color)
+            .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_alignment(TextAlignment::Center)
-            .with_debug_name("chevron_l_" + std::to_string(base_id)));
+            .with_debug_name("chevron_l_" + std::to_string(base_id)))) {
+      value_idx = (value_idx == 0) ? max_options - 1 : value_idx - 1;
+    }
+
+    // Get display value
+    std::string display_value;
+    if (base_id == 110) {
+      display_value = modes[static_cast<size_t>(value_idx)];
+    } else {
+      display_value = resolutions[static_cast<size_t>(value_idx)];
+    }
 
     // Value (center-right)
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_label(value)
+            .with_label(display_value)
             .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 140.0f, y + 8.0f)
@@ -327,22 +338,25 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("value_" + std::to_string(base_id)));
 
-    // Right chevron (>)
-    div(context, mk(entity, base_id + 4),
+    // Right chevron (>) - clickable
+    if (button(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(">")
-            .with_size(ComponentSize{pixels(20), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(28), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 28.0f, y + 7.0f)
             .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(arrow_color)
+            .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_alignment(TextAlignment::Center)
-            .with_debug_name("chevron_r_" + std::to_string(base_id)));
+            .with_debug_name("chevron_r_" + std::to_string(base_id)))) {
+      value_idx = (value_idx + 1) % max_options;
+    }
   }
 
   void render_slider_row(UIContext<InputAction> &context, afterhours::Entity &entity,
                          int base_id, float x, float y, float w, float h,
-                         const std::string &label, int value, int max_val) {
+                         const std::string &label, int &value, int max_val) {
     // Row background - pill shaped
     div(context, mk(entity, base_id),
         ComponentConfig{}
@@ -365,17 +379,20 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
 
-    // Left chevron (<)
-    div(context, mk(entity, base_id + 2),
+    // Left chevron (<) - clickable
+    if (button(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label("<")
-            .with_size(ComponentSize{pixels(20), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(28), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 190.0f, y + 7.0f)
             .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(arrow_color)
+            .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_alignment(TextAlignment::Center)
-            .with_debug_name("chevron_l_" + std::to_string(base_id)));
+            .with_debug_name("chevron_l_" + std::to_string(base_id)))) {
+      if (value > 0) value--;
+    }
 
     // Segmented slider - positioned between arrows
     // 10 segments with gaps, matching inspiration
@@ -389,7 +406,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Saturated teal when filled, dusty rose when empty
       afterhours::Color seg_color = is_filled ? slider_teal : slider_empty;
       
-      div(context, mk(entity, base_id + 10 + i),
+      // Each segment is clickable to set value
+      if (button(context, mk(entity, base_id + 10 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(static_cast<int>(seg_w)), pixels(static_cast<int>(seg_h))})
               .with_absolute_position()
@@ -397,20 +415,25 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(seg_color)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.2f)
-              .with_debug_name("seg_" + std::to_string(base_id) + "_" + std::to_string(i)));
+              .with_debug_name("seg_" + std::to_string(base_id) + "_" + std::to_string(i)))) {
+        value = i + 1;  // Set value to this segment
+      }
     }
 
-    // Right chevron (>)
-    div(context, mk(entity, base_id + 3),
+    // Right chevron (>) - clickable
+    if (button(context, mk(entity, base_id + 3),
         ComponentConfig{}
             .with_label(">")
-            .with_size(ComponentSize{pixels(20), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(28), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 28.0f, y + 7.0f)
             .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(arrow_color)
+            .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_alignment(TextAlignment::Center)
-            .with_debug_name("chevron_r_" + std::to_string(base_id)));
+            .with_debug_name("chevron_r_" + std::to_string(base_id)))) {
+      if (value < max_val) value++;
+    }
   }
 };
 
