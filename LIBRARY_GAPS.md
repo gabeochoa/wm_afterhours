@@ -821,62 +821,60 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | **Input Number** | **Medium** | **No validated numeric entry** | Missing |
 | **List Box** | **Medium** | **Dropdown doesn't scale** | Missing |
 | **Table** | **Medium** | **No data grid** | Missing |
-| **Slider/Range** | **High** | **No slider control** | Missing |
+| **Slider/Range** | **Low** | **Basic slider works** | IMPLEMENTED |
 | **Toggle Switch** | **Medium** | **No iOS-style on/off** | Missing |
 
 
 ---
 
-## 37. Missing Widget: Slider / Range Input
+## 37. ~~Missing Widget: Slider / Range Input~~ (IMPLEMENTED)
 
-**Status:** Not implemented
+**Status:** IMPLEMENTED - `slider()` function exists in `imm_components.h`
 
 **ImGui Equivalent:** `SliderFloat()`, `SliderInt()`
 
-**Issue:** No visual slider control with a track, fill, and draggable handle. Different from `InputNumber` (#26) which is about text entry with +/- buttons. Sliders are essential for volume, brightness, sensitivity, and other continuous value settings.
-
-**Inspiration Examples:** 
-- PowerWash Simulator settings use sliders for Anti-Aliasing levels
-- FIFA/Rematch settings use sliders for Max FPS, Gamma, Motion blur
-- Mini Motorways uses sliders for Controller Cursor Sensitivity
-- Islands & Trains uses segmented discrete sliders (bar made of separate segments)
-- Parcel Corps uses colored volume bars with continuous fill
-
-**Current Workaround:** Stack three divs manually - track background, fill bar, handle circle:
-```cpp
-// Track background
-div(context, mk(entity, 100), ComponentConfig{}
-    .with_size({pixels(200), pixels(6)})
-    .with_custom_background(track_color));
-
-// Fill (percentage of track)
-div(context, mk(entity, 101), ComponentConfig{}
-    .with_size({pixels(int(200 * value)), pixels(6)})
-    .with_custom_background(fill_color));
-
-// Handle
-div(context, mk(entity, 102), ComponentConfig{}
-    .with_size({pixels(12), pixels(12)})
-    .with_translate(200 * value - 6, -3)
-    .with_custom_background(handle_color)
-    .with_rounded_corners(0b1111)
-    .with_roundness(1.0f));
-```
-
-**Suggested Implementation:**
+**The library provides:**
 ```cpp
 ElementResult slider(HasUIContext auto &ctx, EntityParent ep_pair,
-                     float &value, float min, float max,
-                     ComponentConfig config = ComponentConfig());
+                     float &owned_value,
+                     ComponentConfig config = ComponentConfig(),
+                     SliderHandleValueLabelPosition handle_label_position =
+                         SliderHandleValueLabelPosition::None);
 ```
 
-**Features Needed:**
+**Features Available:**
 - Visual track with fill indicator
-- Draggable handle (mouse + touch)
-- Keyboard support (arrows adjust value)
-- Gamepad support (left/right on focused)
-- Optional value display
-- Vertical orientation option
+- Draggable handle (mouse drag support)
+- Keyboard support (arrows adjust value when focused)
+- Label position options: `None`, `OnHandle`, `WithLabel`, `WithLabelNewLine`
+- Uses Theme colors for track/fill/handle
+
+**Usage Example:**
+```cpp
+float volume = 0.75f;
+slider(context, mk(entity, 100), volume,
+       ComponentConfig{}
+           .with_size(ComponentSize{pixels(200), pixels(24)})
+           .with_custom_background(track_color)
+           .with_custom_foreground(fill_color));
+```
+
+**Limitations:**
+- Only 0.0-1.0 range (must scale values externally)
+- No min/max parameters (always normalized)
+- No vertical orientation
+- Custom styling requires understanding internal structure
+- No `with_custom_foreground()` method - slider fill uses `Theme::Usage::Primary` and track uses `Theme::Usage::Secondary` internally
+- Cannot easily set per-slider custom colors without theme modification
+
+**Suggested Enhancement:**
+Add `with_custom_foreground()` to `ComponentConfig` for slider fill color, analogous to `with_custom_background()` for track color:
+```cpp
+slider(context, mk(entity, 0), value,
+       ComponentConfig{}
+           .with_custom_background(track_color)    // track color - works
+           .with_custom_foreground(fill_color));   // fill color - NOT YET SUPPORTED
+```
 
 ---
 

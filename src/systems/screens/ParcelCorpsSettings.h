@@ -217,10 +217,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float slider_y = section2_y + 6 * (row_h + row_gap) + 8.0f;
     
     render_volume_slider(context, entity, 200, row_x, slider_y, row_w, row_h,
-                         "Audio Volume", audio_volume, slider_green, icon_red);
+                         "Audio Volume", audio_volume, icon_red);
     
     render_volume_slider(context, entity, 210, row_x, slider_y + row_h + row_gap, row_w, row_h,
-                         "Music Volume", music_volume, slider_orange, icon_red);
+                         "Music Volume", music_volume, icon_red);
 
     // ========== QUEST PANEL (top center) ==========
     float quest_x = 420.0f;
@@ -524,18 +524,20 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void render_toggle_row_with_icon(UIContext<InputAction> &context, afterhours::Entity &entity,
                          int base_id, float x, float y, float w, float h,
-                         const std::string &label, bool value, afterhours::Color icon_color,
+                         const std::string &label, bool &value, afterhours::Color icon_color,
                          const std::string &icon_symbol) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("toggle_row_" + std::to_string(base_id)));
+    // Row background - clickable to toggle
+    if (button(context, mk(entity, base_id),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+                   .with_absolute_position()
+                   .with_translate(x, y)
+                   .with_custom_background(row_dark)
+                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_roundness(0.15f)
+                   .with_debug_name("toggle_row_" + std::to_string(base_id)))) {
+      value = !value;  // Toggle the boolean on click
+    }
 
     // Icon (colored circle with symbol)
     div(context, mk(entity, base_id + 1),
@@ -591,17 +593,19 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   // Rainbow icon for Resolution/Full Screen rows
   void render_toggle_row_rainbow(UIContext<InputAction> &context, afterhours::Entity &entity,
                          int base_id, float x, float y, float w, float h,
-                         const std::string &label, bool value) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("toggle_row_" + std::to_string(base_id)));
+                         const std::string &label, bool &value) {
+    // Row background - clickable to toggle
+    if (button(context, mk(entity, base_id),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+                   .with_absolute_position()
+                   .with_translate(x, y)
+                   .with_custom_background(row_dark)
+                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_roundness(0.15f)
+                   .with_debug_name("toggle_row_" + std::to_string(base_id)))) {
+      value = !value;  // Toggle the boolean on click
+    }
 
     // Rainbow icon (multicolor circle using nested elements)
     div(context, mk(entity, base_id + 1),
@@ -795,7 +799,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void render_volume_slider(UIContext<InputAction> &context, afterhours::Entity &entity,
                             int base_id, float x, float y, float w, float h,
-                            const std::string &label, float value, afterhours::Color fill_color,
+                            const std::string &label, float &value,
                             afterhours::Color icon_color) {
     // Row background
     div(context, mk(entity, base_id),
@@ -834,30 +838,17 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("volume_label_" + std::to_string(base_id)));
 
-    // Slider track
+    // Use the interactive slider() function
     float slider_w = 125.0f;
     float slider_x = x + w - slider_w - 12.0f;
-    div(context, mk(entity, base_id + 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(10)})
-            .with_absolute_position()
-            .with_translate(slider_x, y + 17.0f)
-            .with_custom_background(slider_track)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.5f)
-            .with_debug_name("volume_track_" + std::to_string(base_id)));
-
-    // Slider fill
-    int fill_w = static_cast<int>(slider_w * value);
-    div(context, mk(entity, base_id + 4),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(fill_w), pixels(10)})
-            .with_absolute_position()
-            .with_translate(slider_x, y + 17.0f)
-            .with_custom_background(fill_color)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.5f)
-            .with_debug_name("volume_fill_" + std::to_string(base_id)));
+    slider(context, mk(entity, base_id + 3), value,
+           ComponentConfig{}
+               .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(14)})
+               .with_absolute_position()
+               .with_translate(slider_x, y + 15.0f)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.5f)
+               .with_debug_name("volume_slider_" + std::to_string(base_id)));
   }
 };
 
