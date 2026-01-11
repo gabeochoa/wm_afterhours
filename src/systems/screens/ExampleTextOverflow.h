@@ -34,7 +34,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = warning_orange;
     theme.accent = afterhours::Color{100, 150, 255, 255};
     theme.error = error_red;
-    theme.roundness = 0.15f;
+    theme.roundness = 0.10f;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();

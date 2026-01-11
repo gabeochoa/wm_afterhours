@@ -17,14 +17,15 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
-    // Main container
+    // Main container - reduced roundness and increased padding for safe area
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.9f)})
+                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
                 .with_custom_background(theme.background)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_roundness(0.08f)
                 .with_debug_name("cards_main"));
 
     // Title
@@ -180,15 +181,16 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                                             .right = pixels(0)})
                         .with_debug_name("row2_nested"));
 
-    // Nested card container
+    // Nested card container - extra padding compensates for rounded corners
     auto nested_container =
         div(context, mk(row2.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(420), pixels(200)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
+                .with_roundness(0.08f)
                 .with_debug_name("nested_container"));
 
     div(context, mk(nested_container.ent(), 0),

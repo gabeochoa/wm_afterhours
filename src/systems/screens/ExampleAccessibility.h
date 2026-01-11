@@ -39,7 +39,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = afterhours::Color{100, 120, 160, 255};
     theme.accent = accent_amber;
     theme.error = afterhours::Color{200, 85, 85, 255};
-    theme.roundness = 0.12f;
+    theme.roundness = 0.10f;
     context.theme = theme;
 
     // Validate theme once on first frame

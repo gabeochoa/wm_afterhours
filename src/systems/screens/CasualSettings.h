@@ -40,7 +40,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = btn_blue;
     theme.accent = btn_green;
     theme.error = close_red;
-    theme.roundness = 0.4f;
+    theme.roundness = 0.18f;
     theme.segments = 16;
     context.theme = theme;
 

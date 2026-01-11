@@ -60,7 +60,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = icon_blue;
     theme.accent = btn_yellow;
     theme.error = icon_red;
-    theme.roundness = 0.3f;
+    theme.roundness = 0.15f;
     theme.segments = 12;
     context.theme = theme;
 

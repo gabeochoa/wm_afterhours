@@ -43,7 +43,7 @@ inline Theme cozy_kraft() {
           Color{225, 165, 165, 255}, // accent - dusty rose/pink (serve button)
           Color{140, 50, 50, 255}    // error - darker red (contrast 5.5:1)
   );
-  t.roundness = 0.15f; // Subtle rounding to match cozy aesthetic
+  t.roundness = 0.12f; // Subtle rounding to match cozy aesthetic
   add_default_language_fonts(t);
   return t;
 }

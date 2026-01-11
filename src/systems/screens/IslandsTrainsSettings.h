@@ -54,7 +54,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = slider_teal;
     theme.accent = slider_teal;
     theme.error = afterhours::Color{180, 100, 100, 255};
-    theme.roundness = 0.2f;
+    theme.roundness = 0.12f;
     theme.segments = 8;
     context.theme = theme;
 

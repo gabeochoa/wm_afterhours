@@ -90,7 +90,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = sage_header;
     theme.accent = rose_btn;
     theme.error = badge_red;
-    theme.roundness = 0.15f;
+    theme.roundness = 0.12f;
     theme.segments = 8;
     context.theme = theme;
 

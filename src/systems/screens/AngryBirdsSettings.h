@@ -43,7 +43,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = btn_blue;
     theme.accent = btn_green;
     theme.error = close_red;
-    theme.roundness = 0.3f;
+    theme.roundness = 0.15f;
     theme.segments = 12;
     context.theme = theme;
 

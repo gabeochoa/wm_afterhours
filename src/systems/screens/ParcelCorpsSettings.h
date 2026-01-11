@@ -65,7 +65,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = text_muted;
     theme.accent = toggle_green;
     theme.error = icon_red;
-    theme.roundness = 0.15f;
+    theme.roundness = 0.10f;
     theme.segments = 10;
     context.theme = theme;
 

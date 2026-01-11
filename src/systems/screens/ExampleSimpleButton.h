@@ -35,7 +35,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = afterhours::Color{100, 180, 200, 255};
     theme.accent = afterhours::Color{255, 180, 100, 255};
     theme.error = afterhours::Color{220, 80, 80, 255};
-    theme.roundness = 0.25f;
+    theme.roundness = 0.15f;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();

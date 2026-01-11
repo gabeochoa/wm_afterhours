@@ -16,14 +16,15 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::sage_natural();
     context.theme = theme;
 
-    // Main container with column layout - use smaller percentage to fit screen
+    // Main container with column layout - use smaller percentage for screen safe area
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.88f), screen_pct(0.82f)})
+                .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.80f)})
                 .with_custom_background(theme.background)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_roundness(0.08f)
                 .with_debug_name("layout_main"));
 
     // Title - use percent sizing to stay within parent

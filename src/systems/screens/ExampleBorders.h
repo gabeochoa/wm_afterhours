@@ -32,7 +32,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = accent_cyan;
     theme.accent = accent_orange;
     theme.error = afterhours::Color{200, 80, 80, 255};
-    theme.roundness = 0.1f;
+    theme.roundness = 0.08f;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();

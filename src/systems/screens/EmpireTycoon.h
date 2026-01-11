@@ -129,7 +129,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = border_blue;
     theme.accent = btn_yellow;
     theme.error = afterhours::Color{240, 100, 100, 255};
-    theme.roundness = 0.25f;
+    theme.roundness = 0.12f;
     theme.segments = 10;
     context.theme = theme;
 

@@ -31,7 +31,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     theme.primary = accent_blue;
     theme.secondary = border_light;
     theme.accent = accent_purple;
-    theme.roundness = 0.15f;
+    theme.roundness = 0.10f;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();

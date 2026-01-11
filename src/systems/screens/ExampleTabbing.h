@@ -36,7 +36,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = btn_cyan;
     theme.accent = btn_lime;
     theme.error = afterhours::Color{220, 70, 70, 255};
-    theme.roundness = 0.2f;
+    theme.roundness = 0.12f;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();
