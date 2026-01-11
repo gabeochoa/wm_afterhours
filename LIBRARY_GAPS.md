@@ -95,6 +95,283 @@ auto child = div(context, mk(parent.ent(), 0),
 
 ---
 
+# Underutilized Library Features
+
+The following features exist in the afterhours library but are underutilized in the screen implementations. These are NOT gaps - they're documentation/awareness issues.
+
+---
+
+## U1. Auto-Generated Entity IDs via Source Location
+
+**Location:** `vendor/afterhours/src/plugins/ui/entity_management.h`
+
+**Status:** ALREADY IMPLEMENTED - screens use manual IDs unnecessarily
+
+The `mk()` function automatically generates unique IDs using C++20 `std::source_location`. Each unique call site (file + line + column) produces a unique entity ID.
+
+**Current Screen Pattern (INCORRECT):**
+```cpp
+// Manual ID tracking - error-prone and tedious
+div(context, mk(entity, 100), config);
+div(context, mk(entity, 101), config);
+div(context, mk(entity, 102), config);
+```
+
+**Better Pattern (USE THIS):**
+```cpp
+// Auto-unique per call site - no manual tracking needed
+div(context, mk(entity), config);  // Unique ID based on this line
+div(context, mk(entity), config);  // Different line = different ID
+div(context, mk(entity), config);  // Each call gets unique hash
+```
+
+**When Manual IDs ARE Needed:**
+```cpp
+// Loops require explicit indices since all iterations share same source line
+for (size_t i = 0; i < items.size(); ++i) {
+    div(context, mk(entity, i), config);  // Need index to differentiate
+}
+```
+
+**Library Implementation (entity_management.h lines 25-33):**
+```cpp
+static EntityParent mk(Entity &parent, EntityID otherID = -1,
+   const std::source_location location = std::source_location::current()) {
+  std::stringstream pre_hash;
+  pre_hash << parent.id << otherID << "file: " << location.file_name() 
+           << '(' << location.line() << ':' << location.column() << ")";
+  UI_UUID hash = std::hash<std::string>{}(pre_hash.str());
+  // Returns existing entity if hash matches, otherwise creates new
+}
+```
+
+---
+
+## U2. Resolution-Independent Spacing Helpers
+
+**Location:** `vendor/afterhours/src/plugins/ui/styling_defaults.h`
+
+**Status:** ALREADY IMPLEMENTED - screens use hardcoded pixel values
+
+The library provides resolution-independent spacing that scales automatically:
+
+**Current Screen Pattern (INCORRECT):**
+```cpp
+// Hardcoded pixels don't scale with resolution
+.with_padding(Padding{.top = pixels(16), .left = pixels(24), ...})
+.with_margin(Margin{.top = pixels(8), ...})
+```
+
+**Better Pattern (USE THIS):**
+```cpp
+// Resolution-independent spacing (scales from 720p baseline)
+.with_padding(Spacing::md)   // Uses DefaultSpacing::medium() = h720(24.0f)
+.with_margin(Spacing::sm)    // Uses DefaultSpacing::small() = h720(16.0f)
+```
+
+**Available Spacing Helpers:**
+```cpp
+struct DefaultSpacing {
+  static Size tiny()      { return h720(8.0f);  }   // Spacing::xs
+  static Size small()     { return h720(16.0f); }   // Spacing::sm
+  static Size medium()    { return h720(24.0f); }   // Spacing::md
+  static Size large()     { return h720(32.0f); }   // Spacing::lg
+  static Size xlarge()    { return h720(48.0f); }   // Spacing::xl
+  static Size container() { return h720(64.0f); }
+};
+
+// For individual axes
+.with_padding(Padding{
+    .top = DefaultSpacing::medium(),
+    .left = DefaultSpacing::large(),
+    .bottom = DefaultSpacing::medium(),
+    .right = DefaultSpacing::large()
+})
+```
+
+---
+
+## U3. Typography Scale System
+
+**Location:** `vendor/afterhours/src/plugins/ui/styling_defaults.h`
+
+**Status:** ALREADY IMPLEMENTED - screens use arbitrary font sizes
+
+**Current Screen Pattern (INCORRECT):**
+```cpp
+.with_font("MyFont", 24.0f)  // Magic number, doesn't scale
+```
+
+**Better Pattern (USE THIS):**
+```cpp
+// Use typography scale for consistent sizing
+struct TypographyScale {
+  static constexpr float BASE_SIZE_720P = 16.0f;
+  static constexpr float RATIO = 1.25f;  // Major third scale
+  
+  static Size size(int level);  // level -2 to +4 typically
+  static Size base();           // 16px at 720p
+  static Size min_accessible(); // 18.67px at 720p (WCAG minimum)
+};
+
+// Usage:
+.with_font("MyFont", TypographyScale::size(2).value)  // Heading size
+.with_font("MyFont", TypographyScale::base().value)   // Body size
+```
+
+---
+
+## U4. Built-in Animation System
+
+**Location:** `vendor/afterhours/src/plugins/animation.h`
+
+**Status:** ALREADY IMPLEMENTED - screens implement manual animation state
+
+The library provides a complete animation manager with easing, sequences, and callbacks.
+
+**Current Screen Pattern (INCORRECT):**
+```cpp
+// Manual animation state tracking
+float hover_scale = 1.0f;
+if (is_hovered) hover_scale = lerp(hover_scale, 1.1f, dt * 10);
+```
+
+**Better Pattern (USE THIS):**
+```cpp
+// Use animation system with easing
+enum struct MyAnim { ButtonHover, MenuSlide };
+
+// Setup animation (once)
+animation::one_shot(MyAnim::ButtonHover, [](auto& h) {
+    h.from(1.0f).to(1.1f, 0.15f, EasingType::EaseOutQuad);
+});
+
+// Read value
+float scale = animation::anim<MyAnim>(MyAnim::ButtonHover).value();
+
+// Complex sequences
+animation::anim<MyAnim>(MyAnim::MenuSlide)
+    .from(0.0f)
+    .to(1.0f, 0.3f, EasingType::EaseOutQuad)
+    .hold(0.5f)  // Pause at end
+    .to(0.0f, 0.3f, EasingType::EaseOutQuad)
+    .on_complete([]() { /* finished */ });
+
+// Indexed animations (for lists)
+animation::anim(MyAnim::ButtonHover, button_index)
+    .from(1.0f).to(1.05f, 0.1f, EasingType::EaseOutQuad);
+```
+
+**Available Easing Types:**
+- `Linear` - Constant speed
+- `EaseOutQuad` - Fast start, slow end (most common for UI)
+- `Hold` - Stay at current value for duration
+
+**Don't forget to register the update system:**
+```cpp
+animation::register_update_systems<MyAnim>(system_manager);
+```
+
+---
+
+## U5. Style Presets
+
+**Location:** `vendor/afterhours/src/plugins/ui/component_config.h`
+
+**Status:** ALREADY IMPLEMENTED - screens rebuild configs from scratch
+
+**Available Presets:**
+```cpp
+// Large padding/margins for editorial layouts
+ComponentConfig magazine_style();
+
+// Medium padding/margins for cards and panels
+ComponentConfig card_style();
+
+// Compact padding/tiny margins for forms
+ComponentConfig form_style();
+
+// Applies sensible responsive defaults
+ComponentConfig auto_spacing();
+```
+
+**Usage:**
+```cpp
+// Instead of:
+div(context, mk(entity),
+    ComponentConfig{}
+        .with_padding(Padding{...many lines...})
+        .with_margin(Margin{...more lines...})
+        .with_font(...));
+
+// Use:
+div(context, mk(entity),
+    card_style()
+        .with_label("Card Content")
+        .with_background(Theme::Usage::Surface));
+```
+
+---
+
+## U6. Focus Cluster Components
+
+**Location:** `vendor/afterhours/src/plugins/ui/components.h`
+
+**Status:** ALREADY IMPLEMENTED - but rarely used in custom screens
+
+The library provides components for grouping related elements for focus navigation:
+
+```cpp
+struct FocusClusterRoot : BaseComponent {};  // Mark container as cluster root
+struct InFocusCluster : BaseComponent {};    // Mark child as part of cluster
+```
+
+**Usage:** When focused, the focus ring draws around the entire cluster root instead of individual children.
+
+```cpp
+auto row = div(context, mk(entity), config);
+row.ent().addComponentIfMissing<FocusClusterRoot>();
+
+auto label = div(context, mk(row.ent()), label_config);
+label.ent().addComponentIfMissing<InFocusCluster>();
+
+auto checkbox = checkbox_no_label(context, mk(row.ent()), value, box_config);
+checkbox.ent().addComponentIfMissing<InFocusCluster>();
+// Focus ring now surrounds entire row, not individual elements
+```
+
+---
+
+## U7. Accessibility Color Utilities
+
+**Location:** `vendor/afterhours/src/plugins/color.h`
+
+**Status:** ALREADY IMPLEMENTED - screens use manual color calculations
+
+The library includes WCAG-compliant contrast and auto-text utilities:
+
+```cpp
+// Check WCAG compliance
+bool ok = colors::meets_wcag_aa(foreground, background);  // 4.5:1 ratio
+bool strict = colors::meets_wcag_aaa(foreground, background);  // 7:1 ratio
+
+// Get WCAG level
+WCAGLevel level = colors::wcag_compliance(foreground, background);
+// Returns: Fail, AALarge, AA, AAALarge, AAA
+
+// Auto-pick text color for any background
+Color text = colors::auto_text_color(background);  // Returns black or white
+Color text = colors::auto_text_color(background, light_option, dark_option);
+
+// Adjust color to meet contrast requirement
+Color adjusted = colors::ensure_contrast(color, background, 4.5f);
+
+// Get suggested font weight for low-contrast pairs
+FontWeight weight = colors::suggested_font_weight(foreground, background);
+```
+
+---
+
 ## 3. ~~Text Color vs Background Color Confusion in `div`~~ (RESOLVED)
 
 **Location:** `vendor/afterhours/src/plugins/ui/component_config.h`
@@ -790,6 +1067,20 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 
 # Priority
 
+## Underutilized Features (Not Gaps - Need Documentation)
+
+| Feature | Location | Issue |
+|---------|----------|-------|
+| Auto Entity IDs | `entity_management.h` | Screens use manual IDs; `mk(parent)` auto-generates |
+| Spacing Helpers | `styling_defaults.h` | Hardcoded pixels instead of `DefaultSpacing::medium()` |
+| Typography Scale | `styling_defaults.h` | Arbitrary font sizes instead of `TypographyScale::size(n)` |
+| Animation System | `animation.h` | Manual lerp instead of `animation::anim<>()` |
+| Style Presets | `component_config.h` | `card_style()`, `form_style()` not used |
+| Focus Clusters | `components.h` | `FocusClusterRoot`/`InFocusCluster` rarely used |
+| Color Utilities | `color.h` | `meets_wcag_aa()`, `auto_text_color()` not used |
+
+## True Gaps (Need Library Addition)
+
 | Gap | Severity | User Impact | Status |
 |-----|----------|-------------|--------|
 | Font in Theme | Medium | Theming feels incomplete | RESOLVED |
@@ -823,6 +1114,10 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | **Table** | **Medium** | **No data grid** | Missing |
 | **Slider/Range** | **Low** | **Basic slider works** | IMPLEMENTED |
 | **Toggle Switch** | **Medium** | **No iOS-style on/off** | Missing |
+| **Button Variants** | **Medium** | **Only filled buttons available** | Missing (Gap #40) |
+| **CSS Grid Layout** | **Medium** | **Manual grid calculation** | Missing (Gap #41) |
+| **Icon+Text Button** | **Medium** | **Manual composition needed** | Missing (Gap #42) |
+| **Stepper/Counter** | **Medium** | **No +/- widget** | Missing (Gap #43) |
 
 
 ---
@@ -915,6 +1210,178 @@ ElementResult toggle_switch(HasUIContext auto &ctx, EntityParent ep_pair,
 - Animation between states
 - Clear on/off visual distinction
 - Optional on/off labels
+
+---
+
+# New Gaps from Screen Review (2026-01)
+
+The following gaps were identified by reviewing all 15 game-style screen implementations and cross-referencing with the actual library code.
+
+---
+
+## 40. Missing Widget: Button Variants (Filled/Outline/Ghost)
+
+**Status:** Not implemented
+
+**Issue:** Only a single `button()` function exists. Game UIs need multiple button styles:
+- **Filled** (solid background - current default)
+- **Outline** (border only, transparent background)
+- **Ghost** (no border, no background, text only)
+- **Icon-only** (circular, square, or custom shape)
+
+**Inspiration Examples:**
+- Dead Space uses outline-style buttons for secondary actions
+- Fighter Menu uses ghost buttons for navigation tabs
+- Cozy Cafe uses icon-only buttons for quick actions
+
+**Suggested Implementation:**
+```cpp
+enum struct ButtonVariant { Filled, Outline, Ghost, Icon };
+
+ElementResult button(HasUIContext auto &ctx, EntityParent ep_pair,
+                     ComponentConfig config = ComponentConfig(),
+                     ButtonVariant variant = ButtonVariant::Filled);
+
+// Or via config:
+ComponentConfig{}.with_button_variant(ButtonVariant::Outline);
+```
+
+**Current Workaround:** Manually style buttons:
+```cpp
+// Outline button workaround
+button(context, mk(entity),
+    ComponentConfig{}
+        .with_label("Cancel")
+        .with_background(Theme::Usage::None)
+        .with_border(theme.primary, 2.0f));
+```
+
+---
+
+## 41. Missing Layout: CSS Grid
+
+**Status:** Not implemented
+
+**Issue:** Only Row/Column flex layout is available. CSS Grid-style layout would enable:
+- Equal-sized cells without manual calculation
+- Spanning cells across rows/columns
+- Auto-placement of items
+- Gap between cells
+
+**Inspiration Examples:**
+- Empire Tycoon resource grid (3x2 layout)
+- Angry Birds level select (grid of levels)
+- Kirby ability select (4x3 grid)
+
+**Suggested Implementation:**
+```cpp
+ElementResult grid(HasUIContext auto &ctx, EntityParent ep_pair,
+                   int columns, int rows = -1,  // -1 = auto rows
+                   ComponentConfig config = ComponentConfig());
+
+// With gap configuration
+ComponentConfig{}
+    .with_grid_gap(DefaultSpacing::small())
+    .with_grid_columns(3)
+    .with_grid_auto_rows(pixels(100));
+```
+
+**Current Workaround:** Nested rows and manual width calculation:
+```cpp
+// Manual 3-column grid
+auto row = div(context, mk(entity), 
+    ComponentConfig{}.with_flex_direction(FlexDirection::Row));
+for (int i = 0; i < 3; i++) {
+    div(context, mk(row.ent(), i),
+        ComponentConfig{}.with_size({percent(0.333f), pixels(100)}));
+}
+```
+
+---
+
+## 42. Missing Widget: Icon + Text Button
+
+**Status:** Not implemented
+
+**Issue:** No built-in way to create buttons with both an icon and label. `icon_row()` exists but doesn't integrate with button behavior.
+
+**Inspiration Examples:**
+- Nearly every settings screen has icon+text menu items
+- Cozy Cafe sidebar buttons (icon left, label right)
+- Flight Options icons before each setting label
+
+**Suggested Implementation:**
+```cpp
+ElementResult icon_button(HasUIContext auto &ctx, EntityParent ep_pair,
+                          texture_manager::Texture icon,
+                          texture_manager::Rectangle icon_rect,
+                          ComponentConfig config = ComponentConfig());
+
+// Or via config
+ComponentConfig{}
+    .with_label("Settings")
+    .with_icon(gear_texture, gear_rect)
+    .with_icon_position(IconPosition::Left);  // Left, Right, Top, Bottom
+```
+
+**Current Workaround:** Manually compose icon and text:
+```cpp
+auto btn = button(context, mk(entity),
+    ComponentConfig{}.with_flex_direction(FlexDirection::Row));
+if (btn) { /* clicked */ }
+
+sprite(context, mk(btn.ent()), icon_texture, icon_rect,
+    ComponentConfig{}.with_size({pixels(24), pixels(24)}));
+div(context, mk(btn.ent()),
+    ComponentConfig{}.with_label("Settings"));
+```
+
+---
+
+## 43. Missing Widget: Stepper / Counter
+
+**Status:** Not implemented
+
+**Issue:** No +/- button pair for incrementing/decrementing values. Different from slider (continuous) or input_int (text entry).
+
+**Inspiration Examples:**
+- Mini Motorways item counters
+- Kirby player count selector
+- Any quantity selector in games
+
+**Suggested Implementation:**
+```cpp
+ElementResult stepper(HasUIContext auto &ctx, EntityParent ep_pair,
+                      int &value, int min, int max, int step = 1,
+                      ComponentConfig config = ComponentConfig());
+
+// Float version
+ElementResult stepper(HasUIContext auto &ctx, EntityParent ep_pair,
+                      float &value, float min, float max, float step = 0.1f,
+                      ComponentConfig config = ComponentConfig());
+```
+
+**Features Needed:**
+- [-] and [+] buttons on sides
+- Current value display in center
+- Long-press for rapid increment
+- Optional: draggable center area
+- Keyboard: left/right arrows when focused
+
+**Current Workaround:** Manual button composition:
+```cpp
+auto row = div(context, mk(entity),
+    ComponentConfig{}.with_flex_direction(FlexDirection::Row));
+
+if (button(context, mk(row.ent()), ComponentConfig{}.with_label("-"))) {
+    value = std::max(min, value - 1);
+}
+div(context, mk(row.ent()),
+    ComponentConfig{}.with_label(std::to_string(value)));
+if (button(context, mk(row.ent()), ComponentConfig{}.with_label("+"))) {
+    value = std::min(max, value + 1);
+}
+```
 
 ---
 
