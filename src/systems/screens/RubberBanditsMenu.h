@@ -77,13 +77,14 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float title_y = 30.0f;
 
     // RUBBER text (black with thick outline effect)
+    // Note: Fredoka is wider, use 40pt instead of 48pt and wider container
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_label("RUBBER")
-            .with_size(ComponentSize{pixels(280), pixels(55)})
+            .with_size(ComponentSize{pixels(320), pixels(50)})
             .with_absolute_position()
             .with_translate(title_x, title_y)
-            .with_font("Fredoka", 48.0f)
+            .with_font("Fredoka", 40.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("title_rubber"));
 
@@ -91,10 +92,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_label("BANDIT$")
-            .with_size(ComponentSize{pixels(300), pixels(55)})
+            .with_size(ComponentSize{pixels(340), pixels(50)})
             .with_absolute_position()
-            .with_translate(title_x, title_y + 50.0f)
-            .with_font("Fredoka", 48.0f)
+            .with_translate(title_x, title_y + 45.0f)
+            .with_font("Fredoka", 40.0f)
             .with_custom_text_color(accent_green)
             .with_debug_name("title_bandits"));
 

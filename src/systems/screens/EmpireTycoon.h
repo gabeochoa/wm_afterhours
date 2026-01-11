@@ -175,14 +175,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     
     // DREAM - large white with thick blue outline and shadow effect
     // Shadow layer first (dark blue, offset)
+    // Note: Fredoka is wider than EqProRounded, so we use smaller size (64pt vs 78pt)
     ui_workarounds::text_with_outline(
         context, entity, 10,
         "DREAM",
-        32.0f, 22.0f, 380.0f, 85.0f,
-        "Fredoka", 78.0f,
+        32.0f, 22.0f, 420.0f, 85.0f,
+        "Fredoka", 64.0f,
         afterhours::Color{45, 90, 140, 180},
         afterhours::Color{35, 70, 115, 150},
-        6.0f,
+        5.0f,
         TextAlignment::Left
     );
     
@@ -190,23 +191,24 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     ui_workarounds::text_with_outline(
         context, entity, 20,
         "DREAM",
-        28.0f, 15.0f, 380.0f, 85.0f,
-        "Fredoka", 78.0f,
+        28.0f, 15.0f, 420.0f, 85.0f,
+        "Fredoka", 64.0f,
         white,
         border_blue,
-        6.0f,
+        5.0f,
         TextAlignment::Left
     );
 
     // Shadow for INCORPORATED
+    // Note: Fredoka is wider, so we use smaller size (42pt vs 52pt) and wider container
     ui_workarounds::text_with_outline(
         context, entity, 30,
         "INCORPORATED",
-        32.0f, 100.0f, 480.0f, 60.0f,
-        "Fredoka", 52.0f,
+        32.0f, 95.0f, 520.0f, 55.0f,
+        "Fredoka", 42.0f,
         afterhours::Color{35, 75, 125, 180},
         afterhours::Color{25, 55, 95, 150},
-        5.0f,
+        4.0f,
         TextAlignment::Left
     );
     
@@ -214,11 +216,11 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     ui_workarounds::text_with_outline(
         context, entity, 40,
         "INCORPORATED",
-        28.0f, 95.0f, 480.0f, 60.0f,
-        "Fredoka", 52.0f,
+        28.0f, 90.0f, 520.0f, 55.0f,
+        "Fredoka", 42.0f,
         afterhours::Color{100, 185, 240, 255},
         afterhours::Color{45, 115, 175, 255},
-        5.0f,
+        4.0f,
         TextAlignment::Left
     );
 

@@ -17,19 +17,19 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   bool notifications_off = true;
 
   // Colors matching Angry Birds inspiration - warm, playful mobile game
-  afterhours::Color bg_green{95, 145, 85, 255};          // Forest green background
-  afterhours::Color header_coral{235, 135, 95, 255};     // Coral/orange header
-  afterhours::Color header_dark{195, 95, 55, 255};       // Darker coral border
-  afterhours::Color panel_cream{255, 245, 225, 255};     // Warm cream panel
-  afterhours::Color panel_peach{255, 235, 215, 255};     // Slightly darker peach
-  afterhours::Color btn_green{125, 195, 95, 255};        // Bright green toggle
-  afterhours::Color btn_green_dark{95, 165, 65, 255};    // Green shadow
-  afterhours::Color btn_blue{95, 165, 215, 255};         // Blue pill button
-  afterhours::Color btn_blue_dark{65, 135, 185, 255};    // Blue shadow
-  afterhours::Color text_dark{55, 45, 35, 255};          // Dark brown text
+  afterhours::Color bg_green{75, 135, 95, 255};          // Softer forest green background
+  afterhours::Color header_coral{245, 145, 100, 255};    // Warmer coral/orange header
+  afterhours::Color header_dark{215, 105, 60, 255};      // Darker coral border
+  afterhours::Color panel_cream{255, 248, 230, 255};     // Warm cream panel (lighter)
+  afterhours::Color panel_peach{255, 240, 218, 255};     // Inner peach
+  afterhours::Color btn_green{115, 195, 85, 255};        // Bright lime green toggle
+  afterhours::Color btn_green_dark{85, 160, 55, 255};    // Green shadow
+  afterhours::Color btn_blue{85, 155, 210, 255};         // Softer blue pill
+  afterhours::Color btn_blue_dark{55, 120, 175, 255};    // Blue shadow
+  afterhours::Color text_dark{65, 55, 45, 255};          // Dark brown text
   afterhours::Color text_white{255, 255, 255, 255};
-  afterhours::Color close_red{220, 85, 95, 255};         // Close button red
-  afterhours::Color wifi_green{85, 195, 145, 255};       // WiFi icon green
+  afterhours::Color close_red{235, 75, 85, 255};         // Brighter close button red
+  afterhours::Color wifi_green{75, 195, 135, 255};       // WiFi icon green
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -58,24 +58,24 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // ========== MAIN PANEL ==========
-    float panel_w = 680.0f;
-    float panel_h = 420.0f;
+    float panel_w = 720.0f;
+    float panel_h = 440.0f;
     float panel_x = ((float)screen_w - panel_w) / 2.0f;
     float panel_y = ((float)screen_h - panel_h) / 2.0f;
 
-    // Panel shadow
+    // Panel shadow (deeper)
     div(context, mk(entity, 5),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), 
                                      pixels(static_cast<int>(panel_h))})
             .with_absolute_position()
-            .with_translate(panel_x + 6.0f, panel_y + 8.0f)
-            .with_custom_background(afterhours::Color{0, 0, 0, 60})
+            .with_translate(panel_x + 8.0f, panel_y + 10.0f)
+            .with_custom_background(afterhours::Color{0, 0, 0, 80})
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
+            .with_roundness(0.12f)
             .with_debug_name("panel_shadow"));
 
-    // Main panel background
+    // Main panel background (thicker border)
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), 
@@ -83,31 +83,31 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x, panel_y)
             .with_custom_background(panel_cream)
-            .with_border(header_dark, 4.0f)
+            .with_border(header_dark, 6.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
+            .with_roundness(0.12f)
             .with_debug_name("panel"));
 
-    // ========== CORAL HEADER ==========
+    // ========== CORAL HEADER (fuller, warmer) ==========
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 8)), pixels(70)})
+            .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 12)), pixels(80)})
             .with_absolute_position()
-            .with_translate(panel_x + 4.0f, panel_y + 4.0f)
+            .with_translate(panel_x + 6.0f, panel_y + 6.0f)
             .with_custom_background(header_coral)
             .with_rounded_corners(std::bitset<4>(0b1100))
-            .with_roundness(0.15f)
+            .with_roundness(0.10f)
             .with_debug_name("header"));
 
-    // Title
+    // Title (larger, bolder)
     div(context, mk(entity, 21),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{pixels(200), pixels(50)})
+            .with_size(ComponentSize{pixels(280), pixels(60)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w / 2.0f - 100.0f, panel_y + 15.0f)
-            .with_font("Fredoka", 38.0f)
-            .with_custom_text_color(text_white)
+            .with_translate(panel_x + panel_w / 2.0f - 140.0f, panel_y + 18.0f)
+            .with_font("Fredoka", 42.0f)
+            .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
 
@@ -128,37 +128,37 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_debug_name("close_btn"));
 
     // ========== TOGGLE BUTTONS (Music, Sound, Vibration) ==========
-    float toggle_y = panel_y + 100.0f;
-    float toggle_x = panel_x + 75.0f;
-    float toggle_spacing = 90.0f;
+    float toggle_y = panel_y + 115.0f;
+    float toggle_x = panel_x + 80.0f;
+    float toggle_spacing = 100.0f;
 
     // Use simple characters that render properly
     std::vector<std::pair<std::string, bool*>> toggles = {
-        {"m", &music_on},      // Music note
-        {"<3", &sound_on},     // Sound/speaker
+        {"~", &music_on},      // Music note
+        {"*", &sound_on},      // Sound/speaker
         {"o", &vibration_on},  // Vibration/phone
     };
 
     for (size_t i = 0; i < toggles.size(); i++) {
       float tx = toggle_x + (float)i * toggle_spacing;
       bool is_on = *toggles[i].second;
-      afterhours::Color bg_col = is_on ? btn_green : afterhours::Color{180, 180, 180, 255};
-      afterhours::Color border_col = is_on ? btn_green_dark : afterhours::Color{140, 140, 140, 255};
+      afterhours::Color bg_col = is_on ? btn_green : afterhours::Color{165, 165, 165, 255};
+      afterhours::Color border_col = is_on ? btn_green_dark : afterhours::Color{125, 125, 125, 255};
 
       if (button(context, mk(entity, 30 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(toggles[i].first)
-                     .with_size(ComponentSize{pixels(70), pixels(70)})
+                     .with_size(ComponentSize{pixels(75), pixels(75)})
                      .with_absolute_position()
                      .with_translate(tx, toggle_y)
                      .with_custom_background(bg_col)
-                     .with_border(border_col, 4.0f)
-                     .with_font("EqProRounded", 32.0f)
+                     .with_border(border_col, 5.0f)
+                     .with_font("EqProRounded", 36.0f)
                      .with_custom_text_color(text_white)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(1.0f)
-                     .with_soft_shadow(2.0f, 4.0f, 8.0f, afterhours::Color{0, 0, 0, 50})
+                     .with_soft_shadow(3.0f, 5.0f, 10.0f, afterhours::Color{0, 0, 0, 60})
                      .with_debug_name("toggle_" + std::to_string(i)))) {
         *toggles[i].second = !(*toggles[i].second);
       }
@@ -213,13 +213,13 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("wifi_icon"));
 
     // ========== BLUE PILL BUTTONS ==========
-    float btn_y1 = toggle_y + 95.0f;
-    float btn_y2 = btn_y1 + 70.0f;
-    float btn_y3 = btn_y2 + 70.0f;
-    float left_btn_x = panel_x + 50.0f;
-    float right_btn_x = panel_x + panel_w / 2.0f + 20.0f;
-    float btn_w = 280.0f;
-    float btn_h = 55.0f;
+    float btn_y1 = toggle_y + 100.0f;
+    float btn_y2 = btn_y1 + 75.0f;
+    float btn_y3 = btn_y2 + 75.0f;
+    float left_btn_x = panel_x + 55.0f;
+    float right_btn_x = panel_x + panel_w / 2.0f + 25.0f;
+    float btn_w = 300.0f;
+    float btn_h = 58.0f;
 
     // Notifications: ON/OFF (clickable)
     std::string notif_text = notifications_off ? "Notifications: OFF" : "Notifications: ON";

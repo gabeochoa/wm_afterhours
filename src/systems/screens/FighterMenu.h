@@ -15,21 +15,23 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_option = 0;  // System Options selected
   int currency = 25000;
 
-  // Colors matching Cross Tag Battle inspiration more closely
-  afterhours::Color bg_dark{25, 22, 20, 255};
-  afterhours::Color bg_brown{65, 52, 42, 255};          // Warmer brown like inspiration
-  afterhours::Color tab_bg_unselected{245, 242, 238, 255};  // Light/white for unselected tabs
-  afterhours::Color tab_selected{95, 180, 65, 255};    // Bright green for selected tab
-  afterhours::Color tab_text_unselected{45, 40, 35, 255}; // Dark text on light tabs
-  afterhours::Color tab_border{55, 50, 45, 255};       // Dark border around tabs
-  afterhours::Color menu_item_bg{15, 15, 15, 255};     // Black bars for menu items
-  afterhours::Color menu_highlight{110, 195, 70, 255}; // Bright green highlight
-  afterhours::Color text_white{245, 240, 235, 255};
-  afterhours::Color text_gray{140, 135, 125, 255};
-  afterhours::Color holograph_teal{65, 200, 190, 255}; // Brighter teal
-  afterhours::Color holograph_white{248, 255, 252, 255};
-  afterhours::Color gold_text{230, 195, 75, 255};      // Brighter gold for P$
-  afterhours::Color menu_text_unselected{165, 160, 155, 255}; // Gray text on dark
+  // Colors matching Cross Tag Battle inspiration - darker, more industrial
+  afterhours::Color bg_dark{15, 12, 10, 255};           // Very dark for contrast
+  afterhours::Color bg_brown{85, 72, 58, 255};          // Warmer brown background
+  afterhours::Color header_black{8, 8, 8, 255};         // Pure black header bar
+  afterhours::Color tab_bg_unselected{248, 245, 240, 255};  // Cream white tabs
+  afterhours::Color tab_selected{85, 195, 55, 255};     // Bright lime green
+  afterhours::Color tab_text_unselected{35, 30, 25, 255}; // Dark text on light
+  afterhours::Color tab_border{40, 35, 30, 255};        // Dark border
+  afterhours::Color menu_item_bg{10, 10, 10, 255};      // Pure black bars
+  afterhours::Color menu_highlight{95, 210, 55, 255};   // Bright lime green
+  afterhours::Color text_white{250, 248, 245, 255};
+  afterhours::Color text_gray{155, 150, 145, 255};
+  afterhours::Color holograph_teal{85, 215, 200, 255};  // Brighter cyan-teal
+  afterhours::Color holograph_white{252, 255, 253, 255};
+  afterhours::Color gold_text{255, 210, 55, 255};       // Bright gold for P$
+  afterhours::Color menu_text_unselected{175, 170, 165, 255}; // Gray text on dark
+  afterhours::Color title_yellow{255, 235, 130, 255};   // Yellow for MainMenu title
 
   std::vector<std::string> tabs = {"Offline", "Online", "Customize", "Options"};
 
@@ -61,32 +63,41 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
-    // ========== BACKGROUND ==========
+    // ========== FULL BACKGROUND (black header + transition) ==========
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_brown)
-            .with_debug_name("bg"));
+            .with_custom_background(header_black)
+            .with_debug_name("bg_full"));
 
-    // ========== TITLE: MainMenu (stylized) ==========
+    // ========== LOWER BROWN AREA (below header bar) ==========
+    div(context, mk(entity, 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h - 145)})
+            .with_absolute_position()
+            .with_translate(0.0f, 145.0f)
+            .with_custom_background(bg_brown)
+            .with_debug_name("bg_lower"));
+
+    // ========== TITLE: MainMenu (stylized yellow on black) ==========
     div(context, mk(entity, 5),
         ComponentConfig{}
             .with_label("MainMenu")
-            .with_size(ComponentSize{pixels(350), pixels(70)})
+            .with_size(ComponentSize{pixels(380), pixels(75)})
             .with_absolute_position()
-            .with_translate(25.0f, 15.0f)
-            .with_font("Gaegu-Bold", 52.0f)
-            .with_custom_text_color(text_white)
+            .with_translate(20.0f, 8.0f)
+            .with_font("Gaegu-Bold", 58.0f)
+            .with_custom_text_color(title_yellow)
             .with_debug_name("title"));
 
-    // ========== CURRENCY DISPLAY ==========
+    // ========== CURRENCY DISPLAY (top right on black header) ==========
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_label(std::to_string(currency) + " P$")
-            .with_size(ComponentSize{pixels(140), pixels(35)})
+            .with_size(ComponentSize{pixels(160), pixels(40)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 165.0f, 22.0f)
-            .with_font("EqProRounded", 24.0f)
+            .with_translate((float)screen_w - 180.0f, 22.0f)
+            .with_font("EqProRounded", 28.0f)
             .with_custom_text_color(gold_text)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("currency"));
