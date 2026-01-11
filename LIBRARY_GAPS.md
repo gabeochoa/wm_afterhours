@@ -494,18 +494,6 @@ font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path,
 
 ---
 
-## 6. Dropdown Close Behavior
-
-**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~760)
-
-**Issue:** No built-in way to close dropdown when clicking outside of it. Dropdowns remain open until user selects an option.
-
-**Current Workaround:** None available - dropdowns stay open.
-
-**Suggested Fix:** Add click-outside detection that closes any open dropdown.
-
----
-
 ## 7. Circular Dependency with Styling Defaults
 
 **Location:** `vendor/afterhours/src/plugins/ui/context.h` (lines 60-61)
