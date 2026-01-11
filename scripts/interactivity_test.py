@@ -502,6 +502,24 @@ SCREEN_TESTS: Dict[str, ScreenTestConfig] = {
             ),
         ]
     ),
+    
+    "fighter_menu": ScreenTestConfig(
+        screen_name="fighter_menu",
+        interactions=[
+            InteractionTest(
+                name="Tab Selection",
+                element_pattern="tab_*",
+                action="click",
+                description="Select a tab"
+            ),
+            InteractionTest(
+                name="Menu Item Selection",
+                element_pattern="menu_*",
+                action="click",
+                description="Select a menu item"
+            ),
+        ]
+    ),
 }
 
 

@@ -132,10 +132,11 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float toggle_x = panel_x + 75.0f;
     float toggle_spacing = 90.0f;
 
+    // Use simple characters that render properly
     std::vector<std::pair<std::string, bool*>> toggles = {
-        {"♫", &music_on},
-        {"◀", &sound_on},
-        {"◇", &vibration_on},
+        {"m", &music_on},      // Music note
+        {"<3", &sound_on},     // Sound/speaker
+        {"o", &vibration_on},  // Vibration/phone
     };
 
     for (size_t i = 0; i < toggles.size(); i++) {

@@ -15,19 +15,21 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_option = 0;  // System Options selected
   int currency = 25000;
 
-  // Colors matching Cross Tag Battle inspiration
+  // Colors matching Cross Tag Battle inspiration more closely
   afterhours::Color bg_dark{25, 22, 20, 255};
-  afterhours::Color bg_brown{45, 38, 32, 255};
-  afterhours::Color tab_bg{15, 15, 15, 255};
-  afterhours::Color tab_selected{85, 165, 55, 255};  // Bright green highlight
-  afterhours::Color tab_text{200, 195, 190, 255};
-  afterhours::Color menu_item_bg{35, 32, 28, 255};
-  afterhours::Color menu_highlight{120, 195, 75, 255};
+  afterhours::Color bg_brown{65, 52, 42, 255};          // Warmer brown like inspiration
+  afterhours::Color tab_bg_unselected{245, 242, 238, 255};  // Light/white for unselected tabs
+  afterhours::Color tab_selected{95, 180, 65, 255};    // Bright green for selected tab
+  afterhours::Color tab_text_unselected{45, 40, 35, 255}; // Dark text on light tabs
+  afterhours::Color tab_border{55, 50, 45, 255};       // Dark border around tabs
+  afterhours::Color menu_item_bg{15, 15, 15, 255};     // Black bars for menu items
+  afterhours::Color menu_highlight{110, 195, 70, 255}; // Bright green highlight
   afterhours::Color text_white{245, 240, 235, 255};
   afterhours::Color text_gray{140, 135, 125, 255};
-  afterhours::Color holograph_teal{65, 185, 175, 255};
-  afterhours::Color holograph_white{235, 250, 248, 255};
-  afterhours::Color gold_text{220, 185, 85, 255};
+  afterhours::Color holograph_teal{65, 200, 190, 255}; // Brighter teal
+  afterhours::Color holograph_white{248, 255, 252, 255};
+  afterhours::Color gold_text{230, 195, 75, 255};      // Brighter gold for P$
+  afterhours::Color menu_text_unselected{165, 160, 155, 255}; // Gray text on dark
 
   std::vector<std::string> tabs = {"Offline", "Online", "Customize", "Options"};
 
@@ -94,25 +96,28 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_w = 180.0f;
     float tab_start_x = 110.0f;
 
-    // L bumper indicator
+    // L bumper indicator - matching inspiration
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("L")
-            .with_size(ComponentSize{pixels(30), pixels(30)})
+            .with_size(ComponentSize{pixels(35), pixels(35)})
             .with_absolute_position()
-            .with_translate(70.0f, tab_y + 5.0f)
-            .with_custom_background(tab_bg)
-            .with_border(text_gray, 1.0f)
+            .with_translate(68.0f, tab_y + 2.0f)
+            .with_custom_background(tab_bg_unselected)
+            .with_border(tab_border, 2.0f)
             .with_font("EqProRounded", 19.0f)
-            .with_custom_text_color(text_white)
+            .with_custom_text_color(tab_text_unselected)
             .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.2f)
             .with_debug_name("l_bumper"));
 
-    // Tab buttons
+    // Tab buttons - white bg for unselected, green for selected (like inspiration)
     for (size_t i = 0; i < tabs.size(); i++) {
       bool is_selected = (i == selected_tab);
-      afterhours::Color tab_bg_color = is_selected ? tab_selected : tab_bg;
-      afterhours::Color tab_text_color = is_selected ? bg_dark : tab_text;
+      afterhours::Color bg_color = is_selected ? tab_selected : tab_bg_unselected;
+      // Selected tab has gold/orange text, unselected has dark text
+      afterhours::Color text_color = is_selected ? gold_text : tab_text_unselected;
 
       if (button(context, mk(entity, 30 + static_cast<int>(i)),
                  ComponentConfig{}
@@ -121,10 +126,10 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                               pixels(40)})
                      .with_absolute_position()
                      .with_translate(tab_start_x + (float)i * tab_w, tab_y)
-                     .with_custom_background(tab_bg_color)
-                     .with_border(text_gray, 1.0f)
-                     .with_font("EqProRounded", 20.0f)
-                     .with_custom_text_color(tab_text_color)
+                     .with_custom_background(bg_color)
+                     .with_border(tab_border, 2.0f)
+                     .with_font("EqProRounded", 19.0f)
+                     .with_custom_text_color(text_color)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("tab_" + std::to_string(i)))) {
         selected_tab = i;
@@ -135,14 +140,16 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 40),
         ComponentConfig{}
             .with_label("R")
-            .with_size(ComponentSize{pixels(30), pixels(30)})
+            .with_size(ComponentSize{pixels(35), pixels(35)})
             .with_absolute_position()
-            .with_translate(tab_start_x + 4 * tab_w + 10.0f, tab_y + 5.0f)
-            .with_custom_background(tab_bg)
-            .with_border(text_gray, 1.0f)
+            .with_translate(tab_start_x + 4 * tab_w + 10.0f, tab_y + 2.0f)
+            .with_custom_background(tab_bg_unselected)
+            .with_border(tab_border, 2.0f)
             .with_font("EqProRounded", 19.0f)
-            .with_custom_text_color(text_white)
+            .with_custom_text_color(tab_text_unselected)
             .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.2f)
             .with_debug_name("r_bumper"));
 
     // Decorative line under tabs
@@ -156,45 +163,48 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("tab_underline"));
 
     // ========== LEFT SIDEBAR MENU ==========
+    // Black horizontal bars with icons on left, matching inspiration
     float menu_x = 45.0f;
-    float menu_y = 175.0f;
-    float menu_item_h = 58.0f;
-    float icon_w = 55.0f;
+    float menu_y = 180.0f;
+    float menu_item_h = 55.0f;
+    float icon_w = 50.0f;
+    float menu_item_w = 320.0f;
 
     for (size_t i = 0; i < menu_options.size(); i++) {
       bool is_selected = (i == selected_option);
       float item_y = menu_y + (float)i * menu_item_h;
       auto &[icon, label] = menu_options[i];
 
-      // Icon background
+      // Icon box on left - dark with border
+      afterhours::Color icon_bg = is_selected ? menu_highlight : menu_item_bg;
+      afterhours::Color icon_color = is_selected ? bg_dark : text_white;
+      
       div(context, mk(entity, 100 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(icon)
               .with_size(ComponentSize{pixels(static_cast<int>(icon_w)),
-                                       pixels(static_cast<int>(menu_item_h - 6))})
+                                       pixels(static_cast<int>(menu_item_h - 4))})
               .with_absolute_position()
               .with_translate(menu_x, item_y)
-              .with_custom_background(menu_item_bg)
-              .with_border(text_gray, 1.0f)
-              .with_font("EqProRounded", 20.0f)
-              .with_custom_text_color(text_white)
+              .with_custom_background(icon_bg)
+              .with_font("EqProRounded", 22.0f)
+              .with_custom_text_color(icon_color)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("icon_" + std::to_string(i)));
 
-      // Menu item background
+      // Menu item bar - black normally, bright green when selected
       afterhours::Color item_bg = is_selected ? menu_highlight : menu_item_bg;
-      afterhours::Color item_text = is_selected ? bg_dark : tab_text;
+      afterhours::Color item_text = is_selected ? bg_dark : menu_text_unselected;
 
       if (button(context, mk(entity, 101 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label(label)
-                     .with_size(ComponentSize{pixels(280),
-                                              pixels(static_cast<int>(menu_item_h - 6))})
+                     .with_size(ComponentSize{pixels(static_cast<int>(menu_item_w - icon_w)),
+                                              pixels(static_cast<int>(menu_item_h - 4))})
                      .with_absolute_position()
                      .with_translate(menu_x + icon_w, item_y)
                      .with_custom_background(item_bg)
-                     .with_border(text_gray, 1.0f)
-                     .with_font("EqProRounded", 20.0f)
+                     .with_font("EqProRounded", 21.0f)
                      .with_custom_text_color(item_text)
                      .with_alignment(TextAlignment::Left)
                      .with_debug_name("menu_" + std::to_string(i)))) {
@@ -328,7 +338,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(30), pixels(30)})
             .with_absolute_position()
             .with_translate(280.0f, prompt_y)
-            .with_custom_background(tab_bg)
+            .with_custom_background(menu_item_bg)
             .with_border(text_gray, 1.0f)
             .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_white)
@@ -402,7 +412,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
             .with_translate(690.0f, prompt_y + 2.0f)
-            .with_custom_background(tab_bg)
+            .with_custom_background(menu_item_bg)
             .with_border(text_gray, 1.0f)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_white)
@@ -415,7 +425,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
             .with_translate(720.0f, prompt_y + 2.0f)
-            .with_custom_background(tab_bg)
+            .with_custom_background(menu_item_bg)
             .with_border(text_gray, 1.0f)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_white)

@@ -11,19 +11,19 @@ We use image diffing to calculate how closely our rendered UI screens match the 
 | Screen | Inspiration File | Screen File | Similarity |
 |--------|-----------------|-------------|------------|
 | Neon Strike | `example_shooter_game.png` | `NeonStrike.h` | **91.9%** ✅ |
+| Rematch/Sports | `example_rematch.jpg` | `SportsSettings.h` | **83.3%** ✅ |
+| Empire Tycoon | `example_tycoon_game.png` | `EmpireTycoon.h` | **80.1%** ✅ |
 | Ace Combat | `example_ace_combat.jpg` | `FlightOptions.h` | **79.8%** ✅ |
 | Mini Motorways | `example_mini_motorways.jpg` | `MiniMotorwaysSettings.h` | **77.7%** ✅ |
+| Angry Birds | `example_angry_birds.jpg` | `AngryBirdsSettings.h` | **74.0%** ✅ |
+| Parcel Corps | `example_parcel_coro.jpg` | `ParcelCorpsSettings.h` | **70.9%** ✅ |
 | Dead Space | `example_deadspace.jpg` | `DeadSpaceSettings.h` | 69.6% |
+| Islands & Trains | `example_islands_trains.jpg` | `IslandsTrainsSettings.h` | 68.5% |
+| Cross Tag | `example_cross_tag.jpg` | `FighterMenu.h` | **62.6%** |
 | Kirby Air Riders | `example_kirby_airriders.jpg` | `KirbyOptions.h` | 60.2% |
 | Rubber Bandits | `example_rubber_bandits.jpg` | `RubberBanditsMenu.h` | 56.4% |
 | Cozy Cafe | `example_cozy_game.png` | `CozyCafe.h` | 55.5% |
 | PowerWash Sim | `example_powerwash.jpg` | `PowerWashSettings.h` | 54.8% |
-| Rematch/Sports | `example_rematch.jpg` | `SportsSettings.h` | 52.4% |
-| Empire Tycoon | `example_tycoon_game.png` | `EmpireTycoon.h` | 51.3% |
-| Angry Birds | `example_angry_birds.jpg` | `AngryBirdsSettings.h` | 35.0% |
-| Cross Tag | `example_cross_tag.jpg` | `FighterMenu.h` | 24.5% |
-| Islands & Trains | `example_islands_trains.jpg` | `IslandsTrainsSettings.h` | 68.5% |
-| Parcel Corps | `example_parcel_coro.jpg` | `ParcelCorpsSettings.h` | 35.0% |
 
 ## How to Run the Comparison
 
