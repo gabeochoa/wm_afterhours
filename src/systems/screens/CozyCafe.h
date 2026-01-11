@@ -211,8 +211,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(left_panel_x, panel_y)
             .with_custom_background(cream_surface)
             .with_border(brown_border, 3.0f)
-            .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 45})
+            .with_soft_shadow(4.0f, 6.0f, 18.0f, afterhours::Color{0, 0, 0, 65})
             .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.12f)
             .with_debug_name("specials_panel"));
 
     // Brown header
@@ -245,6 +246,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(left_panel_x + 25.0f, menu_y + (float)i * 62.0f)
                      .with_custom_background(btn_bg)
                      .with_border(brown_border, selected ? 3.0f : 2.0f)
+                     .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 35})
                      .with_font("Gaegu-Bold", 24.0f)
                      .with_custom_text_color(dark_text)
                      .with_rounded_corners(std::bitset<4>(0b1111))
@@ -294,8 +296,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_panel_x, panel_y)
             .with_custom_background(cream_surface)
             .with_border(sage_header, 4.0f)
-            .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 45})
+            .with_soft_shadow(4.0f, 6.0f, 18.0f, afterhours::Color{0, 0, 0, 65})
             .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.12f)
             .with_debug_name("customers_panel"));
 
     // Sage header
@@ -381,6 +384,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(right_panel_x + 20.0f, serve_btn_y)
                .with_custom_background(rose_btn)
                .with_border(sage_header, 3.0f)
+               .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 40})
                .with_font("Gaegu-Bold", 28.0f)
                .with_custom_text_color(dark_text)
                .with_rounded_corners(std::bitset<4>(0b1111))

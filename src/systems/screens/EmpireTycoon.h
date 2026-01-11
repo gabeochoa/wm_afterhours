@@ -274,16 +274,18 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("money"));
 
     // ========== STATUS ICONS ==========
-    float stat_y = 82.0f;
+    float stat_y = 70.0f;
+    float stat_icon_size = 58.0f;
 
-    // Happiness icon
+    // Happiness icon - larger and more prominent
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(48), pixels(48)})
+            .with_size(ComponentSize{pixels(static_cast<int>(stat_icon_size)), pixels(static_cast<int>(stat_icon_size))})
             .with_absolute_position()
-            .with_translate((float)screen_w - 195.0f, stat_y)
-            .with_custom_background(afterhours::Color{255, 225, 175, 255})
-            .with_border(afterhours::Color{230, 195, 130, 255}, 2.0f)
+            .with_translate((float)screen_w - 210.0f, stat_y)
+            .with_custom_background(afterhours::Color{255, 220, 150, 255})
+            .with_border(afterhours::Color{220, 180, 100, 255}, 3.0f)
+            .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("happy_bg"));
@@ -291,20 +293,21 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle src{0, 0, (float)icon_happiness_tex.width, (float)icon_happiness_tex.height};
       sprite(context, mk(entity, 61), icon_happiness_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(36), pixels(36)})
+              .with_size(ComponentSize{pixels(44), pixels(44)})
               .with_absolute_position()
-              .with_translate((float)screen_w - 189.0f, stat_y + 6.0f)
+              .with_translate((float)screen_w - 203.0f, stat_y + 7.0f)
               .with_debug_name("happy_icon"));
     }
 
-    // Resource gauge icon
+    // Resource gauge icon - larger and more prominent
     div(context, mk(entity, 62),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(48), pixels(48)})
+            .with_size(ComponentSize{pixels(static_cast<int>(stat_icon_size)), pixels(static_cast<int>(stat_icon_size))})
             .with_absolute_position()
-            .with_translate((float)screen_w - 75.0f, stat_y)
-            .with_custom_background(afterhours::Color{195, 215, 240, 255})
-            .with_border(afterhours::Color{165, 185, 210, 255}, 2.0f)
+            .with_translate((float)screen_w - 85.0f, stat_y)
+            .with_custom_background(afterhours::Color{180, 210, 245, 255})
+            .with_border(afterhours::Color{140, 175, 215, 255}, 3.0f)
+            .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("gauge_bg"));
@@ -312,9 +315,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::texture_manager::Rectangle src{0, 0, (float)icon_resources_tex.width, (float)icon_resources_tex.height};
       sprite(context, mk(entity, 63), icon_resources_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(36), pixels(36)})
+              .with_size(ComponentSize{pixels(44), pixels(44)})
               .with_absolute_position()
-              .with_translate((float)screen_w - 69.0f, stat_y + 6.0f)
+              .with_translate((float)screen_w - 78.0f, stat_y + 7.0f)
               .with_debug_name("resource_icon"));
     }
 

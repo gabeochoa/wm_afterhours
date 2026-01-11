@@ -6,6 +6,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <cmath>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -165,6 +166,26 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_needle"));
+
+    // Compass tick marks (8 positions around the ring)
+    float compass_cx = cx;
+    float compass_cy = 60.0f;
+    float compass_radius = 42.0f;
+    float tick_size = 3.0f;
+    for (int i = 0; i < 8; i++) {
+      float angle = (float)i * 3.14159f / 4.0f;
+      float tick_x = compass_cx + std::cos(angle) * compass_radius - tick_size / 2.0f;
+      float tick_y = compass_cy + std::sin(angle) * compass_radius - tick_size / 2.0f;
+      div(context, mk(entity, 106 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(static_cast<int>(tick_size)), pixels(static_cast<int>(tick_size))})
+              .with_absolute_position()
+              .with_translate(tick_x, tick_y)
+              .with_custom_background(text_muted)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(1.0f)
+              .with_debug_name("compass_tick_" + std::to_string(i)));
+    }
 
     // ========== TOP RIGHT: Score & Objective ==========
     div(context, mk(entity, 110),
