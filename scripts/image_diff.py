@@ -85,9 +85,22 @@ def main():
     os.makedirs(diff_dir, exist_ok=True)
     
     comparisons = [
+        # Main game screens (high priority)
         ("example_cozy_game.png", "cozy_cafe.png", "Cozy Cafe"),
         ("example_tycoon_game.png", "empire_tycoon.png", "Empire Tycoon"),
         ("example_shooter_game.png", "neon_strike.png", "Neon Strike"),
+        # Settings screens
+        ("example_ace_combat.jpg", "flight_options.png", "Ace Combat"),
+        ("example_angry_birds.jpg", "angry_birds_settings.png", "Angry Birds"),
+        ("example_cross_tag.jpg", "fighter_menu.png", "Cross Tag"),
+        ("example_deadspace.jpg", "deadspace_settings.png", "Dead Space"),
+        ("example_islands_trains.jpg", "islands_trains_settings.png", "Islands Trains"),
+        ("example_kirby_airriders.jpg", "kirby_options.png", "Kirby Air Riders"),
+        ("example_mini_motorways.jpg", "mini_motorways_settings.png", "Mini Motorways"),
+        ("example_parcel_coro.jpg", "parcel_corps_settings.png", "Parcel Corps"),
+        ("example_powerwash.jpg", "powerwash_settings.png", "PowerWash Sim"),
+        ("example_rematch.jpg", "sports_settings.png", "Rematch Sports"),
+        ("example_rubber_bandits.jpg", "rubber_bandits_menu.png", "Rubber Bandits"),
     ]
     
     results = []
