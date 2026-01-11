@@ -1144,50 +1144,73 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | Auto Entity IDs | `entity_management.h` | Screens use manual IDs; `mk(parent)` auto-generates |
 | Spacing Helpers | `styling_defaults.h` | Hardcoded pixels instead of `DefaultSpacing::medium()` |
 | Typography Scale | `styling_defaults.h` | Arbitrary font sizes instead of `TypographyScale::size(n)` |
-| Animation System | `animation.h` | Manual lerp instead of `animation::anim<>()` |
 | Style Presets | `component_config.h` | `card_style()`, `form_style()` not used |
 | Focus Clusters | `components.h` | `FocusClusterRoot`/`InFocusCluster` rarely used |
 | Color Utilities | `color.h` | `meets_wcag_aa()`, `auto_text_color()` not used |
+| Animation System | `animation.h` | Manual lerp instead of `animation::anim<>()` |
 
-## True Gaps (Need Library Addition)
+## True Gaps - Sorted by Implementation Effort
 
-| Gap | Severity | User Impact | Status |
-|-----|----------|-------------|--------|
-| Font in Theme | Medium | Theming feels incomplete | RESOLVED |
-| Text vs Background color | High | Invisible text, confusing API | RESOLVED |
-| **Auto text color default** | **High** | **Invisible text without workaround** | Open |
-| `screen_pct()` nesting | High | Layout overflow, hard to debug | Open |
-| Font size 0 warnings | Medium | Silent failures, hard to debug | Open |
-| Missing flexbox alignment | Medium | Can't center content easily | Open |
-| CJK font loading | Medium | Non-ASCII text doesn't render | Open |
-| Dropdown close | High | Poor UX, confusing behavior | Open |
-| Styling defaults | Low | Internal architecture issue | Open |
-| Focus ring position | Medium | Accessibility concern | Open |
-| **Focus ring styles** | **High** | **Can't match game focus patterns** | Open |
-| Corner merging | Low | Minor customization limit | Open |
-| Tabbing + values | Medium | Complex widget support | Open |
-| Screen switch cleanup | High | Tabbing to hidden elements | **Fixed in game.cpp** |
-| **Text Input** | **High** | **Can't accept user text** | Missing |
-| **Scroll Container** | **High** | **Content overflow unusable** | Missing |
-| **Progress Bar** | **High** | **No loading feedback** | Missing |
-| **Tooltip** | **High** | **No hover help** | Missing |
-| **Tab Bar** | **Medium** | **No tabbed interfaces** | Missing |
-| **Tree Node** | **Medium** | **No collapsible sections** | Missing |
-| **Modal/Dialog** | **Medium** | **No overlay confirmations** | Missing |
-| **Radio Group** | **Low** | **Use checkbox_group workaround** | Missing |
-| **Separator** | **Low** | **Minor visual polish** | Missing |
-| **Color Picker** | **Low** | **Niche use case** | Missing |
-| **Context Menu** | **Medium** | **No right-click menus** | Missing |
-| **Drag and Drop** | **Medium** | **Can't reorder items** | Missing |
-| **Input Number** | **Medium** | **No validated numeric entry** | Missing |
-| **List Box** | **Medium** | **Dropdown doesn't scale** | Missing |
-| **Table** | **Medium** | **No data grid** | Missing |
-| **Slider/Range** | **Low** | **Basic slider works** | IMPLEMENTED |
-| **Toggle Switch** | **Medium** | **No iOS-style on/off** | Missing |
-| **Button Variants** | **Medium** | **Only filled buttons available** | Missing (Gap #40) |
-| **CSS Grid Layout** | **Medium** | **Manual grid calculation** | Missing (Gap #41) |
-| **Icon+Text Button** | **Medium** | **Manual composition needed** | Missing (Gap #42) |
-| **Stepper/Counter** | **Medium** | **No +/- widget** | Missing (Gap #43) |
+### Trivial (~1-2 hours)
+
+| Gap | Effort | Description | Status |
+|-----|--------|-------------|--------|
+| **Auto text color default** | Trivial | Change default boolean in `component_init.h` | Open |
+| **Separator** | Trivial | Simple horizontal/vertical line widget | Missing |
+| **mk() auto-increment** | Trivial | Add per-call-site counter (see U1 proposal) | Proposed |
+| Font in Theme | Trivial | - | RESOLVED |
+| Text vs Background color | Trivial | - | RESOLVED |
+| Screen switch cleanup | Trivial | - | **Fixed** |
+| **Slider/Range** | Trivial | - | IMPLEMENTED |
+
+### Small (~half day)
+
+| Gap | Effort | Description | Status |
+|-----|--------|-------------|--------|
+| **Progress Bar** | Small | Filled rectangle with value | Missing |
+| **Radio Group** | Small | Like checkbox_group but single-select | Missing |
+| **Toggle Switch** | Small | Styled button + animation | Missing |
+| **Stepper/Counter** | Small | Compose [-] value [+] buttons | Missing |
+| **Button Variants** | Small | Add enum + styling logic to button() | Missing |
+| Font size 0 warnings | Small | Add min clamp + debug indicator | Open |
+| Focus ring position | Small | Move render to correct element | Open |
+| Corner merging | Small | Add merge logic for corners | Open |
+| Styling defaults circular dep | Small | Forward declarations | Open |
+
+### Medium (~1-2 days)
+
+| Gap | Effort | Description | Status |
+|-----|--------|-------------|--------|
+| **Icon+Text Button** | Medium | Compose icon + label with click | Missing |
+| **Tooltip** | Medium | Hover delay + positioned popup | Missing |
+| **Dropdown close** | Medium | Click-outside detection | Open |
+| **Input Number** | Medium | Text input subset + validation | Missing |
+| Tabbing + values | Medium | Mode flag for nav vs adjust | Open |
+| `screen_pct()` documentation | Medium | Better error messages + examples | Open |
+
+### Large (~3-5 days)
+
+| Gap | Effort | Description | Status |
+|-----|--------|-------------|--------|
+| **Focus ring styles** | Large | Multiple render modes + config + animation | Open |
+| **Tab Bar** | Large | Multiple buttons + panel switching | Missing |
+| **Tree Node** | Large | Expand/collapse + indent + animation | Missing |
+| **Modal/Dialog** | Large | Overlay + dim + focus trap + escape | Missing |
+| **Context Menu** | Large | Right-click + popup + keyboard nav | Missing |
+| **CSS Grid Layout** | Large | New layout mode in autolayout | Missing |
+| Missing flexbox alignment | Large | Add justify/align to autolayout | Open |
+
+### Very Large (~1+ week)
+
+| Gap | Effort | Description | Status |
+|-----|--------|-------------|--------|
+| **Text Input** | Very Large | Cursor, selection, copy/paste, keyboard | Missing |
+| **Scroll Container** | Very Large | Overflow, scrollbar, drag, wheel | Missing |
+| **List Box** | Very Large | Scroll + selection + keyboard | Missing |
+| **Table** | Very Large | Columns + sorting + resize + scroll | Missing |
+| **Drag and Drop** | Very Large | Drag detection, drop targets, visual | Missing |
+| **Color Picker** | Very Large | HSV wheel, sliders, hex input | Missing |
+| CJK font loading | Very Large | Auto-detect codepoints from font | Open |
 
 
 ---
@@ -1654,16 +1677,16 @@ The following workaround files have been created to compensate for missing libra
 
 ---
 
-# Updated Priority Table (Visual Effects)
+# Visual Effects - Sorted by Implementation Effort
 
-| Gap | Severity | User Impact | Status |
-|-----|----------|-------------|--------|
-| **Text Stroke/Outline** | **High** | **Can't match game title styles** | Workaround |
-| **Gradient Backgrounds** | **Medium** | **Flat colors lack depth** | Workaround |
-| **Decorative Borders** | **Low** | **Can approximate with images** | Workaround |
-| **Circular Progress** | **Medium** | **No radial gauges** | Missing |
-| **Icon Font Loading** | **High** | **Icons show as ?** | Limited |
-| **Text Drop Shadow** | **Medium** | **Text lacks depth** | Workaround |
-| **Notification Badges** | **Medium** | **No alert indicators** | Workaround |
-| **Decorative Frame** | **Low** | **No scrapbook-style borders** | Workaround |
-| **3D/Puffy Text** | **Medium** | **Game titles lack depth** | Missing |
+| Gap | Effort | Description | Status |
+|-----|--------|-------------|--------|
+| **Text Drop Shadow** | Trivial | Render text twice with offset | Workaround exists |
+| **Notification Badges** | Small | Absolute positioned circle + text | Workaround exists |
+| **Text Stroke/Outline** | Small | Render text 8x at offsets | Workaround exists |
+| **Gradient Backgrounds** | Medium | Layered strips or shader | Workaround exists |
+| **Decorative Frame** | Medium | Layered borders + corner sprites | Workaround exists |
+| **3D/Puffy Text** | Medium | Multi-layer outline + shadow | Missing |
+| **Decorative Borders** | Medium | 9-slice or border styles | Limited |
+| **Icon Font Loading** | Large | Auto-detect codepoints from TTF | Limited |
+| **Circular Progress** | Large | Arc/pie rendering (needs draw_arc) | Missing |
