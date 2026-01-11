@@ -15,6 +15,7 @@ backward::SignalHandling sh;
 #include "systems/screens/CozyCafe.h"
 #include "systems/screens/EmpireTycoon.h"
 #include "systems/screens/ExampleAccessibility.h"
+#include "systems/screens/ExampleBorders.h"
 #include "systems/screens/ExampleColors.h"
 #include "systems/screens/ExampleLayout.h"
 #include "systems/screens/ExampleSimpleButton.h"

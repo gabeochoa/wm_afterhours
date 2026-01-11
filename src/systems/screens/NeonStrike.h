@@ -5,373 +5,607 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/files.h>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
-  struct Weapon {
-    std::string name;
-    int damage;
-    int accuracy;
-    int fire_rate;
+  int score = 15000;
+  int ammo_clip = 35;
+  int ammo_reserve = 210;
+  float health_pct = 0.8f;
+  float armor_pct = 0.45f;
+
+  // Loaded textures
+  bool textures_loaded = false;
+  raylib::Texture2D icon_uav_tex{};
+  raylib::Texture2D icon_recon_tex{};
+  raylib::Texture2D icon_shield_tactical_tex{};
+  raylib::Texture2D icon_strike_tex{};
+  raylib::Texture2D icon_danger_tex{};
+  raylib::Texture2D icon_health_tex{};
+  raylib::Texture2D icon_skull_tex{};
+  raylib::Texture2D icon_ammo_tex{};
+  raylib::Texture2D weapon_grenade_tex{};
+  raylib::Texture2D weapon_melee_tex{};
+  raylib::Texture2D crosshair_tex{};
+
+  void load_textures_if_needed() {
+    if (textures_loaded) return;
+    textures_loaded = true;
+    
+    std::string images_path = afterhours::files::get_resource_path("images", "").string();
+    icon_uav_tex = raylib::LoadTexture((images_path + "icon_uav.png").c_str());
+    icon_recon_tex = raylib::LoadTexture((images_path + "icon_recon.png").c_str());
+    icon_shield_tactical_tex = raylib::LoadTexture((images_path + "icon_shield_tactical.png").c_str());
+    icon_strike_tex = raylib::LoadTexture((images_path + "icon_strike.png").c_str());
+    icon_danger_tex = raylib::LoadTexture((images_path + "icon_danger.png").c_str());
+    icon_health_tex = raylib::LoadTexture((images_path + "icon_health.png").c_str());
+    icon_skull_tex = raylib::LoadTexture((images_path + "icon_skull.png").c_str());
+    icon_ammo_tex = raylib::LoadTexture((images_path + "icon_ammo.png").c_str());
+    weapon_grenade_tex = raylib::LoadTexture((images_path + "icon_grenade.png").c_str());
+    weapon_melee_tex = raylib::LoadTexture((images_path + "icon_melee.png").c_str());
+    crosshair_tex = raylib::LoadTexture((images_path + "crosshair_neon.png").c_str());
+  }
+
+  // Colors matching the inspiration exactly - dark tactical feel
+  afterhours::Color bg_dark{22, 20, 18, 255};
+  afterhours::Color text_tan{205, 195, 175, 255};
+  afterhours::Color text_muted{120, 115, 105, 255};
+  afterhours::Color gold_accent{190, 145, 55, 255};
+  afterhours::Color panel_dark{30, 28, 25, 230};
+  afterhours::Color border_dark{65, 60, 52, 255};
+  afterhours::Color health_cyan{65, 175, 195, 255};
+  afterhours::Color armor_blue{55, 115, 160, 255};
+  afterhours::Color minimap_green{45, 55, 45, 255};
+  afterhours::Color dot_red{180, 60, 50, 255};
+
+  std::vector<std::string> kill_feed = {
+      "@ Alpha_Six = |Heth eliminated [Emepine] with M4",
+      "@ [Tsha_Rio = |Heth eliminated [Emepine] with SCAR]",
+      "@ Alpha_Six  - Under fire! - Under fire!",
   };
-
-  std::vector<Weapon> weapons = {
-      {"VIPER AR-7", 45, 78, 65},
-      {"NOVA REVOLVER", 85, 92, 25},
-      {"PHANTOM SMG", 32, 60, 95},
-  };
-
-  size_t selected_weapon = 0;
-  size_t selected_secondary = 0;
-  size_t selected_perk = 0;
-
-  std::vector<std::string> perks = {"QUICK HANDS", "IRON SKIN", "GHOST STEP"};
-  std::vector<std::string> gear = {"SMOKE", "EMP", "DRONE", "MEDKIT"};
-  std::vector<std::string> secondary_weapons = {"PISTOL", "KNIFE", "LAUNCHER"};
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    load_textures_if_needed();
     Theme theme;
-    theme.font = afterhours::Color{240, 240, 235, 255};
-    theme.darkfont = afterhours::Color{15, 15, 12, 255};
-    theme.font_muted = afterhours::Color{140, 140, 130, 255};
-    theme.background = afterhours::Color{12, 14, 18, 255};
-    theme.surface = afterhours::Color{24, 28, 36, 255};
-    theme.primary = afterhours::Color{38, 44, 56, 255};
-    theme.secondary = afterhours::Color{52, 60, 72, 255};
-    theme.accent = afterhours::Color{175, 105, 20, 255};  // Dark amber (contrast 4.5+ with dark text)
-    theme.error = afterhours::Color{170, 45, 45, 255};
+    theme.font = text_tan;
+    theme.darkfont = bg_dark;
+    theme.font_muted = text_muted;
+    theme.background = bg_dark;
+    theme.surface = panel_dark;
+    theme.primary = border_dark;
+    theme.secondary = afterhours::Color{45, 42, 38, 255};
+    theme.accent = gold_accent;
+    theme.error = afterhours::Color{180, 50, 50, 255};
+    theme.roundness = 0.08f;
+    theme.segments = 4;
     context.theme = theme;
 
-    // Layout constants - all elements contained in card
-    constexpr float CARD_WIDTH = 1000.0f;
-    constexpr float HEADER_H = 50.0f;
-    constexpr float CONTENT_H = 400.0f;
-    constexpr float FOOTER_H = 50.0f;
-    constexpr float INNER_PAD = 20.0f;
-    constexpr float SECTION_GAP = 12.0f;
-    constexpr float CARD_HEIGHT = HEADER_H + CONTENT_H + FOOTER_H + INNER_PAD * 2 + SECTION_GAP * 2;
-    constexpr float LEFT_COL = 560.0f;
-    constexpr float RIGHT_COL = 380.0f;
-    constexpr float COL_GAP = 20.0f;
+    int screen_w = Settings::get().get_screen_width();
+    int screen_h = Settings::get().get_screen_height();
 
-    // Full screen background
-    auto main = div(context, mk(entity, 0),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                        .with_custom_background(theme.background)
-                        .with_flex_direction(FlexDirection::Column)
-                        .with_padding(Spacing::lg)
-                        .with_debug_name("main"));
-
-    // Single unified card container
-    auto card = div(context, mk(main.ent(), 0),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{pixels(CARD_WIDTH), pixels(CARD_HEIGHT)})
-                        .with_custom_background(theme.surface)
-                        .with_padding(Padding{.top = pixels(INNER_PAD), .right = pixels(INNER_PAD),
-                                               .bottom = pixels(INNER_PAD), .left = pixels(INNER_PAD)})
-                        .with_flex_direction(FlexDirection::Column)
-                        .with_debug_name("card"));
-
-    // ========== HEADER ROW ==========
-    auto header = div(context, mk(card.ent(), 0),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{pixels(CARD_WIDTH - INNER_PAD * 2), pixels(50)})
-                          .with_custom_background(theme.primary)
-                          .with_padding(Spacing::sm)
-                          .with_flex_direction(FlexDirection::Row)
-                          .with_debug_name("header"));
-
-    div(context, mk(header.ent(), 0),
+    // Full screen dark background with grain effect simulation
+    div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_label("OPERATION: BLACKOUT")
-            .with_size(ComponentSize{pixels(280), pixels(38)})
-            .with_background(Theme::Usage::Accent)
-            .with_text_color(Theme::Usage::DarkFont)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
-            .with_padding(Spacing::sm)
-            .with_debug_name("mission_name"));
+            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_custom_background(bg_dark)
+            .with_debug_name("bg"));
 
-    div(context, mk(header.ent(), 1),
+    float cx = (float)screen_w / 2.0f;
+
+    // ========== TOP CENTER: Compass ==========
+    // Compass ring
+    div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_label("EXTRACTION")
-            .with_size(ComponentSize{pixels(130), pixels(38)})
-            .with_custom_background(afterhours::Color{140, 40, 40, 255})
-            .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-            .with_margin(Margin{.left = pixels(12)})
-            .with_padding(Spacing::sm)
-            .with_debug_name("mission_type"));
+            .with_label("O")
+            .with_size(ComponentSize{pixels(70), pixels(70)})
+            .with_absolute_position()
+            .with_translate(cx - 35.0f, 25.0f)
+            .with_font("EqProRounded", 65.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("compass_ring"));
 
-    div(context, mk(header.ent(), 2),
+    // Compass cardinal directions
+    div(context, mk(entity, 101),
         ComponentConfig{}
-            .with_label("SQUAD: 4/4")
-            .with_size(ComponentSize{pixels(120), pixels(38)})
-            .with_background(Theme::Usage::Secondary)
-            .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-            .with_margin(Margin{.left = pixels(12)})
-            .with_padding(Spacing::sm)
-            .with_debug_name("squad"));
+            .with_label("N")
+            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_absolute_position()
+            .with_translate(cx - 8.0f, 8.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_tan)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("compass_n"));
 
-    // ========== CONTENT ROW (Two columns) ==========
-    auto content = div(context, mk(card.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{pixels(CARD_WIDTH - INNER_PAD * 2), pixels(CONTENT_H)})
-                           .with_flex_direction(FlexDirection::Row)
-                           .with_margin(Margin{.top = pixels(SECTION_GAP)})
-                           .with_debug_name("content"));
-
-    // LEFT COLUMN - Weapons
-    auto left_col = div(context, mk(content.ent(), 0),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{pixels(LEFT_COL), pixels(CONTENT_H)})
-                            .with_custom_background(theme.primary)
-                            .with_padding(Spacing::md)
-                            .with_flex_direction(FlexDirection::Column)
-                            .with_debug_name("left_col"));
-
-    constexpr float LEFT_INNER = LEFT_COL - 32.0f;
-
-    div(context, mk(left_col.ent(), 0),
+    div(context, mk(entity, 102),
         ComponentConfig{}
-            .with_label("PRIMARY WEAPON")
-            .with_size(ComponentSize{pixels(LEFT_INNER), pixels(32)})
-            .with_background(Theme::Usage::Secondary)
-            .with_custom_text_color(theme.accent)
-            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-            .with_padding(Spacing::sm)
-            .with_skip_tabbing(true)
-            .with_debug_name("weapon_lbl"));
+            .with_label("S")
+            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_absolute_position()
+            .with_translate(cx - 8.0f, 88.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("compass_s"));
 
-    // Weapon buttons
-    for (size_t i = 0; i < weapons.size(); i++) {
-      bool sel = (i == selected_weapon);
-      if (button(context, mk(left_col.ent(), 1 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(weapons[i].name)
-                     .with_size(ComponentSize{pixels(LEFT_INNER), pixels(40)})
-                     .with_custom_background(sel ? theme.accent : theme.secondary)
-                     .with_custom_text_color(sel ? theme.darkfont : theme.font)
-                     .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-                     .with_margin(Margin{.top = pixels(8)})
-                     .with_debug_name("weapon_" + std::to_string(i)))) {
-        selected_weapon = i;
+    div(context, mk(entity, 103),
+        ComponentConfig{}
+            .with_label("W")
+            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_absolute_position()
+            .with_translate(cx - 55.0f, 52.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("compass_w"));
+
+    div(context, mk(entity, 104),
+        ComponentConfig{}
+            .with_label("E")
+            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_absolute_position()
+            .with_translate(cx + 38.0f, 52.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("compass_e"));
+
+    // Compass needle
+    div(context, mk(entity, 105),
+        ComponentConfig{}
+            .with_label("|")
+            .with_size(ComponentSize{pixels(10), pixels(30)})
+            .with_absolute_position()
+            .with_translate(cx - 5.0f, 35.0f)
+            .with_font("EqProRounded", 28.0f)
+            .with_custom_text_color(text_tan)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("compass_needle"));
+
+    // ========== TOP RIGHT: Score & Objective ==========
+    div(context, mk(entity, 110),
+        ComponentConfig{}
+            .with_label("SCORE: 15,000")
+            .with_size(ComponentSize{pixels(180), pixels(28)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 210.0f, 18.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_tan)
+            .with_alignment(TextAlignment::Right)
+            .with_debug_name("score"));
+
+    div(context, mk(entity, 111),
+        ComponentConfig{}
+            .with_label("(U)")
+            .with_size(ComponentSize{pixels(28), pixels(28)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 40.0f, 15.0f)
+            .with_custom_background(text_tan)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(bg_dark)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("score_icon"));
+
+    div(context, mk(entity, 115),
+        ComponentConfig{}
+            .with_label(">> SECURE OBJECTIVE B")
+            .with_size(ComponentSize{pixels(230), pixels(30)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 255.0f, 52.0f)
+            .with_custom_background(gold_accent)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(bg_dark)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("objective"));
+
+    // ========== KILL FEED ==========
+    float kill_y = 120.0f;
+    for (size_t i = 0; i < kill_feed.size(); i++) {
+      div(context, mk(entity, 120 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_label(kill_feed[i])
+              .with_size(ComponentSize{pixels(500), pixels(22)})
+              .with_absolute_position()
+              .with_translate(cx - 250.0f, kill_y + (float)i * 22.0f)
+              .with_font("EqProRounded", 19.0f)
+              .with_custom_text_color(text_muted)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("kill_" + std::to_string(i)));
+    }
+
+    // ========== RIGHT: Voice Indicator ==========
+    div(context, mk(entity, 130),
+        ComponentConfig{}
+            .with_label("@ * Alpha_Six: Under fire!")
+            .with_size(ComponentSize{pixels(220), pixels(22)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 240.0f, 195.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("voice"));
+
+    // ========== LEFT: Killstreak Icons ==========
+    // Array of skill textures and labels
+    std::vector<std::tuple<raylib::Texture2D*, std::string, std::string>> skill_icons = {
+        {&icon_uav_tex, "[T]", "UAV"},
+        {&icon_recon_tex, "[O]", ""},
+        {&icon_shield_tactical_tex, "[U]", ""},
+        {&icon_strike_tex, "[X]", ""},
+        {&icon_danger_tex, "/!\\", ""},
+    };
+
+    float ks_y = 140.0f;
+    for (size_t i = 0; i < skill_icons.size(); i++) {
+      float row_y = ks_y + (float)i * 72.0f;
+      auto& [tex_ptr, fallback_label, label] = skill_icons[i];
+
+      // Cog/gear icon
+      div(context, mk(entity, 140 + static_cast<int>(i) * 3),
+          ComponentConfig{}
+              .with_label("*")
+              .with_size(ComponentSize{pixels(18), pixels(18)})
+              .with_absolute_position()
+              .with_translate(22.0f, row_y + 18.0f)
+              .with_font("EqProRounded", 19.0f)
+              .with_custom_text_color(text_muted)
+              .with_debug_name("cog_" + std::to_string(i)));
+
+      // Icon box background
+      div(context, mk(entity, 141 + static_cast<int>(i) * 3),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(55), pixels(55)})
+              .with_absolute_position()
+              .with_translate(45.0f, row_y)
+              .with_custom_background(panel_dark)
+              .with_border(border_dark, 1.0f)
+              .with_debug_name("ks_bg_" + std::to_string(i)));
+
+      // Icon image or fallback text
+      if (tex_ptr && tex_ptr->id != 0) {
+        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width, (float)tex_ptr->height};
+        sprite(context, mk(entity, 142 + static_cast<int>(i) * 3), *tex_ptr, src,
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(40), pixels(40)})
+                .with_absolute_position()
+                .with_translate(52.5f, row_y + 7.5f)
+                .with_debug_name("ks_icon_" + std::to_string(i)));
+      } else {
+        div(context, mk(entity, 142 + static_cast<int>(i) * 3),
+            ComponentConfig{}
+                .with_label(fallback_label)
+                .with_size(ComponentSize{pixels(55), pixels(55)})
+                .with_absolute_position()
+                .with_translate(45.0f, row_y)
+                .with_font("EqProRounded", 19.0f)
+                .with_custom_text_color(text_tan)
+                .with_alignment(TextAlignment::Center)
+                .with_debug_name("ks_icon_fallback_" + std::to_string(i)));
+      }
+
+      // Label (only for UAV)
+      if (!label.empty()) {
+        div(context, mk(entity, 143 + static_cast<int>(i) * 3),
+            ComponentConfig{}
+                .with_label(label)
+                .with_size(ComponentSize{pixels(55), pixels(16)})
+                .with_absolute_position()
+                .with_translate(45.0f, row_y + 56.0f)
+                .with_font("EqProRounded", 19.0f)
+                .with_custom_text_color(text_muted)
+                .with_alignment(TextAlignment::Center)
+                .with_debug_name("ks_label_" + std::to_string(i)));
       }
     }
 
-    // Stats section
-    auto &w = weapons[selected_weapon];
-    auto stats = div(context, mk(left_col.ent(), 10),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(LEFT_INNER), pixels(100)})
-                         .with_custom_background(theme.background)
-                         .with_padding(Spacing::md)
-                         .with_flex_direction(FlexDirection::Column)
-                         .with_margin(Margin{.top = pixels(16)})
-                         .with_debug_name("stats"));
+    // ========== BOTTOM LEFT: Killstreak Bar ==========
+    float bl_y = (float)screen_h - 195.0f;
 
-    constexpr float STAT_BAR_W = 320.0f;
-
-    auto draw_stat = [&](int idx, const std::string &name, int value) {
-      auto row = div(context, mk(stats.ent(), idx),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(LEFT_INNER - 32), pixels(24)})
-                         .with_flex_direction(FlexDirection::Row)
-                         .with_margin(idx > 0 ? Margin{.top = pixels(6)} : Margin{})
-                         .with_debug_name(name + "_row"));
-
-      // Label
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(name)
-              .with_size(ComponentSize{pixels(48), pixels(20)})
-              .with_custom_text_color(theme.font_muted)
-              .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-              .with_debug_name(name + "_lbl"));
-
-      // Bar background
-      auto bar_bg = div(context, mk(row.ent(), 1),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{pixels(STAT_BAR_W), pixels(14)})
-                            .with_custom_background(theme.primary)
-                            .with_margin(Margin{.left = pixels(8), .top = pixels(3)})
-                            .with_debug_name(name + "_bg"));
-
-      // Bar fill (contained inside bar_bg)
-      float fill_pct = static_cast<float>(value) / 100.0f;
-      float fill_w = STAT_BAR_W * fill_pct;
-      div(context, mk(bar_bg.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(fill_w), pixels(14)})
-              .with_background(Theme::Usage::Accent)
-              .with_debug_name(name + "_fill"));
-
-      // Value text
-      div(context, mk(row.ent(), 2),
-          ComponentConfig{}
-              .with_label(std::to_string(value))
-              .with_size(ComponentSize{pixels(40), pixels(20)})
-              .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-              .with_margin(Margin{.left = pixels(12)})
-              .with_debug_name(name + "_val"));
-    };
-
-    draw_stat(0, "DMG", w.damage);
-    draw_stat(1, "ACC", w.accuracy);
-    draw_stat(2, "ROF", w.fire_rate);
-
-    // RIGHT COLUMN - Gear & Perks
-    auto right_col = div(context, mk(content.ent(), 1),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{pixels(RIGHT_COL), pixels(CONTENT_H)})
-                             .with_custom_background(theme.primary)
-                             .with_padding(Spacing::md)
-                             .with_flex_direction(FlexDirection::Column)
-                             .with_margin(Margin{.left = pixels(COL_GAP)})
-                             .with_debug_name("right_col"));
-
-    constexpr float RIGHT_INNER = RIGHT_COL - 32.0f;
-
-    // SECONDARY weapon
-    div(context, mk(right_col.ent(), 0),
+    div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_label("SECONDARY")
-            .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(28)})
-            .with_background(Theme::Usage::Secondary)
-            .with_custom_text_color(theme.accent)
-            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-            .with_padding(Spacing::sm)
-            .with_skip_tabbing(true)
-            .with_debug_name("secondary_lbl"));
+            .with_size(ComponentSize{pixels(175), pixels(26)})
+            .with_absolute_position()
+            .with_translate(22.0f, bl_y)
+            .with_custom_background(panel_dark)
+            .with_border(border_dark, 1.0f)
+            .with_debug_name("ks_bar"));
 
-    navigation_bar(context, mk(right_col.ent(), 1), secondary_weapons,
-                   selected_secondary,
-                   ComponentConfig{}
-                       .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
-                       .with_background(Theme::Usage::Secondary)
-                       .with_text_color(Theme::Usage::Font)
-                       .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-                       .with_margin(Margin{.top = pixels(8)})
-                       .with_debug_name("secondary_nav"));
-
-    // TACTICAL GEAR - visible header
-    div(context, mk(right_col.ent(), 5),
+    div(context, mk(entity, 201),
         ComponentConfig{}
-            .with_label("TACTICAL GEAR")
-            .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(32)})
-            .with_background(Theme::Usage::Accent)
-            .with_text_color(Theme::Usage::DarkFont)
-            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-            .with_margin(Margin{.top = pixels(12)})
-            .with_skip_tabbing(true)
-            .with_debug_name("gear_lbl"));
+            .with_label("@ KILLSTREAK")
+            .with_size(ComponentSize{pixels(110), pixels(18)})
+            .with_absolute_position()
+            .with_translate(30.0f, bl_y + 4.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("ks_text"));
 
-    constexpr float GEAR_BTN_W = (RIGHT_INNER - 12.0f) / 2.0f;
+    // Killstreak progress boxes
+    div(context, mk(entity, 202),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_absolute_position()
+            .with_translate(150.0f, bl_y + 5.0f)
+            .with_custom_background(text_tan)
+            .with_debug_name("ks_box1"));
 
-    auto gr1 = div(context, mk(right_col.ent(), 6),
-                   ComponentConfig{}
-                       .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
-                       .with_flex_direction(FlexDirection::Row)
-                       .with_margin(Margin{.top = pixels(8)})
-                       .with_debug_name("gr1"));
+    div(context, mk(entity, 203),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_absolute_position()
+            .with_translate(170.0f, bl_y + 5.0f)
+            .with_custom_background(border_dark)
+            .with_debug_name("ks_box2"));
 
-    for (size_t i = 0; i < 2; i++) {
-      button(context, mk(gr1.ent(), static_cast<int>(i)),
-             ComponentConfig{}
-                 .with_label(gear[i])
-                 .with_size(ComponentSize{pixels(GEAR_BTN_W), pixels(32)})
-                 .with_background(Theme::Usage::Secondary)
-                 .with_custom_text_color(theme.font)
-                 .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-                 .with_margin(i == 0 ? Margin{} : Margin{.left = pixels(12)})
-                 .with_debug_name("g_" + std::to_string(i)));
+    // ========== BOTTOM LEFT: Minimap ==========
+    float map_y = (float)screen_h - 160.0f;
+
+    div(context, mk(entity, 210),
+        ComponentConfig{}
+            .with_label("7B Pop <192>")
+            .with_size(ComponentSize{pixels(175), pixels(18)})
+            .with_absolute_position()
+            .with_translate(22.0f, map_y)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("map_label"));
+
+    // Minimap background
+    div(context, mk(entity, 220),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(175), pixels(135)})
+            .with_absolute_position()
+            .with_translate(22.0f, map_y + 18.0f)
+            .with_custom_background(minimap_green)
+            .with_border(border_dark, 2.0f)
+            .with_debug_name("minimap"));
+
+    // Map grid lines (vertical)
+    for (int i = 1; i < 4; i++) {
+      div(context, mk(entity, 230 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(1), pixels(120)})
+              .with_absolute_position()
+              .with_translate(22.0f + (float)i * 43.0f, map_y + 26.0f)
+              .with_custom_background(afterhours::Color{60, 70, 60, 180})
+              .with_debug_name("grid_v_" + std::to_string(i)));
     }
 
-    auto gr2 = div(context, mk(right_col.ent(), 7),
-                   ComponentConfig{}
-                       .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
-                       .with_flex_direction(FlexDirection::Row)
-                       .with_margin(Margin{.top = pixels(8)})
-                       .with_debug_name("gr2"));
-
-    for (size_t i = 2; i < 4; i++) {
-      button(context, mk(gr2.ent(), static_cast<int>(i)),
-             ComponentConfig{}
-                 .with_label(gear[i])
-                 .with_size(ComponentSize{pixels(GEAR_BTN_W), pixels(32)})
-                 .with_background(Theme::Usage::Secondary)
-                 .with_custom_text_color(theme.font)
-                 .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-                 .with_margin(i == 2 ? Margin{} : Margin{.left = pixels(12)})
-                 .with_debug_name("g_" + std::to_string(i)));
+    // Map grid lines (horizontal)
+    for (int i = 1; i < 3; i++) {
+      div(context, mk(entity, 240 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(160), pixels(1)})
+              .with_absolute_position()
+              .with_translate(30.0f, map_y + 18.0f + (float)i * 45.0f)
+              .with_custom_background(afterhours::Color{60, 70, 60, 180})
+              .with_debug_name("grid_h_" + std::to_string(i)));
     }
 
-    // PERK - visible header
-    div(context, mk(right_col.ent(), 10),
+    // Red danger zone on map
+    div(context, mk(entity, 250),
         ComponentConfig{}
-            .with_label("PERK")
-            .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(32)})
-            .with_background(Theme::Usage::Accent)
-            .with_text_color(Theme::Usage::DarkFont)
-            .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-            .with_margin(Margin{.top = pixels(12)})
-            .with_skip_tabbing(true)
-            .with_debug_name("perk_lbl"));
+            .with_size(ComponentSize{pixels(55), pixels(50)})
+            .with_absolute_position()
+            .with_translate(135.0f, map_y + 28.0f)
+            .with_custom_background(afterhours::Color{140, 50, 40, 120})
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("danger_zone"));
 
-    dropdown(context, mk(right_col.ent(), 11), perks, selected_perk,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(RIGHT_INNER), pixels(36)})
-                 .with_background(Theme::Usage::Accent)
-                 .with_text_color(Theme::Usage::DarkFont)
-                 .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-                 .with_margin(Margin{.top = pixels(8)})
-                 .with_debug_name("perk_dd"));
+    // Player icon on map
+    div(context, mk(entity, 260),
+        ComponentConfig{}
+            .with_label("^")
+            .with_size(ComponentSize{pixels(18), pixels(18)})
+            .with_absolute_position()
+            .with_translate(100.0f, (float)screen_h - 75.0f)
+            .with_font("EqProRounded", 20.0f)
+            .with_custom_text_color(text_tan)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("player_icon"));
 
-    // ========== FOOTER ROW ==========
-    auto footer = div(context, mk(card.ent(), 2),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{pixels(CARD_WIDTH - INNER_PAD * 2), pixels(FOOTER_H)})
-                          .with_custom_background(theme.secondary)
-                          .with_padding(Spacing::sm)
-                          .with_flex_direction(FlexDirection::Row)
-                          .with_margin(Margin{.top = pixels(SECTION_GAP)})
-                          .with_debug_name("footer"));
+    // Objective marker
+    div(context, mk(entity, 261),
+        ComponentConfig{}
+            .with_label("*")
+            .with_size(ComponentSize{pixels(12), pixels(12)})
+            .with_absolute_position()
+            .with_translate(150.0f, map_y + 45.0f)
+            .with_custom_background(dot_red)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("obj_marker"));
 
-    button(context, mk(footer.ent(), 0),
-           ComponentConfig{}
-               .with_label("BACK")
-               .with_size(ComponentSize{pixels(100), pixels(38)})
-               .with_background(Theme::Usage::Secondary)
-               .with_custom_text_color(theme.font)
-               .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-               .with_debug_name("back"));
+    // S marker below map
+    div(context, mk(entity, 270),
+        ComponentConfig{}
+            .with_label("S $")
+            .with_size(ComponentSize{pixels(30), pixels(16)})
+            .with_absolute_position()
+            .with_translate(95.0f, (float)screen_h - 18.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("s_marker"));
 
-    button(context, mk(footer.ent(), 1),
-           ComponentConfig{}
-               .with_label("SAVE LOADOUT")
-               .with_size(ComponentSize{pixels(150), pixels(38)})
-               .with_background(Theme::Usage::Secondary)
-               .with_custom_text_color(theme.font)
-               .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-               .with_margin(Margin{.left = pixels(12)})
-               .with_debug_name("save"));
+    // ========== BOTTOM CENTER: Ammo ==========
+    div(context, mk(entity, 300),
+        ComponentConfig{}
+            .with_label(std::to_string(ammo_clip) + "/" + std::to_string(ammo_reserve))
+            .with_size(ComponentSize{pixels(140), pixels(55)})
+            .with_absolute_position()
+            .with_translate(230.0f, (float)screen_h - 90.0f)
+            .with_font("EqProRounded", 42.0f)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("ammo"));
 
-    button(context, mk(footer.ent(), 2),
-           ComponentConfig{}
-               .with_label("DEPLOY >>")
-               .with_size(ComponentSize{pixels(150), pixels(38)})
-               .with_background(Theme::Usage::Accent)
-               .with_text_color(Theme::Usage::DarkFont)
-               .with_font(UIComponent::DEFAULT_FONT, 19.0f)
-               .with_margin(Margin{.left = pixels(12)})
-               .with_debug_name("deploy"));
+    // ========== BOTTOM CENTER: Health & Armor ==========
+    float health_x = 400.0f;
+    float health_y = (float)screen_h - 95.0f;
+
+    // Health panel
+    div(context, mk(entity, 310),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(230), pixels(60)})
+            .with_absolute_position()
+            .with_translate(health_x, health_y)
+            .with_custom_background(panel_dark)
+            .with_border(border_dark, 1.0f)
+            .with_debug_name("health_panel"));
+
+    // Skull icon for health panel
+    if (icon_skull_tex.id != 0) {
+      afterhours::texture_manager::Rectangle src{0, 0, (float)icon_skull_tex.width, (float)icon_skull_tex.height};
+      sprite(context, mk(entity, 311), icon_skull_tex, src,
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(32), pixels(32)})
+              .with_absolute_position()
+              .with_translate(health_x + 10.0f, health_y + 14.0f)
+              .with_debug_name("skull_icon"));
+    } else {
+      div(context, mk(entity, 311),
+          ComponentConfig{}
+              .with_label("@")
+              .with_size(ComponentSize{pixels(35), pixels(35)})
+              .with_absolute_position()
+              .with_translate(health_x + 8.0f, health_y + 12.0f)
+              .with_font("EqProRounded", 24.0f)
+              .with_custom_text_color(text_tan)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("skull"));
+    }
+
+    // Health label
+    div(context, mk(entity, 312),
+        ComponentConfig{}
+            .with_label("80 HEALTH")
+            .with_size(ComponentSize{pixels(120), pixels(16)})
+            .with_absolute_position()
+            .with_translate(health_x + 50.0f, health_y + 8.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("health_label"));
+
+    // Health bar bg
+    div(context, mk(entity, 320),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(165), pixels(14)})
+            .with_absolute_position()
+            .with_translate(health_x + 50.0f, health_y + 26.0f)
+            .with_custom_background(afterhours::Color{25, 25, 22, 255})
+            .with_debug_name("health_bg"));
+
+    // Health bar fill
+    div(context, mk(entity, 321),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(160 * health_pct)), pixels(14)})
+            .with_absolute_position()
+            .with_translate(health_x + 50.0f, health_y + 26.0f)
+            .with_custom_background(health_cyan)
+            .with_debug_name("health_fill"));
+
+    // Armor bar bg
+    div(context, mk(entity, 330),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(165), pixels(10)})
+            .with_absolute_position()
+            .with_translate(health_x + 50.0f, health_y + 44.0f)
+            .with_custom_background(afterhours::Color{25, 25, 22, 255})
+            .with_debug_name("armor_bg"));
+
+    // Armor bar fill
+    div(context, mk(entity, 331),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(160 * armor_pct)), pixels(10)})
+            .with_absolute_position()
+            .with_translate(health_x + 50.0f, health_y + 44.0f)
+            .with_custom_background(armor_blue)
+            .with_debug_name("armor_fill"));
+
+    // ========== BOTTOM RIGHT: Equipment ==========
+    float eq_x = (float)screen_w - 185.0f;
+    float eq_y = (float)screen_h - 105.0f;
+
+    // Grenade (x2) - highlighted with gold border
+    div(context, mk(entity, 400),
+        ComponentConfig{}
+            .with_label("x2")
+            .with_size(ComponentSize{pixels(25), pixels(18)})
+            .with_absolute_position()
+            .with_translate(eq_x - 25.0f, eq_y + 40.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("x2"));
+
+    div(context, mk(entity, 410),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(70), pixels(70)})
+            .with_absolute_position()
+            .with_translate(eq_x, eq_y)
+            .with_custom_background(panel_dark)
+            .with_border(gold_accent, 3.0f)
+            .with_debug_name("grenade_bg"));
+    if (weapon_grenade_tex.id != 0) {
+      afterhours::texture_manager::Rectangle src{0, 0, (float)weapon_grenade_tex.width, (float)weapon_grenade_tex.height};
+      sprite(context, mk(entity, 411), weapon_grenade_tex, src,
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(50), pixels(50)})
+              .with_absolute_position()
+              .with_translate(eq_x + 10.0f, eq_y + 10.0f)
+              .with_debug_name("grenade_icon"));
+    }
+
+    // Knife (x1)
+    div(context, mk(entity, 420),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(70), pixels(70)})
+            .with_absolute_position()
+            .with_translate(eq_x + 80.0f, eq_y)
+            .with_custom_background(panel_dark)
+            .with_border(border_dark, 2.0f)
+            .with_debug_name("knife_bg"));
+    if (weapon_melee_tex.id != 0) {
+      afterhours::texture_manager::Rectangle src{0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
+      sprite(context, mk(entity, 422), weapon_melee_tex, src,
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(50), pixels(50)})
+              .with_absolute_position()
+              .with_translate(eq_x + 90.0f, eq_y + 10.0f)
+              .with_debug_name("knife_icon"));
+    }
+
+    div(context, mk(entity, 421),
+        ComponentConfig{}
+            .with_label("x1")
+            .with_size(ComponentSize{pixels(25), pixels(18)})
+            .with_absolute_position()
+            .with_translate(eq_x + 145.0f, eq_y + 72.0f)
+            .with_font("EqProRounded", 19.0f)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("x1"));
+
+    // ========== CENTER: Crosshair ==========
+    if (crosshair_tex.id != 0) {
+      float cross_cx = (float)screen_w / 2.0f;
+      float cross_cy = (float)screen_h / 2.0f;
+      afterhours::texture_manager::Rectangle src{0, 0, (float)crosshair_tex.width, (float)crosshair_tex.height};
+      sprite(context, mk(entity, 600), crosshair_tex, src,
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(64), pixels(64)})
+              .with_absolute_position()
+              .with_translate(cross_cx - 32.0f, cross_cy - 32.0f)
+              .with_debug_name("crosshair"));
+    }
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(neon_strike, "Game Mockups",
-                        "Tactical shooter loadout screen", NeonStrikeScreen)
+                        "Tactical shooter HUD overlay", NeonStrikeScreen)
