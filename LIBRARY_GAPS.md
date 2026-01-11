@@ -510,19 +510,13 @@ font_manager.load_font_with_codepoints("NotoSansKR", korean_font_path,
 
 ---
 
-## 8. Focus Ring Positioning on Checkbox
+## 8. Focus Ring Positioning on Checkbox ✅ FIXED
 
-**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~220)
+**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (line ~371)
 
-**Issue:** Checkbox focus ring is drawn on the wrong element. The clickable area is `checkbox_no_label` but focus ring appears elsewhere.
+**Issue:** Checkbox focus ring was drawn on the wrong element. The clickable area is `checkbox_no_label` but focus ring appeared on the container row due to incorrect use of `FocusClusterRoot`/`InFocusCluster`.
 
-**Code Comment:**
-```cpp
-// TODO the focus ring is not correct because the actual clickable area is the
-// checkbox_no_label element, not the checkbox element.
-```
-
-**Suggested Fix:** Move focus ring rendering to the actual clickable element.
+**Fix Applied:** Removed `FocusClusterRoot` from the container row and `InFocusCluster` from both the label and checkbox elements. The focus ring now correctly appears on `checkbox_no_label`, which is the actual clickable element.
 
 ---
 
