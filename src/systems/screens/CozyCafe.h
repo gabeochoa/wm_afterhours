@@ -199,10 +199,13 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("served"));
 
     // ========== LEFT PANEL: Today's Specials ==========
-    float left_panel_x = 35.0f;
+    // Center content to better match square inspiration on widescreen
+    float content_width = 820.0f;
+    float content_margin = ((float)screen_w - content_width) / 2.0f;
+    float left_panel_x = content_margin;
     float panel_y = 95.0f;
-    float left_panel_w = 380.0f;
-    float panel_h = 390.0f;
+    float left_panel_w = 360.0f;
+    float panel_h = 400.0f;
     
     div(context, mk(entity, 100),
         ComponentConfig{}
@@ -286,8 +289,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== RIGHT PANEL: Customers ==========
-    float right_panel_x = left_panel_x + left_panel_w + 20.0f;
-    float right_panel_w = 420.0f;
+    float panel_gap = 20.0f;
+    float right_panel_x = left_panel_x + left_panel_w + panel_gap;
+    float right_panel_w = content_width - left_panel_w - panel_gap;
     
     div(context, mk(entity, 200),
         ComponentConfig{}

@@ -2,7 +2,6 @@
 
 #include <afterhours/src/plugins/translation.h>
 #include <afterhours/src/plugins/ui/theme.h>
-#include <afterhours/src/plugins/ui/theme_defaults.h>
 
 namespace afterhours {
 namespace ui {

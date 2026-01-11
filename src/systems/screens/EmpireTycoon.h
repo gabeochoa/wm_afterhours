@@ -419,6 +419,10 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("res_text"));
 
     // ========== LEFT: Navigation Tabs ==========
+    // Center the main content area
+    float content_width = 850.0f;
+    float content_margin = ((float)screen_w - content_width) / 2.0f;
+    
     std::vector<std::tuple<raylib::Texture2D*, std::string, std::string, afterhours::Color>> tabs = {
         {&icon_rides_tex, "[R]", "Rides", tab_blue},
         {&icon_food_tex, "[F]", "Food Stalls", tab_green},
@@ -427,53 +431,58 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         {&icon_finance_tex, "[$]", "Finance", tab_cream},
     };
 
+    float nav_x = content_margin - 10.0f;  // Slightly left of content area
     float nav_y = 195.0f;
+    float tab_width = 115.0f;
+    float tab_height = 78.0f;
+    float tab_spacing = 85.0f;
     for (size_t i = 0; i < tabs.size(); i++) {
-      float tab_y = nav_y + (float)i * 82.0f;
+      float tab_y = nav_y + (float)i * tab_spacing;
       auto& [tex_ptr, fallback, label, bg_color] = tabs[i];
 
-      // Tab button background
+      // Tab button background - larger with thicker border
       button(context, mk(entity, 100 + static_cast<int>(i)),
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(120), pixels(72)})
+                 .with_size(ComponentSize{pixels(static_cast<int>(tab_width)), pixels(static_cast<int>(tab_height))})
                  .with_absolute_position()
-                 .with_translate(18.0f, tab_y)
+                 .with_translate(nav_x, tab_y)
                  .with_custom_background(bg_color)
-                 .with_border(afterhours::Color{175, 185, 195, 255}, 2.0f)
+                 .with_border(afterhours::Color{140, 160, 180, 255}, 3.0f)
                  .with_rounded_corners(std::bitset<4>(0b1111))
-                 .with_soft_shadow(2.0f, 4.0f, 10.0f, afterhours::Color{0, 0, 0, 40})
+                 .with_roundness(0.25f)
+                 .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 50})
                  .with_debug_name("tab_" + std::to_string(i)));
 
-      // Icon image or fallback text
+      // Icon image or fallback text - larger
       if (tex_ptr && tex_ptr->id != 0) {
         afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width, (float)tex_ptr->height};
         sprite(context, mk(entity, 110 + static_cast<int>(i)), *tex_ptr, src,
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(36), pixels(36)})
+                .with_size(ComponentSize{pixels(44), pixels(44)})
                 .with_absolute_position()
-                .with_translate(60.0f, tab_y + 6.0f)
+                .with_translate(nav_x + tab_width/2.0f - 22.0f, tab_y + 6.0f)
                 .with_debug_name("tab_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 110 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_label(fallback)
-                .with_size(ComponentSize{pixels(45), pixels(35)})
+                .with_size(ComponentSize{pixels(50), pixels(40)})
                 .with_absolute_position()
-                .with_translate(55.0f, tab_y + 8.0f)
-                .with_font("EqProRounded", 18.0f)
+                .with_translate(nav_x + tab_width/2.0f - 25.0f, tab_y + 10.0f)
+                .with_font("EqProRounded", 22.0f)
                 .with_custom_text_color(dark_text)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("tab_icon_fallback_" + std::to_string(i)));
       }
 
-      // Tab label
+      // Tab label - positioned below icon
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(110), pixels(20)})
+              .with_size(ComponentSize{pixels(static_cast<int>(tab_width)), pixels(22)})
               .with_absolute_position()
-              .with_translate(23.0f, tab_y + 48.0f)
-              .with_font("EqProRounded", 14.0f)
+              .with_translate(nav_x, tab_y + tab_height - 26.0f)
+              .with_font("EqProRounded", 15.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("tab_label_" + std::to_string(i)));
@@ -481,15 +490,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       // Notification badge on "Upgrades" tab
       if (i == 2) {
         ui_workarounds::notification_badge(context, entity, 130 + static_cast<int>(i),
-            "!", 125.0f, tab_y - 5.0f, 22.0f,
+            "!", nav_x + tab_width - 5.0f, tab_y - 5.0f, 22.0f,
             afterhours::Color{230, 90, 80, 255});
       }
     }
 
     // ========== MAIN PANEL ==========
-    float panel_x = 160.0f;
+    float panel_x = content_margin + 110.0f; // Offset for left tabs
     float panel_y = 185.0f;
-    float panel_w = 720.0f;
+    float panel_w = content_width - 120.0f;  // Panel width minus left tabs
     float panel_h = 420.0f;
 
     // Main panel background - bigger with thicker border to match inspiration

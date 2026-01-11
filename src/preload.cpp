@@ -13,7 +13,7 @@
 #include "settings.h"
 #include <afterhours/src/plugins/color.h>
 #include <afterhours/src/plugins/files.h>
-#include <afterhours/src/plugins/ui/theme_defaults.h>
+#include <afterhours/src/plugins/ui/theme.h>
 
 using namespace afterhours;
 
