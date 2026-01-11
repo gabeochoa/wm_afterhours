@@ -738,7 +738,102 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | **Input Number** | **Medium** | **No validated numeric entry** | Missing |
 | **List Box** | **Medium** | **Dropdown doesn't scale** | Missing |
 | **Table** | **Medium** | **No data grid** | Missing |
+| **Slider/Range** | **High** | **No slider control** | Missing |
+| **Toggle Switch** | **Medium** | **No iOS-style on/off** | Missing |
 
+
+---
+
+## 37. Missing Widget: Slider / Range Input
+
+**Status:** Not implemented
+
+**ImGui Equivalent:** `SliderFloat()`, `SliderInt()`
+
+**Issue:** No visual slider control with a track, fill, and draggable handle. Different from `InputNumber` (#26) which is about text entry with +/- buttons. Sliders are essential for volume, brightness, sensitivity, and other continuous value settings.
+
+**Inspiration Examples:** 
+- PowerWash Simulator settings use sliders for Anti-Aliasing levels
+- FIFA/Rematch settings use sliders for Max FPS, Gamma, Motion blur
+- Mini Motorways uses sliders for Controller Cursor Sensitivity
+- Islands & Trains uses segmented discrete sliders (bar made of separate segments)
+- Parcel Corps uses colored volume bars with continuous fill
+
+**Current Workaround:** Stack three divs manually - track background, fill bar, handle circle:
+```cpp
+// Track background
+div(context, mk(entity, 100), ComponentConfig{}
+    .with_size({pixels(200), pixels(6)})
+    .with_custom_background(track_color));
+
+// Fill (percentage of track)
+div(context, mk(entity, 101), ComponentConfig{}
+    .with_size({pixels(int(200 * value)), pixels(6)})
+    .with_custom_background(fill_color));
+
+// Handle
+div(context, mk(entity, 102), ComponentConfig{}
+    .with_size({pixels(12), pixels(12)})
+    .with_translate(200 * value - 6, -3)
+    .with_custom_background(handle_color)
+    .with_rounded_corners(0b1111)
+    .with_roundness(1.0f));
+```
+
+**Suggested Implementation:**
+```cpp
+ElementResult slider(HasUIContext auto &ctx, EntityParent ep_pair,
+                     float &value, float min, float max,
+                     ComponentConfig config = ComponentConfig());
+```
+
+**Features Needed:**
+- Visual track with fill indicator
+- Draggable handle (mouse + touch)
+- Keyboard support (arrows adjust value)
+- Gamepad support (left/right on focused)
+- Optional value display
+- Vertical orientation option
+
+---
+
+## 38. Missing Widget: Toggle Switch
+
+**Status:** Not implemented
+
+**ImGui Equivalent:** None (ImGui uses Checkbox)
+
+**Issue:** No iOS/Android-style toggle switch. Different from checkbox which is a square with checkmark. Toggle switches are a mobile UI pattern that's now common in all game settings.
+
+**Inspiration Examples:**
+- Angry Birds settings uses circular toggle buttons for Music/Sound/Vibration
+- Mini Motorways uses circle toggles with X/checkmark for Night Mode, Vibration, etc.
+- Parcel Corps uses iOS-style pill toggles with sliding white knobs
+
+**Current Workaround:** Style a button to look like a toggle:
+```cpp
+if (button(context, mk(entity, 0),
+    ComponentConfig{}
+        .with_label(is_on ? "V" : "X")
+        .with_custom_background(is_on ? green : gray)
+        .with_rounded_corners(0b1111)
+        .with_roundness(1.0f))) {
+    is_on = !is_on;
+}
+```
+
+**Suggested Implementation:**
+```cpp
+ElementResult toggle_switch(HasUIContext auto &ctx, EntityParent ep_pair,
+                            bool &value,
+                            ComponentConfig config = ComponentConfig());
+```
+
+**Features Needed:**
+- Pill-shaped track with sliding circle
+- Animation between states
+- Clear on/off visual distinction
+- Optional on/off labels
 
 ---
 
@@ -907,6 +1002,26 @@ ComponentConfig{}
 
 ---
 
+## 39. Missing Feature: 3D/Puffy Text Effect
+
+**Status:** Not implemented
+
+**Issue:** Cannot create 3D "puffy" text effects where text appears to have depth/volume with highlights and shadows. This is common in casual game titles.
+
+**Inspiration Example:** The "DREAM INCORPORATED" title has a thick white outline with a subtle 3D shadow making the text appear to pop out.
+
+**Current Workaround:** Using text outline workaround provides flat outline only, not 3D depth.
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_puffy_text(outline_color, highlight_color, shadow_color, depth);
+```
+
+**Workaround:** Enhanced text outline with offset shadow layers (not yet implemented - would need new workaround file)
+
+---
+
 # Workaround Files Reference
 
 The following workaround files have been created to compensate for missing library features. These should be migrated to native library features when available:
@@ -933,3 +1048,4 @@ The following workaround files have been created to compensate for missing libra
 | **Text Drop Shadow** | **Medium** | **Text lacks depth** | Workaround |
 | **Notification Badges** | **Medium** | **No alert indicators** | Workaround |
 | **Decorative Frame** | **Low** | **No scrapbook-style borders** | Workaround |
+| **3D/Puffy Text** | **Medium** | **Game titles lack depth** | Missing |
