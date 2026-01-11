@@ -43,6 +43,7 @@ pharmasea.exe
 !/lib*.dylib
 recording.trace/
 output/
+baseline_screenshots/
 # until they are used in the project, hiding the kennynl folder
 art_storage/*
 .xmake/*

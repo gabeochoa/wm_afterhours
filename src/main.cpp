@@ -19,6 +19,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ExampleAccessibility.h"
 #include "systems/screens/ExampleBorders.h"
 #include "systems/screens/ExampleColors.h"
+#include "systems/screens/ExampleFlexAlignment.h"
 #include "systems/screens/ExampleLayout.h"
 #include "systems/screens/ExampleSeparators.h"
 #include "systems/screens/ExampleSimpleButton.h"
