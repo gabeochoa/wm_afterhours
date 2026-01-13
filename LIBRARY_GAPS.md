@@ -714,24 +714,30 @@ ElementResult text_input(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ---
 
-## 15. Missing Widget: Progress Bar
+## 15. Missing Widget: Progress Bar ✅ IMPLEMENTED
 
-**Status:** Not implemented
+**Status:** Implemented
 
-**ImGui Equivalent:** `ProgressBar()`
+**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h`
 
-**Issue:** No visual indicator for loading states, download progress, health bars, or completion status.
-
-**Suggested Implementation:**
+**Implementation:**
 ```cpp
 ElementResult progress_bar(HasUIContext auto &ctx, EntityParent ep_pair,
-                           float value,  // 0.0 to 1.0
-                           ComponentConfig config = ComponentConfig());
+                           float value,
+                           ComponentConfig config = ComponentConfig(),
+                           ProgressBarLabelStyle label_style = ProgressBarLabelStyle::Percentage,
+                           float min_value = 0.f, float max_value = 1.f);
 ```
 
-**Features Needed:**
-- Horizontal bar with fill based on value
-- Optional label showing percentage or custom text
+**Features Implemented:**
+- Horizontal bar with fill based on normalized value
+- Multiple label styles: `None`, `Percentage`, `Fraction`, `Custom`
+- Custom min/max value range support
+- Proper corner rounding that matches fill level
+- Non-interactive (read-only display)
+- Demonstrated in the Forms screen
+
+**Future Enhancements (not yet implemented):**
 - Animated/indeterminate mode for unknown duration tasks
 - Vertical orientation option
 

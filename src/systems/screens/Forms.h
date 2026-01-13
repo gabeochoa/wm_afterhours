@@ -134,8 +134,43 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_debug_name("difficulty_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
-    // Dropdowns section header
+    // Progress Bars section header
     div(context, mk(left_col.ent(), 4),
+        ComponentConfig{}
+            .with_label("Progress Bars")
+            .with_size(ComponentSize{pixels(350), pixels(32)})
+            .with_background(Theme::Usage::Accent)
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_skip_tabbing(true)
+            .with_margin(Margin{.top = DefaultSpacing::medium(),
+                                .bottom = DefaultSpacing::small(),
+                                .left = pixels(0),
+                                .right = pixels(0)})
+            .with_debug_name("progress_header"));
+
+    // Progress bar showing volume value (dynamic)
+    progress_bar(context, mk(left_col.ent(), 5), volume_slider,
+                 ComponentConfig{}
+                     .with_label("Audio Level")
+                     .with_size(ComponentSize{pixels(350), pixels(28)})
+                     .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                     .with_margin(Spacing::xs)
+                     .with_debug_name("volume_progress"),
+                 ProgressBarLabelStyle::Percentage);
+
+    // Progress bar with custom range
+    progress_bar(context, mk(left_col.ent(), 6), 75.f,
+                 ComponentConfig{}
+                     .with_label("Level Progress")
+                     .with_size(ComponentSize{pixels(350), pixels(28)})
+                     .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                     .with_margin(Spacing::xs)
+                     .with_debug_name("level_progress"),
+                 ProgressBarLabelStyle::Fraction, 0.f, 100.f);
+
+    // Dropdowns section header
+    div(context, mk(left_col.ent(), 7),
         ComponentConfig{}
             .with_label("Dropdowns")
             .with_size(ComponentSize{pixels(350), pixels(32)})
@@ -150,7 +185,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("dropdowns_header"));
 
     // Resolution dropdown
-    dropdown(context, mk(left_col.ent(), 5), resolutions, resolution_index,
+    dropdown(context, mk(left_col.ent(), 8), resolutions, resolution_index,
              ComponentConfig{}
                  .with_label("Resolution")
                  .with_size(ComponentSize{pixels(350), pixels(40)})
@@ -160,7 +195,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_debug_name("resolution_dropdown"));
 
     // Quality dropdown
-    dropdown(context, mk(left_col.ent(), 6), quality_options, quality_index,
+    dropdown(context, mk(left_col.ent(), 9), quality_options, quality_index,
              ComponentConfig{}
                  .with_label("Quality")
                  .with_size(ComponentSize{pixels(350), pixels(40)})
