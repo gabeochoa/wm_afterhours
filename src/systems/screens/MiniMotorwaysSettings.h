@@ -294,3 +294,6 @@ REGISTER_EXAMPLE_SCREEN(mini_motorways_settings, "Game Mockups",
                         "Minimalist settings (Mini Motorways style)",
                         MiniMotorwaysSettingsScreen)
 
+
+
+

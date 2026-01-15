@@ -81,3 +81,6 @@ Examples:
 - Each component should have a single, clear responsibility
 - Tag components should have no members: `struct IsGrabbed : BaseComponent {};`
 
+
+
+

@@ -78,3 +78,6 @@ build-analysis.txt
 
 # Compilation database
 compile_commands.json
+
+# Ralph config (may contain API key)
+.cursor/ralph-config.json

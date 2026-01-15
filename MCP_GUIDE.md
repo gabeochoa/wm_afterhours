@@ -324,3 +324,6 @@ The MCP protocol allows AI assistants to:
 - Navigate between screens
 - Verify UI behavior programmatically
 
+
+
+
