@@ -150,8 +150,10 @@ bool Settings::load_save_file(int width, int height) {
   this->data->resolution.height = height;
 
   std::vector<std::filesystem::path> settings_places = {
-      std::filesystem::current_path() / "settings.json",
-      files::get_save_path() / "settings.json"};
+      std::filesystem::current_path() / "settings.json"};
+  if (files::get_provider() != nullptr) {
+    settings_places.push_back(files::get_save_path() / "settings.json");
+  }
 
   size_t file_loc = 0;
   std::ifstream ifs;

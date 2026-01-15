@@ -134,12 +134,13 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
 
     button(context, mk(entity, 11),
            ComponentConfig{}
-               .with_label("Light BG - Hard to Read")
+               .with_label("Light BG - Manual Dark Text")
                .with_size(ComponentSize{pixels(col_w), pixels(52)})
                .with_absolute_position()
                .with_translate(left_x, content_y + 40.0f)
                .with_custom_background(demo_bg_light)
-               .with_auto_text_color(false)  // Using theme font (white) on light bg
+               .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+               .with_auto_text_color(false)  // Manual text color, no auto-contrast
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_debug_name("light_no_auto"));
@@ -159,7 +160,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Note about the issue
     div(context, mk(entity, 13),
         ComponentConfig{}
-            .with_label("Default theme font doesn't adapt")
+            .with_label("Manual text color applied")
             .with_size(ComponentSize{pixels(col_w), pixels(22)})
             .with_absolute_position()
             .with_translate(left_x, content_y + 162.0f)

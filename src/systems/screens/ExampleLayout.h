@@ -20,7 +20,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.75f), screen_pct(0.80f)})
+                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.80f)})
                 .with_custom_background(theme.background)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -46,7 +46,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto row_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.98f), pixels(120)})
+                .with_size(ComponentSize{percent(1.0f), pixels(120)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
@@ -58,7 +58,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row_container.ent(), 0),
         ComponentConfig{}
             .with_label("Left Panel")
-            .with_size(ComponentSize{percent(0.28f), pixels(90)})
+            .with_size(ComponentSize{percent(0.25f), pixels(90)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -68,7 +68,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row_container.ent(), 1),
         ComponentConfig{}
             .with_label("Center Panel")
-            .with_size(ComponentSize{percent(0.28f), pixels(90)})
+            .with_size(ComponentSize{percent(0.25f), pixels(90)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -78,7 +78,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row_container.ent(), 2),
         ComponentConfig{}
             .with_label("Right Panel")
-            .with_size(ComponentSize{percent(0.28f), pixels(90)})
+            .with_size(ComponentSize{percent(0.25f), pixels(90)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -89,7 +89,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto col_container =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.98f), pixels(200)})
+                .with_size(ComponentSize{percent(1.0f), pixels(200)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
@@ -104,7 +104,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto left_col = div(
         context, mk(col_container.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.46f), pixels(170)})
+            .with_size(ComponentSize{percent(0.44f), pixels(170)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
@@ -148,7 +148,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_label("FlexDirection::Column stacks elements vertically. "
                         "FlexDirection::Row arranges them horizontally. "
                         "Use margins and padding to control spacing.")
-            .with_size(ComponentSize{percent(0.46f), pixels(170)})
+            .with_size(ComponentSize{percent(0.44f), pixels(170)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_custom_text_color(theme.font)  // Use font (dark charcoal) not darkfont (light)
             .with_padding(Spacing::sm)

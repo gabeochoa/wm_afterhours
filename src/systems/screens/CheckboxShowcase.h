@@ -43,7 +43,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.88f)})
                 .with_custom_background(theme.background)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
@@ -80,7 +80,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.46f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)
@@ -221,7 +221,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto right_col =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.46f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)

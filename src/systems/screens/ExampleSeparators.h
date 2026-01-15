@@ -288,8 +288,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     // Navigation row with vertical separators
     float nav_width = item_width;
     float nav_height = 60.0f;
-    float nav_item_width = 90.0f;
-    float sep_spacing = 12.0f;
+    float nav_item_width = 80.0f;
+    float sep_spacing = 8.0f;
     
     // Nav background
     div(context, mk(entity, 33),

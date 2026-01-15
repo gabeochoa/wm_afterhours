@@ -271,7 +271,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("RESET TO DEFAULTS")
             .with_size(ComponentSize{pixels(250), pixels(30)})
             .with_absolute_position()
-            .with_translate(sw / 2.0f - 125.0f, sh - 50.0f)
+            .with_translate(sw / 2.0f - 125.0f, sh - 70.0f)
             .with_font("EqProRounded", 16.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)

@@ -82,7 +82,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto header =
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1100), pixels(80)})
+                .with_size(ComponentSize{pixels(1000), pixels(80)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
@@ -101,7 +101,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(header.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(500), pixels(10)})
+            .with_size(ComponentSize{pixels(340), pixels(10)})
             .with_debug_name("spacer"));
 
     // Language buttons
@@ -145,7 +145,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1100), pixels(480)})
+                .with_size(ComponentSize{pixels(1000), pixels(480)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Spacing::xs)
                 .with_debug_name("content"));
@@ -154,7 +154,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto left_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(520), pixels(460)})
+                .with_size(ComponentSize{pixels(470), pixels(460)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -165,7 +165,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_panel.ent(), 0),
         ComponentConfig{}
             .with_label(sample.greeting)
-            .with_size(ComponentSize{pixels(480), pixels(50)})
+            .with_size(ComponentSize{pixels(430), pixels(50)})
             .with_background(Theme::Usage::Accent)
             .with_font(font_config.font_name, 32.0f * font_config.size_scale)
             .with_margin(Spacing::xs)
@@ -195,7 +195,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto right_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(540), pixels(460)})
+                .with_size(ComponentSize{pixels(470), pixels(460)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -206,7 +206,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 0),
         ComponentConfig{}
             .with_label("All Languages")
-            .with_size(ComponentSize{pixels(500), pixels(42)})
+            .with_size(ComponentSize{pixels(430), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_margin(Spacing::xs)
@@ -217,7 +217,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 1),
         ComponentConfig{}
             .with_label("EN: " + en.greeting + " - " + en.menu_items[0])
-            .with_size(ComponentSize{pixels(500), pixels(42)})
+            .with_size(ComponentSize{pixels(430), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font("Gaegu-Bold", 20.0f)
             .with_margin(Spacing::xs)
@@ -228,7 +228,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 2),
         ComponentConfig{}
             .with_label("KO: " + ko.greeting + " - " + ko.menu_items[0])
-            .with_size(ComponentSize{pixels(500), pixels(42)})
+            .with_size(ComponentSize{pixels(430), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font("NotoSansKR", 20.0f)
             .with_margin(Spacing::xs)
@@ -239,7 +239,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 3),
         ComponentConfig{}
             .with_label("JA: " + ja.greeting + " - " + ja.menu_items[0])
-            .with_size(ComponentSize{pixels(500), pixels(42)})
+            .with_size(ComponentSize{pixels(430), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font("Sazanami", 20.0f)
             .with_margin(Spacing::xs)
@@ -249,7 +249,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer =
         div(context, mk(main.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1100), pixels(60)})
+                .with_size(ComponentSize{pixels(1000), pixels(60)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::xs)
                 .with_flex_direction(FlexDirection::Column)
