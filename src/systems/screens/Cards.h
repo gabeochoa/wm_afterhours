@@ -49,131 +49,70 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)})
             .with_debug_name("title"));
 
-    // Row 1: Basic cards with different styles
+    // Row 1: Basic cards - all simple like theme swatches
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(180)})
-                        .with_background(Theme::Usage::None)
-                        .with_padding(Spacing::xs)
+                        .with_size(ComponentSize{pixels(900), pixels(160)})
+                        .with_custom_background(theme.surface)
+                        .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row1_cards"));
 
-    // Card 1: Basic surface card
-    auto card1 = div(context, mk(row1.ent(), 0),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(200), pixels(160)})
-                         .with_custom_background(theme.surface)
-                         .with_padding(Spacing::md)
-                         .with_flex_direction(FlexDirection::Column)
-                         .with_margin(Spacing::sm)
-                         .with_debug_name("card1_surface"));
-
-    div(context, mk(card1.ent(), 0),
+    // Card 1: Basic surface card (simple)
+    div(context, mk(row1.ent(), 0),
         ComponentConfig{}
             .with_label("Basic Card")
-            .with_size(ComponentSize{pixels(160), pixels(30)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_custom_background(theme.surface)
+            .with_padding(Spacing::md)
+            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_debug_name("card1_title"));
+            .with_debug_name("card1_surface"));
 
-    div(context, mk(card1.ent(), 1),
-        ComponentConfig{}
-            .with_label(
-                "A simple card with surface color and default rounded corners.")
-            .with_size(ComponentSize{pixels(160), pixels(80)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_skip_tabbing(true)
-            .with_debug_name("card1_body"));
-
-    // Card 2: Primary colored card
-    auto card2 = div(context, mk(row1.ent(), 1),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(200), pixels(160)})
-                         .with_background(Theme::Usage::Primary)
-                         .with_padding(Spacing::md)
-                         .with_flex_direction(FlexDirection::Column)
-                         .with_margin(Spacing::sm)
-                         .with_debug_name("card2_primary"));
-
-    div(context, mk(card2.ent(), 0),
+    // Card 2: Primary colored card (simple)
+    div(context, mk(row1.ent(), 1),
         ComponentConfig{}
             .with_label("Primary Card")
-            .with_size(ComponentSize{pixels(160), pixels(30)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_custom_background(theme.primary)
+            .with_padding(Spacing::md)
+            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_debug_name("card2_title"));
-
-    div(context, mk(card2.ent(), 1),
-        ComponentConfig{}
-            .with_label("Uses the theme's primary color for emphasis.")
-            .with_size(ComponentSize{pixels(160), pixels(80)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_skip_tabbing(true)
-            .with_debug_name("card2_body"));
+            .with_debug_name("card2_primary"));
 
     // Card 3: Accent card with sharp corners
-    auto card3 = div(context, mk(row1.ent(), 2),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(200), pixels(160)})
-                         .with_background(Theme::Usage::Accent)
-                         .with_padding(Spacing::md)
-                         .with_flex_direction(FlexDirection::Column)
-                         .with_margin(Spacing::sm)
-                         .disable_rounded_corners()
-                         .with_debug_name("card3_sharp"));
-
-    div(context, mk(card3.ent(), 0),
+    div(context, mk(row1.ent(), 2),
         ComponentConfig{}
             .with_label("Sharp Corners")
-            .with_size(ComponentSize{pixels(160), pixels(30)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_custom_background(theme.accent)
+            .with_padding(Spacing::md)
+            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_auto_text_color(true)
+            .disable_rounded_corners()
             .with_skip_tabbing(true)
-            .with_debug_name("card3_title"));
+            .with_debug_name("card3_sharp"));
 
-    div(context, mk(card3.ent(), 1),
-        ComponentConfig{}
-            .with_label("No rounded corners for a different aesthetic.")
-            .with_size(ComponentSize{pixels(160), pixels(80)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_skip_tabbing(true)
-            .with_debug_name("card3_body"));
-
-    // Card 4: Custom corner radius
-    auto card4 = div(context, mk(row1.ent(), 3),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(200), pixels(160)})
-                         .with_custom_background(theme.surface)
-                         .with_padding(Spacing::md)
-                         .with_flex_direction(FlexDirection::Column)
-                         .with_margin(Spacing::sm)
-                         .with_rounded_corners(
-                             RoundedCorners().all_sharp().round(TOP_LEFT).round(
-                                 BOTTOM_RIGHT))
-                         .with_debug_name("card4_custom_radius"));
-
-    div(context, mk(card4.ent(), 0),
+    // Card 4: Secondary card with custom corners
+    div(context, mk(row1.ent(), 3),
         ComponentConfig{}
             .with_label("Custom Corners")
-            .with_size(ComponentSize{pixels(160), pixels(30)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_custom_background(theme.secondary)
+            .with_padding(Spacing::md)
+            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_auto_text_color(true)
+            .with_rounded_corners(
+                RoundedCorners().all_sharp().round(TOP_LEFT).round(
+                    BOTTOM_RIGHT))
             .with_skip_tabbing(true)
-            .with_debug_name("card4_title"));
-
-    div(context, mk(card4.ent(), 1),
-        ComponentConfig{}
-            .with_label("Only top-left and bottom-right corners are rounded.")
-            .with_size(ComponentSize{pixels(160), pixels(80)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_skip_tabbing(true)
-            .with_debug_name("card4_body"));
+            .with_debug_name("card4_custom_radius"));
 
     // Row 2: Nested cards
     auto row2 = div(context, mk(main_container.ent(), 2),

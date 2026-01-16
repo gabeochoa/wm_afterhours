@@ -145,15 +145,15 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::xs)
             .with_debug_name("stack3"));
 
-    // Right side description - use percent sizing with proper dark text
+    // Right side description - use percent sizing with auto contrast
     div(context, mk(col_container.ent(), 1),
         ComponentConfig{}
             .with_label("FlexDirection::Column stacks elements vertically. "
                         "FlexDirection::Row arranges them horizontally. "
                         "Use margins and padding to control spacing.")
             .with_size(ComponentSize{percent(0.45f), pixels(170)})
-            .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
-            .with_custom_text_color(theme.font)  // Use font (dark charcoal) not darkfont (light)
+            .with_custom_background(theme.primary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)

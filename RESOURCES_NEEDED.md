@@ -116,3 +116,4 @@ These are already available in our Kenney packs or `images/` folder:
 - 2x resolution (64px+) preferred for high-DPI displays
 - SVG/vector versions are useful for future scaling needs
 
+

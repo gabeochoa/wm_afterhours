@@ -436,7 +436,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     float nav_x = content_margin - 10.0f;  // Slightly left of content area
     float nav_y = 195.0f;
-    float tab_width = 115.0f;
+    float tab_width = 130.0f;  // Increased to prevent text overflow
     float tab_height = 78.0f;
     float tab_spacing = 85.0f;
     for (size_t i = 0; i < tabs.size(); i++) {
@@ -490,10 +490,10 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(static_cast<int>(tab_width)), pixels(22)})
+              .with_size(ComponentSize{pixels(static_cast<int>(tab_width + 10)), pixels(22)})
               .with_absolute_position()
-              .with_translate(nav_x, tab_y + tab_height - 26.0f)
-              .with_font("EqProRounded", 15.0f)
+              .with_translate(nav_x - 5.0f, tab_y + tab_height - 26.0f)
+              .with_font("EqProRounded", 13.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("tab_label_" + std::to_string(i)));

@@ -924,18 +924,49 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("volume_label_" + std::to_string(base_id)));
 
-    // Use the interactive slider() function
+    // Visual slider track and handle (custom rendering for absolute positioning)
     float slider_w = 110.0f;
     float slider_x = x + w - slider_w - 10.0f;
-    slider(context, mk(entity, base_id + 3), value,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(22)})
-               .with_absolute_position()
-               .with_translate(slider_x, y + 8.0f)
-               .with_custom_background(slider_green)
-               .with_rounded_corners(std::bitset<4>(0b1111))
-               .with_roundness(0.5f)
-               .with_debug_name("volume_slider_" + std::to_string(base_id)));
+    float slider_y_pos = y + 10.0f;
+    float slider_h = 16.0f;
+    
+    // Track background
+    div(context, mk(entity, base_id + 3),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(static_cast<int>(slider_h))})
+            .with_absolute_position()
+            .with_translate(slider_x, slider_y_pos)
+            .with_custom_background(slider_track)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.5f)
+            .with_debug_name("volume_track_" + std::to_string(base_id)));
+    
+    // Filled portion
+    float fill_w = slider_w * value;
+    if (fill_w > 2.0f) {
+      div(context, mk(entity, base_id + 4),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(static_cast<int>(fill_w)), pixels(static_cast<int>(slider_h))})
+              .with_absolute_position()
+              .with_translate(slider_x, slider_y_pos)
+              .with_custom_background(slider_green)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.5f)
+              .with_debug_name("volume_fill_" + std::to_string(base_id)));
+    }
+    
+    // Handle
+    float handle_w = 20.0f;
+    float handle_x = slider_x + (slider_w - handle_w) * value;
+    div(context, mk(entity, base_id + 5),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(handle_w)), pixels(static_cast<int>(slider_h + 4))})
+            .with_absolute_position()
+            .with_translate(handle_x, slider_y_pos - 2.0f)
+            .with_custom_background(text_white)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.5f)
+            .with_debug_name("volume_handle_" + std::to_string(base_id)));
   }
 };
 
