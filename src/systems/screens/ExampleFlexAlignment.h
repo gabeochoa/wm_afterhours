@@ -168,15 +168,22 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container - reduced roundness for square appearance
-    auto main_container =
+    // Main container background (no padding so it stays in bounds)
+    auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.90f)})
                 .with_custom_background(theme.background)
+                .with_roundness(0.06f)
+                .with_debug_name("flex_bg"));
+
+    // Content container with padding
+    auto main_container =
+        div(context, mk(root.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
-                .with_roundness(0.06f)
                 .with_debug_name("flex_main"));
 
     // Title

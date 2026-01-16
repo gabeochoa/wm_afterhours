@@ -68,12 +68,19 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     float scaled_size = theme.get_scaled_font_size(current_language, 20.0f);
     LanguageSample sample = get_sample(current_language);
 
-    // Main container - full screen
-    auto main =
+    // Full screen background (no padding so it stays in bounds)
+    auto background =
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                 .with_custom_background(theme.background)
+                .with_debug_name("main_bg"));
+
+    // Content container with padding
+    auto main =
+        div(context, mk(background.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));

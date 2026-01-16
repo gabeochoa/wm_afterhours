@@ -7,6 +7,77 @@ Your task is to **analyze our existing UI** and provide **expert-level critique*
 
 ---
 
+## Design Guide (HIG + Menu/Icon Notes)
+
+Use these rules as default design constraints for UI work and reviews.
+
+### A. Core Principles
+- Prefer **clarity over ornament**; every visual element must reduce cognitive load.
+- Preserve **consistency** across screens, menus, and controls to build user trust.
+- Default to **text-first** for actions; icons are optional aids, not a requirement.
+- Favor **recognizable metaphors**; if no clear metaphor exists, do not use an icon.
+
+### B. Menus
+- **Icons in menus are opt-in**: only use when the icon adds meaning that text cannot.
+- **Never use arbitrary symbols** in menus; only standard marks are allowed.
+- **Ellipsis** only when additional input is required before execution.
+- **Checkmarks** indicate the current selection; **dashes** indicate partial selection.
+- Group related items; use **standard dividers** sparingly for scanability.
+- Keep menu titles stable and predictable; do not rename or reorder casually.
+- If icons are used, reserve a **fixed icon column** for all items to avoid scan breaks.
+
+### C. Iconography
+- Use **appropriate metaphors**; avoid confusing or overly clever visuals.
+- **Avoid text inside icons** (not localizable, hard to read, often ambiguous).
+- Design for **small sizes first**: minimal detail, pixel-aligned, clear silhouettes.
+- Maintain a **consistent icon family** (stroke weight, perspective, lighting).
+- Avoid reusing one icon for multiple meanings; **one action = one icon**.
+- Paired actions should use **mirrored or symmetrical** metaphors (e.g., undo/redo).
+- If an icon cannot be identified without its label, it should not exist.
+
+### D. Icons in Menus (Special Rules)
+- Only include icons for **spatial/visual outcomes** (layout positions, alignment).
+- Do not add icons simply to fill space; icons must earn their place.
+- Avoid mixing iconed and iconless items without alignment safeguards.
+- If a menu already uses checkmarks/dashes, verify combined alignment and clarity.
+
+### E. Controls & Dialogs
+- Prefer **modeless** UI when possible to preserve user control.
+- Always provide **clear feedback** for long-running actions.
+- Match dialog titles to their triggering menu item (minus ellipsis).
+- Use standard controls and states; avoid novel behaviors without strong user value.
+
+### F. Layout, Spacing, and Scanning
+- Use a **coherent spacing scale**; align to a baseline/grid.
+- Preserve **vertical scan lines** in lists and menus.
+- Group related controls; avoid excessive separators or micro-grouping.
+- Keep safe margins from screen edges; never clip or overflow.
+
+### G. Color & Theme
+- Do not rely on color alone to convey meaning; provide redundant cues.
+- Maintain contrast for readability in motion and at gameplay distance.
+- Limit accent colors to purposeful states (alert, selection, focus).
+
+### H. Typography
+- Keep a clear **type scale** with consistent hierarchy.
+- Avoid text effects that reduce legibility at small sizes.
+- Ensure truncation/wrapping rules do not hide meaning.
+
+### I. Consistency & Governance
+- Maintain an **icon registry** that maps actions to approved icons.
+- Reuse system-standard metaphors where possible; do not invent new ones casually.
+- Any deviation from these rules requires rationale in the design review.
+
+### J. Review Checklist (Quick Pass)
+- Menu items use only standard marks (checkmark/dash/ellipsis).
+- Icons are used only when they add meaning and are consistent across the app.
+- Actions have clear text labels; icons are not the only cue.
+- Small-size icons remain legible without micro-detail.
+- Visual scan lines are preserved; alignment is consistent.
+- Color is redundant, contrast is adequate, and states are unambiguous.
+
+---
+
 ## 0. Tooling & Process Requirements (Mandatory)
 
 You must use the **MCP (Model Context Protocol) tools** as part of your analysis process.

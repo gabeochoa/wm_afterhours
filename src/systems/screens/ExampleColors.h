@@ -16,15 +16,22 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::midnight();
     context.theme = theme;
 
-    // Main container - reduced roundness for more square appearance
-    auto main_container =
+    // Main container background (no padding so it stays in bounds)
+    auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.88f), screen_pct(0.82f)})
                 .with_custom_background(theme.background)
+                .with_roundness(0.08f)
+                .with_debug_name("colors_bg"));
+
+    // Content container with padding
+    auto main_container =
+        div(context, mk(root.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
-                .with_roundness(0.08f)
                 .with_debug_name("colors_main"));
 
     // Title

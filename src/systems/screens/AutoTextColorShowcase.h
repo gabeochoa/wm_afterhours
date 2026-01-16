@@ -37,17 +37,23 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     setup_theme();
 
-    // Main container - full screen with padding
+    // Full screen background (no padding so it stays in bounds)
     auto root = div(context, mk(entity),
         ComponentConfig{}
             .with_size({screen_pct(1.0f), screen_pct(1.0f)})
+            .with_background(Theme::Usage::Background)
+            .with_debug_name("root_bg"));
+
+    // Content container with padding
+    auto content = div(context, mk(root.ent(), 0),
+        ComponentConfig{}
+            .with_size({percent(1.0f), percent(1.0f)})
             .with_padding(Spacing::lg)
             .with_flex_direction(FlexDirection::Column)
-            .with_background(Theme::Usage::Background)
             .with_debug_name("root"));
 
     // Title section
-    div(context, mk(root.ent()),
+    div(context, mk(content.ent()),
         ComponentConfig{}
             .with_label("Auto Text Color (Now Default!)")
             .with_size({percent(1.0f), pixels(50.0f)})
@@ -56,7 +62,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::xs)
             .with_debug_name("title"));
 
-    div(context, mk(root.ent()),
+    div(context, mk(content.ent()),
         ComponentConfig{}
             .with_label("Text color automatically adjusts for best contrast against any background")
             .with_size({percent(1.0f), pixels(30.0f)})
@@ -66,7 +72,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("subtitle"));
 
     // Section 1: Default behavior (auto enabled by default)
-    auto section1 = div(context, mk(root.ent()),
+    auto section1 = div(context, mk(content.ent()),
         ComponentConfig{}
             .with_size({percent(1.0f), children()})
             .with_padding(Spacing::sm)
@@ -135,7 +141,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Section 2: Mid-tone colors (edge cases)
-    auto section2 = div(context, mk(root.ent()),
+    auto section2 = div(context, mk(content.ent()),
         ComponentConfig{}
             .with_size({percent(1.0f), children()})
             .with_padding(Spacing::sm)
@@ -179,7 +185,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Section 3: How to disable auto text color
-    auto section3 = div(context, mk(root.ent()),
+    auto section3 = div(context, mk(content.ent()),
         ComponentConfig{}
             .with_size({percent(1.0f), children()})
             .with_padding(Spacing::sm)
@@ -234,7 +240,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("explicit_color"));
 
     // Section 4: Theme colors with auto contrast
-    auto section4 = div(context, mk(root.ent()),
+    auto section4 = div(context, mk(content.ent()),
         ComponentConfig{}
             .with_size({percent(1.0f), children()})
             .with_padding(Spacing::sm)

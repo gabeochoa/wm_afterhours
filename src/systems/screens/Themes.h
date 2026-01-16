@@ -64,12 +64,19 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto theme = get_theme_for_choice(current_theme);
     context.theme = theme;
 
-    // Full screen background
-    auto main =
+    // Full screen background (no padding so it stays in bounds)
+    auto background =
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                 .with_custom_background(theme.background)
+                .with_debug_name("main_bg"));
+
+    // Content container with padding
+    auto main =
+        div(context, mk(background.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main"));
