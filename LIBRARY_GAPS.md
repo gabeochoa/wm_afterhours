@@ -1035,7 +1035,7 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ---
 
-# Priority
+# Priority - All Gaps Sorted by Implementation Effort
 
 ## Underutilized Features (Not Gaps - Need Documentation)
 
@@ -1048,68 +1048,108 @@ ElementResult table(HasUIContext auto &ctx, EntityParent ep_pair,
 | Focus Clusters | `components.h` | `FocusClusterRoot`/`InFocusCluster` rarely used |
 | Color Utilities | `color.h` | `meets_wcag_aa()`, `auto_text_color()` not used |
 | Animation System | `animation.h` | Manual lerp instead of `animation::anim<>()` |
+| `navigation_bar()` | `imm_components.h` | Screens reimplement `< value >` pattern manually |
+| `pagination()` | `imm_components.h` | Similar to navigation_bar, rarely used |
+| `button_group()` | `imm_components.h` | Could be used more for tab-like selections |
+| `separator()` | `imm_components.h` | Screens manually create line dividers |
 
-## True Gaps - Sorted by Implementation Effort
+---
+
+## Master Gap List - Sorted Smallest to Largest
 
 ### Trivial (~1-2 hours)
 
-| Gap | Effort | Description | Status |
-|-----|--------|-------------|--------|
-| **Auto text color default** | Trivial | Change default boolean in `component_init.h` | Open |
-| **mk() auto-increment** | Trivial | Add per-call-site counter (see U1 proposal) | Proposed |
-| Font in Theme | Trivial | - | RESOLVED |
-| Text vs Background color | Trivial | - | RESOLVED |
-| Screen switch cleanup | Trivial | - | **Fixed** |
-| **Slider/Range** | Trivial | - | IMPLEMENTED |
+| # | Gap | Description | Status |
+|---|-----|-------------|--------|
+| - | Auto text color default | Change default boolean in `component_init.h` | Open |
+| - | mk() auto-increment | Add per-call-site counter (see U1 proposal) | Proposed |
+| - | Font in Theme | Font config in Theme struct | RESOLVED |
+| - | Text vs Background color | Explicit API naming | RESOLVED |
+| - | Screen switch cleanup | Entity cleanup on screen change | RESOLVED |
+| 37 | Slider/Range | Continuous value selector | IMPLEMENTED |
 
 ### Small (~half day)
 
-| Gap | Effort | Description | Status |
-|-----|--------|-------------|--------|
-| **Progress Bar** | Small | Filled rectangle with value | Missing |
-| **Radio Group** | Small | Like checkbox_group but single-select | Missing |
-| **Toggle Switch** | Small | Styled button + animation | Missing |
-| **Stepper/Counter** | Small | Compose [-] value [+] buttons | Missing |
-| **Button Variants** | Small | Add enum + styling logic to button() | Missing |
-| Font size 0 warnings | Small | Add min clamp + debug indicator | Open |
-| Focus ring position | Small | Move render to correct element | Open |
-| Corner merging | Small | Add merge logic for corners | Open |
-| Styling defaults circular dep | Small | Forward declarations | Open |
+| # | Gap | Description | Status | Priority |
+|---|-----|-------------|--------|----------|
+| 61 | **Clipboard Abstraction** | Cross-platform clipboard API | Missing | |
+| 44 | **Toggle Switch** | iOS-style pill toggle with sliding knob | Missing | HIGH |
+| 45 | **Stepper/Selector** | `< value >` arrow selector for options | Missing | HIGH |
+| 55 | **Equipment Slot** | Icon container + quantity + selection border | Missing | |
+| 56 | **Stacked Bars** | Health/armor dual progress bars | Missing | |
+| 49 | **Corner Brackets** | Decorative tech-style corner brackets | Missing | |
+| 52 | **Currency Display** | Icon + formatted number in pill | Missing | |
+| 15 | Progress Bar | Filled rectangle with value | IMPLEMENTED | |
+| 20 | **Radio Group** | Like checkbox_group but single-select | Missing | |
+| 40 | **Button Variants** | Filled/Outline/Ghost button styles | Missing | |
+| - | Font size 0 warnings | Add min clamp + debug indicator | Open | |
+| - | Focus ring position | Move render to correct element | Open | |
+| - | Corner merging | Add merge logic for corners | Open | |
+| - | Styling defaults circular dep | Forward declarations | Open | |
 
 ### Medium (~1-2 days)
 
-| Gap | Effort | Description | Status |
-|-----|--------|-------------|--------|
-| **Icon+Text Button** | Medium | Compose icon + label with click | Missing |
-| **Tooltip** | Medium | Hover delay + positioned popup | Missing |
-| **Dropdown close** | Medium | Click-outside detection | Open |
-| **Input Number** | Medium | Text input subset + validation | Missing |
-| Tabbing + values | Medium | Mode flag for nav vs adjust | Open |
-| `screen_pct()` documentation | Medium | Better error messages + examples | Open |
+| # | Gap | Description | Status | Priority |
+|---|-----|-------------|--------|----------|
+| 46 | **Setting Row** | Icon + Label + Control row pattern | Missing | HIGH |
+| 60 | **Test Input Hooks** | Inject input events for automated testing | Missing | |
+| 64 | **Glyph Metrics API** | Per-character width measurements | Missing | |
+| 47 | **Centered Container** | Auto-centering with max-width | Missing | |
+| 48 | **Inline Meter** | Small icon + label + progress gauge | Missing | |
+| 50 | **Vertical Tab Bar** | Sidebar navigation with icons | Missing | |
+| 51 | **Grid Background** | Decorative grid lines pattern | Missing | |
+| 57 | **Compass** | Circular dial with cardinal directions | Missing | |
+| 59 | **Notification Stack** | Auto-dismiss message queue | Missing | |
+| 42 | **Icon+Text Button** | Compose icon + label with click | Missing | |
+| 16 | **Tooltip** | Hover delay + positioned popup | Missing | |
+| 26 | **Input Number** | Text input + validation + +/- buttons | Missing | |
+| - | Dropdown close | Click-outside detection | Open | |
+| - | Tabbing + values | Mode flag for nav vs adjust | Open | |
+| - | `screen_pct()` documentation | Better error messages + examples | Open | |
 
 ### Large (~3-5 days)
 
-| Gap | Effort | Description | Status |
-|-----|--------|-------------|--------|
-| **Focus ring styles** | Large | Multiple render modes + config + animation | Open |
-| **Tab Bar** | Large | Multiple buttons + panel switching | Missing |
-| **Tree Node** | Large | Expand/collapse + indent + animation | Missing |
-| **Modal/Dialog** | Large | Overlay + dim + focus trap + escape | Missing |
-| **Context Menu** | Large | Right-click + popup + keyboard nav | Missing |
-| **CSS Grid Layout** | Large | New layout mode in autolayout | Missing |
-| Missing flexbox alignment | Large | Add justify/align to autolayout | Open |
+| # | Gap | Description | Status | Priority |
+|---|-----|-------------|--------|----------|
+| 53 | **Chat Box** | Username + avatar + message list | Missing | |
+| 63 | **Classic UI Themes** | Win95/retro style theme with 3D bevels | Missing | |
+| 58 | **Minimap** | Grid + markers + zones | Game-specific | |
+| 9b | **Focus Ring Styles** | Multiple render modes + config + animation | Open | |
+| 18 | **Tab Bar** | Multiple buttons + panel switching | Missing | |
+| 19 | **Tree Node** | Expand/collapse + indent + animation | Missing | |
+| 23 | **Modal/Dialog** | Overlay + dim + focus trap + escape | Missing | |
+| 24 | **Context Menu** | Right-click + popup + keyboard nav | Missing | |
+| 41 | **CSS Grid Layout** | New layout mode in autolayout | Missing | |
+| - | Missing flexbox alignment | Add justify/align to autolayout | Open | |
 
 ### Very Large (~1+ week)
 
-| Gap | Effort | Description | Status |
-|-----|--------|-------------|--------|
-| **Text Input** | Very Large | Cursor, selection, copy/paste, keyboard | Missing |
-| **Scroll Container** | Very Large | Overflow, scrollbar, drag, wheel | Missing |
-| **List Box** | Very Large | Scroll + selection + keyboard | Missing |
-| **Table** | Very Large | Columns + sorting + resize + scroll | Missing |
-| **Drag and Drop** | Very Large | Drag detection, drop targets, visual | Missing |
-| **Color Picker** | Very Large | HSV wheel, sliders, hex input | Missing |
-| CJK font loading | Very Large | Auto-detect codepoints from font | Open |
+| # | Gap | Description | Status |
+|---|-----|-------------|--------|
+| 62 | **Text Editor Widget** | Full multiline text editing with selection/undo | Missing |
+| 13 | **Text Input** | Cursor, selection, copy/paste, keyboard | Missing |
+| 17 | **Scroll Container** | Overflow, scrollbar, drag, wheel | Missing |
+| 27 | **List Box** | Scroll + selection + keyboard | Missing |
+| 28 | **Table** | Columns + sorting + resize + scroll | Missing |
+| 25 | **Drag and Drop** | Drag detection, drop targets, visual | Missing |
+| 21 | **Color Picker** | HSV wheel, sliders, hex input | Missing |
+| 5 | CJK font loading | Auto-detect codepoints from font | Open |
+
+---
+
+## Visual Effects - Sorted by Effort
+
+| # | Gap | Effort | Description | Status |
+|---|-----|--------|-------------|--------|
+| 34 | Text Drop Shadow | Trivial | Render text twice with offset | Workaround exists |
+| 35 | Notification Badges | Small | Absolute positioned circle + text | Workaround exists |
+| 29 | Text Stroke/Outline | Small | Render text 8x at offsets | Workaround exists |
+| 30 | Gradient Backgrounds | Medium | Layered strips or shader | Workaround exists |
+| 36 | Decorative Frame | Medium | Layered borders + corner sprites | Workaround exists |
+| 39 | 3D/Puffy Text | Medium | Multi-layer outline + shadow | Missing |
+| 31 | Decorative Borders | Medium | 9-slice or border styles | Limited |
+| 33 | Icon Font Loading | Large | Auto-detect codepoints from TTF | Limited |
+| 32 | Circular Progress | Large | Arc/pie rendering (needs draw_arc) | Missing |
 
 
 ---
@@ -1562,9 +1602,771 @@ ComponentConfig{}
 
 ---
 
+# Additional Gaps from Screen Review (2026-01-16)
+
+The following gaps were identified by comprehensive review of all screen implementations, noting patterns that are repeatedly reimplemented manually.
+
+---
+
+## 44. Missing Widget: Toggle Switch (iOS-style)
+
+**Status:** Not implemented - HIGH PRIORITY
+
+**Issue:** Toggle switches (pill-shaped track with sliding circular knob) are manually reimplemented in multiple screens. This is different from checkbox which is a square with checkmark.
+
+**Screens Using This Pattern:**
+- ParcelCorpsSettings: `render_toggle_row_with_icon()` and `render_toggle_row_rainbow()` (lines 529-679)
+- MiniMotorwaysSettings: Circle toggles with X/V markers (lines 163-199)
+- AngryBirdsSettings: Similar toggle buttons
+
+**Current Workaround (from ParcelCorps):**
+```cpp
+// Toggle track
+Color track_color = value ? toggle_green : toggle_track;
+div(context, mk(entity, base_id + 3),
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(40), pixels(20)})
+        .with_absolute_position()
+        .with_translate(x + w - 50.0f, y + 9.0f)
+        .with_custom_background(track_color)
+        .with_rounded_corners(std::bitset<4>(0b1111))
+        .with_roundness(0.5f));
+
+// Toggle knob
+float knob_x = value ? (x + w - 30.0f) : (x + w - 48.0f);
+div(context, mk(entity, base_id + 4),
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(16), pixels(16)})
+        .with_absolute_position()
+        .with_translate(knob_x, y + 11.0f)
+        .with_custom_background(white)
+        .with_rounded_corners(std::bitset<4>(0b1111))
+        .with_roundness(1.0f));
+```
+
+**Suggested Implementation:**
+```cpp
+enum struct ToggleSwitchStyle {
+    Pill,      // iOS-style pill with sliding knob (default)
+    Circle,    // Single circle with X/checkmark inside
+    Icon,      // Circle with custom icons for on/off states
+};
+
+ElementResult toggle_switch(HasUIContext auto &ctx, EntityParent ep_pair,
+                            bool &value,
+                            ComponentConfig config = ComponentConfig(),
+                            ToggleSwitchStyle style = ToggleSwitchStyle::Pill);
+
+// Usage:
+toggle_switch(context, mk(entity), night_mode,
+    ComponentConfig{}
+        .with_label("Night Mode")
+        .with_size(ComponentSize{pixels(280), pixels(40)}));
+```
+
+**Features Needed:**
+- Pill-shaped track with sliding circular knob
+- Animation for state transition
+- Optional label (inline with toggle)
+- Optional on/off icons
+- Circle variant with X/checkmark markers
+
+---
+
+## 45. Missing Widget: Stepper/Selector with Arrows
+
+**Status:** Not implemented - HIGH PRIORITY
+
+**Issue:** The pattern `< value >` with left/right arrows to cycle through discrete options is reimplemented in almost every settings screen. Different from dropdown (which shows a list) and slider (which is continuous).
+
+**Screens Using This Pattern:**
+- ParcelCorps: `render_language_row()`, `render_selector_row()` (lines 449-527, 681-761)
+- MiniMotorways: Sensitivity selector (lines 214-256)
+- FlightOptions, KirbyOptions, DeadSpace, etc.
+
+**Current Workaround:**
+```cpp
+// Left arrow
+if (button(context, mk(entity, base_id + 3),
+           ComponentConfig{}.with_label("<"))) {
+    option_idx = (option_idx == 0) ? options.size() - 1 : option_idx - 1;
+}
+
+// Value display
+div(context, mk(entity, base_id + 4),
+    ComponentConfig{}.with_label(options[option_idx]));
+
+// Right arrow
+if (button(context, mk(entity, base_id + 5),
+           ComponentConfig{}.with_label(">"))) {
+    option_idx = (option_idx + 1) % options.size();
+}
+```
+
+**Suggested Implementation:**
+```cpp
+template <typename Container>
+ElementResult stepper(HasUIContext auto &ctx, EntityParent ep_pair,
+                      const Container &options, size_t &option_index,
+                      ComponentConfig config = ComponentConfig());
+
+// Variant for numeric values
+ElementResult stepper_int(HasUIContext auto &ctx, EntityParent ep_pair,
+                          int &value, int min, int max, int step = 1,
+                          ComponentConfig config = ComponentConfig());
+
+ElementResult stepper_float(HasUIContext auto &ctx, EntityParent ep_pair,
+                            float &value, float min, float max, float step = 0.1f,
+                            ComponentConfig config = ComponentConfig());
+
+// Usage:
+std::vector<std::string> qualities = {"Low", "Medium", "High", "Ultra"};
+stepper(context, mk(entity), qualities, quality_index,
+    ComponentConfig{}.with_label("Quality"));
+```
+
+**Note:** `navigation_bar` exists but uses a different visual style. This needs to be a compact inline selector.
+
+---
+
+## 46. Missing Widget: Labeled Setting Row
+
+**Status:** Not implemented - HIGH PRIORITY
+
+**Issue:** The pattern `[Icon] Label .............. [Control]` is the most common UI pattern in settings screens. Currently each screen manually composes this from multiple elements.
+
+**Pattern Structure:**
+```
+┌────────────────────────────────────────────────────────┐
+│ [Icon]  Label Text                     [Toggle/Value] │
+└────────────────────────────────────────────────────────┘
+```
+
+**Suggested Implementation:**
+```cpp
+enum struct SettingRowControlType {
+    Toggle,      // Boolean toggle switch
+    Stepper,     // < value > arrows
+    Dropdown,    // Opens dropdown
+    Slider,      // Inline slider
+    Display,     // Read-only value display
+};
+
+struct SettingRowConfig {
+    std::string label;
+    std::optional<TextureConfig> icon;
+    std::optional<Color> icon_bg_color;
+    SettingRowControlType control_type;
+    // ... control-specific options
+};
+
+ElementResult setting_row(HasUIContext auto &ctx, EntityParent ep_pair,
+                          const SettingRowConfig &config,
+                          /* control value reference */);
+
+// Usage:
+bool night_mode = false;
+setting_row(context, mk(entity),
+    SettingRowConfig{
+        .label = "Night Mode",
+        .icon = moon_icon,
+        .icon_bg_color = purple,
+        .control_type = SettingRowControlType::Toggle
+    }, night_mode);
+```
+
+---
+
+## 47. Missing Feature: Centered Content Container
+
+**Status:** Not implemented - MEDIUM PRIORITY
+
+**Issue:** Almost every screen manually calculates content centering:
+```cpp
+float content_width = 850.0f;
+float content_margin = ((float)screen_w - content_width) / 2.0f;
+```
+
+**Suggested Implementation:**
+```cpp
+// New size types
+Size centered_max(float max_width);  // Centers with max width constraint
+
+// Or alignment on containers
+ComponentConfig{}
+    .with_size(ComponentSize{pixels(850), percent(1.0f)})
+    .with_self_align(SelfAlign::Center);  // Centers within parent
+
+// Or a dedicated container
+ElementResult centered_container(HasUIContext auto &ctx, EntityParent ep_pair,
+                                 float max_width,
+                                 ComponentConfig config = ComponentConfig());
+```
+
+---
+
+## 48. Missing Widget: Inline Meter/Gauge
+
+**Status:** Not implemented - MEDIUM PRIORITY
+
+**Issue:** Small inline progress indicators with icon and label are common in game UIs (health bars, resource gauges, etc.). Different from `progress_bar` which is standalone.
+
+**Screens Using This Pattern:**
+- EmpireTycoon: Happiness and Resources meters (lines 330-422)
+- CozyCafe: Progress bars on customer orders
+
+**Pattern Structure:**
+```
+┌─────────────────────────────────┐
+│ [Icon] Label   [███████░░░░░░] │
+└─────────────────────────────────┘
+```
+
+**Suggested Implementation:**
+```cpp
+ElementResult inline_meter(HasUIContext auto &ctx, EntityParent ep_pair,
+                           float value,  // 0.0 to 1.0
+                           ComponentConfig config = ComponentConfig());
+
+// Usage:
+inline_meter(context, mk(entity), happiness_pct,
+    ComponentConfig{}
+        .with_label("Happiness")
+        .with_icon(happy_icon)
+        .with_size(ComponentSize{pixels(175), pixels(34)}));
+```
+
+---
+
+## 49. Missing Feature: Corner Bracket Decorations
+
+**Status:** Not implemented - MEDIUM PRIORITY
+
+**Issue:** Tech/sci-fi UIs commonly use corner bracket decorations on panels. DeadSpace manually creates 8 divs for this effect (lines 278-345).
+
+**Current Workaround (from DeadSpace):**
+```cpp
+int bracket_size = 15;
+Color bracket_color = teal_highlight;
+
+// Top-left bracket (horizontal piece)
+div(context, mk(entity, 300),
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
+        .with_absolute_position()
+        .with_translate(panel_x - 2.0f, panel_y - 2.0f)
+        .with_custom_background(bracket_color));
+// Top-left bracket (vertical piece)
+div(context, mk(entity, 301),
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
+        .with_absolute_position()
+        .with_translate(panel_x - 2.0f, panel_y - 2.0f)
+        .with_custom_background(bracket_color));
+// ... repeat for all 4 corners (8 elements total)
+```
+
+**Suggested Implementation:**
+```cpp
+ComponentConfig{}
+    .with_corner_brackets(bracket_color, bracket_size, bracket_thickness);
+
+// Or as a helper function
+void corner_brackets(HasUIContext auto &ctx, Entity &parent, int base_id,
+                     float x, float y, float w, float h,
+                     Color color, float size = 15.0f, float thickness = 2.0f);
+```
+
+---
+
+## 50. Missing Layout: Vertical Tab Bar
+
+**Status:** Not implemented - MEDIUM PRIORITY
+
+**Issue:** `tab_bar` concept is mentioned but not implemented. Vertical sidebar navigation with icons is common (EmpireTycoon left nav, MiniMotorways category tabs).
+
+**Screens Using This Pattern:**
+- EmpireTycoon: Left navigation tabs (lines 424-507)
+- MiniMotorways: Metro-style category tabs (lines 114-156)
+
+**Suggested Implementation:**
+```cpp
+enum struct TabBarOrientation { Horizontal, Vertical };
+
+struct TabConfig {
+    std::string label;
+    std::optional<TextureConfig> icon;
+    std::optional<Color> bg_color;
+    std::optional<std::string> badge_text;
+};
+
+ElementResult tab_bar(HasUIContext auto &ctx, EntityParent ep_pair,
+                      const std::vector<TabConfig> &tabs,
+                      size_t &active_tab,
+                      TabBarOrientation orientation = TabBarOrientation::Horizontal,
+                      ComponentConfig config = ComponentConfig());
+```
+
+---
+
+## 51. Missing Feature: Grid/Decorative Background Pattern
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** MiniMotorways manually draws grid lines for background effect (lines 77-99). This is a common subtle background treatment.
+
+**Current Workaround:**
+```cpp
+// Grid lines (vertical)
+for (int i = 0; i < 20; i++) {
+    float x = (float)i * 80.0f;
+    div(context, mk(entity, 5 + i),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(1), pixels(screen_h)})
+            .with_absolute_position()
+            .with_translate(x, 0.0f)
+            .with_custom_background(grid_line));
+}
+// ... similar for horizontal
+```
+
+**Suggested Implementation:**
+```cpp
+// As a background effect on containers
+ComponentConfig{}
+    .with_grid_background(cell_size, line_color, line_thickness);
+
+// Or as a helper function
+void grid_background(HasUIContext auto &ctx, Entity &parent, int base_id,
+                     float x, float y, float w, float h,
+                     float cell_w, float cell_h, Color line_color);
+```
+
+---
+
+## 52. Missing Widget: Currency/Resource Display
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** Currency pills (icon + formatted number in a rounded container) are common in game UIs but manually composed.
+
+**Screens Using This Pattern:**
+- EmpireTycoon: Currency pill (lines 229-277)
+- CozyCafe: Gold display (lines 129-149)
+
+**Pattern Structure:**
+```
+┌──────────────────────┐
+│ [💰] $1,250,980      │
+└──────────────────────┘
+```
+
+**Suggested Implementation:**
+```cpp
+ElementResult currency_display(HasUIContext auto &ctx, EntityParent ep_pair,
+                               int64_t amount,
+                               ComponentConfig config = ComponentConfig());
+
+// Or with icon
+ElementResult resource_display(HasUIContext auto &ctx, EntityParent ep_pair,
+                               TextureConfig icon,
+                               const std::string &value,
+                               ComponentConfig config = ComponentConfig());
+```
+
+**Features Needed:**
+- Automatic number formatting with commas/separators
+- Icon display
+- Pill/rounded container styling
+
+---
+
+## 53. Missing Widget: Chat/Message List
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** Chat message displays (username: message format with avatars) appear in multiple screens.
+
+**Screens Using This Pattern:**
+- CozyCafe: Chat box (lines 446-531)
+- ParcelCorps: Chat messages (lines 379-409)
+- EmpireTycoon: GlobalChat (lines 656-687)
+
+**Suggested Implementation:**
+```cpp
+struct ChatMessage {
+    std::string username;
+    std::string message;
+    std::optional<TextureConfig> avatar;
+    std::optional<Color> username_color;
+};
+
+ElementResult chat_box(HasUIContext auto &ctx, EntityParent ep_pair,
+                       const std::vector<ChatMessage> &messages,
+                       ComponentConfig config = ComponentConfig(),
+                       size_t max_visible = 3);
+```
+
+---
+
+## 54. Underutilized: navigation_bar()
+
+**Status:** ALREADY IMPLEMENTED but underutilized
+
+**Location:** `vendor/afterhours/src/plugins/ui/imm_components.h` (lines 929-1010)
+
+**Issue:** The `navigation_bar()` component provides the `< value >` selector pattern but screens still manually implement this pattern.
+
+**Available API:**
+```cpp
+template <typename Container>
+ElementResult navigation_bar(HasUIContext auto &ctx, EntityParent ep_pair,
+                             const Container &options, size_t &option_index,
+                             ComponentConfig config = ComponentConfig());
+```
+
+**Why Not Used:**
+1. Visual style may not match desired aesthetics (arrow buttons vs text arrows)
+2. No icon support
+3. Limited customization options
+
+**Recommendation:** Either enhance `navigation_bar()` to be more flexible, or document it better, or create the `stepper()` widget as an alternative.
+
+---
+
+## 55. Missing Widget: Equipment/Inventory Slot
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** Game UIs frequently show equipment slots with:
+- Background container
+- Item icon or sprite
+- Quantity badge (x2, x1)
+- Selection border (changes color when selected/active)
+
+**Screens Using This Pattern:**
+- NeonStrike: Grenade and knife equipment slots (lines 559-614)
+- EmpireTycoon: Bottom icon buttons
+- CozyCafe: Inventory/Research/Crafting icons
+
+**Current Workaround:**
+```cpp
+div(context, mk(entity, 410),
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(70), pixels(70)})
+        .with_custom_background(panel_dark)
+        .with_border(is_selected ? gold_accent : border_dark, 
+                     is_selected ? 3.0f : 2.0f));
+sprite(context, mk(entity, 411), item_tex, src,
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(50), pixels(50)})
+        .with_absolute_position()
+        .with_translate(slot_x + 10.0f, slot_y + 10.0f));
+div(context, mk(entity, 412),
+    ComponentConfig{}.with_label("x2"));
+```
+
+**Suggested Implementation:**
+```cpp
+struct EquipmentSlotConfig {
+    std::optional<TextureConfig> icon;
+    std::optional<std::string> quantity_text;  // "x2", "1", etc.
+    bool is_selected = false;
+    bool is_disabled = false;
+};
+
+ElementResult equipment_slot(HasUIContext auto &ctx, EntityParent ep_pair,
+                              const EquipmentSlotConfig &slot_config,
+                              ComponentConfig config = ComponentConfig());
+```
+
+---
+
+## 56. Missing Widget: Dual/Stacked Progress Bars
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** Health + Armor/Shield bars stacked together are common in action games.
+
+**Screens Using This Pattern:**
+- NeonStrike: Health bar with armor bar below it (lines 519-552)
+
+**Suggested Implementation:**
+```cpp
+ElementResult stacked_bars(HasUIContext auto &ctx, EntityParent ep_pair,
+                           float primary_value, float secondary_value,
+                           ComponentConfig config = ComponentConfig());
+
+// Or via config
+ComponentConfig{}
+    .with_dual_progress(health_pct, armor_pct)
+    .with_primary_color(health_color)
+    .with_secondary_color(armor_color);
+```
+
+---
+
+## 57. Missing Widget: Compass/Dial
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** Circular compass with cardinal directions and tick marks appears in tactical/navigation UIs.
+
+**Screens Using This Pattern:**
+- NeonStrike: Compass with N/S/E/W and tick marks (lines 100-188)
+
+**Current Workaround:** Manually place divs in circular pattern using trigonometry.
+
+**Suggested Implementation:**
+```cpp
+ElementResult compass(HasUIContext auto &ctx, EntityParent ep_pair,
+                      float heading_degrees,  // 0 = North
+                      ComponentConfig config = ComponentConfig());
+```
+
+---
+
+## 58. Missing Widget: Minimap
+
+**Status:** Not implemented - SPECIALIZED
+
+**Issue:** Minimaps with grid, markers, zones require significant custom code.
+
+**Screens Using This Pattern:**
+- NeonStrike: Minimap with grid, danger zone, player marker (lines 366-458)
+
+**Note:** This is highly game-specific and may not be worth generalizing. However, helper functions for common patterns would be useful:
+- Grid overlay on any container
+- Circular/rectangular map bounds
+- Marker positioning helpers
+
+---
+
+## 59. Missing Widget: Kill Feed / Notification Stack
+
+**Status:** Not implemented - LOW PRIORITY
+
+**Issue:** Stacked temporary notifications with auto-dismiss are common in multiplayer games.
+
+**Screens Using This Pattern:**
+- NeonStrike: Kill feed messages (lines 228-241)
+- Chat messages in various screens
+
+**Suggested Implementation:**
+```cpp
+struct Notification {
+    std::string text;
+    std::optional<Color> color;
+    float duration;
+};
+
+ElementResult notification_stack(HasUIContext auto &ctx, EntityParent ep_pair,
+                                  std::vector<Notification> &notifications,
+                                  ComponentConfig config = ComponentConfig());
+```
+
+---
+
+# Gaps from wordproc Project (Text Editor Use Case)
+
+The following gaps were identified during development of a word processor application built on afterhours. These represent more advanced/specialized needs beyond typical game UI.
+
+---
+
+## 60. Missing Feature: Test Input Hooks
+
+**Status:** Not implemented
+
+**Source:** wordproc project (`AfterhoursGaps/01_test_input_hooks.md`)
+
+**Issue:** Afterhours lacks a first-class way to inject input events for automated tests. The app has to maintain its own test input queue and wrap raylib input calls to support synthetic events.
+
+**Current Workaround:**
+- App maintains its own test input queue in `src/testing/`
+- Raylib input calls are wrapped to support synthetic events
+- Requires macro-undef hacks to intercept input
+
+**Desired Behavior:**
+- Test input subsystem that can be enabled per test run
+- Enqueue key presses (including character input) and mouse events
+- Deterministic, frame-driven delivery of queued input events
+- APIs that don't require macro hacks
+
+**Proposed API:**
+```cpp
+namespace ui::test {
+    void push_key(int keycode);
+    void push_char(char32_t ch);
+    void set_mouse_position(float x, float y);
+    void click_mouse(MouseButton button);
+    void clear();
+}
+```
+
+**Effort:** Medium (~1-2 days)
+
+---
+
+## 61. Missing Feature: Clipboard Abstraction
+
+**Status:** Not implemented
+
+**Source:** wordproc project (`AfterhoursGaps/02_clipboard_abstraction.md`)
+
+**Issue:** Afterhours does not provide a cross-platform clipboard API. Apps must call raylib's `GetClipboardText()`/`SetClipboardText()` directly, coupling them to a specific renderer.
+
+**Current Workaround:** Call raylib clipboard functions directly in editor actions.
+
+**Desired Behavior:**
+- Platform-agnostic clipboard interface with UTF-8 text support
+- Optional rich-text payload support for future versions
+- Clear ownership and lifetime rules for returned strings
+
+**Proposed API:**
+```cpp
+namespace clipboard {
+    void set_text(std::string_view text);
+    std::string get_text();
+    bool has_text();
+}
+```
+
+**Effort:** Small (~half day)
+
+---
+
+## 62. Missing Widget: Text Editing Widget / Text Area
+
+**Status:** Not implemented - overlaps with Gap #13 (Text Input)
+
+**Source:** wordproc project (`AfterhoursGaps/03_text_editing_widget.md`)
+
+**Issue:** Afterhours does not include a built-in text editor or multiline text area component with selection, caret, undo, and layout. This is the most complex missing widget.
+
+**Current Workaround:** 
+- Custom `TextBuffer` with gap buffer, selection, and caret management
+- App-specific layout and rendering logic
+- The custom implementation performs well (2M chars/sec typing capability)
+
+**Desired Features:**
+- Caret movement and selection
+- Undo and redo history
+- Clipboard integration
+- Word wrap and scrolling
+- Styling hooks for fonts, sizes, and colors
+
+**Proposed API:**
+```cpp
+struct TextEditorConfig {
+    bool read_only = false;
+    bool word_wrap = true;
+    std::optional<size_t> max_length;
+};
+
+ElementResult text_editor(HasUIContext auto &ctx, EntityParent ep_pair,
+                          std::string &text,
+                          TextEditorConfig editor_config = TextEditorConfig{},
+                          ComponentConfig config = ComponentConfig());
+
+// State accessors
+size_t text_editor_get_cursor_pos(Entity &editor);
+std::pair<size_t, size_t> text_editor_get_selection(Entity &editor);
+void text_editor_set_cursor_pos(Entity &editor, size_t pos);
+```
+
+**Effort:** Very Large (~2-4 weeks) - This is one of the most complex widgets to implement correctly
+
+---
+
+## 63. Missing Feature: Themeable Widget Library / Classic UI Themes
+
+**Status:** Partial - Theme struct exists but no classic/Win95 themes
+
+**Source:** wordproc project (`AfterhoursGaps/04_win95_widget_library.md`)
+
+**Issue:** Afterhours doesn't provide Win95/classic-style UI widgets. Apps targeting a retro aesthetic need to implement their own:
+- Raised and sunken 3D borders
+- Buttons with hover, pressed, and disabled states with 3D bevels
+- Classic checkboxes with state tracking
+- Menu bar with dropdown components
+- Standardized dialog layouts
+
+**Current Workaround:** Custom `win95_widgets.h/.cpp` implementing all classic UI primitives.
+
+**Desired Behavior:**
+- Themeable widget primitives that can render in classic UI style
+- Built-in menu bar and dropdown components with keyboard navigation
+- Standardized dialog layouts and button placement
+- Theme selection: `ui::theme::set(ThemeStyle::Win95)` or similar
+
+**Proposed API:**
+```cpp
+enum struct ThemeStyle {
+    Modern,     // Current default (rounded, flat)
+    Classic,    // Win95/2000 style with 3D bevels
+    MacOS,      // Aqua-style rounded buttons
+    Flat,       // Material-design inspired
+};
+
+// Theme configuration
+void set_theme_style(ThemeStyle style);
+
+// Classic-style border helpers
+void draw_raised_border(Rectangle rect, Color highlight, Color shadow);
+void draw_sunken_border(Rectangle rect, Color highlight, Color shadow);
+
+// Menu bar component
+ElementResult menu_bar(HasUIContext auto &ctx, EntityParent ep_pair,
+                       const std::vector<MenuBarItem> &items,
+                       ComponentConfig config = ComponentConfig());
+
+// Dialog with standardized buttons
+ElementResult dialog(HasUIContext auto &ctx, EntityParent ep_pair,
+                     const std::string &title,
+                     DialogButtons buttons,  // OK, OKCancel, YesNo, etc.
+                     bool &is_open,
+                     ComponentConfig config = ComponentConfig());
+```
+
+**Effort:** Large (~1 week) - Implementing full theme system with classic UI support
+
+---
+
+## 64. Missing Feature: Glyph Metrics API
+
+**Status:** Not implemented
+
+**Source:** wordproc project
+
+**Issue:** No way to get precise per-character widths for accurate caret positioning. `MeasureText` only gives line-level metrics.
+
+**Current Workaround:** Using raylib's font metrics directly or approximating.
+
+**Desired Behavior:**
+- Get width of individual characters/glyphs
+- Get metrics for text substrings
+- Support for kerning pairs
+
+**Proposed API:**
+```cpp
+namespace fonts {
+    float measure_char(const std::string &font_name, float size, char32_t ch);
+    float measure_substring(const std::string &font_name, float size, 
+                            std::string_view text, size_t start, size_t len);
+    size_t char_at_position(const std::string &font_name, float size,
+                            std::string_view text, float x_offset);
+}
+```
+
+**Effort:** Medium (~1-2 days)
+
+---
+
 # Workaround Files Reference
 
 The following workaround files have been created to compensate for missing library features. These should be migrated to native library features when available:
+
+## Existing Workarounds
 
 | File | Gap | Description |
 |------|-----|-------------|
@@ -1573,6 +2375,20 @@ The following workaround files have been created to compensate for missing libra
 | `src/ui_workarounds/GradientBackground.h` | #30 | Layers horizontal strips to approximate vertical gradient |
 | `src/ui_workarounds/NotificationBadge.h` | #35 | Creates positioned circular badges with text |
 | `src/ui_workarounds/DecorativeFrame.h` | #36 | Creates layered borders with corner accents |
+
+## Potential New Workarounds
+
+The following workarounds could be created to reduce code duplication across screens:
+
+| Potential File | Gap | Description | Priority |
+|----------------|-----|-------------|----------|
+| `ToggleSwitch.h` | #44 | iOS-style toggle with track and sliding knob | HIGH |
+| `Stepper.h` | #45 | `< value >` selector with arrows | HIGH |
+| `SettingRow.h` | #46 | Icon + Label + Control row pattern | HIGH |
+| `CornerBrackets.h` | #49 | Decorative tech-style corner brackets | MEDIUM |
+| `InlineMeter.h` | #48 | Small icon + label + progress gauge | MEDIUM |
+| `CurrencyDisplay.h` | #52 | Icon + formatted number in pill | LOW |
+| `GridBackground.h` | #51 | Decorative grid lines pattern | LOW |
 
 ---
 
