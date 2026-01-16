@@ -751,21 +751,6 @@ struct Theme {
 
 ---
 
-## Clipboard Abstraction
-
-**Status:** Not implemented
-
-**Issue:** No cross-platform clipboard API. Apps must call raylib directly.
-
-**Suggested Implementation:**
-```cpp
-namespace clipboard {
-    void set_text(std::string_view text);
-    std::string get_text();
-    bool has_text();
-}
-```
-
 ---
 
 ## Test Input Hooks
@@ -907,7 +892,7 @@ ComponentConfig{}
 # Priority Summary
 
 ## Trivial (~1-2 hours)
-- Clipboard Abstraction
+- (none remaining)
 
 ## Small (~half day)
 - Toggle Switch

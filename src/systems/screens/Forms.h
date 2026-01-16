@@ -5,6 +5,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/clipboard.h>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -32,6 +33,9 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> quality_options = {"Low", "Medium", "High", "Ultra"};
   std::vector<std::string> languages = {"English", "Spanish",  "French",
                                         "German",  "Japanese", "Korean"};
+
+  // Clipboard demo state
+  std::string clipboard_display = "(clipboard empty)";
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -324,6 +328,61 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                                 .left = pixels(0),
                                 .right = pixels(0)})
             .with_debug_name("status"));
+
+    // Clipboard demo section
+    auto clipboard_row =
+        div(context, mk(main_container.ent(), 3),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                .with_flex_direction(FlexDirection::Row)
+                .with_justify_content(JustifyContent::SpaceAround)
+                .with_margin(Margin{.top = DefaultSpacing::small(),
+                                    .bottom = pixels(0),
+                                    .left = pixels(0),
+                                    .right = pixels(0)})
+                .with_debug_name("clipboard_row"));
+
+    // Copy button - copies current status to clipboard
+    if (button(context, mk(clipboard_row.ent(), 0),
+               ComponentConfig{}
+                   .with_label("Copy Status")
+                   .with_size(ComponentSize{pixels(150), pixels(40)})
+                   .with_background(Theme::Usage::Primary)
+                   .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                   .with_debug_name("copy_btn"))) {
+      afterhours::clipboard::set_text(status);
+      clipboard_display = "Copied!";
+    }
+
+    // Paste button - reads from clipboard
+    if (button(context, mk(clipboard_row.ent(), 1),
+               ComponentConfig{}
+                   .with_label("Paste")
+                   .with_size(ComponentSize{pixels(150), pixels(40)})
+                   .with_background(Theme::Usage::Accent)
+                   .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                   .with_debug_name("paste_btn"))) {
+      if (afterhours::clipboard::has_text()) {
+        clipboard_display = afterhours::clipboard::get_text();
+      } else {
+        clipboard_display = "(clipboard empty)";
+      }
+    }
+
+    // Display clipboard contents (truncated if too long)
+    std::string display_text = clipboard_display;
+    if (display_text.length() > 60) {
+      display_text = display_text.substr(0, 57) + "...";
+    }
+
+    div(context, mk(clipboard_row.ent(), 2),
+        ComponentConfig{}
+            .with_label(display_text)
+            .with_size(ComponentSize{pixels(400), pixels(40)})
+            .with_custom_background(theme.surface)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_debug_name("clipboard_display"));
   }
 };
 
