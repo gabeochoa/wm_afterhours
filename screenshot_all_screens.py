@@ -277,6 +277,43 @@ def get_screen_count(executable):
     return count, screen_names
 
 
+def ensure_build():
+    """Run make to ensure executable is up-to-date."""
+    executable = "./output/ui_tester.exe"
+    
+    # Check if executable exists
+    if not os.path.exists(executable):
+        log("Executable not found, running make...")
+        need_build = True
+    else:
+        # Check if any source file is newer than executable
+        exe_mtime = os.path.getmtime(executable)
+        need_build = False
+        for root, dirs, files in os.walk("src"):
+            for f in files:
+                if f.endswith(('.cpp', '.h')):
+                    src_path = os.path.join(root, f)
+                    if os.path.getmtime(src_path) > exe_mtime:
+                        log(f"Source file {src_path} is newer than executable, rebuilding...")
+                        need_build = True
+                        break
+            if need_build:
+                break
+    
+    if need_build:
+        log("Running make...")
+        result = subprocess.run(["make"], capture_output=True, text=True, timeout=300)
+        if result.returncode != 0:
+            log(f"ERROR: make failed with code {result.returncode}")
+            log(result.stderr)
+            return False
+        log("Build successful")
+    else:
+        log("Executable is up-to-date")
+    
+    return True
+
+
 def main():
     executable = "./output/ui_tester.exe"
     output_dir = "/tmp/ui_showcase_screenshots"
@@ -285,6 +322,10 @@ def main():
     log("=" * 60)
     log("Screenshot All Screens - Starting")
     log("=" * 60)
+    
+    # Ensure build is up-to-date
+    if not ensure_build():
+        return 1
     
     # Get screen count dynamically
     log("Detecting available screens...")
