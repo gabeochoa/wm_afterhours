@@ -178,10 +178,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 2: Nested cards
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(220)})
+                        .with_size(ComponentSize{percent(0.95f), pixels(220)})
                         .with_background(Theme::Usage::None)
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_justify_content(JustifyContent::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),
                                             .left = pixels(0),
@@ -192,9 +193,9 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto nested_container =
         div(context, mk(row2.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(420), pixels(200)})
+                .with_size(ComponentSize{pixels(350), pixels(200)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
                 .with_roundness(0.08f)
@@ -203,7 +204,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(nested_container.ent(), 0),
         ComponentConfig{}
             .with_label("Nested Cards")
-            .with_size(ComponentSize{pixels(380), pixels(30)})
+            .with_size(ComponentSize{percent(0.95f), pixels(30)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
@@ -212,19 +213,19 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Inner cards row
     auto inner_row = div(context, mk(nested_container.ent(), 1),
                          ComponentConfig{}
-                             .with_size(ComponentSize{pixels(380), pixels(120)})
+                             .with_size(ComponentSize{percent(0.95f), pixels(120)})
                              .with_background(Theme::Usage::None)
                              .with_flex_direction(FlexDirection::Row)
                              .with_debug_name("inner_row"));
 
-    // Inner card 1
+    // Inner card 1 - use fixed pixel sizes that fit within container
     div(context, mk(inner_row.ent(), 0),
         ComponentConfig{}
             .with_label("Item 1")
-            .with_size(ComponentSize{pixels(110), pixels(100)})
+            .with_size(ComponentSize{pixels(80), pixels(90)})
             .with_background(Theme::Usage::Primary)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("inner1"));
@@ -233,10 +234,10 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(inner_row.ent(), 1),
         ComponentConfig{}
             .with_label("Item 2")
-            .with_size(ComponentSize{pixels(110), pixels(100)})
+            .with_size(ComponentSize{pixels(80), pixels(90)})
             .with_background(Theme::Usage::Secondary)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("inner2"));
@@ -245,10 +246,10 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(inner_row.ent(), 2),
         ComponentConfig{}
             .with_label("Item 3")
-            .with_size(ComponentSize{pixels(110), pixels(100)})
+            .with_size(ComponentSize{pixels(80), pixels(90)})
             .with_background(Theme::Usage::Accent)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("inner3"));
@@ -257,7 +258,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto info_panel =
         div(context, mk(row2.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(300), pixels(200)})
+                .with_size(ComponentSize{pixels(280), pixels(200)})
                 .with_custom_background(
                     afterhours::colors::opacity_pct(theme.primary, 0.3f))
                 .with_padding(Spacing::md)
@@ -267,21 +268,19 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(info_panel.ent(), 0),
         ComponentConfig{}
-            .with_label("Semi-Transparent Panel")
-            .with_size(ComponentSize{pixels(260), pixels(30)})
+            .with_label("Semi-Transparent")
+            .with_size(ComponentSize{percent(0.95f), pixels(30)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_debug_name("info_title"));
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
-            .with_label("This panel uses opacity to create a translucent "
-                        "overlay effect. "
-                        "Useful for HUDs and popup dialogs.")
-            .with_size(ComponentSize{pixels(260), pixels(120)})
+            .with_label("This panel uses opacity to create a translucent overlay effect.")
+            .with_size(ComponentSize{percent(0.95f), pixels(120)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("info_body"));
 

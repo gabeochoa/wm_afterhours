@@ -31,7 +31,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Layout System Demo")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(0.95f), pixels(50)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -42,58 +42,61 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)})
             .with_debug_name("title"));
 
-    // Row layout demo - JustifyContent::SpaceAround distributes panels evenly
+    // Row layout demo - JustifyContent::Center to keep panels within container
     auto row_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(120)})
+                .with_size(ComponentSize{percent(0.95f), pixels(120)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceAround)
+                .with_justify_content(JustifyContent::Center)
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("row_container"));
 
-    // Three panels - SpaceAround distributes remaining space evenly
+    // Three panels with fixed sizes that fit within container
     div(context, mk(row_container.ent(), 0),
         ComponentConfig{}
             .with_label("Left Panel")
-            .with_size(ComponentSize{percent(0.25f), pixels(90)})
+            .with_size(ComponentSize{pixels(180), pixels(80)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Spacing::sm)
             .with_debug_name("left_panel"));
 
     div(context, mk(row_container.ent(), 1),
         ComponentConfig{}
             .with_label("Center Panel")
-            .with_size(ComponentSize{percent(0.25f), pixels(90)})
+            .with_size(ComponentSize{pixels(180), pixels(80)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Spacing::sm)
             .with_debug_name("center_panel"));
 
     div(context, mk(row_container.ent(), 2),
         ComponentConfig{}
             .with_label("Right Panel")
-            .with_size(ComponentSize{percent(0.25f), pixels(90)})
+            .with_size(ComponentSize{pixels(180), pixels(80)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Spacing::sm)
             .with_debug_name("right_panel"));
 
     // Column layout demo - Center to keep panels within bounds
     auto col_container =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(200)})
+                .with_size(ComponentSize{percent(0.95f), pixels(200)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
@@ -104,7 +107,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto left_col = div(
         context, mk(col_container.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.44f), pixels(170)})
+            .with_size(ComponentSize{percent(0.45f), pixels(170)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
@@ -148,11 +151,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_label("FlexDirection::Column stacks elements vertically. "
                         "FlexDirection::Row arranges them horizontally. "
                         "Use margins and padding to control spacing.")
-            .with_size(ComponentSize{percent(0.44f), pixels(170)})
+            .with_size(ComponentSize{percent(0.45f), pixels(170)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_custom_text_color(theme.font)  // Use font (dark charcoal) not darkfont (light)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
             .with_debug_name("description"));
 
@@ -160,11 +163,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.top = DefaultSpacing::small(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),

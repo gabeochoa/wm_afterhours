@@ -277,7 +277,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("@")
             .with_size(ComponentSize{pixels(50), pixels(50)})
             .with_absolute_position()
-            .with_translate(35.0f, (float)screen_h - 75.0f)
+            .with_translate(55.0f, (float)screen_h - 75.0f)
             .with_custom_background(afterhours::Color{100, 135, 160, 200})
             .with_font("Gaegu-Bold", 28.0f)
             .with_custom_text_color(text_dark)

@@ -85,7 +85,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto header =
         div(context, mk(main.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1100), pixels(80)})
+                .with_size(ComponentSize{pixels(950), pixels(80)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
@@ -114,7 +114,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1100), pixels(420)})
+                .with_size(ComponentSize{pixels(950), pixels(420)})
                 .with_custom_background(theme.background)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -124,7 +124,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto selector_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(280), pixels(400)})
+                .with_size(ComponentSize{pixels(250), pixels(400)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -135,7 +135,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(selector_panel.ent(), 0),
         ComponentConfig{}
             .with_label("Select Theme")
-            .with_size(ComponentSize{pixels(240), pixels(40)})
+            .with_size(ComponentSize{pixels(210), pixels(40)})
             .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_padding(Spacing::xs)
@@ -153,10 +153,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(selector_panel.ent(), btn_idx),
               ComponentConfig{}
                   .with_label(get_theme_name(choice))
-                  .with_size(ComponentSize{pixels(240), pixels(48)})
+                  .with_size(ComponentSize{pixels(210), pixels(48)})
                   .with_background(selected ? Theme::Usage::Accent
                                              : Theme::Usage::Secondary)
-                  .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                  .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                   .with_margin(Spacing::sm)
                   .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {
         current_theme = choice;
@@ -168,7 +168,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto preview_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(550), pixels(400)})
+                .with_size(ComponentSize{pixels(400), pixels(400)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -179,16 +179,16 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(preview_panel.ent(), 0),
         ComponentConfig{}
             .with_label("Component Preview")
-            .with_size(ComponentSize{pixels(480), pixels(40)})
+            .with_size(ComponentSize{pixels(340), pixels(40)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_padding(Spacing::xs)
             .with_debug_name("preview_title"));
 
     // Buttons row
     auto btn_row = div(context, mk(preview_panel.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{pixels(500), pixels(60)})
+                           .with_size(ComponentSize{pixels(340), pixels(55)})
                            .with_custom_background(theme.surface)
                            .with_flex_direction(FlexDirection::Row)
                            .with_margin(Spacing::sm)
@@ -197,36 +197,36 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(btn_row.ent(), 0),
            ComponentConfig{}
                .with_label("Primary")
-               .with_size(ComponentSize{pixels(110), pixels(45)})
+               .with_size(ComponentSize{pixels(75), pixels(40)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::xs)
                .with_debug_name("btn_primary"));
 
     button(context, mk(btn_row.ent(), 1),
            ComponentConfig{}
-               .with_label("Secondary")
-               .with_size(ComponentSize{pixels(110), pixels(45)})
+               .with_label("Second")
+               .with_size(ComponentSize{pixels(75), pixels(40)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::xs)
                .with_debug_name("btn_secondary"));
 
     button(context, mk(btn_row.ent(), 2),
            ComponentConfig{}
                .with_label("Accent")
-               .with_size(ComponentSize{pixels(110), pixels(45)})
+               .with_size(ComponentSize{pixels(75), pixels(40)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::xs)
                .with_debug_name("btn_accent"));
 
     button(context, mk(btn_row.ent(), 3),
            ComponentConfig{}
                .with_label("Disabled")
-               .with_size(ComponentSize{pixels(110), pixels(45)})
+               .with_size(ComponentSize{pixels(75), pixels(40)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                .with_margin(Spacing::xs)
                .with_disabled(true)
                .with_debug_name("btn_disabled"));
@@ -235,9 +235,9 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(preview_panel.ent(), 2), slider_value,
            ComponentConfig{}
                .with_label("Slider Value")
-               .with_size(ComponentSize{pixels(400), pixels(50)})
+               .with_size(ComponentSize{pixels(300), pixels(50)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                .with_margin(Spacing::sm)
                .with_debug_name("preview_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -245,10 +245,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     // Checkbox
     checkbox(context, mk(preview_panel.ent(), 3), checkbox_state,
              ComponentConfig{}
-                 .with_label("Checkbox Option")
-                 .with_size(ComponentSize{pixels(400), pixels(45)})
+                 .with_label("Checkbox")
+                 .with_size(ComponentSize{pixels(300), pixels(45)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("preview_checkbox"));
 
@@ -256,9 +256,9 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     dropdown(context, mk(preview_panel.ent(), 4), dropdown_options,
              dropdown_index,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(400), pixels(45)})
+                 .with_size(ComponentSize{pixels(300), pixels(45)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_margin(Spacing::sm)
                  .with_debug_name("preview_dropdown"));
 
@@ -266,7 +266,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto cards_row =
         div(context, mk(preview_panel.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(500), pixels(100)})
+                .with_size(ComponentSize{pixels(340), pixels(90)})
                 .with_custom_background(theme.surface)
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -274,31 +274,31 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(cards_row.ent(), 0),
         ComponentConfig{}
-            .with_label("Hard Shadow")
-            .with_size(ComponentSize{pixels(140), pixels(80)})
+            .with_label("Hard")
+            .with_size(ComponentSize{pixels(100), pixels(70)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_margin(Spacing::xs)
             .with_hard_shadow(4.0f, 4.0f)
             .with_debug_name("card_hard"));
 
     div(context, mk(cards_row.ent(), 1),
         ComponentConfig{}
-            .with_label("Soft Shadow")
-            .with_size(ComponentSize{pixels(140), pixels(80)})
+            .with_label("Soft")
+            .with_size(ComponentSize{pixels(100), pixels(70)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_margin(Spacing::xs)
             .with_soft_shadow(4.0f, 6.0f, 12.0f)
             .with_debug_name("card_soft"));
 
     div(context, mk(cards_row.ent(), 2),
         ComponentConfig{}
-            .with_label("Accent Card")
-            .with_size(ComponentSize{pixels(140), pixels(80)})
+            .with_label("Accent")
+            .with_size(ComponentSize{pixels(100), pixels(70)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_margin(Spacing::xs)
             .with_soft_shadow(3.0f, 5.0f, 8.0f)
             .with_debug_name("card_accent"));
   }

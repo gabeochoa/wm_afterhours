@@ -89,7 +89,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== PHONE FRAME ==========
     float phone_w = 320.0f;
-    float phone_h = 520.0f;  // Reduced height to prevent overflow
+    float phone_h = 580.0f;  // Increased height to fit volume sliders
     float phone_x = 50.0f;
     float phone_y = ((float)screen_h - phone_h) / 2.0f;
 
@@ -929,9 +929,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float slider_x = x + w - slider_w - 10.0f;
     slider(context, mk(entity, base_id + 3), value,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(12)})
+               .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(22)})
                .with_absolute_position()
-               .with_translate(slider_x, y + 13.0f)
+               .with_translate(slider_x, y + 8.0f)
+               .with_custom_background(slider_green)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
                .with_debug_name("volume_slider_" + std::to_string(base_id)));

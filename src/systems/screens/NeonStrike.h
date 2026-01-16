@@ -231,10 +231,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(kill_feed[i])
-              .with_size(ComponentSize{pixels(500), pixels(22)})
+              .with_size(ComponentSize{pixels(500), pixels(26)})
               .with_absolute_position()
-              .with_translate(cx - 250.0f, kill_y + (float)i * 22.0f)
-              .with_font("EqProRounded", 19.0f)
+              .with_translate(cx - 250.0f, kill_y + (float)i * 26.0f)
+              .with_font("EqProRounded", 21.0f)
               .with_custom_text_color(text_muted)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("kill_" + std::to_string(i)));
@@ -244,10 +244,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 130),
         ComponentConfig{}
             .with_label("@ * Alpha_Six: Under fire!")
-            .with_size(ComponentSize{pixels(220), pixels(22)})
+            .with_size(ComponentSize{pixels(250), pixels(26)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 240.0f, 195.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate((float)screen_w - 270.0f, 195.0f)
+            .with_font("EqProRounded", 21.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("voice"));
 
@@ -339,10 +339,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 201),
         ComponentConfig{}
             .with_label("@ KILLSTREAK")
-            .with_size(ComponentSize{pixels(115), pixels(20)})
+            .with_size(ComponentSize{pixels(125), pixels(24)})
             .with_absolute_position()
-            .with_translate(28.0f, bl_y + 3.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(28.0f, bl_y + 2.0f)
+            .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("ks_text"));
 
@@ -369,10 +369,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("7B Pop <192>")
-            .with_size(ComponentSize{pixels(175), pixels(18)})
+            .with_size(ComponentSize{pixels(175), pixels(22)})
             .with_absolute_position()
             .with_translate(22.0f, map_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 21.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("map_label"));
 

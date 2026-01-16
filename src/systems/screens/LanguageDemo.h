@@ -152,27 +152,28 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(1000), pixels(480)})
+                .with_size(ComponentSize{percent(1.0f), pixels(480)})
                 .with_flex_direction(FlexDirection::Row)
+                .with_justify_content(JustifyContent::Center)
                 .with_margin(Spacing::xs)
                 .with_debug_name("content"));
 
-    // Left panel - current language demo (520px wide, 460px tall)
+    // Left panel - current language demo
     auto left_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(470), pixels(460)})
+                .with_size(ComponentSize{pixels(400), pixels(450)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::xs)
+                .with_margin(Spacing::sm)
                 .with_debug_name("left_panel"));
 
     // Greeting
     div(context, mk(left_panel.ent(), 0),
         ComponentConfig{}
             .with_label(sample.greeting)
-            .with_size(ComponentSize{pixels(430), pixels(50)})
+            .with_size(ComponentSize{pixels(350), pixels(50)})
             .with_background(Theme::Usage::Accent)
             .with_font(font_config.font_name, 32.0f * font_config.size_scale)
             .with_margin(Spacing::xs)
@@ -198,22 +199,22 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                .with_font(font_config.font_name, 20.0f * font_config.size_scale)
                .with_background(Theme::Usage::Accent));
 
-    // Right panel - all languages comparison (540px wide, 460px tall)
+    // Right panel - all languages comparison
     auto right_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(470), pixels(460)})
+                .with_size(ComponentSize{pixels(400), pixels(450)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::xs)
+                .with_margin(Spacing::sm)
                 .with_debug_name("right_panel"));
 
     // Title for right panel
     div(context, mk(right_panel.ent(), 0),
         ComponentConfig{}
             .with_label("All Languages")
-            .with_size(ComponentSize{pixels(430), pixels(42)})
+            .with_size(ComponentSize{pixels(350), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_margin(Spacing::xs)
@@ -224,7 +225,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 1),
         ComponentConfig{}
             .with_label("EN: " + en.greeting + " - " + en.menu_items[0])
-            .with_size(ComponentSize{pixels(430), pixels(42)})
+            .with_size(ComponentSize{pixels(350), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font("Gaegu-Bold", 20.0f)
             .with_margin(Spacing::xs)
@@ -235,7 +236,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 2),
         ComponentConfig{}
             .with_label("KO: " + ko.greeting + " - " + ko.menu_items[0])
-            .with_size(ComponentSize{pixels(430), pixels(42)})
+            .with_size(ComponentSize{pixels(350), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font("NotoSansKR", 20.0f)
             .with_margin(Spacing::xs)
@@ -246,7 +247,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_panel.ent(), 3),
         ComponentConfig{}
             .with_label("JA: " + ja.greeting + " - " + ja.menu_items[0])
-            .with_size(ComponentSize{pixels(430), pixels(42)})
+            .with_size(ComponentSize{pixels(350), pixels(42)})
             .with_custom_background(theme.surface)
             .with_font("Sazanami", 20.0f)
             .with_margin(Spacing::xs)
