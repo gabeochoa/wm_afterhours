@@ -190,7 +190,7 @@ void game() {
                                      Settings::get().get_screen_height());
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                        Settings::get().get_screen_height());
-  uiFont = raylib::LoadFont(
+  uiFont = afterhours::load_font_from_file(
       afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
           .string()
           .c_str());
@@ -266,7 +266,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
                                      Settings::get().get_screen_height());
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                        Settings::get().get_screen_height());
-  uiFont = raylib::LoadFont(
+  uiFont = afterhours::load_font_from_file(
       afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
           .string()
           .c_str());
@@ -436,7 +436,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                        Settings::get().get_screen_height());
 
-  uiFont = raylib::LoadFont(
+  uiFont = afterhours::load_font_from_file(
       afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
           .string()
           .c_str());
