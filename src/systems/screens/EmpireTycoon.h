@@ -3,7 +3,6 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
-#include "../../ui_workarounds/TextOutline.h"
 #include "../../ui_workarounds/GradientBackground.h"
 #include "../../ui_workarounds/NotificationBadge.h"
 #include "../ExampleScreenRegistry.h"
@@ -170,62 +169,63 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== TITLE: DREAM INCORPORATED (large puffy 3D text) ==========
-    // Each text_with_outline uses 9 entity IDs (8 outline + 1 main)
-    // So we space them out: 10-18, 20-28, 30-38, 40-48
+    // Using native with_text_stroke() API for efficient outline rendering
     
     // DREAM - large white with thick blue outline and shadow effect
     // Shadow layer first (dark blue, offset)
-    // Note: Fredoka is wider than EqProRounded, so we use smaller size (64pt vs 78pt)
-    ui_workarounds::text_with_outline(
-        context, entity, 10,
-        "DREAM",
-        32.0f, 22.0f, 420.0f, 85.0f,
-        "Fredoka", 64.0f,
-        afterhours::Color{45, 90, 140, 180},
-        afterhours::Color{35, 70, 115, 150},
-        5.0f,
-        TextAlignment::Left
-    );
+    div(context, mk(entity, 10),
+        ComponentConfig{}
+            .with_label("DREAM")
+            .with_size(ComponentSize{pixels(420), pixels(85)})
+            .with_absolute_position()
+            .with_translate(32.0f, 22.0f)
+            .with_font("Fredoka", 64.0f)
+            .with_custom_text_color(afterhours::Color{45, 90, 140, 180})
+            .with_text_stroke(afterhours::Color{35, 70, 115, 150}, 5.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("dream_shadow"));
     
     // Main DREAM text
-    ui_workarounds::text_with_outline(
-        context, entity, 20,
-        "DREAM",
-        28.0f, 15.0f, 420.0f, 85.0f,
-        "Fredoka", 64.0f,
-        white,
-        border_blue,
-        5.0f,
-        TextAlignment::Left
-    );
+    div(context, mk(entity, 11),
+        ComponentConfig{}
+            .with_label("DREAM")
+            .with_size(ComponentSize{pixels(420), pixels(85)})
+            .with_absolute_position()
+            .with_translate(28.0f, 15.0f)
+            .with_font("Fredoka", 64.0f)
+            .with_custom_text_color(white)
+            .with_text_stroke(border_blue, 5.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("dream_main"));
 
     // Shadow for INCORPORATED
-    // Note: Fredoka is wider, so we use smaller size (42pt vs 52pt) and wider container
-    ui_workarounds::text_with_outline(
-        context, entity, 30,
-        "INCORPORATED",
-        32.0f, 95.0f, 520.0f, 55.0f,
-        "Fredoka", 42.0f,
-        afterhours::Color{35, 75, 125, 180},
-        afterhours::Color{25, 55, 95, 150},
-        4.0f,
-        TextAlignment::Left
-    );
+    div(context, mk(entity, 12),
+        ComponentConfig{}
+            .with_label("INCORPORATED")
+            .with_size(ComponentSize{pixels(520), pixels(55)})
+            .with_absolute_position()
+            .with_translate(32.0f, 95.0f)
+            .with_font("Fredoka", 42.0f)
+            .with_custom_text_color(afterhours::Color{35, 75, 125, 180})
+            .with_text_stroke(afterhours::Color{25, 55, 95, 150}, 4.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("incorporated_shadow"));
     
     // Main INCORPORATED text
-    ui_workarounds::text_with_outline(
-        context, entity, 40,
-        "INCORPORATED",
-        28.0f, 90.0f, 520.0f, 55.0f,
-        "Fredoka", 42.0f,
-        afterhours::Color{100, 185, 240, 255},
-        afterhours::Color{45, 115, 175, 255},
-        4.0f,
-        TextAlignment::Left
-    );
+    div(context, mk(entity, 13),
+        ComponentConfig{}
+            .with_label("INCORPORATED")
+            .with_size(ComponentSize{pixels(520), pixels(55)})
+            .with_absolute_position()
+            .with_translate(28.0f, 90.0f)
+            .with_font("Fredoka", 42.0f)
+            .with_custom_text_color(afterhours::Color{100, 185, 240, 255})
+            .with_text_stroke(afterhours::Color{45, 115, 175, 255}, 4.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("incorporated_main"));
 
     // ========== TOP RIGHT: Currency ==========
-    // IDs 10-49 are used by title text_with_outline calls, start at 50
+    // IDs 10-13 are used by title text, start at 50
     float cur_x = (float)screen_w - 255.0f;
 
     // Currency pill

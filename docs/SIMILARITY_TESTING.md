@@ -109,7 +109,7 @@ This compares each screenshot against its inspiration image and outputs:
 ### Known Limitations
 See `LIBRARY_GAPS.md` for full documentation. Common gaps with existing workarounds:
 - Gradient backgrounds → use `GradientBackground.h` workaround
-- Text outlines → use `TextOutline.h` workaround  
+- Text outlines → ✅ native: use `with_text_stroke(color, thickness)`
 - Notification badges → use `NotificationBadge.h` workaround
 - Decorative frames → use `DecorativeFrame.h` workaround
 
@@ -149,7 +149,7 @@ Add a new entry to `/Users/gabeochoa/p/wm_afterhours/LIBRARY_GAPS.md`:
 
 Create a workaround file in `src/ui_workarounds/`:
 
-1. **Name it descriptively:** `TextOutline.h`, `GradientBackground.h`, etc.
+1. **Name it descriptively:** `GradientBackground.h`, `NotificationBadge.h`, etc.
 2. **Make it reusable:** Accept configurable parameters
 3. **Document limitations:** Note what's approximate vs exact
 

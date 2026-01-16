@@ -793,18 +793,22 @@ namespace fonts {
 
 # Visual Effects Gaps
 
-## Text Stroke / Outline
+## ~~Text Stroke / Outline~~ ✅ RESOLVED
 
-**Issue:** Cannot render text with outline effect. Critical for game UI titles.
+**Status:** Implemented natively in the library.
 
-**Workaround:** `src/ui_workarounds/TextOutline.h` - renders text 8x at offsets
-
-**Suggested Implementation:**
+**Usage:**
 ```cpp
 ComponentConfig{}
     .with_label("DREAM")
     .with_text_stroke(Color{90, 160, 210, 255}, 2.0f);
 ```
+
+The `with_text_stroke(color, thickness)` method renders text with an outline effect
+by drawing the text at 8 offset positions before drawing the main text on top.
+Supports opacity inheritance and works with all text alignment modes.
+
+**Workaround:** Deleted - use native API
 
 ---
 
@@ -881,7 +885,7 @@ ComponentConfig{}
 
 | File | Gap | Description |
 |------|-----|-------------|
-| `src/ui_workarounds/TextOutline.h` | Text Stroke | Renders text 8x at offsets |
+| ~~`src/ui_workarounds/TextOutline.h`~~ | ~~Text Stroke~~ | ✅ RESOLVED: Use `with_text_stroke()` |
 | `src/ui_workarounds/TextShadow.h` | Drop Shadow | Renders text twice for shadow |
 | `src/ui_workarounds/GradientBackground.h` | Gradients | Layered strips |
 | `src/ui_workarounds/NotificationBadge.h` | Badges | Positioned circles with text |
