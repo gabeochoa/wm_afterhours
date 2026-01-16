@@ -27,6 +27,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ExampleTabbing.h"
 #include "systems/screens/ExampleText.h"
 #include "systems/screens/ExampleTextStroke.h"
+#include "systems/screens/ExampleTextShadow.h"
 #include "systems/screens/FighterMenu.h"
 #include "systems/screens/FlightOptions.h"
 #include "systems/screens/Forms.h"

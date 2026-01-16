@@ -886,7 +886,7 @@ ComponentConfig{}
 | File | Gap | Description |
 |------|-----|-------------|
 | ~~`src/ui_workarounds/TextOutline.h`~~ | ~~Text Stroke~~ | ✅ RESOLVED: Use `with_text_stroke()` |
-| `src/ui_workarounds/TextShadow.h` | Drop Shadow | Renders text twice for shadow |
+| ~~`src/ui_workarounds/TextShadow.h`~~ | ~~Drop Shadow~~ | ✅ RESOLVED: Use `with_text_shadow()` |
 | `src/ui_workarounds/GradientBackground.h` | Gradients | Layered strips |
 | `src/ui_workarounds/NotificationBadge.h` | Badges | Positioned circles with text |
 | `src/ui_workarounds/DecorativeFrame.h` | Frames | Layered borders with corners |
