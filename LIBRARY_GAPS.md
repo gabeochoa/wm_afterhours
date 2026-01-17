@@ -167,8 +167,27 @@ ElementResult text_input(HasUIContext auto &ctx, EntityParent ep_pair,
 
 **Issue:** Content that exceeds container bounds is clipped with no way to access it. Critical for lists, logs, and content of unknown length.
 
+**Working Implementation (wordproc):**
+- `src/ecs/components.h` (ScrollComponent)
+- `src/ecs/input_system.h` (mouse wheel handling)
+- `src/ecs/render_system.h` (clipping + offset)
+
 **Suggested Implementation:**
 ```cpp
+namespace afterhours::input {
+  float get_mouse_wheel_move();
+  Vector2 get_mouse_wheel_move_v();  // trackpad / horizontal scroll
+}
+
+struct HasScrollView : BaseComponent {
+  Vector2 scroll_offset = {0, 0};
+  Vector2 content_size = {0, 0};
+  Vector2 viewport_size = {0, 0};
+  bool horizontal_enabled = false;
+  bool vertical_enabled = true;
+  float scroll_speed = 20.0f;
+};
+
 ElementResult scroll_view(HasUIContext auto &ctx, EntityParent ep_pair,
                           ComponentConfig config = ComponentConfig());
 ```
@@ -179,7 +198,9 @@ ElementResult scroll_view(HasUIContext auto &ctx, EntityParent ep_pair,
 - Scrollbar rendering (optional hide when not needed)
 - Scroll position get/set
 - Scroll-to-element support
+- Content clipping via scissor/clip rect
 - Touch/gamepad support
+ - Keyboard support (Page Up/Down, arrows when focused)
 
 ---
 
@@ -234,11 +255,20 @@ ComponentConfig{}.with_tooltip("Help text here");
 
 **Issue:** No overlay dialogs that block interaction with background content.
 
+**Working Implementation (wordproc):**
+- `src/ui/win95_widgets.h/.cpp` (DrawMessageDialog, DrawInputDialog)
+- `src/ecs/components.h` (dialog state flags)
+
 **Suggested Implementation:**
 ```cpp
-ElementResult modal(HasUIContext auto &ctx, EntityParent ep_pair,
-                    bool &is_open,
-                    ComponentConfig config = ComponentConfig());
+enum class DialogResult { Pending, Confirmed, Cancelled, Dismissed, Custom };
+
+bool begin_modal(HasUIContext auto &ctx, EntityParent ep_pair,
+                 const std::string &title,
+                 ComponentConfig config = ComponentConfig());
+void end_modal();
+void close_modal(HasUIContext auto &ctx, EntityParent ep_pair,
+                 DialogResult result = DialogResult::Dismissed);
 ```
 
 **Features Needed:**
@@ -247,6 +277,7 @@ ElementResult modal(HasUIContext auto &ctx, EntityParent ep_pair,
 - Click-outside-to-close option
 - Focus trap (tab stays within modal)
 - Escape to close
+ - Result handling (OK/Cancel/Custom)
 
 ---
 
@@ -545,17 +576,24 @@ ComponentConfig{}
 
 ---
 
-### Text Area (Multiline Input)
+### Text Area / Text Editor (Multiline)
 
 **Status:** Not implemented
 
-**Issue:** No way to accept multi-line text input.
+**Issue:** No way to accept multi-line text input or full text editing (selection, undo/redo, layout).
+
+**Working Implementation (wordproc):**
+- `src/editor/text_buffer.h/.cpp` (gap buffer + selection + undo)
+- `src/editor/text_layout.h/.cpp` (layout + rendering)
 
 **Additional Features Beyond Text Input:**
 - Line wrapping
 - Vertical scrolling
 - Line numbers (optional)
 - Tab handling
+ - Caret movement + selection
+ - Undo/redo
+ - Clipboard integration
 
 ---
 
@@ -646,23 +684,35 @@ ElementResult stacked_bars(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ---
 
-### Notification Stack / Kill Feed
+### Notification Stack / Toasts
 
 **Status:** Not implemented
 
-**Issue:** Stacked temporary notifications with auto-dismiss are common in multiplayer games.
+**Issue:** Stacked temporary notifications with auto-dismiss are common in multiplayer games and apps (save/error toasts).
+
+**Working Implementation (wordproc):**
+- `src/extracted/status_notifications.h` (ready-to-PR implementation)
+- `src/ecs/components.h` (StatusComponent)
 
 **Suggested Implementation:**
 ```cpp
+enum class NotificationLevel { Info, Success, Warning, Error };
+
 struct Notification {
-    std::string text;
-    std::optional<Color> color;
-    float duration;
+    std::string message;
+    NotificationLevel level = NotificationLevel::Info;
+    double duration = 3.0;
+};
+
+struct ProvidesNotifications : BaseComponent {
+    void push(Notification notif, double current_time);
+    void cleanup(double current_time);
+    std::vector<const Notification *> get_visible(double current_time) const;
 };
 
 ElementResult notification_stack(HasUIContext auto &ctx, EntityParent ep_pair,
-                                  std::vector<Notification> &notifications,
-                      ComponentConfig config = ComponentConfig());
+                                 std::vector<Notification> &notifications,
+                                 ComponentConfig config = ComponentConfig());
 ```
 
 ---
@@ -751,6 +801,115 @@ struct Theme {
 
 ---
 
+## Render System Const Constraint
+
+**Issue:** Render systems only call the `const` version of `for_each_with`, which blocks immediate-mode UI patterns that need to mutate state during render (e.g., closing a dialog on click).
+
+**Suggested Implementation:**
+```cpp
+// Option 1: opt-in mutable render systems
+void register_mutable_render_system(std::unique_ptr<SystemBase> system);
+
+// Option 2: deferred mutations from render pass
+namespace ui {
+  void defer(std::function<void()> fn);
+}
+```
+
+---
+
+## Action Binding System
+
+**Issue:** Only low-level input APIs exist; no named actions with remappable keybindings and modifiers.
+
+**Working Implementation (wordproc):**
+- `src/input/action_map.h/.cpp`
+
+**Suggested Implementation:**
+```cpp
+namespace afterhours::input {
+  enum class Modifiers : uint8_t { None = 0, Ctrl = 1, Shift = 2, Alt = 4 };
+
+  struct KeyBinding {
+    KeyCode key = 0;
+    Modifiers modifiers = Modifiers::None;
+  };
+
+  template <typename ActionEnum>
+  class ActionMap {
+   public:
+    void bind(const KeyBinding &binding, ActionEnum action);
+    bool is_action_pressed(ActionEnum action) const;
+    bool is_action_down(ActionEnum action) const;
+    std::optional<KeyBinding> get_binding(ActionEnum action) const;
+  };
+
+  Modifiers get_current_modifiers();
+  std::string format_binding(const KeyBinding &binding);
+}
+```
+
+---
+
+## Renderer Abstraction Layer
+
+**Issue:** Afterhours is tightly coupled to raylib; no headless backend or backend swapping.
+
+**Working Implementation (wordproc):**
+- `src/renderer/renderer_interface.h/.cpp`
+- `src/renderer/raylib_renderer.h`
+
+**Suggested Implementation:**
+```cpp
+namespace afterhours {
+  struct IRenderer {
+    virtual ~IRenderer() = default;
+    virtual void begin_frame() = 0;
+    virtual void end_frame() = 0;
+    virtual void draw_rectangle(Rectangle rect, Color color) = 0;
+    virtual void draw_text(const Font &font, const std::string &text,
+                           Vector2 pos, float size, float spacing, Color color) = 0;
+  };
+
+  IRenderer &get_renderer();
+  void set_renderer(std::unique_ptr<IRenderer> renderer);
+  std::unique_ptr<IRenderer> create_headless_renderer(int width, int height);
+}
+```
+
+---
+
+## Command History (Undo/Redo)
+
+**Issue:** No generic undo/redo system based on the Command pattern.
+
+**Working Implementation (wordproc):**
+- `src/extracted/command_history.h`
+- `src/editor/text_buffer.h`
+
+**Suggested Implementation:**
+```cpp
+namespace afterhours {
+  class Command {
+   public:
+    virtual void execute() = 0;
+    virtual void undo() = 0;
+    virtual std::string description() const { return "Command"; }
+  };
+
+  class CommandHistory {
+   public:
+    void execute(std::unique_ptr<Command> cmd);
+    void undo();
+    void redo();
+    bool can_undo() const;
+    bool can_redo() const;
+  };
+}
+```
+
+---
+
 ---
 
 ## Test Input Hooks
@@ -759,14 +918,98 @@ struct Theme {
 
 **Issue:** No first-class way to inject input events for automated tests.
 
+**Working Implementation (wordproc):**
+- `src/testing/test_input.h/.cpp` (high-level input queue)
+- `src/testing/input_injector.h/.cpp` (low-level raylib injection)
+- `src/testing/test_input_provider.h` (UIContext integration)
+- `src/external.h` (macro wrappers)
+
 **Suggested Implementation:**
 ```cpp
-namespace ui::test {
-    void push_key(int keycode);
-    void push_char(char32_t ch);
-    void set_mouse_position(float x, float y);
-    void click_mouse(MouseButton button);
-    void clear();
+namespace afterhours::ui::test {
+  void push_key(int keycode);
+  void push_char(char32_t ch);
+  void set_mouse_position(float x, float y);
+  void press_mouse_button(int button);  // one-frame press
+  void hold_mouse_button(int button);
+  void release_mouse_button(int button);
+  void scroll_wheel(float delta);
+  void advance_frame();
+  void clear_all();
+}
+
+// Optional: provider interface for per-context input
+struct InputProvider {
+  virtual ~InputProvider() = default;
+  virtual Vector2 get_mouse_position() = 0;
+  virtual bool is_mouse_button_pressed(int button) = 0;
+  virtual bool is_mouse_button_down(int button) = 0;
+  virtual bool is_key_pressed(int key) = 0;
+  virtual int get_char_pressed() = 0;
+};
+```
+
+**Notes:**
+- Pressed input must be visible for exactly one frame (matches hardware behavior).
+- Avoid macro overrides by letting `UIContext` consume a configurable provider.
+
+---
+
+## E2E Testing Framework
+
+**Issue:** No built-in end-to-end UI testing or scripting framework.
+
+**Working Implementation (wordproc):**
+- `src/testing/e2e_script.h` (DSL + runner)
+- `src/testing/e2e_runner.h/.cpp`
+- `src/extracted/e2e_testing.h` (single-file)
+
+**Suggested Implementation:**
+```cpp
+namespace afterhours::testing {
+  class E2ERunner {
+   public:
+    void load_script(const std::string &path);
+    void load_scripts_from_directory(const std::string &dir);
+    void set_timeout_frames(int frames);
+    void tick();
+    bool is_finished() const;
+    bool has_failed() const;
+  };
+
+  namespace visible_text {
+    void register_text(const std::string &text);
+    bool contains(const std::string &text);
+  }
+}
+```
+
+---
+
+## Icon Registry / Icon Management
+
+**Issue:** No centralized icon registry for mapping actions/items to icons with fallbacks.
+
+**Working Implementation (wordproc):**
+- `src/ui/icon_registry.h`
+- `src/extracted/icon_registry.h`
+
+**Suggested Implementation:**
+```cpp
+namespace afterhours::ui {
+  struct IconInfo {
+    std::string name;
+    std::string resource_path;
+    char fallback_symbol = '?';
+    bool is_mirrored = false;
+  };
+
+  class IconRegistry {
+   public:
+    void register_icon(const std::string &id, IconInfo info);
+    std::optional<IconInfo> get(const std::string &id) const;
+    char get_symbol(const std::string &id) const;
+  };
 }
 ```
 
@@ -871,6 +1114,33 @@ ComponentConfig{}
 
 ---
 
+## Beveled / 3D Borders (Win95 Style)
+
+**Issue:** No support for raised/sunken multi-color borders needed for classic 3D UI styling.
+
+**Working Implementation (wordproc):**
+- `src/ui/win95_widgets.h/.cpp` (DrawRaisedBorder / DrawSunkenBorder)
+- `src/ui/theme.h` (Win95 palette)
+
+**Suggested Implementation:**
+```cpp
+enum class BevelStyle { None, Raised, Sunken };
+
+struct BevelBorder {
+  Color light_color = Color{255, 255, 255, 255};
+  Color dark_color = Color{128, 128, 128, 255};
+  float thickness = 1.0f;
+  BevelStyle style = BevelStyle::Raised;
+};
+
+ComponentConfig &with_bevel(BevelStyle style,
+                            Color light = {255, 255, 255, 255},
+                            Color dark = {128, 128, 128, 255},
+                            float thickness = 1.0f);
+```
+
+---
+
 ## Icon Font / Symbol Rendering
 
 **Issue:** Loading icon fonts requires manually specifying codepoints. No auto-detection.
@@ -895,9 +1165,6 @@ ComponentConfig{}
 
 # Priority Summary
 
-## Trivial (~1-2 hours)
-- (none remaining)
-
 ## Small (~half day)
 - Toggle Switch
 - Stepper/Selector
@@ -905,6 +1172,9 @@ ComponentConfig{}
 - Button Variants
 - Corner Brackets
 - Currency Display
+- Beveled / 3D Borders
+- Icon Registry
+- Status Notifications / Toasts
 
 ## Medium (~1-2 days)
 - Setting Row
@@ -916,6 +1186,8 @@ ComponentConfig{}
 - Vertical Tab Bar
 - Test Input Hooks
 - Glyph Metrics API
+- Action Binding System
+- Command History (Undo/Redo)
 
 ## Large (~3-5 days)
 - Focus Ring Styles
@@ -924,10 +1196,13 @@ ComponentConfig{}
 - Modal/Dialog
 - Context Menu
 - CSS Grid Layout
+- Render System Const Constraint
+- Renderer Abstraction Layer
+- E2E Testing Framework
 
 ## Very Large (~1+ week)
 - Text Input (full with selection/clipboard)
-- Text Area
+- Text Area / Text Editor
 - Scroll Container
 - List Box
 - Table
