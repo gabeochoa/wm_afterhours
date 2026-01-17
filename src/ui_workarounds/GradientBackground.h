@@ -16,17 +16,6 @@ namespace ui_workarounds {
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Interpolate between two colors
-inline afterhours::Color lerp_color(afterhours::Color a, afterhours::Color b,
-                                    float t) {
-  return afterhours::Color{
-      static_cast<unsigned char>(a.r + static_cast<int>((b.r - a.r) * t)),
-      static_cast<unsigned char>(a.g + static_cast<int>((b.g - a.g) * t)),
-      static_cast<unsigned char>(a.b + static_cast<int>((b.b - a.b) * t)),
-      static_cast<unsigned char>(a.a + static_cast<int>((b.a - a.a) * t)),
-  };
-}
-
 // Renders a vertical gradient (top to bottom) using horizontal strips
 template <typename Context, typename Entity>
 inline void
@@ -39,7 +28,7 @@ vertical_gradient(Context &context, Entity &entity, int base_id, float x,
 
   for (int i = 0; i < num_strips; i++) {
     float t = static_cast<float>(i) / static_cast<float>(num_strips - 1);
-    afterhours::Color strip_color = lerp_color(top_color, bottom_color, t);
+    afterhours::Color strip_color = afterhours::colors::lerp(top_color, bottom_color, t);
 
     div(context, mk(entity, base_id + i),
         ComponentConfig{}
@@ -64,7 +53,7 @@ inline void horizontal_gradient(Context &context, Entity &entity, int base_id,
 
   for (int i = 0; i < num_strips; i++) {
     float t = static_cast<float>(i) / static_cast<float>(num_strips - 1);
-    afterhours::Color strip_color = lerp_color(left_color, right_color, t);
+    afterhours::Color strip_color = afterhours::colors::lerp(left_color, right_color, t);
 
     div(context, mk(entity, base_id + i),
         ComponentConfig{}
