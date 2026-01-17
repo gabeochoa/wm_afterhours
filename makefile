@@ -150,16 +150,17 @@ $(MAIN_EXE): $(MAIN_OBJS) | $(OUTPUT_DIR)/.stamp
 -include $(MAIN_DEPS)
 
 # Compile main object files
+# Note: Using -MD (not -MMD) to track vendor/afterhours headers since they're included via -isystem
 $(OBJ_DIR)/main/%.o: src/%.cpp | $(OBJ_DIR)/main
 	@echo "Compiling $<..."
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MP -MF $(@:.o=.d) -MT $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MD -MP -MF $(@:.o=.d) -MT $@
 
 # Compile afterhours files.cpp
 $(OBJ_DIR)/main/vendor_afterhours_files.o: vendor/afterhours/src/plugins/files.cpp | $(OBJ_DIR)/main
 	@echo "Compiling vendor/afterhours/src/plugins/files.cpp..."
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MMD -MP -MF $(@:.o=.d) -MT $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MD -MP -MF $(@:.o=.d) -MT $@
 
 # Force dependency regeneration by removing dependency files
 deps:

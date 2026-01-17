@@ -1073,22 +1073,6 @@ ComponentConfig{}
 
 ---
 
-## Circular Progress Indicator
-
-**Issue:** Cannot render circular/radial progress indicators. Needs `draw_arc`.
-
-**Suggested Implementation:**
-```cpp
-circular_progress(context, mk(entity, 0),
-    0.75f,  // value 0-1
-    ComponentConfig{}
-        .with_size(pixels(50), pixels(50))
-        .with_custom_background(fill_color)
-        .with_border(track_color, 4.0f));
-```
-
----
-
 ## 3D/Puffy Text Effect
 
 **Issue:** Cannot create 3D "puffy" text effects with depth/volume.
@@ -1098,48 +1082,6 @@ circular_progress(context, mk(entity, 0),
 ComponentConfig{}
     .with_puffy_text(outline_color, highlight_color, shadow_color, depth);
 ```
-
----
-
-## Decorative/Irregular Borders
-
-**Issue:** Only uniform rectangular borders. Cannot create scalloped, dashed, or 9-slice borders.
-
-**Suggested Implementation:**
-```cpp
-ComponentConfig{}
-    .with_border_style(BorderStyle::Scalloped)  // or Dashed, Dotted, Double
-    .with_border_image(texture);                 // 9-slice border image
-```
-
----
-
-## Beveled / 3D Borders (Win95 Style)
-
-**Issue:** No support for raised/sunken multi-color borders needed for classic 3D UI styling.
-
-**Working Implementation (wordproc):**
-- `src/ui/win95_widgets.h/.cpp` (DrawRaisedBorder / DrawSunkenBorder)
-- `src/ui/theme.h` (Win95 palette)
-
-**Suggested Implementation:**
-```cpp
-enum class BevelStyle { None, Raised, Sunken };
-
-struct BevelBorder {
-  Color light_color = Color{255, 255, 255, 255};
-  Color dark_color = Color{128, 128, 128, 255};
-  float thickness = 1.0f;
-  BevelStyle style = BevelStyle::Raised;
-};
-
-ComponentConfig &with_bevel(BevelStyle style,
-                            Color light = {255, 255, 255, 255},
-                            Color dark = {128, 128, 128, 255},
-                            float thickness = 1.0f);
-```
-
----
 
 ## Icon Font / Symbol Rendering
 

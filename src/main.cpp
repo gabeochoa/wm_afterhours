@@ -16,6 +16,7 @@ backward::SignalHandling sh;
 #include "systems/screens/Cards.h"
 #include "systems/screens/CasualSettings.h"
 #include "systems/screens/CheckboxShowcase.h"
+#include "systems/screens/CircularProgressShowcase.h"
 #include "systems/screens/CozyCafe.h"
 #include "systems/screens/DeadSpaceSettings.h"
 #include "systems/screens/EmpireTycoon.h"
