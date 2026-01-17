@@ -4,6 +4,37 @@ Issues and limitations discovered during UI Showcase development. Only includes 
 
 ---
 
+# Missing Widgets - By Priority
+
+## HIGH PRIORITY
+
+### Toggle Switch (iOS-style)
+
+**Status:** ✅ Implemented
+
+**Implementation:**
+```cpp
+enum struct ToggleSwitchStyle {
+    Pill,   // iOS-style pill with sliding knob (default)
+    Circle, // Single circle with X/checkmark inside
+};
+
+ElementResult toggle_switch(HasUIContext auto &ctx, EntityParent ep_pair,
+                            bool &value,
+                            ComponentConfig config = ComponentConfig(),
+                            ToggleSwitchStyle style = ToggleSwitchStyle::Pill);
+```
+
+**Features:**
+- Pill-shaped track with sliding circular knob (animated)
+- Circle variant with X/V markers
+- Optional label via `config.with_label()`
+- Smooth animation for state transitions
+
+**Demo:** `toggle_switches` screen in Component Galleries
+
+---
+
 ### Stepper/Selector with Arrows
 
 **Status:** Not implemented
