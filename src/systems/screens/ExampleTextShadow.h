@@ -47,13 +47,15 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(20.0f, 15.0f)
             .with_font("BlackOpsOne", 36.0f)
             .with_custom_text_color(text_dark)
-            .with_text_shadow(afterhours::Color{0, 0, 0, 255}, 6.0f, 6.0f)  // Very visible
+            .with_text_shadow(afterhours::Color{0, 0, 0, 255}, 6.0f,
+                              6.0f) // Very visible
             .with_alignment(TextAlignment::Center)
             .with_debug_name("page_title"));
 
     div(context, mk(entity, 2),
         ComponentConfig{}
-            .with_label("Native with_text_shadow() API for depth and legibility")
+            .with_label(
+                "Native with_text_shadow() API for depth and legibility")
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(24)})
             .with_absolute_position()
             .with_translate(20.0f, 65.0f)
@@ -67,13 +69,14 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     float col2_x = 660.0f;
 
     // ========== LEFT COLUMN: Side-by-side comparisons ==========
-    
-    const char* bold_font = "BlackOpsOne";
+
+    const char *bold_font = "BlackOpsOne";
 
     // Row 1: NO SHADOW vs WITH SHADOW - very prominent shadow
     afterhours::Color yellow{255, 220, 80, 255};
-    afterhours::Color shadow_dark{0, 0, 0, 255};  // Full opacity for max visibility
-    
+    afterhours::Color shadow_dark{0, 0, 0,
+                                  255}; // Full opacity for max visibility
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_label("NO SHADOW")
@@ -93,7 +96,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(col1_x + 290.0f, 110.0f)
             .with_font(bold_font, 36.0f)
             .with_custom_text_color(yellow)
-            .with_text_shadow(shadow_dark, 8.0f, 8.0f)  // Large offset for visibility
+            .with_text_shadow(shadow_dark, 8.0f,
+                              8.0f) // Large offset for visibility
             .with_alignment(TextAlignment::Left)
             .with_debug_name("with_shadow_1"));
 
@@ -118,7 +122,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(col1_x, 200.0f)
             .with_font(bold_font, 64.0f)
             .with_custom_text_color(hot_pink)
-            .with_soft_text_shadow(6.0f, 6.0f)  // Larger offset
+            .with_soft_text_shadow(6.0f, 6.0f) // Larger offset
             .with_alignment(TextAlignment::Left)
             .with_debug_name("soft_shadow"));
 
@@ -130,7 +134,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(col1_x + 290.0f, 200.0f)
             .with_font(bold_font, 64.0f)
             .with_custom_text_color(hot_pink)
-            .with_hard_text_shadow(6.0f, 6.0f)  // Larger offset
+            .with_hard_text_shadow(6.0f, 6.0f) // Larger offset
             .with_alignment(TextAlignment::Left)
             .with_debug_name("hard_shadow"));
 
@@ -146,7 +150,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     // Row 3: Colored shadows - very visible red shadow
     afterhours::Color cyan{80, 255, 255, 255};
-    afterhours::Color red_shadow{200, 0, 0, 255};  // Full opacity red
+    afterhours::Color red_shadow{200, 0, 0, 255}; // Full opacity red
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -156,7 +160,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(col1_x, 320.0f)
             .with_font(bold_font, 56.0f)
             .with_custom_text_color(cyan)
-            .with_text_shadow(red_shadow, 8.0f, 8.0f)  // Large offset
+            .with_text_shadow(red_shadow, 8.0f, 8.0f) // Large offset
             .with_alignment(TextAlignment::Left)
             .with_debug_name("colored_shadow"));
 
@@ -201,7 +205,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     // Row 5: Dark background with light text - shadow adds depth
     afterhours::Color dark_panel{35, 40, 55, 255};
     afterhours::Color light_text{255, 255, 255, 255};
-    
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(580), pixels(80)})
@@ -246,7 +250,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("desc_5"));
 
     // ========== RIGHT COLUMN: Offset comparison ==========
-    
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_label("Shadow Offsets:")
@@ -259,38 +263,38 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     afterhours::Color purple{180, 100, 255, 255};
     afterhours::Color purple_shadow{60, 20, 100, 200};
-    
+
     float offset_y = 155.0f;
     float offsets[] = {1.0f, 2.0f, 4.0f, 6.0f, 8.0f, 12.0f};
-    const char* offset_labels[] = {"1px", "2px", "4px", "6px", "8px", "12px"};
-    
-    for (int i = 0; i < 6; i++) {
-        div(context, mk(entity, id++),
-            ComponentConfig{}
-                .with_label("SHADOW")
-                .with_size(ComponentSize{pixels(220), pixels(55)})
-                .with_absolute_position()
-                .with_translate(col2_x, offset_y + i * 75.0f)
-                .with_font(bold_font, 40.0f)
-                .with_custom_text_color(purple)
-                .with_text_shadow(purple_shadow, offsets[i], offsets[i])
-                .with_alignment(TextAlignment::Left)
-                .with_debug_name("offset_" + std::to_string(i)));
+    const char *offset_labels[] = {"1px", "2px", "4px", "6px", "8px", "12px"};
 
-        div(context, mk(entity, id++),
-            ComponentConfig{}
-                .with_label(offset_labels[i])
-                .with_size(ComponentSize{pixels(80), pixels(30)})
-                .with_absolute_position()
-                .with_translate(col2_x + 240.0f, offset_y + i * 75.0f + 12.0f)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                .with_custom_text_color(text_muted)
-                .with_debug_name("offset_label_" + std::to_string(i)));
+    for (int i = 0; i < 6; i++) {
+      div(context, mk(entity, id++),
+          ComponentConfig{}
+              .with_label("SHADOW")
+              .with_size(ComponentSize{pixels(220), pixels(55)})
+              .with_absolute_position()
+              .with_translate(col2_x, offset_y + i * 75.0f)
+              .with_font(bold_font, 40.0f)
+              .with_custom_text_color(purple)
+              .with_text_shadow(purple_shadow, offsets[i], offsets[i])
+              .with_alignment(TextAlignment::Left)
+              .with_debug_name("offset_" + std::to_string(i)));
+
+      div(context, mk(entity, id++),
+          ComponentConfig{}
+              .with_label(offset_labels[i])
+              .with_size(ComponentSize{pixels(80), pixels(30)})
+              .with_absolute_position()
+              .with_translate(col2_x + 240.0f, offset_y + i * 75.0f + 12.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_custom_text_color(text_muted)
+              .with_debug_name("offset_label_" + std::to_string(i)));
     }
 
     // ========== Code example at bottom ==========
     float code_y = screen_h - 60.0f;
-    
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w - 80), pixels(40)})
@@ -303,7 +307,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Usage: ComponentConfig{}.with_text_shadow(Color{r, g, b, a}, offset_x, offset_y)")
+            .with_label("Usage: ComponentConfig{}.with_text_shadow(Color{r, g, "
+                        "b, a}, offset_x, offset_y)")
             .with_size(ComponentSize{pixels(screen_w - 100), pixels(24)})
             .with_absolute_position()
             .with_translate(50.0f, code_y + 10.0f)
@@ -317,4 +322,3 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(text_shadow, "System Demos",
                         "Demonstrates native text drop shadow rendering",
                         ExampleTextShadow)
-

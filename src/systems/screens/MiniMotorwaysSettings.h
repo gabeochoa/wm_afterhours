@@ -19,10 +19,10 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   int sensitivity_level = 1; // 0=Low, 1=Default, 2=High
 
   // Colors matching Mini Motorways inspiration - clean, minimal, pastel
-  afterhours::Color bg_cream{245, 242, 235, 255};        // Warm cream background
-  afterhours::Color grid_line{215, 210, 200, 255};       // Subtle grid lines
-  afterhours::Color text_dark{55, 55, 55, 255};          // Dark gray text
-  afterhours::Color text_muted{145, 140, 130, 255};      // Muted gray
+  afterhours::Color bg_cream{245, 242, 235, 255};   // Warm cream background
+  afterhours::Color grid_line{215, 210, 200, 255};  // Subtle grid lines
+  afterhours::Color text_dark{55, 55, 55, 255};     // Dark gray text
+  afterhours::Color text_muted{145, 140, 130, 255}; // Muted gray
   afterhours::Color highlight_yellow{255, 195, 85, 255}; // Selected tab yellow
   afterhours::Color tab_teal{145, 195, 185, 255};        // Teal tab
   afterhours::Color btn_teal{125, 185, 175, 255};        // Tutorial button teal
@@ -34,7 +34,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   struct SettingToggle {
     std::string label;
-    bool* value;
+    bool *value;
   };
 
   std::vector<SettingToggle> toggles;
@@ -222,13 +222,16 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_text_color(text_dark)
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("sens_left"))) {
-      if (sensitivity_level > 0) sensitivity_level--;
+      if (sensitivity_level > 0)
+        sensitivity_level--;
     }
 
     // Value
     std::string sens_text = "Default";
-    if (sensitivity_level == 0) sens_text = "Low";
-    if (sensitivity_level == 2) sens_text = "High";
+    if (sensitivity_level == 0)
+      sens_text = "Low";
+    if (sensitivity_level == 2)
+      sens_text = "High";
 
     div(context, mk(entity, 122),
         ComponentConfig{}
@@ -252,7 +255,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_text_color(text_dark)
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("sens_right"))) {
-      if (sensitivity_level < 2) sensitivity_level++;
+      if (sensitivity_level < 2)
+        sensitivity_level++;
     }
 
     // Separator line
@@ -276,25 +280,21 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("version"));
 
     // ========== TUTORIAL BUTTON ==========
-    button(context, mk(entity, 210),
-           ComponentConfig{}
-               .with_label("Tutorial  ->")
-               .with_size(ComponentSize{pixels(160), pixels(50)})
-               .with_absolute_position()
-               .with_translate((float)screen_w - 195.0f, (float)screen_h - 65.0f)
-               .with_custom_background(btn_teal)
-               .with_font("EqProRounded", 22.0f)
-               .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("tutorial"));
+    button(
+        context, mk(entity, 210),
+        ComponentConfig{}
+            .with_label("Tutorial  ->")
+            .with_size(ComponentSize{pixels(160), pixels(50)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 195.0f, (float)screen_h - 65.0f)
+            .with_custom_background(btn_teal)
+            .with_font("EqProRounded", 22.0f)
+            .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("tutorial"));
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(mini_motorways_settings, "Game Mockups",
                         "Minimalist settings (Mini Motorways style)",
                         MiniMotorwaysSettingsScreen)
-
-
-
-
-

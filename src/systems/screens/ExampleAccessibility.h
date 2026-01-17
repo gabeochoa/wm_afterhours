@@ -17,14 +17,14 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
   bool theme_is_accessible = false;
 
   // Clean, professional accessibility-focused palette
-  afterhours::Color bg_slate{35, 40, 50, 255};          // Dark slate
-  afterhours::Color panel_dark{45, 52, 65, 255};        // Panel slate
-  afterhours::Color panel_light{58, 68, 85, 255};       // Lighter panel
-  afterhours::Color accent_green{75, 185, 130, 255};    // Accessible green
-  afterhours::Color accent_amber{225, 175, 85, 255};    // Warning amber
-  afterhours::Color text_white{250, 250, 255, 255};     // White text
-  afterhours::Color text_muted{140, 150, 170, 255};     // Muted text
-  afterhours::Color divider{70, 80, 100, 255};          // Divider lines
+  afterhours::Color bg_slate{35, 40, 50, 255};       // Dark slate
+  afterhours::Color panel_dark{45, 52, 65, 255};     // Panel slate
+  afterhours::Color panel_light{58, 68, 85, 255};    // Lighter panel
+  afterhours::Color accent_green{75, 185, 130, 255}; // Accessible green
+  afterhours::Color accent_amber{225, 175, 85, 255}; // Warning amber
+  afterhours::Color text_white{250, 250, 255, 255};  // White text
+  afterhours::Color text_muted{140, 150, 170, 255};  // Muted text
+  afterhours::Color divider{70, 80, 100, 255};       // Divider lines
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -54,7 +54,8 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(
+                ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_slate)
             .with_debug_name("bg"));
 
@@ -71,7 +72,8 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_translate(panel_x, panel_y)
             .with_custom_background(panel_dark)
             .with_border(divider, 1.0f)
-            .with_soft_shadow(6.0f, 10.0f, 25.0f, afterhours::Color{0, 0, 0, 50})
+            .with_soft_shadow(6.0f, 10.0f, 25.0f,
+                              afterhours::Color{0, 0, 0, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_debug_name("main_panel"));
 
@@ -91,8 +93,10 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
 
     // Theme validation status badge
     float status_y = panel_y + 70.0f;
-    std::string status_text = theme_is_accessible ? "WCAG AA Compliant" : "Needs Improvement";
-    afterhours::Color status_color = theme_is_accessible ? accent_green : accent_amber;
+    std::string status_text =
+        theme_is_accessible ? "WCAG AA Compliant" : "Needs Improvement";
+    afterhours::Color status_color =
+        theme_is_accessible ? accent_green : accent_amber;
 
     div(context, mk(entity, 3),
         ComponentConfig{}
@@ -132,18 +136,19 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color demo_bg_light = {225, 225, 235, 255};
     afterhours::Color demo_bg_dark = {45, 50, 65, 255};
 
-    button(context, mk(entity, 11),
-           ComponentConfig{}
-               .with_label("Light BG - Manual Dark Text")
-               .with_size(ComponentSize{pixels(col_w), pixels(52)})
-               .with_absolute_position()
-               .with_translate(left_x, content_y + 40.0f)
-               .with_custom_background(demo_bg_light)
-               .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
-               .with_auto_text_color(false)  // Manual text color, no auto-contrast
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-               .with_rounded_corners(std::bitset<4>(0b1111))
-               .with_debug_name("light_no_auto"));
+    button(
+        context, mk(entity, 11),
+        ComponentConfig{}
+            .with_label("Light BG - Manual Dark Text")
+            .with_size(ComponentSize{pixels(col_w), pixels(52)})
+            .with_absolute_position()
+            .with_translate(left_x, content_y + 40.0f)
+            .with_custom_background(demo_bg_light)
+            .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
+            .with_auto_text_color(false) // Manual text color, no auto-contrast
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_debug_name("light_no_auto"));
 
     button(context, mk(entity, 12),
            ComponentConfig{}
@@ -236,14 +241,14 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
 
     // Variety of background colors to showcase
     afterhours::Color showcase_colors[] = {
-        {255, 200, 100, 255},  // Yellow
-        {100, 180, 255, 255},  // Light blue
-        {255, 100, 140, 255},  // Pink
-        {150, 255, 150, 255},  // Light green
-        {180, 130, 220, 255},  // Lavender
-        {255, 160, 100, 255},  // Orange
-        {100, 200, 180, 255},  // Teal
-        {220, 180, 160, 255},  // Tan
+        {255, 200, 100, 255}, // Yellow
+        {100, 180, 255, 255}, // Light blue
+        {255, 100, 140, 255}, // Pink
+        {150, 255, 150, 255}, // Light green
+        {180, 130, 220, 255}, // Lavender
+        {255, 160, 100, 255}, // Orange
+        {100, 200, 180, 255}, // Teal
+        {220, 180, 160, 255}, // Tan
     };
 
     float btn_w = (panel_w - 90) / 8.0f;
@@ -253,7 +258,8 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Auto")
                  .with_size(ComponentSize{pixels(btn_w), pixels(52)})
                  .with_absolute_position()
-                 .with_translate(panel_x + 30.0f + i * (btn_w + 5), showcase_y + 35.0f)
+                 .with_translate(panel_x + 30.0f + i * (btn_w + 5),
+                                 showcase_y + 35.0f)
                  .with_custom_background(showcase_colors[i])
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -263,14 +269,14 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
 
     // Dark showcase row
     afterhours::Color dark_colors[] = {
-        {40, 60, 100, 255},    // Dark blue
-        {80, 40, 80, 255},     // Dark purple
-        {30, 70, 50, 255},     // Dark green
-        {100, 50, 50, 255},    // Dark red
-        {60, 60, 70, 255},     // Dark gray
-        {80, 70, 40, 255},     // Dark brown
-        {20, 60, 80, 255},     // Dark teal
-        {50, 40, 60, 255},     // Dark violet
+        {40, 60, 100, 255}, // Dark blue
+        {80, 40, 80, 255},  // Dark purple
+        {30, 70, 50, 255},  // Dark green
+        {100, 50, 50, 255}, // Dark red
+        {60, 60, 70, 255},  // Dark gray
+        {80, 70, 40, 255},  // Dark brown
+        {20, 60, 80, 255},  // Dark teal
+        {50, 40, 60, 255},  // Dark violet
     };
 
     for (int i = 0; i < 8; i++) {
@@ -279,7 +285,8 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Auto")
                  .with_size(ComponentSize{pixels(btn_w), pixels(52)})
                  .with_absolute_position()
-                 .with_translate(panel_x + 30.0f + i * (btn_w + 5), showcase_y + 95.0f)
+                 .with_translate(panel_x + 30.0f + i * (btn_w + 5),
+                                 showcase_y + 95.0f)
                  .with_custom_background(dark_colors[i])
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -290,7 +297,8 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Footer info
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_label("Auto text color is enabled by default - text always remains readable")
+            .with_label("Auto text color is enabled by default - text always "
+                        "remains readable")
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(26)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + panel_h - 40.0f)

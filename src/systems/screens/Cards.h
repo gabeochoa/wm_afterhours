@@ -150,12 +150,13 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("nested_title"));
 
     // Inner cards row
-    auto inner_row = div(context, mk(nested_container.ent(), 1),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(0.95f), pixels(120)})
-                             .with_background(Theme::Usage::None)
-                             .with_flex_direction(FlexDirection::Row)
-                             .with_debug_name("inner_row"));
+    auto inner_row =
+        div(context, mk(nested_container.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.95f), pixels(120)})
+                .with_background(Theme::Usage::None)
+                .with_flex_direction(FlexDirection::Row)
+                .with_debug_name("inner_row"));
 
     // Inner card 1 - use fixed pixel sizes that fit within container
     div(context, mk(inner_row.ent(), 0),
@@ -216,7 +217,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
-            .with_label("This panel uses opacity to create a translucent overlay effect.")
+            .with_label("This panel uses opacity to create a translucent "
+                        "overlay effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(120)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)

@@ -19,17 +19,17 @@ struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
     float button_x = (screen_width - button_width) / 2.0f;
     float button_y = (screen_height - button_height) / 2.0f;
 
-    auto button_result =
-        button(context, mk(entity, 0),
-               ComponentConfig{}
-                   .with_label("Click Me")
-                   .with_size(ComponentSize{pixels(button_width),
-                                            pixels(button_height)})
-                   .with_absolute_position()
-                   .with_translate(button_x, button_y)
-                   .with_custom_background(afterhours::Color{100, 100, 200, 255})
-                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
-                   .with_debug_name("test_button"));
+    auto button_result = button(
+        context, mk(entity, 0),
+        ComponentConfig{}
+            .with_label("Click Me")
+            .with_size(
+                ComponentSize{pixels(button_width), pixels(button_height)})
+            .with_absolute_position()
+            .with_translate(button_x, button_y)
+            .with_custom_background(afterhours::Color{100, 100, 200, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_debug_name("test_button"));
 
     if (button_result) {
       button_click_count++;

@@ -19,13 +19,13 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_cyan{85, 175, 225, 255};
   afterhours::Color text_bright{165, 215, 245, 255};
   afterhours::Color text_muted{75, 95, 120, 255};
-  afterhours::Color highlight_line{35, 105, 160, 255};  // Darkened for WCAG AA contrast
+  afterhours::Color highlight_line{35, 105, 160,
+                                   255}; // Darkened for WCAG AA contrast
   afterhours::Color grid_color{20, 35, 55, 180};
 
   std::vector<std::string> categories = {
-      "FLIGHT SYSTEM", "CONTROLS", "KEYBOARD", "MOUSE",
-      "FLIGHT STICK",  "DISPLAY",  "GRAPHICS", "SOUND",
-      "LANGUAGE",
+      "FLIGHT SYSTEM", "CONTROLS", "KEYBOARD", "MOUSE",    "FLIGHT STICK",
+      "DISPLAY",       "GRAPHICS", "SOUND",    "LANGUAGE",
   };
 
   std::vector<std::string> suboptions = {
@@ -39,8 +39,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     Theme theme;
     // Use pure white/black for auto_text_color to achieve WCAG AA contrast
-    theme.font = afterhours::Color{255, 255, 255, 255};  // Pure white for dark bgs
-    theme.darkfont = afterhours::Color{10, 15, 25, 255}; // Near-black for light bgs
+    theme.font =
+        afterhours::Color{255, 255, 255, 255}; // Pure white for dark bgs
+    theme.darkfont =
+        afterhours::Color{10, 15, 25, 255}; // Near-black for light bgs
     theme.font_muted = text_muted;
     theme.background = bg_dark;
     theme.surface = afterhours::Color{12, 18, 30, 255};
@@ -128,8 +130,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(12), pixels(2)})
               .with_absolute_position()
               .with_translate(line_origin_x - 12.0f, tick_y)
-              .with_custom_background(
-                  i == (int)selected_category ? text_cyan : text_muted)
+              .with_custom_background(i == (int)selected_category ? text_cyan
+                                                                  : text_muted)
               .with_debug_name("tick_" + std::to_string(i)));
     }
 
@@ -170,7 +172,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(4), pixels(22)})
                 .with_absolute_position()
-                .with_translate(menu_x - 18.0f, menu_y + (float)i * 32.0f + 3.0f)
+                .with_translate(menu_x - 18.0f,
+                                menu_y + (float)i * 32.0f + 3.0f)
                 .with_custom_background(text_cyan)
                 .with_debug_name("select_bar_" + std::to_string(i)));
       }
@@ -264,4 +267,3 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(flight_options, "Game Mockups",
                         "Flight sim options menu (Ace Combat style)",
                         FlightOptionsScreen)
-

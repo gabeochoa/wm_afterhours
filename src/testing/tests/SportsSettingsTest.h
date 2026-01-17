@@ -215,7 +215,8 @@ TEST(sports_settings_arrow_keys_change_value) {
 }
 
 // Test: Tab then left/right changes value on new row
-// This test verifies that after tabbing to a row, arrow keys can change the value
+// This test verifies that after tabbing to a row, arrow keys can change the
+// value
 TEST(sports_settings_tab_then_arrows) {
   co_await TestApp::wait_for_frames(10);
 
@@ -224,7 +225,7 @@ TEST(sports_settings_tab_then_arrows) {
   co_await TestApp::wait_for_frames(1);
   TestApp::release_mouse_button();
   co_await TestApp::wait_for_frames(3);
-  
+
   TestApp::expect_focus("Window mode");
   TestApp::expect_ui_exists("Borderless window");
 
@@ -234,7 +235,7 @@ TEST(sports_settings_tab_then_arrows) {
   TestApp::expect_focus("Resolution");
   TestApp::expect_ui_exists("2560x1440");
 
-  // Press Right to change resolution  
+  // Press Right to change resolution
   TestApp::simulate_arrow_key(raylib::KEY_RIGHT);
   co_await TestApp::wait_for_frames(5);
 
@@ -275,4 +276,3 @@ TEST(sports_settings_lb_rb_cycle_tabs) {
 
   TestApp::expect_ui_exists("AUDIO");
 }
-

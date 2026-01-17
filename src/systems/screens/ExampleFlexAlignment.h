@@ -22,20 +22,20 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto &theme = context.theme;
 
     // Container for this demo
-    auto container = div(
-        context, mk(parent, id),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.18f), pixels(180)})
-            .with_custom_background(
-                afterhours::colors::darken(theme.surface, 0.92f))
-            .with_padding(Padding{.top = pixels(4),
-                                  .left = pixels(4),
-                                  .bottom = pixels(4),
-                                  .right = pixels(4)})
-            .with_margin(Spacing::xs)
-            .with_flex_direction(FlexDirection::Column)
-            .with_justify_content(jc)
-            .with_debug_name(label));
+    auto container =
+        div(context, mk(parent, id),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.18f), pixels(180)})
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.92f))
+                .with_padding(Padding{.top = pixels(4),
+                                      .left = pixels(4),
+                                      .bottom = pixels(4),
+                                      .right = pixels(4)})
+                .with_margin(Spacing::xs)
+                .with_flex_direction(FlexDirection::Column)
+                .with_justify_content(jc)
+                .with_debug_name(label));
 
     // Title
     div(context, mk(container.ent(), 0),
@@ -69,19 +69,19 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto &theme = context.theme;
 
     // Container for this demo - wide and short for horizontal layout
-    auto container = div(
-        context, mk(parent, id),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.18f), pixels(110)})
-            .with_custom_background(
-                afterhours::colors::darken(theme.surface, 0.92f))
-            .with_padding(Padding{.top = pixels(4),
-                                  .left = pixels(4),
-                                  .bottom = pixels(4),
-                                  .right = pixels(4)})
-            .with_margin(Spacing::xs)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name(label + "_outer"));
+    auto container =
+        div(context, mk(parent, id),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.18f), pixels(110)})
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.92f))
+                .with_padding(Padding{.top = pixels(4),
+                                      .left = pixels(4),
+                                      .bottom = pixels(4),
+                                      .right = pixels(4)})
+                .with_margin(Spacing::xs)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name(label + "_outer"));
 
     // Title at top
     div(context, mk(container.ent(), 0),
@@ -122,20 +122,20 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto &theme = context.theme;
 
     // Container for this demo
-    auto container = div(
-        context, mk(parent, id),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.30f), pixels(105)})
-            .with_custom_background(
-                afterhours::colors::darken(theme.surface, 0.92f))
-            .with_padding(Padding{.top = pixels(4),
-                                  .left = pixels(4),
-                                  .bottom = pixels(4),
-                                  .right = pixels(4)})
-            .with_margin(Spacing::xs)
-            .with_flex_direction(FlexDirection::Row)
-            .with_align_items(ai)
-            .with_debug_name(label));
+    auto container =
+        div(context, mk(parent, id),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.30f), pixels(105)})
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.92f))
+                .with_padding(Padding{.top = pixels(4),
+                                      .left = pixels(4),
+                                      .bottom = pixels(4),
+                                      .right = pixels(4)})
+                .with_margin(Spacing::xs)
+                .with_flex_direction(FlexDirection::Row)
+                .with_align_items(ai)
+                .with_debug_name(label));
 
     // Title at top
     div(context, mk(container.ent(), 0),
@@ -309,4 +309,3 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(flex_alignment, "System Demos",
                         "Flexbox justify and align properties",
                         ExampleFlexAlignment)
-

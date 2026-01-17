@@ -10,15 +10,15 @@ using namespace afterhours::ui::imm;
 
 struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
   // Clean modern color scheme
-  afterhours::Color bg_slate{248, 250, 252, 255};      // Soft gray-blue
-  afterhours::Color card_white{255, 255, 255, 255};    // Pure white
-  afterhours::Color text_dark{30, 41, 59, 255};        // Dark slate
-  afterhours::Color text_muted{100, 116, 139, 255};    // Muted slate
-  afterhours::Color accent_blue{59, 130, 246, 255};    // Vibrant blue
-  afterhours::Color accent_green{34, 197, 94, 255};    // Fresh green
-  afterhours::Color accent_purple{139, 92, 246, 255};  // Soft purple
-  afterhours::Color accent_orange{249, 115, 22, 255};  // Warm orange
-  afterhours::Color border_light{180, 190, 210, 255};  // More visible border
+  afterhours::Color bg_slate{248, 250, 252, 255};     // Soft gray-blue
+  afterhours::Color card_white{255, 255, 255, 255};   // Pure white
+  afterhours::Color text_dark{30, 41, 59, 255};       // Dark slate
+  afterhours::Color text_muted{100, 116, 139, 255};   // Muted slate
+  afterhours::Color accent_blue{59, 130, 246, 255};   // Vibrant blue
+  afterhours::Color accent_green{34, 197, 94, 255};   // Fresh green
+  afterhours::Color accent_purple{139, 92, 246, 255}; // Soft purple
+  afterhours::Color accent_orange{249, 115, 22, 255}; // Warm orange
+  afterhours::Color border_light{180, 190, 210, 255}; // More visible border
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -46,7 +46,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(
+                ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_slate)
             .with_debug_name("bg"));
 
@@ -69,7 +70,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(start_x, content_y)
             .with_custom_background(card_white)
-            .with_soft_shadow(6.0f, 10.0f, 25.0f, afterhours::Color{0, 0, 0, 30})
+            .with_soft_shadow(6.0f, 10.0f, 25.0f,
+                              afterhours::Color{0, 0, 0, 30})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.06f)
             .with_debug_name("left_card_bg"));
@@ -243,7 +245,9 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(settings_line_width), pixels(3)})
             .with_absolute_position()
-            .with_translate(start_x + pad + settings_line_width + settings_label_width + 30, y + 14)
+            .with_translate(start_x + pad + settings_line_width +
+                                settings_label_width + 30,
+                            y + 14)
             .with_custom_background(accent_blue)
             .with_debug_name("settings_line2"));
 
@@ -255,7 +259,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(right_x, content_y)
             .with_custom_background(card_white)
-            .with_soft_shadow(6.0f, 10.0f, 25.0f, afterhours::Color{0, 0, 0, 30})
+            .with_soft_shadow(6.0f, 10.0f, 25.0f,
+                              afterhours::Color{0, 0, 0, 30})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.06f)
             .with_debug_name("right_card_bg"));
@@ -290,7 +295,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     float nav_height = 60.0f;
     float nav_item_width = 80.0f;
     float sep_spacing = 8.0f;
-    
+
     // Nav background
     div(context, mk(entity, 33),
         ComponentConfig{}
@@ -303,14 +308,15 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("nav_bg"));
 
     float nav_x = right_x + pad + 16;
-    const char* nav_items[] = {"Home", "Settings", "Profile", "Help"};
+    const char *nav_items[] = {"Home", "Settings", "Profile", "Help"};
     afterhours::Color sep_colors[] = {text_muted, accent_green, accent_orange};
-    
+
     for (int i = 0; i < 4; i++) {
       div(context, mk(entity, 40 + i),
           ComponentConfig{}
               .with_label(nav_items[i])
-              .with_size(ComponentSize{pixels(nav_item_width), pixels(nav_height)})
+              .with_size(
+                  ComponentSize{pixels(nav_item_width), pixels(nav_height)})
               .with_absolute_position()
               .with_translate(nav_x, y)
               .with_font(UIComponent::DEFAULT_FONT, 17.0f)
@@ -364,8 +370,9 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     y += 52.0f;
 
     // Color rows
-    afterhours::Color colors[] = {accent_blue, accent_green, accent_purple, accent_orange};
-    const char* color_names[] = {"Blue", "Green", "Purple", "Orange"};
+    afterhours::Color colors[] = {accent_blue, accent_green, accent_purple,
+                                  accent_orange};
+    const char *color_names[] = {"Blue", "Green", "Purple", "Orange"};
 
     for (int i = 0; i < 4; i++) {
       div(context, mk(entity, 70 + i),
@@ -403,6 +410,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(separators, "Component Galleries",
-                        "Separator widget examples (horizontal, vertical, labeled)",
-                        ExampleSeparators)
+REGISTER_EXAMPLE_SCREEN(
+    separators, "Component Galleries",
+    "Separator widget examples (horizontal, vertical, labeled)",
+    ExampleSeparators)

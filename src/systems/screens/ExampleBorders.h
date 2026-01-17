@@ -10,15 +10,15 @@ using namespace afterhours::ui::imm;
 
 struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
   // Modern blueprint/technical drawing aesthetic
-  afterhours::Color bg_deep{24, 32, 48, 255};          // Deep blue-gray
-  afterhours::Color panel_dark{32, 42, 62, 255};       // Panel blue
-  afterhours::Color grid_line{45, 58, 85, 255};        // Grid lines
-  afterhours::Color accent_blue{80, 145, 220, 255};    // Blueprint blue
-  afterhours::Color accent_cyan{70, 190, 200, 255};    // Cyan highlight
-  afterhours::Color accent_orange{235, 145, 70, 255};  // Orange accent
-  afterhours::Color text_light{220, 225, 235, 255};    // Light text
-  afterhours::Color text_muted{120, 135, 160, 255};    // Muted text
-  afterhours::Color sample_white{250, 250, 252, 255};  // Sample card white
+  afterhours::Color bg_deep{24, 32, 48, 255};         // Deep blue-gray
+  afterhours::Color panel_dark{32, 42, 62, 255};      // Panel blue
+  afterhours::Color grid_line{45, 58, 85, 255};       // Grid lines
+  afterhours::Color accent_blue{80, 145, 220, 255};   // Blueprint blue
+  afterhours::Color accent_cyan{70, 190, 200, 255};   // Cyan highlight
+  afterhours::Color accent_orange{235, 145, 70, 255}; // Orange accent
+  afterhours::Color text_light{220, 225, 235, 255};   // Light text
+  afterhours::Color text_muted{120, 135, 160, 255};   // Muted text
+  afterhours::Color sample_white{250, 250, 252, 255}; // Sample card white
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -41,7 +41,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(
+                ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_deep)
             .with_debug_name("bg"));
 
@@ -96,9 +97,12 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     BorderDemo row1[] = {
-        {"Thin", afterhours::Color{100, 100, 100, 255}, 1.0f, sample_white, false},
-        {"Medium", afterhours::Color{60, 60, 60, 255}, 3.0f, sample_white, false},
-        {"Thick", afterhours::Color{30, 30, 30, 255}, 6.0f, sample_white, false},
+        {"Thin", afterhours::Color{100, 100, 100, 255}, 1.0f, sample_white,
+         false},
+        {"Medium", afterhours::Color{60, 60, 60, 255}, 3.0f, sample_white,
+         false},
+        {"Thick", afterhours::Color{30, 30, 30, 255}, 6.0f, sample_white,
+         false},
         {"Blue", accent_blue, 3.0f, sample_white, false},
         {"Cyan", accent_cyan, 3.0f, sample_white, false},
         {"Orange", accent_orange, 3.0f, sample_white, false},
@@ -274,7 +278,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + 2 * (box_size + gap), row3_y)
             .with_custom_background(afterhours::Color{255, 250, 242, 255})
             .with_border(afterhours::Color{160, 130, 100, 255}, 3.0f)
-            .with_soft_shadow(3.0f, 4.0f, 10.0f, afterhours::Color{80, 60, 40, 50})
+            .with_soft_shadow(3.0f, 4.0f, 10.0f,
+                              afterhours::Color{80, 60, 40, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
             .with_font("Gaegu-Bold", 18.0f)
@@ -347,7 +352,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x, row4_y)
             .with_custom_background(accent_blue)
             .with_border(afterhours::colors::lighten(accent_blue, 1.3f), 3.0f)
-            .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{80, 145, 220, 60})
+            .with_soft_shadow(3.0f, 5.0f, 12.0f,
+                              afterhours::Color{80, 145, 220, 60})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.4f)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -411,5 +417,5 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(example_borders, "Components",
-                        "Border styling options", ExampleBordersScreen)
+REGISTER_EXAMPLE_SCREEN(example_borders, "Components", "Border styling options",
+                        ExampleBordersScreen)

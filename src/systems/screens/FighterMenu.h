@@ -11,37 +11,36 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_tab = 3;     // Options tab selected
-  size_t selected_option = 0;  // System Options selected
+  size_t selected_tab = 3;    // Options tab selected
+  size_t selected_option = 0; // System Options selected
   int currency = 25000;
 
   // Colors matching Cross Tag Battle inspiration - darker, more industrial
-  afterhours::Color bg_dark{15, 12, 10, 255};           // Very dark for contrast
-  afterhours::Color bg_brown{85, 72, 58, 255};          // Warmer brown background
-  afterhours::Color header_black{8, 8, 8, 255};         // Pure black header bar
-  afterhours::Color tab_bg_unselected{248, 245, 240, 255};  // Cream white tabs
-  afterhours::Color tab_selected{85, 195, 55, 255};     // Bright lime green
-  afterhours::Color tab_text_unselected{35, 30, 25, 255}; // Dark text on light
-  afterhours::Color tab_border{40, 35, 30, 255};        // Dark border
-  afterhours::Color menu_item_bg{10, 10, 10, 255};      // Pure black bars
-  afterhours::Color menu_highlight{95, 210, 55, 255};   // Bright lime green
+  afterhours::Color bg_dark{15, 12, 10, 255};   // Very dark for contrast
+  afterhours::Color bg_brown{85, 72, 58, 255};  // Warmer brown background
+  afterhours::Color header_black{8, 8, 8, 255}; // Pure black header bar
+  afterhours::Color tab_bg_unselected{248, 245, 240, 255}; // Cream white tabs
+  afterhours::Color tab_selected{85, 195, 55, 255};        // Bright lime green
+  afterhours::Color tab_text_unselected{35, 30, 25, 255};  // Dark text on light
+  afterhours::Color tab_border{40, 35, 30, 255};           // Dark border
+  afterhours::Color menu_item_bg{10, 10, 10, 255};         // Pure black bars
+  afterhours::Color menu_highlight{95, 210, 55, 255};      // Bright lime green
   afterhours::Color text_white{250, 248, 245, 255};
   afterhours::Color text_gray{155, 150, 145, 255};
-  afterhours::Color holograph_teal{85, 215, 200, 255};  // Brighter cyan-teal
+  afterhours::Color holograph_teal{85, 215, 200, 255}; // Brighter cyan-teal
   afterhours::Color holograph_white{252, 255, 253, 255};
-  afterhours::Color gold_text{255, 210, 55, 255};       // Bright gold for P$
-  afterhours::Color menu_text_unselected{175, 170, 165, 255}; // Gray text on dark
-  afterhours::Color title_yellow{255, 235, 130, 255};   // Yellow for MainMenu title
+  afterhours::Color gold_text{255, 210, 55, 255}; // Bright gold for P$
+  afterhours::Color menu_text_unselected{175, 170, 165,
+                                         255}; // Gray text on dark
+  afterhours::Color title_yellow{255, 235, 130,
+                                 255}; // Yellow for MainMenu title
 
   std::vector<std::string> tabs = {"Offline", "Online", "Customize", "Options"};
 
   std::vector<std::pair<std::string, std::string>> menu_options = {
-      {"[v]", "System Options"},
-      {"[@]", "Game Options"},
-      {"[/]", "Display Options"},
-      {"[~]", "Sound & Language"},
-      {"[*]", "Network Options"},
-      {"[O]", "Button Settings"},
+      {"[v]", "System Options"},  {"[@]", "Game Options"},
+      {"[/]", "Display Options"}, {"[~]", "Sound & Language"},
+      {"[*]", "Network Options"}, {"[O]", "Button Settings"},
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -123,12 +122,15 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.2f)
             .with_debug_name("l_bumper"));
 
-    // Tab buttons - white bg for unselected, green for selected (like inspiration)
+    // Tab buttons - white bg for unselected, green for selected (like
+    // inspiration)
     for (size_t i = 0; i < tabs.size(); i++) {
       bool is_selected = (i == selected_tab);
-      afterhours::Color bg_color = is_selected ? tab_selected : tab_bg_unselected;
+      afterhours::Color bg_color =
+          is_selected ? tab_selected : tab_bg_unselected;
       // Selected tab has gold/orange text, unselected has dark text
-      afterhours::Color text_color = is_selected ? gold_text : tab_text_unselected;
+      afterhours::Color text_color =
+          is_selected ? gold_text : tab_text_unselected;
 
       if (button(context, mk(entity, 30 + static_cast<int>(i)),
                  ComponentConfig{}
@@ -189,12 +191,13 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       // Icon box on left - dark with border
       afterhours::Color icon_bg = is_selected ? menu_highlight : menu_item_bg;
       afterhours::Color icon_color = is_selected ? bg_dark : text_white;
-      
+
       div(context, mk(entity, 100 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(icon)
-              .with_size(ComponentSize{pixels(static_cast<int>(icon_w)),
-                                       pixels(static_cast<int>(menu_item_h - 4))})
+              .with_size(
+                  ComponentSize{pixels(static_cast<int>(icon_w)),
+                                pixels(static_cast<int>(menu_item_h - 4))})
               .with_absolute_position()
               .with_translate(menu_x, item_y)
               .with_custom_background(icon_bg)
@@ -205,13 +208,15 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Menu item bar - black normally, bright green when selected
       afterhours::Color item_bg = is_selected ? menu_highlight : menu_item_bg;
-      afterhours::Color item_text = is_selected ? bg_dark : menu_text_unselected;
+      afterhours::Color item_text =
+          is_selected ? bg_dark : menu_text_unselected;
 
       if (button(context, mk(entity, 101 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label(label)
-                     .with_size(ComponentSize{pixels(static_cast<int>(menu_item_w - icon_w)),
-                                              pixels(static_cast<int>(menu_item_h - 4))})
+                     .with_size(ComponentSize{
+                         pixels(static_cast<int>(menu_item_w - icon_w)),
+                         pixels(static_cast<int>(menu_item_h - 4))})
                      .with_absolute_position()
                      .with_translate(menu_x + icon_w, item_y)
                      .with_custom_background(item_bg)
@@ -266,7 +271,8 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // Teal accent edge
     div(context, mk(entity, 301),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(8), pixels(static_cast<int>(card_h))})
+            .with_size(
+                ComponentSize{pixels(8), pixels(static_cast<int>(card_h))})
             .with_absolute_position()
             .with_translate(card_x + card_w - 8.0f, card_y)
             .with_custom_background(holograph_teal)
@@ -458,4 +464,3 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(fighter_menu, "Game Mockups",
                         "Anime fighting game menu (Cross Tag style)",
                         FighterMenuScreen)
-

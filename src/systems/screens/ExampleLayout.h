@@ -16,7 +16,8 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::sage_natural();
     context.theme = theme;
 
-    // Main container with column layout - use smaller percentage for screen safe area
+    // Main container with column layout - use smaller percentage for screen
+    // safe area
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
@@ -104,15 +105,16 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("col_demo_container"));
 
     // Left column with stacked items - use percent of parent
-    auto left_col = div(
-        context, mk(col_container.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.45f), pixels(170)})
-            .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
-            .with_padding(Spacing::sm)
-            .with_flex_direction(FlexDirection::Column)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("stacked_column"));
+    auto left_col =
+        div(context, mk(col_container.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.45f), pixels(170)})
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.95f))
+                .with_padding(Spacing::sm)
+                .with_flex_direction(FlexDirection::Column)
+                .with_align_items(AlignItems::Center)
+                .with_debug_name("stacked_column"));
 
     // Stacked items - use percent of parent column
     div(context, mk(left_col.ent(), 0),

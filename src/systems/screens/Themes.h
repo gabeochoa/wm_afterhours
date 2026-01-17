@@ -73,24 +73,22 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("main_bg"));
 
     // Content container with padding
-    auto main =
-        div(context, mk(background.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("main"));
+    auto main = div(context, mk(background.ent(), 0),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                        .with_padding(Spacing::lg)
+                        .with_flex_direction(FlexDirection::Column)
+                        .with_debug_name("main"));
 
     // ========== HEADER ==========
-    auto header =
-        div(context, mk(main.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(950), pixels(80)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Row)
-                .with_soft_shadow(3.0f, 4.0f, 10.0f)
-                .with_debug_name("header"));
+    auto header = div(context, mk(main.ent(), 0),
+                      ComponentConfig{}
+                          .with_size(ComponentSize{pixels(950), pixels(80)})
+                          .with_custom_background(theme.surface)
+                          .with_padding(Spacing::md)
+                          .with_flex_direction(FlexDirection::Row)
+                          .with_soft_shadow(3.0f, 4.0f, 10.0f)
+                          .with_debug_name("header"));
 
     div(context, mk(header.ent(), 0),
         ComponentConfig{}
@@ -111,14 +109,13 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("current_theme"));
 
     // ========== MAIN CONTENT ==========
-    auto content =
-        div(context, mk(main.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(950), pixels(420)})
-                .with_custom_background(theme.background)
-                .with_flex_direction(FlexDirection::Row)
-                .with_margin(Margin{.top = DefaultSpacing::small()})
-                .with_debug_name("content"));
+    auto content = div(context, mk(main.ent(), 1),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{pixels(950), pixels(420)})
+                           .with_custom_background(theme.background)
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_margin(Margin{.top = DefaultSpacing::small()})
+                           .with_debug_name("content"));
 
     // LEFT - Theme Selection
     auto selector_panel =
@@ -155,7 +152,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_label(get_theme_name(choice))
                   .with_size(ComponentSize{pixels(210), pixels(48)})
                   .with_background(selected ? Theme::Usage::Accent
-                                             : Theme::Usage::Secondary)
+                                            : Theme::Usage::Secondary)
                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                   .with_margin(Spacing::sm)
                   .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {

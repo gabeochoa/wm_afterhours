@@ -88,18 +88,19 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("content"));
 
     // Left column - Sliders
-    auto left_col = div(
-        context, mk(content.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(450), pixels(430)})
-            .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
-            .with_padding(Spacing::sm)
-            .with_flex_direction(FlexDirection::Column)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = pixels(0),
-                                .left = pixels(0),
-                                .right = DefaultSpacing::small()})
-            .with_debug_name("left_column"));
+    auto left_col =
+        div(context, mk(content.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(450), pixels(430)})
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.9f))
+                .with_padding(Spacing::sm)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Margin{.top = pixels(0),
+                                    .bottom = pixels(0),
+                                    .left = pixels(0),
+                                    .right = DefaultSpacing::small()})
+                .with_debug_name("left_column"));
 
     // Sliders section header
     div(context, mk(left_col.ent(), 0),
@@ -217,14 +218,14 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_debug_name("quality_dropdown"));
 
     // Right column - Checkboxes
-    auto right_col = div(
-        context, mk(content.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(350), pixels(430)})
-            .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
-            .with_padding(Spacing::sm)
-            .with_flex_direction(FlexDirection::Column)
-            .with_debug_name("right_column"));
+    auto right_col = div(context, mk(content.ent(), 1),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{pixels(350), pixels(430)})
+                             .with_custom_background(afterhours::colors::darken(
+                                 theme.surface, 0.9f))
+                             .with_padding(Spacing::sm)
+                             .with_flex_direction(FlexDirection::Column)
+                             .with_debug_name("right_column"));
 
     // Checkboxes section header
     div(context, mk(right_col.ent(), 0),

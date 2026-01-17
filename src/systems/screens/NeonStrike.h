@@ -33,21 +33,33 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
   raylib::Texture2D crosshair_tex{};
 
   void load_textures_if_needed() {
-    if (textures_loaded) return;
+    if (textures_loaded)
+      return;
     textures_loaded = true;
-    
-    std::string images_path = afterhours::files::get_resource_path("images", "").string();
+
+    std::string images_path =
+        afterhours::files::get_resource_path("images", "").string();
     icon_uav_tex = raylib::LoadTexture((images_path + "icon_uav.png").c_str());
-    icon_recon_tex = raylib::LoadTexture((images_path + "icon_recon.png").c_str());
-    icon_shield_tactical_tex = raylib::LoadTexture((images_path + "icon_shield_tactical.png").c_str());
-    icon_strike_tex = raylib::LoadTexture((images_path + "icon_strike.png").c_str());
-    icon_danger_tex = raylib::LoadTexture((images_path + "icon_danger.png").c_str());
-    icon_health_tex = raylib::LoadTexture((images_path + "icon_health.png").c_str());
-    icon_skull_tex = raylib::LoadTexture((images_path + "icon_skull.png").c_str());
-    icon_ammo_tex = raylib::LoadTexture((images_path + "icon_ammo.png").c_str());
-    weapon_grenade_tex = raylib::LoadTexture((images_path + "icon_grenade.png").c_str());
-    weapon_melee_tex = raylib::LoadTexture((images_path + "icon_melee.png").c_str());
-    crosshair_tex = raylib::LoadTexture((images_path + "crosshair_neon.png").c_str());
+    icon_recon_tex =
+        raylib::LoadTexture((images_path + "icon_recon.png").c_str());
+    icon_shield_tactical_tex =
+        raylib::LoadTexture((images_path + "icon_shield_tactical.png").c_str());
+    icon_strike_tex =
+        raylib::LoadTexture((images_path + "icon_strike.png").c_str());
+    icon_danger_tex =
+        raylib::LoadTexture((images_path + "icon_danger.png").c_str());
+    icon_health_tex =
+        raylib::LoadTexture((images_path + "icon_health.png").c_str());
+    icon_skull_tex =
+        raylib::LoadTexture((images_path + "icon_skull.png").c_str());
+    icon_ammo_tex =
+        raylib::LoadTexture((images_path + "icon_ammo.png").c_str());
+    weapon_grenade_tex =
+        raylib::LoadTexture((images_path + "icon_grenade.png").c_str());
+    weapon_melee_tex =
+        raylib::LoadTexture((images_path + "icon_melee.png").c_str());
+    crosshair_tex =
+        raylib::LoadTexture((images_path + "crosshair_neon.png").c_str());
   }
 
   // Colors matching the inspiration exactly - dark tactical feel
@@ -174,11 +186,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     float tick_size = 3.0f;
     for (int i = 0; i < 8; i++) {
       float angle = (float)i * 3.14159f / 4.0f;
-      float tick_x = compass_cx + std::cos(angle) * compass_radius - tick_size / 2.0f;
-      float tick_y = compass_cy + std::sin(angle) * compass_radius - tick_size / 2.0f;
+      float tick_x =
+          compass_cx + std::cos(angle) * compass_radius - tick_size / 2.0f;
+      float tick_y =
+          compass_cy + std::sin(angle) * compass_radius - tick_size / 2.0f;
       div(context, mk(entity, 106 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(tick_size)), pixels(static_cast<int>(tick_size))})
+              .with_size(ComponentSize{pixels(static_cast<int>(tick_size)),
+                                       pixels(static_cast<int>(tick_size))})
               .with_absolute_position()
               .with_translate(tick_x, tick_y)
               .with_custom_background(text_muted)
@@ -253,18 +268,19 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== LEFT: Killstreak Icons ==========
     // Array of skill textures and labels
-    std::vector<std::tuple<raylib::Texture2D*, std::string, std::string>> skill_icons = {
-        {&icon_uav_tex, "[T]", "UAV"},
-        {&icon_recon_tex, "[O]", ""},
-        {&icon_shield_tactical_tex, "[U]", ""},
-        {&icon_strike_tex, "[X]", ""},
-        {&icon_danger_tex, "/!\\", ""},
-    };
+    std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>
+        skill_icons = {
+            {&icon_uav_tex, "[T]", "UAV"},
+            {&icon_recon_tex, "[O]", ""},
+            {&icon_shield_tactical_tex, "[U]", ""},
+            {&icon_strike_tex, "[X]", ""},
+            {&icon_danger_tex, "/!\\", ""},
+        };
 
     float ks_y = 140.0f;
     for (size_t i = 0; i < skill_icons.size(); i++) {
       float row_y = ks_y + (float)i * 72.0f;
-      auto& [tex_ptr, fallback_label, label] = skill_icons[i];
+      auto &[tex_ptr, fallback_label, label] = skill_icons[i];
 
       // Cog/gear icon
       div(context, mk(entity, 140 + static_cast<int>(i) * 3),
@@ -289,13 +305,15 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Icon image or fallback text
       if (tex_ptr && tex_ptr->id != 0) {
-        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width, (float)tex_ptr->height};
-        sprite(context, mk(entity, 142 + static_cast<int>(i) * 3), *tex_ptr, src,
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(40), pixels(40)})
-                .with_absolute_position()
-                .with_translate(52.5f, row_y + 7.5f)
-                .with_debug_name("ks_icon_" + std::to_string(i)));
+        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
+                                                   (float)tex_ptr->height};
+        sprite(context, mk(entity, 142 + static_cast<int>(i) * 3), *tex_ptr,
+               src,
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(40), pixels(40)})
+                   .with_absolute_position()
+                   .with_translate(52.5f, row_y + 7.5f)
+                   .with_debug_name("ks_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 142 + static_cast<int>(i) * 3),
             ComponentConfig{}
@@ -460,7 +478,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== BOTTOM CENTER: Ammo ==========
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_label(std::to_string(ammo_clip) + "/" + std::to_string(ammo_reserve))
+            .with_label(std::to_string(ammo_clip) + "/" +
+                        std::to_string(ammo_reserve))
             .with_size(ComponentSize{pixels(140), pixels(55)})
             .with_absolute_position()
             .with_translate(230.0f, (float)screen_h - 90.0f)
@@ -484,13 +503,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Skull icon for health panel
     if (icon_skull_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)icon_skull_tex.width, (float)icon_skull_tex.height};
+      afterhours::texture_manager::Rectangle src{
+          0, 0, (float)icon_skull_tex.width, (float)icon_skull_tex.height};
       sprite(context, mk(entity, 311), icon_skull_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(32), pixels(32)})
-              .with_absolute_position()
-              .with_translate(health_x + 10.0f, health_y + 14.0f)
-              .with_debug_name("skull_icon"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(32), pixels(32)})
+                 .with_absolute_position()
+                 .with_translate(health_x + 10.0f, health_y + 14.0f)
+                 .with_debug_name("skull_icon"));
     } else {
       div(context, mk(entity, 311),
           ComponentConfig{}
@@ -527,7 +547,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Health bar fill
     div(context, mk(entity, 321),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(160 * health_pct)), pixels(14)})
+            .with_size(ComponentSize{pixels(static_cast<int>(160 * health_pct)),
+                                     pixels(14)})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(health_cyan)
@@ -545,7 +566,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Armor bar fill
     div(context, mk(entity, 331),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(160 * armor_pct)), pixels(10)})
+            .with_size(ComponentSize{pixels(static_cast<int>(160 * armor_pct)),
+                                     pixels(10)})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 44.0f)
             .with_custom_background(armor_blue)
@@ -575,13 +597,15 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(gold_accent, 3.0f)
             .with_debug_name("grenade_bg"));
     if (weapon_grenade_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)weapon_grenade_tex.width, (float)weapon_grenade_tex.height};
+      afterhours::texture_manager::Rectangle src{
+          0, 0, (float)weapon_grenade_tex.width,
+          (float)weapon_grenade_tex.height};
       sprite(context, mk(entity, 411), weapon_grenade_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(50), pixels(50)})
-              .with_absolute_position()
-              .with_translate(eq_x + 10.0f, eq_y + 10.0f)
-              .with_debug_name("grenade_icon"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(50), pixels(50)})
+                 .with_absolute_position()
+                 .with_translate(eq_x + 10.0f, eq_y + 10.0f)
+                 .with_debug_name("grenade_icon"));
     }
 
     // Knife (x1)
@@ -594,13 +618,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(border_dark, 2.0f)
             .with_debug_name("knife_bg"));
     if (weapon_melee_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
+      afterhours::texture_manager::Rectangle src{
+          0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
       sprite(context, mk(entity, 422), weapon_melee_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(50), pixels(50)})
-              .with_absolute_position()
-              .with_translate(eq_x + 90.0f, eq_y + 10.0f)
-              .with_debug_name("knife_icon"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(50), pixels(50)})
+                 .with_absolute_position()
+                 .with_translate(eq_x + 90.0f, eq_y + 10.0f)
+                 .with_debug_name("knife_icon"));
     }
 
     div(context, mk(entity, 421),
@@ -617,13 +642,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     if (crosshair_tex.id != 0) {
       float cross_cx = (float)screen_w / 2.0f;
       float cross_cy = (float)screen_h / 2.0f;
-      afterhours::texture_manager::Rectangle src{0, 0, (float)crosshair_tex.width, (float)crosshair_tex.height};
+      afterhours::texture_manager::Rectangle src{
+          0, 0, (float)crosshair_tex.width, (float)crosshair_tex.height};
       sprite(context, mk(entity, 600), crosshair_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(64), pixels(64)})
-              .with_absolute_position()
-              .with_translate(cross_cx - 32.0f, cross_cy - 32.0f)
-              .with_debug_name("crosshair"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(64), pixels(64)})
+                 .with_absolute_position()
+                 .with_translate(cross_cx - 32.0f, cross_cy - 32.0f)
+                 .with_debug_name("crosshair"));
     }
   }
 };

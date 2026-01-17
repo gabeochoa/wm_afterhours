@@ -11,8 +11,8 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_initial = 1;  // Continue selected
-  size_t selected_main = 1;     // Gameplay selected
+  size_t selected_initial = 1; // Continue selected
+  size_t selected_main = 1;    // Gameplay selected
 
   // Colors matching Dead Space inspiration - dark sci-fi horror aesthetic
   afterhours::Color bg_black{8, 8, 10, 255};
@@ -25,15 +25,25 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_dim{55, 65, 70, 255};
 
   std::vector<std::string> initial_settings = {
-      "Continue",       "Menu Narration",      "Voice Language",
-      "Subtitles",      "Select Difficulty",   "Inverted Camera (Y-Axis)",
-      "Show Content Warning", "More Settings",
+      "Continue",
+      "Menu Narration",
+      "Voice Language",
+      "Subtitles",
+      "Select Difficulty",
+      "Inverted Camera (Y-Axis)",
+      "Show Content Warning",
+      "More Settings",
   };
 
   std::vector<std::string> main_settings = {
-      "Controls",        "Gameplay",       "Display and Graphics",
-      "Audio",           "Language and Subtitles", "Accessibility",
-      "Policies and Licenses", "Credits",
+      "Controls",
+      "Gameplay",
+      "Display and Graphics",
+      "Audio",
+      "Language and Subtitles",
+      "Accessibility",
+      "Policies and Licenses",
+      "Credits",
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -69,7 +79,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1), pixels(screen_h)})
                 .with_absolute_position()
-                .with_translate((float)screen_w - 120.0f + (float)i * 4.0f, 0.0f)
+                .with_translate((float)screen_w - 120.0f + (float)i * 4.0f,
+                                0.0f)
                 .with_custom_background(afterhours::Color{15, 20, 22, 180})
                 .with_debug_name("scanline_" + std::to_string(i)));
       }
@@ -96,7 +107,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 60),
         ComponentConfig{}
             .with_label("INITIAL SETTINGS")
-            .with_size(ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(28)})
+            .with_size(
+                ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(28)})
             .with_absolute_position()
             .with_translate(sidebar_x, sidebar_y)
             .with_font("EqProRounded", 19.0f)
@@ -112,7 +124,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 70 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(initial_settings[i])
-                     .with_size(ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(28)})
+                     .with_size(ComponentSize{
+                         pixels(static_cast<int>(sidebar_w)), pixels(28)})
                      .with_absolute_position()
                      .with_translate(sidebar_x, item_y)
                      .with_font("EqProRounded", 19.0f)
@@ -193,8 +206,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 121 + static_cast<int>(i) * 2),
                  ComponentConfig{}
                      .with_label(main_settings[i])
-                     .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 40)),
-                                              pixels(static_cast<int>(item_h - 8))})
+                     .with_size(
+                         ComponentSize{pixels(static_cast<int>(panel_w - 40)),
+                                       pixels(static_cast<int>(item_h - 8))})
                      .with_absolute_position()
                      .with_translate(panel_x + 25.0f, item_y + 8.0f)
                      .with_font("EqProRounded", 19.0f)
@@ -301,7 +315,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - bracket_size + 2.0f, panel_y - 2.0f)
+            .with_translate(panel_x + panel_w - bracket_size + 2.0f,
+                            panel_y - 2.0f)
             .with_custom_background(bracket_color)
             .with_debug_name("bracket_tr_h"));
     div(context, mk(entity, 303),
@@ -324,7 +339,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
             .with_absolute_position()
-            .with_translate(panel_x - 2.0f, panel_y + panel_h - bracket_size + 2.0f)
+            .with_translate(panel_x - 2.0f,
+                            panel_y + panel_h - bracket_size + 2.0f)
             .with_custom_background(bracket_color)
             .with_debug_name("bracket_bl_v"));
 
@@ -333,14 +349,16 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - bracket_size + 2.0f, panel_y + panel_h)
+            .with_translate(panel_x + panel_w - bracket_size + 2.0f,
+                            panel_y + panel_h)
             .with_custom_background(bracket_color)
             .with_debug_name("bracket_br_h"));
     div(context, mk(entity, 307),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w, panel_y + panel_h - bracket_size + 2.0f)
+            .with_translate(panel_x + panel_w,
+                            panel_y + panel_h - bracket_size + 2.0f)
             .with_custom_background(bracket_color)
             .with_debug_name("bracket_br_v"));
   }
@@ -349,4 +367,3 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(deadspace_settings, "Game Mockups",
                         "Sci-fi horror settings menu (Dead Space style)",
                         DeadSpaceSettingsScreen)
-

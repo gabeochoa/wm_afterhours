@@ -24,24 +24,21 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
   LanguageSample get_sample(Language lang) {
     switch (lang) {
     case Language::Korean:
-      return LanguageSample{
-          "언어 데모",
-          "안녕하세요!",
-          {"시작", "설정", "정보", "종료"},
-          "계속하기"};
+      return LanguageSample{"언어 데모",
+                            "안녕하세요!",
+                            {"시작", "설정", "정보", "종료"},
+                            "계속하기"};
     case Language::Japanese:
-      return LanguageSample{
-          "言語デモ",
-          "こんにちは！",
-          {"開始", "設定", "情報", "終了"},
-          "続ける"};
+      return LanguageSample{"言語デモ",
+                            "こんにちは！",
+                            {"開始", "設定", "情報", "終了"},
+                            "続ける"};
     case Language::English:
     default:
-      return LanguageSample{
-          "Language Demo",
-          "Hello!",
-          {"Start", "Settings", "About", "Exit"},
-          "Continue"};
+      return LanguageSample{"Language Demo",
+                            "Hello!",
+                            {"Start", "Settings", "About", "Exit"},
+                            "Continue"};
     }
   }
 
@@ -77,24 +74,22 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("main_bg"));
 
     // Content container with padding
-    auto main =
-        div(context, mk(background.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("main"));
+    auto main = div(context, mk(background.ent(), 0),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                        .with_padding(Spacing::sm)
+                        .with_flex_direction(FlexDirection::Column)
+                        .with_debug_name("main"));
 
     // ===== HEADER ROW (80px) =====
-    auto header =
-        div(context, mk(main.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(1000), pixels(80)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
-                .with_margin(Spacing::xs)
-                .with_debug_name("header"));
+    auto header = div(context, mk(main.ent(), 0),
+                      ComponentConfig{}
+                          .with_size(ComponentSize{pixels(1000), pixels(80)})
+                          .with_custom_background(theme.surface)
+                          .with_padding(Spacing::sm)
+                          .with_flex_direction(FlexDirection::Row)
+                          .with_margin(Spacing::xs)
+                          .with_debug_name("header"));
 
     // Title
     div(context, mk(header.ent(), 0),
@@ -119,8 +114,8 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_margin(Spacing::xs)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_background(current_language == Language::English
-                                         ? Theme::Usage::Primary
-                                         : Theme::Usage::Secondary))) {
+                                        ? Theme::Usage::Primary
+                                        : Theme::Usage::Secondary))) {
       current_language = Language::English;
     }
 
@@ -131,8 +126,8 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_margin(Spacing::xs)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_background(current_language == Language::Korean
-                                         ? Theme::Usage::Primary
-                                         : Theme::Usage::Secondary))) {
+                                        ? Theme::Usage::Primary
+                                        : Theme::Usage::Secondary))) {
       current_language = Language::Korean;
     }
 
@@ -143,20 +138,19 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_margin(Spacing::xs)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_background(current_language == Language::Japanese
-                                         ? Theme::Usage::Primary
-                                         : Theme::Usage::Secondary))) {
+                                        ? Theme::Usage::Primary
+                                        : Theme::Usage::Secondary))) {
       current_language = Language::Japanese;
     }
 
     // ===== CONTENT ROW (480px) =====
-    auto content =
-        div(context, mk(main.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(480)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::Center)
-                .with_margin(Spacing::xs)
-                .with_debug_name("content"));
+    auto content = div(context, mk(main.ent(), 1),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(480)})
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_justify_content(JustifyContent::Center)
+                           .with_margin(Spacing::xs)
+                           .with_debug_name("content"));
 
     // Left panel - current language demo
     auto left_panel =
@@ -254,15 +248,14 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ja_sample"));
 
     // ===== FOOTER ROW (60px) =====
-    auto footer =
-        div(context, mk(main.ent(), 2),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(1000), pixels(60)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::xs)
-                .with_debug_name("footer"));
+    auto footer = div(context, mk(main.ent(), 2),
+                      ComponentConfig{}
+                          .with_size(ComponentSize{pixels(1000), pixels(60)})
+                          .with_custom_background(theme.surface)
+                          .with_padding(Spacing::xs)
+                          .with_flex_direction(FlexDirection::Column)
+                          .with_margin(Spacing::xs)
+                          .with_debug_name("footer"));
 
     std::string lang_name = current_language == Language::English  ? "ENGLISH"
                             : current_language == Language::Korean ? "KOREAN"
@@ -270,8 +263,8 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(footer.ent(), 0),
         ComponentConfig{}
-            .with_label("Active: " + lang_name + " | Font: " +
-                        font_config.font_name)
+            .with_label("Active: " + lang_name +
+                        " | Font: " + font_config.font_name)
             .with_size(ComponentSize{pixels(500), pixels(26)})
             .with_custom_background(theme.surface)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)

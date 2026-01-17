@@ -11,8 +11,8 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_tab = 5;     // Options tab (gear icon)
-  size_t selected_option = 0;  // Controller selected
+  size_t selected_tab = 5;    // Options tab (gear icon)
+  size_t selected_option = 0; // Controller selected
 
   // Colors matching Kirby Air Ride inspiration - bright Nintendo aesthetic
   afterhours::Color bg_cream{245, 240, 230, 255};
@@ -26,27 +26,27 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color icon_green{95, 175, 95, 255};
   afterhours::Color icon_purple{145, 95, 185, 255};
   afterhours::Color text_dark{45, 45, 55, 255};
-  afterhours::Color text_black{0, 0, 0, 255};  // Pure black for max contrast on colored backgrounds
+  afterhours::Color text_black{
+      0, 0, 0, 255}; // Pure black for max contrast on colored backgrounds
   afterhours::Color text_muted{120, 115, 125, 255};
   afterhours::Color border_gray{195, 190, 185, 255};
 
   // Tab icons and colors
   std::vector<std::tuple<std::string, afterhours::Color>> tabs = {
-      {"((*))", icon_blue},    // Wifi
-      {"[O]", icon_red},       // Controller
-      {"[^]", icon_green},     // Home
-      {"[@]", icon_purple},    // Mail
-      {"[#]", btn_yellow},     // Star/coins
-      {"[*]", tab_purple},     // Gear (options) - selected
+      {"((*))", icon_blue}, // Wifi
+      {"[O]", icon_red},    // Controller
+      {"[^]", icon_green},  // Home
+      {"[@]", icon_purple}, // Mail
+      {"[#]", btn_yellow},  // Star/coins
+      {"[*]", tab_purple},  // Gear (options) - selected
   };
 
-  std::vector<std::tuple<std::string, std::string, afterhours::Color>> options = {
-      {"[O]", "Controller", icon_green},
-      {"[=]", "Display", icon_blue},
-      {"[+]", "Accessibility", icon_purple},
-      {"[~]", "Sound", icon_blue},
-      {"[(*))", "Online", icon_green},
-  };
+  std::vector<std::tuple<std::string, std::string, afterhours::Color>> options =
+      {
+          {"[O]", "Controller", icon_green},     {"[=]", "Display", icon_blue},
+          {"[+]", "Accessibility", icon_purple}, {"[~]", "Sound", icon_blue},
+          {"[(*))", "Online", icon_green},
+      };
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -105,23 +105,26 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       float scale = is_selected ? 1.15f : 1.0f;
       int size = static_cast<int>(tab_size * scale);
 
-      if (button(context, mk(entity, 20 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(icon)
-                     .with_size(ComponentSize{pixels(size), pixels(size)})
-                     .with_absolute_position()
-                     .with_translate(tx - (scale - 1.0f) * tab_size / 2.0f,
-                                     tab_bar_y - (scale - 1.0f) * tab_size / 2.0f)
-                     .with_custom_background(tab_bg)
-                     .with_border(is_selected ? tab_purple_dark : afterhours::Color{0, 0, 0, 0}, 
-                                  is_selected ? 4.0f : 0.0f)
-                     .with_font("Gaegu-Bold", 22.0f * scale)
-                     .with_custom_text_color(text_black)
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
-                     .with_roundness(0.25f)
-                     .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
-                     .with_debug_name("tab_" + std::to_string(i)))) {
+      if (button(
+              context, mk(entity, 20 + static_cast<int>(i)),
+              ComponentConfig{}
+                  .with_label(icon)
+                  .with_size(ComponentSize{pixels(size), pixels(size)})
+                  .with_absolute_position()
+                  .with_translate(tx - (scale - 1.0f) * tab_size / 2.0f,
+                                  tab_bar_y - (scale - 1.0f) * tab_size / 2.0f)
+                  .with_custom_background(tab_bg)
+                  .with_border(is_selected ? tab_purple_dark
+                                           : afterhours::Color{0, 0, 0, 0},
+                               is_selected ? 4.0f : 0.0f)
+                  .with_font("Gaegu-Bold", 22.0f * scale)
+                  .with_custom_text_color(text_black)
+                  .with_alignment(TextAlignment::Center)
+                  .with_rounded_corners(std::bitset<4>(0b1111))
+                  .with_roundness(0.25f)
+                  .with_soft_shadow(2.0f, 3.0f, 8.0f,
+                                    afterhours::Color{0, 0, 0, 40})
+                  .with_debug_name("tab_" + std::to_string(i)))) {
         selected_tab = i;
       }
     }
@@ -132,7 +135,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("R")
             .with_size(ComponentSize{pixels(32), pixels(32)})
             .with_absolute_position()
-            .with_translate(tab_start_x + 6 * tab_spacing + 10.0f, tab_bar_y + 13.0f)
+            .with_translate(tab_start_x + 6 * tab_spacing + 10.0f,
+                            tab_bar_y + 13.0f)
             .with_custom_background(border_gray)
             .with_font("Gaegu-Bold", 19.0f)
             .with_custom_text_color(text_dark)
@@ -147,7 +151,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Options")
             .with_size(ComponentSize{pixels(100), pixels(28)})
             .with_absolute_position()
-            .with_translate(tab_start_x + 5 * tab_spacing - 15.0f, tab_bar_y + tab_size + 8.0f)
+            .with_translate(tab_start_x + 5 * tab_spacing - 15.0f,
+                            tab_bar_y + tab_size + 8.0f)
             .with_custom_background(tab_purple)
             .with_font("Gaegu-Bold", 19.0f)
             .with_custom_text_color(panel_white)
@@ -180,8 +185,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     float tools_y = panel_y + 30.0f;
 
     std::vector<std::tuple<std::string, afterhours::Color>> tools = {
-        {"[/]", text_black},   // Pencil - use black for contrast
-        {"[-]", text_dark},    // Eraser
+        {"[/]", text_black}, // Pencil - use black for contrast
+        {"[-]", text_dark},  // Eraser
     };
 
     for (size_t i = 0; i < tools.size(); i++) {
@@ -206,17 +211,18 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     float name_x = panel_x + 180.0f;
     float name_y = panel_y + 30.0f;
 
-    button(context, mk(entity, 100),
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(260), pixels(58)})
-               .with_absolute_position()
-               .with_translate(name_x, name_y)
-               .with_custom_background(btn_yellow)
-               .with_border(btn_yellow_dark, 4.0f)
-               .with_rounded_corners(std::bitset<4>(0b1111))
-               .with_roundness(0.5f)
-               .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
-               .with_debug_name("name_btn"));
+    button(
+        context, mk(entity, 100),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(260), pixels(58)})
+            .with_absolute_position()
+            .with_translate(name_x, name_y)
+            .with_custom_background(btn_yellow)
+            .with_border(btn_yellow_dark, 4.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.5f)
+            .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
+            .with_debug_name("name_btn"));
 
     // Avatar circle
     div(context, mk(entity, 101),
@@ -281,26 +287,31 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       float oy = grid_y + (float)row * row_spacing;
 
       bool is_selected = (i == selected_option);
-      afterhours::Color opt_bg = is_selected ? color : afterhours::Color{235, 230, 225, 255};
+      afterhours::Color opt_bg =
+          is_selected ? color : afterhours::Color{235, 230, 225, 255};
       afterhours::Color opt_text = is_selected ? text_black : color;
 
       // Option icon button
-      if (button(context, mk(entity, 200 + static_cast<int>(i) * 2),
-                 ComponentConfig{}
-                     .with_label(icon)
-                     .with_size(ComponentSize{pixels(static_cast<int>(icon_size)),
-                                              pixels(static_cast<int>(icon_size))})
-                     .with_absolute_position()
-                     .with_translate(ox, oy)
-                     .with_custom_background(opt_bg)
-                     .with_border(is_selected ? afterhours::Color{0, 0, 0, 0} : border_gray, 2.0f)
-                     .with_font("Gaegu-Bold", 32.0f)
-                     .with_custom_text_color(opt_text)
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
-                     .with_roundness(0.25f)
-                     .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 30})
-                     .with_debug_name("opt_icon_" + std::to_string(i)))) {
+      if (button(
+              context, mk(entity, 200 + static_cast<int>(i) * 2),
+              ComponentConfig{}
+                  .with_label(icon)
+                  .with_size(ComponentSize{pixels(static_cast<int>(icon_size)),
+                                           pixels(static_cast<int>(icon_size))})
+                  .with_absolute_position()
+                  .with_translate(ox, oy)
+                  .with_custom_background(opt_bg)
+                  .with_border(is_selected ? afterhours::Color{0, 0, 0, 0}
+                                           : border_gray,
+                               2.0f)
+                  .with_font("Gaegu-Bold", 32.0f)
+                  .with_custom_text_color(opt_text)
+                  .with_alignment(TextAlignment::Center)
+                  .with_rounded_corners(std::bitset<4>(0b1111))
+                  .with_roundness(0.25f)
+                  .with_soft_shadow(2.0f, 3.0f, 8.0f,
+                                    afterhours::Color{0, 0, 0, 30})
+                  .with_debug_name("opt_icon_" + std::to_string(i)))) {
         selected_option = i;
       }
 
@@ -330,11 +341,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("description"));
 
-    // ========== LEFT DECORATIVE ELEMENTS (checkerboard pattern hint) ==========
+    // ========== LEFT DECORATIVE ELEMENTS (checkerboard pattern hint)
+    // ==========
     float check_x = 30.0f;
     float check_y = panel_y + panel_h - 80.0f;
-    afterhours::Color check1{195, 225, 195, 255};  // Light green
-    afterhours::Color check2{175, 205, 235, 255};  // Light blue
+    afterhours::Color check1{195, 225, 195, 255}; // Light green
+    afterhours::Color check2{175, 205, 235, 255}; // Light blue
 
     for (int row = 0; row < 3; row++) {
       for (int col = 0; col < 4; col++) {
@@ -344,9 +356,10 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(18), pixels(18)})
                 .with_absolute_position()
                 .with_translate(check_x + (float)col * 22.0f,
-                               check_y + (float)row * 22.0f)
+                                check_y + (float)row * 22.0f)
                 .with_custom_background(c)
-                .with_debug_name("check_" + std::to_string(row) + "_" + std::to_string(col)));
+                .with_debug_name("check_" + std::to_string(row) + "_" +
+                                 std::to_string(col)));
       }
     }
   }
@@ -355,4 +368,3 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(kirby_options, "Game Mockups",
                         "Colorful Nintendo options menu (Kirby style)",
                         KirbyOptionsScreen)
-

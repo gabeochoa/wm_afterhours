@@ -10,23 +10,23 @@ using namespace afterhours::ui::imm;
 
 struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
   // Fantasy parchment aesthetic
-  afterhours::Color bg_dark{35, 28, 22, 255};           // Dark wood/leather
-  afterhours::Color bg_medium{55, 45, 38, 255};         // Medium brown
-  afterhours::Color parchment{245, 235, 220, 255};      // Parchment background
-  afterhours::Color gold_accent{218, 165, 32, 255};     // Gold
-  afterhours::Color text_dark{45, 35, 25, 255};         // Dark text
-  afterhours::Color text_light{235, 225, 210, 255};     // Light text
+  afterhours::Color bg_dark{35, 28, 22, 255};       // Dark wood/leather
+  afterhours::Color bg_medium{55, 45, 38, 255};     // Medium brown
+  afterhours::Color parchment{245, 235, 220, 255};  // Parchment background
+  afterhours::Color gold_accent{218, 165, 32, 255}; // Gold
+  afterhours::Color text_dark{45, 35, 25, 255};     // Dark text
+  afterhours::Color text_light{235, 225, 210, 255}; // Light text
 
   bool textures_loaded = false;
   std::string base_path;
 
   // Panel textures - different styles
-  raylib::Texture2D panel_000;  // Simple rounded
-  raylib::Texture2D panel_005;  // Ornate corners
-  raylib::Texture2D panel_010;  // Double border
-  raylib::Texture2D panel_015;  // Thick border
-  raylib::Texture2D panel_020;  // Decorative
-  raylib::Texture2D panel_025;  // Heavy ornate
+  raylib::Texture2D panel_000; // Simple rounded
+  raylib::Texture2D panel_005; // Ornate corners
+  raylib::Texture2D panel_010; // Double border
+  raylib::Texture2D panel_015; // Thick border
+  raylib::Texture2D panel_020; // Decorative
+  raylib::Texture2D panel_025; // Heavy ornate
 
   // Border-only textures (transparent center)
   raylib::Texture2D border_000;
@@ -46,28 +46,47 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     textures_loaded = true;
 
-    base_path = afterhours::files::get_resource_path("kenney", "kenney_fantasy-ui-borders/PNG").string();
+    base_path = afterhours::files::get_resource_path(
+                    "kenney", "kenney_fantasy-ui-borders/PNG")
+                    .string();
 
     // Default panels
-    panel_000 = raylib::LoadTexture((base_path + "/Default/Panel/panel-000.png").c_str());
-    panel_005 = raylib::LoadTexture((base_path + "/Default/Panel/panel-005.png").c_str());
-    panel_010 = raylib::LoadTexture((base_path + "/Default/Panel/panel-010.png").c_str());
-    panel_015 = raylib::LoadTexture((base_path + "/Default/Panel/panel-015.png").c_str());
-    panel_020 = raylib::LoadTexture((base_path + "/Default/Panel/panel-020.png").c_str());
-    panel_025 = raylib::LoadTexture((base_path + "/Default/Panel/panel-025.png").c_str());
+    panel_000 = raylib::LoadTexture(
+        (base_path + "/Default/Panel/panel-000.png").c_str());
+    panel_005 = raylib::LoadTexture(
+        (base_path + "/Default/Panel/panel-005.png").c_str());
+    panel_010 = raylib::LoadTexture(
+        (base_path + "/Default/Panel/panel-010.png").c_str());
+    panel_015 = raylib::LoadTexture(
+        (base_path + "/Default/Panel/panel-015.png").c_str());
+    panel_020 = raylib::LoadTexture(
+        (base_path + "/Default/Panel/panel-020.png").c_str());
+    panel_025 = raylib::LoadTexture(
+        (base_path + "/Default/Panel/panel-025.png").c_str());
 
     // Border-only (transparent center)
-    border_000 = raylib::LoadTexture((base_path + "/Default/Border/panel-border-000.png").c_str());
-    border_005 = raylib::LoadTexture((base_path + "/Default/Border/panel-border-005.png").c_str());
-    border_010 = raylib::LoadTexture((base_path + "/Default/Border/panel-border-010.png").c_str());
+    border_000 = raylib::LoadTexture(
+        (base_path + "/Default/Border/panel-border-000.png").c_str());
+    border_005 = raylib::LoadTexture(
+        (base_path + "/Default/Border/panel-border-005.png").c_str());
+    border_010 = raylib::LoadTexture(
+        (base_path + "/Default/Border/panel-border-010.png").c_str());
 
     // Transparent border
-    trans_border_000 = raylib::LoadTexture((base_path + "/Default/Transparent border/panel-transparent-border-000.png").c_str());
-    trans_border_010 = raylib::LoadTexture((base_path + "/Default/Transparent border/panel-transparent-border-010.png").c_str());
+    trans_border_000 = raylib::LoadTexture(
+        (base_path +
+         "/Default/Transparent border/panel-transparent-border-000.png")
+            .c_str());
+    trans_border_010 = raylib::LoadTexture(
+        (base_path +
+         "/Default/Transparent border/panel-transparent-border-010.png")
+            .c_str());
 
     // Double-width panels (thicker borders)
-    double_panel_000 = raylib::LoadTexture((base_path + "/Double/Panel/panel-000.png").c_str());
-    double_panel_010 = raylib::LoadTexture((base_path + "/Double/Panel/panel-010.png").c_str());
+    double_panel_000 = raylib::LoadTexture(
+        (base_path + "/Double/Panel/panel-000.png").c_str());
+    double_panel_010 = raylib::LoadTexture(
+        (base_path + "/Double/Panel/panel-010.png").c_str());
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -84,7 +103,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = afterhours::Color{139, 90, 43, 255};
     theme.accent = afterhours::Color{200, 150, 50, 255};
     theme.error = afterhours::Color{180, 60, 60, 255};
-    theme.roundness = 0.0f;  // Nine-slice handles corners
+    theme.roundness = 0.0f; // Nine-slice handles corners
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();
@@ -93,12 +112,13 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(
+                ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
     float start_x = 40.0f;
-    float start_y = 70.0f;  // Account for taller title
+    float start_y = 70.0f; // Account for taller title
     float box_width = 140.0f;
     float box_height = 100.0f;
     float gap = 20.0f;
@@ -125,12 +145,9 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     PanelDemo row1[] = {
-        {"Simple", &panel_000, 16},
-        {"Ornate", &panel_005, 16},
-        {"Double Line", &panel_010, 16},
-        {"Thick", &panel_015, 16},
-        {"Decorative", &panel_020, 16},
-        {"Heavy", &panel_025, 16},
+        {"Simple", &panel_000, 16},      {"Ornate", &panel_005, 16},
+        {"Double Line", &panel_010, 16}, {"Thick", &panel_015, 16},
+        {"Decorative", &panel_020, 16},  {"Heavy", &panel_025, 16},
     };
 
     // Row 1 label
@@ -162,7 +179,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Row 2: Border-only styles (transparent centers)
     float row2_y = row1_y + box_height + gap + label_height;
-    
+
     div(context, mk(entity, 25),
         ComponentConfig{}
             .with_label("Border Only (transparent center)")
@@ -174,10 +191,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("row2_label"));
 
     PanelDemo row2[] = {
-        {"Border A", &border_000, 16},
-        {"Border B", &border_005, 16},
-        {"Border C", &border_010, 16},
-        {"Trans A", &trans_border_000, 16},
+        {"Border A", &border_000, 16},      {"Border B", &border_005, 16},
+        {"Border C", &border_010, 16},      {"Trans A", &trans_border_000, 16},
         {"Trans B", &trans_border_010, 16},
     };
 
@@ -294,7 +309,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position()
             .with_translate(start_x, row4_y)
-            .with_nine_slice_border(double_panel_000, 32)  // Double needs larger slice
+            .with_nine_slice_border(double_panel_000,
+                                    32) // Double needs larger slice
             .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -319,7 +335,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position()
             .with_translate(start_x + 2 * (box_width + gap), row4_y)
-            .with_nine_slice_border(NineSliceBorder::uniform(panel_010, 16, gold_accent))
+            .with_nine_slice_border(
+                NineSliceBorder::uniform(panel_010, 16, gold_accent))
             .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -331,8 +348,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position()
             .with_translate(start_x + 3 * (box_width + gap), row4_y)
-            .with_nine_slice_border(NineSliceBorder::uniform(panel_010, 16, 
-                                afterhours::Color{100, 150, 220, 255}))
+            .with_nine_slice_border(NineSliceBorder::uniform(
+                panel_010, 16, afterhours::Color{100, 150, 220, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -344,8 +361,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position()
             .with_translate(start_x + 4 * (box_width + gap), row4_y)
-            .with_nine_slice_border(NineSliceBorder::uniform(panel_010, 16,
-                                afterhours::Color{200, 80, 80, 255}))
+            .with_nine_slice_border(NineSliceBorder::uniform(
+                panel_010, 16, afterhours::Color{200, 80, 80, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -357,8 +374,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position()
             .with_translate(start_x + 5 * (box_width + gap), row4_y)
-            .with_nine_slice_border(NineSliceBorder::uniform(panel_010, 16,
-                                afterhours::Color{80, 180, 100, 255}))
+            .with_nine_slice_border(NineSliceBorder::uniform(
+                panel_010, 16, afterhours::Color{80, 180, 100, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -377,18 +394,18 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(gold_accent)
             .with_debug_name("row5_label"));
 
-    auto btn_result = button(
-        context, mk(entity, 80),
-        ComponentConfig{}
-            .with_label("Click Me!")
-            .with_size(ComponentSize{pixels(180.0f), pixels(50.0f)})
-            .with_absolute_position()
-            .with_translate(start_x, row5_y)
-            .with_nine_slice_border(panel_020, 16)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("nine_slice_button"));
+    auto btn_result =
+        button(context, mk(entity, 80),
+               ComponentConfig{}
+                   .with_label("Click Me!")
+                   .with_size(ComponentSize{pixels(180.0f), pixels(50.0f)})
+                   .with_absolute_position()
+                   .with_translate(start_x, row5_y)
+                   .with_nine_slice_border(panel_020, 16)
+                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_custom_text_color(text_dark)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name("nine_slice_button"));
 
     if (btn_result) {
       log_info("Nine-slice button clicked!");
@@ -407,7 +424,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 86),
         ComponentConfig{}
             .with_label("This is a dialog box using 9-slice borders. "
-                       "The corners stay crisp while the edges stretch!")
+                        "The corners stay crisp while the edges stretch!")
             .with_size(ComponentSize{pixels(330), pixels(100)})
             .with_absolute_position()
             .with_translate(start_x + 210, row5_y + 10)
@@ -441,8 +458,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120.0f), pixels(55.0f)})
             .with_absolute_position()
             .with_translate(start_x + 585, row5_y + 50)
-            .with_nine_slice_border(NineSliceBorder::uniform(border_005, 16, 
-                                afterhours::Color{180, 140, 80, 255}))
+            .with_nine_slice_border(NineSliceBorder::uniform(
+                border_005, 16, afterhours::Color{180, 140, 80, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -454,8 +471,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120.0f), pixels(55.0f)})
             .with_absolute_position()
             .with_translate(start_x + 715, row5_y + 50)
-            .with_nine_slice_border(NineSliceBorder::uniform(border_010, 16,
-                                afterhours::Color{100, 140, 180, 255}))
+            .with_nine_slice_border(NineSliceBorder::uniform(
+                border_010, 16, afterhours::Color{100, 140, 180, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -464,5 +481,5 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
 };
 
 REGISTER_EXAMPLE_SCREEN(nine_slice_borders, "Components",
-                        "9-slice border textures", ExampleNineSliceBordersScreen)
-
+                        "9-slice border textures",
+                        ExampleNineSliceBordersScreen)

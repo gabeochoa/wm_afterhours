@@ -16,25 +16,20 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
   int coins = 20;
 
   // Colors matching Rubber Bandits - vibrant cartoony yellow/orange
-  afterhours::Color bg_yellow{255, 200, 65, 255};        // Bright yellow background
-  afterhours::Color bg_yellow_dark{235, 175, 45, 255};   // Darker yellow
-  afterhours::Color text_dark{45, 35, 25, 255};          // Dark brown text
+  afterhours::Color bg_yellow{255, 200, 65, 255}; // Bright yellow background
+  afterhours::Color bg_yellow_dark{235, 175, 45, 255}; // Darker yellow
+  afterhours::Color text_dark{45, 35, 25, 255};        // Dark brown text
   afterhours::Color text_white{255, 255, 255, 255};
-  afterhours::Color menu_bg{255, 245, 200, 255};         // Light cream menu bg
-  afterhours::Color highlight{255, 225, 145, 255};       // Highlighted item
-  afterhours::Color accent_green{145, 200, 95, 255};     // Green accent
-  afterhours::Color accent_blue{95, 175, 215, 255};      // Blue accent  
-  afterhours::Color lightning{255, 230, 85, 255};        // Lightning bolt yellow
-  afterhours::Color online_pill{155, 185, 135, 255};     // Online status pill
+  afterhours::Color menu_bg{255, 245, 200, 255};     // Light cream menu bg
+  afterhours::Color highlight{255, 225, 145, 255};   // Highlighted item
+  afterhours::Color accent_green{145, 200, 95, 255}; // Green accent
+  afterhours::Color accent_blue{95, 175, 215, 255};  // Blue accent
+  afterhours::Color lightning{255, 230, 85, 255};    // Lightning bolt yellow
+  afterhours::Color online_pill{155, 185, 135, 255}; // Online status pill
 
   std::vector<std::string> menu_items = {
-      "OPTIONS",
-      "CONTROLS",
-      "LEADERBOARD",
-      "ARMORY",
-      "REPORT PLAYER",
-      "PLAY CREDITS",
-      "BACK",
+      "OPTIONS",       "CONTROLS",     "LEADERBOARD", "ARMORY",
+      "REPORT PLAYER", "PLAY CREDITS", "BACK",
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -320,7 +315,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 5; i++) {
       float bag_x = 350.0f + (float)i * 85.0f + (float)(i % 2) * 20.0f;
       float bag_y = (float)screen_h - 180.0f + (float)(i % 3) * 25.0f;
-      
+
       div(context, mk(entity, 500 + i),
           ComponentConfig{}
               .with_label("$")
@@ -341,4 +336,3 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(rubber_bandits_menu, "Game Mockups",
                         "Cartoony party game menu (Rubber Bandits style)",
                         RubberBanditsMenuScreen)
-

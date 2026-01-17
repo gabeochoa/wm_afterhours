@@ -14,8 +14,8 @@ using namespace afterhours::ui::imm;
 
 struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   int64_t cash = 1250980;
-  size_t selected_tab = 0;  // Navigation tab selection
-  
+  size_t selected_tab = 0; // Navigation tab selection
+
   // Loaded textures
   bool textures_loaded = false;
   raylib::Texture2D coin_tex{};
@@ -34,23 +34,37 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   raylib::Texture2D cloud_tex{};
 
   void load_textures_if_needed() {
-    if (textures_loaded) return;
+    if (textures_loaded)
+      return;
     textures_loaded = true;
-    
-    std::string images_path = afterhours::files::get_resource_path("images", "").string();
-    coin_tex = raylib::LoadTexture((images_path + "icon_coin_small.png").c_str());
-    diamond_tex = raylib::LoadTexture((images_path + "icon_diamond.png").c_str());
-    star_trophy_tex = raylib::LoadTexture((images_path + "icon_star_trophy.png").c_str());
+
+    std::string images_path =
+        afterhours::files::get_resource_path("images", "").string();
+    coin_tex =
+        raylib::LoadTexture((images_path + "icon_coin_small.png").c_str());
+    diamond_tex =
+        raylib::LoadTexture((images_path + "icon_diamond.png").c_str());
+    star_trophy_tex =
+        raylib::LoadTexture((images_path + "icon_star_trophy.png").c_str());
     sparkle_tex = raylib::LoadTexture((images_path + "sparkle.png").c_str());
-    icon_happiness_tex = raylib::LoadTexture((images_path + "icon_happiness.png").c_str());
-    icon_resources_tex = raylib::LoadTexture((images_path + "icon_resources.png").c_str());
-    icon_rides_tex = raylib::LoadTexture((images_path + "icon_rides.png").c_str());
-    icon_food_tex = raylib::LoadTexture((images_path + "icon_food.png").c_str());
-    icon_upgrades_tex = raylib::LoadTexture((images_path + "icon_upgrades.png").c_str());
-    icon_finance_tex = raylib::LoadTexture((images_path + "icon_finance.png").c_str());
-    icon_shop_tex = raylib::LoadTexture((images_path + "icon_shop.png").c_str());
-    icon_settings_tex = raylib::LoadTexture((images_path + "icon_settings.png").c_str());
-    mascot_tex = raylib::LoadTexture((images_path + "mascot_business.png").c_str());
+    icon_happiness_tex =
+        raylib::LoadTexture((images_path + "icon_happiness.png").c_str());
+    icon_resources_tex =
+        raylib::LoadTexture((images_path + "icon_resources.png").c_str());
+    icon_rides_tex =
+        raylib::LoadTexture((images_path + "icon_rides.png").c_str());
+    icon_food_tex =
+        raylib::LoadTexture((images_path + "icon_food.png").c_str());
+    icon_upgrades_tex =
+        raylib::LoadTexture((images_path + "icon_upgrades.png").c_str());
+    icon_finance_tex =
+        raylib::LoadTexture((images_path + "icon_finance.png").c_str());
+    icon_shop_tex =
+        raylib::LoadTexture((images_path + "icon_shop.png").c_str());
+    icon_settings_tex =
+        raylib::LoadTexture((images_path + "icon_settings.png").c_str());
+    mascot_tex =
+        raylib::LoadTexture((images_path + "mascot_business.png").c_str());
     cloud_tex = raylib::LoadTexture((images_path + "cloud_white.png").c_str());
   }
   float happiness_pct = 0.85f;
@@ -83,7 +97,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   // Colors matching Dream Incorporated exactly
   afterhours::Color sky_top{125, 175, 220, 255};
   afterhours::Color sky_bottom{185, 200, 225, 255};
-  afterhours::Color lavender_bg{190, 175, 200, 255};  // Purple tint at bottom
+  afterhours::Color lavender_bg{190, 175, 200, 255}; // Purple tint at bottom
   afterhours::Color panel_blue{125, 190, 240, 255};
   afterhours::Color panel_blue_light{175, 215, 250, 255};
   afterhours::Color border_blue{85, 155, 205, 255};
@@ -117,7 +131,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     load_textures_if_needed();
-    
+
     Theme theme;
     theme.font = dark_text;
     theme.darkfont = dark_text;
@@ -136,14 +150,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_h = Settings::get().get_screen_height();
 
     // ========== BACKGROUND: Sky gradient with lavender at bottom ==========
-    ui_workarounds::vertical_gradient(context, entity, 1, 0, 0,
-        static_cast<float>(screen_w), static_cast<float>(screen_h) * 0.7f,
-        sky_top, sky_bottom, 10);
+    ui_workarounds::vertical_gradient(
+        context, entity, 1, 0, 0, static_cast<float>(screen_w),
+        static_cast<float>(screen_h) * 0.7f, sky_top, sky_bottom, 10);
 
     // Lavender/purple bottom section
     div(context, mk(entity, 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(static_cast<int>(screen_h * 0.35f))})
+            .with_size(ComponentSize{
+                pixels(screen_w), pixels(static_cast<int>(screen_h * 0.35f))})
             .with_absolute_position()
             .with_translate(0.0f, static_cast<float>(screen_h) * 0.65f)
             .with_custom_background(lavender_bg)
@@ -151,26 +166,27 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Decorative clouds
     if (cloud_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)cloud_tex.width, (float)cloud_tex.height};
+      afterhours::texture_manager::Rectangle src{0, 0, (float)cloud_tex.width,
+                                                 (float)cloud_tex.height};
       sprite(context, mk(entity, 6), cloud_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(80), pixels(40)})
-              .with_absolute_position()
-              .with_translate((float)screen_w - 130.0f, 15.0f)
-              .with_opacity(0.6f)
-              .with_debug_name("cloud1"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(80), pixels(40)})
+                 .with_absolute_position()
+                 .with_translate((float)screen_w - 130.0f, 15.0f)
+                 .with_opacity(0.6f)
+                 .with_debug_name("cloud1"));
       sprite(context, mk(entity, 7), cloud_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(60), pixels(30)})
-              .with_absolute_position()
-              .with_translate((float)screen_w - 200.0f, 55.0f)
-              .with_opacity(0.4f)
-              .with_debug_name("cloud2"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(60), pixels(30)})
+                 .with_absolute_position()
+                 .with_translate((float)screen_w - 200.0f, 55.0f)
+                 .with_opacity(0.4f)
+                 .with_debug_name("cloud2"));
     }
 
     // ========== TITLE: DREAM INCORPORATED (large puffy 3D text) ==========
     // Using native with_text_stroke() API for efficient outline rendering
-    
+
     // DREAM - large white with thick blue outline and shadow effect
     // Shadow layer first (dark blue, offset)
     div(context, mk(entity, 10),
@@ -184,7 +200,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_text_stroke(afterhours::Color{35, 70, 115, 150}, 5.0f)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("dream_shadow"));
-    
+
     // Main DREAM text
     div(context, mk(entity, 11),
         ComponentConfig{}
@@ -210,7 +226,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_text_stroke(afterhours::Color{25, 55, 95, 150}, 4.0f)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("incorporated_shadow"));
-    
+
     // Main INCORPORATED text
     div(context, mk(entity, 13),
         ComponentConfig{}
@@ -242,13 +258,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Gold coin
     if (coin_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)coin_tex.width, (float)coin_tex.height};
+      afterhours::texture_manager::Rectangle src{0, 0, (float)coin_tex.width,
+                                                 (float)coin_tex.height};
       sprite(context, mk(entity, 56), coin_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(36), pixels(36)})
-              .with_absolute_position()
-              .with_translate(cur_x + 12.0f, 26.0f)
-              .with_debug_name("coin"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(36), pixels(36)})
+                 .with_absolute_position()
+                 .with_translate(cur_x + 12.0f, 26.0f)
+                 .with_debug_name("coin"));
     } else {
       div(context, mk(entity, 56),
           ComponentConfig{}
@@ -283,7 +300,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Happiness icon - larger and more prominent
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(stat_icon_size)), pixels(static_cast<int>(stat_icon_size))})
+            .with_size(ComponentSize{pixels(static_cast<int>(stat_icon_size)),
+                                     pixels(static_cast<int>(stat_icon_size))})
             .with_absolute_position()
             .with_translate((float)screen_w - 210.0f, stat_y)
             .with_custom_background(afterhours::Color{255, 220, 150, 255})
@@ -293,19 +311,22 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(1.0f)
             .with_debug_name("happy_bg"));
     if (icon_happiness_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)icon_happiness_tex.width, (float)icon_happiness_tex.height};
+      afterhours::texture_manager::Rectangle src{
+          0, 0, (float)icon_happiness_tex.width,
+          (float)icon_happiness_tex.height};
       sprite(context, mk(entity, 61), icon_happiness_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(44), pixels(44)})
-              .with_absolute_position()
-              .with_translate((float)screen_w - 203.0f, stat_y + 7.0f)
-              .with_debug_name("happy_icon"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(44), pixels(44)})
+                 .with_absolute_position()
+                 .with_translate((float)screen_w - 203.0f, stat_y + 7.0f)
+                 .with_debug_name("happy_icon"));
     }
 
     // Resource gauge icon - larger and more prominent
     div(context, mk(entity, 62),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(stat_icon_size)), pixels(static_cast<int>(stat_icon_size))})
+            .with_size(ComponentSize{pixels(static_cast<int>(stat_icon_size)),
+                                     pixels(static_cast<int>(stat_icon_size))})
             .with_absolute_position()
             .with_translate((float)screen_w - 85.0f, stat_y)
             .with_custom_background(afterhours::Color{180, 210, 245, 255})
@@ -315,13 +336,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(1.0f)
             .with_debug_name("gauge_bg"));
     if (icon_resources_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)icon_resources_tex.width, (float)icon_resources_tex.height};
+      afterhours::texture_manager::Rectangle src{
+          0, 0, (float)icon_resources_tex.width,
+          (float)icon_resources_tex.height};
       sprite(context, mk(entity, 63), icon_resources_tex, src,
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(44), pixels(44)})
-              .with_absolute_position()
-              .with_translate((float)screen_w - 78.0f, stat_y + 7.0f)
-              .with_debug_name("resource_icon"));
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(44), pixels(44)})
+                 .with_absolute_position()
+                 .with_translate((float)screen_w - 78.0f, stat_y + 7.0f)
+                 .with_debug_name("resource_icon"));
     }
 
     // ========== METERS ==========
@@ -377,7 +400,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 84),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(44 * happiness_pct)), pixels(16)})
+            .with_size(ComponentSize{
+                pixels(static_cast<int>(44 * happiness_pct)), pixels(16)})
             .with_absolute_position()
             .with_translate((float)screen_w - 216.0f, meter_y + 9.0f)
             .with_custom_background(happy_green)
@@ -425,53 +449,61 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Center the main content area
     float content_width = 850.0f;
     float content_margin = ((float)screen_w - content_width) / 2.0f;
-    
-    std::vector<std::tuple<raylib::Texture2D*, std::string, std::string, afterhours::Color>> tabs = {
-        {&icon_rides_tex, "[R]", "Rides", tab_blue},
-        {&icon_food_tex, "[F]", "Food Stalls", tab_green},
-        {&icon_upgrades_tex, "[!]", "Upgrades", tab_pink},
-        {&icon_upgrades_tex, "[X]", "Upgrades", tab_purple},
-        {&icon_finance_tex, "[$]", "Finance", tab_cream},
-    };
 
-    float nav_x = content_margin - 10.0f;  // Slightly left of content area
+    std::vector<std::tuple<raylib::Texture2D *, std::string, std::string,
+                           afterhours::Color>>
+        tabs = {
+            {&icon_rides_tex, "[R]", "Rides", tab_blue},
+            {&icon_food_tex, "[F]", "Food Stalls", tab_green},
+            {&icon_upgrades_tex, "[!]", "Upgrades", tab_pink},
+            {&icon_upgrades_tex, "[X]", "Upgrades", tab_purple},
+            {&icon_finance_tex, "[$]", "Finance", tab_cream},
+        };
+
+    float nav_x = content_margin - 10.0f; // Slightly left of content area
     float nav_y = 195.0f;
-    float tab_width = 130.0f;  // Increased to prevent text overflow
+    float tab_width = 130.0f; // Increased to prevent text overflow
     float tab_height = 78.0f;
     float tab_spacing = 85.0f;
     for (size_t i = 0; i < tabs.size(); i++) {
       float tab_y = nav_y + (float)i * tab_spacing;
-      auto& [tex_ptr, fallback, label, bg_color] = tabs[i];
+      auto &[tex_ptr, fallback, label, bg_color] = tabs[i];
 
       // Tab button background - larger with thicker border
       bool tab_selected = (i == selected_tab);
-      afterhours::Color border_color = tab_selected 
-          ? afterhours::Color{255, 200, 50, 255}   // Gold border when selected
-          : afterhours::Color{140, 160, 180, 255};
+      afterhours::Color border_color =
+          tab_selected ? afterhours::Color{255, 200, 50, 255}
+                       // Gold border when selected
+                       : afterhours::Color{140, 160, 180, 255};
       float border_width = tab_selected ? 5.0f : 3.0f;
-      
+
       if (button(context, mk(entity, 100 + static_cast<int>(i)),
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(static_cast<int>(tab_width)), pixels(static_cast<int>(tab_height))})
-                 .with_absolute_position()
-                 .with_translate(nav_x, tab_y)
-                 .with_custom_background(bg_color)
-                 .with_border(border_color, border_width)
-                 .with_rounded_corners(std::bitset<4>(0b1111))
-                 .with_roundness(0.25f)
-                 .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 50})
-                 .with_debug_name("tab_" + std::to_string(i)))) {
+                 ComponentConfig{}
+                     .with_size(
+                         ComponentSize{pixels(static_cast<int>(tab_width)),
+                                       pixels(static_cast<int>(tab_height))})
+                     .with_absolute_position()
+                     .with_translate(nav_x, tab_y)
+                     .with_custom_background(bg_color)
+                     .with_border(border_color, border_width)
+                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_roundness(0.25f)
+                     .with_soft_shadow(3.0f, 5.0f, 12.0f,
+                                       afterhours::Color{0, 0, 0, 50})
+                     .with_debug_name("tab_" + std::to_string(i)))) {
         selected_tab = i;
       }
 
       // Icon image or fallback text - larger
       if (tex_ptr && tex_ptr->id != 0) {
-        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width, (float)tex_ptr->height};
-        sprite(context, mk(entity, 110 + static_cast<int>(i)), *tex_ptr, src,
+        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
+                                                   (float)tex_ptr->height};
+        sprite(
+            context, mk(entity, 110 + static_cast<int>(i)), *tex_ptr, src,
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(44), pixels(44)})
                 .with_absolute_position()
-                .with_translate(nav_x + tab_width/2.0f - 22.0f, tab_y + 6.0f)
+                .with_translate(nav_x + tab_width / 2.0f - 22.0f, tab_y + 6.0f)
                 .with_debug_name("tab_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 110 + static_cast<int>(i)),
@@ -479,7 +511,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_label(fallback)
                 .with_size(ComponentSize{pixels(50), pixels(40)})
                 .with_absolute_position()
-                .with_translate(nav_x + tab_width/2.0f - 25.0f, tab_y + 10.0f)
+                .with_translate(nav_x + tab_width / 2.0f - 25.0f, tab_y + 10.0f)
                 .with_font("EqProRounded", 22.0f)
                 .with_custom_text_color(dark_text)
                 .with_alignment(TextAlignment::Center)
@@ -490,7 +522,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(static_cast<int>(tab_width + 10)), pixels(22)})
+              .with_size(ComponentSize{pixels(static_cast<int>(tab_width + 10)),
+                                       pixels(22)})
               .with_absolute_position()
               .with_translate(nav_x - 5.0f, tab_y + tab_height - 26.0f)
               .with_font("EqProRounded", 13.0f)
@@ -500,8 +533,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Notification badge on "Upgrades" tab
       if (i == 2) {
-        ui_workarounds::notification_badge(context, entity, 130 + static_cast<int>(i),
-            "!", nav_x + tab_width - 5.0f, tab_y - 5.0f, 22.0f,
+        ui_workarounds::notification_badge(
+            context, entity, 130 + static_cast<int>(i), "!",
+            nav_x + tab_width - 5.0f, tab_y - 5.0f, 22.0f,
             afterhours::Color{230, 90, 80, 255});
       }
     }
@@ -509,13 +543,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== MAIN PANEL ==========
     float panel_x = content_margin + 110.0f; // Offset for left tabs
     float panel_y = 185.0f;
-    float panel_w = content_width - 120.0f;  // Panel width minus left tabs
+    float panel_w = content_width - 120.0f; // Panel width minus left tabs
     float panel_h = 420.0f;
 
     // Main panel background - bigger with thicker border to match inspiration
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), pixels(static_cast<int>(panel_h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
+                                     pixels(static_cast<int>(panel_h))})
             .with_absolute_position()
             .with_translate(panel_x, panel_y)
             .with_custom_background(panel_blue)
@@ -552,8 +587,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(entity, 220 + static_cast<int>(i)),
           ComponentConfig{}
-              .with_label(production[i].name + ": " + 
-                         std::to_string(production[i].rate) + "/min")
+              .with_label(production[i].name + ": " +
+                          std::to_string(production[i].rate) + "/min")
               .with_size(ComponentSize{pixels(230), pixels(32)})
               .with_absolute_position()
               .with_translate(panel_x + 50.0f, item_y)
@@ -600,11 +635,11 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < projects.size(); i++) {
       float item_y = panel_y + 75.0f + (float)i * 48.0f;
 
-      std::string proj_text = projects[i].name + " - " + 
-          std::to_string(projects[i].progress) + "%";
+      std::string proj_text =
+          projects[i].name + " - " + std::to_string(projects[i].progress) + "%";
       if (projects[i].rate > 0) {
-        proj_text = projects[i].name + " - " + 
-            std::to_string(projects[i].rate) + "/min";
+        proj_text = projects[i].name + " - " +
+                    std::to_string(projects[i].rate) + "/min";
       }
 
       div(context, mk(entity, 260 + static_cast<int>(i)),
@@ -630,27 +665,31 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== ACTION BUTTONS ==========
-    std::vector<std::string> btn_labels = {"Speed Up", "Prioritize", "New Project"};
+    std::vector<std::string> btn_labels = {"Speed Up", "Prioritize",
+                                           "New Project"};
     float btn_y = panel_y + panel_h - 75.0f;
     float btn_w = 170.0f;
     float btn_spacing = 190.0f;
 
     for (size_t i = 0; i < btn_labels.size(); i++) {
-      button(context, mk(entity, 300 + static_cast<int>(i)),
-             ComponentConfig{}
-                 .with_label(btn_labels[i])
-                 .with_size(ComponentSize{pixels(static_cast<int>(btn_w)), pixels(58)})
-                 .with_absolute_position()
-                 .with_translate(panel_x + 50.0f + (float)i * btn_spacing, btn_y)
-                 .with_custom_background(btn_yellow)
-                 .with_border(btn_yellow_dark, 4.0f)
-                 .with_font("EqProRounded", 22.0f)
-                 .with_custom_text_color(dark_text)
-                 .with_alignment(TextAlignment::Center)
-                 .with_rounded_corners(std::bitset<4>(0b1111))
-                 .with_roundness(0.3f)
-                 .with_soft_shadow(3.0f, 5.0f, 12.0f, afterhours::Color{0, 0, 0, 60})
-                 .with_debug_name("btn_" + std::to_string(i)));
+      button(
+          context, mk(entity, 300 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_label(btn_labels[i])
+              .with_size(
+                  ComponentSize{pixels(static_cast<int>(btn_w)), pixels(58)})
+              .with_absolute_position()
+              .with_translate(panel_x + 50.0f + (float)i * btn_spacing, btn_y)
+              .with_custom_background(btn_yellow)
+              .with_border(btn_yellow_dark, 4.0f)
+              .with_font("EqProRounded", 22.0f)
+              .with_custom_text_color(dark_text)
+              .with_alignment(TextAlignment::Center)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.3f)
+              .with_soft_shadow(3.0f, 5.0f, 12.0f,
+                                afterhours::Color{0, 0, 0, 60})
+              .with_debug_name("btn_" + std::to_string(i)));
     }
 
     // ========== BOTTOM: Chat ==========
@@ -705,7 +744,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(280), pixels(26)})
             .with_absolute_position()
-            .with_translate((float)screen_w / 2.0f - 115.0f, (float)screen_h - 55.0f)
+            .with_translate((float)screen_w / 2.0f - 115.0f,
+                            (float)screen_h - 55.0f)
             .with_custom_background(white)
             .with_border(border_blue, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -714,20 +754,21 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 412),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(268 * milestone_pct)), pixels(22)})
+            .with_size(ComponentSize{
+                pixels(static_cast<int>(268 * milestone_pct)), pixels(22)})
             .with_absolute_position()
-            .with_translate((float)screen_w / 2.0f - 111.0f, (float)screen_h - 53.0f)
+            .with_translate((float)screen_w / 2.0f - 111.0f,
+                            (float)screen_h - 53.0f)
             .with_custom_background(btn_yellow)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("milestone_fill"));
 
     // ========== BOTTOM RIGHT: Icons ==========
-    std::vector<std::tuple<raylib::Texture2D*, std::string, std::string>> icon_data = {
-        {&icon_shop_tex, "$", "Shop"},
-        {&icon_settings_tex, "@", "Settings"},
-        {&star_trophy_tex, "#", "Leaderboards"}
-    };
+    std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>
+        icon_data = {{&icon_shop_tex, "$", "Shop"},
+                     {&icon_settings_tex, "@", "Settings"},
+                     {&star_trophy_tex, "#", "Leaderboards"}};
     float icon_x = (float)screen_w - 270.0f;
     float icon_size = 52.0f;
     float icon_img_size = 32.0f;
@@ -735,7 +776,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     for (size_t i = 0; i < icon_data.size(); i++) {
       float ix = icon_x + (float)i * 82.0f;
-      auto& [tex_ptr, fallback, label] = icon_data[i];
+      auto &[tex_ptr, fallback, label] = icon_data[i];
 
       // Button background
       button(context, mk(entity, 500 + static_cast<int>(i)),
@@ -751,13 +792,16 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Icon image or fallback text
       if (tex_ptr && tex_ptr->id != 0) {
-        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width, (float)tex_ptr->height};
+        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
+                                                   (float)tex_ptr->height};
         sprite(context, mk(entity, 520 + static_cast<int>(i)), *tex_ptr, src,
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(icon_img_size), pixels(icon_img_size)})
-                .with_absolute_position()
-                .with_translate(ix + icon_offset, (float)screen_h - 92.0f + icon_offset)
-                .with_debug_name("icon_img_" + std::to_string(i)));
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(icon_img_size),
+                                            pixels(icon_img_size)})
+                   .with_absolute_position()
+                   .with_translate(ix + icon_offset,
+                                   (float)screen_h - 92.0f + icon_offset)
+                   .with_debug_name("icon_img_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 520 + static_cast<int>(i)),
             ComponentConfig{}

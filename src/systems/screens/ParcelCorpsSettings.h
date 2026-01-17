@@ -20,38 +20,43 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   float music_volume = 0.75f;
 
   // Colors matching Parcel Corps - dark phone UI with green toggles
-  afterhours::Color bg_dark{18, 22, 28, 255};            // Very dark background
-  afterhours::Color phone_black{12, 14, 18, 255};        // Phone frame black
-  afterhours::Color row_dark{35, 40, 50, 180};           // Row background (semi-transparent)
-  afterhours::Color row_separator{55, 60, 70, 255};      // Row separator
-  afterhours::Color text_white{245, 248, 250, 255};      // White text
-  afterhours::Color text_muted{145, 155, 165, 255};      // Muted text
-  afterhours::Color toggle_green{75, 195, 95, 255};      // iOS-style green toggle
-  afterhours::Color toggle_track{85, 90, 100, 255};      // Toggle track (off)
-  afterhours::Color slider_green{95, 185, 85, 255};      // Volume slider green
-  afterhours::Color slider_orange{235, 155, 65, 255};    // Music slider orange
-  afterhours::Color slider_track{55, 60, 70, 255};       // Slider track background
-  afterhours::Color icon_purple{145, 95, 185, 255};      // Purple icon (language)
-  afterhours::Color icon_blue{65, 145, 215, 255};        // Blue icon (MSAA)
-  afterhours::Color icon_red{215, 85, 85, 255};          // Red icon (motion blur, volume)
-  afterhours::Color icon_green{85, 175, 125, 255};       // Green icon (subtitles, texture)
-  afterhours::Color icon_rainbow1{255, 120, 120, 255};   // Rainbow icon color 1 (resolution)
-  afterhours::Color icon_rainbow2{120, 255, 120, 255};   // Rainbow icon color 2
-  afterhours::Color icon_rainbow3{120, 120, 255, 255};   // Rainbow icon color 3
-  afterhours::Color notch_gray{45, 50, 60, 255};         // Phone notch
-  afterhours::Color quest_blue{65, 155, 220, 255};       // Quest panel blue
-  afterhours::Color quest_blue_dark{45, 120, 180, 255};  // Quest panel border
+  afterhours::Color bg_dark{18, 22, 28, 255};     // Very dark background
+  afterhours::Color phone_black{12, 14, 18, 255}; // Phone frame black
+  afterhours::Color row_dark{35, 40, 50,
+                             180}; // Row background (semi-transparent)
+  afterhours::Color row_separator{55, 60, 70, 255};   // Row separator
+  afterhours::Color text_white{245, 248, 250, 255};   // White text
+  afterhours::Color text_muted{145, 155, 165, 255};   // Muted text
+  afterhours::Color toggle_green{75, 195, 95, 255};   // iOS-style green toggle
+  afterhours::Color toggle_track{85, 90, 100, 255};   // Toggle track (off)
+  afterhours::Color slider_green{95, 185, 85, 255};   // Volume slider green
+  afterhours::Color slider_orange{235, 155, 65, 255}; // Music slider orange
+  afterhours::Color slider_track{55, 60, 70, 255};    // Slider track background
+  afterhours::Color icon_purple{145, 95, 185, 255};   // Purple icon (language)
+  afterhours::Color icon_blue{65, 145, 215, 255};     // Blue icon (MSAA)
+  afterhours::Color icon_red{215, 85, 85,
+                             255}; // Red icon (motion blur, volume)
+  afterhours::Color icon_green{85, 175, 125,
+                               255}; // Green icon (subtitles, texture)
+  afterhours::Color icon_rainbow1{255, 120, 120,
+                                  255}; // Rainbow icon color 1 (resolution)
+  afterhours::Color icon_rainbow2{120, 255, 120, 255};  // Rainbow icon color 2
+  afterhours::Color icon_rainbow3{120, 120, 255, 255};  // Rainbow icon color 3
+  afterhours::Color notch_gray{45, 50, 60, 255};        // Phone notch
+  afterhours::Color quest_blue{65, 155, 220, 255};      // Quest panel blue
+  afterhours::Color quest_blue_dark{45, 120, 180, 255}; // Quest panel border
 
-  std::vector<std::string> languages = {"King's English", "American", "Deutsch", "Français"};
-  
+  std::vector<std::string> languages = {"King's English", "American", "Deutsch",
+                                        "Français"};
+
   // MSAA options and current selection
   std::vector<std::string> msaa_options = {"Off", "2x", "4x", "8x"};
-  size_t msaa_idx = 1;  // Default: 2x
-  
+  size_t msaa_idx = 1; // Default: 2x
+
   // Texture Quality options and current selection
   std::vector<std::string> texture_options = {"Low", "Medium", "High", "Ultra"};
-  size_t texture_idx = 2;  // Default: High
-  
+  size_t texture_idx = 2; // Default: High
+
   // Chat messages
   std::vector<std::pair<std::string, std::string>> chat_messages = {
       {"reveredsoup", "you did it :)"},
@@ -89,21 +94,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== PHONE FRAME ==========
     float phone_w = 320.0f;
-    float phone_h = 580.0f;  // Increased height to fit volume sliders
+    float phone_h = 580.0f; // Increased height to fit volume sliders
     float phone_x = 50.0f;
     float phone_y = ((float)screen_h - phone_h) / 2.0f;
 
     // Phone outer frame
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(phone_w)), 
+            .with_size(ComponentSize{pixels(static_cast<int>(phone_w)),
                                      pixels(static_cast<int>(phone_h))})
             .with_absolute_position()
             .with_translate(phone_x, phone_y)
             .with_custom_background(phone_black)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.12f)
-            .with_soft_shadow(6.0f, 8.0f, 25.0f, afterhours::Color{0, 0, 0, 120})
+            .with_soft_shadow(6.0f, 8.0f, 25.0f,
+                              afterhours::Color{0, 0, 0, 120})
             .with_debug_name("phone_frame"));
 
     // Phone screen area
@@ -115,7 +121,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 11),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(screen_inner_w)), 
+            .with_size(ComponentSize{pixels(static_cast<int>(screen_inner_w)),
                                      pixels(static_cast<int>(screen_inner_h))})
             .with_absolute_position()
             .with_translate(screen_x, screen_y)
@@ -126,7 +132,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== STATUS BAR ==========
     float status_y = screen_y + 12.0f;
-    
+
     // Time
     div(context, mk(entity, 20),
         ComponentConfig{}
@@ -176,20 +182,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float row_x = screen_x + 8.0f;
     float row_start_y = status_y + 75.0f;
     float row_w = screen_inner_w - 16.0f;
-    float row_h = 38.0f;  // Reduced row height
+    float row_h = 38.0f; // Reduced row height
     float row_gap = 2.0f;
 
     // Language selector row (purple globe icon)
     render_language_row(context, entity, 100, row_x, row_start_y, row_w, row_h);
 
     // Subtitles toggle (green speech bubble icon)
-    render_toggle_row_with_icon(context, entity, 110, row_x, row_start_y + row_h + row_gap, row_w, row_h,
-                      "Subtitles", subtitles, icon_green, "...");
+    render_toggle_row_with_icon(context, entity, 110, row_x,
+                                row_start_y + row_h + row_gap, row_w, row_h,
+                                "Subtitles", subtitles, icon_green, "...");
 
     // Separator
     div(context, mk(entity, 115),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(row_w)), pixels(1)})
+            .with_size(
+                ComponentSize{pixels(static_cast<int>(row_w)), pixels(1)})
             .with_absolute_position()
             .with_translate(row_x, row_start_y + 2 * (row_h + row_gap))
             .with_custom_background(row_separator)
@@ -198,36 +206,42 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float section2_y = row_start_y + 2 * (row_h + row_gap) + 6.0f;
 
     // Resolution (rainbow/multicolor icon)
-    render_display_row_rainbow(context, entity, 120, row_x, section2_y, row_w, row_h,
-                       "Resolution", "2560 x 1440");
+    render_display_row_rainbow(context, entity, 120, row_x, section2_y, row_w,
+                               row_h, "Resolution", "2560 x 1440");
 
     // Full Screen toggle (rainbow icon)
-    render_toggle_row_rainbow(context, entity, 130, row_x, section2_y + row_h + row_gap, row_w, row_h,
-                      "Full Screen", fullscreen);
+    render_toggle_row_rainbow(context, entity, 130, row_x,
+                              section2_y + row_h + row_gap, row_w, row_h,
+                              "Full Screen", fullscreen);
 
     // MSAA (blue icon) - interactive
-    render_selector_row(context, entity, 140, row_x, section2_y + 2 * (row_h + row_gap), row_w, row_h,
-                       "MSAA", msaa_options, msaa_idx, icon_blue);
+    render_selector_row(context, entity, 140, row_x,
+                        section2_y + 2 * (row_h + row_gap), row_w, row_h,
+                        "MSAA", msaa_options, msaa_idx, icon_blue);
 
     // Texture Quality (green gem icon) - interactive
-    render_selector_row(context, entity, 150, row_x, section2_y + 3 * (row_h + row_gap), row_w, row_h,
-                       "Texture Quality", texture_options, texture_idx, icon_green);
+    render_selector_row(
+        context, entity, 150, row_x, section2_y + 3 * (row_h + row_gap), row_w,
+        row_h, "Texture Quality", texture_options, texture_idx, icon_green);
 
     // Motion Blur toggle (red/pink X icon)
-    render_toggle_row_with_icon(context, entity, 160, row_x, section2_y + 4 * (row_h + row_gap), row_w, row_h,
-                      "Motion Blur", motion_blur, icon_red, "X");
+    render_toggle_row_with_icon(
+        context, entity, 160, row_x, section2_y + 4 * (row_h + row_gap), row_w,
+        row_h, "Motion Blur", motion_blur, icon_red, "X");
 
     // VSync toggle (purple icon)
-    render_toggle_row_with_icon(context, entity, 170, row_x, section2_y + 5 * (row_h + row_gap), row_w, row_h,
-                      "VSync", vsync, icon_purple, "~");
+    render_toggle_row_with_icon(context, entity, 170, row_x,
+                                section2_y + 5 * (row_h + row_gap), row_w,
+                                row_h, "VSync", vsync, icon_purple, "~");
 
     // ========== VOLUME SLIDERS ==========
     float slider_y = section2_y + 6 * (row_h + row_gap) + 8.0f;
-    
+
     render_volume_slider(context, entity, 200, row_x, slider_y, row_w, row_h,
                          "Audio Volume", audio_volume, icon_red);
-    
-    render_volume_slider(context, entity, 210, row_x, slider_y + row_h + row_gap, row_w, row_h,
+
+    render_volume_slider(context, entity, 210, row_x,
+                         slider_y + row_h + row_gap, row_w, row_h,
                          "Music Volume", music_volume, icon_red);
 
     // ========== QUEST PANEL (top center) ==========
@@ -239,7 +253,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Quest panel background
     div(context, mk(entity, 250),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(quest_w)), pixels(static_cast<int>(quest_h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(quest_w)),
+                                     pixels(static_cast<int>(quest_h))})
             .with_absolute_position()
             .with_translate(quest_x, quest_y)
             .with_custom_background(quest_blue)
@@ -380,11 +395,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float chat_x = (float)screen_w - 200.0f;
     float chat_start_y = 60.0f;
     float chat_line_h = 20.0f;
-    
+
     for (size_t i = 0; i < chat_messages.size(); i++) {
-      auto& [username, message] = chat_messages[i];
+      auto &[username, message] = chat_messages[i];
       float chat_y = chat_start_y + (float)i * chat_line_h;
-      
+
       // Username
       div(context, mk(entity, 320 + static_cast<int>(i) * 2),
           ComponentConfig{}
@@ -446,12 +461,14 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("vehicle_name"));
   }
 
-  void render_language_row(UIContext<InputAction> &context, afterhours::Entity &entity,
-                           int base_id, float x, float y, float w, float h) {
+  void render_language_row(UIContext<InputAction> &context,
+                           afterhours::Entity &entity, int base_id, float x,
+                           float y, float w, float h) {
     // Row background
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                     pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x, y)
             .with_custom_background(row_dark)
@@ -496,7 +513,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_debug_name("lang_left"))) {
-      language_idx = (language_idx == 0) ? static_cast<int>(languages.size()) - 1 : language_idx - 1;
+      language_idx = (language_idx == 0)
+                         ? static_cast<int>(languages.size()) - 1
+                         : language_idx - 1;
     }
 
     // Language value
@@ -526,21 +545,24 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
   }
 
-  void render_toggle_row_with_icon(UIContext<InputAction> &context, afterhours::Entity &entity,
-                         int base_id, float x, float y, float w, float h,
-                         const std::string &label, bool &value, afterhours::Color icon_color,
-                         const std::string &icon_symbol) {
+  void render_toggle_row_with_icon(UIContext<InputAction> &context,
+                                   afterhours::Entity &entity, int base_id,
+                                   float x, float y, float w, float h,
+                                   const std::string &label, bool &value,
+                                   afterhours::Color icon_color,
+                                   const std::string &icon_symbol) {
     // Row background - clickable to toggle
     if (button(context, mk(entity, base_id),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+                   .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                            pixels(static_cast<int>(h))})
                    .with_absolute_position()
                    .with_translate(x, y)
                    .with_custom_background(row_dark)
                    .with_rounded_corners(std::bitset<4>(0b1111))
                    .with_roundness(0.15f)
                    .with_debug_name("toggle_row_" + std::to_string(base_id)))) {
-      value = !value;  // Toggle the boolean on click
+      value = !value; // Toggle the boolean on click
     }
 
     // Icon (colored circle with symbol) - consistent size
@@ -595,20 +617,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   }
 
   // Rainbow icon for Resolution/Full Screen rows
-  void render_toggle_row_rainbow(UIContext<InputAction> &context, afterhours::Entity &entity,
-                         int base_id, float x, float y, float w, float h,
-                         const std::string &label, bool &value) {
+  void render_toggle_row_rainbow(UIContext<InputAction> &context,
+                                 afterhours::Entity &entity, int base_id,
+                                 float x, float y, float w, float h,
+                                 const std::string &label, bool &value) {
     // Row background - clickable to toggle
     if (button(context, mk(entity, base_id),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+                   .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                            pixels(static_cast<int>(h))})
                    .with_absolute_position()
                    .with_translate(x, y)
                    .with_custom_background(row_dark)
                    .with_rounded_corners(std::bitset<4>(0b1111))
                    .with_roundness(0.15f)
                    .with_debug_name("toggle_row_" + std::to_string(base_id)))) {
-      value = !value;  // Toggle the boolean on click
+      value = !value; // Toggle the boolean on click
     }
 
     // Rainbow icon (multicolor circle using nested elements) - consistent size
@@ -678,14 +702,16 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("toggle_knob_" + std::to_string(base_id)));
   }
 
-  void render_selector_row(UIContext<InputAction> &context, afterhours::Entity &entity,
-                           int base_id, float x, float y, float w, float h,
-                           const std::string &label, const std::vector<std::string> &options,
+  void render_selector_row(UIContext<InputAction> &context,
+                           afterhours::Entity &entity, int base_id, float x,
+                           float y, float w, float h, const std::string &label,
+                           const std::vector<std::string> &options,
                            size_t &option_idx, afterhours::Color icon_color) {
     // Row background
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                     pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x, y)
             .with_custom_background(row_dark)
@@ -720,16 +746,17 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("selector_label_" + std::to_string(base_id)));
 
     // Left arrow <
-    if (button(context, mk(entity, base_id + 3),
-               ComponentConfig{}
-                   .with_label("<")
-                   .with_size(ComponentSize{pixels(20), pixels(22)})
-                   .with_absolute_position()
-                   .with_translate(x + w - 95.0f, y + 8.0f)
-                   .with_font("EqProRounded", 14.0f)
-                   .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_debug_name("selector_left_" + std::to_string(base_id)))) {
+    if (button(
+            context, mk(entity, base_id + 3),
+            ComponentConfig{}
+                .with_label("<")
+                .with_size(ComponentSize{pixels(20), pixels(22)})
+                .with_absolute_position()
+                .with_translate(x + w - 95.0f, y + 8.0f)
+                .with_font("EqProRounded", 14.0f)
+                .with_custom_text_color(text_muted)
+                .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                .with_debug_name("selector_left_" + std::to_string(base_id)))) {
       option_idx = (option_idx == 0) ? options.size() - 1 : option_idx - 1;
     }
 
@@ -755,19 +782,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_font("EqProRounded", 14.0f)
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_debug_name("selector_right_" + std::to_string(base_id)))) {
+                   .with_debug_name("selector_right_" +
+                                    std::to_string(base_id)))) {
       option_idx = (option_idx + 1) % options.size();
     }
   }
 
-  void render_display_row(UIContext<InputAction> &context, afterhours::Entity &entity,
-                          int base_id, float x, float y, float w, float h,
-                          const std::string &label, const std::string &value,
+  void render_display_row(UIContext<InputAction> &context,
+                          afterhours::Entity &entity, int base_id, float x,
+                          float y, float w, float h, const std::string &label,
+                          const std::string &value,
                           afterhours::Color icon_color) {
     // Row background
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                     pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x, y)
             .with_custom_background(row_dark)
@@ -814,13 +844,16 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("display_value_" + std::to_string(base_id)));
   }
 
-  void render_display_row_rainbow(UIContext<InputAction> &context, afterhours::Entity &entity,
-                          int base_id, float x, float y, float w, float h,
-                          const std::string &label, const std::string &value) {
+  void render_display_row_rainbow(UIContext<InputAction> &context,
+                                  afterhours::Entity &entity, int base_id,
+                                  float x, float y, float w, float h,
+                                  const std::string &label,
+                                  const std::string &value) {
     // Row background
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                     pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x, y)
             .with_custom_background(row_dark)
@@ -883,14 +916,15 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("display_value_" + std::to_string(base_id)));
   }
 
-  void render_volume_slider(UIContext<InputAction> &context, afterhours::Entity &entity,
-                            int base_id, float x, float y, float w, float h,
-                            const std::string &label, float &value,
-                            afterhours::Color icon_color) {
+  void render_volume_slider(UIContext<InputAction> &context,
+                            afterhours::Entity &entity, int base_id, float x,
+                            float y, float w, float h, const std::string &label,
+                            float &value, afterhours::Color icon_color) {
     // Row background
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(w)),
+                                     pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x, y)
             .with_custom_background(row_dark)
@@ -924,29 +958,32 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("volume_label_" + std::to_string(base_id)));
 
-    // Visual slider track and handle (custom rendering for absolute positioning)
+    // Visual slider track and handle (custom rendering for absolute
+    // positioning)
     float slider_w = 110.0f;
     float slider_x = x + w - slider_w - 10.0f;
     float slider_y_pos = y + 10.0f;
     float slider_h = 16.0f;
-    
+
     // Track background
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(slider_w)), pixels(static_cast<int>(slider_h))})
+            .with_size(ComponentSize{pixels(static_cast<int>(slider_w)),
+                                     pixels(static_cast<int>(slider_h))})
             .with_absolute_position()
             .with_translate(slider_x, slider_y_pos)
             .with_custom_background(slider_track)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("volume_track_" + std::to_string(base_id)));
-    
+
     // Filled portion
     float fill_w = slider_w * value;
     if (fill_w > 2.0f) {
       div(context, mk(entity, base_id + 4),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(fill_w)), pixels(static_cast<int>(slider_h))})
+              .with_size(ComponentSize{pixels(static_cast<int>(fill_w)),
+                                       pixels(static_cast<int>(slider_h))})
               .with_absolute_position()
               .with_translate(slider_x, slider_y_pos)
               .with_custom_background(slider_green)
@@ -954,13 +991,14 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_roundness(0.5f)
               .with_debug_name("volume_fill_" + std::to_string(base_id)));
     }
-    
+
     // Handle
     float handle_w = 20.0f;
     float handle_x = slider_x + (slider_w - handle_w) * value;
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(handle_w)), pixels(static_cast<int>(slider_h + 4))})
+            .with_size(ComponentSize{pixels(static_cast<int>(handle_w)),
+                                     pixels(static_cast<int>(slider_h + 4))})
             .with_absolute_position()
             .with_translate(handle_x, slider_y_pos - 2.0f)
             .with_custom_background(text_white)
@@ -973,4 +1011,3 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(parcel_corps_settings, "Game Mockups",
                         "Phone UI settings overlay (Parcel Corps style)",
                         ParcelCorpsSettingsScreen)
-

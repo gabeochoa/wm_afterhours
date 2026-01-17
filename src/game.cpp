@@ -299,8 +299,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     bool screen_found = false;
     for (const auto &screen_name :
          ExampleScreenRegistry::get().get_screen_names()) {
-      if (test_name.find(screen_name + "_") == 0 ||
-          test_name == screen_name) {
+      if (test_name.find(screen_name + "_") == 0 || test_name == screen_name) {
         auto screen = ExampleScreenRegistry::get().create_screen(screen_name);
         if (screen) {
           // Set as current screen so ScreenSystem runs
@@ -317,7 +316,8 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
       if (test_name == "tabbing") {
         systems.register_update_system(std::make_unique<SetupTabbingTest>());
       } else {
-        systems.register_update_system(std::make_unique<SetupSimpleButtonTest>());
+        systems.register_update_system(
+            std::make_unique<SetupSimpleButtonTest>());
       }
     }
 
@@ -503,9 +503,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     // Reset the UIContext focus state and mark old UI as not rendered
     // This prevents tabbing/clicking on elements from old screens
-    auto *ui_context =
-        afterhours::EntityHelper::get_singleton_cmp<
-            afterhours::ui::UIContext<InputAction>>();
+    auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
     }

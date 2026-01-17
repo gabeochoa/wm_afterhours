@@ -67,14 +67,14 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     float col2_x = 660.0f;
 
     // ========== LEFT COLUMN: Side-by-side comparisons ==========
-    
+
     // Using BlackOpsOne for bold, blocky text that shows stroke clearly
-    const char* bold_font = "BlackOpsOne";
+    const char *bold_font = "BlackOpsOne";
 
     // Row 1: NO STROKE vs WITH STROKE (same yellow color)
     afterhours::Color yellow{255, 220, 80, 255};
-    afterhours::Color dark_outline{20, 15, 0, 255};  // Darker for more contrast
-    
+    afterhours::Color dark_outline{20, 15, 0, 255}; // Darker for more contrast
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_label("NO STROKE")
@@ -110,7 +110,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     // Row 2: EXTREME thick stroke (12px)
     afterhours::Color hot_pink{255, 50, 150, 255};
-    afterhours::Color deep_purple{40, 0, 60, 255};  // Even darker
+    afterhours::Color deep_purple{40, 0, 60, 255}; // Even darker
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -188,7 +188,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     // Row 5: White on light background - stroke makes it readable
     afterhours::Color light_bg{220, 225, 235, 255};
-    
+
     // Light background panel
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -234,7 +234,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("desc_5"));
 
     // ========== RIGHT COLUMN: Thickness comparison ==========
-    
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_label("Stroke Thickness:")
@@ -246,39 +246,40 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("thickness_title"));
 
     afterhours::Color orange{255, 180, 60, 255};
-    afterhours::Color dark_orange{80, 40, 0, 255};  // Darker for more contrast
-    
+    afterhours::Color dark_orange{80, 40, 0, 255}; // Darker for more contrast
+
     float thickness_y = 155.0f;
     float thicknesses[] = {2.0f, 4.0f, 6.0f, 8.0f, 10.0f, 14.0f};
-    const char* thickness_labels[] = {"2px", "4px", "6px", "8px", "10px", "14px"};
-    
-    for (int i = 0; i < 6; i++) {
-        div(context, mk(entity, id++),
-            ComponentConfig{}
-                .with_label("STROKE")
-                .with_size(ComponentSize{pixels(220), pixels(55)})
-                .with_absolute_position()
-                .with_translate(col2_x, thickness_y + i * 75.0f)
-                .with_font(bold_font, 40.0f)
-                .with_custom_text_color(orange)
-                .with_text_stroke(dark_orange, thicknesses[i])
-                .with_alignment(TextAlignment::Left)
-                .with_debug_name("thickness_" + std::to_string(i)));
+    const char *thickness_labels[] = {"2px", "4px",  "6px",
+                                      "8px", "10px", "14px"};
 
-        div(context, mk(entity, id++),
-            ComponentConfig{}
-                .with_label(thickness_labels[i])
-                .with_size(ComponentSize{pixels(80), pixels(30)})
-                .with_absolute_position()
-                .with_translate(col2_x + 240.0f, thickness_y + i * 75.0f + 12.0f)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                .with_custom_text_color(text_muted)
-                .with_debug_name("thickness_label_" + std::to_string(i)));
+    for (int i = 0; i < 6; i++) {
+      div(context, mk(entity, id++),
+          ComponentConfig{}
+              .with_label("STROKE")
+              .with_size(ComponentSize{pixels(220), pixels(55)})
+              .with_absolute_position()
+              .with_translate(col2_x, thickness_y + i * 75.0f)
+              .with_font(bold_font, 40.0f)
+              .with_custom_text_color(orange)
+              .with_text_stroke(dark_orange, thicknesses[i])
+              .with_alignment(TextAlignment::Left)
+              .with_debug_name("thickness_" + std::to_string(i)));
+
+      div(context, mk(entity, id++),
+          ComponentConfig{}
+              .with_label(thickness_labels[i])
+              .with_size(ComponentSize{pixels(80), pixels(30)})
+              .with_absolute_position()
+              .with_translate(col2_x + 240.0f, thickness_y + i * 75.0f + 12.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_custom_text_color(text_muted)
+              .with_debug_name("thickness_label_" + std::to_string(i)));
     }
 
     // ========== Code example at bottom ==========
     float code_y = screen_h - 60.0f;
-    
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w - 80), pixels(40)})
@@ -291,7 +292,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Usage: ComponentConfig{}.with_text_stroke(Color{r, g, b, a}, thickness)")
+            .with_label("Usage: ComponentConfig{}.with_text_stroke(Color{r, g, "
+                        "b, a}, thickness)")
             .with_size(ComponentSize{pixels(screen_w - 100), pixels(24)})
             .with_absolute_position()
             .with_translate(50.0f, code_y + 10.0f)
@@ -305,4 +307,3 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(text_stroke, "System Demos",
                         "Demonstrates native text stroke/outline rendering",
                         ExampleTextStroke)
-

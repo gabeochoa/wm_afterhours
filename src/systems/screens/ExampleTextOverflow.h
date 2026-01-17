@@ -43,7 +43,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(
+                ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
@@ -80,7 +81,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 #else
                 warning_orange
 #endif
-            )
+                )
             .with_alignment(TextAlignment::Center)
             .with_debug_name("instructions"));
 
@@ -120,7 +121,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 12),
         ComponentConfig{}
             .with_label("This text fits perfectly")
-            .with_size(ComponentSize{pixels(card_width - 30), pixels(card_height - 20)})
+            .with_size(ComponentSize{pixels(card_width - 30),
+                                     pixels(card_height - 20)})
             .with_absolute_position()
             .with_translate(left_col_x + 15.0f, card_y + 10.0f)
             .with_font("Gaegu-Bold", 24.0f)
@@ -349,4 +351,3 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(text_overflow, "Tools",
                         "Demonstrates text overflow debug indicators",
                         ExampleTextOverflow)
-

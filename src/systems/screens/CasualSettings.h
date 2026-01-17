@@ -200,8 +200,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(entity, 100 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(left_buttons[i])
-                 .with_size(
-                     ComponentSize{pixels(static_cast<int>(btn_w)), pixels(static_cast<int>(btn_h))})
+                 .with_size(ComponentSize{pixels(static_cast<int>(btn_w)),
+                                          pixels(static_cast<int>(btn_h))})
                  .with_absolute_position()
                  .with_translate(left_x, row_y + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
@@ -221,8 +221,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(entity, 110 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(right_buttons[i])
-                 .with_size(
-                     ComponentSize{pixels(static_cast<int>(btn_w)), pixels(static_cast<int>(btn_h))})
+                 .with_size(ComponentSize{pixels(static_cast<int>(btn_w)),
+                                          pixels(static_cast<int>(btn_h))})
                  .with_absolute_position()
                  .with_translate(right_x, row_y + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
@@ -307,4 +307,3 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(casual_settings, "Game Mockups",
                         "Casual mobile settings (Angry Birds style)",
                         CasualSettingsScreen)
-

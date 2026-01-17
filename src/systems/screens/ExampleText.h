@@ -11,13 +11,13 @@ using namespace afterhours::ui::imm;
 
 struct ExampleText : ScreenSystem<UIContext<InputAction>> {
   // Elegant dark theme with gold accents - like a luxury brand
-  afterhours::Color bg_charcoal{28, 26, 24, 255};      // Rich charcoal
-  afterhours::Color panel_dark{42, 38, 35, 255};       // Dark panel
-  afterhours::Color gold_accent{205, 175, 110, 255};   // Warm gold
-  afterhours::Color silver_text{195, 195, 200, 255};   // Silver text
-  afterhours::Color cream_text{250, 245, 235, 255};    // Cream white
-  afterhours::Color muted_text{130, 125, 120, 255};    // Muted brown-gray
-  afterhours::Color divider{65, 58, 52, 255};          // Subtle divider
+  afterhours::Color bg_charcoal{28, 26, 24, 255};    // Rich charcoal
+  afterhours::Color panel_dark{42, 38, 35, 255};     // Dark panel
+  afterhours::Color gold_accent{205, 175, 110, 255}; // Warm gold
+  afterhours::Color silver_text{195, 195, 200, 255}; // Silver text
+  afterhours::Color cream_text{250, 245, 235, 255};  // Cream white
+  afterhours::Color muted_text{130, 125, 120, 255};  // Muted brown-gray
+  afterhours::Color divider{65, 58, 52, 255};        // Subtle divider
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -40,7 +40,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     // Full background
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(
+                ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_charcoal)
             .with_debug_name("bg"));
 
@@ -132,7 +133,9 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 14),
         ComponentConfig{}
-            .with_label("Body text for readable content that flows naturally across multiple lines and maintains excellent legibility.")
+            .with_label(
+                "Body text for readable content that flows naturally across "
+                "multiple lines and maintains excellent legibility.")
             .with_size(ComponentSize{pixels(col_w), pixels(65)})
             .with_absolute_position()
             .with_translate(left_col, content_y + 175.0f)
@@ -190,7 +193,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(col_w), pixels(42)})
               .with_absolute_position()
               .with_translate(right_col, content_y + 30.0f + i * 52.0f)
-              .with_custom_background(afterhours::colors::darken(panel_dark, 0.85f))
+              .with_custom_background(
+                  afterhours::colors::darken(panel_dark, 0.85f))
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.2f)
               .with_debug_name("color_bg_" + std::to_string(i)));
@@ -209,7 +213,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     // Footer
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_label("Elegant typography creates visual hierarchy and guides the reader's eye")
+            .with_label("Elegant typography creates visual hierarchy and "
+                        "guides the reader's eye")
             .with_size(ComponentSize{pixels(panel_w - 100), pixels(24)})
             .with_absolute_position()
             .with_translate(panel_x + 50.0f, panel_y + panel_h - 50.0f)

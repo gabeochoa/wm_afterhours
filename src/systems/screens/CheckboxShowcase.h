@@ -30,8 +30,8 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
   bool disabled_unchecked = false;
 
   // Checkbox group values (bitset for multi-select)
-  std::bitset<4> options_group{0b0101};  // Options 1 and 3 selected
-  std::bitset<3> min_max_group{0b001};   // One selected (min 1, max 2)
+  std::bitset<4> options_group{0b0101}; // Options 1 and 3 selected
+  std::bitset<3> min_max_group{0b001};  // One selected (min 1, max 2)
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -73,15 +73,14 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // Content area - two columns
-    auto content =
-        div(context, mk(main_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(480)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceBetween)
-                .with_debug_name("content"));
+    auto content = div(context, mk(main_container.ent(), 1),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(480)})
+                           .with_custom_background(theme.surface)
+                           .with_padding(Spacing::md)
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_justify_content(JustifyContent::SpaceBetween)
+                           .with_debug_name("content"));
 
     // ========== Left column - Basic types ==========
     auto left_col =
@@ -249,17 +248,16 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("group_header"));
 
     // Simple checkbox group - select any combination
-    checkbox_group(
-        context, mk(right_col.ent(), 1), options_group,
-        std::array<std::string_view, 4>{"Option A", "Option B", "Option C",
-                                        "Option D"},
-        {-1, -1},  // No min/max constraints
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), pixels(160)})
-            .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_margin(Spacing::sm)
-            .with_debug_name("options_group"));
+    checkbox_group(context, mk(right_col.ent(), 1), options_group,
+                   std::array<std::string_view, 4>{"Option A", "Option B",
+                                                   "Option C", "Option D"},
+                   {-1, -1}, // No min/max constraints
+                   ComponentConfig{}
+                       .with_size(ComponentSize{percent(0.90f), pixels(160)})
+                       .with_background(Theme::Usage::Primary)
+                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                       .with_margin(Spacing::sm)
+                       .with_debug_name("options_group"));
 
     // === Section: Checkbox Group with Min/Max ===
     div(context, mk(right_col.ent(), 2),
@@ -281,7 +279,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     checkbox_group(
         context, mk(right_col.ent(), 3), min_max_group,
         std::array<std::string_view, 3>{"Choice 1", "Choice 2", "Choice 3"},
-        {1, 2},  // Min 1, max 2 selections
+        {1, 2}, // Min 1, max 2 selections
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.90f), pixels(120)})
             .with_background(Theme::Usage::Secondary)
@@ -327,4 +325,3 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(checkboxes, "Component Galleries",
                         "All checkbox component types and variations",
                         CheckboxShowcase)
-
