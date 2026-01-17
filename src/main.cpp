@@ -31,6 +31,7 @@ backward::SignalHandling sh;
 #include "systems/screens/FighterMenu.h"
 #include "systems/screens/FlightOptions.h"
 #include "systems/screens/Forms.h"
+#include "systems/screens/TextInputDemo.h"
 #include "systems/screens/KirbyOptions.h"
 #include "systems/screens/LanguageDemo.h"
 #include "systems/screens/NeonStrike.h"

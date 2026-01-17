@@ -908,7 +908,7 @@ ComponentConfig{}
 
 ## Medium (~1-2 days)
 - Setting Row
-- Text Input (basic)
+- ~~Text Input (basic)~~ ✅ Implemented
 - Tooltip
 - Input Number
 - Centered Container

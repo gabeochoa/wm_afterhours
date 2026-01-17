@@ -14,6 +14,11 @@ enum class InputAction {
   PauseButton,
   ToggleUIDebug,
   ToggleUILayoutDebug,
+  // Text editing actions
+  TextBackspace,
+  TextDelete,
+  TextHome,
+  TextEnd,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -74,6 +79,23 @@ inline auto get_mapping() {
 
   mapping[to_int(InputAction::ToggleUILayoutDebug)] = {
       raylib::KEY_EQUAL,
+  };
+
+  // Text editing
+  mapping[to_int(InputAction::TextBackspace)] = {
+      raylib::KEY_BACKSPACE,
+  };
+
+  mapping[to_int(InputAction::TextDelete)] = {
+      raylib::KEY_DELETE,
+  };
+
+  mapping[to_int(InputAction::TextHome)] = {
+      raylib::KEY_HOME,
+  };
+
+  mapping[to_int(InputAction::TextEnd)] = {
+      raylib::KEY_END,
   };
 
   return mapping;

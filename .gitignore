@@ -82,3 +82,4 @@ compile_commands.json
 # Ralph config (may contain API key)
 .cursor/ralph-config.json
 tmp/
+.cursor/debug.log
