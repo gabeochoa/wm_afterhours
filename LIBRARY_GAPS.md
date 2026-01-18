@@ -136,11 +136,9 @@ ElementResult setting_row(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ### Radio Button Group
 
-**Status:** Not implemented
+**Status:** ✅ Implemented
 
-**Issue:** `checkbox_group` uses `std::bitset` for multi-select. No single-select radio button where exactly one option is active.
-
-**Suggested Implementation:**
+**Implementation:**
 ```cpp
 template <typename Container>
 ElementResult radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
@@ -149,10 +147,13 @@ ElementResult radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
                           ComponentConfig config = ComponentConfig());
 ```
 
-**Features Needed:**
-- Circular indicator (vs checkbox square)
-- Exactly one selected at a time
-- Keyboard navigation between options
+**Features:**
+- Circular indicator with filled dot when selected
+- Single-select (exactly one active at a time)
+- Clickable label and circle
+- Keyboard navigation via tab
+
+**Demo:** `radio_buttons` screen in Component Galleries
 
 ---
 

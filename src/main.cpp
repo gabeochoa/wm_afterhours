@@ -50,6 +50,7 @@ backward::SignalHandling sh;
 #include "systems/screens/TextInputDemo.h"
 #include "systems/screens/Themes.h"
 #include "systems/screens/ToggleSwitchShowcase.h"
+#include "systems/screens/RadioGroupShowcase.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
 #include <cstdio>
