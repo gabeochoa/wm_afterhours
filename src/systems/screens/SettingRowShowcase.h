@@ -35,14 +35,14 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.12f;
     context.theme = theme;
 
-    // Main container - centered panel
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.85f)})
+                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.80f)})
                 .with_custom_background(theme.background)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_translate(0.0f, -40.0f)
                 .with_debug_name("root"));
 
     // Title bar
@@ -59,16 +59,16 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.1f)
             .with_debug_name("title"));
 
-    // Content panel - use explicit padding to contain all children
+    // Content panel - fixed height to fit all rows
     auto content = div(context, mk(root.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.95f), children()})
+                           .with_size(ComponentSize{percent(0.95f), pixels(480)})
                            .with_custom_background(theme.surface)
                            .with_padding(Padding{
-                               .top = pixels(20),
-                               .left = pixels(30),
-                               .bottom = pixels(20),
-                               .right = pixels(30)})
+                               .top = pixels(16),
+                               .left = pixels(24),
+                               .bottom = pixels(16),
+                               .right = pixels(24)})
                            .with_flex_direction(FlexDirection::Column)
                            .with_roundness(0.06f)
                            .with_debug_name("content"));
@@ -100,7 +100,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(content.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(16)})
+            .with_size(ComponentSize{percent(1.0f), pixels(10)})
             .with_debug_name("spacer1"));
 
     // Stepper section label
@@ -120,7 +120,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(content.ent(), 8),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(16)})
+            .with_size(ComponentSize{percent(1.0f), pixels(10)})
             .with_debug_name("spacer2"));
 
     // Slider section label
