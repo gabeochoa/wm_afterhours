@@ -1,0 +1,37 @@
+# Button Click Test
+# Tests clicking buttons on the buttons gallery screen
+
+# Navigate to the buttons screen
+goto_screen buttons
+wait 0.5
+
+# Verify we're on the buttons screen
+expect_text "Button Gallery"
+expect_text "Total clicks: 0"
+
+# Click the Normal button (first button in row 1)
+# Tab to focus on the first interactive button
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Verify click was registered
+expect_text "Total clicks: 1"
+
+# Click Accent button
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+expect_text "Total clicks: 2"
+
+# Click a few more buttons via tabbing
+key TAB
+key ENTER
+wait 0.2
+
+expect_text "Total clicks: 3"
+
+screenshot button_click_test

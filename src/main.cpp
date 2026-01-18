@@ -54,6 +54,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ScrollViewShowcase.h"
 #include "systems/screens/SelfAlignShowcase.h"
 #include "systems/screens/TabContainerShowcase.h"
+#include "testing/e2e_integration.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
 #include <cstdio>
@@ -115,6 +116,13 @@ int main(int argc, char *argv[]) {
 #ifdef AFTER_HOURS_ENABLE_MCP
     std::cout << "  --mcp                        Enable MCP server mode\n";
 #endif
+    std::cout << "\nE2E Testing:\n";
+    std::cout << "  --e2e                        Enable E2E test mode\n";
+    std::cout << "  --test-script <path>         Run single E2E script\n";
+    std::cout << "  --test-script-dir <path>     Run all .e2e scripts in directory\n";
+    std::cout << "  --timeout <seconds>          Set E2E timeout (default: 30)\n";
+    std::cout << "  --slow                       Run tests slowly for visibility (0.5s delay)\n";
+    std::cout << "  --slow-delay <seconds>       Set slow mode delay (implies --slow)\n";
     return 0;
   }
 
@@ -130,6 +138,100 @@ int main(int argc, char *argv[]) {
   if (cmdl["--list-screens"]) {
     ExampleScreenRegistry::get().list_screens();
     return 0;
+  }
+
+  // E2E Testing Mode
+  if (e2e::should_run_e2e(argc, argv)) {
+    auto e2e_args = e2e::parse_e2e_args(argc, argv);
+    
+    if (e2e_args.script_path.empty() && e2e_args.script_dir.empty()) {
+      std::cout << "E2E mode requires --test-script or --test-script-dir\n";
+      return 1;
+    }
+
+    int screenWidth, screenHeight;
+    cmdl({"-w", "--width"}, 1280) >> screenWidth;
+    cmdl({"-h", "--height"}, 720) >> screenHeight;
+
+    Settings::get().load_save_file(screenWidth, screenHeight);
+
+    Preload::get()
+        .init("UI Tester - E2E Mode")
+        .make_singleton();
+    Settings::get().refresh_settings();
+
+    // Set up test mode
+    afterhours::testing::test_input::detail::test_mode = true;
+
+    // Create and configure runner
+    afterhours::testing::E2ERunner runner;
+    runner.set_timeout(e2e_args.timeout_seconds);
+    if (e2e_args.slow_mode) {
+      runner.set_slow_mode(true, e2e_args.slow_delay);
+    }
+    runner.set_reset_callback(reset_e2e_state);
+
+    // Load scripts
+    if (!e2e_args.script_path.empty()) {
+      runner.load_script(e2e_args.script_path);
+    } else if (!e2e_args.script_dir.empty()) {
+      runner.load_scripts_from_directory(e2e_args.script_dir);
+    }
+
+    if (!runner.has_commands()) {
+      std::cout << "No E2E commands found to execute\n";
+      return 1;
+    }
+
+    std::cout << "Running E2E tests...\n";
+
+    if (e2e_args.slow_mode) {
+      // Visual mode - run with window open so user can see what's happening
+      return run_e2e_tests(e2e_args, runner);
+    } else {
+      // Headless mode - fast execution without window
+      log_warn("Running in headless mode - UI-based commands (expect_text, "
+               "click, etc.) will not work. Use --slow for visual tests.");
+      // Still need to run command handler systems!
+      afterhours::SystemManager headless_systems;
+
+      // Register E2E command handlers
+      afterhours::testing::register_builtin_handlers(headless_systems);
+      headless_systems.register_update_system(
+          std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
+              []() { reset_e2e_state(); }));
+      afterhours::testing::register_unknown_handler(headless_systems);
+      afterhours::testing::register_cleanup(headless_systems);
+
+      const float dt = 1.0f / 60.0f;
+      afterhours::testing::reset_command_error_count();
+
+      while (!runner.is_finished()) {
+        runner.tick(dt);
+        // Merge entities created by runner into main array before systems run
+        afterhours::EntityHelper::merge_entity_arrays();
+        headless_systems.run(dt);
+        afterhours::testing::test_input::reset_frame();
+
+        // Fail fast on first error
+        if (afterhours::testing::get_command_error_count() > 0) {
+          log_warn("Stopping test early due to error");
+          break;
+        }
+      }
+
+      // Check for command-level errors (e.g., expect_text failures)
+      int cmd_errors = afterhours::testing::get_command_error_count();
+      bool has_errors = runner.has_failed() || cmd_errors > 0;
+
+      runner.print_results();
+      if (cmd_errors > 0) {
+        log_warn("Total command errors: {}", cmd_errors);
+      }
+      Settings::get().write_save_file();
+
+      return has_errors ? 1 : 0;
+    }
   }
 
   // Try --screen=<name> format first (preferred)

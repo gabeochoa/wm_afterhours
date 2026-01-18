@@ -1,0 +1,21 @@
+# Focus and Type Test
+# Test focusing by debug_name and typing
+
+goto_screen text_input
+wait 0.5
+
+# Verify initial status
+expect_text "Enter your details above"
+
+# Focus the username input field by debug_name
+focus_element username_input
+wait 0.2
+
+# Type a single character
+type "a"
+wait 0.3
+
+# The status should now show "Username: a"
+expect_text "Username: a"
+
+screenshot focus_and_type

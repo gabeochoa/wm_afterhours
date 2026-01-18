@@ -1,0 +1,30 @@
+# Custom Commands Test
+# Tests app-specific custom commands like goto_screen
+
+# Start with buttons screen
+goto_screen buttons
+wait 0.3
+
+expect_text "Button Gallery"
+
+# Navigate to next screen
+next_screen
+wait 0.3
+
+# Navigate to previous screen (back to buttons)
+prev_screen
+wait 0.3
+
+expect_text "Button Gallery"
+
+# Go directly to text input screen
+goto_screen text_input
+wait 0.3
+
+expect_text "Text Input Component Demo"
+
+# Go to checkboxes screen
+goto_screen checkboxes
+wait 0.3
+
+screenshot custom_commands_test

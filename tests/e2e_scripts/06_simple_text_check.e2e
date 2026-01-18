@@ -1,0 +1,15 @@
+# Simple Text Check Test
+# Just verify we can see the initial screen text
+
+# Navigate to the text input screen
+goto_screen text_input
+wait 0.5
+
+# Verify initial text
+expect_text "Text Input Component Demo"
+expect_text "Enter your details above"
+expect_text "Username"
+expect_text "Submit"
+
+screenshot simple_text_check
+

@@ -1,0 +1,23 @@
+# Keyboard Input Test
+# Tests semantic actions for navigation
+
+# Navigate to the text input screen
+goto_screen text_input
+wait 0.5
+
+# Verify we're on the text input screen
+expect_text "Text Input Component Demo"
+expect_text "Enter your details above"
+
+# Focus the submit button directly
+focus_element submit_btn
+wait 0.2
+
+# Press Enter to submit
+key ENTER
+wait 0.3
+
+# Should show submitted message (empty form)
+expect_text "Submitted!"
+
+screenshot keyboard_input_test

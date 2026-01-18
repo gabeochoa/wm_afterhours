@@ -15,6 +15,7 @@
 #include "systems/SetupTabbingTest.h"
 #include "systems/TestSystem.h"
 #include "systems/UpdateRenderTexture.h"
+#include "testing/e2e_integration.h"
 #include "testing/test_app.h"
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
@@ -22,6 +23,7 @@
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>
+#include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
 #include <chrono>
 #include <iostream>
@@ -615,4 +617,362 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     afterhours::mcp::shutdown();
   }
 #endif
+}
+
+int run_e2e_tests(const e2e::E2EArgs & /*args*/,
+                  afterhours::testing::E2ERunner &runner) {
+  configure_validation();
+
+  // Enable test mode for both test_input systems
+  test_input::test_mode = true;
+  afterhours::testing::test_input::detail::test_mode = true;
+
+  mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
+                                     Settings::get().get_screen_height());
+  screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
+                                       Settings::get().get_screen_height());
+
+  uiFont = afterhours::load_font_from_file(
+      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+          .string()
+          .c_str());
+
+  std::vector<std::string> screen_names =
+      ExampleScreenRegistry::get().get_screen_names();
+  if (screen_names.empty()) {
+    std::cerr << "ERROR: No screens available for E2E testing" << std::endl;
+    return 1;
+  }
+
+  int current_screen_index = 0;
+
+  afterhours::SystemManager systems;
+
+  {
+    afterhours::window_manager::enforce_singletons(systems);
+    afterhours::ui::enforce_singletons<InputAction>(systems);
+    afterhours::input::enforce_singletons(systems);
+  }
+
+  {
+    afterhours::input::register_update_systems(systems);
+    afterhours::window_manager::register_update_systems(systems);
+    systems.register_update_system(std::make_unique<UpdateRenderTexture>());
+  }
+
+  {
+    systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::ui::register_render_systems<InputAction>(
+        systems, InputAction::ToggleUILayoutDebug);
+    systems.register_render_system(std::make_unique<EndWorldRender>());
+    systems.register_render_system(
+        std::make_unique<BeginPostProcessingRender>());
+    systems.register_render_system(std::make_unique<RenderRenderTexture>());
+    systems.register_render_system(std::make_unique<RenderScreenHUD>());
+    systems.register_render_system(std::make_unique<EndDrawing>());
+  }
+
+  // Initialize HUD state
+  ScreenHUDState::total_screens = static_cast<int>(screen_names.size());
+
+  std::unique_ptr<afterhours::SystemBase> current_screen_system;
+  std::unique_ptr<ScreenCyclerSystem> cycler_system =
+      std::make_unique<ScreenCyclerSystem>();
+  cycler_system->systems_ptr = &systems;
+  ScreenCyclerSystem *cycler_ptr = cycler_system.get();
+
+  auto load_screen = [&](int index) {
+    if (index < 0 || index >= static_cast<int>(screen_names.size())) {
+      return;
+    }
+
+    auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::UIContext<InputAction>>();
+    if (ui_context) {
+      ui_context->reset();
+    }
+
+    for (const auto &e : afterhours::EntityHelper::get_entities()) {
+      if (!e)
+        continue;
+      if (e->has<afterhours::ui::UIComponent>()) {
+        e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
+      }
+    }
+
+    std::string new_screen_name = screen_names[index];
+    current_screen_system =
+        ExampleScreenRegistry::get().create_screen(new_screen_name);
+    if (!current_screen_system) {
+      std::cerr << "ERROR: Failed to create screen: " << new_screen_name
+                << std::endl;
+      return;
+    }
+    cycler_ptr->current_screen = current_screen_system.get();
+    g_current_screen = current_screen_system.get();
+
+    ScreenHUDState::current_screen_name = new_screen_name;
+    ScreenHUDState::current_screen_description =
+        ExampleScreenRegistry::get().get_screen_description(new_screen_name);
+    ScreenHUDState::current_index = index;
+
+    std::cout << "[E2E] Loaded screen: " << new_screen_name << std::endl;
+  };
+
+  {
+    afterhours::ui::register_before_ui_updates<InputAction>(systems);
+
+    load_screen(current_screen_index);
+    if (!current_screen_system) {
+      std::cerr << "ERROR: Failed to create initial screen" << std::endl;
+      return 1;
+    }
+    systems.register_update_system(std::move(cycler_system));
+
+    afterhours::ui::register_after_ui_updates<InputAction>(systems);
+  }
+
+  // Reset callback for per-script cleanup
+  auto reset_fn = []() {
+    // Clear input + visible text
+    afterhours::testing::test_input::reset_all();
+    afterhours::testing::VisibleTextRegistry::instance().clear();
+
+    // Reset UI focus state
+    auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::UIContext<InputAction>>();
+    if (ui_context) {
+      ui_context->reset();
+    }
+
+    // Note: avoid deleting UI entities mid-frame; load_screen already
+    // marks old UI as not rendered when switching screens.
+  };
+
+  // Register E2E command handlers
+  afterhours::testing::register_builtin_handlers(systems);
+  systems.register_update_system(
+      std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
+          reset_fn));
+  runner.set_reset_callback(reset_fn);
+
+  // Register 'action' command for semantic UI actions (WidgetNext, etc.)
+  struct HandleActionCommand
+      : afterhours::System<afterhours::testing::PendingE2ECommand> {
+    void for_each_with(afterhours::Entity &,
+                       afterhours::testing::PendingE2ECommand &cmd,
+                       float) override {
+      if (cmd.is_consumed() || !cmd.is("action"))
+        return;
+      if (!cmd.has_args(1)) {
+        cmd.fail("action requires action name");
+        return;
+      }
+
+      auto *ctx =
+          afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::UIContext<
+              InputAction>>();
+      if (!ctx) {
+        cmd.fail("UIContext not found");
+        return;
+      }
+
+      auto action = magic_enum::enum_cast<InputAction>(cmd.arg(0));
+      if (!action) {
+        cmd.fail("Unknown action: " + cmd.arg(0));
+        return;
+      }
+
+      ctx->last_action = *action;
+      cmd.consume();
+    }
+  };
+  systems.register_update_system(std::make_unique<HandleActionCommand>());
+
+  // Register 'focus_element' command to focus UI element by debug_name
+  struct HandleFocusElementCommand
+      : afterhours::System<afterhours::testing::PendingE2ECommand> {
+    void for_each_with(afterhours::Entity &,
+                       afterhours::testing::PendingE2ECommand &cmd,
+                       float) override {
+      if (cmd.is_consumed() || !cmd.is("focus_element"))
+        return;
+      if (!cmd.has_args(1)) {
+        cmd.fail("focus_element requires element debug_name");
+        return;
+      }
+
+      auto *ctx =
+          afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::UIContext<
+              InputAction>>();
+      if (!ctx) {
+        cmd.fail("UIContext not found");
+        return;
+      }
+
+      const std::string &target_name = cmd.arg(0);
+
+      // Search for entity with matching debug_name
+      auto opt = afterhours::EntityQuery()
+                     .whereHasComponent<afterhours::ui::UIComponentDebug>()
+                     .whereLambda([&](const afterhours::Entity &e) {
+                       return e.get<afterhours::ui::UIComponentDebug>().name() ==
+                              target_name;
+                     })
+                     .gen_first();
+
+      if (!opt) {
+        cmd.fail("Element not found: " + target_name);
+        return;
+      }
+
+      afterhours::Entity &target = opt.asE();
+      int focus_target_id = target.id;
+
+      // For text_input components, the HasTextInputState is on the parent
+      // but focus should go to a child field entity. Check if this entity
+      // has UIComponent with children and find the focusable field.
+      if (target.has<afterhours::ui::UIComponent>()) {
+        auto &ui_cmp = target.get<afterhours::ui::UIComponent>();
+        // Look for a child entity that's in the focus cluster (the field)
+        // Use the LAST matching child since text_input puts field after label
+        for (int child_id : ui_cmp.children) {
+          auto child_opt =
+              afterhours::EntityQuery().whereID(child_id).gen_first();
+          if (child_opt &&
+              child_opt.asE().has<afterhours::ui::InFocusCluster>()) {
+            focus_target_id = child_id; // Keep updating to get the LAST one
+          }
+        }
+      }
+
+      // Clear any pending input before switching focus
+      afterhours::testing::test_input::clear_queue();
+      ctx->set_focus(focus_target_id);
+
+      cmd.consume();
+    }
+  };
+  systems.register_update_system(std::make_unique<HandleFocusElementCommand>());
+
+  // Register goto_screen command with callback
+  auto goto_screen_cmd =
+      std::make_unique<e2e_commands::HandleGotoScreenCommand>();
+  goto_screen_cmd->goto_screen_fn = [&](const std::string &name) {
+    for (int i = 0; i < static_cast<int>(screen_names.size()); i++) {
+      if (screen_names[i] == name) {
+        current_screen_index = i;
+        load_screen(i);
+        return;
+      }
+    }
+    log_error("[E2E] Screen not found: {}", name);
+  };
+  systems.register_update_system(std::move(goto_screen_cmd));
+
+  // Register next_screen and prev_screen commands
+  systems.register_update_system(
+      std::make_unique<e2e_commands::HandleNextScreenCommand>());
+  systems.register_update_system(
+      std::make_unique<e2e_commands::HandlePrevScreenCommand>());
+
+  // Register screenshot command (just consume it for now)
+  systems.register_update_system(
+      std::make_unique<afterhours::testing::HandleScreenshotCommand>(
+          [](const std::string &name) {
+            log_info("[E2E] Screenshot requested: {}", name);
+          }));
+
+  // Register reset_test_state command to clear UI between scripts
+  systems.register_update_system(
+      std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
+          []() { reset_e2e_state(); }));
+
+  afterhours::testing::register_unknown_handler(systems);
+  afterhours::testing::register_cleanup(systems);
+
+  afterhours::ui::validation::register_systems<InputAction>(systems);
+
+  // Main E2E loop with visual rendering
+  while (running && !raylib::WindowShouldClose() && !runner.is_finished()) {
+    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
+      running = false;
+      break;
+    }
+
+    float dt = raylib::GetFrameTime();
+
+    // Advance E2E runner (dispatches commands)
+    runner.tick(dt);
+
+    // Run game systems (input, UI, rendering, E2E command handlers)
+    // Note: E2E handlers (update) run first, then rendering populates registry
+    // The visible text registry accumulates text from render; expect_text
+    // checks in the next frame after rendering has populated it
+    systems.run(dt);
+
+    // Fail fast on first error
+    if (afterhours::testing::get_command_error_count() > 0) {
+      log_warn("Stopping test early due to error");
+      break;
+    }
+
+    // Screen navigation via test input (AFTER E2E commands are processed)
+    // Check the afterhours input_injector since E2E handlers use that
+    namespace ah_input = afterhours::testing::input_injector;
+    if (ah_input::consume_press(afterhours::keys::PAGE_DOWN) ||
+        ah_input::consume_press(afterhours::keys::PERIOD)) {
+      current_screen_index =
+          (current_screen_index + 1) % static_cast<int>(screen_names.size());
+      load_screen(current_screen_index);
+    }
+    if (ah_input::consume_press(afterhours::keys::PAGE_UP) ||
+        ah_input::consume_press(afterhours::keys::COMMA)) {
+      current_screen_index =
+          (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
+          static_cast<int>(screen_names.size());
+      load_screen(current_screen_index);
+    }
+
+    // Reset test input state for next frame
+    afterhours::testing::test_input::reset_frame();
+  }
+
+  runner.print_results();
+  Settings::get().write_save_file();
+
+  return runner.has_failed() ? 1 : 0;
+}
+
+void reset_e2e_state() {
+  // Reset UI focus/input state and clear UI entities between scripts.
+  if (auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
+          afterhours::ui::UIContext<InputAction>>()) {
+    ui_context->reset();
+  }
+
+  // Clear text registry and input queues
+  afterhours::testing::VisibleTextRegistry::instance().clear();
+  afterhours::testing::test_input::clear_queue();
+  afterhours::testing::test_input::reset_frame();
+  afterhours::testing::input_injector::reset_frame();
+
+  // Mark all UI entities as not rendered to avoid stale focus/click handling.
+  for (const auto &e : afterhours::EntityHelper::get_entities()) {
+    if (!e)
+      continue;
+    if (e->has<afterhours::ui::UIComponent>()) {
+      e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
+    }
+  }
+
+  // Wipe UI component entities between scripts to avoid state leakage.
+  for (const auto &e : afterhours::EntityHelper::get_entities()) {
+    if (!e)
+      continue;
+    if (e->has<afterhours::ui::UIComponent>()) {
+      e->cleanup = true;
+    }
+  }
+  afterhours::EntityHelper::cleanup();
 }

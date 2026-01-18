@@ -83,6 +83,13 @@ ifeq ($(ENABLE_MCP),1)
     MCP_CXXFLAGS := -DAFTER_HOURS_ENABLE_MCP
 endif
 
+# E2E Testing support (enabled by default, disable with ENABLE_E2E=0)
+ENABLE_E2E ?= 1
+E2E_CXXFLAGS :=
+ifeq ($(ENABLE_E2E),1)
+    E2E_CXXFLAGS := -DAFTER_HOURS_ENABLE_E2E_TESTING
+endif
+
 # Accessibility enforcement (warn and clamp small font sizes)
 ACCESSIBILITY_CXXFLAGS := -DAFTERHOURS_ENFORCE_MIN_FONT_SIZE
 
@@ -97,8 +104,8 @@ endif
 
 # Combine all CXXFLAGS
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
-    $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) \
-    $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS)
+    $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(E2E_CXXFLAGS) \
+    $(ACCESSIBILITY_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS)
 
 # Include directories (use -isystem for vendor to suppress their warnings)
 INCLUDES := -isystem vendor/
