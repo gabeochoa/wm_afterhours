@@ -45,6 +45,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ParcelCorpsSettings.h"
 #include "systems/screens/PowerWashSettings.h"
 #include "systems/screens/RubberBanditsMenu.h"
+#include "systems/screens/SettingRowShowcase.h"
 #include "systems/screens/SportsSettings.h"
 #include "systems/screens/TextInputDemo.h"
 #include "systems/screens/Themes.h"

@@ -4,43 +4,6 @@ Issues and limitations discovered during UI Showcase development. Only includes 
 
 ---
 
-# Missing Widgets - By Priority
-
-## HIGH PRIORITY
-
-### Toggle Switch (iOS-style)
-
-**Status:** Not implemented
-
-**Issue:** Toggle switches (pill-shaped track with sliding circular knob) are manually reimplemented in multiple screens. Different from checkbox which is a square with checkmark.
-
-**Screens Using This Pattern:**
-- ParcelCorpsSettings: `render_toggle_row_with_icon()` and `render_toggle_row_rainbow()`
-- MiniMotorwaysSettings: Circle toggles with X/V markers
-- AngryBirdsSettings: Similar toggle buttons
-
-**Suggested Implementation:**
-```cpp
-enum struct ToggleSwitchStyle {
-    Pill,      // iOS-style pill with sliding knob (default)
-    Circle,    // Single circle with X/checkmark inside
-    Icon,      // Circle with custom icons for on/off states
-};
-
-ElementResult toggle_switch(HasUIContext auto &ctx, EntityParent ep_pair,
-                            bool &value,
-                            ComponentConfig config = ComponentConfig(),
-                            ToggleSwitchStyle style = ToggleSwitchStyle::Pill);
-```
-
-**Features Needed:**
-- Pill-shaped track with sliding circular knob
-- Animation for state transition
-- Optional label (inline with toggle)
-- Circle variant with X/checkmark markers
-
----
-
 ### Stepper/Selector with Arrows
 
 **Status:** Not implemented
@@ -79,7 +42,33 @@ ElementResult stepper_float(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ### Labeled Setting Row
 
-**Status:** Not implemented
+**Status:** ✅ Implemented in `vendor/afterhours/src/plugins/ui/setting_row.h`
+
+**Known Issue:** When icons are enabled, they render outside the parent container bounds due to a layout system bug with FlexDirection::Row positioning. Icons are disabled in the showcase until this is fixed.
+
+**Slot Config Support:** The component supports optional slot-level customization via `SettingRowConfig`:
+```cpp
+// Simple usage (zero config)
+setting_row_toggle(ctx, mk(parent), "Music", music_enabled);
+
+// With slot customization
+auto row_config = SettingRowConfig{}
+    .with_label("Music")
+    .with_control_type(SettingRowControlType::Toggle)
+    .with_label_config(ComponentConfig{}.with_font(BOLD_FONT, 24.0f))
+    .with_control_config(ComponentConfig{}.with_custom_background(accent));
+setting_row(ctx, mk(parent), row_config, &music_enabled);
+```
+
+**Future Enhancement:** Consider generalizing to a Builder pattern for all HOCs:
+```cpp
+// Future pattern (not yet implemented)
+setting_row(ctx, mk(parent), "Music", &value)
+    .with_icon_style(ComponentConfig{})
+    .with_label_style(ComponentConfig{})
+    .with_control(toggle_switch, ComponentConfig{})
+    .build();
+```
 
 **Issue:** The pattern `[Icon] Label .............. [Control]` is the most common UI pattern in settings screens.
 
@@ -1034,26 +1023,6 @@ namespace fonts {
 
 ---
 
-# Visual Effects Gaps
-
-## ~~Text Stroke / Outline~~ ✅ RESOLVED
-
-**Status:** Implemented natively in the library.
-
-**Usage:**
-```cpp
-ComponentConfig{}
-    .with_label("DREAM")
-    .with_text_stroke(Color{90, 160, 210, 255}, 2.0f);
-```
-
-The `with_text_stroke(color, thickness)` method renders text with an outline effect
-by drawing the text at 8 offset positions before drawing the main text on top.
-Supports opacity inheritance and works with all text alignment modes.
-
-**Workaround:** Deleted - use native API
-
----
 
 ## Gradient Backgrounds
 
