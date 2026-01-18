@@ -183,41 +183,6 @@ ElementResult text_input(HasUIContext auto &ctx, EntityParent ep_pair,
 ---
 
 
-### Tab Container
-
-**Status:** ✅ Implemented
-
-**Implementation:**
-```cpp
-ElementResult tab_container(HasUIContext auto &ctx, EntityParent ep_pair,
-                            const Container &tab_labels,
-                            size_t &active_tab,
-                            ComponentConfig config = ComponentConfig());
-```
-
-**Features:**
-- Horizontal row of equally-sized tabs
-- Active tab highlighting (uses theme.surface for active, theme.background for inactive)
-- Click to switch tabs
-- Returns ElementResult with changed state and active tab index
-- Keyboard navigation via focus system
-
-**Usage Example:**
-```cpp
-size_t active_tab = 0;
-std::array<std::string_view, 3> tabs = {"Tab one", "Tab two", "Tab three"};
-
-tab_container(ctx, mk(parent, 0), tabs, active_tab,
-    ComponentConfig{}.with_size(ComponentSize{pixels(640), pixels(50)}));
-
-// Render content based on active_tab
-if (active_tab == 0) { /* Tab one content */ }
-```
-
-**Demo:** `./output/ui_tester.exe --screen=tab_container`
-
----
-
 ### Tooltip
 
 **Status:** Not implemented
@@ -385,19 +350,34 @@ ElementResult input_float(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ### Centered Content Container
 
-**Status:** Not implemented
+**Status:** ✅ Implemented
 
 **Issue:** Almost every screen manually calculates content centering.
 
-**Suggested Implementation:**
-```cpp
-Size centered_max(float max_width);  // Centers with max width constraint
+**Implementation:**
 
-// Or alignment on containers
-ComponentConfig{}
-    .with_size(ComponentSize{pixels(850), percent(1.0f)})
-    .with_self_align(SelfAlign::Center);  // Centers within parent
+Added `SelfAlign` enum and `with_self_align()` method to allow individual elements to override their parent's `align_items` setting. This enables easy centering of content containers without manual position calculations.
+
+```cpp
+// Center a content panel within its parent on the cross axis
+auto content_panel = div(context, mk(parent.ent(), 0),
+    ComponentConfig{}
+        .with_size(ComponentSize{pixels(850), percent(1.0f)})
+        .with_self_align(SelfAlign::Center)  // Centers within parent
+        .with_debug_name("centered_panel"));
+
+// SelfAlign options:
+// - SelfAlign::Auto      - Inherit from parent's align_items (default)
+// - SelfAlign::FlexStart - Align to start of cross axis
+// - SelfAlign::FlexEnd   - Align to end of cross axis
+// - SelfAlign::Center    - Center on cross axis
 ```
+
+**Files Changed:**
+- `layout_types.h` - Added `SelfAlign` enum
+- `ui_core_components.h` - Added `self_align` field to `UIComponent`
+- `component_config.h` - Added `with_self_align()` method
+- `autolayout.h` - Updated positioning to respect `self_align`
 
 ---
 
