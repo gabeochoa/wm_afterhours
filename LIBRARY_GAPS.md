@@ -182,69 +182,39 @@ ElementResult text_input(HasUIContext auto &ctx, EntityParent ep_pair,
 
 ---
 
-### Scroll Container
 
-**Status:** Not implemented
+### Tab Container
 
-**Issue:** Content that exceeds container bounds is clipped with no way to access it. Critical for lists, logs, and content of unknown length.
+**Status:** ✅ Implemented
 
-**Working Implementation (wordproc):**
-- `src/ecs/components.h` (ScrollComponent)
-- `src/ecs/input_system.h` (mouse wheel handling)
-- `src/ecs/render_system.h` (clipping + offset)
-
-**Suggested Implementation:**
+**Implementation:**
 ```cpp
-namespace afterhours::input {
-  float get_mouse_wheel_move();
-  Vector2 get_mouse_wheel_move_v();  // trackpad / horizontal scroll
-}
-
-struct HasScrollView : BaseComponent {
-  Vector2 scroll_offset = {0, 0};
-  Vector2 content_size = {0, 0};
-  Vector2 viewport_size = {0, 0};
-  bool horizontal_enabled = false;
-  bool vertical_enabled = true;
-  float scroll_speed = 20.0f;
-};
-
-ElementResult scroll_view(HasUIContext auto &ctx, EntityParent ep_pair,
-                          ComponentConfig config = ComponentConfig());
+ElementResult tab_container(HasUIContext auto &ctx, EntityParent ep_pair,
+                            const Container &tab_labels,
+                            size_t &active_tab,
+                            ComponentConfig config = ComponentConfig());
 ```
 
-**Features Needed:**
-- Vertical scrolling (mouse wheel, drag scrollbar)
-- Horizontal scrolling (Shift+wheel)
-- Scrollbar rendering (optional hide when not needed)
-- Scroll position get/set
-- Scroll-to-element support
-- Content clipping via scissor/clip rect
-- Touch/gamepad support
- - Keyboard support (Page Up/Down, arrows when focused)
+**Features:**
+- Horizontal row of equally-sized tabs
+- Active tab highlighting (uses theme.surface for active, theme.background for inactive)
+- Click to switch tabs
+- Returns ElementResult with changed state and active tab index
+- Keyboard navigation via focus system
 
----
-
-### Tab Bar
-
-**Status:** Not implemented
-
-**Issue:** No way to organize content into tabbed panels. Common for settings pages and multi-view interfaces.
-
-**Suggested Implementation:**
+**Usage Example:**
 ```cpp
-ElementResult tab_bar(HasUIContext auto &ctx, EntityParent ep_pair,
-                      const std::vector<std::string> &tab_labels,
-                      size_t &active_tab,
-                      ComponentConfig config = ComponentConfig());
+size_t active_tab = 0;
+std::array<std::string_view, 3> tabs = {"Tab one", "Tab two", "Tab three"};
+
+tab_container(ctx, mk(parent, 0), tabs, active_tab,
+    ComponentConfig{}.with_size(ComponentSize{pixels(640), pixels(50)}));
+
+// Render content based on active_tab
+if (active_tab == 0) { /* Tab one content */ }
 ```
 
-**Features Needed:**
-- Horizontal row of tabs
-- Active tab highlighting
-- Click to switch
-- Keyboard navigation (arrows when focused)
-- Optional close button per tab
+**Demo:** `./output/ui_tester.exe --screen=tab_container`
 
 ---
 
