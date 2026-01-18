@@ -1,0 +1,15 @@
+# Scroll View Test
+# Tests scroll view component rendering
+
+# Navigate to the scroll view screen
+goto_screen scroll_view
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen scroll_view
+
+# Verify we're on the correct screen
+expect_text "Scroll"
+
+screenshot scroll_view_display
+

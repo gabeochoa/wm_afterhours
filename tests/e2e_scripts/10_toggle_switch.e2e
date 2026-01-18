@@ -1,0 +1,22 @@
+# Toggle Switch Test
+# Tests toggle switch component rendering and toggling
+
+# Navigate to the toggle switches screen
+goto_screen toggle_switches
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen toggle_switches
+
+# Verify we're on the correct screen
+expect_text "Toggle Switch"
+
+# Tab to first toggle and activate
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take screenshot after toggle
+screenshot toggle_after_switch
+

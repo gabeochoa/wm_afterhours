@@ -1,0 +1,15 @@
+# Text Stroke Test
+# Tests text stroke effect rendering
+
+# Navigate to the text stroke screen
+goto_screen text_stroke
+wait 0.5
+
+# Validate screen against baseline
+validate_screen text_stroke
+
+# Verify we're on the correct screen
+expect_text "Stroke"
+
+screenshot text_stroke_display
+

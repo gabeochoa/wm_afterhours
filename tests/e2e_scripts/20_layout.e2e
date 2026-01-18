@@ -1,0 +1,15 @@
+# Layout Test
+# Tests layout system rendering
+
+# Navigate to the layout screen
+goto_screen layout
+wait 0.5
+
+# Validate screen against baseline
+validate_screen layout
+
+# Verify we're on the correct screen
+expect_text "Layout"
+
+screenshot layout_display
+

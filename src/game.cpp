@@ -16,6 +16,7 @@
 #include "systems/TestSystem.h"
 #include "systems/UpdateRenderTexture.h"
 #include "testing/e2e_integration.h"
+#include "testing/screenshot_validation.h"
 #include "testing/test_app.h"
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
@@ -629,9 +630,16 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 #endif
 }
 
-int run_e2e_tests(const e2e::E2EArgs & /*args*/,
+int run_e2e_tests(const e2e::E2EArgs &args,
                   afterhours::testing::E2ERunner &runner) {
   configure_validation();
+
+  // Set global update-baselines flag
+  screenshot_validation::set_update_baselines(args.update_baselines);
+  if (screenshot_validation::is_update_baselines()) {
+    log_info("[E2E] Running in update-baselines mode - screenshots will be "
+             "saved as new baselines");
+  }
 
   // Enable test mode for both test_input systems
   test_input::test_mode = true;
@@ -889,12 +897,19 @@ int run_e2e_tests(const e2e::E2EArgs & /*args*/,
   systems.register_update_system(
       std::make_unique<e2e_commands::HandlePrevScreenCommand>());
 
-  // Register screenshot command (just consume it for now)
+  // Register screenshot command
   systems.register_update_system(
       std::make_unique<afterhours::testing::HandleScreenshotCommand>(
           [](const std::string &name) {
-            log_info("[E2E] Screenshot requested: {}", name);
+            std::string path = "/tmp/e2e_screenshot_" + name + ".png";
+            screenshot_validation::save_screenshot_to(path);
+            log_info("[E2E] Screenshot saved: {}", path);
           }));
+
+  // Register validate_screen command for visual regression testing
+  systems.register_update_system(
+      std::make_unique<e2e_commands::HandleValidateScreenCommand>(
+          screenshot_validation::validate_screen_against_baseline));
 
   // Register reset_test_state command to clear UI between scripts
   systems.register_update_system(

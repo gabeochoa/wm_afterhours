@@ -1,0 +1,33 @@
+# Image Showcase Test
+# Tests image, sprite, and image_button components
+
+# Navigate to the images screen
+goto_screen images
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen images
+
+# Verify we're on the correct screen
+expect_text "Image & Sprite Components Showcase"
+
+# Tab to an image button and click
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Verify click was registered
+expect_text "Button clicks: 1"
+
+# Take screenshot after click
+screenshot images_after_click
+

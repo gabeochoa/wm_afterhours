@@ -1,0 +1,29 @@
+# Radio Button Selection Test
+# Tests radio button group component rendering and selection
+
+# Navigate to the radio buttons screen
+goto_screen radio_buttons
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen radio_buttons
+
+# Tab to first radio option
+key TAB
+wait 0.2
+
+# Select first option (should already be selected or will select)
+key ENTER
+wait 0.2
+
+# Tab to next option
+key TAB
+wait 0.2
+
+# Select the new option
+key ENTER
+wait 0.3
+
+# Take screenshot after selection
+screenshot radio_after_select
+

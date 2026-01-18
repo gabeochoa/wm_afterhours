@@ -37,10 +37,12 @@ backward::SignalHandling sh;
 #include "systems/screens/FighterMenu.h"
 #include "systems/screens/FlightOptions.h"
 #include "systems/screens/Forms.h"
+#include "systems/screens/ImageShowcase.h"
 #include "systems/screens/IslandsTrainsSettings.h"
 #include "systems/screens/KirbyOptions.h"
 #include "systems/screens/LanguageDemo.h"
 #include "systems/screens/MiniMotorwaysSettings.h"
+#include "systems/screens/NavigationBarShowcase.h"
 #include "systems/screens/NeonStrike.h"
 #include "systems/screens/ParcelCorpsSettings.h"
 #include "systems/screens/PowerWashSettings.h"
@@ -50,6 +52,7 @@ backward::SignalHandling sh;
 #include "systems/screens/TextInputDemo.h"
 #include "systems/screens/Themes.h"
 #include "systems/screens/ToggleSwitchShowcase.h"
+#include "systems/screens/PaginationShowcase.h"
 #include "systems/screens/RadioGroupShowcase.h"
 #include "systems/screens/ScrollViewShowcase.h"
 #include "systems/screens/SelfAlignShowcase.h"
@@ -124,6 +127,7 @@ int main(int argc, char *argv[]) {
     std::cout << "  --timeout <seconds>          Set E2E timeout (default: 30)\n";
     std::cout << "  --slow                       Run tests slowly for visibility (0.5s delay)\n";
     std::cout << "  --slow-delay <seconds>       Set slow mode delay (implies --slow)\n";
+    std::cout << "  --update-baselines           Update baseline screenshots instead of comparing\n";
     return 0;
   }
 

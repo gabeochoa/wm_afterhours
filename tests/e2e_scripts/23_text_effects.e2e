@@ -1,0 +1,15 @@
+# Text Shadow Test
+# Tests text shadow effect rendering
+
+# Navigate to the text shadow screen
+goto_screen text_shadow
+wait 0.5
+
+# Validate screen against baseline
+validate_screen text_shadow
+
+# Verify we're on the correct screen
+expect_text "Shadow"
+
+screenshot text_shadow_display
+

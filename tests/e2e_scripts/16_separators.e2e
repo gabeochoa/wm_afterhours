@@ -1,0 +1,15 @@
+# Separators Test
+# Tests separator component rendering
+
+# Navigate to the separators screen
+goto_screen separators
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen separators
+
+# Verify we're on the correct screen
+expect_text "Separator"
+
+screenshot separators_display
+

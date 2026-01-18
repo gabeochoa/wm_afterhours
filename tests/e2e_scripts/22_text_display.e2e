@@ -1,0 +1,15 @@
+# Text Display Test
+# Tests text rendering
+
+# Navigate to the text screen
+goto_screen text
+wait 0.5
+
+# Validate screen against baseline
+validate_screen text
+
+# Verify we're on the correct screen
+expect_text "Text"
+
+screenshot text_display
+

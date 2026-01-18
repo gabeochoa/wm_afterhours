@@ -1,0 +1,23 @@
+# Tabbing Test
+# Tests keyboard tabbing navigation
+
+# Navigate to the tabbing screen
+goto_screen tabbing
+wait 0.5
+
+# Validate screen against baseline
+validate_screen tabbing
+
+# Verify we're on the correct screen
+expect_text "Tab"
+
+# Test tabbing through elements
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.3
+
+screenshot tabbing_after_nav
+

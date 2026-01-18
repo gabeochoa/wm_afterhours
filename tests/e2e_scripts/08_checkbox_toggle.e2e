@@ -1,0 +1,22 @@
+# Checkbox Toggle Test
+# Tests checkbox component rendering and interaction
+
+# Navigate to the checkboxes screen
+goto_screen checkboxes
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen checkboxes
+
+# Verify we're on the correct screen
+expect_text "Checkbox Components Showcase"
+
+# Tab to first interactive checkbox and toggle
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take a screenshot after toggle
+screenshot checkboxes_after_toggle
+

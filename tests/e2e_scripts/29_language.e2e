@@ -1,0 +1,15 @@
+# Language Demo Test
+# Tests language/i18n system
+
+# Navigate to the language demo screen
+goto_screen language_demo
+wait 0.5
+
+# Validate screen against baseline
+validate_screen language_demo
+
+# Verify we're on the correct screen
+expect_text "Language"
+
+screenshot language_display
+

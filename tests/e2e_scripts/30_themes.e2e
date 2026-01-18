@@ -1,0 +1,21 @@
+# Themes Test
+# Tests theme switching
+
+# Navigate to the themes screen
+goto_screen themes
+wait 0.5
+
+# Validate screen against baseline
+validate_screen themes
+
+# Verify we're on the correct screen
+expect_text "Theme"
+
+# Try switching theme
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot themes_after_switch
+

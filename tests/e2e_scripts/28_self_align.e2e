@@ -1,0 +1,15 @@
+# Self Align Test
+# Tests self-alignment system
+
+# Navigate to the self align screen
+goto_screen self_align
+wait 0.5
+
+# Validate screen against baseline
+validate_screen self_align
+
+# Verify we're on the correct screen
+expect_text "Align"
+
+screenshot self_align_display
+

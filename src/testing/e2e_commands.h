@@ -84,6 +84,39 @@ struct HandleGotoScreenCommand : System<testing::PendingE2ECommand> {
   }
 };
 
+// Handle 'validate_screen name' - screenshots and validates against baseline
+// Fails if the screenshot differs from baseline by more than 1%
+struct HandleValidateScreenCommand : System<testing::PendingE2ECommand> {
+  using ValidateFn = std::function<bool(const std::string &)>;
+
+  explicit HandleValidateScreenCommand(ValidateFn fn)
+      : validate_fn_(std::move(fn)) {}
+
+  virtual void for_each_with(Entity &, testing::PendingE2ECommand &cmd,
+                             float) override {
+    if (cmd.is_consumed() || !cmd.is("validate_screen"))
+      return;
+    if (!cmd.has_args(1)) {
+      cmd.fail("validate_screen requires screen name");
+      return;
+    }
+    if (!validate_fn_) {
+      cmd.fail("validate_screen callback not set");
+      return;
+    }
+
+    if (!validate_fn_(cmd.arg(0))) {
+      cmd.fail("Screenshot differs from baseline by more than 1%: " +
+               cmd.arg(0));
+      return;
+    }
+    cmd.consume();
+  }
+
+private:
+  ValidateFn validate_fn_;
+};
+
 // Register app-specific commands
 template <typename ScreenManager>
 inline void register_app_commands(SystemManager &sm) {

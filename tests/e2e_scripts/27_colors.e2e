@@ -1,0 +1,15 @@
+# Colors Test
+# Tests color system display
+
+# Navigate to the colors screen
+goto_screen colors
+wait 0.5
+
+# Validate screen against baseline
+validate_screen colors
+
+# Verify we're on the correct screen
+expect_text "Color"
+
+screenshot colors_display
+

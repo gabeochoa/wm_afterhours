@@ -1,0 +1,15 @@
+# Cards Display Test
+# Tests card component rendering
+
+# Navigate to the cards screen
+goto_screen cards
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen cards
+
+# Verify we're on the correct screen
+expect_text "Card"
+
+screenshot cards_display
+

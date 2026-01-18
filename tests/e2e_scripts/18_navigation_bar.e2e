@@ -1,0 +1,22 @@
+# Navigation Bar Test
+# Tests navigation bar component rendering and navigation
+
+# Navigate to the navigation bar screen
+goto_screen navigation_bar_demo
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen navigation_bar_demo
+
+# Verify we're on the correct screen
+expect_text "Navigation Bar Component Showcase"
+
+# Tab to navigation and interact
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take screenshot after navigation
+screenshot navbar_after_nav
+

@@ -87,6 +87,7 @@ struct E2EArgs {
   float timeout_seconds = 30.0f; // Default 30 second timeout
   bool slow_mode = false;        // Run tests slowly for visibility
   float slow_delay = 0.5f;       // Delay between commands in slow mode
+  bool update_baselines = false; // Update baseline screenshots instead of comparing
 };
 
 inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
@@ -109,6 +110,8 @@ inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
     } else if (arg == "--slow-delay" && i + 1 < argc) {
       args.slow_delay = std::stof(argv[++i]);
       args.slow_mode = true;
+    } else if (arg == "--update-baselines") {
+      args.update_baselines = true;
     }
   }
 

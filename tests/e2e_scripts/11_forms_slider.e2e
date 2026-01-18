@@ -1,0 +1,28 @@
+# Forms and Slider Test
+# Tests form components including sliders
+
+# Navigate to the forms screen
+goto_screen forms
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen forms
+
+# Verify we're on the correct screen
+expect_text "Form Components Gallery"
+
+# Tab to a slider component
+key TAB
+wait 0.2
+
+# Adjust slider with arrow keys
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.3
+
+# Take screenshot after slider adjustment
+screenshot forms_after_slider
+

@@ -1,0 +1,22 @@
+# Tab Container Test
+# Tests tab container component rendering and switching
+
+# Navigate to the tab container screen
+goto_screen tab_container
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen tab_container
+
+# Verify we're on the correct screen
+expect_text "Tab"
+
+# Tab to switch between tabs
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take screenshot after tab switch
+screenshot tab_after_switch
+

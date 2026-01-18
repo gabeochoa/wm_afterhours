@@ -1,0 +1,15 @@
+# Flex Alignment Test
+# Tests flex alignment system rendering
+
+# Navigate to the flex alignment screen
+goto_screen flex_alignment
+wait 0.5
+
+# Validate screen against baseline
+validate_screen flex_alignment
+
+# Verify we're on the correct screen
+expect_text "Flex"
+
+screenshot flex_alignment_display
+

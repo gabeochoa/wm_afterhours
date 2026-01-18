@@ -1,0 +1,15 @@
+# Circular Progress Test
+# Tests circular progress component rendering
+
+# Navigate to the circular progress screen
+goto_screen circular_progress
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen circular_progress
+
+# Verify we're on the correct screen
+expect_text "Circular"
+
+screenshot circular_progress_display
+

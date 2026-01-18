@@ -1,0 +1,15 @@
+# Text Overflow Test
+# Tests text overflow handling
+
+# Navigate to the text overflow screen
+goto_screen text_overflow
+wait 0.5
+
+# Validate screen against baseline
+validate_screen text_overflow
+
+# Verify we're on the correct screen
+expect_text "Overflow"
+
+screenshot text_overflow_display
+
