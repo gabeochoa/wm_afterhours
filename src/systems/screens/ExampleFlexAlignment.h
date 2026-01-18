@@ -9,375 +9,370 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Demonstrates the new flexbox alignment properties:
-// - justify_content: FlexStart, FlexEnd, Center, SpaceBetween, SpaceAround
-// - align_items: FlexStart, FlexEnd, Center
+// Demonstrates flexbox alignment properties in a clean 2-column layout
 struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 
-  // Vertical justify demo (Column direction)
+  // Vertical justify demo (Column direction) - compact
   void render_justify_vertical(UIContext<InputAction> &context,
                                afterhours::Entity &parent,
                                const std::string &label, JustifyContent jc,
                                int id) {
-    auto &theme = context.theme;
+    // Container with visible background
+    auto container = div(
+        context, mk(parent, id),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.18f), percent(0.92f)})
+            .with_custom_background(afterhours::Color{50, 60, 80, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(6), 
+                                  .bottom = pixels(6), .right = pixels(6)})
+            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2), 
+                                .left = pixels(3), .right = pixels(3)})
+            .with_flex_direction(FlexDirection::Column)
+            .with_justify_content(jc)
+            .with_debug_name(label));
 
-    // Container - use Column direction, NO flex on children to prevent wrap
-    auto container =
-        div(context, mk(parent, id),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(150), pixels(120)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.92f))
-                .with_padding(Padding{.top = pixels(4),
-                                      .left = pixels(4),
-                                      .bottom = pixels(4),
-                                      .right = pixels(4)})
-                .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                    .left = pixels(4), .right = pixels(4)})
-                .with_flex_direction(FlexDirection::Column)
-                .with_justify_content(jc)
-                .with_debug_name(label));
-
-    // Three boxes with labels like "FlexEnd 1" - use Row to prevent Column wrap
+    // 3 boxes - tall enough to show spacing clearly
     for (int i = 0; i < 3; i++) {
       div(context, mk(container.ent(), i),
           ComponentConfig{}
-              .with_label(label + " " + std::to_string(i + 1))
-              .with_size(ComponentSize{percent(0.95f), pixels(28)})
+              .with_label(std::to_string(i + 1))
+              .with_size(ComponentSize{percent(0.85f), pixels(28)})
               .with_background(Theme::Usage::Primary)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_flex_direction(FlexDirection::Row)
-              .with_debug_name(label + "_box_" + std::to_string(i)));
+              .with_debug_name(label + "_" + std::to_string(i)));
     }
   }
 
-  // Horizontal justify demo (Row direction)
+  // Horizontal justify demo (Row direction) - compact
   void render_justify_horizontal(UIContext<InputAction> &context,
                                  afterhours::Entity &parent,
                                  const std::string &label, JustifyContent jc,
                                  int id) {
-    auto &theme = context.theme;
+    // Container with visible background
+    auto container = div(
+        context, mk(parent, id),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.18f), percent(0.92f)})
+            .with_custom_background(afterhours::Color{50, 60, 80, 255})
+            .with_padding(Padding{.top = pixels(4), .left = pixels(4), 
+                                  .bottom = pixels(4), .right = pixels(4)})
+            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2), 
+                                .left = pixels(3), .right = pixels(3)})
+            .with_flex_direction(FlexDirection::Column)
+            .with_debug_name(label + "_outer"));
 
-    // Container for this demo - wide and short for horizontal layout
-    auto container =
-        div(context, mk(parent, id),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.18f), pixels(110)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.92f))
-                .with_padding(Padding{.top = pixels(4),
-                                      .left = pixels(4),
-                                      .bottom = pixels(4),
-                                      .right = pixels(4)})
-                .with_margin(Spacing::xs)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name(label + "_outer"));
-
-    // Title at top
+    // Title
     div(context, mk(container.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{percent(0.95f), pixels(22)})
-            .with_custom_background(theme.secondary)
+            .with_size(ComponentSize{percent(0.92f), pixels(22)})
+            .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
+            .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
 
     // Inner row container with justify
-    auto inner = div(context, mk(container.ent(), 1),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{percent(1.0f), pixels(60)})
-                         .with_flex_direction(FlexDirection::Row)
-                         .with_justify_content(jc)
-                         .with_debug_name(label + "_inner"));
+    auto inner = div(
+        context, mk(container.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.92f), pixels(40)})
+            .with_custom_background(afterhours::Color{35, 45, 65, 255})
+            .with_padding(Padding{.top = pixels(4), .left = pixels(4), 
+                                  .bottom = pixels(4), .right = pixels(4)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_justify_content(jc)
+            .with_debug_name(label + "_inner"));
 
-    // Three boxes of different widths
-    const float widths[] = {35.0f, 25.0f, 30.0f};
+    // Three boxes
     for (int i = 0; i < 3; i++) {
       div(context, mk(inner.ent(), i),
           ComponentConfig{}
               .with_label(std::to_string(i + 1))
-              .with_size(ComponentSize{pixels(widths[i]), pixels(50)})
+              .with_size(ComponentSize{pixels(26), pixels(28)})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-              .with_debug_name(label + "_box_" + std::to_string(i)));
+              .with_flex_direction(FlexDirection::Column)
+              .with_debug_name(label + "_" + std::to_string(i)));
     }
   }
 
+  // Align items demo - compact
   void render_align_demo(UIContext<InputAction> &context,
                          afterhours::Entity &parent, const std::string &label,
                          AlignItems ai, int id) {
-    auto &theme = context.theme;
+    // Container with visible background
+    auto container = div(
+        context, mk(parent, id),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.31f), percent(0.92f)})
+            .with_custom_background(afterhours::Color{50, 60, 80, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(8), 
+                                  .bottom = pixels(6), .right = pixels(8)})
+            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2), 
+                                .left = pixels(4), .right = pixels(4)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_align_items(ai)
+            .with_debug_name(label));
 
-    // Container for this demo
-    auto container =
-        div(context, mk(parent, id),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.30f), pixels(105)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.92f))
-                .with_padding(Padding{.top = pixels(4),
-                                      .left = pixels(4),
-                                      .bottom = pixels(4),
-                                      .right = pixels(4)})
-                .with_margin(Spacing::xs)
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(ai)
-                .with_debug_name(label));
-
-    // Title at top
+    // Title at left
     div(context, mk(container.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(80), pixels(24)})
-            .with_custom_background(theme.secondary)
+            .with_size(ComponentSize{pixels(75), pixels(24)})
+            .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
+            .with_flex_direction(FlexDirection::Column)
             .with_debug_name(label + "_title"));
 
-    // Three boxes of different heights to show cross-axis alignment
-    const float heights[] = {70.0f, 40.0f, 55.0f};
+    // Three boxes of different heights
+    const float heights[] = {55.0f, 35.0f, 45.0f};
     for (int i = 0; i < 3; i++) {
       div(context, mk(container.ent(), i + 1),
           ComponentConfig{}
               .with_label(std::to_string(i + 1))
-              .with_size(ComponentSize{pixels(45), pixels(heights[i])})
+              .with_size(ComponentSize{pixels(35), pixels(heights[i])})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-              .with_debug_name(label + "_box_" + std::to_string(i)));
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_flex_direction(FlexDirection::Column)
+              .with_debug_name(label + "_" + std::to_string(i)));
     }
   }
 
-  // Demo for SelfAlign - individual child overrides parent's AlignItems
+  // SelfAlign demo - compact
   void render_self_align_demo(UIContext<InputAction> &context,
                               afterhours::Entity &parent, int id) {
-    auto &theme = context.theme;
+    // Container with AlignItems::Center
+    auto container = div(
+        context, mk(parent, id),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.96f), percent(0.92f)})
+            .with_custom_background(afterhours::Color{50, 60, 80, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(10), 
+                                  .bottom = pixels(6), .right = pixels(10)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_align_items(AlignItems::Center)
+            .with_justify_content(JustifyContent::SpaceAround)
+            .with_debug_name("self_align_container"));
 
-    // Container with AlignItems::Center - children can override
-    auto container =
-        div(context, mk(parent, id),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(80)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.92f))
-                .with_padding(Padding{.top = pixels(5),
-                                      .left = pixels(8),
-                                      .bottom = pixels(5),
-                                      .right = pixels(8)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)  // Parent default
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_debug_name("self_align_container"));
-
-    // Child 1: FlexStart (overrides parent's Center) - aligns to TOP
+    // FlexStart - aligns to TOP
     div(context, mk(container.ent(), 0),
         ComponentConfig{}
-            .with_label("FlexStart")
-            .with_size(ComponentSize{pixels(90), pixels(28)})
+            .with_label("Start")
+            .with_size(ComponentSize{pixels(70), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_self_align(SelfAlign::FlexStart)
+            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_start"));
 
-    // Child 2: Auto (uses parent's Center) - aligns to MIDDLE
+    // Auto - aligns to MIDDLE
     div(context, mk(container.ent(), 1),
         ComponentConfig{}
             .with_label("Auto")
-            .with_size(ComponentSize{pixels(65), pixels(28)})
+            .with_size(ComponentSize{pixels(60), pixels(32)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_self_align(SelfAlign::Auto)
+            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_auto"));
 
-    // Child 3: Center (explicit, same as parent) - aligns to MIDDLE
+    // Center - aligns to MIDDLE
     div(context, mk(container.ent(), 2),
         ComponentConfig{}
             .with_label("Center")
-            .with_size(ComponentSize{pixels(70), pixels(28)})
+            .with_size(ComponentSize{pixels(70), pixels(32)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_self_align(SelfAlign::Center)
+            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_center"));
 
-    // Child 4: FlexEnd (overrides parent's Center) - aligns to BOTTOM
+    // FlexEnd - aligns to BOTTOM
     div(context, mk(container.ent(), 3),
         ComponentConfig{}
-            .with_label("FlexEnd")
-            .with_size(ComponentSize{pixels(90), pixels(28)})
-            .with_custom_background(afterhours::Color{200, 70, 100, 255})
+            .with_label("End")
+            .with_size(ComponentSize{pixels(60), pixels(32)})
+            .with_custom_background(afterhours::Color{180, 60, 90, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_self_align(SelfAlign::FlexEnd)
+            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_end"));
   }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Use a clean modern theme
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container background (no padding so it stays in bounds)
-    auto root =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.90f)})
-                .with_custom_background(theme.background)
-                .with_roundness(0.06f)
-                .with_debug_name("flex_bg"));
+    // Full screen root
+    auto root = div(
+        context, mk(entity, 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(0.95f)})
+            .with_custom_background(theme.background)
+            .with_padding(Padding{.top = pixels(8), .left = pixels(12), 
+                                  .bottom = pixels(8), .right = pixels(12)})
+            .with_flex_direction(FlexDirection::Column)
+            .with_debug_name("root"));
 
-    // Content container with padding
-    auto main_container =
-        div(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("flex_main"));
-
-    // Title
-    div(context, mk(main_container.ent(), 0),
+    // Title row
+    div(context, mk(root.ent(), 0),
         ComponentConfig{}
             .with_label("Flexbox Alignment Demo")
-            .with_size(ComponentSize{percent(1.0f), pixels(45)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_flex_direction(FlexDirection::Row)
             .with_debug_name("title"));
 
-    // Section 1: Vertical justify_content (Column direction)
-    div(context, mk(main_container.ent(), 1),
+    // Main content - 2 column layout
+    auto main_row = div(
+        context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_label("justify_content - Column (vertical distribution)")
-            .with_size(ComponentSize{percent(1.0f), pixels(26)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
+            .with_margin(Margin{.top = pixels(6)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("main_row"));
+
+    // LEFT COLUMN - Vertical demos
+    auto left_col = div(
+        context, mk(main_row.ent(), 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+            .with_custom_background(afterhours::Color{30, 38, 55, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(8), 
+                                  .bottom = pixels(6), .right = pixels(8)})
+            .with_margin(Margin{.right = pixels(6)})
+            .with_flex_direction(FlexDirection::Column)
+            .with_debug_name("left_col"));
+
+    // Section 1: Vertical justify
+    div(context, mk(left_col.ent(), 0),
+        ComponentConfig{}
+            .with_label("JustifyContent: Column")
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("justify_v_label"));
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("jv_label"));
 
-    // Row of vertical justify demos
-    auto justify_v_row =
-        div(context, mk(main_container.ent(), 2),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(135)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Row)
-                .with_debug_name("justify_v_row"));
-
-    render_justify_vertical(context, justify_v_row.ent(), "FlexStart",
-                            JustifyContent::FlexStart, 0);
-    render_justify_vertical(context, justify_v_row.ent(), "FlexEnd",
-                            JustifyContent::FlexEnd, 1);
-    render_justify_vertical(context, justify_v_row.ent(), "Center",
-                            JustifyContent::Center, 2);
-    render_justify_vertical(context, justify_v_row.ent(), "SpaceBtwn",
-                            JustifyContent::SpaceBetween, 3);
-    render_justify_vertical(context, justify_v_row.ent(), "SpaceArnd",
-                            JustifyContent::SpaceAround, 4);
-
-    // Section 2: Horizontal justify_content (Row direction)
-    div(context, mk(main_container.ent(), 3),
+    auto jv_row = div(
+        context, mk(left_col.ent(), 1),
         ComponentConfig{}
-            .with_label("justify_content - Row (horizontal distribution)")
-            .with_size(ComponentSize{percent(1.0f), pixels(26)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(140)})
+            .with_custom_background(afterhours::Color{38, 46, 65, 255})
+            .with_padding(Spacing::xs)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("jv_row"));
+
+    render_justify_vertical(context, jv_row.ent(), "Start", JustifyContent::FlexStart, 0);
+    render_justify_vertical(context, jv_row.ent(), "End", JustifyContent::FlexEnd, 1);
+    render_justify_vertical(context, jv_row.ent(), "Center", JustifyContent::Center, 2);
+    render_justify_vertical(context, jv_row.ent(), "Between", JustifyContent::SpaceBetween, 3);
+    render_justify_vertical(context, jv_row.ent(), "Around", JustifyContent::SpaceAround, 4);
+
+    // Section 2: AlignItems
+    div(context, mk(left_col.ent(), 2),
+        ComponentConfig{}
+            .with_label("AlignItems: Row")
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("justify_h_label"));
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("ai_label"));
 
-    // Row of horizontal justify demos
-    auto justify_h_row =
-        div(context, mk(main_container.ent(), 4),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(120)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Row)
-                .with_debug_name("justify_h_row"));
-
-    render_justify_horizontal(context, justify_h_row.ent(), "FlexStart",
-                              JustifyContent::FlexStart, 0);
-    render_justify_horizontal(context, justify_h_row.ent(), "FlexEnd",
-                              JustifyContent::FlexEnd, 1);
-    render_justify_horizontal(context, justify_h_row.ent(), "Center",
-                              JustifyContent::Center, 2);
-    render_justify_horizontal(context, justify_h_row.ent(), "SpaceBetween",
-                              JustifyContent::SpaceBetween, 3);
-    render_justify_horizontal(context, justify_h_row.ent(), "SpaceAround",
-                              JustifyContent::SpaceAround, 4);
-
-    // Section 3: align_items
-    div(context, mk(main_container.ent(), 5),
+    auto ai_row = div(
+        context, mk(left_col.ent(), 3),
         ComponentConfig{}
-            .with_label("align_items (cross axis alignment)")
-            .with_size(ComponentSize{percent(1.0f), pixels(26)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(90)})
+            .with_custom_background(afterhours::Color{38, 46, 65, 255})
+            .with_padding(Spacing::xs)
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("ai_row"));
+
+    render_align_demo(context, ai_row.ent(), "Start", AlignItems::FlexStart, 0);
+    render_align_demo(context, ai_row.ent(), "Center", AlignItems::Center, 1);
+    render_align_demo(context, ai_row.ent(), "End", AlignItems::FlexEnd, 2);
+
+    // RIGHT COLUMN - Horizontal demos
+    auto right_col = div(
+        context, mk(main_row.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+            .with_custom_background(afterhours::Color{30, 38, 55, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(8), 
+                                  .bottom = pixels(6), .right = pixels(8)})
+            .with_margin(Margin{.left = pixels(6)})
+            .with_flex_direction(FlexDirection::Column)
+            .with_debug_name("right_col"));
+
+    // Section 3: Horizontal justify
+    div(context, mk(right_col.ent(), 0),
+        ComponentConfig{}
+            .with_label("JustifyContent: Row")
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("align_label"));
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("jh_label"));
 
-    // Row of align_items demos
-    auto align_row =
-        div(context, mk(main_container.ent(), 6),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(120)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Row)
-                .with_debug_name("align_row"));
-
-    render_align_demo(context, align_row.ent(), "FlexStart",
-                      AlignItems::FlexStart, 0);
-    render_align_demo(context, align_row.ent(), "Center", AlignItems::Center,
-                      1);
-    render_align_demo(context, align_row.ent(), "FlexEnd", AlignItems::FlexEnd,
-                      2);
-
-    // Section 4: SelfAlign (individual child override)
-    div(context, mk(main_container.ent(), 7),
+    auto jh_row = div(
+        context, mk(right_col.ent(), 1),
         ComponentConfig{}
-            .with_label("self_align (child overrides parent's align_items)")
-            .with_size(ComponentSize{percent(1.0f), pixels(26)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(100)})
+            .with_custom_background(afterhours::Color{38, 46, 65, 255})
+            .with_padding(Spacing::xs)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("jh_row"));
+
+    render_justify_horizontal(context, jh_row.ent(), "Start", JustifyContent::FlexStart, 0);
+    render_justify_horizontal(context, jh_row.ent(), "End", JustifyContent::FlexEnd, 1);
+    render_justify_horizontal(context, jh_row.ent(), "Center", JustifyContent::Center, 2);
+    render_justify_horizontal(context, jh_row.ent(), "Between", JustifyContent::SpaceBetween, 3);
+    render_justify_horizontal(context, jh_row.ent(), "Around", JustifyContent::SpaceAround, 4);
+
+    // Section 4: SelfAlign
+    div(context, mk(right_col.ent(), 2),
+        ComponentConfig{}
+            .with_label("SelfAlign: Override Parent")
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("self_align_label"));
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("sa_label"));
 
-    render_self_align_demo(context, main_container.ent(), 8);
-
-    // Footer
-    div(context, mk(main_container.ent(), 9),
+    auto sa_row = div(
+        context, mk(right_col.ent(), 3),
         ComponentConfig{}
-            .with_label("with_justify_content() + with_align_items() + with_self_align()")
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
-            .with_custom_background(theme.surface)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("footer"));
+            .with_size(ComponentSize{percent(1.0f), pixels(80)})
+            .with_custom_background(afterhours::Color{38, 46, 65, 255})
+            .with_padding(Spacing::xs)
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name("sa_row"));
+
+    render_self_align_demo(context, sa_row.ent(), 0);
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(flex_alignment, "System Demos",
                         "Flexbox justify and align properties",
                         ExampleFlexAlignment)
-
