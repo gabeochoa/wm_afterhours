@@ -21,42 +21,33 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                                int id) {
     auto &theme = context.theme;
 
-    // Container for this demo
+    // Container - use Column direction, NO flex on children to prevent wrap
     auto container =
         div(context, mk(parent, id),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.18f), pixels(180)})
+                .with_size(ComponentSize{pixels(150), pixels(120)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.92f))
                 .with_padding(Padding{.top = pixels(4),
                                       .left = pixels(4),
                                       .bottom = pixels(4),
                                       .right = pixels(4)})
-                .with_margin(Spacing::xs)
+                .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
+                                    .left = pixels(4), .right = pixels(4)})
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(jc)
                 .with_debug_name(label));
 
-    // Title
-    div(context, mk(container.ent(), 0),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{percent(0.95f), pixels(24)})
-            .with_custom_background(theme.secondary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_skip_tabbing(true)
-            .with_debug_name(label + "_title"));
-
-    // Three small boxes to show alignment
+    // Three boxes with labels like "FlexEnd 1" - use Row to prevent Column wrap
     for (int i = 0; i < 3; i++) {
-      div(context, mk(container.ent(), i + 1),
+      div(context, mk(container.ent(), i),
           ComponentConfig{}
-              .with_label(std::to_string(i + 1))
-              .with_size(ComponentSize{percent(0.9f), pixels(28)})
+              .with_label(label + " " + std::to_string(i + 1))
+              .with_size(ComponentSize{percent(0.95f), pixels(28)})
               .with_background(Theme::Usage::Primary)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+              .with_flex_direction(FlexDirection::Row)
               .with_debug_name(label + "_box_" + std::to_string(i)));
     }
   }
@@ -162,6 +153,72 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     }
   }
 
+  // Demo for SelfAlign - individual child overrides parent's AlignItems
+  void render_self_align_demo(UIContext<InputAction> &context,
+                              afterhours::Entity &parent, int id) {
+    auto &theme = context.theme;
+
+    // Container with AlignItems::Center - children can override
+    auto container =
+        div(context, mk(parent, id),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.95f), pixels(80)})
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.92f))
+                .with_padding(Padding{.top = pixels(5),
+                                      .left = pixels(8),
+                                      .bottom = pixels(5),
+                                      .right = pixels(8)})
+                .with_flex_direction(FlexDirection::Row)
+                .with_align_items(AlignItems::Center)  // Parent default
+                .with_justify_content(JustifyContent::SpaceAround)
+                .with_debug_name("self_align_container"));
+
+    // Child 1: FlexStart (overrides parent's Center) - aligns to TOP
+    div(context, mk(container.ent(), 0),
+        ComponentConfig{}
+            .with_label("FlexStart")
+            .with_size(ComponentSize{pixels(90), pixels(28)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_self_align(SelfAlign::FlexStart)
+            .with_debug_name("self_start"));
+
+    // Child 2: Auto (uses parent's Center) - aligns to MIDDLE
+    div(context, mk(container.ent(), 1),
+        ComponentConfig{}
+            .with_label("Auto")
+            .with_size(ComponentSize{pixels(65), pixels(28)})
+            .with_background(Theme::Usage::Secondary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_self_align(SelfAlign::Auto)
+            .with_debug_name("self_auto"));
+
+    // Child 3: Center (explicit, same as parent) - aligns to MIDDLE
+    div(context, mk(container.ent(), 2),
+        ComponentConfig{}
+            .with_label("Center")
+            .with_size(ComponentSize{pixels(70), pixels(28)})
+            .with_background(Theme::Usage::Accent)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_self_align(SelfAlign::Center)
+            .with_debug_name("self_center"));
+
+    // Child 4: FlexEnd (overrides parent's Center) - aligns to BOTTOM
+    div(context, mk(container.ent(), 3),
+        ComponentConfig{}
+            .with_label("FlexEnd")
+            .with_size(ComponentSize{pixels(90), pixels(28)})
+            .with_custom_background(afterhours::Color{200, 70, 100, 255})
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_self_align(SelfAlign::FlexEnd)
+            .with_debug_name("self_end"));
+  }
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     // Use a clean modern theme
@@ -213,7 +270,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto justify_v_row =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(190)})
+                .with_size(ComponentSize{percent(1.0f), pixels(135)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::xs)
                 .with_flex_direction(FlexDirection::Row)
@@ -225,9 +282,9 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                             JustifyContent::FlexEnd, 1);
     render_justify_vertical(context, justify_v_row.ent(), "Center",
                             JustifyContent::Center, 2);
-    render_justify_vertical(context, justify_v_row.ent(), "SpaceBetween",
+    render_justify_vertical(context, justify_v_row.ent(), "SpaceBtwn",
                             JustifyContent::SpaceBetween, 3);
-    render_justify_vertical(context, justify_v_row.ent(), "SpaceAround",
+    render_justify_vertical(context, justify_v_row.ent(), "SpaceArnd",
                             JustifyContent::SpaceAround, 4);
 
     // Section 2: Horizontal justify_content (Row direction)
@@ -292,10 +349,24 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     render_align_demo(context, align_row.ent(), "FlexEnd", AlignItems::FlexEnd,
                       2);
 
-    // Footer
+    // Section 4: SelfAlign (individual child override)
     div(context, mk(main_container.ent(), 7),
         ComponentConfig{}
-            .with_label("with_justify_content() + with_align_items()")
+            .with_label("self_align (child overrides parent's align_items)")
+            .with_size(ComponentSize{percent(1.0f), pixels(26)})
+            .with_custom_background(theme.surface)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_margin(Margin{.top = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
+            .with_debug_name("self_align_label"));
+
+    render_self_align_demo(context, main_container.ent(), 8);
+
+    // Footer
+    div(context, mk(main_container.ent(), 9),
+        ComponentConfig{}
+            .with_label("with_justify_content() + with_align_items() + with_self_align()")
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
@@ -309,3 +380,4 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 REGISTER_EXAMPLE_SCREEN(flex_alignment, "System Demos",
                         "Flexbox justify and align properties",
                         ExampleFlexAlignment)
+
