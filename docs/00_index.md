@@ -105,6 +105,12 @@ This directory contains detailed specifications for missing features, infrastruc
 | 70 | `70_misc_widgets.md` | Not implemented | Low |
 | 71 | `71_page_sections.md` | Not implemented | Low |
 
+## Coverage & Testing
+| # | File | Status | Priority |
+|---|------|--------|----------|
+| 80 | `80_showcase_screens.md` | Documentation | Medium |
+| 81 | `81_test_coverage_gaps.md` | Documentation | High |
+
 ## Workarounds
 | Directory | Description |
 |-----------|-------------|
