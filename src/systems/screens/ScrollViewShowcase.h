@@ -59,12 +59,21 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("instructions"));
 
-    // Invert scroll toggle
-    checkbox(context, mk(root.ent(), 2), invert_scroll,
+    // Invert scroll toggle row with label
+    auto toggle_row = div(context, mk(root.ent(), 2),
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(280), pixels(52)})
-                 .with_label("Invert scroll")
+                 .with_size(ComponentSize{percent(0.95f), pixels(52)})
+                 .with_flex_direction(FlexDirection::Row)
+                 .with_align_items(AlignItems::Center)
                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                 .with_debug_name("toggle_row"));
+
+    checkbox(context, mk(toggle_row.ent(), 0), invert_scroll,
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(200), pixels(44)})
+                 .with_label("Invert Scroll Direction")
+                 .with_background(Theme::Usage::Primary)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side
@@ -154,6 +163,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Row)
+            .with_no_wrap()
             .with_debug_name("horiz_scroll"));
 
     // Configure horizontal scrolling

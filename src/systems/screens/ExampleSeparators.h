@@ -307,7 +307,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.12f)
             .with_debug_name("nav_bg"));
 
-    float nav_x = right_x + pad + 16;
+    float nav_x = right_x + pad + 20;  // Added more left padding
     const char *nav_items[] = {"Home", "Settings", "Profile", "Help"};
     afterhours::Color sep_colors[] = {text_muted, accent_green, accent_orange};
 

@@ -63,8 +63,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Card 1: Basic surface card (simple)
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
-            .with_label("Basic Card")
-            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_label("Basic")
+            .with_size(ComponentSize{pixels(140), pixels(120)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
@@ -76,8 +76,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Card 2: Primary colored card (simple)
     div(context, mk(row1.ent(), 1),
         ComponentConfig{}
-            .with_label("Primary Card")
-            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_label("Primary")
+            .with_size(ComponentSize{pixels(140), pixels(120)})
             .with_custom_background(theme.primary)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
@@ -89,8 +89,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Card 3: Accent card with sharp corners
     div(context, mk(row1.ent(), 2),
         ComponentConfig{}
-            .with_label("Sharp Corners")
-            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_label("Sharp")
+            .with_size(ComponentSize{pixels(140), pixels(120)})
             .with_custom_background(theme.accent)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
@@ -103,8 +103,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Card 4: Secondary card with custom corners
     div(context, mk(row1.ent(), 3),
         ComponentConfig{}
-            .with_label("Custom Corners")
-            .with_size(ComponentSize{pixels(120), pixels(120)})
+            .with_label("Custom")
+            .with_size(ComponentSize{pixels(140), pixels(120)})
             .with_custom_background(theme.secondary)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
@@ -151,46 +151,50 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("nested_title"));
 
-    // Inner cards row - prevent wrapping, use full width
+    // Inner cards row - prevent wrapping, ensure enough height for cards
     auto inner_row =
         div(context, mk(nested_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                .with_size(ComponentSize{percent(1.0f), pixels(90)})
                 .with_background(Theme::Usage::None)
                 .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
+                .with_align_items(AlignItems::Center)
                 .with_debug_name("inner_row"));
 
     // Inner card 1 - smaller to fit within the ~280px available width
     div(context, mk(inner_row.ent(), 0),
         ComponentConfig{}
-            .with_label("1")
-            .with_size(ComponentSize{pixels(70), pixels(80)})
+            .with_label("Item 1")
+            .with_size(ComponentSize{pixels(70), pixels(70)})
             .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Margin{.right = DefaultSpacing::tiny()})
+            .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("inner1"));
 
     // Inner card 2
     div(context, mk(inner_row.ent(), 1),
         ComponentConfig{}
-            .with_label("2")
-            .with_size(ComponentSize{pixels(70), pixels(80)})
+            .with_label("Item 2")
+            .with_size(ComponentSize{pixels(70), pixels(70)})
             .with_background(Theme::Usage::Secondary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Margin{.right = DefaultSpacing::tiny()})
+            .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("inner2"));
 
     // Inner card 3
     div(context, mk(inner_row.ent(), 2),
         ComponentConfig{}
-            .with_label("3")
-            .with_size(ComponentSize{pixels(70), pixels(80)})
+            .with_label("Item 3")
+            .with_size(ComponentSize{pixels(70), pixels(70)})
             .with_background(Theme::Usage::Accent)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)

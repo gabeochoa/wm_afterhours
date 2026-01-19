@@ -171,9 +171,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 105),
         ComponentConfig{}
             .with_label("|")
-            .with_size(ComponentSize{pixels(10), pixels(30)})
+            .with_size(ComponentSize{pixels(20), pixels(30)})
             .with_absolute_position()
-            .with_translate(cx - 5.0f, 35.0f)
+            .with_translate(cx - 10.0f, 35.0f)
             .with_font("EqProRounded", 28.0f)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)

@@ -97,28 +97,30 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                     afterhours::colors::darken(theme.surface, 0.9f))
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("left_column"));
 
     // Sliders section header
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("Sliders")
-            .with_size(ComponentSize{pixels(300), pixels(32)})
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
             .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_margin(Spacing::xs)
             .with_debug_name("sliders_header"));
 
-    // Volume slider - use pixels for better control
+    // Volume slider - use percent for responsive layout
     slider(context, mk(left_col.ent(), 1), volume_slider,
            ComponentConfig{}
                .with_label("Volume")
-               .with_size(ComponentSize{pixels(300), pixels(40)})
+               .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-               .with_margin(Spacing::sm)
+               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_margin(Spacing::xs)
                .with_debug_name("volume_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
@@ -126,10 +128,10 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(left_col.ent(), 2), brightness_slider,
            ComponentConfig{}
                .with_label("Brightness")
-               .with_size(ComponentSize{pixels(300), pixels(40)})
+               .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-               .with_margin(Spacing::sm)
+               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_margin(Spacing::xs)
                .with_debug_name("brightness_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
@@ -137,10 +139,10 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(left_col.ent(), 3), difficulty_slider,
            ComponentConfig{}
                .with_label("Difficulty")
-               .with_size(ComponentSize{pixels(300), pixels(40)})
+               .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-               .with_margin(Spacing::sm)
+               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+               .with_margin(Spacing::xs)
                .with_debug_name("difficulty_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
@@ -148,23 +150,21 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 4),
         ComponentConfig{}
             .with_label("Progress Bars")
-            .with_size(ComponentSize{pixels(300), pixels(32)})
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
             .with_background(Theme::Usage::Accent)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_margin(Spacing::xs)
             .with_debug_name("progress_header"));
 
     // Progress bar showing volume value (dynamic)
     progress_bar(context, mk(left_col.ent(), 5), volume_slider,
                  ComponentConfig{}
                      .with_label("Audio Level")
-                     .with_size(ComponentSize{pixels(300), pixels(30)})
-                     .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                     .with_size(ComponentSize{percent(0.95f), pixels(28)})
+                     .with_font(UIComponent::DEFAULT_FONT, 12.0f)
                      .with_margin(Spacing::xs)
                      .with_debug_name("volume_progress"),
                  ProgressBarLabelStyle::Percentage);
@@ -173,8 +173,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     progress_bar(context, mk(left_col.ent(), 6), 75.f,
                  ComponentConfig{}
                      .with_label("Level Progress")
-                     .with_size(ComponentSize{pixels(300), pixels(30)})
-                     .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                     .with_size(ComponentSize{percent(0.95f), pixels(28)})
+                     .with_font(UIComponent::DEFAULT_FONT, 12.0f)
                      .with_margin(Spacing::xs)
                      .with_debug_name("level_progress"),
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);
@@ -183,35 +183,31 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 7),
         ComponentConfig{}
             .with_label("Dropdowns")
-            .with_size(ComponentSize{pixels(300), pixels(32)})
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
             .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_margin(Spacing::xs)
             .with_debug_name("dropdowns_header"));
 
     // Resolution dropdown
     dropdown(context, mk(left_col.ent(), 8), resolutions, resolution_index,
              ComponentConfig{}
-                 .with_label("Resolution")
-                 .with_size(ComponentSize{pixels(300), pixels(40)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::sm)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("resolution_dropdown"));
 
     // Quality dropdown
     dropdown(context, mk(left_col.ent(), 9), quality_options, quality_index,
              ComponentConfig{}
-                 .with_label("Quality")
-                 .with_size(ComponentSize{pixels(300), pixels(40)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::sm)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("quality_dropdown"));
 
     // Right column - Checkboxes
@@ -222,60 +218,67 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
                              .with_flex_direction(FlexDirection::Column)
+                             .with_no_wrap()
                              .with_debug_name("right_column"));
 
     // Checkboxes section header
     div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
             .with_label("Checkboxes")
-            .with_size(ComponentSize{pixels(280), pixels(32)})
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
             .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_margin(Spacing::xs)
             .with_debug_name("checkboxes_header"));
 
-    // Audio checkboxes - use 52px height to accommodate checkbox component sizing
+    // Audio checkboxes - reduced height for better fit
     checkbox(context, mk(right_col.ent(), 1), enable_music,
              ComponentConfig{}
-                 .with_label("Enable Music")
-                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                 .with_label("Music")
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("music_checkbox"));
 
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
              ComponentConfig{}
-                 .with_label("Enable SFX")
-                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                 .with_label("SFX")
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("sfx_checkbox"));
 
     // Display checkboxes
     checkbox(context, mk(right_col.ent(), 3), fullscreen,
              ComponentConfig{}
                  .with_label("Fullscreen")
-                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("fullscreen_checkbox"));
 
     checkbox(context, mk(right_col.ent(), 4), vsync,
              ComponentConfig{}
                  .with_label("V-Sync")
-                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("vsync_checkbox"));
 
     checkbox(context, mk(right_col.ent(), 5), show_fps,
              ComponentConfig{}
                  .with_label("Show FPS")
-                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("fps_checkbox"));
 
     // Disabled checkbox example
@@ -283,23 +286,20 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 6), disabled_value,
              ComponentConfig{}
                  .with_label("Disabled")
-                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("disabled_checkbox"));
 
     // Language dropdown
     dropdown(context, mk(right_col.ent(), 7), languages, language_index,
              ComponentConfig{}
-                 .with_label("Language")
-                 .with_size(ComponentSize{pixels(280), pixels(40)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Margin{.top = DefaultSpacing::small(),
-                                     .bottom = pixels(0),
-                                     .left = pixels(0),
-                                     .right = pixels(0)})
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("language_dropdown"));
 
     // Status display
@@ -311,7 +311,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -338,7 +338,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(clipboard_row.ent(), 0),
                ComponentConfig{}
                    .with_label("Copy Status")
-                   .with_size(ComponentSize{pixels(150), pixels(40)})
+                   .with_size(ComponentSize{pixels(150), pixels(44)})
                    .with_background(Theme::Usage::Primary)
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_debug_name("copy_btn"))) {
@@ -350,7 +350,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(clipboard_row.ent(), 1),
                ComponentConfig{}
                    .with_label("Paste")
-                   .with_size(ComponentSize{pixels(150), pixels(40)})
+                   .with_size(ComponentSize{pixels(150), pixels(44)})
                    .with_background(Theme::Usage::Accent)
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_debug_name("paste_btn"))) {
@@ -370,7 +370,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(clipboard_row.ent(), 2),
         ComponentConfig{}
             .with_label(display_text)
-            .with_size(ComponentSize{pixels(400), pixels(40)})
+            .with_size(ComponentSize{pixels(400), pixels(44)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)

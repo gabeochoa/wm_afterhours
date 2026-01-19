@@ -148,14 +148,14 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("sizes_label"));
 
-    // Small button
+    // Small button - use smaller font to fit the compact size
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("Small")
                    .with_size(ComponentSize{pixels(80), pixels(32)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                    .with_padding(Spacing::xs)
                    .with_margin(Spacing::xs)
                    .with_debug_name("btn_small"))) {

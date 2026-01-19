@@ -25,12 +25,12 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
                 .with_roundness(0.08f)
                 .with_debug_name("colors_bg"));
 
-    // Content container with padding
+    // Content container with padding - use percent less than 1.0 to account for padding
     auto main_container =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
+                .with_size(ComponentSize{percent(0.98f), percent(0.98f)})
+                .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("colors_main"));
 

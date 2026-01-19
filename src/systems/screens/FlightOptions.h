@@ -21,7 +21,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_muted{110, 135, 165, 255};  // Brightened for WCAG AA contrast
   afterhours::Color highlight_line{35, 105, 160,
                                    255}; // Darkened for WCAG AA contrast
-  afterhours::Color grid_color{20, 35, 55, 180};
+  afterhours::Color grid_color{15, 25, 40, 120};  // Made more subtle
 
   std::vector<std::string> categories = {
       "FLIGHT SYSTEM", "CONTROLS", "KEYBOARD", "MOUSE",    "FLIGHT STICK",

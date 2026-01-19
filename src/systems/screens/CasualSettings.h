@@ -270,37 +270,6 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("player_id"));
 
-    // ========== CORNER DECORATIONS ==========
-    // Settings gear icon (bottom left)
-    div(context, mk(entity, 300),
-        ComponentConfig{}
-            .with_label("@")
-            .with_size(ComponentSize{pixels(50), pixels(50)})
-            .with_absolute_position()
-            .with_translate(55.0f, (float)screen_h - 75.0f)
-            .with_custom_background(afterhours::Color{100, 135, 160, 200})
-            .with_font("Gaegu-Bold", 28.0f)
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("gear_icon"));
-
-    // Level indicator (bottom right)
-    div(context, mk(entity, 310),
-        ComponentConfig{}
-            .with_label("4")
-            .with_size(ComponentSize{pixels(65), pixels(65)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 95.0f, (float)screen_h - 85.0f)
-            .with_custom_background(btn_green)
-            .with_border(btn_green_dark, 5.0f)
-            .with_font("Gaegu-Bold", 36.0f)
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("level_badge"));
   }
 };
 

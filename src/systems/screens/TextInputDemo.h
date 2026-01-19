@@ -70,77 +70,78 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("form_container"));
 
-    // Username input - use children() height to let widget size itself
-    // Use wider width to fit label + field side-by-side without wrapping
-    if (text_input(context, mk(form_container.ent(), 0), username,
-                   ComponentConfig{}
-                       .with_label("Username")
-                       .with_size(ComponentSize{pixels(500), children()})
-                       .with_no_wrap()  // Prevent internal flex wrapping
-                       .with_background(Theme::Usage::Primary)
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Spacing::sm)
-                       .with_debug_name("username_input"))) {
+    // Helper to create labeled text input with stacked layout (label above input)
+    auto make_input_field = [&](int idx, const std::string& label_text,
+                                std::string& value, Theme::Usage bg,
+                                std::optional<char> mask = std::nullopt) -> bool {
+      // Label above the input
+      div(context, mk(form_container.ent(), idx * 2),
+          ComponentConfig{}
+              .with_label(label_text + ":")
+              .with_size(ComponentSize{pixels(396), pixels(24)})
+              .with_background(Theme::Usage::None)
+              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_skip_tabbing(true)
+              .with_debug_name(label_text + "_label"));
+
+      // Text input without internal label
+      auto input_config = ComponentConfig{}
+          .with_size(ComponentSize{pixels(396), pixels(44)})
+          .with_background(bg)
+          .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+          .with_margin(Margin{.bottom = DefaultSpacing::small()})
+          .with_debug_name(label_text + "_input");
+
+      if (mask) {
+        input_config.with_mask_char(*mask);
+      }
+
+      return text_input(context, mk(form_container.ent(), idx * 2 + 1), value, input_config);
+    };
+
+    // Username input
+    if (make_input_field(0, "Username", username, Theme::Usage::Primary)) {
       status_message = "Username: " + username;
     }
 
     // Email input
-    if (text_input(context, mk(form_container.ent(), 1), email,
-                   ComponentConfig{}
-                       .with_label("Email")
-                       .with_size(ComponentSize{pixels(500), children()})
-                       .with_no_wrap()
-                       .with_background(Theme::Usage::Accent)
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Spacing::sm)
-                       .with_debug_name("email_input"))) {
+    if (make_input_field(1, "Email", email, Theme::Usage::Accent)) {
       status_message = "Email: " + email;
     }
 
     // Password input with masking
-    if (text_input(context, mk(form_container.ent(), 2), password,
-                   ComponentConfig{}
-                       .with_label("Password")
-                       .with_size(ComponentSize{pixels(500), children()})
-                       .with_no_wrap()
-                       .with_background(Theme::Usage::Secondary)
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Spacing::sm)
-                       .with_mask_char('*')
-                       .with_debug_name("password_input"))) {
+    if (make_input_field(2, "Password", password, Theme::Usage::Secondary, '*')) {
       status_message = "Password changed";
     }
 
-    // Separator - reduce margin to prevent overflow
-    separator(context, mk(form_container.ent(), 3),
+    // Separator - indices 0-5 used by 3 label/input pairs above
+    separator(context, mk(form_container.ent(), 6),
               SeparatorOrientation::Horizontal,
               ComponentConfig{}.with_margin(Spacing::sm));
 
     // Search input (no label)
-    div(context, mk(form_container.ent(), 4),
+    div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(400), pixels(30)})
+            .with_size(ComponentSize{pixels(396), pixels(24)})
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
     // Search input - no label so field uses full width
-    // Use 490px to account for margin and padding calculations
-    if (text_input(context, mk(form_container.ent(), 5), search_query,
+    if (text_input(context, mk(form_container.ent(), 8), search_query,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(490), children()})
-                       .with_no_wrap()
+                       .with_size(ComponentSize{pixels(396), pixels(44)})
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Spacing::sm)
+                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_debug_name("search_input"))) {
       status_message = "Searching for: " + search_query;
     }
 
     // Submit button
-    if (button(context, mk(form_container.ent(), 6),
+    if (button(context, mk(form_container.ent(), 9),
                ComponentConfig{}
                    .with_label("Submit")
                    .with_size(ComponentSize{pixels(200), pixels(50)})

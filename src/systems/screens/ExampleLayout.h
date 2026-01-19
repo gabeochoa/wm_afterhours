@@ -147,19 +147,52 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::xs)
             .with_debug_name("stack3"));
 
-    // Right side description - use percent sizing with auto contrast
-    div(context, mk(col_container.ent(), 1),
+    // Right side description - use percent sizing with better visibility
+    auto desc_panel = div(context, mk(col_container.ent(), 1),
         ComponentConfig{}
-            .with_label("FlexDirection::Column stacks elements vertically. "
-                        "FlexDirection::Row arranges them horizontally. "
-                        "Use margins and padding to control spacing.")
             .with_size(ComponentSize{percent(0.45f), pixels(170)})
             .with_custom_background(theme.primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_padding(Spacing::md)
+            .with_flex_direction(FlexDirection::Column)
             .with_skip_tabbing(true)
-            .with_debug_name("description"));
+            .with_debug_name("description_panel"));
+
+    div(context, mk(desc_panel.ent(), 0),
+        ComponentConfig{}
+            .with_label("Layout Guide")
+            .with_size(ComponentSize{percent(0.95f), pixels(36)})
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
+            .with_debug_name("desc_title"));
+
+    div(context, mk(desc_panel.ent(), 1),
+        ComponentConfig{}
+            .with_label("Column: stacks vertically")
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_skip_tabbing(true)
+            .with_debug_name("desc_line1"));
+
+    div(context, mk(desc_panel.ent(), 2),
+        ComponentConfig{}
+            .with_label("Row: arranges horizontally")
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_skip_tabbing(true)
+            .with_debug_name("desc_line2"));
+
+    div(context, mk(desc_panel.ent(), 3),
+        ComponentConfig{}
+            .with_label("Margins control spacing")
+            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_skip_tabbing(true)
+            .with_debug_name("desc_line3"));
 
     // Info footer - use percent width
     div(context, mk(main_container.ent(), 3),

@@ -299,10 +299,10 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Auto text color is enabled by default - text always "
                         "remains readable")
-            .with_size(ComponentSize{pixels(panel_w - 60), pixels(26)})
+            .with_size(ComponentSize{pixels(panel_w - 60), pixels(30)})
             .with_absolute_position()
-            .with_translate(panel_x + 30.0f, panel_y + panel_h - 40.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_translate(panel_x + 30.0f, panel_y + panel_h - 44.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 17.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

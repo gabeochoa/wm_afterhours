@@ -103,21 +103,28 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section: sprite()
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
-            .with_label("sprite() - Display icons from texture")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_label("sprite() - Display icons")
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
             .with_debug_name("sprite_label"));
 
-    // Row of sprites
+    // Row of sprites with labels
     auto sprite_row =
         div(context, mk(left_col.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                .with_size(ComponentSize{percent(1.0f), pixels(100)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
+                .with_justify_content(JustifyContent::SpaceAround)
+                .with_custom_background(theme.surface)
+                .with_padding(Spacing::sm)
+                .with_rounded_corners(RoundedCorners().all_round())
+                .with_roundness(0.08f)
                 .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                 .with_debug_name("sprite_row"));
 
@@ -126,53 +133,65 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     sprite(context, mk(sprite_row.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(64), pixels(64)})
-               .with_margin(Margin{.right = DefaultSpacing::small()})
+               .with_size(ComponentSize{pixels(56), pixels(56)})
                .with_debug_name("sprite_gear"));
 
     sprite(context, mk(sprite_row.ent(), 1), star_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(64), pixels(64)})
-               .with_margin(Margin{.right = DefaultSpacing::small()})
+               .with_size(ComponentSize{pixels(56), pixels(56)})
                .with_debug_name("sprite_star"));
 
     sprite(context, mk(sprite_row.ent(), 2), trophy_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(64), pixels(64)})
-               .with_margin(Margin{.right = DefaultSpacing::small()})
+               .with_size(ComponentSize{pixels(56), pixels(56)})
                .with_debug_name("sprite_trophy"));
 
     sprite(context, mk(sprite_row.ent(), 3), home_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(64), pixels(64)})
+               .with_size(ComponentSize{pixels(56), pixels(56)})
                .with_debug_name("sprite_home"));
 
     // Section: image() with texture
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
-            .with_label("image() - Background texture")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_label("image() - With background")
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
             .with_debug_name("image_label"));
 
     // Simple box with texture as image
     auto img_container =
         div(context, mk(left_col.ent(), 3),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(200), pixels(100)})
+                .with_size(ComponentSize{percent(0.90f), pixels(120)})
                 .with_custom_background(theme.secondary)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.1f)
-                .with_margin(Margin{.bottom = DefaultSpacing::medium()})
+                .with_padding(Spacing::sm)
+                .with_flex_direction(FlexDirection::Row)
+                .with_align_items(AlignItems::Center)
+                .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("image_with_tex"));
 
     sprite(context, mk(img_container.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
                .with_size(ComponentSize{pixels(80), pixels(80)})
                .with_debug_name("image_gear"));
+
+    div(context, mk(img_container.ent(), 1),
+        ComponentConfig{}
+            .with_label("Settings")
+            .with_size(ComponentSize{pixels(100), pixels(40)})
+            .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_margin(Margin{.left = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
+            .with_debug_name("settings_label"));
 
     // Right column - Interactive elements
     auto right_col =
@@ -188,21 +207,28 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section: image_button()
     div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
-            .with_label("image_button() - Clickable icons")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_label("image_button() - Clickable")
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
             .with_debug_name("image_button_label"));
 
     // Row of image buttons
     auto button_row =
         div(context, mk(right_col.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                .with_size(ComponentSize{percent(1.0f), pixels(90)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
+                .with_justify_content(JustifyContent::SpaceAround)
+                .with_custom_background(theme.surface)
+                .with_padding(Spacing::sm)
+                .with_rounded_corners(RoundedCorners().all_round())
+                .with_roundness(0.08f)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("button_row"));
 
@@ -212,7 +238,6 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                          .with_custom_background(theme.primary)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
-                         .with_margin(Margin{.right = DefaultSpacing::small()})
                          .with_debug_name("imgbtn_gear"))) {
       button_clicks++;
     }
@@ -223,7 +248,6 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                          .with_custom_background(theme.accent)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
-                         .with_margin(Margin{.right = DefaultSpacing::small()})
                          .with_debug_name("imgbtn_play"))) {
       button_clicks++;
     }
@@ -241,36 +265,37 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Click counter
     div(context, mk(right_col.ent(), 2),
         ComponentConfig{}
-            .with_label("Button clicks: " + std::to_string(button_clicks))
-            .with_size(ComponentSize{pixels(200), pixels(30)})
+            .with_label("Clicks: " + std::to_string(button_clicks))
+            .with_size(ComponentSize{percent(0.90f), pixels(36)})
+            .with_custom_background(theme.surface)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::large()})
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_padding(Spacing::xs)
+            .with_margin(Margin{.bottom = DefaultSpacing::medium()})
+            .with_skip_tabbing(true)
             .with_debug_name("click_counter"));
 
     // Section: icon_row() - multiple frames
     div(context, mk(right_col.ent(), 3),
         ComponentConfig{}
-            .with_label("icon_row() - Multiple icons in row")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_label("Icon Row Display")
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
             .with_debug_name("icon_row_label"));
-
-    // icon_row with multiple frames from the same spritesheet
-    std::vector<raylib::Rectangle> icon_frames = {
-        {0, 0, 128, 128}, // Using same rect since we have separate textures
-    };
 
     // For icon_row demo, we'll just show a simpler display
     auto icon_row_container =
         div(context, mk(right_col.ent(), 4),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(60)})
+                .with_size(ComponentSize{percent(1.0f), pixels(70)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_rounded_corners(RoundedCorners().all_round())
@@ -280,31 +305,27 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Manually create an icon row effect
     sprite(context, mk(icon_row_container.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(40), pixels(40)})
-               .with_margin(Margin{.right = pixels(8)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_debug_name("icon_row_1"));
 
     sprite(context, mk(icon_row_container.ent(), 1), star_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(40), pixels(40)})
-               .with_margin(Margin{.right = pixels(8)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_debug_name("icon_row_2"));
 
     sprite(context, mk(icon_row_container.ent(), 2), trophy_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(40), pixels(40)})
-               .with_margin(Margin{.right = pixels(8)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_debug_name("icon_row_3"));
 
     sprite(context, mk(icon_row_container.ent(), 3), home_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(40), pixels(40)})
-               .with_margin(Margin{.right = pixels(8)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_debug_name("icon_row_4"));
 
     sprite(context, mk(icon_row_container.ent(), 4), play_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(40), pixels(40)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_debug_name("icon_row_5"));
   }
 };

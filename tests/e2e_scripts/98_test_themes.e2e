@@ -1,0 +1,5 @@
+# Test just the themes screen
+goto_screen themes
+wait 50
+screenshot themes_test
+

@@ -21,9 +21,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
   ThemeChoice current_theme = ThemeChoice::OceanNavy;
   float slider_value = 0.5f;
   bool checkbox_state = true;
-  size_t dropdown_index = 0;
-  std::vector<std::string> dropdown_options = {"Option A", "Option B",
-                                               "Option C"};
+  bool toggle_state = false;
 
   Theme get_theme_for_choice(ThemeChoice choice) {
     switch (choice) {
@@ -111,7 +109,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== MAIN CONTENT ==========
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{pixels(950), pixels(420)})
+                           .with_size(ComponentSize{pixels(950), pixels(480)})
                            .with_custom_background(theme.background)
                            .with_flex_direction(FlexDirection::Row)
                            .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -121,11 +119,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto selector_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(250), pixels(400)})
+                .with_size(ComponentSize{pixels(250), pixels(460)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::sm)
+                .with_margin(Spacing::xs)
                 .with_soft_shadow(4.0f, 6.0f, 12.0f)
                 .with_debug_name("selector_panel"));
 
@@ -165,11 +163,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto preview_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(400), pixels(400)})
+                .with_size(ComponentSize{pixels(420), pixels(460)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::sm)
+                .with_margin(Spacing::xs)
                 .with_soft_shadow(4.0f, 6.0f, 12.0f)
                 .with_debug_name("preview_panel"));
 
@@ -182,120 +180,118 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_debug_name("preview_title"));
 
-    // Buttons row
+    // Buttons row - use percent sizing to fit within row
     auto btn_row = div(context, mk(preview_panel.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{pixels(340), pixels(55)})
+                           .with_size(ComponentSize{pixels(360), pixels(55)})
                            .with_custom_background(theme.surface)
                            .with_flex_direction(FlexDirection::Row)
-                           .with_margin(Spacing::sm)
+                           .with_no_wrap()
+                           .with_margin(Spacing::xs)
                            .with_debug_name("btn_row"));
 
     button(context, mk(btn_row.ent(), 0),
            ComponentConfig{}
-               .with_label("Primary")
-               .with_size(ComponentSize{pixels(75), pixels(40)})
+               .with_label("P")
+               .with_size(ComponentSize{percent(0.24f), percent(0.90f)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-               .with_margin(Spacing::xs)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, 12.0f)
                .with_debug_name("btn_primary"));
 
     button(context, mk(btn_row.ent(), 1),
            ComponentConfig{}
-               .with_label("Second")
-               .with_size(ComponentSize{pixels(75), pixels(40)})
+               .with_label("S")
+               .with_size(ComponentSize{percent(0.24f), percent(0.90f)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-               .with_margin(Spacing::xs)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, 12.0f)
                .with_debug_name("btn_secondary"));
 
     button(context, mk(btn_row.ent(), 2),
            ComponentConfig{}
-               .with_label("Accent")
-               .with_size(ComponentSize{pixels(75), pixels(40)})
+               .with_label("A")
+               .with_size(ComponentSize{percent(0.24f), percent(0.90f)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-               .with_margin(Spacing::xs)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, 12.0f)
                .with_debug_name("btn_accent"));
 
     button(context, mk(btn_row.ent(), 3),
            ComponentConfig{}
-               .with_label("Disabled")
-               .with_size(ComponentSize{pixels(75), pixels(40)})
+               .with_label("D")
+               .with_size(ComponentSize{percent(0.24f), percent(0.90f)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-               .with_margin(Spacing::xs)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, 12.0f)
                .with_disabled(true)
                .with_debug_name("btn_disabled"));
 
-    // Slider
+    // Slider - height 54 to avoid wrap, no label to give full width to background
     slider(context, mk(preview_panel.ent(), 2), slider_value,
            ComponentConfig{}
-               .with_label("Slider Value")
-               .with_size(ComponentSize{pixels(300), pixels(50)})
+               .with_size(ComponentSize{pixels(360), pixels(54)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-               .with_margin(Spacing::sm)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_margin(Spacing::xs)
                .with_debug_name("preview_slider"),
-           SliderHandleValueLabelPosition::WithLabel);
+           SliderHandleValueLabelPosition::None);
 
     // Checkbox
     checkbox(context, mk(preview_panel.ent(), 3), checkbox_state,
              ComponentConfig{}
                  .with_label("Checkbox")
-                 .with_size(ComponentSize{pixels(300), pixels(45)})
+                 .with_size(ComponentSize{pixels(360), pixels(50)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::sm)
+                 .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                 .with_margin(Spacing::xs)
                  .with_debug_name("preview_checkbox"));
 
-    // Dropdown
-    dropdown(context, mk(preview_panel.ent(), 4), dropdown_options,
-             dropdown_index,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(300), pixels(45)})
-                 .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::sm)
-                 .with_debug_name("preview_dropdown"));
+    // Toggle switch instead of dropdown (dropdown has hardcoded internal sizing)
+    toggle_switch(context, mk(preview_panel.ent(), 4), toggle_state,
+                  ComponentConfig{}
+                      .with_label("Toggle")
+                      .with_size(ComponentSize{pixels(360), pixels(50)})
+                      .with_background(Theme::Usage::Secondary)
+                      .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                      .with_margin(Spacing::xs)
+                      .with_debug_name("preview_toggle"));
 
-    // Cards with shadows demo
+    // Cards with shadows demo - use percent sizing to fit within row
     auto cards_row =
         div(context, mk(preview_panel.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(340), pixels(90)})
+                .with_size(ComponentSize{pixels(360), pixels(70)})
                 .with_custom_background(theme.surface)
                 .with_flex_direction(FlexDirection::Row)
+                .with_no_wrap()
                 .with_margin(Margin{.top = DefaultSpacing::small()})
                 .with_debug_name("cards_row"));
 
     div(context, mk(cards_row.ent(), 0),
         ComponentConfig{}
             .with_label("Hard")
-            .with_size(ComponentSize{pixels(100), pixels(70)})
+            .with_size(ComponentSize{percent(0.32f), percent(0.90f)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_hard_shadow(4.0f, 4.0f)
             .with_debug_name("card_hard"));
 
     div(context, mk(cards_row.ent(), 1),
         ComponentConfig{}
             .with_label("Soft")
-            .with_size(ComponentSize{pixels(100), pixels(70)})
+            .with_size(ComponentSize{percent(0.32f), percent(0.90f)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_soft_shadow(4.0f, 6.0f, 12.0f)
             .with_debug_name("card_soft"));
 
     div(context, mk(cards_row.ent(), 2),
         ComponentConfig{}
             .with_label("Accent")
-            .with_size(ComponentSize{pixels(100), pixels(70)})
+            .with_size(ComponentSize{percent(0.32f), percent(0.90f)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_soft_shadow(3.0f, 5.0f, 8.0f)
             .with_debug_name("card_accent"));
   }

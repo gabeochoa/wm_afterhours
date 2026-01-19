@@ -63,7 +63,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(400)})
+                .with_size(ComponentSize{percent(1.0f), pixels(460)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
@@ -83,7 +83,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     // Height increased to 50px to fit internal buttons
     pagination(context, mk(content.ent(), 1), pages, page_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(500), pixels(50)})
+                   .with_size(ComponentSize{pixels(620), pixels(50)})
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                    .with_debug_name("pagination_basic"));
@@ -111,7 +111,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
 
     pagination(context, mk(content.ent(), 4), difficulties, difficulty_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(400), pixels(50)})
+                   .with_size(ComponentSize{pixels(520), pixels(50)})
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                    .with_debug_name("pagination_difficulty"));
@@ -138,7 +138,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
 
     pagination(context, mk(content.ent(), 7), colors, color_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(450), pixels(50)})
+                   .with_size(ComponentSize{pixels(620), pixels(50)})
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_debug_name("pagination_colors"));
 
