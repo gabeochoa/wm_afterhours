@@ -245,7 +245,6 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.95f), children()})
                        .with_flex_direction(FlexDirection::Column)
-                       .with_no_wrap()  // Prevent horizontal wrapping inside group
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                        .with_debug_name("options_group"));
@@ -271,7 +270,6 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.95f), children()})
             .with_flex_direction(FlexDirection::Column)
-            .with_no_wrap()  // Prevent horizontal wrapping inside group
             .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_debug_name("minmax_group"));
