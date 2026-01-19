@@ -15,18 +15,17 @@
 ```cpp
 #include <afterhours/src/plugins/toast.h>
 
-// Setup (in preload)
-afterhours::toast::add_singleton_components(entity);
-
 // Register systems (in game init)
+afterhours::toast::enforce_singletons(systems);  // Auto-creates singleton
 afterhours::toast::register_update_systems(systems);
+afterhours::toast::register_layout_systems<InputAction>(systems);
 
-// Show toasts from anywhere
-afterhours::toast::info("Hello!");
-afterhours::toast::success("Saved!");
-afterhours::toast::warning("Check settings");
-afterhours::toast::error("Something went wrong");
-afterhours::toast::custom("Custom!", Color{255, 127, 80, 255});
+// Show toasts (within UI update context)
+afterhours::toast::send_info(ctx, "Hello!");
+afterhours::toast::send_success(ctx, "Saved!");
+afterhours::toast::send_warning(ctx, "Check settings");
+afterhours::toast::send_error(ctx, "Something went wrong");
+afterhours::toast::send_custom(ctx, "Custom!", Color{255, 127, 80, 255});
 ```
 
 ## Problem
