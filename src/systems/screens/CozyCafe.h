@@ -3,7 +3,6 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
-#include "../../ui_workarounds/DecorativeFrame.h"
 #include "../../ui_workarounds/NotificationBadge.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
@@ -108,9 +107,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_h = Settings::get().get_screen_height();
 
     // ========== DECORATIVE KRAFT PAPER FRAME ==========
-    ui_workarounds::kraft_paper_frame(
-        context, entity, 1, static_cast<float>(screen_w),
-        static_cast<float>(screen_h), kraft_frame, kraft_bg, 14.0f);
+    decorative_frame(
+        context, mk(entity, 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<float>(screen_w)),
+                                     pixels(static_cast<float>(screen_h))})
+            .with_custom_background(kraft_bg)
+            .with_border(kraft_frame, h720(14.0f)),
+        DecorativeFrameStyle::KraftPaper);
 
     // ========== HEADER ==========
     // Title with flower symbol

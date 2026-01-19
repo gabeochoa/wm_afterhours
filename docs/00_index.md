@@ -40,7 +40,7 @@ This directory contains detailed specifications for missing features, infrastruc
 | 31 | `31_color_picker.md` | Not implemented | Low |
 | 32 | `32_drag_and_drop.md` | Not implemented | Low |
 | 33 | `33_css_grid_layout.md` | Not implemented | Low |
-| 35 | `35_decorative_elements.md` | Not implemented | Low |
+| 35 | `35_decorative_elements.md` | Partial (decorative_frame) | Low |
 | 36 | `36_game_ui_widgets.md` | Not implemented | Low |
 
 ## Infrastructure - Core
