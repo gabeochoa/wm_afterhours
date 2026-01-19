@@ -5,7 +5,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include <afterhours/src/plugins/text_input/text_input.h>
+#include <afterhours/src/plugins/ui/text_input/text_input.h>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;

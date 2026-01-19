@@ -10,6 +10,7 @@ backward::SignalHandling sh;
 #include "preload.h"
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
+#include "systems/screens/AIMChatDemo.h"
 #include "systems/screens/AngryBirdsSettings.h"
 #include "systems/screens/AutoTextColorShowcase.h"
 #include "systems/screens/Buttons.h"
