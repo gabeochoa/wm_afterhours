@@ -124,8 +124,8 @@ def main():
     # Start with --mcp AND --screen to go directly to that screen
     client = MCPClient(executable, ["--mcp", f"--screen={screen_name}"])
     
-    # Wait for app to initialize
-    time.sleep(1.0)
+    # Wait for app to initialize and navigate to screen
+    time.sleep(2.0)
     
     try:
         # Initialize MCP

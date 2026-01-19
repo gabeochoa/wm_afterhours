@@ -4,6 +4,8 @@
 
 enum class InputAction {
   None,
+  WidgetUp,
+  WidgetDown,
   WidgetRight,
   WidgetLeft,
   WidgetNext,
@@ -36,6 +38,16 @@ using afterhours::input;
 inline auto get_mapping() {
   std::map<int, input::ValidInputs> mapping;
 
+  mapping[to_int(InputAction::WidgetUp)] = {
+      raylib::KEY_UP,
+      raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
+  };
+
+  mapping[to_int(InputAction::WidgetDown)] = {
+      raylib::KEY_DOWN,
+      raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+  };
+
   mapping[to_int(InputAction::WidgetLeft)] = {
       raylib::KEY_LEFT,
       raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
@@ -48,13 +60,11 @@ inline auto get_mapping() {
 
   mapping[to_int(InputAction::WidgetBack)] = {
       raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
-      raylib::KEY_UP,
   };
 
   mapping[to_int(InputAction::WidgetNext)] = {
       raylib::KEY_TAB,
       raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
-      raylib::KEY_DOWN,
   };
 
   mapping[to_int(InputAction::WidgetPress)] = {

@@ -81,7 +81,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(title_bar.ent(), 0),
         ComponentConfig{}
             .with_label(buddy_name + " - Instant Message")
-            .with_size(ComponentSize{pixels(W - 80), pixels(24)})
+            .with_size(ComponentSize{pixels(INNER_W - 70), pixels(28)})  // Leave room for controls
             .with_custom_text_color(AIMColors::title_text())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -89,24 +89,16 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("title_text"));
 
-    // Window controls
-    auto controls =
-        div(context, mk(title_bar.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(66), pixels(20)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_debug_name("window_controls"));
-
+    // Window controls - placed directly in title bar (no intermediate container)
+    const char* ctrl_labels[] = {"_", "□", "×"};
     for (int i = 0; i < 3; i++) {
-      const char* labels[] = {"_", "□", "×"};
-      div(context, mk(controls.ent(), i),
+      div(context, mk(title_bar.ent(), i + 1),
           ComponentConfig{}
-              .with_label(labels[i])
-              .with_size(ComponentSize{pixels(20), pixels(18)})
+              .with_label(ctrl_labels[i])
+              .with_size(ComponentSize{pixels(20), pixels(20)})
               .with_custom_background(AIMColors::button_face())
               .with_custom_text_color(AIMColors::text_default())
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 12.0f)
               .with_margin(Margin{.left = pixels(2)})
               .disable_rounded_corners()
               .with_skip_tabbing(true)
@@ -235,11 +227,11 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("send_to_label"));
 
-    // Message input - single line (multiline text_area not yet implemented)
-    // Framework auto-scales text to fill container height, so size container
-    // to match desired font: ~14pt font + 10px text margins = 24px
-    constexpr float INPUT_FONT_SIZE = 14.0f;
-    constexpr int INPUT_HEIGHT = 24;  // Forces ~14pt font via auto-scaling
+    // Message input - multiline text area
+    // 3 lines at 18px line height = 54px, plus padding
+    constexpr float INPUT_LINE_HEIGHT = 18.0f;
+    constexpr int INPUT_LINES = 3;
+    constexpr int INPUT_HEIGHT = static_cast<int>(INPUT_LINE_HEIGHT * INPUT_LINES) + 8;
 
     auto input_container =
         div(context, mk(window.ent(), 6),
@@ -250,13 +242,15 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .disable_rounded_corners()
                 .with_debug_name("input_container"));
 
-    if (afterhours::text_input::text_input(
+    if (afterhours::text_input::text_area(
             context, mk(input_container.ent(), 0), message_input,
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(INNER_W - PAD * 4), pixels(INPUT_HEIGHT)})
                 .with_custom_background(AIMColors::input_bg())
                 .with_custom_text_color(AIMColors::my_text())
-                .with_font(UIComponent::DEFAULT_FONT, INPUT_FONT_SIZE)
+                .with_line_height(pixels(INPUT_LINE_HEIGHT))
+                .with_max_lines(INPUT_LINES)
+                .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                 .disable_rounded_corners()
                 .with_debug_name("message_input"))) {
     }
