@@ -1,10 +1,33 @@
 # Status Notifications (Toast System)
 
-## Working Implementation
-See these files for a complete working example:
-- `src/extracted/status_notifications.h` - Clean, standalone implementation ready for PR
-- `src/ecs/components.h` - StatusComponent (simpler version)
-- `src/ecs/component_helpers.h` - status::set(), status::hasMessage()
+## ✅ Implemented (Afterhours Plugin)
+
+**Implementation Files:**
+- `vendor/afterhours/src/plugins/toast.h` - Toast plugin with info/success/warning/error/custom levels
+- `src/systems/screens/ToastShowcase.h` - Demo screen with all toast types
+
+**Run the demo:**
+```bash
+./output/ui_tester.exe --screen=toasts
+```
+
+**Usage:**
+```cpp
+#include <afterhours/src/plugins/toast.h>
+
+// Setup (in preload)
+afterhours::toast::add_singleton_components(entity);
+
+// Register systems (in game init)
+afterhours::toast::register_update_systems(systems);
+
+// Show toasts from anywhere
+afterhours::toast::info("Hello!");
+afterhours::toast::success("Saved!");
+afterhours::toast::warning("Check settings");
+afterhours::toast::error("Something went wrong");
+afterhours::toast::custom("Custom!", Color{255, 127, 80, 255});
+```
 
 ## Problem
 Afterhours does not provide a notification/toast system for temporary status messages.

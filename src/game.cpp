@@ -23,6 +23,7 @@
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>
+#include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
 #include <chrono>
@@ -210,6 +211,7 @@ void game() {
   {
     afterhours::input::register_update_systems(systems);
     afterhours::window_manager::register_update_systems(systems);
+    afterhours::toast::register_update_systems(systems);
 
     auto test_system = std::make_unique<TestSystem>();
     test_system_ptr = test_system.get();
@@ -224,6 +226,8 @@ void game() {
     systems.register_render_system(
         std::make_unique<BeginPostProcessingRender>());
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
+    // Toast rendering must happen LAST (after UI) but before EndDrawing
+    afterhours::toast::register_render_systems<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
@@ -286,6 +290,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   {
     afterhours::input::register_update_systems(systems);
     afterhours::window_manager::register_update_systems(systems);
+    afterhours::toast::register_update_systems(systems);
 
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
 
@@ -338,6 +343,8 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
 
     systems.register_render_system(std::make_unique<RenderTestFeedback>());
+    // Toast rendering must happen LAST (after UI) but before EndDrawing
+    afterhours::toast::register_render_systems<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
@@ -473,6 +480,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   {
     afterhours::input::register_update_systems(systems);
     afterhours::window_manager::register_update_systems(systems);
+    afterhours::toast::register_update_systems(systems);
 
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
   }
@@ -486,6 +494,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
         std::make_unique<BeginPostProcessingRender>());
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
     systems.register_render_system(std::make_unique<RenderScreenHUD>());
+    // Toast rendering must happen LAST (after UI) but before EndDrawing
+    afterhours::toast::register_render_systems<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 
@@ -657,6 +667,7 @@ int run_e2e_tests(const e2e::E2EArgs & /*args*/,
   {
     afterhours::input::register_update_systems(systems);
     afterhours::window_manager::register_update_systems(systems);
+    afterhours::toast::register_update_systems(systems);
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
   }
 
@@ -669,6 +680,8 @@ int run_e2e_tests(const e2e::E2EArgs & /*args*/,
         std::make_unique<BeginPostProcessingRender>());
     systems.register_render_system(std::make_unique<RenderRenderTexture>());
     systems.register_render_system(std::make_unique<RenderScreenHUD>());
+    // Toast rendering must happen LAST (after UI) but before EndDrawing
+    afterhours::toast::register_render_systems<InputAction>(systems);
     systems.register_render_system(std::make_unique<EndDrawing>());
   }
 

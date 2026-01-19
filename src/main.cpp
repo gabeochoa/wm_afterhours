@@ -54,6 +54,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ScrollViewShowcase.h"
 #include "systems/screens/SelfAlignShowcase.h"
 #include "systems/screens/TabContainerShowcase.h"
+#include "systems/screens/ToastShowcase.h"
 #include "testing/e2e_integration.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
