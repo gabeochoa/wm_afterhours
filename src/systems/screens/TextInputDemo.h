@@ -26,54 +26,57 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container
+    // Main container - centered on screen
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.08f)
+                .with_padding(Spacing::lg)  // Move padding to root
                 .with_debug_name("text_input_demo_bg"));
 
-    // Content container with padding
+    // Content container - use percent for proper sizing
     auto main_container =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()  // Prevent children from wrapping
                 .with_debug_name("text_input_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
-            .with_label("Text Input Component Demo")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_label("Text Input Demo")
+            .with_size(ComponentSize{percent(1.0f), pixels(45)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("title"));
 
-    // Form container
+    // Form container - use percent height for proper containment
     auto form_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.9f), pixels(400)})
+                .with_size(ComponentSize{percent(0.95f), percent(0.75f)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::FlexStart)
+                .with_align_items(AlignItems::FlexStart)  // Align children left
+                .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("form_container"));
 
-    // Username input
+    // Username input - use children() height to let widget size itself
+    // Use wider width to fit label + field side-by-side without wrapping
     if (text_input(context, mk(form_container.ent(), 0), username,
                    ComponentConfig{}
                        .with_label("Username")
-                       .with_size(ComponentSize{pixels(400), pixels(45)})
+                       .with_size(ComponentSize{pixels(500), children()})
+                       .with_no_wrap()  // Prevent internal flex wrapping
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                        .with_margin(Spacing::sm)
@@ -85,7 +88,8 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     if (text_input(context, mk(form_container.ent(), 1), email,
                    ComponentConfig{}
                        .with_label("Email")
-                       .with_size(ComponentSize{pixels(400), pixels(45)})
+                       .with_size(ComponentSize{pixels(500), children()})
+                       .with_no_wrap()
                        .with_background(Theme::Usage::Accent)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                        .with_margin(Spacing::sm)
@@ -97,7 +101,8 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     if (text_input(context, mk(form_container.ent(), 2), password,
                    ComponentConfig{}
                        .with_label("Password")
-                       .with_size(ComponentSize{pixels(400), pixels(45)})
+                       .with_size(ComponentSize{pixels(500), children()})
+                       .with_no_wrap()
                        .with_background(Theme::Usage::Secondary)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                        .with_margin(Spacing::sm)
@@ -106,10 +111,10 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       status_message = "Password changed";
     }
 
-    // Separator
+    // Separator - reduce margin to prevent overflow
     separator(context, mk(form_container.ent(), 3),
               SeparatorOrientation::Horizontal,
-              ComponentConfig{}.with_margin(Spacing::md));
+              ComponentConfig{}.with_margin(Spacing::sm));
 
     // Search input (no label)
     div(context, mk(form_container.ent(), 4),
@@ -121,9 +126,12 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
+    // Search input - no label so field uses full width
+    // Use 490px to account for margin and padding calculations
     if (text_input(context, mk(form_container.ent(), 5), search_query,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(400), pixels(45)})
+                       .with_size(ComponentSize{pixels(490), children()})
+                       .with_no_wrap()
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                        .with_margin(Spacing::sm)
@@ -143,26 +151,22 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       status_message = "Submitted! User: " + username + ", Email: " + email;
     }
 
-    // Status display
+    // Status display - reduced margin to fit
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status_message)
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                .bottom = pixels(0),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_debug_name("status"));
 
-    // Instructions
+    // Instructions - reduced size to fit
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
-            .with_label("Click a field to focus, type to input. Backspace to "
-                        "delete. Arrow keys to move cursor.")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_label("Click to focus, type to input. Backspace/arrows/Home/End for navigation.")
+            .with_size(ComponentSize{percent(1.0f), pixels(35)})
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
