@@ -44,11 +44,12 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container background (no padding so it stays in bounds)
+    // Main container background - centered on screen
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
+                .with_size(ComponentSize{screen_pct(0.88f), screen_pct(0.88f)})
+                .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.08f)
                 .with_debug_name("forms_bg"));
@@ -65,7 +66,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Title
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
-            .with_label("Form Components Gallery")
+            .with_label("Form Components")
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
@@ -80,26 +81,22 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(480)})
+                .with_size(ComponentSize{percent(1.0f), percent(0.75f)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::Center)
+                .with_justify_content(JustifyContent::SpaceBetween)
                 .with_debug_name("content"));
 
     // Left column - Sliders
     auto left_col =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(450), pixels(430)})
+                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.9f))
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.top = pixels(0),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = DefaultSpacing::small()})
                 .with_debug_name("left_column"));
 
     // Sliders section header
@@ -220,7 +217,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Right column - Checkboxes
     auto right_col = div(context, mk(content.ent(), 1),
                          ComponentConfig{}
-                             .with_size(ComponentSize{pixels(350), pixels(430)})
+                             .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
                              .with_custom_background(afterhours::colors::darken(
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
@@ -239,63 +236,57 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::xs)
             .with_debug_name("checkboxes_header"));
 
-    // Audio checkboxes - use fixed pixel sizes for consistency
+    // Audio checkboxes - use 52px height to accommodate checkbox component sizing
     checkbox(context, mk(right_col.ent(), 1), enable_music,
              ComponentConfig{}
                  .with_label("Enable Music")
-                 .with_size(ComponentSize{pixels(280), pixels(34)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::xs)
                  .with_debug_name("music_checkbox"));
 
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
              ComponentConfig{}
                  .with_label("Enable SFX")
-                 .with_size(ComponentSize{pixels(280), pixels(34)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::xs)
                  .with_debug_name("sfx_checkbox"));
 
     // Display checkboxes
     checkbox(context, mk(right_col.ent(), 3), fullscreen,
              ComponentConfig{}
                  .with_label("Fullscreen")
-                 .with_size(ComponentSize{pixels(280), pixels(34)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::xs)
                  .with_debug_name("fullscreen_checkbox"));
 
     checkbox(context, mk(right_col.ent(), 4), vsync,
              ComponentConfig{}
                  .with_label("V-Sync")
-                 .with_size(ComponentSize{pixels(280), pixels(34)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::xs)
                  .with_debug_name("vsync_checkbox"));
 
     checkbox(context, mk(right_col.ent(), 5), show_fps,
              ComponentConfig{}
                  .with_label("Show FPS")
-                 .with_size(ComponentSize{pixels(280), pixels(34)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::xs)
                  .with_debug_name("fps_checkbox"));
 
     // Disabled checkbox example
     bool disabled_value = true;
     checkbox(context, mk(right_col.ent(), 6), disabled_value,
              ComponentConfig{}
-                 .with_label("Disabled Option")
-                 .with_size(ComponentSize{pixels(280), pixels(34)})
+                 .with_label("Disabled")
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-                 .with_margin(Spacing::xs)
                  .with_debug_name("disabled_checkbox"));
 
     // Language dropdown

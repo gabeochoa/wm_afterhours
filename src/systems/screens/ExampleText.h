@@ -16,7 +16,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color gold_accent{205, 175, 110, 255}; // Warm gold
   afterhours::Color silver_text{195, 195, 200, 255}; // Silver text
   afterhours::Color cream_text{250, 245, 235, 255};  // Cream white
-  afterhours::Color muted_text{130, 125, 120, 255};  // Muted brown-gray
+  afterhours::Color muted_text{165, 160, 155, 255};  // Muted brown-gray (brightened for WCAG AA)
   afterhours::Color divider{65, 58, 52, 255};        // Subtle divider
 
   void for_each_with(afterhours::Entity &entity,

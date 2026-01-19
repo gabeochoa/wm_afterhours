@@ -9,7 +9,7 @@ wait 0.5
 validate_screen forms
 
 # Verify we're on the correct screen
-expect_text "Form Components Gallery"
+expect_text "Form Components"
 
 # Tab to a slider component
 key TAB

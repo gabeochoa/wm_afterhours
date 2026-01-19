@@ -525,7 +525,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 95.0f, y + 9.0f)
-            .with_font("EqProRounded", 11.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));

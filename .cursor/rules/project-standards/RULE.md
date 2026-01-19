@@ -14,7 +14,7 @@ Use short, descriptive commit messages with prefixes:
 
 Rules:
 - Use all lowercase
-- Avoid special characters like ampersands (&) - use "and" instead
+- Always use "and" instead of special characters like ampersands (&)
 - Keep messages concise and descriptive
 
 Examples:
@@ -25,9 +25,9 @@ Examples:
 ## Code Style
 - Keep functions focused and single-purpose
 - Prefer early returns to reduce nesting
-- Dont add any comments unless explicitly asked 
+- Remember to only add comments when explicitly asked 
 - use a function instead of a line with multiple ternary expressions
-- Avoid using `auto` for non-template types - use explicit types instead
+- Always use explicit types instead of `auto` for non-template types
 - Use `for (Entity &entity : EntityQuery().gen())` instead of `for (auto &ref : ...)` with `ref.get()`
 - Prefer references over pointers when possible
 
@@ -47,7 +47,7 @@ Examples:
 ## Debugging
 - Use `log_info()`, `log_warn()`, `log_error()` for logging
 - Add debug logs for complex systems
-- Remove verbose debug logs before committing
+- Always remove verbose debug logs before committing
 
 ## Component Patterns
 - All components inherit from `BaseComponent`

@@ -24,11 +24,12 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
-    // Main container
+    // Main container - centered on screen
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.50f), screen_pct(0.70f)})
+                .with_size(ComponentSize{screen_pct(0.50f), screen_pct(0.75f)})
+                .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.08f)
                 .with_debug_name("toggle_bg"));

@@ -190,53 +190,10 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Running E2E tests...\n";
 
-    if (e2e_args.slow_mode) {
-      // Visual mode - run with window open so user can see what's happening
-      return run_e2e_tests(e2e_args, runner);
-    } else {
-      // Headless mode - fast execution without window
-      log_warn("Running in headless mode - UI-based commands (expect_text, "
-               "click, etc.) will not work. Use --slow for visual tests.");
-      // Still need to run command handler systems!
-      afterhours::SystemManager headless_systems;
-
-      // Register E2E command handlers
-      afterhours::testing::register_builtin_handlers(headless_systems);
-      headless_systems.register_update_system(
-          std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
-              []() { reset_e2e_state(); }));
-      afterhours::testing::register_unknown_handler(headless_systems);
-      afterhours::testing::register_cleanup(headless_systems);
-
-      const float dt = 1.0f / 60.0f;
-      afterhours::testing::reset_command_error_count();
-
-      while (!runner.is_finished()) {
-        runner.tick(dt);
-        // Merge entities created by runner into main array before systems run
-        afterhours::EntityHelper::merge_entity_arrays();
-        headless_systems.run(dt);
-        afterhours::testing::test_input::reset_frame();
-
-        // Fail fast on first error
-        if (afterhours::testing::get_command_error_count() > 0) {
-          log_warn("Stopping test early due to error");
-          break;
-        }
-      }
-
-      // Check for command-level errors (e.g., expect_text failures)
-      int cmd_errors = afterhours::testing::get_command_error_count();
-      bool has_errors = runner.has_failed() || cmd_errors > 0;
-
-      runner.print_results();
-      if (cmd_errors > 0) {
-        log_warn("Total command errors: {}", cmd_errors);
-      }
-      Settings::get().write_save_file();
-
-      return has_errors ? 1 : 0;
-    }
+    // Always run in visual mode - headless mode disabled for debugging
+    // TODO: Re-enable headless mode for CI once debugging is complete
+    // Original condition: if (e2e_args.slow_mode)
+    return run_e2e_tests(e2e_args, runner);
   }
 
   // Try --screen=<name> format first (preferred)

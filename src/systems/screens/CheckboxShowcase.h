@@ -39,11 +39,13 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container background (no padding so it stays in bounds)
+    // Main container background - centered on screen with safe margins
+    // Use smaller size to prevent internal overflow issues
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.88f)})
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.08f)
                 .with_debug_name("checkbox_bg"));
@@ -57,10 +59,10 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("checkbox_main"));
 
-    // Title
+    // Title - centered text with proper sizing
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
-            .with_label("Checkbox Components Showcase")
+            .with_label("Checkbox Components")
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
@@ -72,10 +74,10 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)})
             .with_debug_name("title"));
 
-    // Content area - two columns
+    // Content area - two columns with proper spacing
     auto content = div(context, mk(main_container.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(480)})
+                           .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
                            .with_custom_background(theme.surface)
                            .with_padding(Spacing::md)
                            .with_flex_direction(FlexDirection::Row)
@@ -86,74 +88,67 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.46f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()  // Prevent horizontal wrapping
                 .with_debug_name("left_column"));
 
     // === Section: Checkbox with Label ===
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
-            .with_label("checkbox() - With Label")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_label("With Label")
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
-            .with_margin(Spacing::xs)
             .with_debug_name("labeled_header"));
 
     checkbox(context, mk(left_col.ent(), 1), labeled_primary,
              ComponentConfig{}
                  .with_label("Primary Color")
-                 .with_size(ComponentSize{percent(0.90f), pixels(36)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::xs)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("checkbox_primary"));
 
     checkbox(context, mk(left_col.ent(), 2), labeled_secondary,
              ComponentConfig{}
                  .with_label("Secondary Color")
-                 .with_size(ComponentSize{percent(0.90f), pixels(36)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::xs)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("checkbox_secondary"));
 
     checkbox(context, mk(left_col.ent(), 3), labeled_accent,
              ComponentConfig{}
                  .with_label("Accent Color")
-                 .with_size(ComponentSize{percent(0.90f), pixels(36)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::xs)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("checkbox_accent"));
 
     // === Section: Checkbox without Label ===
     div(context, mk(left_col.ent(), 4),
         ComponentConfig{}
-            .with_label("checkbox_no_label() - Box Only")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_label("Box Only (No Label)")
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                .bottom = DefaultSpacing::small(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
             .with_debug_name("no_label_header"));
 
     // Row of no-label checkboxes
     auto no_label_row =
         div(context, mk(left_col.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(50)})
+                .with_size(ComponentSize{percent(1.0f), pixels(50)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_align_items(AlignItems::Center)
@@ -191,106 +186,100 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 6),
         ComponentConfig{}
             .with_label("Disabled State")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                .bottom = DefaultSpacing::small(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
             .with_debug_name("disabled_header"));
 
     checkbox(context, mk(left_col.ent(), 7), disabled_checked,
              ComponentConfig{}
                  .with_label("Disabled (Checked)")
-                 .with_size(ComponentSize{percent(0.90f), pixels(36)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::xs)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("disabled_checked"));
 
     checkbox(context, mk(left_col.ent(), 8), disabled_unchecked,
              ComponentConfig{}
                  .with_label("Disabled (Unchecked)")
-                 .with_size(ComponentSize{percent(0.90f), pixels(36)})
+                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Spacing::xs)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("disabled_unchecked"));
 
     // ========== Right column - Groups ==========
     auto right_col =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.46f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()  // Prevent horizontal wrapping
                 .with_debug_name("right_column"));
 
     // === Section: Checkbox Group (no min/max) ===
     div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
-            .with_label("checkbox_group() - Multi-Select")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_label("Multi-Select Group")
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
-            .with_margin(Spacing::xs)
             .with_debug_name("group_header"));
 
     // Simple checkbox group - select any combination
+    // Use percent(0.95f) width to allow buffer for internal checkbox sizing
     checkbox_group(context, mk(right_col.ent(), 1), options_group,
                    std::array<std::string_view, 4>{"Option A", "Option B",
                                                    "Option C", "Option D"},
                    {-1, -1}, // No min/max constraints
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.90f), pixels(160)})
+                       .with_size(ComponentSize{percent(0.95f), children()})
+                       .with_flex_direction(FlexDirection::Column)
+                       .with_no_wrap()  // Prevent horizontal wrapping inside group
                        .with_background(Theme::Usage::Primary)
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Spacing::sm)
+                       .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                        .with_debug_name("options_group"));
 
     // === Section: Checkbox Group with Min/Max ===
     div(context, mk(right_col.ent(), 2),
         ComponentConfig{}
-            .with_label("checkbox_group() - Min/Max Constraints")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_label("Min/Max Constraints")
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                .bottom = DefaultSpacing::small(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
             .with_debug_name("minmax_header"));
 
     // Checkbox group with min=1, max=2 constraint
+    // Use percent(0.95f) width to allow buffer for internal checkbox sizing
     checkbox_group(
         context, mk(right_col.ent(), 3), min_max_group,
         std::array<std::string_view, 3>{"Choice 1", "Choice 2", "Choice 3"},
         {1, 2}, // Min 1, max 2 selections
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), pixels(120)})
+            .with_size(ComponentSize{percent(0.95f), children()})
+            .with_flex_direction(FlexDirection::Column)
+            .with_no_wrap()  // Prevent horizontal wrapping inside group
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_debug_name("minmax_group"));
 
     div(context, mk(right_col.ent(), 4),
         ComponentConfig{}
-            .with_label("(min: 1, max: 2 selections allowed)")
-            .with_size(ComponentSize{percent(0.90f), pixels(28)})
+            .with_label("(min: 1, max: 2 allowed)")
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_text_color(theme.darkfont)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)

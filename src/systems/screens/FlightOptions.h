@@ -18,7 +18,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color bg_dark{8, 12, 22, 255};
   afterhours::Color text_cyan{85, 175, 225, 255};
   afterhours::Color text_bright{165, 215, 245, 255};
-  afterhours::Color text_muted{75, 95, 120, 255};
+  afterhours::Color text_muted{110, 135, 165, 255};  // Brightened for WCAG AA contrast
   afterhours::Color highlight_line{35, 105, 160,
                                    255}; // Darkened for WCAG AA contrast
   afterhours::Color grid_color{20, 35, 55, 180};

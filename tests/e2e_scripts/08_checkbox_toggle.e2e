@@ -9,7 +9,7 @@ wait 0.5
 validate_screen checkboxes
 
 # Verify we're on the correct screen
-expect_text "Checkbox Components Showcase"
+expect_text "Checkbox Components"
 
 # Tab to first interactive checkbox and toggle
 key TAB

@@ -25,40 +25,60 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font_muted = afterhours::Color{128, 128, 128, 255};
     context.theme = theme;
 
+    // Main container - centered on screen
+    auto root =
+        div(context, mk(entity, 100),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.75f)})
+                .with_self_align(SelfAlign::Center)
+                .with_custom_background(theme.background)
+                .with_border(theme.font_muted, 1.0f)
+                .with_roundness(0.04f)
+                .with_padding(Spacing::lg)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("scroll_bg"));
+
     // Title
-    div(context, mk(entity, 0),
+    div(context, mk(root.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(700), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_label("Scroll View Demo")
+            .with_custom_background(theme.surface)
             .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_padding(Spacing::sm)
             .with_debug_name("title"));
 
     // Instructions
-    div(context, mk(entity, 1),
+    div(context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(700), pixels(20)})
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_label("Use mouse wheel to scroll (trackpad for horizontal)")
             .with_custom_text_color(theme.font_muted)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("instructions"));
 
     // Invert scroll toggle
-    checkbox(context, mk(entity, 3), invert_scroll,
+    checkbox(context, mk(root.ent(), 2), invert_scroll,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(250), pixels(28)})
-                 .with_label("Invert scroll direction")
+                 .with_size(ComponentSize{pixels(280), pixels(52)})
+                 .with_label("Invert scroll")
+                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side
-    auto container = div(context, mk(entity, 2),
+    auto container = div(context, mk(root.ent(), 3),
                          ComponentConfig{}
-                             .with_size(ComponentSize{pixels(700), pixels(280)})
+                             .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
                              .with_flex_direction(FlexDirection::Row)
+                             .with_justify_content(JustifyContent::SpaceAround)
                              .with_debug_name("container"));
 
     // === VERTICAL SCROLL VIEW ===
     auto vert_section = div(context, mk(container.ent(), 0),
                             ComponentConfig{}
-                                .with_size(ComponentSize{pixels(320), percent(1.0f)})
+                                .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
                                 .with_flex_direction(FlexDirection::Column)
                                 .with_debug_name("vert_section"));
 
@@ -72,7 +92,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     auto vert_scroll = scroll_view(
         context, mk(vert_section.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(300), pixels(200)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.80f)})
             .with_custom_background(theme.surface)
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
@@ -111,16 +131,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name(fmt::format("vert_item_{}", i)));
     }
 
-    // Spacer
-    div(context, mk(container.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(40), percent(1.0f)})
-            .with_debug_name("spacer"));
-
     // === HORIZONTAL SCROLL VIEW ===
-    auto horiz_section = div(context, mk(container.ent(), 2),
+    auto horiz_section = div(context, mk(container.ent(), 1),
                              ComponentConfig{}
-                                 .with_size(ComponentSize{pixels(320), percent(1.0f)})
+                                 .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
                                  .with_flex_direction(FlexDirection::Column)
                                  .with_debug_name("horiz_section"));
 
@@ -134,7 +148,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     auto horiz_scroll = scroll_view(
         context, mk(horiz_section.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(300), pixels(100)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
             .with_custom_background(theme.surface)
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
