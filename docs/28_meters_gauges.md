@@ -1,7 +1,10 @@
 # Meters and Gauges
 
-**Status:** Not implemented  
-**Priority:** Medium
+**Status:** Partially implemented  
+**Priority:** Low
+
+> ✅ `progress_bar()` and `circular_progress()` exist in afterhours.  
+> ❌ Inline meters with icons and stacked bars not yet implemented.
 
 ---
 

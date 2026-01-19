@@ -1,12 +1,21 @@
 # Form Controls
 
-**Status:** Partially implemented  
-**Priority:** Medium  
+**Status:** Mostly implemented  
+**Priority:** Low  
 **Source:** Component Gallery Analysis
+
+> ✅ **Already in afterhours:** `slider`, `checkbox`, `radio_group`, `dropdown`, `toggle_switch`  
+> ❌ **Not yet implemented:** Combobox (search/filter), Fieldset, Form Label
 
 ---
 
-## Select / Dropdown
+## ~~Select / Dropdown~~ ✅ IMPLEMENTED
+
+See `dropdown()` in `vendor/afterhours/src/plugins/ui/imm_components.h`
+
+---
+
+## Combobox / Autocomplete
 
 ### Description
 
@@ -95,118 +104,21 @@ combobox(ctx, mk(parent, 0), all_items, selected_item, search_query);
 
 ---
 
-## Slider / Range Input
+## ~~Slider / Range Input~~ ✅ IMPLEMENTED
 
-### Description
-
-A form control for choosing a value within a preset range by dragging a handle.
-
-### Use Cases in Game UI
-- Volume controls
-- Brightness/gamma
-- Mouse sensitivity
-- Game speed
-- Character creation sliders
-
-### Suggested Implementation
-
-```cpp
-struct SliderConfig {
-    float min = 0.0f;
-    float max = 1.0f;
-    float step = 0.0f;  // 0 = continuous
-    bool show_value = true;
-    bool show_ticks = false;
-    std::string value_format = "{:.0%}";  // Format string
-};
-
-ElementResult slider(HasUIContext auto &ctx, EntityParent ep_pair,
-                     float &value,
-                     SliderConfig config = SliderConfig());
-
-// Integer variant
-ElementResult slider_int(HasUIContext auto &ctx, EntityParent ep_pair,
-                         int &value, int min, int max, int step = 1,
-                         ComponentConfig config = ComponentConfig());
-
-// Usage:
-slider(ctx, mk(parent, 0), volume, SliderConfig{.min = 0, .max = 1});
-slider_int(ctx, mk(parent, 1), brightness, 0, 100, 5);
-```
-
-### Features Needed
-- Draggable handle
-- Track fill showing current value
-- Value label display
-- Tick marks for discrete steps
-- Keyboard control (+/- to adjust)
-- Optional dual handles for range selection
+See `slider()` in `vendor/afterhours/src/plugins/ui/imm_components.h`
 
 ---
 
-## Checkbox
+## ~~Checkbox~~ ✅ IMPLEMENTED
 
-### Description
-
-An input for boolean choices or selecting multiple items from a list.
-
-### Note
-
-Basic checkbox exists in the library. This documents the expected API and features.
-
-### Suggested Implementation
-
-```cpp
-ElementResult checkbox(HasUIContext auto &ctx, EntityParent ep_pair,
-                       const std::string &label,
-                       bool &checked,
-                       ComponentConfig config = ComponentConfig());
-
-// Indeterminate state for parent checkboxes
-ElementResult checkbox(HasUIContext auto &ctx, EntityParent ep_pair,
-                       const std::string &label,
-                       std::optional<bool> &checked,  // nullopt = indeterminate
-                       ComponentConfig config = ComponentConfig());
-```
-
-### Features Needed
-- Checked/unchecked states
-- Indeterminate state (for "select all" with partial selection)
-- Label positioning (right/left)
-- Disabled state
-- Focus ring
+See `checkbox()` in `vendor/afterhours/src/plugins/ui/imm_components.h`
 
 ---
 
-## Radio Button Group
+## ~~Radio Button Group~~ ✅ IMPLEMENTED
 
-### Description
-
-Radio buttons allow selecting a single option from a list of predefined options.
-
-**Also known as:** Radio, Radio group
-
-### Note
-
-Radio buttons exist in the library. This documents the expected API.
-
-### Suggested Implementation
-
-```cpp
-template <typename T>
-ElementResult radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
-                          const std::vector<std::pair<T, std::string>> &options,
-                          T &selected_value,
-                          ComponentConfig config = ComponentConfig());
-
-// Usage:
-radio_group(ctx, mk(parent, 0), {
-    {Quality::Low, "Low"},
-    {Quality::Medium, "Medium"},
-    {Quality::High, "High"},
-    {Quality::Ultra, "Ultra"}
-}, graphics_quality);
-```
+See `radio_group()` in `vendor/afterhours/src/plugins/ui/imm_components.h`
 
 ---
 

@@ -8,9 +8,11 @@ This directory contains detailed specifications for missing features, infrastruc
 | # | File | Status | Priority |
 |---|------|--------|----------|
 | 03 | `03_text_editing_widget.md` | Spec complete | High |
-| 21 | `21_text_input.md` | Not implemented | Medium |
+| ~~21~~ | ~~`21_text_input.md`~~ | ✅ Implemented | - |
 | 22 | `22_rich_text_label.md` | Not implemented | Medium |
 | 34 | `34_text_area.md` | Not implemented | Low |
+
+> `text_input()` is now implemented in afterhours with UTF-8, cursor, and callbacks.
 
 ## Widgets - High Priority
 | # | File | Status | Priority |
@@ -23,11 +25,13 @@ This directory contains detailed specifications for missing features, infrastruc
 | 23 | `23_tooltip.md` | Not implemented | Medium |
 | 24 | `24_context_menu.md` | Not implemented | Medium |
 | 25 | `25_tree_node.md` | Not implemented | Medium |
-| 26 | `26_button_variants.md` | Not implemented | Medium |
+| 26 | `26_button_variants.md` | Partial (button exists) | Low |
 | 27 | `27_input_number.md` | Not implemented | Medium |
-| 28 | `28_meters_gauges.md` | Not implemented | Medium |
-| 29 | `29_tab_bars.md` | Not implemented | Medium |
+| 28 | `28_meters_gauges.md` | Partial (progress_bar exists) | Low |
+| ~~29~~ | ~~`29_tab_bars.md`~~ | ✅ Implemented | - |
 | 09 | `09_modal_dialogs.md` | Spec complete | Medium |
+
+> `tab_container()` is now implemented in afterhours.
 
 ## Widgets - Low Priority
 | # | File | Status | Priority |
@@ -45,9 +49,11 @@ This directory contains detailed specifications for missing features, infrastruc
 | 05 | `05_render_system_const_constraint.md` | BLOCKER | High |
 | 06 | `06_action_binding_system.md` | Spec complete | Medium |
 | 07 | `07_renderer_abstraction.md` | Spec complete | Large |
-| 08 | `08_scrollable_containers.md` | Blocked by 05 | Large |
+| ~~08~~ | ~~`08_scrollable_containers.md`~~ | ✅ Implemented | - |
 | 10 | `10_command_history.md` | Spec complete | Medium |
 | 17 | `17_pluggable_backends.md` | Spec complete | Large |
+
+> `scroll_view()` is now fully implemented in afterhours with mouse wheel, clipping, and scroll state.
 
 ## Infrastructure - UI
 | # | File | Status | Priority |
@@ -89,13 +95,13 @@ This directory contains detailed specifications for missing features, infrastruc
 | 60 | `60_accordion.md` | Not implemented | Medium |
 | 61 | `61_alerts_feedback.md` | Not implemented | Medium |
 | 62 | `62_avatars_badges.md` | Not implemented | Low |
-| 63 | `63_navigation.md` | Not implemented | Medium |
-| 64 | `64_form_controls.md` | Partial | Medium |
+| 63 | `63_navigation.md` | Partial (nav_bar, pagination exist) | Low |
+| 64 | `64_form_controls.md` | Mostly done (slider, checkbox, etc.) | Low |
 | 65 | `65_date_time.md` | Not implemented | Low |
 | 66 | `66_file_handling.md` | Not implemented | Low |
 | 67 | `67_overlay_panels.md` | Not implemented | Medium |
 | 68 | `68_loading_states.md` | Not implemented | Medium |
-| 69 | `69_media.md` | Not implemented | Low |
+| 69 | `69_media.md` | Partial (image exists) | Low |
 | 70 | `70_misc_widgets.md` | Not implemented | Low |
 | 71 | `71_page_sections.md` | Not implemented | Low |
 
@@ -121,11 +127,8 @@ This directory contains detailed specifications for missing features, infrastruc
 - API Ergonomics (50) - helper functions, builder patterns
 - Debug Tooling (54) - overlays, hierarchy viewer
 - Responsive Design (57) - breakpoints, scaling
-- Text Input (21)
 - Tooltip (23)
 - Input Number (27)
-- Inline Meter (28)
-- Tab Bars (29)
 - Test Input Hooks (42)
 - Glyph Metrics API (41)
 - Action Binding System (06)
@@ -151,13 +154,21 @@ This directory contains detailed specifications for missing features, infrastruc
 - Page Sections (71)
 
 ### Very Large (~1+ week)
-- Text Input (full with selection/clipboard)
 - Text Area / Text Editor (34)
-- Scroll Container (08)
 - List Box (30)
 - Table (30)
 - Drag and Drop (32)
 - Color Picker (31)
+
+### ✅ Recently Completed in Afterhours
+- `scroll_view()` - Full scroll container with wheel input
+- `text_input()` - Single-line with UTF-8 and cursor
+- `tab_container()` - Horizontal tabs
+- `navigation_bar()` - Arrow navigation
+- `pagination()` - Page controls
+- `slider()`, `checkbox()`, `radio_group()`, `dropdown()`, `toggle_switch()`
+- `progress_bar()`, `circular_progress()`
+- `image_button()`
 
 ---
 
@@ -165,15 +176,23 @@ This directory contains detailed specifications for missing features, infrastruc
 
 Parsed **60 standard UI components** from the Component Gallery. Here's the coverage:
 
-### ✅ Already Covered
-- Button → `26_button_variants.md`
+### ✅ Already Implemented in Afterhours
+- Button, button_group, image_button
+- Checkbox, radio_group, toggle_switch
+- Slider
+- Dropdown
+- Progress bar, circular_progress
+- Tabs (tab_container)
+- Text input
+- Scroll view
+- Navigation bar, pagination
+- Image, sprite, icon_row
+
+### 📋 Documented (Not Yet Implemented)
 - Color picker → `31_color_picker.md`
 - Modal → `09_modal_dialogs.md`
-- Progress bar/indicator → `28_meters_gauges.md`
 - Stepper → `20_stepper_selector.md`
 - Table → `30_list_table.md`
-- Tabs → `29_tab_bars.md`
-- Text input → `21_text_input.md`
 - Textarea → `34_text_area.md`
 - Toast → `11_status_notifications.md`
 - Tooltip → `23_tooltip.md`

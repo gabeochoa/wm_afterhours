@@ -1,7 +1,10 @@
 # Button Variants
 
-**Status:** Not implemented  
-**Priority:** Medium
+**Status:** Partially implemented  
+**Priority:** Low
+
+> ✅ `button()`, `button_group()`, and `image_button()` exist in afterhours.  
+> ❌ Button variants (Outline, Ghost) and icon+text buttons not yet implemented.
 
 ## Problem
 
