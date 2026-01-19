@@ -132,7 +132,6 @@ Quick reference for what's easiest to implement first.
 | 26 | Button Variants | Add variant param to existing button |
 | 28 | Inline Meter | Compose progress_bar + icon + label |
 | 62 | Avatars/Badges | Image + styled div |
-| 68 | Spinner | Animated circular_progress |
 
 ### 🟡 Small (1-4 hours)
 
@@ -145,7 +144,7 @@ Quick reference for what's easiest to implement first.
 | 56 | Color System | Helper functions, no new components |
 | 60 | Accordion | Collapsible div, simple state |
 | 61 | Alerts/Banners | Styled div with icon |
-| 68 | Skeleton Loaders | Animated div placeholders |
+| 68 | Loading States | Skeleton loaders, shimmer effects |
 | 70 | Rating | Row of icon buttons |
 | 70 | Separator | Thin div |
 
