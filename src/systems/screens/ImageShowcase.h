@@ -44,21 +44,23 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container background
+    // Main container background - centered with padding
     auto root = div(context, mk(entity, 0),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
+                        .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                        .with_self_align(SelfAlign::Center)
                         .with_custom_background(theme.background)
                         .with_roundness(0.08f)
+                        .with_padding(Spacing::lg)  // Padding on root
                         .with_debug_name("image_bg"));
 
-    // Content container with padding
+    // Content container - no padding since root has it
     auto main_container =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("image_main"));
 
     // Title
