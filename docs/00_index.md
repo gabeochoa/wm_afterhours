@@ -118,6 +118,81 @@ This directory contains detailed specifications for missing features, infrastruc
 
 ---
 
+## Level of Effort (LOE)
+
+Quick reference for what's easiest to implement first.
+
+### 🟢 Quick Wins (< 1 hour)
+
+| # | Item | Notes |
+|---|------|-------|
+| 14 | Uninitialized Size Warning | Single assert/log in render |
+| 11 | Status Notifications (Toast) | Compose existing components |
+| 13 | Icon Registry | Wrapper around texture manager |
+| 26 | Button Variants | Add variant param to existing button |
+| 28 | Inline Meter | Compose progress_bar + icon + label |
+| 62 | Avatars/Badges | Image + styled div |
+| 68 | Spinner | Animated circular_progress |
+
+### 🟡 Small (1-4 hours)
+
+| # | Item | Notes |
+|---|------|-------|
+| 20 | Stepper/Selector | Buttons + value display |
+| 23 | Tooltip | Div positioned near hover target |
+| 27 | Input Number | text_input + stepper buttons |
+| 53 | Type Safety | Wrapper structs for floats |
+| 56 | Color System | Helper functions, no new components |
+| 60 | Accordion | Collapsible div, simple state |
+| 61 | Alerts/Banners | Styled div with icon |
+| 68 | Skeleton Loaders | Animated div placeholders |
+| 70 | Rating | Row of icon buttons |
+| 70 | Separator | Thin div |
+
+### 🟠 Medium (4-8 hours / 1 day)
+
+| # | Item | Notes |
+|---|------|-------|
+| 06 | Action Binding | KeyBinding struct + ActionMap |
+| 10 | Command History | Generic undo/redo stack |
+| 25 | Tree Node | Recursive collapsible sections |
+| 41 | Font Loading | Glyph metrics API additions |
+| 42 | Test Input Hooks | Input injection layer |
+| 50 | API Ergonomics | Helper functions, builder patterns |
+| 54 | Debug Tooling | Overlay system, hierarchy viewer |
+| 57 | Responsive Design | Breakpoint helpers |
+| 67 | Drawer/Popover | Overlay panel positioning |
+| 71 | Page Sections | Header/footer/hero layouts |
+
+### 🔴 Large (1-3 days)
+
+| # | Item | Notes |
+|---|------|-------|
+| 05 | Render Const Constraint | System architecture change |
+| 09 | Modal Dialogs | Focus trap, overlay, z-order |
+| 22 | Rich Text Label | BBCode parsing, multi-style spans |
+| 24 | Context Menu | Right-click trigger, positioning |
+| 40 | Focus Ring Styles | Per-component customization |
+| 51 | Entity ID Management | mk() API changes |
+| 52 | Absolute Positioning Bugs | Debug + fix margin calc |
+| 55 | Component Config Issues | Several config fixes |
+
+### ⚫ Very Large (3+ days)
+
+| # | Item | Notes |
+|---|------|-------|
+| 07 | Renderer Abstraction | Concept-based backend system |
+| 17 | Pluggable Backends | IBackend interface + impls |
+| 30 | List/Table | Virtual scrolling, columns |
+| 31 | Color Picker | Hue wheel, RGB inputs, preview |
+| 32 | Drag and Drop | Hit testing, ghost rendering |
+| 33 | CSS Grid Layout | 2D grid algorithm |
+| 34 | Text Area | Multiline with line numbers |
+| 43 | E2E Testing | Full framework setup |
+| 65 | Date/Time Inputs | Calendar widget |
+
+---
+
 ## Priority Summary
 
 ### Critical (Bugs/Blockers)
