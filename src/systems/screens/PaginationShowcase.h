@@ -25,21 +25,23 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container background
+    // Main container background - centered with padding
     auto root = div(context, mk(entity, 0),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.88f)})
+                        .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                        .with_self_align(SelfAlign::Center)
                         .with_custom_background(theme.background)
                         .with_roundness(0.08f)
+                        .with_padding(Spacing::lg)  // Padding on root
                         .with_debug_name("pagination_bg"));
 
-    // Content container with padding
+    // Content container - no padding since root has it
     auto main_container =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("pagination_main"));
 
     // Title
@@ -78,9 +80,10 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("section1_label"));
 
+    // Height increased to 50px to fit internal buttons
     pagination(context, mk(content.ent(), 1), pages, page_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(500), pixels(45)})
+                   .with_size(ComponentSize{pixels(500), pixels(50)})
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                    .with_debug_name("pagination_basic"));
@@ -108,7 +111,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
 
     pagination(context, mk(content.ent(), 4), difficulties, difficulty_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(400), pixels(45)})
+                   .with_size(ComponentSize{pixels(400), pixels(50)})
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                    .with_debug_name("pagination_difficulty"));
@@ -135,7 +138,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
 
     pagination(context, mk(content.ent(), 7), colors, color_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(450), pixels(45)})
+                   .with_size(ComponentSize{pixels(450), pixels(50)})
                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_debug_name("pagination_colors"));
 

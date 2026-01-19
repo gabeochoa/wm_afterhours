@@ -17,22 +17,24 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
-    // Main container background (no padding so it stays in bounds)
+    // Main container background - centered with padding
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.08f)
+                .with_padding(Spacing::lg)  // Padding on root
                 .with_debug_name("cards_bg"));
 
-    // Content container with padding
+    // Content container - no padding since root has it
     auto main_container =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("cards_main"));
 
     // Title
@@ -128,13 +130,13 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                                             .right = pixels(0)})
                         .with_debug_name("row2_nested"));
 
-    // Nested card container - extra padding compensates for rounded corners
+    // Nested card container - wider to fit inner cards
     auto nested_container =
         div(context, mk(row2.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(350), pixels(200)})
+                .with_size(ComponentSize{pixels(300), pixels(180)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)  // Reduced padding
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
                 .with_roundness(0.08f)
@@ -149,48 +151,48 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("nested_title"));
 
-    // Inner cards row
+    // Inner cards row - prevent wrapping, use full width
     auto inner_row =
         div(context, mk(nested_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(120)})
+                .with_size(ComponentSize{percent(1.0f), pixels(100)})
                 .with_background(Theme::Usage::None)
                 .with_flex_direction(FlexDirection::Row)
+                .with_no_wrap()
                 .with_debug_name("inner_row"));
 
-    // Inner card 1 - use fixed pixel sizes that fit within container
+    // Inner card 1 - smaller to fit within the ~280px available width
     div(context, mk(inner_row.ent(), 0),
         ComponentConfig{}
-            .with_label("Item 1")
-            .with_size(ComponentSize{pixels(80), pixels(90)})
+            .with_label("1")
+            .with_size(ComponentSize{pixels(70), pixels(80)})
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_margin(Margin{.right = DefaultSpacing::tiny()})
             .with_skip_tabbing(true)
             .with_debug_name("inner1"));
 
     // Inner card 2
     div(context, mk(inner_row.ent(), 1),
         ComponentConfig{}
-            .with_label("Item 2")
-            .with_size(ComponentSize{pixels(80), pixels(90)})
+            .with_label("2")
+            .with_size(ComponentSize{pixels(70), pixels(80)})
             .with_background(Theme::Usage::Secondary)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_margin(Margin{.right = DefaultSpacing::tiny()})
             .with_skip_tabbing(true)
             .with_debug_name("inner2"));
 
     // Inner card 3
     div(context, mk(inner_row.ent(), 2),
         ComponentConfig{}
-            .with_label("Item 3")
-            .with_size(ComponentSize{pixels(80), pixels(90)})
+            .with_label("3")
+            .with_size(ComponentSize{pixels(70), pixels(80)})
             .with_background(Theme::Usage::Accent)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
             .with_debug_name("inner3"));
 
