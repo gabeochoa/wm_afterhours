@@ -53,6 +53,7 @@ backward::SignalHandling sh;
 #include "systems/screens/TextInputDemo.h"
 #include "systems/screens/Themes.h"
 #include "systems/screens/ToggleSwitchShowcase.h"
+#include "systems/screens/ModalShowcase.h"
 #include "systems/screens/PaginationShowcase.h"
 #include "systems/screens/RadioGroupShowcase.h"
 #include "systems/screens/ScrollViewShowcase.h"

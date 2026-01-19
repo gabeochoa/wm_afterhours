@@ -1,0 +1,201 @@
+# Modal Dialog Test
+# Tests modal dialog component rendering and interaction
+
+# Navigate to the modals screen
+goto_screen modals
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen modals
+
+# Verify we're on the correct screen
+expect_text "Modal Dialogs"
+
+# =========================================================================
+# Test 1: Click to open modal and validate it opened
+# =========================================================================
+# Click the Simple Modal button
+focus_component btn_simple
+wait 0.2
+key ENTER
+wait 0.5
+
+# Modal should be visible - validate with text
+expect_text "Basic Modal"
+expect_text "This is a simple modal dialog"
+
+# Take screenshot of open modal
+screenshot modals_basic_open
+
+# =========================================================================
+# Test 2: Click close button to close modal
+# =========================================================================
+# Tab to the Close button inside the modal
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Modal should be closed - "Basic Modal" title should not be visible
+# The screen should be back to normal
+screenshot modals_basic_closed_via_button
+
+# Verify background is visible again
+expect_text "Modal Dialogs"
+expect_text "Basic Modals:"
+
+# =========================================================================
+# Test 3: Open modal, click on background button (verify input blocking)
+# =========================================================================
+# First, note the current BG Clicks count
+expect_text "BG Clicks: 0"
+
+# Open the modal
+focus_component btn_simple
+wait 0.2
+key ENTER
+wait 0.5
+
+# Modal should be open
+expect_text "Basic Modal"
+
+# Try to click the background button (should NOT work - modal blocks input)
+# We'll simulate clicking at the location of the background button
+# First, get focus to background button - but it should be blocked
+focus_component btn_background
+wait 0.2
+key ENTER
+wait 0.3
+
+# The BG Clicks count should STILL be 0 because the modal blocks input
+# Close the modal first to check
+key ESCAPE
+wait 0.3
+
+# Now verify the background button was NOT clicked
+expect_text "BG Clicks: 0"
+screenshot modals_input_blocking_verified
+
+# =========================================================================
+# Test 4: Click off modal (backdrop) to dismiss
+# =========================================================================
+# Open the modal again
+focus_component btn_simple
+wait 0.2
+key ENTER
+wait 0.5
+
+# Modal should be open
+expect_text "Basic Modal"
+
+# Click outside the modal (on backdrop) to dismiss
+# Use click with coordinates outside the modal area
+# The modal is centered, so clicking in the corner should hit the backdrop
+click 50 50
+wait 0.5
+
+# Modal should be closed after backdrop click
+screenshot modals_backdrop_dismiss
+
+# Verify background is visible again (modal is closed)
+expect_text "Modal Dialogs"
+expect_text "Basic Modals:"
+
+# =========================================================================
+# Test 5: Escape key closes modal
+# =========================================================================
+# Open a modal
+focus_component btn_simple
+wait 0.2
+key ENTER
+wait 0.5
+
+# Modal should be open
+expect_text "Basic Modal"
+
+# Press Escape to close
+key ESCAPE
+wait 0.3
+
+# Modal should be closed
+screenshot modals_escape_close
+
+# =========================================================================
+# Test 6: modal::confirm helper - test both confirm and cancel
+# =========================================================================
+# Navigate to confirm button
+goto_screen modals
+wait 0.3
+
+# Find and click the modal::confirm button
+focus_component btn_confirm
+wait 0.2
+key ENTER
+wait 0.5
+
+# Confirm dialog should appear
+expect_text "Confirm Action"
+expect_text "Are you sure"
+
+# Take screenshot
+screenshot modals_confirm_open
+
+# Click Cancel button (second button)
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should show Cancelled in results
+screenshot modals_confirm_cancelled
+
+# =========================================================================
+# Test 7: Modal stacking
+# =========================================================================
+# Open the settings modal
+focus_component btn_stacked
+wait 0.2
+key ENTER
+wait 0.5
+
+# Settings modal should appear
+expect_text "Settings"
+expect_text "Enable notifications"
+
+# Take screenshot
+screenshot modals_stacked_settings
+
+# Click "Reset to Defaults" to open nested modal
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+# Nested confirm should appear on top
+expect_text "Reset Settings?"
+
+# Screenshot of stacked modals
+screenshot modals_stacked_confirm
+
+# Close the nested modal with Escape
+key ESCAPE
+wait 0.3
+
+# Settings should still be visible
+expect_text "Settings"
+
+# Close settings
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Final screenshot
+screenshot modals_final
+

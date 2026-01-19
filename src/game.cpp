@@ -24,6 +24,7 @@
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>
+#include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
@@ -206,6 +207,7 @@ void game() {
     afterhours::ui::enforce_singletons<InputAction>(systems);
     afterhours::input::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
+    afterhours::modal::enforce_singletons(systems);
   }
 
   TestSystem *test_system_ptr = nullptr;
@@ -215,6 +217,7 @@ void game() {
     afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
+    afterhours::modal::register_update_systems<InputAction>(systems);
 
     auto test_system = std::make_unique<TestSystem>();
     test_system_ptr = test_system.get();
@@ -223,6 +226,7 @@ void game() {
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
@@ -285,6 +289,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     afterhours::ui::enforce_singletons<InputAction>(systems);
     afterhours::input::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
+    afterhours::modal::enforce_singletons(systems);
   }
 
   TestSystem *test_system_ptr = nullptr;
@@ -294,6 +299,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
+    afterhours::modal::register_update_systems<InputAction>(systems);
 
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
 
@@ -338,6 +344,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
@@ -477,6 +484,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     afterhours::ui::enforce_singletons<InputAction>(systems);
     afterhours::input::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
+    afterhours::modal::enforce_singletons(systems);
   }
 
   {
@@ -484,12 +492,14 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
+    afterhours::modal::register_update_systems<InputAction>(systems);
 
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
   }
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
@@ -671,6 +681,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::ui::enforce_singletons<InputAction>(systems);
     afterhours::input::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
+    afterhours::modal::enforce_singletons(systems);
   }
 
   {
@@ -678,11 +689,13 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
+    afterhours::modal::register_update_systems<InputAction>(systems);
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
   }
 
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::modal::register_render_systems<InputAction>(systems);
     afterhours::ui::register_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
