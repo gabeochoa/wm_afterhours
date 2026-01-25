@@ -6,25 +6,25 @@ goto_screen text_input
 wait 0.5
 
 # Verify we're on the text input screen
-expect_text "Text Input Component Demo"
+expect_text "Text Input Demo"
 expect_text "Enter your details above"
 
 # Fill out Username
-focus_element username_input
+focus_element Username_input
 wait 0.2
 type "testuser"
 wait 0.3
 expect_text "Username: testuser"
 
 # Fill out Email
-focus_element email_input
+focus_element Email_input
 wait 0.2
 type "test@example.com"
 wait 0.3
 expect_text "Email: test@example.com"
 
 # Fill out Password (shows masked)
-focus_element password_input
+focus_element Password_input
 wait 0.2
 type "secretpass"
 wait 0.3

@@ -6,7 +6,7 @@ goto_screen text_input
 wait 0.5
 
 # Verify we're on the text input screen
-expect_text "Text Input Component Demo"
+expect_text "Text Input Demo"
 expect_text "Enter your details above"
 
 # Focus the submit button directly
