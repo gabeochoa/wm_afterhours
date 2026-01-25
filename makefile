@@ -116,6 +116,8 @@ LDFLAGS := -L. -Lvendor/ $(RAYLIB_LIB) $(FRAMEWORKS) $(COVERAGE_LDFLAGS)
 # Directories
 OBJ_DIR := output/objs
 OUTPUT_DIR := output
+TRACE_DIR := $(OUTPUT_DIR)/traces
+TRACE_FILE := $(TRACE_DIR)/ui_tester.trace
 
 # Source files
 MAIN_SRC := $(wildcard src/*.cpp)
@@ -211,7 +213,7 @@ run: output
 	./$(MAIN_EXE)
 
 # Utility targets
-.PHONY: all clean clean-all deps output sign run
+.PHONY: all clean clean-all deps output sign run count countall cppcheck profile
 
 # Code counting
 count:
@@ -228,5 +230,12 @@ cppcheck:
 		--suppress=useInitializationList --suppress=duplicateCondition \
 		--suppress=nullPointerRedundantCheck --suppress=cstyleCast
 
-.PHONY: count countall cppcheck
+
+profile: $(MAIN_EXE)
+	@mkdir -p $(TRACE_DIR)
+	@rm -rf $(TRACE_FILE)
+	-xcrun xctrace record --template 'Time Profiler' --output $(TRACE_FILE) --launch -- ./$(MAIN_EXE)
+	@echo "Trace saved to $(TRACE_FILE)"
+	@echo "Open with: open $(TRACE_FILE)"
+
 
