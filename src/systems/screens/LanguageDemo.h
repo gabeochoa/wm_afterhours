@@ -91,16 +91,24 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                           .with_margin(Spacing::xs)
                           .with_debug_name("header"));
 
-    // Title - with left margin to prevent screen-edge clipping
-    div(context, mk(header.ent(), 0),
+    // Title container - outer div provides spacing, inner div contains text
+    auto title_container =
+        div(context, mk(header.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(300), pixels(60)})
+                .with_background(Theme::Usage::Primary)
+                .with_padding(Padding{.left = pixels(12), .right = pixels(8),
+                                      .top = pixels(4), .bottom = pixels(4)})
+                .with_debug_name("title_container"));
+
+    // Title text - inside padded container to prevent left clipping
+    div(context, mk(title_container.ent(), 0),
         ComponentConfig{}
             .with_label(sample.title)
-            .with_size(ComponentSize{pixels(300), pixels(60)})
-            .with_background(Theme::Usage::Primary)
+            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
             .with_font(font_config.font_name, 26.0f * font_config.size_scale)
-            .with_padding(Spacing::sm)
-            .with_margin(Margin{.left = pixels(8)})
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("title_text"));
 
     // Spacer
     div(context, mk(header.ent(), 1),

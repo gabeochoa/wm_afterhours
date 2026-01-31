@@ -283,7 +283,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       auto &[icon, label, color] = options[i];
       int row = static_cast<int>(i) / 3;
       int col = static_cast<int>(i) % 3;
-      float ox = grid_x + (float)col * col_spacing;
+
+      // Calculate how many items are in this row
+      size_t items_in_row = (row == 0) ? 3 : (options.size() - 3);
+      // Center incomplete rows by offsetting by half the missing columns
+      float row_offset = (3 - items_in_row) * col_spacing / 2.0f;
+
+      float ox = grid_x + row_offset + (float)col * col_spacing;
       float oy = grid_y + (float)row * row_spacing;
 
       bool is_selected = (i == selected_option);

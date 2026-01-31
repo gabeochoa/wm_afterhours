@@ -3,7 +3,23 @@
     "allow": [
       "Bash(find:*)",
       "Bash(done)",
-      "Bash(./run.sh)"
+      "Bash(./run.sh)",
+      "Skill(10x-engineer:brainstorming)",
+      "Bash(xargs basename:*)",
+      "Bash(./build/wm_afterhours:*)",
+      "Bash(./output/ui_tester.exe:*)",
+      "Bash(make clean:*)",
+      "Bash(make:*)",
+      "Bash(clang++:*)",
+      "Bash(grep:*)",
+      "WebSearch",
+      "Bash(identify -verbose:*)",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Skill(10x-engineer:writing-plans)",
+      "Bash(python3:*)",
+      "Bash(xargs:*)",
+      "Skill(interface-design)"
     ]
   }
 }

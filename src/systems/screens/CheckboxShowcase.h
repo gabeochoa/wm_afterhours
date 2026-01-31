@@ -233,7 +233,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
             .with_label("Multi-Select")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_size(ComponentSize{percent(0.85f), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
@@ -249,7 +249,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                                                    "Option C", "Option D"},
                    {-1, -1}, // No min/max constraints
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.90f), pixels(52)})
+                       .with_size(ComponentSize{percent(0.80f), pixels(52)})
                        .with_flex_direction(FlexDirection::Column)
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -260,7 +260,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_col.ent(), 2),
         ComponentConfig{}
             .with_label("Min/Max (1-2)")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_size(ComponentSize{percent(0.85f), pixels(32)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
@@ -276,7 +276,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         std::array<std::string_view, 3>{"Choice 1", "Choice 2", "Choice 3"},
         {1, 2}, // Min 1, max 2 selections
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), pixels(52)})
+            .with_size(ComponentSize{percent(0.80f), pixels(52)})
             .with_flex_direction(FlexDirection::Column)
             .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)

@@ -147,7 +147,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // ========== MENU CATEGORIES ==========
-    float menu_x = 170.0f;
+    float menu_x = 185.0f;
     float menu_y = 150.0f;
 
     for (size_t i = 0; i < categories.size(); i++) {
@@ -162,6 +162,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(menu_x, menu_y + (float)i * 32.0f)
                      .with_font("EqProRounded", 19.0f)
                      .with_custom_text_color(item_color)
+                     .with_alignment(TextAlignment::Left)
+                     .with_padding(Padding{.left = pixels(8)})
                      .with_debug_name("cat_" + std::to_string(i)))) {
         selected_category = i;
       }

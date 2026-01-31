@@ -450,10 +450,12 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{
                          pixels(220), pixels(static_cast<int>(row_h - 4))})
                      .with_absolute_position()
-                     .with_translate(panel_x, ry + 2.0f)
+                     .with_translate(panel_x + 16.0f, ry + 2.0f)
                      .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(label_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                     .with_alignment(TextAlignment::Left)
+                     .with_padding(Padding{.left = pixels(8)})
                      .with_debug_name("label_" + std::to_string(i)))) {
         selected_row = i;
       }

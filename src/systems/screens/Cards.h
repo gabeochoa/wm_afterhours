@@ -45,10 +45,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_margin(Spacing::md)
             .with_debug_name("title"));
 
     // Row 1: Basic cards - all simple like theme swatches
@@ -124,10 +121,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::Center)
-                        .with_margin(Margin{.top = DefaultSpacing::small(),
-                                            .bottom = pixels(0),
-                                            .left = pixels(0),
-                                            .right = pixels(0)})
+                        .with_margin(Spacing::sm)
                         .with_debug_name("row2_nested"));
 
     // Nested card container - wider to fit inner cards
@@ -171,7 +165,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Margin{.right = DefaultSpacing::small()})
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("inner1"));
 
@@ -184,7 +178,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Margin{.right = DefaultSpacing::small()})
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("inner2"));
 
@@ -238,10 +232,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
-                        .with_margin(Margin{.top = DefaultSpacing::small(),
-                                            .bottom = pixels(0),
-                                            .left = pixels(0),
-                                            .right = pixels(0)})
+                        .with_margin(Spacing::sm)
                         .with_debug_name("row3_themes"));
 
     div(context, mk(row3.ent(), 0),

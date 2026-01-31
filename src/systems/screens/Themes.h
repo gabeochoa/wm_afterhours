@@ -151,6 +151,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_size(ComponentSize{pixels(210), pixels(48)})
                   .with_background(selected ? Theme::Usage::Accent
                                             : Theme::Usage::Secondary)
+                  .with_auto_text_color(true)
                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                   .with_margin(Spacing::sm)
                   .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {

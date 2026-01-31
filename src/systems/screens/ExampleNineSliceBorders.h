@@ -117,7 +117,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
-    float start_x = 40.0f;
+    float start_x = 60.0f;
     float start_y = 70.0f; // Account for taller title
     float box_width = 140.0f;
     float box_height = 100.0f;

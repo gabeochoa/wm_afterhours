@@ -114,6 +114,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(sidebar_x, sidebar_y)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_white)
+            .with_padding(Padding{.left = pixels(8)})
+            .with_alignment(TextAlignment::Left)
             .with_debug_name("sidebar_header"));
 
     // Sidebar items
@@ -131,6 +133,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(sidebar_x, item_y)
                      .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(item_color)
+                     .with_padding(Padding{.left = pixels(8)})
+                     .with_alignment(TextAlignment::Left)
                      .with_debug_name("initial_" + std::to_string(i)))) {
         selected_initial = i;
       }

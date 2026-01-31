@@ -292,6 +292,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(cur_x + 55.0f, 25.0f)
             .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(dark_text)
+            .with_alignment(TextAlignment::Right)
             .with_debug_name("money"));
 
     // ========== STATUS ICONS ==========

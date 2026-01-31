@@ -132,43 +132,61 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_debug_name("close_btn"));
 
     // ========== TOGGLE BUTTONS (Music, Sound, Vibration) ==========
-    float toggle_y = panel_y + 115.0f;
+    float toggle_y = panel_y + 110.0f;
     float toggle_x = panel_x + 80.0f;
     float toggle_spacing = 100.0f;
 
-    // Use simple characters that render properly
-    std::vector<std::pair<std::string, bool *>> toggles = {
-        {"~", &music_on},     // Music note
-        {"*", &sound_on},     // Sound/speaker
-        {"o", &vibration_on}, // Vibration/phone
+    // Icon symbols with descriptive text labels for clarity
+    struct ToggleInfo {
+      std::string icon;
+      std::string label;
+      bool *state;
+    };
+    std::vector<ToggleInfo> toggles = {
+        {"M", "Music", &music_on},
+        {"S", "Sound", &sound_on},
+        {"V", "Vibrate", &vibration_on},
     };
 
     for (size_t i = 0; i < toggles.size(); i++) {
       float tx = toggle_x + (float)i * toggle_spacing;
-      bool is_on = *toggles[i].second;
+      bool is_on = *toggles[i].state;
       afterhours::Color bg_col =
           is_on ? btn_green : afterhours::Color{165, 165, 165, 255};
       afterhours::Color border_col =
           is_on ? btn_green_dark : afterhours::Color{125, 125, 125, 255};
 
+      // Icon button
       if (button(context, mk(entity, 30 + static_cast<int>(i)),
                  ComponentConfig{}
-                     .with_label(toggles[i].first)
-                     .with_size(ComponentSize{pixels(75), pixels(75)})
+                     .with_label(toggles[i].icon)
+                     .with_size(ComponentSize{pixels(75), pixels(55)})
                      .with_absolute_position()
                      .with_translate(tx, toggle_y)
                      .with_custom_background(bg_col)
                      .with_border(border_col, 5.0f)
-                     .with_font("EqProRounded", 36.0f)
+                     .with_font("EqProRounded", 28.0f)
                      .with_custom_text_color(text_white)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
-                     .with_roundness(1.0f)
+                     .with_roundness(0.6f)
                      .with_soft_shadow(3.0f, 5.0f, 10.0f,
                                        afterhours::Color{0, 0, 0, 60})
                      .with_debug_name("toggle_" + std::to_string(i)))) {
-        *toggles[i].second = !(*toggles[i].second);
+        *toggles[i].state = !(*toggles[i].state);
       }
+
+      // Text label below the button for clarity
+      div(context, mk(entity, 35 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_label(toggles[i].label)
+              .with_size(ComponentSize{pixels(75), pixels(18)})
+              .with_absolute_position()
+              .with_translate(tx, toggle_y + 58.0f)
+              .with_font("EqProRounded", 14.0f)
+              .with_custom_text_color(text_dark)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("toggle_label_" + std::to_string(i)));
     }
 
     // Save/Load Progress button
@@ -203,21 +221,33 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_progress"));
 
-    // WiFi icon
+    // WiFi/Cloud sync icon with label
     div(context, mk(entity, 43),
         ComponentConfig{}
-            .with_label("(O)")
-            .with_size(ComponentSize{pixels(50), pixels(50)})
+            .with_label("W")
+            .with_size(ComponentSize{pixels(50), pixels(36)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 10.0f)
+            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 5.0f)
             .with_custom_background(wifi_green)
             .with_border(afterhours::Color{55, 165, 115, 255}, 3.0f)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
+            .with_roundness(0.5f)
             .with_debug_name("wifi_icon"));
+
+    // WiFi label for clarity
+    div(context, mk(entity, 44),
+        ComponentConfig{}
+            .with_label("Sync")
+            .with_size(ComponentSize{pixels(50), pixels(16)})
+            .with_absolute_position()
+            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 44.0f)
+            .with_font("EqProRounded", 12.0f)
+            .with_custom_text_color(text_dark)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("wifi_label"));
 
     // ========== BLUE PILL BUTTONS ==========
     float btn_y1 = toggle_y + 100.0f;

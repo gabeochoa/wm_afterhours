@@ -125,6 +125,38 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, 16.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("vert_info"));
+
+      // Vertical scroll indicator
+      float track_height = 120.0f;
+      float thumb_ratio = sv.viewport_size.y /
+                          std::max(sv.content_size.y, sv.viewport_size.y);
+      float thumb_height = std::max(20.0f, track_height * thumb_ratio);
+      float scroll_ratio =
+          max_scroll > 0.0f ? sv.scroll_offset.y / max_scroll : 0.0f;
+      float thumb_offset = scroll_ratio * (track_height - thumb_height);
+
+      // Indicator track (dark background)
+      auto vert_track = div(
+          context, mk(vert_section.ent(), 3),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(8), pixels(track_height)})
+              .with_custom_background(afterhours::Color{100, 100, 100, 180})
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_self_align(SelfAlign::FlexEnd)
+              .with_margin(Margin{.top = pixels(4)})
+              .with_debug_name("vert_indicator_track"));
+
+      // Indicator thumb (bright, visible)
+      div(context, mk(vert_track.ent(), 0),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(8), pixels(thumb_height)})
+              .with_custom_background(afterhours::Color{70, 130, 180, 255})
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_absolute_position()
+              .with_translate(pixels(0), pixels(thumb_offset))
+              .with_debug_name("vert_indicator_thumb"));
     }
 
     // Vertical scroll items
@@ -164,6 +196,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Row)
             .with_no_wrap()
+            .with_padding(Padding{.left = pixels(8), .right = pixels(8)})
             .with_debug_name("horiz_scroll"));
 
     // Configure horizontal scrolling
@@ -182,6 +215,38 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, 16.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("horiz_info"));
+
+      // Horizontal scroll indicator
+      float track_width = 150.0f;
+      float thumb_ratio = sv.viewport_size.x /
+                          std::max(sv.content_size.x, sv.viewport_size.x);
+      float thumb_width = std::max(20.0f, track_width * thumb_ratio);
+      float scroll_ratio =
+          max_scroll > 0.0f ? sv.scroll_offset.x / max_scroll : 0.0f;
+      float thumb_offset = scroll_ratio * (track_width - thumb_width);
+
+      // Indicator track (dark background)
+      auto horiz_track = div(
+          context, mk(horiz_section.ent(), 3),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(track_width), pixels(8)})
+              .with_custom_background(afterhours::Color{100, 100, 100, 180})
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_self_align(SelfAlign::Center)
+              .with_margin(Margin{.top = pixels(8)})
+              .with_debug_name("horiz_indicator_track"));
+
+      // Indicator thumb (bright, visible)
+      div(context, mk(horiz_track.ent(), 0),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(thumb_width), pixels(8)})
+              .with_custom_background(afterhours::Color{0, 120, 215, 255})
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_absolute_position()
+              .with_translate(pixels(thumb_offset), pixels(0))
+              .with_debug_name("horiz_indicator_thumb"));
     }
 
     // Horizontal scroll items

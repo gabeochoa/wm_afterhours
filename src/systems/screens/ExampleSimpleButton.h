@@ -113,7 +113,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("subtitle"));
 
     // The button!
-    float button_width = 200.0f;
+    float button_width = 310.0f;
     float button_height = 60.0f;
     float button_x = card_x + (card_w - button_width) / 2.0f;
     float button_y = card_y + 115.0f;
@@ -135,6 +135,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                    .with_rounded_corners(std::bitset<4>(0b1111))
                    .with_roundness(0.5f)
                    .with_alignment(TextAlignment::Center)
+                   .with_padding(Spacing::md)
                    .with_debug_name("example_button"));
 
     if (button_result) {

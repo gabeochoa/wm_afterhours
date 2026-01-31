@@ -187,23 +187,20 @@ clean-all: clean
 	rm -f $(MAIN_EXE)
 	@echo "Cleaned all"
 
-# Resource copying
+# Resource copying (use symlink for speed)
 ifeq ($(UNAME_S),Darwin)
-    mkdir_cmd := mkdir -p $(OUTPUT_DIR)/resources/
-    cp_resources_cmd := cp -r resources/* $(OUTPUT_DIR)/resources/
+    cp_resources_cmd := rm -rf $(OUTPUT_DIR)/resources && ln -s $(CURDIR)/resources $(OUTPUT_DIR)/resources
     sign_cmd := codesign -s - -f --verbose --entitlements ent.plist
 else ifeq ($(OS),Windows_NT)
     mkdir_cmd := powershell -command "& {&'New-Item' -Path .\ -Name $(OUTPUT_DIR)\resources -ItemType directory -ErrorAction SilentlyContinue}"
     cp_resources_cmd := powershell -command "& {&'Copy-Item' .\resources\* $(OUTPUT_DIR)\resources -ErrorAction SilentlyContinue}"
     sign_cmd :=
 else
-    mkdir_cmd := mkdir -p $(OUTPUT_DIR)/resources/
-    cp_resources_cmd := cp -r resources/* $(OUTPUT_DIR)/resources/
+    cp_resources_cmd := rm -rf $(OUTPUT_DIR)/resources && ln -s $(CURDIR)/resources $(OUTPUT_DIR)/resources
     sign_cmd :=
 endif
 
 output: $(MAIN_EXE)
-	$(mkdir_cmd)
 	$(cp_resources_cmd)
 
 sign: $(MAIN_EXE)

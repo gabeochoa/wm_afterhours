@@ -29,7 +29,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.55f), pixels(600)})
+                .with_size(ComponentSize{screen_pct(0.55f), pixels(480)})
                 .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.08f)
@@ -73,7 +73,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                   ComponentConfig{}
                       .with_label("Notifications")
                       .with_size(ComponentSize{percent(0.95f), pixels(36)})
-                      .with_background(Theme::Usage::Surface)
+                      .with_background(Theme::Usage::None)
                       .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                       .with_margin(Spacing::xs)
                       .with_debug_name("notifications"),
@@ -83,7 +83,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                   ComponentConfig{}
                       .with_label("Sound Effects")
                       .with_size(ComponentSize{percent(0.95f), pixels(36)})
-                      .with_background(Theme::Usage::Surface)
+                      .with_background(Theme::Usage::None)
                       .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                       .with_margin(Spacing::xs)
                       .with_debug_name("sound"),
@@ -93,7 +93,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                   ComponentConfig{}
                       .with_label("Vibration")
                       .with_size(ComponentSize{percent(0.95f), pixels(36)})
-                      .with_background(Theme::Usage::Surface)
+                      .with_background(Theme::Usage::None)
                       .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                       .with_margin(Spacing::xs)
                       .with_debug_name("vibration"),
@@ -116,7 +116,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                   ComponentConfig{}
                       .with_label("Dark Mode")
                       .with_size(ComponentSize{percent(0.95f), pixels(36)})
-                      .with_background(Theme::Usage::Surface)
+                      .with_background(Theme::Usage::None)
                       .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                       .with_margin(Spacing::xs)
                       .with_debug_name("dark_mode"),
@@ -126,7 +126,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                   ComponentConfig{}
                       .with_label("Auto-Save")
                       .with_size(ComponentSize{percent(0.95f), pixels(36)})
-                      .with_background(Theme::Usage::Surface)
+                      .with_background(Theme::Usage::None)
                       .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                       .with_margin(Spacing::xs)
                       .with_debug_name("auto_save"),
@@ -134,20 +134,17 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Status (removed cloud_sync toggle to fit)
     std::string status = fmt::format(
-        "Notif:{} Sound:{} Vib:{} Dark:{} Save:{}",
-        enable_notifications ? "ON" : "OFF", enable_sound ? "ON" : "OFF",
-        enable_vibration ? "ON" : "OFF", dark_mode ? "ON" : "OFF",
-        auto_save ? "ON" : "OFF");
+        "Notifications:{} Dark Mode:{}",
+        enable_notifications ? "ON" : "OFF", dark_mode ? "ON" : "OFF");
 
     div(context, mk(main_container.ent(), 8),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(0.95f), pixels(30)})
+            .with_size(ComponentSize{percent(0.90f), pixels(26)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
+            .with_font(UIComponent::DEFAULT_FONT, 11.0f)
             .with_skip_tabbing(true)
             .with_debug_name("status"));
   }

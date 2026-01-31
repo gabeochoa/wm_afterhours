@@ -99,7 +99,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row1.ent(), 1),
                ComponentConfig{}
                    .with_label("Simple Modal")
-                   .with_size(ComponentSize{pixels(150), pixels(50)})
+                   .with_size(ComponentSize{pixels(180), pixels(60)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -110,7 +110,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row1.ent(), 2),
                ComponentConfig{}
                    .with_label("Composable Modal")
-                   .with_size(ComponentSize{pixels(180), pixels(50)})
+                   .with_size(ComponentSize{pixels(210), pixels(60)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -146,7 +146,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("modal::info")
-                   .with_size(ComponentSize{pixels(130), pixels(50)})
+                   .with_size(ComponentSize{pixels(160), pixels(60)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -157,7 +157,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 2),
                ComponentConfig{}
                    .with_label("modal::confirm")
-                   .with_size(ComponentSize{pixels(150), pixels(50)})
+                   .with_size(ComponentSize{pixels(180), pixels(60)})
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -169,7 +169,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 3),
                ComponentConfig{}
                    .with_label("modal::fyi")
-                   .with_size(ComponentSize{pixels(130), pixels(50)})
+                   .with_size(ComponentSize{pixels(160), pixels(60)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -206,7 +206,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row3.ent(), 1),
                ComponentConfig{}
                    .with_label("Open Settings (with nested confirm)")
-                   .with_size(ComponentSize{pixels(320), pixels(50)})
+                   .with_size(ComponentSize{pixels(350), pixels(60)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -244,7 +244,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row4.ent(), 1),
                ComponentConfig{}
                    .with_label("Background Button")
-                   .with_size(ComponentSize{pixels(180), pixels(50)})
+                   .with_size(ComponentSize{pixels(210), pixels(60)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_margin(Spacing::sm)
@@ -303,7 +303,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_padding(Spacing::sm)
+            .with_alignment(TextAlignment::Left)
+            .with_margin(Margin{.left = DefaultSpacing::medium()})
             .with_debug_name("results"));
 
     // =========================================================================
