@@ -242,12 +242,13 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== TOP RIGHT: Currency ==========
     // IDs 10-13 are used by title text, start at 50
-    float cur_x = (float)screen_w - 255.0f;
+    // Increased width to prevent currency text clipping for large amounts
+    float cur_x = (float)screen_w - 300.0f;
 
-    // Currency pill
+    // Currency pill - wider to fit full amount like $1,250,980
     div(context, mk(entity, 55),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(225), pixels(52)})
+            .with_size(ComponentSize{pixels(275), pixels(52)})
             .with_absolute_position()
             .with_translate(cur_x, 18.0f)
             .with_custom_background(white)
@@ -286,10 +287,10 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 57),
         ComponentConfig{}
             .with_label(format_money(cash))
-            .with_size(ComponentSize{pixels(165), pixels(38)})
+            .with_size(ComponentSize{pixels(210), pixels(38)})
             .with_absolute_position()
             .with_translate(cur_x + 55.0f, 25.0f)
-            .with_font("EqProRounded", 28.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("money"));
 

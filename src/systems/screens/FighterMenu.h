@@ -422,13 +422,13 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("return_label"));
 
-    // L/R for change entry
+    // L/R for change entry - moved left to prevent clipping
     div(context, mk(entity, 430),
         ComponentConfig{}
             .with_label("L")
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
-            .with_translate(690.0f, prompt_y + 2.0f)
+            .with_translate(670.0f, prompt_y + 2.0f)
             .with_custom_background(menu_item_bg)
             .with_border(text_gray, 1.0f)
             .with_font("EqProRounded", 19.0f)
@@ -441,7 +441,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("R")
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
-            .with_translate(720.0f, prompt_y + 2.0f)
+            .with_translate(700.0f, prompt_y + 2.0f)
             .with_custom_background(menu_item_bg)
             .with_border(text_gray, 1.0f)
             .with_font("EqProRounded", 19.0f)
@@ -452,9 +452,9 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 432),
         ComponentConfig{}
             .with_label(": Change Entry")
-            .with_size(ComponentSize{pixels(120), pixels(30)})
+            .with_size(ComponentSize{pixels(130), pixels(30)})
             .with_absolute_position()
-            .with_translate(750.0f, prompt_y)
+            .with_translate(730.0f, prompt_y)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("change_label"));

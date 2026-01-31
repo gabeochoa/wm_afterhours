@@ -99,9 +99,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // ========== LEFT SIDEBAR: INITIAL SETTINGS ==========
-    float sidebar_x = 35.0f;
+    // Position sidebar further from left edge to prevent clipping
+    float sidebar_x = 55.0f;
     float sidebar_y = 150.0f;
-    float sidebar_w = 230.0f;
+    float sidebar_w = 210.0f;
 
     // Sidebar header
     div(context, mk(entity, 60),
@@ -128,7 +129,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(static_cast<int>(sidebar_w)), pixels(28)})
                      .with_absolute_position()
                      .with_translate(sidebar_x, item_y)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(item_color)
                      .with_debug_name("initial_" + std::to_string(i)))) {
         selected_initial = i;

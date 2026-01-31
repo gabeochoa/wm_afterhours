@@ -77,27 +77,29 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto main = div(context, mk(background.ent(), 0),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                        .with_padding(Spacing::sm)
+                        .with_padding(Spacing::md)
                         .with_flex_direction(FlexDirection::Column)
                         .with_debug_name("main"));
 
     // ===== HEADER ROW (80px) =====
     auto header = div(context, mk(main.ent(), 0),
                       ComponentConfig{}
-                          .with_size(ComponentSize{pixels(1000), pixels(80)})
+                          .with_size(ComponentSize{percent(1.0f), pixels(80)})
                           .with_custom_background(theme.surface)
                           .with_padding(Spacing::sm)
                           .with_flex_direction(FlexDirection::Row)
                           .with_margin(Spacing::xs)
                           .with_debug_name("header"));
 
-    // Title
+    // Title - with left margin to prevent screen-edge clipping
     div(context, mk(header.ent(), 0),
         ComponentConfig{}
             .with_label(sample.title)
-            .with_size(ComponentSize{pixels(280), pixels(60)})
+            .with_size(ComponentSize{pixels(300), pixels(60)})
             .with_background(Theme::Usage::Primary)
-            .with_font(font_config.font_name, 32.0f * font_config.size_scale)
+            .with_font(font_config.font_name, 26.0f * font_config.size_scale)
+            .with_padding(Spacing::sm)
+            .with_margin(Margin{.left = pixels(8)})
             .with_debug_name("title"));
 
     // Spacer
@@ -250,7 +252,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // ===== FOOTER ROW (60px) =====
     auto footer = div(context, mk(main.ent(), 2),
                       ComponentConfig{}
-                          .with_size(ComponentSize{pixels(1000), pixels(60)})
+                          .with_size(ComponentSize{percent(1.0f), pixels(60)})
                           .with_custom_background(theme.surface)
                           .with_padding(Spacing::xs)
                           .with_flex_direction(FlexDirection::Column)

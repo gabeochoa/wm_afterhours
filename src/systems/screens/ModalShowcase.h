@@ -48,6 +48,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.90f)})
             .with_custom_background(theme.background)
             .with_roundness(0.08f)
+            .with_self_align(SelfAlign::Center)
             .with_debug_name("modal_bg"));
 
     auto main_container =
@@ -301,6 +302,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                         "  Cancels: " + std::to_string(cancel_count))
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_padding(Spacing::sm)
             .with_debug_name("results"));
 
     // =========================================================================
