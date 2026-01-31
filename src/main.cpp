@@ -82,6 +82,9 @@ bool g_mcp_mode = false;
 int g_saved_stdout_fd = -1; // Used by MCP to write JSON to original stdout
 #endif
 
+bool g_headless_mode = false;
+std::string g_headless_output_dir = "output/";
+
 int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
 
@@ -123,6 +126,7 @@ int main(int argc, char *argv[]) {
 #ifdef AFTER_HOURS_ENABLE_MCP
     std::cout << "  --mcp                        Enable MCP server mode\n";
 #endif
+    std::cout << "  --headless-screenshots [dir] Render all screens to PNG without display (default: output/)\n";
     std::cout << "\nE2E Testing:\n";
     std::cout << "  --e2e                        Enable E2E test mode\n";
     std::cout << "  --test-script <path>         Run single E2E script\n";
@@ -145,6 +149,22 @@ int main(int argc, char *argv[]) {
 
   if (cmdl["--list-screens"]) {
     ExampleScreenRegistry::get().list_screens();
+    return 0;
+  }
+
+  // Headless screenshots mode
+  // Check both as flag (--headless-screenshots alone) and as parameter (--headless-screenshots <dir>)
+  std::string headless_output_dir;
+  bool has_headless_flag = cmdl["--headless-screenshots"];
+  bool has_headless_param = static_cast<bool>(cmdl({"--headless-screenshots"}) >> headless_output_dir);
+
+  if (has_headless_flag || has_headless_param) {
+    g_headless_mode = true;
+    if (has_headless_param && !headless_output_dir.empty()) {
+      g_headless_output_dir = headless_output_dir;
+    }
+    std::cout << "Headless mode enabled, output dir: " << g_headless_output_dir << "\n";
+    run_headless_screenshots();
     return 0;
   }
 

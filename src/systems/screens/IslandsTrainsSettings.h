@@ -473,6 +473,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(islands_trains_settings, "Game Mockups",
-                        "Calm puzzle game settings (Islands & Trains style)",
-                        IslandsTrainsSettingsScreen)
+// TODO: Fix entity ID conflict in vertical_gradient before re-enabling
+// REGISTER_EXAMPLE_SCREEN(islands_trains_settings, "Game Mockups",
+//                         "Calm puzzle game settings (Islands & Trains style)",
+//                         IslandsTrainsSettingsScreen)
