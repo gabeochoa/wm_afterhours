@@ -227,7 +227,7 @@ void game() {
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
     afterhours::modal::register_render_systems<InputAction>(systems);
-    afterhours::ui::register_render_systems<InputAction>(
+    afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
@@ -345,7 +345,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
     afterhours::modal::register_render_systems<InputAction>(systems);
-    afterhours::ui::register_render_systems<InputAction>(
+    afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
@@ -500,7 +500,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
     afterhours::modal::register_render_systems<InputAction>(systems);
-    afterhours::ui::register_render_systems<InputAction>(
+    afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
@@ -696,7 +696,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   {
     systems.register_render_system(std::make_unique<BeginWorldRender>());
     afterhours::modal::register_render_systems<InputAction>(systems);
-    afterhours::ui::register_render_systems<InputAction>(
+    afterhours::ui::register_batched_render_systems<InputAction>(
         systems, InputAction::ToggleUILayoutDebug);
     systems.register_render_system(std::make_unique<EndWorldRender>());
     systems.register_render_system(
