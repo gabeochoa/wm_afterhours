@@ -282,6 +282,5 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-// TODO: NotoSansKR font not loaded in headless mode - re-enable when font loading is fixed
-// REGISTER_EXAMPLE_SCREEN(language_demo, "System Demos",
-//                         "Multi-language font support demo", LanguageDemoScreen)
+REGISTER_EXAMPLE_SCREEN(language_demo, "System Demos",
+                        "Multi-language font support demo", LanguageDemoScreen)
