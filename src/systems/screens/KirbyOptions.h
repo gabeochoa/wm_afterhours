@@ -166,8 +166,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== MAIN CONTENT PANEL ==========
     float panel_x = 130.0f;
     float panel_y = 130.0f;
-    float panel_w = 620.0f;
-    float panel_h = 400.0f;
+    float panel_w = static_cast<float>(screen_w) - 180.0f;  // Wider panel
+    float panel_h = static_cast<float>(screen_h) - 180.0f;  // Taller panel
 
     div(context, mk(entity, 50),
         ComponentConfig{}
@@ -278,11 +278,11 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("common_label"));
 
     // ========== OPTIONS GRID (2 columns) ==========
-    float grid_x = panel_x + 35.0f;
+    float grid_x = panel_x + 100.0f;  // More centered
     float grid_y = panel_y + 135.0f;
-    float icon_size = 70.0f;
-    float col_spacing = 150.0f;
-    float row_spacing = 95.0f;
+    float icon_size = 80.0f;   // Larger icons
+    float col_spacing = 170.0f;
+    float row_spacing = 110.0f;
 
     for (size_t i = 0; i < options.size(); i++) {
       auto &[icon, label, color] = options[i];
@@ -351,28 +351,6 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("Gaegu-Bold", 20.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("description"));
-
-    // ========== LEFT DECORATIVE ELEMENTS (checkerboard pattern hint)
-    // ==========
-    float check_x = 30.0f;
-    float check_y = panel_y + panel_h - 80.0f;
-    afterhours::Color check1{195, 225, 195, 255}; // Light green
-    afterhours::Color check2{175, 205, 235, 255}; // Light blue
-
-    for (int row = 0; row < 3; row++) {
-      for (int col = 0; col < 4; col++) {
-        afterhours::Color c = ((row + col) % 2 == 0) ? check1 : check2;
-        div(context, mk(entity, 400 + row * 4 + col),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(18), pixels(18)})
-                .with_absolute_position()
-                .with_translate(check_x + (float)col * 22.0f,
-                                check_y + (float)row * 22.0f)
-                .with_custom_background(c)
-                .with_debug_name("check_" + std::to_string(row) + "_" +
-                                 std::to_string(col)));
-      }
-    }
   }
 };
 

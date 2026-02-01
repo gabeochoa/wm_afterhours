@@ -138,8 +138,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 14),
         ComponentConfig{}
             .with_label(
-                "Body text for readable content that flows naturally across "
-                "multiple lines and maintains excellent legibility.")
+                "Body text for readable content that flows naturally "
+                "and maintains excellent legibility.")
             .with_size(ComponentSize{pixels(col_w), pixels(80)})
             .with_absolute_position()
             .with_translate(left_col, content_y + left_spacing * 2.7f)

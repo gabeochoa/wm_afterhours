@@ -78,18 +78,16 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     StyleRow rows[] = {{"Raised", BevelStyle::Raised},
                        {"Sunken", BevelStyle::Sunken}};
-    float thicknesses[] = {1.0f, 2.0f, 3.0f, 4.0f};
+    float thicknesses[] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
 
     float cell = 100.0f;
     float gap = 16.0f;
     float row_label_width = 100.0f;
-    float big_size = 150.0f;
-    float big_gap = 24.0f;
     float col_header_height = 28.0f;
 
     // Calculate total content width and center horizontally
-    float grid_width = 4 * cell + 3 * gap;  // 4 cells with 3 gaps between
-    float content_width = row_label_width + 20.0f + grid_width + big_gap + big_size;
+    float grid_width = 6 * cell + 5 * gap;  // 6 cells with 5 gaps between
+    float content_width = row_label_width + 20.0f + grid_width;
 
     // Header area: title bar ends at ~60, legend ends at ~88
     float header_bottom = 96.0f;
@@ -97,7 +95,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     float start_x = (screen_width - content_width) / 2.0f + row_label_width + 20.0f;
     float start_y = header_bottom + col_header_height + 16.0f;
 
-    for (int c = 0; c < 4; ++c) {
+    for (int c = 0; c < 6; ++c) {
       div(context, mk(entity, 10 + c),
           ComponentConfig{}
               .with_label(fmt::format("{}px", static_cast<int>(thicknesses[c])))
@@ -124,7 +122,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center)
               .with_debug_name("row_label_" + std::to_string(r)));
 
-      for (int c = 0; c < 4; ++c) {
+      for (int c = 0; c < 6; ++c) {
         float x = start_x + c * (cell + gap);
         float y = start_y + r * (cell + gap);
         afterhours::Color fill = panel;
@@ -147,35 +145,6 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                                  std::to_string(c)));
       }
     }
-
-    float big_x = start_x + grid_width + big_gap;
-    float big_y = start_y;
-
-    div(context, mk(entity, 300),
-        ComponentConfig{}
-            .with_label("Raised 6px")
-            .with_size(ComponentSize{pixels(big_size), pixels(big_size)})
-            .with_absolute_position()
-            .with_translate(big_x, big_y)
-            .with_custom_background(panel)
-            .with_bevel(BevelStyle::Raised, light_edge, dark_edge, 6.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("big_raised"));
-
-    div(context, mk(entity, 301),
-        ComponentConfig{}
-            .with_label("Sunken 6px")
-            .with_size(ComponentSize{pixels(big_size), pixels(big_size)})
-            .with_absolute_position()
-            .with_translate(big_x, big_y + big_size + gap)
-            .with_custom_background(panel)
-            .with_bevel(BevelStyle::Sunken, light_edge, dark_edge, 6.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(sunken_text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("big_sunken"));
   }
 };
 

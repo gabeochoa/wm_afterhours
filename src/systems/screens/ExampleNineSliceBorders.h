@@ -118,11 +118,11 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     float start_x = 60.0f;
-    float start_y = 70.0f; // Account for taller title
+    float start_y = 60.0f; // Reduced to fit more content
     float box_width = 140.0f;
-    float box_height = 100.0f;
-    float gap = 20.0f;
-    float label_height = 25.0f;
+    float box_height = 85.0f;  // Reduced from 100
+    float gap = 15.0f;  // Reduced from 20
+    float label_height = 22.0f;  // Reduced from 25
 
     // Title - needs to be tall enough for font + 9-slice border insets
     div(context, mk(entity, 1),
@@ -220,7 +220,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(400), pixels(label_height)})
             .with_absolute_position()
             .with_translate(start_x, row3_y - label_height - 5)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_custom_text_color(gold_accent)
             .with_debug_name("row3_label"));
 
@@ -228,7 +228,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 50),
         ComponentConfig{}
             .with_label("Small")
-            .with_size(ComponentSize{pixels(80), pixels(60)})
+            .with_size(ComponentSize{pixels(80), pixels(55)})
             .with_absolute_position()
             .with_translate(start_x, row3_y)
             .with_nine_slice_border(panel_010, 16)
@@ -241,11 +241,11 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 51),
         ComponentConfig{}
             .with_label("Medium")
-            .with_size(ComponentSize{pixels(150), pixels(80)})
+            .with_size(ComponentSize{pixels(130), pixels(70)})
             .with_absolute_position()
-            .with_translate(start_x + 100, row3_y)
+            .with_translate(start_x + 95, row3_y)
             .with_nine_slice_border(panel_010, 16)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("size_medium"));
@@ -254,11 +254,11 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 52),
         ComponentConfig{}
             .with_label("Large Panel")
-            .with_size(ComponentSize{pixels(220), pixels(100)})
+            .with_size(ComponentSize{pixels(180), pixels(85)})
             .with_absolute_position()
-            .with_translate(start_x + 270, row3_y)
+            .with_translate(start_x + 240, row3_y)
             .with_nine_slice_border(panel_010, 16)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("size_large"));
@@ -266,12 +266,12 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Wide
     div(context, mk(entity, 53),
         ComponentConfig{}
-            .with_label("Wide Panel - Good for menus and headers")
-            .with_size(ComponentSize{pixels(400), pixels(60)})
+            .with_label("Wide Panel - Good for menus")
+            .with_size(ComponentSize{pixels(350), pixels(55)})
             .with_absolute_position()
-            .with_translate(start_x + 510, row3_y)
+            .with_translate(start_x + 440, row3_y)
             .with_nine_slice_border(panel_015, 16)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("size_wide"));
@@ -280,17 +280,17 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 54),
         ComponentConfig{}
             .with_label("Tall")
-            .with_size(ComponentSize{pixels(80), pixels(140)})
+            .with_size(ComponentSize{pixels(70), pixels(110)})
             .with_absolute_position()
-            .with_translate(start_x + 930, row3_y - 40)
+            .with_translate(start_x + 810, row3_y - 25)
             .with_nine_slice_border(panel_005, 16)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("size_tall"));
 
     // Row 4: Double-width borders and tinting
-    float row4_y = row3_y + 120 + gap + label_height;
+    float row4_y = row3_y + 100 + gap + label_height;
 
     div(context, mk(entity, 60),
         ComponentConfig{}
@@ -382,7 +382,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("tint_green"));
 
     // Interactive button example
-    float row5_y = row4_y + box_height + gap * 2;
+    float row5_y = row4_y + box_height + gap + 5;
 
     div(context, mk(entity, 75),
         ComponentConfig{}

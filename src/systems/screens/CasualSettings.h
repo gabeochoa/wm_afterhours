@@ -125,6 +125,9 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         {"[]", &vibrate_on, "vibrate"} // Phone vibrate symbol
     };
 
+    // Display names for the toggle labels
+    std::vector<std::string> toggle_labels = {"Music", "Sound", "Vibrate"};
+
     for (size_t i = 0; i < toggles.size(); i++) {
       auto &[icon, state_ptr, name] = toggles[i];
       float tx = toggle_start_x + (float)i * toggle_spacing;
@@ -150,6 +153,18 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("toggle_" + name))) {
         *state_ptr = !*state_ptr;
       }
+
+      // Add visible label below the toggle icon
+      div(context, mk(entity, 60 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_label(toggle_labels[i])
+              .with_size(ComponentSize{pixels(58), pixels(18)})
+              .with_absolute_position()
+              .with_translate(tx, toggle_y + 62.0f)
+              .with_font("Gaegu-Bold", 14.0f)
+              .with_custom_text_color(text_dark)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("label_" + name));
     }
 
     // Wifi icon (positioned first, then Save/Load button to its left)

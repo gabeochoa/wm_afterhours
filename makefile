@@ -210,7 +210,15 @@ run: output
 	./$(MAIN_EXE)
 
 # Utility targets
-.PHONY: all clean clean-all deps output sign run count countall cppcheck profile
+.PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
+
+# Screenshot generation (cleans old screenshots then generates new ones at 720p)
+screenshots: $(MAIN_EXE)
+	@echo "Cleaning old screenshots..."
+	rm -f $(OUTPUT_DIR)/*.png
+	@echo "Generating screenshots..."
+	./$(MAIN_EXE) --headless-screenshots
+	@echo "Screenshots saved to $(OUTPUT_DIR)/"
 
 # Code counting
 count:

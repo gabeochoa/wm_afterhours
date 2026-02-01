@@ -58,16 +58,18 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("title"));
 
-    // Form container - fits content more tightly
+    // Form container - fits content more tightly, centered
+    // Reduced height from 520px to 480px to leave room for footer elements
     auto form_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(440)})
+                .with_size(ComponentSize{percent(0.95f), pixels(460)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_align_items(AlignItems::FlexStart)  // Align children left
+                .with_self_align(SelfAlign::Center)  // Center the form container
                 .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("form_container"));
 
@@ -75,13 +77,13 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto make_input_field = [&](int idx, const std::string& label_text,
                                 std::string& value, Theme::Usage bg,
                                 std::optional<char> mask = std::nullopt) -> bool {
-      // Label above the input
+      // Label above the input - larger font for better visibility
       div(context, mk(form_container.ent(), idx * 2),
           ComponentConfig{}
               .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(28)})
+              .with_size(ComponentSize{pixels(396), pixels(36)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 22.0f)
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
@@ -128,9 +130,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(28)})
+            .with_size(ComponentSize{pixels(396), pixels(36)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 

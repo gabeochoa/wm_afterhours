@@ -73,7 +73,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float title_x = 45.0f;
     float title_y = 30.0f;
 
-    // RUBBER text (black with thick outline effect)
+    // RUBBER text - dark brown matching BANDIT$ styling for better contrast
     // Note: Fredoka is wider, use 40pt instead of 48pt and wider container
     div(context, mk(entity, 10),
         ComponentConfig{}
@@ -81,9 +81,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(320), pixels(56)})
             .with_absolute_position()
             .with_translate(title_x, title_y)
-            .with_custom_background(afterhours::Color{0, 0, 0, 60})
+            .with_custom_background(afterhours::Color{60, 45, 25, 180})
             .with_font("Fredoka", 44.0f)
-            .with_custom_text_color(afterhours::Color{20, 15, 10, 255})
+            .with_custom_text_color(afterhours::Color{85, 55, 25, 255})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
             .with_debug_name("title_rubber"));
@@ -105,13 +105,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== TOP RIGHT: Player info ==========
     float info_x = (float)screen_w - 200.0f;
 
-    // Online pill
+    // Online pill - widened to fit full text
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("thia9uers - Online")
-            .with_size(ComponentSize{pixels(200), pixels(32)})
+            .with_size(ComponentSize{pixels(230), pixels(32)})
             .with_absolute_position()
-            .with_translate(info_x - 55.0f, 20.0f)
+            .with_translate(info_x - 85.0f, 20.0f)
             .with_custom_background(online_pill)
             .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_dark)
@@ -155,12 +155,23 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== MENU ITEMS ==========
     float menu_x = 55.0f;
     float menu_y = 175.0f;
-    float menu_item_h = 44.0f;
+    float menu_item_h = 48.0f;
+
+    // Menu background panel for better contrast
+    div(context, mk(entity, 45),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(280), pixels(static_cast<int>(menu_items.size() * menu_item_h + 20))})
+            .with_absolute_position()
+            .with_translate(menu_x - 15.0f, menu_y - 10.0f)
+            .with_custom_background(menu_bg)
+            .with_border(afterhours::Color{180, 165, 125, 255}, 3.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.1f)
+            .with_debug_name("menu_bg"));
 
     for (size_t i = 0; i < menu_items.size(); i++) {
       float item_y = menu_y + (float)i * menu_item_h;
       bool is_selected = (i == selected_item);
-      afterhours::Color item_color = text_dark;
 
       // Selection indicator (triangle)
       if (is_selected) {
@@ -169,20 +180,26 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_label(">")
                 .with_size(ComponentSize{pixels(28), pixels(36)})
                 .with_absolute_position()
-                .with_translate(menu_x - 28.0f, item_y)
+                .with_translate(menu_x - 28.0f, item_y + 4.0f)
                 .with_font("EqProRounded", 24.0f)
                 .with_custom_text_color(text_dark)
                 .with_debug_name("arrow_" + std::to_string(i)));
       }
 
+      // Menu item with background for better visibility
+      afterhours::Color item_bg = is_selected ? highlight : menu_bg;
       if (button(context, mk(entity, 100 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(menu_items[i])
-                     .with_size(ComponentSize{pixels(240), pixels(40)})
+                     .with_size(ComponentSize{pixels(240), pixels(44)})
                      .with_absolute_position()
                      .with_translate(menu_x, item_y)
-                     .with_font("EqProRounded", 24.0f)
-                     .with_custom_text_color(item_color)
+                     .with_custom_background(item_bg)
+                     .with_border(is_selected ? afterhours::Color{220, 190, 100, 255} : afterhours::Color{0, 0, 0, 0}, 2.0f)
+                     .with_font("EqProRounded", 22.0f)
+                     .with_custom_text_color(text_dark)
+                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_roundness(0.15f)
                      .with_debug_name("menu_" + std::to_string(i)))) {
         selected_item = i;
       }

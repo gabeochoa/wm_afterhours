@@ -69,10 +69,11 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     checkbox(context, mk(toggle_row.ent(), 0), invert_scroll,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(220), pixels(44)})
+                 .with_size(ComponentSize{pixels(320), pixels(52)})
                  .with_label("Invert Scroll Direction")
-                 .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                 .with_custom_background(theme.primary)
+                 .with_auto_text_color(true)
+                 .with_font(UIComponent::DEFAULT_FONT, 24.0f)
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side

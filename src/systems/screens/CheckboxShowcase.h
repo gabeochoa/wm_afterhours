@@ -54,10 +54,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     const float STATUS_HEIGHT = 44.0f * scale;
     const float STATUS_FONT = theme.font_size_sm * scale;  // 16px - body text
 
-    // Calculate content height based on the taller column (right has more items)
-    // Right: 2 headers (28*2) + 7 checkboxes (36*7) = 56 + 252 = 308 * scale
-    // Plus minimal padding from Spacing::xs on columns (~8px each side)
-    float column_content_height = 2 * HEADER_HEIGHT + 7 * CHECKBOX_HEIGHT + 16.0f * scale;
+    // Left: 3 headers + 6 rows (3 labeled + 1 no-label row + 2 disabled)
+    // Right: 2 headers + 7 checkboxes
+    float left_content = 3 * HEADER_HEIGHT + 6 * CHECKBOX_HEIGHT + 24.0f * scale;
+    float right_content = 2 * HEADER_HEIGHT + 7 * CHECKBOX_HEIGHT + 24.0f * scale;
+    float column_content_height = std::max(left_content, right_content);
 
     // Card sized to fit content tightly
     float card_content = TITLE_HEIGHT + column_content_height + STATUS_HEIGHT;

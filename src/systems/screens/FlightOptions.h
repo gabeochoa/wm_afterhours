@@ -68,49 +68,52 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // Note: Grid lines removed to reduce visual clutter - clean background only
 
     // ========== DECORATIVE HUD LINES ==========
-    // Angled lines from top-left corner
-    float line_origin_x = 145.0f;
-    float line_origin_y = 135.0f;
+    // Position decorative elements adjacent to menu for visual connection
+    float menu_x = 185.0f;
+    float menu_y = 150.0f;
+    float line_origin_x = menu_x - 20.0f;  // Position line close to menu items
+    float line_origin_y = menu_y - 15.0f;  // Align with menu start
 
-    // Top angled line
+    // Top angled line connecting to title area
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(120), pixels(2)})
+            .with_size(ComponentSize{pixels(80), pixels(2)})
             .with_absolute_position()
-            .with_translate(25.0f, 130.0f)
+            .with_translate(line_origin_x - 80.0f, line_origin_y)
             .with_custom_background(highlight_line)
             .with_debug_name("line_top"));
 
-    // Connecting vertical line
+    // Connecting vertical line running alongside menu categories
+    float vertical_line_height = (float)categories.size() * 36.0f + 20.0f;
     div(context, mk(entity, 61),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels(400)})
+            .with_size(ComponentSize{pixels(2), pixels((int)vertical_line_height)})
             .with_absolute_position()
             .with_translate(line_origin_x, line_origin_y)
             .with_custom_background(highlight_line)
             .with_debug_name("line_vert"));
 
-    // Glow dot at intersection
+    // Glow dot at intersection - positioned at line corner
     div(context, mk(entity, 62),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(8), pixels(8)})
+            .with_size(ComponentSize{pixels(6), pixels(6)})
             .with_absolute_position()
-            .with_translate(line_origin_x - 3.0f, line_origin_y - 3.0f)
+            .with_translate(line_origin_x - 2.0f, line_origin_y - 2.0f)
             .with_custom_background(afterhours::Color{255, 200, 80, 255})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("glow_dot"));
 
-    // Horizontal tick marks along vertical line
-    for (int i = 0; i < 9; i++) {
-      float tick_y = 160.0f + (float)i * 32.0f;
-      div(context, mk(entity, 70 + i),
+    // Horizontal tick marks aligned with each menu category
+    for (size_t i = 0; i < categories.size(); i++) {
+      float tick_y = menu_y + (float)i * 36.0f + 10.0f;  // Center tick with menu item
+      div(context, mk(entity, 70 + static_cast<int>(i)),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(12), pixels(2)})
+              .with_size(ComponentSize{pixels(10), pixels(2)})
               .with_absolute_position()
-              .with_translate(line_origin_x - 12.0f, tick_y)
-              .with_custom_background(i == (int)selected_category ? text_cyan
-                                                                  : text_muted)
+              .with_translate(line_origin_x + 2.0f, tick_y)  // Tick extends from line toward menu
+              .with_custom_background(i == selected_category ? text_cyan
+                                                             : text_muted)
               .with_debug_name("tick_" + std::to_string(i)));
     }
 
@@ -126,8 +129,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // ========== MENU CATEGORIES ==========
-    float menu_x = 185.0f;
-    float menu_y = 150.0f;
+    // menu_x and menu_y already defined above with decorative elements
 
     for (size_t i = 0; i < categories.size(); i++) {
       bool selected = (i == selected_category);

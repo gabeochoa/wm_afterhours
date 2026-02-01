@@ -44,11 +44,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Button Gallery")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(70)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 36.0f)
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
                                 .left = pixels(0),

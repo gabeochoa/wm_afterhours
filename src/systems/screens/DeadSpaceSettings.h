@@ -21,7 +21,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color teal_highlight{65, 145, 145, 255};
   afterhours::Color teal_bright{85, 175, 175, 255};
   afterhours::Color text_white{195, 205, 210, 255};
-  afterhours::Color text_muted{95, 110, 115, 255};
+  afterhours::Color text_muted{145, 160, 165, 255};
   afterhours::Color text_dim{55, 65, 70, 255};
 
   std::vector<std::string> initial_settings = {

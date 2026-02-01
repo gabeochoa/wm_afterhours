@@ -485,15 +485,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                            afterhours::Color>>
         tabs = {
             {&icon_rides_tex, "[R]", "Rides", tab_blue},
-            {&icon_food_tex, "[F]", "Food Stalls", tab_green},
+            {&icon_food_tex, "[F]", "Food", tab_green},
             {&icon_upgrades_tex, "[!]", "Upgrades", tab_pink},
-            {&icon_upgrades_tex, "[X]", "Upgrades", tab_purple},
             {&icon_finance_tex, "[$]", "Finance", tab_cream},
         };
 
-    float tab_width = 115.0f;  // 44px minimum interactive, slightly larger
-    float tab_height = 75.0f;  // Proper touch target size
-    float tab_spacing = 82.0f; // Adjusted spacing
+    float tab_width = 110.0f;  // Wide enough for "Upgrades" label
+    float tab_height = 70.0f;  // Proper touch target size
+    float tab_spacing = 78.0f; // Adjusted spacing
     // Ensure tabs don't go past left edge - minimum 15px from left
     float nav_x = std::max(15.0f, content_margin - tab_width - 15.0f);
     float nav_y = 210.0f;
@@ -555,15 +554,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("tab_icon_fallback_" + std::to_string(i)));
       }
 
-      // Tab label - positioned below icon, 18.0f minimum font
+      // Tab label - positioned below icon, 14.0f font to fit shorter width
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(static_cast<int>(tab_width + 10)),
-                                       pixels(24)})
+              .with_size(ComponentSize{pixels(static_cast<int>(tab_width)),
+                                       pixels(20)})
               .with_absolute_position()
-              .with_translate(nav_x - 5.0f, tab_y + tab_height - 28.0f)
-              .with_font("EqProRounded", 18.0f)
+              .with_translate(nav_x, tab_y + tab_height - 22.0f)
+              .with_font("EqProRounded", 14.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("tab_label_" + std::to_string(i)));
@@ -578,9 +577,10 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== MAIN PANEL ==========
-    float panel_x = content_margin; // Start at content margin (tabs are to the left)
+    // Panel should not overlap with sidebar tabs - start after tab area
+    float panel_x = nav_x + tab_width + 30.0f; // Start after tabs with margin
     float panel_y = 200.0f;
-    float panel_w = content_width; // Use full content width (percent based)
+    float panel_w = (float)screen_w - panel_x - 30.0f; // Fill remaining width with margin
     float panel_h = 440.0f;
 
     // Main panel background - bigger with thicker border to match inspiration
