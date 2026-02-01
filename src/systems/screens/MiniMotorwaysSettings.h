@@ -64,8 +64,10 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_w = res ? res->current_resolution.width : 1280;
+    int screen_h = res ? res->current_resolution.height : 720;
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
@@ -74,8 +76,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_cream)
             .with_debug_name("bg"));
 
-    // Grid lines (vertical)
-    for (int i = 0; i < 20; i++) {
+    // Grid lines (vertical) - calculate count based on screen width
+    int num_vertical_lines = (screen_w / 80) + 1;
+    for (int i = 0; i < num_vertical_lines; i++) {
       float x = (float)i * 80.0f;
       div(context, mk(entity, 5 + i),
           ComponentConfig{}
@@ -86,8 +89,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("grid_v_" + std::to_string(i)));
     }
 
-    // Grid lines (horizontal)
-    for (int i = 0; i < 12; i++) {
+    // Grid lines (horizontal) - calculate count based on screen height
+    int num_horizontal_lines = (screen_h / 60) + 1;
+    for (int i = 0; i < num_horizontal_lines; i++) {
       float y = (float)i * 60.0f;
       div(context, mk(entity, 30 + i),
           ComponentConfig{}

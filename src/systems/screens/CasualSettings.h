@@ -152,36 +152,37 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // Save/Load Progress button
-    button(context, mk(entity, 50),
-           ComponentConfig{}
-               .with_label("Save/Load Progress")
-               .with_size(ComponentSize{pixels(195), pixels(55)})
-               .with_absolute_position()
-               .with_translate(panel_x + panel_w - 260.0f, toggle_y)
-               .with_custom_background(white)
-               .with_border(afterhours::Color{200, 195, 185, 255}, 3.0f)
-               .with_font("Gaegu-Bold", 19.0f)
-               .with_custom_text_color(text_dark)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
-               .with_roundness(0.5f)
-               .with_debug_name("save_load"));
-
-    // Wifi icon
+    // Wifi icon (positioned first, then Save/Load button to its left)
+    float wifi_x = panel_x + panel_w - 75.0f;
     div(context, mk(entity, 51),
         ComponentConfig{}
             .with_label("((*))")
-            .with_size(ComponentSize{pixels(40), pixels(40)})
+            .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 75.0f, toggle_y + 8.0f)
+            .with_translate(wifi_x, toggle_y + 5.0f)
             .with_custom_background(btn_green)
-            .with_font("Gaegu-Bold", 19.0f)
+            .with_font("Gaegu-Bold", 18.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("wifi_icon"));
+
+    // Save/Load Progress button (positioned to the left of wifi icon with gap)
+    button(context, mk(entity, 50),
+           ComponentConfig{}
+               .with_label("Save/Load Progress")
+               .with_size(ComponentSize{pixels(210), pixels(55)})
+               .with_absolute_position()
+               .with_translate(wifi_x - 220.0f, toggle_y)
+               .with_custom_background(white)
+               .with_border(afterhours::Color{200, 195, 185, 255}, 3.0f)
+               .with_font("Gaegu-Bold", 18.0f)
+               .with_custom_text_color(text_dark)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.5f)
+               .with_debug_name("save_load"));
 
     // ========== MENU BUTTONS ==========
     std::vector<std::string> left_buttons = {"Notifications: OFF", "Language"};

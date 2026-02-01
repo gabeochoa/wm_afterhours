@@ -45,7 +45,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = div(
         context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.90f)})
+            .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.75f)})
             .with_custom_background(theme.background)
             .with_roundness(0.08f)
             .with_self_align(SelfAlign::Center)
@@ -56,7 +56,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
-                .with_padding(Spacing::md)
+                .with_padding(Padding{.top = pixels(20), .left = pixels(24),
+                                      .bottom = pixels(20), .right = pixels(24)})
                 .with_debug_name("modal_main"));
 
     // Title
@@ -76,206 +77,270 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // =========================================================================
-    // Row 1: Basic modals
+    // Section 1: Basic Modals
     // =========================================================================
-    auto row1 =
+    auto section1 =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_roundness(0.1f)
+                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
+                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_roundness(0.08f)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                .with_debug_name("section1"));
+
+    // Section header
+    div(context, mk(section1.ent(), 0),
+        ComponentConfig{}
+            .with_label("BASIC MODALS")
+            .with_size(ComponentSize{pixels(200), pixels(26)})
+            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("section1_label"));
+
+    auto row1 =
+        div(context, mk(section1.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(55)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
+                .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("row1"));
 
-    div(context, mk(row1.ent(), 0),
-        ComponentConfig{}
-            .with_label("Basic Modals:")
-            .with_size(ComponentSize{pixels(140), pixels(40)})
-            .with_auto_text_color(true)
-            .with_debug_name("row1_label"));
-
-    if (button(context, mk(row1.ent(), 1),
+    if (button(context, mk(row1.ent(), 0),
                ComponentConfig{}
                    .with_label("Simple Modal")
-                   .with_size(ComponentSize{pixels(180), pixels(60)})
+                   .with_size(ComponentSize{pixels(200), pixels(50)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+                   .with_margin(Margin{.right = DefaultSpacing::medium()})
                    .with_debug_name("btn_simple"))) {
       show_basic_modal = true;
     }
 
-    if (button(context, mk(row1.ent(), 2),
+    if (button(context, mk(row1.ent(), 1),
                ComponentConfig{}
                    .with_label("Composable Modal")
-                   .with_size(ComponentSize{pixels(210), pixels(60)})
+                   .with_size(ComponentSize{pixels(240), pixels(50)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                    .with_debug_name("btn_composable"))) {
       show_composable_modal = true;
     }
 
     // =========================================================================
-    // Row 2: Convenience helpers
+    // Section 2: Helper Functions
     // =========================================================================
-    auto row2 =
+    auto section2 =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_roundness(0.1f)
+                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
+                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_roundness(0.08f)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                .with_debug_name("section2"));
+
+    // Section header
+    div(context, mk(section2.ent(), 0),
+        ComponentConfig{}
+            .with_label("HELPER FUNCTIONS")
+            .with_size(ComponentSize{pixels(200), pixels(26)})
+            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("section2_label"));
+
+    auto row2 =
+        div(context, mk(section2.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(55)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = pixels(0)})
+                .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("row2"));
 
-    div(context, mk(row2.ent(), 0),
-        ComponentConfig{}
-            .with_label("Helpers:")
-            .with_size(ComponentSize{pixels(140), pixels(40)})
-            .with_auto_text_color(true)
-            .with_debug_name("row2_label"));
-
-    if (button(context, mk(row2.ent(), 1),
+    if (button(context, mk(row2.ent(), 0),
                ComponentConfig{}
                    .with_label("modal::info")
-                   .with_size(ComponentSize{pixels(160), pixels(60)})
+                   .with_size(ComponentSize{pixels(180), pixels(50)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+                   .with_margin(Margin{.right = DefaultSpacing::medium()})
                    .with_debug_name("btn_info"))) {
       show_info_modal = true;
     }
 
-    if (button(context, mk(row2.ent(), 2),
+    if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("modal::confirm")
-                   .with_size(ComponentSize{pixels(180), pixels(60)})
+                   .with_size(ComponentSize{pixels(200), pixels(50)})
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+                   .with_margin(Margin{.right = DefaultSpacing::medium()})
                    .with_debug_name("btn_confirm"))) {
       show_confirm_modal = true;
       last_confirm_result = afterhours::DialogResult::Pending;
     }
 
-    if (button(context, mk(row2.ent(), 3),
+    if (button(context, mk(row2.ent(), 2),
                ComponentConfig{}
                    .with_label("modal::fyi")
-                   .with_size(ComponentSize{pixels(160), pixels(60)})
+                   .with_size(ComponentSize{pixels(180), pixels(50)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                    .with_debug_name("btn_fyi"))) {
       show_fyi_modal = true;
       last_fyi_result = afterhours::DialogResult::Pending;
     }
 
     // =========================================================================
-    // Row 3: Modal stacking
+    // Section 3: Modal Stacking
     // =========================================================================
-    auto row3 =
+    auto section3 =
         div(context, mk(main_container.ent(), 3),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_roundness(0.1f)
+                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
+                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_roundness(0.08f)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                .with_debug_name("section3"));
+
+    // Section header
+    div(context, mk(section3.ent(), 0),
+        ComponentConfig{}
+            .with_label("MODAL STACKING")
+            .with_size(ComponentSize{pixels(200), pixels(26)})
+            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("section3_label"));
+
+    auto row3 =
+        div(context, mk(section3.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(55)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = pixels(0)})
+                .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("row3"));
 
-    div(context, mk(row3.ent(), 0),
-        ComponentConfig{}
-            .with_label("Stacking:")
-            .with_size(ComponentSize{pixels(140), pixels(40)})
-            .with_auto_text_color(true)
-            .with_debug_name("row3_label"));
-
-    if (button(context, mk(row3.ent(), 1),
+    if (button(context, mk(row3.ent(), 0),
                ComponentConfig{}
                    .with_label("Open Settings (with nested confirm)")
-                   .with_size(ComponentSize{pixels(350), pixels(60)})
+                   .with_size(ComponentSize{pixels(420), pixels(50)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                    .with_debug_name("btn_stacked"))) {
       show_stacked_settings = true;
     }
 
     // =========================================================================
-    // Row 4: Input blocking test - background button
+    // Section 4: Input Blocking Test
     // =========================================================================
-    auto row4 =
+    auto section4 =
         div(context, mk(main_container.ent(), 4),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_roundness(0.1f)
+                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
+                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_roundness(0.08f)
+                .with_flex_direction(FlexDirection::Column)
+                .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                .with_debug_name("section4"));
+
+    // Section header
+    div(context, mk(section4.ent(), 0),
+        ComponentConfig{}
+            .with_label("INPUT BLOCKING TEST")
+            .with_size(ComponentSize{pixels(220), pixels(26)})
+            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("section4_label"));
+
+    auto row4 =
+        div(context, mk(section4.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(55)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = pixels(0)})
+                .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("row4"));
-
-    div(context, mk(row4.ent(), 0),
-        ComponentConfig{}
-            .with_label("Input Blocking:")
-            .with_size(ComponentSize{pixels(140), pixels(40)})
-            .with_auto_text_color(true)
-            .with_debug_name("row4_label"));
 
     // This button is used to test input blocking - when a modal is open,
     // clicking this button should NOT increment the counter
-    if (button(context, mk(row4.ent(), 1),
+    if (button(context, mk(row4.ent(), 0),
                ComponentConfig{}
                    .with_label("Background Button")
-                   .with_size(ComponentSize{pixels(210), pixels(60)})
+                   .with_size(ComponentSize{pixels(260), pixels(50)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_margin(Spacing::sm)
+                   .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+                   .with_margin(Margin{.right = DefaultSpacing::large()})
                    .with_debug_name("btn_background"))) {
       background_click_count++;
     }
 
-    div(context, mk(row4.ent(), 2),
+    div(context, mk(row4.ent(), 1),
         ComponentConfig{}
             .with_label("BG Clicks: " + std::to_string(background_click_count))
-            .with_size(ComponentSize{pixels(150), pixels(40)})
+            .with_size(ComponentSize{pixels(200), pixels(45)})
             .with_auto_text_color(true)
-            .with_margin(Margin{.left = DefaultSpacing::medium()})
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("bg_click_count"));
 
     // =========================================================================
-    // Row 5: Results display
+    // Section 5: Results Display
     // =========================================================================
-    auto row5 =
+    auto section5 =
         div(context, mk(main_container.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(70)})
+                .with_size(ComponentSize{percent(1.0f), pixels(95)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_roundness(0.1f)
+                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
+                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_roundness(0.08f)
+                .with_flex_direction(FlexDirection::Column)
+                .with_debug_name("section5"));
+
+    // Section header
+    div(context, mk(section5.ent(), 0),
+        ComponentConfig{}
+            .with_label("RESULTS")
+            .with_size(ComponentSize{pixels(120), pixels(26)})
+            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_alignment(TextAlignment::Left)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("section5_label"));
+
+    auto row5 =
+        div(context, mk(section5.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(35)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = pixels(0)})
+                .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("row5"));
 
     std::string confirm_result_str = "Pending";
@@ -300,11 +365,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                         fyi_result_str + "  |  Confirms: " +
                         std::to_string(confirm_count) +
                         "  Cancels: " + std::to_string(cancel_count))
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.left = DefaultSpacing::medium()})
             .with_debug_name("results"));
 
     // =========================================================================

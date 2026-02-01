@@ -38,50 +38,57 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_width = Settings::get().get_screen_width();
     int screen_height = Settings::get().get_screen_height();
 
-    // Background
+    // Background - covers entire screen
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
+                ComponentSize{pixels((float)screen_width), pixels((float)screen_height)})
             .with_custom_background(bg_deep)
             .with_debug_name("bg"));
 
-    // Subtle grid pattern
-    for (int i = 0; i < 20; i++) {
+    // Calculate grid to cover entire screen
+    int num_v_lines = (screen_width / 65) + 1;
+    int num_h_lines = (screen_height / 55) + 1;
+
+    // Subtle grid pattern - covers entire screen
+    // Use entity IDs 200-299 for vertical lines, 300-399 for horizontal
+    for (int i = 0; i < num_v_lines; i++) {
       // Vertical lines
       div(context, mk(entity, 200 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(screen_height)})
+              .with_size(ComponentSize{pixels(1), pixels((float)screen_height)})
               .with_absolute_position()
               .with_translate((float)(i * 65 + 30), 0)
               .with_custom_background(grid_line)
               .with_debug_name("vgrid_" + std::to_string(i)));
     }
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < num_h_lines; i++) {
       // Horizontal lines
-      div(context, mk(entity, 230 + i),
+      div(context, mk(entity, 300 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(screen_width), pixels(1)})
+              .with_size(ComponentSize{pixels((float)screen_width), pixels(1)})
               .with_absolute_position()
               .with_translate(0, (float)(i * 55 + 40))
               .with_custom_background(grid_line)
               .with_debug_name("hgrid_" + std::to_string(i)));
     }
 
-    float start_x = 45.0f;
-    float start_y = 55.0f;
-    float box_size = 95.0f;
-    float gap = 22.0f;
+    // Calculate content dimensions and center everything
+    float box_size = 110.0f;
+    float gap = 25.0f;
+    float content_width = 6.0f * box_size + 5.0f * gap; // 6 boxes with 5 gaps
+    float start_x = (screen_width - content_width) / 2.0f;
+    float start_y = 65.0f;
 
-    // Title
+    // Title - centered above content
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_label("BORDER STYLES")
-            .with_size(ComponentSize{pixels(screen_width - 90.0f), pixels(38)})
+            .with_size(ComponentSize{pixels(content_width), pixels(42)})
             .with_absolute_position()
-            .with_translate(start_x, 8.0f)
+            .with_translate(start_x, 12.0f)
             .with_custom_background(accent_blue)
-            .with_font("EqProRounded", 24.0f)
+            .with_font("EqProRounded", 26.0f)
             .with_custom_text_color(bg_deep)
             .with_padding(Spacing::xs)
             .with_alignment(TextAlignment::Center)
@@ -124,15 +131,21 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("border_" + std::to_string(i)));
     }
 
-    // Row label
+    // Row 1 label - positioned as a header on the left
+    // Ensure labels stay within screen bounds
+    float row_label_width = 140.0f;
+    float min_left_margin = 15.0f;
+    float row_label_x = std::max(min_left_margin, start_x - row_label_width - 15.0f);
+
     div(context, mk(entity, 19),
         ComponentConfig{}
             .with_label("Width & Color")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
-            .with_translate(start_x + 6 * (box_size + gap) + 10, start_y + 38)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_translate(row_label_x, start_y)
+            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right)
             .with_debug_name("row1_label"));
 
     // Row 2: Rounded corners and shadows
@@ -227,15 +240,16 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("soft_shadow"));
 
-    // Row label
+    // Row 2 label
     div(context, mk(entity, 29),
         ComponentConfig{}
-            .with_label("Corners & Shadows")
-            .with_size(ComponentSize{pixels(140), pixels(20)})
+            .with_label("Corners &\nShadows")
+            .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
-            .with_translate(start_x + 6 * (box_size + gap) + 10, row2_y + 38)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_translate(row_label_x, row2_y)
+            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right)
             .with_debug_name("row2_label"));
 
     // Row 3: Themed examples
@@ -329,19 +343,33 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("outline_only"));
 
-    // Row label
+    // Row 3 label
     div(context, mk(entity, 39),
         ComponentConfig{}
             .with_label("Themed Styles")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
-            .with_translate(start_x + 6 * (box_size + gap) + 10, row3_y + 38)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_translate(row_label_x, row3_y)
+            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right)
             .with_debug_name("row3_label"));
 
     // Interactive button with border
     float row4_y = row3_y + box_size + gap + 15;
+    float row4_height = 110.0f;
+
+    // Row 4 label
+    div(context, mk(entity, 49),
+        ComponentConfig{}
+            .with_label("Interactive")
+            .with_size(ComponentSize{pixels(row_label_width), pixels(row4_height)})
+            .with_absolute_position()
+            .with_translate(row_label_x, row4_y)
+            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right)
+            .with_debug_name("row4_label"));
 
     auto btn_result = button(
         context, mk(entity, 40),

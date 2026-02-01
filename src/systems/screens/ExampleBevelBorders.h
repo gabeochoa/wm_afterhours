@@ -31,8 +31,10 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     context.theme = theme;
 
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_width = res ? res->current_resolution.width : 1280;
+    int screen_height = res ? res->current_resolution.height : 720;
 
     // Background
     div(context, mk(entity, 0),
@@ -77,31 +79,45 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                        {"Sunken", BevelStyle::Sunken}};
     float thicknesses[] = {1.0f, 2.0f, 3.0f, 4.0f};
 
-    float cell = 110.0f;
-    float gap = 18.0f;
-    float start_x = 190.0f;
-    float start_y = 120.0f;
+    float cell = 100.0f;
+    float gap = 16.0f;
+    float row_label_width = 100.0f;
+    float big_size = 150.0f;
+    float big_gap = 24.0f;
+    float col_header_height = 28.0f;
+
+    // Calculate total content width and center horizontally
+    float grid_width = 4 * cell + 3 * gap;  // 4 cells with 3 gaps between
+    float content_width = row_label_width + 20.0f + grid_width + big_gap + big_size;
+
+    // Header area: title bar ends at ~60, legend ends at ~88
+    float header_bottom = 96.0f;
+
+    float start_x = (screen_width - content_width) / 2.0f + row_label_width + 20.0f;
+    float start_y = header_bottom + col_header_height + 16.0f;
 
     for (int c = 0; c < 4; ++c) {
       div(context, mk(entity, 10 + c),
           ComponentConfig{}
               .with_label(fmt::format("{}px", static_cast<int>(thicknesses[c])))
-              .with_size(ComponentSize{pixels(cell), pixels(28.0f)})
+              .with_size(ComponentSize{pixels(cell), pixels(col_header_height)})
               .with_absolute_position()
-              .with_translate(start_x + c * (cell + gap), start_y - 36.0f)
+              .with_translate(start_x + c * (cell + gap), start_y - col_header_height - 8.0f)
               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("col_label_" + std::to_string(c)));
     }
 
+    float row_label_x = (screen_width - content_width) / 2.0f;
+
     for (int r = 0; r < 2; ++r) {
       div(context, mk(entity, 20 + r),
           ComponentConfig{}
               .with_label(rows[r].label)
-              .with_size(ComponentSize{pixels(120.0f), pixels(cell)})
+              .with_size(ComponentSize{pixels(row_label_width), pixels(cell)})
               .with_absolute_position()
-              .with_translate(40.0f, start_y + r * (cell + gap))
+              .with_translate(row_label_x, start_y + r * (cell + gap))
               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
@@ -131,9 +147,8 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    float big_x = start_x + 4 * (cell + gap) + 30.0f;
+    float big_x = start_x + grid_width + big_gap;
     float big_y = start_y;
-    float big_size = 170.0f;
 
     div(context, mk(entity, 300),
         ComponentConfig{}

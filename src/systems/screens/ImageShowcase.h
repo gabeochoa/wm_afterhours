@@ -44,17 +44,18 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container background - centered with padding
-    auto root = div(context, mk(entity, 0),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
-                        .with_self_align(SelfAlign::Center)
-                        .with_custom_background(theme.background)
-                        .with_roundness(0.08f)
-                        .with_padding(Spacing::lg)  // Padding on root
-                        .with_debug_name("image_bg"));
+    // Main container background - centered on screen with padding
+    auto root =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                .with_self_align(SelfAlign::Center)
+                .with_custom_background(theme.background)
+                .with_roundness(0.08f)
+                .with_padding(Spacing::lg)
+                .with_debug_name("image_bg"));
 
-    // Content container - no padding since root has it
+    // Content container
     auto main_container =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
@@ -66,270 +67,247 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Title
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
-            .with_label("Image & Sprite Components Showcase")
+            .with_label("Image & Sprite Components")
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_debug_name("title"));
 
-    // Content area - two columns
-    auto content =
-        div(context, mk(main_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(420)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceBetween)
-                .with_debug_name("content"));
-
-    // Left column - Static images
-    auto left_col =
-        div(context, mk(content.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.95f))
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("left_column"));
-
-    // Section: sprite()
-    div(context, mk(left_col.ent(), 0),
-        ComponentConfig{}
-            .with_label("sprite() - Display icons")
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_custom_background(theme.primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_padding(Spacing::xs)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("sprite_label"));
-
-    // Row of sprites with labels
-    auto sprite_row =
-        div(context, mk(left_col.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(100)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
-                .with_rounded_corners(RoundedCorners().all_round())
-                .with_roundness(0.08f)
-                .with_margin(Margin{.bottom = DefaultSpacing::medium()})
-                .with_debug_name("sprite_row"));
-
-    // Display individual sprites
     raylib::Rectangle full_src{0, 0, 128, 128};
 
-    sprite(context, mk(sprite_row.ent(), 0), gear_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(56), pixels(56)})
-               .with_debug_name("sprite_gear"));
+    // Row 1: sprite() demo
+    auto row1 = div(context, mk(main_container.ent(), 1),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                        .with_custom_background(theme.surface)
+                        .with_padding(Spacing::sm)
+                        .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
+                        .with_debug_name("row1_sprites"));
 
-    sprite(context, mk(sprite_row.ent(), 1), star_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(56), pixels(56)})
-               .with_debug_name("sprite_star"));
-
-    sprite(context, mk(sprite_row.ent(), 2), trophy_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(56), pixels(56)})
-               .with_debug_name("sprite_trophy"));
-
-    sprite(context, mk(sprite_row.ent(), 3), home_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(56), pixels(56)})
-               .with_debug_name("sprite_home"));
-
-    // Section: image() with texture
-    div(context, mk(left_col.ent(), 2),
+    div(context, mk(row1.ent(), 0),
         ComponentConfig{}
-            .with_label("image() - With background")
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_label("sprite():")
+            .with_size(ComponentSize{pixels(120), pixels(40)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_padding(Spacing::xs)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
-            .with_debug_name("image_label"));
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_debug_name("sprite_label"));
 
-    // Simple box with texture as image
+    sprite(context, mk(row1.ent(), 1), gear_tex, full_src,
+           ComponentConfig{}
+               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_margin(Spacing::sm)
+               .with_debug_name("sprite_gear"));
+
+    sprite(context, mk(row1.ent(), 2), star_tex, full_src,
+           ComponentConfig{}
+               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_margin(Spacing::sm)
+               .with_debug_name("sprite_star"));
+
+    sprite(context, mk(row1.ent(), 3), trophy_tex, full_src,
+           ComponentConfig{}
+               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_margin(Spacing::sm)
+               .with_debug_name("sprite_trophy"));
+
+    sprite(context, mk(row1.ent(), 4), home_tex, full_src,
+           ComponentConfig{}
+               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_margin(Spacing::sm)
+               .with_debug_name("sprite_home"));
+
+    sprite(context, mk(row1.ent(), 5), play_tex, full_src,
+           ComponentConfig{}
+               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_margin(Spacing::sm)
+               .with_debug_name("sprite_play"));
+
+    // Row 2: image_button() demo
+    auto row2 = div(context, mk(main_container.ent(), 2),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                        .with_custom_background(theme.surface)
+                        .with_padding(Spacing::sm)
+                        .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
+                        .with_margin(Margin{.top = DefaultSpacing::small()})
+                        .with_debug_name("row2_buttons"));
+
+    div(context, mk(row2.ent(), 0),
+        ComponentConfig{}
+            .with_label("image_button():")
+            .with_size(ComponentSize{pixels(160), pixels(40)})
+            .with_custom_background(theme.accent)
+            .with_auto_text_color(true)
+            .with_skip_tabbing(true)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_debug_name("imgbtn_label"));
+
+    if (image_button(context, mk(row2.ent(), 1), gear_tex, full_src,
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(60), pixels(60)})
+                         .with_custom_background(theme.primary)
+                         .with_rounded_corners(RoundedCorners().all_round())
+                         .with_roundness(0.2f)
+                         .with_margin(Spacing::sm)
+                         .with_debug_name("imgbtn_gear"))) {
+      button_clicks++;
+    }
+
+    if (image_button(context, mk(row2.ent(), 2), play_tex, full_src,
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(60), pixels(60)})
+                         .with_custom_background(theme.accent)
+                         .with_rounded_corners(RoundedCorners().all_round())
+                         .with_roundness(0.2f)
+                         .with_margin(Spacing::sm)
+                         .with_debug_name("imgbtn_play"))) {
+      button_clicks++;
+    }
+
+    if (image_button(context, mk(row2.ent(), 3), star_tex, full_src,
+                     ComponentConfig{}
+                         .with_size(ComponentSize{pixels(60), pixels(60)})
+                         .with_custom_background(theme.secondary)
+                         .with_rounded_corners(RoundedCorners().all_round())
+                         .with_roundness(0.2f)
+                         .with_margin(Spacing::sm)
+                         .with_debug_name("imgbtn_star"))) {
+      button_clicks++;
+    }
+
+    div(context, mk(row2.ent(), 4),
+        ComponentConfig{}
+            .with_label("Clicks: " + std::to_string(button_clicks))
+            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_custom_background(theme.surface)
+            .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Margin{.left = DefaultSpacing::medium()})
+            .with_skip_tabbing(true)
+            .with_debug_name("click_counter"));
+
+    // Row 3: Image with background demo
+    auto row3 = div(context, mk(main_container.ent(), 3),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                        .with_custom_background(theme.surface)
+                        .with_padding(Spacing::sm)
+                        .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
+                        .with_margin(Margin{.top = DefaultSpacing::small()})
+                        .with_debug_name("row3_image"));
+
+    div(context, mk(row3.ent(), 0),
+        ComponentConfig{}
+            .with_label("With BG:")
+            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_custom_background(theme.primary)
+            .with_auto_text_color(true)
+            .with_skip_tabbing(true)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_debug_name("withbg_label"));
+
     auto img_container =
-        div(context, mk(left_col.ent(), 3),
+        div(context, mk(row3.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.90f), pixels(120)})
+                .with_size(ComponentSize{pixels(200), pixels(70)})
                 .with_custom_background(theme.secondary)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.1f)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("image_with_tex"));
+                .with_margin(Spacing::sm)
+                .with_debug_name("image_container"));
 
     sprite(context, mk(img_container.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(80), pixels(80)})
-               .with_debug_name("image_gear"));
+               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_debug_name("container_gear"));
 
     div(context, mk(img_container.ent(), 1),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{pixels(100), pixels(40)})
+            .with_size(ComponentSize{pixels(80), pixels(30)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_margin(Margin{.left = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("settings_label"));
 
-    // Right column - Interactive elements
-    auto right_col =
-        div(context, mk(content.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.95f))
-                .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("right_column"));
+    // Row 4: Icon row demo
+    auto row4 = div(context, mk(main_container.ent(), 4),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                        .with_custom_background(theme.surface)
+                        .with_padding(Spacing::sm)
+                        .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
+                        .with_margin(Margin{.top = DefaultSpacing::small()})
+                        .with_debug_name("row4_iconrow"));
 
-    // Section: image_button()
-    div(context, mk(right_col.ent(), 0),
+    div(context, mk(row4.ent(), 0),
         ComponentConfig{}
-            .with_label("image_button() - Clickable")
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_label("Icon Row:")
+            .with_size(ComponentSize{pixels(120), pixels(40)})
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_padding(Spacing::xs)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
-            .with_debug_name("image_button_label"));
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_debug_name("iconrow_label"));
 
-    // Row of image buttons
-    auto button_row =
-        div(context, mk(right_col.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(90)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
-                .with_rounded_corners(RoundedCorners().all_round())
-                .with_roundness(0.08f)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("button_row"));
-
-    if (image_button(context, mk(button_row.ent(), 0), gear_tex, full_src,
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(64), pixels(64)})
-                         .with_custom_background(theme.primary)
-                         .with_rounded_corners(RoundedCorners().all_round())
-                         .with_roundness(0.2f)
-                         .with_debug_name("imgbtn_gear"))) {
-      button_clicks++;
-    }
-
-    if (image_button(context, mk(button_row.ent(), 1), play_tex, full_src,
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(64), pixels(64)})
-                         .with_custom_background(theme.accent)
-                         .with_rounded_corners(RoundedCorners().all_round())
-                         .with_roundness(0.2f)
-                         .with_debug_name("imgbtn_play"))) {
-      button_clicks++;
-    }
-
-    if (image_button(context, mk(button_row.ent(), 2), star_tex, full_src,
-                     ComponentConfig{}
-                         .with_size(ComponentSize{pixels(64), pixels(64)})
-                         .with_custom_background(theme.secondary)
-                         .with_rounded_corners(RoundedCorners().all_round())
-                         .with_roundness(0.2f)
-                         .with_debug_name("imgbtn_star"))) {
-      button_clicks++;
-    }
-
-    // Click counter
-    div(context, mk(right_col.ent(), 2),
-        ComponentConfig{}
-            .with_label("Clicks: " + std::to_string(button_clicks))
-            .with_size(ComponentSize{percent(0.90f), pixels(36)})
-            .with_custom_background(theme.surface)
-            .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_padding(Spacing::xs)
-            .with_margin(Margin{.bottom = DefaultSpacing::medium()})
-            .with_skip_tabbing(true)
-            .with_debug_name("click_counter"));
-
-    // Section: icon_row() - multiple frames
-    div(context, mk(right_col.ent(), 3),
-        ComponentConfig{}
-            .with_label("Icon Row Display")
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_custom_background(theme.accent)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_padding(Spacing::xs)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("icon_row_label"));
-
-    // For icon_row demo, we'll just show a simpler display
     auto icon_row_container =
-        div(context, mk(right_col.ent(), 4),
+        div(context, mk(row4.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(70)})
+                .with_size(ComponentSize{pixels(300), pixels(60)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
+                .with_custom_background(
+                    afterhours::colors::darken(theme.surface, 0.9f))
+                .with_padding(Spacing::xs)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.08f)
+                .with_margin(Spacing::sm)
                 .with_debug_name("icon_row_container"));
 
-    // Manually create an icon row effect
     sprite(context, mk(icon_row_container.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
+               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_margin(Spacing::xs)
                .with_debug_name("icon_row_1"));
 
     sprite(context, mk(icon_row_container.ent(), 1), star_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
+               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_margin(Spacing::xs)
                .with_debug_name("icon_row_2"));
 
     sprite(context, mk(icon_row_container.ent(), 2), trophy_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
+               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_margin(Spacing::xs)
                .with_debug_name("icon_row_3"));
 
     sprite(context, mk(icon_row_container.ent(), 3), home_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
+               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_margin(Spacing::xs)
                .with_debug_name("icon_row_4"));
 
     sprite(context, mk(icon_row_container.ent(), 4), play_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
+               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_margin(Spacing::xs)
                .with_debug_name("icon_row_5"));
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(images, "Component Galleries",
                         "Image, sprite, and image_button demo", ImageShowcase)
-

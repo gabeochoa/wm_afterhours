@@ -58,11 +58,11 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("title"));
 
-    // Form container - use percent height for proper containment
+    // Form container - fits content more tightly
     auto form_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), percent(0.75f)})
+                .with_size(ComponentSize{percent(0.95f), children()})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -86,11 +86,14 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name(label_text + "_label"));
 
       // Text input without internal label
+      // Note: with_rounded_corners and with_roundness ensure the focus ring matches the rounded input field
       auto input_config = ComponentConfig{}
           .with_size(ComponentSize{pixels(396), pixels(44)})
           .with_background(bg)
           .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-          .with_margin(Margin{.bottom = DefaultSpacing::small()})
+          .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+          .with_rounded_corners(RoundedCorners().all_round())
+          .with_roundness(0.15f)
           .with_debug_name(label_text + "_input");
 
       if (mask) {
@@ -136,7 +139,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                        .with_size(ComponentSize{pixels(396), pixels(44)})
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+                       .with_rounded_corners(RoundedCorners().all_round())
+                       .with_roundness(0.15f)
                        .with_debug_name("search_input"))) {
       status_message = "Searching for: " + search_query;
     }

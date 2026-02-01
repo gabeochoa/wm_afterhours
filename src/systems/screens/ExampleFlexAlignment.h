@@ -17,26 +17,47 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                                afterhours::Entity &parent,
                                const std::string &label, JustifyContent jc,
                                int id) {
-    // Container with visible background
-    auto container = div(
+    // Outer container to hold title + demo
+    auto outer = div(
         context, mk(parent, id),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.18f), percent(0.92f)})
-            .with_custom_background(afterhours::Color{50, 60, 80, 255})
-            .with_padding(Padding{.top = pixels(6), .left = pixels(6), 
-                                  .bottom = pixels(6), .right = pixels(6)})
-            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2), 
+            .with_size(ComponentSize{percent(0.18f), percent(1.0f)})
+            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2),
                                 .left = pixels(3), .right = pixels(3)})
             .with_flex_direction(FlexDirection::Column)
-            .with_justify_content(jc)
-            .with_debug_name(label));
+            .with_debug_name(label + "_outer"));
 
-    // 3 boxes - tall enough to show spacing clearly
+    // Title label
+    div(context, mk(outer.ent(), 0),
+        ComponentConfig{}
+            .with_label(label)
+            .with_size(ComponentSize{percent(1.0f), pixels(22)})
+            .with_custom_background(afterhours::Color{80, 90, 110, 255})
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_skip_tabbing(true)
+            .with_flex_direction(FlexDirection::Row)
+            .with_debug_name(label + "_title"));
+
+    // Container with visible background for demo items
+    auto container = div(
+        context, mk(outer.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+            .with_custom_background(afterhours::Color{50, 60, 80, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(6),
+                                  .bottom = pixels(6), .right = pixels(6)})
+            .with_margin(Margin{.top = pixels(4)})
+            .with_flex_direction(FlexDirection::Column)
+            .with_justify_content(jc)
+            .with_debug_name(label + "_container"));
+
+    // 3 boxes - sized to fit within container
     for (int i = 0; i < 3; i++) {
       div(context, mk(container.ent(), i),
           ComponentConfig{}
               .with_label(std::to_string(i + 1))
-              .with_size(ComponentSize{percent(0.85f), pixels(28)})
+              .with_size(ComponentSize{percent(0.85f), percent(0.22f)})
               .with_background(Theme::Usage::Primary)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -54,11 +75,11 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto container = div(
         context, mk(parent, id),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.18f), percent(0.92f)})
+            .with_size(ComponentSize{percent(0.18f), percent(1.0f)})
             .with_custom_background(afterhours::Color{50, 60, 80, 255})
-            .with_padding(Padding{.top = pixels(4), .left = pixels(4), 
+            .with_padding(Padding{.top = pixels(4), .left = pixels(4),
                                   .bottom = pixels(4), .right = pixels(4)})
-            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2), 
+            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2),
                                 .left = pixels(3), .right = pixels(3)})
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name(label + "_outer"));
@@ -67,7 +88,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(container.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{percent(0.92f), pixels(22)})
+            .with_size(ComponentSize{percent(1.0f), pixels(22)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -79,10 +100,11 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto inner = div(
         context, mk(container.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.92f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
             .with_custom_background(afterhours::Color{35, 45, 65, 255})
-            .with_padding(Padding{.top = pixels(4), .left = pixels(4), 
+            .with_padding(Padding{.top = pixels(4), .left = pixels(4),
                                   .bottom = pixels(4), .right = pixels(4)})
+            .with_margin(Margin{.top = pixels(4)})
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(jc)
             .with_debug_name(label + "_inner"));
@@ -92,7 +114,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(inner.ent(), i),
           ComponentConfig{}
               .with_label(std::to_string(i + 1))
-              .with_size(ComponentSize{pixels(26), pixels(28)})
+              .with_size(ComponentSize{pixels(26), percent(0.70f)})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -105,39 +127,48 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
   void render_align_demo(UIContext<InputAction> &context,
                          afterhours::Entity &parent, const std::string &label,
                          AlignItems ai, int id) {
-    // Container with visible background
-    auto container = div(
+    // Outer container to hold title + demo
+    auto outer = div(
         context, mk(parent, id),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.31f), percent(0.92f)})
-            .with_custom_background(afterhours::Color{50, 60, 80, 255})
-            .with_padding(Padding{.top = pixels(6), .left = pixels(8), 
-                                  .bottom = pixels(6), .right = pixels(8)})
-            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2), 
+            .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
+            .with_margin(Margin{.top = pixels(2), .bottom = pixels(2),
                                 .left = pixels(4), .right = pixels(4)})
-            .with_flex_direction(FlexDirection::Row)
-            .with_align_items(ai)
-            .with_debug_name(label));
+            .with_flex_direction(FlexDirection::Column)
+            .with_debug_name(label + "_outer"));
 
-    // Title at left
-    div(context, mk(container.ent(), 0),
+    // Title label at top
+    div(context, mk(outer.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(75), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(22)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_skip_tabbing(true)
-            .with_flex_direction(FlexDirection::Column)
+            .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
 
-    // Three boxes of different heights
-    const float heights[] = {55.0f, 35.0f, 45.0f};
+    // Container with visible background and align items
+    auto container = div(
+        context, mk(outer.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+            .with_custom_background(afterhours::Color{50, 60, 80, 255})
+            .with_padding(Padding{.top = pixels(6), .left = pixels(8),
+                                  .bottom = pixels(6), .right = pixels(8)})
+            .with_margin(Margin{.top = pixels(4)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_align_items(ai)
+            .with_debug_name(label + "_container"));
+
+    // Three boxes of different heights using percent of container
+    const float heights[] = {0.70f, 0.45f, 0.55f};
     for (int i = 0; i < 3; i++) {
-      div(context, mk(container.ent(), i + 1),
+      div(context, mk(container.ent(), i),
           ComponentConfig{}
               .with_label(std::to_string(i + 1))
-              .with_size(ComponentSize{pixels(35), pixels(heights[i])})
+              .with_size(ComponentSize{pixels(40), percent(heights[i])})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -153,9 +184,9 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto container = div(
         context, mk(parent, id),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.96f), percent(0.92f)})
+            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
             .with_custom_background(afterhours::Color{50, 60, 80, 255})
-            .with_padding(Padding{.top = pixels(6), .left = pixels(10), 
+            .with_padding(Padding{.top = pixels(6), .left = pixels(10),
                                   .bottom = pixels(6), .right = pixels(10)})
             .with_flex_direction(FlexDirection::Row)
             .with_align_items(AlignItems::Center)
@@ -166,7 +197,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(container.ent(), 0),
         ComponentConfig{}
             .with_label("Start")
-            .with_size(ComponentSize{pixels(70), pixels(32)})
+            .with_size(ComponentSize{pixels(70), percent(0.25f)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -178,7 +209,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(container.ent(), 1),
         ComponentConfig{}
             .with_label("Auto")
-            .with_size(ComponentSize{pixels(60), pixels(32)})
+            .with_size(ComponentSize{pixels(60), percent(0.25f)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -190,7 +221,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(container.ent(), 2),
         ComponentConfig{}
             .with_label("Center")
-            .with_size(ComponentSize{pixels(70), pixels(32)})
+            .with_size(ComponentSize{pixels(70), percent(0.25f)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -202,7 +233,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(container.ent(), 3),
         ComponentConfig{}
             .with_label("End")
-            .with_size(ComponentSize{pixels(60), pixels(32)})
+            .with_size(ComponentSize{pixels(60), percent(0.25f)})
             .with_custom_background(afterhours::Color{180, 60, 90, 255})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -273,7 +304,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto jv_row = div(
         context, mk(left_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(140)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.45f)})
             .with_custom_background(afterhours::Color{38, 46, 65, 255})
             .with_padding(Spacing::xs)
             .with_margin(Margin{.bottom = pixels(8)})
@@ -300,7 +331,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto ai_row = div(
         context, mk(left_col.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(90)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.40f)})
             .with_custom_background(afterhours::Color{38, 46, 65, 255})
             .with_padding(Spacing::xs)
             .with_flex_direction(FlexDirection::Row)
@@ -336,7 +367,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto jh_row = div(
         context, mk(right_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(100)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.35f)})
             .with_custom_background(afterhours::Color{38, 46, 65, 255})
             .with_padding(Spacing::xs)
             .with_margin(Margin{.bottom = pixels(8)})
@@ -363,7 +394,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto sa_row = div(
         context, mk(right_col.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(80)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
             .with_custom_background(afterhours::Color{38, 46, 65, 255})
             .with_padding(Spacing::xs)
             .with_flex_direction(FlexDirection::Row)

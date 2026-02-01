@@ -21,9 +21,9 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.80f)})
+                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.85f)})
                 .with_custom_background(theme.background)
-                .with_padding(Spacing::sm)
+                .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.08f)
                 .with_debug_name("layout_main"));
@@ -32,10 +32,10 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Layout System Demo")
-            .with_size(ComponentSize{percent(0.95f), pixels(50)})
+            .with_size(ComponentSize{percent(0.95f), pixels(60)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
+            .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, 26.0f)
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
@@ -93,9 +93,9 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto col_container =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(200)})
+                .with_size(ComponentSize{percent(0.95f), pixels(280)})
                 .with_custom_background(theme.surface)
-                .with_padding(Spacing::sm)
+                .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
@@ -108,7 +108,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         div(context, mk(col_container.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.45f), pixels(170)})
+                .with_size(ComponentSize{percent(0.45f), pixels(240)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)
@@ -120,7 +120,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("Stacked Item 1")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -130,7 +130,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 1),
         ComponentConfig{}
             .with_label("Stacked Item 2")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -140,7 +140,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
             .with_label("Stacked Item 3")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -150,28 +150,30 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     // Right side description - use percent sizing with better visibility
     auto desc_panel = div(context, mk(col_container.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.45f), pixels(170)})
+            .with_size(ComponentSize{percent(0.45f), pixels(240)})
             .with_custom_background(theme.primary)
             .with_padding(Spacing::md)
             .with_flex_direction(FlexDirection::Column)
+            .with_align_items(AlignItems::Center)
             .with_skip_tabbing(true)
             .with_debug_name("description_panel"));
 
     div(context, mk(desc_panel.ent(), 0),
         ComponentConfig{}
             .with_label("Layout Guide")
-            .with_size(ComponentSize{percent(0.95f), pixels(36)})
+            .with_size(ComponentSize{percent(0.90f), pixels(48)})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_padding(Spacing::md)
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_title"));
 
     div(context, mk(desc_panel.ent(), 1),
         ComponentConfig{}
             .with_label("Column: stacks vertically")
-            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_size(ComponentSize{percent(0.90f), pixels(40)})
             .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line1"));
@@ -179,8 +181,9 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(desc_panel.ent(), 2),
         ComponentConfig{}
             .with_label("Row: arranges horizontally")
-            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_size(ComponentSize{percent(0.90f), pixels(40)})
             .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line2"));
@@ -188,8 +191,9 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(desc_panel.ent(), 3),
         ComponentConfig{}
             .with_label("Margins control spacing")
-            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_size(ComponentSize{percent(0.90f), pixels(40)})
             .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line3"));
@@ -198,12 +202,12 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
-            .with_size(ComponentSize{percent(0.95f), pixels(40)})
+            .with_size(ComponentSize{percent(0.95f), pixels(60)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small(),
+            .with_padding(Spacing::md)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_margin(Margin{.top = DefaultSpacing::medium(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
                                 .right = pixels(0)})

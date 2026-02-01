@@ -26,12 +26,13 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
 
-    // Main container background
+    // Main container - centered on screen
     auto root = div(context, mk(entity, 0),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.92f)})
+                        .with_size(ComponentSize{screen_pct(0.60f), screen_pct(0.90f)})
+                        .with_self_align(SelfAlign::Center)
                         .with_custom_background(theme.background)
-                        .with_roundness(0.08f)
+                        .with_roundness(0.04f)
                         .with_debug_name("navbar_bg"));
 
     // Content container with padding
@@ -39,112 +40,117 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("navbar_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Navigation Bar Component Showcase")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{pixels(700), pixels(50)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true)
             .with_debug_name("title"));
 
-    // Content area
-    auto content =
-        div(context, mk(main_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(480)})
-                .with_custom_background(theme.surface)
-                .with_padding(Spacing::lg)
-                .with_flex_direction(FlexDirection::Column)
-                .with_debug_name("content"));
-
     // Section 1: Settings Categories
-    div(context, mk(content.ent(), 0),
+    div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
             .with_label("Settings Categories")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_custom_background(theme.primary)
+            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_skip_tabbing(true)
             .with_debug_name("section1_label"));
 
-    navigation_bar(context, mk(content.ent(), 1), categories, category_idx,
+    navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(450), pixels(50)})
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                       .with_size(ComponentSize{pixels(500), pixels(50)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_categories"));
 
-    div(context, mk(content.ent(), 2),
+    div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Current: " + categories[category_idx])
-            .with_size(ComponentSize{pixels(300), pixels(30)})
-            .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::large()})
+            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_custom_background(theme.surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_skip_tabbing(true)
             .with_debug_name("status1"));
 
     // Section 2: Game Modes
-    div(context, mk(content.ent(), 3),
+    div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_label("Game Mode Selector")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_custom_background(theme.accent)
+            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_skip_tabbing(true)
             .with_debug_name("section2_label"));
 
-    navigation_bar(context, mk(content.ent(), 4), modes, mode_idx,
+    navigation_bar(context, mk(main_container.ent(), 5), modes, mode_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(400), pixels(50)})
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                       .with_size(ComponentSize{pixels(450), pixels(50)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_modes"));
 
-    div(context, mk(content.ent(), 5),
+    div(context, mk(main_container.ent(), 6),
         ComponentConfig{}
             .with_label("Mode: " + modes[mode_idx])
-            .with_size(ComponentSize{pixels(300), pixels(30)})
-            .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::large()})
+            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_custom_background(theme.surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_skip_tabbing(true)
             .with_debug_name("status2"));
 
     // Section 3: Level Selector (more options)
-    div(context, mk(content.ent(), 6),
+    div(context, mk(main_container.ent(), 7),
         ComponentConfig{}
             .with_label("Level Selector (6 options)")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_custom_background(theme.secondary)
+            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_skip_tabbing(true)
             .with_debug_name("section3_label"));
 
-    navigation_bar(context, mk(content.ent(), 7), levels, level_idx,
+    navigation_bar(context, mk(main_container.ent(), 8), levels, level_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(300), pixels(50)})
-                       .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                       .with_size(ComponentSize{pixels(400), pixels(50)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_levels"));
 
-    div(context, mk(content.ent(), 8),
+    div(context, mk(main_container.ent(), 9),
         ComponentConfig{}
             .with_label("Level: " + levels[level_idx])
-            .with_size(ComponentSize{pixels(300), pixels(30)})
-            .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_custom_background(theme.surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_skip_tabbing(true)
             .with_debug_name("status3"));
   }
 };

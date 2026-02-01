@@ -85,14 +85,14 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_debug_name("content"));
 
     // Left column - Sliders
     auto left_col =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.9f))
                 .with_padding(Spacing::sm)
@@ -213,7 +213,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Right column - Checkboxes
     auto right_col = div(context, mk(content.ent(), 1),
                          ComponentConfig{}
-                             .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                             .with_size(ComponentSize{percent(0.42f), percent(1.0f)})
                              .with_custom_background(afterhours::colors::darken(
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
@@ -225,7 +225,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
             .with_label("Checkboxes")
-            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_size(ComponentSize{percent(0.80f), pixels(28)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
@@ -238,7 +238,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 1), enable_music,
              ComponentConfig{}
                  .with_label("Music")
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
@@ -247,7 +247,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
              ComponentConfig{}
                  .with_label("SFX")
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
@@ -257,7 +257,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 3), fullscreen,
              ComponentConfig{}
                  .with_label("Fullscreen")
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
@@ -266,7 +266,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 4), vsync,
              ComponentConfig{}
                  .with_label("V-Sync")
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
@@ -275,7 +275,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 5), show_fps,
              ComponentConfig{}
                  .with_label("Show FPS")
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
                  .with_margin(Spacing::xs)
@@ -286,7 +286,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 6), disabled_value,
              ComponentConfig{}
                  .with_label("Disabled")
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
                  .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -296,7 +296,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Language dropdown
     dropdown(context, mk(right_col.ent(), 7), languages, language_index,
              ComponentConfig{}
-                 .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                 .with_size(ComponentSize{percent(0.80f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_margin(Spacing::xs)

@@ -54,34 +54,37 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
+    // Note: We keep screen_w/h for positioning elements relative to screen edges
+    // but use screen_pct(1.0f) for full-screen coverage to work with any resolution
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
     // ========== BACKGROUND ==========
+    // Use screen_pct(1.0f) to cover full screen regardless of Settings resolution
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
     // ========== GRID LINES (subtle background effect) ==========
-    // Vertical grid lines
-    for (int i = 0; i < 20; i++) {
+    // Use generous counts to cover up to 1920x1080 and beyond
+    // Grid lines: vertical every 80px, horizontal every 60px
+    for (int i = 0; i < 30; i++) {  // 30 * 80 = 2400px coverage
       float x = (float)i * 80.0f;
       div(context, mk(entity, 10 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(screen_h)})
+              .with_size(ComponentSize{pixels(1), screen_pct(1.0f)})
               .with_absolute_position()
               .with_translate(x, 0.0f)
               .with_custom_background(grid_color)
               .with_debug_name("grid_v_" + std::to_string(i)));
     }
-    // Horizontal grid lines
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 25; i++) {  // 25 * 60 = 1500px coverage
       float y = (float)i * 60.0f;
       div(context, mk(entity, 40 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(screen_w), pixels(1)})
+              .with_size(ComponentSize{screen_pct(1.0f), pixels(1)})
               .with_absolute_position()
               .with_translate(0.0f, y)
               .with_custom_background(grid_color)

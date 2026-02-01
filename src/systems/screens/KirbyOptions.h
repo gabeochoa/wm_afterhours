@@ -165,7 +165,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     float panel_x = 130.0f;
     float panel_y = 130.0f;
     float panel_w = 620.0f;
-    float panel_h = 370.0f;
+    float panel_h = 400.0f;
 
     div(context, mk(entity, 50),
         ComponentConfig{}
@@ -275,9 +275,9 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== OPTIONS GRID (2 columns) ==========
     float grid_x = panel_x + 35.0f;
     float grid_y = panel_y + 135.0f;
-    float icon_size = 75.0f;
-    float col_spacing = 160.0f;
-    float row_spacing = 100.0f;
+    float icon_size = 70.0f;
+    float col_spacing = 150.0f;
+    float row_spacing = 95.0f;
 
     for (size_t i = 0; i < options.size(); i++) {
       auto &[icon, label, color] = options[i];
@@ -325,11 +325,11 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 201 + static_cast<int>(i) * 2),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 40)),
-                                       pixels(22)})
+              .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 50)),
+                                       pixels(24)})
               .with_absolute_position()
-              .with_translate(ox - 20.0f, oy + icon_size + 8.0f)
-              .with_font("Gaegu-Bold", 19.0f)
+              .with_translate(ox - 25.0f, oy + icon_size + 5.0f)
+              .with_font("Gaegu-Bold", 17.0f)
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("opt_label_" + std::to_string(i)));

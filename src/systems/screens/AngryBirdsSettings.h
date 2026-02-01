@@ -62,7 +62,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== MAIN PANEL ==========
     float panel_w = 720.0f;
-    float panel_h = 440.0f;
+    float panel_h = 470.0f;
     float panel_x = ((float)screen_w - panel_w) / 2.0f;
     float panel_y = ((float)screen_h - panel_h) / 2.0f;
 
@@ -115,16 +115,16 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
 
-    // Close button (X)
+    // Close button (X) - positioned inside panel bounds in header
     button(context, mk(entity, 25),
            ComponentConfig{}
                .with_label("X")
-               .with_size(ComponentSize{pixels(52), pixels(52)})
+               .with_size(ComponentSize{pixels(40), pixels(40)})
                .with_absolute_position()
-               .with_translate(panel_x + panel_w - 65.0f, panel_y - 8.0f)
+               .with_translate(panel_x + panel_w - 52.0f, panel_y + 24.0f)
                .with_custom_background(close_red)
                .with_border(afterhours::Color{175, 55, 65, 255}, 3.0f)
-               .with_font("EqProRounded", 28.0f)
+               .with_font("EqProRounded", 20.0f)
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -180,10 +180,10 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 35 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(toggles[i].label)
-              .with_size(ComponentSize{pixels(75), pixels(18)})
+              .with_size(ComponentSize{pixels(75), pixels(24)})
               .with_absolute_position()
-              .with_translate(tx, toggle_y + 58.0f)
-              .with_font("EqProRounded", 14.0f)
+              .with_translate(tx, toggle_y + 62.0f)
+              .with_font("EqProRounded", 16.0f)
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("toggle_label_" + std::to_string(i)));
@@ -241,22 +241,22 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 44),
         ComponentConfig{}
             .with_label("Sync")
-            .with_size(ComponentSize{pixels(50), pixels(16)})
+            .with_size(ComponentSize{pixels(50), pixels(20)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 44.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 46.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("wifi_label"));
 
     // ========== BLUE PILL BUTTONS ==========
     float btn_y1 = toggle_y + 100.0f;
-    float btn_y2 = btn_y1 + 75.0f;
-    float btn_y3 = btn_y2 + 75.0f;
+    float btn_y2 = btn_y1 + 65.0f;
+    float btn_y3 = btn_y2 + 65.0f;
     float left_btn_x = panel_x + 55.0f;
     float right_btn_x = panel_x + panel_w / 2.0f + 25.0f;
     float btn_w = 300.0f;
-    float btn_h = 58.0f;
+    float btn_h = 50.0f;
 
     // Notifications: ON/OFF (clickable)
     std::string notif_text =
@@ -284,10 +284,10 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 51),
         ComponentConfig{}
             .with_label(notif_icon)
-            .with_size(ComponentSize{pixels(30), pixels(30)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(left_btn_x + 20.0f, btn_y1 + 12.0f)
-            .with_font("EqProRounded", 24.0f)
+            .with_translate(left_btn_x + 18.0f, btn_y1 + 10.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(notif_icon_color)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("notif_icon"));
@@ -295,10 +295,10 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 52),
         ComponentConfig{}
             .with_label(notif_text)
-            .with_size(ComponentSize{pixels(200), pixels(35)})
+            .with_size(ComponentSize{pixels(220), pixels(32)})
             .with_absolute_position()
-            .with_translate(left_btn_x + 55.0f, btn_y1 + 10.0f)
-            .with_font("EqProRounded", 22.0f)
+            .with_translate(left_btn_x + 50.0f, btn_y1 + 8.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("notif_text"));
 
@@ -313,7 +313,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_btn_x, btn_y1)
             .with_custom_background(btn_blue)
             .with_border(btn_blue_dark, 4.0f)
-            .with_font("EqProRounded", 26.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -332,7 +332,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(left_btn_x, btn_y2)
             .with_custom_background(btn_blue)
             .with_border(btn_blue_dark, 4.0f)
-            .with_font("EqProRounded", 26.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -351,7 +351,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_btn_x, btn_y2)
             .with_custom_background(btn_blue)
             .with_border(btn_blue_dark, 4.0f)
-            .with_font("EqProRounded", 26.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -363,30 +363,30 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 70),
         ComponentConfig{}
             .with_label("15555-1-114203-20-10200-01")
-            .with_size(ComponentSize{pixels(280), pixels(22)})
+            .with_size(ComponentSize{pixels(280), pixels(24)})
             .with_absolute_position()
-            .with_translate(left_btn_x, btn_y3 + 10.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(left_btn_x, btn_y3 + 6.0f)
+            .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("build_id"));
 
     div(context, mk(entity, 71),
         ComponentConfig{}
             .with_label("Version 1.11.0.12346")
-            .with_size(ComponentSize{pixels(200), pixels(20)})
+            .with_size(ComponentSize{pixels(220), pixels(22)})
             .with_absolute_position()
-            .with_translate(left_btn_x, btn_y3 + 32.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(left_btn_x, btn_y3 + 26.0f)
+            .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("version"));
 
     div(context, mk(entity, 72),
         ComponentConfig{}
             .with_label("Player ID: 281676956389")
-            .with_size(ComponentSize{pixels(200), pixels(20)})
+            .with_size(ComponentSize{pixels(220), pixels(22)})
             .with_absolute_position()
-            .with_translate(left_btn_x, btn_y3 + 52.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(left_btn_x, btn_y3 + 46.0f)
+            .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("player_id"));
 
@@ -401,7 +401,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_btn_x, btn_y3)
             .with_custom_background(btn_blue)
             .with_border(btn_blue_dark, 4.0f)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))

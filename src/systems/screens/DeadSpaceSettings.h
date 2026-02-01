@@ -72,14 +72,25 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_black)
             .with_debug_name("bg"));
 
-    // Subtle vertical scan lines effect
-    for (int i = 0; i < 30; i++) {
+    // Calculate responsive layout values
+    float content_margin = 30.0f;
+    float sidebar_w = 200.0f;
+    float sidebar_x = content_margin;
+    float sidebar_y = 100.0f;
+    float gap = 30.0f;
+    float panel_x = sidebar_x + sidebar_w + gap;
+    float panel_w = (float)screen_w - panel_x - content_margin;
+    float panel_y = 60.0f;
+    float panel_h = (float)screen_h - panel_y - 90.0f;
+
+    // Subtle vertical scan lines effect (positioned at right edge of screen)
+    for (int i = 0; i < 20; i++) {
       if (i % 3 == 0) {
         div(context, mk(entity, 5 + i),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(1), pixels(screen_h)})
                 .with_absolute_position()
-                .with_translate((float)screen_w - 120.0f + (float)i * 4.0f,
+                .with_translate((float)screen_w - 80.0f + (float)i * 4.0f,
                                 0.0f)
                 .with_custom_background(afterhours::Color{15, 20, 22, 180})
                 .with_debug_name("scanline_" + std::to_string(i)));
@@ -87,22 +98,20 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== TITLE: MORE SETTINGS ==========
+    float title_w = 280.0f;
+    float title_x = panel_x + (panel_w - title_w) / 2.0f;
     div(context, mk(entity, 50),
         ComponentConfig{}
             .with_label("MORE SETTINGS")
-            .with_size(ComponentSize{pixels(280), pixels(40)})
+            .with_size(ComponentSize{pixels(static_cast<int>(title_w)), pixels(32)})
             .with_absolute_position()
-            .with_translate(350.0f, 55.0f)
+            .with_translate(title_x, 20.0f)
             .with_font("EqProRounded", 26.0f)
             .with_custom_text_color(teal_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
 
     // ========== LEFT SIDEBAR: INITIAL SETTINGS ==========
-    // Position sidebar further from left edge to prevent clipping
-    float sidebar_x = 55.0f;
-    float sidebar_y = 150.0f;
-    float sidebar_w = 210.0f;
 
     // Sidebar header
     div(context, mk(entity, 60),
@@ -141,11 +150,6 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== MAIN PANEL: SETTINGS ==========
-    float panel_x = 300.0f;
-    float panel_y = 100.0f;
-    float panel_w = 520.0f;
-    float panel_h = 450.0f;
-
     // Panel background with border
     div(context, mk(entity, 100),
         ComponentConfig{}
@@ -172,8 +176,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("panel_header"));
 
     // Settings list items
-    float list_y = panel_y + 55.0f;
-    float item_h = 48.0f;
+    float header_h = 45.0f;
+    float list_y = panel_y + header_h + 10.0f;
+    float list_area_h = panel_h - header_h - 20.0f;
+    float item_h = list_area_h / (float)main_settings.size();
 
     for (size_t i = 0; i < main_settings.size(); i++) {
       float item_y = list_y + (float)i * item_h;
@@ -224,8 +230,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_y = panel_y + panel_h + 20.0f;
-    float prompt_x = panel_x + 150.0f;
+    float prompt_bar_w = 280.0f;
+    float prompt_x = panel_x + (panel_w - prompt_bar_w) / 2.0f;
+    float prompt_y = panel_y + panel_h + 10.0f;
 
     // Enter prompt (smaller, just for SELECT)
     div(context, mk(entity, 200),

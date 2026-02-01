@@ -37,14 +37,15 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.10f;
     context.theme = theme;
 
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_width = res ? res->current_resolution.width : 1280;
+    (void)res; // screen_height not needed since we use screen_pct for background
 
-    // Background
+    // Background - use screen_pct for reliable full-screen coverage
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
@@ -88,9 +89,12 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     float card_y = 130.0f;
     float card_spacing = 20.0f;
     float card_height = 100.0f;
-    float card_width = 380.0f;
-    float left_col_x = (screen_width / 2.0f) - card_width - 10.0f;
-    float right_col_x = (screen_width / 2.0f) + 10.0f;
+    float card_width = 340.0f;
+    float col_gap = 30.0f;
+    float total_content_width = card_width * 2.0f + col_gap;
+    float content_start_x = (screen_width - total_content_width) / 2.0f;
+    float left_col_x = content_start_x;
+    float right_col_x = content_start_x + card_width + col_gap;
 
     // === WORKING EXAMPLES (Left Column) ===
     // Section header
@@ -121,11 +125,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 12),
         ComponentConfig{}
             .with_label("This text fits perfectly")
-            .with_size(ComponentSize{pixels(card_width - 30),
+            .with_size(ComponentSize{pixels(card_width - 20),
                                      pixels(card_height - 20)})
             .with_absolute_position()
-            .with_translate(left_col_x + 15.0f, card_y + 10.0f)
-            .with_font("Gaegu-Bold", 24.0f)
+            .with_translate(left_col_x + 10.0f, card_y + 10.0f)
+            .with_font("Gaegu-Bold", 22.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_ok_1"));
@@ -146,9 +150,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 14),
         ComponentConfig{}
             .with_label("Short text")
-            .with_size(ComponentSize{pixels(card_width - 30), pixels(50)})
+            .with_size(ComponentSize{pixels(card_width - 20), pixels(50)})
             .with_absolute_position()
-            .with_translate(left_col_x + 15.0f, card_y + 5.0f)
+            .with_translate(left_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -308,7 +312,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label("Shrinking boxes with same text:")
-            .with_size(ComponentSize{pixels(300), pixels(20)})
+            .with_size(ComponentSize{pixels(card_width), pixels(20)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -318,7 +322,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 
     card_y += 25.0f;
 
-    float box_sizes[] = {120.0f, 80.0f, 50.0f, 30.0f, 15.0f};
+    // Use smaller box sizes to fit within the column width
+    float box_sizes[] = {70.0f, 55.0f, 40.0f, 28.0f, 18.0f};
+    float box_spacing = 8.0f;
     float box_x = right_col_x;
     for (int i = 0; i < 5; i++) {
       float size = box_sizes[i];
@@ -335,15 +341,15 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 41 + i * 2),
           ComponentConfig{}
               .with_label("ABC")
-              .with_size(ComponentSize{pixels(size - 10), pixels(size - 10)})
+              .with_size(ComponentSize{pixels(size - 8), pixels(size - 8)})
               .with_absolute_position()
-              .with_translate(box_x + 5.0f, card_y + 5.0f)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_translate(box_x + 4.0f, card_y + 4.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
               .with_custom_text_color(text_light)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("shrink_text_" + std::to_string(i)));
 
-      box_x += size + 10.0f;
+      box_x += size + box_spacing;
     }
   }
 };

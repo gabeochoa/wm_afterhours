@@ -162,12 +162,12 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_debug_name("gold_text"));
 
-    // Rating box
+    // Rating box - widened to fit all content
     div(context, mk(entity, 30),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(185), pixels(52)})
+            .with_size(ComponentSize{pixels(220), pixels(58)})
             .with_absolute_position()
-            .with_translate(560.0f, 23.0f)
+            .with_translate(530.0f, 20.0f)
             .with_custom_background(cream_surface)
             .with_border(brown_border, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -177,9 +177,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 31),
         ComponentConfig{}
             .with_label("Rating:")
-            .with_size(ComponentSize{pixels(55), pixels(20)})
+            .with_size(ComponentSize{pixels(60), pixels(22)})
             .with_absolute_position()
-            .with_translate(570.0f, 30.0f)
+            .with_translate(540.0f, 26.0f)
             .with_font("Gaegu-Bold", 14.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("rating_label"));
@@ -188,14 +188,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Using colored rectangles as simple star representation
     afterhours::Color star_gold{215, 175, 95, 255};
     afterhours::Color star_empty_color{190, 180, 165, 255};
-    float star_x = 628.0f;
+    float star_x = 600.0f;
     for (int i = 0; i < 5; i++) {
       bool is_filled = (i < 4);
       div(context, mk(entity, 33 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(16), pixels(16)})
               .with_absolute_position()
-              .with_translate(star_x + (float)i * 19.0f, 30.0f)
+              .with_translate(star_x + (float)i * 19.0f, 26.0f)
               .with_custom_background(is_filled ? star_gold : star_empty_color)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.3f)
@@ -205,9 +205,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 32),
         ComponentConfig{}
             .with_label("Customers Served: " + std::to_string(customers_today))
-            .with_size(ComponentSize{pixels(170), pixels(18)})
+            .with_size(ComponentSize{pixels(200), pixels(20)})
             .with_absolute_position()
-            .with_translate(570.0f, 50.0f)
+            .with_translate(540.0f, 50.0f)
             .with_font("Gaegu-Bold", 13.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("served"));
@@ -279,13 +279,13 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // Promote Special button
+    // Promote Special button - widened for full text visibility
     float promote_y = panel_y + panel_h - 70.0f;
     button(context, mk(entity, 120),
            ComponentConfig{}
                .with_label("Promote Special")
                .with_size(ComponentSize{
-                   pixels(static_cast<int>(menu_btn_w - 40)), pixels(46)})
+                   pixels(static_cast<int>(menu_btn_w)), pixels(46)})
                .with_absolute_position()
                .with_translate(left_panel_x + 25.0f, promote_y)
                .with_custom_background(cream_surface)
@@ -297,16 +297,16 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_debug_name("promote"));
 
-    // Clock icon on Promote button
+    // Clock icon on Promote button - positioned to not overlap text
     if (clock_tex.id != 0) {
       afterhours::texture_manager::Rectangle clock_src{
           0, 0, (float)clock_tex.width, (float)clock_tex.height};
       sprite(context, mk(entity, 121), clock_tex, clock_src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(26), pixels(26)})
+                 .with_size(ComponentSize{pixels(24), pixels(24)})
                  .with_absolute_position()
-                 .with_translate(left_panel_x + menu_btn_w - 35.0f,
-                                 promote_y + 10.0f)
+                 .with_translate(left_panel_x + menu_btn_w - 8.0f,
+                                 promote_y + 11.0f)
                  .with_debug_name("clock_icon"));
     }
 

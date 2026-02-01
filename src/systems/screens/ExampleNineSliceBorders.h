@@ -411,70 +411,73 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
       log_info("Nine-slice button clicked!");
     }
 
-    // Dialog box example
+    // Dialog box example - positioned next to button with proper spacing
     div(context, mk(entity, 85),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(350.0f), pixels(120.0f)})
+            .with_size(ComponentSize{pixels(300.0f), pixels(100.0f)})
             .with_absolute_position()
             .with_translate(start_x + 200, row5_y)
-            .with_nine_slice_border(panel_025, 16)
+            .with_custom_background(parchment)
+            .with_nine_slice_border(border_010, 16)
             .with_padding(Spacing::sm)
             .with_debug_name("dialog_box"));
 
     div(context, mk(entity, 86),
         ComponentConfig{}
-            .with_label("This is a dialog box using 9-slice borders. "
-                        "The corners stay crisp while the edges stretch!")
-            .with_size(ComponentSize{pixels(330), pixels(100)})
+            .with_label("This is a dialog using 9-slice. "
+                        "Corners stay crisp!")
+            .with_size(ComponentSize{pixels(270), pixels(70)})
             .with_absolute_position()
-            .with_translate(start_x + 210, row5_y + 10)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_translate(start_x + 215, row5_y + 15)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("dialog_text"));
 
-    // Nested panels example
+    // Nested panels example - with visible outer panel
     div(context, mk(entity, 90),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(280.0f), pixels(120.0f)})
+            .with_size(ComponentSize{pixels(280.0f), pixels(100.0f)})
             .with_absolute_position()
-            .with_translate(start_x + 570, row5_y)
-            .with_nine_slice_border(panel_015, 16)
+            .with_translate(start_x + 520, row5_y)
+            .with_custom_background(parchment)
+            .with_nine_slice_border(border_010, 16)
             .with_debug_name("nested_outer"));
 
     div(context, mk(entity, 91),
         ComponentConfig{}
             .with_label("Nested Panels")
-            .with_size(ComponentSize{pixels(250), pixels(30)})
+            .with_size(ComponentSize{pixels(250), pixels(25)})
             .with_absolute_position()
-            .with_translate(start_x + 585, row5_y + 10)
+            .with_translate(start_x + 535, row5_y + 8)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_custom_text_color(text_dark)
+            .with_alignment(TextAlignment::Center)
             .with_debug_name("nested_title"));
 
     div(context, mk(entity, 92),
         ComponentConfig{}
             .with_label("Inner")
-            .with_size(ComponentSize{pixels(120.0f), pixels(55.0f)})
+            .with_size(ComponentSize{pixels(110.0f), pixels(50.0f)})
             .with_absolute_position()
-            .with_translate(start_x + 585, row5_y + 50)
+            .with_translate(start_x + 535, row5_y + 40)
             .with_nine_slice_border(NineSliceBorder::uniform(
                 border_005, 16, afterhours::Color{180, 140, 80, 255}))
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_custom_text_color(text_light)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("nested_inner_a"));
 
     div(context, mk(entity, 93),
         ComponentConfig{}
             .with_label("Panel")
-            .with_size(ComponentSize{pixels(120.0f), pixels(55.0f)})
+            .with_size(ComponentSize{pixels(110.0f), pixels(50.0f)})
             .with_absolute_position()
-            .with_translate(start_x + 715, row5_y + 50)
+            .with_translate(start_x + 675, row5_y + 40)
             .with_nine_slice_border(NineSliceBorder::uniform(
                 border_010, 16, afterhours::Color{100, 140, 180, 255}))
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_custom_text_color(text_light)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("nested_inner_b"));
   }

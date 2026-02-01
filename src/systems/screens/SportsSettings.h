@@ -380,15 +380,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(get_section_header())
             .with_size(ComponentSize{pixels(150), pixels(30)})
             .with_absolute_position()
-            .with_translate(40.0f, header_y)
+            .with_translate(50.0f, header_y)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("section_header"));
 
     // ========== LEFT PANEL: Settings ==========
-    float panel_x = 40.0f;
+    float panel_x = 50.0f;
     float panel_y = header_y + 40.0f;
-    float panel_w = 450.0f;
+    float panel_w = 520.0f;
     float row_h = 42.0f;
 
     // Reset selected_row if out of bounds for current tab
@@ -448,19 +448,19 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(setting.label)
                      .with_size(ComponentSize{
-                         pixels(220), pixels(static_cast<int>(row_h - 4))})
+                         pixels(200), pixels(static_cast<int>(row_h - 4))})
                      .with_absolute_position()
-                     .with_translate(panel_x + 16.0f, ry + 2.0f)
+                     .with_translate(panel_x + 20.0f, ry + 2.0f)
                      .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(label_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Left)
-                     .with_padding(Padding{.left = pixels(8)})
+                     .with_padding(Padding{.left = pixels(4)})
                      .with_debug_name("label_" + std::to_string(i)))) {
         selected_row = i;
       }
 
-      float value_x = panel_x + 240.0f;
+      float value_x = panel_x + 220.0f;
       float arrow_size = 24.0f;
       float step = 0.05f; // 5% per click for sliders
 
@@ -493,9 +493,9 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 301 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(display_value)
-              .with_size(ComponentSize{pixels(130), pixels(28)})
+              .with_size(ComponentSize{pixels(120), pixels(28)})
               .with_absolute_position()
-              .with_translate(value_x + arrow_size + 5.0f, ry + 6.0f)
+              .with_translate(value_x + arrow_size + 4.0f, ry + 6.0f)
               .with_font("EqProRounded", 16.0f)
               .with_custom_text_color(value_color)
               .with_alignment(TextAlignment::Center)
@@ -511,7 +511,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{
                          pixels(static_cast<int>(arrow_size)), pixels(28)})
                      .with_absolute_position()
-                     .with_translate(value_x + arrow_size + 140.0f, ry + 6.0f)
+                     .with_translate(value_x + arrow_size + 128.0f, ry + 6.0f)
                      .with_font("EqProRounded", 16.0f)
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -527,16 +527,38 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }
       }
 
-      // Slider visual (syncs with arrows)
+      // Slider visual bar (static display - matches arrow control values)
       if (setting.is_slider) {
-        slider(context, mk(entity, 500 + static_cast<int>(i)),
-               setting.slider_pct,
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(130), pixels(12)})
-                   .with_absolute_position()
-                   .with_translate(value_x + arrow_size + 170.0f, ry + 13.0f)
-                   .with_skip_tabbing(true)
-                   .with_debug_name("slider_" + std::to_string(i)));
+        float bar_x = value_x + arrow_size + 160.0f;
+        float bar_y = ry + 12.0f;
+        float bar_w = 100.0f;
+        float bar_h = 14.0f;
+
+        // Slider track background
+        div(context, mk(entity, 500 + static_cast<int>(i)),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(static_cast<int>(bar_w)),
+                                         pixels(static_cast<int>(bar_h))})
+                .with_absolute_position()
+                .with_translate(bar_x, bar_y)
+                .with_custom_background(slider_track)
+                .with_skip_tabbing(true)
+                .with_debug_name("slider_bg_" + std::to_string(i)));
+
+        // Slider fill (shows current value)
+        float fill_w = bar_w * setting.slider_pct;
+        if (fill_w > 2.0f) {
+          div(context, mk(entity, 600 + static_cast<int>(i)),
+              ComponentConfig{}
+                  .with_size(ComponentSize{pixels(static_cast<int>(fill_w)),
+                                           pixels(static_cast<int>(bar_h))})
+                  .with_absolute_position()
+                  .with_translate(bar_x, bar_y)
+                  .with_custom_background(accent_green)
+                  .with_render_layer(1)
+                  .with_skip_tabbing(true)
+                  .with_debug_name("slider_fill_" + std::to_string(i)));
+        }
       }
     }
 

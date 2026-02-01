@@ -81,7 +81,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(title_bar.ent(), 0),
         ComponentConfig{}
             .with_label(buddy_name + " - Instant Message")
-            .with_size(ComponentSize{pixels(INNER_W - 70), pixels(28)})  // Leave room for controls
+            .with_size(ComponentSize{pixels(INNER_W - 80), pixels(28)})  // Leave room for controls
             .with_custom_text_color(AIMColors::title_text())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
@@ -89,10 +89,20 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("title_text"));
 
-    // Window controls - placed directly in title bar (no intermediate container)
-    const char* ctrl_labels[] = {"_", "□", "×"};
+    // Window controls container - groups buttons on the right
+    auto controls_container =
+        div(context, mk(title_bar.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(72), pixels(24)})
+                .with_flex_direction(FlexDirection::Row)
+                .with_align_items(AlignItems::Center)
+                .with_justify_content(JustifyContent::FlexEnd)
+                .with_margin(Margin{.right = pixels(2)})
+                .with_debug_name("controls_container"));
+
+    const char* ctrl_labels[] = {"_", "[]", "X"};
     for (int i = 0; i < 3; i++) {
-      div(context, mk(title_bar.ent(), i + 1),
+      div(context, mk(controls_container.ent(), i),
           ComponentConfig{}
               .with_label(ctrl_labels[i])
               .with_size(ComponentSize{pixels(20), pixels(20)})

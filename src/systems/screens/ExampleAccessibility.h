@@ -77,17 +77,18 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_debug_name("main_panel"));
 
-    // Header
+    // Header - use same roundness as container and match its top edge
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_label("Accessibility Features")
-            .with_size(ComponentSize{pixels(panel_w - 4), pixels(55)})
+            .with_size(ComponentSize{pixels(panel_w), pixels(55)})
             .with_absolute_position()
-            .with_translate(panel_x + 2.0f, panel_y + 2.0f)
+            .with_translate(panel_x, panel_y)
             .with_custom_background(accent_green)
             .with_font("EqProRounded", 28.0f)
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
+            .with_roundness(0.10f)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
 

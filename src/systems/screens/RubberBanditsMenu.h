@@ -48,20 +48,22 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_w = res ? res->current_resolution.width : 1280;
+    int screen_h = res ? res->current_resolution.height : 720;
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_yellow)
             .with_debug_name("bg"));
 
     // Ground area (darker yellow)
     div(context, mk(entity, 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(150)})
+            .with_size(ComponentSize{screen_pct(1.0f), pixels(150)})
             .with_absolute_position()
             .with_translate(0.0f, (float)screen_h - 150.0f)
             .with_custom_background(bg_yellow_dark)
@@ -101,9 +103,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("thia9uers - Online")
-            .with_size(ComponentSize{pixels(170), pixels(28)})
+            .with_size(ComponentSize{pixels(185), pixels(28)})
             .with_absolute_position()
-            .with_translate(info_x - 30.0f, 20.0f)
+            .with_translate(info_x - 45.0f, 20.0f)
             .with_custom_background(online_pill)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_dark)
@@ -264,9 +266,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 301),
         ComponentConfig{}
             .with_label("EARL THE BIRD")
-            .with_size(ComponentSize{pixels(170), pixels(32)})
+            .with_size(ComponentSize{pixels(200), pixels(32)})
             .with_absolute_position()
-            .with_translate(char_x - 40.0f, char_y)
+            .with_translate(char_x - 55.0f, char_y)
             .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -278,7 +280,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("RB")
             .with_size(ComponentSize{pixels(45), pixels(32)})
             .with_absolute_position()
-            .with_translate(char_x + 145.0f, char_y)
+            .with_translate(char_x + 160.0f, char_y)
             .with_custom_background(text_dark)
             .with_font("EqProRounded", 16.0f)
             .with_custom_text_color(text_white)
@@ -291,10 +293,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 303),
         ComponentConfig{}
             .with_label("FAVOURITE")
-            .with_size(ComponentSize{pixels(100), pixels(20)})
+            .with_size(ComponentSize{pixels(140), pixels(24)})
             .with_absolute_position()
-            .with_translate(char_x - 5.0f, char_y + 32.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_translate(char_x - 25.0f, char_y + 34.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(afterhours::Color{120, 100, 70, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("favourite"));

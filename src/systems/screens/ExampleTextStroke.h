@@ -28,8 +28,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.1f;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
+    // Get actual screen dimensions from window manager singleton
+    auto *resolution = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_w = resolution ? resolution->current_resolution.width : 1920;
+    int screen_h = resolution ? resolution->current_resolution.height : 1080;
 
     // Background
     div(context, mk(entity, 0),
@@ -63,8 +66,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("page_subtitle"));
 
     int id = 10;
-    float col1_x = 40.0f;
-    float col2_x = 660.0f;
+    float margin = 80.0f;  // Side margins
+    float col_gap = 60.0f; // Gap between columns
+    float col1_x = margin;
+    float col1_width = (screen_w - 2 * margin - col_gap) * 0.55f; // Left column: 55% of content area
+    float col2_x = margin + col1_width + col_gap;
 
     // ========== LEFT COLUMN: Side-by-side comparisons ==========
 
@@ -188,11 +194,12 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     // Row 5: White on light background - stroke makes it readable
     afterhours::Color light_bg{220, 225, 235, 255};
+    float light_panel_width = col1_width; // Width matches left column
 
     // Light background panel
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(580), pixels(80)})
+            .with_size(ComponentSize{pixels(light_panel_width), pixels(80)})
             .with_absolute_position()
             .with_translate(col1_x, 555.0f)
             .with_custom_background(light_bg)
@@ -216,7 +223,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_label("WHITE")
             .with_size(ComponentSize{pixels(180), pixels(55)})
             .with_absolute_position()
-            .with_translate(col1_x + 280.0f, 565.0f)
+            .with_translate(col1_x + light_panel_width * 0.5f, 565.0f)
             .with_font(bold_font, 40.0f)
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 4.0f)
@@ -225,13 +232,23 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("invisible           visible!")
-            .with_size(ComponentSize{pixels(300), pixels(20)})
+            .with_label("invisible")
+            .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position()
-            .with_translate(col1_x + 60.0f, 618.0f)
+            .with_translate(col1_x + 50.0f, 618.0f)
             .with_font(UIComponent::DEFAULT_FONT, 12.0f)
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
-            .with_debug_name("desc_5"));
+            .with_debug_name("desc_5a"));
+
+    div(context, mk(entity, id++),
+        ComponentConfig{}
+            .with_label("visible!")
+            .with_size(ComponentSize{pixels(100), pixels(20)})
+            .with_absolute_position()
+            .with_translate(col1_x + light_panel_width * 0.5f + 20.0f, 618.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
+            .with_debug_name("desc_5b"));
 
     // ========== RIGHT COLUMN: Thickness comparison ==========
 

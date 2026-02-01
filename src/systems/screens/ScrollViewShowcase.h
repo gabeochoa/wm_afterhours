@@ -101,7 +101,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     auto vert_scroll = scroll_view(
         context, mk(vert_section.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(0.80f)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
             .with_custom_background(theme.surface)
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
@@ -189,14 +189,14 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     auto horiz_scroll = scroll_view(
         context, mk(horiz_section.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
             .with_custom_background(theme.surface)
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Row)
             .with_no_wrap()
-            .with_padding(Padding{.left = pixels(8), .right = pixels(8)})
+            .with_padding(Padding{.left = pixels(4), .right = pixels(4)})
             .with_debug_name("horiz_scroll"));
 
     // Configure horizontal scrolling

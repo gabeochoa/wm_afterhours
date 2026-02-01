@@ -74,6 +74,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_info"))) {
       toast::send_info(context, "This is an info message #" +
                   std::to_string(++toast_counter));
@@ -86,6 +87,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_success"))) {
       toast::send_success(context, "Operation completed successfully!");
     }
@@ -98,6 +100,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(warningBg)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_warning"))) {
       toast::send_warning(context, "Warning: Check your settings");
     }
@@ -109,6 +112,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Error)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_error"))) {
       toast::send_error(context, "Error: Something went wrong!");
     }
@@ -139,6 +143,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_quick"))) {
       toast::send_info(context, "This disappears fast!", 1.0f);
     }
@@ -150,6 +155,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_long"))) {
       toast::send_info(context, "This sticks around for a while...", 10.0f);
     }
@@ -161,6 +167,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_spam"))) {
       for (int i = 0; i < 5; i++) {
         toast::send_info(context, "Spam toast #" + std::to_string(i + 1), 4.0f);
@@ -175,6 +182,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(coral)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_custom"))) {
       toast::send_custom(context, "Custom colored toast!", coral, 4.0f);
     }
@@ -205,6 +213,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_roundness(theme.roundness)
                    .with_debug_name("btn_undo"))) {
       // Create a toast that shows undo was triggered
       // Note: For truly interactive toasts with buttons, a different approach

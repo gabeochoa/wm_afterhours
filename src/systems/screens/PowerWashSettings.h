@@ -188,8 +188,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== MAIN PANEL ==========
     float panel_x = 55.0f;
     float panel_y = 60.0f;
-    float panel_w = 600.0f;
-    float panel_h = 420.0f;
+    float panel_w = 480.0f;
+    float panel_h = 380.0f;
 
     div(context, mk(entity, 20),
         ComponentConfig{}
@@ -202,10 +202,10 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("main_panel"));
 
     // ========== SETTINGS ROWS ==========
-    float row_x = panel_x + 20.0f;
-    float row_y = panel_y + 20.0f;
-    float row_h = 38.0f;
-    float label_w = 200.0f;
+    float row_x = panel_x + 15.0f;
+    float row_y = panel_y + 15.0f;
+    float row_h = 36.0f;
+    float label_w = 140.0f;
     float dropdown_w = 220.0f;
 
     auto &current_settings = get_current_settings();
@@ -246,7 +246,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_label("<")
                      .with_size(ComponentSize{pixels(24), pixels(28)})
                      .with_absolute_position()
-                     .with_translate(row_x + label_w + 40.0f, ry)
+                     .with_translate(row_x + label_w + 20.0f, ry)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", 16.0f)
@@ -266,9 +266,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(
                   current_settings[i].options[current_settings[i].option_idx])
               .with_size(ComponentSize{
-                  pixels(static_cast<int>(dropdown_w - 54)), pixels(28)})
+                  pixels(static_cast<int>(dropdown_w - 52)), pixels(28)})
               .with_absolute_position()
-              .with_translate(row_x + label_w + 66.0f, ry)
+              .with_translate(row_x + label_w + 45.0f, ry)
               .with_custom_background(dd_bg)
               .with_font("EqProRounded", 14.0f)
               .with_custom_text_color(text_white)
@@ -282,7 +282,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(24), pixels(28)})
                      .with_absolute_position()
                      .with_translate(
-                         row_x + label_w + 40.0f + dropdown_w - 26.0f, ry)
+                         row_x + label_w + 20.0f + dropdown_w - 24.0f, ry)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", 16.0f)
@@ -296,10 +296,10 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== HELP TEXT PANEL ==========
-    float help_x = panel_x + panel_w + 30.0f;
+    float help_x = panel_x + panel_w + 15.0f;
     float help_y = panel_y;
-    float help_w = 280.0f;
-    float help_h = 150.0f;
+    float help_w = 220.0f;
+    float help_h = 140.0f;
 
     div(context, mk(entity, 150),
         ComponentConfig{}
@@ -322,51 +322,51 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 151),
         ComponentConfig{}
             .with_label(setting_name)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)),
+            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
                                      pixels(28)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 15.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_translate(help_x + 12.0f, help_y + 12.0f)
+            .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(text_cyan)
             .with_debug_name("help_title"));
 
     div(context, mk(entity, 152),
         ComponentConfig{}
             .with_label(help_line1)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)),
+            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
                                      pixels(25)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 50.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(help_x + 12.0f, help_y + 45.0f)
+            .with_font("EqProRounded", 13.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("help1"));
 
     div(context, mk(entity, 153),
         ComponentConfig{}
             .with_label(help_line2)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)),
+            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
                                      pixels(25)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 72.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(help_x + 12.0f, help_y + 65.0f)
+            .with_font("EqProRounded", 13.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("help2"));
 
     div(context, mk(entity, 154),
         ComponentConfig{}
             .with_label(current_val)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 30)),
+            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
                                      pixels(25)})
             .with_absolute_position()
-            .with_translate(help_x + 15.0f, help_y + 110.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(help_x + 12.0f, help_y + 100.0f)
+            .with_font("EqProRounded", 13.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("help_current"));
 
     // ========== BOTTOM TAB BAR ==========
-    float tab_y = panel_y + panel_h + 15.0f;
-    float tab_w = 110.0f;
-    float tab_h = 35.0f;
+    float tab_y = panel_y + panel_h + 12.0f;
+    float tab_w = 90.0f;
+    float tab_h = 32.0f;
     float tab_total = tab_w * (float)tabs.size();
     float tab_start_x = panel_x + (panel_w - tab_total) / 2.0f;
 
@@ -386,7 +386,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_translate(tx, tab_y)
                   .with_custom_background(tab_bg)
                   .with_border(panel_border, 1.0f)
-                  .with_font("EqProRounded", 14.0f)
+                  .with_font("EqProRounded", 12.0f)
                   .with_custom_text_color(tab_text)
                   .with_alignment(TextAlignment::Center)
                   .with_debug_name("tab_" + std::to_string(i)))) {
@@ -407,7 +407,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_y = (float)screen_h - 45.0f;
+    float prompt_y = panel_y + panel_h + 55.0f;
     float prompt_x = panel_x;
 
     // X Close

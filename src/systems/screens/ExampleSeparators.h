@@ -34,8 +34,10 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.10f;
     context.theme = theme;
 
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_width = res ? res->current_resolution.width : 1280;
+    int screen_height = res ? res->current_resolution.height : 720;
     float col_width = 480.0f;
     float card_height = 580.0f;
     float col_gap = 50.0f;

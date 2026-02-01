@@ -171,7 +171,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_size(ComponentSize{pixels(150), pixels(40)})
             .with_absolute_position()
             .with_translate(screen_x + 15.0f, status_y + 35.0f)
             .with_font("EqProRounded", 28.0f)
@@ -278,10 +278,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 252),
         ComponentConfig{}
             .with_label("SIGN UP A BUSINESS TO YOUR DELIVERY APP")
-            .with_size(ComponentSize{pixels(300), pixels(22)})
+            .with_size(ComponentSize{pixels(285), pixels(22)})
             .with_absolute_position()
             .with_translate(quest_x + 40.0f, quest_y + 14.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_font("EqProRounded", 11.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("quest_text1"));
 
@@ -315,10 +315,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 255),
         ComponentConfig{}
             .with_label("SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP")
-            .with_size(ComponentSize{pixels(250), pixels(22)})
+            .with_size(ComponentSize{pixels(240), pixels(22)})
             .with_absolute_position()
             .with_translate(quest_x + 78.0f, quest_y + 48.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_font("EqProRounded", 11.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("quest_text2"));
 
@@ -392,7 +392,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("username"));
 
     // ========== CHAT MESSAGES (right side) ==========
-    float chat_x = (float)screen_w - 200.0f;
+    float chat_x = (float)screen_w - 250.0f;
     float chat_start_y = 60.0f;
     float chat_line_h = 20.0f;
 
@@ -404,10 +404,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 320 + static_cast<int>(i) * 2),
           ComponentConfig{}
               .with_label(username)
-              .with_size(ComponentSize{pixels(120), pixels(18)})
+              .with_size(ComponentSize{pixels(150), pixels(18)})
               .with_absolute_position()
               .with_translate(chat_x, chat_y)
-              .with_font("EqProRounded", 12.0f)
+              .with_font("EqProRounded", 10.0f)
               .with_custom_text_color(slider_orange)
               .with_debug_name("chat_user_" + std::to_string(i)));
 
@@ -415,10 +415,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 321 + static_cast<int>(i) * 2),
           ComponentConfig{}
               .with_label(message)
-              .with_size(ComponentSize{pixels(80), pixels(18)})
+              .with_size(ComponentSize{pixels(85), pixels(18)})
               .with_absolute_position()
-              .with_translate(chat_x + 110.0f, chat_y)
-              .with_font("EqProRounded", 12.0f)
+              .with_translate(chat_x + 148.0f, chat_y)
+              .with_font("EqProRounded", 10.0f)
               .with_custom_text_color(text_white)
               .with_debug_name("chat_msg_" + std::to_string(i)));
     }

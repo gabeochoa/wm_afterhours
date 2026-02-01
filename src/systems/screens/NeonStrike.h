@@ -382,7 +382,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ks_box2"));
 
     // ========== BOTTOM LEFT: Minimap ==========
-    float map_y = (float)screen_h - 160.0f;
+    // Minimap total height: label(22) + gap(4) + map(120) = 146 + 20px margin = 166
+    float map_y = (float)screen_h - 175.0f;
 
     div(context, mk(entity, 210),
         ComponentConfig{}
@@ -397,9 +398,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Minimap background
     div(context, mk(entity, 220),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(175), pixels(135)})
+            .with_size(ComponentSize{pixels(175), pixels(120)})
             .with_absolute_position()
-            .with_translate(22.0f, map_y + 18.0f)
+            .with_translate(22.0f, map_y + 26.0f)
             .with_custom_background(minimap_green)
             .with_border(border_dark, 2.0f)
             .with_debug_name("minimap"));
@@ -408,9 +409,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 1; i < 4; i++) {
       div(context, mk(entity, 230 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(120)})
+              .with_size(ComponentSize{pixels(1), pixels(105)})
               .with_absolute_position()
-              .with_translate(22.0f + (float)i * 43.0f, map_y + 26.0f)
+              .with_translate(22.0f + (float)i * 43.0f, map_y + 34.0f)
               .with_custom_background(afterhours::Color{60, 70, 60, 180})
               .with_debug_name("grid_v_" + std::to_string(i)));
     }
@@ -421,41 +422,41 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{pixels(160), pixels(1)})
               .with_absolute_position()
-              .with_translate(30.0f, map_y + 18.0f + (float)i * 45.0f)
+              .with_translate(30.0f, map_y + 26.0f + (float)i * 40.0f)
               .with_custom_background(afterhours::Color{60, 70, 60, 180})
               .with_debug_name("grid_h_" + std::to_string(i)));
     }
 
-    // Red danger zone on map
+    // Red danger zone on map - positioned within minimap bounds
     div(context, mk(entity, 250),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(55), pixels(50)})
+            .with_size(ComponentSize{pixels(45), pixels(40)})
             .with_absolute_position()
-            .with_translate(135.0f, map_y + 28.0f)
+            .with_translate(140.0f, map_y + 36.0f)
             .with_custom_background(afterhours::Color{140, 50, 40, 120})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("danger_zone"));
 
-    // Player icon on map
+    // Player icon on map - positioned relative to minimap
     div(context, mk(entity, 260),
         ComponentConfig{}
             .with_label("^")
             .with_size(ComponentSize{pixels(18), pixels(18)})
             .with_absolute_position()
-            .with_translate(100.0f, (float)screen_h - 75.0f)
+            .with_translate(100.0f, map_y + 95.0f)
             .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("player_icon"));
 
-    // Objective marker
+    // Objective marker - positioned within minimap bounds
     div(context, mk(entity, 261),
         ComponentConfig{}
             .with_label("*")
             .with_size(ComponentSize{pixels(12), pixels(12)})
             .with_absolute_position()
-            .with_translate(150.0f, map_y + 45.0f)
+            .with_translate(150.0f, map_y + 50.0f)
             .with_custom_background(dot_red)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
@@ -464,14 +465,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(1.0f)
             .with_debug_name("obj_marker"));
 
-    // S marker below map
+    // S marker below map - positioned safely above screen bottom
     div(context, mk(entity, 270),
         ComponentConfig{}
             .with_label("S $")
-            .with_size(ComponentSize{pixels(30), pixels(16)})
+            .with_size(ComponentSize{pixels(30), pixels(20)})
             .with_absolute_position()
-            .with_translate(95.0f, (float)screen_h - 18.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(95.0f, (float)screen_h - 25.0f)
+            .with_font("EqProRounded", 17.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("s_marker"));
 
@@ -574,7 +575,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("armor_fill"));
 
     // ========== BOTTOM RIGHT: Equipment ==========
-    float eq_x = (float)screen_w - 185.0f;
+    // Two 70x70 boxes with 10px gap between them, positioned from right edge
+    float eq_box_size = 70.0f;
+    float eq_gap = 10.0f;
+    float eq_margin = 20.0f;  // margin from right edge of screen
+    // Knife box (rightmost)
+    float knife_x = (float)screen_w - eq_margin - eq_box_size;
+    // Grenade box (left of knife)
+    float grenade_x = knife_x - eq_gap - eq_box_size;
     float eq_y = (float)screen_h - 105.0f;
 
     // Grenade (x2) - highlighted with gold border
@@ -583,16 +591,16 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("x2")
             .with_size(ComponentSize{pixels(25), pixels(18)})
             .with_absolute_position()
-            .with_translate(eq_x - 25.0f, eq_y + 40.0f)
+            .with_translate(grenade_x - 28.0f, eq_y + 26.0f)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("x2"));
 
     div(context, mk(entity, 410),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(70), pixels(70)})
+            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)), pixels(static_cast<int>(eq_box_size))})
             .with_absolute_position()
-            .with_translate(eq_x, eq_y)
+            .with_translate(grenade_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(gold_accent, 3.0f)
             .with_debug_name("grenade_bg"));
@@ -604,16 +612,16 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(50), pixels(50)})
                  .with_absolute_position()
-                 .with_translate(eq_x + 10.0f, eq_y + 10.0f)
+                 .with_translate(grenade_x + 10.0f, eq_y + 10.0f)
                  .with_debug_name("grenade_icon"));
     }
 
     // Knife (x1)
     div(context, mk(entity, 420),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(70), pixels(70)})
+            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)), pixels(static_cast<int>(eq_box_size))})
             .with_absolute_position()
-            .with_translate(eq_x + 80.0f, eq_y)
+            .with_translate(knife_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 2.0f)
             .with_debug_name("knife_bg"));
@@ -624,16 +632,17 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(50), pixels(50)})
                  .with_absolute_position()
-                 .with_translate(eq_x + 90.0f, eq_y + 10.0f)
+                 .with_translate(knife_x + 10.0f, eq_y + 10.0f)
                  .with_debug_name("knife_icon"));
     }
 
+    // x1 label positioned below the knife box, inside screen bounds
     div(context, mk(entity, 421),
         ComponentConfig{}
             .with_label("x1")
             .with_size(ComponentSize{pixels(25), pixels(18)})
             .with_absolute_position()
-            .with_translate(eq_x + 145.0f, eq_y + 72.0f)
+            .with_translate(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size + 2.0f)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("x1"));

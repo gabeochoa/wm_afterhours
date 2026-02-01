@@ -6,6 +6,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/window_manager.h>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -59,8 +60,10 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_w = res ? res->current_resolution.width : 1280;
+    int screen_h = res ? res->current_resolution.height : 720;
 
     // ========== FULL BACKGROUND (black header + transition) ==========
     div(context, mk(entity, 0),
@@ -228,35 +231,39 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // "Offline Mode" indicator
+    // "Offline Mode" indicator - position in center area
+    float offline_x = menu_x + menu_item_w + 60.0f;
     div(context, mk(entity, 200),
         ComponentConfig{}
             .with_label("Offline Mode")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_absolute_position()
-            .with_translate(430.0f, 165.0f)
+            .with_translate(offline_x, 165.0f)
             .with_font("EqProRounded", 19.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("offline_mode"));
 
     // ========== CENTER CHARACTER AREA (placeholder) ==========
-    // Just show a simple character placeholder
+    // Position between menu (ends ~365px) and card panel
+    float center_area_start = menu_x + menu_item_w + 30.0f;
+    float center_area_end = (float)screen_w - 350.0f - 80.0f; // before card
+    float character_x = (center_area_start + center_area_end) / 2.0f - 60.0f;
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("^_^")
             .with_size(ComponentSize{pixels(120), pixels(180)})
             .with_absolute_position()
-            .with_translate(450.0f, 260.0f)
+            .with_translate(character_x, 260.0f)
             .with_font("EqProRounded", 48.0f)
             .with_custom_text_color(text_gray)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("character"));
 
     // ========== RIGHT PANEL: Info Card (holographic style) ==========
-    float card_x = 620.0f;
-    float card_y = 200.0f;
     float card_w = 350.0f;
     float card_h = 320.0f;
+    float card_x = (float)screen_w - card_w - 50.0f; // 50px from right edge
+    float card_y = 200.0f;
 
     // Card background (diagonal cut effect simulated)
     div(context, mk(entity, 300),

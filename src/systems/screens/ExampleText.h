@@ -34,8 +34,10 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.08f;
     context.theme = theme;
 
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
+    auto *res = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_width = res ? res->current_resolution.width : 1280;
+    int screen_height = res ? res->current_resolution.height : 720;
 
     // Full background
     div(context, mk(entity, 0),
@@ -45,9 +47,9 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_charcoal)
             .with_debug_name("bg"));
 
-    // Main container panel
-    float panel_w = 850.0f;
-    float panel_h = 520.0f;
+    // Main container panel - sized proportionally to screen
+    float panel_w = screen_width * 0.75f;  // 75% of screen width
+    float panel_h = screen_height * 0.70f; // 70% of screen height
     float panel_x = (screen_width - panel_w) / 2.0f;
     float panel_y = (screen_height - panel_h) / 2.0f;
 
@@ -84,19 +86,22 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title_line"));
 
     // Typography examples in a refined layout
-    float content_y = panel_y + 105.0f;
+    float content_y = panel_y + 110.0f;
     float left_col = panel_x + 50.0f;
-    float right_col = panel_x + panel_w / 2.0f + 25.0f;
-    float col_w = (panel_w / 2.0f) - 75.0f;
+    float right_col = panel_x + panel_w / 2.0f + 30.0f;
+    float col_w = (panel_w / 2.0f) - 80.0f;
+    float content_height = panel_h - 180.0f; // Available height for content
 
     // Left column - Size variations
+    float left_spacing = content_height / 6.0f; // Divide content area into sections
+
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_label("SIZE HIERARCHY")
-            .with_size(ComponentSize{pixels(col_w), pixels(20)})
+            .with_size(ComponentSize{pixels(col_w), pixels(24)})
             .with_absolute_position()
             .with_translate(left_col, content_y)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_custom_text_color(muted_text)
             .with_debug_name("size_label"));
 
@@ -104,30 +109,30 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_label("Display Text")
-            .with_size(ComponentSize{pixels(col_w), pixels(48)})
+            .with_size(ComponentSize{pixels(col_w), pixels(56)})
             .with_absolute_position()
-            .with_translate(left_col, content_y + 30.0f)
-            .with_font("Garamond", 42.0f)
+            .with_translate(left_col, content_y + left_spacing * 0.5f)
+            .with_font("Garamond", 48.0f)
             .with_custom_text_color(cream_text)
             .with_debug_name("display_text"));
 
     div(context, mk(entity, 12),
         ComponentConfig{}
             .with_label("Headline Style")
-            .with_size(ComponentSize{pixels(col_w), pixels(36)})
+            .with_size(ComponentSize{pixels(col_w), pixels(44)})
             .with_absolute_position()
-            .with_translate(left_col, content_y + 85.0f)
-            .with_font("Garamond", 32.0f)
+            .with_translate(left_col, content_y + left_spacing * 1.3f)
+            .with_font("Garamond", 36.0f)
             .with_custom_text_color(silver_text)
             .with_debug_name("headline_text"));
 
     div(context, mk(entity, 13),
         ComponentConfig{}
             .with_label("Subheading Text")
-            .with_size(ComponentSize{pixels(col_w), pixels(30)})
+            .with_size(ComponentSize{pixels(col_w), pixels(36)})
             .with_absolute_position()
-            .with_translate(left_col, content_y + 130.0f)
-            .with_font("Garamond", 26.0f)
+            .with_translate(left_col, content_y + left_spacing * 2.0f)
+            .with_font("Garamond", 28.0f)
             .with_custom_text_color(silver_text)
             .with_debug_name("subheading_text"));
 
@@ -136,9 +141,9 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_label(
                 "Body text for readable content that flows naturally across "
                 "multiple lines and maintains excellent legibility.")
-            .with_size(ComponentSize{pixels(col_w), pixels(65)})
+            .with_size(ComponentSize{pixels(col_w), pixels(80)})
             .with_absolute_position()
-            .with_translate(left_col, content_y + 175.0f)
+            .with_translate(left_col, content_y + left_spacing * 2.7f)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(muted_text)
             .with_debug_name("body_text"));
@@ -146,30 +151,32 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 15),
         ComponentConfig{}
             .with_label("Caption & metadata - smaller supporting text")
-            .with_size(ComponentSize{pixels(col_w), pixels(22)})
+            .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position()
-            .with_translate(left_col, content_y + 250.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_translate(left_col, content_y + left_spacing * 4.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
             .with_custom_text_color(muted_text)
             .with_debug_name("caption_text"));
 
     // Divider line
     div(context, mk(entity, 16),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(1), pixels(280)})
+            .with_size(ComponentSize{pixels(1), pixels(content_height)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w / 2.0f, content_y + 15.0f)
+            .with_translate(panel_x + panel_w / 2.0f, content_y)
             .with_custom_background(divider)
             .with_debug_name("divider"));
 
     // Right column - Color variations
+    float right_item_spacing = (content_height - 30.0f) / 5.0f; // Space for 5 items plus header
+
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("COLOR TREATMENTS")
-            .with_size(ComponentSize{pixels(col_w), pixels(20)})
+            .with_size(ComponentSize{pixels(col_w), pixels(24)})
             .with_absolute_position()
             .with_translate(right_col, content_y)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_custom_text_color(muted_text)
             .with_debug_name("color_label"));
 
@@ -187,12 +194,15 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     };
 
     for (int i = 0; i < 5; i++) {
+      float item_y = content_y + 35.0f + i * right_item_spacing;
+      float pill_height = std::min(right_item_spacing - 10.0f, 50.0f);
+
       // Background pill for each text sample
       div(context, mk(entity, 30 + i * 2),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(col_w), pixels(42)})
+              .with_size(ComponentSize{pixels(col_w), pixels(pill_height)})
               .with_absolute_position()
-              .with_translate(right_col, content_y + 30.0f + i * 52.0f)
+              .with_translate(right_col, item_y)
               .with_custom_background(
                   afterhours::colors::darken(panel_dark, 0.85f))
               .with_rounded_corners(std::bitset<4>(0b1111))
@@ -202,10 +212,10 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 31 + i * 2),
           ComponentConfig{}
               .with_label(examples[i].label)
-              .with_size(ComponentSize{pixels(col_w - 20), pixels(28)})
+              .with_size(ComponentSize{pixels(col_w - 24), pixels(pill_height - 8)})
               .with_absolute_position()
-              .with_translate(right_col + 12.0f, content_y + 38.0f + i * 52.0f)
-              .with_font("Garamond", 22.0f)
+              .with_translate(right_col + 12.0f, item_y + 4.0f)
+              .with_font("Garamond", 24.0f)
               .with_custom_text_color(examples[i].color)
               .with_debug_name("color_text_" + std::to_string(i)));
     }

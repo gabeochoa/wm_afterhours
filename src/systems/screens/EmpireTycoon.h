@@ -411,12 +411,12 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.5f)
             .with_debug_name("happy_bar_fill"));
 
-    // Resources meter
+    // Resources meter - moved left to stay within screen bounds
     div(context, mk(entity, 85),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(175), pixels(34)})
+            .with_size(ComponentSize{pixels(155), pixels(34)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 155.0f, meter_y)
+            .with_translate((float)screen_w - 175.0f, meter_y)
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -428,7 +428,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("*")
             .with_size(ComponentSize{pixels(22), pixels(22)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 150.0f, meter_y + 6.0f)
+            .with_translate((float)screen_w - 170.0f, meter_y + 6.0f)
             .with_custom_background(afterhours::Color{195, 215, 240, 255})
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(dark_text)
@@ -440,9 +440,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 87),
         ComponentConfig{}
             .with_label("Resources")
-            .with_size(ComponentSize{pixels(75), pixels(20)})
+            .with_size(ComponentSize{pixels(85), pixels(20)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 120.0f, meter_y + 8.0f)
+            .with_translate((float)screen_w - 140.0f, meter_y + 8.0f)
             .with_font("EqProRounded", 13.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("res_text"));
@@ -462,11 +462,12 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             {&icon_finance_tex, "[$]", "Finance", tab_cream},
         };
 
-    float nav_x = content_margin - 10.0f; // Slightly left of content area
+    float tab_width = 110.0f;  // Reduced to fit without overlapping
+    float tab_height = 70.0f;  // Slightly smaller
+    float tab_spacing = 78.0f; // Adjusted spacing
+    // Ensure tabs don't go past left edge - minimum 15px from left
+    float nav_x = std::max(15.0f, content_margin - tab_width - 15.0f);
     float nav_y = 195.0f;
-    float tab_width = 130.0f; // Increased to prevent text overflow
-    float tab_height = 78.0f;
-    float tab_spacing = 85.0f;
     for (size_t i = 0; i < tabs.size(); i++) {
       float tab_y = nav_y + (float)i * tab_spacing;
       auto &[tex_ptr, fallback, label, bg_color] = tabs[i];
@@ -543,9 +544,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== MAIN PANEL ==========
-    float panel_x = content_margin + 110.0f; // Offset for left tabs
+    float panel_x = content_margin; // Start at content margin (tabs are to the left)
     float panel_y = 185.0f;
-    float panel_w = content_width - 120.0f; // Panel width minus left tabs
+    float panel_w = content_width; // Use full content width
     float panel_h = 420.0f;
 
     // Main panel background - bigger with thicker border to match inspiration
@@ -565,17 +566,17 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("Production Overview")
-            .with_size(ComponentSize{pixels(200), pixels(28)})
+            .with_size(ComponentSize{pixels(220), pixels(28)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + 20.0f)
             .with_font("EqProRounded", 21.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("prod_header"));
 
-    // Production box
+    // Production box - adjusted for wider panel
     div(context, mk(entity, 211),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(170)})
+            .with_size(ComponentSize{pixels(300), pixels(170)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + 55.0f)
             .with_custom_background(white)
@@ -591,7 +592,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(production[i].name + ": " +
                           std::to_string(production[i].rate) + "/min")
-              .with_size(ComponentSize{pixels(230), pixels(32)})
+              .with_size(ComponentSize{pixels(250), pixels(32)})
               .with_absolute_position()
               .with_translate(panel_x + 50.0f, item_y)
               .with_font("EqProRounded", 17.0f)
@@ -604,7 +605,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label("^")
               .with_size(ComponentSize{pixels(25), pixels(25)})
               .with_absolute_position()
-              .with_translate(panel_x + 275.0f, item_y + 3.0f)
+              .with_translate(panel_x + 295.0f, item_y + 3.0f)
               .with_font("EqProRounded", 22.0f)
               .with_custom_text_color(happy_green)
               .with_alignment(TextAlignment::Center)
@@ -615,19 +616,19 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 250),
         ComponentConfig{}
             .with_label("Current Projects")
-            .with_size(ComponentSize{pixels(180), pixels(28)})
+            .with_size(ComponentSize{pixels(200), pixels(28)})
             .with_absolute_position()
-            .with_translate(panel_x + 350.0f, panel_y + 20.0f)
+            .with_translate(panel_x + 380.0f, panel_y + 20.0f)
             .with_font("EqProRounded", 21.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("proj_header"));
 
-    // Projects box
+    // Projects box - adjusted to fit within panel
     div(context, mk(entity, 251),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(310), pixels(170)})
+            .with_size(ComponentSize{pixels(380), pixels(170)})
             .with_absolute_position()
-            .with_translate(panel_x + 335.0f, panel_y + 55.0f)
+            .with_translate(panel_x + 360.0f, panel_y + 55.0f)
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -647,9 +648,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 260 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(proj_text)
-              .with_size(ComponentSize{pixels(270), pixels(32)})
+              .with_size(ComponentSize{pixels(320), pixels(32)})
               .with_absolute_position()
-              .with_translate(panel_x + 355.0f, item_y)
+              .with_translate(panel_x + 380.0f, item_y)
               .with_font("EqProRounded", 15.0f)
               .with_custom_text_color(dark_text)
               .with_debug_name("proj_" + std::to_string(i)));
@@ -659,7 +660,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label("^")
               .with_size(ComponentSize{pixels(25), pixels(25)})
               .with_absolute_position()
-              .with_translate(panel_x + 610.0f, item_y + 3.0f)
+              .with_translate(panel_x + 710.0f, item_y + 3.0f)
               .with_font("EqProRounded", 22.0f)
               .with_custom_text_color(happy_green)
               .with_alignment(TextAlignment::Center)
@@ -670,8 +671,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     std::vector<std::string> btn_labels = {"Speed Up", "Prioritize",
                                            "New Project"};
     float btn_y = panel_y + panel_h - 75.0f;
-    float btn_w = 170.0f;
-    float btn_spacing = 190.0f;
+    float btn_w = 180.0f;
+    float btn_spacing = 220.0f;  // Wider spacing for larger panel
 
     for (size_t i = 0; i < btn_labels.size(); i++) {
       button(
@@ -681,7 +682,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(
                   ComponentSize{pixels(static_cast<int>(btn_w)), pixels(58)})
               .with_absolute_position()
-              .with_translate(panel_x + 50.0f + (float)i * btn_spacing, btn_y)
+              .with_translate(panel_x + 80.0f + (float)i * btn_spacing, btn_y)
               .with_custom_background(btn_yellow)
               .with_border(btn_yellow_dark, 4.0f)
               .with_font("EqProRounded", 22.0f)
@@ -770,22 +771,23 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>
         icon_data = {{&icon_shop_tex, "$", "Shop"},
                      {&icon_settings_tex, "@", "Settings"},
-                     {&star_trophy_tex, "#", "Leaderboards"}};
-    float icon_x = (float)screen_w - 270.0f;
+                     {&star_trophy_tex, "#", "Leaderboard"}};
+    float icon_x = (float)screen_w - 280.0f;
     float icon_size = 52.0f;
     float icon_img_size = 32.0f;
     float icon_offset = (icon_size - icon_img_size) / 2.0f;
+    float icon_btn_y = (float)screen_h - 105.0f; // Move icons up to leave room for labels
 
     for (size_t i = 0; i < icon_data.size(); i++) {
-      float ix = icon_x + (float)i * 82.0f;
+      float ix = icon_x + (float)i * 85.0f;
       auto &[tex_ptr, fallback, label] = icon_data[i];
 
       // Button background
       button(context, mk(entity, 500 + static_cast<int>(i)),
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(icon_size), pixels(icon_size)})
+                 .with_size(ComponentSize{pixels(static_cast<int>(icon_size)), pixels(static_cast<int>(icon_size))})
                  .with_absolute_position()
-                 .with_translate(ix, (float)screen_h - 92.0f)
+                 .with_translate(ix, icon_btn_y)
                  .with_custom_background(btn_yellow)
                  .with_border(btn_yellow_dark, 2.0f)
                  .with_rounded_corners(std::bitset<4>(0b1111))
@@ -798,33 +800,32 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                                                    (float)tex_ptr->height};
         sprite(context, mk(entity, 520 + static_cast<int>(i)), *tex_ptr, src,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(icon_img_size),
-                                            pixels(icon_img_size)})
+                   .with_size(ComponentSize{pixels(static_cast<int>(icon_img_size)),
+                                            pixels(static_cast<int>(icon_img_size))})
                    .with_absolute_position()
-                   .with_translate(ix + icon_offset,
-                                   (float)screen_h - 92.0f + icon_offset)
+                   .with_translate(ix + icon_offset, icon_btn_y + icon_offset)
                    .with_debug_name("icon_img_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 520 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_label(fallback)
-                .with_size(ComponentSize{pixels(icon_size), pixels(icon_size)})
+                .with_size(ComponentSize{pixels(static_cast<int>(icon_size)), pixels(static_cast<int>(icon_size))})
                 .with_absolute_position()
-                .with_translate(ix, (float)screen_h - 92.0f)
+                .with_translate(ix, icon_btn_y)
                 .with_font("EqProRounded", 26.0f)
                 .with_custom_text_color(dark_text)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("icon_fallback_" + std::to_string(i)));
       }
 
-      // Label below icon
+      // Label below icon - larger and properly positioned
       div(context, mk(entity, 510 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(85), pixels(18)})
+              .with_size(ComponentSize{pixels(80), pixels(22)})
               .with_absolute_position()
-              .with_translate(ix - 16.0f, (float)screen_h - 32.0f)
-              .with_font("EqProRounded", 12.0f)
+              .with_translate(ix - 14.0f, icon_btn_y + icon_size + 5.0f)
+              .with_font("EqProRounded", 13.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("icon_label_" + std::to_string(i)));

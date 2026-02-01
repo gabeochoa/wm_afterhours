@@ -57,18 +57,24 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("subtitle"));
 
-    // Single demo container - a column, so children stack vertically
+    // Demo container - a column, so children stack vertically
     // but can use SelfAlign to control their horizontal position
+    // Using explicit pixel values for spacing instead of padding
+    // to avoid layout calculation issues with SelfAlign
+    float container_width = 600.0f;
+    float container_height = 220.0f;
+    float margin_size = 30.0f; // Visual spacing from container edges
+
     auto demo = div(context, mk(main.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(600), pixels(220)})
+            .with_size(ComponentSize{pixels(container_width), pixels(container_height)})
             .with_custom_background(afterhours::Color{45, 50, 55, 255})
             .with_border(afterhours::Color{80, 80, 80, 255}, 1.0f)
             .with_flex_direction(FlexDirection::Column)
-            .with_padding(Spacing::md)
+            .with_justify_content(JustifyContent::SpaceAround)
             .with_debug_name("demo"));
 
-    // FlexStart - aligns left
+    // FlexStart - aligns left with margin for visual spacing from edge
     div(context, mk(demo.ent(), 0),
         ComponentConfig{}
             .with_label("FlexStart (left)")
@@ -77,7 +83,8 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
+                                .left = pixels(margin_size), .right = pixels(0)})
             .with_skip_tabbing(true)
             .with_debug_name("flex_start"));
 
@@ -90,11 +97,10 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("center"));
 
-    // FlexEnd - aligns right
+    // FlexEnd - aligns right with margin for visual spacing from edge
     div(context, mk(demo.ent(), 2),
         ComponentConfig{}
             .with_label("FlexEnd (right)")
@@ -103,7 +109,8 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
+                                .left = pixels(0), .right = pixels(margin_size)})
             .with_skip_tabbing(true)
             .with_debug_name("flex_end"));
 
