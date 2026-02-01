@@ -151,20 +151,25 @@ void configure_validation() {
 } // namespace
 
 void run_headless_screenshots() {
+  // Screenshot resolution (720p for faster rendering and smaller files)
+  constexpr int SCREENSHOT_WIDTH = 1280;
+  constexpr int SCREENSHOT_HEIGHT = 720;
+
   // 1. Initialize headless GL context (no window needed)
   HeadlessGL gl;
-  if (!gl.init(1920, 1080)) {
+  if (!gl.init(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT)) {
     log_error("Failed to create headless GL context");
     return;
   }
-  log_info("[Headless] Initialized headless GL context");
+  log_info("[Headless] Initialized headless GL context ({}x{})",
+           SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
 
   // 2. Load GL extensions (required before rlglInit)
   raylib::rlLoadExtensions(gl.get_proc_address());
   log_info("[Headless] Loaded GL extensions");
 
   // 3. Initialize rlgl (raylib's GL layer)
-  raylib::rlglInit(1920, 1080);
+  raylib::rlglInit(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
   raylib::rlSetBlendMode(raylib::RL_BLEND_ALPHA);
   log_info("[Headless] Initialized rlgl");
 
@@ -173,8 +178,8 @@ void run_headless_screenshots() {
   log_info("[Headless] Initialized files plugin");
 
   // 5. Create render textures
-  mainRT = raylib::LoadRenderTexture(1920, 1080);
-  screenRT = raylib::LoadRenderTexture(1920, 1080);
+  mainRT = raylib::LoadRenderTexture(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
+  screenRT = raylib::LoadRenderTexture(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
   log_info("[Headless] Created render textures");
 
   // 6. Load main font for legacy usage
@@ -211,7 +216,8 @@ void run_headless_screenshots() {
         afterhours::EntityHelper::createPermanentEntity();
     resolution_entity
         .addComponent<afterhours::window_manager::ProvidesCurrentResolution>(
-            afterhours::window_manager::Resolution{.width = 1920, .height = 1080});
+            afterhours::window_manager::Resolution{.width = SCREENSHOT_WIDTH,
+                                                   .height = SCREENSHOT_HEIGHT});
     resolution_entity.addComponent<afterhours::window_manager::ProvidesTargetFPS>(
         60);
     resolution_entity.addComponent<
@@ -291,6 +297,44 @@ void run_headless_screenshots() {
       ui_context->reset();
     }
 
+    // Clean up toast/modal singletons so they get recreated with fresh internal entities
+    // ToastRoot creates an internal entity with UIComponent that gets cleaned up below,
+    // but the singleton would still hold a stale entity_id. By marking the singleton
+    // for cleanup, enforce_singletons will recreate it with a valid internal entity.
+    if (afterhours::EntityHelper::has_singleton<afterhours::toast::ToastRoot>()) {
+      auto &toast_singleton = afterhours::EntityHelper::get_singleton<
+          afterhours::toast::ToastRoot>().get();
+      // Also clean up the internal root entity that ToastRoot references
+      if (toast_singleton.has<afterhours::toast::ToastRoot>()) {
+        auto &toast_root = toast_singleton.get<afterhours::toast::ToastRoot>();
+        if (toast_root.entity_id >= 0) {
+          auto opt_root = afterhours::EntityHelper::getEntityForID(toast_root.entity_id);
+          if (opt_root.valid()) {
+            opt_root.asE().cleanup = true;
+          }
+        }
+      }
+      toast_singleton.cleanup = true;
+    }
+    if (afterhours::EntityHelper::has_singleton<afterhours::modal::ModalRoot>()) {
+      auto &modal_singleton = afterhours::EntityHelper::get_singleton<
+          afterhours::modal::ModalRoot>().get();
+      // Clear modal stack to remove stale entity IDs and clean up the modal entities
+      if (modal_singleton.has<afterhours::modal::ModalRoot>()) {
+        auto &modal_root = modal_singleton.get<afterhours::modal::ModalRoot>();
+        for (auto modal_id : modal_root.modal_stack) {
+          if (modal_id >= 0) {
+            auto opt_modal = afterhours::EntityHelper::getEntityForID(modal_id);
+            if (opt_modal.valid()) {
+              opt_modal.asE().cleanup = true;
+            }
+          }
+        }
+        modal_root.modal_stack.clear();
+      }
+      modal_singleton.cleanup = true;
+    }
+
     // Clean up UI entities (except permanent root)
     for (const auto &e : afterhours::EntityHelper::get_entities()) {
       if (!e)
@@ -362,7 +406,7 @@ void run_headless_screenshots() {
     {
       auto &entities = afterhours::EntityHelper::get_entities_for_mod();
       systems.tick_all(entities, 0.016f);
-      afterhours::EntityHelper::cleanup();
+      // Note: cleanup moved to after render to avoid cleaning up entities still in render_cmds
     }
 
     // Run render systems
@@ -370,6 +414,10 @@ void run_headless_screenshots() {
       const auto &entities = afterhours::EntityHelper::get_entities();
       systems.render(entities, 0.016f);
     }
+
+    // Cleanup any entities marked during tick (e.g., expired toasts)
+    // Safe to do after render since render_cmds has been cleared
+    afterhours::EntityHelper::cleanup();
 
     // Ensure GPU operations complete
     raylib::rlDrawRenderBatchActive();
@@ -381,13 +429,15 @@ void run_headless_screenshots() {
     {
       glBindFramebuffer(GL_FRAMEBUFFER, mainRT.id);
 
-      unsigned char *pixels = (unsigned char *)RL_MALLOC(1920 * 1080 * 4);
-      glReadPixels(0, 0, 1920, 1080, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+      unsigned char *pixels =
+          (unsigned char *)RL_MALLOC(SCREENSHOT_WIDTH * SCREENSHOT_HEIGHT * 4);
+      glReadPixels(0, 0, SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT, GL_RGBA,
+                   GL_UNSIGNED_BYTE, pixels);
 
       raylib::Image image;
       image.data = pixels;
-      image.width = 1920;
-      image.height = 1080;
+      image.width = SCREENSHOT_WIDTH;
+      image.height = SCREENSHOT_HEIGHT;
       image.format = raylib::PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
       image.mipmaps = 1;
 
