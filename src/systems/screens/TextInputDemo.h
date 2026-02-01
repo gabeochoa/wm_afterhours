@@ -62,7 +62,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto form_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), children()})
+                .with_size(ComponentSize{percent(0.95f), pixels(440)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -129,7 +129,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_label("Search (no label version):")
             .with_size(ComponentSize{pixels(396), pixels(24)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
@@ -153,7 +153,6 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(200), pixels(50)})
                    .with_background(Theme::Usage::Accent)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-                   .with_margin(Margin{.top = DefaultSpacing::medium()})
                    .with_debug_name("submit_btn"))) {
       status_message = "Submitted! User: " + username + ", Email: " + email;
     }

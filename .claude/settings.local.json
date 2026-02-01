@@ -19,7 +19,20 @@
       "Skill(10x-engineer:writing-plans)",
       "Bash(python3:*)",
       "Bash(xargs:*)",
-      "Skill(interface-design)"
+      "Skill(interface-design)",
+      "Bash(/Users/gabeochoa/p/wm_afterhours/output/ui_tester.exe --headless-screenshots /tmp/fix_test/)",
+      "Bash(pkill:*)",
+      "Bash(lsof:*)",
+      "Bash(pgrep:*)",
+      "Bash(watchman watch-list:*)",
+      "Bash(./Users/gabeochoa/p/wm_afterhours/output/ui_tester.exe:*)",
+      "Bash(echo:*)",
+      "Bash(/Users/gabeochoa/p/wm_afterhours/output/ui_tester.exe:*)",
+      "Bash(git -C /Users/gabeochoa/p/wm_afterhours log --oneline -5 -- src/systems/screens/ImageShowcase.h)",
+      "Bash(tee:*)",
+      "Bash(awk:*)",
+      "Bash(./output/headless_test/headless_screenshots.exe:*)",
+      "Bash(./output/main:*)"
     ]
   }
 }

@@ -167,22 +167,20 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // ===== CONTENT ROW =====
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(650)})
+                           .with_size(ComponentSize{percent(1.0f), pixels(540)})
                            .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_justify_content(JustifyContent::Center)
-                           .with_margin(Spacing::sm)
                            .with_debug_name("content"));
 
     // Left panel - current language demo
     auto left_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.45f), pixels(620)})
+                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::sm)
                 .with_debug_name("left_panel"));
 
     // Greeting
@@ -210,8 +208,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(left_panel.ent(), 5),
            ComponentConfig{}
                .with_label(sample.button_text)
-               .with_size(ComponentSize{pixels(160), pixels(36)})
-               .with_margin(Spacing::sm)
+               .with_size(ComponentSize{pixels(160), pixels(40)})
                .with_font(font_config.font_name, 18.0f * font_config.size_scale)
                .with_background(Theme::Usage::Accent));
 
@@ -219,11 +216,10 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto right_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.45f), pixels(620)})
+                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::sm)
                 .with_debug_name("right_panel"));
 
     // Title for right panel

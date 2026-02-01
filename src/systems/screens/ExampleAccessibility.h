@@ -71,7 +71,6 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x, panel_y)
             .with_custom_background(panel_dark)
-            .with_border(divider, 1.0f)
             .with_soft_shadow(6.0f, 10.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))

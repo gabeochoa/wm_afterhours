@@ -17,76 +17,80 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void render_profile_tab(UIContext<InputAction> &context, afterhours::Entity &root,
                           const Theme &theme) {
+    // Section title - use larger font for clear hierarchy
     div(context, mk(root, 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Profile Settings")
-            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 32.0f)  // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_title"));
 
+    // Content lines - use font_size_sm (16px) for values, creating hierarchy with title
     div(context, mk(root, 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Username: player_one")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line1"));
 
     div(context, mk(root, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Email: player@example.com")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line2"));
 
     div(context, mk(root, 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Account created: January 2024")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line3"));
 
     div(context, mk(root, 5),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Subscription: Premium")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_debug_name("content_line4"));
   }
 
   void render_audio_tab(UIContext<InputAction> &context, afterhours::Entity &root,
                         const Theme &theme) {
+    // Section title - use larger font for clear hierarchy
     div(context, mk(root, 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Audio Settings")
-            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 32.0f)  // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_title"));
 
+    // Content lines - use font_size_sm (16px) for values
     div(context, mk(root, 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Volume: 80%")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line1"));
 
     div(context, mk(root, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Music: 60%")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_line2"));
@@ -106,29 +110,31 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void render_display_tab(UIContext<InputAction> &context, afterhours::Entity &root,
                           const Theme &theme) {
+    // Section title - use larger font for clear hierarchy
     div(context, mk(root, 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Display Settings")
-            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 32.0f)  // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_title"));
 
+    // Content lines - use font_size_sm (16px) for values
     div(context, mk(root, 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Resolution: 1920x1080")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line1"));
 
     div(context, mk(root, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Fullscreen: Enabled")
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_line2"));

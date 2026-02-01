@@ -573,7 +573,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_debug_name("prod_header"));
 
-    // Production box - adjusted for wider panel
+    // Production box - uses clip_children for text overflow protection
     div(context, mk(entity, 211),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(300), pixels(170)})
@@ -582,6 +582,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_clip_children(true)
             .with_debug_name("prod_box"));
 
     // Production items
@@ -623,7 +624,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_debug_name("proj_header"));
 
-    // Projects box - adjusted to fit within panel
+    // Projects box - uses clip_children for text overflow protection
     div(context, mk(entity, 251),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(380), pixels(170)})
@@ -632,6 +633,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_clip_children(true)
             .with_debug_name("proj_box"));
 
     // Project items

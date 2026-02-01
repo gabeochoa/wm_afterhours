@@ -187,7 +187,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("buddy_status"));
 
-    // Chat history area - large area for conversation
+    // Chat history area - uses clip_children to properly handle long messages
     auto chat_area =
         div(context, mk(window.ent(), 3),
             ComponentConfig{}
@@ -197,6 +197,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_align_items(AlignItems::FlexStart)
                 .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)})
                 .with_padding(Padding{.left = pixels(4), .top = pixels(2)})
+                .with_clip_children(true)
                 .disable_rounded_corners()
                 .with_debug_name("chat_area"));
 

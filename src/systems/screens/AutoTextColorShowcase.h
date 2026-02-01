@@ -69,13 +69,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text color automatically adjusts for best contrast "
                         "against any background")
-            .with_size({percent(1.0f), pixels(30.0f)})
+            .with_size({percent(1.0f), pixels(40.0f)})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)})
             .with_debug_name("subtitle"));
 
     // Section 1: Default behavior (auto enabled by default)
@@ -89,15 +85,14 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent()),
         ComponentConfig{}
             .with_label("Default Behavior (no config needed)")
-            .with_size({percent(1.0f), pixels(28.0f)})
+            .with_size({percent(1.0f), pixels(35.0f)})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("section1_title"));
 
     // Row of buttons with various backgrounds - auto contrast just works
     auto row1 = div(context, mk(section1.ent()),
                     ComponentConfig{}
-                        .with_size({percent(1.0f), children()})
+                        .with_size({percent(1.0f), pixels(78.0f)})
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row1"));
 
@@ -125,7 +120,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     // Row of light backgrounds
     auto row2 = div(context, mk(section1.ent()),
                     ComponentConfig{}
-                        .with_size({percent(1.0f), children()})
+                        .with_size({percent(1.0f), pixels(78.0f)})
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row2"));
 
@@ -160,14 +155,13 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent()),
         ComponentConfig{}
             .with_label("Mid-tone Colors (best contrast)")
-            .with_size({percent(1.0f), pixels(28.0f)})
+            .with_size({percent(1.0f), pixels(35.0f)})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("section2_title"));
 
     auto row3 = div(context, mk(section2.ent()),
                     ComponentConfig{}
-                        .with_size({percent(1.0f), children()})
+                        .with_size({percent(1.0f), pixels(78.0f)})
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row3"));
 
@@ -205,14 +199,13 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent()),
         ComponentConfig{}
             .with_label("Explicit Control Options")
-            .with_size({percent(1.0f), pixels(28.0f)})
+            .with_size({percent(1.0f), pixels(35.0f)})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("section3_title"));
 
     auto row4 = div(context, mk(section3.ent()),
                     ComponentConfig{}
-                        .with_size({percent(1.0f), children()})
+                        .with_size({percent(1.0f), pixels(78.0f)})
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row4"));
 
@@ -264,14 +257,13 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section4.ent()),
         ComponentConfig{}
             .with_label("Works with Theme Colors Too")
-            .with_size({percent(1.0f), pixels(28.0f)})
+            .with_size({percent(1.0f), pixels(35.0f)})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Spacing::xs)
             .with_debug_name("section4_title"));
 
     auto row5 = div(context, mk(section4.ent()),
                     ComponentConfig{}
-                        .with_size({percent(1.0f), children()})
+                        .with_size({percent(1.0f), pixels(78.0f)})
                         .with_flex_direction(FlexDirection::Row)
                         .with_debug_name("row5"));
 

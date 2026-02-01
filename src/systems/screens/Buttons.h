@@ -36,6 +36,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("buttons_main"));
 
@@ -64,11 +65,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("row1_states"));
 
-    // Section label
+    // Section label - fixed width for alignment, auto height to center with controls
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
             .with_label("States:")
-            .with_size(ComponentSize{pixels(100), pixels(40)})
+            .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -142,7 +143,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row2.ent(), 0),
         ComponentConfig{}
             .with_label("Sizes:")
-            .with_size(ComponentSize{pixels(100), pixels(40)})
+            .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -205,7 +206,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row3.ent(), 0),
         ComponentConfig{}
             .with_label("Group:")
-            .with_size(ComponentSize{pixels(100), pixels(40)})
+            .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -253,7 +254,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row4.ent(), 0),
         ComponentConfig{}
             .with_label("Custom:")
-            .with_size(ComponentSize{pixels(100), pixels(40)})
+            .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -268,6 +269,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)  // Match theme default roundness
                    .with_debug_name("btn_coral"))) {
       click_counts[10]++;
     }
@@ -281,6 +283,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)  // Match Coral button roundness
                    .with_debug_name("btn_teal"))) {
       click_counts[11]++;
     }
@@ -307,14 +310,10 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
             .with_label(counter_text)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.top = DefaultSpacing::medium(),
-                                .bottom = pixels(0),
-                                .left = pixels(0),
-                                .right = pixels(0)})
             .with_debug_name("click_counter"));
   }
 };

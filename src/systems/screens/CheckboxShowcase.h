@@ -40,24 +40,28 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     // Scale factor based on screen height (base: 720p)
     float scale = static_cast<float>(screen_height) / 720.0f;
 
-    // Responsive sizing
-    const float HEADER_HEIGHT = 28.0f * scale;
-    const float HEADER_FONT = 14.0f * scale;
-    const float CHECKBOX_HEIGHT = 36.0f * scale;
-    const float CHECKBOX_FONT = 13.0f * scale;
-    const float TITLE_HEIGHT = 50.0f * scale;
-    const float TITLE_FONT = 26.0f * scale;
-    const float STATUS_HEIGHT = 40.0f * scale;
-    const float STATUS_FONT = 16.0f * scale;
+    // Responsive sizing using theme typography scale for visual hierarchy
+    // Title: font_size_xl (42px) - Screen titles
+    // Section headers: font_size_lg (32px) - Section headers
+    // Labels: font_size_md (20px) - Labels
+    // Body text: font_size_sm (16px) - Body text, values
+    const float TITLE_HEIGHT = 60.0f * scale;
+    const float TITLE_FONT = theme.font_size_xl * scale;  // 42px - largest
+    const float HEADER_HEIGHT = 40.0f * scale;
+    const float HEADER_FONT = theme.font_size_lg * 0.75f * scale;  // 24px - section headers
+    const float CHECKBOX_HEIGHT = 40.0f * scale;
+    const float CHECKBOX_FONT = theme.font_size_md * scale;  // 20px - labels
+    const float STATUS_HEIGHT = 44.0f * scale;
+    const float STATUS_FONT = theme.font_size_sm * scale;  // 16px - body text
 
     // Calculate content height based on the taller column (right has more items)
     // Right: 2 headers (28*2) + 7 checkboxes (36*7) = 56 + 252 = 308 * scale
-    // Plus minimal padding from Spacing::xs on columns (~6px each side)
-    float column_content_height = 2 * HEADER_HEIGHT + 7 * CHECKBOX_HEIGHT + 12.0f * scale;
+    // Plus minimal padding from Spacing::xs on columns (~8px each side)
+    float column_content_height = 2 * HEADER_HEIGHT + 7 * CHECKBOX_HEIGHT + 16.0f * scale;
 
     // Card sized to fit content tightly
     float card_content = TITLE_HEIGHT + column_content_height + STATUS_HEIGHT;
-    float card_height = card_content + 10.0f * scale;
+    float card_height = card_content + 8.0f * scale;
     float card_width = screen_width * 0.85f;
 
     // Root - full screen background

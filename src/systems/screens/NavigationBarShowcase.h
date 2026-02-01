@@ -73,7 +73,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
     navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(500), pixels(50)})
+                       .with_size(ComponentSize{pixels(480), pixels(48)})
                        .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_categories"));
@@ -95,7 +95,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Game Mode Selector")
             .with_size(ComponentSize{pixels(700), pixels(36)})
-            .with_background(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -105,7 +105,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
     navigation_bar(context, mk(main_container.ent(), 5), modes, mode_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(450), pixels(50)})
+                       .with_size(ComponentSize{pixels(480), pixels(48)})
                        .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_modes"));
@@ -127,7 +127,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Level Selector (6 options)")
             .with_size(ComponentSize{pixels(700), pixels(36)})
-            .with_background(Theme::Usage::Secondary)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -137,7 +137,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
     navigation_bar(context, mk(main_container.ent(), 8), levels, level_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(400), pixels(50)})
+                       .with_size(ComponentSize{pixels(480), pixels(48)})
                        .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_levels"));

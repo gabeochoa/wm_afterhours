@@ -42,6 +42,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_debug_name("radio_main"));
 
     // Title
@@ -110,7 +111,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Size")
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_background(Theme::Usage::Secondary)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -138,7 +139,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Color")
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_background(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)

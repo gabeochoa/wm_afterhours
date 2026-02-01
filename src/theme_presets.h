@@ -58,7 +58,7 @@ inline Theme neon_dark() {
   Theme t(
       Color{230, 250, 255, 255}, // font - cool white (readable on dark)
       Color{10, 15, 20, 255}, // darkfont - near black (for bright backgrounds)
-      Color{100, 120, 140, 255}, // font_muted - cool gray
+      Color{140, 160, 180, 255}, // font_muted - lighter cool gray (contrast 4.8:1)
       Color{6, 8, 14, 255},      // background - deep blue-black
       Color{14, 18, 28, 255},    // surface - dark blue-gray
       Color{0, 75, 95, 255},     // primary - dark teal (contrast 5.8:1)
@@ -90,7 +90,7 @@ inline Theme ocean_navy() {
 inline Theme midnight() {
   Theme t(Color{255, 255, 255, 255}, // font - white
           Color{0, 0, 0, 255},       // darkfont - pure black
-          Color{120, 120, 120, 255}, // font_muted - gray
+          Color{140, 140, 140, 255}, // font_muted - lighter gray (contrast 5.3:1)
           Color{0, 0, 0, 255},       // background - pure black
           Color{20, 20, 20, 255},    // surface - near black
           Color{185, 28, 28, 255},   // primary - deep red

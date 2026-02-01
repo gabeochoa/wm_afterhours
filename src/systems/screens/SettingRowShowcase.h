@@ -49,13 +49,12 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 0),
         ComponentConfig{}
             .with_label("Setting Row Showcase")
-            .with_size(ComponentSize{percent(0.95f), pixels(45)})
+            .with_size(ComponentSize{percent(0.95f), pixels(48)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_roundness(0.1f)
             .with_debug_name("title"));
 
@@ -77,10 +76,10 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(content.ent(), 0),
         ComponentConfig{}
             .with_label("TOGGLES")
-            .with_size(ComponentSize{pixels(120), pixels(28)})
+            .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.bottom = pixels(10)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("toggle_label"));
 
     // Toggle rows - simple API (zero config)
@@ -100,17 +99,17 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(content.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(10)})
+            .with_size(ComponentSize{percent(1.0f), pixels(8)})
             .with_debug_name("spacer1"));
 
     // Stepper section label
     div(context, mk(content.ent(), 5),
         ComponentConfig{}
             .with_label("OPTIONS")
-            .with_size(ComponentSize{pixels(120), pixels(28)})
+            .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.bottom = pixels(10)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("stepper_label"));
 
     // Stepper rows
@@ -120,17 +119,17 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(content.ent(), 8),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(10)})
+            .with_size(ComponentSize{percent(1.0f), pixels(8)})
             .with_debug_name("spacer2"));
 
     // Slider section label
     div(context, mk(content.ent(), 9),
         ComponentConfig{}
             .with_label("VOLUME")
-            .with_size(ComponentSize{pixels(120), pixels(28)})
+            .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-            .with_margin(Margin{.bottom = pixels(10)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("slider_label"));
 
     // Slider rows - simple API
@@ -151,10 +150,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 2),
         ComponentConfig{}
             .with_label("setting_row: Toggle, Stepper, Slider, Dropdown, Display")
-            .with_size(ComponentSize{percent(0.95f), pixels(28)})
+            .with_size(ComponentSize{percent(0.95f), pixels(32)})
             .with_custom_text_color(afterhours::Color{100, 110, 130, 255})
             .with_font(UIComponent::DEFAULT_FONT, 12.0f)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));
   }

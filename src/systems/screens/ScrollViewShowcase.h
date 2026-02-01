@@ -52,11 +52,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     // Instructions
     div(context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Use mouse wheel to scroll (trackpad for horizontal)")
             .with_custom_text_color(theme.font_muted)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_debug_name("instructions"));
 
     // Invert scroll toggle row with label
@@ -98,6 +97,8 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font)
             .with_debug_name("vert_label"));
 
+    // Vertical scroll container - uses clip_children to ensure items
+    // are properly scissored to container bounds
     auto vert_scroll = scroll_view(
         context, mk(vert_section.ent(), 1),
         ComponentConfig{}
@@ -107,6 +108,9 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Column)
+            .with_clip_children(true)
+            .with_padding(Padding{.left = pixels(4), .right = pixels(4),
+                                  .top = pixels(4), .bottom = pixels(4)})
             .with_debug_name("vert_scroll"));
 
     // Configure vertical scrolling
@@ -143,8 +147,6 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(afterhours::Color{100, 100, 100, 180})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.5f)
-              .with_self_align(SelfAlign::FlexEnd)
-              .with_margin(Margin{.top = pixels(4)})
               .with_debug_name("vert_indicator_track"));
 
       // Indicator thumb (bright, visible)
@@ -186,6 +188,8 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font)
             .with_debug_name("horiz_label"));
 
+    // Horizontal scroll container - uses clip_children to ensure items
+    // are properly scissored to container bounds
     auto horiz_scroll = scroll_view(
         context, mk(horiz_section.ent(), 1),
         ComponentConfig{}
@@ -196,7 +200,9 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Row)
             .with_no_wrap()
-            .with_padding(Padding{.left = pixels(4), .right = pixels(4)})
+            .with_clip_children(true)
+            .with_padding(Padding{.left = pixels(4), .right = pixels(4),
+                                  .top = pixels(4), .bottom = pixels(4)})
             .with_debug_name("horiz_scroll"));
 
     // Configure horizontal scrolling

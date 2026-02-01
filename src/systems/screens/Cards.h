@@ -137,9 +137,12 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(nested_container.ent(), 0),
         ComponentConfig{}
             .with_label("Nested Cards")
-            .with_size(ComponentSize{percent(0.95f), pixels(30)})
-            .with_background(Theme::Usage::None)
+            .with_size(ComponentSize{percent(0.95f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_alignment(TextAlignment::Left)
             .with_skip_tabbing(true)
             .with_debug_name("nested_title"));
 
@@ -163,6 +166,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true)
             .with_debug_name("inner1"));
 
@@ -175,6 +179,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true)
             .with_debug_name("inner2"));
 
@@ -187,6 +192,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true)
             .with_debug_name("inner3"));
 
@@ -200,14 +206,18 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
+                .with_roundness(0.08f)  // Match nested_container roundness
                 .with_debug_name("info_panel"));
 
     div(context, mk(info_panel.ent(), 0),
         ComponentConfig{}
             .with_label("Semi-Transparent")
-            .with_size(ComponentSize{percent(0.95f), pixels(30)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_size(ComponentSize{percent(0.95f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_alignment(TextAlignment::Left)
             .with_skip_tabbing(true)
             .with_debug_name("info_title"));
 

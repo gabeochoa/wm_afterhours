@@ -15,7 +15,6 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color bg_warm{255, 245, 235, 255};      // Warm cream
   afterhours::Color card_white{255, 255, 255, 255};   // Pure white
   afterhours::Color btn_coral{255, 115, 105, 255};    // Vibrant coral
-  afterhours::Color btn_coral_dark{230, 90, 80, 255}; // Darker coral for border
   afterhours::Color text_dark{55, 50, 60, 255};       // Dark text
   afterhours::Color text_muted{140, 130, 145, 255};   // Muted text
   afterhours::Color confetti_pink{255, 180, 190, 255}; // Confetti color
@@ -127,7 +126,6 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                    .with_absolute_position()
                    .with_translate(button_x, button_y)
                    .with_custom_background(btn_coral)
-                   .with_border(btn_coral_dark, 3.0f)
                    .with_soft_shadow(4.0f, 6.0f, 14.0f,
                                      afterhours::Color{255, 100, 90, 50})
                    .with_font("Gaegu-Bold", 26.0f)

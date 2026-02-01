@@ -322,12 +322,21 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 
     card_y += 25.0f;
 
-    // Use smaller box sizes to fit within the column width
+    // Shrinking boxes demonstration
+    // First 2 boxes: text fits with proper sizing (green border)
+    // Last 3 boxes: text overflows despite smaller font (red border)
+    // This shows the minimum readable size constraint
     float box_sizes[] = {70.0f, 55.0f, 40.0f, 28.0f, 18.0f};
+    // Font sizes are progressively smaller but have a minimum floor
+    float font_sizes[] = {16.0f, 14.0f, 12.0f, 10.0f, 10.0f};
     float box_spacing = 8.0f;
     float box_x = right_col_x;
     for (int i = 0; i < 5; i++) {
       float size = box_sizes[i];
+      float font_size = font_sizes[i];
+      // First 2 boxes have room for text, last 3 show overflow
+      bool text_fits = i < 2;
+
       div(context, mk(entity, 40 + i * 2),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(size), pixels(size)})
@@ -335,7 +344,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
               .with_translate(box_x, card_y)
               .with_custom_background(card_bg)
               .with_rounded_corners(std::bitset<4>(0b1111))
-              .with_border(i < 2 ? success_green : error_red, 2.0f)
+              .with_border(text_fits ? success_green : error_red, 2.0f)
               .with_debug_name("shrink_box_" + std::to_string(i)));
 
       div(context, mk(entity, 41 + i * 2),
@@ -344,13 +353,26 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(size - 8), pixels(size - 8)})
               .with_absolute_position()
               .with_translate(box_x + 4.0f, card_y + 4.0f)
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, font_size)
               .with_custom_text_color(text_light)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("shrink_text_" + std::to_string(i)));
 
       box_x += size + box_spacing;
     }
+
+    // Add explanatory note about minimum sizes
+    card_y += 80.0f + card_spacing;
+    div(context, mk(entity, 60),
+        ComponentConfig{}
+            .with_label("Note: Text has a 10px minimum font size. Smaller containers show overflow indicators.")
+            .with_size(ComponentSize{pixels(card_width), pixels(40)})
+            .with_absolute_position()
+            .with_translate(right_col_x, card_y)
+            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("min_size_note"));
   }
 };
 

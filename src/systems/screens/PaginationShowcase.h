@@ -87,8 +87,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     // Use a row of individual buttons to simulate pagination
     float pag1_x = content_x;
     float btn_width = 120.0f;
-    float btn_height = 44.0f;
-    float arrow_width = 44.0f;
+    float btn_height = 48.0f;
+    float arrow_width = 48.0f;
 
     // Left arrow
     button(context, mk(entity, 100),
@@ -223,7 +223,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
-            .with_background(Theme::Usage::Accent)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -241,7 +241,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
                .with_absolute_position()
                .with_translate(pag3_x, current_y)
-               .with_background(Theme::Usage::Accent)
+               .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 20.0f)
                .with_debug_name("pag3_left"));
 
@@ -255,7 +255,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
                  .with_absolute_position()
                  .with_translate(pag3_x, current_y)
-                 .with_background(selected ? Theme::Usage::Secondary : Theme::Usage::Accent)
+                 .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("pag3_btn_" + std::to_string(i)));
@@ -268,7 +268,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
                .with_absolute_position()
                .with_translate(pag3_x, current_y)
-               .with_background(Theme::Usage::Accent)
+               .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 20.0f)
                .with_debug_name("pag3_right"));
 

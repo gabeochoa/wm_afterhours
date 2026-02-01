@@ -56,8 +56,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
-                .with_padding(Padding{.top = pixels(20), .left = pixels(24),
-                                      .bottom = pixels(20), .right = pixels(24)})
+                .with_padding(Spacing::lg)
                 .with_debug_name("modal_main"));
 
     // Title
@@ -84,8 +83,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
-                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_padding(Spacing::md)
                 .with_roundness(0.08f)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -95,9 +93,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent(), 0),
         ComponentConfig{}
             .with_label("BASIC MODALS")
-            .with_size(ComponentSize{pixels(200), pixels(26)})
-            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section1_label"));
@@ -142,8 +142,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
-                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_padding(Spacing::md)
                 .with_roundness(0.08f)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -153,9 +152,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent(), 0),
         ComponentConfig{}
             .with_label("HELPER FUNCTIONS")
-            .with_size(ComponentSize{pixels(200), pixels(26)})
-            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section2_label"));
@@ -214,8 +215,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
-                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_padding(Spacing::md)
                 .with_roundness(0.08f)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -225,9 +225,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent(), 0),
         ComponentConfig{}
             .with_label("MODAL STACKING")
-            .with_size(ComponentSize{pixels(200), pixels(26)})
-            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section3_label"));
@@ -260,8 +262,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(115)})
                 .with_custom_background(theme.surface)
-                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
-                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_padding(Spacing::md)
                 .with_roundness(0.08f)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -271,9 +272,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section4.ent(), 0),
         ComponentConfig{}
             .with_label("INPUT BLOCKING TEST")
-            .with_size(ComponentSize{pixels(220), pixels(26)})
-            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section4_label"));
@@ -317,8 +320,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(95)})
                 .with_custom_background(theme.surface)
-                .with_padding(Padding{.top = pixels(14), .left = pixels(24),
-                                      .bottom = pixels(14), .right = pixels(24)})
+                .with_padding(Spacing::md)
                 .with_roundness(0.08f)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section5"));
@@ -327,9 +329,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section5.ent(), 0),
         ComponentConfig{}
             .with_label("RESULTS")
-            .with_size(ComponentSize{pixels(120), pixels(26)})
-            .with_custom_text_color(afterhours::Color{140, 150, 170, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_background(Theme::Usage::Surface)
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section5_label"));

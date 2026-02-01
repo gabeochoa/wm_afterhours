@@ -266,7 +266,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto icon_row_container =
         div(context, mk(row4.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(300), pixels(60)})
+                .with_size(ComponentSize{pixels(350), pixels(70)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_custom_background(
@@ -274,7 +274,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_padding(Spacing::xs)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.08f)
-                .with_margin(Spacing::sm)
+                .with_no_wrap()
                 .with_debug_name("icon_row_container"));
 
     sprite(context, mk(icon_row_container.ent(), 0), gear_tex, full_src,
