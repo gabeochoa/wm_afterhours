@@ -34,7 +34,8 @@
       "Bash(./output/headless_test/headless_screenshots.exe:*)",
       "Bash(./output/main:*)",
       "Bash(lldb:*)",
-      "Skill(10x-engineer:subagent-driven-development)"
+      "Skill(10x-engineer:subagent-driven-development)",
+      "Bash(./graphics_example:*)"
     ]
   }
 }

@@ -520,7 +520,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{
                          pixels(44), pixels(44)})
                      .with_absolute_position()
-                     .with_translate(value_x + 44.0f + 138.0f, ry + 0.0f)
+                     .with_translate(value_x + 44.0f + 148.0f, ry + 0.0f)
                      .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -538,7 +538,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Slider visual bar (static display - matches arrow control values)
       if (setting.is_slider) {
-        float bar_x = value_x + arrow_size + 160.0f;
+        float bar_x = value_x + arrow_size + 170.0f;
         float bar_y = ry + 12.0f;
         float bar_w = 100.0f;
         float bar_h = 14.0f;

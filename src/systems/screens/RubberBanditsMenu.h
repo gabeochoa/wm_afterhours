@@ -73,7 +73,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float title_x = 45.0f;
     float title_y = 30.0f;
 
-    // RUBBER text - dark brown matching BANDIT$ styling for better contrast
+    // RUBBER text - off-white/cream for contrast against dark overlay
     // Note: Fredoka is wider, use 40pt instead of 48pt and wider container
     div(context, mk(entity, 10),
         ComponentConfig{}
@@ -83,7 +83,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(title_x, title_y)
             .with_custom_background(afterhours::Color{60, 45, 25, 180})
             .with_font("Fredoka", 44.0f)
-            .with_custom_text_color(afterhours::Color{85, 55, 25, 255})
+            .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
             .with_debug_name("title_rubber"));

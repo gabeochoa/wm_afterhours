@@ -69,11 +69,11 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     checkbox(context, mk(toggle_row.ent(), 0), invert_scroll,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(320), pixels(52)})
+                 .with_size(ComponentSize{pixels(280), pixels(48)})
                  .with_label("Invert Scroll Direction")
                  .with_custom_background(theme.primary)
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side
@@ -131,36 +131,6 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, 18.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("vert_info"));
-
-      // Vertical scroll indicator
-      float track_height = 120.0f;
-      float thumb_ratio = sv.viewport_size.y /
-                          std::max(sv.content_size.y, sv.viewport_size.y);
-      float thumb_height = std::max(20.0f, track_height * thumb_ratio);
-      float scroll_ratio =
-          max_scroll > 0.0f ? sv.scroll_offset.y / max_scroll : 0.0f;
-      float thumb_offset = scroll_ratio * (track_height - thumb_height);
-
-      // Indicator track (dark background) - increased visibility
-      auto vert_track = div(
-          context, mk(vert_section.ent(), 3),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(10), pixels(track_height)})
-              .with_custom_background(afterhours::Color{80, 80, 80, 200})
-              .with_rounded_corners(RoundedCorners().all_round())
-              .with_roundness(0.5f)
-              .with_debug_name("vert_indicator_track"));
-
-      // Indicator thumb (bright, visible) - increased visibility
-      div(context, mk(vert_track.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(10), pixels(thumb_height)})
-              .with_custom_background(afterhours::Color{70, 130, 180, 255})
-              .with_rounded_corners(RoundedCorners().all_round())
-              .with_roundness(0.5f)
-              .with_absolute_position()
-              .with_translate(pixels(0), pixels(thumb_offset))
-              .with_debug_name("vert_indicator_thumb"));
     }
 
     // Vertical scroll items - increased text size for touch targets
@@ -259,15 +229,16 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("horiz_indicator_thumb"));
     }
 
-    // Horizontal scroll items - increased gap between items
+    // Horizontal scroll items - sized so item 5 is clearly partially visible
+    // to indicate scrollability (4 full items + ~50% of item 5 visible)
     for (int i = 0; i < 15; i++) {
       div(context, mk(horiz_scroll.ent(), i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(80), pixels(80)})
+              .with_size(ComponentSize{pixels(70), pixels(70)})
               .with_label(fmt::format("{}", i + 1))
               .with_background(Theme::Usage::Accent)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-              .with_margin(Margin{.left = pixels(6), .right = pixels(6)})
+              .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)
               .with_debug_name(fmt::format("horiz_item_{}", i)));

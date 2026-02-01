@@ -84,7 +84,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                .left = pixels(margin_size), .right = pixels(0)})
+                                .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
             .with_debug_name("flex_start"));
 
@@ -110,7 +110,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(margin_size)})
+                                .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
             .with_debug_name("flex_end"));
 

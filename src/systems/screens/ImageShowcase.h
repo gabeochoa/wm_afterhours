@@ -279,31 +279,31 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     sprite(context, mk(icon_row_container.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_margin(Spacing::xs)
                .with_debug_name("icon_row_1"));
 
     sprite(context, mk(icon_row_container.ent(), 1), star_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_margin(Spacing::xs)
                .with_debug_name("icon_row_2"));
 
     sprite(context, mk(icon_row_container.ent(), 2), trophy_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_margin(Spacing::xs)
                .with_debug_name("icon_row_3"));
 
     sprite(context, mk(icon_row_container.ent(), 3), home_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_margin(Spacing::xs)
                .with_debug_name("icon_row_4"));
 
     sprite(context, mk(icon_row_container.ent(), 4), play_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(32), pixels(32)})
+               .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_margin(Spacing::xs)
                .with_debug_name("icon_row_5"));
   }

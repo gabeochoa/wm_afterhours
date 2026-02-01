@@ -81,9 +81,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(form_container.ent(), idx * 2),
           ComponentConfig{}
               .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(36)})
+              .with_size(ComponentSize{pixels(396), pixels(30)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
@@ -91,7 +91,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       // Text input without internal label
       // Note: with_rounded_corners and with_roundness ensure the focus ring matches the rounded input field
       auto input_config = ComponentConfig{}
-          .with_size(ComponentSize{pixels(396), pixels(44)})
+          .with_size(ComponentSize{pixels(396), pixels(38)})
           .with_background(bg)
           .with_font(UIComponent::DEFAULT_FONT, 18.0f)
           .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -130,16 +130,16 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(36)})
+            .with_size(ComponentSize{pixels(396), pixels(30)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
     // Search input - no label so field uses full width
     if (text_input(context, mk(form_container.ent(), 8), search_query,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(396), pixels(44)})
+                       .with_size(ComponentSize{pixels(396), pixels(38)})
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -153,9 +153,10 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(form_container.ent(), 9),
                ComponentConfig{}
                    .with_label("Submit")
-                   .with_size(ComponentSize{pixels(200), pixels(50)})
+                   .with_size(ComponentSize{pixels(200), pixels(44)})
                    .with_background(Theme::Usage::Accent)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
                    .with_debug_name("submit_btn"))) {
       status_message = "Submitted! User: " + username + ", Email: " + email;
     }

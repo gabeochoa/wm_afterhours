@@ -165,7 +165,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto buddy_info =
         div(context, mk(buddy_bar.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(200), pixels(40)})
+                .with_size(ComponentSize{pixels(210), pixels(40)})
                 .with_flex_direction(FlexDirection::Column)
                 .with_padding(Padding{.left = pixels(10)})
                 .with_debug_name("buddy_info"));
@@ -173,7 +173,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(buddy_info.ent(), 0),
         ComponentConfig{}
             .with_label(buddy_name)
-            .with_size(ComponentSize{pixels(180), pixels(22)})
+            .with_size(ComponentSize{pixels(190), pixels(22)})
             .with_custom_text_color(AIMColors::buddy_text())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -183,10 +183,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(buddy_info.ent(), 1),
         ComponentConfig{}
             .with_label("Available")
-            .with_size(ComponentSize{pixels(100), pixels(20)})
+            .with_size(ComponentSize{pixels(90), pixels(18)})
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("buddy_status"));
 

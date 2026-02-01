@@ -202,12 +202,12 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
-            .with_size(ComponentSize{percent(0.95f), pixels(60)})
+            .with_size(ComponentSize{percent(0.95f), pixels(48)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
-            .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
-            .with_margin(Margin{.top = DefaultSpacing::medium(),
+            .with_padding(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Margin{.top = DefaultSpacing::small(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
                                 .right = pixels(0)})

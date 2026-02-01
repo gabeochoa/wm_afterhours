@@ -282,7 +282,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(285), pixels(22)})
             .with_absolute_position()
             .with_translate(quest_x + 40.0f, quest_y + 14.0f)
-            .with_font("EqProRounded", 11.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("quest_text1"));
 
@@ -319,7 +319,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(240), pixels(22)})
             .with_absolute_position()
             .with_translate(quest_x + 78.0f, quest_y + 48.0f)
-            .with_font("EqProRounded", 11.0f)
+            .with_font("EqProRounded", 12.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("quest_text2"));
 
@@ -408,7 +408,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(150), pixels(18)})
               .with_absolute_position()
               .with_translate(chat_x, chat_y)
-              .with_font("EqProRounded", 10.0f)
+              .with_font("EqProRounded", 12.0f)
               .with_custom_text_color(slider_orange)
               .with_debug_name("chat_user_" + std::to_string(i)));
 
@@ -419,7 +419,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(85), pixels(18)})
               .with_absolute_position()
               .with_translate(chat_x + 148.0f, chat_y)
-              .with_font("EqProRounded", 10.0f)
+              .with_font("EqProRounded", 12.0f)
               .with_custom_text_color(text_white)
               .with_debug_name("chat_msg_" + std::to_string(i)));
     }
@@ -509,7 +509,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_label("<")
                    .with_size(ComponentSize{pixels(28), pixels(28)})
                    .with_absolute_position()
-                   .with_translate(x + w - 155.0f, y + 8.0f)
+                   .with_translate(x + w - 175.0f, y + 8.0f)
                    .with_font("EqProRounded", 18.0f)
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -523,9 +523,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(languages[language_idx])
-            .with_size(ComponentSize{pixels(100), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(115), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 120.0f, y + 12.0f)
+            .with_translate(x + w - 140.0f, y + 12.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)

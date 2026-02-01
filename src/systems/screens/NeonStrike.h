@@ -206,10 +206,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 110),
         ComponentConfig{}
             .with_label("SCORE: 15,000")
-            .with_size(ComponentSize{pixels(180), pixels(28)})
+            .with_size(ComponentSize{pixels(260), pixels(28)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 210.0f, 18.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate((float)screen_w - 330.0f, 18.0f)
+            .with_font("EqProRounded", 15.0f)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("score"));

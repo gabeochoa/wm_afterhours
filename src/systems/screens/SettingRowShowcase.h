@@ -38,7 +38,8 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.80f)})
+                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.80f)})
+                .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)

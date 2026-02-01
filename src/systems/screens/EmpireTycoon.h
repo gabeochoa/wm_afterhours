@@ -531,15 +531,17 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       }
 
       // Icon image or fallback text - larger (minimum 44px)
+      // NOTE: Icons are 64x48 but have wrong text labels baked in at bottom
+      // Crop to top 32px to only show the icon graphic, not the wrong text
       if (tex_ptr && tex_ptr->id != 0) {
         afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
-                                                   (float)tex_ptr->height};
+                                                   32.0f}; // Only top 32px
         sprite(
             context, mk(entity, 110 + static_cast<int>(i)), *tex_ptr, src,
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(48), pixels(48)})
+                .with_size(ComponentSize{pixels(48), pixels(36)})
                 .with_absolute_position()
-                .with_translate(nav_x + tab_width / 2.0f - 24.0f, tab_y + 6.0f)
+                .with_translate(nav_x + tab_width / 2.0f - 24.0f, tab_y + 4.0f)
                 .with_debug_name("tab_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 110 + static_cast<int>(i)),

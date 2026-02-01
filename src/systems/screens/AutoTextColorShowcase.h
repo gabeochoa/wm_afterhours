@@ -110,7 +110,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(row1.ent(), i),
              ComponentConfig{}
                  .with_label(dark_labels[i])
-                 .with_size({percent(0.22f), pixels(55.0f)})
+                 .with_size({percent(0.20f), pixels(55.0f)})
                  .with_custom_background(dark_colors[i])
                  .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
@@ -137,7 +137,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(row2.ent(), i),
              ComponentConfig{}
                  .with_label(light_labels[i])
-                 .with_size({percent(0.22f), pixels(55.0f)})
+                 .with_size({percent(0.20f), pixels(55.0f)})
                  .with_custom_background(light_colors[i])
                  .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
@@ -181,7 +181,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(row3.ent(), i),
              ComponentConfig{}
                  .with_label(mid_labels[i])
-                 .with_size({percent(0.14f), pixels(55.0f)})
+                 .with_size({percent(0.13f), pixels(55.0f)})
                  .with_custom_background(mid_colors[i])
                  .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                  .with_margin(Spacing::xs)
@@ -270,7 +270,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row5.ent(), 0),
            ComponentConfig{}
                .with_label("Primary")
-               .with_size({percent(0.17f), pixels(55.0f)})
+               .with_size({percent(0.15f), pixels(55.0f)})
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
@@ -279,7 +279,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row5.ent(), 1),
            ComponentConfig{}
                .with_label("Accent")
-               .with_size({percent(0.17f), pixels(55.0f)})
+               .with_size({percent(0.15f), pixels(55.0f)})
                .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
@@ -288,7 +288,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row5.ent(), 2),
            ComponentConfig{}
                .with_label("Secondary")
-               .with_size({percent(0.17f), pixels(55.0f)})
+               .with_size({percent(0.15f), pixels(55.0f)})
                .with_background(Theme::Usage::Secondary)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
@@ -297,7 +297,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row5.ent(), 3),
            ComponentConfig{}
                .with_label("Background")
-               .with_size({percent(0.17f), pixels(55.0f)})
+               .with_size({percent(0.15f), pixels(55.0f)})
                .with_background(Theme::Usage::Background)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
@@ -306,7 +306,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row5.ent(), 4),
            ComponentConfig{}
                .with_label("Surface")
-               .with_size({percent(0.17f), pixels(55.0f)})
+               .with_size({percent(0.15f), pixels(55.0f)})
                .with_background(Theme::Usage::Surface)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)

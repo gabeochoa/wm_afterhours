@@ -254,11 +254,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_margin(Spacing::xs)
                  .with_debug_name("preview_checkbox"));
 
-    // Toggle switch
+    // Toggle switch - increased height to fit toggle_track
     toggle_switch(context, mk(preview_panel.ent(), 4), toggle_state,
                   ComponentConfig{}
                       .with_label("Toggle")
-                      .with_size(ComponentSize{percent(0.95f), pixels(36)})
+                      .with_size(ComponentSize{percent(0.95f), pixels(48)})
                       .with_background(Theme::Usage::Secondary)
                       .with_auto_text_color(true)
                       .with_font(UIComponent::DEFAULT_FONT, 14.0f)

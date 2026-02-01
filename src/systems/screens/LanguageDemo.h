@@ -164,10 +164,10 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
       current_language = Language::Japanese;
     }
 
-    // ===== CONTENT ROW ===== - expanded width
+    // ===== CONTENT ROW ===== - adjusted height to fit within parent
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(540)})
+                           .with_size(ComponentSize{percent(1.0f), pixels(480)})
                            .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_justify_content(JustifyContent::Center)
