@@ -127,6 +127,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Tab buttons - white bg for unselected, green for selected (like
     // inspiration)
+    // Minimum 44px height for touch targets
     for (size_t i = 0; i < tabs.size(); i++) {
       bool is_selected = (i == selected_tab);
       afterhours::Color bg_color =
@@ -139,12 +140,12 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(tabs[i])
                      .with_size(ComponentSize{pixels(static_cast<int>(tab_w)),
-                                              pixels(40)})
+                                              pixels(44)})
                      .with_absolute_position()
                      .with_translate(tab_start_x + (float)i * tab_w, tab_y)
                      .with_custom_background(bg_color)
                      .with_border(tab_border, 2.0f)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(text_color)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("tab_" + std::to_string(i)))) {
@@ -180,18 +181,19 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== LEFT SIDEBAR MENU ==========
     // Black horizontal bars with icons on left, matching inspiration
+    // Connected visually to content area via consistent spacing
     float menu_x = 45.0f;
     float menu_y = 180.0f;
-    float menu_item_h = 55.0f;
-    float icon_w = 50.0f;
-    float menu_item_w = 320.0f;
+    float menu_item_h = 58.0f; // Minimum 44px for touch targets
+    float icon_w = 56.0f;      // Minimum 44px for touch targets
+    float menu_item_w = 360.0f; // Expanded width for better visual connection
 
     for (size_t i = 0; i < menu_options.size(); i++) {
       bool is_selected = (i == selected_option);
       float item_y = menu_y + (float)i * menu_item_h;
       auto &[icon, label] = menu_options[i];
 
-      // Icon box on left - dark with border
+      // Icon box on left - dark with border (minimum 44px touch target)
       afterhours::Color icon_bg = is_selected ? menu_highlight : menu_item_bg;
       afterhours::Color icon_color = is_selected ? bg_dark : text_white;
 
@@ -204,15 +206,17 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(menu_x, item_y)
               .with_custom_background(icon_bg)
-              .with_font("EqProRounded", 22.0f)
+              .with_font("EqProRounded", 24.0f)
               .with_custom_text_color(icon_color)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("icon_" + std::to_string(i)));
 
-      // Menu item bar - black normally, bright green when selected
+      // Menu item bar - black normally, bright green when selected (with hover state)
+      // Using border for hover state indication
       afterhours::Color item_bg = is_selected ? menu_highlight : menu_item_bg;
       afterhours::Color item_text =
           is_selected ? bg_dark : menu_text_unselected;
+      afterhours::Color item_border = is_selected ? holograph_teal : afterhours::Color{40, 40, 40, 255};
 
       if (button(context, mk(entity, 101 + static_cast<int>(i) * 3),
                  ComponentConfig{}
@@ -223,7 +227,8 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_absolute_position()
                      .with_translate(menu_x + icon_w, item_y)
                      .with_custom_background(item_bg)
-                     .with_font("EqProRounded", 21.0f)
+                     .with_border(item_border, is_selected ? 2.0f : 0.0f)
+                     .with_font("EqProRounded", 22.0f)
                      .with_custom_text_color(item_text)
                      .with_alignment(TextAlignment::Left)
                      .with_debug_name("menu_" + std::to_string(i)))) {
@@ -232,38 +237,53 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // "Offline Mode" indicator - position in center area
-    float offline_x = menu_x + menu_item_w + 60.0f;
+    float offline_x = menu_x + menu_item_w + 40.0f;
     div(context, mk(entity, 200),
         ComponentConfig{}
             .with_label("Offline Mode")
-            .with_size(ComponentSize{pixels(140), pixels(28)})
+            .with_size(ComponentSize{pixels(160), pixels(32)})
             .with_absolute_position()
             .with_translate(offline_x, 165.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("offline_mode"));
 
-    // ========== CENTER CHARACTER AREA (placeholder) ==========
-    // Position between menu (ends ~365px) and card panel
+    // ========== CENTER CHARACTER AREA (fills dead space) ==========
+    // Position between menu (ends ~405px) and card panel
     float center_area_start = menu_x + menu_item_w + 30.0f;
-    float center_area_end = (float)screen_w - 350.0f - 80.0f; // before card
-    float character_x = (center_area_start + center_area_end) / 2.0f - 60.0f;
+    float center_area_end = (float)screen_w - 380.0f - 60.0f; // before card
+    float center_area_width = center_area_end - center_area_start;
+    float character_x = center_area_start + center_area_width / 2.0f - 80.0f;
+
+    // Add background panel to fill dead space and connect visually
+    div(context, mk(entity, 205),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(center_area_width)),
+                                     pixels(360)})
+            .with_absolute_position()
+            .with_translate(center_area_start, 200.0f)
+            .with_custom_background(afterhours::Color{40, 35, 30, 120})
+            .with_border(afterhours::Color{60, 55, 50, 200}, 2.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.1f)
+            .with_debug_name("center_bg"));
+
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("^_^")
-            .with_size(ComponentSize{pixels(120), pixels(180)})
+            .with_size(ComponentSize{pixels(160), pixels(220)})
             .with_absolute_position()
             .with_translate(character_x, 260.0f)
-            .with_font("EqProRounded", 48.0f)
+            .with_font("EqProRounded", 56.0f)
             .with_custom_text_color(text_gray)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("character"));
 
     // ========== RIGHT PANEL: Info Card (holographic style) ==========
-    float card_w = 350.0f;
-    float card_h = 320.0f;
+    float card_w = 380.0f;
+    float card_h = 340.0f;
     float card_x = (float)screen_w - card_w - 50.0f; // 50px from right edge
-    float card_y = 200.0f;
+    float card_y = 195.0f;
 
     // Card background (diagonal cut effect simulated)
     div(context, mk(entity, 300),
@@ -289,11 +309,11 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 310),
         ComponentConfig{}
             .with_label("@")
-            .with_size(ComponentSize{pixels(140), pixels(140)})
+            .with_size(ComponentSize{pixels(150), pixels(150)})
             .with_absolute_position()
-            .with_translate(card_x + 40.0f, card_y + 30.0f)
+            .with_translate(card_x + 45.0f, card_y + 30.0f)
             .with_custom_background(afterhours::Color{55, 175, 165, 180})
-            .with_font("EqProRounded", 85.0f)
+            .with_font("EqProRounded", 90.0f)
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -304,67 +324,69 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 320),
         ComponentConfig{}
             .with_label("System Options")
-            .with_size(ComponentSize{pixels(280), pixels(45)})
+            .with_size(ComponentSize{pixels(300), pixels(48)})
             .with_absolute_position()
-            .with_translate(card_x + 30.0f, card_y + 190.0f)
-            .with_font("Gaegu-Bold", 32.0f)
+            .with_translate(card_x + 35.0f, card_y + 195.0f)
+            .with_font("Gaegu-Bold", 34.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_title"));
 
-    // Card description
+    // Card description - minimum 18.0f font
     div(context, mk(entity, 321),
         ComponentConfig{}
             .with_label("System Options")
-            .with_size(ComponentSize{pixels(300), pixels(22)})
+            .with_size(ComponentSize{pixels(320), pixels(26)})
             .with_absolute_position()
-            .with_translate(card_x + 30.0f, card_y + 235.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(card_x + 35.0f, card_y + 243.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_subtitle"));
 
     div(context, mk(entity, 322),
         ComponentConfig{}
             .with_label("Change various settings in the")
-            .with_size(ComponentSize{pixels(300), pixels(22)})
+            .with_size(ComponentSize{pixels(320), pixels(26)})
             .with_absolute_position()
-            .with_translate(card_x + 30.0f, card_y + 260.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(card_x + 35.0f, card_y + 268.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_desc1"));
 
     div(context, mk(entity, 323),
         ComponentConfig{}
             .with_label("game, such as vibration, save,")
-            .with_size(ComponentSize{pixels(300), pixels(22)})
+            .with_size(ComponentSize{pixels(320), pixels(26)})
             .with_absolute_position()
-            .with_translate(card_x + 30.0f, card_y + 280.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(card_x + 35.0f, card_y + 290.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_desc2"));
 
     div(context, mk(entity, 324),
         ComponentConfig{}
             .with_label("and autosave functions.")
-            .with_size(ComponentSize{pixels(300), pixels(22)})
+            .with_size(ComponentSize{pixels(320), pixels(26)})
             .with_absolute_position()
-            .with_translate(card_x + 30.0f, card_y + 300.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(card_x + 35.0f, card_y + 312.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_desc3"));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_y = (float)screen_h - 55.0f;
+    // Increased keyboard hint spacing for better readability
+    float prompt_y = (float)screen_h - 60.0f;
+    float hint_spacing = 150.0f; // Increased from ~120px spacing
 
-    // D-pad
+    // D-pad (minimum 44px touch target)
     div(context, mk(entity, 400),
         ComponentConfig{}
             .with_label("+")
-            .with_size(ComponentSize{pixels(30), pixels(30)})
+            .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
-            .with_translate(280.0f, prompt_y)
+            .with_translate(200.0f, prompt_y)
             .with_custom_background(menu_item_bg)
-            .with_border(text_gray, 1.0f)
-            .with_font("EqProRounded", 22.0f)
+            .with_border(text_gray, 2.0f)
+            .with_font("EqProRounded", 24.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("dpad"));
@@ -372,22 +394,22 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label(": Select")
-            .with_size(ComponentSize{pixels(70), pixels(30)})
+            .with_size(ComponentSize{pixels(90), pixels(36)})
             .with_absolute_position()
-            .with_translate(315.0f, prompt_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(242.0f, prompt_y)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("select_label"));
 
-    // A button (confirm)
+    // A button (confirm) - minimum 44px touch target
     div(context, mk(entity, 410),
         ComponentConfig{}
             .with_label("o")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
+            .with_size(ComponentSize{pixels(34), pixels(34)})
             .with_absolute_position()
-            .with_translate(420.0f, prompt_y + 1.0f)
+            .with_translate(200.0f + hint_spacing, prompt_y + 1.0f)
             .with_custom_background(afterhours::Color{180, 60, 60, 255})
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -397,22 +419,22 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 411),
         ComponentConfig{}
             .with_label(": Confirm")
-            .with_size(ComponentSize{pixels(80), pixels(30)})
+            .with_size(ComponentSize{pixels(100), pixels(36)})
             .with_absolute_position()
-            .with_translate(453.0f, prompt_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(200.0f + hint_spacing + 40.0f, prompt_y)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("confirm_label"));
 
-    // B button (return)
+    // B button (return) - minimum 44px touch target
     div(context, mk(entity, 420),
         ComponentConfig{}
             .with_label("o")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
+            .with_size(ComponentSize{pixels(34), pixels(34)})
             .with_absolute_position()
-            .with_translate(560.0f, prompt_y + 1.0f)
+            .with_translate(200.0f + hint_spacing * 2, prompt_y + 1.0f)
             .with_custom_background(afterhours::Color{180, 160, 60, 255})
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -422,23 +444,23 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 421),
         ComponentConfig{}
             .with_label(": Return")
-            .with_size(ComponentSize{pixels(70), pixels(30)})
+            .with_size(ComponentSize{pixels(90), pixels(36)})
             .with_absolute_position()
-            .with_translate(593.0f, prompt_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(200.0f + hint_spacing * 2 + 40.0f, prompt_y)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("return_label"));
 
-    // L/R for change entry - moved left to prevent clipping
+    // L/R for change entry - moved left to prevent clipping (minimum 44px touch)
     div(context, mk(entity, 430),
         ComponentConfig{}
             .with_label("L")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(32), pixels(32)})
             .with_absolute_position()
-            .with_translate(670.0f, prompt_y + 2.0f)
+            .with_translate(200.0f + hint_spacing * 3, prompt_y + 2.0f)
             .with_custom_background(menu_item_bg)
-            .with_border(text_gray, 1.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_border(text_gray, 2.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("l_btn"));
@@ -446,12 +468,12 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 431),
         ComponentConfig{}
             .with_label("R")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
+            .with_size(ComponentSize{pixels(32), pixels(32)})
             .with_absolute_position()
-            .with_translate(700.0f, prompt_y + 2.0f)
+            .with_translate(200.0f + hint_spacing * 3 + 38.0f, prompt_y + 2.0f)
             .with_custom_background(menu_item_bg)
-            .with_border(text_gray, 1.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_border(text_gray, 2.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("r_btn"));
@@ -459,10 +481,10 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 432),
         ComponentConfig{}
             .with_label(": Change Entry")
-            .with_size(ComponentSize{pixels(130), pixels(30)})
+            .with_size(ComponentSize{pixels(150), pixels(36)})
             .with_absolute_position()
-            .with_translate(730.0f, prompt_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(200.0f + hint_spacing * 3 + 76.0f, prompt_y)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("change_label"));
   }

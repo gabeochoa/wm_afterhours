@@ -25,11 +25,11 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
 
-    // Main container - centered on screen, sized to fit all content comfortably
+    // Main container - centered on screen, sized to fill more screen space
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.50f), screen_pct(0.85f)})
+                .with_size(ComponentSize{screen_pct(0.75f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_custom_background(theme.background)
                 .with_roundness(0.04f)
@@ -48,10 +48,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Toggle Switch Components")
             .with_size(ComponentSize{percent(1.0f), pixels(60)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_skip_tabbing(true)
             .with_debug_name("main_title"));
@@ -59,22 +59,22 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section: Pill Style
     div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
-            .with_label("Pill Style (iOS)")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_label("Pill Style (iOS) - Slide to toggle ON/OFF")
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("pill_title"));
 
     toggle_switch(context, mk(main_container.ent(), 2), enable_notifications,
                   ComponentConfig{}
-                      .with_label("Notifications")
-                      .with_size(ComponentSize{percent(1.0f), pixels(54)})
+                      .with_label(enable_notifications ? "Notifications: ON" : "Notifications: OFF")
+                      .with_size(ComponentSize{percent(1.0f), pixels(60)})
                       .with_custom_background(theme.surface)
-                      .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                      .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                       .with_padding(Padding{.left = DefaultSpacing::small()})
                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                       .with_debug_name("notifications"),
@@ -82,10 +82,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     toggle_switch(context, mk(main_container.ent(), 3), enable_sound,
                   ComponentConfig{}
-                      .with_label("Sound Effects")
-                      .with_size(ComponentSize{percent(1.0f), pixels(54)})
+                      .with_label(enable_sound ? "Sound Effects: ON" : "Sound Effects: OFF")
+                      .with_size(ComponentSize{percent(1.0f), pixels(60)})
                       .with_custom_background(theme.surface)
-                      .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                      .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                       .with_padding(Padding{.left = DefaultSpacing::small()})
                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                       .with_debug_name("sound"),
@@ -93,10 +93,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     toggle_switch(context, mk(main_container.ent(), 4), enable_vibration,
                   ComponentConfig{}
-                      .with_label("Vibration")
-                      .with_size(ComponentSize{percent(1.0f), pixels(54)})
+                      .with_label(enable_vibration ? "Vibration: ON" : "Vibration: OFF")
+                      .with_size(ComponentSize{percent(1.0f), pixels(60)})
                       .with_custom_background(theme.surface)
-                      .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                      .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                       .with_padding(Padding{.left = DefaultSpacing::small()})
                       .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                       .with_debug_name("vibration"),
@@ -105,22 +105,22 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section: Circle Style
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
-            .with_label("Circle Style (Checkbox)")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_background(Theme::Usage::Secondary)
+            .with_label("Circle Style (Checkbox) - Click to toggle ON/OFF")
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("circle_title"));
 
     toggle_switch(context, mk(main_container.ent(), 6), dark_mode,
                   ComponentConfig{}
-                      .with_label("Dark Mode")
-                      .with_size(ComponentSize{percent(1.0f), pixels(54)})
+                      .with_label(dark_mode ? "Dark Mode: ON" : "Dark Mode: OFF")
+                      .with_size(ComponentSize{percent(1.0f), pixels(60)})
                       .with_custom_background(theme.surface)
-                      .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                      .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                       .with_padding(Padding{.left = DefaultSpacing::small()})
                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                       .with_debug_name("dark_mode"),
@@ -128,10 +128,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     toggle_switch(context, mk(main_container.ent(), 7), auto_save,
                   ComponentConfig{}
-                      .with_label("Auto-Save")
-                      .with_size(ComponentSize{percent(1.0f), pixels(54)})
+                      .with_label(auto_save ? "Auto-Save: ON" : "Auto-Save: OFF")
+                      .with_size(ComponentSize{percent(1.0f), pixels(60)})
                       .with_custom_background(theme.surface)
-                      .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                      .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                       .with_padding(Padding{.left = DefaultSpacing::small()})
                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                       .with_debug_name("auto_save"),
@@ -139,10 +139,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     toggle_switch(context, mk(main_container.ent(), 8), cloud_sync,
                   ComponentConfig{}
-                      .with_label("Cloud Sync")
-                      .with_size(ComponentSize{percent(1.0f), pixels(54)})
+                      .with_label(cloud_sync ? "Cloud Sync: ON" : "Cloud Sync: OFF")
+                      .with_size(ComponentSize{percent(1.0f), pixels(60)})
                       .with_custom_background(theme.surface)
-                      .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                      .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                       .with_padding(Padding{.left = DefaultSpacing::small()})
                       .with_margin(Margin{.bottom = DefaultSpacing::medium()})
                       .with_debug_name("cloud_sync"),
@@ -157,11 +157,11 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 9),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_debug_name("status"));
   }

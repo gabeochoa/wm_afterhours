@@ -56,11 +56,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 2),
         ComponentConfig{}
-            .with_label("Native with_text_stroke() API for game UI titles")
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(24)})
+            .with_label("Create bold outlines for game titles and headers")
+            .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
             .with_absolute_position()
             .with_translate(20.0f, 65.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("page_subtitle"));
@@ -106,37 +106,37 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Same yellow color - stroke adds dark outline")
-            .with_size(ComponentSize{pixels(450), pixels(20)})
+            .with_label("Same yellow color with dark outline for contrast")
+            .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 170.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_1"));
 
-    // Row 2: EXTREME thick stroke (12px)
+    // Row 2: BOLD thick stroke (8px - more legible than 12px)
     afterhours::Color hot_pink{255, 50, 150, 255};
     afterhours::Color deep_purple{40, 0, 60, 255}; // Even darker
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("EXTREME")
+            .with_label("BOLD")
             .with_size(ComponentSize{pixels(400), pixels(90)})
             .with_absolute_position()
             .with_translate(col1_x, 200.0f)
             .with_font(bold_font, 72.0f)
             .with_custom_text_color(hot_pink)
-            .with_text_stroke(deep_purple, 12.0f)
+            .with_text_stroke(deep_purple, 8.0f)
             .with_alignment(TextAlignment::Left)
-            .with_debug_name("extreme"));
+            .with_debug_name("bold"));
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("12px stroke - very chunky outline")
-            .with_size(ComponentSize{pixels(350), pixels(20)})
+            .with_label("Thick 8px stroke creates a chunky game-style effect")
+            .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 295.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_2"));
 
@@ -158,11 +158,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Cyan + red stroke - complementary colors")
-            .with_size(ComponentSize{pixels(350), pixels(20)})
+            .with_label("Cyan text with red outline for a vibrant look")
+            .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 410.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_3"));
 
@@ -184,11 +184,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Dark text + bright stroke = glow effect")
-            .with_size(ComponentSize{pixels(350), pixels(20)})
+            .with_label("Dark text with bright outline creates a glow effect")
+            .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 525.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_4"));
 
@@ -254,29 +254,29 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Stroke Thickness:")
-            .with_size(ComponentSize{pixels(300), pixels(30)})
+            .with_label("Outline Thickness Examples:")
+            .with_size(ComponentSize{pixels(300), pixels(34)})
             .with_absolute_position()
             .with_translate(col2_x, 110.0f)
-            .with_font("Gaegu-Bold", 24.0f)
+            .with_font("Gaegu-Bold", 26.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("thickness_title"));
 
     afterhours::Color orange{255, 180, 60, 255};
     afterhours::Color dark_orange{80, 40, 0, 255}; // Darker for more contrast
 
-    float thickness_y = 155.0f;
-    float thicknesses[] = {2.0f, 4.0f, 6.0f, 8.0f, 10.0f, 14.0f};
-    const char *thickness_labels[] = {"2px", "4px",  "6px",
-                                      "8px", "10px", "14px"};
+    float thickness_y = 160.0f;
+    float thicknesses[] = {2.0f, 4.0f, 6.0f, 8.0f, 10.0f};
+    const char *thickness_labels[] = {"2px - subtle", "4px - medium",  "6px - bold",
+                                      "8px - chunky", "10px - heavy"};
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
       div(context, mk(entity, id++),
           ComponentConfig{}
               .with_label("STROKE")
-              .with_size(ComponentSize{pixels(220), pixels(55)})
+              .with_size(ComponentSize{pixels(220), pixels(60)})
               .with_absolute_position()
-              .with_translate(col2_x, thickness_y + i * 75.0f)
+              .with_translate(col2_x, thickness_y + i * 85.0f)
               .with_font(bold_font, 40.0f)
               .with_custom_text_color(orange)
               .with_text_stroke(dark_orange, thicknesses[i])
@@ -286,9 +286,9 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, id++),
           ComponentConfig{}
               .with_label(thickness_labels[i])
-              .with_size(ComponentSize{pixels(80), pixels(30)})
+              .with_size(ComponentSize{pixels(140), pixels(34)})
               .with_absolute_position()
-              .with_translate(col2_x + 240.0f, thickness_y + i * 75.0f + 12.0f)
+              .with_translate(col2_x + 230.0f, thickness_y + i * 85.0f + 14.0f)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_custom_text_color(text_muted)
               .with_debug_name("thickness_label_" + std::to_string(i)));
@@ -299,7 +299,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w - 80), pixels(40)})
+            .with_size(ComponentSize{pixels(screen_w - 80), pixels(44)})
             .with_absolute_position()
             .with_translate(40.0f, code_y)
             .with_custom_background(surface)
@@ -309,12 +309,11 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Usage: ComponentConfig{}.with_text_stroke(Color{r, g, "
-                        "b, a}, thickness)")
-            .with_size(ComponentSize{pixels(screen_w - 100), pixels(24)})
+            .with_label("Tip: Use 2-6px for readable text, 6-10px for decorative titles and headers")
+            .with_size(ComponentSize{pixels(screen_w - 100), pixels(28)})
             .with_absolute_position()
             .with_translate(50.0f, code_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
             .with_alignment(TextAlignment::Left)
             .with_debug_name("code_text"));

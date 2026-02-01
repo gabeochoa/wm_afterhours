@@ -27,9 +27,9 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.background)
             .with_debug_name("bg"));
 
-    // Main panel dimensions
-    float panel_w = 720.0f;
-    float panel_h = 420.0f;
+    // Main panel dimensions - expanded to use more screen
+    float panel_w = 900.0f;
+    float panel_h = 520.0f;
     float panel_x = (screen_width - panel_w) / 2.0f;
     float panel_y = (screen_height - panel_h) / 2.0f;
 
@@ -62,20 +62,20 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // Row dimensions
-    float row_w = panel_w - 40.0f;
-    float row_h = 100.0f;
-    float row_x = panel_x + 20.0f;
-    float row1_y = panel_y + 70.0f;
-    float row2_y = row1_y + row_h + 20.0f;
+    float row_w = panel_w - 60.0f;
+    float row_h = 130.0f;
+    float row_x = panel_x + 30.0f;
+    float row1_y = panel_y + 80.0f;
+    float row2_y = row1_y + row_h + 30.0f;
 
     // Row 1 label
     div(context, mk(entity, 3),
         ComponentConfig{}
             .with_label("Theme Colors")
-            .with_size(ComponentSize{pixels(row_w), pixels(24)})
+            .with_size(ComponentSize{pixels(row_w), pixels(28)})
             .with_absolute_position()
-            .with_translate(row_x, row1_y - 28.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_translate(row_x, row1_y - 32.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_auto_text_color(true)
             .with_debug_name("row1_label"));
 
@@ -87,15 +87,15 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_translate(row_x, row1_y)
             .with_custom_background(theme.background)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.06f)
+            .with_roundness(0.04f)
             .with_debug_name("row1_bg"));
 
-    // Theme color swatches
-    float swatch_w = 120.0f;
-    float swatch_h = 80.0f;
-    float swatch_gap = 12.0f;
-    float swatches_start_x = row_x + 20.0f;
-    float swatch_y = row1_y + 10.0f;
+    // Theme color swatches - with increased gaps
+    float swatch_w = 150.0f;
+    float swatch_h = 100.0f;
+    float swatch_gap = 18.0f;
+    float swatches_start_x = row_x + 25.0f;
+    float swatch_y = row1_y + 15.0f;
 
     struct ThemeSwatch {
       const char *label;
@@ -121,7 +121,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_rounded_corners(std::bitset<4>(0b1111))
-              .with_roundness(0.12f)
+              .with_roundness(0.10f)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("swatch_" + std::to_string(i)));
     }
@@ -130,10 +130,10 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 4),
         ComponentConfig{}
             .with_label("Custom Colors")
-            .with_size(ComponentSize{pixels(row_w), pixels(24)})
+            .with_size(ComponentSize{pixels(row_w), pixels(28)})
             .with_absolute_position()
-            .with_translate(row_x, row2_y - 28.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_translate(row_x, row2_y - 32.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_auto_text_color(true)
             .with_debug_name("row2_label"));
 
@@ -145,33 +145,38 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_translate(row_x, row2_y)
             .with_custom_background(theme.background)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.06f)
+            .with_roundness(0.04f)
             .with_debug_name("row2_bg"));
 
-    // Custom color swatches
-    afterhours::Color custom_colors[] = {
-        afterhours::Color{255, 100, 100, 255}, // Red
-        afterhours::Color{100, 200, 100, 255}, // Green
-        afterhours::Color{100, 150, 255, 255}, // Blue
-        afterhours::Color{255, 200, 100, 255}, // Yellow
-        afterhours::Color{200, 100, 255, 255}, // Purple
+    // Custom color swatches with hex values
+    struct CustomColorInfo {
+      const char *name;
+      afterhours::Color color;
+      const char *hex;
     };
-    const char *custom_labels[] = {"Red", "Green", "Blue", "Yellow", "Purple"};
-    float custom_swatch_y = row2_y + 10.0f;
+    CustomColorInfo custom_colors[] = {
+        {"Red", afterhours::Color{255, 100, 100, 255}, "#FF6464"},
+        {"Green", afterhours::Color{100, 200, 100, 255}, "#64C864"},
+        {"Blue", afterhours::Color{100, 150, 255, 255}, "#6496FF"},
+        {"Yellow", afterhours::Color{255, 200, 100, 255}, "#FFC864"},
+        {"Purple", afterhours::Color{200, 100, 255, 255}, "#C864FF"},
+    };
+    float custom_swatch_y = row2_y + 15.0f;
 
     for (int i = 0; i < 5; i++) {
+      std::string label = std::string(custom_colors[i].name) + "\n" + custom_colors[i].hex;
       div(context, mk(entity, 40 + i),
           ComponentConfig{}
-              .with_label(custom_labels[i])
+              .with_label(label)
               .with_size(ComponentSize{pixels(swatch_w), pixels(swatch_h)})
               .with_absolute_position()
               .with_translate(swatches_start_x + i * (swatch_w + swatch_gap),
                               custom_swatch_y)
-              .with_custom_background(custom_colors[i])
+              .with_custom_background(custom_colors[i].color)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_rounded_corners(std::bitset<4>(0b1111))
-              .with_roundness(0.12f)
+              .with_roundness(0.10f)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("custom_" + std::to_string(i)));
     }
@@ -180,11 +185,11 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 50),
         ComponentConfig{}
             .with_label("Using Midnight theme. Top row: theme colors. Bottom "
-                        "row: custom colors.")
-            .with_size(ComponentSize{pixels(panel_w - 40), pixels(32)})
+                        "row: custom colors with hex values.")
+            .with_size(ComponentSize{pixels(panel_w - 60), pixels(36)})
             .with_absolute_position()
-            .with_translate(panel_x + 20.0f, panel_y + panel_h - 45.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_translate(panel_x + 30.0f, panel_y + panel_h - 55.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)
             .with_skip_tabbing(true)

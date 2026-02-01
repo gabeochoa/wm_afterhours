@@ -170,15 +170,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   std::string get_section_header() {
     switch (selected_tab) {
     case 0:
-      return "GAMEPLAY";
+      return "Gameplay";
     case 1:
-      return "GRAPHICS";
+      return "Graphics";
     case 2:
-      return "AUDIO";
+      return "Audio";
     case 3:
-      return "CONTROLS";
+      return "Controls";
     default:
-      return "GRAPHICS";
+      return "Graphics";
     }
   }
 
@@ -214,6 +214,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (selected_tab == 1 &&
         index == 5) { // Gamma - divide by 10 for decimal display
       return fmt::format("{:.1f}", val / 10.0f);
+    }
+    // Add units for common slider types
+    std::string label = setting.label;
+    if (label == "Max FPS" || label == "Framerate target") {
+      return std::to_string(val) + " FPS";
+    } else if (label.find("Volume") != std::string::npos ||
+               label == "Screen percentage" ||
+               label == "Vibration Strength") {
+      return std::to_string(val) + "%";
     }
     return std::to_string(val);
   }
@@ -381,7 +390,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(150), pixels(30)})
             .with_absolute_position()
             .with_translate(50.0f, header_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("section_header"));
 
@@ -451,7 +460,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(200), pixels(static_cast<int>(row_h - 4))})
                      .with_absolute_position()
                      .with_translate(panel_x + 20.0f, ry + 2.0f)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_font("EqProRounded", 18.0f)
                      .with_custom_text_color(label_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Left)
@@ -470,10 +479,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("<")
                      .with_size(ComponentSize{
-                         pixels(static_cast<int>(arrow_size)), pixels(28)})
+                         pixels(44), pixels(44)})
                      .with_absolute_position()
-                     .with_translate(value_x, ry + 6.0f)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_translate(value_x, ry + 0.0f)
+                     .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_skip_tabbing(true)
@@ -493,10 +502,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 301 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(display_value)
-              .with_size(ComponentSize{pixels(120), pixels(28)})
+              .with_size(ComponentSize{pixels(130), pixels(44)})
               .with_absolute_position()
-              .with_translate(value_x + arrow_size + 4.0f, ry + 6.0f)
-              .with_font("EqProRounded", 16.0f)
+              .with_translate(value_x + 44.0f + 4.0f, ry + 0.0f)
+              .with_font("EqProRounded", 18.0f)
               .with_custom_text_color(value_color)
               .with_alignment(TextAlignment::Center)
               .with_skip_tabbing(true)
@@ -509,10 +518,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(">")
                      .with_size(ComponentSize{
-                         pixels(static_cast<int>(arrow_size)), pixels(28)})
+                         pixels(44), pixels(44)})
                      .with_absolute_position()
-                     .with_translate(value_x + arrow_size + 128.0f, ry + 6.0f)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_translate(value_x + 44.0f + 138.0f, ry + 0.0f)
+                     .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_skip_tabbing(true)

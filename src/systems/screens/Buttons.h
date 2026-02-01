@@ -84,6 +84,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
                    .with_debug_name("btn_normal"))) {
       click_counts[0]++;
     }
@@ -97,6 +98,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
                    .with_debug_name("btn_accent"))) {
       click_counts[1]++;
     }
@@ -110,6 +112,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
                    .with_debug_name("btn_secondary"))) {
       click_counts[2]++;
     }
@@ -124,6 +127,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_disabled(true)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
+               .with_roundness(0.08f)
                .with_debug_name("btn_disabled"));
 
     // Row 2: Different sizes - AlignItems::Center vertically centers buttons
@@ -149,16 +153,17 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("sizes_label"));
 
-    // Small button - use smaller font to fit the compact size
+    // Small button - increased height to meet 44px touch target, larger font for visibility
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("Small")
-                   .with_size(ComponentSize{pixels(80), pixels(32)})
+                   .with_size(ComponentSize{pixels(90), pixels(44)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                    .with_padding(Spacing::xs)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
                    .with_debug_name("btn_small"))) {
       click_counts[3]++;
     }
@@ -172,6 +177,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
                    .with_debug_name("btn_medium"))) {
       click_counts[4]++;
     }
@@ -185,6 +191,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                    .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
                    .with_debug_name("btn_large"))) {
       click_counts[5]++;
     }
@@ -212,7 +219,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("group_label"));
 
-    // Create individual buttons styled as a group
+    // Create individual buttons styled as a group with gaps between them
     std::array<std::string_view, 4> group_labels = {"One", "Two", "Three",
                                                     "Four"};
     for (size_t i = 0; i < group_labels.size(); i++) {
@@ -232,6 +239,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                      .with_auto_text_color(true)
                      .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                      .with_rounded_corners(corners)
+                     .with_margin(Spacing::xs)
                      .with_debug_name("btn_group_" + std::to_string(i)))) {
         click_counts[6 + i]++;
       }

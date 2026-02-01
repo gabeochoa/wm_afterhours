@@ -64,18 +64,18 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Instructions
     std::string instructions =
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
-        "Debug mode ENABLED - red corners show text overflow";
+        "Debug mode is ON - red corners appear when text is too large for its container";
 #else
-        "Debug mode DISABLED - rebuild with -DAFTERHOURS_DEBUG_TEXT_OVERFLOW";
+        "Debug mode is OFF - enable to see overflow indicators (compile with debug flag)";
 #endif
 
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_label(instructions)
-            .with_size(ComponentSize{pixels(screen_width - 40), pixels(30)})
+            .with_size(ComponentSize{pixels(screen_width - 40), pixels(34)})
             .with_absolute_position()
             .with_translate(20.0f, 75.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
                 success_green
@@ -86,11 +86,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("instructions"));
 
-    float card_y = 130.0f;
-    float card_spacing = 20.0f;
+    float card_y = 120.0f;
+    float card_spacing = 16.0f;
     float card_height = 100.0f;
-    float card_width = 340.0f;
-    float col_gap = 30.0f;
+    float card_width = 380.0f;
+    float col_gap = 40.0f;
     float total_content_width = card_width * 2.0f + col_gap;
     float content_start_x = (screen_width - total_content_width) / 2.0f;
     float left_col_x = content_start_x;
@@ -100,11 +100,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Section header
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label("Working (text fits)")
-            .with_size(ComponentSize{pixels(card_width), pixels(25)})
+            .with_label("Good: Text Fits Container")
+            .with_size(ComponentSize{pixels(card_width), pixels(28)})
             .with_absolute_position()
             .with_translate(left_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(success_green)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("section_working"));
@@ -160,10 +160,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 
     card_y += 60 + card_spacing;
 
-    // Card 3: Icon-sized box with single char
+    // Card 3: Icon-sized box with single char - increased to 44px minimum
     div(context, mk(entity, 15),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(50), pixels(50)})
+            .with_size(ComponentSize{pixels(52), pixels(52)})
             .with_absolute_position()
             .with_translate(left_col_x, card_y)
             .with_custom_background(card_bg)
@@ -174,10 +174,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 16),
         ComponentConfig{}
             .with_label("OK")
-            .with_size(ComponentSize{pixels(40), pixels(40)})
+            .with_size(ComponentSize{pixels(44), pixels(44)})
             .with_absolute_position()
-            .with_translate(left_col_x + 5.0f, card_y + 5.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_translate(left_col_x + 4.0f, card_y + 4.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_ok_3"));
@@ -189,11 +189,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Section header
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_label("Overflow (text doesn't fit)")
-            .with_size(ComponentSize{pixels(card_width), pixels(25)})
+            .with_label("Problem: Text Too Large")
+            .with_size(ComponentSize{pixels(card_width), pixels(28)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(error_red)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("section_overflow"));
@@ -248,10 +248,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 
     card_y += 15 + card_spacing;
 
-    // Card 3: Extremely tiny container
+    // Card 3: Extremely tiny container - increased to 44px minimum
     div(context, mk(entity, 25),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_size(ComponentSize{pixels(44), pixels(44)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
             .with_custom_background(card_bg)
@@ -262,9 +262,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 26),
         ComponentConfig{}
             .with_label("No way this fits")
-            .with_size(ComponentSize{pixels(10), pixels(10)})
+            .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
-            .with_translate(right_col_x + 5.0f, card_y + 5.0f)
+            .with_translate(right_col_x + 4.0f, card_y + 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, 12.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -273,16 +273,16 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Label for the tiny box
     div(context, mk(entity, 27),
         ComponentConfig{}
-            .with_label("<-- Tiny 20x20 box")
-            .with_size(ComponentSize{pixels(200), pixels(20)})
+            .with_label("<-- Small 44x44 box with long text")
+            .with_size(ComponentSize{pixels(280), pixels(24)})
             .with_absolute_position()
-            .with_translate(right_col_x + 30.0f, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_translate(right_col_x + 54.0f, card_y + 10.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("tiny_label"));
 
-    card_y += 30 + card_spacing;
+    card_y += 54 + card_spacing;
 
     // Card 4: Zero-margin nightmare
     div(context, mk(entity, 28),
@@ -311,11 +311,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Row of progressively smaller boxes
     div(context, mk(entity, 30),
         ComponentConfig{}
-            .with_label("Shrinking boxes with same text:")
-            .with_size(ComponentSize{pixels(card_width), pixels(20)})
+            .with_label("How containers handle different text sizes:")
+            .with_size(ComponentSize{pixels(card_width), pixels(24)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("shrinking_label"));
@@ -326,10 +326,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // First 2 boxes: text fits with proper sizing (green border)
     // Last 3 boxes: text overflows despite smaller font (red border)
     // This shows the minimum readable size constraint
-    float box_sizes[] = {70.0f, 55.0f, 40.0f, 28.0f, 18.0f};
+    float box_sizes[] = {70.0f, 55.0f, 44.0f, 44.0f, 44.0f};
     // Font sizes are progressively smaller but have a minimum floor
     float font_sizes[] = {16.0f, 14.0f, 12.0f, 10.0f, 10.0f};
-    float box_spacing = 8.0f;
+    float box_spacing = 10.0f;
     float box_x = right_col_x;
     for (int i = 0; i < 5; i++) {
       float size = box_sizes[i];
@@ -365,11 +365,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     card_y += 80.0f + card_spacing;
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_label("Note: Text has a 10px minimum font size. Smaller containers show overflow indicators.")
-            .with_size(ComponentSize{pixels(card_width), pixels(40)})
+            .with_label("Minimum touch target size is 44px. Smaller containers trigger overflow warnings.")
+            .with_size(ComponentSize{pixels(card_width), pixels(44)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("min_size_note"));

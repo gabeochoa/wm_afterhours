@@ -121,12 +121,12 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Left column header
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label("WITHOUT auto_text_color")
-            .with_size(ComponentSize{pixels(col_w), pixels(28)})
+            .with_label("Without Auto-Text")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(left_x, content_y)
             .with_custom_background(panel_light)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -166,10 +166,10 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 13),
         ComponentConfig{}
             .with_label("Manual text color applied")
-            .with_size(ComponentSize{pixels(col_w), pixels(22)})
+            .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position()
             .with_translate(left_x, content_y + 162.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("left_note"));
@@ -177,12 +177,12 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Right column header
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_label("WITH auto_text_color")
-            .with_size(ComponentSize{pixels(col_w), pixels(28)})
+            .with_label("With Auto-Text")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(right_x, content_y)
             .with_custom_background(accent_green)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -217,10 +217,10 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 23),
         ComponentConfig{}
             .with_label("Automatically picks best contrast!")
-            .with_size(ComponentSize{pixels(col_w), pixels(22)})
+            .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position()
             .with_translate(right_x, content_y + 162.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(accent_green)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("right_note"));
@@ -231,10 +231,10 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label("Auto-Contrast on Various Backgrounds")
-            .with_size(ComponentSize{pixels(panel_w - 60), pixels(26)})
+            .with_size(ComponentSize{pixels(panel_w - 60), pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, showcase_y)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("showcase_title"));
@@ -299,10 +299,10 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Auto text color is enabled by default - text always "
                         "remains readable")
-            .with_size(ComponentSize{pixels(panel_w - 60), pixels(30)})
+            .with_size(ComponentSize{pixels(panel_w - 60), pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + panel_h - 44.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 17.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

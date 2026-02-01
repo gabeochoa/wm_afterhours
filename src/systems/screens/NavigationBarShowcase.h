@@ -26,10 +26,10 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
 
-    // Main container - centered on screen
+    // Main container - centered on screen, expanded for more screen use
     auto root = div(context, mk(entity, 0),
                     ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.60f), screen_pct(0.90f)})
+                        .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.92f)})
                         .with_self_align(SelfAlign::Center)
                         .with_custom_background(theme.background)
                         .with_roundness(0.04f)
@@ -49,11 +49,11 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Navigation Bar Component Showcase")
-            .with_size(ComponentSize{pixels(700), pixels(50)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(56)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("title"));
@@ -62,31 +62,31 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
             .with_label("Settings Categories")
-            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true)
             .with_debug_name("section1_label"));
 
     navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(480), pixels(48)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_size(ComponentSize{percent(0.85f), pixels(52)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_categories"));
 
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Current: " + categories[category_idx])
-            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("status1"));
 
@@ -94,31 +94,31 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_label("Game Mode Selector")
-            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true)
             .with_debug_name("section2_label"));
 
     navigation_bar(context, mk(main_container.ent(), 5), modes, mode_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(480), pixels(48)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_size(ComponentSize{percent(0.85f), pixels(52)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_modes"));
 
     div(context, mk(main_container.ent(), 6),
         ComponentConfig{}
             .with_label("Mode: " + modes[mode_idx])
-            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("status2"));
 
@@ -126,30 +126,30 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 7),
         ComponentConfig{}
             .with_label("Level Selector (6 options)")
-            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true)
             .with_debug_name("section3_label"));
 
     navigation_bar(context, mk(main_container.ent(), 8), levels, level_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{pixels(480), pixels(48)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_size(ComponentSize{percent(0.85f), pixels(52)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_debug_name("navbar_levels"));
 
     div(context, mk(main_container.ent(), 9),
         ComponentConfig{}
             .with_label("Level: " + levels[level_idx])
-            .with_size(ComponentSize{pixels(700), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_debug_name("status3"));
   }

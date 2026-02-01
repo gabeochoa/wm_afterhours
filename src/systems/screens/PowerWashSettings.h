@@ -225,10 +225,10 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(current_settings[i].label)
                      .with_size(ComponentSize{pixels(static_cast<int>(label_w)),
-                                              pixels(28)})
+                                              pixels(44)})
                      .with_absolute_position()
-                     .with_translate(row_x, ry)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_translate(row_x, ry - 8.0f)
+                     .with_font("EqProRounded", 18.0f)
                      .with_custom_text_color(label_color)
                      .with_debug_name("label_" + std::to_string(i)))) {
         selected_row = i;
@@ -244,12 +244,12 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 51 + static_cast<int>(i) * 4),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{pixels(24), pixels(28)})
+                     .with_size(ComponentSize{pixels(44), pixels(44)})
                      .with_absolute_position()
-                     .with_translate(row_x + label_w + 20.0f, ry)
+                     .with_translate(row_x + label_w + 20.0f, ry - 8.0f)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_font("EqProRounded", 18.0f)
                      .with_custom_text_color(arrow_color)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("left_" + std::to_string(i)))) {
@@ -266,11 +266,11 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(
                   current_settings[i].options[current_settings[i].option_idx])
               .with_size(ComponentSize{
-                  pixels(static_cast<int>(dropdown_w - 52)), pixels(28)})
+                  pixels(static_cast<int>(dropdown_w - 92)), pixels(44)})
               .with_absolute_position()
-              .with_translate(row_x + label_w + 45.0f, ry)
+              .with_translate(row_x + label_w + 65.0f, ry - 8.0f)
               .with_custom_background(dd_bg)
-              .with_font("EqProRounded", 14.0f)
+              .with_font("EqProRounded", 16.0f)
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("value_" + std::to_string(i)));
@@ -279,13 +279,13 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 53 + static_cast<int>(i) * 4),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{pixels(24), pixels(28)})
+                     .with_size(ComponentSize{pixels(44), pixels(44)})
                      .with_absolute_position()
                      .with_translate(
-                         row_x + label_w + 20.0f + dropdown_w - 24.0f, ry)
+                         row_x + label_w + 20.0f + dropdown_w - 24.0f, ry - 8.0f)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_font("EqProRounded", 18.0f)
                      .with_custom_text_color(arrow_color)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("right_" + std::to_string(i)))) {
@@ -364,9 +364,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("help_current"));
 
     // ========== BOTTOM TAB BAR ==========
-    float tab_y = panel_y + panel_h + 12.0f;
-    float tab_w = 90.0f;
-    float tab_h = 32.0f;
+    float tab_y = panel_y + panel_h + 15.0f;
+    float tab_w = 95.0f;
+    float tab_h = 44.0f;
     float tab_total = tab_w * (float)tabs.size();
     float tab_start_x = panel_x + (panel_w - tab_total) / 2.0f;
 
@@ -380,27 +380,27 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(entity, 200 + static_cast<int>(i)),
               ComponentConfig{}
                   .with_label(tabs[i])
-                  .with_size(ComponentSize{pixels(static_cast<int>(tab_w - 4)),
+                  .with_size(ComponentSize{pixels(static_cast<int>(tab_w - 6)),
                                            pixels(static_cast<int>(tab_h))})
                   .with_absolute_position()
                   .with_translate(tx, tab_y)
                   .with_custom_background(tab_bg)
                   .with_border(panel_border, 1.0f)
-                  .with_font("EqProRounded", 12.0f)
+                  .with_font("EqProRounded", 14.0f)
                   .with_custom_text_color(tab_text)
                   .with_alignment(TextAlignment::Center)
                   .with_debug_name("tab_" + std::to_string(i)))) {
         selected_tab = i;
       }
 
-      // Underline on selected
+      // Underline on selected - thicker for visibility
       if (is_selected) {
         div(context, mk(entity, 210 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(tab_w - 8)),
-                                         pixels(3)})
+                .with_size(ComponentSize{pixels(static_cast<int>(tab_w - 10)),
+                                         pixels(5)})
                 .with_absolute_position()
-                .with_translate(tx + 2.0f, tab_y + tab_h - 5.0f)
+                .with_translate(tx + 2.0f, tab_y + tab_h - 7.0f)
                 .with_custom_background(highlight_blue)
                 .with_debug_name("tab_underline_" + std::to_string(i)));
       }

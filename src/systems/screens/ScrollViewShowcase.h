@@ -52,10 +52,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     // Instructions
     div(context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Use mouse wheel to scroll (trackpad for horizontal)")
             .with_custom_text_color(theme.font_muted)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("instructions"));
 
     // Invert scroll toggle row with label
@@ -69,10 +69,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     checkbox(context, mk(toggle_row.ent(), 0), invert_scroll,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(200), pixels(44)})
+                 .with_size(ComponentSize{pixels(220), pixels(44)})
                  .with_label("Invert Scroll Direction")
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side
@@ -92,9 +92,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(vert_section.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Vertical Scroll")
             .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("vert_label"));
 
     // Vertical scroll container - uses clip_children to ensure items
@@ -123,10 +124,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       float max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
       div(context, mk(vert_section.ent(), 2),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(20)})
+              .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Y: {:.0f} / {:.0f}", sv.scroll_offset.y,
                                       max_scroll))
-              .with_font(UIComponent::DEFAULT_FONT, 16.f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("vert_info"));
 
@@ -139,20 +140,20 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           max_scroll > 0.0f ? sv.scroll_offset.y / max_scroll : 0.0f;
       float thumb_offset = scroll_ratio * (track_height - thumb_height);
 
-      // Indicator track (dark background)
+      // Indicator track (dark background) - increased visibility
       auto vert_track = div(
           context, mk(vert_section.ent(), 3),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(8), pixels(track_height)})
-              .with_custom_background(afterhours::Color{100, 100, 100, 180})
+              .with_size(ComponentSize{pixels(10), pixels(track_height)})
+              .with_custom_background(afterhours::Color{80, 80, 80, 200})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.5f)
               .with_debug_name("vert_indicator_track"));
 
-      // Indicator thumb (bright, visible)
+      // Indicator thumb (bright, visible) - increased visibility
       div(context, mk(vert_track.ent(), 0),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(8), pixels(thumb_height)})
+              .with_size(ComponentSize{pixels(10), pixels(thumb_height)})
               .with_custom_background(afterhours::Color{70, 130, 180, 255})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.5f)
@@ -161,14 +162,15 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("vert_indicator_thumb"));
     }
 
-    // Vertical scroll items
+    // Vertical scroll items - increased text size for touch targets
     for (int i = 0; i < 20; i++) {
       div(context, mk(vert_scroll.ent(), i),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(0.95f), pixels(40)})
+              .with_size(ComponentSize{percent(0.95f), pixels(44)})
               .with_label(fmt::format("Item {}", i + 1))
               .with_background(Theme::Usage::Primary)
-              .with_margin(Margin{.top = pixels(2), .bottom = pixels(2)})
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_margin(Margin{.top = pixels(3), .bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)
               .with_debug_name(fmt::format("vert_item_{}", i)));
@@ -183,9 +185,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(horiz_section.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Horizontal Scroll")
             .with_custom_text_color(theme.font)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("horiz_label"));
 
     // Horizontal scroll container - uses clip_children to ensure items
@@ -215,10 +218,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       float max_scroll = std::max(0.0f, sv.content_size.x - sv.viewport_size.x);
       div(context, mk(horiz_section.ent(), 2),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(20)})
+              .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("X: {:.0f} / {:.0f}", sv.scroll_offset.x,
                                       max_scroll))
-              .with_font(UIComponent::DEFAULT_FONT, 16.f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("horiz_info"));
 
@@ -231,22 +234,22 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           max_scroll > 0.0f ? sv.scroll_offset.x / max_scroll : 0.0f;
       float thumb_offset = scroll_ratio * (track_width - thumb_width);
 
-      // Indicator track (dark background)
+      // Indicator track (dark background) - increased visibility
       auto horiz_track = div(
           context, mk(horiz_section.ent(), 3),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(track_width), pixels(8)})
-              .with_custom_background(afterhours::Color{100, 100, 100, 180})
+              .with_size(ComponentSize{pixels(track_width), pixels(10)})
+              .with_custom_background(afterhours::Color{80, 80, 80, 200})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.5f)
               .with_self_align(SelfAlign::Center)
               .with_margin(Margin{.top = pixels(8)})
               .with_debug_name("horiz_indicator_track"));
 
-      // Indicator thumb (bright, visible)
+      // Indicator thumb (bright, visible) - increased visibility
       div(context, mk(horiz_track.ent(), 0),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(thumb_width), pixels(8)})
+              .with_size(ComponentSize{pixels(thumb_width), pixels(10)})
               .with_custom_background(afterhours::Color{0, 120, 215, 255})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.5f)
@@ -255,14 +258,15 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("horiz_indicator_thumb"));
     }
 
-    // Horizontal scroll items
+    // Horizontal scroll items - increased gap between items
     for (int i = 0; i < 15; i++) {
       div(context, mk(horiz_scroll.ent(), i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(80), pixels(80)})
               .with_label(fmt::format("{}", i + 1))
               .with_background(Theme::Usage::Accent)
-              .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_margin(Margin{.left = pixels(6), .right = pixels(6)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)
               .with_debug_name(fmt::format("horiz_item_{}", i)));

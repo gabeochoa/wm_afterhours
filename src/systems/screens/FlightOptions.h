@@ -54,9 +54,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    // Note: We keep screen_w/h for positioning elements relative to screen edges
-    // but use screen_pct(1.0f) for full-screen coverage to work with any resolution
-    int screen_w = Settings::get().get_screen_width();
+    // Note: We only need screen_h for positioning elements relative to screen bottom
     int screen_h = Settings::get().get_screen_height();
 
     // ========== BACKGROUND ==========
@@ -67,29 +65,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
-    // ========== GRID LINES (subtle background effect) ==========
-    // Use generous counts to cover up to 1920x1080 and beyond
-    // Grid lines: vertical every 80px, horizontal every 60px
-    for (int i = 0; i < 30; i++) {  // 30 * 80 = 2400px coverage
-      float x = (float)i * 80.0f;
-      div(context, mk(entity, 10 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), screen_pct(1.0f)})
-              .with_absolute_position()
-              .with_translate(x, 0.0f)
-              .with_custom_background(grid_color)
-              .with_debug_name("grid_v_" + std::to_string(i)));
-    }
-    for (int i = 0; i < 25; i++) {  // 25 * 60 = 1500px coverage
-      float y = (float)i * 60.0f;
-      div(context, mk(entity, 40 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{screen_pct(1.0f), pixels(1)})
-              .with_absolute_position()
-              .with_translate(0.0f, y)
-              .with_custom_background(grid_color)
-              .with_debug_name("grid_h_" + std::to_string(i)));
-    }
+    // Note: Grid lines removed to reduce visual clutter - clean background only
 
     // ========== DECORATIVE HUD LINES ==========
     // Angled lines from top-left corner
@@ -160,10 +136,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 110 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(categories[i])
-                     .with_size(ComponentSize{pixels(180), pixels(28)})
+                     .with_size(ComponentSize{pixels(200), pixels(32)})
                      .with_absolute_position()
-                     .with_translate(menu_x, menu_y + (float)i * 32.0f)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_translate(menu_x, menu_y + (float)i * 36.0f)
+                     .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(item_color)
                      .with_alignment(TextAlignment::Left)
                      .with_padding(Padding{.left = pixels(8)})
@@ -175,17 +151,26 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       if (selected) {
         div(context, mk(entity, 150 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(4), pixels(22)})
+                .with_size(ComponentSize{pixels(4), pixels(26)})
                 .with_absolute_position()
                 .with_translate(menu_x - 18.0f,
-                                menu_y + (float)i * 32.0f + 3.0f)
+                                menu_y + (float)i * 36.0f + 3.0f)
                 .with_custom_background(text_cyan)
                 .with_debug_name("select_bar_" + std::to_string(i)));
       }
     }
 
+    // ========== VISUAL CONNECTION LINE (menu to submenu) ==========
+    div(context, mk(entity, 160),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(2), pixels(100)})
+            .with_absolute_position()
+            .with_translate(370.0f, 250.0f)
+            .with_custom_background(highlight_line)
+            .with_debug_name("connector_line"));
+
     // ========== SUB-OPTIONS (right side) ==========
-    float sub_x = 380.0f;
+    float sub_x = 400.0f;
     float sub_y = 250.0f;
 
     for (size_t i = 0; i < suboptions.size(); i++) {
@@ -195,10 +180,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 200 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(suboptions[i])
-                     .with_size(ComponentSize{pixels(220), pixels(24)})
+                     .with_size(ComponentSize{pixels(260), pixels(32)})
                      .with_absolute_position()
-                     .with_translate(sub_x, sub_y + (float)i * 26.0f)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_translate(sub_x, sub_y + (float)i * 36.0f)
+                     .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(opt_color)
                      .with_debug_name("opt_" + std::to_string(i)))) {
         selected_option = i;
@@ -209,10 +194,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 300),
         ComponentConfig{}
             .with_label("Select the in-flight system.")
-            .with_size(ComponentSize{pixels(350), pixels(30)})
+            .with_size(ComponentSize{pixels(400), pixels(36)})
             .with_absolute_position()
             .with_translate(170.0f, (float)screen_h - 180.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_bright)
             .with_debug_name("help"));
 
@@ -223,12 +208,12 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 400),
         ComponentConfig{}
             .with_label("Enter")
-            .with_size(ComponentSize{pixels(50), pixels(28)})
+            .with_size(ComponentSize{pixels(56), pixels(36)})
             .with_absolute_position()
             .with_translate(160.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("enter_key"));
@@ -236,10 +221,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("OK")
-            .with_size(ComponentSize{pixels(30), pixels(28)})
+            .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
-            .with_translate(218.0f, btn_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(224.0f, btn_y)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_bright)
             .with_debug_name("ok_label"));
 
@@ -247,12 +232,12 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 402),
         ComponentConfig{}
             .with_label("Esc")
-            .with_size(ComponentSize{pixels(40), pixels(28)})
+            .with_size(ComponentSize{pixels(48), pixels(36)})
             .with_absolute_position()
-            .with_translate(265.0f, btn_y)
+            .with_translate(275.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("esc_key"));
@@ -260,10 +245,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 403),
         ComponentConfig{}
             .with_label("BACK")
-            .with_size(ComponentSize{pixels(50), pixels(28)})
+            .with_size(ComponentSize{pixels(56), pixels(36)})
             .with_absolute_position()
-            .with_translate(313.0f, btn_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(331.0f, btn_y)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_bright)
             .with_debug_name("back_label"));
   }

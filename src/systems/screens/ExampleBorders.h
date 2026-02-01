@@ -46,39 +46,12 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_deep)
             .with_debug_name("bg"));
 
-    // Calculate grid to cover entire screen
-    int num_v_lines = (screen_width / 65) + 1;
-    int num_h_lines = (screen_height / 55) + 1;
-
-    // Subtle grid pattern - covers entire screen
-    // Use entity IDs 200-299 for vertical lines, 300-399 for horizontal
-    for (int i = 0; i < num_v_lines; i++) {
-      // Vertical lines
-      div(context, mk(entity, 200 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels((float)screen_height)})
-              .with_absolute_position()
-              .with_translate((float)(i * 65 + 30), 0)
-              .with_custom_background(grid_line)
-              .with_debug_name("vgrid_" + std::to_string(i)));
-    }
-    for (int i = 0; i < num_h_lines; i++) {
-      // Horizontal lines
-      div(context, mk(entity, 300 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels((float)screen_width), pixels(1)})
-              .with_absolute_position()
-              .with_translate(0, (float)(i * 55 + 40))
-              .with_custom_background(grid_line)
-              .with_debug_name("hgrid_" + std::to_string(i)));
-    }
-
     // Calculate content dimensions and center everything
     float box_size = 110.0f;
     float gap = 25.0f;
     float content_width = 6.0f * box_size + 5.0f * gap; // 6 boxes with 5 gaps
     float start_x = (screen_width - content_width) / 2.0f;
-    float start_y = 65.0f;
+    float start_y = 85.0f;
 
     // Title - centered above content
     div(context, mk(entity, 1),
@@ -93,6 +66,18 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
+
+    // Legend - explanation of border types
+    div(context, mk(entity, 2),
+        ComponentConfig{}
+            .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | Row 3: Themed | Row 4: Interactive")
+            .with_size(ComponentSize{pixels(content_width), pixels(22)})
+            .with_absolute_position()
+            .with_translate(start_x, 56.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("legend"));
 
     // Row 1: Basic borders with labels
     struct BorderDemo {
@@ -125,7 +110,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_translate(x, start_y)
               .with_custom_background(row1[i].bg_color)
               .with_border(row1[i].border_color, row1[i].border_width)
-              .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_custom_text_color(bg_deep)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("border_" + std::to_string(i)));
@@ -143,7 +128,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
             .with_translate(row_label_x, start_y)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row1_label"));
@@ -161,7 +146,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(accent_blue, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.2f)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("rounded"));
@@ -176,7 +161,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(accent_cyan, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("pill"));
@@ -191,7 +176,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(accent_blue, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.25f)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("top_only"));
@@ -206,7 +191,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(accent_orange, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1001))
             .with_roundness(0.3f)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("diagonal"));
@@ -220,7 +205,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(sample_white)
             .with_border(afterhours::Color{80, 80, 80, 255}, 2.0f)
             .with_hard_shadow(5.0f, 5.0f, afterhours::Color{0, 0, 0, 120})
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("hard_shadow"));
@@ -235,7 +220,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{100, 100, 100, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_soft_shadow(4.0f, 6.0f, 14.0f, afterhours::Color{0, 0, 0, 80})
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("soft_shadow"));
@@ -247,7 +232,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
             .with_translate(row_label_x, row2_y)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row2_label"));
@@ -264,7 +249,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_deep)
             .with_border(accent_cyan, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("dark_mode"));
@@ -279,7 +264,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{0, 255, 200, 255}, 3.0f)
             .with_soft_shadow(0, 0, 12.0f, afterhours::Color{0, 255, 200, 60})
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(afterhours::Color{0, 255, 200, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("neon_glow"));
@@ -310,7 +295,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{60, 20, 20, 255})
             .with_border(afterhours::Color{200, 60, 60, 255}, 3.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(afterhours::Color{255, 180, 180, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("danger"));
@@ -324,7 +309,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{20, 55, 35, 255})
             .with_border(afterhours::Color{60, 180, 100, 255}, 3.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(afterhours::Color{180, 255, 200, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("success"));
@@ -338,7 +323,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_border(text_light, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("outline_only"));
@@ -350,7 +335,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
             .with_translate(row_label_x, row3_y)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row3_label"));
@@ -366,7 +351,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(row4_height)})
             .with_absolute_position()
             .with_translate(row_label_x, row4_y)
-            .with_font(UIComponent::DEFAULT_FONT, 15.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row4_label"));
@@ -375,7 +360,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 40),
         ComponentConfig{}
             .with_label("Interactive Button")
-            .with_size(ComponentSize{pixels(200.0f), pixels(52.0f)})
+            .with_size(ComponentSize{pixels(220.0f), pixels(56.0f)})
             .with_absolute_position()
             .with_translate(start_x, row4_y)
             .with_custom_background(accent_blue)

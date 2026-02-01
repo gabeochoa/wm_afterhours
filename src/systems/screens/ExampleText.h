@@ -48,8 +48,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // Main container panel - sized proportionally to screen
-    float panel_w = screen_width * 0.75f;  // 75% of screen width
-    float panel_h = screen_height * 0.70f; // 70% of screen height
+    float panel_w = screen_width * 0.85f;  // 85% of screen width
+    float panel_h = screen_height * 0.80f; // 80% of screen height
     float panel_x = (screen_width - panel_w) / 2.0f;
     float panel_y = (screen_height - panel_h) / 2.0f;
 
@@ -96,12 +96,12 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label("SIZE HIERARCHY")
-            .with_size(ComponentSize{pixels(col_w), pixels(24)})
+            .with_label("Text Size Hierarchy")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(left_col, content_y)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_custom_text_color(muted_text)
+            .with_font("Garamond", 22.0f)
+            .with_custom_text_color(gold_accent)
             .with_debug_name("size_label"));
 
     // Display text - large
@@ -171,12 +171,12 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_label("COLOR TREATMENTS")
-            .with_size(ComponentSize{pixels(col_w), pixels(24)})
+            .with_label("Color Treatments")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(right_col, content_y)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_custom_text_color(muted_text)
+            .with_font("Garamond", 22.0f)
+            .with_custom_text_color(gold_accent)
             .with_debug_name("color_label"));
 
     struct ColorExample {
@@ -224,10 +224,10 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Elegant typography creates visual hierarchy and "
                         "guides the reader's eye")
-            .with_size(ComponentSize{pixels(panel_w - 100), pixels(24)})
+            .with_size(ComponentSize{pixels(panel_w - 100), pixels(30)})
             .with_absolute_position()
-            .with_translate(panel_x + 50.0f, panel_y + panel_h - 50.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_translate(panel_x + 50.0f, panel_y + panel_h - 45.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(muted_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

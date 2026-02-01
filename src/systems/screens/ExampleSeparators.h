@@ -38,9 +38,9 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         afterhours::window_manager::ProvidesCurrentResolution>();
     int screen_width = res ? res->current_resolution.width : 1280;
     int screen_height = res ? res->current_resolution.height : 720;
-    float col_width = 480.0f;
-    float card_height = 580.0f;
-    float col_gap = 50.0f;
+    float col_width = 520.0f;
+    float card_height = 620.0f;
+    float col_gap = 40.0f;
     float total_width = col_width * 2 + col_gap;
     float start_x = (screen_width - total_width) / 2.0f;
     float content_y = 80.0f;
@@ -86,25 +86,25 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_label("Horizontal Separators")
-            .with_size(ComponentSize{pixels(item_width), pixels(36)})
+            .with_size(ComponentSize{pixels(item_width), pixels(40)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font("Gaegu-Bold", 28.0f)
+            .with_font("Gaegu-Bold", 30.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("h_title"));
-    y += 48.0f;
+    y += 52.0f;
 
     // Basic separator
     div(context, mk(entity, 12),
         ComponentConfig{}
-            .with_label("Basic separator (default)")
-            .with_size(ComponentSize{pixels(item_width), pixels(24)})
+            .with_label("Basic separator - default style")
+            .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label1"));
-    y += 32.0f;
+    y += 36.0f;
 
     div(context, mk(entity, 13),
         ComponentConfig{}
@@ -113,19 +113,19 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad, y)
             .with_custom_background(border_light)
             .with_debug_name("sep1"));
-    y += 28.0f;
+    y += 32.0f;
 
     // Thick separator
     div(context, mk(entity, 14),
         ComponentConfig{}
-            .with_label("Thick separator (6px)")
-            .with_size(ComponentSize{pixels(item_width), pixels(24)})
+            .with_label("Thick separator - 6 pixels tall")
+            .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label2"));
-    y += 32.0f;
+    y += 36.0f;
 
     div(context, mk(entity, 15),
         ComponentConfig{}
@@ -134,19 +134,19 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad, y)
             .with_custom_background(border_light)
             .with_debug_name("sep2"));
-    y += 30.0f;
+    y += 34.0f;
 
     // Blue separator
     div(context, mk(entity, 16),
         ComponentConfig{}
-            .with_label("Custom color (blue)")
-            .with_size(ComponentSize{pixels(item_width), pixels(24)})
+            .with_label("Custom color - blue accent")
+            .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label3"));
-    y += 32.0f;
+    y += 36.0f;
 
     div(context, mk(entity, 17),
         ComponentConfig{}
@@ -155,19 +155,19 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad, y)
             .with_custom_background(accent_blue)
             .with_debug_name("sep3"));
-    y += 28.0f;
+    y += 32.0f;
 
     // Partial width separator
     div(context, mk(entity, 18),
         ComponentConfig{}
-            .with_label("Partial width (60%)")
-            .with_size(ComponentSize{pixels(item_width), pixels(24)})
+            .with_label("Partial width - 60% centered")
+            .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label4"));
-    y += 32.0f;
+    y += 36.0f;
 
     float partial_width = item_width * 0.6f;
     div(context, mk(entity, 19),
@@ -177,19 +177,19 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad + (item_width - partial_width) / 2, y)
             .with_custom_background(accent_purple)
             .with_debug_name("sep4"));
-    y += 40.0f;
+    y += 44.0f;
 
     // Labeled separator section title
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("Labeled Separators")
-            .with_size(ComponentSize{pixels(item_width), pixels(30)})
+            .with_size(ComponentSize{pixels(item_width), pixels(34)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font("Gaegu-Bold", 24.0f)
+            .with_font("Gaegu-Bold", 26.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("labeled_title"));
-    y += 44.0f;
+    y += 48.0f;
 
     // --- OR --- style separator
     float line_width = (item_width - 60) / 2;
@@ -273,30 +273,30 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 31),
         ComponentConfig{}
             .with_label("Vertical Separators")
-            .with_size(ComponentSize{pixels(item_width), pixels(36)})
+            .with_size(ComponentSize{pixels(item_width), pixels(40)})
             .with_absolute_position()
             .with_translate(right_x + pad, y)
-            .with_font("Gaegu-Bold", 28.0f)
+            .with_font("Gaegu-Bold", 30.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("v_title"));
-    y += 48.0f;
+    y += 52.0f;
 
     div(context, mk(entity, 32),
         ComponentConfig{}
-            .with_label("Used between navigation items:")
-            .with_size(ComponentSize{pixels(item_width), pixels(24)})
+            .with_label("Use between navigation items:")
+            .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(right_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("v_desc"));
-    y += 36.0f;
+    y += 40.0f;
 
     // Navigation row with vertical separators
     float nav_width = item_width;
-    float nav_height = 60.0f;
-    float nav_item_width = 80.0f;
-    float sep_spacing = 8.0f;
+    float nav_height = 64.0f;
+    float nav_item_width = 90.0f;
+    float sep_spacing = 12.0f;
 
     // Nav background
     div(context, mk(entity, 33),
@@ -309,7 +309,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.12f)
             .with_debug_name("nav_bg"));
 
-    float nav_x = right_x + pad + 20;  // Added more left padding
+    float nav_x = right_x + pad + 24;  // Added more left padding
     const char *nav_items[] = {"Home", "Settings", "Profile", "Help"};
     afterhours::Color sep_colors[] = {text_muted, accent_green, accent_orange};
 
@@ -321,7 +321,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
                   ComponentSize{pixels(nav_item_width), pixels(nav_height)})
               .with_absolute_position()
               .with_translate(nav_x, y)
-              .with_font(UIComponent::DEFAULT_FONT, 17.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name(std::string("nav_") + nav_items[i]));
@@ -331,7 +331,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         // Vertical separator
         div(context, mk(entity, 50 + i),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(3), pixels(36)})
+                .with_size(ComponentSize{pixels(3), pixels(40)})
                 .with_absolute_position()
                 .with_translate(nav_x + sep_spacing, y + 12)
                 .with_custom_background(sep_colors[i])
@@ -339,7 +339,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         nav_x += sep_spacing * 2 + 3;
       }
     }
-    y += nav_height + 44.0f;
+    y += nav_height + 48.0f;
 
     // Color gallery section
     float gallery_line_width = (item_width - 140) / 2;
@@ -380,32 +380,32 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 70 + i),
           ComponentConfig{}
               .with_label(color_names[i])
-              .with_size(ComponentSize{pixels(80), pixels(28)})
+              .with_size(ComponentSize{pixels(90), pixels(32)})
               .with_absolute_position()
               .with_translate(right_x + pad, y)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
               .with_custom_text_color(text_muted)
               .with_debug_name(std::string("color_") + color_names[i]));
 
       div(context, mk(entity, 80 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(item_width - 100), pixels(4)})
+              .with_size(ComponentSize{pixels(item_width - 110), pixels(4)})
               .with_absolute_position()
-              .with_translate(right_x + pad + 90, y + 12)
+              .with_translate(right_x + pad + 100, y + 14)
               .with_custom_background(colors[i])
               .with_debug_name(std::string("colorbar_") + color_names[i]));
-      y += 42.0f;
+      y += 46.0f;
     }
 
     // Footer
-    y += 20.0f;
+    y += 24.0f;
     div(context, mk(entity, 90),
         ComponentConfig{}
-            .with_label("Separators help organize UI content")
-            .with_size(ComponentSize{pixels(item_width), pixels(26)})
+            .with_label("Separators help organize and structure UI content")
+            .with_size(ComponentSize{pixels(item_width), pixels(30)})
             .with_absolute_position()
             .with_translate(right_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

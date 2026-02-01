@@ -107,7 +107,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(title_x, 20.0f)
             .with_font("EqProRounded", 26.0f)
-            .with_custom_text_color(teal_bright)
+            .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
 
@@ -118,10 +118,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("INITIAL SETTINGS")
             .with_size(
-                ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(28)})
+                ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(32)})
             .with_absolute_position()
             .with_translate(sidebar_x, sidebar_y)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_padding(Padding{.left = pixels(8)})
             .with_alignment(TextAlignment::Left)
@@ -129,18 +129,32 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Sidebar items
     for (size_t i = 0; i < initial_settings.size(); i++) {
-      float item_y = sidebar_y + 35.0f + (float)i * 32.0f;
+      float item_y = sidebar_y + 40.0f + (float)i * 38.0f;
       bool is_selected = (i == selected_initial);
-      afterhours::Color item_color = is_selected ? text_white : text_dim;
+      afterhours::Color item_color = is_selected ? text_white : text_muted;
+      afterhours::Color item_bg = is_selected ? afterhours::Color{35, 70, 72, 255} : afterhours::Color{0, 0, 0, 0};
+
+      // Item background for selection highlight
+      if (is_selected) {
+        div(context, mk(entity, 65 + static_cast<int>(i)),
+            ComponentConfig{}
+                .with_size(ComponentSize{
+                    pixels(static_cast<int>(sidebar_w)), pixels(34)})
+                .with_absolute_position()
+                .with_translate(sidebar_x, item_y)
+                .with_custom_background(item_bg)
+                .with_border(teal_highlight, 1.0f)
+                .with_debug_name("initial_bg_" + std::to_string(i)));
+      }
 
       if (button(context, mk(entity, 70 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(initial_settings[i])
                      .with_size(ComponentSize{
-                         pixels(static_cast<int>(sidebar_w)), pixels(28)})
+                         pixels(static_cast<int>(sidebar_w)), pixels(34)})
                      .with_absolute_position()
                      .with_translate(sidebar_x, item_y)
-                     .with_font("EqProRounded", 16.0f)
+                     .with_font("EqProRounded", 18.0f)
                      .with_custom_text_color(item_color)
                      .with_padding(Padding{.left = pixels(8)})
                      .with_alignment(TextAlignment::Left)
@@ -166,17 +180,17 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("// SETTINGS")
             .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 4)),
-                                     pixels(38)})
+                                     pixels(44)})
             .with_absolute_position()
             .with_translate(panel_x + 2.0f, panel_y + 2.0f)
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
-            .with_font("EqProRounded", 20.0f)
-            .with_custom_text_color(teal_bright)
+            .with_font("EqProRounded", 22.0f)
+            .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("panel_header"));
 
     // Settings list items
-    float header_h = 45.0f;
+    float header_h = 50.0f;
     float list_y = panel_y + header_h + 10.0f;
     float list_area_h = panel_h - header_h - 20.0f;
     float item_h = list_area_h / (float)main_settings.size();
@@ -196,7 +210,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(panel_x + 10.0f, item_y)
               .with_custom_background(item_bg)
-              .with_border(panel_border, 1.0f)
+              .with_border(is_selected ? teal_highlight : panel_border, 1.0f)
               .with_debug_name("item_bg_" + std::to_string(i)));
 
       // Highlight bar on selected
@@ -222,7 +236,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                        pixels(static_cast<int>(item_h - 8))})
                      .with_absolute_position()
                      .with_translate(panel_x + 25.0f, item_y + 8.0f)
-                     .with_font("EqProRounded", 19.0f)
+                     .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(text_color)
                      .with_debug_name("setting_" + std::to_string(i)))) {
         selected_main = i;

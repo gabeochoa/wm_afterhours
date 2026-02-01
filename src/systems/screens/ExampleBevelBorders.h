@@ -9,23 +9,24 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
-  afterhours::Color bg{176, 176, 176, 255};
-  afterhours::Color panel{210, 210, 210, 255};
-  afterhours::Color text{30, 30, 30, 255};
-  afterhours::Color light_edge{248, 248, 248, 255};
-  afterhours::Color dark_edge{64, 64, 64, 255};
-  afterhours::Color sunken_text{230, 230, 230, 255};
+  // Use richer colors instead of pure gray
+  afterhours::Color bg{45, 55, 75, 255};           // Muted blue-gray background
+  afterhours::Color panel{65, 78, 102, 255};       // Panel surface
+  afterhours::Color text{235, 235, 240, 255};      // High contrast light text
+  afterhours::Color light_edge{180, 190, 205, 255}; // Bevel light edge
+  afterhours::Color dark_edge{30, 38, 52, 255};    // Bevel dark edge
+  afterhours::Color sunken_text{200, 205, 215, 255}; // Slightly dimmer for sunken
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
     theme.font = text;
-    theme.darkfont = afterhours::Color{0, 0, 0, 255};
-    theme.font_muted = afterhours::Color{80, 80, 80, 255};
+    theme.darkfont = afterhours::Color{20, 25, 35, 255};
+    theme.font_muted = afterhours::Color{160, 170, 190, 255};
     theme.background = bg;
     theme.surface = panel;
-    theme.primary = afterhours::Color{70, 120, 200, 255};
-    theme.secondary = afterhours::Color{110, 160, 220, 255};
+    theme.primary = afterhours::Color{90, 140, 210, 255};
+    theme.secondary = afterhours::Color{130, 175, 230, 255};
     theme.accent = afterhours::Color{235, 175, 80, 255};
     theme.error = afterhours::Color{200, 80, 80, 255};
     theme.roundness = 0.0f;
@@ -47,12 +48,12 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_label("BEVEL BORDERS")
-            .with_size(ComponentSize{pixels(screen_width - 60.0f), pixels(40)})
+            .with_size(ComponentSize{pixels(screen_width - 60.0f), pixels(44)})
             .with_absolute_position()
             .with_translate(30.0f, 20.0f)
             .with_custom_background(panel)
-            .with_border(afterhours::Color{120, 120, 120, 255}, 2.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+            .with_border(afterhours::Color{120, 130, 150, 255}, 2.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -64,8 +65,8 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pixels(screen_width - 60.0f), pixels(24.0f)})
             .with_absolute_position()
-            .with_translate(30.0f, 64.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_translate(30.0f, 68.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("legend"));
@@ -103,7 +104,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(cell), pixels(col_header_height)})
               .with_absolute_position()
               .with_translate(start_x + c * (cell + gap), start_y - col_header_height - 8.0f)
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("col_label_" + std::to_string(c)));
@@ -118,7 +119,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(row_label_width), pixels(cell)})
               .with_absolute_position()
               .with_translate(row_label_x, start_y + r * (cell + gap))
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("row_label_" + std::to_string(r)));
@@ -139,7 +140,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(fill)
                 .with_bevel(rows[r].style, light_edge, dark_edge,
                             thicknesses[c])
-                .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                 .with_custom_text_color(label_color)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("bevel_" + std::to_string(r) + "_" +
@@ -158,7 +159,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(big_x, big_y)
             .with_custom_background(panel)
             .with_bevel(BevelStyle::Raised, light_edge, dark_edge, 6.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("big_raised"));
@@ -171,7 +172,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(big_x, big_y + big_size + gap)
             .with_custom_background(panel)
             .with_bevel(BevelStyle::Sunken, light_edge, dark_edge, 6.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(sunken_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("big_sunken"));

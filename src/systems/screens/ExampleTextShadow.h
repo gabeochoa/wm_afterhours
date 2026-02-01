@@ -55,11 +55,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_label(
-                "Native with_text_shadow() API for depth and legibility")
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(24)})
+                "Add depth and improve legibility with text shadows")
+            .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
             .with_absolute_position()
             .with_translate(20.0f, 65.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("page_subtitle"));
@@ -107,10 +107,10 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_label("Same color - shadow adds depth")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(20)})
+            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 165.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_1"));
 
@@ -143,11 +143,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("with_soft_text_shadow() vs with_hard_text_shadow()")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(20)})
+            .with_label("Soft shadow creates a subtle glow effect")
+            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 260.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_2"));
 
@@ -169,11 +169,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Cyan text + red shadow - retro 3D effect")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(20)})
+            .with_label("Cyan text with red shadow for retro 3D look")
+            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 350.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_3"));
 
@@ -197,11 +197,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Stroke + shadow combined = maximum impact")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(20)})
+            .with_label("Combine stroke and shadow for maximum impact")
+            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 440.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_4"));
 
@@ -258,11 +258,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Shadow Offsets:")
-            .with_size(ComponentSize{pixels(right_col_width), pixels(26)})
+            .with_label("Shadow Offset Examples:")
+            .with_size(ComponentSize{pixels(right_col_width), pixels(30)})
             .with_absolute_position()
             .with_translate(col2_x, 110.0f)
-            .with_font("Gaegu-Bold", 20.0f)
+            .with_font("Gaegu-Bold", 22.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("offset_title"));
 
@@ -303,7 +303,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(40)})
+            .with_size(ComponentSize{pixels(screen_w - 40), pixels(44)})
             .with_absolute_position()
             .with_translate(20.0f, code_y)
             .with_custom_background(surface)
@@ -313,12 +313,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Usage: ComponentConfig{}.with_text_shadow(Color{r, g, "
-                        "b, a}, offset_x, offset_y)")
-            .with_size(ComponentSize{pixels(screen_w - 60), pixels(24)})
+            .with_label("Tip: Use small offsets (1-4px) for subtle depth, larger offsets (6-10px) for bold effects")
+            .with_size(ComponentSize{pixels(screen_w - 60), pixels(28)})
             .with_absolute_position()
             .with_translate(30.0f, code_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
             .with_alignment(TextAlignment::Left)
             .with_debug_name("code_text"));

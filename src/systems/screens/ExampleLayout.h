@@ -174,7 +174,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.90f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line1"));
 
@@ -184,7 +184,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.90f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line2"));
 
@@ -194,7 +194,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.90f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line3"));
 

@@ -11,11 +11,11 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
-  // Text input values
+  // Text input values with placeholder text
   std::string username = "";
   std::string email = "";
   std::string password = "";
-  std::string search_query = "";
+  std::string search_query = "Type to search...";
   std::string notes = "Type something here...";
 
   // Status message
@@ -79,10 +79,11 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(form_container.ent(), idx * 2),
           ComponentConfig{}
               .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(24)})
+              .with_size(ComponentSize{pixels(396), pixels(28)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_skip_tabbing(true)
+              .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
 
       // Text input without internal label
@@ -127,9 +128,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(24)})
+            .with_size(ComponentSize{pixels(396), pixels(28)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
@@ -161,10 +162,10 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status_message)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_debug_name("status"));
 
@@ -172,11 +173,11 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Click to focus, type to input. Backspace/arrows/Home/End for navigation.")
-            .with_size(ComponentSize{percent(1.0f), pixels(35)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_debug_name("instructions"));
   }

@@ -115,56 +115,56 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_debug_name("title_text"));
 
-    // Button row container - needs enough width for 3 buttons
+    // Button row container - needs enough width for 3 buttons with 44px height
     auto button_row =
         div(context, mk(header.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(200), pixels(50)})
+                .with_size(ComponentSize{pixels(240), pixels(50)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("button_row"));
 
-    // Language buttons - EN
+    // Language buttons - EN - 44px height, standardized width
     if (button(context, mk(button_row.ent(), 0),
                ComponentConfig{}
                    .with_label("EN")
-                   .with_size(ComponentSize{pixels(50), pixels(36)})
+                   .with_size(ComponentSize{pixels(60), pixels(44)})
                    .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
-                   .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                    .with_background(current_language == Language::English
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
       current_language = Language::English;
     }
 
-    // Language buttons - KO
+    // Language buttons - KO - 44px height, standardized width
     if (button(context, mk(button_row.ent(), 1),
                ComponentConfig{}
                    .with_label("KO")
-                   .with_size(ComponentSize{pixels(50), pixels(36)})
+                   .with_size(ComponentSize{pixels(60), pixels(44)})
                    .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
-                   .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                    .with_background(current_language == Language::Korean
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
       current_language = Language::Korean;
     }
 
-    // Language buttons - JA
+    // Language buttons - JA - 44px height, standardized width
     if (button(context, mk(button_row.ent(), 2),
                ComponentConfig{}
                    .with_label("JA")
-                   .with_size(ComponentSize{pixels(50), pixels(36)})
+                   .with_size(ComponentSize{pixels(60), pixels(44)})
                    .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
-                   .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                    .with_background(current_language == Language::Japanese
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
       current_language = Language::Japanese;
     }
 
-    // ===== CONTENT ROW =====
+    // ===== CONTENT ROW ===== - expanded width
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(540)})
@@ -173,11 +173,11 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                            .with_justify_content(JustifyContent::Center)
                            .with_debug_name("content"));
 
-    // Left panel - current language demo
+    // Left panel - current language demo - expanded width
     auto left_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.50f), percent(1.0f)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -193,26 +193,26 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::xs)
             .with_debug_name("greeting"));
 
-    // Menu items
+    // Menu items - 44px touch targets
     for (int i = 0; i < 4; i++) {
       button(context, mk(left_panel.ent(), i + 1),
              ComponentConfig{}
                  .with_label(sample.menu_items[i])
-                 .with_size(ComponentSize{pixels(160), pixels(34)})
+                 .with_size(ComponentSize{pixels(180), pixels(44)})
                  .with_margin(Spacing::xs)
                  .with_font(font_config.font_name, scaled_size)
                  .with_background(Theme::Usage::Primary));
     }
 
-    // Continue button
+    // Continue button - 44px touch target
     button(context, mk(left_panel.ent(), 5),
            ComponentConfig{}
                .with_label(sample.button_text)
-               .with_size(ComponentSize{pixels(160), pixels(40)})
+               .with_size(ComponentSize{pixels(180), pixels(44)})
                .with_font(font_config.font_name, 18.0f * font_config.size_scale)
                .with_background(Theme::Usage::Accent));
 
-    // Right panel - all languages comparison
+    // Right panel - all languages comparison - expanded width
     auto right_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
@@ -282,7 +282,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Active: " + lang_name +
                         " | Font: " + font_config.font_name)
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("lang_indicator"));
@@ -290,9 +290,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(footer.ent(), 1),
         ComponentConfig{}
             .with_label("Press 1/2/3 to switch languages")
-            .with_size(ComponentSize{percent(1.0f), pixels(20)})
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("instructions"));
   }
 };

@@ -102,7 +102,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_label("X")
                    .with_size(ComponentSize{pixels(52), pixels(52)})
                    .with_absolute_position()
-                   .with_translate(panel_x + panel_w - 20.0f, panel_y - 20.0f)
+                   .with_translate(panel_x + panel_w - 30.0f, panel_y - 10.0f)
                    .with_custom_background(close_red)
                    .with_border(afterhours::Color{190, 55, 65, 255}, 4.0f)
                    .with_font("Gaegu-Bold", 28.0f)
@@ -145,8 +145,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(1.0f)
-                     .with_soft_shadow(2.0f, 4.0f, 8.0f,
-                                       afterhours::Color{0, 0, 0, 50})
+                     .with_soft_shadow(1.0f, 2.0f, 4.0f,
+                                       afterhours::Color{0, 0, 0, 35})
                      .with_debug_name("toggle_" + name))) {
         *state_ptr = !*state_ptr;
       }
@@ -212,8 +212,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(std::bitset<4>(0b1111))
                  .with_roundness(0.5f)
-                 .with_soft_shadow(2.0f, 4.0f, 10.0f,
-                                   afterhours::Color{0, 0, 0, 45})
+                 .with_soft_shadow(1.0f, 2.0f, 5.0f,
+                                   afterhours::Color{0, 0, 0, 30})
                  .with_debug_name("left_btn_" + std::to_string(i)));
     }
 
@@ -233,8 +233,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(std::bitset<4>(0b1111))
                  .with_roundness(0.5f)
-                 .with_soft_shadow(2.0f, 4.0f, 10.0f,
-                                   afterhours::Color{0, 0, 0, 45})
+                 .with_soft_shadow(1.0f, 2.0f, 5.0f,
+                                   afterhours::Color{0, 0, 0, 30})
                  .with_debug_name("right_btn_" + std::to_string(i)));
     }
 

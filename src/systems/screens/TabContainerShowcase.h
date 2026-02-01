@@ -27,41 +27,50 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_title"));
 
-    // Content lines - use font_size_sm (16px) for values, creating hierarchy with title
+    // Content lines - use 18px minimum for body text
     div(context, mk(root, 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Username: player_one")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line1"));
 
     div(context, mk(root, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Email: player@example.com")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line2"));
 
     div(context, mk(root, 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Account created: January 2024")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line3"));
 
     div(context, mk(root, 5),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Subscription: Premium")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
+            .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line4"));
+
+    div(context, mk(root, 6),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_label("Last login: Today at 10:30 AM")
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_custom_text_color(theme.font)
+            .with_debug_name("content_line5"));
   }
 
   void render_audio_tab(UIContext<InputAction> &context, afterhours::Entity &root,
@@ -76,34 +85,43 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_title"));
 
-    // Content lines - use font_size_sm (16px) for values
+    // Content lines - use 18px minimum for values
     div(context, mk(root, 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_label("Volume: 80%")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_label("Master Volume: 80%")
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line1"));
 
     div(context, mk(root, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_label("Music: 60%")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_label("Music Volume: 60%")
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_custom_text_color(theme.font)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("content_line2"));
+
+    div(context, mk(root, 4),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_label("Sound Effects: 75%")
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
-            .with_debug_name("content_line2"));
+            .with_debug_name("content_line3"));
 
     // Audio bars
     for (int i = 0; i < 5; ++i) {
-      float bar_width = 100.0f + (static_cast<float>(i) * 80.0f);
+      float bar_width = 120.0f + (static_cast<float>(i) * 90.0f);
       div(context, mk(root, 10 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(bar_width), pixels(20)})
+              .with_size(ComponentSize{pixels(bar_width), pixels(24)})
               .with_custom_background(theme.accent)
               .with_roundness(0.15f)
-              .with_margin(Margin{.bottom = pixels(8)})
+              .with_margin(Margin{.bottom = pixels(10)})
               .with_debug_name(fmt::format("bar_{}", i)));
     }
   }
@@ -120,24 +138,33 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(16)})
             .with_debug_name("content_title"));
 
-    // Content lines - use font_size_sm (16px) for values
+    // Content lines - use 18px minimum for values
     div(context, mk(root, 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Resolution: 1920x1080")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("content_line1"));
 
     div(context, mk(root, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Fullscreen: Enabled")
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)  // font_size_sm for body text
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_custom_text_color(theme.font)
+            .with_margin(Margin{.bottom = pixels(8)})
+            .with_debug_name("content_line2"));
+
+    div(context, mk(root, 4),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_label("VSync: On")
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)})
-            .with_debug_name("content_line2"));
+            .with_debug_name("content_line3"));
 
     // Color swatches row
     afterhours::Color swatches[] = {
@@ -147,18 +174,18 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto swatch_row = div(context, mk(root, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(60)})
+            .with_size(ComponentSize{percent(1.0f), pixels(70)})
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name("swatch_row"));
 
     for (int i = 0; i < 6; ++i) {
       div(context, mk(swatch_row.ent(), i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(50), pixels(50)})
+              .with_size(ComponentSize{pixels(60), pixels(60)})
               .with_custom_background(swatches[i])
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.2f)
-              .with_margin(Margin{.right = pixels(12)})
+              .with_margin(Margin{.right = pixels(16)})
               .with_debug_name(fmt::format("swatch_{}", i)));
     }
   }
@@ -174,10 +201,10 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font_muted = afterhours::Color{180, 180, 180, 255};
     context.theme = theme;
 
-    // Root container - centered on screen
+    // Root container - centered on screen, expanded to fill more screen
     auto root = div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.75f)})
+            .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
             .with_self_align(SelfAlign::Center)
             .with_custom_background(theme.background)
             .with_roundness(0.04f)
@@ -194,8 +221,8 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     // Use tab_container component - check result for tab changes
     if (auto result = tab_container(context, mk(main_container.ent(), 0), tab_labels, active_tab,
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(50)})
-                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                .with_font(UIComponent::DEFAULT_FONT, 22.0f)
                 .with_debug_name("tabs")); result) {
       // Tab changed - could log, play sound, etc.
     }

@@ -45,7 +45,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = div(
         context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.75f)})
+            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.88f)})
             .with_custom_background(theme.background)
             .with_roundness(0.08f)
             .with_self_align(SelfAlign::Center)
@@ -64,13 +64,13 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Modal Dialogs")
             .with_size(ComponentSize{percent(1.0f), pixels(60)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, 32.0f)
             .with_roundness(0.1f)
             .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
+                                .bottom = DefaultSpacing::small(),
                                 .left = pixels(0),
                                 .right = pixels(0)})
             .with_debug_name("title"));
@@ -93,8 +93,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent(), 0),
         ComponentConfig{}
             .with_label("BASIC MODALS")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_background(Theme::Usage::Surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -152,8 +152,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent(), 0),
         ComponentConfig{}
             .with_label("HELPER FUNCTIONS")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_background(Theme::Usage::Surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -225,8 +225,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent(), 0),
         ComponentConfig{}
             .with_label("MODAL STACKING")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_background(Theme::Usage::Surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -272,8 +272,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section4.ent(), 0),
         ComponentConfig{}
             .with_label("INPUT BLOCKING TEST")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_background(Theme::Usage::Surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -318,7 +318,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section5 =
         div(context, mk(main_container.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(95)})
+                .with_size(ComponentSize{percent(1.0f), pixels(110)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_roundness(0.08f)
@@ -329,8 +329,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section5.ent(), 0),
         ComponentConfig{}
             .with_label("RESULTS")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_background(Theme::Usage::Surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
@@ -341,7 +341,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto row5 =
         div(context, mk(section5.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(35)})
+                .with_size(ComponentSize{percent(1.0f), pixels(44)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
@@ -369,7 +369,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                         fyi_result_str + "  |  Confirms: " +
                         std::to_string(confirm_count) +
                         "  Cancels: " + std::to_string(cancel_count))
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Left)

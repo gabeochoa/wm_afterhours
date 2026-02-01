@@ -35,9 +35,9 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.background)
             .with_debug_name("bg"));
 
-    // Main card - centered
-    float card_width = screen_width * 0.85f;
-    float card_height = screen_height * 0.80f;
+    // Main card - centered, expanded to fill more screen
+    float card_width = screen_width * 0.92f;
+    float card_height = screen_height * 0.88f;
     float card_x = (screen_width - card_width) / 2.0f;
     float card_y = (screen_height - card_height) / 2.0f;
 
@@ -57,40 +57,41 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_label("Pagination Component Showcase")
-            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(50)})
+            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(56)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 32.0f)
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("title"));
 
-    current_y += 70.0f;
+    current_y += 76.0f;
 
     // Section 1: Basic Pagination
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_label("Basic Pagination")
-            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(36)})
+            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("section1_label"));
 
-    current_y += 46.0f;
+    current_y += 52.0f;
 
     // Pagination 1 - placed directly without absolute positioning
     // Use a row of individual buttons to simulate pagination
     float pag1_x = content_x;
-    float btn_width = 120.0f;
+    float btn_width = 100.0f;
     float btn_height = 48.0f;
     float arrow_width = 48.0f;
+    float btn_gap = 8.0f;
 
-    // Left arrow
+    // Left arrow - 44px minimum touch target
     button(context, mk(entity, 100),
            ComponentConfig{}
                .with_label("<")
@@ -98,12 +99,12 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::SYMBOL_FONT, 20.0f)
+               .with_font(UIComponent::SYMBOL_FONT, 22.0f)
                .with_debug_name("pag1_left"));
 
-    pag1_x += arrow_width + 4.0f;
+    pag1_x += arrow_width + btn_gap;
 
-    // Page buttons
+    // Page buttons with gaps
     for (size_t i = 0; i < pages.size(); i++) {
       bool selected = (i == page_idx);
       button(context, mk(entity, 101 + i),
@@ -114,12 +115,12 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_translate(pag1_x, current_y)
                  .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                  .with_debug_name("pag1_btn_" + std::to_string(i)));
-      pag1_x += btn_width + 4.0f;
+      pag1_x += btn_width + btn_gap;
     }
 
-    // Right arrow
+    // Right arrow - 44px minimum touch target
     button(context, mk(entity, 106),
            ComponentConfig{}
                .with_label(">")
@@ -127,39 +128,39 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::SYMBOL_FONT, 20.0f)
+               .with_font(UIComponent::SYMBOL_FONT, 22.0f)
                .with_debug_name("pag1_right"));
 
-    current_y += 54.0f;
+    current_y += 58.0f;
 
     // Status text 1
     div(context, mk(entity, 12),
         ComponentConfig{}
             .with_label("Selected: " + pages[page_idx])
-            .with_size(ComponentSize{pixels(300), pixels(28)})
+            .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("status1"));
 
-    current_y += 45.0f;
+    current_y += 50.0f;
 
     // Section 2: Difficulty Selector
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("Difficulty Selector (4 options)")
-            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(36)})
+            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("section2_label"));
 
-    current_y += 46.0f;
+    current_y += 52.0f;
 
     // Pagination 2 - difficulty buttons
     float pag2_x = content_x;
@@ -171,10 +172,10 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::SYMBOL_FONT, 20.0f)
+               .with_font(UIComponent::SYMBOL_FONT, 22.0f)
                .with_debug_name("pag2_left"));
 
-    pag2_x += arrow_width + 4.0f;
+    pag2_x += arrow_width + btn_gap;
 
     for (size_t i = 0; i < difficulties.size(); i++) {
       bool selected = (i == difficulty_idx);
@@ -186,9 +187,9 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_translate(pag2_x, current_y)
                  .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                  .with_debug_name("pag2_btn_" + std::to_string(i)));
-      pag2_x += btn_width + 4.0f;
+      pag2_x += btn_width + btn_gap;
     }
 
     button(context, mk(entity, 205),
@@ -198,39 +199,39 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::SYMBOL_FONT, 20.0f)
+               .with_font(UIComponent::SYMBOL_FONT, 22.0f)
                .with_debug_name("pag2_right"));
 
-    current_y += 54.0f;
+    current_y += 58.0f;
 
     // Status text 2
     div(context, mk(entity, 22),
         ComponentConfig{}
             .with_label("Difficulty: " + difficulties[difficulty_idx])
-            .with_size(ComponentSize{pixels(300), pixels(28)})
+            .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("status2"));
 
-    current_y += 45.0f;
+    current_y += 50.0f;
 
     // Section 3: Color Picker
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label("Color Picker (5 options)")
-            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(36)})
+            .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("section3_label"));
 
-    current_y += 46.0f;
+    current_y += 52.0f;
 
     // Pagination 3 - color buttons
     float pag3_x = content_x;
@@ -242,10 +243,10 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::SYMBOL_FONT, 20.0f)
+               .with_font(UIComponent::SYMBOL_FONT, 22.0f)
                .with_debug_name("pag3_left"));
 
-    pag3_x += arrow_width + 4.0f;
+    pag3_x += arrow_width + btn_gap;
 
     for (size_t i = 0; i < colors.size(); i++) {
       bool selected = (i == color_idx);
@@ -257,9 +258,9 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_translate(pag3_x, current_y)
                  .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                  .with_debug_name("pag3_btn_" + std::to_string(i)));
-      pag3_x += btn_width + 4.0f;
+      pag3_x += btn_width + btn_gap;
     }
 
     button(context, mk(entity, 306),
@@ -269,20 +270,20 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::SYMBOL_FONT, 20.0f)
+               .with_font(UIComponent::SYMBOL_FONT, 22.0f)
                .with_debug_name("pag3_right"));
 
-    current_y += 54.0f;
+    current_y += 58.0f;
 
     // Status text 3
     div(context, mk(entity, 32),
         ComponentConfig{}
             .with_label("Color: " + colors[color_idx])
-            .with_size(ComponentSize{pixels(300), pixels(28)})
+            .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("status3"));
   }
 };

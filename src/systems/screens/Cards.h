@@ -34,15 +34,17 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_no_wrap()
                 .with_debug_name("cards_main"));
 
-    // Title
+    // Title - larger font for better visibility
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Cards & Panels Gallery")
-            .with_size(ComponentSize{percent(0.95f), pixels(50)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(0.95f), pixels(60)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, 28.0f)
             .with_debug_name("title"));
@@ -50,13 +52,26 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 1: Basic cards - all simple like theme swatches
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(0.95f), pixels(140)})
+                        .with_size(ComponentSize{percent(0.95f), pixels(160)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
                         .with_debug_name("row1_cards"));
 
-    // Card 1: Basic surface card (simple)
+    // Section label - aligned with card row
+    div(context, mk(row1.ent(), 100),
+        ComponentConfig{}
+            .with_label("Basic:")
+            .with_size(ComponentSize{pixels(80), pixels(44)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Spacing::sm)
+            .with_skip_tabbing(true)
+            .with_debug_name("basic_label"));
+
+    // Card 1: Basic surface card (simple) - standardized height
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
             .with_label("Basic")
@@ -119,8 +134,20 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_background(Theme::Usage::None)
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
-                        .with_justify_content(JustifyContent::Center)
+                        .with_align_items(AlignItems::Center)
                         .with_debug_name("row2_nested"));
+
+    // Section label for nested cards
+    div(context, mk(row2.ent(), 100),
+        ComponentConfig{}
+            .with_label("Nested:")
+            .with_size(ComponentSize{pixels(80), pixels(44)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_margin(Spacing::sm)
+            .with_skip_tabbing(true)
+            .with_debug_name("nested_label"));
 
     // Nested card container - sized proportionally to fit within row
     auto nested_container =
@@ -238,65 +265,68 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
+                        .with_align_items(AlignItems::Center)
                         .with_debug_name("row3_themes"));
 
     div(context, mk(row3.ent(), 0),
         ComponentConfig{}
             .with_label("Theme Colors:")
-            .with_size(ComponentSize{percent(0.12f), pixels(50)})
-            .with_background(Theme::Usage::None)
+            .with_size(ComponentSize{percent(0.14f), pixels(50)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_margin(Spacing::xs)
             .with_skip_tabbing(true)
             .with_debug_name("theme_label"));
 
-    // Color swatches
+    // Color swatches - with gaps between them
     div(context, mk(row3.ent(), 1),
         ComponentConfig{}
             .with_label("Primary")
-            .with_size(ComponentSize{percent(0.14f), pixels(50)})
+            .with_size(ComponentSize{percent(0.13f), pixels(50)})
             .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_primary"));
 
     div(context, mk(row3.ent(), 2),
         ComponentConfig{}
             .with_label("Secondary")
-            .with_size(ComponentSize{percent(0.14f), pixels(50)})
+            .with_size(ComponentSize{percent(0.13f), pixels(50)})
             .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_secondary"));
 
     div(context, mk(row3.ent(), 3),
         ComponentConfig{}
             .with_label("Accent")
-            .with_size(ComponentSize{percent(0.14f), pixels(50)})
+            .with_size(ComponentSize{percent(0.13f), pixels(50)})
             .with_background(Theme::Usage::Accent)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_accent"));
 
     div(context, mk(row3.ent(), 4),
         ComponentConfig{}
             .with_label("Surface")
-            .with_size(ComponentSize{percent(0.14f), pixels(50)})
+            .with_size(ComponentSize{percent(0.13f), pixels(50)})
             .with_background(Theme::Usage::Surface)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_surface"));
 
     div(context, mk(row3.ent(), 5),
         ComponentConfig{}
             .with_label("Background")
-            .with_size(ComponentSize{percent(0.14f), pixels(50)})
+            .with_size(ComponentSize{percent(0.13f), pixels(50)})
             .with_background(Theme::Usage::Background)
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
-            .with_margin(Spacing::xs)
+            .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
             .with_debug_name("swatch_background"));
   }

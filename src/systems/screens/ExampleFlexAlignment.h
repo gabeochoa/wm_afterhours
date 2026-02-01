@@ -31,10 +31,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(outer.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{percent(1.0f), pixels(22)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
@@ -88,10 +88,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(container.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{percent(1.0f), pixels(22)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
@@ -117,7 +117,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(26), percent(0.70f)})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
               .with_flex_direction(FlexDirection::Column)
               .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -141,10 +141,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(outer.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{percent(1.0f), pixels(22)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
@@ -200,7 +200,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), percent(0.25f)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_self_align(SelfAlign::FlexStart)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_start"));
@@ -212,7 +212,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), percent(0.25f)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_self_align(SelfAlign::Auto)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_auto"));
@@ -224,7 +224,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), percent(0.25f)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_self_align(SelfAlign::Center)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_center"));
@@ -236,7 +236,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), percent(0.25f)})
             .with_custom_background(afterhours::Color{180, 60, 90, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_self_align(SelfAlign::FlexEnd)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_end"));
@@ -294,10 +294,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("JustifyContent: Column")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name("jv_label"));
 
@@ -321,10 +321,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
             .with_label("AlignItems: Row")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name("ai_label"));
 
@@ -357,10 +357,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_col.ent(), 0),
         ComponentConfig{}
             .with_label("JustifyContent: Row")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name("jh_label"));
 
@@ -384,10 +384,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(right_col.ent(), 2),
         ComponentConfig{}
             .with_label("SelfAlign: Override Parent")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{45, 55, 75, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name("sa_label"));
 

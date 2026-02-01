@@ -45,15 +45,15 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_debug_name("radio_main"));
 
-    // Title
+    // Title - increased font size for visibility
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Radio Button Groups")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_custom_background(theme.surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(60)})
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 32.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_debug_name("title"));
 
@@ -82,18 +82,19 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(col1.ent(), 0),
         ComponentConfig{}
             .with_label("Favorite Fruit")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("fruit_header"));
 
+    // Radio group with 44px row heights and increased circle size
     radio_group(context, mk(col1.ent(), 1), fruit_options, fruit_idx,
                 ComponentConfig{}
-                    .with_size(ComponentSize{percent(1.0f), pixels(40)})
-                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                    .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                    .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                     .with_debug_name("fruit_radios"));
 
     // Column 2 - Size selection
@@ -110,18 +111,19 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(col2.ent(), 0),
         ComponentConfig{}
             .with_label("Size")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("size_header"));
 
+    // Radio group with 44px row heights and increased circle size
     radio_group(context, mk(col2.ent(), 1), size_options, size_idx,
                 ComponentConfig{}
-                    .with_size(ComponentSize{percent(1.0f), pixels(40)})
-                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                    .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                    .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                     .with_debug_name("size_radios"));
 
     // Column 3 - Color selection
@@ -138,21 +140,22 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(col3.ent(), 0),
         ComponentConfig{}
             .with_label("Color")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_skip_tabbing(true)
             .with_debug_name("color_header"));
 
+    // Radio group with 44px row heights and increased circle size
     radio_group(context, mk(col3.ent(), 1), color_options, color_idx,
                 ComponentConfig{}
-                    .with_size(ComponentSize{percent(1.0f), pixels(40)})
-                    .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                    .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                    .with_font(UIComponent::DEFAULT_FONT, 18.0f)
                     .with_debug_name("color_radios"));
 
-    // Status display
+    // Status display - 44px touch target
     std::string status =
         fmt::format("Selected: {} {} {}",
                     fruit_options[fruit_idx], size_options[size_idx],
@@ -161,7 +164,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)

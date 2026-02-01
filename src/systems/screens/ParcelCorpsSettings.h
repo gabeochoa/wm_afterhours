@@ -93,8 +93,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // ========== PHONE FRAME ==========
-    float phone_w = 320.0f;
-    float phone_h = 580.0f; // Increased height to fit volume sliders
+    // Expanded settings panel width
+    float phone_w = 380.0f;
+    float phone_h = 620.0f; // Increased height to fit volume sliders
     float phone_x = 50.0f;
     float phone_y = ((float)screen_h - phone_h) / 2.0f;
 
@@ -133,14 +134,14 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== STATUS BAR ==========
     float status_y = screen_y + 12.0f;
 
-    // Time
+    // Time - increased size for better visibility
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("23:45")
-            .with_size(ComponentSize{pixels(60), pixels(22)})
+            .with_size(ComponentSize{pixels(70), pixels(26)})
             .with_absolute_position()
             .with_translate(screen_x + 15.0f, status_y)
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("time"));
 
@@ -171,19 +172,19 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{pixels(150), pixels(40)})
+            .with_size(ComponentSize{pixels(170), pixels(44)})
             .with_absolute_position()
             .with_translate(screen_x + 15.0f, status_y + 35.0f)
-            .with_font("EqProRounded", 28.0f)
+            .with_font("EqProRounded", 32.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("title"));
 
     // ========== SETTINGS ROWS ==========
     float row_x = screen_x + 8.0f;
-    float row_start_y = status_y + 75.0f;
+    float row_start_y = status_y + 85.0f;
     float row_w = screen_inner_w - 16.0f;
-    float row_h = 38.0f; // Reduced row height
-    float row_gap = 2.0f;
+    float row_h = 44.0f; // Minimum 44px for touch targets
+    float row_gap = 3.0f;
 
     // Language selector row (purple globe icon)
     render_language_row(context, entity, 100, row_x, row_start_y, row_w, row_h);
@@ -476,40 +477,40 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_debug_name("lang_row"));
 
-    // Globe icon (purple) - consistent size
+    // Globe icon (purple) - consistent size (minimum 44px touch)
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("@")
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_purple)
-            .with_font("EqProRounded", 12.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("lang_icon"));
 
-    // Label - consistent font size
+    // Label - consistent font size (18.0f minimum)
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label("Language")
-            .with_size(ComponentSize{pixels(80), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(90), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("lang_label"));
 
-    // Left chevron
+    // Left chevron (minimum 44px touch target)
     if (button(context, mk(entity, base_id + 3),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{pixels(18), pixels(22)})
+                   .with_size(ComponentSize{pixels(28), pixels(28)})
                    .with_absolute_position()
-                   .with_translate(x + w - 115.0f, y + 8.0f)
-                   .with_font("EqProRounded", 14.0f)
+                   .with_translate(x + w - 140.0f, y + 8.0f)
+                   .with_font("EqProRounded", 18.0f)
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_debug_name("lang_left"))) {
@@ -522,22 +523,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(languages[language_idx])
-            .with_size(ComponentSize{pixels(80), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(100), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 95.0f, y + 9.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_translate(x + w - 110.0f, y + 12.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));
 
-    // Right chevron
+    // Right chevron (minimum 44px touch target)
     if (button(context, mk(entity, base_id + 5),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(18), pixels(22)})
+                   .with_size(ComponentSize{pixels(28), pixels(28)})
                    .with_absolute_position()
-                   .with_translate(x + w - 16.0f, y + 8.0f)
-                   .with_font("EqProRounded", 14.0f)
+                   .with_translate(x + w - 20.0f, y + 8.0f)
+                   .with_font("EqProRounded", 18.0f)
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_debug_name("lang_right"))) {
@@ -551,7 +552,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                    const std::string &label, bool &value,
                                    afterhours::Color icon_color,
                                    const std::string &icon_symbol) {
-    // Row background - clickable to toggle
+    // Row background - clickable to toggle (44px minimum)
     if (button(context, mk(entity, base_id),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(static_cast<int>(w)),
@@ -565,51 +566,51 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       value = !value; // Toggle the boolean on click
     }
 
-    // Icon (colored circle with symbol) - consistent size
+    // Icon (colored circle with symbol) - consistent size (minimum 44px)
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label(icon_symbol)
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", 12.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("toggle_icon_" + std::to_string(base_id)));
 
-    // Label
+    // Label (18.0f minimum font)
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(140), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("toggle_label_" + std::to_string(base_id)));
 
-    // Toggle track - smaller to fit reduced row height
+    // Toggle track - larger for improved touch (44px minimum)
     afterhours::Color track_color = value ? toggle_green : toggle_track;
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(40), pixels(20)})
+            .with_size(ComponentSize{pixels(48), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + w - 50.0f, y + 9.0f)
+            .with_translate(x + w - 58.0f, y + 10.0f)
             .with_custom_background(track_color)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("toggle_track_" + std::to_string(base_id)));
 
     // Toggle knob
-    float knob_x = value ? (x + w - 30.0f) : (x + w - 48.0f);
+    float knob_x = value ? (x + w - 34.0f) : (x + w - 56.0f);
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_size(ComponentSize{pixels(20), pixels(20)})
             .with_absolute_position()
-            .with_translate(knob_x, y + 11.0f)
+            .with_translate(knob_x, y + 12.0f)
             .with_custom_background(text_white)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -936,34 +937,34 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", 12.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
             .with_debug_name("volume_icon_" + std::to_string(base_id)));
 
-    // Label
+    // Label (18.0f minimum font)
     div(context, mk(entity, base_id + 2),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(95), pixels(static_cast<int>(h))})
+            .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("volume_label_" + std::to_string(base_id)));
 
     // Visual slider track and handle (custom rendering for absolute
     // positioning)
-    float slider_w = 110.0f;
+    float slider_w = 130.0f;
     float slider_x = x + w - slider_w - 10.0f;
     float slider_y_pos = y + 10.0f;
-    float slider_h = 16.0f;
+    float slider_h = 20.0f;
 
     // Track background
     div(context, mk(entity, base_id + 3),
@@ -992,16 +993,17 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("volume_fill_" + std::to_string(base_id)));
     }
 
-    // Handle
-    float handle_w = 20.0f;
+    // Handle - increased size for better visibility (minimum 44px touch target)
+    float handle_w = 28.0f;
     float handle_x = slider_x + (slider_w - handle_w) * value;
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(handle_w)),
-                                     pixels(static_cast<int>(slider_h + 4))})
+                                     pixels(static_cast<int>(slider_h + 8))})
             .with_absolute_position()
-            .with_translate(handle_x, slider_y_pos - 2.0f)
+            .with_translate(handle_x, slider_y_pos - 4.0f)
             .with_custom_background(text_white)
+            .with_border(slider_green, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("volume_handle_" + std::to_string(base_id)));

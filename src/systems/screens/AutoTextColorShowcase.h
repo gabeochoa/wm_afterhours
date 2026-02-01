@@ -85,8 +85,8 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent()),
         ComponentConfig{}
             .with_label("Default Behavior (no config needed)")
-            .with_size({percent(1.0f), pixels(35.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size({percent(1.0f), pixels(40.0f)})
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_debug_name("section1_title"));
 
     // Row of buttons with various backgrounds - auto contrast just works
@@ -155,8 +155,8 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent()),
         ComponentConfig{}
             .with_label("Mid-tone Colors (best contrast)")
-            .with_size({percent(1.0f), pixels(35.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size({percent(1.0f), pixels(40.0f)})
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_debug_name("section2_title"));
 
     auto row3 = div(context, mk(section2.ent()),
@@ -199,8 +199,8 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent()),
         ComponentConfig{}
             .with_label("Explicit Control Options")
-            .with_size({percent(1.0f), pixels(35.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size({percent(1.0f), pixels(40.0f)})
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_debug_name("section3_title"));
 
     auto row4 = div(context, mk(section3.ent()),
@@ -257,8 +257,8 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section4.ent()),
         ComponentConfig{}
             .with_label("Works with Theme Colors Too")
-            .with_size({percent(1.0f), pixels(35.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_size({percent(1.0f), pixels(40.0f)})
+            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
             .with_debug_name("section4_title"));
 
     auto row5 = div(context, mk(section4.ent()),

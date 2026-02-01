@@ -66,14 +66,14 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float panel_x = ((float)screen_w - panel_w) / 2.0f;
     float panel_y = ((float)screen_h - panel_h) / 2.0f;
 
-    // Panel shadow (deeper)
+    // Panel shadow (reduced)
     div(context, mk(entity, 5),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
                                      pixels(static_cast<int>(panel_h))})
             .with_absolute_position()
-            .with_translate(panel_x + 8.0f, panel_y + 10.0f)
-            .with_custom_background(afterhours::Color{0, 0, 0, 80})
+            .with_translate(panel_x + 4.0f, panel_y + 5.0f)
+            .with_custom_background(afterhours::Color{0, 0, 0, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.12f)
             .with_debug_name("panel_shadow"));
@@ -119,9 +119,9 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 25),
            ComponentConfig{}
                .with_label("X")
-               .with_size(ComponentSize{pixels(40), pixels(40)})
+               .with_size(ComponentSize{pixels(44), pixels(44)})
                .with_absolute_position()
-               .with_translate(panel_x + panel_w - 52.0f, panel_y + 24.0f)
+               .with_translate(panel_x + panel_w - 56.0f, panel_y + 22.0f)
                .with_custom_background(close_red)
                .with_border(afterhours::Color{175, 55, 65, 255}, 3.0f)
                .with_font("EqProRounded", 20.0f)
@@ -170,8 +170,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(0.6f)
-                     .with_soft_shadow(3.0f, 5.0f, 10.0f,
-                                       afterhours::Color{0, 0, 0, 60})
+                     .with_soft_shadow(2.0f, 3.0f, 6.0f,
+                                       afterhours::Color{0, 0, 0, 40})
                      .with_debug_name("toggle_" + std::to_string(i)))) {
         *toggles[i].state = !(*toggles[i].state);
       }
@@ -183,7 +183,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(75), pixels(24)})
               .with_absolute_position()
               .with_translate(tx, toggle_y + 62.0f)
-              .with_font("EqProRounded", 16.0f)
+              .with_font("EqProRounded", 18.0f)
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("toggle_label_" + std::to_string(i)));
@@ -244,7 +244,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(20)})
             .with_absolute_position()
             .with_translate(panel_x + panel_w - 85.0f, toggle_y + 46.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("wifi_label"));

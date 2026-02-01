@@ -90,12 +90,12 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
-            .with_label("sprite():")
-            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_label("Sprites")
+            .with_size(ComponentSize{pixels(120), pixels(48)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("sprite_label"));
 
     sprite(context, mk(row1.ent(), 1), gear_tex, full_src,
@@ -141,12 +141,12 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(row2.ent(), 0),
         ComponentConfig{}
-            .with_label("image_button():")
-            .with_size(ComponentSize{pixels(160), pixels(40)})
+            .with_label("Image Buttons")
+            .with_size(ComponentSize{pixels(160), pixels(48)})
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("imgbtn_label"));
 
     if (image_button(context, mk(row2.ent(), 1), gear_tex, full_src,
@@ -185,7 +185,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row2.ent(), 4),
         ComponentConfig{}
             .with_label("Clicks: " + std::to_string(button_clicks))
-            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_size(ComponentSize{pixels(120), pixels(48)})
             .with_custom_background(theme.surface)
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -206,12 +206,12 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(row3.ent(), 0),
         ComponentConfig{}
-            .with_label("With BG:")
-            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_label("With Background")
+            .with_size(ComponentSize{pixels(160), pixels(48)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("withbg_label"));
 
     auto img_container =
@@ -235,9 +235,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(img_container.ent(), 1),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{pixels(80), pixels(30)})
+            .with_size(ComponentSize{pixels(100), pixels(36)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.left = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("settings_label"));
@@ -255,12 +255,12 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(row4.ent(), 0),
         ComponentConfig{}
-            .with_label("Icon Row:")
-            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_label("Icon Row")
+            .with_size(ComponentSize{pixels(120), pixels(48)})
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("iconrow_label"));
 
     auto icon_row_container =

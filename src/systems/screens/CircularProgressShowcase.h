@@ -77,10 +77,10 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Radial progress visualization")
             .with_size(
-                ComponentSize{pixels(screen_width), pixels(24.0f * scale)})
+                ComponentSize{pixels(screen_width), pixels(28.0f * scale)})
             .with_absolute_position()
             .with_translate(0.0f, 65.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f * scale)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f * scale)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("subtitle"));
@@ -95,9 +95,9 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
     // Ring sizes based on scale
     float ring_size = 80.0f * scale;
     float ring_thickness = 8.0f * scale;
-    float title_font = 20.0f * scale;
-    float value_font = 24.0f * scale;
-    float desc_font = 14.0f * scale;
+    float title_font = 22.0f * scale;
+    float value_font = 26.0f * scale;
+    float desc_font = 18.0f * scale;
 
     // ========== CARD 1: Basic Progress ==========
     div(context, mk(entity, 10),
@@ -347,10 +347,10 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Size Variations")
             .with_size(
-                ComponentSize{pixels(screen_width), pixels(24.0f * scale)})
+                ComponentSize{pixels(screen_width), pixels(28.0f * scale)})
             .with_absolute_position()
             .with_translate(0.0f, bottom_y - 5.0f * scale)
-            .with_font("Gaegu-Bold", 22.0f * scale)
+            .with_font("Gaegu-Bold", 24.0f * scale)
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("size_title"));
@@ -398,10 +398,10 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(fmt::format("{:.0f}px", size))
               .with_size(ComponentSize{pixels(small_card_width),
-                                       pixels(20.0f * scale)})
+                                       pixels(24.0f * scale)})
               .with_absolute_position()
               .with_translate(card_x, bottom_y + 100.0f * scale)
-              .with_font("Gaegu-Bold", 16.0f * scale)
+              .with_font("Gaegu-Bold", 18.0f * scale)
               .with_custom_text_color(colors[i])
               .with_alignment(TextAlignment::Center)
               .with_debug_name(fmt::format("size_label_{}", i)));
@@ -412,10 +412,10 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(fmt::format(
                   "{}%", static_cast<int>(progress_values[i] * 100)))
               .with_size(ComponentSize{pixels(small_card_width),
-                                       pixels(16.0f * scale)})
+                                       pixels(20.0f * scale)})
               .with_absolute_position()
               .with_translate(card_x, bottom_y + 122.0f * scale)
-              .with_font(UIComponent::DEFAULT_FONT, 12.0f * scale)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f * scale)
               .with_custom_text_color(text_muted)
               .with_alignment(TextAlignment::Center)
               .with_debug_name(fmt::format("progress_label_{}", i)));

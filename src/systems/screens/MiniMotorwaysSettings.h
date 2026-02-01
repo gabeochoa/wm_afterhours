@@ -76,37 +76,13 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_cream)
             .with_debug_name("bg"));
 
-    // Grid lines (vertical) - calculate count based on screen width
-    int num_vertical_lines = (screen_w / 80) + 1;
-    for (int i = 0; i < num_vertical_lines; i++) {
-      float x = (float)i * 80.0f;
-      div(context, mk(entity, 5 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(screen_h)})
-              .with_absolute_position()
-              .with_translate(x, 0.0f)
-              .with_custom_background(grid_line)
-              .with_debug_name("grid_v_" + std::to_string(i)));
-    }
-
-    // Grid lines (horizontal) - calculate count based on screen height
-    int num_horizontal_lines = (screen_h / 60) + 1;
-    for (int i = 0; i < num_horizontal_lines; i++) {
-      float y = (float)i * 60.0f;
-      div(context, mk(entity, 30 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(screen_w), pixels(1)})
-              .with_absolute_position()
-              .with_translate(0.0f, y)
-              .with_custom_background(grid_line)
-              .with_debug_name("grid_h_" + std::to_string(i)));
-    }
+    // Note: Grid lines removed to reduce visual clutter - clean cream background only
 
     // ========== BACK ARROW ==========
-    div(context, mk(entity, 50),
+    button(context, mk(entity, 50),
         ComponentConfig{}
             .with_label("<-")
-            .with_size(ComponentSize{pixels(50), pixels(50)})
+            .with_size(ComponentSize{pixels(56), pixels(56)})
             .with_absolute_position()
             .with_translate(35.0f, 35.0f)
             .with_font("EqProRounded", 32.0f)
@@ -147,7 +123,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 70 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(categories[i])
-                     .with_size(ComponentSize{pixels(150), pixels(42)})
+                     .with_size(ComponentSize{pixels(160), pixels(48)})
                      .with_absolute_position()
                      .with_translate(205.0f, tab_y)
                      .with_custom_background(tab_bg)
@@ -173,10 +149,10 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 100 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(toggles[i].label)
-              .with_size(ComponentSize{pixels(280), pixels(35)})
+              .with_size(ComponentSize{pixels(300), pixels(40)})
               .with_absolute_position()
               .with_translate(content_x, row_y)
-              .with_font("EqProRounded", 26.0f)
+              .with_font("EqProRounded", 24.0f)
               .with_custom_text_color(text_dark)
               .with_debug_name("label_" + std::to_string(i)));
 
@@ -187,7 +163,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 101 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label(toggle_icon)
-                     .with_size(ComponentSize{pixels(45), pixels(45)})
+                     .with_size(ComponentSize{pixels(52), pixels(52)})
                      .with_absolute_position()
                      .with_translate(content_x + 340.0f, row_y - 5.0f)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -208,7 +184,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 120),
         ComponentConfig{}
             .with_label("Controller Cursor Sensitivity")
-            .with_size(ComponentSize{pixels(320), pixels(35)})
+            .with_size(ComponentSize{pixels(340), pixels(40)})
             .with_absolute_position()
             .with_translate(content_x, sens_y)
             .with_font("EqProRounded", 22.0f)
@@ -219,9 +195,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 121),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{pixels(35), pixels(35)})
+                   .with_size(ComponentSize{pixels(44), pixels(44)})
                    .with_absolute_position()
-                   .with_translate(content_x + 330.0f, sens_y - 2.0f)
+                   .with_translate(content_x + 340.0f, sens_y - 2.0f)
                    .with_font("EqProRounded", 28.0f)
                    .with_custom_text_color(text_dark)
                    .with_alignment(TextAlignment::Center)
@@ -240,9 +216,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 122),
         ComponentConfig{}
             .with_label(sens_text)
-            .with_size(ComponentSize{pixels(100), pixels(35)})
+            .with_size(ComponentSize{pixels(110), pixels(40)})
             .with_absolute_position()
-            .with_translate(content_x + 370.0f, sens_y)
+            .with_translate(content_x + 390.0f, sens_y)
             .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -252,9 +228,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 123),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(35), pixels(35)})
+                   .with_size(ComponentSize{pixels(44), pixels(44)})
                    .with_absolute_position()
-                   .with_translate(content_x + 475.0f, sens_y - 2.0f)
+                   .with_translate(content_x + 505.0f, sens_y - 2.0f)
                    .with_font("EqProRounded", 28.0f)
                    .with_custom_text_color(text_dark)
                    .with_alignment(TextAlignment::Center)
@@ -276,10 +252,10 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 200),
         ComponentConfig{}
             .with_label("Mini Motorways release-10-patch-2 (202207010917)")
-            .with_size(ComponentSize{pixels(450), pixels(25)})
+            .with_size(ComponentSize{pixels(480), pixels(28)})
             .with_absolute_position()
             .with_translate(35.0f, (float)screen_h - 45.0f)
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_muted)
             .with_debug_name("version"));
 
@@ -288,9 +264,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 210),
         ComponentConfig{}
             .with_label("Tutorial  ->")
-            .with_size(ComponentSize{pixels(160), pixels(50)})
+            .with_size(ComponentSize{pixels(170), pixels(56)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 195.0f, (float)screen_h - 65.0f)
+            .with_translate((float)screen_w - 205.0f, (float)screen_h - 70.0f)
             .with_custom_background(btn_teal)
             .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})

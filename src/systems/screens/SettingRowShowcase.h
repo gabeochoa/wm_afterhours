@@ -49,36 +49,36 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 0),
         ComponentConfig{}
             .with_label("Setting Row Showcase")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_alignment(TextAlignment::Center)
             .with_roundness(0.1f)
             .with_debug_name("title"));
 
-    // Content panel - fixed height to fit all rows
+    // Content panel - increased height to prevent clipping
     auto content = div(context, mk(root.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.95f), pixels(480)})
+                           .with_size(ComponentSize{percent(0.95f), pixels(520)})
                            .with_custom_background(theme.surface)
                            .with_padding(Padding{
                                .top = pixels(16),
                                .left = pixels(24),
-                               .bottom = pixels(16),
+                               .bottom = pixels(20),
                                .right = pixels(24)})
                            .with_flex_direction(FlexDirection::Column)
                            .with_roundness(0.06f)
                            .with_debug_name("content"));
 
-    // Toggle section label
+    // Toggle section label - increased size
     div(context, mk(content.ent(), 0),
         ComponentConfig{}
             .with_label("TOGGLES")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
+            .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("toggle_label"));
 
@@ -102,13 +102,13 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(8)})
             .with_debug_name("spacer1"));
 
-    // Stepper section label
+    // Stepper section label - increased size
     div(context, mk(content.ent(), 5),
         ComponentConfig{}
             .with_label("OPTIONS")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
+            .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("stepper_label"));
 
@@ -122,13 +122,13 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(8)})
             .with_debug_name("spacer2"));
 
-    // Slider section label
+    // Slider section label - increased size
     div(context, mk(content.ent(), 9),
         ComponentConfig{}
             .with_label("VOLUME")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
+            .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("slider_label"));
 
@@ -146,13 +146,13 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_text_color(afterhours::Color{255, 180, 80, 255})),
         &music_volume);
 
-    // Footer
+    // Footer - increased text size
     div(context, mk(root.ent(), 2),
         ComponentConfig{}
-            .with_label("setting_row: Toggle, Stepper, Slider, Dropdown, Display")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
+            .with_label("Toggle, Stepper, Slider, Dropdown, Display")
+            .with_size(ComponentSize{percent(0.95f), pixels(36)})
             .with_custom_text_color(afterhours::Color{100, 110, 130, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));
   }

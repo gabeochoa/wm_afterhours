@@ -33,19 +33,21 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
   // Tab icons and colors
   std::vector<std::tuple<std::string, afterhours::Color>> tabs = {
-      {"((*))", icon_blue}, // Wifi
-      {"[O]", icon_red},    // Controller
-      {"[^]", icon_green},  // Home
-      {"[@]", icon_purple}, // Mail
-      {"[#]", btn_yellow},  // Star/coins
-      {"[*]", tab_purple},  // Gear (options) - selected
+      {"Wifi", icon_blue},       // Wifi
+      {"Ctrl", icon_red},        // Controller
+      {"Home", icon_green},      // Home
+      {"Mail", icon_purple},     // Mail
+      {"Star", btn_yellow},      // Star/coins
+      {"Gear", tab_purple},      // Gear (options) - selected
   };
 
   std::vector<std::tuple<std::string, std::string, afterhours::Color>> options =
       {
-          {"[O]", "Controller", icon_green},     {"[=]", "Display", icon_blue},
-          {"[+]", "Accessibility", icon_purple}, {"[~]", "Sound", icon_blue},
-          {"[(*))", "Online", icon_green},
+          {"Ctrl", "Controller", icon_green},
+          {"Disp", "Display", icon_blue},
+          {"Acc", "Accessibility", icon_purple},
+          {"Snd", "Sound", icon_blue},
+          {"Net", "Online", icon_green},
       };
 
   void for_each_with(afterhours::Entity &entity,
@@ -184,9 +186,9 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     float tools_x = panel_x - 65.0f;
     float tools_y = panel_y + 30.0f;
 
-    std::vector<std::tuple<std::string, afterhours::Color>> tools = {
-        {"[/]", text_black}, // Pencil - use black for contrast
-        {"[-]", text_dark},  // Eraser
+  std::vector<std::tuple<std::string, afterhours::Color>> tools = {
+        {"Edit", text_black},  // Pencil - use black for contrast
+        {"Erase", text_dark},  // Eraser
     };
 
     for (size_t i = 0; i < tools.size(); i++) {
@@ -194,12 +196,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 60 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(icon)
-              .with_size(ComponentSize{pixels(45), pixels(45)})
+              .with_size(ComponentSize{pixels(52), pixels(52)})
               .with_absolute_position()
-              .with_translate(tools_x, tools_y + (float)i * 55.0f)
+              .with_translate(tools_x, tools_y + (float)i * 60.0f)
               .with_custom_background(panel_white)
               .with_border(border_gray, 2.0f)
-              .with_font("Gaegu-Bold", 20.0f)
+              .with_font("Gaegu-Bold", 18.0f)
               .with_custom_text_color(color)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(std::bitset<4>(0b1111))
@@ -251,24 +253,27 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("name_text"));
 
     // Delete Data button (right side)
-    div(context, mk(entity, 110),
+    button(context, mk(entity, 110),
         ComponentConfig{}
-            .with_label("[x] Delete Data")
-            .with_size(ComponentSize{pixels(110), pixels(22)})
+            .with_label("Delete Data")
+            .with_size(ComponentSize{pixels(130), pixels(32)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 140.0f, name_y + 20.0f)
-            .with_font("Gaegu-Bold", 19.0f)
-            .with_custom_text_color(text_dark)
+            .with_translate(panel_x + panel_w - 160.0f, name_y + 18.0f)
+            .with_custom_background(afterhours::Color{220, 85, 85, 255})
+            .with_font("Gaegu-Bold", 18.0f)
+            .with_auto_text_color(true)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.25f)
             .with_debug_name("delete_data"));
 
     // ========== COMMON LABEL ==========
     div(context, mk(entity, 120),
         ComponentConfig{}
             .with_label("Common")
-            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_size(ComponentSize{pixels(100), pixels(28)})
             .with_absolute_position()
             .with_translate(panel_x + 25.0f, panel_y + 105.0f)
-            .with_font("Gaegu-Bold", 19.0f)
+            .with_font("Gaegu-Bold", 20.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("common_label"));
 
@@ -326,10 +331,10 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(label)
               .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 50)),
-                                       pixels(24)})
+                                       pixels(28)})
               .with_absolute_position()
               .with_translate(ox - 25.0f, oy + icon_size + 5.0f)
-              .with_font("Gaegu-Bold", 17.0f)
+              .with_font("Gaegu-Bold", 18.0f)
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("opt_label_" + std::to_string(i)));
@@ -340,10 +345,10 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Enter a new name and customize your controls.")
             .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 60)),
-                                     pixels(28)})
+                                     pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + panel_h - 45.0f)
-            .with_font("Gaegu-Bold", 19.0f)
+            .with_font("Gaegu-Bold", 20.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("description"));
 

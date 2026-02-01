@@ -36,20 +36,20 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     // Title
     div(context, mk(main.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(0.08f)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.06f)})
             .with_label("Decorative Frames")
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(10.0f)})
+            .with_margin(Margin{.top = h720(8.0f)})
             .with_debug_name("title"));
 
     // Subtitle
     div(context, mk(main.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(0.05f)})
+            .with_size(ComponentSize{percent(1.0f), percent(0.04f)})
             .with_label("Three style variants for decorative borders")
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("subtitle"));
@@ -57,14 +57,14 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     // Container for the three frames
     auto row = div(context, mk(main.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.95f), percent(0.70f)})
+            .with_size(ComponentSize{percent(0.95f), percent(0.82f)})
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center)
             .with_debug_name("frame_row"));
 
-    // Each column is ~30% of row width
-    Size col_width = percent(0.30f);
+    // Each column is ~31% of row width
+    Size col_width = percent(0.31f);
     Size col_height = percent(0.95f);
 
     // ========== KRAFT PAPER STYLE ==========
@@ -81,7 +81,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     decorative_frame(context, mk(kraft_col.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.75f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.82f)})
             .with_custom_background(kraft_bg)
             .with_border(kraft_frame_color, h720(8.0f))
             .with_debug_name("kraft_frame"),
@@ -89,19 +89,19 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(kraft_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.10f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.08f)})
             .with_label("KraftPaper")
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(6.0f)})
+            .with_margin(Margin{.top = h720(4.0f)})
             .with_debug_name("kraft_label"));
 
     div(context, mk(kraft_col.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.08f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.06f)})
             .with_label("Layered + corners")
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("kraft_desc"));
@@ -120,7 +120,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     decorative_frame(context, mk(simple_col.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.75f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.82f)})
             .with_custom_background(simple_bg)
             .with_border(simple_frame_color, h720(3.0f))
             .with_debug_name("simple_frame"),
@@ -128,19 +128,19 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(simple_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.10f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.08f)})
             .with_label("Simple")
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(6.0f)})
+            .with_margin(Margin{.top = h720(4.0f)})
             .with_debug_name("simple_label"));
 
     div(context, mk(simple_col.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.08f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.06f)})
             .with_label("Border + background")
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("simple_desc"));
@@ -159,7 +159,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     decorative_frame(context, mk(inset_col.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.75f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.82f)})
             .with_custom_background(inset_bg)
             .with_border(inset_frame_color, h720(5.0f))
             .with_debug_name("inset_frame"),
@@ -167,32 +167,22 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(inset_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.10f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.08f)})
             .with_label("Inset")
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(6.0f)})
+            .with_margin(Margin{.top = h720(4.0f)})
             .with_debug_name("inset_label"));
 
     div(context, mk(inset_col.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.08f)})
+            .with_size(ComponentSize{percent(0.92f), percent(0.06f)})
             .with_label("Sunken shadow")
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("inset_desc"));
-
-    // Footer note
-    div(context, mk(main.ent(), 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(0.06f)})
-            .with_label("All frames use responsive h720() sizing")
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
   }
 };
 

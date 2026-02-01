@@ -246,10 +246,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(kill_feed[i])
-              .with_size(ComponentSize{pixels(500), pixels(26)})
+              .with_size(ComponentSize{pixels(550), pixels(28)})
               .with_absolute_position()
-              .with_translate(cx - 250.0f, kill_y + (float)i * 26.0f)
-              .with_font("EqProRounded", 21.0f)
+              .with_translate(cx - 275.0f, kill_y + (float)i * 30.0f)
+              .with_font("EqProRounded", 18.0f)
               .with_custom_text_color(text_muted)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("kill_" + std::to_string(i)));
@@ -279,49 +279,49 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     float ks_y = 140.0f;
     for (size_t i = 0; i < skill_icons.size(); i++) {
-      float row_y = ks_y + (float)i * 72.0f;
+      float row_y = ks_y + (float)i * 78.0f;
       auto &[tex_ptr, fallback_label, label] = skill_icons[i];
 
       // Cog/gear icon
       div(context, mk(entity, 140 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label("*")
-              .with_size(ComponentSize{pixels(18), pixels(18)})
+              .with_size(ComponentSize{pixels(20), pixels(20)})
               .with_absolute_position()
-              .with_translate(22.0f, row_y + 18.0f)
-              .with_font("EqProRounded", 19.0f)
+              .with_translate(18.0f, row_y + 20.0f)
+              .with_font("EqProRounded", 20.0f)
               .with_custom_text_color(text_muted)
               .with_debug_name("cog_" + std::to_string(i)));
 
-      // Icon box background
+      // Icon box background - 44px minimum for touch targets
       div(context, mk(entity, 141 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(55), pixels(55)})
+              .with_size(ComponentSize{pixels(60), pixels(60)})
               .with_absolute_position()
               .with_translate(45.0f, row_y)
               .with_custom_background(panel_dark)
               .with_border(border_dark, 1.0f)
               .with_debug_name("ks_bg_" + std::to_string(i)));
 
-      // Icon image or fallback text
+      // Icon image or fallback text - 44px minimum
       if (tex_ptr && tex_ptr->id != 0) {
         afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
                                                    (float)tex_ptr->height};
         sprite(context, mk(entity, 142 + static_cast<int>(i) * 3), *tex_ptr,
                src,
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(40), pixels(40)})
+                   .with_size(ComponentSize{pixels(48), pixels(48)})
                    .with_absolute_position()
-                   .with_translate(52.5f, row_y + 7.5f)
+                   .with_translate(51.0f, row_y + 6.0f)
                    .with_debug_name("ks_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 142 + static_cast<int>(i) * 3),
             ComponentConfig{}
                 .with_label(fallback_label)
-                .with_size(ComponentSize{pixels(55), pixels(55)})
+                .with_size(ComponentSize{pixels(60), pixels(60)})
                 .with_absolute_position()
                 .with_translate(45.0f, row_y)
-                .with_font("EqProRounded", 19.0f)
+                .with_font("EqProRounded", 20.0f)
                 .with_custom_text_color(text_tan)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("ks_icon_fallback_" + std::to_string(i)));
@@ -332,10 +332,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 143 + static_cast<int>(i) * 3),
             ComponentConfig{}
                 .with_label(label)
-                .with_size(ComponentSize{pixels(55), pixels(16)})
+                .with_size(ComponentSize{pixels(60), pixels(18)})
                 .with_absolute_position()
-                .with_translate(45.0f, row_y + 56.0f)
-                .with_font("EqProRounded", 19.0f)
+                .with_translate(45.0f, row_y + 62.0f)
+                .with_font("EqProRounded", 18.0f)
                 .with_custom_text_color(text_muted)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("ks_label_" + std::to_string(i)));
@@ -382,47 +382,47 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ks_box2"));
 
     // ========== BOTTOM LEFT: Minimap ==========
-    // Minimap total height: label(22) + gap(4) + map(120) = 146 + 20px margin = 166
-    float map_y = (float)screen_h - 175.0f;
+    // Minimap total height: label(26) + gap(4) + map(160) = 190 + 20px margin = 210
+    float map_y = (float)screen_h - 215.0f;
 
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("7B Pop <192>")
-            .with_size(ComponentSize{pixels(175), pixels(22)})
+            .with_size(ComponentSize{pixels(200), pixels(26)})
             .with_absolute_position()
             .with_translate(22.0f, map_y)
-            .with_font("EqProRounded", 21.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("map_label"));
 
-    // Minimap background
+    // Minimap background - increased size for better visibility
     div(context, mk(entity, 220),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(175), pixels(120)})
+            .with_size(ComponentSize{pixels(200), pixels(160)})
             .with_absolute_position()
-            .with_translate(22.0f, map_y + 26.0f)
+            .with_translate(22.0f, map_y + 30.0f)
             .with_custom_background(minimap_green)
             .with_border(border_dark, 2.0f)
             .with_debug_name("minimap"));
 
-    // Map grid lines (vertical)
+    // Map grid lines (vertical) - adjusted for larger minimap
     for (int i = 1; i < 4; i++) {
       div(context, mk(entity, 230 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(105)})
+              .with_size(ComponentSize{pixels(1), pixels(145)})
               .with_absolute_position()
-              .with_translate(22.0f + (float)i * 43.0f, map_y + 34.0f)
+              .with_translate(22.0f + (float)i * 50.0f, map_y + 38.0f)
               .with_custom_background(afterhours::Color{60, 70, 60, 180})
               .with_debug_name("grid_v_" + std::to_string(i)));
     }
 
-    // Map grid lines (horizontal)
-    for (int i = 1; i < 3; i++) {
+    // Map grid lines (horizontal) - adjusted for larger minimap
+    for (int i = 1; i < 4; i++) {
       div(context, mk(entity, 240 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(160), pixels(1)})
+              .with_size(ComponentSize{pixels(185), pixels(1)})
               .with_absolute_position()
-              .with_translate(30.0f, map_y + 26.0f + (float)i * 40.0f)
+              .with_translate(30.0f, map_y + 30.0f + (float)i * 40.0f)
               .with_custom_background(afterhours::Color{60, 70, 60, 180})
               .with_debug_name("grid_h_" + std::to_string(i)));
     }
@@ -430,9 +430,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Red danger zone on map - positioned within minimap bounds
     div(context, mk(entity, 250),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(45), pixels(40)})
+            .with_size(ComponentSize{pixels(50), pixels(50)})
             .with_absolute_position()
-            .with_translate(140.0f, map_y + 36.0f)
+            .with_translate(158.0f, map_y + 40.0f)
             .with_custom_background(afterhours::Color{140, 50, 40, 120})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -442,10 +442,10 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 260),
         ComponentConfig{}
             .with_label("^")
-            .with_size(ComponentSize{pixels(18), pixels(18)})
+            .with_size(ComponentSize{pixels(22), pixels(22)})
             .with_absolute_position()
-            .with_translate(100.0f, map_y + 95.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_translate(110.0f, map_y + 130.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("player_icon"));
@@ -454,11 +454,11 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 261),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(12), pixels(12)})
+            .with_size(ComponentSize{pixels(14), pixels(14)})
             .with_absolute_position()
-            .with_translate(150.0f, map_y + 50.0f)
+            .with_translate(170.0f, map_y + 60.0f)
             .with_custom_background(dot_red)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -525,21 +525,22 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("skull"));
     }
 
-    // Health label
+    // Health label with percentage overlay
+    int health_val = static_cast<int>(health_pct * 100);
     div(context, mk(entity, 312),
         ComponentConfig{}
-            .with_label("80 HEALTH")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_label(std::to_string(health_val) + " HEALTH")
+            .with_size(ComponentSize{pixels(140), pixels(22)})
             .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 6.0f)
-            .with_font("EqProRounded", 16.0f)
+            .with_translate(health_x + 50.0f, health_y + 4.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_tan)
             .with_debug_name("health_label"));
 
     // Health bar bg
     div(context, mk(entity, 320),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(165), pixels(14)})
+            .with_size(ComponentSize{pixels(165), pixels(16)})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
@@ -549,7 +550,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 321),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(160 * health_pct)),
-                                     pixels(14)})
+                                     pixels(16)})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(health_cyan)
@@ -558,21 +559,33 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Armor bar bg
     div(context, mk(entity, 330),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(165), pixels(10)})
+            .with_size(ComponentSize{pixels(165), pixels(12)})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 44.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
             .with_debug_name("armor_bg"));
 
-    // Armor bar fill
+    // Armor bar fill with percentage overlay
+    int armor_val = static_cast<int>(armor_pct * 100);
     div(context, mk(entity, 331),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(160 * armor_pct)),
-                                     pixels(10)})
+                                     pixels(12)})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 44.0f)
             .with_custom_background(armor_blue)
             .with_debug_name("armor_fill"));
+
+    // Armor percentage label
+    div(context, mk(entity, 332),
+        ComponentConfig{}
+            .with_label(std::to_string(armor_val) + "% ARMOR")
+            .with_size(ComponentSize{pixels(100), pixels(18)})
+            .with_absolute_position()
+            .with_translate(health_x + 120.0f, health_y + 42.0f)
+            .with_font("EqProRounded", 12.0f)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("armor_label"));
 
     // ========== BOTTOM RIGHT: Equipment ==========
     // Two 70x70 boxes with 10px gap between them, positioned from right edge
