@@ -45,11 +45,20 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     const float HEADER_FONT = 14.0f * scale;
     const float CHECKBOX_HEIGHT = 36.0f * scale;
     const float CHECKBOX_FONT = 13.0f * scale;
-    const float GROUP_ROW_HEIGHT = 32.0f * scale;
     const float TITLE_HEIGHT = 50.0f * scale;
     const float TITLE_FONT = 26.0f * scale;
     const float STATUS_HEIGHT = 40.0f * scale;
     const float STATUS_FONT = 16.0f * scale;
+
+    // Calculate content height based on the taller column (right has more items)
+    // Right: 2 headers (28*2) + 7 checkboxes (36*7) = 56 + 252 = 308 * scale
+    // Plus minimal padding from Spacing::xs on columns (~6px each side)
+    float column_content_height = 2 * HEADER_HEIGHT + 7 * CHECKBOX_HEIGHT + 12.0f * scale;
+
+    // Card sized to fit content tightly
+    float card_content = TITLE_HEIGHT + column_content_height + STATUS_HEIGHT;
+    float card_height = card_content + 10.0f * scale;
+    float card_width = screen_width * 0.85f;
 
     // Root - full screen background
     div(context, mk(entity, 0),
@@ -59,8 +68,6 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // Main card - centered
-    float card_width = screen_width * 0.90f;
-    float card_height = screen_height * 0.85f;
     float card_x = (screen_width - card_width) / 2.0f;
     float card_y = (screen_height - card_height) / 2.0f;
 
@@ -70,8 +77,8 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(card_x, card_y)
             .with_custom_background(theme.surface)
-            .with_roundness(0.03f)
-            .with_padding(Spacing::md)
+            .with_roundness(0.02f)
+            .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("card"));
 
@@ -89,21 +96,21 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // Content row - two columns
-    float content_height = card_height - TITLE_HEIGHT - STATUS_HEIGHT - 60.0f * scale;
     auto content = div(context, mk(card.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(content_height)})
+            .with_size(ComponentSize{percent(1.0f), pixels(column_content_height)})
             .with_flex_direction(FlexDirection::Row)
+            .with_justify_content(JustifyContent::SpaceBetween)
             .with_debug_name("content"));
 
     // ========== LEFT COLUMN ==========
     auto left_col = div(context, mk(content.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+            .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
-            .with_padding(Spacing::sm)
+            .with_padding(Spacing::xs)
             .with_flex_direction(FlexDirection::Column)
-            .with_no_wrap()
+            .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("left_col"));
 
     // With Label section
@@ -224,11 +231,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     // ========== RIGHT COLUMN ==========
     auto right_col = div(context, mk(content.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+            .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
-            .with_padding(Spacing::sm)
+            .with_padding(Spacing::xs)
             .with_flex_direction(FlexDirection::Column)
-            .with_no_wrap()
+            .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("right_col"));
 
     // Multi-Select section
@@ -243,18 +250,54 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("multi_hdr"));
 
-    checkbox_group(context, mk(right_col.ent(), 1), options_group,
-        std::array<std::string_view, 4>{"Option A", "Option B", "Option C", "Option D"},
-        {-1, -1},
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(GROUP_ROW_HEIGHT)})
-            .with_flex_direction(FlexDirection::Column)
-            .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
-            .with_debug_name("multi_group"));
+    // Individual checkboxes for multi-select
+    bool opt_a = options_group.test(0);
+    bool opt_b = options_group.test(1);
+    bool opt_c = options_group.test(2);
+    bool opt_d = options_group.test(3);
+
+    if (checkbox(context, mk(right_col.ent(), 1), opt_a,
+             ComponentConfig{}
+                 .with_label("Option A")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_debug_name("opt_a"))) {
+        if (opt_a) options_group.set(0); else options_group.reset(0);
+    }
+
+    if (checkbox(context, mk(right_col.ent(), 2), opt_b,
+             ComponentConfig{}
+                 .with_label("Option B")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_debug_name("opt_b"))) {
+        if (opt_b) options_group.set(1); else options_group.reset(1);
+    }
+
+    if (checkbox(context, mk(right_col.ent(), 3), opt_c,
+             ComponentConfig{}
+                 .with_label("Option C")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_debug_name("opt_c"))) {
+        if (opt_c) options_group.set(2); else options_group.reset(2);
+    }
+
+    if (checkbox(context, mk(right_col.ent(), 4), opt_d,
+             ComponentConfig{}
+                 .with_label("Option D")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_debug_name("opt_d"))) {
+        if (opt_d) options_group.set(3); else options_group.reset(3);
+    }
 
     // Min/Max section
-    div(context, mk(right_col.ent(), 2),
+    div(context, mk(right_col.ent(), 5),
         ComponentConfig{}
             .with_label("Min/Max (1-2)")
             .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
@@ -265,15 +308,49 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("minmax_hdr"));
 
-    checkbox_group(context, mk(right_col.ent(), 3), min_max_group,
-        std::array<std::string_view, 3>{"Choice 1", "Choice 2", "Choice 3"},
-        {1, 2},
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(GROUP_ROW_HEIGHT)})
-            .with_flex_direction(FlexDirection::Column)
-            .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
-            .with_debug_name("minmax_group"));
+    // Individual checkboxes for min/max with constraints
+    bool ch_1 = min_max_group.test(0);
+    bool ch_2 = min_max_group.test(1);
+    bool ch_3 = min_max_group.test(2);
+    int mm_count = static_cast<int>(min_max_group.count());
+
+    // Disable unchecking if at min (1), disable checking if at max (2)
+    bool dis_1 = (ch_1 && mm_count <= 1) || (!ch_1 && mm_count >= 2);
+    bool dis_2 = (ch_2 && mm_count <= 1) || (!ch_2 && mm_count >= 2);
+    bool dis_3 = (ch_3 && mm_count <= 1) || (!ch_3 && mm_count >= 2);
+
+    if (checkbox(context, mk(right_col.ent(), 6), ch_1,
+             ComponentConfig{}
+                 .with_label("Choice 1")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Secondary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_disabled(dis_1)
+                 .with_debug_name("ch_1"))) {
+        if (ch_1) min_max_group.set(0); else min_max_group.reset(0);
+    }
+
+    if (checkbox(context, mk(right_col.ent(), 7), ch_2,
+             ComponentConfig{}
+                 .with_label("Choice 2")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Secondary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_disabled(dis_2)
+                 .with_debug_name("ch_2"))) {
+        if (ch_2) min_max_group.set(1); else min_max_group.reset(1);
+    }
+
+    if (checkbox(context, mk(right_col.ent(), 8), ch_3,
+             ComponentConfig{}
+                 .with_label("Choice 3")
+                 .with_size(ComponentSize{percent(1.0f), pixels(CHECKBOX_HEIGHT)})
+                 .with_background(Theme::Usage::Secondary)
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_disabled(dis_3)
+                 .with_debug_name("ch_3"))) {
+        if (ch_3) min_max_group.set(2); else min_max_group.reset(2);
+    }
 
     // Status bar
     std::string status = "Selected: Group " + std::to_string(options_group.count()) + "/4";
