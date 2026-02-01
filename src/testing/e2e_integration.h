@@ -88,6 +88,9 @@ struct E2EArgs {
   bool slow_mode = false;        // Run tests slowly for visibility
   float slow_delay = 0.5f;       // Delay between commands in slow mode
   bool update_baselines = false; // Update baseline screenshots instead of comparing
+  bool headless = false;         // Use headless graphics backend (no window)
+  float time_scale = 1.0f;       // Time multiplier (1.0 = normal, 10.0 = 10x faster)
+  int capture_interval = 0;      // Auto-capture every N frames (0 = disabled)
 };
 
 inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
@@ -112,6 +115,12 @@ inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
       args.slow_mode = true;
     } else if (arg == "--update-baselines") {
       args.update_baselines = true;
+    } else if (arg == "--headless") {
+      args.headless = true;
+    } else if (arg == "--time-scale" && i + 1 < argc) {
+      args.time_scale = std::stof(argv[++i]);
+    } else if (arg == "--capture-interval" && i + 1 < argc) {
+      args.capture_interval = std::stoi(argv[++i]);
     }
   }
 

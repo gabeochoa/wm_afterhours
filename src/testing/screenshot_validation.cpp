@@ -3,6 +3,7 @@
 #include "../log.h"
 #include "../rl.h"
 
+#include <afterhours/src/graphics/graphics.h>
 #include <cmath>
 #include <filesystem>
 
@@ -67,6 +68,14 @@ float calculate_image_diff_percentage(const std::string &path1,
 }
 
 void save_screenshot_to(const std::string &path) {
+  // Try graphics API first (handles GPU sync properly in headless mode)
+  if (afterhours::graphics::capture_frame(path)) {
+    log_info("[screenshot] Captured via graphics API: {}", path);
+    return;
+  }
+
+  // Fallback: graphics not initialized, use direct texture capture
+  log_info("[screenshot] Using fallback capture (graphics API unavailable)");
   raylib::Image image = raylib::LoadImageFromTexture(mainRT.texture);
   if (image.data == nullptr) {
     log_error("Failed to capture screenshot");

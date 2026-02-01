@@ -3,6 +3,7 @@
 #include "../game.h"
 #include "../render_backend.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/graphics/graphics.h>
 #include <string>
 
 // Global state for the HUD (simple approach for screen demo)
@@ -22,6 +23,11 @@ inline int ScreenHUDState::total_screens = 0;
 struct RenderScreenHUD : afterhours::System<> {
   virtual void once(float) const override {
     if (ScreenHUDState::current_screen_name.empty()) {
+      return;
+    }
+
+    // Skip HUD rendering in headless mode (uiFont not loaded, and not needed for tests)
+    if (afterhours::graphics::is_headless()) {
       return;
     }
 

@@ -90,6 +90,9 @@ ifeq ($(ENABLE_E2E),1)
     E2E_CXXFLAGS := -DAFTER_HOURS_ENABLE_E2E_TESTING
 endif
 
+# Raylib graphics backend (enabled by default when using raylib)
+RAYLIB_BACKEND_CXXFLAGS := -DAFTER_HOURS_USE_RAYLIB
+
 # Accessibility enforcement (warn and clamp small font sizes)
 ACCESSIBILITY_CXXFLAGS := -DAFTERHOURS_ENFORCE_MIN_FONT_SIZE
 
@@ -105,7 +108,7 @@ endif
 # Combine all CXXFLAGS
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
     $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(E2E_CXXFLAGS) \
-    $(ACCESSIBILITY_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS)
+    $(RAYLIB_BACKEND_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS)
 
 # Include directories (use -isystem for vendor to suppress their warnings)
 INCLUDES := -isystem vendor/
@@ -126,7 +129,6 @@ MAIN_SRC += $(wildcard src/systems/*.cpp)
 MAIN_SRC += $(wildcard src/ui/*.cpp)
 MAIN_SRC += $(wildcard src/testing/*.cpp)
 MAIN_SRC += $(wildcard src/engine/*.cpp)
-MAIN_SRC += $(wildcard src/backends/*.cpp)
 
 # Object files
 MAIN_OBJS := $(MAIN_SRC:src/%.cpp=$(OBJ_DIR)/main/%.o)
@@ -171,6 +173,8 @@ $(OBJ_DIR)/main/vendor_afterhours_files.o: vendor/afterhours/src/plugins/files.c
 	@echo "Compiling vendor/afterhours/src/plugins/files.cpp..."
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MD -MP -MF $(@:.o=.d) -MT $@
+
+# Note: Graphics module is now header-only - no .cpp files to compile
 
 # Force dependency regeneration by removing dependency files
 deps:

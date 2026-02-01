@@ -1,6 +1,6 @@
 #include "headless_screenshots.h"
 
-#include "backends/image_backend.h"
+#include <afterhours/src/graphics/graphics.h>
 #include "font_config.h"
 #include "game.h"
 #include "input_mapping.h"
@@ -311,34 +311,27 @@ afterhours::SystemManager create_screen_systems(const std::string &screen_name) 
 } // namespace
 
 void run_headless_screenshots() {
-  // 1. Configure and initialize backend
-  backend::ImageBackend img_backend;
-
-  backend::ImageBackendConfig img_config;
-  img_config.width = SCREENSHOT_WIDTH;
-  img_config.height = SCREENSHOT_HEIGHT;
-  img_config.auto_save = false;  // We'll call capture_frame explicitly
-  img_config.output_dir = g_headless_output_dir;
-  img_backend.set_image_config(img_config);
-
-  backend::BackendConfig cfg;
+  // 1. Configure and initialize graphics backend
+  afterhours::graphics::Config cfg;
+  cfg.display = afterhours::graphics::DisplayMode::Headless;
   cfg.width = SCREENSHOT_WIDTH;
   cfg.height = SCREENSHOT_HEIGHT;
   cfg.title = "Headless Screenshots";
+  cfg.target_fps = 60;
 
-  if (!img_backend.init(cfg)) {
-    log_error("[Headless] Failed to initialize ImageBackend");
+  if (!afterhours::graphics::init(cfg)) {
+    log_error("[Headless] Failed to initialize graphics backend");
     return;
   }
-  log_info("[Headless] ImageBackend initialized ({}x{})", SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
+  log_info("[Headless] Graphics backend initialized ({}x{})", SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
 
   // 2. Initialize files plugin (required for resource loading)
   afterhours::files::init("Prime Pressure", "resources");
   log_info("[Headless] Initialized files plugin");
 
   // 3. Set up global render textures
-  // The backend provides mainRT, but we still need screenRT for some systems
-  mainRT = img_backend.get_render_texture();
+  // Get the render texture from the graphics backend for mainRT
+  mainRT = afterhours::graphics::get_render_texture();
   screenRT = raylib::LoadRenderTexture(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
   log_info("[Headless] Render textures ready");
 
@@ -358,8 +351,9 @@ void run_headless_screenshots() {
 
   if (screen_names.empty()) {
     log_error("[Headless] No screens available");
+    // Note: mainRT is owned by the graphics backend, do not unload it manually
     raylib::UnloadRenderTexture(screenRT);
-    img_backend.shutdown();
+    afterhours::graphics::shutdown();
     return;
   }
 
@@ -415,10 +409,10 @@ void run_headless_screenshots() {
     // Ensure GPU operations complete and flush render batch
     raylib::rlDrawRenderBatchActive();
 
-    // Capture screenshot using backend
+    // Capture screenshot using graphics API
     std::filesystem::path output_path =
         std::filesystem::path(g_headless_output_dir) / (screen_name + ".png");
-    img_backend.capture_frame(output_path.string());
+    afterhours::graphics::capture_frame(output_path);
 
     log_info("[Headless] Saved: {}", output_path.string());
   }
@@ -433,8 +427,9 @@ void run_headless_screenshots() {
   afterhours::EntityHelper::cleanup();
 
   raylib::UnloadFont(uiFont);
+  // Note: mainRT is owned by the graphics backend, do not unload it manually
   raylib::UnloadRenderTexture(screenRT);
-  img_backend.shutdown();
+  afterhours::graphics::shutdown();
 
   log_info("[Headless] Completed - rendered {} screens", screen_names.size());
 }

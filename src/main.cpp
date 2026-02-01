@@ -9,7 +9,8 @@ backward::SignalHandling sh;
 #include "game.h"
 #include "preload.h"
 #include "settings.h"
-#include "backends/backend.h"
+#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/plugins/files.h>
 #include "systems/ExampleScreenRegistry.h"
 #include "systems/screens/AIMChatDemo.h"
 #include "systems/screens/AngryBirdsSettings.h"
@@ -138,6 +139,9 @@ int main(int argc, char *argv[]) {
     std::cout << "  --slow                       Run tests slowly for visibility (0.5s delay)\n";
     std::cout << "  --slow-delay <seconds>       Set slow mode delay (implies --slow)\n";
     std::cout << "  --update-baselines           Update baseline screenshots instead of comparing\n";
+    std::cout << "  --headless                   Run E2E tests without a window (for CI)\n";
+    std::cout << "  --time-scale <float>         Time multiplier for headless mode (default: 1.0, e.g., 10.0 = 10x faster)\n";
+    std::cout << "  --capture-interval <int>     Auto-capture screenshot every N frames (0 = disabled)\n";
     return 0;
   }
 
@@ -185,7 +189,7 @@ int main(int argc, char *argv[]) {
   // E2E Testing Mode
   if (e2e::should_run_e2e(argc, argv)) {
     auto e2e_args = e2e::parse_e2e_args(argc, argv);
-    
+
     if (e2e_args.script_path.empty() && e2e_args.script_dir.empty()) {
       std::cout << "E2E mode requires --test-script or --test-script-dir\n";
       return 1;
@@ -197,9 +201,38 @@ int main(int argc, char *argv[]) {
 
     Settings::get().load_save_file(screenWidth, screenHeight);
 
-    Preload::get()
-        .init("UI Tester - E2E Mode")
-        .make_singleton();
+    if (e2e_args.headless) {
+      // Headless mode: use graphics abstraction instead of Preload
+      afterhours::graphics::Config cfg;
+      cfg.display = afterhours::graphics::DisplayMode::Headless;
+      cfg.width = screenWidth;
+      cfg.height = screenHeight;
+      cfg.title = "UI Tester - E2E Headless";
+      cfg.target_fps = 60;
+      cfg.time_scale = e2e_args.time_scale;
+
+      if (!afterhours::graphics::init(cfg)) {
+        std::cout << "Failed to initialize headless graphics backend\n";
+        return 1;
+      }
+
+      // Enable auto-capture if requested
+      if (e2e_args.capture_interval > 0) {
+        std::string output_dir = "output/";
+        afterhours::graphics::capture_every_n_frames(e2e_args.capture_interval, output_dir);
+      }
+
+      // Initialize files plugin (normally done by Preload::init)
+      afterhours::files::init("Prime Pressure", "resources");
+
+      // Create singletons (normally done by Preload::make_singleton)
+      Preload::get().make_singleton();
+    } else {
+      // Normal windowed mode
+      Preload::get()
+          .init("UI Tester - E2E Mode")
+          .make_singleton();
+    }
     Settings::get().refresh_settings();
 
     // Set up test mode
@@ -227,10 +260,14 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Running E2E tests...\n";
 
-    // Always run in visual mode - headless mode disabled for debugging
-    // TODO: Re-enable headless mode for CI once debugging is complete
-    // Original condition: if (e2e_args.slow_mode)
-    return run_e2e_tests(e2e_args, runner);
+    int result = run_e2e_tests(e2e_args, runner);
+
+    // Cleanup headless graphics if used
+    if (e2e_args.headless) {
+      afterhours::graphics::shutdown();
+    }
+
+    return result;
   }
 
   // Try --screen=<name> format first (preferred)

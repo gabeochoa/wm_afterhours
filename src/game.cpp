@@ -21,6 +21,7 @@
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
 #include "testing/tests/SimpleButtonClickTest.h"
+#include <afterhours/src/graphics/graphics.h>
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>
@@ -655,15 +656,23 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   test_input::test_mode = true;
   afterhours::testing::test_input::detail::test_mode = true;
 
-  mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
-                                     Settings::get().get_screen_height());
-  screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
+  // Initialize render textures
+  if (afterhours::graphics::is_headless()) {
+    // In headless mode, use the graphics backend's render texture
+    mainRT = afterhours::graphics::get_render_texture();
+    screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
+                                         Settings::get().get_screen_height());
+    // Skip uiFont loading - not needed in headless mode (HUD skips rendering)
+  } else {
+    mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                        Settings::get().get_screen_height());
-
-  uiFont = afterhours::load_font_from_file(
-      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
-          .string()
-          .c_str());
+    screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
+                                         Settings::get().get_screen_height());
+    uiFont = afterhours::load_font_from_file(
+        afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+            .string()
+            .c_str());
+  }
 
   std::vector<std::string> screen_names =
       ExampleScreenRegistry::get().get_screen_names();
@@ -934,14 +943,25 @@ int run_e2e_tests(const e2e::E2EArgs &args,
 
   afterhours::ui::validation::register_systems<InputAction>(systems);
 
-  // Main E2E loop with visual rendering
-  while (running && !raylib::WindowShouldClose() && !runner.is_finished()) {
-    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
+  // Main E2E loop
+  // In headless mode, skip WindowShouldClose check (no window exists)
+  auto should_continue = []() {
+    if (afterhours::graphics::is_headless()) {
+      return running;
+    }
+    return running && !raylib::WindowShouldClose();
+  };
+
+  while (should_continue() && !runner.is_finished()) {
+    if (!afterhours::graphics::is_headless() && raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       running = false;
       break;
     }
 
-    float dt = raylib::GetFrameTime();
+    // Use graphics API for delta time in headless mode, raylib otherwise
+    float dt = afterhours::graphics::is_headless()
+                   ? afterhours::graphics::get_delta_time()
+                   : raylib::GetFrameTime();
 
     // Advance E2E runner (dispatches commands)
     runner.tick(dt);

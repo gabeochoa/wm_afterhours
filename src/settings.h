@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "rl.h"
 #include <afterhours/src/library.h>
 #include <afterhours/src/plugins/window_manager.h>
 #include <afterhours/src/singleton.h>
