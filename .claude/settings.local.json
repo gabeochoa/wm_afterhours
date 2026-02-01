@@ -33,7 +33,8 @@
       "Bash(awk:*)",
       "Bash(./output/headless_test/headless_screenshots.exe:*)",
       "Bash(./output/main:*)",
-      "Bash(lldb:*)"
+      "Bash(lldb:*)",
+      "Skill(10x-engineer:subagent-driven-development)"
     ]
   }
 }

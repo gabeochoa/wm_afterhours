@@ -9,6 +9,7 @@ backward::SignalHandling sh;
 #include "game.h"
 #include "preload.h"
 #include "settings.h"
+#include "backends/backend.h"
 #include "systems/ExampleScreenRegistry.h"
 #include "systems/screens/AIMChatDemo.h"
 #include "systems/screens/AngryBirdsSettings.h"
@@ -127,6 +128,8 @@ int main(int argc, char *argv[]) {
     std::cout << "  --mcp                        Enable MCP server mode\n";
 #endif
     std::cout << "  --headless-screenshots [dir] Render all screens to PNG without display (default: output/)\n";
+    std::cout << "  --image-backend              Alias for --headless-screenshots\n";
+    std::cout << "  --image-output <dir>         Output directory override (default: output/)\n";
     std::cout << "\nE2E Testing:\n";
     std::cout << "  --e2e                        Enable E2E test mode\n";
     std::cout << "  --test-script <path>         Run single E2E script\n";
@@ -157,12 +160,23 @@ int main(int argc, char *argv[]) {
   std::string headless_output_dir;
   bool has_headless_flag = cmdl["--headless-screenshots"];
   bool has_headless_param = static_cast<bool>(cmdl({"--headless-screenshots"}) >> headless_output_dir);
+  // Also check --image-backend as an alias
+  bool has_image_backend = cmdl["--image-backend"];
 
-  if (has_headless_flag || has_headless_param) {
+  if (has_headless_flag || has_headless_param || has_image_backend) {
     g_headless_mode = true;
+
+    // Determine output directory
+    std::string output_dir = "output/";
     if (has_headless_param && !headless_output_dir.empty()) {
-      g_headless_output_dir = headless_output_dir;
+      output_dir = headless_output_dir;
     }
+    std::string image_output_override;
+    if (cmdl({"--image-output"}) >> image_output_override) {
+      output_dir = image_output_override;
+    }
+    g_headless_output_dir = output_dir;
+
     std::cout << "Headless mode enabled, output dir: " << g_headless_output_dir << "\n";
     run_headless_screenshots();
     return 0;

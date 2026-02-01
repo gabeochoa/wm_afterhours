@@ -1,5 +1,6 @@
 #include "headless_screenshots.h"
 
+#include "backends/backend.h"
 #include "engine/headless_gl.h"
 #include "font_config.h"
 #include "game.h"
@@ -425,7 +426,7 @@ void run_headless_screenshots() {
     glFinish();
 
     // Save screenshot
-    std::string path = g_headless_output_dir + "/" + screen_name + ".png";
+    std::filesystem::path output_path = std::filesystem::path(g_headless_output_dir) / (screen_name + ".png");
     {
       glBindFramebuffer(GL_FRAMEBUFFER, mainRT.id);
 
@@ -442,10 +443,10 @@ void run_headless_screenshots() {
       image.mipmaps = 1;
 
       raylib::ImageFlipVertical(&image);
-      raylib::ExportImage(image, path.c_str());
+      raylib::ExportImage(image, output_path.string().c_str());
       raylib::UnloadImage(image);
     }
-    log_info("[Headless] Saved: {}", path);
+    log_info("[Headless] Saved: {}", output_path.string());
   }
 
   // 9. Cleanup
