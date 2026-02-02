@@ -413,15 +413,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.5f)
             .with_debug_name("happy_bar_fill"));
 
-    // Happiness percentage label
+    // Happiness percentage label - larger and more prominent
     int happy_val = static_cast<int>(happiness_pct * 100);
     div(context, mk(entity, 88),
         ComponentConfig{}
             .with_label(std::to_string(happy_val) + "%")
-            .with_size(ComponentSize{pixels(40), pixels(18)})
+            .with_size(ComponentSize{pixels(50), pixels(24)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 210.0f, meter_y + 11.0f)
-            .with_font("EqProRounded", 12.0f)
+            .with_translate((float)screen_w - 216.0f, meter_y + 8.0f)
+            .with_font("EqProRounded", 16.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("happy_pct"));
@@ -462,14 +462,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_debug_name("res_text"));
 
-    // Resources percentage label
-    int res_val = static_cast<int>(resources_pct * 100);
+    // Resources percentage label with current/max format
+    int res_current = static_cast<int>(resources_pct * 1000);  // Simulated current value
+    int res_max = 1000;  // Simulated max value
     div(context, mk(entity, 89),
         ComponentConfig{}
-            .with_label(std::to_string(res_val) + "%")
-            .with_size(ComponentSize{pixels(50), pixels(18)})
+            .with_label(std::to_string(res_current) + "/" + std::to_string(res_max))
+            .with_size(ComponentSize{pixels(70), pixels(18)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 55.0f, meter_y + 11.0f)
+            .with_translate((float)screen_w - 70.0f, meter_y + 11.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Right)
@@ -556,15 +557,15 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("tab_icon_fallback_" + std::to_string(i)));
       }
 
-      // Tab label - positioned below icon, 14.0f font to fit shorter width
+      // Tab label - positioned below icon, larger 16.0f font for readability
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
               .with_size(ComponentSize{pixels(static_cast<int>(tab_width)),
-                                       pixels(20)})
+                                       pixels(24)})
               .with_absolute_position()
-              .with_translate(nav_x, tab_y + tab_height - 22.0f)
-              .with_font("EqProRounded", 14.0f)
+              .with_translate(nav_x, tab_y + tab_height - 26.0f)
+              .with_font("EqProRounded", 16.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("tab_label_" + std::to_string(i)));
@@ -608,6 +609,22 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("EqProRounded", 24.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("prod_header"));
+
+    // Trend indicator legend - placed prominently at top right of panel
+    div(context, mk(entity, 212),
+        ComponentConfig{}
+            .with_label("^ = Trending Up")
+            .with_size(ComponentSize{pixels(180), pixels(28)})
+            .with_absolute_position()
+            .with_translate(panel_x + panel_w - 200.0f, panel_y + 24.0f)
+            .with_font("EqProRounded", 18.0f)
+            .with_custom_text_color(happy_green)
+            .with_custom_background(white)
+            .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.3f)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("trend_legend"));
 
     // Production box - uses clip_children for text overflow protection
     div(context, mk(entity, 211),
@@ -735,11 +752,11 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== BOTTOM: Chat ==========
-    float bottom_y = (float)screen_h - 90.0f;
+    float bottom_y = (float)screen_h - 100.0f;
 
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(275), pixels(65)})
+            .with_size(ComponentSize{pixels(340), pixels(80)})
             .with_absolute_position()
             .with_translate(22.0f, bottom_y)
             .with_custom_background(white)
@@ -749,21 +766,21 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 401),
         ComponentConfig{}
-            .with_label("GlobalChat: New area unlocked!")
-            .with_size(ComponentSize{pixels(255), pixels(20)})
+            .with_label("GlobalChat: New area unlocked! Explore now.")
+            .with_size(ComponentSize{pixels(320), pixels(24)})
             .with_absolute_position()
-            .with_translate(32.0f, bottom_y + 12.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_translate(32.0f, bottom_y + 14.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("chat1"));
 
     div(context, mk(entity, 402),
         ComponentConfig{}
-            .with_label("DevTeam: Update v2.0 is live")
-            .with_size(ComponentSize{pixels(255), pixels(20)})
+            .with_label("DevTeam: Update v2.0 is live - check patch notes!")
+            .with_size(ComponentSize{pixels(320), pixels(24)})
             .with_absolute_position()
-            .with_translate(32.0f, bottom_y + 36.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_translate(32.0f, bottom_y + 44.0f)
+            .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("chat2"));
 

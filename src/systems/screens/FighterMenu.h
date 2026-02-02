@@ -39,9 +39,9 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> tabs = {"Offline", "Online", "Customize", "Options"};
 
   std::vector<std::pair<std::string, std::string>> menu_options = {
-      {"[v]", "System Options"},  {"[@]", "Game Options"},
-      {"[/]", "Display Options"}, {"[~]", "Sound & Language"},
-      {"[*]", "Network Options"}, {"[O]", "Button Settings"},
+      {"F1", "System Options"},  {"F2", "Game Options"},
+      {"F3", "Display Options"}, {"F4", "Sound & Language"},
+      {"F5", "Network Options"}, {"F6", "Button Settings"},
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -95,10 +95,10 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== CURRENCY DISPLAY (top right on black header) ==========
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label(std::to_string(currency) + " P$")
-            .with_size(ComponentSize{pixels(160), pixels(40)})
+            .with_label("Points: " + std::to_string(currency))
+            .with_size(ComponentSize{pixels(200), pixels(40)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 180.0f, 22.0f)
+            .with_translate((float)screen_w - 220.0f, 22.0f)
             .with_font("EqProRounded", 28.0f)
             .with_custom_text_color(gold_text)
             .with_alignment(TextAlignment::Right)
@@ -241,12 +241,23 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 200),
         ComponentConfig{}
             .with_label("Offline Mode")
-            .with_size(ComponentSize{pixels(160), pixels(32)})
+            .with_size(ComponentSize{pixels(200), pixels(32)})
             .with_absolute_position()
             .with_translate(offline_x, 165.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("offline_mode"));
+
+    // Offline mode status indicator
+    div(context, mk(entity, 201),
+        ComponentConfig{}
+            .with_label("Not connected to network")
+            .with_size(ComponentSize{pixels(200), pixels(24)})
+            .with_absolute_position()
+            .with_translate(offline_x, 192.0f)
+            .with_font("EqProRounded", 16.0f)
+            .with_custom_text_color(text_gray)
+            .with_debug_name("offline_status"));
 
     // ========== CENTER CHARACTER AREA (fills dead space) ==========
     // Position between menu (ends ~405px) and card panel
@@ -345,30 +356,30 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 322),
         ComponentConfig{}
             .with_label("Change various settings in the")
-            .with_size(ComponentSize{pixels(320), pixels(26)})
+            .with_size(ComponentSize{pixels(320), pixels(28)})
             .with_absolute_position()
             .with_translate(card_x + 35.0f, card_y + 268.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_desc1"));
 
     div(context, mk(entity, 323),
         ComponentConfig{}
             .with_label("game, such as vibration, save,")
-            .with_size(ComponentSize{pixels(320), pixels(26)})
+            .with_size(ComponentSize{pixels(320), pixels(28)})
             .with_absolute_position()
-            .with_translate(card_x + 35.0f, card_y + 290.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_translate(card_x + 35.0f, card_y + 293.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_desc2"));
 
     div(context, mk(entity, 324),
         ComponentConfig{}
             .with_label("and autosave functions.")
-            .with_size(ComponentSize{pixels(320), pixels(26)})
+            .with_size(ComponentSize{pixels(320), pixels(28)})
             .with_absolute_position()
-            .with_translate(card_x + 35.0f, card_y + 312.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_translate(card_x + 35.0f, card_y + 318.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(bg_dark)
             .with_debug_name("card_desc3"));
 

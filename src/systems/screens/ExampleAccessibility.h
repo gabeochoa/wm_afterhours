@@ -94,7 +94,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Theme validation status badge
     float status_y = panel_y + 70.0f;
     std::string status_text =
-        theme_is_accessible ? "WCAG AA Compliant" : "Needs Improvement";
+        theme_is_accessible ? "WCAG AA Compliant" : "Contrast Below WCAG AA";
     afterhours::Color status_color =
         theme_is_accessible ? accent_green : accent_amber;
 
@@ -121,7 +121,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Left column header
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label("Without Auto-Text")
+            .with_label("Without Automatic Contrast")
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(left_x, content_y)
@@ -177,7 +177,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     // Right column header
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_label("With Auto-Text")
+            .with_label("With Automatic Contrast")
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(right_x, content_y)

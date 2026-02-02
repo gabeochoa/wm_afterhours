@@ -23,6 +23,14 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_light{240, 235, 250, 255}; // Off-white
   afterhours::Color border_glow{120, 75, 155, 255}; // Purple glow
 
+  // Focus ring configuration - high contrast for visibility on colored buttons
+  afterhours::Color focus_ring_color{255, 255, 100, 255}; // Bright yellow for high contrast
+  float focus_ring_thickness = 4.0f;                      // Thicker than default 3.0f
+  float focus_ring_offset = 5.0f;                         // Slightly larger gap
+
+  // UI display options
+  bool show_total_clicks = true; // Set to false to hide click counter footer
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     // Set up retro arcade theme
@@ -37,6 +45,10 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
     theme.accent = btn_lime;
     theme.error = afterhours::Color{220, 70, 70, 255};
     theme.roundness = 0.12f;
+    // Configure focus ring for high contrast on colored buttons
+    theme.focus = focus_ring_color;
+    theme.focus_ring_thickness = focus_ring_thickness;
+    theme.focus_ring_offset = focus_ring_offset;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();
@@ -151,21 +163,23 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // Footer with total clicks
-    int total_clicks = 0;
-    for (int i = 0; i < 4; i++)
-      total_clicks += button_clicks[i];
+    // Footer with total clicks (configurable visibility)
+    if (show_total_clicks) {
+      int total_clicks = 0;
+      for (int i = 0; i < 4; i++)
+        total_clicks += button_clicks[i];
 
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_label("Total Clicks: " + std::to_string(total_clicks))
-            .with_size(ComponentSize{pixels(panel_width - 40), pixels(28)})
-            .with_absolute_position()
-            .with_translate(panel_x + 20.0f, panel_y + panel_height - 40.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(btn_lime)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
+      div(context, mk(entity, 20),
+          ComponentConfig{}
+              .with_label("Total Clicks: " + std::to_string(total_clicks))
+              .with_size(ComponentSize{pixels(panel_width - 40), pixels(28)})
+              .with_absolute_position()
+              .with_translate(panel_x + 20.0f, panel_y + panel_height - 40.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_custom_text_color(btn_lime)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("footer"));
+    }
   }
 };
 

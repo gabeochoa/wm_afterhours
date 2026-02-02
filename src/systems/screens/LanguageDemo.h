@@ -14,6 +14,19 @@ using namespace afterhours::translation;
 struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
   Language current_language = Language::English;
 
+  // Configuration options for design improvements
+  struct Config {
+    // Issue 1: Make keyboard shortcuts more discoverable
+    bool show_prominent_keyboard_hints = true;  // Show hints on language buttons
+
+    // Issue 2: Show full language names below ISO codes
+    bool show_full_language_names = true;  // Display "English", "Korean", "Japanese" below codes
+
+    // Issue 3: Button color consistency
+    bool use_consistent_button_colors = true;  // Use Primary instead of Accent for Continue button
+  };
+  Config config;
+
   struct LanguageSample {
     std::string title;
     std::string greeting;
@@ -115,49 +128,62 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_debug_name("title_text"));
 
-    // Button row container - needs enough width for 3 buttons with 44px height
+    // Button row container - needs enough width for 3 buttons
+    // Height increased to accommodate full language names when enabled
     auto button_row =
         div(context, mk(header.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(240), pixels(50)})
+                .with_size(ComponentSize{pixels(270), pixels(54)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("button_row"));
 
-    // Language buttons - EN - 44px height, standardized width
+    // Helper to build language button labels with optional hints and full names
+    auto make_lang_label = [this](const char* code, const char* full_name, const char* key_hint) {
+      std::string label = code;
+      if (config.show_full_language_names) {
+        label += std::string("\n") + full_name;
+      }
+      if (config.show_prominent_keyboard_hints) {
+        label += std::string(" [") + key_hint + "]";
+      }
+      return label;
+    };
+
+    // Language buttons - EN
     if (button(context, mk(button_row.ent(), 0),
                ComponentConfig{}
-                   .with_label("EN")
-                   .with_size(ComponentSize{pixels(60), pixels(44)})
+                   .with_label(make_lang_label("EN", "English", "1"))
+                   .with_size(ComponentSize{pixels(80), pixels(48)})
                    .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? 14.0f : 18.0f)
                    .with_background(current_language == Language::English
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
       current_language = Language::English;
     }
 
-    // Language buttons - KO - 44px height, standardized width
+    // Language buttons - KO
     if (button(context, mk(button_row.ent(), 1),
                ComponentConfig{}
-                   .with_label("KO")
-                   .with_size(ComponentSize{pixels(60), pixels(44)})
+                   .with_label(make_lang_label("KO", "Korean", "2"))
+                   .with_size(ComponentSize{pixels(80), pixels(48)})
                    .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? 14.0f : 18.0f)
                    .with_background(current_language == Language::Korean
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
       current_language = Language::Korean;
     }
 
-    // Language buttons - JA - 44px height, standardized width
+    // Language buttons - JA
     if (button(context, mk(button_row.ent(), 2),
                ComponentConfig{}
-                   .with_label("JA")
-                   .with_size(ComponentSize{pixels(60), pixels(44)})
+                   .with_label(make_lang_label("JA", "Japanese", "3"))
+                   .with_size(ComponentSize{pixels(80), pixels(48)})
                    .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? 14.0f : 18.0f)
                    .with_background(current_language == Language::Japanese
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -205,12 +231,15 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Continue button - 44px touch target
+    // Color is configurable: consistent (Primary) or distinct (Accent)
     button(context, mk(left_panel.ent(), 5),
            ComponentConfig{}
                .with_label(sample.button_text)
                .with_size(ComponentSize{pixels(180), pixels(44)})
                .with_font(font_config.font_name, 18.0f * font_config.size_scale)
-               .with_background(Theme::Usage::Accent));
+               .with_background(config.use_consistent_button_colors
+                                    ? Theme::Usage::Primary
+                                    : Theme::Usage::Accent));
 
     // Right panel - all languages comparison - expanded width
     auto right_panel =

@@ -54,18 +54,21 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("subtitle"));
 
-    // Container for the three frames - use most of screen height
+    // Container for the three frames - compact layout
     auto row = div(context, mk(main.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.95f), percent(0.80f)})
+            .with_size(ComponentSize{percent(0.95f), percent(0.55f)})
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
-            .with_align_items(AlignItems::Center)
+            .with_align_items(AlignItems::FlexStart)
+            .with_margin(Margin{.top = h720(16.0f)})
             .with_debug_name("frame_row"));
 
-    // Each column is ~31% of row width
-    Size col_width = percent(0.31f);
-    Size col_height = percent(0.95f);
+    // Each column width - height determined by content
+    Size col_width = percent(0.28f);
+    // Frame size - use size that matches visual rendering
+    Size frame_width = h720(140.0f);
+    Size frame_height = h720(140.0f);
 
     // ========== KRAFT PAPER STYLE ==========
     afterhours::Color kraft_frame_color{101, 67, 33, 255};
@@ -73,15 +76,15 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto kraft_col = div(context, mk(row.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{col_width, col_height})
+            .with_size(ComponentSize{col_width, percent(1.0f)})
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::Center)
+            .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("kraft_col"));
 
     decorative_frame(context, mk(kraft_col.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.75f)})
+            .with_size(ComponentSize{frame_width, frame_height})
             .with_custom_background(kraft_bg)
             .with_border(kraft_frame_color, h720(8.0f))
             .with_debug_name("kraft_frame"),
@@ -89,16 +92,17 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(kraft_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.10f)})
+            .with_size(ComponentSize{frame_width, h720(30.0f)})
             .with_label("KraftPaper")
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
+            .with_margin(Margin{.top = h720(6.0f)})
             .with_debug_name("kraft_label"));
 
     div(context, mk(kraft_col.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.08f)})
+            .with_size(ComponentSize{frame_width, h720(24.0f)})
             .with_label("Layered + corners")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
@@ -111,15 +115,15 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto simple_col = div(context, mk(row.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{col_width, col_height})
+            .with_size(ComponentSize{col_width, percent(1.0f)})
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::Center)
+            .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("simple_col"));
 
     decorative_frame(context, mk(simple_col.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.75f)})
+            .with_size(ComponentSize{frame_width, frame_height})
             .with_custom_background(simple_bg)
             .with_border(simple_frame_color, h720(3.0f))
             .with_debug_name("simple_frame"),
@@ -127,16 +131,17 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(simple_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.10f)})
+            .with_size(ComponentSize{frame_width, h720(30.0f)})
             .with_label("Simple")
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
+            .with_margin(Margin{.top = h720(6.0f)})
             .with_debug_name("simple_label"));
 
     div(context, mk(simple_col.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.08f)})
+            .with_size(ComponentSize{frame_width, h720(24.0f)})
             .with_label("Border + background")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
@@ -149,15 +154,15 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto inset_col = div(context, mk(row.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{col_width, col_height})
+            .with_size(ComponentSize{col_width, percent(1.0f)})
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::Center)
+            .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("inset_col"));
 
     decorative_frame(context, mk(inset_col.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.75f)})
+            .with_size(ComponentSize{frame_width, frame_height})
             .with_custom_background(inset_bg)
             .with_border(inset_frame_color, h720(5.0f))
             .with_debug_name("inset_frame"),
@@ -165,21 +170,52 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(inset_col.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.10f)})
+            .with_size(ComponentSize{frame_width, h720(30.0f)})
             .with_label("Inset")
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
+            .with_margin(Margin{.top = h720(6.0f)})
             .with_debug_name("inset_label"));
 
     div(context, mk(inset_col.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.90f), percent(0.08f)})
+            .with_size(ComponentSize{frame_width, h720(24.0f)})
             .with_label("Sunken shadow")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("inset_desc"));
+
+    // ========== INFO SECTION ==========
+    auto info_section = div(context, mk(main.ent(), 3),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.90f), percent(0.18f)})
+            .with_custom_background(theme.surface)
+            .with_border(theme.secondary, h720(2.0f))
+            .with_flex_direction(FlexDirection::Column)
+            .with_align_items(AlignItems::Center)
+            .with_justify_content(JustifyContent::Center)
+            .with_margin(Margin{.top = h720(12.0f)})
+            .with_debug_name("info_section"));
+
+    div(context, mk(info_section.ent(), 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.95f), percent(0.35f)})
+            .with_label("Usage Tips")
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_custom_text_color(theme.font)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("info_title"));
+
+    div(context, mk(info_section.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.95f), percent(0.55f)})
+            .with_label("KraftPaper: Rustic warmth | Simple: Clean minimal | Inset: Depth effect")
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("info_content"));
   }
 };
 

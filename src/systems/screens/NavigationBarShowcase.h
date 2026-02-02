@@ -73,22 +73,10 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
     navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.85f), pixels(52)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+                       .with_size(ComponentSize{percent(0.85f), pixels(64)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_debug_name("navbar_categories"));
-
-    div(context, mk(main_container.ent(), 3),
-        ComponentConfig{}
-            .with_label("Current: " + categories[category_idx])
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("status1"));
 
     // Section 2: Game Modes
     div(context, mk(main_container.ent(), 4),
@@ -105,22 +93,10 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
     navigation_bar(context, mk(main_container.ent(), 5), modes, mode_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.85f), pixels(52)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+                       .with_size(ComponentSize{percent(0.85f), pixels(64)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_debug_name("navbar_modes"));
-
-    div(context, mk(main_container.ent(), 6),
-        ComponentConfig{}
-            .with_label("Mode: " + modes[mode_idx])
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("status2"));
 
     // Section 3: Level Selector (more options)
     div(context, mk(main_container.ent(), 7),
@@ -137,21 +113,9 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
     navigation_bar(context, mk(main_container.ent(), 8), levels, level_idx,
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.85f), pixels(52)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+                       .with_size(ComponentSize{percent(0.85f), pixels(64)})
+                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
                        .with_debug_name("navbar_levels"));
-
-    div(context, mk(main_container.ent(), 9),
-        ComponentConfig{}
-            .with_label("Level: " + levels[level_idx])
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("status3"));
   }
 };
 

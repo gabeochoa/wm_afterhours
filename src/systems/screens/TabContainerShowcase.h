@@ -12,8 +12,8 @@ using namespace afterhours::ui::imm;
 struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 0;
 
-  std::array<std::string_view, 3> tab_labels = {"Tab one", "Tab two",
-                                                 "Tab 3"};
+  std::array<std::string_view, 3> tab_labels = {"Profile", "Account",
+                                                 "Preferences"};
 
   void render_profile_tab(UIContext<InputAction> &context, afterhours::Entity &root,
                           const Theme &theme) {
@@ -198,7 +198,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.primary = afterhours::Color{100, 100, 100, 255};
     theme.accent = afterhours::Color{0, 120, 215, 255};
     theme.font = afterhours::Color{33, 33, 33, 255};
-    theme.font_muted = afterhours::Color{180, 180, 180, 255};
+    theme.font_muted = afterhours::Color{100, 100, 100, 255};
     context.theme = theme;
 
     // Root container - centered on screen, expanded to fill more screen

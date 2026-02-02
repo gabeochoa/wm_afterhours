@@ -20,6 +20,9 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_muted{120, 135, 160, 255};   // Muted text
   afterhours::Color sample_white{250, 250, 252, 255}; // Sample card white
 
+  // Configurable typography sizes
+  float section_header_font_size = 22.0f;  // Category labels (e.g., "Width & Color")
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
@@ -128,7 +131,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
             .with_translate(row_label_x, start_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, section_header_font_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row1_label"));
@@ -232,7 +235,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
             .with_translate(row_label_x, row2_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, section_header_font_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row2_label"));
@@ -335,7 +338,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position()
             .with_translate(row_label_x, row3_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, section_header_font_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row3_label"));
@@ -351,7 +354,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_label_width), pixels(row4_height)})
             .with_absolute_position()
             .with_translate(row_label_x, row4_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, section_header_font_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("row4_label"));

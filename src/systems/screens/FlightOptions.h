@@ -19,8 +19,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_cyan{85, 175, 225, 255};
   afterhours::Color text_bright{165, 215, 245, 255};
   afterhours::Color text_muted{110, 135, 165, 255};  // Brightened for WCAG AA contrast
-  afterhours::Color highlight_line{35, 105, 160,
-                                   255}; // Darkened for WCAG AA contrast
+  afterhours::Color highlight_line{65, 140, 195,
+                                   255}; // Brightened for better visibility
+  afterhours::Color connector_line{85, 160, 210,
+                                   255}; // Brighter line for tree connectors
   afterhours::Color grid_color{15, 25, 40, 120};  // Made more subtle
 
   std::vector<std::string> categories = {
@@ -33,6 +35,27 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       "High-G Turn Settings",
       "Reduced Collision Damage",
       "Vibration",
+  };
+
+  // Context-aware help text for each suboption
+  std::vector<std::string> suboption_help = {
+      "Choose between standard or expert control schemes.",
+      "Configure high-G maneuver sensitivity.",
+      "Toggle reduced damage from collisions.",
+      "Vibration feedback requires a compatible controller.",
+  };
+
+  // Help text for each category (when no suboption is focused)
+  std::vector<std::string> category_help = {
+      "Configure flight control behavior and aircraft handling.",
+      "Adjust control mappings and input settings.",
+      "Customize keyboard input bindings.",
+      "Configure mouse sensitivity and behavior.",
+      "Set up flight stick axes and buttons.",
+      "Adjust HUD and display preferences.",
+      "Configure graphics quality and performance.",
+      "Adjust audio levels and settings.",
+      "Select game language and localization.",
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -168,16 +191,26 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(2), pixels(100)})
             .with_absolute_position()
             .with_translate(370.0f, 250.0f)
-            .with_custom_background(highlight_line)
+            .with_custom_background(connector_line)
             .with_debug_name("connector_line"));
 
     // ========== SUB-OPTIONS (right side) ==========
     float sub_x = 400.0f;
     float sub_y = 250.0f;
 
+    // Vibration is unavailable (index 3) - requires compatible controller
+    bool vibration_unavailable = true;
+    afterhours::Color disabled_color{70, 85, 105, 255};  // Dimmer than text_muted
+
     for (size_t i = 0; i < suboptions.size(); i++) {
       bool is_selected = (i == selected_option);
-      afterhours::Color opt_color = is_selected ? text_bright : text_muted;
+      bool is_vibration = (i == 3);
+      afterhours::Color opt_color;
+      if (is_vibration && vibration_unavailable) {
+        opt_color = disabled_color;
+      } else {
+        opt_color = is_selected ? text_bright : text_muted;
+      }
 
       if (button(context, mk(entity, 200 + static_cast<int>(i)),
                  ComponentConfig{}
@@ -187,16 +220,44 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(sub_x, sub_y + (float)i * 36.0f)
                      .with_font("EqProRounded", 20.0f)
                      .with_custom_text_color(opt_color)
+                     .with_disabled(is_vibration && vibration_unavailable)
                      .with_debug_name("opt_" + std::to_string(i)))) {
-        selected_option = i;
+        if (!(is_vibration && vibration_unavailable)) {
+          selected_option = i;
+        }
       }
     }
 
+    // Tooltip for disabled Vibration option
+    if (vibration_unavailable) {
+      div(context, mk(entity, 250),
+          ComponentConfig{}
+              .with_label("(Requires compatible controller)")
+              .with_size(ComponentSize{pixels(260), pixels(20)})
+              .with_absolute_position()
+              .with_translate(sub_x + 16.0f, sub_y + 3 * 36.0f + 24.0f)
+              .with_font("EqProRounded", 14.0f)
+              .with_custom_text_color(disabled_color)
+              .with_debug_name("vibration_tooltip"));
+    }
+
     // ========== HELP TEXT ==========
+    // Generate context-aware help text based on current selection
+    std::string help_text;
+    if (selected_category == 0 && selected_option < suboption_help.size()) {
+      // When on Flight System category, show suboption-specific help
+      help_text = suboption_help[selected_option];
+    } else if (selected_category < category_help.size()) {
+      // Show category-specific help for other categories
+      help_text = category_help[selected_category];
+    } else {
+      help_text = "Select an option to configure.";
+    }
+
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_label("Select the in-flight system.")
-            .with_size(ComponentSize{pixels(400), pixels(36)})
+            .with_label(help_text)
+            .with_size(ComponentSize{pixels(500), pixels(36)})
             .with_absolute_position()
             .with_translate(170.0f, (float)screen_h - 180.0f)
             .with_font("EqProRounded", 20.0f)

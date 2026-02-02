@@ -92,11 +92,6 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
   }
 
-  // Currency/resource display values
-  int time_val = 10;
-  int water_val = 200;
-  int star_val = 1;
-
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
@@ -149,41 +144,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("title"));
 
-    // Resource icons on right
-    float res_x = (float)screen_w - 250.0f;
-
-    // Time
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_label("@" + std::to_string(time_val) + ".00")
-            .with_size(ComponentSize{pixels(80), pixels(25)})
-            .with_absolute_position()
-            .with_translate(res_x, top_y + 5.0f)
-            .with_font("EqProRounded", 16.0f)
-            .with_custom_text_color(text_cyan)
-            .with_debug_name("time"));
-
-    // Water
-    div(context, mk(entity, 11),
-        ComponentConfig{}
-            .with_label("%" + std::to_string(water_val))
-            .with_size(ComponentSize{pixels(70), pixels(25)})
-            .with_absolute_position()
-            .with_translate(res_x + 90.0f, top_y + 5.0f)
-            .with_font("EqProRounded", 16.0f)
-            .with_custom_text_color(text_cyan)
-            .with_debug_name("water"));
-
-    // Star
-    div(context, mk(entity, 12),
-        ComponentConfig{}
-            .with_label("*" + std::to_string(star_val))
-            .with_size(ComponentSize{pixels(40), pixels(25)})
-            .with_absolute_position()
-            .with_translate(res_x + 170.0f, top_y + 5.0f)
-            .with_font("EqProRounded", 16.0f)
-            .with_custom_text_color(text_cyan)
-            .with_debug_name("star"));
+    // NOTE: HUD elements (currency/resources) are intentionally hidden in settings
+    // to avoid confusion - they serve no purpose in this context
 
     // ========== MAIN PANEL ==========
     float panel_x = 55.0f;
@@ -313,6 +275,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Dynamic help text based on selected setting
     std::string setting_name = current_settings[selected_row].label;
+    std::string help_title = "Help: " + setting_name;
     std::string help_line1 = "Adjust the " + setting_name;
     std::string help_line2 = "setting to your preference.";
     std::string current_val =
@@ -321,7 +284,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 151),
         ComponentConfig{}
-            .with_label(setting_name)
+            .with_label(help_title)
             .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
                                      pixels(28)})
             .with_absolute_position()

@@ -86,16 +86,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Toggle rows - simple API (zero config)
     setting_row_toggle(context, mk(content.ent(), 1), "Music", music_enabled);
     setting_row_toggle(context, mk(content.ent(), 2), "Sound Effects", sound_effects);
-
-    // Toggle with custom label styling via slot config (purple text)
-    setting_row(
-        context, mk(content.ent(), 3),
-        SettingRowConfig{}
-            .with_label("Vibration")
-            .with_control_type(SettingRowControlType::Toggle)
-            .with_label_config(ComponentConfig{}
-                .with_custom_text_color(afterhours::Color{200, 120, 255, 255})),
-        &vibration);
+    setting_row_toggle(context, mk(content.ent(), 3), "Vibration", vibration);
 
     // Spacer
     div(context, mk(content.ent(), 4),
@@ -135,17 +126,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Slider rows - simple API
     setting_row_slider(context, mk(content.ent(), 10), "Master Volume", master_volume);
-
-    // Slider with custom label styling via slot config (orange text)
-    setting_row(
-        context, mk(content.ent(), 11),
-        SettingRowConfig{}
-            .with_label("Music Volume")
-            .with_control_type(SettingRowControlType::Slider)
-            .with_slider_width(180.0f)
-            .with_label_config(ComponentConfig{}
-                .with_custom_text_color(afterhours::Color{255, 180, 80, 255})),
-        &music_volume);
+    setting_row_slider(context, mk(content.ent(), 11), "Music Volume", music_volume);
 
     // Footer - increased text size
     div(context, mk(root.ent(), 2),

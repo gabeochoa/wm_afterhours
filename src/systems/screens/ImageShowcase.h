@@ -81,7 +81,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Row 1: sprite() demo
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(140)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -98,40 +98,42 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("sprite_label"));
 
-    sprite(context, mk(row1.ent(), 1), gear_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(50), pixels(50)})
-               .with_margin(Spacing::sm)
-               .with_debug_name("sprite_gear"));
+    // Helper lambda to create sprite with label for row1
+    auto create_labeled_sprite = [&](int idx, const raylib::Texture2D& tex,
+                                      const std::string& label_text) {
+      auto sprite_wrapper = div(context, mk(row1.ent(), idx),
+                                ComponentConfig{}
+                                    .with_size(ComponentSize{pixels(90), pixels(120)})
+                                    .with_flex_direction(FlexDirection::Column)
+                                    .with_align_items(AlignItems::Center)
+                                    .with_margin(Spacing::xs)
+                                    .with_debug_name("sprite_wrapper_" + std::to_string(idx)));
 
-    sprite(context, mk(row1.ent(), 2), star_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(50), pixels(50)})
-               .with_margin(Spacing::sm)
-               .with_debug_name("sprite_star"));
+      sprite(context, mk(sprite_wrapper.ent(), 0), tex, full_src,
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(72), pixels(72)})
+                 .with_debug_name("sprite_icon_" + std::to_string(idx)));
 
-    sprite(context, mk(row1.ent(), 3), trophy_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(50), pixels(50)})
-               .with_margin(Spacing::sm)
-               .with_debug_name("sprite_trophy"));
+      div(context, mk(sprite_wrapper.ent(), 1),
+          ComponentConfig{}
+              .with_label(label_text)
+              .with_size(ComponentSize{pixels(80), pixels(24)})
+              .with_custom_text_color(theme.font)
+              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_skip_tabbing(true)
+              .with_debug_name("sprite_label_" + std::to_string(idx)));
+    };
 
-    sprite(context, mk(row1.ent(), 4), home_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(50), pixels(50)})
-               .with_margin(Spacing::sm)
-               .with_debug_name("sprite_home"));
-
-    sprite(context, mk(row1.ent(), 5), play_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(50), pixels(50)})
-               .with_margin(Spacing::sm)
-               .with_debug_name("sprite_play"));
+    create_labeled_sprite(1, gear_tex, "Gear");
+    create_labeled_sprite(2, star_tex, "Star");
+    create_labeled_sprite(3, trophy_tex, "Trophy");
+    create_labeled_sprite(4, home_tex, "Home");
+    create_labeled_sprite(5, play_tex, "Play");
 
     // Row 2: image_button() demo
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(110)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -151,7 +153,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     if (image_button(context, mk(row2.ent(), 1), gear_tex, full_src,
                      ComponentConfig{}
-                         .with_size(ComponentSize{pixels(60), pixels(60)})
+                         .with_size(ComponentSize{pixels(80), pixels(80)})
                          .with_custom_background(theme.primary)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
@@ -162,7 +164,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     if (image_button(context, mk(row2.ent(), 2), play_tex, full_src,
                      ComponentConfig{}
-                         .with_size(ComponentSize{pixels(60), pixels(60)})
+                         .with_size(ComponentSize{pixels(80), pixels(80)})
                          .with_custom_background(theme.accent)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
@@ -173,7 +175,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     if (image_button(context, mk(row2.ent(), 3), star_tex, full_src,
                      ComponentConfig{}
-                         .with_size(ComponentSize{pixels(60), pixels(60)})
+                         .with_size(ComponentSize{pixels(80), pixels(80)})
                          .with_custom_background(theme.secondary)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
@@ -229,7 +231,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     sprite(context, mk(img_container.ent(), 0), gear_tex, full_src,
            ComponentConfig{}
-               .with_size(ComponentSize{pixels(50), pixels(50)})
+               .with_size(ComponentSize{pixels(64), pixels(64)})
                .with_debug_name("container_gear"));
 
     div(context, mk(img_container.ent(), 1),
@@ -242,10 +244,10 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("settings_label"));
 
-    // Row 4: Icon row demo
+    // Row 4: Icon row demo with labels
     auto row4 = div(context, mk(main_container.ent(), 4),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(150)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
@@ -266,46 +268,48 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto icon_row_container =
         div(context, mk(row4.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(350), pixels(70)})
+                .with_size(ComponentSize{pixels(520), pixels(120)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
+                .with_justify_content(JustifyContent::SpaceAround)
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.9f))
-                .with_padding(Spacing::xs)
+                .with_padding(Spacing::sm)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.08f)
                 .with_no_wrap()
                 .with_debug_name("icon_row_container"));
 
-    sprite(context, mk(icon_row_container.ent(), 0), gear_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
-               .with_margin(Spacing::xs)
-               .with_debug_name("icon_row_1"));
+    // Helper lambda to create icon with label
+    auto create_labeled_icon = [&](int idx, const raylib::Texture2D& tex,
+                                    const std::string& label_text) {
+      auto icon_wrapper = div(context, mk(icon_row_container.ent(), idx),
+                              ComponentConfig{}
+                                  .with_size(ComponentSize{pixels(90), pixels(110)})
+                                  .with_flex_direction(FlexDirection::Column)
+                                  .with_align_items(AlignItems::Center)
+                                  .with_debug_name("icon_wrapper_" + std::to_string(idx)));
 
-    sprite(context, mk(icon_row_container.ent(), 1), star_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
-               .with_margin(Spacing::xs)
-               .with_debug_name("icon_row_2"));
+      sprite(context, mk(icon_wrapper.ent(), 0), tex, full_src,
+             ComponentConfig{}
+                 .with_size(ComponentSize{pixels(72), pixels(72)})
+                 .with_debug_name("icon_" + std::to_string(idx)));
 
-    sprite(context, mk(icon_row_container.ent(), 2), trophy_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
-               .with_margin(Spacing::xs)
-               .with_debug_name("icon_row_3"));
+      div(context, mk(icon_wrapper.ent(), 1),
+          ComponentConfig{}
+              .with_label(label_text)
+              .with_size(ComponentSize{pixels(80), pixels(24)})
+              .with_custom_text_color(theme.font)
+              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_skip_tabbing(true)
+              .with_debug_name("label_" + std::to_string(idx)));
+    };
 
-    sprite(context, mk(icon_row_container.ent(), 3), home_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
-               .with_margin(Spacing::xs)
-               .with_debug_name("icon_row_4"));
-
-    sprite(context, mk(icon_row_container.ent(), 4), play_tex, full_src,
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(48), pixels(48)})
-               .with_margin(Spacing::xs)
-               .with_debug_name("icon_row_5"));
+    create_labeled_icon(0, gear_tex, "Settings");
+    create_labeled_icon(1, star_tex, "Favorites");
+    create_labeled_icon(2, trophy_tex, "Awards");
+    create_labeled_icon(3, home_tex, "Home");
+    create_labeled_icon(4, play_tex, "Play");
   }
 };
 

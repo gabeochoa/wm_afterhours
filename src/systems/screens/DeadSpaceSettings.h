@@ -21,11 +21,11 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color teal_highlight{65, 145, 145, 255};
   afterhours::Color teal_bright{85, 175, 175, 255};
   afterhours::Color text_white{195, 205, 210, 255};
-  afterhours::Color text_muted{175, 190, 195, 255};
-  afterhours::Color text_dim{55, 65, 70, 255};
+  afterhours::Color text_muted{205, 215, 220, 255};
+  afterhours::Color text_dim{120, 135, 140, 255};
 
   std::vector<std::string> initial_settings = {
-      "Continue",
+      "Resume Game",
       "Menu Narration",
       "Voice Language",
       "Subtitles",
@@ -84,32 +84,19 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float panel_h = (float)screen_h - panel_y - 90.0f;
 
     // Subtle vertical scan lines effect (positioned at right edge of screen)
-    for (int i = 0; i < 20; i++) {
-      if (i % 3 == 0) {
-        div(context, mk(entity, 5 + i),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(1), pixels(screen_h)})
-                .with_absolute_position()
-                .with_translate((float)screen_w - 80.0f + (float)i * 4.0f,
-                                0.0f)
-                .with_custom_background(afterhours::Color{15, 20, 22, 180})
-                .with_debug_name("scanline_" + std::to_string(i)));
-      }
+    // Only draw a few lines with subtle opacity to avoid looking like a scroll bar
+    for (int i = 0; i < 5; i++) {
+      div(context, mk(entity, 5 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(1), pixels(screen_h / 4)})
+              .with_absolute_position()
+              .with_translate((float)screen_w - 25.0f + (float)i * 5.0f,
+                              (float)screen_h / 3.0f)
+              .with_custom_background(afterhours::Color{25, 35, 40, 100})
+              .with_debug_name("scanline_" + std::to_string(i)));
     }
 
-    // ========== TITLE: MORE SETTINGS ==========
-    float title_w = 280.0f;
-    float title_x = panel_x + (panel_w - title_w) / 2.0f;
-    div(context, mk(entity, 50),
-        ComponentConfig{}
-            .with_label("MORE SETTINGS")
-            .with_size(ComponentSize{pixels(static_cast<int>(title_w)), pixels(32)})
-            .with_absolute_position()
-            .with_translate(title_x, 20.0f)
-            .with_font("EqProRounded", 26.0f)
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+    // Title removed - consolidated with panel header "// SETTINGS" to avoid duplication
 
     // ========== LEFT SIDEBAR: INITIAL SETTINGS ==========
 

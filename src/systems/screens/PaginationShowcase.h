@@ -10,6 +10,11 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
+  // Pagination configuration
+  // When true, arrows wrap around (last->first, first->last)
+  // When false, arrows are disabled at boundaries
+  bool enable_wraparound = false;
+
   // Pagination state
   size_t page_idx = 0;
   size_t difficulty_idx = 1;
@@ -18,7 +23,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> pages = {"Page 1", "Page 2", "Page 3", "Page 4",
                                     "Page 5"};
   std::vector<std::string> difficulties = {"Easy", "Medium", "Hard", "Expert"};
-  std::vector<std::string> colors = {"Red", "Green", "Blue", "Yellow", "Purple"};
+  std::vector<std::string> color_options = {"Red", "Green", "Blue", "Yellow", "Purple"};
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context,
                      float) override {
@@ -92,6 +97,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     float btn_gap = 8.0f;
 
     // Left arrow - 44px minimum touch target
+    // Disable when at first item (unless wraparound enabled)
+    bool pag1_left_disabled = !enable_wraparound && (page_idx == 0);
     button(context, mk(entity, 100),
            ComponentConfig{}
                .with_label("<")
@@ -100,6 +107,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_translate(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 22.0f)
+               .with_disabled(pag1_left_disabled)
                .with_debug_name("pag1_left"));
 
     pag1_x += arrow_width + btn_gap;
@@ -121,6 +129,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Right arrow - 44px minimum touch target
+    // Disable when at last item (unless wraparound enabled)
+    bool pag1_right_disabled = !enable_wraparound && (page_idx == pages.size() - 1);
     button(context, mk(entity, 106),
            ComponentConfig{}
                .with_label(">")
@@ -129,6 +139,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_translate(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 22.0f)
+               .with_disabled(pag1_right_disabled)
                .with_debug_name("pag1_right"));
 
     current_y += 58.0f;
@@ -165,6 +176,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     // Pagination 2 - difficulty buttons
     float pag2_x = content_x;
 
+    // Left arrow - disable at first item (unless wraparound enabled)
+    bool pag2_left_disabled = !enable_wraparound && (difficulty_idx == 0);
     button(context, mk(entity, 200),
            ComponentConfig{}
                .with_label("<")
@@ -173,6 +186,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_translate(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 22.0f)
+               .with_disabled(pag2_left_disabled)
                .with_debug_name("pag2_left"));
 
     pag2_x += arrow_width + btn_gap;
@@ -192,6 +206,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
       pag2_x += btn_width + btn_gap;
     }
 
+    // Right arrow - disable at last item (unless wraparound enabled)
+    bool pag2_right_disabled = !enable_wraparound && (difficulty_idx == difficulties.size() - 1);
     button(context, mk(entity, 205),
            ComponentConfig{}
                .with_label(">")
@@ -200,6 +216,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_translate(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 22.0f)
+               .with_disabled(pag2_right_disabled)
                .with_debug_name("pag2_right"));
 
     current_y += 58.0f;
@@ -217,10 +234,10 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
 
     current_y += 50.0f;
 
-    // Section 3: Color Picker
+    // Section 3: Option Selector (renamed from Color Picker for clearer mental model)
     div(context, mk(entity, 30),
         ComponentConfig{}
-            .with_label("Color Picker (5 options)")
+            .with_label("Option Selector (5 options)")
             .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
@@ -233,9 +250,11 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
 
     current_y += 52.0f;
 
-    // Pagination 3 - color buttons
+    // Pagination 3 - option buttons
     float pag3_x = content_x;
 
+    // Left arrow - disable at first item (unless wraparound enabled)
+    bool pag3_left_disabled = !enable_wraparound && (color_idx == 0);
     button(context, mk(entity, 300),
            ComponentConfig{}
                .with_label("<")
@@ -244,15 +263,16 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_translate(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 22.0f)
+               .with_disabled(pag3_left_disabled)
                .with_debug_name("pag3_left"));
 
     pag3_x += arrow_width + btn_gap;
 
-    for (size_t i = 0; i < colors.size(); i++) {
+    for (size_t i = 0; i < color_options.size(); i++) {
       bool selected = (i == color_idx);
       button(context, mk(entity, 301 + i),
              ComponentConfig{}
-                 .with_label(colors[i])
+                 .with_label(color_options[i])
                  .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
                  .with_absolute_position()
                  .with_translate(pag3_x, current_y)
@@ -263,6 +283,8 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
       pag3_x += btn_width + btn_gap;
     }
 
+    // Right arrow - disable at last item (unless wraparound enabled)
+    bool pag3_right_disabled = !enable_wraparound && (color_idx == color_options.size() - 1);
     button(context, mk(entity, 306),
            ComponentConfig{}
                .with_label(">")
@@ -271,6 +293,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_translate(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, 22.0f)
+               .with_disabled(pag3_right_disabled)
                .with_debug_name("pag3_right"));
 
     current_y += 58.0f;
@@ -278,7 +301,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     // Status text 3
     div(context, mk(entity, 32),
         ComponentConfig{}
-            .with_label("Color: " + colors[color_idx])
+            .with_label("Selected: " + color_options[color_idx])
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)

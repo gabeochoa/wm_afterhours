@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
 
 using namespace afterhours::ui;
@@ -15,6 +16,14 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::pair<std::string, std::string>> chat_history;
   std::string buddy_name = "SmarterChild";
   std::string my_name = "coolkid2001";
+
+  // Confirmation dialog states
+  bool show_warn_confirm = false;
+  bool show_block_confirm = false;
+
+  // Modal entity IDs
+  static constexpr int MODAL_WARN = 100;
+  static constexpr int MODAL_BLOCK = 101;
 
   // AIM color palette
   struct AIMColors {
@@ -59,6 +68,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     constexpr int SAFE_MARGIN = 8;  // Safe area margin at screen edges
 
     // Main window - sharp corners for Windows 98 aesthetic with safe area margin
+    // Centered on screen to utilize available space
     auto window =
         div(context, mk(entity, 0),
             ComponentConfig{}
@@ -68,6 +78,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_padding(Padding{.left = pixels(SAFE_MARGIN), .right = pixels(SAFE_MARGIN),
                                       .top = pixels(SAFE_MARGIN), .bottom = pixels(SAFE_MARGIN)})
                 .disable_rounded_corners()
+                .with_self_align(SelfAlign::Center)
                 .with_debug_name("aim_window"));
 
     // Title bar
@@ -160,7 +171,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(AIMColors::text_default())
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_skip_tabbing(true)
-            .with_debug_name("buddy_icon"));
+            .with_debug_name("buddy_icon_available"));
 
     auto buddy_info =
         div(context, mk(buddy_bar.ent(), 1),
@@ -190,20 +201,38 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("buddy_status"));
 
-    // Chat history area - uses clip_children to properly handle long messages
-    // Visual hierarchy: increased message spacing and text size
-    auto chat_area =
+    // Chat history container - holds scroll view and scroll indicator side by side
+    auto chat_container =
         div(context, mk(window.ent(), 3),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(280)})
+                .with_flex_direction(FlexDirection::Row)
+                .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)})
+                .with_debug_name("chat_container"));
+
+    // Chat history area - uses scroll_view for scrollable messages
+    auto chat_area =
+        scroll_view(context, mk(chat_container.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(INNER_W - PAD * 2 - 14), pixels(280)})
                 .with_custom_background(AIMColors::chat_bg())
                 .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::FlexStart)
-                .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)})
                 .with_padding(Padding{.left = pixels(6), .top = pixels(4)})
                 .with_clip_children(true)
                 .disable_rounded_corners()
                 .with_debug_name("chat_area"));
+
+    // Configure vertical scrolling for chat
+    float chat_max_scroll = 0.0f;
+    float chat_scroll_ratio = 0.0f;
+    if (chat_area.ent().has<HasScrollView>()) {
+      auto &sv = chat_area.ent().get<HasScrollView>();
+      sv.vertical_enabled = true;
+      sv.horizontal_enabled = false;
+      chat_max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
+      chat_scroll_ratio = chat_max_scroll > 0.0f ? sv.scroll_offset.y / chat_max_scroll : 0.0f;
+    }
 
     int msg_idx = 0;
     for (const auto& [sender, msg] : chat_history) {
@@ -214,7 +243,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(chat_area.ent(), msg_idx++),
           ComponentConfig{}
               .with_label(formatted)
-              .with_size(ComponentSize{pixels(INNER_W - PAD * 4), pixels(28)})
+              .with_size(ComponentSize{pixels(INNER_W - PAD * 4 - 14), pixels(28)})
               .with_custom_text_color(is_me ? AIMColors::my_text() : AIMColors::buddy_text())
               .with_alignment(TextAlignment::Left)
               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -222,6 +251,34 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true)
               .with_debug_name("chat_msg"));
     }
+
+    // Scroll bar track (vertical indicator for chat area)
+    constexpr float SCROLL_TRACK_HEIGHT = 260.0f;
+    constexpr float SCROLL_TRACK_WIDTH = 12.0f;
+    auto scroll_track = div(
+        context, mk(chat_container.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(SCROLL_TRACK_WIDTH), pixels(SCROLL_TRACK_HEIGHT)})
+            .with_custom_background(afterhours::Color{200, 200, 200, 255})
+            .with_margin(Margin{.left = pixels(2), .top = pixels(10)})
+            .disable_rounded_corners()
+            .with_skip_tabbing(true)
+            .with_debug_name("scroll_track"));
+
+    // Scroll bar thumb - calculate size and position based on content
+    float thumb_ratio = chat_max_scroll > 0.0f ? SCROLL_TRACK_HEIGHT / (SCROLL_TRACK_HEIGHT + chat_max_scroll) : 1.0f;
+    float thumb_height = std::max(20.0f, SCROLL_TRACK_HEIGHT * thumb_ratio);
+    float thumb_offset = chat_scroll_ratio * (SCROLL_TRACK_HEIGHT - thumb_height);
+
+    div(context, mk(scroll_track.ent(), 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(SCROLL_TRACK_WIDTH), pixels(thumb_height)})
+            .with_custom_background(afterhours::Color{100, 100, 100, 255})
+            .with_absolute_position()
+            .with_translate(pixels(0), pixels(thumb_offset))
+            .disable_rounded_corners()
+            .with_skip_tabbing(true)
+            .with_debug_name("scroll_thumb"));
 
     // Separator
     div(context, mk(window.ent(), 4),
@@ -283,21 +340,48 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_margin(Margin{.top = pixels(6), .left = pixels(PAD)})
                 .with_debug_name("button_bar"));
 
-    // Action buttons - styled as actual buttons with 44px touch targets
-    const char* btn_labels[] = {"Warn", "Block", "Send"};
-    for (int i = 0; i < 3; i++) {
-      button(context, mk(button_bar.ent(), i),
-             ComponentConfig{}
-                 .with_label(btn_labels[i])
-                 .with_size(ComponentSize{pixels(70), pixels(44)})
-                 .with_custom_background(AIMColors::button_face())
-                 .with_custom_text_color(AIMColors::text_default())
-                 .with_border(AIMColors::button_shadow(), 2.0f)
-                 .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                 .with_margin(Margin{.left = pixels(6)})
-                 .disable_rounded_corners()
-                 .with_debug_name("action_btn"));
+    // Warn button - shows confirmation dialog explaining consequences
+    if (button(context, mk(button_bar.ent(), 0),
+               ComponentConfig{}
+                   .with_label("Warn")
+                   .with_size(ComponentSize{pixels(70), pixels(44)})
+                   .with_custom_background(AIMColors::button_face())
+                   .with_custom_text_color(AIMColors::text_default())
+                   .with_border(AIMColors::button_shadow(), 2.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_margin(Margin{.left = pixels(6)})
+                   .disable_rounded_corners()
+                   .with_debug_name("warn_btn"))) {
+      show_warn_confirm = true;
     }
+
+    // Block button - shows confirmation dialog explaining consequences
+    if (button(context, mk(button_bar.ent(), 1),
+               ComponentConfig{}
+                   .with_label("Block")
+                   .with_size(ComponentSize{pixels(70), pixels(44)})
+                   .with_custom_background(AIMColors::button_face())
+                   .with_custom_text_color(AIMColors::text_default())
+                   .with_border(AIMColors::button_shadow(), 2.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_margin(Margin{.left = pixels(6)})
+                   .disable_rounded_corners()
+                   .with_debug_name("block_btn"))) {
+      show_block_confirm = true;
+    }
+
+    // Send button
+    button(context, mk(button_bar.ent(), 2),
+           ComponentConfig{}
+               .with_label("Send")
+               .with_size(ComponentSize{pixels(70), pixels(44)})
+               .with_custom_background(AIMColors::button_face())
+               .with_custom_text_color(AIMColors::text_default())
+               .with_border(AIMColors::button_shadow(), 2.0f)
+               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_margin(Margin{.left = pixels(6)})
+               .disable_rounded_corners()
+               .with_debug_name("send_btn"));
 
     // Status bar
     div(context, mk(window.ent(), 8),
@@ -311,6 +395,20 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Padding{.left = pixels(PAD)})
             .with_skip_tabbing(true)
             .with_debug_name("status_bar"));
+
+    // Confirmation dialog for Warn action
+    afterhours::modal::confirm(
+        context, mk(entity, MODAL_WARN), show_warn_confirm,
+        "Warn " + buddy_name + "?",
+        "This will send a warning to " + buddy_name + ". If you warn someone too often, you may be penalized.",
+        "Send Warning", "Cancel");
+
+    // Confirmation dialog for Block action
+    afterhours::modal::confirm(
+        context, mk(entity, MODAL_BLOCK), show_block_confirm,
+        "Block " + buddy_name + "?",
+        "Blocking " + buddy_name + " will prevent them from contacting you. You can unblock them later in your Buddy List settings.",
+        "Block User", "Cancel");
   }
 };
 

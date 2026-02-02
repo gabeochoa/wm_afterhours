@@ -17,6 +17,12 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_dark{45, 35, 25, 255};     // Dark text
   afterhours::Color text_light{235, 225, 210, 255}; // Light text
 
+  // High-contrast text colors for tinted panels (accessibility)
+  afterhours::Color text_on_gold{30, 20, 10, 255};      // Dark brown on gold
+  afterhours::Color text_on_blue{255, 255, 255, 255};   // White on blue
+  afterhours::Color text_on_red{255, 255, 255, 255};    // White on red
+  afterhours::Color text_on_green{20, 40, 20, 255};     // Dark green on green
+
   bool textures_loaded = false;
   std::string base_path;
 
@@ -196,6 +202,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
         {"Trans B", &trans_border_010, 16},
     };
 
+    // Increased font size for better label readability (was 18.0f)
+    constexpr float border_label_font_size = 20.0f;
     for (int i = 0; i < 5; i++) {
       float x = start_x + i * (box_width + gap);
       div(context, mk(entity, 30 + i),
@@ -205,7 +213,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(x, row2_y)
               .with_nine_slice_border(*row2[i].texture, row2[i].slice_size)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, border_label_font_size)
               .with_custom_text_color(text_light)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("border_" + std::to_string(i)));
@@ -328,7 +336,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("double_b"));
 
-    // Tinted panels
+    // Tinted panels - using high-contrast text colors for accessibility
     div(context, mk(entity, 67),
         ComponentConfig{}
             .with_label("Gold Tint")
@@ -338,7 +346,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(
                 NineSliceBorder::uniform(panel_010, 16, gold_accent))
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(text_dark)
+            .with_custom_text_color(text_on_gold)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("tint_gold"));
 
@@ -351,7 +359,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(NineSliceBorder::uniform(
                 panel_010, 16, afterhours::Color{100, 150, 220, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(text_light)
+            .with_custom_text_color(text_on_blue)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("tint_blue"));
 
@@ -364,7 +372,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(NineSliceBorder::uniform(
                 panel_010, 16, afterhours::Color{200, 80, 80, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(text_light)
+            .with_custom_text_color(text_on_red)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("tint_red"));
 
@@ -377,7 +385,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(NineSliceBorder::uniform(
                 panel_010, 16, afterhours::Color{80, 180, 100, 255}))
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-            .with_custom_text_color(text_dark)
+            .with_custom_text_color(text_on_green)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("tint_green"));
 

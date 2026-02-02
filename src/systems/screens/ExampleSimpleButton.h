@@ -69,9 +69,9 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("confetti_" + std::to_string(i)));
     }
 
-    // Main card
-    float card_w = 340.0f;
-    float card_h = 280.0f;
+    // Main card - expanded to accommodate more content
+    float card_w = 400.0f;
+    float card_h = 420.0f;
     float card_x = (screen_width - card_w) / 2.0f;
     float card_y = (screen_height - card_h) / 2.0f;
 
@@ -112,10 +112,10 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("subtitle"));
 
     // The button!
-    float button_width = 310.0f;
-    float button_height = 60.0f;
+    float button_width = 360.0f;
+    float button_height = 56.0f;
     float button_x = card_x + (card_w - button_width) / 2.0f;
-    float button_y = card_y + 115.0f;
+    float button_y = card_y + 110.0f;
 
     auto button_result =
         button(context, mk(entity, 10),
@@ -165,7 +165,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(180), pixels(42)})
             .with_absolute_position()
-            .with_translate(card_x + (card_w - 180) / 2.0f, card_y + 195.0f)
+            .with_translate(card_x + (card_w - 180) / 2.0f, card_y + 185.0f)
             .with_custom_background(
                 afterhours::colors::opacity_pct(counter_color, 0.12f))
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -177,11 +177,128 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_label(counter_text)
             .with_size(ComponentSize{pixels(170), pixels(32)})
             .with_absolute_position()
-            .with_translate(card_x + (card_w - 170) / 2.0f, card_y + 200.0f)
+            .with_translate(card_x + (card_w - 170) / 2.0f, card_y + 190.0f)
             .with_font("Gaegu-Bold", 22.0f)
             .with_custom_text_color(counter_color)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("click_counter"));
+
+    // Additional button variations section
+    afterhours::Color secondary_btn{100, 180, 200, 255};
+    afterhours::Color outline_border{180, 170, 190, 255};
+
+    // Divider line
+    div(context, mk(entity, 30),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(button_width - 40), pixels(1)})
+            .with_absolute_position()
+            .with_translate(card_x + (card_w - (button_width - 40)) / 2.0f,
+                            card_y + 250.0f)
+            .with_custom_background(afterhours::colors::opacity_pct(text_muted, 0.3f))
+            .with_debug_name("divider"));
+
+    // "More Styles" label
+    div(context, mk(entity, 31),
+        ComponentConfig{}
+            .with_label("More Styles")
+            .with_size(ComponentSize{pixels(card_w - 40), pixels(20)})
+            .with_absolute_position()
+            .with_translate(card_x + 20.0f, card_y + 262.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("more_styles_label"));
+
+    // Secondary button (blue/teal style)
+    float small_btn_w = 170.0f;
+    float small_btn_h = 44.0f;
+    float small_btn_y = card_y + 295.0f;
+    float left_btn_x = card_x + (card_w / 2.0f) - small_btn_w - 8.0f;
+    float right_btn_x = card_x + (card_w / 2.0f) + 8.0f;
+
+    button(context, mk(entity, 32),
+           ComponentConfig{}
+               .with_label("Secondary")
+               .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
+               .with_absolute_position()
+               .with_translate(left_btn_x, small_btn_y)
+               .with_custom_background(secondary_btn)
+               .with_soft_shadow(3.0f, 4.0f, 10.0f,
+                                 afterhours::Color{80, 160, 180, 40})
+               .with_font("Gaegu-Bold", 18.0f)
+               .with_custom_text_color(card_white)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.4f)
+               .with_alignment(TextAlignment::Center)
+               .with_padding(Spacing::sm)
+               .with_debug_name("secondary_button"));
+
+    // Outline button style
+    button(context, mk(entity, 33),
+           ComponentConfig{}
+               .with_label("Outline")
+               .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
+               .with_absolute_position()
+               .with_translate(right_btn_x, small_btn_y)
+               .with_custom_background(card_white)
+               .with_border(outline_border, 2.0f)
+               .with_font("Gaegu-Bold", 18.0f)
+               .with_custom_text_color(text_dark)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.4f)
+               .with_alignment(TextAlignment::Center)
+               .with_padding(Spacing::sm)
+               .with_debug_name("outline_button"));
+
+    // Small pill buttons row
+    float pill_btn_w = 105.0f;
+    float pill_btn_h = 36.0f;
+    float pill_y = card_y + 355.0f;
+    float pill_gap = 10.0f;
+    float total_pills_w = pill_btn_w * 3 + pill_gap * 2;
+    float pill_start_x = card_x + (card_w - total_pills_w) / 2.0f;
+
+    button(context, mk(entity, 34),
+           ComponentConfig{}
+               .with_label("Small")
+               .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
+               .with_absolute_position()
+               .with_translate(pill_start_x, pill_y)
+               .with_custom_background(confetti_mint)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_custom_text_color(text_dark)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.5f)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("small_button_1"));
+
+    button(context, mk(entity, 35),
+           ComponentConfig{}
+               .with_label("Pill")
+               .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
+               .with_absolute_position()
+               .with_translate(pill_start_x + pill_btn_w + pill_gap, pill_y)
+               .with_custom_background(confetti_pink)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_custom_text_color(text_dark)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.5f)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("small_button_2"));
+
+    button(context, mk(entity, 36),
+           ComponentConfig{}
+               .with_label("Buttons")
+               .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
+               .with_absolute_position()
+               .with_translate(pill_start_x + (pill_btn_w + pill_gap) * 2, pill_y)
+               .with_custom_background(confetti_gold)
+               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_custom_text_color(text_dark)
+               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_roundness(0.5f)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("small_button_3"));
   }
 };
 

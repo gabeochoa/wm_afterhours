@@ -14,6 +14,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   bool music_on = true;
   bool sound_on = true;
   bool vibrate_on = false;
+  bool show_about = false;
 
   // Colors matching Angry Birds inspiration - bright, playful mobile aesthetic
   afterhours::Color bg_green{85, 165, 95, 255};
@@ -120,9 +121,9 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float toggle_spacing = 75.0f;
 
     std::vector<std::tuple<std::string, bool *, std::string>> toggles = {
-        {"~", &music_on, "music"},     // Music note symbol
-        {"<)", &sound_on, "sound"},    // Speaker symbol
-        {"[]", &vibrate_on, "vibrate"} // Phone vibrate symbol
+        {"M", &music_on, "music"},     // Music note icon
+        {"S", &sound_on, "sound"},     // Speaker icon
+        {"V", &vibrate_on, "vibrate"}  // Vibrate icon
     };
 
     // Display names for the toggle labels
@@ -253,38 +254,135 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_debug_name("right_btn_" + std::to_string(i)));
     }
 
-    // ========== VERSION INFO ==========
+    // ========== ABOUT BUTTON (replaces inline version info) ==========
     float info_y = panel_y + panel_h - 75.0f;
 
-    div(context, mk(entity, 200),
-        ComponentConfig{}
-            .with_label("15555-1-114203-20-10200-01")
-            .with_size(ComponentSize{pixels(280), pixels(20)})
-            .with_absolute_position()
-            .with_translate(left_x, info_y)
-            .with_font("Gaegu-Bold", 19.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("build_id"));
+    if (button(context, mk(entity, 200),
+               ComponentConfig{}
+                   .with_label("About")
+                   .with_size(ComponentSize{pixels(120), pixels(45)})
+                   .with_absolute_position()
+                   .with_translate(left_x, info_y + 10.0f)
+                   .with_custom_background(btn_blue)
+                   .with_border(btn_blue_dark, 3.0f)
+                   .with_font("Gaegu-Bold", 20.0f)
+                   .with_custom_text_color(white)
+                   .with_alignment(TextAlignment::Center)
+                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_roundness(0.5f)
+                   .with_soft_shadow(1.0f, 2.0f, 5.0f,
+                                     afterhours::Color{0, 0, 0, 30})
+                   .with_debug_name("about_btn"))) {
+      show_about = !show_about;
+    }
 
+    // Version display (simple, non-technical)
     div(context, mk(entity, 201),
         ComponentConfig{}
-            .with_label("Version 1.11.0.12346")
-            .with_size(ComponentSize{pixels(180), pixels(20)})
+            .with_label("Version 1.11.0")
+            .with_size(ComponentSize{pixels(150), pixels(20)})
             .with_absolute_position()
-            .with_translate(left_x, info_y + 22.0f)
-            .with_font("Gaegu-Bold", 19.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("version"));
+            .with_translate(left_x + 135.0f, info_y + 22.0f)
+            .with_font("Gaegu-Bold", 17.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("version_simple"));
 
-    div(context, mk(entity, 202),
-        ComponentConfig{}
-            .with_label("Player ID: 281676956389")
-            .with_size(ComponentSize{pixels(200), pixels(20)})
-            .with_absolute_position()
-            .with_translate(left_x, info_y + 44.0f)
-            .with_font("Gaegu-Bold", 19.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("player_id"));
+    // ========== ABOUT PANEL (shows technical info when toggled) ==========
+    if (show_about) {
+      // About panel background overlay
+      float about_w = 380.0f;
+      float about_h = 180.0f;
+      float about_x = (float)screen_w / 2.0f - about_w / 2.0f;
+      float about_y = (float)screen_h / 2.0f - about_h / 2.0f;
+
+      // Orange border for About panel
+      div(context, mk(entity, 300),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(static_cast<int>(about_w + 12)),
+                                       pixels(static_cast<int>(about_h + 12))})
+              .with_absolute_position()
+              .with_translate(about_x - 6.0f, about_y - 6.0f)
+              .with_custom_background(panel_orange)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.12f)
+              .with_debug_name("about_border"));
+
+      // Cream inner panel
+      div(context, mk(entity, 301),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(static_cast<int>(about_w)),
+                                       pixels(static_cast<int>(about_h))})
+              .with_absolute_position()
+              .with_translate(about_x, about_y)
+              .with_custom_background(panel_cream)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.1f)
+              .with_debug_name("about_inner"));
+
+      // About title
+      div(context, mk(entity, 302),
+          ComponentConfig{}
+              .with_label("About")
+              .with_size(ComponentSize{pixels(100), pixels(30)})
+              .with_absolute_position()
+              .with_translate(about_x + about_w / 2.0f - 50.0f, about_y + 12.0f)
+              .with_font("Gaegu-Bold", 24.0f)
+              .with_custom_text_color(text_dark)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("about_title"));
+
+      // Build number
+      div(context, mk(entity, 303),
+          ComponentConfig{}
+              .with_label("Build: 15555-1-114203-20-10200-01")
+              .with_size(ComponentSize{pixels(340), pixels(22)})
+              .with_absolute_position()
+              .with_translate(about_x + 20.0f, about_y + 50.0f)
+              .with_font("Gaegu-Bold", 16.0f)
+              .with_custom_text_color(text_muted)
+              .with_debug_name("about_build"));
+
+      // Full version
+      div(context, mk(entity, 304),
+          ComponentConfig{}
+              .with_label("Version: 1.11.0.12346")
+              .with_size(ComponentSize{pixels(220), pixels(22)})
+              .with_absolute_position()
+              .with_translate(about_x + 20.0f, about_y + 75.0f)
+              .with_font("Gaegu-Bold", 16.0f)
+              .with_custom_text_color(text_muted)
+              .with_debug_name("about_version"));
+
+      // Player ID
+      div(context, mk(entity, 305),
+          ComponentConfig{}
+              .with_label("Player ID: 281676956389")
+              .with_size(ComponentSize{pixels(240), pixels(22)})
+              .with_absolute_position()
+              .with_translate(about_x + 20.0f, about_y + 100.0f)
+              .with_font("Gaegu-Bold", 16.0f)
+              .with_custom_text_color(text_muted)
+              .with_debug_name("about_player_id"));
+
+      // Close About button
+      if (button(context, mk(entity, 306),
+                 ComponentConfig{}
+                     .with_label("Close")
+                     .with_size(ComponentSize{pixels(100), pixels(38)})
+                     .with_absolute_position()
+                     .with_translate(about_x + about_w / 2.0f - 50.0f,
+                                     about_y + about_h - 48.0f)
+                     .with_custom_background(btn_green)
+                     .with_border(btn_green_dark, 3.0f)
+                     .with_font("Gaegu-Bold", 18.0f)
+                     .with_custom_text_color(text_dark)
+                     .with_alignment(TextAlignment::Center)
+                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_roundness(0.5f)
+                     .with_debug_name("about_close"))) {
+        show_about = false;
+      }
+    }
 
   }
 };

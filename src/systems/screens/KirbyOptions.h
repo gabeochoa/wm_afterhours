@@ -13,6 +13,7 @@ using namespace afterhours::ui::imm;
 struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_tab = 5;    // Options tab (gear icon)
   size_t selected_option = 0; // Controller selected
+  bool show_delete_confirm = false; // Confirmation barrier for delete
 
   // Colors matching Kirby Air Ride inspiration - bright Nintendo aesthetic
   afterhours::Color bg_cream{245, 240, 230, 255};
@@ -43,11 +44,11 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::vector<std::tuple<std::string, std::string, afterhours::Color>> options =
       {
-          {"Ctrl", "Controller", icon_green},
-          {"Disp", "Display", icon_blue},
-          {"Acc", "Accessibility", icon_purple},
-          {"Snd", "Sound", icon_blue},
-          {"Net", "Online", icon_green},
+          {"Controller", "Controller", icon_green},
+          {"Display", "Display", icon_blue},
+          {"Access", "Accessibility", icon_purple},
+          {"Sound", "Sound", icon_blue},
+          {"Online", "Online", icon_green},
       };
 
   void for_each_with(afterhours::Entity &entity,
@@ -82,19 +83,21 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_spacing = 68.0f;
     float tab_start_x = 200.0f;
 
-    // L bumper
+    // L bumper - consistent styling with tab bar
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_label("L")
-            .with_size(ComponentSize{pixels(32), pixels(32)})
+            .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
-            .with_translate(tab_start_x - 50.0f, tab_bar_y + 13.0f)
-            .with_custom_background(border_gray)
-            .with_font("Gaegu-Bold", 19.0f)
-            .with_custom_text_color(text_dark)
+            .with_translate(tab_start_x - 55.0f, tab_bar_y + 11.0f)
+            .with_custom_background(tab_purple)
+            .with_border(tab_purple_dark, 2.0f)
+            .with_font("Gaegu-Bold", 20.0f)
+            .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.3f)
+            .with_roundness(0.35f)
+            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
             .with_debug_name("l_bumper"));
 
     // Tab icons
@@ -131,20 +134,22 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // R bumper
+    // R bumper - consistent styling with tab bar
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label("R")
-            .with_size(ComponentSize{pixels(32), pixels(32)})
+            .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
             .with_translate(tab_start_x + 6 * tab_spacing + 10.0f,
-                            tab_bar_y + 13.0f)
-            .with_custom_background(border_gray)
-            .with_font("Gaegu-Bold", 19.0f)
-            .with_custom_text_color(text_dark)
+                            tab_bar_y + 11.0f)
+            .with_custom_background(tab_purple)
+            .with_border(tab_purple_dark, 2.0f)
+            .with_font("Gaegu-Bold", 20.0f)
+            .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.3f)
+            .with_roundness(0.35f)
+            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
             .with_debug_name("r_bumper"));
 
     // ========== "Options" LABEL under selected tab ==========
@@ -252,19 +257,56 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("name_text"));
 
-    // Delete Data button (right side)
-    button(context, mk(entity, 110),
-        ComponentConfig{}
-            .with_label("Delete Data")
-            .with_size(ComponentSize{pixels(130), pixels(32)})
-            .with_absolute_position()
-            .with_translate(panel_x + panel_w - 160.0f, name_y + 18.0f)
-            .with_custom_background(afterhours::Color{220, 85, 85, 255})
-            .with_font("Gaegu-Bold", 18.0f)
-            .with_auto_text_color(true)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.25f)
-            .with_debug_name("delete_data"));
+    // Delete Data button with confirmation barrier
+    if (!show_delete_confirm) {
+      // Initial state: subtle gray button that requires click to reveal danger
+      if (button(context, mk(entity, 110),
+          ComponentConfig{}
+              .with_label("Data...")
+              .with_size(ComponentSize{pixels(90), pixels(28)})
+              .with_absolute_position()
+              .with_translate(panel_x + panel_w - 120.0f, name_y + 20.0f)
+              .with_custom_background(afterhours::Color{200, 195, 190, 255})
+              .with_border(border_gray, 1.0f)
+              .with_font("Gaegu-Bold", 16.0f)
+              .with_custom_text_color(text_muted)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.25f)
+              .with_debug_name("data_menu"))) {
+        show_delete_confirm = true;
+      }
+    } else {
+      // Confirmation state: show Cancel and Delete buttons
+      // Cancel button
+      if (button(context, mk(entity, 111),
+          ComponentConfig{}
+              .with_label("Cancel")
+              .with_size(ComponentSize{pixels(70), pixels(28)})
+              .with_absolute_position()
+              .with_translate(panel_x + panel_w - 195.0f, name_y + 20.0f)
+              .with_custom_background(afterhours::Color{180, 175, 170, 255})
+              .with_border(border_gray, 1.0f)
+              .with_font("Gaegu-Bold", 15.0f)
+              .with_custom_text_color(text_dark)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.25f)
+              .with_debug_name("cancel_delete"))) {
+        show_delete_confirm = false;
+      }
+      // Confirm Delete button
+      button(context, mk(entity, 112),
+          ComponentConfig{}
+              .with_label("Delete")
+              .with_size(ComponentSize{pixels(70), pixels(28)})
+              .with_absolute_position()
+              .with_translate(panel_x + panel_w - 115.0f, name_y + 20.0f)
+              .with_custom_background(afterhours::Color{220, 85, 85, 255})
+              .with_font("Gaegu-Bold", 15.0f)
+              .with_auto_text_color(true)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.25f)
+              .with_debug_name("confirm_delete"));
+    }
 
     // ========== COMMON LABEL ==========
     div(context, mk(entity, 120),
@@ -278,11 +320,11 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("common_label"));
 
     // ========== OPTIONS GRID (2 columns) ==========
-    float grid_x = panel_x + 100.0f;  // More centered
+    float grid_x = panel_x + 80.0f;  // More centered
     float grid_y = panel_y + 135.0f;
-    float icon_size = 80.0f;   // Larger icons
-    float col_spacing = 170.0f;
-    float row_spacing = 110.0f;
+    float icon_size = 90.0f;   // Larger icons for full labels
+    float col_spacing = 160.0f;
+    float row_spacing = 115.0f;
 
     for (size_t i = 0; i < options.size(); i++) {
       auto &[icon, label, color] = options[i];
@@ -315,7 +357,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_border(is_selected ? afterhours::Color{0, 0, 0, 0}
                                            : border_gray,
                                2.0f)
-                  .with_font("Gaegu-Bold", 32.0f)
+                  .with_font("Gaegu-Bold", 18.0f)
                   .with_custom_text_color(opt_text)
                   .with_alignment(TextAlignment::Center)
                   .with_rounded_corners(std::bitset<4>(0b1111))
@@ -340,16 +382,21 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("opt_label_" + std::to_string(i)));
     }
 
-    // ========== DESCRIPTION TEXT ==========
+    // ========== DESCRIPTION TEXT (more prominent) ==========
     div(context, mk(entity, 300),
         ComponentConfig{}
             .with_label("Enter a new name and customize your controls.")
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 60)),
-                                     pixels(32)})
+            .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 40)),
+                                     pixels(42)})
             .with_absolute_position()
-            .with_translate(panel_x + 30.0f, panel_y + panel_h - 45.0f)
-            .with_font("Gaegu-Bold", 20.0f)
+            .with_translate(panel_x + 20.0f, panel_y + panel_h - 55.0f)
+            .with_custom_background(afterhours::Color{240, 235, 230, 255})
+            .with_border(border_gray, 1.0f)
+            .with_font("Gaegu-Bold", 24.0f)
             .with_custom_text_color(text_dark)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.3f)
             .with_debug_name("description"));
   }
 };

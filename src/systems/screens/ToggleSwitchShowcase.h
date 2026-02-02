@@ -56,10 +56,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("main_title"));
 
-    // Section: Pill Style
+    // Section: Pill Style - Best for binary settings (on/off, enabled/disabled)
     div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
-            .with_label("Pill Style (iOS) - Slide to toggle ON/OFF")
+            .with_label("Pill Style - Use for app settings (on/off states)")
             .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
@@ -102,10 +102,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                       .with_debug_name("vibration"),
                   ToggleSwitchStyle::Pill);
 
-    // Section: Circle Style
+    // Section: Circle Style - Best for confirmations or compact lists
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
-            .with_label("Circle Style (Checkbox) - Click to toggle ON/OFF")
+            .with_label("Circle Style - Use for checklists or confirmations")
             .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)

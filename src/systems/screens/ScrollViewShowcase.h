@@ -53,7 +53,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_label("Use mouse wheel to scroll (trackpad for horizontal)")
+            .with_label("Use mouse wheel to scroll (Shift+wheel or trackpad for horizontal)")
             .with_custom_text_color(theme.font_muted)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("instructions"));
@@ -61,7 +61,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     // Invert scroll toggle row with label
     auto toggle_row = div(context, mk(root.ent(), 2),
              ComponentConfig{}
-                 .with_size(ComponentSize{percent(0.95f), pixels(52)})
+                 .with_size(ComponentSize{percent(0.95f), pixels(36)})
                  .with_flex_direction(FlexDirection::Row)
                  .with_align_items(AlignItems::Center)
                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -69,11 +69,11 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     checkbox(context, mk(toggle_row.ent(), 0), invert_scroll,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(280), pixels(48)})
-                 .with_label("Invert Scroll Direction")
-                 .with_custom_background(theme.primary)
-                 .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+                 .with_size(ComponentSize{pixels(200), pixels(28)})
+                 .with_label("Invert Scroll")
+                 .with_custom_background(theme.secondary)
+                 .with_custom_text_color(theme.font)
+                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side
@@ -123,11 +123,11 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       sv.invert_scroll = invert_scroll;
 
       float max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
+      int scroll_pct = max_scroll > 0.0f ? static_cast<int>((sv.scroll_offset.y / max_scroll) * 100.0f) : 0;
       div(context, mk(vert_section.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
-              .with_label(fmt::format("Y: {:.0f} / {:.0f}", sv.scroll_offset.y,
-                                      max_scroll))
+              .with_label(fmt::format("Scrolled: {}%", scroll_pct))
               .with_font(UIComponent::DEFAULT_FONT, 18.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("vert_info"));
@@ -187,11 +187,11 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       sv.invert_scroll = invert_scroll;
 
       float max_scroll = std::max(0.0f, sv.content_size.x - sv.viewport_size.x);
+      int scroll_pct = max_scroll > 0.0f ? static_cast<int>((sv.scroll_offset.x / max_scroll) * 100.0f) : 0;
       div(context, mk(horiz_section.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
-              .with_label(fmt::format("X: {:.0f} / {:.0f}", sv.scroll_offset.x,
-                                      max_scroll))
+              .with_label(fmt::format("Scrolled: {}%", scroll_pct))
               .with_font(UIComponent::DEFAULT_FONT, 18.f)
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("horiz_info"));

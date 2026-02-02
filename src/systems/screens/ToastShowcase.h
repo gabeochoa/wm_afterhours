@@ -180,44 +180,52 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("second_row"));
 
+    // Configurable toast durations for demo
+    constexpr float QUICK_TOAST_DURATION = 1.0f;
+    constexpr float LONG_TOAST_DURATION = 10.0f;
+    constexpr float SPAM_TOAST_DURATION = 4.0f;
+    constexpr int SPAM_TOAST_COUNT = 5;
+
     if (button(context, mk(second_row.ent(), 0),
                ComponentConfig{}
-                   .with_label("Quick (1s)")
-                   .with_size(ComponentSize{pixels(144), pixels(56)})
+                   .with_label("Quick (displays 1s)")
+                   .with_size(ComponentSize{pixels(184), pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_quick"))) {
-      toast::send_info(context, "This disappears fast!", 1.0f);
+      toast::send_info(context, "This disappears fast!", QUICK_TOAST_DURATION);
     }
 
     if (button(context, mk(second_row.ent(), 1),
                ComponentConfig{}
-                   .with_label("Long (10s)")
-                   .with_size(ComponentSize{pixels(144), pixels(56)})
+                   .with_label("Long (displays 10s)")
+                   .with_size(ComponentSize{pixels(192), pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_long"))) {
-      toast::send_info(context, "This sticks around for a while...", 10.0f);
+      toast::send_info(context, "This sticks around for a while...", LONG_TOAST_DURATION);
     }
 
+    // Warning color for spam button to indicate potential overwhelm
+    afterhours::Color spamWarningBg = theme.accent;
     if (button(context, mk(second_row.ent(), 2),
                ComponentConfig{}
-                   .with_label("Spam x5")
-                   .with_size(ComponentSize{pixels(128), pixels(56)})
-                   .with_background(Theme::Usage::Accent)
+                   .with_label("Spam x5 (!)")
+                   .with_size(ComponentSize{pixels(136), pixels(56)})
+                   .with_custom_background(spamWarningBg)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_spam"))) {
-      for (int i = 0; i < 5; i++) {
-        toast::send_info(context, "Spam toast #" + std::to_string(i + 1), 4.0f);
+      for (int i = 0; i < SPAM_TOAST_COUNT; i++) {
+        toast::send_warning(context, "Spam toast #" + std::to_string(i + 1), SPAM_TOAST_DURATION);
       }
     }
 

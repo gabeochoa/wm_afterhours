@@ -29,8 +29,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::vector<std::string> menu_items = {
       "OPTIONS",       "CONTROLS",     "LEADERBOARD", "ARMORY",
-      "REPORT PLAYER", "PLAY CREDITS", "BACK",
+      "PLAY CREDITS", "BACK",
   };
+
+  bool promo_dismissed = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -105,15 +107,16 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== TOP RIGHT: Player info ==========
     float info_x = (float)screen_w - 200.0f;
 
-    // Online pill - widened to fit full text
+    // Online pill - larger and more prominent
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("thia9uers - Online")
-            .with_size(ComponentSize{pixels(230), pixels(32)})
+            .with_size(ComponentSize{pixels(260), pixels(42)})
             .with_absolute_position()
-            .with_translate(info_x - 85.0f, 20.0f)
+            .with_translate(info_x - 115.0f, 15.0f)
             .with_custom_background(online_pill)
-            .with_font("EqProRounded", 18.0f)
+            .with_border(afterhours::Color{115, 155, 105, 255}, 3.0f)
+            .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -126,7 +129,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(std::to_string(player_count))
             .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 70.0f, 15.0f)
+            .with_translate((float)screen_w - 70.0f, 12.0f)
             .with_custom_background(accent_blue)
             .with_border(afterhours::Color{65, 145, 185, 255}, 3.0f)
             .with_font("EqProRounded", 28.0f)
@@ -142,7 +145,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("*")
             .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 70.0f, 68.0f)
+            .with_translate((float)screen_w - 70.0f, 65.0f)
             .with_custom_background(lightning)
             .with_border(afterhours::Color{215, 190, 55, 255}, 3.0f)
             .with_font("EqProRounded", 28.0f)
@@ -205,70 +208,76 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // ========== PROMO BOX ==========
-    float promo_x = (float)screen_w - 350.0f;
-    float promo_y = 140.0f;
+    // ========== PROMO BOX (dismissible, less prominent) ==========
+    if (!promo_dismissed) {
+      float promo_x = (float)screen_w - 290.0f;
+      float promo_y = 160.0f;
 
-    div(context, mk(entity, 200),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(75)})
-            .with_absolute_position()
-            .with_translate(promo_x, promo_y)
-            .with_custom_background(menu_bg)
-            .with_border(afterhours::Color{200, 185, 145, 255}, 3.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("promo_box"));
+      // Smaller, less prominent promo box with muted colors
+      div(context, mk(entity, 200),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(220), pixels(55)})
+              .with_absolute_position()
+              .with_translate(promo_x, promo_y)
+              .with_custom_background(afterhours::Color{245, 235, 210, 200})
+              .with_border(afterhours::Color{180, 165, 135, 180}, 2.0f)
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(0.15f)
+              .with_debug_name("promo_box"));
 
-    div(context, mk(entity, 201),
-        ComponentConfig{}
-            .with_label("Get more bandits!")
-            .with_size(ComponentSize{pixels(180), pixels(32)})
-            .with_absolute_position()
-            .with_translate(promo_x + 15.0f, promo_y + 12.0f)
-            .with_font("EqProRounded", 18.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("promo_text1"));
+      div(context, mk(entity, 201),
+          ComponentConfig{}
+              .with_label("Supporter pack available")
+              .with_size(ComponentSize{pixels(180), pixels(24)})
+              .with_absolute_position()
+              .with_translate(promo_x + 10.0f, promo_y + 8.0f)
+              .with_font("EqProRounded", 14.0f)
+              .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
+              .with_debug_name("promo_text1"));
 
-    div(context, mk(entity, 202),
-        ComponentConfig{}
-            .with_label("Buy the supporter")
-            .with_size(ComponentSize{pixels(180), pixels(28)})
-            .with_absolute_position()
-            .with_translate(promo_x + 15.0f, promo_y + 38.0f)
-            .with_font("EqProRounded", 18.0f)
-            .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
-            .with_debug_name("promo_text2"));
+      div(context, mk(entity, 202),
+          ComponentConfig{}
+              .with_label("More characters in shop")
+              .with_size(ComponentSize{pixels(180), pixels(20)})
+              .with_absolute_position()
+              .with_translate(promo_x + 10.0f, promo_y + 30.0f)
+              .with_font("EqProRounded", 12.0f)
+              .with_custom_text_color(afterhours::Color{130, 115, 85, 255})
+              .with_debug_name("promo_text2"));
 
-    div(context, mk(entity, 203),
-        ComponentConfig{}
-            .with_label("pack and show off!")
-            .with_size(ComponentSize{pixels(180), pixels(28)})
-            .with_absolute_position()
-            .with_translate(promo_x + 15.0f, promo_y + 58.0f)
-            .with_font("EqProRounded", 18.0f)
-            .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
-            .with_debug_name("promo_text3"));
-
-    // Promo icon
-    div(context, mk(entity, 204),
-        ComponentConfig{}
-            .with_label("$")
-            .with_size(ComponentSize{pixels(50), pixels(50)})
-            .with_absolute_position()
-            .with_translate(promo_x + 215.0f, promo_y + 12.0f)
-            .with_custom_background(accent_green)
-            .with_border(afterhours::Color{115, 170, 65, 255}, 3.0f)
-            .with_font("EqProRounded", 28.0f)
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("promo_icon"));
+      // Dismiss X button
+      if (button(context, mk(entity, 205),
+                 ComponentConfig{}
+                     .with_label("X")
+                     .with_size(ComponentSize{pixels(24), pixels(24)})
+                     .with_absolute_position()
+                     .with_translate(promo_x + 190.0f, promo_y + 5.0f)
+                     .with_custom_background(afterhours::Color{180, 165, 135, 200})
+                     .with_font("EqProRounded", 14.0f)
+                     .with_custom_text_color(afterhours::Color{80, 70, 50, 255})
+                     .with_alignment(TextAlignment::Center)
+                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_roundness(0.5f)
+                     .with_debug_name("promo_dismiss"))) {
+        promo_dismissed = true;
+      }
+    }
 
     // ========== CHARACTER SELECTOR ==========
     float char_y = (float)screen_h - 90.0f;
     float char_x = (float)screen_w / 2.0f;
+
+    // Context label for character selector
+    div(context, mk(entity, 299),
+        ComponentConfig{}
+            .with_label("SELECT CHARACTER")
+            .with_size(ComponentSize{pixels(200), pixels(24)})
+            .with_absolute_position()
+            .with_translate(char_x - 50.0f, char_y - 28.0f)
+            .with_font("EqProRounded", 14.0f)
+            .with_custom_text_color(afterhours::Color{80, 70, 50, 255})
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("char_label"));
 
     // LB button
     div(context, mk(entity, 300),

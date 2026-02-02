@@ -22,6 +22,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color warning_orange{255, 180, 80, 255};
   afterhours::Color error_red{255, 90, 90, 255};
 
+  // Configurable border thicknesses for visibility
+  float success_border_thickness = 4.0f;  // Thicker for better visibility
+  float error_border_thickness = 2.0f;
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     Theme theme;
@@ -119,7 +123,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(left_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(success_green, 2.0f)
+            .with_border(success_green, success_border_thickness)
             .with_debug_name("card_ok_1"));
 
     div(context, mk(entity, 12),
@@ -144,7 +148,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(left_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(success_green, 2.0f)
+            .with_border(success_green, success_border_thickness)
             .with_debug_name("card_ok_2"));
 
     div(context, mk(entity, 14),
@@ -168,7 +172,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(left_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(success_green, 2.0f)
+            .with_border(success_green, success_border_thickness)
             .with_debug_name("card_ok_3"));
 
     div(context, mk(entity, 16),
@@ -208,7 +212,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(error_red, 2.0f)
+            .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_1"));
 
     div(context, mk(entity, 22),
@@ -232,7 +236,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(error_red, 2.0f)
+            .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_2"));
 
     div(context, mk(entity, 24),
@@ -256,7 +260,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(error_red, 2.0f)
+            .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_3"));
 
     div(context, mk(entity, 26),
@@ -292,7 +296,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_border(error_red, 2.0f)
+            .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_4"));
 
     div(context, mk(entity, 29),
@@ -344,7 +348,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
               .with_translate(box_x, card_y)
               .with_custom_background(card_bg)
               .with_rounded_corners(std::bitset<4>(0b1111))
-              .with_border(text_fits ? success_green : error_red, 2.0f)
+              .with_border(text_fits ? success_green : error_red,
+                           text_fits ? success_border_thickness : error_border_thickness)
               .with_debug_name("shrink_box_" + std::to_string(i)));
 
       div(context, mk(entity, 41 + i * 2),

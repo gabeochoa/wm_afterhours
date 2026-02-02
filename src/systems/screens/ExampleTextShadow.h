@@ -80,6 +80,21 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     float left_col_width = col2_x - col1_x - 20.0f;  // Available width for left column
     float half_left = left_col_width / 2.0f;
 
+    // Configurable contrast background for light shadow examples
+    afterhours::Color contrast_bg{50, 55, 70, 255};
+    float contrast_panel_padding = 10.0f;
+
+    // Dark panel behind yellow text for better shadow visibility
+    div(context, mk(entity, id++),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(left_col_width), pixels(55)})
+            .with_absolute_position()
+            .with_translate(col1_x - contrast_panel_padding / 2.0f, 110.0f)
+            .with_custom_background(contrast_bg)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.15f)
+            .with_debug_name("yellow_panel_bg"));
+
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_label("NO SHADOW")
@@ -116,6 +131,17 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     // Row 2: SOFT vs HARD shadow presets - larger offsets
     afterhours::Color hot_pink{255, 50, 150, 255};
+
+    // Dark panel behind SOFT/HARD for better shadow visibility (especially soft shadows)
+    div(context, mk(entity, id++),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(left_col_width), pixels(70)})
+            .with_absolute_position()
+            .with_translate(col1_x - contrast_panel_padding / 2.0f, 190.0f)
+            .with_custom_background(contrast_bg)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.15f)
+            .with_debug_name("soft_hard_panel_bg"));
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -274,6 +300,18 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     float offsets[] = {1.0f, 2.0f, 4.0f, 6.0f, 8.0f, 10.0f};
     const char *offset_labels[] = {"1px", "2px", "4px", "6px", "8px", "10px"};
 
+    // Dark panel behind offset examples for better visibility of subtle shadows
+    float offset_panel_height = 6 * offset_spacing;
+    div(context, mk(entity, id++),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(right_col_width), pixels(offset_panel_height)})
+            .with_absolute_position()
+            .with_translate(col2_x - contrast_panel_padding / 2.0f, offset_y)
+            .with_custom_background(contrast_bg)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.1f)
+            .with_debug_name("offset_panel_bg"));
+
     for (int i = 0; i < 6; i++) {
       div(context, mk(entity, id++),
           ComponentConfig{}
@@ -294,7 +332,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(col2_x + right_col_width - 55, offset_y + i * offset_spacing + 10.0f)
               .with_font(UIComponent::DEFAULT_FONT, 16.0f)
-              .with_custom_text_color(text_muted)
+              .with_custom_text_color(afterhours::Color{180, 185, 200, 255})  // Lighter text for dark bg
               .with_debug_name("offset_label_" + std::to_string(i)));
     }
 

@@ -55,15 +55,38 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                            .with_flex_direction(FlexDirection::Column)
                            .with_debug_name("root"));
 
-    // Title section
-    div(context, mk(content.ent()),
+    // Title section - row with title text and badge
+    auto title_row = div(context, mk(content.ent()),
+                         ComponentConfig{}
+                             .with_size({percent(1.0f), pixels(60.0f)})
+                             .with_flex_direction(FlexDirection::Row)
+                             .with_justify_content(JustifyContent::Center)
+                             .with_align_items(AlignItems::Center)
+                             .with_margin(Spacing::xs)
+                             .with_debug_name("title_row"));
+
+    // Main title text
+    div(context, mk(title_row.ent(), 0),
         ComponentConfig{}
-            .with_label("Auto Text Color (Now Default!)")
-            .with_size({percent(1.0f), pixels(50.0f)})
+            .with_label("Auto Text Color")
+            .with_size({children(), pixels(60.0f)})
             .with_font(UIComponent::DEFAULT_FONT, 32.0f)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Spacing::xs)
             .with_debug_name("title"));
+
+    // Badge for "Now Default!" - stands out with accent background
+    div(context, mk(title_row.ent(), 1),
+        ComponentConfig{}
+            .with_label("NEW DEFAULT")
+            .with_size({pixels(140.0f), pixels(34.0f)})
+            .with_padding(Spacing::sm)
+            .with_margin(Spacing::sm)
+            .with_background(Theme::Usage::Accent)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.3f)
+            .with_debug_name("now_default_badge"));
 
     div(context, mk(content.ent()),
         ComponentConfig{}

@@ -118,6 +118,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Disabled button
+    // Enhanced disabled styling: reduced opacity + dashed border pattern
+    // makes the disabled state more visually obvious per accessibility guidelines.
+    // Configurable: adjust opacity (0.4-0.6) and border color as needed.
+    constexpr float disabled_opacity = 0.5f;  // Configurable: lower = more obvious
+    afterhours::Color disabled_border_color{120, 120, 130, 200};  // Configurable: muted border
     button(context, mk(row1.ent(), 4),
            ComponentConfig{}
                .with_label("Disabled")
@@ -125,6 +130,8 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_background(Theme::Usage::Primary)
                .with_auto_text_color(true)
                .with_disabled(true)
+               .with_opacity(disabled_opacity)
+               .with_border(disabled_border_color, 2.0f)
                .with_font(UIComponent::DEFAULT_FONT, 20.0f)
                .with_margin(Spacing::xs)
                .with_roundness(0.08f)
@@ -296,7 +303,14 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
       click_counts[11]++;
     }
 
-    // No rounded corners
+    // Sharp corners button - demonstrates .disable_rounded_corners()
+    // STYLE GUIDE: When to use sharp vs rounded corners:
+    // - ROUNDED (default, 0.08f): Standard buttons, form actions, navigation
+    //   Creates a friendly, approachable feel. Use for primary user interactions.
+    // - SHARP: Technical/utility buttons, toolbars, button groups, data tables
+    //   Creates a precise, structured feel. Use for secondary UI or dense layouts.
+    // - MIXED (as in button groups above): Sharp edges where buttons meet,
+    //   rounded on outer edges for visual grouping.
     button(context, mk(row4.ent(), 3),
            ComponentConfig{}
                .with_label("Sharp")

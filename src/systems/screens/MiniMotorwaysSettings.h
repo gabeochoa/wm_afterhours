@@ -18,6 +18,14 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   bool colorblind_mode = false;
   int sensitivity_level = 1; // 0=Low, 1=Default, 2=High
 
+  // === CONFIGURABLE UI OPTIONS ===
+  // Toggle indicator style: "checkmark" (standard) or "vx" (V/X style)
+  std::string toggle_indicator_style = "checkmark";
+  // Sensitivity stepper button size (pixels) - minimum 48 for accessibility
+  float stepper_button_size = 52.0f;
+  // Version display style: "simple" (Version 1.10.2) or "technical" (release-10-patch-2...)
+  std::string version_display_style = "simple";
+
   // Colors matching Mini Motorways inspiration - clean, minimal, pastel
   afterhours::Color bg_cream{245, 242, 235, 255};   // Warm cream background
   afterhours::Color grid_line{215, 210, 200, 255};  // Subtle grid lines
@@ -156,8 +164,20 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(text_dark)
               .with_debug_name("label_" + std::to_string(i)));
 
-      // Toggle circle
-      std::string toggle_icon = is_on ? "V" : "X";
+      // Toggle circle - use configurable indicator style
+      std::string toggle_icon;
+      afterhours::Color toggle_bg;
+      if (toggle_indicator_style == "vx") {
+        // Original V/X style
+        toggle_icon = is_on ? "V" : "X";
+        toggle_bg = afterhours::Color{0, 0, 0, 0};  // Transparent
+      } else {
+        // Standard filled/empty circle style (more universally recognized)
+        // Empty circle for off, filled inner circle for on
+        toggle_icon = "";  // No text - use visual fill instead
+        // For "on" state, use a smaller filled circle inside the ring
+        toggle_bg = afterhours::Color{0, 0, 0, 0};  // Handle fill separately
+      }
       afterhours::Color icon_color = is_on ? text_dark : text_muted;
 
       if (button(context, mk(entity, 101 + static_cast<int>(i) * 3),
@@ -166,7 +186,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(52), pixels(52)})
                      .with_absolute_position()
                      .with_translate(content_x + 340.0f, row_y - 5.0f)
-                     .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                     .with_custom_background(toggle_bg)
                      .with_border(toggle_circle, 3.0f)
                      .with_font("EqProRounded", 22.0f)
                      .with_custom_text_color(icon_color)
@@ -175,6 +195,19 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_roundness(1.0f)
                      .with_debug_name("toggle_" + std::to_string(i)))) {
         *(toggles[i].value) = !is_on;
+      }
+
+      // For checkmark style: add filled inner circle when on
+      if (toggle_indicator_style != "vx" && is_on) {
+        div(context, mk(entity, 102 + static_cast<int>(i) * 3),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(28), pixels(28)})
+                .with_absolute_position()
+                .with_translate(content_x + 340.0f + 12.0f, row_y - 5.0f + 12.0f)
+                .with_custom_background(toggle_circle)
+                .with_rounded_corners(std::bitset<4>(0b1111))
+                .with_roundness(1.0f)
+                .with_debug_name("toggle_fill_" + std::to_string(i)));
       }
     }
 
@@ -191,11 +224,12 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_debug_name("sens_label"));
 
-    // Left arrow
+    // Left arrow - use configurable stepper size for accessibility
+    int stepper_size = static_cast<int>(stepper_button_size);
     if (button(context, mk(entity, 121),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{pixels(44), pixels(44)})
+                   .with_size(ComponentSize{pixels(stepper_size), pixels(stepper_size)})
                    .with_absolute_position()
                    .with_translate(content_x + 340.0f, sens_y - 2.0f)
                    .with_font("EqProRounded", 28.0f)
@@ -224,11 +258,11 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("sens_value"));
 
-    // Right arrow
+    // Right arrow - use configurable stepper size for accessibility
     if (button(context, mk(entity, 123),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(44), pixels(44)})
+                   .with_size(ComponentSize{pixels(stepper_size), pixels(stepper_size)})
                    .with_absolute_position()
                    .with_translate(content_x + 505.0f, sens_y - 2.0f)
                    .with_font("EqProRounded", 28.0f)
@@ -249,9 +283,17 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("separator"));
 
     // ========== VERSION INFO ==========
+    // Use configurable version display style
+    std::string version_label;
+    if (version_display_style == "technical") {
+      version_label = "Mini Motorways release-10-patch-2 (202207010917)";
+    } else {
+      // Simple user-friendly format (default)
+      version_label = "Mini Motorways Version 1.10.2";
+    }
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_label("Mini Motorways release-10-patch-2 (202207010917)")
+            .with_label(version_label)
             .with_size(ComponentSize{pixels(480), pixels(28)})
             .with_absolute_position()
             .with_translate(35.0f, (float)screen_h - 45.0f)

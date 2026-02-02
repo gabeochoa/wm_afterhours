@@ -74,7 +74,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Card 1: Basic surface card (simple) - standardized height
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
-            .with_label("Basic")
+            .with_label("Surface")
             .with_size(ComponentSize{pixels(140), pixels(100)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::md)
@@ -254,7 +254,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         "overlay effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_auto_text_color(true)
             .with_skip_tabbing(true)
             .with_debug_name("info_body"));
 

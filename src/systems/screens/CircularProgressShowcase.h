@@ -22,8 +22,12 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color track_dark{55, 65, 81, 150};      // Subtle track
 
   // Animated values
-  float animated_progress = 0.0f;
+  float animated_progress = 0.35f; // Start at 35% so screenshots show meaningful progress
   float animation_speed = 0.3f;
+
+  // Configuration: minimum size (in base pixels, before scaling) to show percentage text
+  // Sizes below this threshold will hide the percentage label for better readability
+  float min_size_for_percentage_text = 50.0f;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float dt) override {
@@ -406,19 +410,22 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center)
               .with_debug_name(fmt::format("size_label_{}", i)));
 
-      // Progress label
-      div(context, mk(entity, 140 + i),
-          ComponentConfig{}
-              .with_label(fmt::format(
-                  "{}%", static_cast<int>(progress_values[i] * 100)))
-              .with_size(ComponentSize{pixels(small_card_width),
-                                       pixels(20.0f * scale)})
-              .with_absolute_position()
-              .with_translate(card_x, bottom_y + 122.0f * scale)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f * scale)
-              .with_custom_text_color(text_muted)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name(fmt::format("progress_label_{}", i)));
+      // Progress label - only show for sizes above the configured threshold
+      // This improves readability by hiding tiny text on small indicators
+      if (base_sizes[i] >= min_size_for_percentage_text) {
+        div(context, mk(entity, 140 + i),
+            ComponentConfig{}
+                .with_label(fmt::format(
+                    "{}%", static_cast<int>(progress_values[i] * 100)))
+                .with_size(ComponentSize{pixels(small_card_width),
+                                         pixels(20.0f * scale)})
+                .with_absolute_position()
+                .with_translate(card_x, bottom_y + 122.0f * scale)
+                .with_font(UIComponent::DEFAULT_FONT, 18.0f * scale)
+                .with_custom_text_color(text_muted)
+                .with_alignment(TextAlignment::Center)
+                .with_debug_name(fmt::format("progress_label_{}", i)));
+      }
     }
   }
 };

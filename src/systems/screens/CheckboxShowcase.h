@@ -303,9 +303,12 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Min/Max section - use Primary for consistent section headers
+    // Dynamic feedback showing current selection count
+    int mm_count = static_cast<int>(min_max_group.count());
+    std::string minmax_label = "Select 1-2 options (" + std::to_string(mm_count) + " selected)";
     div(context, mk(right_col.ent(), 5),
         ComponentConfig{}
-            .with_label("Min/Max (1-2)")
+            .with_label(minmax_label)
             .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
@@ -318,7 +321,6 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     bool ch_1 = min_max_group.test(0);
     bool ch_2 = min_max_group.test(1);
     bool ch_3 = min_max_group.test(2);
-    int mm_count = static_cast<int>(min_max_group.count());
 
     // Disable unchecking if at min (1), disable checking if at max (2)
     bool dis_1 = (ch_1 && mm_count <= 1) || (!ch_1 && mm_count >= 2);

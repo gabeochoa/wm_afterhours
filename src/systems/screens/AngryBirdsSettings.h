@@ -136,16 +136,15 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float toggle_x = panel_x + 80.0f;
     float toggle_spacing = 100.0f;
 
-    // Icon symbols with descriptive text labels for clarity
+    // Toggle buttons with ON/OFF text for clarity
     struct ToggleInfo {
-      std::string icon;
       std::string label;
       bool *state;
     };
     std::vector<ToggleInfo> toggles = {
-        {"M", "Music", &music_on},
-        {"S", "Sound", &sound_on},
-        {"V", "Vibrate", &vibration_on},
+        {"Music", &music_on},
+        {"Sound", &sound_on},
+        {"Vibrate", &vibration_on},
     };
 
     for (size_t i = 0; i < toggles.size(); i++) {
@@ -155,17 +154,18 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           is_on ? btn_green : afterhours::Color{165, 165, 165, 255};
       afterhours::Color border_col =
           is_on ? btn_green_dark : afterhours::Color{125, 125, 125, 255};
+      std::string btn_text = is_on ? "ON" : "OFF";
 
-      // Icon button
+      // Toggle button with ON/OFF text
       if (button(context, mk(entity, 30 + static_cast<int>(i)),
                  ComponentConfig{}
-                     .with_label(toggles[i].icon)
+                     .with_label(btn_text)
                      .with_size(ComponentSize{pixels(75), pixels(55)})
                      .with_absolute_position()
                      .with_translate(tx, toggle_y)
                      .with_custom_background(bg_col)
                      .with_border(border_col, 5.0f)
-                     .with_font("EqProRounded", 28.0f)
+                     .with_font("EqProRounded", 22.0f)
                      .with_custom_text_color(text_white)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
@@ -189,12 +189,25 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("toggle_label_" + std::to_string(i)));
     }
 
-    // Save/Load Progress button
+    // ========== SAVE/LOAD + SYNC GROUP ==========
+    // Group container for Save/Load and Sync to show relationship
+    div(context, mk(entity, 39),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(260), pixels(88)})
+            .with_absolute_position()
+            .with_translate(panel_x + panel_w - 280.0f, toggle_y - 8.0f)
+            .with_custom_background(afterhours::Color{255, 245, 225, 255})
+            .with_border(afterhours::Color{200, 185, 165, 255}, 2.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.2f)
+            .with_debug_name("save_sync_group"));
+
+    // Save/Load Progress section (inside group)
     div(context, mk(entity, 40),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(200), pixels(70)})
+            .with_size(ComponentSize{pixels(175), pixels(70)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 240.0f, toggle_y)
+            .with_translate(panel_x + panel_w - 270.0f, toggle_y)
             .with_custom_background(panel_peach)
             .with_border(afterhours::Color{200, 185, 165, 255}, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -206,7 +219,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Save/Load")
             .with_size(ComponentSize{pixels(130), pixels(28)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 225.0f, toggle_y + 8.0f)
+            .with_translate(panel_x + panel_w - 258.0f, toggle_y + 8.0f)
             .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_title"));
@@ -216,38 +229,38 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Progress")
             .with_size(ComponentSize{pixels(130), pixels(28)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 225.0f, toggle_y + 32.0f)
+            .with_translate(panel_x + panel_w - 258.0f, toggle_y + 32.0f)
             .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_progress"));
 
-    // WiFi/Cloud sync icon with label
+    // Sync button (visually grouped with Save/Load)
     div(context, mk(entity, 43),
         ComponentConfig{}
-            .with_label("W")
+            .with_label("<>")
             .with_size(ComponentSize{pixels(50), pixels(36)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 5.0f)
+            .with_translate(panel_x + panel_w - 78.0f, toggle_y + 5.0f)
             .with_custom_background(wifi_green)
             .with_border(afterhours::Color{55, 165, 115, 255}, 3.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
-            .with_debug_name("wifi_icon"));
+            .with_debug_name("sync_icon"));
 
-    // WiFi label for clarity
+    // Sync label
     div(context, mk(entity, 44),
         ComponentConfig{}
             .with_label("Sync")
             .with_size(ComponentSize{pixels(50), pixels(20)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 85.0f, toggle_y + 46.0f)
+            .with_translate(panel_x + panel_w - 78.0f, toggle_y + 46.0f)
             .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
-            .with_debug_name("wifi_label"));
+            .with_debug_name("sync_label"));
 
     // ========== BLUE PILL BUTTONS ==========
     float btn_y1 = toggle_y + 100.0f;
@@ -258,12 +271,12 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float btn_w = 300.0f;
     float btn_h = 50.0f;
 
-    // Notifications: ON/OFF (clickable)
+    // Notifications: ON/OFF (clickable) with clear checkmark/X icon
     std::string notif_text =
         notifications_off ? "Notifications: OFF" : "Notifications: ON";
     afterhours::Color notif_icon_color =
         notifications_off ? close_red : btn_green;
-    std::string notif_icon = notifications_off ? "Ø" : "✓";
+    std::string notif_icon = notifications_off ? "X" : "OK";
 
     if (button(context, mk(entity, 50),
                ComponentConfig{}
@@ -360,10 +373,11 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("support"));
 
     // ========== BOTTOM INFO ==========
+    // Build ID formatted more readably with label
     div(context, mk(entity, 70),
         ComponentConfig{}
-            .with_label("15555-1-114203-20-10200-01")
-            .with_size(ComponentSize{pixels(280), pixels(24)})
+            .with_label("Build: 15555.1.114203")
+            .with_size(ComponentSize{pixels(200), pixels(24)})
             .with_absolute_position()
             .with_translate(left_btn_x, btn_y3 + 6.0f)
             .with_font("EqProRounded", 17.0f)
@@ -380,9 +394,10 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(afterhours::Color{130, 115, 95, 255})
             .with_debug_name("version"));
 
+    // Player ID formatted more readably
     div(context, mk(entity, 72),
         ComponentConfig{}
-            .with_label("Player ID: 281676956389")
+            .with_label("Player: #281-676-956")
             .with_size(ComponentSize{pixels(220), pixels(22)})
             .with_absolute_position()
             .with_translate(left_btn_x, btn_y3 + 46.0f)

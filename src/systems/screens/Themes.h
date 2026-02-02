@@ -101,18 +101,19 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(header.ent(), 1),
         ComponentConfig{}
-            .with_label("Current: " + get_theme_name(current_theme))
-            .with_size(ComponentSize{pixels(220), pixels(35)})
+            .with_label("Active: " + get_theme_name(current_theme))
+            .with_size(ComponentSize{pixels(240), pixels(40)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_margin(Margin{.left = DefaultSpacing::medium()})
+            .with_hard_shadow(2.0f, 2.0f)
             .with_debug_name("current_theme"));
 
     // ========== MAIN CONTENT ==========
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.90f), pixels(440)})
+                           .with_size(ComponentSize{percent(0.95f), pixels(480)})
                            .with_custom_background(theme.background)
                            .with_flex_direction(FlexDirection::Row)
                            .with_margin(Margin{.top = DefaultSpacing::medium()})
@@ -122,7 +123,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto selector_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(200), pixels(390)})
+                .with_size(ComponentSize{pixels(200), pixels(430)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -148,17 +149,23 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     int btn_idx = 1;
     for (auto choice : theme_choices) {
       bool selected = (choice == current_theme);
-      if (button(
-              context, mk(selector_panel.ent(), btn_idx),
-              ComponentConfig{}
-                  .with_label(get_theme_name(choice))
-                  .with_size(ComponentSize{percent(0.95f), pixels(45)})
-                  .with_background(selected ? Theme::Usage::Accent
-                                            : Theme::Usage::Secondary)
-                  .with_auto_text_color(true)
-                  .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                  .with_margin(Spacing::xs)
-                  .with_debug_name("theme_btn_" + std::to_string(btn_idx)))) {
+      auto btn_config =
+          ComponentConfig{}
+              .with_label(selected ? "> " + get_theme_name(choice) + " <"
+                                   : get_theme_name(choice))
+              .with_size(ComponentSize{percent(0.95f), pixels(48)})
+              .with_background(selected ? Theme::Usage::Accent
+                                         : Theme::Usage::Secondary)
+              .with_auto_text_color(true)
+              .with_font(UIComponent::DEFAULT_FONT, selected ? 19.0f : 17.0f)
+              .with_margin(Spacing::xs)
+              .with_debug_name("theme_btn_" + std::to_string(btn_idx));
+
+      if (selected) {
+        btn_config = btn_config.with_hard_shadow(3.0f, 3.0f);
+      }
+
+      if (button(context, mk(selector_panel.ent(), btn_idx), btn_config)) {
         current_theme = choice;
       }
       btn_idx++;
@@ -168,7 +175,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto preview_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(380), pixels(390)})
+                .with_size(ComponentSize{pixels(480), pixels(430)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -305,6 +312,45 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, 14.0f)
             .with_soft_shadow(2.0f, 2.0f, 5.0f)
             .with_debug_name("card_accent"));
+
+    // Text display row for theme colors
+    auto text_row =
+        div(context, mk(preview_panel.ent(), 6),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.95f), pixels(50)})
+                .with_custom_background(theme.surface)
+                .with_flex_direction(FlexDirection::Row)
+                .with_no_wrap()
+                .with_margin(Margin{.top = DefaultSpacing::small()})
+                .with_debug_name("text_row"));
+
+    div(context, mk(text_row.ent(), 0),
+        ComponentConfig{}
+            .with_label("Primary Text")
+            .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_debug_name("text_primary"));
+
+    div(context, mk(text_row.ent(), 1),
+        ComponentConfig{}
+            .with_label("Secondary Text")
+            .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
+            .with_background(Theme::Usage::Secondary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_debug_name("text_secondary"));
+
+    div(context, mk(text_row.ent(), 2),
+        ComponentConfig{}
+            .with_label("Surface Text")
+            .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
+            .with_custom_background(theme.surface)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, 13.0f)
+            .with_soft_shadow(1.0f, 1.0f, 4.0f)
+            .with_debug_name("text_surface"));
   }
 };
 

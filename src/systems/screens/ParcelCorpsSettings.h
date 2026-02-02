@@ -134,13 +134,23 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== STATUS BAR ==========
     float status_y = screen_y + 12.0f;
 
-    // Time - increased size for better visibility
+    // Time - increased size for better visibility (game time label for clarity)
+    div(context, mk(entity, 19),
+        ComponentConfig{}
+            .with_label("Game Time:")
+            .with_size(ComponentSize{pixels(80), pixels(18)})
+            .with_absolute_position()
+            .with_translate(screen_x + 15.0f, status_y - 2.0f)
+            .with_font("EqProRounded", 10.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("time_label"));
+
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("23:45")
             .with_size(ComponentSize{pixels(70), pixels(26)})
             .with_absolute_position()
-            .with_translate(screen_x + 15.0f, status_y)
+            .with_translate(screen_x + 15.0f, status_y + 12.0f)
             .with_font("EqProRounded", 20.0f)
             .with_custom_text_color(text_white)
             .with_debug_name("time"));
@@ -245,9 +255,130 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          slider_y + row_h + row_gap, row_w, row_h,
                          "Music Volume", music_volume, icon_red);
 
-    // ========== QUEST PANEL (top center) ==========
-    float quest_x = 420.0f;
-    float quest_y = 25.0f;
+    // ========== ICON LEGEND (explains icon meanings) ==========
+    float legend_y = slider_y + 2 * (row_h + row_gap) + 12.0f;
+
+    // Legend title
+    div(context, mk(entity, 220),
+        ComponentConfig{}
+            .with_label("Icon Legend:")
+            .with_size(ComponentSize{pixels(100), pixels(16)})
+            .with_absolute_position()
+            .with_translate(row_x + 8.0f, legend_y)
+            .with_font("EqProRounded", 11.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_title"));
+
+    // Legend items - row 1
+    float legend_item_y = legend_y + 18.0f;
+    float legend_col_w = (row_w - 16.0f) / 2.0f;
+
+    // @ = Language/Globe
+    div(context, mk(entity, 221),
+        ComponentConfig{}
+            .with_label("@")
+            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + 8.0f, legend_item_y)
+            .with_custom_background(icon_purple)
+            .with_font("EqProRounded", 8.0f)
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("legend_globe"));
+
+    div(context, mk(entity, 222),
+        ComponentConfig{}
+            .with_label("Language")
+            .with_size(ComponentSize{pixels(70), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + 26.0f, legend_item_y)
+            .with_font("EqProRounded", 10.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_globe_text"));
+
+    // ~ = Sync/VSync
+    div(context, mk(entity, 223),
+        ComponentConfig{}
+            .with_label("~")
+            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + legend_col_w + 8.0f, legend_item_y)
+            .with_custom_background(icon_purple)
+            .with_font("EqProRounded", 8.0f)
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("legend_sync"));
+
+    div(context, mk(entity, 224),
+        ComponentConfig{}
+            .with_label("Sync")
+            .with_size(ComponentSize{pixels(50), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + legend_col_w + 26.0f, legend_item_y)
+            .with_font("EqProRounded", 10.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_sync_text"));
+
+    // Legend items - row 2
+    float legend_item_y2 = legend_item_y + 16.0f;
+
+    // X = Motion/Effects
+    div(context, mk(entity, 225),
+        ComponentConfig{}
+            .with_label("X")
+            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + 8.0f, legend_item_y2)
+            .with_custom_background(icon_red)
+            .with_font("EqProRounded", 8.0f)
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("legend_motion"));
+
+    div(context, mk(entity, 226),
+        ComponentConfig{}
+            .with_label("Effects")
+            .with_size(ComponentSize{pixels(70), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + 26.0f, legend_item_y2)
+            .with_font("EqProRounded", 10.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_motion_text"));
+
+    // * = Quality
+    div(context, mk(entity, 227),
+        ComponentConfig{}
+            .with_label("*")
+            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + legend_col_w + 8.0f, legend_item_y2)
+            .with_custom_background(icon_blue)
+            .with_font("EqProRounded", 8.0f)
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("legend_quality"));
+
+    div(context, mk(entity, 228),
+        ComponentConfig{}
+            .with_label("Quality")
+            .with_size(ComponentSize{pixels(60), pixels(14)})
+            .with_absolute_position()
+            .with_translate(row_x + legend_col_w + 26.0f, legend_item_y2)
+            .with_font("EqProRounded", 10.0f)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_quality_text"));
+
+    // ========== QUEST PANEL (moved to right side to avoid overlapping phone) ==========
+    float quest_x = (float)screen_w - 370.0f;
+    float quest_y = 180.0f;
     float quest_w = 340.0f;
     float quest_h = 85.0f;
 
@@ -503,16 +634,18 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("lang_label"));
 
-    // Left chevron (minimum 44px touch target)
+    // Left chevron (increased size for better touch target)
     if (button(context, mk(entity, base_id + 3),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{pixels(28), pixels(28)})
+                   .with_size(ComponentSize{pixels(36), pixels(36)})
                    .with_absolute_position()
-                   .with_translate(x + w - 175.0f, y + 8.0f)
-                   .with_font("EqProRounded", 18.0f)
+                   .with_translate(x + w - 180.0f, y + 4.0f)
+                   .with_font("EqProRounded", 22.0f)
                    .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_custom_background(afterhours::Color{55, 60, 70, 180})
+                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_roundness(0.3f)
                    .with_debug_name("lang_left"))) {
       language_idx = (language_idx == 0)
                          ? static_cast<int>(languages.size()) - 1
@@ -531,16 +664,18 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));
 
-    // Right chevron (minimum 44px touch target)
+    // Right chevron (increased size for better touch target)
     if (button(context, mk(entity, base_id + 5),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(28), pixels(28)})
+                   .with_size(ComponentSize{pixels(36), pixels(36)})
                    .with_absolute_position()
-                   .with_translate(x + w - 20.0f, y + 8.0f)
-                   .with_font("EqProRounded", 18.0f)
+                   .with_translate(x + w - 40.0f, y + 4.0f)
+                   .with_font("EqProRounded", 22.0f)
                    .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_custom_background(afterhours::Color{55, 60, 70, 180})
+                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_roundness(0.3f)
                    .with_debug_name("lang_right"))) {
       language_idx = (language_idx + 1) % languages.size();
     }
@@ -746,17 +881,19 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("selector_label_" + std::to_string(base_id)));
 
-    // Left arrow <
+    // Left arrow < (increased size for better touch target)
     if (button(
             context, mk(entity, base_id + 3),
             ComponentConfig{}
                 .with_label("<")
-                .with_size(ComponentSize{pixels(20), pixels(22)})
+                .with_size(ComponentSize{pixels(32), pixels(32)})
                 .with_absolute_position()
-                .with_translate(x + w - 95.0f, y + 8.0f)
-                .with_font("EqProRounded", 14.0f)
+                .with_translate(x + w - 110.0f, y + 6.0f)
+                .with_font("EqProRounded", 20.0f)
                 .with_custom_text_color(text_muted)
-                .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                .with_custom_background(afterhours::Color{55, 60, 70, 180})
+                .with_rounded_corners(std::bitset<4>(0b1111))
+                .with_roundness(0.3f)
                 .with_debug_name("selector_left_" + std::to_string(base_id)))) {
       option_idx = (option_idx == 0) ? options.size() - 1 : option_idx - 1;
     }
@@ -773,16 +910,18 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("selector_value_" + std::to_string(base_id)));
 
-    // Right arrow >
+    // Right arrow > (increased size for better touch target)
     if (button(context, mk(entity, base_id + 5),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(20), pixels(22)})
+                   .with_size(ComponentSize{pixels(32), pixels(32)})
                    .with_absolute_position()
-                   .with_translate(x + w - 22.0f, y + 8.0f)
-                   .with_font("EqProRounded", 14.0f)
+                   .with_translate(x + w - 38.0f, y + 6.0f)
+                   .with_font("EqProRounded", 20.0f)
                    .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                   .with_custom_background(afterhours::Color{55, 60, 70, 180})
+                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_roundness(0.3f)
                    .with_debug_name("selector_right_" +
                                     std::to_string(base_id)))) {
       option_idx = (option_idx + 1) % options.size();

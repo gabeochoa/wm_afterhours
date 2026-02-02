@@ -106,7 +106,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
         {"Secondary", Theme::Usage::Secondary},
         {"Accent", Theme::Usage::Accent},
         {"Surface", Theme::Usage::Surface},
-        {"Error", Theme::Usage::Error},
+        {"Error/Danger", Theme::Usage::Error},
     };
 
     for (int i = 0; i < 5; i++) {

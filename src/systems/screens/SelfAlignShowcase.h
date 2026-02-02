@@ -63,7 +63,6 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     // to avoid layout calculation issues with SelfAlign
     float container_width = 600.0f;
     float container_height = 224.0f;
-    float margin_size = 32.0f; // Visual spacing from container edges (4x 8px)
 
     auto demo = div(context, mk(main.ent(), 2),
         ComponentConfig{}
@@ -114,10 +113,10 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("flex_end"));
 
-    // Code example
+    // Visual explanation (user-friendly alternative to code snippet)
     div(context, mk(main.ent(), 3),
         ComponentConfig{}
-            .with_label(".with_self_align(SelfAlign::Center)")
+            .with_label("Each element chooses its own position")
             .with_size(ComponentSize{pixels(504), pixels(48)})
             .with_custom_background(afterhours::Color{40, 50, 45, 255})
             .with_custom_text_color(afterhours::Color{150, 255, 150, 255})
@@ -126,7 +125,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = DefaultSpacing::medium(), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
-            .with_debug_name("code"));
+            .with_debug_name("explanation"));
 
     // Benefits
     div(context, mk(main.ent(), 4),

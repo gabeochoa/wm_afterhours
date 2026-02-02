@@ -288,14 +288,28 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)})
             .with_debug_name("status"));
 
-    // Clipboard demo section
+    // Clipboard demo section with help text
+    div(context, mk(main_container.ent(), 3),
+        ComponentConfig{}
+            .with_label("Clipboard Demo: Copy saves current settings, Paste retrieves saved text")
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
+            .with_custom_text_color(theme.font_muted)
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm - 4.0f)  // 12px - help text
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = pixels(0),
+                                .left = pixels(0),
+                                .right = pixels(0)})
+            .with_debug_name("clipboard_help"));
+
     auto clipboard_row =
-        div(context, mk(main_container.ent(), 3),
+        div(context, mk(main_container.ent(), 4),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(50)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
-                .with_margin(Margin{.top = DefaultSpacing::small(),
+                .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
                                     .right = pixels(0)})

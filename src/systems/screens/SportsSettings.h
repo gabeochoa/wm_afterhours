@@ -12,7 +12,7 @@ using namespace afterhours::ui::imm;
 
 struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_tab = 1; // VIDEO tab
-  size_t selected_row = 4; // Max FPS selected
+  size_t selected_row = 6; // Anti-Aliasing method selected to show TSR tooltip
 
   // Colors matching Rematch/FIFA style - dark with bright green accents
   afterhours::Color bg_dark{18, 22, 28, 255};        // Very dark background
@@ -25,7 +25,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color highlight_row{
       45, 75, 95, 160}; // Selected row highlight (semi-transparent)
   afterhours::Color slider_bg{55, 65, 80, 255};    // Slider background
-  afterhours::Color slider_track{35, 45, 55, 255}; // Slider track
+  afterhours::Color slider_track{20, 25, 32, 255}; // Slider track - darker for better contrast
+  afterhours::Color slider_empty_border{60, 70, 85, 255}; // Border for empty portion
 
   std::vector<std::string> tabs = {"GAMEPLAY", "VIDEO", "AUDIO", "CONTROLS"};
 
@@ -67,7 +68,13 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
        3},
       {"Dynamic resolution", false, 0.0f, 0, 0, {"Disabled", "Enabled"}, 1},
       {"Framerate target", true, 0.4f, 30, 120, {}, 0},
-      {"Motion blur", true, 0.7f, 0, 10, {}, 0},
+      {"Motion blur",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Off", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
+       7},
       {"Graphics quality",
        false,
        0.0f,
@@ -93,7 +100,13 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
        {"Beginner", "Amateur", "Semi-Pro", "Professional", "World Class",
         "Legendary"},
        3},
-      {"Game Speed", true, 0.5f, 0, 100, {}, 0},
+      {"Game Speed",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Slow", "Normal", "Fast"},
+       1},
       {"Match Length",
        false,
        0.0f,
@@ -180,6 +193,40 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     default:
       return "Graphics";
     }
+  }
+
+  // Get description text for a setting (tooltips for abbreviations)
+  std::string get_setting_description(const std::string &label,
+                                      const std::string &current_value) {
+    // Anti-Aliasing method explanations
+    if (label == "Anti-Aliasing method") {
+      if (current_value == "TSR") {
+        return "TSR (Temporal Super Resolution) uses";
+      } else if (current_value == "TAA") {
+        return "TAA (Temporal Anti-Aliasing) smooths";
+      } else if (current_value == "FXAA") {
+        return "FXAA (Fast Approximate AA) is a";
+      } else if (current_value == "DLSS") {
+        return "DLSS (Deep Learning Super Sampling)";
+      }
+    }
+    return "Adjust this setting to customize your";
+  }
+
+  std::string get_setting_description_line2(const std::string &label,
+                                            const std::string &current_value) {
+    if (label == "Anti-Aliasing method") {
+      if (current_value == "TSR") {
+        return "AI to upscale lower resolution frames.";
+      } else if (current_value == "TAA") {
+        return "edges using temporal frame data.";
+      } else if (current_value == "FXAA") {
+        return "fast, low-cost edge smoothing method.";
+      } else if (current_value == "DLSS") {
+        return "uses NVIDIA AI for quality upscaling.";
+      }
+    }
+    return "gaming experience.";
   }
 
   // Helper to format slider value for display - works with current tab's
@@ -543,7 +590,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         float bar_w = 100.0f;
         float bar_h = 14.0f;
 
-        // Slider track background
+        // Slider track background with border for contrast
         div(context, mk(entity, 500 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(static_cast<int>(bar_w)),
@@ -551,6 +598,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_absolute_position()
                 .with_translate(bar_x, bar_y)
                 .with_custom_background(slider_track)
+                .with_border(slider_empty_border, 1.0f)
                 .with_skip_tabbing(true)
                 .with_debug_name("slider_bg_" + std::to_string(i)));
 
@@ -584,7 +632,13 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    ? "---"
                    : selected_setting.options[selected_setting.option_idx]);
 
-    div(context, mk(entity, 300),
+    // Get dynamic descriptions (with tooltips for abbreviations like TSR)
+    std::string desc_line1 =
+        get_setting_description(selected_setting.label, current_val);
+    std::string desc_line2 =
+        get_setting_description_line2(selected_setting.label, current_val);
+
+    div(context, mk(entity, 700),
         ComponentConfig{}
             .with_label(selected_setting.label)
             .with_size(
@@ -595,9 +649,9 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("help_title"));
 
-    div(context, mk(entity, 301),
+    div(context, mk(entity, 701),
         ComponentConfig{}
-            .with_label("Adjust this setting to customize your")
+            .with_label(desc_line1)
             .with_size(
                 ComponentSize{pixels(static_cast<int>(help_w)), pixels(50)})
             .with_absolute_position()
@@ -606,9 +660,9 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("help_desc1"));
 
-    div(context, mk(entity, 302),
+    div(context, mk(entity, 702),
         ComponentConfig{}
-            .with_label("gaming experience.")
+            .with_label(desc_line2)
             .with_size(
                 ComponentSize{pixels(static_cast<int>(help_w)), pixels(30)})
             .with_absolute_position()
@@ -617,7 +671,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_debug_name("help_desc2"));
 
-    div(context, mk(entity, 303),
+    div(context, mk(entity, 703),
         ComponentConfig{}
             .with_label("Current: " + current_val)
             .with_size(

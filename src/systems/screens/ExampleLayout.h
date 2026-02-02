@@ -97,7 +97,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceAround)
+                .with_justify_content(JustifyContent::SpaceBetween)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
@@ -108,7 +108,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         div(context, mk(col_container.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.45f), pixels(240)})
+                .with_size(ComponentSize{percent(0.40f), pixels(220)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)
@@ -150,11 +150,12 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     // Right side description - use percent sizing with better visibility
     auto desc_panel = div(context, mk(col_container.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.45f), pixels(240)})
+            .with_size(ComponentSize{percent(0.40f), pixels(220)})
             .with_custom_background(theme.primary)
             .with_padding(Spacing::md)
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
+            .with_roundness(0.08f)
             .with_skip_tabbing(true)
             .with_debug_name("description_panel"));
 

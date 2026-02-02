@@ -18,6 +18,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
   std::string search_query = "Type to search...";
   std::string notes = "Type something here...";
 
+  // Password visibility toggle
+  bool show_password = false;
+
   // Status message
   std::string status_message = "Enter your details above";
 
@@ -81,9 +84,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(form_container.ent(), idx * 2),
           ComponentConfig{}
               .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(30)})
+              .with_size(ComponentSize{pixels(396), pixels(32)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+              .with_font(UIComponent::DEFAULT_FONT, 24.0f)
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
@@ -116,9 +119,59 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       status_message = "Email: " + email;
     }
 
-    // Password input with masking
-    if (make_input_field(2, "Password", password, Theme::Usage::Secondary, '*')) {
+    // Password input with masking and show/hide toggle
+    // Password label
+    div(context, mk(form_container.ent(), 4),
+        ComponentConfig{}
+            .with_label("Password:")
+            .with_size(ComponentSize{pixels(396), pixels(32)})
+            .with_background(Theme::Usage::None)
+            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_skip_tabbing(true)
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_debug_name("password_label"));
+
+    // Password row container (input + toggle button)
+    auto password_row =
+        div(context, mk(form_container.ent(), 5),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(396), pixels(38)})
+                .with_flex_direction(FlexDirection::Row)
+                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_align_items(AlignItems::Center)
+                .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+                .with_debug_name("password_row"));
+
+    // Password text input (narrower to make room for toggle)
+    auto password_config = ComponentConfig{}
+        .with_size(ComponentSize{pixels(310), pixels(38)})
+        .with_background(Theme::Usage::Secondary)
+        .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+        .with_rounded_corners(RoundedCorners().all_round())
+        .with_roundness(0.15f)
+        .with_debug_name("password_input");
+
+    // Apply mask only when not showing password
+    if (!show_password) {
+      password_config.with_mask_char('*');
+    }
+
+    if (text_input(context, mk(password_row.ent(), 0), password, password_config)) {
       status_message = "Password changed";
+    }
+
+    // Show/Hide toggle button
+    if (button(context, mk(password_row.ent(), 1),
+               ComponentConfig{}
+                   .with_label(show_password ? "Hide" : "Show")
+                   .with_size(ComponentSize{pixels(76), pixels(38)})
+                   .with_background(Theme::Usage::Accent)
+                   .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                   .with_rounded_corners(RoundedCorners().all_round())
+                   .with_roundness(0.15f)
+                   .with_debug_name("password_toggle"))) {
+      show_password = !show_password;
+      status_message = show_password ? "Password visible" : "Password hidden";
     }
 
     // Separator - indices 0-5 used by 3 label/input pairs above
@@ -130,9 +183,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(30)})
+            .with_size(ComponentSize{pixels(396), pixels(32)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
@@ -172,15 +225,15 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_debug_name("status"));
 
-    // Instructions - reduced size to fit
+    // Instructions - concise navigation hints
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
-            .with_label("Click to focus, type to input. Backspace/arrows/Home/End for navigation.")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_label("Tab: next field | Arrows: cursor | Enter: submit")
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("instructions"));
   }
