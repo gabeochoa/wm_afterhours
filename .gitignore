@@ -83,3 +83,5 @@ compile_commands.json
 .cursor/ralph-config.json
 tmp/
 .cursor/debug.log
+
+audits/
