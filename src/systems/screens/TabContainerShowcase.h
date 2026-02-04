@@ -13,7 +13,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 0;
 
   std::array<std::string_view, 3> tab_labels = {"Profile", "Account",
-                                                 "Preferences"};
+                                                 "Prefs"};
 
   void render_profile_tab(UIContext<InputAction> &context, afterhours::Entity &root,
                           const Theme &theme) {

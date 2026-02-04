@@ -46,8 +46,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color quest_blue{65, 155, 220, 255};      // Quest panel blue
   afterhours::Color quest_blue_dark{45, 120, 180, 255}; // Quest panel border
 
-  std::vector<std::string> languages = {"King's English", "American", "Deutsch",
-                                        "Français"};
+  std::vector<std::string> languages = {"English UK", "English US", "Deutsch",
+                                        "Francais"};
 
   // MSAA options and current selection
   std::vector<std::string> msaa_options = {"Off", "2x", "4x", "8x"};

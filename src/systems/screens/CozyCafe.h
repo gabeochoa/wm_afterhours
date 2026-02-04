@@ -707,7 +707,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Badge hint: explain what "!" means
     div(context, mk(entity, 514),
         ComponentConfig{}
-            .with_label("Ready to claim")
+            .with_label("Ready!")
             .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 30)),
                                      pixels(16)})
             .with_absolute_position()

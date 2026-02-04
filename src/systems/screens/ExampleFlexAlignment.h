@@ -15,7 +15,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
   size_t active_category = 0;
 
   std::array<std::string_view, 5> category_labels = {
-    "All", "Vertical Spacing", "Horizontal Spacing", "Cross-Axis Align", "Individual Override"
+    "All", "Vertical", "Horizontal", "Cross-Axis", "Self Align"
   };
 
   // Vertical justify demo (Column direction) - compact

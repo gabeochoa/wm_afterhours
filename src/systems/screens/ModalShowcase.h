@@ -36,6 +36,16 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
   static constexpr int MODAL_SETTINGS = 105;
   static constexpr int MODAL_NESTED_CONFIRM = 106;
 
+  // Configurable design parameters
+  static constexpr float SECTION_ROUNDNESS = 0.08f;
+  static constexpr float BUTTON_ROUNDNESS = 0.08f;
+  static constexpr float SECTION_HEIGHT = 95.0f;
+  static constexpr float ROW_HEIGHT = 44.0f;
+  static constexpr float BUTTON_HEIGHT = 40.0f;
+  static constexpr float HEADER_HEIGHT = 30.0f;
+  static constexpr float TITLE_HEIGHT = 50.0f;
+  static constexpr float HELPER_BUTTON_WIDTH = 170.0f;  // Uniform width for helper buttons
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
 
@@ -47,7 +57,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.88f)})
             .with_custom_background(theme.background)
-            .with_roundness(0.08f)
+            .with_roundness(SECTION_ROUNDNESS)
             .with_self_align(SelfAlign::Center)
             .with_debug_name("modal_bg"));
 
@@ -59,16 +69,16 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_padding(Spacing::md)
                 .with_debug_name("modal_main"));
 
-    // Title
+    // Title - use theme font sizes
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Modal Dialogs")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(TITLE_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
-            .with_roundness(0.1f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_lg)
+            .with_roundness(SECTION_ROUNDNESS)
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::small(),
                                 .left = pixels(0),
@@ -81,10 +91,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section1 =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(95)})
+                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
-                .with_roundness(0.08f)
+                .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("section1"));
@@ -93,19 +103,19 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent(), 0),
         ComponentConfig{}
             .with_label("BASIC MODALS")
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(4)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section1_label"));
 
     auto row1 =
         div(context, mk(section1.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
@@ -114,11 +124,12 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row1.ent(), 0),
                ComponentConfig{}
                    .with_label("Simple Modal")
-                   .with_size(ComponentSize{pixels(180), pixels(40)})
+                   .with_size(ComponentSize{pixels(180), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
                    .with_margin(Margin{.right = DefaultSpacing::medium()})
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_simple"))) {
       show_basic_modal = true;
     }
@@ -126,10 +137,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row1.ent(), 1),
                ComponentConfig{}
                    .with_label("Composable Modal")
-                   .with_size(ComponentSize{pixels(220), pixels(40)})
+                   .with_size(ComponentSize{pixels(220), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_composable"))) {
       show_composable_modal = true;
     }
@@ -140,10 +152,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section2 =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(95)})
+                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
-                .with_roundness(0.08f)
+                .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("section2"));
@@ -152,19 +164,19 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent(), 0),
         ComponentConfig{}
             .with_label("HELPER FUNCTIONS")
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(4)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section2_label"));
 
     auto row2 =
         div(context, mk(section2.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
@@ -172,24 +184,26 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     if (button(context, mk(row2.ent(), 0),
                ComponentConfig{}
-                   .with_label("modal::info")
-                   .with_size(ComponentSize{pixels(160), pixels(40)})
+                   .with_label("Info Dialog")
+                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
                    .with_margin(Margin{.right = DefaultSpacing::medium()})
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_info"))) {
       show_info_modal = true;
     }
 
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
-                   .with_label("modal::confirm")
-                   .with_size(ComponentSize{pixels(180), pixels(40)})
+                   .with_label("Confirmation")
+                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
                    .with_margin(Margin{.right = DefaultSpacing::medium()})
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_confirm"))) {
       show_confirm_modal = true;
       last_confirm_result = afterhours::DialogResult::Pending;
@@ -197,11 +211,12 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     if (button(context, mk(row2.ent(), 2),
                ComponentConfig{}
-                   .with_label("modal::fyi")
-                   .with_size(ComponentSize{pixels(160), pixels(40)})
+                   .with_label("Notice")
+                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_fyi"))) {
       show_fyi_modal = true;
       last_fyi_result = afterhours::DialogResult::Pending;
@@ -213,10 +228,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section3 =
         div(context, mk(main_container.ent(), 3),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(95)})
+                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
-                .with_roundness(0.08f)
+                .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("section3"));
@@ -225,19 +240,19 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent(), 0),
         ComponentConfig{}
             .with_label("MODAL STACKING")
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(4)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section3_label"));
 
     auto row3 =
         div(context, mk(section3.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
@@ -246,10 +261,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row3.ent(), 0),
                ComponentConfig{}
                    .with_label("Open Settings (with nested confirm)")
-                   .with_size(ComponentSize{pixels(380), pixels(40)})
+                   .with_size(ComponentSize{pixels(380), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_stacked"))) {
       show_stacked_settings = true;
     }
@@ -260,10 +276,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section4 =
         div(context, mk(main_container.ent(), 4),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(95)})
+                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
-                .with_roundness(0.08f)
+                .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("section4"));
@@ -272,19 +288,19 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section4.ent(), 0),
         ComponentConfig{}
             .with_label("INPUT BLOCKING TEST")
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(4)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section4_label"));
 
     auto row4 =
         div(context, mk(section4.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
@@ -295,21 +311,26 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row4.ent(), 0),
                ComponentConfig{}
                    .with_label("Background Button")
-                   .with_size(ComponentSize{pixels(220), pixels(40)})
+                   .with_size(ComponentSize{pixels(220), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
                    .with_margin(Margin{.right = DefaultSpacing::large()})
+                   .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_background"))) {
       background_click_count++;
     }
 
+    // Counter display with visual containment - use lightened surface for distinction
     div(context, mk(row4.ent(), 1),
         ComponentConfig{}
             .with_label("BG Clicks: " + std::to_string(background_click_count))
-            .with_size(ComponentSize{pixels(180), pixels(40)})
+            .with_size(ComponentSize{pixels(180), pixels(BUTTON_HEIGHT)})
+            .with_custom_background(afterhours::colors::lighten(theme.background, 0.15f))
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_padding(Spacing::xs)
+            .with_roundness(BUTTON_ROUNDNESS)
             .with_debug_name("bg_click_count"));
 
     // =========================================================================
@@ -318,10 +339,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section5 =
         div(context, mk(main_container.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(95)})
+                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
-                .with_roundness(0.08f)
+                .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section5"));
 
@@ -329,24 +350,24 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section5.ent(), 0),
         ComponentConfig{}
             .with_label("RESULTS")
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(4)})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section5_label"));
 
     auto row5 =
         div(context, mk(section5.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_custom_background(theme.background)
-                .with_roundness(0.05f)
+                .with_roundness(SECTION_ROUNDNESS)
                 .with_padding(Spacing::sm)
                 .with_debug_name("row5"));
 
@@ -372,9 +393,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                         fyi_result_str + "  |  Confirms: " +
                         std::to_string(confirm_count) +
                         "  Cancels: " + std::to_string(cancel_count))
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(BUTTON_HEIGHT)})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("results"));
 

@@ -183,7 +183,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     auto col1 =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_border(theme.accent, 2.0f)
@@ -215,7 +215,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     auto col2 =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_border(theme.accent, 2.0f)
@@ -247,7 +247,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     auto col3 =
         div(context, mk(content.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_border(theme.accent, 2.0f)

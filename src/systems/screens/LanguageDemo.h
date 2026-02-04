@@ -133,7 +133,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto button_row =
         div(context, mk(header.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(270), pixels(54)})
+                .with_size(ComponentSize{pixels(300), pixels(54)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_align_items(AlignItems::Center)

@@ -172,30 +172,30 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(desc_panel.ent(), 1),
         ComponentConfig{}
             .with_label("Column: stacks vertically")
-            .with_size(ComponentSize{percent(0.90f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line1"));
 
     div(context, mk(desc_panel.ent(), 2),
         ComponentConfig{}
             .with_label("Row: arranges horizontally")
-            .with_size(ComponentSize{percent(0.90f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line2"));
 
     div(context, mk(desc_panel.ent(), 3),
         ComponentConfig{}
             .with_label("Margins control spacing")
-            .with_size(ComponentSize{percent(0.90f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
             .with_skip_tabbing(true)
             .with_debug_name("desc_line3"));
 

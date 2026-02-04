@@ -12,11 +12,59 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
+  // ========== CONFIGURABLE GAME STATE ==========
   int score = 15000;
   int ammo_clip = 35;
   int ammo_reserve = 210;
   float health_pct = 0.8f;
   float armor_pct = 0.45f;
+  int killstreak_count = 1;        // Current killstreak progress (0-3)
+  int killstreak_max = 3;          // Max killstreak boxes
+
+  // ========== CONFIGURABLE LAYOUT PARAMETERS ==========
+  // Margins and spacing
+  float margin_edge = 22.0f;        // Edge margin for UI elements
+  float margin_bottom = 20.0f;      // Bottom margin
+  float element_gap = 10.0f;        // Gap between adjacent elements
+
+  // Compass configuration
+  float compass_size = 70.0f;
+  float compass_font_size = 65.0f;
+  float compass_cardinal_size = 19.0f;
+  float compass_radius = 42.0f;
+  float compass_tick_size = 3.0f;
+
+  // Killstreak sidebar configuration
+  float ks_icon_size = 60.0f;
+  float ks_icon_gap = 16.0f;        // Reduced gap to fit 4 icons above minimap
+  float ks_start_y = 140.0f;
+  int ks_sidebar_count = 4;         // Number of skill icons to show on left
+
+  // Minimap configuration
+  float minimap_width = 200.0f;
+  float minimap_height = 160.0f;
+  float minimap_label_height = 26.0f;
+
+  // Health panel configuration
+  float health_panel_width = 230.0f;
+  float health_panel_height = 60.0f;
+  float health_bar_width = 165.0f;
+  float health_bar_height = 16.0f;
+  float armor_bar_height = 12.0f;
+
+  // Equipment box configuration
+  float eq_box_size = 70.0f;
+  float eq_icon_size = 50.0f;
+
+  // Crosshair configuration
+  float crosshair_size = 64.0f;
+
+  // ========== FONT SIZES ==========
+  float font_small = 12.0f;
+  float font_medium = 17.0f;
+  float font_normal = 18.0f;
+  float font_large = 21.0f;
+  float font_xlarge = 42.0f;
 
   // Loaded textures
   bool textures_loaded = false;
@@ -75,9 +123,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color dot_red{180, 60, 50, 255};
 
   std::vector<std::string> kill_feed = {
-      "@ Alpha_Six = |Heth eliminated [Emepine] with M4",
-      "@ [Tsha_Rio = |Heth eliminated [Emepine] with SCAR]",
-      "@ Alpha_Six  - Under fire! - Under fire!",
+      "Alpha_Six eliminated [Emepine] with M4",
+      "[Tsha_Rio] eliminated [Emepine] with SCAR",
+      "Alpha_Six - Under fire!",
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -108,16 +156,22 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     float cx = (float)screen_w / 2.0f;
+    float cy = (float)screen_h / 2.0f;
 
     // ========== TOP CENTER: Compass ==========
+    float compass_cx = cx;
+    float compass_top_y = 25.0f;
+    float compass_cy = compass_top_y + compass_size / 2.0f;
+
     // Compass ring
     div(context, mk(entity, 100),
         ComponentConfig{}
             .with_label("O")
-            .with_size(ComponentSize{pixels(70), pixels(70)})
+            .with_size(ComponentSize{pixels(static_cast<int>(compass_size)),
+                                     pixels(static_cast<int>(compass_size))})
             .with_absolute_position()
-            .with_translate(cx - 35.0f, 25.0f)
-            .with_font("EqProRounded", 65.0f)
+            .with_translate(compass_cx - compass_size / 2.0f, compass_top_y)
+            .with_font("EqProRounded", compass_font_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_ring"));
@@ -128,8 +182,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("N")
             .with_size(ComponentSize{pixels(20), pixels(20)})
             .with_absolute_position()
-            .with_translate(cx - 8.0f, 8.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(compass_cx - 8.0f, compass_top_y - 17.0f)
+            .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_n"));
@@ -139,8 +193,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("S")
             .with_size(ComponentSize{pixels(20), pixels(20)})
             .with_absolute_position()
-            .with_translate(cx - 8.0f, 88.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(compass_cx - 8.0f, compass_top_y + compass_size - 3.0f)
+            .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_s"));
@@ -150,8 +204,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("W")
             .with_size(ComponentSize{pixels(20), pixels(20)})
             .with_absolute_position()
-            .with_translate(cx - 55.0f, 52.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(compass_cx - compass_size / 2.0f - 20.0f, compass_cy - 8.0f)
+            .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_w"));
@@ -161,39 +215,35 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("E")
             .with_size(ComponentSize{pixels(20), pixels(20)})
             .with_absolute_position()
-            .with_translate(cx + 38.0f, 52.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(compass_cx + compass_size / 2.0f + 3.0f, compass_cy - 8.0f)
+            .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_e"));
 
-    // Compass needle
+    // Compass needle (vertical line)
     div(context, mk(entity, 105),
         ComponentConfig{}
             .with_label("|")
             .with_size(ComponentSize{pixels(20), pixels(30)})
             .with_absolute_position()
-            .with_translate(cx - 10.0f, 35.0f)
+            .with_translate(compass_cx - 10.0f, compass_cy - 12.0f)
             .with_font("EqProRounded", 28.0f)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_needle"));
 
     // Compass tick marks (8 positions around the ring)
-    float compass_cx = cx;
-    float compass_cy = 60.0f;
-    float compass_radius = 42.0f;
-    float tick_size = 3.0f;
     for (int i = 0; i < 8; i++) {
-      float angle = (float)i * 3.14159f / 4.0f;
+      float angle = (float)i * 3.14159f / 4.0f - 3.14159f / 2.0f; // Start from top
       float tick_x =
-          compass_cx + std::cos(angle) * compass_radius - tick_size / 2.0f;
+          compass_cx + std::cos(angle) * compass_radius - compass_tick_size / 2.0f;
       float tick_y =
-          compass_cy + std::sin(angle) * compass_radius - tick_size / 2.0f;
+          compass_cy + std::sin(angle) * compass_radius - compass_tick_size / 2.0f;
       div(context, mk(entity, 106 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(tick_size)),
-                                       pixels(static_cast<int>(tick_size))})
+              .with_size(ComponentSize{pixels(static_cast<int>(compass_tick_size)),
+                                       pixels(static_cast<int>(compass_tick_size))})
               .with_absolute_position()
               .with_translate(tick_x, tick_y)
               .with_custom_background(text_muted)
@@ -267,60 +317,61 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("voice"));
 
     // ========== LEFT: Killstreak Icons ==========
-    // Array of skill textures and labels
+    // Array of skill textures and labels (only show ks_sidebar_count)
     std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>
         skill_icons = {
             {&icon_uav_tex, "[T]", "UAV"},
             {&icon_recon_tex, "[O]", ""},
             {&icon_shield_tactical_tex, "[U]", ""},
             {&icon_strike_tex, "[X]", ""},
-            {&icon_danger_tex, "/!\\", ""},
         };
 
-    float ks_y = 140.0f;
-    for (size_t i = 0; i < skill_icons.size(); i++) {
-      float row_y = ks_y + (float)i * 78.0f;
+    size_t icons_to_show = std::min(static_cast<size_t>(ks_sidebar_count), skill_icons.size());
+    for (size_t i = 0; i < icons_to_show; i++) {
+      float row_y = ks_start_y + (float)i * (ks_icon_size + ks_icon_gap);
       auto &[tex_ptr, fallback_label, label] = skill_icons[i];
 
-      // Cog/gear icon
-      div(context, mk(entity, 140 + static_cast<int>(i) * 3),
+      // Cog/gear icon - subtle indicator
+      div(context, mk(entity, 140 + static_cast<int>(i) * 4),
           ComponentConfig{}
               .with_label("*")
-              .with_size(ComponentSize{pixels(20), pixels(20)})
+              .with_size(ComponentSize{pixels(16), pixels(16)})
               .with_absolute_position()
-              .with_translate(18.0f, row_y + 20.0f)
-              .with_font("EqProRounded", 20.0f)
+              .with_translate(margin_edge - 2.0f, row_y + ks_icon_size / 2.0f - 8.0f)
+              .with_font("EqProRounded", 16.0f)
               .with_custom_text_color(text_muted)
               .with_debug_name("cog_" + std::to_string(i)));
 
-      // Icon box background - 44px minimum for touch targets
-      div(context, mk(entity, 141 + static_cast<int>(i) * 3),
+      // Icon box background
+      div(context, mk(entity, 141 + static_cast<int>(i) * 4),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(60), pixels(60)})
+              .with_size(ComponentSize{pixels(static_cast<int>(ks_icon_size)),
+                                       pixels(static_cast<int>(ks_icon_size))})
               .with_absolute_position()
-              .with_translate(45.0f, row_y)
+              .with_translate(margin_edge + 20.0f, row_y)
               .with_custom_background(panel_dark)
               .with_border(border_dark, 1.0f)
               .with_debug_name("ks_bg_" + std::to_string(i)));
 
-      // Icon image or fallback text - 44px minimum
+      // Icon image or fallback text
       if (tex_ptr && tex_ptr->id != 0) {
         afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
                                                    (float)tex_ptr->height};
-        sprite(context, mk(entity, 142 + static_cast<int>(i) * 3), *tex_ptr,
+        sprite(context, mk(entity, 142 + static_cast<int>(i) * 4), *tex_ptr,
                src,
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(48), pixels(48)})
                    .with_absolute_position()
-                   .with_translate(51.0f, row_y + 6.0f)
+                   .with_translate(margin_edge + 26.0f, row_y + 6.0f)
                    .with_debug_name("ks_icon_" + std::to_string(i)));
       } else {
-        div(context, mk(entity, 142 + static_cast<int>(i) * 3),
+        div(context, mk(entity, 142 + static_cast<int>(i) * 4),
             ComponentConfig{}
                 .with_label(fallback_label)
-                .with_size(ComponentSize{pixels(60), pixels(60)})
+                .with_size(ComponentSize{pixels(static_cast<int>(ks_icon_size)),
+                                         pixels(static_cast<int>(ks_icon_size))})
                 .with_absolute_position()
-                .with_translate(45.0f, row_y)
+                .with_translate(margin_edge + 20.0f, row_y)
                 .with_font("EqProRounded", 20.0f)
                 .with_custom_text_color(text_tan)
                 .with_alignment(TextAlignment::Center)
@@ -329,173 +380,173 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Label (only for UAV)
       if (!label.empty()) {
-        div(context, mk(entity, 143 + static_cast<int>(i) * 3),
+        div(context, mk(entity, 143 + static_cast<int>(i) * 4),
             ComponentConfig{}
                 .with_label(label)
-                .with_size(ComponentSize{pixels(60), pixels(18)})
+                .with_size(ComponentSize{pixels(static_cast<int>(ks_icon_size)), pixels(16)})
                 .with_absolute_position()
-                .with_translate(45.0f, row_y + 62.0f)
-                .with_font("EqProRounded", 18.0f)
+                .with_translate(margin_edge + 20.0f, row_y + ks_icon_size + 2.0f)
+                .with_font("EqProRounded", font_medium)
                 .with_custom_text_color(text_muted)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("ks_label_" + std::to_string(i)));
       }
     }
 
-    // ========== BOTTOM LEFT: Killstreak Bar ==========
-    float bl_y = (float)screen_h - 195.0f;
+    // ========== BOTTOM LEFT: Minimap ==========
+    // Calculate layout from bottom of screen upward
+    float map_bottom_margin = margin_bottom;
+    float map_content_y = (float)screen_h - map_bottom_margin - minimap_height;
+    float map_label_y = map_content_y - minimap_label_height - 4.0f;
+
+    // Map location label
+    div(context, mk(entity, 210),
+        ComponentConfig{}
+            .with_label("7B Pop <192>")
+            .with_size(ComponentSize{pixels(static_cast<int>(minimap_width)),
+                                     pixels(static_cast<int>(minimap_label_height))})
+            .with_absolute_position()
+            .with_translate(margin_edge, map_label_y)
+            .with_font("EqProRounded", font_large)
+            .with_custom_text_color(text_tan)
+            .with_debug_name("map_label"));
+
+    // Minimap background
+    div(context, mk(entity, 220),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(minimap_width)),
+                                     pixels(static_cast<int>(minimap_height))})
+            .with_absolute_position()
+            .with_translate(margin_edge, map_content_y)
+            .with_custom_background(minimap_green)
+            .with_border(border_dark, 2.0f)
+            .with_debug_name("minimap"));
+
+    // Map grid lines (vertical)
+    float grid_cell_w = minimap_width / 4.0f;
+    float grid_cell_h = minimap_height / 4.0f;
+    for (int i = 1; i < 4; i++) {
+      div(context, mk(entity, 230 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(1), pixels(static_cast<int>(minimap_height - 15.0f))})
+              .with_absolute_position()
+              .with_translate(margin_edge + (float)i * grid_cell_w, map_content_y + 8.0f)
+              .with_custom_background(afterhours::Color{60, 70, 60, 180})
+              .with_debug_name("grid_v_" + std::to_string(i)));
+    }
+
+    // Map grid lines (horizontal)
+    for (int i = 1; i < 4; i++) {
+      div(context, mk(entity, 240 + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(static_cast<int>(minimap_width - 15.0f)), pixels(1)})
+              .with_absolute_position()
+              .with_translate(margin_edge + 8.0f, map_content_y + (float)i * grid_cell_h)
+              .with_custom_background(afterhours::Color{60, 70, 60, 180})
+              .with_debug_name("grid_h_" + std::to_string(i)));
+    }
+
+    // Red danger zone on map
+    div(context, mk(entity, 250),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(50), pixels(50)})
+            .with_absolute_position()
+            .with_translate(margin_edge + minimap_width - 65.0f, map_content_y + 10.0f)
+            .with_custom_background(afterhours::Color{140, 50, 40, 120})
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("danger_zone"));
+
+    // Player icon on map - triangle shape indicator
+    float player_map_x = margin_edge + minimap_width / 2.0f - 8.0f;
+    float player_map_y = map_content_y + minimap_height - 35.0f;
+    div(context, mk(entity, 260),
+        ComponentConfig{}
+            .with_label("^")
+            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_absolute_position()
+            .with_translate(player_map_x, player_map_y)
+            .with_font("EqProRounded", font_large)
+            .with_custom_text_color(text_tan)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("player_icon"));
+
+    // Objective marker - red dot
+    div(context, mk(entity, 261),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(12), pixels(12)})
+            .with_absolute_position()
+            .with_translate(margin_edge + minimap_width - 45.0f, map_content_y + 30.0f)
+            .with_custom_background(dot_red)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("obj_marker"));
+
+    // ========== BOTTOM LEFT: Killstreak Progress Bar (below minimap) ==========
+    float ks_bar_width = 200.0f;
+    float ks_bar_height = 28.0f;
+    float ks_bar_y = map_label_y - ks_bar_height - 8.0f;
+    float ks_box_size = 14.0f;
+    float ks_box_gap = 4.0f;
 
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(175), pixels(26)})
+            .with_size(ComponentSize{pixels(static_cast<int>(ks_bar_width)),
+                                     pixels(static_cast<int>(ks_bar_height))})
             .with_absolute_position()
-            .with_translate(22.0f, bl_y)
+            .with_translate(margin_edge, ks_bar_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 1.0f)
             .with_debug_name("ks_bar"));
 
     div(context, mk(entity, 201),
         ComponentConfig{}
-            .with_label("@ KILLSTREAK")
-            .with_size(ComponentSize{pixels(125), pixels(24)})
+            .with_label("KILLSTREAK")
+            .with_size(ComponentSize{pixels(120), pixels(static_cast<int>(ks_bar_height - 4.0f))})
             .with_absolute_position()
-            .with_translate(28.0f, bl_y + 2.0f)
-            .with_font("EqProRounded", 17.0f)
+            .with_translate(margin_edge + 8.0f, ks_bar_y + 2.0f)
+            .with_font("EqProRounded", font_medium)
             .with_custom_text_color(text_tan)
             .with_debug_name("ks_text"));
 
-    // Killstreak progress boxes
-    div(context, mk(entity, 202),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
-            .with_absolute_position()
-            .with_translate(150.0f, bl_y + 5.0f)
-            .with_custom_background(text_tan)
-            .with_debug_name("ks_box1"));
-
-    div(context, mk(entity, 203),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
-            .with_absolute_position()
-            .with_translate(170.0f, bl_y + 5.0f)
-            .with_custom_background(border_dark)
-            .with_debug_name("ks_box2"));
-
-    // ========== BOTTOM LEFT: Minimap ==========
-    // Minimap total height: label(26) + gap(4) + map(160) = 190 + 20px margin = 210
-    float map_y = (float)screen_h - 215.0f;
-
-    div(context, mk(entity, 210),
-        ComponentConfig{}
-            .with_label("7B Pop <192>")
-            .with_size(ComponentSize{pixels(200), pixels(26)})
-            .with_absolute_position()
-            .with_translate(22.0f, map_y)
-            .with_font("EqProRounded", 22.0f)
-            .with_custom_text_color(text_tan)
-            .with_debug_name("map_label"));
-
-    // Minimap background - increased size for better visibility
-    div(context, mk(entity, 220),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(200), pixels(160)})
-            .with_absolute_position()
-            .with_translate(22.0f, map_y + 30.0f)
-            .with_custom_background(minimap_green)
-            .with_border(border_dark, 2.0f)
-            .with_debug_name("minimap"));
-
-    // Map grid lines (vertical) - adjusted for larger minimap
-    for (int i = 1; i < 4; i++) {
-      div(context, mk(entity, 230 + i),
+    // Killstreak progress boxes (dynamic based on killstreak_count)
+    float boxes_start_x = margin_edge + ks_bar_width - (ks_box_size * killstreak_max + ks_box_gap * (killstreak_max - 1)) - 10.0f;
+    for (int i = 0; i < killstreak_max; i++) {
+      afterhours::Color box_color = (i < killstreak_count) ? text_tan : border_dark;
+      div(context, mk(entity, 202 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(145)})
+              .with_size(ComponentSize{pixels(static_cast<int>(ks_box_size)),
+                                       pixels(static_cast<int>(ks_box_size))})
               .with_absolute_position()
-              .with_translate(22.0f + (float)i * 50.0f, map_y + 38.0f)
-              .with_custom_background(afterhours::Color{60, 70, 60, 180})
-              .with_debug_name("grid_v_" + std::to_string(i)));
+              .with_translate(boxes_start_x + (float)i * (ks_box_size + ks_box_gap),
+                              ks_bar_y + (ks_bar_height - ks_box_size) / 2.0f)
+              .with_custom_background(box_color)
+              .with_debug_name("ks_box" + std::to_string(i)));
     }
-
-    // Map grid lines (horizontal) - adjusted for larger minimap
-    for (int i = 1; i < 4; i++) {
-      div(context, mk(entity, 240 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(185), pixels(1)})
-              .with_absolute_position()
-              .with_translate(30.0f, map_y + 30.0f + (float)i * 40.0f)
-              .with_custom_background(afterhours::Color{60, 70, 60, 180})
-              .with_debug_name("grid_h_" + std::to_string(i)));
-    }
-
-    // Red danger zone on map - positioned within minimap bounds
-    div(context, mk(entity, 250),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(50), pixels(50)})
-            .with_absolute_position()
-            .with_translate(158.0f, map_y + 40.0f)
-            .with_custom_background(afterhours::Color{140, 50, 40, 120})
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("danger_zone"));
-
-    // Player icon on map - positioned relative to minimap
-    div(context, mk(entity, 260),
-        ComponentConfig{}
-            .with_label("^")
-            .with_size(ComponentSize{pixels(22), pixels(22)})
-            .with_absolute_position()
-            .with_translate(110.0f, map_y + 130.0f)
-            .with_font("EqProRounded", 22.0f)
-            .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("player_icon"));
-
-    // Objective marker - positioned within minimap bounds
-    div(context, mk(entity, 261),
-        ComponentConfig{}
-            .with_label("*")
-            .with_size(ComponentSize{pixels(14), pixels(14)})
-            .with_absolute_position()
-            .with_translate(170.0f, map_y + 60.0f)
-            .with_custom_background(dot_red)
-            .with_font("EqProRounded", 20.0f)
-            .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("obj_marker"));
-
-    // S marker below map - positioned safely above screen bottom
-    div(context, mk(entity, 270),
-        ComponentConfig{}
-            .with_label("S $")
-            .with_size(ComponentSize{pixels(30), pixels(20)})
-            .with_absolute_position()
-            .with_translate(95.0f, (float)screen_h - 25.0f)
-            .with_font("EqProRounded", 17.0f)
-            .with_custom_text_color(text_muted)
-            .with_debug_name("s_marker"));
 
     // ========== BOTTOM CENTER: Ammo ==========
+    float ammo_x = margin_edge + minimap_width + 20.0f;
+    float ammo_y = (float)screen_h - margin_bottom - 70.0f;
     div(context, mk(entity, 300),
         ComponentConfig{}
             .with_label(std::to_string(ammo_clip) + "/" +
                         std::to_string(ammo_reserve))
             .with_size(ComponentSize{pixels(140), pixels(55)})
             .with_absolute_position()
-            .with_translate(230.0f, (float)screen_h - 90.0f)
-            .with_font("EqProRounded", 42.0f)
+            .with_translate(ammo_x, ammo_y)
+            .with_font("EqProRounded", font_xlarge)
             .with_custom_text_color(text_tan)
             .with_debug_name("ammo"));
 
     // ========== BOTTOM CENTER: Health & Armor ==========
-    float health_x = 400.0f;
-    float health_y = (float)screen_h - 95.0f;
+    float health_x = ammo_x + 150.0f;
+    float health_y = (float)screen_h - margin_bottom - health_panel_height - 15.0f;
 
     // Health panel
     div(context, mk(entity, 310),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(230), pixels(60)})
+            .with_size(ComponentSize{pixels(static_cast<int>(health_panel_width)),
+                                     pixels(static_cast<int>(health_panel_height))})
             .with_absolute_position()
             .with_translate(health_x, health_y)
             .with_custom_background(panel_dark)
@@ -525,22 +576,23 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("skull"));
     }
 
-    // Health label with percentage overlay
+    // Health label with percentage
     int health_val = static_cast<int>(health_pct * 100);
     div(context, mk(entity, 312),
         ComponentConfig{}
             .with_label(std::to_string(health_val) + " HEALTH")
-            .with_size(ComponentSize{pixels(140), pixels(22)})
+            .with_size(ComponentSize{pixels(140), pixels(20)})
             .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 4.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_translate(health_x + 50.0f, health_y + 5.0f)
+            .with_font("EqProRounded", font_normal)
             .with_custom_text_color(text_tan)
             .with_debug_name("health_label"));
 
     // Health bar bg
     div(context, mk(entity, 320),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(165), pixels(16)})
+            .with_size(ComponentSize{pixels(static_cast<int>(health_bar_width)),
+                                     pixels(static_cast<int>(health_bar_height))})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
@@ -549,128 +601,141 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Health bar fill
     div(context, mk(entity, 321),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(160 * health_pct)),
-                                     pixels(16)})
+            .with_size(ComponentSize{pixels(static_cast<int>((health_bar_width - 5.0f) * health_pct)),
+                                     pixels(static_cast<int>(health_bar_height))})
             .with_absolute_position()
             .with_translate(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(health_cyan)
             .with_debug_name("health_fill"));
 
+    // Armor label and bar (label left of bar)
+    int armor_val = static_cast<int>(armor_pct * 100);
+    float armor_label_width = 60.0f;
+    float armor_bar_start_x = health_x + 50.0f + armor_label_width + 4.0f;
+    float armor_bar_actual_width = health_bar_width - armor_label_width - 4.0f;
+
+    div(context, mk(entity, 332),
+        ComponentConfig{}
+            .with_label(std::to_string(armor_val) + "%")
+            .with_size(ComponentSize{pixels(static_cast<int>(armor_label_width)), pixels(14)})
+            .with_absolute_position()
+            .with_translate(health_x + 50.0f, health_y + 44.0f)
+            .with_font("EqProRounded", font_small)
+            .with_custom_text_color(text_muted)
+            .with_debug_name("armor_label"));
+
     // Armor bar bg
     div(context, mk(entity, 330),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(165), pixels(12)})
+            .with_size(ComponentSize{pixels(static_cast<int>(armor_bar_actual_width)),
+                                     pixels(static_cast<int>(armor_bar_height))})
             .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 44.0f)
+            .with_translate(armor_bar_start_x, health_y + 44.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
             .with_debug_name("armor_bg"));
 
-    // Armor bar fill with percentage overlay
-    int armor_val = static_cast<int>(armor_pct * 100);
+    // Armor bar fill
     div(context, mk(entity, 331),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(160 * armor_pct)),
-                                     pixels(12)})
+            .with_size(ComponentSize{pixels(static_cast<int>(armor_bar_actual_width * armor_pct)),
+                                     pixels(static_cast<int>(armor_bar_height))})
             .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 44.0f)
+            .with_translate(armor_bar_start_x, health_y + 44.0f)
             .with_custom_background(armor_blue)
             .with_debug_name("armor_fill"));
 
-    // Armor percentage label
-    div(context, mk(entity, 332),
-        ComponentConfig{}
-            .with_label(std::to_string(armor_val) + "% ARMOR")
-            .with_size(ComponentSize{pixels(100), pixels(18)})
-            .with_absolute_position()
-            .with_translate(health_x + 120.0f, health_y + 42.0f)
-            .with_font("EqProRounded", 12.0f)
-            .with_custom_text_color(text_tan)
-            .with_debug_name("armor_label"));
-
     // ========== BOTTOM RIGHT: Equipment ==========
-    // Two 70x70 boxes with 10px gap between them, positioned from right edge
-    float eq_box_size = 70.0f;
-    float eq_gap = 10.0f;
-    float eq_margin = 20.0f;  // margin from right edge of screen
+    // Two boxes with gap between them, positioned from right edge
+    float eq_margin = margin_edge;  // margin from right edge of screen
     // Knife box (rightmost)
     float knife_x = (float)screen_w - eq_margin - eq_box_size;
     // Grenade box (left of knife)
-    float grenade_x = knife_x - eq_gap - eq_box_size;
-    float eq_y = (float)screen_h - 105.0f;
+    float grenade_x = knife_x - element_gap - eq_box_size;
+    float eq_y = (float)screen_h - margin_bottom - eq_box_size - 15.0f;
 
-    // Grenade (x2) - highlighted with gold border
+    // Grenade count label (positioned left of grenade box)
     div(context, mk(entity, 400),
         ComponentConfig{}
             .with_label("x2")
-            .with_size(ComponentSize{pixels(25), pixels(18)})
+            .with_size(ComponentSize{pixels(30), pixels(20)})
             .with_absolute_position()
-            .with_translate(grenade_x - 28.0f, eq_y + 26.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_translate(grenade_x - 35.0f, eq_y + eq_box_size / 2.0f - 10.0f)
+            .with_font("EqProRounded", font_normal)
             .with_custom_text_color(text_tan)
+            .with_alignment(TextAlignment::Right)
             .with_debug_name("x2"));
 
+    // Grenade box - highlighted with gold border (selected)
     div(context, mk(entity, 410),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)), pixels(static_cast<int>(eq_box_size))})
+            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)),
+                                     pixels(static_cast<int>(eq_box_size))})
             .with_absolute_position()
             .with_translate(grenade_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(gold_accent, 3.0f)
             .with_debug_name("grenade_bg"));
+
     if (weapon_grenade_tex.id != 0) {
+      float icon_offset = (eq_box_size - eq_icon_size) / 2.0f;
       afterhours::texture_manager::Rectangle src{
           0, 0, (float)weapon_grenade_tex.width,
           (float)weapon_grenade_tex.height};
       sprite(context, mk(entity, 411), weapon_grenade_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(50), pixels(50)})
+                 .with_size(ComponentSize{pixels(static_cast<int>(eq_icon_size)),
+                                          pixels(static_cast<int>(eq_icon_size))})
                  .with_absolute_position()
-                 .with_translate(grenade_x + 10.0f, eq_y + 10.0f)
+                 .with_translate(grenade_x + icon_offset, eq_y + icon_offset)
                  .with_debug_name("grenade_icon"));
     }
 
-    // Knife (x1)
+    // Knife box
     div(context, mk(entity, 420),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)), pixels(static_cast<int>(eq_box_size))})
+            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)),
+                                     pixels(static_cast<int>(eq_box_size))})
             .with_absolute_position()
             .with_translate(knife_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 2.0f)
             .with_debug_name("knife_bg"));
+
     if (weapon_melee_tex.id != 0) {
+      float icon_offset = (eq_box_size - eq_icon_size) / 2.0f;
       afterhours::texture_manager::Rectangle src{
           0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
       sprite(context, mk(entity, 422), weapon_melee_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(50), pixels(50)})
+                 .with_size(ComponentSize{pixels(static_cast<int>(eq_icon_size)),
+                                          pixels(static_cast<int>(eq_icon_size))})
                  .with_absolute_position()
-                 .with_translate(knife_x + 10.0f, eq_y + 10.0f)
+                 .with_translate(knife_x + icon_offset, eq_y + icon_offset)
                  .with_debug_name("knife_icon"));
     }
 
-    // x1 label positioned below the knife box, inside screen bounds
+    // x1 label positioned at bottom-right corner of knife box
     div(context, mk(entity, 421),
         ComponentConfig{}
             .with_label("x1")
-            .with_size(ComponentSize{pixels(25), pixels(18)})
+            .with_size(ComponentSize{pixels(25), pixels(16)})
             .with_absolute_position()
-            .with_translate(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size + 2.0f)
-            .with_font("EqProRounded", 19.0f)
-            .with_custom_text_color(text_tan)
+            .with_translate(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size - 16.0f)
+            .with_font("EqProRounded", font_small)
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right)
             .with_debug_name("x1"));
 
     // ========== CENTER: Crosshair ==========
     if (crosshair_tex.id != 0) {
-      float cross_cx = (float)screen_w / 2.0f;
-      float cross_cy = (float)screen_h / 2.0f;
       afterhours::texture_manager::Rectangle src{
           0, 0, (float)crosshair_tex.width, (float)crosshair_tex.height};
       sprite(context, mk(entity, 600), crosshair_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(64), pixels(64)})
+                 .with_size(ComponentSize{pixels(static_cast<int>(crosshair_size)),
+                                          pixels(static_cast<int>(crosshair_size))})
                  .with_absolute_position()
-                 .with_translate(cross_cx - 32.0f, cross_cy - 32.0f)
+                 .with_translate(cx - crosshair_size / 2.0f, cy - crosshair_size / 2.0f)
                  .with_debug_name("crosshair"));
     }
   }

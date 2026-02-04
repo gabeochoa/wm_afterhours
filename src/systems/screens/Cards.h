@@ -63,7 +63,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row1.ent(), 100),
         ComponentConfig{}
             .with_label("Basic:")
-            .with_size(ComponentSize{pixels(80), pixels(44)})
+            .with_size(ComponentSize{pixels(100), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
@@ -141,7 +141,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row2.ent(), 100),
         ComponentConfig{}
             .with_label("Nested:")
-            .with_size(ComponentSize{pixels(80), pixels(44)})
+            .with_size(ComponentSize{pixels(100), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)

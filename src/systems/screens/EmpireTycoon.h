@@ -468,9 +468,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 89),
         ComponentConfig{}
             .with_label(std::to_string(res_current) + "/" + std::to_string(res_max))
-            .with_size(ComponentSize{pixels(70), pixels(18)})
+            .with_size(ComponentSize{pixels(85), pixels(18)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 70.0f, meter_y + 11.0f)
+            .with_translate((float)screen_w - 85.0f, meter_y + 11.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Right)
@@ -533,16 +533,16 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Icon image or fallback text - larger (minimum 44px)
       // NOTE: Icons are 64x48 but have wrong text labels baked in at bottom
-      // Crop to top 32px to only show the icon graphic, not the wrong text
+      // Crop to top 28px to only show the icon graphic, not the wrong text
       if (tex_ptr && tex_ptr->id != 0) {
         afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
-                                                   32.0f}; // Only top 32px
+                                                   28.0f}; // Only top 28px - hide baked-in text
         sprite(
             context, mk(entity, 110 + static_cast<int>(i)), *tex_ptr, src,
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(48), pixels(36)})
+                .with_size(ComponentSize{pixels(48), pixels(28)})
                 .with_absolute_position()
-                .with_translate(nav_x + tab_width / 2.0f - 24.0f, tab_y + 4.0f)
+                .with_translate(nav_x + tab_width / 2.0f - 24.0f, tab_y + 8.0f)
                 .with_debug_name("tab_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 110 + static_cast<int>(i)),

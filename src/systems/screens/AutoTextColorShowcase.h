@@ -65,12 +65,12 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                              .with_margin(Spacing::xs)
                              .with_debug_name("title_row"));
 
-    // Main title text
+    // Main title text - large and prominent
     div(context, mk(title_row.ent(), 0),
         ComponentConfig{}
             .with_label("Auto Text Color")
-            .with_size({children(), pixels(60.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, 32.0f)
+            .with_size({pixels(350.0f), pixels(60.0f)})
+            .with_font(UIComponent::DEFAULT_FONT, 42.0f)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
 

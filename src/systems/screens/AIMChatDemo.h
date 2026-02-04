@@ -25,6 +25,24 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
   static constexpr int MODAL_WARN = 100;
   static constexpr int MODAL_BLOCK = 101;
 
+  // Configurable UI parameters
+  struct UIConfig {
+    // Touch target sizes
+    static constexpr int WINDOW_CONTROL_SIZE = 24;  // Minimum touch target for window controls
+    static constexpr int BUTTON_HEIGHT = 44;        // Standard button height for comfortable touch
+    static constexpr int BUTTON_WIDTH = 70;         // Standard button width
+
+    // Status indicator
+    static constexpr int STATUS_DOT_SIZE = 10;      // Size of online status indicator dot
+
+    // Spacing
+    static constexpr int BUTTON_SPACING = 6;        // Space between buttons
+    static constexpr int BUTTON_BAR_MARGIN = 8;     // Right margin for button bar
+  };
+
+  // Placeholder text for input field
+  std::string placeholder_text = "Type a message...";
+
   // AIM color palette
   struct AIMColors {
     static afterhours::Color window_bg() { return {236, 233, 216, 255}; }
@@ -38,6 +56,8 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     static afterhours::Color button_shadow() { return {128, 128, 128, 255}; }
     static afterhours::Color text_default() { return {0, 0, 0, 255}; }
     static afterhours::Color warning_yellow() { return {255, 255, 0, 255}; }
+    static afterhours::Color placeholder_text() { return {160, 160, 160, 255}; }  // Gray placeholder
+    static afterhours::Color online_green() { return {0, 180, 0, 255}; }          // Online status indicator
   };
 
   AIMChatDemo() {
@@ -107,7 +127,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto controls_container =
         div(context, mk(title_bar.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(72), pixels(24)})
+                .with_size(ComponentSize{pixels(80), pixels(UIConfig::WINDOW_CONTROL_SIZE)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexEnd)
@@ -119,7 +139,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(controls_container.ent(), i),
           ComponentConfig{}
               .with_label(ctrl_labels[i])
-              .with_size(ComponentSize{pixels(20), pixels(20)})
+              .with_size(ComponentSize{pixels(UIConfig::WINDOW_CONTROL_SIZE), pixels(UIConfig::WINDOW_CONTROL_SIZE)})
               .with_custom_background(AIMColors::button_face())
               .with_custom_text_color(AIMColors::text_default())
               .with_font(UIComponent::DEFAULT_FONT, 12.0f)
@@ -191,10 +211,30 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("buddy_name_display"));
 
-    div(context, mk(buddy_info.ent(), 1),
+    // Status row with indicator dot and text
+    auto status_row =
+        div(context, mk(buddy_info.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(120), pixels(18)})
+                .with_flex_direction(FlexDirection::Row)
+                .with_align_items(AlignItems::Center)
+                .with_debug_name("status_row"));
+
+    // Green status indicator dot
+    div(context, mk(status_row.ent(), 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(UIConfig::STATUS_DOT_SIZE), pixels(UIConfig::STATUS_DOT_SIZE)})
+            .with_custom_background(AIMColors::online_green())
+            .with_rounded_corners(RoundedCorners().all_round())
+            .with_roundness(1.0f)  // Fully circular
+            .with_margin(Margin{.right = pixels(4)})
+            .with_skip_tabbing(true)
+            .with_debug_name("status_dot"));
+
+    div(context, mk(status_row.ent(), 1),
         ComponentConfig{}
             .with_label("Available")
-            .with_size(ComponentSize{pixels(90), pixels(18)})
+            .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, 16.0f)
@@ -307,12 +347,19 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     constexpr int INPUT_LINES = 3;
     constexpr int INPUT_HEIGHT = static_cast<int>(INPUT_LINE_HEIGHT * INPUT_LINES) + 8;
 
-    auto input_container =
+    // Wrapper div to contain both input and placeholder overlay
+    auto input_wrapper =
         div(context, mk(window.ent(), 6),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(INPUT_HEIGHT + 4)})
-                .with_custom_background(AIMColors::input_bg())
                 .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)})
+                .with_debug_name("input_wrapper"));
+
+    auto input_container =
+        div(context, mk(input_wrapper.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(INPUT_HEIGHT + 4)})
+                .with_custom_background(AIMColors::input_bg())
                 .disable_rounded_corners()
                 .with_debug_name("input_container"));
 
@@ -329,6 +376,23 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("message_input"))) {
     }
 
+    // Placeholder text - render in wrapper, positioned absolutely over the input
+    // Since text_area forces a background, we render placeholder on higher render layer
+    if (message_input.empty()) {
+      div(context, mk(input_wrapper.ent(), 1),
+          ComponentConfig{}
+              .with_label(placeholder_text)
+              .with_size(ComponentSize{pixels(INNER_W - PAD * 4), pixels(INPUT_LINE_HEIGHT)})
+              .with_custom_text_color(AIMColors::placeholder_text())
+              .with_alignment(TextAlignment::Left)
+              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_absolute_position()
+              .with_translate(pixels(6), pixels(6))
+              .with_skip_tabbing(true)
+              .with_render_layer(10)  // Render on top of text_area
+              .with_debug_name("placeholder_text"));
+    }
+
     // Button bar - padding to keep buttons from window edge
     auto button_bar =
         div(context, mk(window.ent(), 7),
@@ -337,19 +401,19 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::FlexEnd)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.top = pixels(6), .left = pixels(PAD)})
+                .with_margin(Margin{.top = pixels(6), .left = pixels(PAD), .right = pixels(UIConfig::BUTTON_BAR_MARGIN)})
                 .with_debug_name("button_bar"));
 
     // Warn button - shows confirmation dialog explaining consequences
     if (button(context, mk(button_bar.ent(), 0),
                ComponentConfig{}
                    .with_label("Warn")
-                   .with_size(ComponentSize{pixels(70), pixels(44)})
+                   .with_size(ComponentSize{pixels(UIConfig::BUTTON_WIDTH), pixels(UIConfig::BUTTON_HEIGHT)})
                    .with_custom_background(AIMColors::button_face())
                    .with_custom_text_color(AIMColors::text_default())
                    .with_border(AIMColors::button_shadow(), 2.0f)
                    .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                   .with_margin(Margin{.left = pixels(6)})
+                   .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
                    .disable_rounded_corners()
                    .with_debug_name("warn_btn"))) {
       show_warn_confirm = true;
@@ -359,12 +423,12 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(button_bar.ent(), 1),
                ComponentConfig{}
                    .with_label("Block")
-                   .with_size(ComponentSize{pixels(70), pixels(44)})
+                   .with_size(ComponentSize{pixels(UIConfig::BUTTON_WIDTH), pixels(UIConfig::BUTTON_HEIGHT)})
                    .with_custom_background(AIMColors::button_face())
                    .with_custom_text_color(AIMColors::text_default())
                    .with_border(AIMColors::button_shadow(), 2.0f)
                    .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-                   .with_margin(Margin{.left = pixels(6)})
+                   .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
                    .disable_rounded_corners()
                    .with_debug_name("block_btn"))) {
       show_block_confirm = true;
@@ -374,12 +438,12 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(button_bar.ent(), 2),
            ComponentConfig{}
                .with_label("Send")
-               .with_size(ComponentSize{pixels(70), pixels(44)})
+               .with_size(ComponentSize{pixels(UIConfig::BUTTON_WIDTH), pixels(UIConfig::BUTTON_HEIGHT)})
                .with_custom_background(AIMColors::button_face())
                .with_custom_text_color(AIMColors::text_default())
                .with_border(AIMColors::button_shadow(), 2.0f)
                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
-               .with_margin(Margin{.left = pixels(6)})
+               .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
                .disable_rounded_corners()
                .with_debug_name("send_btn"));
 
