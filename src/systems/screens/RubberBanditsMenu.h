@@ -105,15 +105,15 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title_bandits"));
 
     // ========== TOP RIGHT: Player info ==========
-    float info_x = (float)screen_w - 200.0f;
+    float info_x = (float)screen_w - 220.0f;
 
     // Online pill - larger and more prominent
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("thia9uers - Online")
-            .with_size(ComponentSize{pixels(260), pixels(42)})
+            .with_size(ComponentSize{pixels(285), pixels(42)})
             .with_absolute_position()
-            .with_translate(info_x - 115.0f, 15.0f)
+            .with_translate(info_x - 125.0f, 15.0f)
             .with_custom_background(online_pill)
             .with_border(afterhours::Color{115, 155, 105, 255}, 3.0f)
             .with_font("EqProRounded", 22.0f)

@@ -3,109 +3,200 @@
 **Date:** 2026-02-03
 **Reviewer:** Claude (interface-design skill)
 **Total Screens:** 50
-**Status:** FIXES IN PROGRESS
+**Status:** REVIEW COMPLETE - FIXES NEEDED
 
 ---
 
-## Fixes Applied This Session
+## CRITICAL ISSUES (Text Cutoff / Overflow)
 
-### 1. AUTO TEXT COLOR - Title font increased
-**File:** `src/systems/screens/AutoTextColorShowcase.h`
-**Fix:** Increased title font from 32.0f to 42.0f, width from children() to 350px
-**Status:** ✓ FIXED
-
-### 2. LANGUAGE DEMO - Button row widened
-**File:** `src/systems/screens/LanguageDemo.h`
-**Fix:** Increased button_row width from 270px to 300px to fit all 3 language tabs
-**Status:** ✓ FIXED
-
-### 3. TAB CONTAINER - Shortened "Preferences" label
-**File:** `src/systems/screens/TabContainerShowcase.h`
-**Fix:** Changed "Preferences" to "Prefs" to fit within tab area
-**Status:** ✓ FIXED
-
-### 4. COZY CAFE - Shortened hint label
-**File:** `src/systems/screens/CozyCafe.h`
-**Fix:** Changed "Ready to claim" to "Ready!" to fit within container
-**Status:** ✓ FIXED
-
-### 5. RADIO BUTTONS - Reduced column widths
-**File:** `src/systems/screens/RadioGroupShowcase.h`
-**Fix:** Reduced column widths from 30% to 28% each to fit all 3 columns
-**Status:** ✓ FIXED
-
-### 6. PARCEL CORPS - Shortened language labels
-**File:** `src/systems/screens/ParcelCorpsSettings.h`
-**Fix:** Changed "King's English" to "English UK" to fit between arrows
-**Status:** ✓ FIXED
-
-### 7. EMPIRE TYCOON - Widened resources display
+### 1. EMPIRE TYCOON - Resources display cutoff
 **File:** `src/systems/screens/EmpireTycoon.h`
-**Fix:** Increased resources label width from 70px to 85px
-**Fix:** Cropped icon images more aggressively (28px height instead of 32px) to hide baked-in text
-**Status:** ✓ FIXED (minor residual icon text visible)
+**Issue:** "600/1000" text is cut off at the right edge - shows as "600/100" with trailing character clipped
+**Fix needed:** Increase width of resources container or reduce font size
 
-### 8. LAYOUT - Increased description text width
-**File:** `src/systems/screens/ExampleLayout.h`
-**Fix:** Changed description lines from 90% width to 100%, reduced font from 18.0f to 16.0f
-**Status:** ✓ FIXED
+### 2. EMPIRE TYCOON - Sidebar icons show baked-in text
+**File:** `src/systems/screens/EmpireTycoon.h`
+**Issue:** Sidebar icons (Rides, Food, Upgrades, Finance) show both the icon AND baked-in text from the source image, creating duplicate labels
+**Fix needed:** Crop icons more aggressively or use text-free icon variants
 
-### 9. VENDOR TYPO - Fixed checkbox indicator
-**File:** `vendor/afterhours/src/plugins/ui/imm_components.h`
-**Fix:** Fixed typo `state.od` to `state.on` for checkbox indicator
-**Status:** ✓ FIXED
+### 3. IMAGES - Debug dimension indicators showing
+**File:** `src/systems/screens/ImagesShowcase.h`
+**Issue:** Small colon characters (`:`) appear next to every sprite icon - appears to be debug dimension info leaking into display
+**Fix needed:** Remove debug text or hide dimension indicators in showcase
+
+### 4. RUBBER BANDITS - Username cutoff
+**File:** `src/systems/screens/RubberBanditsMenu.h`
+**Issue:** "thia9uers - Online" text is cut off at right edge, showing partial character
+**Fix needed:** Increase container width or use ellipsis for long usernames
+
+### 5. PARCEL CORPS - Language selector text cramped
+**File:** `src/systems/screens/ParcelCorpsSettings.h`
+**Issue:** "English UK" text is very close to the < and > navigation arrows, nearly touching
+**Fix needed:** Add more padding between text and arrows OR shorten to "EN-UK"
+
+### 6. NEON STRIKE - UAV label overlap
+**File:** `src/systems/screens/NeonStrike.h`
+**Issue:** "UAV" label appears below the first icon but overlaps/touches the icon boundary
+**Fix needed:** Add spacing between icon and label
 
 ---
 
-## Previously Fixed (From Earlier Sessions)
+## HIGH PRIORITY ISSUES (Layout / Spacing)
 
-- CHECKBOXES - Changed X to checkmark (vendor fix)
-- TOGGLE SWITCHES - Increased circle indicator size (vendor fix)
-- FLEX ALIGNMENT - Shortened tab labels
-- CARDS - Increased section label widths
-- MODALS - User-friendly button labels
+### 7. TAB CONTAINER - Excessive right margin on tabs
+**File:** `src/systems/screens/TabContainerShowcase.h`
+**Issue:** The "Prefs" tab appears pushed far to the right with large gap between "Account" and "Prefs"
+**Fix needed:** Even out tab spacing or use equal-width tabs
+
+### 8. CARDS - "Basic:" and "Nested:" labels too small
+**File:** `src/systems/screens/CardsShowcase.h`
+**Issue:** Section labels "Basic:" and "Nested:" are very small and hard to read
+**Fix needed:** Increase label font size
+
+### 9. COZY CAFE - Bottom nav icons cramped
+**File:** `src/systems/screens/CozyCafe.h`
+**Issue:** Bottom navigation icons (Inventory, Research, Crafting) have text labels that are very small and partially cut off ("2 new items", "Ready!")
+**Fix needed:** Increase width of nav items or use icon-only display
+
+### 10. SCROLL VIEW - Horizontal items overflow container
+**File:** `src/systems/screens/ScrollViewShowcase.h`
+**Issue:** Items 4 and 5 in horizontal scroll extend beyond the visible container boundary
+**Fix needed:** This may be intentional for scroll demo, but container should have visible bounds
+
+### 11. FORMS - "English V" dropdown text
+**File:** `src/systems/screens/FormsShowcase.h`
+**Issue:** Dropdown shows "English V" where V appears to be a checkmark but looks like letter V
+**Fix needed:** Use proper checkmark character or icon
+
+### 12. CHECKBOXES - Using "v" instead of checkmark
+**File:** Multiple screens
+**Issue:** Checkboxes use lowercase "v" character instead of proper checkmark symbol
+**Fix needed:** Replace "v" with proper checkmark Unicode character (U+2713) or custom icon
+
+### 13. TOGGLE SWITCHES - Circle style uses "x" for off
+**File:** `src/systems/screens/ToggleSwitchShowcase.h`
+**Issue:** Circle style toggles show "x" for OFF state which looks like an error
+**Fix needed:** Use empty circle or different visual for OFF state
 
 ---
 
-## Remaining Issues (Lower Priority)
+## MEDIUM PRIORITY ISSUES
 
-### EMPIRE TYCOON
-1. Sidebar icons still show partial baked-in text (e.g., "Rides" icon shows both icon and "Rides" text)
-2. Resources display still shows "600/1000" slightly cut at end edge
+### 14. TEXT OVERFLOW DEMO - Intentional but confusing
+**File:** `src/systems/screens/TextOverflowDemo.h`
+**Issue:** Red corners are intentional debug indicators, but screen doesn't clearly explain this is a DEBUG demo
+**Fix needed:** Add clearer "DEBUG MODE" indicator or move to dev-only screens
 
-### IMAGES
-1. Small dimension indicators (`:`) visible next to sprite icons - may be debug info
+### 15. ACCESSIBILITY - WCAG warning badge
+**File:** `src/systems/screens/AccessibilityShowcase.h`
+**Issue:** "Contrast Below WCAG AA" badge is shown but it's not clear if this is demonstrating a problem or is itself a problem
+**Fix needed:** Clarify this is an intentional demo of the accessibility feature
 
-### Other Minor Issues
-1. **ANGRY BIRDS SETTINGS** - "x" indicator on toggle (intentional OFF state)
-2. **DECORATIVE FRAME** - Minor bottom spacing
-3. **TEXT OVERFLOW** - Red corners are intentional debug indicators
-4. **AIM CHAT** - Wide scroll bar is intentional retro styling
-5. **ACCESSIBILITY** - WCAG warning badge is intentional demo element
+### 16. AIM CHAT - Wide scrollbar
+**File:** `src/systems/screens/AimChatShowcase.h`
+**Issue:** Scrollbar is very wide (appears to be 20-30px) - may be intentional retro styling
+**Fix needed:** If not intentional, reduce scrollbar width
+
+### 17. FIGHTER MENU - "MainMenu" title not styled
+**File:** `src/systems/screens/FighterMenu.h`
+**Issue:** "MainMenu" title appears as plain text without proper title styling
+**Fix needed:** Apply consistent title styling
+
+### 18. SPORTS SETTINGS - Dense layout with small fonts
+**File:** `src/systems/screens/SportsSettings.h`
+**Issue:** Text is quite small throughout, especially setting labels like "Anti-Aliasing method"
+**Fix needed:** Increase base font size for readability
+
+### 19. DEADSPACE SETTINGS - Left panel text small
+**File:** `src/systems/screens/DeadspaceSettings.h`
+**Issue:** "INITIAL SETTINGS" section text is notably smaller than main menu
+**Fix needed:** Increase font size for better visual hierarchy
+
+### 20. THEMES - Component preview cramped
+**File:** `src/systems/screens/ThemeSwitcher.h`
+**Issue:** Component preview panel (P, S, A, D buttons) is densely packed
+**Fix needed:** Add more internal padding
+
+---
+
+## MINOR ISSUES (Polish)
+
+### 21. DECORATIVE FRAME - Bottom spacing
+**File:** `src/systems/screens/DecorativeFrame.h`
+**Issue:** "Usage Tips" panel has more space above than below the text
+**Fix needed:** Even out vertical padding
+
+### 22. KIRBY OPTIONS - "Data..." button text
+**File:** `src/systems/screens/KirbyOptions.h`
+**Issue:** "Data..." button uses ellipsis suggesting it opens a dialog - verify this is intentional
+**Fix needed:** Confirm UX pattern or remove ellipsis
+
+### 23. NINE SLICE - Some panels have tight text
+**File:** `src/systems/screens/NineSliceBorders.h`
+**Issue:** Text in smaller panels ("Small", "Inner", "Panel") is close to borders
+**Fix needed:** Increase internal padding
+
+### 24. TEXT SHADOW - Title has double shadow effect
+**File:** `src/systems/screens/TextShadowShowcase.h`
+**Issue:** "Text Drop Shadow" title shows both the text AND its shadow overlapping
+**Fix needed:** This may be intentional demo - verify
+
+### 25. CIRCULAR PROGRESS - Size label overlap
+**File:** `src/systems/screens/CircularProgressShowcase.h`
+**Issue:** "28px" size label is very close to the ring on smallest variant
+**Fix needed:** Add more spacing or position label below ring
+
+---
+
+## SCREENS WITH NO ISSUES (Clean)
+
+The following screens have no visible issues:
+
+1. auto_text_color.png - Clean
+2. language_demo.png - Clean
+3. buttons.png - Clean
+4. flex_alignment.png - Clean
+5. modals.png - Clean
+6. pagination.png - Clean
+7. text.png - Clean
+8. separators.png - Clean
+9. angry_birds_settings.png - Clean
+10. mini_motorways_settings.png - Clean
+11. powerwash_settings.png - Clean
+12. casual_settings.png - Clean
+13. flight_options.png - Clean
+14. toasts.png - Clean
+15. tabbing.png - Clean
+16. text_input.png - Clean
+17. navigation_bar_demo.png - Clean
+18. setting_row_showcase.png - Clean
+19. colors.png - Clean
+20. bevel_borders.png - Clean
+21. example_borders.png - Clean
+22. simple_button.png - Clean
+23. self_align.png - Clean
+24. radio_buttons.png - Clean
+25. layout.png - Clean
 
 ---
 
 ## Summary
 
-| Category | Count | Status |
-|----------|-------|--------|
-| Fixes Applied This Session | 9 | ✓ Complete |
-| Previously Fixed | 5 | ✓ Verified |
-| Remaining Minor | 5 | Low priority |
-| Intentional/Demo | 5 | No action needed |
-| Clean Screens | 26 | No issues |
+| Category | Count | Priority |
+|----------|-------|----------|
+| Critical (Text Cutoff) | 6 | Fix immediately |
+| High (Layout/Spacing) | 7 | Fix soon |
+| Medium (Polish) | 7 | Fix when possible |
+| Minor (Polish) | 5 | Low priority |
+| Clean Screens | 25 | No action |
 
-### Key Improvements Made
+### Top 3 Fixes to Apply Now:
 
-1. **Title visibility improved** - Auto Text Color title now readable at 42px font
-2. **Language tabs fit** - All 3 language buttons now visible
-3. **Tab labels fit** - Shortened to prevent cutoff
-4. **Selector text fits** - "English UK" fits between navigation arrows
-5. **Layout text visible** - All description text now fits within panel
-6. **Resource counter visible** - 600/1000 display now has adequate width
+1. **EMPIRE TYCOON resources** - "600/1000" cutoff is user-facing data loss
+2. **IMAGES debug text** - Colon characters are clearly debug artifacts
+3. **RUBBER BANDITS username** - Text cutoff on player info
 
 ---
 
 *Reviewed: 2026-02-03*
-*Fixes applied: 2026-02-03*
 *All 50 screens inspected via headless screenshots*

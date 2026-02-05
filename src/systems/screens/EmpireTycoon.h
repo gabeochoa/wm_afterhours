@@ -429,9 +429,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Resources meter with label - moved left to stay within screen bounds
     div(context, mk(entity, 85),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(165), pixels(40)})
+            .with_size(ComponentSize{pixels(220), pixels(40)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 175.0f, meter_y)
+            .with_translate((float)screen_w - 240.0f, meter_y)
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -443,7 +443,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("*")
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 170.0f, meter_y + 7.0f)
+            .with_translate((float)screen_w - 235.0f, meter_y + 7.0f)
             .with_custom_background(afterhours::Color{195, 215, 240, 255})
             .with_font("EqProRounded", 16.0f)
             .with_custom_text_color(dark_text)
@@ -457,7 +457,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Resources")
             .with_size(ComponentSize{pixels(90), pixels(22)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 140.0f, meter_y + 9.0f)
+            .with_translate((float)screen_w - 205.0f, meter_y + 9.0f)
             .with_font("EqProRounded", 18.0f)
             .with_custom_text_color(dark_text)
             .with_debug_name("res_text"));
@@ -468,9 +468,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 89),
         ComponentConfig{}
             .with_label(std::to_string(res_current) + "/" + std::to_string(res_max))
-            .with_size(ComponentSize{pixels(85), pixels(18)})
+            .with_size(ComponentSize{pixels(100), pixels(18)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 85.0f, meter_y + 11.0f)
+            .with_translate((float)screen_w - 110.0f, meter_y + 11.0f)
             .with_font("EqProRounded", 14.0f)
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Right)
