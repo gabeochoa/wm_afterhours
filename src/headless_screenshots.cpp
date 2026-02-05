@@ -167,35 +167,19 @@ void setup_ecs_singletons() {
   afterhours::EntityHelper::registerSingleton<
       afterhours::window_manager::ProvidesAvailableWindowResolutions>(resolution_entity);
 
-  // Create UI singleton components
+  // Create UI singleton components using library function
   afterhours::Entity &ui_entity =
       afterhours::EntityHelper::createPermanentEntity();
+  afterhours::ui::add_singleton_components<InputAction>(ui_entity);
 
-  ui_entity.addComponent<afterhours::ui::UIContext<InputAction>>();
-  afterhours::EntityHelper::registerSingleton<
-      afterhours::ui::UIContext<InputAction>>(ui_entity);
+  // Load custom fonts for headless rendering
+  auto *font_mgr =
+      afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::FontManager>();
+  if (font_mgr) {
+    load_fonts_into_manager(*font_mgr);
+  }
 
-  auto &font_mgr = ui_entity.addComponent<afterhours::ui::FontManager>();
-  load_fonts_into_manager(font_mgr);
-  afterhours::EntityHelper::registerSingleton<afterhours::ui::FontManager>(ui_entity);
-
-  auto &text_cache = ui_entity.addComponent<afterhours::ui::TextMeasureCache>();
-  text_cache.set_measure_function(
-      [](std::string_view text, std::string_view font_name, float font_size,
-         float spacing) {
-        auto font_manager = afterhours::EntityHelper::get_singleton_cmp<
-            afterhours::ui::FontManager>();
-        if (!font_manager) {
-          return raylib::Vector2{0.0f, 0.0f};
-        }
-        const std::string font_name_str(font_name);
-        const std::string text_str(text);
-        raylib::Font font = font_manager->get_font(font_name_str);
-        return afterhours::measure_text(font, text_str.c_str(), font_size, spacing);
-      });
-  afterhours::EntityHelper::registerSingleton<
-      afterhours::ui::TextMeasureCache>(ui_entity);
-
+  // Add root UI component for headless
   ui_entity.addComponent<afterhours::ui::UIComponent>(ui_entity.id)
       .set_desired_width(afterhours::ui::screen_pct(1.f))
       .set_desired_height(afterhours::ui::screen_pct(1.f))

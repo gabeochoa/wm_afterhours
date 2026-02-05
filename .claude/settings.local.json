@@ -37,7 +37,8 @@
       "Skill(10x-engineer:subagent-driven-development)",
       "Bash(./graphics_example:*)",
       "Bash(DISPLAY=:0 python3:*)",
-      "Skill(audit-design)"
+      "Skill(audit-design)",
+      "Bash(brew list:*)"
     ]
   }
 }
