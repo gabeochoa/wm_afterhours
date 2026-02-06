@@ -55,7 +55,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_translate(panel_x, panel_y)
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.08f)
             .with_alignment(TextAlignment::Center)
@@ -75,7 +75,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_w), pixels(28)})
             .with_absolute_position()
             .with_translate(row_x, row1_y - 32.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_debug_name("row1_label"));
 
@@ -119,7 +119,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
                               swatch_y)
               .with_background(theme_swatches[i].usage)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.10f)
               .with_alignment(TextAlignment::Center)
@@ -133,7 +133,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_w), pixels(28)})
             .with_absolute_position()
             .with_translate(row_x, row2_y - 32.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_debug_name("row2_label"));
 
@@ -174,7 +174,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
                               custom_swatch_y)
               .with_custom_background(custom_colors[i].color)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.10f)
               .with_alignment(TextAlignment::Center)
@@ -189,7 +189,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(36)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + panel_h - 55.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)
             .with_skip_tabbing(true)

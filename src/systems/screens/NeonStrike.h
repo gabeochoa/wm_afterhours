@@ -228,7 +228,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(20), pixels(30)})
             .with_absolute_position()
             .with_translate(compass_cx - 10.0f, compass_cy - 12.0f)
-            .with_font("EqProRounded", 28.0f)
+            .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("compass_needle"));
@@ -259,7 +259,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(260), pixels(28)})
             .with_absolute_position()
             .with_translate((float)screen_w - 330.0f, 18.0f)
-            .with_font("EqProRounded", 15.0f)
+            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("score"));
@@ -271,7 +271,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w - 40.0f, 15.0f)
             .with_custom_background(text_tan)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -285,7 +285,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w - 255.0f, 52.0f)
             .with_custom_background(gold_accent)
-            .with_font("BlackOpsOne", 16.0f)
+            .with_font("BlackOpsOne", h720(16.0f))
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("objective"));
@@ -299,7 +299,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(550), pixels(28)})
               .with_absolute_position()
               .with_translate(cx - 275.0f, kill_y + (float)i * 30.0f)
-              .with_font("EqProRounded", 18.0f)
+              .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(text_muted)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("kill_" + std::to_string(i)));
@@ -312,7 +312,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(26)})
             .with_absolute_position()
             .with_translate((float)screen_w - 270.0f, 195.0f)
-            .with_font("EqProRounded", 21.0f)
+            .with_font("EqProRounded", h720(21.0f))
             .with_custom_text_color(text_tan)
             .with_debug_name("voice"));
 
@@ -338,7 +338,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(16), pixels(16)})
               .with_absolute_position()
               .with_translate(margin_edge - 2.0f, row_y + ks_icon_size / 2.0f - 8.0f)
-              .with_font("EqProRounded", 16.0f)
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("cog_" + std::to_string(i)));
 
@@ -372,7 +372,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
                                          pixels(static_cast<int>(ks_icon_size))})
                 .with_absolute_position()
                 .with_translate(margin_edge + 20.0f, row_y)
-                .with_font("EqProRounded", 20.0f)
+                .with_font("EqProRounded", h720(20.0f))
                 .with_custom_text_color(text_tan)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("ks_icon_fallback_" + std::to_string(i)));
@@ -570,7 +570,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(35), pixels(35)})
               .with_absolute_position()
               .with_translate(health_x + 8.0f, health_y + 12.0f)
-              .with_font("EqProRounded", 24.0f)
+              .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(text_tan)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("skull"));

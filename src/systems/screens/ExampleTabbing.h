@@ -100,7 +100,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x + 2.0f, panel_y + 2.0f)
             .with_custom_background(btn_magenta)
-            .with_font("EqProRounded", 26.0f)
+            .with_font("EqProRounded", h720(26.0f))
             .with_custom_text_color(text_light)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.15f)
@@ -114,7 +114,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_width - 40), pixels(24)})
             .with_absolute_position()
             .with_translate(panel_x + 20.0f, panel_y + 62.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("instructions"));
@@ -151,7 +151,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
                      .with_soft_shadow(3.0f, 4.0f, 10.0f,
                                        afterhours::Color{0, 0, 0, 80})
                      .with_auto_text_color(true)
-                     .with_font("EqProRounded", 22.0f)
+                     .with_font("EqProRounded", h720(22.0f))
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(0.4f)
                      .with_alignment(TextAlignment::Center)
@@ -175,7 +175,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(panel_width - 40), pixels(28)})
               .with_absolute_position()
               .with_translate(panel_x + 20.0f, panel_y + panel_height - 40.0f)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(btn_lime)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("footer"));

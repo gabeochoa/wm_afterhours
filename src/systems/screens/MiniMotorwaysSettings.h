@@ -93,7 +93,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(56), pixels(56)})
             .with_absolute_position()
             .with_translate(35.0f, 35.0f)
-            .with_font("EqProRounded", 32.0f)
+            .with_font("EqProRounded", h720(32.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("back_arrow"));
 
@@ -135,7 +135,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_absolute_position()
                      .with_translate(205.0f, tab_y)
                      .with_custom_background(tab_bg)
-                     .with_font("EqProRounded", 22.0f)
+                     .with_font("EqProRounded", h720(22.0f))
                      .with_custom_text_color(text_dark)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("tab_" + std::to_string(i)))) {
@@ -160,7 +160,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(300), pixels(40)})
               .with_absolute_position()
               .with_translate(content_x, row_y)
-              .with_font("EqProRounded", 24.0f)
+              .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(text_dark)
               .with_debug_name("label_" + std::to_string(i)));
 
@@ -188,7 +188,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(content_x + 340.0f, row_y - 5.0f)
                      .with_custom_background(toggle_bg)
                      .with_border(toggle_circle, 3.0f)
-                     .with_font("EqProRounded", 22.0f)
+                     .with_font("EqProRounded", h720(22.0f))
                      .with_custom_text_color(icon_color)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
@@ -220,7 +220,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(340), pixels(40)})
             .with_absolute_position()
             .with_translate(content_x, sens_y)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("sens_label"));
 
@@ -232,7 +232,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(stepper_size), pixels(stepper_size)})
                    .with_absolute_position()
                    .with_translate(content_x + 340.0f, sens_y - 2.0f)
-                   .with_font("EqProRounded", 28.0f)
+                   .with_font("EqProRounded", h720(28.0f))
                    .with_custom_text_color(text_dark)
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("sens_left"))) {
@@ -265,7 +265,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(stepper_size), pixels(stepper_size)})
                    .with_absolute_position()
                    .with_translate(content_x + 505.0f, sens_y - 2.0f)
-                   .with_font("EqProRounded", 28.0f)
+                   .with_font("EqProRounded", h720(28.0f))
                    .with_custom_text_color(text_dark)
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("sens_right"))) {
@@ -297,7 +297,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(480), pixels(28)})
             .with_absolute_position()
             .with_translate(35.0f, (float)screen_h - 45.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("version"));
 
@@ -310,7 +310,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w - 205.0f, (float)screen_h - 70.0f)
             .with_custom_background(btn_teal)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("tutorial"));

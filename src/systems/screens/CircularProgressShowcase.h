@@ -72,7 +72,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(screen_width), pixels(40.0f * scale)})
             .with_absolute_position()
             .with_translate(0.0f, 20.0f * scale)
-            .with_font("Gaegu-Bold", 36.0f * scale)
+            .with_font("Gaegu-Bold", h720(36.0f * scale))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -85,7 +85,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(screen_width), pixels(28.0f * scale)})
             .with_absolute_position()
             .with_translate(0.0f, 65.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f * scale)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f * scale))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("subtitle"));
@@ -123,7 +123,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(start_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", title_font)
+            .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card1_title"));
@@ -146,7 +146,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(start_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", value_font)
+            .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_cyan)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card1_value"));
@@ -157,7 +157,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
             .with_absolute_position()
             .with_translate(start_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, desc_font)
+            .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card1_desc"));
@@ -182,7 +182,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(card2_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", title_font)
+            .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card2_title"));
@@ -206,7 +206,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(card2_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", value_font)
+            .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_purple)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card2_value"));
@@ -217,7 +217,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
             .with_absolute_position()
             .with_translate(card2_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, desc_font)
+            .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card2_desc"));
@@ -242,7 +242,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(card3_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", title_font)
+            .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card3_title"));
@@ -265,7 +265,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(card3_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", value_font)
+            .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_green)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card3_value"));
@@ -276,7 +276,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
             .with_absolute_position()
             .with_translate(card3_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, desc_font)
+            .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card3_desc"));
@@ -301,7 +301,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(card4_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", title_font)
+            .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card4_title"));
@@ -324,7 +324,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
             .with_absolute_position()
             .with_translate(card4_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", value_font)
+            .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_orange)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card4_value"));
@@ -335,7 +335,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
             .with_absolute_position()
             .with_translate(card4_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, desc_font)
+            .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("card4_desc"));
@@ -355,7 +355,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(screen_width), pixels(28.0f * scale)})
             .with_absolute_position()
             .with_translate(0.0f, bottom_y - 5.0f * scale)
-            .with_font("Gaegu-Bold", 24.0f * scale)
+            .with_font("Gaegu-Bold", h720(24.0f * scale))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("size_title"));
@@ -406,7 +406,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
                                        pixels(24.0f * scale)})
               .with_absolute_position()
               .with_translate(card_x, bottom_y + 100.0f * scale)
-              .with_font("Gaegu-Bold", 18.0f * scale)
+              .with_font("Gaegu-Bold", h720(18.0f * scale))
               .with_custom_text_color(colors[i])
               .with_alignment(TextAlignment::Center)
               .with_debug_name(fmt::format("size_label_{}", i)));
@@ -422,7 +422,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
                                          pixels(20.0f * scale)})
                 .with_absolute_position()
                 .with_translate(card_x, bottom_y + 122.0f * scale)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f * scale)
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f * scale))
                 .with_custom_text_color(text_muted)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name(fmt::format("progress_label_{}", i)));

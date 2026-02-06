@@ -164,7 +164,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 32.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_debug_name("title"));
 
@@ -199,7 +199,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_skip_tabbing(true)
             .with_debug_name("fruit_header"));
 
@@ -207,7 +207,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     custom_radio_group(context, mk(col1.ent(), 1), fruit_options, fruit_idx,
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                           .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                           .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                            .with_debug_name("fruit_radios"),
                        radio_style);
 
@@ -231,7 +231,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_skip_tabbing(true)
             .with_debug_name("size_header"));
 
@@ -239,7 +239,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     custom_radio_group(context, mk(col2.ent(), 1), size_options, size_idx,
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                           .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                           .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                            .with_debug_name("size_radios"),
                        radio_style);
 
@@ -263,7 +263,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_skip_tabbing(true)
             .with_debug_name("color_header"));
 
@@ -271,7 +271,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     custom_radio_group(context, mk(col3.ent(), 1), color_options, color_idx,
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                           .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                           .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                            .with_debug_name("color_radios"),
                        radio_style);
 
@@ -288,7 +288,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("status"));

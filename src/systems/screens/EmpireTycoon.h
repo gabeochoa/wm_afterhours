@@ -195,7 +195,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(420), pixels(85)})
             .with_absolute_position()
             .with_translate(32.0f, 22.0f)
-            .with_font("Fredoka", 64.0f)
+            .with_font("Fredoka", h720(64.0f))
             .with_custom_text_color(afterhours::Color{45, 90, 140, 180})
             .with_text_stroke(afterhours::Color{35, 70, 115, 150}, 5.0f)
             .with_alignment(TextAlignment::Left)
@@ -208,7 +208,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(420), pixels(85)})
             .with_absolute_position()
             .with_translate(28.0f, 15.0f)
-            .with_font("Fredoka", 64.0f)
+            .with_font("Fredoka", h720(64.0f))
             .with_custom_text_color(white)
             .with_text_stroke(border_blue, 5.0f)
             .with_alignment(TextAlignment::Left)
@@ -221,7 +221,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(520), pixels(55)})
             .with_absolute_position()
             .with_translate(32.0f, 95.0f)
-            .with_font("Fredoka", 42.0f)
+            .with_font("Fredoka", h720(42.0f))
             .with_custom_text_color(afterhours::Color{35, 75, 125, 180})
             .with_text_stroke(afterhours::Color{25, 55, 95, 150}, 4.0f)
             .with_alignment(TextAlignment::Left)
@@ -234,7 +234,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(520), pixels(55)})
             .with_absolute_position()
             .with_translate(28.0f, 90.0f)
-            .with_font("Fredoka", 42.0f)
+            .with_font("Fredoka", h720(42.0f))
             .with_custom_text_color(afterhours::Color{100, 185, 240, 255})
             .with_text_stroke(afterhours::Color{45, 115, 175, 255}, 4.0f)
             .with_alignment(TextAlignment::Left)
@@ -276,7 +276,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_translate(cur_x + 10.0f, 23.0f)
               .with_custom_background(btn_yellow)
               .with_border(btn_yellow_dark, 2.0f)
-              .with_font("EqProRounded", 24.0f)
+              .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(white)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(std::bitset<4>(0b1111))
@@ -291,7 +291,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(50)})
             .with_absolute_position()
             .with_translate(cur_x + 62.0f, 20.0f)
-            .with_font("EqProRounded", 32.0f)
+            .with_font("EqProRounded", h720(32.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("money"));
@@ -373,7 +373,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w - 340.0f, meter_y + 7.0f)
             .with_custom_background(afterhours::Color{255, 210, 130, 255})
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -386,7 +386,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(22)})
             .with_absolute_position()
             .with_translate((float)screen_w - 305.0f, meter_y + 9.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("happy_text"));
 
@@ -421,7 +421,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(24)})
             .with_absolute_position()
             .with_translate((float)screen_w - 216.0f, meter_y + 8.0f)
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("happy_pct"));
@@ -445,7 +445,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w - 235.0f, meter_y + 7.0f)
             .with_custom_background(afterhours::Color{195, 215, 240, 255})
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -458,7 +458,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(90), pixels(22)})
             .with_absolute_position()
             .with_translate((float)screen_w - 205.0f, meter_y + 9.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("res_text"));
 
@@ -471,7 +471,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(18)})
             .with_absolute_position()
             .with_translate((float)screen_w - 110.0f, meter_y + 11.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("res_pct"));
@@ -551,7 +551,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(52), pixels(44)})
                 .with_absolute_position()
                 .with_translate(nav_x + tab_width / 2.0f - 26.0f, tab_y + 8.0f)
-                .with_font("EqProRounded", 24.0f)
+                .with_font("EqProRounded", h720(24.0f))
                 .with_custom_text_color(dark_text)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("tab_icon_fallback_" + std::to_string(i)));
@@ -565,7 +565,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                                        pixels(24)})
               .with_absolute_position()
               .with_translate(nav_x, tab_y + tab_height - 26.0f)
-              .with_font("EqProRounded", 16.0f)
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("tab_label_" + std::to_string(i)));
@@ -606,7 +606,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + 20.0f)
-            .with_font("EqProRounded", 24.0f)
+            .with_font("EqProRounded", h720(24.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("prod_header"));
 
@@ -617,7 +617,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(180), pixels(28)})
             .with_absolute_position()
             .with_translate(panel_x + panel_w - 200.0f, panel_y + 24.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(happy_green)
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
@@ -649,7 +649,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(280), pixels(36)})
               .with_absolute_position()
               .with_translate(panel_x + 50.0f, item_y)
-              .with_font("EqProRounded", 18.0f)
+              .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(dark_text)
               .with_debug_name("prod_" + std::to_string(i)));
 
@@ -660,7 +660,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(28), pixels(28)})
               .with_absolute_position()
               .with_translate(panel_x + 330.0f, item_y + 4.0f)
-              .with_font("EqProRounded", 24.0f)
+              .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(happy_green)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("prod_arrow_" + std::to_string(i)));
@@ -673,7 +673,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(220), pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 420.0f, panel_y + 20.0f)
-            .with_font("EqProRounded", 24.0f)
+            .with_font("EqProRounded", h720(24.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("proj_header"));
 
@@ -706,7 +706,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(360), pixels(36)})
               .with_absolute_position()
               .with_translate(panel_x + 420.0f, item_y)
-              .with_font("EqProRounded", 18.0f)
+              .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(dark_text)
               .with_debug_name("proj_" + std::to_string(i)));
 
@@ -716,7 +716,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(28), pixels(28)})
               .with_absolute_position()
               .with_translate(panel_x + 780.0f, item_y + 4.0f)
-              .with_font("EqProRounded", 24.0f)
+              .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(happy_green)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("proj_arrow_" + std::to_string(i)));
@@ -741,7 +741,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               // Reduced saturation on yellow buttons
               .with_custom_background(afterhours::Color{255, 215, 100, 255})
               .with_border(btn_yellow_dark, 4.0f)
-              .with_font("EqProRounded", 22.0f)
+              .with_font("EqProRounded", h720(22.0f))
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(std::bitset<4>(0b1111))
@@ -770,7 +770,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(320), pixels(24)})
             .with_absolute_position()
             .with_translate(32.0f, bottom_y + 14.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("chat1"));
 
@@ -780,7 +780,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(320), pixels(24)})
             .with_absolute_position()
             .with_translate(32.0f, bottom_y + 44.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("chat2"));
 
@@ -793,7 +793,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(160), pixels(26)})
             .with_absolute_position()
             .with_translate(ms_x, (float)screen_h - 90.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("milestone_label"));
@@ -832,7 +832,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate((float)screen_w / 2.0f - 30.0f,
                             (float)screen_h - 55.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("milestone_pct"));
@@ -882,7 +882,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(static_cast<int>(icon_size)), pixels(static_cast<int>(icon_size))})
                 .with_absolute_position()
                 .with_translate(ix, icon_btn_y)
-                .with_font("EqProRounded", 28.0f)
+                .with_font("EqProRounded", h720(28.0f))
                 .with_custom_text_color(dark_text)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("icon_fallback_" + std::to_string(i)));
@@ -895,7 +895,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(85), pixels(24)})
               .with_absolute_position()
               .with_translate(ix - 14.0f, icon_btn_y + icon_size + 5.0f)
-              .with_font("EqProRounded", 18.0f)
+              .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("icon_label_" + std::to_string(i)));

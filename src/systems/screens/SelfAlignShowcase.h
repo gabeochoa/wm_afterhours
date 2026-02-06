@@ -40,7 +40,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_skip_tabbing(true)
             .with_debug_name("title"));
 
@@ -51,7 +51,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(704), pixels(48)})
             .with_custom_text_color(afterhours::Color{180, 180, 180, 255})
             .with_alignment(TextAlignment::Center)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = DefaultSpacing::small(),
                                 .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
@@ -81,7 +81,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_self_align(SelfAlign::FlexStart)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
@@ -95,7 +95,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_skip_tabbing(true)
             .with_debug_name("center"));
 
@@ -107,7 +107,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_self_align(SelfAlign::FlexEnd)
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
@@ -120,7 +120,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(504), pixels(48)})
             .with_custom_background(afterhours::Color{40, 50, 45, 255})
             .with_custom_text_color(afterhours::Color{150, 255, 150, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = DefaultSpacing::medium(), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
@@ -133,7 +133,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("No manual calculations - just set alignment!")
             .with_size(ComponentSize{pixels(504), pixels(32)})
             .with_custom_text_color(afterhours::Color{100, 220, 100, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})

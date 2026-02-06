@@ -54,7 +54,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Center)
             .with_roundness(0.1f)
             .with_debug_name("title"));
@@ -79,7 +79,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("TOGGLES")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("toggle_label"));
 
@@ -100,7 +100,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("OPTIONS")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("stepper_label"));
 
@@ -120,7 +120,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("VOLUME")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{160, 170, 190, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("slider_label"));
 
@@ -134,7 +134,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Toggle, Stepper, Slider, Dropdown, Display")
             .with_size(ComponentSize{percent(0.95f), pixels(36)})
             .with_custom_text_color(afterhours::Color{100, 110, 130, 255})
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));
   }

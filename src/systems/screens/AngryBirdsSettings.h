@@ -175,7 +175,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x + panel_w / 2.0f - 140.0f,
                             panel_y + cfg_title_y_offset)
-            .with_font("Fredoka", cfg_title_font_size)
+            .with_font("Fredoka", h720(cfg_title_font_size))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -194,7 +194,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(close_x, close_y)
                .with_custom_background(close_red)
                .with_border(close_red_dark, cfg_close_btn_border)
-               .with_font("EqProRounded", 18.0f)
+               .with_font("EqProRounded", h720(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -237,7 +237,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_translate(tx, toggle_y)
                   .with_custom_background(bg_col)
                   .with_border(border_col, cfg_toggle_border_width)
-                  .with_font("EqProRounded", cfg_toggle_font_size)
+                  .with_font("EqProRounded", h720(cfg_toggle_font_size))
                   .with_custom_text_color(text_white)
                   .with_alignment(TextAlignment::Center)
                   .with_rounded_corners(std::bitset<4>(0b1111))
@@ -261,7 +261,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(tx, toggle_y + cfg_toggle_height +
                                       cfg_toggle_label_gap)
-              .with_font("EqProRounded", cfg_toggle_label_font_size)
+              .with_font("EqProRounded", h720(cfg_toggle_label_font_size))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("toggle_label_" + std::to_string(i)));
@@ -293,7 +293,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position()
             .with_translate(saveload_x + 14.0f, saveload_y + 14.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_title"));
 
@@ -303,7 +303,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position()
             .with_translate(saveload_x + 14.0f, saveload_y + 40.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_progress"));
 
@@ -320,7 +320,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(sync_x, sync_y)
                .with_custom_background(wifi_green)
                .with_border(wifi_green_dark, 3.0f)
-               .with_font("EqProRounded", 14.0f)
+               .with_font("EqProRounded", h720(14.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -370,7 +370,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(left_btn_x + 16.0f,
                             btn_row1_y + (cfg_pill_btn_height - 26.0f) / 2.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(notif_icon_color)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("notif_icon"));
@@ -382,7 +382,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(left_btn_x + 46.0f,
                             btn_row1_y + (cfg_pill_btn_height - 28.0f) / 2.0f)
-            .with_font("EqProRounded", 17.0f)
+            .with_font("EqProRounded", h720(17.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("notif_text"));
 
@@ -397,7 +397,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(right_btn_x, btn_row1_y)
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", cfg_pill_font_size)
+               .with_font("EqProRounded", h720(cfg_pill_font_size))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -420,7 +420,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(left_btn_x, btn_row2_y)
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", cfg_pill_font_size)
+               .with_font("EqProRounded", h720(cfg_pill_font_size))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -443,7 +443,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(right_btn_x, btn_row2_y)
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", cfg_pill_font_size)
+               .with_font("EqProRounded", h720(cfg_pill_font_size))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -464,7 +464,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(static_cast<int>(cfg_info_line_height))})
             .with_absolute_position()
             .with_translate(left_btn_x, info_y)
-            .with_font("EqProRounded", cfg_info_font_size)
+            .with_font("EqProRounded", h720(cfg_info_font_size))
             .with_custom_text_color(text_muted)
             .with_debug_name("build_id"));
 
@@ -475,7 +475,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(static_cast<int>(cfg_info_line_height))})
             .with_absolute_position()
             .with_translate(left_btn_x, info_y + cfg_info_line_height + 2.0f)
-            .with_font("EqProRounded", cfg_info_font_size)
+            .with_font("EqProRounded", h720(cfg_info_font_size))
             .with_custom_text_color(text_muted)
             .with_debug_name("version"));
 
@@ -487,7 +487,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(left_btn_x,
                             info_y + (cfg_info_line_height + 2.0f) * 2.0f)
-            .with_font("EqProRounded", cfg_info_font_size)
+            .with_font("EqProRounded", h720(cfg_info_font_size))
             .with_custom_text_color(text_muted)
             .with_debug_name("player_id"));
 
@@ -502,7 +502,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(right_btn_x, btn_row3_y)
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", 17.0f)
+               .with_font("EqProRounded", h720(17.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))

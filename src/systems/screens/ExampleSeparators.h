@@ -52,7 +52,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_width), pixels(50)})
             .with_absolute_position()
             .with_translate(0.0f, 20.0f)
-            .with_font("Gaegu-Bold", 42.0f)
+            .with_font("Gaegu-Bold", h720(42.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -81,7 +81,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(40)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font("Gaegu-Bold", 30.0f)
+            .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("h_title"));
     y += 52.0f;
@@ -93,7 +93,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label1"));
     y += 36.0f;
@@ -114,7 +114,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label2"));
     y += 36.0f;
@@ -135,7 +135,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label3"));
     y += 36.0f;
@@ -156,7 +156,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label4"));
     y += 36.0f;
@@ -178,7 +178,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(34)})
             .with_absolute_position()
             .with_translate(start_x + pad, y)
-            .with_font("Gaegu-Bold", 26.0f)
+            .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("labeled_title"));
     y += 48.0f;
@@ -199,7 +199,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(28)})
             .with_absolute_position()
             .with_translate(start_x + pad + line_width + 5, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("or_label"));
@@ -230,7 +230,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(settings_label_width), pixels(30)})
             .with_absolute_position()
             .with_translate(start_x + pad + settings_line_width + 15, y)
-            .with_font("Gaegu-Bold", 22.0f)
+            .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(accent_blue)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("settings_label"));
@@ -268,7 +268,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(40)})
             .with_absolute_position()
             .with_translate(right_x + pad, y)
-            .with_font("Gaegu-Bold", 30.0f)
+            .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("v_title"));
     y += 52.0f;
@@ -279,7 +279,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position()
             .with_translate(right_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("v_desc"));
     y += 40.0f;
@@ -313,7 +313,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
                   ComponentSize{pixels(nav_item_width), pixels(nav_height)})
               .with_absolute_position()
               .with_translate(nav_x, y)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
               .with_debug_name(std::string("nav_") + nav_items[i]));
@@ -349,7 +349,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(130), pixels(30)})
             .with_absolute_position()
             .with_translate(right_x + pad + gallery_line_width + 5, y)
-            .with_font("Gaegu-Bold", 22.0f)
+            .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("gallery_label"));
@@ -375,7 +375,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(90), pixels(32)})
               .with_absolute_position()
               .with_translate(right_x + pad, y)
-              .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name(std::string("color_") + color_names[i]));
 
@@ -397,7 +397,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(30)})
             .with_absolute_position()
             .with_translate(right_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

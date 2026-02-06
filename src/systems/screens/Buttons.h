@@ -48,7 +48,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 36.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(36.0f))
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
                                 .left = pixels(0),
@@ -72,7 +72,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_debug_name("states_label"));
 
     // Normal button
@@ -82,7 +82,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
                    .with_debug_name("btn_normal"))) {
@@ -96,7 +96,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
                    .with_debug_name("btn_accent"))) {
@@ -110,7 +110,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
                    .with_debug_name("btn_secondary"))) {
@@ -132,7 +132,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_disabled(true)
                .with_opacity(disabled_opacity)
                .with_border(disabled_border_color, 2.0f)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                .with_margin(Spacing::xs)
                .with_roundness(0.08f)
                .with_debug_name("btn_disabled"));
@@ -157,7 +157,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_debug_name("sizes_label"));
 
     // Small button - increased height to meet 44px touch target, larger font for visibility
@@ -167,7 +167,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(90), pixels(44)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                    .with_padding(Spacing::xs)
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
@@ -182,7 +182,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
                    .with_debug_name("btn_medium"))) {
@@ -196,7 +196,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(180), pixels(60)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
                    .with_debug_name("btn_large"))) {
@@ -223,7 +223,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_debug_name("group_label"));
 
     // Create individual buttons styled as a group with gaps between them
@@ -244,7 +244,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(90), pixels(45)})
                      .with_background(Theme::Usage::Primary)
                      .with_auto_text_color(true)
-                     .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                     .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                      .with_rounded_corners(corners)
                      .with_margin(Spacing::xs)
                      .with_debug_name("btn_group_" + std::to_string(i)))) {
@@ -272,7 +272,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_debug_name("custom_label"));
 
     // Custom color button - coral
@@ -282,7 +282,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_custom_background(afterhours::Color{255, 127, 80, 255})
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)  // Match theme default roundness
                    .with_debug_name("btn_coral"))) {
@@ -296,7 +296,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(120), pixels(45)})
                    .with_custom_background(afterhours::Color{0, 100, 100, 255})
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)  // Match Coral button roundness
                    .with_debug_name("btn_teal"))) {
@@ -317,7 +317,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{pixels(120), pixels(45)})
                .with_background(Theme::Usage::Primary)
                .with_auto_text_color(true)
-               .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                .with_margin(Spacing::xs)
                .disable_rounded_corners()
                .with_debug_name("btn_sharp"));
@@ -335,7 +335,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(theme.surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_debug_name("click_counter"));
   }
 };

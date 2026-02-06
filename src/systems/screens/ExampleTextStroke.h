@@ -49,7 +49,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
             .with_absolute_position()
             .with_translate(20.0f, 15.0f)
-            .with_font("BlackOpsOne", 36.0f)
+            .with_font("BlackOpsOne", h720(36.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 3.0f)
             .with_alignment(TextAlignment::Center)
@@ -61,7 +61,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
             .with_absolute_position()
             .with_translate(20.0f, 65.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("page_subtitle"));
@@ -88,7 +88,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(280), pixels(55)})
             .with_absolute_position()
             .with_translate(col1_x, 110.0f)
-            .with_font(bold_font, 36.0f)
+            .with_font(bold_font, h720(36.0f))
             .with_custom_text_color(yellow)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("no_stroke_1"));
@@ -99,7 +99,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(320), pixels(55)})
             .with_absolute_position()
             .with_translate(col1_x + 290.0f, 110.0f)
-            .with_font(bold_font, 36.0f)
+            .with_font(bold_font, h720(36.0f))
             .with_custom_text_color(yellow)
             .with_text_stroke(dark_outline, 5.0f)
             .with_alignment(TextAlignment::Left)
@@ -111,7 +111,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 170.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_1"));
 
@@ -125,7 +125,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(400), pixels(90)})
             .with_absolute_position()
             .with_translate(col1_x, 200.0f)
-            .with_font(bold_font, 72.0f)
+            .with_font(bold_font, h720(72.0f))
             .with_custom_text_color(hot_pink)
             .with_text_stroke(deep_purple, 8.0f)
             .with_alignment(TextAlignment::Left)
@@ -137,7 +137,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 295.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_2"));
 
@@ -151,7 +151,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(400), pixels(75)})
             .with_absolute_position()
             .with_translate(col1_x, 330.0f)
-            .with_font(bold_font, 56.0f)
+            .with_font(bold_font, h720(56.0f))
             .with_custom_text_color(cyan)
             .with_text_stroke(red_stroke, 8.0f)
             .with_alignment(TextAlignment::Left)
@@ -163,7 +163,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 410.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_3"));
 
@@ -177,7 +177,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(75)})
             .with_absolute_position()
             .with_translate(col1_x, 445.0f)
-            .with_font(bold_font, 56.0f)
+            .with_font(bold_font, h720(56.0f))
             .with_custom_text_color(dark_text)
             .with_text_stroke(glow_cyan, 8.0f)
             .with_alignment(TextAlignment::Left)
@@ -189,7 +189,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(450), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 525.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_4"));
 
@@ -214,7 +214,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(180), pixels(55)})
             .with_absolute_position()
             .with_translate(col1_x + 30.0f, 565.0f)
-            .with_font(bold_font, 40.0f)
+            .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("white_no_stroke"));
@@ -225,7 +225,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(180), pixels(55)})
             .with_absolute_position()
             .with_translate(col1_x + light_panel_width * 0.5f, 565.0f)
-            .with_font(bold_font, 40.0f)
+            .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 4.0f)
             .with_alignment(TextAlignment::Left)
@@ -237,7 +237,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position()
             .with_translate(col1_x + 50.0f, 618.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
             .with_debug_name("desc_5a"));
 
@@ -247,7 +247,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position()
             .with_translate(col1_x + light_panel_width * 0.5f + 20.0f, 618.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
             .with_debug_name("desc_5b"));
 
@@ -259,7 +259,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(34)})
             .with_absolute_position()
             .with_translate(col2_x, 110.0f)
-            .with_font("Gaegu-Bold", 26.0f)
+            .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("thickness_title"));
 
@@ -278,7 +278,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(220), pixels(60)})
               .with_absolute_position()
               .with_translate(col2_x, thickness_y + i * 85.0f)
-              .with_font(bold_font, 40.0f)
+              .with_font(bold_font, h720(40.0f))
               .with_custom_text_color(orange)
               .with_text_stroke(dark_orange, thicknesses[i])
               .with_alignment(TextAlignment::Left)
@@ -290,7 +290,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(140), pixels(34)})
               .with_absolute_position()
               .with_translate(col2_x + 230.0f, thickness_y + i * 85.0f + 14.0f)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("thickness_label_" + std::to_string(i)));
     }
@@ -314,7 +314,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 100), pixels(28)})
             .with_absolute_position()
             .with_translate(50.0f, code_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
             .with_alignment(TextAlignment::Left)
             .with_debug_name("code_text"));

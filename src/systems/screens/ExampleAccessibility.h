@@ -85,7 +85,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x, panel_y)
             .with_custom_background(accent_green)
-            .with_font("EqProRounded", 28.0f)
+            .with_font("EqProRounded", h720(28.0f))
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.10f)
@@ -107,7 +107,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_translate(panel_x + (panel_w - 220) / 2.0f, status_y)
             .with_custom_background(status_color)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_alignment(TextAlignment::Center)
@@ -127,7 +127,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(left_x, content_y)
             .with_custom_background(panel_light)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -147,7 +147,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(demo_bg_light)
             .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
             .with_auto_text_color(false) // Manual text color, no auto-contrast
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_debug_name("light_no_auto"));
 
@@ -159,7 +159,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                .with_translate(left_x, content_y + 100.0f)
                .with_custom_background(demo_bg_dark)
                .with_auto_text_color(false)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_debug_name("dark_no_auto"));
 
@@ -170,7 +170,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position()
             .with_translate(left_x, content_y + 162.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("left_note"));
@@ -183,7 +183,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(right_x, content_y)
             .with_custom_background(accent_green)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -198,7 +198,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                .with_translate(right_x, content_y + 40.0f)
                .with_custom_background(demo_bg_light)
                .with_auto_text_color(true)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_debug_name("light_auto"));
 
@@ -210,7 +210,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                .with_translate(right_x, content_y + 100.0f)
                .with_custom_background(demo_bg_dark)
                .with_auto_text_color(true)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_debug_name("dark_auto"));
 
@@ -221,7 +221,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position()
             .with_translate(right_x, content_y + 162.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(accent_green)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("right_note"));
@@ -235,7 +235,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, showcase_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("showcase_title"));
@@ -263,7 +263,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                                  showcase_y + 35.0f)
                  .with_custom_background(showcase_colors[i])
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                  .with_rounded_corners(std::bitset<4>(0b1111))
                  .with_debug_name("color_" + std::to_string(i)));
     }
@@ -290,7 +290,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                                  showcase_y + 95.0f)
                  .with_custom_background(dark_colors[i])
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                  .with_rounded_corners(std::bitset<4>(0b1111))
                  .with_debug_name("dark_" + std::to_string(i)));
     }
@@ -303,7 +303,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(32)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + panel_h - 44.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

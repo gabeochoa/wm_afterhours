@@ -39,7 +39,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
             .with_absolute_position()
             .with_translate(20.0f, 15.0f)
-            .with_font("BlackOpsOne", 36.0f)
+            .with_font("BlackOpsOne", h720(36.0f))
             .with_custom_text_color(text_dark)
             .with_text_shadow(afterhours::Color{0, 0, 0, 255}, 6.0f,
                               6.0f) // Very visible
@@ -53,7 +53,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
             .with_absolute_position()
             .with_translate(20.0f, 65.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("page_subtitle"));
@@ -95,7 +95,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(half_left - 10), pixels(55)})
             .with_absolute_position()
             .with_translate(col1_x, 110.0f)
-            .with_font(bold_font, 32.0f)
+            .with_font(bold_font, h720(32.0f))
             .with_custom_text_color(yellow)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("no_shadow_1"));
@@ -106,7 +106,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(half_left), pixels(55)})
             .with_absolute_position()
             .with_translate(col1_x + half_left, 110.0f)
-            .with_font(bold_font, 32.0f)
+            .with_font(bold_font, h720(32.0f))
             .with_custom_text_color(yellow)
             .with_text_shadow(shadow_dark, 6.0f,
                               6.0f) // Large offset for visibility
@@ -119,7 +119,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 165.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_1"));
 
@@ -143,7 +143,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(half_left - 10), pixels(70)})
             .with_absolute_position()
             .with_translate(col1_x, 190.0f)
-            .with_font(bold_font, 52.0f)
+            .with_font(bold_font, h720(52.0f))
             .with_custom_text_color(hot_pink)
             .with_soft_text_shadow(5.0f, 5.0f)
             .with_alignment(TextAlignment::Left)
@@ -155,7 +155,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(half_left), pixels(70)})
             .with_absolute_position()
             .with_translate(col1_x + half_left, 190.0f)
-            .with_font(bold_font, 52.0f)
+            .with_font(bold_font, h720(52.0f))
             .with_custom_text_color(hot_pink)
             .with_hard_text_shadow(5.0f, 5.0f)
             .with_alignment(TextAlignment::Left)
@@ -167,7 +167,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 260.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_2"));
 
@@ -181,7 +181,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width), pixels(65)})
             .with_absolute_position()
             .with_translate(col1_x, 285.0f)
-            .with_font(bold_font, 48.0f)
+            .with_font(bold_font, h720(48.0f))
             .with_custom_text_color(cyan)
             .with_text_shadow(red_shadow, 6.0f, 6.0f)
             .with_alignment(TextAlignment::Left)
@@ -193,7 +193,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 350.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_3"));
 
@@ -208,7 +208,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width), pixels(65)})
             .with_absolute_position()
             .with_translate(col1_x, 375.0f)
-            .with_font(bold_font, 48.0f)
+            .with_font(bold_font, h720(48.0f))
             .with_custom_text_color(orange)
             .with_text_stroke(dark_stroke, 3.0f)
             .with_text_shadow(shadow_offset, 5.0f, 5.0f)
@@ -221,7 +221,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
             .with_absolute_position()
             .with_translate(col1_x, 440.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_4"));
 
@@ -245,7 +245,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(half_left - 30), pixels(45)})
             .with_absolute_position()
             .with_translate(col1_x + 15.0f, 475.0f)
-            .with_font(bold_font, 34.0f)
+            .with_font(bold_font, h720(34.0f))
             .with_custom_text_color(light_text)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("light_no_shadow"));
@@ -256,7 +256,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(half_left - 30), pixels(45)})
             .with_absolute_position()
             .with_translate(col1_x + half_left + 15.0f, 475.0f)
-            .with_font(bold_font, 34.0f)
+            .with_font(bold_font, h720(34.0f))
             .with_custom_text_color(light_text)
             .with_text_shadow(afterhours::Color{0, 0, 0, 180}, 3.0f, 3.0f)
             .with_alignment(TextAlignment::Left)
@@ -268,7 +268,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width - 30), pixels(20)})
             .with_absolute_position()
             .with_translate(col1_x + 25.0f, 520.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 11.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(11.0f))
             .with_custom_text_color(afterhours::Color{140, 145, 170, 255})
             .with_debug_name("desc_5"));
 
@@ -282,7 +282,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(right_col_width), pixels(30)})
             .with_absolute_position()
             .with_translate(col2_x, 110.0f)
-            .with_font("Gaegu-Bold", 22.0f)
+            .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("offset_title"));
 
@@ -313,7 +313,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(right_col_width - 60), pixels(48)})
               .with_absolute_position()
               .with_translate(col2_x, offset_y + i * offset_spacing)
-              .with_font(bold_font, 34.0f)
+              .with_font(bold_font, h720(34.0f))
               .with_custom_text_color(purple)
               .with_text_shadow(purple_shadow, offsets[i], offsets[i])
               .with_alignment(TextAlignment::Left)
@@ -325,7 +325,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(50), pixels(26)})
               .with_absolute_position()
               .with_translate(col2_x + right_col_width - 55, offset_y + i * offset_spacing + 10.0f)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
               .with_custom_text_color(afterhours::Color{180, 185, 200, 255})  // Lighter text for dark bg
               .with_debug_name("offset_label_" + std::to_string(i)));
     }
@@ -349,7 +349,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 60), pixels(28)})
             .with_absolute_position()
             .with_translate(30.0f, code_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
             .with_alignment(TextAlignment::Left)
             .with_debug_name("code_text"));

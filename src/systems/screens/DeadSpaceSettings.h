@@ -108,7 +108,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(32)})
             .with_absolute_position()
             .with_translate(sidebar_x, sidebar_y)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_white)
             .with_padding(Padding{.left = pixels(8)})
             .with_alignment(TextAlignment::Left)
@@ -141,7 +141,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(static_cast<int>(sidebar_w)), pixels(34)})
                      .with_absolute_position()
                      .with_translate(sidebar_x, item_y)
-                     .with_font("EqProRounded", 18.0f)
+                     .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(item_color)
                      .with_padding(Padding{.left = pixels(8)})
                      .with_alignment(TextAlignment::Left)
@@ -171,7 +171,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x + 2.0f, panel_y + 2.0f)
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("panel_header"));
@@ -223,7 +223,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                        pixels(static_cast<int>(item_h - 8))})
                      .with_absolute_position()
                      .with_translate(panel_x + 25.0f, item_y + 8.0f)
-                     .with_font("EqProRounded", 20.0f)
+                     .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(text_color)
                      .with_debug_name("setting_" + std::to_string(i)))) {
         selected_main = i;
@@ -242,7 +242,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), pixels(22)})
             .with_absolute_position()
             .with_translate(prompt_x + 105.0f, prompt_y + 3.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_small"));
 
@@ -264,7 +264,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 15.0f, prompt_y + 35.0f)
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("enter_key"));
@@ -275,7 +275,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 55.0f, prompt_y + 35.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_label"));
 
@@ -287,7 +287,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 135.0f, prompt_y + 35.0f)
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("esc_key"));
@@ -298,7 +298,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 175.0f, prompt_y + 35.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("back_label"));
 

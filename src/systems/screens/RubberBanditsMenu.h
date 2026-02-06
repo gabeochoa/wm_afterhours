@@ -84,7 +84,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(title_x, title_y)
             .with_custom_background(afterhours::Color{60, 45, 25, 180})
-            .with_font("Fredoka", 44.0f)
+            .with_font("Fredoka", h720(44.0f))
             .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
@@ -98,7 +98,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(title_x, title_y + 50.0f)
             .with_custom_background(afterhours::Color{0, 0, 0, 60})
-            .with_font("Fredoka", 44.0f)
+            .with_font("Fredoka", h720(44.0f))
             .with_custom_text_color(accent_green)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
@@ -116,7 +116,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(info_x - 125.0f, 15.0f)
             .with_custom_background(online_pill)
             .with_border(afterhours::Color{115, 155, 105, 255}, 3.0f)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -132,7 +132,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate((float)screen_w - 70.0f, 12.0f)
             .with_custom_background(accent_blue)
             .with_border(afterhours::Color{65, 145, 185, 255}, 3.0f)
-            .with_font("EqProRounded", 28.0f)
+            .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -148,7 +148,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate((float)screen_w - 70.0f, 65.0f)
             .with_custom_background(lightning)
             .with_border(afterhours::Color{215, 190, 55, 255}, 3.0f)
-            .with_font("EqProRounded", 28.0f)
+            .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -184,7 +184,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(28), pixels(36)})
                 .with_absolute_position()
                 .with_translate(menu_x - 28.0f, item_y + 4.0f)
-                .with_font("EqProRounded", 24.0f)
+                .with_font("EqProRounded", h720(24.0f))
                 .with_custom_text_color(text_dark)
                 .with_debug_name("arrow_" + std::to_string(i)));
       }
@@ -199,7 +199,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(menu_x, item_y)
                      .with_custom_background(item_bg)
                      .with_border(is_selected ? afterhours::Color{220, 190, 100, 255} : afterhours::Color{0, 0, 0, 0}, 2.0f)
-                     .with_font("EqProRounded", 22.0f)
+                     .with_font("EqProRounded", h720(22.0f))
                      .with_custom_text_color(text_dark)
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(0.15f)
@@ -231,7 +231,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(180), pixels(24)})
               .with_absolute_position()
               .with_translate(promo_x + 10.0f, promo_y + 8.0f)
-              .with_font("EqProRounded", 14.0f)
+              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
               .with_debug_name("promo_text1"));
 
@@ -241,7 +241,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(180), pixels(20)})
               .with_absolute_position()
               .with_translate(promo_x + 10.0f, promo_y + 30.0f)
-              .with_font("EqProRounded", 12.0f)
+              .with_font("EqProRounded", h720(12.0f))
               .with_custom_text_color(afterhours::Color{130, 115, 85, 255})
               .with_debug_name("promo_text2"));
 
@@ -253,7 +253,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_absolute_position()
                      .with_translate(promo_x + 190.0f, promo_y + 5.0f)
                      .with_custom_background(afterhours::Color{180, 165, 135, 200})
-                     .with_font("EqProRounded", 14.0f)
+                     .with_font("EqProRounded", h720(14.0f))
                      .with_custom_text_color(afterhours::Color{80, 70, 50, 255})
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
@@ -274,9 +274,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(24)})
             .with_absolute_position()
             .with_translate(char_x - 50.0f, char_y - 28.0f)
-            .with_font("EqProRounded", 14.0f)
-            .with_custom_text_color(afterhours::Color{80, 70, 50, 255})
-            .with_alignment(TextAlignment::Center)
+            .with_font("EqProRounded", h720(14.0f))
             .with_debug_name("char_label"));
 
     // LB button
@@ -287,7 +285,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(char_x - 110.0f, char_y)
             .with_custom_background(text_dark)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -301,7 +299,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(220), pixels(36)})
             .with_absolute_position()
             .with_translate(char_x - 55.0f, char_y)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("char_name"));
@@ -314,7 +312,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(char_x + 170.0f, char_y)
             .with_custom_background(text_dark)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -328,7 +326,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(150), pixels(28)})
             .with_absolute_position()
             .with_translate(char_x - 25.0f, char_y + 38.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("favourite"));
@@ -340,9 +338,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(320), pixels(32)})
             .with_absolute_position()
             .with_translate(55.0f, (float)screen_h - 50.0f)
-            .with_font("EqProRounded", 18.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("hint"));
+            .with_font("EqProRounded", h720(18.0f))
+            .with_custom_text_color(afterhours::Color{180, 180, 180, 255})
+            .with_debug_name("bottom_hint"));
 
     // Note: Decorative coin elements removed to reduce clutter
   }

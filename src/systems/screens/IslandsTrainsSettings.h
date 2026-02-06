@@ -143,7 +143,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(close_x, close_y)
                .with_custom_background(close_bg)
                .with_border(close_border, 2.0f)
-               .with_font("EqProRounded", 28.0f)
+               .with_font("EqProRounded", h720(28.0f))
                .with_custom_text_color(afterhours::Color{130, 140, 130, 255})
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -157,7 +157,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(45)})
             .with_absolute_position()
             .with_translate(panel_x + panel_w / 2.0f - 125.0f, panel_y + 18.0f)
-            .with_font("EqProRounded", 30.0f)
+            .with_font("EqProRounded", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -176,7 +176,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(22)})
             .with_absolute_position()
             .with_translate(content_x, content_y)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("display_header"));
 
@@ -202,7 +202,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(22)})
             .with_absolute_position()
             .with_translate(content_x, controls_y)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("controls_header"));
 
@@ -227,7 +227,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(content_x,
                                controls_row_y + 2 * (row_h + section_gap))
                .with_custom_background(btn_cream)
-               .with_font("EqProRounded", 15.0f)
+               .with_font("EqProRounded", h720(15.0f))
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -243,7 +243,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(22)})
             .with_absolute_position()
             .with_translate(content_x, audio_y)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("audio_header"));
 
@@ -267,7 +267,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(22)})
             .with_absolute_position()
             .with_translate(content_x, tutorial_y)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("tutorial_header"));
 
@@ -279,7 +279,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position()
                .with_translate(content_x, tutorial_y + 22.0f)
                .with_custom_background(btn_cream)
-               .with_font("EqProRounded", 15.0f)
+               .with_font("EqProRounded", h720(15.0f))
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(std::bitset<4>(0b1111))
@@ -294,7 +294,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(30)})
             .with_absolute_position()
             .with_translate(sw / 2.0f - 125.0f, sh - 70.0f)
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("reset"));
@@ -323,7 +323,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(160), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + 16.0f, y + 8.0f)
-            .with_font("EqProRounded", 15.0f)
+            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
 
@@ -335,7 +335,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        ComponentSize{pixels(28), pixels(static_cast<int>(h))})
                    .with_absolute_position()
                    .with_translate(x + w - 165.0f, y + 7.0f)
-                   .with_font("EqProRounded", 17.0f)
+                   .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
@@ -358,7 +358,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + w - 140.0f, y + 8.0f)
-            .with_font("EqProRounded", 15.0f)
+            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("value_" + std::to_string(base_id)));
@@ -371,7 +371,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        ComponentSize{pixels(28), pixels(static_cast<int>(h))})
                    .with_absolute_position()
                    .with_translate(x + w - 28.0f, y + 7.0f)
-                   .with_font("EqProRounded", 17.0f)
+                   .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
@@ -403,7 +403,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(175), pixels(static_cast<int>(h))})
             .with_absolute_position()
             .with_translate(x + 16.0f, y + 8.0f)
-            .with_font("EqProRounded", 15.0f)
+            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
 
@@ -415,7 +415,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        ComponentSize{pixels(28), pixels(static_cast<int>(h))})
                    .with_absolute_position()
                    .with_translate(x + w - 190.0f, y + 7.0f)
-                   .with_font("EqProRounded", 17.0f)
+                   .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
@@ -462,7 +462,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        ComponentSize{pixels(28), pixels(static_cast<int>(h))})
                    .with_absolute_position()
                    .with_translate(x + w - 28.0f, y + 7.0f)
-                   .with_font("EqProRounded", 17.0f)
+                   .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)

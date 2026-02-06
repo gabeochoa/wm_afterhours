@@ -46,7 +46,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Scroll View Demo")
             .with_custom_background(theme.surface)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_padding(Spacing::sm)
             .with_debug_name("title"));
 
@@ -56,7 +56,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Use mouse wheel to scroll (Shift+wheel or trackpad for horizontal)")
             .with_custom_text_color(theme.font_muted)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("instructions"));
 
     // Invert scroll toggle row with label
@@ -74,7 +74,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Invert Scroll")
                  .with_custom_background(theme.secondary)
                  .with_custom_text_color(theme.font)
-                 .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                  .with_debug_name("invert_toggle"));
 
     // Container for both scroll views side by side
@@ -97,7 +97,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Vertical Scroll")
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("vert_label"));
 
     // Vertical scroll container - uses clip_children to ensure items
@@ -129,7 +129,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Scrolled: {}%", scroll_pct))
-              .with_font(UIComponent::DEFAULT_FONT, 18.f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("vert_info"));
     }
@@ -141,7 +141,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.95f), pixels(44)})
               .with_label(fmt::format("Item {}", i + 1))
               .with_background(Theme::Usage::Primary)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_margin(Margin{.top = pixels(3), .bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)
@@ -160,7 +160,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Horizontal Scroll")
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("horiz_label"));
 
     // Horizontal scroll container - uses clip_children to ensure items
@@ -193,7 +193,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Scrolled: {}%", scroll_pct))
-              .with_font(UIComponent::DEFAULT_FONT, 18.f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("horiz_info"));
 
@@ -238,7 +238,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(70), pixels(70)})
               .with_label(fmt::format("{}", i + 1))
               .with_background(Theme::Usage::Accent)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)

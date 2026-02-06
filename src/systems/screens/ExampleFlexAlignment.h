@@ -40,7 +40,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
@@ -66,7 +66,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.85f), percent(0.22f)})
               .with_background(Theme::Usage::Primary)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_flex_direction(FlexDirection::Row)
               .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -97,7 +97,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
@@ -123,7 +123,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(26), percent(0.70f)})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_flex_direction(FlexDirection::Column)
               .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -150,7 +150,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(afterhours::Color{80, 90, 110, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
@@ -177,7 +177,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(40), percent(heights[i])})
               .with_background(Theme::Usage::Accent)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_flex_direction(FlexDirection::Column)
               .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -206,7 +206,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), percent(0.25f)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_self_align(SelfAlign::FlexStart)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_start"));
@@ -218,7 +218,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), percent(0.25f)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_self_align(SelfAlign::Auto)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_auto"));
@@ -230,7 +230,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), percent(0.25f)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_self_align(SelfAlign::Center)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_center"));
@@ -242,7 +242,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), percent(0.25f)})
             .with_custom_background(afterhours::Color{180, 60, 90, 255})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_self_align(SelfAlign::FlexEnd)
             .with_flex_direction(FlexDirection::Column)
             .with_debug_name("self_end"));
@@ -271,7 +271,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_flex_direction(FlexDirection::Row)
             .with_debug_name("title"));
 
@@ -288,7 +288,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     if (auto result = tab_container(context, mk(tab_row.ent(), 0), category_labels, active_category,
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(40)})
-                .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+                .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                 .with_debug_name("category_tabs")); result) {
       // Tab changed
     }
@@ -322,7 +322,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
               .with_flex_direction(FlexDirection::Row)
               .with_debug_name("jv_label"));
 
@@ -349,7 +349,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
               .with_flex_direction(FlexDirection::Row)
               .with_debug_name("ai_label"));
 
@@ -385,7 +385,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
               .with_flex_direction(FlexDirection::Row)
               .with_debug_name("jh_label"));
 
@@ -412,7 +412,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
               .with_flex_direction(FlexDirection::Row)
               .with_debug_name("sa_label"));
 
@@ -446,7 +446,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)})
                 .with_debug_name("section_title"));
@@ -474,7 +474,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)})
                 .with_debug_name("section_title"));
@@ -502,7 +502,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)})
                 .with_debug_name("section_title"));
@@ -528,7 +528,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)})
                 .with_debug_name("section_title"));

@@ -147,7 +147,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(50)})
             .with_absolute_position()
             .with_translate(135.0f, 60.0f)
-            .with_font("EqProRounded", 36.0f)
+            .with_font("EqProRounded", h720(36.0f))
             .with_custom_text_color(text_cyan)
             .with_debug_name("title"));
 
@@ -164,7 +164,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(200), pixels(32)})
                      .with_absolute_position()
                      .with_translate(menu_x, menu_y + (float)i * 36.0f)
-                     .with_font("EqProRounded", 20.0f)
+                     .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(item_color)
                      .with_alignment(TextAlignment::Left)
                      .with_padding(Padding{.left = pixels(8)})
@@ -218,7 +218,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(260), pixels(32)})
                      .with_absolute_position()
                      .with_translate(sub_x, sub_y + (float)i * 36.0f)
-                     .with_font("EqProRounded", 20.0f)
+                     .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(opt_color)
                      .with_disabled(is_vibration && vibration_unavailable)
                      .with_debug_name("opt_" + std::to_string(i)))) {
@@ -236,7 +236,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(260), pixels(20)})
               .with_absolute_position()
               .with_translate(sub_x + 16.0f, sub_y + 3 * 36.0f + 24.0f)
-              .with_font("EqProRounded", 14.0f)
+              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(disabled_color)
               .with_debug_name("vibration_tooltip"));
     }
@@ -260,7 +260,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(500), pixels(36)})
             .with_absolute_position()
             .with_translate(170.0f, (float)screen_h - 180.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("help"));
 
@@ -276,7 +276,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(160.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("enter_key"));
@@ -287,7 +287,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
             .with_translate(224.0f, btn_y)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("ok_label"));
 
@@ -300,7 +300,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(275.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("esc_key"));
@@ -311,7 +311,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(56), pixels(36)})
             .with_absolute_position()
             .with_translate(331.0f, btn_y)
-            .with_font("EqProRounded", 18.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("back_label"));
   }

@@ -58,7 +58,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(30.0f, 20.0f)
             .with_custom_background(panel)
             .with_border(afterhours::Color{120, 130, 150, 255}, 2.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -71,7 +71,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(screen_width - 60.0f), pixels(24.0f)})
             .with_absolute_position()
             .with_translate(30.0f, 68.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("legend"));
@@ -107,7 +107,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(cell), pixels(col_header_height)})
               .with_absolute_position()
               .with_translate(start_x + c * (cell + gap), start_y - col_header_height - 8.0f)
-              .with_font(UIComponent::DEFAULT_FONT, column_header_font_size)
+              .with_font(UIComponent::DEFAULT_FONT, h720(column_header_font_size))
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("col_label_" + std::to_string(c)));
@@ -122,7 +122,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(row_label_width), pixels(cell)})
               .with_absolute_position()
               .with_translate(row_label_x, start_y + r * (cell + gap))
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("row_label_" + std::to_string(r)));
@@ -143,7 +143,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(fill)
                 .with_bevel(rows[r].style, light_edge, dark_edge,
                             thicknesses[c])
-                .with_font(UIComponent::DEFAULT_FONT, cell_label_font_size)
+                .with_font(UIComponent::DEFAULT_FONT, h720(cell_label_font_size))
                 .with_custom_text_color(label_color)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("bevel_" + std::to_string(r) + "_" +

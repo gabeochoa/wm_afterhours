@@ -118,7 +118,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(INNER_W - 80), pixels(28)})  // Leave room for controls
             .with_custom_text_color(AIMColors::title_text())
             .with_alignment(TextAlignment::Left)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_padding(Padding{.left = pixels(6)})
             .with_skip_tabbing(true)
             .with_debug_name("title_text"));
@@ -142,7 +142,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(UIConfig::WINDOW_CONTROL_SIZE), pixels(UIConfig::WINDOW_CONTROL_SIZE)})
               .with_custom_background(AIMColors::button_face())
               .with_custom_text_color(AIMColors::text_default())
-              .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
               .with_margin(Margin{.left = pixels(2)})
               .disable_rounded_corners()
               .with_skip_tabbing(true)
@@ -166,7 +166,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_label(menus[i])
               .with_size(ComponentSize{pixels(55), pixels(22)})
               .with_custom_text_color(AIMColors::text_default())
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_padding(Padding{.left = pixels(6)})
               .with_skip_tabbing(true)
               .with_debug_name("menu_item"));
@@ -189,7 +189,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(40), pixels(40)})
             .with_custom_background(AIMColors::warning_yellow())
             .with_custom_text_color(AIMColors::text_default())
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_debug_name("buddy_icon_available"));
 
@@ -207,7 +207,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(190), pixels(22)})
             .with_custom_text_color(AIMColors::buddy_text())
             .with_alignment(TextAlignment::Left)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
             .with_debug_name("buddy_name_display"));
 
@@ -237,7 +237,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("buddy_status"));
 
@@ -286,7 +286,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(INNER_W - PAD * 4 - 14), pixels(28)})
               .with_custom_text_color(is_me ? AIMColors::my_text() : AIMColors::buddy_text())
               .with_alignment(TextAlignment::Left)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_margin(Margin{.bottom = pixels(4)})
               .with_skip_tabbing(true)
               .with_debug_name("chat_msg"));
@@ -336,7 +336,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(INNER_W), pixels(24)})
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_padding(Padding{.left = pixels(PAD)})
             .with_skip_tabbing(true)
             .with_debug_name("send_to_label"));
@@ -371,7 +371,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_text_color(AIMColors::my_text())
                 .with_line_height(pixels(INPUT_LINE_HEIGHT))
                 .with_max_lines(INPUT_LINES)
-                .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                 .disable_rounded_corners()
                 .with_debug_name("message_input"))) {
     }
@@ -385,7 +385,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(INNER_W - PAD * 4), pixels(INPUT_LINE_HEIGHT)})
               .with_custom_text_color(AIMColors::placeholder_text())
               .with_alignment(TextAlignment::Left)
-              .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_absolute_position()
               .with_translate(pixels(6), pixels(6))
               .with_skip_tabbing(true)
@@ -412,7 +412,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(AIMColors::button_face())
                    .with_custom_text_color(AIMColors::text_default())
                    .with_border(AIMColors::button_shadow(), 2.0f)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                    .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
                    .disable_rounded_corners()
                    .with_debug_name("warn_btn"))) {
@@ -427,7 +427,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(AIMColors::button_face())
                    .with_custom_text_color(AIMColors::text_default())
                    .with_border(AIMColors::button_shadow(), 2.0f)
-                   .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                    .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
                    .disable_rounded_corners()
                    .with_debug_name("block_btn"))) {
@@ -442,7 +442,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(AIMColors::button_face())
                .with_custom_text_color(AIMColors::text_default())
                .with_border(AIMColors::button_shadow(), 2.0f)
-               .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
                .disable_rounded_corners()
                .with_debug_name("send_btn"));
@@ -455,7 +455,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(AIMColors::button_face())
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_padding(Padding{.left = pixels(PAD)})
             .with_skip_tabbing(true)
             .with_debug_name("status_bar"));

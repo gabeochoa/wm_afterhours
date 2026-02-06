@@ -95,7 +95,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, TITLE_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(TITLE_FONT))
             .with_alignment(TextAlignment::Center)
             .with_skip_tabbing(true)
             .with_debug_name("title"));
@@ -126,7 +126,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, HEADER_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
             .with_skip_tabbing(true)
             .with_debug_name("with_label_hdr"));
 
@@ -135,7 +135,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Primary")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("cb_primary"));
 
     checkbox(context, mk(left_col.ent(), 2), labeled_secondary,
@@ -143,7 +143,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Secondary")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("cb_secondary"));
 
     checkbox(context, mk(left_col.ent(), 3), labeled_accent,
@@ -151,7 +151,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Accent")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("cb_accent"));
 
     // Box Only section - use Primary for consistent section headers
@@ -162,7 +162,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, HEADER_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
             .with_skip_tabbing(true)
             .with_debug_name("box_only_hdr"));
 
@@ -180,28 +180,28 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::SYMBOL_FONT, 20.0f * scale)
+            .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
             .with_debug_name("nl_option_1"));
 
     checkbox_no_label(context, mk(no_label_row.ent(), 1), no_label_2,
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::SYMBOL_FONT, 20.0f * scale)
+            .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
             .with_debug_name("nl_option_2"));
 
     checkbox_no_label(context, mk(no_label_row.ent(), 2), no_label_3,
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::SYMBOL_FONT, 20.0f * scale)
+            .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
             .with_debug_name("nl_option_3"));
 
     checkbox_no_label(context, mk(no_label_row.ent(), 3), no_label_4,
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::SYMBOL_FONT, 20.0f * scale)
+            .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
             .with_debug_name("nl_option_4"));
 
     // Disabled section - use Primary for consistent section headers
@@ -212,7 +212,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, HEADER_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
             .with_skip_tabbing(true)
             .with_debug_name("disabled_hdr"));
 
@@ -222,7 +222,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("cb_dis_on"));
 
     checkbox(context, mk(left_col.ent(), 8), disabled_unchecked,
@@ -231,7 +231,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("cb_dis_off"));
 
     // ========== RIGHT COLUMN ==========
@@ -252,7 +252,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, HEADER_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
             .with_skip_tabbing(true)
             .with_debug_name("multi_hdr"));
 
@@ -267,7 +267,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Option A")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("opt_a"))) {
         if (opt_a) options_group.set(0); else options_group.reset(0);
     }
@@ -277,7 +277,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Option B")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("opt_b"))) {
         if (opt_b) options_group.set(1); else options_group.reset(1);
     }
@@ -287,7 +287,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Option C")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("opt_c"))) {
         if (opt_c) options_group.set(2); else options_group.reset(2);
     }
@@ -297,7 +297,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Option D")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_debug_name("opt_d"))) {
         if (opt_d) options_group.set(3); else options_group.reset(3);
     }
@@ -313,7 +313,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, HEADER_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
             .with_skip_tabbing(true)
             .with_debug_name("minmax_hdr"));
 
@@ -332,7 +332,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Choice 1")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_disabled(dis_1)
                  .with_debug_name("ch_1"))) {
         if (ch_1) min_max_group.set(0); else min_max_group.reset(0);
@@ -343,7 +343,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Choice 2")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_disabled(dis_2)
                  .with_debug_name("ch_2"))) {
         if (ch_2) min_max_group.set(1); else min_max_group.reset(1);
@@ -354,7 +354,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Choice 3")
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
                  .with_disabled(dis_3)
                  .with_debug_name("ch_3"))) {
         if (ch_3) min_max_group.set(2); else min_max_group.reset(2);
@@ -371,7 +371,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, STATUS_FONT)
+            .with_font(UIComponent::DEFAULT_FONT, h720(STATUS_FONT))
             .with_alignment(TextAlignment::Center)
             .with_skip_tabbing(true)
             .with_debug_name("status"));

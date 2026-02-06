@@ -61,7 +61,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_width - 40), pixels(50)})
             .with_absolute_position()
             .with_translate(20.0f, 20.0f)
-            .with_font("Gaegu-Bold", 32.0f)
+            .with_font("Gaegu-Bold", h720(32.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -80,7 +80,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_width - 40), pixels(34)})
             .with_absolute_position()
             .with_translate(20.0f, 75.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
                 success_green
@@ -109,7 +109,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(28)})
             .with_absolute_position()
             .with_translate(left_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(success_green)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("section_working"));
@@ -134,7 +134,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
                                      pixels(card_height - 20)})
             .with_absolute_position()
             .with_translate(left_col_x + 10.0f, card_y + 10.0f)
-            .with_font("Gaegu-Bold", 22.0f)
+            .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_ok_1"));
@@ -158,7 +158,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width - 20), pixels(50)})
             .with_absolute_position()
             .with_translate(left_col_x + 10.0f, card_y + 5.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_ok_2"));
@@ -182,7 +182,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(44), pixels(44)})
             .with_absolute_position()
             .with_translate(left_col_x + 4.0f, card_y + 4.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_ok_3"));
@@ -198,7 +198,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(28)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(error_red)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("section_overflow"));
@@ -222,7 +222,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(20)})
             .with_absolute_position()
             .with_translate(right_col_x + 5.0f, card_y + 5.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_overflow_1"));
@@ -246,7 +246,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width - 20), pixels(5)})
             .with_absolute_position()
             .with_translate(right_col_x + 10.0f, card_y + 5.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_overflow_2"));
@@ -270,7 +270,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
             .with_translate(right_col_x + 4.0f, card_y + 4.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_overflow_3"));
@@ -282,7 +282,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(280), pixels(24)})
             .with_absolute_position()
             .with_translate(right_col_x + 54.0f, card_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("tiny_label"));
@@ -306,7 +306,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(90), pixels(15)})
             .with_absolute_position()
             .with_translate(right_col_x + 5.0f, card_y + 5.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_overflow_4"));
@@ -320,7 +320,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(24)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("shrinking_label"));
@@ -375,7 +375,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(44)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("min_size_note"));

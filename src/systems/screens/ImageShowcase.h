@@ -72,7 +72,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_debug_name("title"));
 
@@ -95,7 +95,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("sprite_label"));
 
     // Helper lambda to create sprite with label for row1
@@ -119,7 +119,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(label_text)
               .with_size(ComponentSize{pixels(80), pixels(24)})
               .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
               .with_skip_tabbing(true)
               .with_debug_name("sprite_label_" + std::to_string(idx)));
     };
@@ -148,7 +148,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("imgbtn_label"));
 
     if (image_button(context, mk(row2.ent(), 1), gear_tex, full_src,
@@ -190,7 +190,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(48)})
             .with_custom_background(theme.surface)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.left = DefaultSpacing::medium()})
             .with_skip_tabbing(true)
             .with_debug_name("click_counter"));
@@ -213,7 +213,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("withbg_label"));
 
     auto img_container =
@@ -239,7 +239,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Settings")
             .with_size(ComponentSize{pixels(100), pixels(36)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.left = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name("settings_label"));
@@ -262,7 +262,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("iconrow_label"));
 
     auto icon_row_container =
@@ -300,7 +300,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(label_text)
               .with_size(ComponentSize{pixels(80), pixels(24)})
               .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+              .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
               .with_skip_tabbing(true)
               .with_debug_name("label_" + std::to_string(idx)));
     };

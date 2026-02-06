@@ -128,7 +128,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(30), pixels(30)})
             .with_absolute_position()
             .with_translate(25.0f, top_y + 5.0f)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("close"));
@@ -140,7 +140,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(30)})
             .with_absolute_position()
             .with_translate(65.0f, top_y + 5.0f)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("title"));
 
@@ -190,7 +190,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                               pixels(44)})
                      .with_absolute_position()
                      .with_translate(row_x, ry - 8.0f)
-                     .with_font("EqProRounded", 18.0f)
+                     .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(label_color)
                      .with_debug_name("label_" + std::to_string(i)))) {
         selected_row = i;
@@ -211,7 +211,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_translate(row_x + label_w + 20.0f, ry - 8.0f)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
-                     .with_font("EqProRounded", 18.0f)
+                     .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(arrow_color)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("left_" + std::to_string(i)))) {
@@ -232,7 +232,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(row_x + label_w + 65.0f, ry - 8.0f)
               .with_custom_background(dd_bg)
-              .with_font("EqProRounded", 16.0f)
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("value_" + std::to_string(i)));
@@ -247,7 +247,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          row_x + label_w + 20.0f + dropdown_w - 24.0f, ry - 8.0f)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
-                     .with_font("EqProRounded", 18.0f)
+                     .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(arrow_color)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("right_" + std::to_string(i)))) {
@@ -289,7 +289,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(28)})
             .with_absolute_position()
             .with_translate(help_x + 12.0f, help_y + 12.0f)
-            .with_font("EqProRounded", 17.0f)
+            .with_font("EqProRounded", h720(17.0f))
             .with_custom_text_color(text_cyan)
             .with_debug_name("help_title"));
 
@@ -300,7 +300,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(25)})
             .with_absolute_position()
             .with_translate(help_x + 12.0f, help_y + 45.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_font("EqProRounded", h720(13.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help1"));
 
@@ -311,7 +311,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(25)})
             .with_absolute_position()
             .with_translate(help_x + 12.0f, help_y + 65.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_font("EqProRounded", h720(13.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help2"));
 
@@ -322,7 +322,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(25)})
             .with_absolute_position()
             .with_translate(help_x + 12.0f, help_y + 100.0f)
-            .with_font("EqProRounded", 13.0f)
+            .with_font("EqProRounded", h720(13.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("help_current"));
 
@@ -349,7 +349,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_translate(tx, tab_y)
                   .with_custom_background(tab_bg)
                   .with_border(panel_border, 1.0f)
-                  .with_font("EqProRounded", 14.0f)
+                  .with_font("EqProRounded", h720(14.0f))
                   .with_custom_text_color(tab_text)
                   .with_alignment(TextAlignment::Center)
                   .with_debug_name("tab_" + std::to_string(i)))) {
@@ -381,7 +381,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("x_btn"));
@@ -392,7 +392,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 35.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("close_label"));
 
@@ -404,7 +404,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 100.0f, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("o_btn"));
@@ -415,7 +415,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 135.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("reset_label"));
 
@@ -427,7 +427,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 195.0f, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_font("EqProRounded", 16.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("square_btn"));
@@ -438,7 +438,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(55), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 230.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", 14.0f)
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_label"));
   }

@@ -70,7 +70,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(48)})
             .with_absolute_position()
             .with_translate(panel_x + 30.0f, panel_y + 25.0f)
-            .with_font("Garamond", 36.0f)
+            .with_font("Garamond", h720(36.0f))
             .with_custom_text_color(gold_accent)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -100,7 +100,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(left_col, content_y)
-            .with_font("Garamond", 22.0f)
+            .with_font("Garamond", h720(22.0f))
             .with_custom_text_color(gold_accent)
             .with_debug_name("size_label"));
 
@@ -111,7 +111,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(56)})
             .with_absolute_position()
             .with_translate(left_col, content_y + left_spacing * 0.5f)
-            .with_font("Garamond", 48.0f)
+            .with_font("Garamond", h720(48.0f))
             .with_custom_text_color(cream_text)
             .with_debug_name("display_text"));
 
@@ -121,7 +121,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(44)})
             .with_absolute_position()
             .with_translate(left_col, content_y + left_spacing * 1.3f)
-            .with_font("Garamond", 36.0f)
+            .with_font("Garamond", h720(36.0f))
             .with_custom_text_color(silver_text)
             .with_debug_name("headline_text"));
 
@@ -131,7 +131,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(36)})
             .with_absolute_position()
             .with_translate(left_col, content_y + left_spacing * 2.0f)
-            .with_font("Garamond", 28.0f)
+            .with_font("Garamond", h720(28.0f))
             .with_custom_text_color(silver_text)
             .with_debug_name("subheading_text"));
 
@@ -175,7 +175,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position()
             .with_translate(right_col, content_y)
-            .with_font("Garamond", 22.0f)
+            .with_font("Garamond", h720(22.0f))
             .with_custom_text_color(gold_accent)
             .with_debug_name("color_label"));
 
@@ -214,7 +214,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(col_w - 24), pixels(pill_height - 8)})
               .with_absolute_position()
               .with_translate(right_col + 12.0f, item_y + 4.0f)
-              .with_font("Garamond", 24.0f)
+              .with_font("Garamond", h720(24.0f))
               .with_custom_text_color(examples[i].color)
               .with_debug_name("color_text_" + std::to_string(i)));
     }

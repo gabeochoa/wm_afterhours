@@ -93,7 +93,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(36)})
             .with_absolute_position()
             .with_translate(card_x + card_padding, card_y + card_padding + 4.0f)
-            .with_font("Gaegu-Bold", 28.0f)
+            .with_font("Gaegu-Bold", h720(28.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("title"));
@@ -105,7 +105,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(22)})
             .with_absolute_position()
             .with_translate(card_x + card_padding, card_y + card_padding + 42.0f)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("subtitle"));
@@ -127,7 +127,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(btn_coral)
                    .with_soft_shadow(4.0f, 6.0f, 14.0f,
                                      afterhours::Color{255, 100, 90, 50})
-                   .with_font("Gaegu-Bold", 26.0f)
+                   .with_font("Gaegu-Bold", h720(26.0f))
                    .with_custom_text_color(card_white)
                    .with_rounded_corners(std::bitset<4>(0b1111))
                    .with_roundness(0.5f)
@@ -181,7 +181,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(counter_width - 10), pixels(32)})
             .with_absolute_position()
             .with_translate(card_x + (card_w - (counter_width - 10)) / 2.0f, counter_y + 5.0f)
-            .with_font("Gaegu-Bold", 22.0f)
+            .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(counter_color)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("click_counter"));
@@ -211,7 +211,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(20)})
             .with_absolute_position()
             .with_translate(card_x + card_padding, more_styles_y)
-            .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("more_styles_label"));
@@ -233,7 +233,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(secondary_btn)
                .with_soft_shadow(3.0f, 4.0f, 10.0f,
                                  afterhours::Color{80, 160, 180, 40})
-               .with_font("Gaegu-Bold", 18.0f)
+               .with_font("Gaegu-Bold", h720(18.0f))
                .with_custom_text_color(card_white)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.4f)
@@ -252,7 +252,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_border(outline_border, 2.0f)
                .with_soft_shadow(2.0f, 3.0f, 8.0f,
                                  afterhours::Color{100, 90, 110, 25})
-               .with_font("Gaegu-Bold", 18.0f)
+               .with_font("Gaegu-Bold", h720(18.0f))
                .with_custom_text_color(text_dark)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.4f)
@@ -277,7 +277,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(confetti_mint)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{140, 200, 170, 35})
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                .with_custom_text_color(text_dark)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
@@ -293,7 +293,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(confetti_pink)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{220, 150, 160, 35})
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                .with_custom_text_color(text_dark)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
@@ -309,7 +309,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(confetti_gold)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{220, 185, 120, 35})
-               .with_font(UIComponent::DEFAULT_FONT, 14.0f)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                .with_custom_text_color(text_dark)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)

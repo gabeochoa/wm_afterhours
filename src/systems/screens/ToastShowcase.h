@@ -45,7 +45,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 32.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_roundness(0.1f)
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
@@ -74,7 +74,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section1_label"));
@@ -94,7 +94,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(152), pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_info"))) {
@@ -108,7 +108,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(160), pixels(56)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_success"))) {
@@ -122,7 +122,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(168), pixels(56)})
                    .with_custom_background(warningBg)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_warning"))) {
@@ -135,7 +135,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(152), pixels(56)})
                    .with_background(Theme::Usage::Error)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 28.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
                    .with_roundness(theme.roundness)
                    .with_debug_name("btn_error"))) {
       toast::send_error(context, "Error: Something went wrong!");
@@ -166,7 +166,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section2_label"));
@@ -192,7 +192,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(184), pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_quick"))) {
@@ -205,7 +205,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(192), pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_long"))) {
@@ -220,7 +220,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(136), pixels(56)})
                    .with_custom_background(spamWarningBg)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 24.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_spam"))) {
@@ -236,7 +236,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(160), pixels(56)})
                    .with_custom_background(coral)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
                    .with_roundness(theme.roundness)
                    .with_debug_name("btn_custom"))) {
       toast::send_custom(context, "Custom colored toast!", coral, 4.0f);
@@ -267,7 +267,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("section3_label"));
@@ -287,7 +287,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(184), pixels(56)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
                    .with_roundness(theme.roundness)
                    .with_margin(Margin{.right = DefaultSpacing::tiny()})
                    .with_debug_name("btn_undo"))) {
@@ -307,7 +307,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Undos: " + std::to_string(undo_counter))
             .with_size(ComponentSize{pixels(120), pixels(56)})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 26.0f));
+            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f)));
   }
 };
 

@@ -136,7 +136,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(220), pixels(50)})
             .with_absolute_position()
             .with_translate(flower_tex.id != 0 ? 78.0f : 35.0f, 28.0f)
-            .with_font("Gaegu-Bold", 36.0f)
+            .with_font("Gaegu-Bold", h720(36.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("title"));
 
@@ -158,7 +158,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(130), pixels(28)})
             .with_absolute_position()
             .with_translate(377.0f, 33.0f)
-            .with_font("Gaegu-Bold", 18.0f)
+            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("gold_text"));
 
@@ -180,7 +180,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), pixels(22)})
             .with_absolute_position()
             .with_translate(540.0f, 26.0f)
-            .with_font("Gaegu-Bold", 14.0f)
+            .with_font("Gaegu-Bold", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("rating_label"));
 
@@ -209,7 +209,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(40), pixels(20)})
             .with_absolute_position()
             .with_translate(star_x + 5 * 24.0f + 8.0f, 24.0f)
-            .with_font("Gaegu-Bold", 16.0f)
+            .with_font("Gaegu-Bold", h720(16.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("rating_numeric"));
 
@@ -219,7 +219,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(20)})
             .with_absolute_position()
             .with_translate(540.0f, 50.0f)
-            .with_font("Gaegu-Bold", 13.0f)
+            .with_font("Gaegu-Bold", h720(13.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("served"));
 
@@ -255,7 +255,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(left_panel_x + 3.0f, panel_y + 3.0f)
             .with_custom_background(brown_header)
-            .with_font("Gaegu-Bold", 30.0f)
+            .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(cream_surface)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -281,7 +281,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_border(brown_border, selected ? 3.0f : 2.0f)
                      .with_soft_shadow(2.0f, 3.0f, 8.0f,
                                        afterhours::Color{0, 0, 0, 35})
-                     .with_font("Gaegu-Bold", 26.0f)
+                     .with_font("Gaegu-Bold", h720(26.0f))
                      .with_custom_text_color(dark_text)
                      .with_rounded_corners(std::bitset<4>(0b1111))
                      .with_roundness(0.5f)
@@ -302,7 +302,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                .with_translate(left_panel_x + 25.0f, promote_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
-               .with_font("Gaegu-Bold", 22.0f)
+               .with_font("Gaegu-Bold", h720(22.0f))
                .with_custom_text_color(dark_text)
                .with_rounded_corners(std::bitset<4>(0b1111))
                .with_roundness(0.5f)
@@ -350,7 +350,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(right_panel_x + 4.0f, panel_y + 4.0f)
             .with_custom_background(sage_header)
-            .with_font("Gaegu-Bold", 32.0f)
+            .with_font("Gaegu-Bold", h720(32.0f))
             .with_custom_text_color(dark_text)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_alignment(TextAlignment::Center)
@@ -369,7 +369,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(180), pixels(36)})
               .with_absolute_position()
               .with_translate(right_panel_x + 20.0f, row_y)
-              .with_font("Gaegu-Bold", 24.0f)
+              .with_font("Gaegu-Bold", h720(24.0f))
               .with_custom_text_color(dark_text)
               .with_debug_name("cust_" + std::to_string(i)));
 
@@ -380,7 +380,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(70), pixels(20)})
               .with_absolute_position()
               .with_translate(right_panel_x + 195.0f, row_y + 8.0f)
-              .with_font("Gaegu-Bold", 13.0f)
+              .with_font("Gaegu-Bold", h720(13.0f))
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("patience_label_" + std::to_string(i)));
 
@@ -416,7 +416,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(50), pixels(22)})
                 .with_absolute_position()
                 .with_translate(right_panel_x + 285.0f, row_y + 7.0f)
-                .with_font("Gaegu-Bold", 14.0f)
+                .with_font("Gaegu-Bold", h720(14.0f))
                 .with_custom_text_color(cream_surface)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("prog_pct_" + std::to_string(i)));
@@ -431,7 +431,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(right_panel_x + 365.0f, row_y + 2.0f)
               .with_custom_background(time_bg)
-              .with_font("Gaegu-Bold", 18.0f)
+              .with_font("Gaegu-Bold", h720(18.0f))
               .with_custom_text_color(cream_surface)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.4f)
@@ -452,7 +452,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(rose_btn)
             .with_border(sage_header, 3.0f)
             .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 40})
-            .with_font("Gaegu-Bold", 30.0f)
+            .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(dark_text)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
@@ -508,7 +508,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(26)})
             .with_absolute_position()
             .with_translate(left_panel_x, slider_y + 36.0f)
-            .with_font("Gaegu-Bold", 18.0f)
+            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("music_label"));
 
@@ -549,7 +549,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(left_panel_x + 10.0f, chat_line1_y)
               .with_custom_background(afterhours::Color{180, 160, 140, 255})
-              .with_font("Gaegu-Bold", 12.0f)
+              .with_font("Gaegu-Bold", h720(12.0f))
               .with_custom_text_color(cream_surface)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(1.0f)
@@ -563,7 +563,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(370), pixels(28)})
             .with_absolute_position()
             .with_translate(left_panel_x + 42.0f, chat_line1_y + 2.0f)
-            .with_font("Gaegu-Bold", 14.0f)
+            .with_font("Gaegu-Bold", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("chat1"));
 
@@ -586,7 +586,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position()
               .with_translate(left_panel_x + 10.0f, chat_line2_y)
               .with_custom_background(afterhours::Color{120, 150, 180, 255})
-              .with_font("Gaegu-Bold", 12.0f)
+              .with_font("Gaegu-Bold", h720(12.0f))
               .with_custom_text_color(cream_surface)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(1.0f)
@@ -600,7 +600,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(370), pixels(28)})
             .with_absolute_position()
             .with_translate(left_panel_x + 42.0f, chat_line2_y + 2.0f)
-            .with_font("Gaegu-Bold", 14.0f)
+            .with_font("Gaegu-Bold", h720(14.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("chat2"));
 
@@ -647,7 +647,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(22)})
             .with_absolute_position()
             .with_translate(icon_x - 8.0f, icon_y + icon_size + 4.0f)
-            .with_font("Gaegu-Bold", 18.0f)
+            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("inventory_label"));
@@ -659,7 +659,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(16)})
             .with_absolute_position()
             .with_translate(icon_x - 12.0f, icon_y + icon_size + 24.0f)
-            .with_font("Gaegu-Bold", 12.0f)
+            .with_font("Gaegu-Bold", h720(12.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("inventory_hint"));
@@ -700,7 +700,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(icon_x + icon_spacing - 8.0f,
                             icon_y + icon_size + 4.0f)
-            .with_font("Gaegu-Bold", 18.0f)
+            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("research_label"));
@@ -713,7 +713,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(icon_x + icon_spacing - 15.0f,
                             icon_y + icon_size + 24.0f)
-            .with_font("Gaegu-Bold", 12.0f)
+            .with_font("Gaegu-Bold", h720(12.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("research_hint"));
@@ -751,7 +751,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(icon_x + icon_spacing * 2 - 8.0f,
                             icon_y + icon_size + 4.0f)
-            .with_font("Gaegu-Bold", 18.0f)
+            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("crafting_label"));

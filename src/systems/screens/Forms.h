@@ -163,7 +163,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Audio Level")
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+                     .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
                      .with_margin(Spacing::xs)
                      .with_debug_name("volume_progress"),
                  ProgressBarLabelStyle::Percentage);
@@ -173,7 +173,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Level Progress")
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font(UIComponent::DEFAULT_FONT, 12.0f)
+                     .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
                      .with_margin(Spacing::xs)
                      .with_debug_name("level_progress"),
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);

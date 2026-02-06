@@ -36,7 +36,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 26.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
                                 .left = pixels(0),
@@ -63,7 +63,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm)
             .with_debug_name("left_panel"));
 
@@ -74,7 +74,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm)
             .with_debug_name("center_panel"));
 
@@ -85,7 +85,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm)
             .with_debug_name("right_panel"));
 
@@ -123,7 +123,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Spacing::xs)
             .with_debug_name("stack1"));
 
@@ -133,7 +133,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Spacing::xs)
             .with_debug_name("stack2"));
 
@@ -143,7 +143,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(52)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, 20.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Spacing::xs)
             .with_debug_name("stack3"));
 
@@ -165,7 +165,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.90f), pixels(48)})
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, 22.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_title"));
 
@@ -175,7 +175,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_line1"));
 
@@ -185,7 +185,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_line2"));
 
@@ -195,7 +195,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 16.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_line3"));
 
@@ -207,7 +207,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(theme.surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, 18.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::small(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),

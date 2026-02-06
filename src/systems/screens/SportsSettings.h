@@ -360,7 +360,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_translate(tab_start_x - 50.0f, tab_y + 4.0f)
                    .with_custom_background(panel_dark)
                    .with_border(text_muted, 1.0f)
-                   .with_font("EqProRounded", 16.0f)
+                   .with_font("EqProRounded", h720(16.0f))
                    .with_custom_text_color(text_white)
                    .with_alignment(TextAlignment::Center)
                    .with_skip_tabbing(true)
@@ -387,7 +387,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                            pixels(static_cast<int>(tab_h))})
                   .with_absolute_position()
                   .with_translate(tx, tab_y)
-                  .with_font("EqProRounded", 16.0f)
+                  .with_font("EqProRounded", h720(16.0f))
                   .with_custom_text_color(tab_text)
                   .with_custom_background(
                       afterhours::Color{0, 0, 0, 0}) // Transparent bg
@@ -420,7 +420,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                    tab_y + 4.0f)
                    .with_custom_background(panel_dark)
                    .with_border(text_muted, 1.0f)
-                   .with_font("EqProRounded", 16.0f)
+                   .with_font("EqProRounded", h720(16.0f))
                    .with_custom_text_color(text_white)
                    .with_alignment(TextAlignment::Center)
                    .with_skip_tabbing(true)
@@ -437,7 +437,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(150), pixels(30)})
             .with_absolute_position()
             .with_translate(50.0f, header_y)
-            .with_font("EqProRounded", 20.0f)
+            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("section_header"));
 
@@ -507,7 +507,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(200), pixels(static_cast<int>(row_h - 4))})
                      .with_absolute_position()
                      .with_translate(panel_x + 20.0f, ry + 2.0f)
-                     .with_font("EqProRounded", 18.0f)
+                     .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(label_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Left)
@@ -529,7 +529,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(44), pixels(44)})
                      .with_absolute_position()
                      .with_translate(value_x, ry + 0.0f)
-                     .with_font("EqProRounded", 20.0f)
+                     .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_skip_tabbing(true)
@@ -552,7 +552,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(130), pixels(44)})
               .with_absolute_position()
               .with_translate(value_x + 44.0f + 4.0f, ry + 0.0f)
-              .with_font("EqProRounded", 18.0f)
+              .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(value_color)
               .with_alignment(TextAlignment::Center)
               .with_skip_tabbing(true)
@@ -568,7 +568,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(44), pixels(44)})
                      .with_absolute_position()
                      .with_translate(value_x + 44.0f + 148.0f, ry + 0.0f)
-                     .with_font("EqProRounded", 20.0f)
+                     .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_skip_tabbing(true)
@@ -645,7 +645,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(static_cast<int>(help_w)), pixels(35)})
             .with_absolute_position()
             .with_translate(help_x, help_y)
-            .with_font("EqProRounded", 22.0f)
+            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help_title"));
 
@@ -656,7 +656,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(static_cast<int>(help_w)), pixels(50)})
             .with_absolute_position()
             .with_translate(help_x, help_y + 40.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help_desc1"));
 
@@ -667,7 +667,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(static_cast<int>(help_w)), pixels(30)})
             .with_absolute_position()
             .with_translate(help_x, help_y + 70.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help_desc2"));
 
@@ -678,7 +678,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(static_cast<int>(help_w)), pixels(30)})
             .with_absolute_position()
             .with_translate(help_x, help_y + 110.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("help_default"));
 
@@ -694,7 +694,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x, prompt_y)
             .with_custom_background(afterhours::Color{180, 160, 60, 255})
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -707,7 +707,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(130), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 35.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("reset_label"));
 
@@ -719,7 +719,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 175.0f, prompt_y)
             .with_custom_background(afterhours::Color{180, 80, 80, 255})
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -732,7 +732,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 210.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", 19.0f)
+            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("back_label"));
   }
