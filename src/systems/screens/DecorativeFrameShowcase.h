@@ -28,7 +28,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     auto main = div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_debug_name("main"));
@@ -210,7 +210,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     auto info_section = div(context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_size(ComponentSize{percent(info_section_width_pct), percent(info_section_height_pct)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_border(theme.secondary, h720(2.0f))
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)

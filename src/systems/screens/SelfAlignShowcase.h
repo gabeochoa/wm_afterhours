@@ -26,7 +26,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     auto main = div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels((float)sw), pixels((float)sh)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::Center)
@@ -37,7 +37,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SelfAlign Feature Demo")
             .with_size(ComponentSize{pixels(500), pixels(50)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))

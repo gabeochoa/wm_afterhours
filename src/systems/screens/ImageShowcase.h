@@ -50,7 +50,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_padding(Spacing::lg)
                 .with_debug_name("image_bg"));
@@ -69,7 +69,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Image & Sprite Components")
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
@@ -82,7 +82,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(140)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -92,7 +92,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Sprites")
             .with_size(ComponentSize{pixels(120), pixels(48)})
-            .with_custom_background(theme.primary)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -134,7 +134,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(110)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -145,7 +145,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Image Buttons")
             .with_size(ComponentSize{pixels(160), pixels(48)})
-            .with_custom_background(theme.accent)
+            .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -154,7 +154,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     if (image_button(context, mk(row2.ent(), 1), gear_tex, full_src,
                      ComponentConfig{}
                          .with_size(ComponentSize{pixels(80), pixels(80)})
-                         .with_custom_background(theme.primary)
+                         .with_background(Theme::Usage::Primary)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
                          .with_margin(Spacing::sm)
@@ -165,7 +165,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     if (image_button(context, mk(row2.ent(), 2), play_tex, full_src,
                      ComponentConfig{}
                          .with_size(ComponentSize{pixels(80), pixels(80)})
-                         .with_custom_background(theme.accent)
+                         .with_background(Theme::Usage::Accent)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
                          .with_margin(Spacing::sm)
@@ -176,7 +176,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     if (image_button(context, mk(row2.ent(), 3), star_tex, full_src,
                      ComponentConfig{}
                          .with_size(ComponentSize{pixels(80), pixels(80)})
-                         .with_custom_background(theme.secondary)
+                         .with_background(Theme::Usage::Secondary)
                          .with_rounded_corners(RoundedCorners().all_round())
                          .with_roundness(0.2f)
                          .with_margin(Spacing::sm)
@@ -188,7 +188,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Clicks: " + std::to_string(button_clicks))
             .with_size(ComponentSize{pixels(120), pixels(48)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.left = DefaultSpacing::medium()})
@@ -199,7 +199,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto row3 = div(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(100)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -210,7 +210,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("With Background")
             .with_size(ComponentSize{pixels(160), pixels(48)})
-            .with_custom_background(theme.primary)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -220,7 +220,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(row3.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(200), pixels(70)})
-                .with_custom_background(theme.secondary)
+                .with_background(Theme::Usage::Secondary)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.1f)
                 .with_padding(Spacing::sm)
@@ -248,7 +248,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto row4 = div(context, mk(main_container.ent(), 4),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(150)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -259,7 +259,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Icon Row")
             .with_size(ComponentSize{pixels(120), pixels(48)})
-            .with_custom_background(theme.accent)
+            .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))

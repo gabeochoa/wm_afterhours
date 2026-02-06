@@ -31,7 +31,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
                     ComponentConfig{}
                         .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.92f)})
                         .with_self_align(SelfAlign::Center)
-                        .with_custom_background(theme.background)
+                        .with_background(Theme::Usage::Background)
                         .with_roundness(0.04f)
                         .with_debug_name("navbar_bg"));
 

@@ -67,7 +67,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::lg)
                 .with_debug_name("main_bg"));
 
@@ -82,7 +82,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto header = div(context, mk(main.ent(), 0),
                       ComponentConfig{}
                           .with_size(ComponentSize{percent(0.90f), pixels(60)})
-                          .with_custom_background(theme.surface)
+                          .with_background(Theme::Usage::Surface)
                           .with_padding(Spacing::sm)
                           .with_flex_direction(FlexDirection::Row)
                           .with_align_items(AlignItems::Center)
@@ -114,7 +114,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(0.95f), pixels(480)})
-                           .with_custom_background(theme.background)
+                           .with_background(Theme::Usage::Background)
                            .with_flex_direction(FlexDirection::Row)
                            .with_margin(Margin{.top = DefaultSpacing::medium()})
                            .with_debug_name("content"));
@@ -124,7 +124,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(200), pixels(430)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
@@ -176,7 +176,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(480), pixels(430)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::sm)
@@ -197,7 +197,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto btn_row = div(context, mk(preview_panel.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(0.95f), pixels(45)})
-                           .with_custom_background(theme.surface)
+                           .with_background(Theme::Usage::Surface)
                            .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_margin(Spacing::xs)
@@ -277,7 +277,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(preview_panel.ent(), 5),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(55)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -318,7 +318,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(preview_panel.ent(), 6),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(50)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_margin(Margin{.top = DefaultSpacing::small()})
@@ -346,7 +346,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Surface Text")
             .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_soft_shadow(1.0f, 1.0f, 4.0f)

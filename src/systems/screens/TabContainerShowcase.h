@@ -119,7 +119,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(root, 10 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(bar_width), pixels(24)})
-              .with_custom_background(theme.accent)
+              .with_background(Theme::Usage::Accent)
               .with_roundness(0.15f)
               .with_margin(Margin{.bottom = pixels(10)})
               .with_debug_name(fmt::format("bar_{}", i)));
@@ -206,7 +206,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
             .with_self_align(SelfAlign::Center)
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_roundness(0.04f)
             .with_debug_name("root"));
 
@@ -231,7 +231,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     auto content_panel = div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Padding{
                 .top = pixels(16),
                 .left = pixels(24),

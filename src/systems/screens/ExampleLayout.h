@@ -22,7 +22,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.85f)})
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.08f)
@@ -33,7 +33,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Layout System Demo")
             .with_size(ComponentSize{percent(0.95f), pixels(60)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
@@ -48,7 +48,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(120)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::Center)
@@ -94,7 +94,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(280)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceBetween)
@@ -151,7 +151,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto desc_panel = div(context, mk(col_container.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.40f), pixels(220)})
-            .with_custom_background(theme.primary)
+            .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::md)
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
@@ -204,7 +204,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
             .with_size(ComponentSize{percent(0.95f), pixels(48)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))

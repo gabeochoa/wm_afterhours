@@ -56,7 +56,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.88f)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_roundness(SECTION_ROUNDNESS)
             .with_self_align(SelfAlign::Center)
             .with_debug_name("modal_bg"));
@@ -92,7 +92,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
@@ -153,7 +153,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
@@ -229,7 +229,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 3),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
@@ -277,7 +277,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 4),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
@@ -340,7 +340,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 5),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
@@ -366,7 +366,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_padding(Spacing::sm)
                 .with_debug_name("row5"));

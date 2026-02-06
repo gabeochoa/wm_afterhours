@@ -25,7 +25,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_padding(Spacing::lg)  // Padding on root, not child
                 .with_debug_name("buttons_bg"));
@@ -45,7 +45,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Button Gallery")
             .with_size(ComponentSize{percent(1.0f), pixels(70)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(36.0f))
@@ -59,7 +59,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -141,7 +141,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(90)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -207,7 +207,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row3 = div(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(100)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -256,7 +256,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row4 = div(context, mk(main_container.ent(), 4),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -333,7 +333,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(counter_text)
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_debug_name("click_counter"));

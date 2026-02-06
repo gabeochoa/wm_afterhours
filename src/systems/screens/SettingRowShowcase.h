@@ -40,7 +40,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.80f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
                 .with_translate(0.0f, -40.0f)
@@ -51,7 +51,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Setting Row Showcase")
             .with_size(ComponentSize{percent(0.95f), pixels(52)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
@@ -63,7 +63,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     auto content = div(context, mk(root.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(0.95f), pixels(520)})
-                           .with_custom_background(theme.surface)
+                           .with_background(Theme::Usage::Surface)
                            .with_padding(Padding{
                                .top = pixels(16),
                                .left = pixels(24),

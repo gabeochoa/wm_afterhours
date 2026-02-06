@@ -32,7 +32,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.75f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_border(theme.font_muted, 1.0f)
                 .with_roundness(0.04f)
                 .with_padding(Spacing::lg)
@@ -44,7 +44,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_label("Scroll View Demo")
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_padding(Spacing::sm)
@@ -72,7 +72,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(200), pixels(28)})
                  .with_label("Invert Scroll")
-                 .with_custom_background(theme.secondary)
+                 .with_background(Theme::Usage::Secondary)
                  .with_custom_text_color(theme.font)
                  .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                  .with_debug_name("invert_toggle"));
@@ -106,7 +106,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(vert_section.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
@@ -168,7 +168,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(horiz_section.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)

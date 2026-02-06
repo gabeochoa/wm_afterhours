@@ -37,7 +37,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_debug_name("bg"));
 
     // Main card - centered, expanded to fill more screen
@@ -51,7 +51,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
             .with_absolute_position()
             .with_translate(card_x, card_y)
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_roundness(0.05f)
             .with_debug_name("card"));
 
@@ -66,7 +66,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(content_x, current_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
-            .with_custom_text_color(theme.font)
+            .with_auto_text_color(true)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("title"));
 
@@ -151,7 +151,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
-            .with_custom_text_color(theme.font)
+            .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("status1"));
 
@@ -228,7 +228,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
-            .with_custom_text_color(theme.font)
+            .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("status2"));
 
@@ -305,7 +305,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position()
             .with_translate(content_x, current_y)
-            .with_custom_text_color(theme.font)
+            .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("status3"));
   }

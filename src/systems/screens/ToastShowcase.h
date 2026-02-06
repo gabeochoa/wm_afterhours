@@ -25,7 +25,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.90f)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_roundness(0.08f)
             .with_debug_name("toast_bg"));
 
@@ -42,7 +42,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Toast Notifications")
             .with_size(ComponentSize{percent(1.0f), pixels(60)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
@@ -60,7 +60,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(130)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(0.1f)
                 .with_flex_direction(FlexDirection::Column)
@@ -148,7 +148,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(130)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(0.1f)
                 .with_flex_direction(FlexDirection::Column)
@@ -249,7 +249,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 3),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(130)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_roundness(0.1f)
                 .with_flex_direction(FlexDirection::Column)

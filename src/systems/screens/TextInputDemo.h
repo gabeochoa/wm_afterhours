@@ -36,7 +36,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_padding(Spacing::lg)  // Move padding to root
                 .with_debug_name("text_input_demo_bg"));
@@ -55,7 +55,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text Input Demo")
             .with_size(ComponentSize{percent(1.0f), pixels(45)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -67,7 +67,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(460)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::FlexStart)
@@ -219,7 +219,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status_message)
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::small()})

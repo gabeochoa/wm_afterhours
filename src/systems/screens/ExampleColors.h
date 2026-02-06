@@ -24,7 +24,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(
                 ComponentSize{pixels(screen_width), pixels(screen_height)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_debug_name("bg"));
 
     // Main panel dimensions - expanded to use more screen
@@ -39,7 +39,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w), pixels(panel_h)})
             .with_absolute_position()
             .with_translate(panel_x, panel_y)
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_soft_shadow(6.0f, 10.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 50})
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -53,7 +53,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w), pixels(50)})
             .with_absolute_position()
             .with_translate(panel_x, panel_y)
-            .with_custom_background(theme.primary)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_rounded_corners(std::bitset<4>(0b1100))
@@ -85,7 +85,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_w), pixels(row_h)})
             .with_absolute_position()
             .with_translate(row_x, row1_y)
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.04f)
             .with_debug_name("row1_bg"));
@@ -143,7 +143,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_w), pixels(row_h)})
             .with_absolute_position()
             .with_translate(row_x, row2_y)
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.04f)
             .with_debug_name("row2_bg"));

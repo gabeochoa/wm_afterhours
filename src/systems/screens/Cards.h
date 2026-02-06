@@ -23,7 +23,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_padding(Spacing::lg)  // Padding on root
                 .with_debug_name("cards_bg"));
@@ -53,7 +53,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(0.95f), pixels(130)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
@@ -76,7 +76,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Surface")
             .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -89,7 +89,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Primary")
             .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_custom_background(theme.primary)
+            .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -102,7 +102,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Sharp")
             .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_custom_background(theme.accent)
+            .with_background(Theme::Usage::Accent)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -116,7 +116,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Custom")
             .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_custom_background(theme.secondary)
+            .with_background(Theme::Usage::Secondary)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -154,7 +154,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(row2.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.35f), pixels(130)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)  // Reduced padding
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
@@ -263,7 +263,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row3 = div(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(0.95f), pixels(70)})
-                        .with_custom_background(theme.surface)
+                        .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)

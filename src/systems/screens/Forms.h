@@ -50,7 +50,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.82f), screen_pct(0.86f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_debug_name("forms_bg"));
 
@@ -83,7 +83,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.68f)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::Center)
@@ -279,7 +279,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status)
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - body text
             .with_margin(Margin{.top = DefaultSpacing::small(),
@@ -352,7 +352,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(display_text)
             .with_size(ComponentSize{pixels(400), pixels(44)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm() - 2.0f)  // 14px - secondary text
             .with_debug_name("clipboard_display"));

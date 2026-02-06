@@ -69,7 +69,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_width), pixels(screen_height)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_debug_name("bg"));
 
     // Main card - centered
@@ -81,7 +81,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
             .with_absolute_position()
             .with_translate(card_x, card_y)
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_roundness(0.02f)
             .with_padding(Spacing::sm)
             .with_flex_direction(FlexDirection::Column)

@@ -255,7 +255,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(0.95f)})
-            .with_custom_background(theme.background)
+            .with_background(Theme::Usage::Background)
             .with_padding(Padding{.top = pixels(8), .left = pixels(12),
                                   .bottom = pixels(8), .right = pixels(12)})
             .with_flex_direction(FlexDirection::Column)
@@ -266,7 +266,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Flexbox Alignment Demo")
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_custom_background(theme.primary)
+            .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_flex_direction(FlexDirection::Row)

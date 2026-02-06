@@ -84,7 +84,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.85f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.05f)
                 .with_padding(Spacing::md)
                 .with_debug_name("main_bg"));
@@ -101,7 +101,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto header = div(context, mk(main.ent(), 0),
                       ComponentConfig{}
                           .with_size(ComponentSize{expand(), pixels(70)})
-                          .with_custom_background(theme.surface)
+                          .with_background(Theme::Usage::Surface)
                           .with_padding(Padding{.left = pixels(16), .right = pixels(16),
                                                 .top = pixels(8), .bottom = pixels(8)})
                           .with_flex_direction(FlexDirection::Row)
@@ -204,7 +204,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{expand(), expand()})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("left_panel"));
@@ -246,7 +246,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{expand(), expand()})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("right_panel"));
@@ -298,7 +298,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer = div(context, mk(main.ent(), 2),
                       ComponentConfig{}
                           .with_size(ComponentSize{expand(), pixels(55)})
-                          .with_custom_background(theme.surface)
+                          .with_background(Theme::Usage::Surface)
                           .with_padding(Spacing::xs)
                           .with_flex_direction(FlexDirection::Column)
                           .with_debug_name("footer"));

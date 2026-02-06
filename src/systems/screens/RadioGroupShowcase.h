@@ -67,7 +67,7 @@ ElementResult custom_radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
         div(ctx, mk(row.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(visual_circle_sz), pixels(visual_circle_sz)})
-                .with_custom_background(ctx.theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_border(ring_color, effective_border)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(1.0f)
@@ -83,7 +83,7 @@ ElementResult custom_radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
               .with_size(ComponentSize{pixels(dot_sz), pixels(dot_sz)})
               .with_absolute_position()
               .with_translate(offset, offset)
-              .with_custom_background(ctx.theme.accent)
+              .with_background(Theme::Usage::Accent)
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(1.0f)
               .with_skip_tabbing(true)
@@ -143,7 +143,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.75f)})
                 .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.background)
+                .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_debug_name("radio_bg"));
 
@@ -173,7 +173,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
-                .with_custom_background(theme.surface)
+                .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
@@ -285,7 +285,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status)
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(theme.surface)
+            .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
