@@ -15,6 +15,8 @@ backward::SignalHandling sh;
 #include "systems/screens/AIMChatDemo.h"
 #include "systems/screens/AngryBirdsSettings.h"
 #include "systems/screens/AnimationBasicDemo.h"
+#include "systems/screens/AnimationInteractiveDemo.h"
+#include "systems/screens/AnimationLoopingDemo.h"
 #include "systems/screens/AutoTextColorShowcase.h"
 #include "systems/screens/Buttons.h"
 #include "systems/screens/Cards.h"
