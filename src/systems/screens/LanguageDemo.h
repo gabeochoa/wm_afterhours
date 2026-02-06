@@ -92,7 +92,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // Content container
     auto main = div(context, mk(root.ent(), 0),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                        .with_size(ComponentSize{expand(), expand()})
                         .with_flex_direction(FlexDirection::Column)
                         .with_no_wrap()
                         .with_debug_name("main"));
@@ -100,7 +100,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // ===== HEADER ROW =====
     auto header = div(context, mk(main.ent(), 0),
                       ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.0f), pixels(70)})
+                          .with_size(ComponentSize{expand(), pixels(70)})
                           .with_custom_background(theme.surface)
                           .with_padding(Padding{.left = pixels(16), .right = pixels(16),
                                                 .top = pixels(8), .bottom = pixels(8)})
@@ -123,7 +123,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(title_container.ent(), 0),
         ComponentConfig{}
             .with_label(sample.title)
-            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+            .with_size(ComponentSize{expand(), expand()})
             .with_font(font_config.font_name, 24.0f * font_config.size_scale)
             .with_alignment(TextAlignment::Left)
             .with_debug_name("title_text"));
@@ -193,7 +193,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // ===== CONTENT ROW ===== - adjusted height to fit within parent
     auto content = div(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(480)})
+                           .with_size(ComponentSize{expand(), pixels(480)})
                            .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_justify_content(JustifyContent::Center)
@@ -203,7 +203,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto left_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.50f), percent(1.0f)})
+                .with_size(ComponentSize{expand(), expand()})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -245,7 +245,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto right_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{expand(), expand()})
                 .with_custom_background(theme.surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -297,7 +297,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // ===== FOOTER ROW =====
     auto footer = div(context, mk(main.ent(), 2),
                       ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.0f), pixels(55)})
+                          .with_size(ComponentSize{expand(), pixels(55)})
                           .with_custom_background(theme.surface)
                           .with_padding(Spacing::xs)
                           .with_flex_direction(FlexDirection::Column)
@@ -311,7 +311,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Active: " + lang_name +
                         " | Font: " + font_config.font_name)
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
+            .with_size(ComponentSize{expand(), pixels(28)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("lang_indicator"));
@@ -319,7 +319,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(footer.ent(), 1),
         ComponentConfig{}
             .with_label("Press 1/2/3 to switch languages")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{expand(), pixels(24)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, 18.0f)
             .with_debug_name("instructions"));

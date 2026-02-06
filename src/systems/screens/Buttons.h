@@ -255,7 +255,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 4: Custom styled buttons
     auto row4 = div(context, mk(main_container.ent(), 4),
                     ComponentConfig{}
-                        .with_size(ComponentSize{pixels(1100), pixels(80)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(80)})
                         .with_custom_background(theme.surface)
                         .with_padding(Spacing::sm)
                         .with_flex_direction(FlexDirection::Row)
