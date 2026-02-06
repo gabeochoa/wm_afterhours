@@ -130,17 +130,17 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     float scale3 = get_anim_value(InteractiveAnimKey::Button3Scale, 1.0f);
 
     // ========== BUTTON 1 ==========
+    // Using with_scale() for smooth animations - bypasses layout recalculation
     float btn1_x = center_x - spacing - button_size / 2.0f;
-    float btn1_scaled_size = button_size * scale1;
-    float btn1_offset = (button_size - btn1_scaled_size) / 2.0f;
 
     if (button(context, mk(entity, 10),
                ComponentConfig{}
                    .with_label("Click!")
-                   .with_size(ComponentSize{pixels(btn1_scaled_size),
-                                            pixels(btn1_scaled_size)})
+                   .with_size(ComponentSize{pixels(button_size),
+                                            pixels(button_size)})
                    .with_absolute_position()
-                   .with_translate(btn1_x + btn1_offset, button_y + btn1_offset)
+                   .with_translate(btn1_x, button_y)
+                   .with_scale(scale1)  // Smooth visual scaling after layout
                    .with_custom_background(box_blue)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -153,16 +153,15 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== BUTTON 2 ==========
     float btn2_x = center_x - button_size / 2.0f;
-    float btn2_scaled_size = button_size * scale2;
-    float btn2_offset = (button_size - btn2_scaled_size) / 2.0f;
 
     if (button(context, mk(entity, 20),
                ComponentConfig{}
                    .with_label("Press!")
-                   .with_size(ComponentSize{pixels(btn2_scaled_size),
-                                            pixels(btn2_scaled_size)})
+                   .with_size(ComponentSize{pixels(button_size),
+                                            pixels(button_size)})
                    .with_absolute_position()
-                   .with_translate(btn2_x + btn2_offset, button_y + btn2_offset)
+                   .with_translate(btn2_x, button_y)
+                   .with_scale(scale2)  // Smooth visual scaling after layout
                    .with_custom_background(box_green)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -175,16 +174,15 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
 
     // ========== BUTTON 3 ==========
     float btn3_x = center_x + spacing - button_size / 2.0f;
-    float btn3_scaled_size = button_size * scale3;
-    float btn3_offset = (button_size - btn3_scaled_size) / 2.0f;
 
     if (button(context, mk(entity, 30),
                ComponentConfig{}
                    .with_label("Tap!")
-                   .with_size(ComponentSize{pixels(btn3_scaled_size),
-                                            pixels(btn3_scaled_size)})
+                   .with_size(ComponentSize{pixels(button_size),
+                                            pixels(button_size)})
                    .with_absolute_position()
-                   .with_translate(btn3_x + btn3_offset, button_y + btn3_offset)
+                   .with_translate(btn3_x, button_y)
+                   .with_scale(scale3)  // Smooth visual scaling after layout
                    .with_custom_background(box_purple)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -211,7 +209,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     // Instructions section
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_label("Buttons animate with squash and stretch on click")
+            .with_label("Using with_scale() for smooth visual scaling animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
             .with_absolute_position()
             .with_translate(0.0f, screen_h - 80.0f)

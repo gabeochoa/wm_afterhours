@@ -45,25 +45,25 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    // Fade: 0 -> 1 over 0.8s
+    // Fade: 0 -> 1 over 1.6s (slower for visibility)
     afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::FadeIn)
         .from(0.0f)
-        .to(1.0f, 0.8f, afterhours::animation::EasingType::EaseOutQuad);
+        .to(1.0f, 1.6f, afterhours::animation::EasingType::EaseOutQuad);
 
-    // Slide: -200 -> 0 over 0.6s
+    // Slide: -200 -> 0 over 1.2s (slower for visibility)
     afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::SlideIn)
         .from(-200.0f)
-        .to(0.0f, 0.6f, afterhours::animation::EasingType::EaseOutQuad);
+        .to(0.0f, 1.2f, afterhours::animation::EasingType::EaseOutQuad);
 
-    // Scale: 0 -> 1 over 0.5s with bounce effect (sequence)
+    // Scale: 0 -> 1 over 1.0s with bounce effect (sequence)
     afterhours::animation::anim<BasicAnimKey>(BasicAnimKey::ScaleUp)
         .from(0.0f)
         .sequence({
             {.to_value = 1.15f,
-             .duration = 0.3f,
+             .duration = 0.6f,
              .easing = afterhours::animation::EasingType::EaseOutQuad},
             {.to_value = 1.0f,
-             .duration = 0.2f,
+             .duration = 0.4f,
              .easing = afterhours::animation::EasingType::EaseOutQuad},
         });
   }
@@ -139,8 +139,48 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     float spacing = 200.0f;
     float center_x = screen_w / 2.0f;
 
-    // ========== BOX 1: Fade In ==========
-    float fade_x = center_x - spacing - box_size / 2.0f;
+    // ========== BOX 1: Slide In (left position) ==========
+    float slide_base_x = center_x - spacing - box_size / 2.0f;
+
+    // Label above box
+    div(context, mk(entity, 20),
+        ComponentConfig{}
+            .with_label("Slide In")
+            .with_size(ComponentSize{pixels(box_size), pixels(30)})
+            .with_absolute_position()
+            .with_translate(slide_base_x, box_y - 40.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_background(Theme::Usage::Surface)
+            .with_custom_text_color(text_light)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("slide_label"));
+
+    // Animated box with position offset
+    div(context, mk(entity, 21),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
+            .with_absolute_position()
+            .with_translate(slide_base_x + slide_offset, box_y)
+            .with_custom_background(box_green)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.15f)
+            .with_debug_name("slide_box"));
+
+    // Value indicator
+    div(context, mk(entity, 22),
+        ComponentConfig{}
+            .with_label(fmt::format("x offset: {:.0f}px", slide_offset))
+            .with_size(ComponentSize{pixels(box_size + 40), pixels(24)})
+            .with_absolute_position()
+            .with_translate(slide_base_x - 20.0f, box_y + box_size + 10.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_background(Theme::Usage::Surface)
+            .with_custom_text_color(text_light)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("slide_value"));
+
+    // ========== BOX 2: Fade In (center position) ==========
+    float fade_x = center_x - box_size / 2.0f;
 
     // Label above box
     div(context, mk(entity, 10),
@@ -180,46 +220,6 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("fade_value"));
 
-    // ========== BOX 2: Slide In ==========
-    float slide_base_x = center_x - box_size / 2.0f;
-
-    // Label above box
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_label("Slide In")
-            .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(slide_base_x, box_y - 40.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("slide_label"));
-
-    // Animated box with position offset
-    div(context, mk(entity, 21),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(slide_base_x + slide_offset, box_y)
-            .with_custom_background(box_green)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("slide_box"));
-
-    // Value indicator
-    div(context, mk(entity, 22),
-        ComponentConfig{}
-            .with_label(fmt::format("x offset: {:.0f}px", slide_offset))
-            .with_size(ComponentSize{pixels(box_size + 40), pixels(24)})
-            .with_absolute_position()
-            .with_translate(slide_base_x - 20.0f, box_y + box_size + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("slide_value"));
-
     // ========== BOX 3: Scale Up ==========
     float scale_x = center_x + spacing - box_size / 2.0f;
 
@@ -236,16 +236,13 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("scale_label"));
 
-    // Animated box with scale (simulate via size)
-    float scaled_size = box_size * scale_factor;
-    float scale_offset = (box_size - scaled_size) / 2.0f;
-
+    // Animated box with scale - using with_scale() for smooth animations
     div(context, mk(entity, 31),
         ComponentConfig{}
-            .with_size(
-                ComponentSize{pixels(scaled_size), pixels(scaled_size)})
+            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_absolute_position()
-            .with_translate(scale_x + scale_offset, box_y + scale_offset)
+            .with_translate(scale_x, box_y)
+            .with_scale(scale_factor)  // Smooth visual scaling after layout
             .with_custom_background(box_purple)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
