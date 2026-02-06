@@ -3,6 +3,7 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
+#include "../../theme_presets.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -19,19 +20,8 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
       return;
     theme_initialized = true;
 
-    // Set up a theme with properly contrasting font colors
-    Theme theme;
-    theme.font =
-        afterhours::Color{255, 255, 255, 255}; // White for dark backgrounds
-    theme.darkfont =
-        afterhours::Color{30, 30, 30, 255}; // Near-black for light backgrounds
-    theme.font_muted = afterhours::Color{150, 150, 150, 255};
-    theme.background = afterhours::Color{45, 45, 55, 255}; // Dark background
-    theme.surface = afterhours::Color{60, 60, 70, 255};
-    theme.primary = afterhours::Color{100, 140, 200, 255};
-    theme.secondary = afterhours::Color{80, 100, 140, 255};
-    theme.accent = afterhours::Color{200, 160, 100, 255};
-    theme.error = afterhours::Color{200, 80, 80, 255};
+    // Use ocean_navy theme preset (dark background theme)
+    auto theme = afterhours::ui::theme_presets::ocean_navy();
     ThemeDefaults::get().set_theme(theme);
   }
 

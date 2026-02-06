@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -22,16 +23,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    Theme theme;
-    theme.font = text_dark;
-    theme.darkfont = card_white;
-    theme.font_muted = text_muted;
-    theme.background = bg_slate;
-    theme.surface = card_white;
-    theme.primary = accent_blue;
-    theme.secondary = border_light;
-    theme.accent = accent_purple;
-    theme.roundness = 0.10f;
+    auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
     auto *res = afterhours::EntityHelper::get_singleton_cmp<

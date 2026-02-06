@@ -6,6 +6,7 @@
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
+#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -72,10 +73,9 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     theme.background = AIMColors::window_bg();
     theme.surface = AIMColors::button_face();
     theme.primary = AIMColors::title_bar();
-    theme.secondary = AIMColors::input_bg();  // White for text input bg
+    theme.secondary = AIMColors::input_bg();
     theme.font = AIMColors::text_default();
     theme.darkfont = AIMColors::text_default();
-    // Set focus ring and accent to a subtle gray instead of bright yellow/green
     theme.accent = AIMColors::button_shadow();
     context.theme = theme;
 

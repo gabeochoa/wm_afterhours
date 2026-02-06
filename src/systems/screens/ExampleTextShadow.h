@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -18,14 +19,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    Theme theme;
-    theme.font = text_dark;
-    theme.darkfont = text_dark;
-    theme.font_muted = text_muted;
-    theme.background = bg_light;
-    theme.surface = surface;
-    theme.primary = afterhours::Color{60, 120, 200, 255};
-    theme.roundness = 0.1f;
+    auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
     int screen_w = Settings::get().get_screen_width();

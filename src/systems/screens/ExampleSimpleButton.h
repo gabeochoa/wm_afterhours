@@ -3,6 +3,7 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
+#include "../../theme_presets.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -32,17 +33,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    Theme theme;
-    theme.font = text_dark;
-    theme.darkfont = card_white;
-    theme.font_muted = text_muted;
-    theme.background = bg_warm;
-    theme.surface = card_white;
-    theme.primary = btn_coral;
-    theme.secondary = afterhours::Color{100, 180, 200, 255};
-    theme.accent = afterhours::Color{255, 180, 100, 255};
-    theme.error = afterhours::Color{220, 80, 80, 255};
-    theme.roundness = 0.15f;
+    auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();

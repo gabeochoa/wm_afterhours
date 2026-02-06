@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -109,7 +110,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = afterhours::Color{139, 90, 43, 255};
     theme.accent = afterhours::Color{200, 150, 50, 255};
     theme.error = afterhours::Color{180, 60, 60, 255};
-    theme.roundness = 0.0f; // Nine-slice handles corners
+    theme.roundness = 0.0f;
     context.theme = theme;
 
     int screen_width = Settings::get().get_screen_width();
