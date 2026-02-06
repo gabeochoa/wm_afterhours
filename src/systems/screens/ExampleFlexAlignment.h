@@ -51,8 +51,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
             .with_custom_background(afterhours::Color{50, 60, 80, 255})
-            .with_padding(Padding{.top = pixels(6), .left = pixels(6),
-                                  .bottom = pixels(6), .right = pixels(6)})
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.top = pixels(4)})
             .with_flex_direction(FlexDirection::Column)
             .with_justify_content(jc)
@@ -83,8 +82,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.18f), percent(1.0f)})
             .with_custom_background(afterhours::Color{50, 60, 80, 255})
-            .with_padding(Padding{.top = pixels(4), .left = pixels(4),
-                                  .bottom = pixels(4), .right = pixels(4)})
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.top = pixels(2), .bottom = pixels(2),
                                 .left = pixels(3), .right = pixels(3)})
             .with_flex_direction(FlexDirection::Column)
@@ -108,8 +106,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
             .with_custom_background(afterhours::Color{35, 45, 65, 255})
-            .with_padding(Padding{.top = pixels(4), .left = pixels(4),
-                                  .bottom = pixels(4), .right = pixels(4)})
+            .with_padding(Spacing::xs)
             .with_margin(Margin{.top = pixels(4)})
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(jc)

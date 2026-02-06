@@ -112,8 +112,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Column)
             .with_clip_children(true)
-            .with_padding(Padding{.left = pixels(4), .right = pixels(4),
-                                  .top = pixels(4), .bottom = pixels(4)})
+            .with_padding(Spacing::xs)
             .with_debug_name("vert_scroll"));
 
     // Configure vertical scrolling
@@ -176,8 +175,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_flex_direction(FlexDirection::Row)
             .with_no_wrap()
             .with_clip_children(true)
-            .with_padding(Padding{.left = pixels(4), .right = pixels(4),
-                                  .top = pixels(4), .bottom = pixels(4)})
+            .with_padding(Spacing::xs)
             .with_debug_name("horiz_scroll"));
 
     // Configure horizontal scrolling

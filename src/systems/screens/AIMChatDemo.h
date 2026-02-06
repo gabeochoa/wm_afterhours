@@ -95,8 +95,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(W), pixels(H)})
                 .with_custom_background(AIMColors::window_bg())
                 .with_flex_direction(FlexDirection::Column)
-                .with_padding(Padding{.left = pixels(SAFE_MARGIN), .right = pixels(SAFE_MARGIN),
-                                      .top = pixels(SAFE_MARGIN), .bottom = pixels(SAFE_MARGIN)})
+                .with_padding(Spacing::sm)
                 .disable_rounded_corners()
                 .with_self_align(SelfAlign::Center)
                 .with_debug_name("aim_window"));
