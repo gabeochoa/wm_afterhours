@@ -40,15 +40,15 @@ TEST(fontconfig_struct) {
 TEST(theme_font_fields) {
   Theme theme;
 
-  // Check default font sizes exist
-  assert_true(theme.font_size_sm == 14.f,
+  // Check default font sizes from FontSizing
+  assert_true(theme.font_size_sm() == 14.f,
               "Theme should have default font_size_sm of 14");
-  assert_true(theme.font_size_md == 18.f,
-              "Theme should have default font_size_md of 18");
-  assert_true(theme.font_size_lg == 28.f,
+  assert_true(theme.font_size_md() == 20.f,
+              "Theme should have default font_size_md of 20");
+  assert_true(theme.font_size_lg() == 28.f,
               "Theme should have default font_size_lg of 28");
-  assert_true(theme.font_size_xl == 36.f,
-              "Theme should have default font_size_xl of 36");
+  assert_true(theme.font_size_xl() == 38.f,
+              "Theme should have default font_size_xl of 38");
 
   // Check language_fonts map exists and is empty by default
   assert_true(theme.language_fonts.empty(),

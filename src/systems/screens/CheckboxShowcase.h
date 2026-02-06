@@ -46,13 +46,13 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     // Labels: font_size_md (20px) - Labels
     // Body text: font_size_sm (16px) - Body text, values
     const float TITLE_HEIGHT = 60.0f * scale;
-    const float TITLE_FONT = theme.font_size_xl * scale;  // 42px - largest
+    const float TITLE_FONT = theme.font_size_xl() * scale;  // 42px - largest
     const float HEADER_HEIGHT = 40.0f * scale;
-    const float HEADER_FONT = theme.font_size_lg * 0.75f * scale;  // 24px - section headers
+    const float HEADER_FONT = theme.font_size_lg() * 0.75f * scale;  // 24px - section headers
     const float CHECKBOX_HEIGHT = 40.0f * scale;
-    const float CHECKBOX_FONT = theme.font_size_md * scale;  // 20px - labels
+    const float CHECKBOX_FONT = theme.font_size_md() * scale;  // 20px - labels
     const float STATUS_HEIGHT = 44.0f * scale;
-    const float STATUS_FONT = theme.font_size_sm * scale;  // 16px - body text
+    const float STATUS_FONT = theme.font_size_sm() * scale;  // 16px - body text
 
     // Left: 3 headers + 6 rows (3 labeled + 1 no-label row + 2 disabled)
     // Right: 2 headers + 7 checkboxes

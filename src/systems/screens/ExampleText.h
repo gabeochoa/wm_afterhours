@@ -143,7 +143,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(80)})
             .with_absolute_position()
             .with_translate(left_col, content_y + left_spacing * 2.7f)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
             .with_custom_text_color(muted_text)
             .with_debug_name("body_text"));
 
@@ -153,7 +153,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position()
             .with_translate(left_col, content_y + left_spacing * 4.0f)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_custom_text_color(muted_text)
             .with_debug_name("caption_text"));
 
@@ -227,7 +227,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(panel_w - 100), pixels(30)})
             .with_absolute_position()
             .with_translate(panel_x + 50.0f, panel_y + panel_h - 45.0f)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
             .with_custom_text_color(muted_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));

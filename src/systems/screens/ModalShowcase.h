@@ -77,7 +77,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_lg)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_lg())
             .with_roundness(SECTION_ROUNDNESS)
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::small(),
@@ -107,7 +107,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section1_label"));
@@ -127,7 +127,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(180), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_margin(Margin{.right = DefaultSpacing::medium()})
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_simple"))) {
@@ -140,7 +140,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(220), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_composable"))) {
       show_composable_modal = true;
@@ -168,7 +168,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section2_label"));
@@ -188,7 +188,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_margin(Margin{.right = DefaultSpacing::medium()})
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_info"))) {
@@ -201,7 +201,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_margin(Margin{.right = DefaultSpacing::medium()})
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_confirm"))) {
@@ -215,7 +215,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_fyi"))) {
       show_fyi_modal = true;
@@ -244,7 +244,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section3_label"));
@@ -264,7 +264,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(380), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_stacked"))) {
       show_stacked_settings = true;
@@ -292,7 +292,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section4_label"));
@@ -314,7 +314,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{pixels(220), pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+                   .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
                    .with_margin(Margin{.right = DefaultSpacing::large()})
                    .with_roundness(BUTTON_ROUNDNESS)
                    .with_debug_name("btn_background"))) {
@@ -328,7 +328,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(180), pixels(BUTTON_HEIGHT)})
             .with_custom_background(afterhours::colors::lighten(theme.background, 0.15f))
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_padding(Spacing::xs)
             .with_roundness(BUTTON_ROUNDNESS)
             .with_debug_name("bg_click_count"));
@@ -354,7 +354,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("section5_label"));
@@ -395,7 +395,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                         "  Cancels: " + std::to_string(cancel_count))
             .with_size(ComponentSize{percent(1.0f), pixels(BUTTON_HEIGHT)})
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm)
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
             .with_debug_name("results"));
 
