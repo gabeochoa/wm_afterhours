@@ -315,7 +315,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       // Section 1: Vertical justify - user-friendly description
       div(context, mk(left_col.ent(), 0),
           ComponentConfig{}
-              .with_label("Vertical Spacing: Distribute items top-to-bottom")
+              .with_label("Vertical Spacing (JustifyContent, Column)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
@@ -342,7 +342,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       // Section 2: AlignItems - user-friendly description
       div(context, mk(left_col.ent(), 2),
           ComponentConfig{}
-              .with_label("Cross-Axis Align: Position items within row")
+              .with_label("Cross-Axis Align (AlignItems)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
@@ -378,7 +378,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       // Section 3: Horizontal justify - user-friendly description
       div(context, mk(right_col.ent(), 0),
           ComponentConfig{}
-              .with_label("Horizontal Spacing: Distribute items left-to-right")
+              .with_label("Horizontal Spacing (JustifyContent, Row)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
@@ -405,7 +405,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       // Section 4: SelfAlign - user-friendly description
       div(context, mk(right_col.ent(), 2),
           ComponentConfig{}
-              .with_label("Individual Override: Each item controls its position")
+              .with_label("Individual Override (SelfAlign)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
@@ -439,7 +439,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         // Vertical Spacing (JustifyContent: Column)
         div(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
-                .with_label("Vertical Spacing: Distribute items from top to bottom in a column layout")
+                .with_label("Vertical Spacing (JustifyContent, Column): Items distributed top-to-bottom")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
@@ -467,7 +467,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         // Horizontal Spacing (JustifyContent: Row)
         div(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
-                .with_label("Horizontal Spacing: Distribute items from left to right in a row layout")
+                .with_label("Horizontal Spacing (JustifyContent, Row): Items distributed left-to-right")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
@@ -495,7 +495,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         // Cross-Axis Align (AlignItems)
         div(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
-                .with_label("Cross-Axis Align: Position items perpendicular to the main flow direction")
+                .with_label("Cross-Axis Align (AlignItems): Position items perpendicular to main axis")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
@@ -521,7 +521,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
         // Individual Override (SelfAlign)
         div(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
-                .with_label("Individual Override: Each item can override the parent's alignment")
+                .with_label("Individual Override (SelfAlign): Each item overrides parent alignment")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)

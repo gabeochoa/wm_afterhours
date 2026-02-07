@@ -67,13 +67,13 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Form Components")
-            .with_size(ComponentSize{percent(1.0f), pixels(60)})
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_xl())  // 42px - screen title
             .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
+                                .bottom = DefaultSpacing::small(),
                                 .left = pixels(0),
                                 .right = pixels(0)})
             .with_debug_name("title"));
@@ -82,9 +82,9 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.68f)})
+                .with_size(ComponentSize{percent(1.0f), percent(0.78f)})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::Center)
                 .with_debug_name("content"));
@@ -98,7 +98,6 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                     afterhours::colors::darken(theme.surface, 0.9f))
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_no_wrap()
                 .with_debug_name("left_column"));
 
     // Sliders section header - font_size_md for section headers
@@ -117,7 +116,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(left_col.ent(), 1), volume_slider,
            ComponentConfig{}
                .with_label("Volume")
-               .with_size(ComponentSize{percent(0.95f), pixels(48)})
+               .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                .with_margin(Spacing::xs)
@@ -128,7 +127,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(left_col.ent(), 2), brightness_slider,
            ComponentConfig{}
                .with_label("Brightness")
-               .with_size(ComponentSize{percent(0.95f), pixels(48)})
+               .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                .with_margin(Spacing::xs)
@@ -139,7 +138,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(left_col.ent(), 3), difficulty_slider,
            ComponentConfig{}
                .with_label("Difficulty")
-               .with_size(ComponentSize{percent(0.95f), pixels(48)})
+               .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Secondary)
                .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                .with_margin(Spacing::xs)
@@ -186,7 +185,6 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
                              .with_flex_direction(FlexDirection::Column)
-                             .with_no_wrap()
                              .with_debug_name("right_column"));
 
     // Checkboxes section header - font_size_md for section headers
@@ -205,7 +203,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 1), enable_music,
              ComponentConfig{}
                  .with_label("Music")
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs)
@@ -214,7 +212,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
              ComponentConfig{}
                  .with_label("SFX")
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs)
@@ -224,7 +222,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 3), fullscreen,
              ComponentConfig{}
                  .with_label("Fullscreen")
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs)
@@ -233,7 +231,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 4), vsync,
              ComponentConfig{}
                  .with_label("V-Sync")
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs)
@@ -242,20 +240,22 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(right_col.ent(), 5), show_fps,
              ComponentConfig{}
                  .with_label("Show FPS")
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs)
                  .with_debug_name("fps_checkbox"));
 
     // Disabled checkbox example - standardized checkmark color via Primary
+    // Enhanced disabled styling: reduced opacity for stronger visual differentiation
     bool disabled_value = true;
     checkbox(context, mk(right_col.ent(), 6), disabled_value,
              ComponentConfig{}
                  .with_label("Disabled")
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
+                 .with_opacity(0.5f)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs)
                  .with_debug_name("disabled_checkbox"));
@@ -263,7 +263,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Language dropdown - font_size_sm for dropdown values
     dropdown(context, mk(right_col.ent(), 7), languages, language_index,
              ComponentConfig{}
-                 .with_size(ComponentSize{percent(0.92f), pixels(38)})
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Secondary)
                  .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - values
                  .with_margin(Spacing::xs)
@@ -278,11 +278,11 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())  // 16px - body text
-            .with_margin(Margin{.top = DefaultSpacing::small(),
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
                                 .right = pixels(0)})
@@ -292,12 +292,12 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Clipboard Demo: Copy saves current settings, Paste retrieves saved text")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
             .with_custom_text_color(theme.font_muted)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm() - 4.0f)  // 12px - help text
-            .with_margin(Margin{.top = DefaultSpacing::small(),
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
                                 .right = pixels(0)})
@@ -306,7 +306,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto clipboard_row =
         div(context, mk(main_container.ent(), 4),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                .with_size(ComponentSize{percent(1.0f), pixels(44)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_margin(Margin{.top = DefaultSpacing::tiny(),

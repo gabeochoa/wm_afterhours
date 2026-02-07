@@ -38,7 +38,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::lg)  // Move padding to root
+                .with_padding(Spacing::md)  // Moderate padding on root
                 .with_debug_name("text_input_demo_bg"));
 
     // Content container - use percent for proper sizing
@@ -58,21 +58,23 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("title"));
 
-    // Form container - fits content more tightly, centered
-    // Reduced height from 520px to 480px to leave room for footer elements
+    // Form container - uses flex_grow to fill available space, leaving room for
+    // status and instructions at the bottom of main_container
     auto form_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(460)})
+                .with_size(ComponentSize{percent(0.95f), pixels(426)})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_align_items(AlignItems::FlexStart)  // Align children left
                 .with_self_align(SelfAlign::Center)  // Center the form container
+                .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                    .bottom = DefaultSpacing::tiny()})
                 .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("form_container"));
 
@@ -80,13 +82,13 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto make_input_field = [&](int idx, const std::string& label_text,
                                 std::string& value, Theme::Usage bg,
                                 std::optional<char> mask = std::nullopt) -> bool {
-      // Label above the input - larger font for better visibility
+      // Label above the input - prominent font for clear field identification
       div(context, mk(form_container.ent(), idx * 2),
           ComponentConfig{}
               .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(32)})
+              .with_size(ComponentSize{pixels(396), pixels(34)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
+              .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
@@ -124,9 +126,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 4),
         ComponentConfig{}
             .with_label("Password:")
-            .with_size(ComponentSize{pixels(396), pixels(32)})
+            .with_size(ComponentSize{pixels(396), pixels(34)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_skip_tabbing(true)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("password_label"));
@@ -183,9 +185,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(32)})
+            .with_size(ComponentSize{pixels(396), pixels(34)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("search_label"));
 
@@ -214,7 +216,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       status_message = "Submitted! User: " + username + ", Email: " + email;
     }
 
-    // Status display - reduced margin to fit
+    // Status display - compact margin to fit within container
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status_message)
@@ -222,19 +224,20 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Margin{.top = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
             .with_debug_name("status"));
 
-    // Instructions - concise navigation hints
+    // Instructions - brief contextual navigation hint
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
-            .with_label("Tab: next field | Arrows: cursor | Enter: submit")
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_label("Tab / Enter")
+            .with_size(ComponentSize{percent(1.0f), pixels(30)})
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_skip_tabbing(true)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
             .with_debug_name("instructions"));
   }
 };

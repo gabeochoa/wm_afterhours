@@ -54,7 +54,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_label("Use mouse wheel to scroll (Shift+wheel or trackpad for horizontal)")
+            .with_label("Scroll: mouse wheel | Horizontal: Shift + scroll wheel or trackpad swipe")
             .with_custom_text_color(theme.font_muted)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("instructions"));
@@ -124,10 +124,12 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
       float max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
       int scroll_pct = max_scroll > 0.0f ? static_cast<int>((sv.scroll_offset.y / max_scroll) * 100.0f) : 0;
+      int total_items = 20;
+      int visible_item = max_scroll > 0.0f ? 1 + static_cast<int>((sv.scroll_offset.y / max_scroll) * (total_items - 1)) : 1;
       div(context, mk(vert_section.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
-              .with_label(fmt::format("Scrolled: {}%", scroll_pct))
+              .with_label(fmt::format("Item {} of {} ({}%)", visible_item, total_items, scroll_pct))
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("vert_info"));
@@ -187,10 +189,12 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
       float max_scroll = std::max(0.0f, sv.content_size.x - sv.viewport_size.x);
       int scroll_pct = max_scroll > 0.0f ? static_cast<int>((sv.scroll_offset.x / max_scroll) * 100.0f) : 0;
+      int total_items = 15;
+      int visible_item = max_scroll > 0.0f ? 1 + static_cast<int>((sv.scroll_offset.x / max_scroll) * (total_items - 1)) : 1;
       div(context, mk(horiz_section.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
-              .with_label(fmt::format("Scrolled: {}%", scroll_pct))
+              .with_label(fmt::format("Item {} of {} ({}%)", visible_item, total_items, scroll_pct))
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(theme.font_muted)
               .with_debug_name("horiz_info"));

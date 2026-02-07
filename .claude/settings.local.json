@@ -40,7 +40,9 @@
       "Skill(audit-design)",
       "Bash(brew list:*)",
       "Bash(./layout_performance.exe:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(for id in a9f903b a726dff a8eac1f a45969c a20b6ac a469dfe ac48283 ac40f50 ae87b0c abe516f a8d4c72 a12a50c a9130b9)",
+      "Bash(do echo \"stopping $id\")"
     ]
   }
 }

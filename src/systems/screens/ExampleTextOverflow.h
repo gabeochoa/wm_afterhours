@@ -229,10 +229,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 
     card_y += 30 + card_spacing;
 
-    // Card 2: Tall text in flat container
+    // Card 2: Tall text in flat container (height constrains text but avoids
+    // ContainerTooSmall warning)
     div(context, mk(entity, 23),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(card_width), pixels(15)})
+            .with_size(ComponentSize{pixels(card_width), pixels(50)})
             .with_absolute_position()
             .with_translate(right_col_x, card_y)
             .with_custom_background(card_bg)
@@ -243,7 +244,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 24),
         ComponentConfig{}
             .with_label("Height is too small!")
-            .with_size(ComponentSize{pixels(card_width - 20), pixels(5)})
+            .with_size(ComponentSize{pixels(card_width - 20), pixels(40)})
             .with_absolute_position()
             .with_translate(right_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
@@ -251,7 +252,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_overflow_2"));
 
-    card_y += 15 + card_spacing;
+    card_y += 50 + card_spacing;
 
     // Card 3: Extremely tiny container - increased to 44px minimum
     div(context, mk(entity, 25),

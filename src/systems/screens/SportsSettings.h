@@ -25,8 +25,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color highlight_row{
       45, 75, 95, 160}; // Selected row highlight (semi-transparent)
   afterhours::Color slider_bg{55, 65, 80, 255};    // Slider background
-  afterhours::Color slider_track{20, 25, 32, 255}; // Slider track - darker for better contrast
-  afterhours::Color slider_empty_border{60, 70, 85, 255}; // Border for empty portion
+  afterhours::Color slider_track{22, 28, 38, 255}; // Slider track - much darker for strong contrast against green fill
+  afterhours::Color slider_empty_border{55, 65, 80, 255}; // Border for empty portion - subtle but visible
 
   std::vector<std::string> tabs = {"GAMEPLAY", "VIDEO", "AUDIO", "CONTROLS"};
 
@@ -64,17 +64,11 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
        0.0f,
        0,
        0,
-       {"Off", "FXAA", "TAA", "TSR", "DLSS"},
+       {"Off", "FXAA", "TAA", "TSR (Temporal Super Resolution)", "DLSS"},
        3},
       {"Dynamic resolution", false, 0.0f, 0, 0, {"Disabled", "Enabled"}, 1},
       {"Framerate target", true, 0.4f, 30, 120, {}, 0},
-      {"Motion blur",
-       false,
-       0.0f,
-       0,
-       0,
-       {"Off", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
-       7},
+      {"Motion blur", true, 0.7f, 0, 10, {}, 0},
       {"Graphics quality",
        false,
        0.0f,
@@ -200,7 +194,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                       const std::string &current_value) {
     // Anti-Aliasing method explanations
     if (label == "Anti-Aliasing method") {
-      if (current_value == "TSR") {
+      if (current_value == "TSR (Temporal Super Resolution)") {
         return "TSR (Temporal Super Resolution) uses";
       } else if (current_value == "TAA") {
         return "TAA (Temporal Anti-Aliasing) smooths";
@@ -216,7 +210,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   std::string get_setting_description_line2(const std::string &label,
                                             const std::string &current_value) {
     if (label == "Anti-Aliasing method") {
-      if (current_value == "TSR") {
+      if (current_value == "TSR (Temporal Super Resolution)") {
         return "AI to upscale lower resolution frames.";
       } else if (current_value == "TAA") {
         return "edges using temporal frame data.";
@@ -615,6 +609,38 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_render_layer(1)
                   .with_skip_tabbing(true)
                   .with_debug_name("slider_fill_" + std::to_string(i)));
+        }
+      } else if (setting.options.size() > 1) {
+        // Segmented position indicator for non-slider settings
+        // Shows dots/segments matching the slider bar position and style
+        float bar_x = value_x + arrow_size + 170.0f;
+        float bar_y = ry + 14.0f;
+        float bar_w = 100.0f;
+        float dot_h = 10.0f;
+        size_t num_opts = setting.options.size();
+        float total_gap = 4.0f * (float)(num_opts - 1); // gaps between segments
+        float seg_w = (bar_w - total_gap) / (float)num_opts;
+
+        for (size_t j = 0; j < num_opts; j++) {
+          float sx = bar_x + (float)j * (seg_w + 4.0f);
+          bool is_active = (j == setting.option_idx);
+          afterhours::Color seg_color =
+              is_active ? accent_green : slider_track;
+          afterhours::Color seg_border =
+              is_active ? accent_green : slider_empty_border;
+
+          div(context,
+              mk(entity, 800 + static_cast<int>(i) * 20 + static_cast<int>(j)),
+              ComponentConfig{}
+                  .with_size(ComponentSize{pixels(static_cast<int>(seg_w)),
+                                           pixels(static_cast<int>(dot_h))})
+                  .with_absolute_position()
+                  .with_translate(sx, bar_y)
+                  .with_custom_background(seg_color)
+                  .with_border(seg_border, 1.0f)
+                  .with_skip_tabbing(true)
+                  .with_debug_name("seg_" + std::to_string(i) + "_" +
+                                   std::to_string(j)));
         }
       }
     }

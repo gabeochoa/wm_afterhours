@@ -62,14 +62,14 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Section label - aligned with card row
     div(context, mk(row1.ent(), 100),
         ComponentConfig{}
-            .with_label("Basic:")
+            .with_label("Styles:")
             .with_size(ComponentSize{pixels(100), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm)
             .with_skip_tabbing(true)
-            .with_debug_name("basic_label"));
+            .with_debug_name("styles_label"));
 
     // Card 1: Basic surface card (simple) - standardized height
     div(context, mk(row1.ent(), 0),
@@ -254,8 +254,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         "overlay effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_custom_text_color(theme.font)
             .with_skip_tabbing(true)
             .with_debug_name("info_body"));
 

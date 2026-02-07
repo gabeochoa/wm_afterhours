@@ -111,10 +111,11 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("title_bar"));
 
+    // Title text - width calculated to leave room for controls (82px + 2px margin + 4px buffer) within parent (INNER_W=485px)
     div(context, mk(title_bar.ent(), 0),
         ComponentConfig{}
             .with_label(buddy_name + " - Instant Message")
-            .with_size(ComponentSize{pixels(INNER_W - 80), pixels(28)})  // Leave room for controls
+            .with_size(ComponentSize{pixels(INNER_W - 90), pixels(28)})  // 485 - 90 = 395, leaves room for 82px controls + margins + buffer
             .with_custom_text_color(AIMColors::title_text())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -123,10 +124,11 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title_text"));
 
     // Window controls container - groups buttons on the right
+    // Height matches title bar (28px), width accounts for 3 buttons (24px each + 2px margins)
     auto controls_container =
         div(context, mk(title_bar.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(80), pixels(UIConfig::WINDOW_CONTROL_SIZE)})
+                .with_size(ComponentSize{pixels(82), pixels(28)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexEnd)

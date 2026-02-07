@@ -21,8 +21,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color text_muted{110, 135, 165, 255};  // Brightened for WCAG AA contrast
   afterhours::Color highlight_line{65, 140, 195,
                                    255}; // Brightened for better visibility
-  afterhours::Color connector_line{85, 160, 210,
-                                   255}; // Brighter line for tree connectors
+  afterhours::Color connector_line{110, 180, 225,
+                                   255}; // High-visibility tree connector
   afterhours::Color grid_color{15, 25, 40, 120};  // Made more subtle
 
   std::vector<std::string> categories = {
@@ -185,44 +185,79 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // ========== VISUAL CONNECTION LINE (menu to submenu) ==========
-    div(context, mk(entity, 160),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels(100)})
-            .with_absolute_position()
-            .with_translate(370.0f, 250.0f)
-            .with_custom_background(connector_line)
-            .with_debug_name("connector_line"));
-
     // ========== SUB-OPTIONS (right side) ==========
     float sub_x = 400.0f;
     float sub_y = 250.0f;
 
-    // Vibration is unavailable (index 3) - requires compatible controller
+    // ========== VISUAL CONNECTION LINE (menu to submenu) ==========
+    // Vertical connector spanning all suboptions
+    float connector_x = 385.0f;
+    float connector_top = sub_y + 10.0f;
+    float connector_bottom = sub_y + ((float)suboptions.size() - 1) * 36.0f + 10.0f;
+    div(context, mk(entity, 160),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(3), pixels((int)(connector_bottom - connector_top))})
+            .with_absolute_position()
+            .with_translate(connector_x, connector_top)
+            .with_custom_background(connector_line)
+            .with_debug_name("connector_line"));
+
+    // Horizontal branch lines from connector to each suboption
+    for (size_t i = 0; i < suboptions.size(); i++) {
+      float branch_y = sub_y + (float)i * 36.0f + 10.0f;
+      div(context, mk(entity, 170 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(12), pixels(2)})
+              .with_absolute_position()
+              .with_translate(connector_x + 3.0f, branch_y)
+              .with_custom_background(connector_line)
+              .with_debug_name("branch_" + std::to_string(i)));
+    }
+
+    // Sub-option header showing which category's settings are displayed
+    std::string sub_header = categories[selected_category] + " SETTINGS";
+    div(context, mk(entity, 195),
+        ComponentConfig{}
+            .with_label(sub_header)
+            .with_size(ComponentSize{pixels(300), pixels(28)})
+            .with_absolute_position()
+            .with_translate(sub_x, sub_y - 36.0f)
+            .with_font("EqProRounded", h720(16.0f))
+            .with_custom_text_color(text_cyan)
+            .with_debug_name("sub_header"));
+
+    // Sub-option items
     bool vibration_unavailable = true;
     afterhours::Color disabled_color{70, 85, 105, 255};  // Dimmer than text_muted
 
     for (size_t i = 0; i < suboptions.size(); i++) {
       bool is_selected = (i == selected_option);
       bool is_vibration = (i == 3);
+      bool is_disabled = is_vibration && vibration_unavailable;
       afterhours::Color opt_color;
-      if (is_vibration && vibration_unavailable) {
+      if (is_disabled) {
         opt_color = disabled_color;
       } else {
         opt_color = is_selected ? text_bright : text_muted;
       }
 
+      // Append "(Unavailable)" to disabled items so the state is clear inline
+      std::string label = suboptions[i];
+      if (is_disabled) {
+        label += "  (Unavailable)";
+      }
+
       if (button(context, mk(entity, 200 + static_cast<int>(i)),
                  ComponentConfig{}
-                     .with_label(suboptions[i])
-                     .with_size(ComponentSize{pixels(260), pixels(32)})
+                     .with_label(label)
+                     .with_size(ComponentSize{pixels(300), pixels(32)})
                      .with_absolute_position()
                      .with_translate(sub_x, sub_y + (float)i * 36.0f)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(opt_color)
-                     .with_disabled(is_vibration && vibration_unavailable)
+                     .with_disabled(is_disabled)
                      .with_debug_name("opt_" + std::to_string(i)))) {
-        if (!(is_vibration && vibration_unavailable)) {
+        if (!is_disabled) {
           selected_option = i;
         }
       }
@@ -230,14 +265,25 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Tooltip for disabled Vibration option
     if (vibration_unavailable) {
+      // Small indicator dot to draw attention to the tooltip
+      div(context, mk(entity, 249),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(6), pixels(6)})
+              .with_absolute_position()
+              .with_translate(sub_x + 8.0f, sub_y + 3 * 36.0f + 28.0f)
+              .with_custom_background(afterhours::Color{180, 140, 50, 255})
+              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_roundness(1.0f)
+              .with_debug_name("vibration_warn_dot"));
+
       div(context, mk(entity, 250),
           ComponentConfig{}
-              .with_label("(Requires compatible controller)")
-              .with_size(ComponentSize{pixels(260), pixels(20)})
+              .with_label("Requires compatible controller")
+              .with_size(ComponentSize{pixels(280), pixels(20)})
               .with_absolute_position()
-              .with_translate(sub_x + 16.0f, sub_y + 3 * 36.0f + 24.0f)
+              .with_translate(sub_x + 18.0f, sub_y + 3 * 36.0f + 24.0f)
               .with_font("EqProRounded", h720(14.0f))
-              .with_custom_text_color(disabled_color)
+              .with_custom_text_color(text_muted)
               .with_debug_name("vibration_tooltip"));
     }
 
@@ -251,7 +297,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       // Show category-specific help for other categories
       help_text = category_help[selected_category];
     } else {
-      help_text = "Select an option to configure.";
+      help_text = "Use arrow keys to browse categories and options.";
     }
 
     div(context, mk(entity, 300),

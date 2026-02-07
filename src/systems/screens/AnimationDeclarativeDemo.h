@@ -143,7 +143,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.15f)
-            .with_animation(Anim::on_appear().scale(0.01f, 1.0f).spring(10.0f, 6.0f))
+            .with_animation(Anim::on_appear().scale(0.3f, 1.0f).spring(10.0f, 6.0f))
             .with_animation(Anim::on_appear().opacity(0.0f, 1.0f).ease_out(0.2f))
             .with_debug_name("appear_btn"));
 

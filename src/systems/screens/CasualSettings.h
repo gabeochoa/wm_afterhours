@@ -115,57 +115,43 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Close action
     }
 
-    // ========== TOGGLE ICONS (Music, Sound, Vibrate) ==========
-    float toggle_y = panel_y + 45.0f;
-    float toggle_start_x = panel_x + 95.0f;
-    float toggle_spacing = 75.0f;
+    // ========== TOGGLE BUTTONS (Music, Sound, Vibrate) ==========
+    float toggle_y = panel_y + 40.0f;
+    float toggle_start_x = panel_x + 40.0f;
+    float toggle_spacing = 100.0f;
 
     std::vector<std::tuple<std::string, bool *, std::string>> toggles = {
-        {"M", &music_on, "music"},     // Music note icon
-        {"S", &sound_on, "sound"},     // Speaker icon
-        {"V", &vibrate_on, "vibrate"}  // Vibrate icon
+        {"Music", &music_on, "music"},
+        {"Sound", &sound_on, "sound"},
+        {"Vibrate", &vibrate_on, "vibrate"}
     };
 
-    // Display names for the toggle labels
-    std::vector<std::string> toggle_labels = {"Music", "Sound", "Vibrate"};
-
     for (size_t i = 0; i < toggles.size(); i++) {
-      auto &[icon, state_ptr, name] = toggles[i];
+      auto &[label, state_ptr, name] = toggles[i];
       float tx = toggle_start_x + (float)i * toggle_spacing;
+      std::string display = label + (*state_ptr ? ": ON" : ": OFF");
       afterhours::Color toggle_bg = *state_ptr ? btn_green : text_muted;
       afterhours::Color toggle_border =
           *state_ptr ? btn_green_dark : afterhours::Color{95, 85, 75, 255};
 
       if (button(context, mk(entity, 40 + static_cast<int>(i)),
                  ComponentConfig{}
-                     .with_label(icon)
-                     .with_size(ComponentSize{pixels(58), pixels(58)})
+                     .with_label(display)
+                     .with_size(ComponentSize{pixels(90), pixels(58)})
                      .with_absolute_position()
                      .with_translate(tx, toggle_y)
                      .with_custom_background(toggle_bg)
                      .with_border(toggle_border, 4.0f)
-                     .with_font("Gaegu-Bold", h720(24.0f))
-                     .with_custom_text_color(text_dark)
+                     .with_font("Gaegu-Bold", h720(18.0f))
+                     .with_custom_text_color(*state_ptr ? text_dark : white)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(std::bitset<4>(0b1111))
-                     .with_roundness(1.0f)
+                     .with_roundness(0.5f)
                      .with_soft_shadow(1.0f, 2.0f, 4.0f,
                                        afterhours::Color{0, 0, 0, 35})
                      .with_debug_name("toggle_" + name))) {
         *state_ptr = !*state_ptr;
       }
-
-      // Add visible label below the toggle icon
-      div(context, mk(entity, 60 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(toggle_labels[i])
-              .with_size(ComponentSize{pixels(58), pixels(18)})
-              .with_absolute_position()
-              .with_translate(tx, toggle_y + 62.0f)
-              .with_font("Gaegu-Bold", h720(14.0f))
-              .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("label_" + name));
     }
 
     // Wifi icon (positioned first, then Save/Load button to its left)

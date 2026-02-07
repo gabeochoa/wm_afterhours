@@ -332,10 +332,10 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
             .with_label(counter_text)
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("click_counter"));
   }
 };

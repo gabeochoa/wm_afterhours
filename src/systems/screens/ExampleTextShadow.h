@@ -268,7 +268,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(left_col_width - 30), pixels(20)})
             .with_absolute_position()
             .with_translate(col1_x + 25.0f, 520.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(11.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(afterhours::Color{140, 145, 170, 255})
             .with_debug_name("desc_5"));
 

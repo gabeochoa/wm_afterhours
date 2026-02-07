@@ -49,12 +49,13 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
   }
 
   // Elastic pop - quick overshoot then settle
+  // Returns minimum 0.35 to ensure container stays large enough for text with margins
   float elastic_pop(float t, float overshoot = 1.3f, float settle_speed = 4.0f) {
-    if (t < 0.0f) return 0.0f;
+    if (t < 0.0f) return 0.35f;
     if (t > 2.0f) return 1.0f;
     float progress = 1.0f - std::exp(-settle_speed * t);
     float bounce = std::sin(t * 12.0f) * std::exp(-t * 3.0f) * (overshoot - 1.0f);
-    return std::min(1.0f, progress + bounce);
+    return std::max(0.35f, std::min(1.0f, progress + bounce));
   }
 
   // Balloon pop - deflate to 0 then smoothly inflate back to 1

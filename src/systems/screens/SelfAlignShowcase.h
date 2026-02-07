@@ -113,32 +113,66 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_debug_name("flex_end"));
 
-    // Visual explanation (user-friendly alternative to code snippet)
-    div(context, mk(main.ent(), 3),
+    // Visual legend row showing color-to-position mapping
+    auto legend = div(context, mk(main.ent(), 3),
         ComponentConfig{}
-            .with_label("Each element chooses its own position")
-            .with_size(ComponentSize{pixels(504), pixels(48)})
-            .with_custom_background(afterhours::Color{40, 50, 45, 255})
-            .with_custom_text_color(afterhours::Color{150, 255, 150, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = DefaultSpacing::medium(), .bottom = pixels(0),
+            .with_size(ComponentSize{pixels(container_width), pixels(36)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_justify_content(JustifyContent::SpaceAround)
+            .with_align_items(AlignItems::Center)
+            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
-            .with_debug_name("explanation"));
+            .with_debug_name("legend"));
 
-    // Benefits
+    // Legend: left
+    div(context, mk(legend.ent(), 0),
+        ComponentConfig{}
+            .with_label("Left")
+            .with_size(ComponentSize{pixels(120), pixels(28)})
+            .with_background(Theme::Usage::Primary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_alignment(TextAlignment::Center)
+            .with_skip_tabbing(true)
+            .with_debug_name("legend_left"));
+
+    // Legend: center
+    div(context, mk(legend.ent(), 1),
+        ComponentConfig{}
+            .with_label("Center")
+            .with_size(ComponentSize{pixels(120), pixels(28)})
+            .with_background(Theme::Usage::Secondary)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_alignment(TextAlignment::Center)
+            .with_skip_tabbing(true)
+            .with_debug_name("legend_center"));
+
+    // Legend: right
+    div(context, mk(legend.ent(), 2),
+        ComponentConfig{}
+            .with_label("Right")
+            .with_size(ComponentSize{pixels(120), pixels(28)})
+            .with_background(Theme::Usage::Accent)
+            .with_auto_text_color(true)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_alignment(TextAlignment::Center)
+            .with_skip_tabbing(true)
+            .with_debug_name("legend_right"));
+
+    // Summary line
     div(context, mk(main.ent(), 4),
         ComponentConfig{}
-            .with_label("No manual calculations - just set alignment!")
-            .with_size(ComponentSize{pixels(504), pixels(32)})
-            .with_custom_text_color(afterhours::Color{100, 220, 100, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_label("Each element picks its own position")
+            .with_size(ComponentSize{pixels(container_width), pixels(28)})
+            .with_custom_text_color(afterhours::Color{160, 170, 180, 255})
+            .with_font(UIComponent::DEFAULT_FONT, h720(15.0f))
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
             .with_skip_tabbing(true)
-            .with_debug_name("benefits"));
+            .with_debug_name("summary"));
   }
 };
 

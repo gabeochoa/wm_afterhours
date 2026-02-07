@@ -81,6 +81,9 @@ Examples:
 - Each component should have a single, clear responsibility
 - Tag components should have no members: `struct IsGrabbed : BaseComponent {};`
 
+## Agent Behavior
+- Always use the AskQuestion tool when you need to ask the user a question or present choices. Never ask questions inline in plain text — use the structured question tool so the user can select options directly.
+
 
 
 

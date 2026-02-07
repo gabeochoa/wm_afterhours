@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_initial = 1; // Continue selected
+  size_t selected_initial = 1; // Menu Narration selected
   size_t selected_main = 1;    // Gameplay selected
 
   // Colors matching Dead Space inspiration - dark sci-fi horror aesthetic
@@ -20,8 +20,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color panel_border{45, 65, 72, 255};
   afterhours::Color teal_highlight{65, 145, 145, 255};
   afterhours::Color teal_bright{85, 175, 175, 255};
-  afterhours::Color text_white{195, 205, 210, 255};
-  afterhours::Color text_muted{205, 215, 220, 255};
+  afterhours::Color text_white{220, 230, 235, 255};
+  afterhours::Color text_muted{185, 200, 205, 255};
   afterhours::Color text_dim{120, 135, 140, 255};
 
   std::vector<std::string> initial_settings = {
@@ -83,17 +83,16 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float panel_y = 60.0f;
     float panel_h = (float)screen_h - panel_y - 90.0f;
 
-    // Subtle vertical scan lines effect (positioned at right edge of screen)
-    // Only draw a few lines with subtle opacity to avoid looking like a scroll bar
-    for (int i = 0; i < 5; i++) {
+    // Subtle decorative tech lines along the bottom edge of the screen
+    for (int i = 0; i < 3; i++) {
       div(context, mk(entity, 5 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(screen_h / 4)})
+              .with_size(ComponentSize{pixels(40 + i * 20), pixels(1)})
               .with_absolute_position()
-              .with_translate((float)screen_w - 25.0f + (float)i * 5.0f,
-                              (float)screen_h / 3.0f)
-              .with_custom_background(afterhours::Color{25, 35, 40, 100})
-              .with_debug_name("scanline_" + std::to_string(i)));
+              .with_translate(content_margin + (float)i * 70.0f,
+                              (float)screen_h - 20.0f)
+              .with_custom_background(afterhours::Color{30, 50, 55, 120})
+              .with_debug_name("techline_" + std::to_string(i)));
     }
 
     // Title removed - consolidated with panel header "// SETTINGS" to avoid duplication
@@ -103,7 +102,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Sidebar header
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_label("INITIAL SETTINGS")
+            .with_label("PAUSE MENU")
             .with_size(
                 ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(32)})
             .with_absolute_position()

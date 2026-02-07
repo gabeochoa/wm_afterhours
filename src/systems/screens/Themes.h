@@ -71,17 +71,12 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_padding(Spacing::lg)
                 .with_debug_name("main_bg"));
 
-    // Content container
-    auto main = div(context, mk(background.ent(), 0),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                        .with_flex_direction(FlexDirection::Column)
-                        .with_debug_name("main"));
-
     // ========== HEADER ==========
-    auto header = div(context, mk(main.ent(), 0),
+    auto header = div(context, mk(background.ent(), 0),
                       ComponentConfig{}
-                          .with_size(ComponentSize{percent(0.90f), pixels(60)})
+                          .with_size(ComponentSize{screen_pct(0.90f), pixels(60)})
+                          .with_absolute_position()
+                          .with_translate(0.0f, 0.0f)
                           .with_background(Theme::Usage::Surface)
                           .with_padding(Spacing::sm)
                           .with_flex_direction(FlexDirection::Row)
@@ -102,28 +97,29 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(header.ent(), 1),
         ComponentConfig{}
             .with_label("Active: " + get_theme_name(current_theme))
-            .with_size(ComponentSize{pixels(240), pixels(40)})
+            .with_size(ComponentSize{pixels(280), pixels(44)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(21.0f))
             .with_margin(Margin{.left = DefaultSpacing::medium()})
-            .with_hard_shadow(2.0f, 2.0f)
+            .with_hard_shadow(3.0f, 3.0f)
             .with_debug_name("current_theme"));
 
     // ========== MAIN CONTENT ==========
-    auto content = div(context, mk(main.ent(), 1),
+    auto content = div(context, mk(background.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.95f), pixels(480)})
+                           .with_size(ComponentSize{screen_pct(0.90f), pixels(530)})
+                           .with_absolute_position()
+                           .with_translate(0.0f, 75.0f)
                            .with_background(Theme::Usage::Background)
                            .with_flex_direction(FlexDirection::Row)
-                           .with_margin(Margin{.top = DefaultSpacing::medium()})
                            .with_debug_name("content"));
 
     // LEFT - Theme Selection
     auto selector_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(200), pixels(430)})
+                .with_size(ComponentSize{pixels(200), pixels(480)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -175,7 +171,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto preview_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(480), pixels(430)})
+                .with_size(ComponentSize{pixels(520), pixels(480)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
@@ -351,6 +347,23 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_soft_shadow(1.0f, 1.0f, 4.0f)
             .with_debug_name("text_surface"));
+
+    // Labeled separator
+    separator(context, mk(preview_panel.ent(), 7),
+              SeparatorOrientation::Horizontal,
+              ComponentConfig{}
+                  .with_debug_name("preview_separator"));
+
+    // Progress bar
+    progress_bar(context, mk(preview_panel.ent(), 8), 0.72f,
+                 ComponentConfig{}
+                     .with_label("Loading")
+                     .with_size(ComponentSize{percent(0.95f), pixels(28)})
+                     .with_background(Theme::Usage::Primary)
+                     .with_auto_text_color(true)
+                     .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+                     .with_margin(Spacing::xs)
+                     .with_debug_name("preview_progress"));
   }
 };
 

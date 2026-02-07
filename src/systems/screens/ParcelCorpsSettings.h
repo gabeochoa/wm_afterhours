@@ -95,7 +95,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== PHONE FRAME ==========
     // Expanded settings panel width
     float phone_w = 380.0f;
-    float phone_h = 620.0f; // Increased height to fit volume sliders
+    float phone_h = 690.0f; // Increased height to fit volume sliders and legend
     float phone_x = 50.0f;
     float phone_y = ((float)screen_h - phone_h) / 2.0f;
 
@@ -141,7 +141,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_absolute_position()
             .with_translate(screen_x + 15.0f, status_y - 2.0f)
-            .with_font("EqProRounded", h720(10.0f))
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("time_label"));
 
@@ -256,32 +256,32 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          "Music Volume", music_volume, icon_red);
 
     // ========== ICON LEGEND (explains icon meanings) ==========
-    float legend_y = slider_y + 2 * (row_h + row_gap) + 12.0f;
+    float legend_y = slider_y + 2 * (row_h + row_gap) + 6.0f;
 
     // Legend title
     div(context, mk(entity, 220),
         ComponentConfig{}
             .with_label("Icon Legend:")
-            .with_size(ComponentSize{pixels(100), pixels(16)})
+            .with_size(ComponentSize{pixels(110), pixels(20)})
             .with_absolute_position()
             .with_translate(row_x + 8.0f, legend_y)
-            .with_font("EqProRounded", h720(11.0f))
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("legend_title"));
 
     // Legend items - row 1
-    float legend_item_y = legend_y + 18.0f;
+    float legend_item_y = legend_y + 22.0f;
     float legend_col_w = (row_w - 16.0f) / 2.0f;
 
     // @ = Language/Globe
     div(context, mk(entity, 221),
         ComponentConfig{}
             .with_label("@")
-            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_size(ComponentSize{pixels(18), pixels(18)})
             .with_absolute_position()
             .with_translate(row_x + 8.0f, legend_item_y)
             .with_custom_background(icon_purple)
-            .with_font("EqProRounded", h720(8.0f))
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -291,10 +291,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 222),
         ComponentConfig{}
             .with_label("Language")
-            .with_size(ComponentSize{pixels(70), pixels(14)})
+            .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_absolute_position()
-            .with_translate(row_x + 26.0f, legend_item_y)
-            .with_font("EqProRounded", h720(10.0f))
+            .with_translate(row_x + 30.0f, legend_item_y)
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("legend_globe_text"));
 
@@ -302,11 +302,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 223),
         ComponentConfig{}
             .with_label("~")
-            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_size(ComponentSize{pixels(18), pixels(18)})
             .with_absolute_position()
             .with_translate(row_x + legend_col_w + 8.0f, legend_item_y)
             .with_custom_background(icon_purple)
-            .with_font("EqProRounded", h720(8.0f))
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -316,25 +316,25 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 224),
         ComponentConfig{}
             .with_label("Sync")
-            .with_size(ComponentSize{pixels(50), pixels(14)})
+            .with_size(ComponentSize{pixels(50), pixels(18)})
             .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 26.0f, legend_item_y)
-            .with_font("EqProRounded", h720(10.0f))
+            .with_translate(row_x + legend_col_w + 30.0f, legend_item_y)
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("legend_sync_text"));
 
     // Legend items - row 2
-    float legend_item_y2 = legend_item_y + 16.0f;
+    float legend_item_y2 = legend_item_y + 22.0f;
 
     // X = Motion/Effects
     div(context, mk(entity, 225),
         ComponentConfig{}
             .with_label("X")
-            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_size(ComponentSize{pixels(18), pixels(18)})
             .with_absolute_position()
             .with_translate(row_x + 8.0f, legend_item_y2)
             .with_custom_background(icon_red)
-            .with_font("EqProRounded", h720(8.0f))
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -344,10 +344,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 226),
         ComponentConfig{}
             .with_label("Effects")
-            .with_size(ComponentSize{pixels(70), pixels(14)})
+            .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_absolute_position()
-            .with_translate(row_x + 26.0f, legend_item_y2)
-            .with_font("EqProRounded", h720(10.0f))
+            .with_translate(row_x + 30.0f, legend_item_y2)
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("legend_motion_text"));
 
@@ -355,11 +355,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 227),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_size(ComponentSize{pixels(18), pixels(18)})
             .with_absolute_position()
             .with_translate(row_x + legend_col_w + 8.0f, legend_item_y2)
             .with_custom_background(icon_blue)
-            .with_font("EqProRounded", h720(8.0f))
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -369,12 +369,61 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 228),
         ComponentConfig{}
             .with_label("Quality")
-            .with_size(ComponentSize{pixels(60), pixels(14)})
+            .with_size(ComponentSize{pixels(70), pixels(18)})
             .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 26.0f, legend_item_y2)
-            .with_font("EqProRounded", h720(10.0f))
+            .with_translate(row_x + legend_col_w + 30.0f, legend_item_y2)
+            .with_font("EqProRounded", h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("legend_quality_text"));
+
+    // Legend items - row 3
+    float legend_item_y3 = legend_item_y2 + 22.0f;
+
+    // ... = Subtitles/Text
+    div(context, mk(entity, 229),
+        ComponentConfig{}
+            .with_label("...")
+            .with_size(ComponentSize{pixels(18), pixels(18)})
+            .with_absolute_position()
+            .with_translate(row_x + 8.0f, legend_item_y3)
+            .with_custom_background(icon_green)
+            .with_font("EqProRounded", h720(12.0f))
+            .with_custom_text_color(text_white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("legend_subtitles"));
+
+    div(context, mk(entity, 230),
+        ComponentConfig{}
+            .with_label("Text")
+            .with_size(ComponentSize{pixels(50), pixels(18)})
+            .with_absolute_position()
+            .with_translate(row_x + 30.0f, legend_item_y3)
+            .with_font("EqProRounded", h720(12.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_subtitles_text"));
+
+    // Rainbow = Display
+    div(context, mk(entity, 231),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(18), pixels(18)})
+            .with_absolute_position()
+            .with_translate(row_x + legend_col_w + 8.0f, legend_item_y3)
+            .with_custom_background(icon_rainbow1)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("legend_display"));
+
+    div(context, mk(entity, 232),
+        ComponentConfig{}
+            .with_label("Display")
+            .with_size(ComponentSize{pixels(70), pixels(18)})
+            .with_absolute_position()
+            .with_translate(row_x + legend_col_w + 30.0f, legend_item_y3)
+            .with_font("EqProRounded", h720(12.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("legend_display_text"));
 
     // ========== QUEST PANEL (moved to right side to avoid overlapping phone) ==========
     float quest_x = (float)screen_w - 370.0f;
@@ -638,9 +687,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, base_id + 3),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{pixels(36), pixels(36)})
+                   .with_size(ComponentSize{pixels(44), pixels(44)})
                    .with_absolute_position()
-                   .with_translate(x + w - 180.0f, y + 4.0f)
+                   .with_translate(x + w - 190.0f, y)
                    .with_font("EqProRounded", h720(22.0f))
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{55, 60, 70, 180})
@@ -658,8 +707,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(languages[language_idx])
             .with_size(ComponentSize{pixels(115), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 140.0f, y + 12.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + w - 145.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));
@@ -668,9 +717,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, base_id + 5),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(36), pixels(36)})
+                   .with_size(ComponentSize{pixels(44), pixels(44)})
                    .with_absolute_position()
-                   .with_translate(x + w - 40.0f, y + 4.0f)
+                   .with_translate(x + w - 44.0f, y)
                    .with_font("EqProRounded", h720(22.0f))
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{55, 60, 70, 180})
@@ -774,9 +823,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Rainbow icon (multicolor circle using nested elements) - consistent size
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_rainbow1)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -784,9 +833,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_size(ComponentSize{pixels(16), pixels(16)})
             .with_absolute_position()
-            .with_translate(x + 13.0f, y + 12.0f)
+            .with_translate(x + 14.0f, y + 14.0f)
             .with_custom_background(icon_rainbow2)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -794,9 +843,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 6),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(6), pixels(6)})
+            .with_size(ComponentSize{pixels(8), pixels(8)})
             .with_absolute_position()
-            .with_translate(x + 17.0f, y + 16.0f)
+            .with_translate(x + 18.0f, y + 18.0f)
             .with_custom_background(icon_rainbow3)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -808,30 +857,30 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("toggle_label_" + std::to_string(base_id)));
 
-    // Toggle track - smaller for reduced row height
+    // Toggle track - consistent size with other toggle rows
     afterhours::Color track_color = value ? toggle_green : toggle_track;
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(40), pixels(20)})
+            .with_size(ComponentSize{pixels(48), pixels(24)})
             .with_absolute_position()
-            .with_translate(x + w - 50.0f, y + 9.0f)
+            .with_translate(x + w - 58.0f, y + 10.0f)
             .with_custom_background(track_color)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("toggle_track_" + std::to_string(base_id)));
 
     // Toggle knob
-    float knob_x = value ? (x + w - 30.0f) : (x + w - 48.0f);
+    float knob_x = value ? (x + w - 34.0f) : (x + w - 56.0f);
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_size(ComponentSize{pixels(20), pixels(20)})
             .with_absolute_position()
-            .with_translate(knob_x, y + 11.0f)
+            .with_translate(knob_x, y + 12.0f)
             .with_custom_background(text_white)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -859,11 +908,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", h720(12.0f))
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -876,8 +925,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(100), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("selector_label_" + std::to_string(base_id)));
 
@@ -886,10 +935,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             context, mk(entity, base_id + 3),
             ComponentConfig{}
                 .with_label("<")
-                .with_size(ComponentSize{pixels(32), pixels(32)})
+                .with_size(ComponentSize{pixels(44), pixels(44)})
                 .with_absolute_position()
-                .with_translate(x + w - 110.0f, y + 6.0f)
-                .with_font("EqProRounded", h720(20.0f))
+                .with_translate(x + w - 130.0f, y)
+                .with_font("EqProRounded", h720(22.0f))
                 .with_custom_text_color(text_muted)
                 .with_custom_background(afterhours::Color{55, 60, 70, 180})
                 .with_rounded_corners(std::bitset<4>(0b1111))
@@ -904,8 +953,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(options[option_idx])
             .with_size(ComponentSize{pixels(50), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 72.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + w - 85.0f, y + 9.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("selector_value_" + std::to_string(base_id)));
@@ -914,10 +963,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, base_id + 5),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(32), pixels(32)})
+                   .with_size(ComponentSize{pixels(44), pixels(44)})
                    .with_absolute_position()
-                   .with_translate(x + w - 38.0f, y + 6.0f)
-                   .with_font("EqProRounded", h720(20.0f))
+                   .with_translate(x + w - 44.0f, y)
+                   .with_font("EqProRounded", h720(22.0f))
                    .with_custom_text_color(text_muted)
                    .with_custom_background(afterhours::Color{55, 60, 70, 180})
                    .with_rounded_corners(std::bitset<4>(0b1111))
@@ -949,11 +998,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_color)
-            .with_font("EqProRounded", h720(12.0f))
+            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -966,8 +1015,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("display_label_" + std::to_string(base_id)));
 
@@ -977,8 +1026,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(value)
             .with_size(ComponentSize{pixels(85), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 92.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + w - 92.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("display_value_" + std::to_string(base_id)));
@@ -1001,12 +1050,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_debug_name("display_row_" + std::to_string(base_id)));
 
-    // Rainbow icon (multicolor circle) - smaller to match other icons
+    // Rainbow icon (multicolor circle) - consistent size with other icons
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(24), pixels(24)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position()
-            .with_translate(x + 8.0f, y + 7.0f)
+            .with_translate(x + 8.0f, y + 8.0f)
             .with_custom_background(icon_rainbow1)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -1014,9 +1063,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(14), pixels(14)})
+            .with_size(ComponentSize{pixels(16), pixels(16)})
             .with_absolute_position()
-            .with_translate(x + 13.0f, y + 12.0f)
+            .with_translate(x + 14.0f, y + 14.0f)
             .with_custom_background(icon_rainbow2)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -1024,9 +1073,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 6),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(6), pixels(6)})
+            .with_size(ComponentSize{pixels(8), pixels(8)})
             .with_absolute_position()
-            .with_translate(x + 17.0f, y + 16.0f)
+            .with_translate(x + 18.0f, y + 18.0f)
             .with_custom_background(icon_rainbow3)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(1.0f)
@@ -1038,8 +1087,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + 38.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + 42.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("display_label_" + std::to_string(base_id)));
 
@@ -1049,8 +1098,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(value)
             .with_size(ComponentSize{pixels(85), pixels(static_cast<int>(h))})
             .with_absolute_position()
-            .with_translate(x + w - 92.0f, y + 9.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_translate(x + w - 92.0f, y + 12.0f)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("display_value_" + std::to_string(base_id)));

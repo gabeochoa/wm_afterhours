@@ -31,11 +31,11 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     int screen_width = res ? res->current_resolution.width : 1280;
     int screen_height = res ? res->current_resolution.height : 720;
     float col_width = 520.0f;
-    float card_height = 620.0f;
+    float card_height = 500.0f;
     float col_gap = 40.0f;
     float total_width = col_width * 2 + col_gap;
     float start_x = (screen_width - total_width) / 2.0f;
-    float content_y = 80.0f;
+    float content_y = 100.0f;
 
     // Background
     div(context, mk(entity, 0),
@@ -84,7 +84,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("h_title"));
-    y += 52.0f;
+    y += 48.0f;
 
     // Basic separator
     div(context, mk(entity, 12),
@@ -126,7 +126,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad, y)
             .with_custom_background(border_light)
             .with_debug_name("sep2"));
-    y += 34.0f;
+    y += 32.0f;
 
     // Blue separator
     div(context, mk(entity, 16),
@@ -169,7 +169,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad + (item_width - partial_width) / 2, y)
             .with_custom_background(accent_purple)
             .with_debug_name("sep4"));
-    y += 44.0f;
+    y += 40.0f;
 
     // Labeled separator section title
     div(context, mk(entity, 20),
@@ -181,7 +181,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("labeled_title"));
-    y += 48.0f;
+    y += 40.0f;
 
     // --- OR --- style separator
     float line_width = (item_width - 60) / 2;
@@ -211,7 +211,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(start_x + pad + line_width + 60, y + 12)
             .with_custom_background(border_light)
             .with_debug_name("or_line2"));
-    y += 48.0f;
+    y += 40.0f;
 
     // --- Settings --- style separator
     float settings_label_width = 110.0f;
@@ -271,7 +271,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("v_title"));
-    y += 52.0f;
+    y += 48.0f;
 
     div(context, mk(entity, 32),
         ComponentConfig{}
@@ -331,7 +331,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         nav_x += sep_spacing * 2 + 3;
       }
     }
-    y += nav_height + 48.0f;
+    y += nav_height + 40.0f;
 
     // Color gallery section
     float gallery_line_width = (item_width - 140) / 2;
@@ -361,7 +361,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_translate(right_x + pad + gallery_line_width + 140, y + 14)
             .with_custom_background(border_light)
             .with_debug_name("gallery_line2"));
-    y += 52.0f;
+    y += 40.0f;
 
     // Color rows
     afterhours::Color colors[] = {accent_blue, accent_green, accent_purple,
@@ -386,7 +386,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
               .with_translate(right_x + pad + 100, y + 14)
               .with_custom_background(colors[i])
               .with_debug_name(std::string("colorbar_") + color_names[i]));
-      y += 46.0f;
+      y += 40.0f;
     }
 
     // Footer

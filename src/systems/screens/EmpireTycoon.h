@@ -352,14 +352,16 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== METERS ==========
     // IDs 80-95 for meters
-    float meter_y = 155.0f;
+    // Two rows: happiness on top, resources below
+    float meter_y = 152.0f;
+    float meter_row2_y = meter_y + 44.0f;
 
-    // Happiness meter with label
+    // Happiness meter with label - full row
     div(context, mk(entity, 80),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(185), pixels(40)})
+            .with_size(ComponentSize{pixels(280), pixels(40)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 345.0f, meter_y)
+            .with_translate((float)screen_w - 340.0f, meter_y)
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -371,7 +373,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(":)")
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 340.0f, meter_y + 7.0f)
+            .with_translate((float)screen_w - 335.0f, meter_y + 7.0f)
             .with_custom_background(afterhours::Color{255, 210, 130, 255})
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
@@ -383,9 +385,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 82),
         ComponentConfig{}
             .with_label("Happiness")
-            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_size(ComponentSize{pixels(90), pixels(22)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 305.0f, meter_y + 9.0f)
+            .with_translate((float)screen_w - 302.0f, meter_y + 9.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("happy_text"));
@@ -393,9 +395,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Happiness bar background
     div(context, mk(entity, 83),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(55), pixels(22)})
+            .with_size(ComponentSize{pixels(80), pixels(24)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 218.0f, meter_y + 9.0f)
+            .with_translate((float)screen_w - 200.0f, meter_y + 8.0f)
             .with_custom_background(afterhours::Color{225, 230, 235, 255})
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
@@ -405,33 +407,44 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 84),
         ComponentConfig{}
             .with_size(ComponentSize{
-                pixels(static_cast<int>(50 * happiness_pct)), pixels(20)})
+                pixels(static_cast<int>(74 * happiness_pct)), pixels(20)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 216.0f, meter_y + 10.0f)
+            .with_translate((float)screen_w - 197.0f, meter_y + 10.0f)
             .with_custom_background(happy_green)
             .with_rounded_corners(std::bitset<4>(0b1111))
             .with_roundness(0.5f)
             .with_debug_name("happy_bar_fill"));
 
-    // Happiness percentage label - larger and more prominent
+    // Happiness percentage label - large and prominent with background highlight
     int happy_val = static_cast<int>(happiness_pct * 100);
+    div(context, mk(entity, 92),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(68), pixels(32)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 124.0f, meter_y + 4.0f)
+            .with_custom_background(afterhours::Color{220, 245, 220, 255})
+            .with_border(happy_green, 2.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.5f)
+            .with_debug_name("happy_pct_bg"));
+
     div(context, mk(entity, 88),
         ComponentConfig{}
             .with_label(std::to_string(happy_val) + "%")
-            .with_size(ComponentSize{pixels(50), pixels(24)})
+            .with_size(ComponentSize{pixels(68), pixels(32)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 216.0f, meter_y + 8.0f)
-            .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(dark_text)
+            .with_translate((float)screen_w - 124.0f, meter_y + 4.0f)
+            .with_font("EqProRounded", h720(26.0f))
+            .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("happy_pct"));
 
-    // Resources meter with label - moved left to stay within screen bounds
+    // Resources meter with label - second row, no overlap
     div(context, mk(entity, 85),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(220), pixels(40)})
+            .with_size(ComponentSize{pixels(280), pixels(40)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 240.0f, meter_y)
+            .with_translate((float)screen_w - 340.0f, meter_row2_y)
             .with_custom_background(white)
             .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
@@ -443,7 +456,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("*")
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 235.0f, meter_y + 7.0f)
+            .with_translate((float)screen_w - 335.0f, meter_row2_y + 7.0f)
             .with_custom_background(afterhours::Color{195, 215, 240, 255})
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(dark_text)
@@ -457,22 +470,46 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Resources")
             .with_size(ComponentSize{pixels(90), pixels(22)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 205.0f, meter_y + 9.0f)
+            .with_translate((float)screen_w - 302.0f, meter_row2_y + 9.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("res_text"));
 
-    // Resources percentage label with current/max format
+    // Resources bar background
+    div(context, mk(entity, 90),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(80), pixels(24)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 200.0f, meter_row2_y + 8.0f)
+            .with_custom_background(afterhours::Color{225, 230, 235, 255})
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.5f)
+            .with_debug_name("res_bar_bg"));
+
+    // Resources bar fill
+    div(context, mk(entity, 91),
+        ComponentConfig{}
+            .with_size(ComponentSize{
+                pixels(static_cast<int>(74 * resources_pct)), pixels(20)})
+            .with_absolute_position()
+            .with_translate((float)screen_w - 197.0f, meter_row2_y + 10.0f)
+            .with_custom_background(panel_blue)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.5f)
+            .with_debug_name("res_bar_fill"));
+
+    // Resources percentage label with current/max context
     int res_current = static_cast<int>(resources_pct * 1000);  // Simulated current value
     int res_max = 1000;  // Simulated max value
+    int res_pct_val = static_cast<int>(resources_pct * 100);
     div(context, mk(entity, 89),
         ComponentConfig{}
-            .with_label(std::to_string(res_current) + "/" + std::to_string(res_max))
-            .with_size(ComponentSize{pixels(100), pixels(18)})
+            .with_label(std::to_string(res_current) + "/" + std::to_string(res_max) + " (" + std::to_string(res_pct_val) + "%)")
+            .with_size(ComponentSize{pixels(130), pixels(30)})
             .with_absolute_position()
-            .with_translate((float)screen_w - 110.0f, meter_y + 11.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(dark_text)
+            .with_translate((float)screen_w - 128.0f, meter_row2_y + 5.0f)
+            .with_font("EqProRounded", h720(18.0f))
+            .with_custom_text_color(panel_blue)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("res_pct"));
 
@@ -610,19 +647,19 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_debug_name("prod_header"));
 
-    // Trend indicator legend - placed prominently at top right of panel
+    // Trend indicator legend - prominent pill at top right of panel
     div(context, mk(entity, 212),
         ComponentConfig{}
             .with_label("^ = Trending Up")
-            .with_size(ComponentSize{pixels(180), pixels(28)})
+            .with_size(ComponentSize{pixels(190), pixels(32)})
             .with_absolute_position()
-            .with_translate(panel_x + panel_w - 200.0f, panel_y + 24.0f)
-            .with_font("EqProRounded", h720(18.0f))
-            .with_custom_text_color(happy_green)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
+            .with_translate(panel_x + panel_w - 210.0f, panel_y + 22.0f)
+            .with_font("EqProRounded", h720(20.0f))
+            .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
+            .with_custom_background(afterhours::Color{220, 245, 220, 255})
+            .with_border(happy_green, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.3f)
+            .with_roundness(0.5f)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("trend_legend"));
 
@@ -756,7 +793,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(340), pixels(80)})
+            .with_size(ComponentSize{pixels(480), pixels(80)})
             .with_absolute_position()
             .with_translate(22.0f, bottom_y)
             .with_custom_background(white)
@@ -767,7 +804,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("GlobalChat: New area unlocked! Explore now.")
-            .with_size(ComponentSize{pixels(320), pixels(24)})
+            .with_size(ComponentSize{pixels(460), pixels(24)})
             .with_absolute_position()
             .with_translate(32.0f, bottom_y + 14.0f)
             .with_font("EqProRounded", h720(14.0f))
@@ -777,7 +814,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 402),
         ComponentConfig{}
             .with_label("DevTeam: Update v2.0 is live - check patch notes!")
-            .with_size(ComponentSize{pixels(320), pixels(24)})
+            .with_size(ComponentSize{pixels(460), pixels(24)})
             .with_absolute_position()
             .with_translate(32.0f, bottom_y + 44.0f)
             .with_font("EqProRounded", h720(14.0f))

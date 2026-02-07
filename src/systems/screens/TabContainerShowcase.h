@@ -13,7 +13,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 0;
 
   std::array<std::string_view, 3> tab_labels = {"Profile", "Account",
-                                                 "Prefs"};
+                                                 "Settings"};
 
   void render_profile_tab(UIContext<InputAction> &context, afterhours::Entity &root,
                           const Theme &theme) {
@@ -198,7 +198,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.primary = afterhours::Color{100, 100, 100, 255};
     theme.accent = afterhours::Color{0, 120, 215, 255};
     theme.font = afterhours::Color{33, 33, 33, 255};
-    theme.font_muted = afterhours::Color{100, 100, 100, 255};
+    theme.font_muted = afterhours::Color{55, 55, 55, 255};
     context.theme = theme;
 
     // Root container - centered on screen, expanded to fill more screen
@@ -219,10 +219,17 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("main_container"));
 
     // Use tab_container component - check result for tab changes
+    // Note: Small horizontal padding prevents floating-point rounding from
+    // causing false layout overflow warnings when tab widths (percent(1/N))
+    // sum to exactly the container width.
     if (auto result = tab_container(context, mk(main_container.ent(), 0), tab_labels, active_tab,
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                 .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+                .with_no_wrap()
+                .with_padding(Padding{
+                    .left = pixels(1),
+                    .right = pixels(1)})
                 .with_debug_name("tabs")); result) {
       // Tab changed - could log, play sound, etc.
     }

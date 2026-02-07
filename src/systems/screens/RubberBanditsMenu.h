@@ -108,6 +108,17 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float info_x = (float)screen_w - 220.0f;
 
     // Online pill - larger and more prominent
+    div(context, mk(entity, 19),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_absolute_position()
+            .with_translate(info_x - 135.0f, 28.0f)
+            .with_custom_background(afterhours::Color{85, 185, 75, 255})
+            .with_border(afterhours::Color{65, 155, 55, 255}, 2.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(1.0f)
+            .with_debug_name("online_dot"));
+
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_label("thia9uers - Online")
@@ -219,8 +230,8 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(220), pixels(55)})
               .with_absolute_position()
               .with_translate(promo_x, promo_y)
-              .with_custom_background(afterhours::Color{245, 235, 210, 200})
-              .with_border(afterhours::Color{180, 165, 135, 180}, 2.0f)
+              .with_custom_background(afterhours::Color{245, 235, 210, 160})
+              .with_border(afterhours::Color{180, 165, 135, 140}, 1.5f)
               .with_rounded_corners(std::bitset<4>(0b1111))
               .with_roundness(0.15f)
               .with_debug_name("promo_box"));
@@ -267,14 +278,27 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float char_y = (float)screen_h - 90.0f;
     float char_x = (float)screen_w / 2.0f;
 
-    // Context label for character selector
+    // Character selector background container for grouping clarity
+    div(context, mk(entity, 298),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(400), pixels(100)})
+            .with_absolute_position()
+            .with_translate(char_x - 145.0f, char_y - 34.0f)
+            .with_custom_background(afterhours::Color{255, 245, 200, 150})
+            .with_border(afterhours::Color{180, 165, 125, 120}, 2.0f)
+            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_roundness(0.15f)
+            .with_debug_name("char_selector_bg"));
+
+    // Context label for character selector - larger and more prominent
     div(context, mk(entity, 299),
         ComponentConfig{}
             .with_label("SELECT CHARACTER")
             .with_size(ComponentSize{pixels(200), pixels(24)})
             .with_absolute_position()
             .with_translate(char_x - 50.0f, char_y - 28.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_font("EqProRounded", h720(16.0f))
+            .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_debug_name("char_label"));
 
     // LB button

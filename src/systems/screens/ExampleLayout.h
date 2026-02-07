@@ -89,26 +89,26 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::sm)
             .with_debug_name("right_panel"));
 
-    // Column layout demo - Center to keep panels within bounds
+    // Column layout demo - stacked items demonstration
     auto col_container =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(280)})
+                .with_size(ComponentSize{percent(0.95f), pixels(220)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_justify_content(JustifyContent::Center)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
                                     .right = pixels(0)})
                 .with_debug_name("col_demo_container"));
 
-    // Left column with stacked items - use percent of parent
+    // Column with stacked items - centered within container
     auto left_col =
         div(context, mk(col_container.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.40f), pixels(220)})
+                .with_size(ComponentSize{percent(0.60f), pixels(180)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::sm)
@@ -120,7 +120,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("Stacked Item 1")
-            .with_size(ComponentSize{percent(0.95f), pixels(52)})
+            .with_size(ComponentSize{percent(0.95f), pixels(48)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
@@ -130,7 +130,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 1),
         ComponentConfig{}
             .with_label("Stacked Item 2")
-            .with_size(ComponentSize{percent(0.95f), pixels(52)})
+            .with_size(ComponentSize{percent(0.95f), pixels(48)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
@@ -140,67 +140,61 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
             .with_label("Stacked Item 3")
-            .with_size(ComponentSize{percent(0.95f), pixels(52)})
+            .with_size(ComponentSize{percent(0.95f), pixels(48)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Spacing::xs)
             .with_debug_name("stack3"));
 
-    // Right side description - use percent sizing with better visibility
-    auto desc_panel = div(context, mk(col_container.ent(), 1),
+    // Layout guide - positioned below demo content to avoid obstruction
+    auto desc_panel = div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.40f), pixels(220)})
-            .with_background(Theme::Usage::Primary)
-            .with_padding(Spacing::md)
-            .with_flex_direction(FlexDirection::Column)
+            .with_size(ComponentSize{percent(0.95f), pixels(44)})
+            .with_background(Theme::Usage::Surface)
+            .with_padding(Spacing::sm)
+            .with_flex_direction(FlexDirection::Row)
+            .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center)
-            .with_roundness(0.08f)
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = pixels(0),
+                                .left = pixels(0),
+                                .right = pixels(0)})
             .with_skip_tabbing(true)
             .with_debug_name("description_panel"));
 
     div(context, mk(desc_panel.ent(), 0),
         ComponentConfig{}
-            .with_label("Layout Guide")
-            .with_size(ComponentSize{percent(0.90f), pixels(48)})
-            .with_auto_text_color(true)
-            .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("desc_title"));
-
-    div(context, mk(desc_panel.ent(), 1),
-        ComponentConfig{}
             .with_label("Column: stacks vertically")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(0.30f), pixels(32)})
             .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
+            .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_line1"));
 
-    div(context, mk(desc_panel.ent(), 2),
+    div(context, mk(desc_panel.ent(), 1),
         ComponentConfig{}
             .with_label("Row: arranges horizontally")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(0.30f), pixels(32)})
             .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
+            .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_line2"));
 
-    div(context, mk(desc_panel.ent(), 3),
+    div(context, mk(desc_panel.ent(), 2),
         ComponentConfig{}
             .with_label("Margins control spacing")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(0.30f), pixels(32)})
             .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
+            .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true)
             .with_debug_name("desc_line3"));
 
     // Info footer - use percent width
-    div(context, mk(main_container.ent(), 3),
+    div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
             .with_size(ComponentSize{percent(0.95f), pixels(48)})
