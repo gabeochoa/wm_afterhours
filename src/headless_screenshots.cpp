@@ -383,7 +383,7 @@ void run_headless_screenshots() {
 
     // Run render systems
     {
-      const auto &entities = afterhours::EntityHelper::get_entities();
+      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
       systems.render(entities, 0.016f);
     }
 

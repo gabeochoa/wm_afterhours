@@ -158,6 +158,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("theme_btn_" + std::to_string(btn_idx));
 
       if (selected) {
+        // When selected, use accent background — ensure text contrasts with it
+        auto accent = context.theme.accent;
+        btn_config = btn_config.with_custom_text_color(
+            afterhours::colors::auto_text_color(accent, context.theme.font, context.theme.darkfont));
         btn_config = btn_config.with_hard_shadow(3.0f, 3.0f);
       }
 
