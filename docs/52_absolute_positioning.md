@@ -234,3 +234,111 @@ ComponentConfig{}
     //  Use with_translate() or with_absolute_position_at() instead."
 ```
 
+---
+
+## Example Screen: AbsolutePositioningShowcase
+
+**File:** `src/systems/screens/AbsolutePositioningShowcase.h`
+**CLI:** `--screen=absolute_positioning`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A screen demonstrating correct absolute positioning patterns and bug verification:
+
+1. **Bug Repro: Margin + Absolute** — A div using `with_margin().with_absolute_position()` (the old buggy pattern). After the fix: element renders at correct size. Before the fix: element would have negative width. A label shows `computed_width` to confirm it's positive.
+
+2. **Correct Pattern: Translate + Absolute** — The same element positioned correctly using `with_translate().with_absolute_position()`. Side by side with the margin version to show they now produce identical results.
+
+3. **Corner Positioning** — 4 colored squares, one at each corner of the screen, using `with_absolute_position_at(x, y)`. Each labeled with its position method.
+
+4. **Centered Overlay** — A semi-transparent dark overlay covering the full screen with a centered dialog box using `position_center()` + absolute positioning. Demonstrates the modal positioning pattern.
+
+5. **Debug Readout** — A panel showing for each absolutely positioned element: base position, translate offset, final position. Verifies that `get_final_position()` includes translate in its calculation.
+
+6. **Mixed Layout** — A normal flow container with 3 children, plus an absolutely positioned overlay badge in the top-right corner of the container. Shows absolute + relative mixing correctly.
+
+### Features Exercised
+
+- `with_absolute_position()` with `with_translate()` (correct pattern)
+- Negative size detection and warning
+- `with_absolute_position_at(x, y)` helper
+- `get_final_position()` including translate in debug output
+- Mixing absolute and relative positioning
+
+### Verification
+
+- No element has negative computed size
+- Margin+absolute warning appears in debug mode
+- Corner elements are exactly at the 4 corners
+- Centered overlay is visually centered on screen
+- Debug readout shows correct final positions including translate
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/AbsolutePositioningTest.h`
+
+#### New Custom Commands Needed
+
+- `expect_element_position(label, x, y, tolerance)` — check element position. Core assertion for positioning tests.
+- `expect_element_size(label, w, h, tolerance)` — check element size. Needed to verify no negative sizes.
+
+#### Screenshots
+
+1. `abspos_basic` — element at (100, 100) via translate
+2. `abspos_margin_warning` — element with margin+absolute showing debug warning
+3. `abspos_corners` — 4 squares at screen corners
+4. `abspos_centered_overlay` — centered dialog on dark backdrop
+5. `abspos_mixed_layout` — flow container with absolute overlay badge
+6. `abspos_debug_readout` — debug panel showing base/translate/final positions
+
+#### Test Script
+
+```cpp
+TEST(abspos_corners) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Top Left");
+  TestApp::expect_ui_exists("Top Right");
+  TestApp::expect_ui_exists("Bottom Left");
+  TestApp::expect_ui_exists("Bottom Right");
+
+  auto snap = TestApp::capture_snapshot("abspos_corners");
+
+  // Verify top-left is near (0, 0)
+  expect_element_position("Top Left", 0, 0, 30.0f);
+}
+
+TEST(abspos_no_negative_size) {
+  co_await TestApp::wait_for_frames(5);
+
+  // The margin+absolute combo element should still have valid size
+  auto *elem = TestApp::find_ui_element_by_label("Margin + Absolute");
+  if (elem && elem->has<afterhours::ui::UIComponent>()) {
+    auto rect = elem->get<afterhours::ui::UIComponent>().rect();
+    if (rect.width < 0 || rect.height < 0) {
+      throw std::runtime_error("Negative size detected!");
+    }
+  }
+
+  auto snap = TestApp::capture_snapshot("abspos_margin_warning");
+}
+
+TEST(abspos_centered_overlay) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Dialog Title");
+  auto snap = TestApp::capture_snapshot("abspos_centered_overlay");
+}
+
+TEST(abspos_debug_readout) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("base position:");
+  TestApp::expect_ui_exists("translate:");
+  TestApp::expect_ui_exists("final position:");
+
+  auto snap = TestApp::capture_snapshot("abspos_debug_readout");
+}
+```
+

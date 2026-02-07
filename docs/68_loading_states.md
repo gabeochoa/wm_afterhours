@@ -188,3 +188,127 @@ loading_progress(ctx, mk(parent, 0), download_progress,
                  });
 ```
 
+---
+
+## Example Screen: LoadingStatesShowcase
+
+**File:** `src/systems/screens/LoadingStatesShowcase.h`
+**CLI:** `--screen=loading_states`
+**Category:** Widgets
+
+### Layout
+
+A screen demonstrating all loading state components:
+
+1. **Spinners** — A row of 4 spinner variants: Circular (rotating arc), Dots (bouncing dots), Bars (loading bars), Pulse (pulsing circle). Each labeled with its variant. Speed can be adjusted with a slider.
+
+2. **Spinner Sizes** — Circular spinners at SM, MD, LG sizes side by side.
+
+3. **Skeleton Loaders** — A mock "loading" state for a profile card: skeleton avatar (circle), skeleton text (3 lines, last line 60% width), skeleton button. After 3 seconds, the actual content replaces the skeletons with a fade transition.
+
+4. **Skeleton List** — A list of 5 `skeleton_list_item()` placeholders simulating a leaderboard loading. Shimmer animation sweeps across each skeleton.
+
+5. **Loading Overlay** — A button "Start Operation" that triggers a `loading_overlay()` covering the screen. Shows a spinner, message "Processing...", and a progress bar filling from 0% to 100% over 3 seconds. Overlay blocks all interaction until complete.
+
+6. **Button Loading State** — A button that shows a spinner inside it when clicked (replacing the label text with a small spinner + "Saving..."). After 2 seconds, reverts to "Save".
+
+### Features Exercised
+
+- `spinner()` with all `SpinnerVariant` options and sizes
+- `skeleton()`, `skeleton_text()`, `skeleton_card()`, `skeleton_list_item()`
+- Shimmer animation on skeleton loaders
+- `loading_overlay()` with message, spinner, progress bar
+- Button loading state with inline spinner
+
+### Verification
+
+- All spinners animate continuously (not static)
+- Skeleton shimmer sweeps left-to-right in a repeating pattern
+- After 3 seconds, skeletons are replaced by actual content
+- Loading overlay blocks all mouse clicks and keyboard input
+- Progress bar fills smoothly from 0% to 100%
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/LoadingStatesTest.h`
+
+#### New Custom Commands Needed
+
+None — uses existing `click_button`, `expect_ui_exists`, `wait_for_frames`, `capture_snapshot`. Animation is verified via snapshot comparison across frames.
+
+#### Screenshots
+
+1. `loading_spinners` — row of spinner variants (circular, dots, bars, pulse)
+2. `loading_spinner_sizes` — SM/MD/LG spinners
+3. `loading_skeleton_loading` — skeleton placeholders before content loads
+4. `loading_skeleton_loaded` — actual content after skeleton transition (3s later)
+5. `loading_overlay_active` — full-screen loading overlay with progress bar
+6. `loading_overlay_complete` — after loading completes, overlay gone
+7. `loading_button_state` — button showing inline spinner during save
+
+#### Test Script
+
+```cpp
+TEST(loading_spinners_animate) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_a = TestApp::capture_snapshot("loading_spinners");
+  co_await TestApp::wait_for_frames(15);
+  auto snap_b = TestApp::capture_snapshot("loading_spinners_frame_b");
+
+  // Spinners should be animated (frames differ)
+}
+
+TEST(loading_skeleton_transition) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_loading = TestApp::capture_snapshot("loading_skeleton_loading");
+
+  // Wait for skeleton-to-content transition (3s = ~180 frames)
+  co_await TestApp::wait_for_frames(200);
+
+  auto snap_loaded = TestApp::capture_snapshot("loading_skeleton_loaded");
+  // Content should now be visible, skeletons gone
+}
+
+TEST(loading_overlay) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Start Operation");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Processing...");
+  auto snap = TestApp::capture_snapshot("loading_overlay_active");
+
+  // Overlay should block clicks (try clicking a background button)
+  TestApp::click_button("Start Operation");  // should be blocked
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  // Wait for loading to complete (3s = ~180 frames)
+  co_await TestApp::wait_for_frames(200);
+
+  auto snap2 = TestApp::capture_snapshot("loading_overlay_complete");
+}
+
+TEST(loading_button_inline) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Save");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Saving...");
+  auto snap = TestApp::capture_snapshot("loading_button_state");
+
+  // Wait for save to complete (2s = ~120 frames)
+  co_await TestApp::wait_for_frames(130);
+
+  TestApp::expect_ui_exists("Save");  // reverted to normal
+}
+```
+

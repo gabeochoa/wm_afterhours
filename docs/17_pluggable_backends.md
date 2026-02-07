@@ -886,6 +886,12 @@ This pattern should apply to all system integrations:
 
 - `src/util/clipboard.h` - Application-layer clipboard wrapper with test mode support
 
+---
+
+## Example Screen
+
+**Note:** Like `07_renderer_abstraction.md`, this is a build-time infrastructure change. Verification is that the clipboard, input, timing, and rendering all work correctly when switching between Raylib, Sokol, and Headless backends. The `FormsGallery` screen (which uses clipboard, mouse, keyboard) serves as a good integration test across backends. A dedicated "BackendInfoShowcase" could display: backend name, clipboard contents (paste test), mouse position, key state, and simulated time — confirming all `IBackend` methods work for the active backend.
+
 ## References
 
 - [Sokol GitHub Repository](https://github.com/floooh/sokol)

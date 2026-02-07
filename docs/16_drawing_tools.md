@@ -775,3 +775,135 @@ namespace afterhours::layout {
 - **07_renderer_abstraction.md** - Base graphics layer this builds upon
 - **08_scrollable_containers.md** - Uses similar scissor/clipping for drawing canvas bounds
 
+---
+
+## Example Screen: DrawingToolsDemo
+
+**File:** `src/systems/screens/DrawingToolsDemo.h`
+**CLI:** `--screen=drawing_tools`
+**Category:** Drawing & Graphics
+
+### Layout
+
+A mini drawing canvas demonstrating all shape primitives and interaction helpers:
+
+1. **Toolbar** — Horizontal button row: Line, Rectangle, Rounded Rect, Ellipse, Triangle, Arrow, Freeform. Each selects the active tool. Below: line style selector (Solid, Dashed, Dotted, DashDot) and color picker (6 preset colors).
+
+2. **Canvas Area** — A large `div` (80% of screen) acting as the drawing surface. Click-and-drag creates the selected shape. Shapes persist on the canvas after release. The canvas clips drawing content via `BeginScissorMode`.
+
+3. **Selection & Editing** — Clicking an existing shape selects it. Selection handles (8 resize handles + rotation handle) appear around the selected shape. Drag to move, handles to resize, top handle to rotate. Shift constrains rotation to 15-degree increments.
+
+4. **Z-Order Controls** — When a shape is selected, buttons: "Bring to Front", "Send to Back", "Forward", "Backward". Shapes render in z-order with correct overlap.
+
+5. **Freeform Demo** — In freeform mode, draw strokes with the mouse. On release, the stroke is simplified via Ramer-Douglas-Peucker. A label shows "Points: N → M after simplification".
+
+### Features Exercised
+
+- `ui::draw::line()`, `rect()`, `ellipse()`, `arrow()` with `LineStyle` variants
+- `ui::edit::hit_test_rect/line/ellipse/triangle()`
+- `ui::edit::draw_selection_handles()` and `hit_test_handles()`
+- `ui::edit::update_drag/resize/rotate()`
+- `ui::edit::snap_angle()` for constrained rotation
+- `ui::draw::capture_stroke_update()` and `simplify_stroke()`
+- `ui::layer::bring_to_front/send_to_back/sort_by_z()`
+
+### Verification
+
+- All 4 line styles render distinctly for each shape type
+- Selection handles appear on click; dragging a handle resizes correctly
+- Rotation handle: Shift-drag snaps to 15-degree increments
+- Z-order: "Bring to Front" makes shape render above all others
+- Freeform: stroke point count decreases after simplification
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/DrawingToolsTest.h`
+
+#### New Custom Commands Needed
+
+- `drag_from_to(from_pos, to_pos, hold_frames)` — click at `from_pos`, hold for `hold_frames` frames while interpolating mouse to `to_pos`, then release. Needed for drawing shapes on the canvas.
+- `drag_element_by(label, dx, dy, hold_frames)` — click element center, drag by offset (dx, dy) over `hold_frames`, release. Needed for moving/resizing selected shapes.
+
+#### Screenshots
+
+1. `drawing_initial` — empty canvas with toolbar
+2. `drawing_rectangle_drawn` — after drawing a rectangle on the canvas
+3. `drawing_shape_selected` — after clicking a shape, showing selection handles
+4. `drawing_freeform_stroke` — after a freeform stroke, showing point simplification label
+5. `drawing_z_order_changed` — after "Bring to Front" with overlapping shapes
+
+#### Test Script
+
+```cpp
+TEST(drawing_tools_draw_rect) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Select Rectangle tool
+  TestApp::click_button("Rectangle");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  auto snap_init = TestApp::capture_snapshot("drawing_initial");
+
+  // Draw rectangle on canvas by dragging
+  drag_from_to({200, 200}, {400, 350}, 10);
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("drawing_rectangle_drawn");
+}
+
+TEST(drawing_tools_select_shape) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Select Rectangle tool and draw
+  TestApp::click_button("Rectangle");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  drag_from_to({200, 200}, {400, 350}, 10);
+  co_await TestApp::wait_for_frames(5);
+
+  // Click on the shape to select it
+  test_input::set_mouse_position({300, 275});
+  test_input::simulate_mouse_button_press(raylib::MOUSE_BUTTON_LEFT);
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  // Selection handles should appear (snapshot verifies visually)
+  auto snap = TestApp::capture_snapshot("drawing_shape_selected");
+}
+
+TEST(drawing_tools_z_order) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Draw two overlapping rectangles
+  TestApp::click_button("Rectangle");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  drag_from_to({200, 200}, {350, 350}, 10);
+  co_await TestApp::wait_for_frames(5);
+
+  drag_from_to({250, 250}, {450, 400}, 10);
+  co_await TestApp::wait_for_frames(5);
+
+  // Select first rectangle and bring to front
+  test_input::set_mouse_position({220, 220});
+  test_input::simulate_mouse_button_press(raylib::MOUSE_BUTTON_LEFT);
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::click_button("Bring to Front");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("drawing_z_order_changed");
+}
+```
+

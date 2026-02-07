@@ -439,3 +439,100 @@ This allows users to rebind scroll navigation keys in accessibility settings.
 - Compile-time validation via concepts prevents missing required actions
 - Clean integration with existing InputAction system
 
+---
+
+## Example Screen: ActionBindingShowcase
+
+**File:** `src/systems/screens/ActionBindingShowcase.h`
+**CLI:** `--screen=action_binding`
+**Category:** Infrastructure
+
+### Layout
+
+A two-panel screen demonstrating the action binding system:
+
+1. **Left Panel: Binding Display** — A table showing all registered actions with their current key bindings. Each row: `Action Name | Keybinding | Status`. Actions include Save (Ctrl+S), Copy (Ctrl+C), Paste (Ctrl+V), Undo (Ctrl+Z), Redo (Ctrl+Shift+Z), ToggleBold (Ctrl+B). The "Status" column flashes green momentarily when that action is triggered.
+
+2. **Right Panel: Live Test Area** — A `text_input` field where the user can type. Below it, a log of triggered actions: "Ctrl+S → Save triggered", "Ctrl+Z → Undo triggered", etc. Each action appends to a scrollable log.
+
+3. **Bottom: Rebinding UI** — A "Rebind" button next to each action. Clicking it puts that row into "listening" mode (highlighted), and the next key combo pressed becomes the new binding. Displays the human-readable format: "Ctrl+S", "Cmd+B" (platform-aware).
+
+### Features Exercised
+
+- `ActionMap<ActionEnum>` creation and binding
+- `KeyBinding` with `Modifiers` (Ctrl, Shift, Alt, Meta)
+- `is_action_pressed()` checking per frame
+- `format_binding()` for human-readable display
+- Runtime rebinding via `unbind()` / `bind()`
+- Platform-aware modifier display (Ctrl vs Cmd)
+
+### Verification
+
+- Pressing Ctrl+S shows "Save triggered" in the log
+- Rebinding Save to Ctrl+Q: old binding no longer triggers, new one does
+- `format_binding()` shows "Cmd+S" on macOS, "Ctrl+S" on Windows/Linux
+- All required `ValidInputAction` values (None, WidgetNext, etc.) compile without error
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/ActionBindingTest.h`
+
+#### New Custom Commands Needed
+
+- `simulate_key_combo(modifier_key, main_key)` — hold modifier key (e.g. `KEY_LEFT_CONTROL`) and press main key (e.g. `KEY_S`). Needed to trigger bound actions like Ctrl+S, Ctrl+Z, etc.
+
+#### Screenshots
+
+1. `action_binding_initial` — screen with binding table and empty action log
+2. `action_binding_save_triggered` — after Ctrl+S, log shows "Save triggered" with green flash on Save row
+3. `action_binding_rebound` — after rebinding Save to Ctrl+Q, binding table shows updated keybinding
+4. `action_binding_rebound_triggered` — after pressing Ctrl+Q, log shows "Save triggered" confirming rebind works
+
+#### Test Script
+
+```cpp
+TEST(action_binding_trigger) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Save");
+  TestApp::expect_ui_exists("Ctrl+S");
+
+  // Trigger Ctrl+S
+  simulate_key_combo(KEY_LEFT_CONTROL, KEY_S);
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::expect_ui_exists("Save triggered");
+  auto snap = TestApp::capture_snapshot("action_binding_save_triggered");
+  if (!snap.success) throw std::runtime_error("Snapshot failed");
+}
+
+TEST(action_binding_rebind) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Click Rebind button next to Save
+  TestApp::click_button("Rebind Save");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  // Now press Ctrl+Q as the new binding
+  simulate_key_combo(KEY_LEFT_CONTROL, KEY_Q);
+  co_await TestApp::wait_for_frames(3);
+
+  // Table should now show Ctrl+Q for Save
+  TestApp::expect_ui_exists("Ctrl+Q");
+
+  // Old binding should no longer work
+  simulate_key_combo(KEY_LEFT_CONTROL, KEY_S);
+  co_await TestApp::wait_for_frames(3);
+  TestApp::expect_ui_not_exists("Save triggered");
+
+  // New binding should work
+  simulate_key_combo(KEY_LEFT_CONTROL, KEY_Q);
+  co_await TestApp::wait_for_frames(3);
+  TestApp::expect_ui_exists("Save triggered");
+
+  auto snap = TestApp::capture_snapshot("action_binding_rebound_triggered");
+  if (!snap.success) throw std::runtime_error("Snapshot failed");
+}
+

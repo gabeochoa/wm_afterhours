@@ -26,3 +26,9 @@ Unclear how to handle components that want to use Widget Value Down/Up to contro
 ### Suggested Fix
 Add a mode or flag to distinguish between navigation and value adjustment contexts.
 
+---
+
+## Example Screen
+
+**Note:** These are internal plumbing issues (circular dependency fix, tabbing mode flag). They don't warrant a dedicated showcase screen. The circular dependency fix is verified by successful compilation. The tabbing/value-control distinction is best verified within the `FormsGallery` screen by confirming that a slider can be focused via Tab and adjusted via Up/Down arrows without interfering with Tab navigation to the next widget.
+

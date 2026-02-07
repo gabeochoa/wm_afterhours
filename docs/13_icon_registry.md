@@ -266,3 +266,91 @@ This keeps `image_button` as the low-level primitive for raw texture clicks, whi
 6. **Central registry** - Single source of truth prevents duplicates
 7. **Layered composition** - Registry (data) + primitives (rendering) = icon_button (semantic)
 
+---
+
+## Example Screen: IconRegistryShowcase
+
+**File:** `src/systems/screens/IconRegistryShowcase.h`
+**CLI:** `--screen=icon_registry`
+**Category:** Infrastructure
+
+### Layout
+
+A toolbar-style demo showing the icon registry in action:
+
+1. **Icon Gallery** — A grid of all registered icons. Each cell shows: the icon image (if loaded), the fallback symbol, and the icon name below. Mirrored icons (e.g., Undo/Redo) are shown side by side with a "mirrored" label.
+
+2. **Toolbar Demo** — A horizontal toolbar with `icon_button` components: Save, Undo, Redo, Cut, Copy, Paste, Bold, Italic. Each button shows icon + text label. Clicking any button appends to an action log below.
+
+3. **Fallback Mode** — A toggle "Disable Textures" that forces all icons to render as fallback text symbols. The toolbar should remain functional and readable with just the character symbols (e.g., `<` for Undo, `>` for Redo).
+
+4. **Registry Info** — A readout showing total icons registered, how many have textures loaded, how many use fallback symbols, and the count of mirrored pairs.
+
+### Features Exercised
+
+- `IconRegistry::register_icon()` with `IconInfo`
+- `IconRegistry::get()` and `get_symbol()` for fallback
+- `set_mirror()` for paired icons
+- `icon_button()` composing registry + `sprite` + `text`
+- Fallback rendering when textures unavailable
+
+### Verification
+
+- All toolbar buttons display icon + label
+- Redo icon is horizontally mirrored version of Undo icon
+- "Disable Textures" mode: all icons show fallback characters, toolbar still works
+- Clicking any icon_button appends the correct action to the log
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/IconRegistryTest.h`
+
+#### New Custom Commands Needed
+
+None — uses existing `click_button`, `expect_ui_exists`, `capture_snapshot`.
+
+#### Screenshots
+
+1. `icon_registry_initial` — full gallery with icons loaded, toolbar visible
+2. `icon_registry_fallback_mode` — after "Disable Textures" toggle, all icons show text symbols
+3. `icon_registry_action_logged` — after clicking Save icon_button, log shows "Save"
+
+#### Test Script
+
+```cpp
+TEST(icon_registry_toolbar_click) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_init = TestApp::capture_snapshot("icon_registry_initial");
+
+  // Click Save in toolbar
+  TestApp::click_button("Save");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::expect_ui_exists("Save");  // in action log
+  auto snap = TestApp::capture_snapshot("icon_registry_action_logged");
+}
+
+TEST(icon_registry_fallback) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Toggle fallback mode
+  TestApp::click_button("Disable Textures");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("icon_registry_fallback_mode");
+
+  // Toolbar should still work in fallback mode
+  TestApp::click_button("Undo");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::expect_ui_exists("Undo");  // in action log
+}
+```
+

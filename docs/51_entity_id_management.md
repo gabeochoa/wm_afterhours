@@ -164,3 +164,96 @@ static_assert(unique_indices<0, 1, 2, 3>(), "Duplicate indices!");
 3. **Phase 3**: Encourage `mk_next()` or `mk_id()` in documentation
 4. **Phase 4**: Consider deprecating manual index management
 
+---
+
+## Example Screen: EntityIDShowcase
+
+**File:** `src/systems/screens/EntityIDShowcase.h`
+**CLI:** `--screen=entity_id`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A screen demonstrating auto-incrementing and string-based entity IDs:
+
+1. **Auto-Increment Demo** — A column of 10 buttons created with `mk_next(parent)`. No manual index needed. Buttons labeled "Button 0" through "Button 9". Below: a label showing the auto-assigned IDs.
+
+2. **String ID Demo** — A form with elements using `mk_id(parent, "username_label")`, `mk_id(parent, "username_input")`, `mk_id(parent, "submit_btn")`. A debug readout shows the hashed integer IDs alongside the string names.
+
+3. **Refactoring Safety Test** — Two panels: "Before" has 5 elements with manual `mk(parent, 0)` through `mk(parent, 4)`. "After" inserts a new element between index 1 and 2. The "After" panel uses `mk_next()`, so adding elements doesn't require renumbering.
+
+4. **Conflict Detection** — A debug panel showing duplicate ID warnings. Two elements intentionally use `mk(parent, 42)` — a red warning appears: "Entity ID conflict: parent=X, index=42" with source location.
+
+5. **Scoped IDs** — A demo using `IdScope`: a loop creating 5 rows, each with 3 elements. Each row uses a scoped ID block so IDs don't conflict across rows.
+
+### Features Exercised
+
+- `mk_next()` auto-incrementing IDs
+- `mk_id(parent, "string")` for string-based IDs
+- `IdScope` for scoped ID blocks
+- Debug conflict detection with helpful error messages
+- `reset_auto_ids()` at frame start
+
+### Verification
+
+- All 10 auto-increment buttons render without conflicts
+- String-based IDs produce consistent hashes across frames
+- Adding elements in the "After" panel doesn't break existing elements
+- Intentional duplicate ID triggers a visible warning
+- Scoped IDs in nested loops don't conflict
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/EntityIDTest.h`
+
+#### New Custom Commands Needed
+
+- `expect_element_count(label_prefix, expected)` — count elements with a label prefix. Needed to verify all 10 auto-increment buttons rendered without conflicts.
+
+#### Screenshots
+
+1. `entity_id_auto_increment` — 10 buttons rendered with auto-IDs, all visible and distinct
+2. `entity_id_string_ids` — form with string-based IDs and debug hash readout
+3. `entity_id_refactoring` — "Before" vs "After" panels showing inserted element doesn't break others
+4. `entity_id_conflict_warning` — red warning message for intentional duplicate ID
+
+#### Test Script
+
+```cpp
+TEST(entity_id_auto_increment) {
+  co_await TestApp::wait_for_frames(5);
+
+  // All 10 auto-increment buttons should exist
+  for (int i = 1; i <= 10; i++) {
+    TestApp::expect_ui_exists("Auto Button " + std::to_string(i));
+  }
+
+  auto snap = TestApp::capture_snapshot("entity_id_auto_increment");
+}
+
+TEST(entity_id_string_based) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Username:");
+  auto snap = TestApp::capture_snapshot("entity_id_string_ids");
+}
+
+TEST(entity_id_conflict_detection) {
+  co_await TestApp::wait_for_frames(5);
+
+  // The intentional duplicate should trigger a warning
+  TestApp::expect_ui_exists("Entity ID conflict");
+  auto snap = TestApp::capture_snapshot("entity_id_conflict_warning");
+}
+
+TEST(entity_id_refactoring_safety) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Both panels should render all elements
+  TestApp::expect_ui_exists("Before");
+  TestApp::expect_ui_exists("After");
+
+  auto snap = TestApp::capture_snapshot("entity_id_refactoring");
+}
+```
+

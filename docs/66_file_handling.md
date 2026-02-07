@@ -163,3 +163,98 @@ if (auto path = file_dialog::open_file("Select Avatar",
 }
 ```
 
+---
+
+## Example Screen: FileHandlingShowcase
+
+**File:** `src/systems/screens/FileHandlingShowcase.h`
+**CLI:** `--screen=file_handling`
+**Category:** Widgets
+
+### Layout
+
+A file management demo screen:
+
+1. **File Display Cards** — A list of 4 `file_display()` cards showing mock files: "screenshot.png" (1.2 MB, with thumbnail), "save_game.dat" (256 KB), "config.json" (4 KB), "replay.rpl" (12 MB). Each shows icon, name, size, and optional delete button.
+
+2. **File Upload Zone** — A `file_upload()` dropzone with dashed border: "Drop files here or click to browse". Accepted types: `.png`, `.jpg`. Max size: 5 MB. Dropping a valid file shows it in a list below. Invalid files show error messages.
+
+3. **Upload Progress** — A simulated upload progress bar that fills from 0% to 100% over 2 seconds after a file is "uploaded".
+
+4. **File Browser Button** — A button "Open File..." that would trigger `file_dialog::open_file()`. In the showcase, it simulates the dialog by showing a mock path result.
+
+### Features Exercised
+
+- `file_display()` with file info, thumbnail, delete button
+- `file_upload()` with accepted extensions, max size validation
+- File size formatting (KB, MB)
+- File type icon selection based on extension
+- Upload progress indication
+
+### Verification
+
+- File cards show correctly formatted sizes (1.2 MB, not 1228800)
+- File type icons differ for .png vs .dat vs .json
+- Upload zone rejects files > 5 MB with error message
+- Upload zone rejects non-image files with error message
+- Delete button removes the file card from the list
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/FileHandlingTest.h`
+
+#### New Custom Commands Needed
+
+None — uses existing `click_button`, `expect_ui_exists`, `expect_ui_not_exists`, `capture_snapshot`. File drag-and-drop from the OS cannot be simulated in E2E tests; the test covers button-based upload and display.
+
+#### Screenshots
+
+1. `file_handling_initial` — file display cards and upload zone visible
+2. `file_handling_card_detail` — file cards showing formatted sizes and icons
+3. `file_handling_upload_progress` — progress bar mid-fill during simulated upload
+4. `file_handling_card_deleted` — after deleting a file card, list updated
+
+#### Test Script
+
+```cpp
+TEST(file_handling_display) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Verify file cards with formatted sizes
+  TestApp::expect_ui_exists("screenshot.png");
+  TestApp::expect_ui_exists("1.2 MB");
+  TestApp::expect_ui_exists("save_game.dat");
+  TestApp::expect_ui_exists("256 KB");
+
+  auto snap = TestApp::capture_snapshot("file_handling_initial");
+}
+
+TEST(file_handling_delete) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Delete screenshot.png
+  TestApp::click_button("Delete screenshot.png");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_not_exists("screenshot.png");
+  auto snap = TestApp::capture_snapshot("file_handling_card_deleted");
+}
+
+TEST(file_handling_upload_simulate) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Click "Open File..." button (simulated dialog)
+  TestApp::click_button("Open File...");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  // Should show mock path result
+  // Wait for upload progress
+  co_await TestApp::wait_for_frames(60);  // mid-progress
+  auto snap = TestApp::capture_snapshot("file_handling_upload_progress");
+}
+```
+

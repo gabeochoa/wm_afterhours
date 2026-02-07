@@ -161,3 +161,90 @@ The API is powerful but the learning curve is steep. Need to understand many con
    - "Why is my text invisible?"
    - "Why is positioning wrong?"
 
+---
+
+## Example Screen: APIErgonomicsShowcase
+
+**File:** `src/systems/screens/APIErgonomicsShowcase.h`
+**CLI:** `--screen=api_ergonomics`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A comparison screen showing verbose vs. ergonomic API usage:
+
+1. **Before/After Code Display** — Two columns. Left: a settings panel built with verbose `ComponentConfig{}` chains (many `.with_*()` calls). Right: the same panel built with helper functions (`text_label()`, `centered_button()`, `container()`). Both render identically — a label above each says "Verbose (12 lines)" vs "Ergonomic (5 lines)".
+
+2. **Size Helper Demo** — A row of boxes sized with different helpers: `screen_pct(0.1f)`, `responsive_px(100)`, `DefaultSize::button()`, `DefaultSize::icon_medium()`. Each labeled with the helper used and the resolved pixel size.
+
+3. **Position Helper Demo** — 4 small colored squares positioned at each corner using `position_top_left()`, `position_top_right()`, `position_bottom_left()`, `position_bottom_right()`. A centered square using `position_center()`.
+
+4. **Quick-Build Form** — A mini settings form built entirely with helpers: `text_label`, `centered_button`, and `container`. Demonstrates that helpers compose naturally with existing `ComponentConfig`.
+
+### Features Exercised
+
+- `text_label()`, `centered_button()`, `container()` helper functions
+- `responsive_px()` with reference resolution scaling
+- `DefaultSize::button()`, `icon_small()`, `icon_medium()`, `icon_large()`
+- `position_top_left/right()`, `position_center()` helpers
+- Helper function composition with existing ComponentConfig
+
+### Verification
+
+- Verbose and ergonomic panels render identically
+- `responsive_px(200)` resolves to correct pixel count for current screen size
+- Position helpers place elements at expected corners
+- Helper functions accept additional ComponentConfig chaining
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/APIErgonomicsTest.h`
+
+#### New Custom Commands Needed
+
+- `expect_element_position(label, x, y, tolerance)` — check element position. Needed to verify `position_top_left/right()` helpers place elements at expected corners.
+- `expect_element_size(label, w, h, tolerance)` — check element size. Needed to verify `responsive_px()` resolves correctly.
+
+#### Screenshots
+
+1. `api_ergonomics_comparison` — verbose vs ergonomic panels side by side (should look identical)
+2. `api_ergonomics_size_helpers` — boxes with different size helpers, labeled with resolved pixel values
+3. `api_ergonomics_position_helpers` — 4 squares at corners + 1 centered
+4. `api_ergonomics_quick_form` — mini form built with helpers
+
+#### Test Script
+
+```cpp
+TEST(api_ergonomics_identical_output) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Verbose");
+  TestApp::expect_ui_exists("Ergonomic");
+
+  auto snap = TestApp::capture_snapshot("api_ergonomics_comparison");
+  // Visual verification: both panels should render identically
+}
+
+TEST(api_ergonomics_position_helpers) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Verify corner elements exist
+  TestApp::expect_ui_exists("Top Left");
+  TestApp::expect_ui_exists("Top Right");
+  TestApp::expect_ui_exists("Bottom Left");
+  TestApp::expect_ui_exists("Bottom Right");
+  TestApp::expect_ui_exists("Center");
+
+  auto snap = TestApp::capture_snapshot("api_ergonomics_position_helpers");
+
+  // Check positions are near edges
+  expect_element_position("Top Left", 0, 0, 50.0f);
+}
+
+TEST(api_ergonomics_size_helpers) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("api_ergonomics_size_helpers");
+}
+```
+

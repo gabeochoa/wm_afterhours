@@ -221,3 +221,131 @@ if (carousel(ctx, mk(parent, 0), screenshots.size(), current_index)) {
 - Multi-slide view
 - Keyboard navigation (arrows)
 
+---
+
+## Example Screen: MediaShowcase
+
+**File:** `src/systems/screens/MediaShowcase.h`
+**CLI:** `--screen=media`
+**Category:** Widgets
+
+### Layout
+
+A media gallery screen:
+
+1. **Image Fit Modes** — 5 panels showing the same image with different `ImageFit` modes: Contain (letterboxed), Cover (cropped to fill), Fill (stretched), ScaleDown (natural or smaller), None (natural size, may overflow). Each labeled.
+
+2. **Image with Fallback** — An image with a valid texture, and an image with `std::nullopt` that shows a placeholder/fallback (gray box with "No Image" text).
+
+3. **Rounded Image** — An image with `border_radius = 16.0f` showing rounded corners, and a fully circular image (border_radius = 50% of size).
+
+4. **Icon Gallery** — A grid of icons at different sizes (XS through XL) using the `icon()` component. Some with rotation (45°), one with `spin = true` (loading animation). A text-symbol icon using `icon_symbol(U'★')`.
+
+5. **Carousel** — A 5-slide carousel with dot indicators and prev/next arrows. Each slide is a different colored placeholder. Auto-play toggleable with a checkbox. Loop mode toggleable.
+
+### Features Exercised
+
+- `image()` with all `ImageFit` modes
+- Image fallback rendering
+- `border_radius` for rounded/circular images
+- `icon()` with sizes, rotation, spin animation
+- `icon_symbol()` for text-based icons
+- `carousel()` with navigation, indicators, auto-play, loop
+
+### Verification
+
+- Contain: image fits within bounds, may have letterboxing
+- Cover: image fills bounds, may be cropped
+- Fill: image stretches to fill (may distort)
+- Carousel prev/next buttons navigate between slides
+- Carousel dots show current position
+- Auto-play advances slides every 5 seconds
+- Spinning icon rotates continuously
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/MediaTest.h`
+
+#### New Custom Commands Needed
+
+None — media components are mostly display-only. Carousel navigation uses existing `click_button`.
+
+#### Screenshots
+
+1. `media_image_contain` — image with Contain fit mode (letterboxed)
+2. `media_image_cover` — image with Cover fit mode (cropped)
+3. `media_image_fill` — image with Fill fit mode (stretched)
+4. `media_image_fallback` — fallback placeholder for missing image
+5. `media_image_rounded` — image with rounded corners and circular crop
+6. `media_icons` — icon gallery at different sizes, one spinning
+7. `media_carousel_slide1` — carousel at first slide with dot indicators
+8. `media_carousel_slide2` — carousel after clicking next
+
+#### Test Script
+
+```cpp
+TEST(media_image_fit_modes) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Contain");
+  TestApp::expect_ui_exists("Cover");
+  TestApp::expect_ui_exists("Fill");
+
+  auto snap1 = TestApp::capture_snapshot("media_image_contain");
+  auto snap2 = TestApp::capture_snapshot("media_image_cover");
+  auto snap3 = TestApp::capture_snapshot("media_image_fill");
+}
+
+TEST(media_image_fallback) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("No Image");
+  auto snap = TestApp::capture_snapshot("media_image_fallback");
+}
+
+TEST(media_icons_spin) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_a = TestApp::capture_snapshot("media_icons");
+  co_await TestApp::wait_for_frames(15);
+  auto snap_b = TestApp::capture_snapshot("media_icons_frame_b");
+
+  // Spinning icon should cause frames to differ
+}
+
+TEST(media_carousel_navigate) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap1 = TestApp::capture_snapshot("media_carousel_slide1");
+
+  // Click next arrow
+  TestApp::click_button("Next");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap2 = TestApp::capture_snapshot("media_carousel_slide2");
+  // Dot indicator should show second dot active
+}
+
+TEST(media_carousel_loop) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Navigate to last slide
+  for (int i = 0; i < 4; i++) {
+    TestApp::click_button("Next");
+    co_await TestApp::wait_for_frames(1);
+    TestApp::release_mouse_button();
+    co_await TestApp::wait_for_frames(3);
+  }
+
+  // Click next again — should loop to first slide
+  TestApp::click_button("Next");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  // Should be back at slide 1
+}
+```
+

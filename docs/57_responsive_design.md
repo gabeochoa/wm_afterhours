@@ -221,6 +221,123 @@ ui::responsive::on_screen_resize([](int w, int h) {
 
 ---
 
+## Example Screen: ResponsiveDesignShowcase
+
+**File:** `src/systems/screens/ResponsiveDesignShowcase.h`
+**CLI:** `--screen=responsive_design`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A screen that adapts to different window sizes:
+
+1. **Breakpoint Indicator** — A label at the top showing the current breakpoint: "XS (480)", "SM (768)", "MD (1024)", "LG (1280)", "XL (1920)". Updates in real time as window resizes.
+
+2. **Responsive Grid** — A card grid that changes column count: 1 column at XS, 2 at SM, 3 at MD, 4 at LG. Cards reflow smoothly as the window resizes.
+
+3. **Sidebar Toggle** — At MD and above: a left sidebar (250px) + main content. Below MD: sidebar hidden, full-width content with a hamburger button to toggle sidebar as an overlay.
+
+4. **Font Scaling** — Text rendered with `font_xs()` through `font_2xl()`. At each breakpoint, all font sizes scale proportionally. Labels show the resolved pixel sizes.
+
+5. **Spacing Demo** — A column of items with `spacing_md()` between them. On XS, the spacing is compact; on XL, it's generous. A label shows the resolved spacing value.
+
+6. **Reference Resolution** — Two boxes: one sized with `px(200)` (scales with screen), one sized with `pixels(200)` (fixed). On a 1920px screen they're equal; on a 3840px screen, the responsive one doubles.
+
+### Features Exercised
+
+- `set_reference_resolution()` and `px()` responsive sizing
+- `current_breakpoint()` and `at_breakpoint<T>()`
+- `font_xs()` through `font_2xl()` responsive font presets
+- `spacing_xs()` through `spacing_xl()` responsive spacing
+- `is_widescreen()`, `safe_area_left()` for aspect ratio handling
+- `screen_resized_this_frame()` for change detection
+
+### Verification
+
+- Resizing window updates the breakpoint indicator
+- Grid column count changes at each breakpoint threshold
+- Sidebar visibility toggles at MD breakpoint
+- `px(200)` at 2x screen resolution renders at 400px
+- Font sizes scale proportionally with screen size
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/ResponsiveDesignTest.h`
+
+#### New Custom Commands Needed
+
+- `simulate_window_resize(w, h)` — change window/reference resolution. Core command for responsive testing. Adjusts the reference resolution so breakpoint calculations update.
+- `expect_element_size(label, w, h, tolerance)` — check element dimensions. Needed to verify px() scaling and responsive sizes.
+
+#### Screenshots
+
+1. `responsive_1920x1080` — full layout at 1920x1080 (4-column grid, sidebar visible)
+2. `responsive_1280x720` — layout at 1280x720 (3-column grid, sidebar still visible)
+3. `responsive_800x600` — layout at 800x600 (2-column grid, sidebar hidden)
+4. `responsive_480x320` — layout at 480x320 (1-column grid, mobile layout)
+5. `responsive_breakpoint_indicator` — readout showing current breakpoint and resolved values
+
+#### Test Script
+
+```cpp
+TEST(responsive_breakpoint_switch) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Start at 1920x1080
+  simulate_window_resize(1920, 1080);
+  co_await TestApp::wait_for_frames(10);
+
+  TestApp::expect_ui_exists("XL");  // breakpoint indicator
+  auto snap1 = TestApp::capture_snapshot("responsive_1920x1080");
+
+  // Resize to 800x600
+  simulate_window_resize(800, 600);
+  co_await TestApp::wait_for_frames(10);
+
+  TestApp::expect_ui_exists("SM");  // breakpoint should change
+  auto snap2 = TestApp::capture_snapshot("responsive_800x600");
+
+  // Resize to 480x320
+  simulate_window_resize(480, 320);
+  co_await TestApp::wait_for_frames(10);
+
+  TestApp::expect_ui_exists("XS");
+  auto snap3 = TestApp::capture_snapshot("responsive_480x320");
+}
+
+TEST(responsive_sidebar_toggle) {
+  co_await TestApp::wait_for_frames(5);
+
+  // At large resolution, sidebar should be visible
+  simulate_window_resize(1920, 1080);
+  co_await TestApp::wait_for_frames(10);
+  TestApp::expect_ui_exists("Sidebar");
+
+  // At small resolution, sidebar should be hidden
+  simulate_window_resize(600, 400);
+  co_await TestApp::wait_for_frames(10);
+  TestApp::expect_ui_not_exists("Sidebar");
+}
+
+TEST(responsive_grid_columns) {
+  co_await TestApp::wait_for_frames(5);
+
+  simulate_window_resize(1920, 1080);
+  co_await TestApp::wait_for_frames(10);
+  TestApp::expect_ui_exists("Columns: 4");
+
+  simulate_window_resize(1280, 720);
+  co_await TestApp::wait_for_frames(10);
+  TestApp::expect_ui_exists("Columns: 3");
+
+  simulate_window_resize(800, 600);
+  co_await TestApp::wait_for_frames(10);
+  TestApp::expect_ui_exists("Columns: 2");
+}
+```
+
+---
+
 ## Complete Example
 
 ```cpp

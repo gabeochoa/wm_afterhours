@@ -1,47 +1,9 @@
-# Decorative Elements
+# Decorative Elements — Remaining Work
 
-**Status:** Partial (decorative_frame implemented)  
+**Status:** Partial  
 **Priority:** Low
 
----
-
-## Decorative Frame ✅ Implemented
-
-Creates layered decorative borders/frames around content with multiple style variants.
-
-### Usage
-
-```cpp
-// Kraft-paper style frame (default) - layered borders with corner accents
-auto frame = decorative_frame(ctx, mk(parent),
-    ComponentConfig{}
-        .with_size(pixels(400), pixels(300))
-        .with_custom_background(kraft_tan)
-        .with_border(frame_brown, 12.0f),
-    DecorativeFrameStyle::KraftPaper);
-
-// Simple frame - single border with background
-decorative_frame(ctx, mk(parent),
-    ComponentConfig{}
-        .with_size(percent(1.0f), percent(1.0f))
-        .with_background(Theme::Usage::Surface)
-        .with_border(theme.accent, 4.0f),
-    DecorativeFrameStyle::Simple);
-
-// Inset/sunken frame - shadow/highlight edges
-decorative_frame(ctx, mk(parent),
-    ComponentConfig{}
-        .with_size(pixels(300), pixels(200)),
-    DecorativeFrameStyle::Inset);
-```
-
-### Style Variants
-
-| Style | Description |
-|-------|-------------|
-| `KraftPaper` | Layered borders with corner accents (scrapbook/craft feel) |
-| `Simple` | Single border with background |
-| `Inset` | Sunken effect with shadow/highlight edges |
+> `decorative_frame()` with KraftPaper/Simple/Inset styles is implemented in `imm_components.h`.
 
 ---
 
@@ -77,6 +39,38 @@ MiniMotorways manually draws grid lines for background effect.
 ComponentConfig{}
     .with_grid_background(cell_size, line_color, line_thickness);
 ```
+
+---
+
+## Quote / Blockquote
+
+A styled text element for quotations or highlighted passages. Renders with a left accent bar, optional quote marks, and optional attribution.
+
+### Use Cases in Game UI
+- NPC dialogue highlights
+- Lore text
+- Tips/hints display
+- Achievement descriptions
+
+### Suggested Implementation
+
+```cpp
+struct QuoteConfig {
+    std::optional<std::string> attribution;
+    bool show_quote_marks = true;
+    Color accent_color = Theme::Usage::Accent;
+};
+
+ElementResult quote(HasUIContext auto &ctx, EntityParent ep_pair,
+                    const std::string &text,
+                    QuoteConfig config = QuoteConfig());
+```
+
+### Features Needed
+- Left accent bar (colored vertical strip)
+- Italic text styling
+- Optional attribution line below (e.g. "— Elder Sage")
+- Optional decorative quote marks
 
 ---
 

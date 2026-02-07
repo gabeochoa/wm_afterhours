@@ -162,3 +162,91 @@ const UIComponent& get_component(Entity e) const;
 .with_font_size(FontSize::pixels(24))     // Only option
 ```
 
+---
+
+## Example Screen: TypeSafetyShowcase
+
+**File:** `src/systems/screens/TypeSafetyShowcase.h`
+**CLI:** `--screen=type_safety`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A screen demonstrating strong-typed APIs vs raw floats:
+
+1. **FontSize Types** — Three text labels rendered with `FontSize::pixels(24)`, `FontSize::screen_pct(0.03f)`, and `FontSize::em(1.5f)`. Each labeled with the type used and the resolved pixel size at current resolution.
+
+2. **Opacity Type** — A row of 5 colored boxes using `Opacity(1.0f)`, `Opacity(0.75f)`, `Opacity::half()`, `Opacity(0.25f)`, `Opacity::none()`. Labels show the clamped value. Attempting `Opacity(1.5f)` shows it clamps to 1.0.
+
+3. **Dimension Type** — Three equal-looking panels created with `Dimension::px(200)`, `Dimension::pct(0.15f)`, `Dimension::auto_size()`. Labels show the resolved pixel value, demonstrating that percentage resolves relative to parent.
+
+4. **Const Correctness** — A readout panel showing theme query results via const methods: `theme.get_color(Usage::Primary)`, `widget.is_focused()`, `widget.get_bounds()`. Each labeled "const" to indicate they don't mutate state.
+
+### Features Exercised
+
+- `FontSize::pixels()`, `FontSize::screen_pct()`, `FontSize::em()`
+- `Opacity` with clamping and named constructors
+- `Dimension::px()`, `Dimension::pct()`, `Dimension::auto_size()`
+- Const-correct query methods on Theme and UIComponent
+
+### Verification
+
+- FontSize::pixels(24) always renders at 24px regardless of screen size
+- FontSize::screen_pct scales with screen resolution
+- Opacity(1.5) clamps to 1.0 (fully opaque)
+- Dimension::pct(0.5) resolves to half of parent width
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/TypeSafetyTest.h`
+
+#### New Custom Commands Needed
+
+- `expect_element_size(label, w, h, tolerance)` — check element dimensions. Needed to verify `Dimension::pct(0.5)` resolves to half of parent width.
+
+#### Screenshots
+
+1. `type_safety_font_sizes` — three labels at different FontSize types with resolved px shown
+2. `type_safety_opacity` — 5 colored boxes at different opacities
+3. `type_safety_dimensions` — 3 panels with px/pct/auto dimensions, resolved values shown
+4. `type_safety_const` — readout panel showing const query results
+
+#### Test Script
+
+```cpp
+TEST(type_safety_font_size) {
+  co_await TestApp::wait_for_frames(5);
+
+  // FontSize labels should exist with resolved values
+  TestApp::expect_ui_exists("pixels(24)");
+  TestApp::expect_ui_exists("screen_pct");
+
+  auto snap = TestApp::capture_snapshot("type_safety_font_sizes");
+}
+
+TEST(type_safety_opacity_clamp) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Verify clamping label
+  TestApp::expect_ui_exists("1.0");  // Opacity(1.5) clamped to 1.0
+
+  auto snap = TestApp::capture_snapshot("type_safety_opacity");
+}
+
+TEST(type_safety_dimension_resolve) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("type_safety_dimensions");
+
+  // Verify pct(0.5) panel is approximately half parent width
+  // Uses snapshot for visual regression
+}
+
+TEST(type_safety_const_queries) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("const");
+  auto snap = TestApp::capture_snapshot("type_safety_const");
+}
+```
+

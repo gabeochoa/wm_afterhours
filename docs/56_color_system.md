@@ -172,6 +172,92 @@ struct ColorSpec {
 
 ---
 
+## Example Screen: ColorSystemShowcase
+
+**File:** `src/systems/screens/ColorSystemShowcase.h`
+**CLI:** `--screen=color_system`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A comprehensive color system demo:
+
+1. **Named Colors** — A grid of swatches: `white()`, `black()`, `gray_25()`, `gray_50()`, `gray_75()`, `error()`, `warning()`, `success()`, `info()`. Each labeled with the function name and hex value.
+
+2. **Color Manipulation** — Starting from a base blue (`#3498DB`), a row of swatches showing: original, `lighten(0.2)`, `lighten(0.4)`, `darken(0.2)`, `darken(0.4)`, `with_alpha(0.5)`, `with_alpha(0.25)`. Each labeled with the operation.
+
+3. **Color Blending** — A gradient bar showing `blend(red, blue, t)` for t=0.0 to 1.0 in 10 steps. Red on the left smoothly transitions to blue on the right.
+
+4. **Hex Input** — A `text_input` for hex colors (`#RRGGBB`). Typing a valid hex updates a large preview swatch. Demonstrates `colors::hex(0xRRGGBB)` parsing.
+
+5. **Theme vs Fixed** — Two rows of buttons: top row uses `with_themed_color(Theme::Usage::Primary)` (adapts when theme changes), bottom row uses `with_fixed_color(colors::hex(0x3498DB))` (stays the same). A theme switcher dropdown changes the theme — only the top row changes.
+
+6. **Palette Presets** — A row of named palette previews: Material Blue, Material Dark, Nord, Dracula. Clicking one applies it as the current theme, updating all themed elements.
+
+### Features Exercised
+
+- `colors::white/black/gray/error/warning/success/info()`
+- `colors::lighten()`, `darken()`, `with_alpha()`, `blend()`
+- `colors::hex()` for hex color parsing
+- `Theme::Usage` vs `custom_color` distinction
+- `ColorSpec::themed()` vs `ColorSpec::fixed()`
+- `palettes::apply_palette()` for preset application
+
+### Verification
+
+- `lighten(0.4)` produces a visibly lighter color
+- `darken(0.4)` produces a visibly darker color
+- `with_alpha(0.5)` shows semi-transparency
+- Switching themes: themed colors change, fixed colors don't
+- Blend gradient is smooth with no banding artifacts
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/ColorSystemTest.h`
+
+#### New Custom Commands Needed
+
+None — color system is primarily visual. Snapshot comparison is the main verification method.
+
+#### Screenshots
+
+1. `color_system_hex_rgb` — color construction demo showing hex/rgb/rgba swatches
+2. `color_system_manipulation` — lighten/darken/alpha panels showing before/after
+3. `color_system_themed_vs_fixed` — themed + fixed swatches in default theme
+4. `color_system_theme_switched` — same swatches after theme switch (themed changed, fixed didn't)
+5. `color_system_auto_text` — auto_text_color demo (white text on dark, black on light)
+6. `color_system_blend_gradient` — smooth blend gradient strip
+
+#### Test Script
+
+```cpp
+TEST(color_system_theme_switch) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_before = TestApp::capture_snapshot("color_system_themed_vs_fixed");
+
+  // Switch theme
+  TestApp::click_button("Switch Theme");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_after = TestApp::capture_snapshot("color_system_theme_switched");
+  // Themed swatches should change color, fixed swatches should not
+}
+
+TEST(color_system_visual_regression) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap1 = TestApp::capture_snapshot("color_system_hex_rgb");
+  auto snap2 = TestApp::capture_snapshot("color_system_manipulation");
+  auto snap3 = TestApp::capture_snapshot("color_system_auto_text");
+  auto snap4 = TestApp::capture_snapshot("color_system_blend_gradient");
+}
+```
+
+---
+
 ## Color Palette Presets
 
 ```cpp

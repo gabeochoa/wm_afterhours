@@ -484,6 +484,12 @@ struct RaylibBackend {
 - All `#ifdef` logic isolated to `graphics_backend.h`—nowhere else
 - Requires C++20 (`-std=c++20`)
 
+---
+
+## Example Screen
+
+**Note:** The renderer abstraction is a build-time/compile-time change with no visual UI of its own. Verification is that *all existing showcase screens* render identically when compiled with `-DAFTERHOURS_USE_RAYLIB` vs. `-DAFTERHOURS_USE_SOKOL` vs. `-DAFTERHOURS_USE_HEADLESS`. The headless backend can be verified by running any screen and confirming it completes without errors and produces a framebuffer output. A dedicated "RendererInfoShowcase" could display the active backend name (`Backend::name()`), screen dimensions, and draw call count as a simple diagnostic panel.
+
 ## Resources
 - https://github.com/floooh/sokol
 - https://github.com/floooh/sokol-samples (example code)

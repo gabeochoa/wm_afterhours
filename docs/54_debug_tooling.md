@@ -238,3 +238,129 @@ namespace ui::debug {
 #endif
 ```
 
+---
+
+## Example Screen: DebugToolingShowcase
+
+**File:** `src/systems/screens/DebugToolingShowcase.h`
+**CLI:** `--screen=debug_tooling`
+**Category:** DX / Developer Experience
+
+### Layout
+
+A screen for testing and demonstrating all debug tools:
+
+1. **Bounds Overlay Toggle** — A button "Toggle Bounds (F1)" that enables/disables the bounds overlay. When on, every UI element gets a colored rectangle outline showing its computed bounds. Absolute elements shown in orange, focused in yellow, hovered in cyan.
+
+2. **Hover Inspector** — When enabled (F2), hovering any element shows a tooltip-like panel with: element name, entity ID, position, size, padding, margin, parent name, source location. The inspector panel tracks the mouse.
+
+3. **Hierarchy Viewer** — A button "Show Hierarchy (F3)" that prints the element tree to a panel: indented tree with element names, sizes, and states. Expandable nodes for containers. Shows `[ABSOLUTE]` for absolute elements.
+
+4. **Performance Stats** — A button "Show Profiler (F4)" toggling a corner overlay: elements created/rendered, layout time (ms), render time (ms), draw calls, and a list of the 3 slowest elements.
+
+5. **Error Provocation** — Buttons that intentionally create bad states: "Create Negative Size", "Create Duplicate ID", "Create Missing Font". Each triggers a visible warning message in the debug panel.
+
+### Features Exercised
+
+- `ui::debug::show_bounds_overlay()`
+- `ui::debug::enable_hover_inspector()`
+- `ui::debug::print_hierarchy()` and `get_hierarchy()`
+- `ui::debug::get_frame_stats()` and `get_slow_elements()`
+- `log_ui_error()` with context-rich messages
+- Debug keyboard shortcuts (F1-F5)
+
+### Verification
+
+- Bounds overlay: every element gets a colored outline
+- Hover inspector: shows correct element info on mouse hover
+- Hierarchy: tree structure matches actual element nesting
+- Profiler: shows non-zero element counts and timing
+- Error provocation: produces visible, helpful warning messages
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/DebugToolingTest.h`
+
+#### New Custom Commands Needed
+
+- `simulate_key(keycode)` — already exists via `TestApp::simulate_key()`. Used for F1-F4 debug shortcuts.
+- `hover_element(label)` — needed for the hover inspector (F2).
+
+#### Screenshots
+
+1. `debug_initial` — screen before any debug tools enabled
+2. `debug_bounds_overlay` — after F1, all elements showing colored outlines
+3. `debug_hover_inspector` — after F2, hovering an element shows info tooltip
+4. `debug_hierarchy` — after F3, hierarchy tree panel visible
+5. `debug_profiler` — after F4, corner overlay with stats
+6. `debug_error_warning` — after clicking "Create Negative Size", warning message visible
+
+#### Test Script
+
+```cpp
+TEST(debug_bounds_overlay) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_before = TestApp::capture_snapshot("debug_initial");
+
+  // Press F1 to toggle bounds overlay
+  TestApp::simulate_key(raylib::KEY_F1);
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_after = TestApp::capture_snapshot("debug_bounds_overlay");
+
+  // Snapshots should differ (overlay adds colored outlines)
+}
+
+TEST(debug_hover_inspector) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Press F2 to enable hover inspector
+  TestApp::simulate_key(raylib::KEY_F2);
+  co_await TestApp::wait_for_frames(3);
+
+  // Hover over a button
+  hover_element("Toggle Bounds (F1)");
+  co_await TestApp::wait_for_frames(5);
+
+  // Inspector panel should show element info
+  TestApp::expect_ui_exists("entity ID:");
+  auto snap = TestApp::capture_snapshot("debug_hover_inspector");
+}
+
+TEST(debug_hierarchy) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Press F3 to show hierarchy
+  TestApp::simulate_key(raylib::KEY_F3);
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("debug_hierarchy");
+}
+
+TEST(debug_profiler) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Press F4 to show profiler
+  TestApp::simulate_key(raylib::KEY_F4);
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("elements:");
+  TestApp::expect_ui_exists("layout:");
+  auto snap = TestApp::capture_snapshot("debug_profiler");
+}
+
+TEST(debug_error_provocation) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Create Negative Size");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  // Warning should be visible
+  TestApp::expect_ui_exists("warning");
+  auto snap = TestApp::capture_snapshot("debug_error_warning");
+}
+```
+

@@ -1,28 +1,30 @@
-# Overlay Panels
+# Drawer / Flyout / Sheet
 
 **Status:** Not implemented  
 **Priority:** Medium  
 **Source:** Component Gallery Analysis
 
+> **Popover** merged into `23_tooltip.md` (shared anchoring/positioning with tooltips).  
+> **Dropdown Menu** merged into `24_context_menu.md` (shared MenuItem structure with context menus).
+
 ---
 
-## Drawer / Flyout / Sheet
+## Description
 
-### Description
-
-A panel which slides out from the edge of the screen, typically used for secondary navigation or detail views.
+A panel that slides out from the edge of the screen, typically used for secondary navigation, detail views, or settings. Unlike modals, drawers don't center on screen — they attach to an edge and can remain open alongside the main content.
 
 **Also known as:** Tray, Flyout, Sheet, Side panel
 
-### Use Cases in Game UI
+## Use Cases in Game UI
 - Inventory sidebar
 - Character equipment panel
 - Quest details panel
 - Settings panel (slides from right)
 - Player stats panel
 - Chat panel
+- Mobile-style bottom sheet for action lists
 
-### Suggested Implementation
+## Suggested Implementation
 
 ```cpp
 enum class DrawerEdge { Left, Right, Top, Bottom };
@@ -60,130 +62,147 @@ if (begin_drawer(ctx, mk(parent, 0), inventory_open, "Inventory",
 }
 ```
 
-### Features Needed
+## Features Needed
 - Slide in/out animation from edge
-- Optional backdrop overlay
+- Optional backdrop overlay (reuse modal backdrop)
 - Close button in header
 - Close on outside click
 - Close on Escape key
-- Swipe to close (for touch)
 - Scrollable content area
+- Swipe to close (for touch, future)
 
 ---
 
-## Popover
+## Example Screen: DrawerShowcase
 
-### Description
+**File:** `src/systems/screens/DrawerShowcase.h`
+**CLI:** `--screen=drawer`
+**Category:** Overlay Components
 
-An element that pops up from another element, floating above other content. Unlike tooltips, popovers are typically triggered via click and can contain interactive elements.
+### Layout
 
-### Use Cases in Game UI
-- Item info popup (on click)
-- Quick actions menu
-- Emoji picker
-- Color palette popup
-- Share menu
-- User profile preview
+A screen with buttons that open drawers from different edges:
 
-### Suggested Implementation
+1. **Drawer (Left)** — Button "Open Inventory" opens a drawer sliding from the left edge (30% width). Contains a scrollable list of 20 items. Closes via X button, Escape, or clicking outside the drawer.
 
-```cpp
-enum class PopoverPlacement {
-    Top, TopStart, TopEnd,
-    Bottom, BottomStart, BottomEnd,
-    Left, LeftStart, LeftEnd,
-    Right, RightStart, RightEnd,
-    Auto  // Automatically choose best placement
-};
+2. **Drawer (Right)** — Button "Open Details" opens a drawer from the right (30% width). Contains a form with text inputs and sliders. Demonstrates interactive content inside a drawer.
 
-struct PopoverConfig {
-    PopoverPlacement placement = PopoverPlacement::Auto;
-    bool close_on_outside_click = true;
-    bool show_arrow = true;
-    float offset = 8.0f;  // Distance from trigger
-};
+3. **Drawer (Bottom)** — Button "Show Options" opens a bottom sheet (40% height). Mobile-style action list with 5 options. Demonstrates the vertical variant.
 
-bool begin_popover(HasUIContext auto &ctx, EntityParent ep_pair,
-                   Entity trigger_element,
-                   bool &is_open,
-                   PopoverConfig config = PopoverConfig());
-void end_popover();
+4. **Drawer (Top)** — Button "Notifications" opens a top sheet (200px). Shows a list of notification items. Demonstrates fixed-pixel sizing.
 
-// Usage:
-if (button(ctx, mk(parent, 0), ComponentConfig{}.with_label("⋮")).clicked) {
-    more_menu_open = !more_menu_open;
-}
+5. **No Backdrop Drawer** — Button "Open Chat" opens a right drawer without a backdrop, allowing interaction with the main content behind it. Demonstrates `show_backdrop = false`.
 
-if (begin_popover(ctx, mk(parent, 1), mk(parent, 0).entity, more_menu_open)) {
-    if (button(ctx, mk(current, 0), "Edit").clicked) { /* ... */ }
-    if (button(ctx, mk(current, 1), "Delete").clicked) { /* ... */ }
-    if (button(ctx, mk(current, 2), "Share").clicked) { /* ... */ }
-    end_popover();
-}
-```
+### Features Exercised
 
-### Features Needed
-- Positioning relative to trigger element
-- Auto-flip when near screen edge
-- Optional arrow/caret pointing to trigger
-- Close on outside click
-- Close on Escape
-- Keyboard navigation within popover
-- Focus trap
+- `drawer()` with Left/Right/Top/Bottom edges
+- Drawer backdrop overlay, outside-click-to-close, Escape to close
+- Slide animation for drawer open/close
+- Scrollable content area inside drawer
+- Interactive content (form inputs) inside drawer
+- No-backdrop mode
 
----
+### Verification
 
-## Dropdown Menu
+- Left drawer slides in from left edge, backdrop appears behind it
+- Clicking outside drawer closes it (with backdrop)
+- Clicking outside drawer does NOT close it when `close_on_outside_click = false`
+- Escape closes the drawer
+- X button in header closes the drawer
+- Scroll works inside drawer content area
+- Bottom sheet takes 40% of screen height from the bottom edge
+- No-backdrop drawer allows clicking main content behind it
 
-### Description
+### E2E Test Plan
 
-A menu that appears below a button, showing actions or navigation options.
+**Test file:** `src/testing/tests/DrawerTest.h`
 
-**Also known as:** Select menu, Action menu
+#### New Custom Commands Needed
 
-### Note
+- `expect_element_visible(label)` / `expect_element_hidden(label)` — check visibility. Needed to verify drawer open/close state.
 
-Related to `24_context_menu.md` but triggered differently (click vs right-click).
+#### Screenshots
 
-### Suggested Implementation
+1. `drawer_initial` — trigger buttons visible, no drawers open
+2. `drawer_left_open` — left drawer slid in with backdrop
+3. `drawer_right_form` — right drawer with form content
+4. `drawer_bottom_sheet` — bottom sheet open (40% height)
+5. `drawer_no_backdrop` — right drawer open without backdrop
+
+#### Test Script
 
 ```cpp
-struct MenuItem {
-    std::string label;
-    std::optional<TextureConfig> icon;
-    std::optional<std::string> shortcut;  // "Ctrl+C"
-    std::function<void()> on_select;
-    bool disabled = false;
-    bool is_separator = false;
-    std::vector<MenuItem> submenu;  // For nested menus
-};
+TEST(drawer_left_open_close) {
+  co_await TestApp::wait_for_frames(5);
 
-ElementResult dropdown_menu(HasUIContext auto &ctx, EntityParent ep_pair,
-                            Entity trigger_button,
-                            const std::vector<MenuItem> &items,
-                            bool &is_open);
+  auto snap_init = TestApp::capture_snapshot("drawer_initial");
 
-// Usage:
-if (button(ctx, mk(parent, 0), ComponentConfig{}.with_label("File")).clicked) {
-    file_menu_open = true;
+  // Open left drawer
+  TestApp::click_button("Open Inventory");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(10);  // wait for slide animation
+
+  TestApp::expect_ui_exists("Inventory");
+  auto snap = TestApp::capture_snapshot("drawer_left_open");
+
+  // Press Escape to close
+  TestApp::simulate_escape();
+  co_await TestApp::wait_for_frames(10);
 }
 
-dropdown_menu(ctx, mk(parent, 1), mk(parent, 0).entity, {
-    {"New", new_icon, "Ctrl+N", []{ new_file(); }},
-    {"Open", open_icon, "Ctrl+O", []{ open_file(); }},
-    {"Save", save_icon, "Ctrl+S", []{ save_file(); }},
-    {.is_separator = true},
-    {"Exit", std::nullopt, std::nullopt, []{ exit(); }}
-}, file_menu_open);
+TEST(drawer_bottom_sheet) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Show Options");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(10);
+
+  auto snap = TestApp::capture_snapshot("drawer_bottom_sheet");
+
+  // Click outside to close
+  test_input::set_mouse_position({640, 100});  // above the bottom sheet
+  test_input::simulate_mouse_button_press(raylib::MOUSE_BUTTON_LEFT);
+  co_await TestApp::wait_for_frames(1);
+  test_input::simulate_mouse_button_release(raylib::MOUSE_BUTTON_LEFT);
+  co_await TestApp::wait_for_frames(10);
+}
+
+TEST(drawer_right_form_interaction) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Open Details");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(10);
+
+  auto snap = TestApp::capture_snapshot("drawer_right_form");
+
+  // Close via X button
+  TestApp::click_button("Close Drawer");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(10);
+}
+
+TEST(drawer_no_backdrop) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Open Chat");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(10);
+
+  auto snap = TestApp::capture_snapshot("drawer_no_backdrop");
+
+  // Main content should still be interactable
+  TestApp::click_button("Open Inventory");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(10);
+
+  // Both drawers should be open now
+  TestApp::expect_ui_exists("Inventory");
+}
 ```
-
-### Features Needed
-- All popover features
-- Menu item hover highlighting
-- Keyboard navigation (arrows, enter)
-- Shortcut key display
-- Dividers/separators
-- Nested submenus
-- Icons
-- Disabled items
-

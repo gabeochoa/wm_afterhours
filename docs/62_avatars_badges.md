@@ -130,3 +130,97 @@ notification_badge(ctx, mk(parent, 2), unread_messages);
 
 See `src/ui_workarounds/NotificationBadge.h` for a basic implementation.
 
+---
+
+## Example Screen: AvatarsBadgesShowcase
+
+**File:** `src/systems/screens/AvatarsBadgesShowcase.h`
+**CLI:** `--screen=avatars_badges`
+**Category:** Widgets
+
+### Layout
+
+A profile/social screen demonstrating avatars and badges:
+
+1. **Avatar Sizes** — A row of avatars at sizes XS, SM, MD, LG, XL. All using the same placeholder image. Labels show the size name below each.
+
+2. **Avatar Shapes** — Three avatars: Circle, Square, Rounded. Same image, different `AvatarShape`.
+
+3. **Fallback Initials** — Avatars with no image, showing colored circles with initials: "JD" (blue), "AB" (green), "XY" (red). Each with a different `fallback_color`.
+
+4. **Status Indicators** — Avatars with online (green dot), away (yellow dot), and offline (gray dot) status indicators in the bottom-right corner.
+
+5. **Avatar Group** — An `avatar_group()` showing 7 overlapping avatars, but `max_visible = 4`. The 5th position shows "+3" indicating hidden avatars.
+
+6. **Badge Gallery** — Badges in all variants: Default, Primary, Secondary, Success, Warning, Error. Both filled and outlined styles. Pill-shaped and squared.
+
+7. **Notification Badge** — A bell icon with a red `notification_badge(count=5)` positioned in the top-right corner. Count of 0 hides the badge. Count > 99 shows "99+".
+
+### Features Exercised
+
+- `avatar()` with size, shape, image, fallback, status
+- `avatar_group()` with `max_visible` and overflow count
+- `badge()` with all `BadgeVariant` options
+- `notification_badge()` with count display
+- Pill vs squared badge shapes
+- Filled vs outlined badge styles
+
+### Verification
+
+- XS avatar is visually smaller than XL avatar
+- Circle avatar clips image to circle shape
+- Initials render centered in the fallback circle
+- Avatar group shows overlap with "+N" count
+- Notification badge with count=0 is hidden
+- Notification badge with count=150 shows "99+"
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/AvatarsBadgesTest.h`
+
+#### New Custom Commands Needed
+
+None — avatars and badges are display-only. Snapshot comparison is the primary verification method.
+
+#### Screenshots
+
+1. `avatars_sizes` — XS through XL avatars side by side
+2. `avatars_shapes` — circle, rounded square, and square avatars
+3. `avatars_fallback_initials` — colored circles with initials
+4. `avatars_status` — avatars with online/away/offline indicators
+5. `avatars_group` — overlapping avatar group with "+3" overflow
+6. `badges_variants` — all badge variants and styles
+7. `badges_notification` — bell icon with notification count badge
+
+#### Test Script
+
+```cpp
+TEST(avatars_badges_render) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Verify key elements exist
+  TestApp::expect_ui_exists("JD");  // initials fallback
+  TestApp::expect_ui_exists("+3");  // avatar group overflow
+  TestApp::expect_ui_exists("LEGENDARY");  // badge text
+  TestApp::expect_ui_exists("99+");  // capped notification count
+
+  auto snap1 = TestApp::capture_snapshot("avatars_sizes");
+  auto snap2 = TestApp::capture_snapshot("avatars_shapes");
+  auto snap3 = TestApp::capture_snapshot("avatars_fallback_initials");
+  auto snap4 = TestApp::capture_snapshot("avatars_status");
+  auto snap5 = TestApp::capture_snapshot("avatars_group");
+  auto snap6 = TestApp::capture_snapshot("badges_variants");
+  auto snap7 = TestApp::capture_snapshot("badges_notification");
+}
+
+TEST(avatars_badges_regression) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap = TestApp::capture_snapshot("avatars_badges_full");
+  auto compare = TestApp::compare_snapshot("avatars_badges_full");
+  if (!compare.success) {
+    throw std::runtime_error("Avatars/badges regression: " + compare.error_message);
+  }
+}
+```
+

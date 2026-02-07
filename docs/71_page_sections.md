@@ -218,3 +218,135 @@ card(ctx, mk(parent, 0)) {
 - Border radius
 - Content padding
 
+---
+
+## Example Screen: PageSectionsShowcase
+
+**File:** `src/systems/screens/PageSectionsShowcase.h`
+**CLI:** `--screen=page_sections`
+**Category:** Widgets
+
+### Layout
+
+A full-page layout demonstrating all page section components:
+
+1. **Header** — A `header()` at the top with: title "Game Settings", a back button (←), and a right-side action button (gear icon). Consistent height, dark background.
+
+2. **Hero Banner** — A `hero()` section below the header: full-width, 40% height, with a background image/color, title "Welcome Back, Player!", subtitle "Your adventure continues...", and a "Play Now" call-to-action button.
+
+3. **Heading Hierarchy** — Below the hero: `heading("Section", H1)`, `heading("Subsection", H2)`, `heading("Detail", H3)` showing visual size hierarchy from largest to smallest.
+
+4. **Card Grid** — Four `card()` components in a 2x2 grid. Each card has: a colored header image area, `card_header()` with title/subtitle, `card_body()` with description text, and `card_footer()` with a price display and "Buy" button. Cards have elevation shadow and lift on hover.
+
+5. **Footer** — A `footer()` at the bottom with: version text "v1.2.3", copyright, and `button_hints_footer()` showing controller hints: "A: Select | B: Back | Y: Options".
+
+### Features Exercised
+
+- `header()` with title, back button, actions
+- `hero()` with background, title, subtitle, CTA button
+- `heading()` at levels H1, H2, H3 with visual hierarchy
+- `card()` with `card_header/body/footer` sections, elevation, hover
+- `footer()` and `button_hints_footer()` for controller hints
+
+### Verification
+
+- Header stays at top, consistent height across screens
+- Hero banner fills width with readable text over background
+- H1 is visually larger than H2, H2 larger than H3
+- Cards have visible shadow that lifts on hover
+- Footer displays at bottom with version and controller hints
+- Back button in header fires callback
+- Card click fires callback
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/PageSectionsTest.h`
+
+#### New Custom Commands Needed
+
+- `hover_element(label)` — move mouse to element without clicking. Needed for card hover-lift effect verification.
+
+#### Screenshots
+
+1. `page_header` — header bar with title, back button, and action button
+2. `page_hero` — hero banner with title, subtitle, and CTA button
+3. `page_headings` — H1/H2/H3 heading hierarchy
+4. `page_cards` — 2x2 card grid with shadows
+5. `page_card_hovered` — card with lift/shadow effect on hover
+6. `page_footer` — footer with version text and controller hints
+
+#### Test Script
+
+```cpp
+TEST(page_sections_render) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Verify all sections exist
+  TestApp::expect_ui_exists("Game Settings");  // header title
+  TestApp::expect_ui_exists("Welcome Back, Player!");  // hero title
+  TestApp::expect_ui_exists("Section");  // H1
+  TestApp::expect_ui_exists("Subsection");  // H2
+  TestApp::expect_ui_exists("v1.2.3");  // footer version
+
+  auto snap1 = TestApp::capture_snapshot("page_header");
+  auto snap2 = TestApp::capture_snapshot("page_hero");
+  auto snap3 = TestApp::capture_snapshot("page_headings");
+  auto snap4 = TestApp::capture_snapshot("page_cards");
+  auto snap5 = TestApp::capture_snapshot("page_footer");
+}
+
+TEST(page_sections_back_button) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Click back button in header
+  TestApp::click_button("Back");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  // Back callback should fire (logged or screen changes)
+}
+
+TEST(page_sections_hero_cta) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Play Now");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  // CTA callback should fire
+}
+
+TEST(page_sections_card_hover) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_before = TestApp::capture_snapshot("page_cards");
+
+  // Hover over first card
+  hover_element("Card 1");
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_hovered = TestApp::capture_snapshot("page_card_hovered");
+  // Card should show elevated shadow in hovered state
+}
+
+TEST(page_sections_card_click) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Buy");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  // Card click callback should fire
+}
+
+TEST(page_sections_button_hints) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("A: Select");
+  TestApp::expect_ui_exists("B: Back");
+}
+```
+

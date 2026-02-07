@@ -151,3 +151,124 @@ ElementResult game_calendar(HasUIContext auto &ctx, EntityParent ep_pair,
                             ComponentConfig config = ComponentConfig());
 ```
 
+---
+
+## Example Screen: DateTimeShowcase
+
+**File:** `src/systems/screens/DateTimeShowcase.h`
+**CLI:** `--screen=date_time`
+**Category:** Widgets
+
+### Layout
+
+A screen with date/time input components:
+
+1. **Date Input** — A formatted date input showing "MM/DD/YYYY". Clicking the calendar button opens a datepicker. The selected date shows in a label below.
+
+2. **Calendar Datepicker** — A full calendar widget: month/year header with < > navigation, 7-column day grid (Su-Sa), today highlighted with a circle, selected date highlighted with a filled circle. Disabled dates (weekends) shown grayed out.
+
+3. **Date Range Picker** — Two date inputs ("Start" and "End") linked. Selecting a start date constrains the end date to be after it. The range is visualized on a mini calendar with highlighted span.
+
+4. **Time Input** — A time input with hour/minute dropdowns (or stepper). Toggle between 12h and 24h format. Shows "3:45 PM" vs "15:45".
+
+5. **Game Calendar** — A fantasy calendar with custom season names ("Planting", "Harvest", "Frost", "Bloom"), 28 days per season, custom year numbering. Demonstrates `game_calendar()`.
+
+### Features Exercised
+
+- `date_input()` with format, min/max constraints
+- `datepicker()` with month navigation, today highlight, disabled dates
+- `daterange_picker()` with linked start/end
+- `time_input()` with 12h/24h toggle
+- `game_calendar()` with custom seasons and day counts
+
+### Verification
+
+- Clicking a day in the calendar updates the date input
+- Month navigation (< >) changes the displayed month
+- Today is visually highlighted with a distinct marker
+- Disabled dates cannot be selected
+- Date range: end date cannot be before start date
+- Time format toggle switches between "3:45 PM" and "15:45"
+
+### E2E Test Plan
+
+**Test file:** `src/testing/tests/DateTimeTest.h`
+
+#### New Custom Commands Needed
+
+None — uses existing `click_button`, `expect_ui_exists`, `expect_ui_not_exists`, `simulate_tab`, `capture_snapshot`.
+
+#### Screenshots
+
+1. `datetime_initial` — all date/time inputs at default values
+2. `datetime_calendar_open` — calendar datepicker expanded with month grid
+3. `datetime_day_selected` — after clicking a day, date input updated
+4. `datetime_month_nav` — calendar after clicking ">" to next month
+5. `datetime_time_format` — time input showing 12h/24h toggle result
+6. `datetime_game_calendar` — fantasy calendar with custom seasons
+
+#### Test Script
+
+```cpp
+TEST(datetime_calendar_select) {
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_init = TestApp::capture_snapshot("datetime_initial");
+
+  // Open calendar
+  TestApp::click_button("Calendar Button");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  auto snap_open = TestApp::capture_snapshot("datetime_calendar_open");
+
+  // Click a specific day (e.g., "15")
+  TestApp::click_button("15");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  auto snap = TestApp::capture_snapshot("datetime_day_selected");
+}
+
+TEST(datetime_month_navigation) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::click_button("Calendar Button");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  // Click next month arrow
+  TestApp::click_button(">");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  auto snap = TestApp::capture_snapshot("datetime_month_nav");
+}
+
+TEST(datetime_time_format_toggle) {
+  co_await TestApp::wait_for_frames(5);
+
+  // Toggle between 12h and 24h
+  TestApp::click_button("24h");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::expect_ui_exists("15:45");
+  auto snap = TestApp::capture_snapshot("datetime_time_format");
+}
+
+TEST(datetime_game_calendar) {
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Planting");
+  TestApp::expect_ui_exists("Harvest");
+
+  auto snap = TestApp::capture_snapshot("datetime_game_calendar");
+}
+```
+
