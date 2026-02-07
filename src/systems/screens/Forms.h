@@ -162,7 +162,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Audio Level")
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+                     .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                      .with_margin(Spacing::xs)
                      .with_debug_name("volume_progress"),
                  ProgressBarLabelStyle::Percentage);
@@ -172,7 +172,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Level Progress")
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+                     .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
                      .with_margin(Spacing::xs)
                      .with_debug_name("level_progress"),
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);
@@ -296,7 +296,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
             .with_custom_text_color(theme.font_muted)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm() - 4.0f)  // 12px - help text
+            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm() - 2.0f)  // 12px - help text
             .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),

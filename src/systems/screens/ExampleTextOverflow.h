@@ -271,7 +271,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position()
             .with_translate(right_col_x + 4.0f, card_y + 4.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("text_overflow_3"));
@@ -334,7 +334,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // This shows the minimum readable size constraint
     float box_sizes[] = {70.0f, 55.0f, 44.0f, 44.0f, 44.0f};
     // Font sizes are progressively smaller but have a minimum floor
-    float font_sizes[] = {16.0f, 14.0f, 12.0f, 10.0f, 10.0f};
+    float font_sizes[] = {16.0f, 14.0f, 12.0f, 12.0f, 12.0f};
     float box_spacing = 10.0f;
     float box_x = right_col_x;
     for (int i = 0; i < 5; i++) {
