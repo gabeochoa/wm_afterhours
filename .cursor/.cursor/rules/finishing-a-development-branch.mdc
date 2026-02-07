@@ -1,0 +1,120 @@
+---
+description: "Use when implementation is complete and you need to wrap up - guides completion by verifying builds/tests pass and presenting structured options."
+globs:
+alwaysApply: false
+---
+
+# Finishing Development Work
+
+## Overview
+
+Guide completion of development work by presenting clear options and handling chosen workflow.
+
+**Core principle:** Verify build/tests -> Present options -> Execute choice -> Clean up.
+
+**Announce at start:** "I'm using the finishing-a-development-branch rule to complete this work."
+
+## The Process
+
+### Step 1: Verify Build and Tests
+
+**Before presenting options, verify everything works:**
+
+```bash
+make
+make test
+```
+
+**If build or tests fail:**
+```
+Build/tests failing. Must fix before completing:
+
+[Show failures]
+
+Cannot proceed until build and tests pass.
+```
+
+Stop. Don't proceed to Step 2.
+
+**If everything passes:** Continue to Step 2.
+
+### Step 2: Check Current State
+
+```bash
+git status
+git log --oneline -5
+```
+
+### Step 3: Present Options
+
+Present exactly these options:
+
+```
+Implementation complete. What would you like to do?
+
+1. Commit all changes (if uncommitted work remains)
+2. Keep changes as-is (I'll handle it later)
+3. Discard this work
+```
+
+**Don't add explanation** - keep options concise.
+
+### Step 4: Execute Choice
+
+#### Option 1: Commit Changes
+
+```bash
+git add -A
+git commit -m "description of changes"
+```
+
+Report: "Changes committed. You can push when ready."
+
+#### Option 2: Keep As-Is
+
+Report: "Keeping changes as-is. You can commit later."
+
+**Don't modify anything.**
+
+#### Option 3: Discard
+
+**Confirm first:**
+```
+This will permanently discard all uncommitted changes.
+
+Type 'discard' to confirm.
+```
+
+Wait for exact confirmation.
+
+If confirmed:
+```bash
+git checkout -- .
+git clean -fd
+```
+
+## Common Mistakes
+
+**Skipping build/test verification**
+- **Problem:** Commit broken code
+- **Fix:** Always verify build and tests before offering options
+
+**Open-ended questions**
+- **Problem:** "What should I do next?" is ambiguous
+- **Fix:** Present structured options
+
+**No confirmation for discard**
+- **Problem:** Accidentally delete work
+- **Fix:** Require typed "discard" confirmation
+
+## Red Flags
+
+**Never:**
+- Proceed with failing build or tests
+- Delete work without confirmation
+- Commit without verifying the build
+
+**Always:**
+- Verify build and tests before offering options
+- Present structured options
+- Get typed confirmation for discard

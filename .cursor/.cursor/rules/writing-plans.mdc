@@ -1,0 +1,94 @@
+---
+description: "Use when you have a spec or requirements for a multi-step task, before touching code. Creates detailed implementation plans with bite-sized tasks."
+globs:
+alwaysApply: false
+---
+
+# Writing Plans
+
+## Overview
+
+Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. Frequent commits.
+
+Assume they are a skilled developer, but know almost nothing about our toolset or problem domain.
+
+**Announce at start:** "I'm using the writing-plans rule to create the implementation plan."
+
+**Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
+
+## Bite-Sized Task Granularity
+
+**Each step is one action (2-5 minutes):**
+- "Write the implementation code" - step
+- "Build and verify it compiles" - step
+- "Run `make run` and verify behavior" - step
+- "Commit" - step
+
+## Plan Document Header
+
+**Every plan MUST start with this header:**
+
+```markdown
+# [Feature Name] Implementation Plan
+
+> **For Claude:** REQUIRED: Use the executing-plans rule to implement this plan task-by-task.
+
+**Goal:** [One sentence describing what this builds]
+
+**Architecture:** [2-3 sentences about approach]
+
+**Tech Stack:** C++23, Raylib, afterhours ECS
+
+---
+```
+
+## Task Structure
+
+```markdown
+### Task N: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.h`
+- Modify: `exact/path/to/existing.cpp`
+
+**Step 1: Write the implementation**
+
+\```cpp
+// exact code to write
+\```
+
+**Step 2: Build and verify**
+
+```bash
+make
+```
+
+Expected: Clean compile, no errors
+
+**Step 3: Run and verify behavior**
+
+```bash
+make run
+```
+
+Expected: [describe what should happen]
+
+**Step 4: Commit**
+
+```bash
+git commit -m "description of change"
+```
+```
+
+## Remember
+- Exact file paths always
+- Complete code in plan (not "add validation")
+- Exact commands with expected output
+- DRY, YAGNI, frequent commits
+- Build command is `make`, run command is `make run`
+- Test command is `make test`
+- Use git for version control (not sl/jf)
+
+## Execution Handoff
+
+After saving the plan, offer to execute it using the executing-plans rule.

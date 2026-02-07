@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pkill:*)",
+      "Bash(find:*)",
+      "Bash(xcrun xctrace:*)",
+      "Bash(test:*)",
+      "Bash(timeout:*)",
+      "Bash(sips:*)",
+      "Bash(identify:*)",
+      "Bash(./output/cartographer.exe:*)",
+      "Skill(10x-engineer:brainstorming)",
+      "Bash(make:*)",
+      "Bash(git stash:*)",
+      "Bash(ls:*)",
+      "Skill(10x-engineer:writing-plans)",
+      "Skill(10x-engineer:subagent-driven-development)",
+      "Bash(python3:*)",
+      "Bash(convert:*)",
+      "Bash(magick identify:*)",
+      "Bash(magick:*)",
+      "Bash(lldb:*)",
+      "Bash(echo:*)",
+      "Bash(tree:*)",
+      "Bash(for test in tests/*.e2e)",
+      "Bash(do ./output/cartographer.exe -f \"$test\" -h)",
+      "Bash(done)",
+      "Bash(time clang++:*)",
+      "Bash(git log:*)",
+      "Bash(wc:*)",
+      "Skill(10x-engineer:executing-plans)",
+      "Bash(do)",
+      "Skill(10x-engineer:finishing-a-development-branch)",
+      "Bash(cursor:*)",
+      "Bash(ccache:*)",
+      "Bash(gh search:*)"
+    ]
+  }
+}
