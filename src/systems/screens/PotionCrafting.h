@@ -105,8 +105,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_dark)
-            .with_debug_name("bg"));
+            .with_custom_background(bg_dark));
 
     // ========== HEADER ==========
     div(context, mk(entity, 5),
@@ -125,8 +124,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(panel_purple)
             .with_border(border_purple, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("gold_bg"));
+            .with_roundness(0.5f));
 
     div(context, mk(entity, 7),
         ComponentConfig{}
@@ -155,9 +153,8 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(tab_text)
                      .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(std::bitset<4>(0b1100))
-                     .with_roundness(0.2f)
-                     .with_debug_name("tab_" + std::to_string(i)))) {
+            .with_rounded_corners(std::bitset<4>(0b1100))
+            .with_roundness(0.2f))) {
         selected_tab = i;
       }
     }
@@ -175,8 +172,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(panel_purple)
             .with_border(border_purple, 2.0f)
             .with_rounded_corners(std::bitset<4>(0b0011))
-            .with_roundness(0.06f)
-            .with_debug_name("recipe_panel"));
+            .with_roundness(0.06f));
 
     // Recipe rows
     for (size_t i = 0; i < recipes.size(); i++) {
@@ -197,8 +193,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_custom_background(row_bg)
                   .with_border(row_border, is_sel ? 2.0f : 0.0f)
                   .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.1f)
-                  .with_debug_name("recipe_row_" + std::to_string(i)))) {
+                  .with_roundness(0.1f))) {
         selected_recipe = i;
       }
 
@@ -210,8 +205,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(recipes[i].potion_color)
               .with_border(border_purple, 2.0f)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_debug_name("potion_dot_" + std::to_string(i)));
+              .with_roundness(1.0f));
 
       // Recipe name
       div(context, mk(entity, 112 + static_cast<int>(i) * 4),
@@ -220,8 +214,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(200), pixels(28)})
               .with_absolute_position(list_x + 70.0f, ry + 8.0f)
               .with_font("Gaegu-Bold", h720(22.0f))
-              .with_custom_text_color(is_sel ? accent_gold : white)
-              .with_debug_name("recipe_name_" + std::to_string(i)));
+              .with_custom_text_color(is_sel ? accent_gold : white));
 
       // Effect text
       div(context, mk(entity, 113 + static_cast<int>(i) * 4),
@@ -229,8 +222,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(recipes[i].effect)
               .with_size(ComponentSize{pixels(200), pixels(22)})
               .with_absolute_position(list_x + 70.0f, ry + 32.0f)
-              .with_custom_text_color(muted)
-              .with_debug_name("recipe_effect_" + std::to_string(i)));
+              .with_custom_text_color(muted));
 
       // Brew time
       div(context, mk(entity, 114 + static_cast<int>(i) * 4),
@@ -238,8 +230,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(std::to_string(recipes[i].brew_time) + "s")
               .with_size(ComponentSize{pixels(50), pixels(22)})
               .with_absolute_position(list_x + 70.0f, ry + 50.0f)
-              .with_custom_text_color(muted)
-              .with_debug_name("recipe_time_" + std::to_string(i)));
+              .with_custom_text_color(muted));
     }
 
     // ========== CENTER: BREWING STATION ==========
@@ -258,8 +249,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_soft_shadow(3.0f, 4.0f, 12.0f,
-                              afterhours::Color{0, 0, 0, 60})
-            .with_debug_name("brew_panel"));
+                              afterhours::Color{0, 0, 0, 60}));
 
     // Brewing header
     div(context, mk(entity, 201),
@@ -284,8 +274,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(brew_bg)
             .with_border(border_purple, 3.0f)
             .with_rounded_corners(std::bitset<4>(0b0011))
-            .with_roundness(0.4f)
-            .with_debug_name("flask_bg"));
+            .with_roundness(0.4f));
 
     // Flask fill (based on brew progress)
     float fill_h = flask_size * brew_progress;
@@ -296,8 +285,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                             flask_y + flask_size - fill_h - 3.0f)
             .with_custom_background(sel_recipe.potion_color)
             .with_rounded_corners(std::bitset<4>(0b0011))
-            .with_roundness(0.3f)
-            .with_debug_name("flask_fill"));
+            .with_roundness(0.3f));
 
     // Flask neck
     div(context, mk(entity, 212),
@@ -306,8 +294,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(flask_x + (flask_size - 40.0f) / 2.0f,
                             flask_y - 22.0f)
             .with_custom_background(brew_bg)
-            .with_border(border_purple, 2.0f)
-            .with_debug_name("flask_neck"));
+            .with_border(border_purple, 2.0f));
 
     // Brew progress bar
     float prog_y = flask_y + flask_size + 15.0f;
@@ -319,8 +306,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(brew_bg)
             .with_border(border_purple, 1.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("brew_bar_bg"));
+            .with_roundness(0.5f));
 
     div(context, mk(entity, 221),
         ComponentConfig{}
@@ -330,8 +316,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(brew_x + 33.0f, prog_y + 2.0f)
             .with_custom_background(accent_green)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("brew_bar_fill"));
+            .with_roundness(0.5f));
 
     // Progress percentage
     int prog_pct = static_cast<int>(brew_progress * 100);
@@ -392,8 +377,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                                       : afterhours::Color{180, 60, 60, 255},
                            2.0f)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.15f)
-              .with_debug_name("slot_" + std::to_string(i)));
+              .with_roundness(0.15f));
 
       // Ingredient icon
       div(context, mk(entity, 241 + static_cast<int>(i) * 3),
@@ -406,8 +390,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_debug_name("slot_icon_" + std::to_string(i)));
+              .with_roundness(1.0f));
 
       // Count label
       div(context, mk(entity, 242 + static_cast<int>(i) * 3),
@@ -417,8 +400,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                                        pixels(18)})
               .with_absolute_position(sx, sy + slot_size - 20.0f)
               .with_custom_text_color(has_enough ? accent_green : afterhours::Color{220, 80, 80, 255})
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("slot_count_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Center));
     }
 
     // Brew button
@@ -451,8 +433,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(panel_purple)
             .with_border(border_purple, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.06f)
-            .with_debug_name("inv_panel"));
+            .with_roundness(0.06f));
 
     // Inventory header
     div(context, mk(entity, 301),
@@ -486,8 +467,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(panel_light)
               .with_border(border_purple, 1.0f)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.1f)
-              .with_debug_name("inv_cell_" + std::to_string(i)));
+              .with_roundness(0.1f));
 
       // Icon
       div(context, mk(entity, 311 + static_cast<int>(i) * 3),
@@ -500,8 +480,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_debug_name("inv_icon_" + std::to_string(i)));
+              .with_roundness(1.0f));
 
       // Name and count
       div(context, mk(entity, 312 + static_cast<int>(i) * 3),
@@ -511,8 +490,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pxf(inv_cell_w - 55),
                                        pixels(40)})
               .with_absolute_position(ix + 46.0f, iy + 8.0f)
-              .with_custom_text_color(white)
-              .with_debug_name("inv_name_" + std::to_string(i)));
+              .with_custom_text_color(white));
     }
 
     // ========== BOTTOM STATUS ==========

@@ -186,8 +186,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                               pixels(44)})
                      .with_absolute_position(row_x, ry - 8.0f)
                      .with_font("EqProRounded", h720(18.0f))
-                     .with_custom_text_color(label_color)
-                     .with_debug_name("label_" + std::to_string(i)))) {
+                     .with_custom_text_color(label_color))) {
         selected_row = i;
       }
 
@@ -207,8 +206,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(arrow_color)
-                     .with_alignment(TextAlignment::Center)
-                     .with_debug_name("left_" + std::to_string(i)))) {
+                     .with_alignment(TextAlignment::Center))) {
         selected_row = i;
         auto &setting = current_settings[i];
         setting.option_idx = (setting.option_idx == 0)
@@ -226,8 +224,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(row_x + label_w + 65.0f, ry - 8.0f)
               .with_custom_background(dd_bg)
               .with_custom_text_color(text_white)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("value_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Center));
 
       // Right arrow >
       if (button(context, mk(entity, 53 + static_cast<int>(i) * 4),
@@ -240,8 +237,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(arrow_color)
-                     .with_alignment(TextAlignment::Center)
-                     .with_debug_name("right_" + std::to_string(i)))) {
+                     .with_alignment(TextAlignment::Center))) {
         selected_row = i;
         auto &setting = current_settings[i];
         setting.option_idx = (setting.option_idx + 1) % setting.options.size();
@@ -271,41 +267,22 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         "Current: " + current_settings[selected_row]
                           .options[current_settings[selected_row].option_idx];
 
-    div(context, mk(entity, 151),
-        ComponentConfig{}
-            .with_label(help_title)
-            .with_size(ComponentSize{pxf(help_w - 24),
-                                     pixels(28)})
-            .with_absolute_position(help_x + 12.0f, help_y + 12.0f)
-            .with_font("EqProRounded", h720(17.0f))
-            .with_custom_text_color(text_cyan));
-
-    div(context, mk(entity, 152),
-        ComponentConfig{}
-            .with_label(help_line1)
-            .with_size(ComponentSize{pxf(help_w - 24),
-                                     pixels(25)})
-            .with_absolute_position(help_x + 12.0f, help_y + 45.0f)
-            .with_font("EqProRounded", h720(13.0f))
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 153),
-        ComponentConfig{}
-            .with_label(help_line2)
-            .with_size(ComponentSize{pxf(help_w - 24),
-                                     pixels(25)})
-            .with_absolute_position(help_x + 12.0f, help_y + 65.0f)
-            .with_font("EqProRounded", h720(13.0f))
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 154),
-        ComponentConfig{}
-            .with_label(current_val)
-            .with_size(ComponentSize{pxf(help_w - 24),
-                                     pixels(25)})
-            .with_absolute_position(help_x + 12.0f, help_y + 100.0f)
-            .with_font("EqProRounded", h720(13.0f))
-            .with_custom_text_color(text_muted));
+    struct HelpLine { int id; const std::string &text; int h; float y_off; float font_sz; afterhours::Color color; };
+    HelpLine help_lines[] = {
+        {151, help_title, 28, 12.0f, 17.0f, text_cyan},
+        {152, help_line1, 25, 45.0f, 13.0f, text_white},
+        {153, help_line2, 25, 65.0f, 13.0f, text_white},
+        {154, current_val, 25, 100.0f, 13.0f, text_muted},
+    };
+    for (auto &hl : help_lines) {
+      div(context, mk(entity, hl.id),
+          ComponentConfig{}
+              .with_label(hl.text)
+              .with_size(ComponentSize{pxf(help_w - 24), pixels(hl.h)})
+              .with_absolute_position(help_x + 12.0f, help_y + hl.y_off)
+              .with_font("EqProRounded", h720(hl.font_sz))
+              .with_custom_text_color(hl.color));
+    }
 
     // ========== BOTTOM TAB BAR ==========
     float tab_y = panel_y + panel_h + 15.0f;
@@ -330,8 +307,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_border(panel_border, 1.0f)
                   .with_font("EqProRounded", h720(14.0f))
                   .with_custom_text_color(tab_text)
-                  .with_alignment(TextAlignment::Center)
-                  .with_debug_name("tab_" + std::to_string(i)))) {
+                  .with_alignment(TextAlignment::Center))) {
         selected_tab = i;
       }
 
@@ -342,8 +318,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pxf(tab_w - 10),
                                          pixels(5)})
                 .with_absolute_position(tx + 2.0f, tab_y + tab_h - 7.0f)
-                .with_custom_background(highlight_blue)
-                .with_debug_name("tab_underline_" + std::to_string(i)));
+                .with_custom_background(highlight_blue));
       }
     }
 
@@ -351,59 +326,30 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float prompt_y = panel_y + panel_h + 55.0f;
     float prompt_x = panel_x;
 
-    // X Close
-    div(context, mk(entity, 300),
-        ComponentConfig{}
-            .with_label("X")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position(prompt_x, prompt_y)
-            .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 301),
-        ComponentConfig{}
-            .with_label("Close")
-            .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position(prompt_x + 35.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_white));
-
-    // O Reset
-    div(context, mk(entity, 302),
-        ComponentConfig{}
-            .with_label("O")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position(prompt_x + 100.0f, prompt_y)
-            .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 303),
-        ComponentConfig{}
-            .with_label("Reset")
-            .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position(prompt_x + 135.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_white));
-
-    // [] Select
-    div(context, mk(entity, 304),
-        ComponentConfig{}
-            .with_label("[]")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position(prompt_x + 195.0f, prompt_y)
-            .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 305),
-        ComponentConfig{}
-            .with_label("Select")
-            .with_size(ComponentSize{pixels(55), pixels(25)})
-            .with_absolute_position(prompt_x + 230.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_white));
+    struct Prompt { const char *icon; const char *label; int icon_id; int label_id; float x_off; int label_w; };
+    afterhours::Color prompt_bg{55, 75, 95, 255};
+    Prompt prompts[] = {
+        {"X", "Close", 300, 301, 0.0f, 50},
+        {"O", "Reset", 302, 303, 100.0f, 50},
+        {"[]", "Select", 304, 305, 195.0f, 55},
+    };
+    for (auto &p : prompts) {
+      div(context, mk(entity, p.icon_id),
+          ComponentConfig{}
+              .with_label(p.icon)
+              .with_size(ComponentSize{pixels(28), pixels(28)})
+              .with_absolute_position(prompt_x + p.x_off, prompt_y)
+              .with_custom_background(prompt_bg)
+              .with_custom_text_color(text_white)
+              .with_alignment(TextAlignment::Center));
+      div(context, mk(entity, p.label_id),
+          ComponentConfig{}
+              .with_label(p.label)
+              .with_size(ComponentSize{pixels(p.label_w), pixels(25)})
+              .with_absolute_position(prompt_x + p.x_off + 35.0f, prompt_y + 2.0f)
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(text_white));
+    }
   }
 };
 

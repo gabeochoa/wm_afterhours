@@ -164,106 +164,65 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float section_gap = 5.0f;        // Tighter gap between rows
     float section_header_gap = 8.0f; // Gap after section header
 
+    // Section header helper
+    auto section_header = [&](int id, const char *label, float y) {
+      div(context, mk(entity, id),
+          ComponentConfig{}
+              .with_label(label)
+              .with_size(ComponentSize{pixels(120), pixels(22)})
+              .with_absolute_position(content_x, y)
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(header_olive));
+    };
+
+    // Pill-style action button helper
+    auto action_button = [&](int id, const char *label, float y) {
+      button(context, mk(entity, id),
+             ComponentConfig{}
+                 .with_label(label)
+                 .with_720p_size(row_w, row_h)
+                 .with_absolute_position(content_x, y)
+                 .with_custom_background(btn_cream)
+                 .with_custom_text_color(text_muted)
+                 .with_alignment(TextAlignment::Center)
+                 .with_rounded_corners(RoundedCorners())
+                 .with_roundness(0.5f));
+    };
+
     // ========== DISPLAY SECTION ==========
-    div(context, mk(entity, 100),
-        ComponentConfig{}
-            .with_label("DISPLAY")
-            .with_size(ComponentSize{pixels(100), pixels(22)})
-            .with_absolute_position(content_x, content_y)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive));
-
+    section_header(100, "DISPLAY", content_y);
     float display_row_y = content_y + 22.0f;
-
-    // Mode row - interactive
     render_selector_row(context, entity, 110, content_x, display_row_y, row_w,
-                        row_h, "Mode", display_mode,
-                        static_cast<int>(modes.size()));
-
-    // Resolution row - interactive
+                        row_h, "Mode", display_mode, static_cast<int>(modes.size()));
     render_selector_row(context, entity, 120, content_x,
                         display_row_y + row_h + section_gap, row_w, row_h,
-                        "Resolution", resolution,
-                        static_cast<int>(resolutions.size()));
+                        "Resolution", resolution, static_cast<int>(resolutions.size()));
 
     // ========== CONTROLS SECTION ==========
-    float controls_y =
-        display_row_y + 2 * (row_h + section_gap) + section_header_gap;
-    div(context, mk(entity, 130),
-        ComponentConfig{}
-            .with_label("CONTROLS")
-            .with_size(ComponentSize{pixels(120), pixels(22)})
-            .with_absolute_position(content_x, controls_y)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive));
-
+    float controls_y = display_row_y + 2 * (row_h + section_gap) + section_header_gap;
+    section_header(130, "CONTROLS", controls_y);
     float controls_row_y = controls_y + 22.0f;
-
-    // Cam panning speed
     render_slider_row(context, entity, 140, content_x, controls_row_y, row_w,
                       row_h, "Cam panning speed", cam_pan_speed, 10);
-
-    // Cam rotating speed
     render_slider_row(context, entity, 160, content_x,
                       controls_row_y + row_h + section_gap, row_w, row_h,
                       "Cam rotating Speed", cam_rotate_speed, 10);
-
-    // Keyboard button
-    button(context, mk(entity, 180),
-           ComponentConfig{}
-               .with_label("KEYBOARD")
-               .with_720p_size(row_w, row_h)
-               .with_absolute_position(content_x,
-                               controls_row_y + 2 * (row_h + section_gap))
-               .with_custom_background(btn_cream)
-               .with_custom_text_color(text_muted)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f));
+    action_button(180, "KEYBOARD", controls_row_y + 2 * (row_h + section_gap));
 
     // ========== AUDIO SECTION ==========
-    float audio_y =
-        controls_row_y + 3 * (row_h + section_gap) + section_header_gap;
-    div(context, mk(entity, 190),
-        ComponentConfig{}
-            .with_label("AUDIO")
-            .with_size(ComponentSize{pixels(80), pixels(22)})
-            .with_absolute_position(content_x, audio_y)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive));
-
+    float audio_y = controls_row_y + 3 * (row_h + section_gap) + section_header_gap;
+    section_header(190, "AUDIO", audio_y);
     float audio_row_y = audio_y + 22.0f;
-
-    // Effects Volume
     render_slider_row(context, entity, 200, content_x, audio_row_y, row_w,
                       row_h, "Effects Volume", effects_volume, 10);
-
-    // Music Volume
     render_slider_row(context, entity, 220, content_x,
                       audio_row_y + row_h + section_gap, row_w, row_h,
                       "Music Volume", music_volume, 10);
 
     // ========== TUTORIAL SECTION ==========
-    float tutorial_y =
-        audio_row_y + 2 * (row_h + section_gap) + section_header_gap;
-    div(context, mk(entity, 240),
-        ComponentConfig{}
-            .with_label("TUTORIAL")
-            .with_size(ComponentSize{pixels(100), pixels(22)})
-            .with_absolute_position(content_x, tutorial_y)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive));
-
-    button(context, mk(entity, 250),
-           ComponentConfig{}
-               .with_label("PLAY TUTORIAL")
-               .with_720p_size(row_w, row_h)
-               .with_absolute_position(content_x, tutorial_y + 22.0f)
-               .with_custom_background(btn_cream)
-               .with_custom_text_color(text_muted)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f));
+    float tutorial_y = audio_row_y + 2 * (row_h + section_gap) + section_header_gap;
+    section_header(240, "TUTORIAL", tutorial_y);
+    action_button(250, "PLAY TUTORIAL", tutorial_y + 22.0f);
 
     // ========== RESET TO DEFAULTS ==========
     // Positioned at SCREEN bottom, outside the panel (matching inspiration)
@@ -289,8 +248,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(x, y)
             .with_custom_background(row_cream)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.55f)
-            .with_debug_name("row_" + std::to_string(base_id)));
+            .with_roundness(0.55f));
 
     // Label (left-aligned)
     div(context, mk(entity, base_id + 1),
@@ -298,8 +256,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(160), pxf(h)})
             .with_absolute_position(x + 16.0f, y + 8.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("label_" + std::to_string(base_id)));
+            .with_custom_text_color(text_dark));
 
     // Left chevron (<) - clickable
     if (button(context, mk(entity, base_id + 2),
@@ -311,8 +268,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("chevron_l_" + std::to_string(base_id)))) {
+                   .with_alignment(TextAlignment::Center))) {
       value_idx = (value_idx == 0) ? max_options - 1 : value_idx - 1;
     }
 
@@ -331,8 +287,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pxf(h)})
             .with_absolute_position(x + w - 140.0f, y + 8.0f)
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("value_" + std::to_string(base_id)));
+            .with_alignment(TextAlignment::Center));
 
     // Right chevron (>) - clickable
     if (button(context, mk(entity, base_id + 4),
@@ -344,8 +299,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("chevron_r_" + std::to_string(base_id)))) {
+                   .with_alignment(TextAlignment::Center))) {
       value_idx = (value_idx + 1) % max_options;
     }
   }
@@ -362,8 +316,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(x, y)
             .with_custom_background(row_cream)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.55f)
-            .with_debug_name("row_" + std::to_string(base_id)));
+            .with_roundness(0.55f));
 
     // Label (left-aligned)
     div(context, mk(entity, base_id + 1),
@@ -371,8 +324,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(175), pxf(h)})
             .with_absolute_position(x + 16.0f, y + 8.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("label_" + std::to_string(base_id)));
+            .with_custom_text_color(text_dark));
 
     // Left chevron (<) - clickable
     if (button(context, mk(entity, base_id + 2),
@@ -384,8 +336,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("chevron_l_" + std::to_string(base_id)))) {
+                   .with_alignment(TextAlignment::Center))) {
       if (value > 0)
         value--;
     }
@@ -411,9 +362,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      y + 11.0f)
                      .with_custom_background(seg_color)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.2f)
-                     .with_debug_name("seg_" + std::to_string(base_id) + "_" +
-                                      std::to_string(i)))) {
+                     .with_roundness(0.2f))) {
         value = i + 1; // Set value to this segment
       }
     }
@@ -428,8 +377,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("chevron_r_" + std::to_string(base_id)))) {
+                   .with_alignment(TextAlignment::Center))) {
       if (value < max_val)
         value++;
     }

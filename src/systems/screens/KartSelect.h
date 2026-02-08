@@ -171,8 +171,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_custom_background(cell_bg)
                   .with_border(cell_border, border_w)
                   .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.15f)
-                  .with_debug_name("char_" + std::to_string(i)))) {
+                  .with_roundness(0.15f))) {
         selected_character = i;
       }
 
@@ -191,8 +190,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(white)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_debug_name("portrait_" + std::to_string(i)));
+              .with_roundness(1.0f));
 
       // Character name below portrait
       afterhours::Color name_color = is_selected ? dark_text : white;
@@ -204,8 +202,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(cx, cy + cell_size - 22.0f)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(name_color)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("name_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Center));
     }
 
     // ========== CENTER: CHARACTER PREVIEW ==========
@@ -284,8 +281,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(40), pixels(22)})
               .with_absolute_position(preview_x + 20.0f, sy)
               .with_font("EqProRounded", h720(16.0f))
-              .with_custom_text_color(white)
-              .with_debug_name("stat_label_" + std::to_string(i)));
+              .with_custom_text_color(white));
 
       // Bar background
       div(context, mk(entity, 111 + static_cast<int>(i) * 3),
@@ -295,8 +291,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(preview_x + 70.0f, sy + 3.0f)
               .with_custom_background(afterhours::Color{25, 35, 60, 255})
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f)
-              .with_debug_name("stat_bg_" + std::to_string(i)));
+              .with_roundness(0.5f));
 
       // Bar fill
       div(context, mk(entity, 112 + static_cast<int>(i) * 3),
@@ -307,8 +302,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(preview_x + 70.0f, sy + 3.0f)
               .with_custom_background(stats[i].color)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f)
-              .with_debug_name("stat_fill_" + std::to_string(i)));
+              .with_roundness(0.5f));
     }
 
     // ========== RIGHT: KART SELECTION ==========
@@ -359,8 +353,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_custom_text_color(kart_text)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.3f)
-                     .with_debug_name("kart_" + std::to_string(i)))) {
+                     .with_roundness(0.3f))) {
         selected_kart = i;
       }
     }

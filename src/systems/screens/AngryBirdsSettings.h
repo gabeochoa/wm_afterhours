@@ -237,8 +237,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                       2.0f, 3.0f, cfg_btn_shadow_blur,
                       afterhours::Color{0, 0, 0,
                                         static_cast<unsigned char>(
-                                            cfg_btn_shadow_alpha)})
-                  .with_debug_name("toggle_" + std::to_string(i)))) {
+                                            cfg_btn_shadow_alpha)}))) {
         *toggles[i].state = !(*toggles[i].state);
       }
 
@@ -253,8 +252,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                       cfg_toggle_label_gap)
               .with_font("EqProRounded", h720(cfg_toggle_label_font_size))
               .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("toggle_label_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Center));
     }
 
     // ========== SAVE/LOAD + SYNC GROUP ==========
@@ -361,109 +359,49 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("EqProRounded", h720(17.0f))
             .with_custom_text_color(text_white));
 
-    // Credits
-    button(context, mk(entity, 55),
-           ComponentConfig{}
-               .with_label("Credits")
-               .with_size(ComponentSize{
-                   pxf(cfg_pill_btn_width),
-                   pxf(cfg_pill_btn_height)})
-               .with_absolute_position(right_btn_x, btn_row1_y)
-               .with_custom_background(btn_blue)
-               .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", h720(cfg_pill_font_size))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(
-                   2.0f, 3.0f, cfg_btn_shadow_blur,
-                   afterhours::Color{
-                       0, 0, 0,
-                       static_cast<unsigned char>(cfg_btn_shadow_alpha)})
-               .with_debug_name("credits"));
-
-    // Language
-    button(context, mk(entity, 60),
-           ComponentConfig{}
-               .with_label("Language")
-               .with_size(ComponentSize{
-                   pxf(cfg_pill_btn_width),
-                   pxf(cfg_pill_btn_height)})
-               .with_absolute_position(left_btn_x, btn_row2_y)
-               .with_custom_background(btn_blue)
-               .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", h720(cfg_pill_font_size))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(
-                   2.0f, 3.0f, cfg_btn_shadow_blur,
-                   afterhours::Color{
-                       0, 0, 0,
-                       static_cast<unsigned char>(cfg_btn_shadow_alpha)})
-               .with_debug_name("language"));
-
-    // Support
-    button(context, mk(entity, 65),
-           ComponentConfig{}
-               .with_label("Support")
-               .with_size(ComponentSize{
-                   pxf(cfg_pill_btn_width),
-                   pxf(cfg_pill_btn_height)})
-               .with_absolute_position(right_btn_x, btn_row2_y)
-               .with_custom_background(btn_blue)
-               .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", h720(cfg_pill_font_size))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(
-                   2.0f, 3.0f, cfg_btn_shadow_blur,
-                   afterhours::Color{
-                       0, 0, 0,
-                       static_cast<unsigned char>(cfg_btn_shadow_alpha)})
-               .with_debug_name("support"));
+    // Blue pill buttons - data-driven
+    struct PillBtn { const char *label; int id; float x; float y; };
+    afterhours::Color pill_shadow{0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
+    PillBtn pill_btns[] = {
+        {"Credits", 55, right_btn_x, btn_row1_y},
+        {"Language", 60, left_btn_x, btn_row2_y},
+        {"Support", 65, right_btn_x, btn_row2_y},
+    };
+    for (auto &pb : pill_btns) {
+      button(context, mk(entity, pb.id),
+             ComponentConfig{}
+                 .with_label(pb.label)
+                 .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
+                 .with_absolute_position(pb.x, pb.y)
+                 .with_custom_background(btn_blue)
+                 .with_border(btn_blue_dark, cfg_pill_border_width)
+                 .with_font("EqProRounded", h720(cfg_pill_font_size))
+                 .with_custom_text_color(text_white)
+                 .with_alignment(TextAlignment::Center)
+                 .with_rounded_corners(RoundedCorners())
+                 .with_roundness(0.5f)
+                 .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, pill_shadow));
+    }
 
     // ========== BOTTOM INFO (left column) ==========
     float info_y = btn_row3_y + 4.0f;
-    div(context, mk(entity, 70),
-        ComponentConfig{}
-            .with_label("Build: 15555.1.114203")
-            .with_size(ComponentSize{pixels(200),
-                                     pxf(cfg_info_line_height)})
-            .with_absolute_position(left_btn_x, info_y)
-            .with_font("EqProRounded", h720(cfg_info_font_size))
-            .with_custom_text_color(text_muted));
+    const char *info_lines[] = {
+        "Build: 15555.1.114203", "Version 1.11.0.12346", "Player: #281-676-956"};
+    for (int il = 0; il < 3; il++) {
+      div(context, mk(entity, 70 + il),
+          ComponentConfig{}
+              .with_label(info_lines[il])
+              .with_size(ComponentSize{pixels(200), pxf(cfg_info_line_height)})
+              .with_absolute_position(left_btn_x, info_y + (float)il * (cfg_info_line_height + 2.0f))
+              .with_font("EqProRounded", h720(cfg_info_font_size))
+              .with_custom_text_color(text_muted));
+    }
 
-    div(context, mk(entity, 71),
-        ComponentConfig{}
-            .with_label("Version 1.11.0.12346")
-            .with_size(ComponentSize{pixels(200),
-                                     pxf(cfg_info_line_height)})
-            .with_absolute_position(left_btn_x, info_y + cfg_info_line_height + 2.0f)
-            .with_font("EqProRounded", h720(cfg_info_font_size))
-            .with_custom_text_color(text_muted));
-
-    div(context, mk(entity, 72),
-        ComponentConfig{}
-            .with_label("Player: #281-676-956")
-            .with_size(ComponentSize{pixels(200),
-                                     pxf(cfg_info_line_height)})
-            .with_absolute_position(left_btn_x,
-                            info_y + (cfg_info_line_height + 2.0f) * 2.0f)
-            .with_font("EqProRounded", h720(cfg_info_font_size))
-            .with_custom_text_color(text_muted));
-
-    // Terms and Privacy
+    // Terms and Privacy (same pill style, slightly smaller font)
     button(context, mk(entity, 75),
            ComponentConfig{}
                .with_label("Terms and Privacy")
-               .with_size(ComponentSize{
-                   pxf(cfg_pill_btn_width),
-                   pxf(cfg_pill_btn_height)})
+               .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
                .with_absolute_position(right_btn_x, btn_row3_y)
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, cfg_pill_border_width)
@@ -472,12 +410,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_soft_shadow(
-                   2.0f, 3.0f, cfg_btn_shadow_blur,
-                   afterhours::Color{
-                       0, 0, 0,
-                       static_cast<unsigned char>(cfg_btn_shadow_alpha)})
-               .with_debug_name("terms"));
+               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, pill_shadow));
   }
 };
 

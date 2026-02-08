@@ -116,30 +116,16 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_dark)
             .with_debug_name("bg"));
 
-    // Checkered flag decorative stripe at top
+    // Checkered flag decorative stripe at top (two rows, offset)
     float stripe_h = 8.0f;
     int stripe_count = screen_w / 16;
     for (int i = 0; i < stripe_count; i++) {
-      // Row 0: white squares at even positions
-      if (i % 2 == 0) {
-        div(context, mk(entity, 1 + i),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(16),
-                                         pxf(stripe_h)})
-                .with_absolute_position((float)i * 16.0f, 0.0f)
-                .with_custom_background(white)
-                .with_debug_name("checker_r0_" + std::to_string(i)));
-      }
-      // Row 1: white squares at odd positions
-      if (i % 2 == 1) {
-        div(context, mk(entity, 1 + stripe_count + i),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(16),
-                                         pxf(stripe_h)})
-                .with_absolute_position((float)i * 16.0f, stripe_h)
-                .with_custom_background(white)
-                .with_debug_name("checker_r1_" + std::to_string(i)));
-      }
+      int row = i % 2; // row 0: even positions, row 1: odd positions
+      div(context, mk(entity, 1 + row * stripe_count + i),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(16), pxf(stripe_h)})
+              .with_absolute_position((float)i * 16.0f, (float)row * stripe_h)
+              .with_custom_background(white));
     }
 
     // ========== HEADER ==========
@@ -190,34 +176,22 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     float col_pts_x = table_x + table_w - 80.0f;
     float header_y = table_y + 10.0f;
 
-    div(context, mk(entity, 201),
-        ComponentConfig{}
-            .with_label("#")
-            .with_size(ComponentSize{pixels(40), pixels(24)})
-            .with_absolute_position(col_pos_x, header_y)
-            .with_custom_text_color(muted));
-
-    div(context, mk(entity, 202),
-        ComponentConfig{}
-            .with_label("RACER")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
-            .with_absolute_position(col_name_x, header_y)
-            .with_custom_text_color(muted));
-
-    div(context, mk(entity, 203),
-        ComponentConfig{}
-            .with_label("TIME")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
-            .with_absolute_position(col_time_x, header_y)
-            .with_custom_text_color(muted));
-
-    div(context, mk(entity, 204),
-        ComponentConfig{}
-            .with_label("PTS")
-            .with_size(ComponentSize{pixels(60), pixels(24)})
-            .with_absolute_position(col_pts_x, header_y)
-            .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Right));
+    struct ColHeader { const char *label; int id; int w; float x; TextAlignment align; };
+    ColHeader headers[] = {
+        {"#", 201, 40, col_pos_x, TextAlignment::Left},
+        {"RACER", 202, 120, col_name_x, TextAlignment::Left},
+        {"TIME", 203, 120, col_time_x, TextAlignment::Left},
+        {"PTS", 204, 60, col_pts_x, TextAlignment::Right},
+    };
+    for (auto &ch : headers) {
+      div(context, mk(entity, ch.id),
+          ComponentConfig{}
+              .with_label(ch.label)
+              .with_size(ComponentSize{pixels(ch.w), pixels(24)})
+              .with_absolute_position(ch.x, header_y)
+              .with_custom_text_color(muted)
+              .with_alignment(ch.align));
+    }
 
     // Separator
     div(context, mk(entity, 205),
@@ -243,8 +217,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_absolute_position(table_x + 10.0f, ry - 2.0f)
                 .with_custom_background(afterhours::Color{30, 35, 55, 255})
                 .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.1f)
-                .with_debug_name("alt_row_" + std::to_string(i)));
+                .with_roundness(0.1f));
       }
 
       // Row highlight for player
@@ -269,8 +242,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(44), pixels(32)})
               .with_absolute_position(col_pos_x, ry + 6.0f)
               .with_font("Fredoka", h720(22.0f))
-              .with_custom_text_color(position_color(r.position))
-              .with_debug_name("pos_" + std::to_string(i)));
+              .with_custom_text_color(position_color(r.position)));
 
       // Name
       div(context, mk(entity, 212 + static_cast<int>(i) * 5),
@@ -280,8 +252,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(col_name_x, ry + 6.0f)
               .with_font("EqProRounded",
                           h720(r.is_player ? 22.0f : 20.0f))
-              .with_custom_text_color(r.is_player ? gold : white)
-              .with_debug_name("name_" + std::to_string(i)));
+              .with_custom_text_color(r.is_player ? gold : white));
 
       // Time
       div(context, mk(entity, 213 + static_cast<int>(i) * 5),
@@ -290,8 +261,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(140), pixels(28)})
               .with_absolute_position(col_time_x, ry + 8.0f)
               .with_font("EqProRounded", h720(18.0f))
-              .with_custom_text_color(white)
-              .with_debug_name("time_" + std::to_string(i)));
+              .with_custom_text_color(white));
 
       // Points
       div(context, mk(entity, 214 + static_cast<int>(i) * 5),
@@ -301,8 +271,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(col_pts_x, ry + 8.0f)
               .with_font("EqProRounded", h720(20.0f))
               .with_custom_text_color(accent_green)
-              .with_alignment(TextAlignment::Right)
-              .with_debug_name("pts_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Right));
     }
 
     // ========== RIGHT: CUP STANDINGS ==========
@@ -347,8 +316,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(30), pixels(28)})
               .with_absolute_position(cup_x + 15.0f, sy)
               .with_font("EqProRounded", h720(20.0f))
-              .with_custom_text_color(position_color(static_cast<int>(i + 1)))
-              .with_debug_name("cup_pos_" + std::to_string(i)));
+              .with_custom_text_color(position_color(static_cast<int>(i + 1))));
 
       // Name
       div(context, mk(entity, 411 + static_cast<int>(i) * 3),
@@ -357,8 +325,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(120), pixels(28)})
               .with_absolute_position(cup_x + 50.0f, sy)
               .with_font("EqProRounded", h720(20.0f))
-              .with_custom_text_color(s.is_player ? gold : white)
-              .with_debug_name("cup_name_" + std::to_string(i)));
+              .with_custom_text_color(s.is_player ? gold : white));
 
       // Points
       div(context, mk(entity, 412 + static_cast<int>(i) * 3),
@@ -368,8 +335,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(cup_x + cup_w - 100.0f, sy)
               .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(muted)
-              .with_alignment(TextAlignment::Right)
-              .with_debug_name("cup_pts_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Right));
     }
 
     // ========== RIGHT: BEST LAP ==========
@@ -386,34 +352,22 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.06f)
             .with_debug_name("lap_panel"));
 
-    div(context, mk(entity, 451),
-        ComponentConfig{}
-            .with_label("BEST LAP")
-            .with_size(ComponentSize{pxf(cup_w - 20),
-                                     pixels(24)})
-            .with_absolute_position(cup_x + 10.0f, lap_y + 12.0f)
-            .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 452),
-        ComponentConfig{}
-            .with_label("0:48.220")
-            .with_size(ComponentSize{pxf(cup_w - 20),
-                                     pixels(40)})
-            .with_absolute_position(cup_x + 10.0f, lap_y + 40.0f)
-            .with_font("Fredoka", h720(32.0f))
-            .with_custom_text_color(accent_green)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 453),
-        ComponentConfig{}
-            .with_label("New Personal Best!")
-            .with_size(ComponentSize{pxf(cup_w - 20),
-                                     pixels(20)})
-            .with_absolute_position(cup_x + 10.0f, lap_y + 75.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(gold)
-            .with_alignment(TextAlignment::Center));
+    struct LapLine { const char *label; int id; int h; float y_off; const char *font; float font_sz; afterhours::Color color; };
+    LapLine lap_lines[] = {
+        {"BEST LAP", 451, 24, 12.0f, "EqProRounded", 16.0f, muted},
+        {"0:48.220", 452, 40, 40.0f, "Fredoka", 32.0f, accent_green},
+        {"New Personal Best!", 453, 20, 75.0f, "EqProRounded", 14.0f, gold},
+    };
+    for (auto &ll : lap_lines) {
+      div(context, mk(entity, ll.id),
+          ComponentConfig{}
+              .with_label(ll.label)
+              .with_size(ComponentSize{pxf(cup_w - 20), pixels(ll.h)})
+              .with_absolute_position(cup_x + 10.0f, lap_y + ll.y_off)
+              .with_font(ll.font, h720(ll.font_sz))
+              .with_custom_text_color(ll.color)
+              .with_alignment(TextAlignment::Center));
+    }
 
     // ========== BOTTOM ACTIONS ==========
     float bottom_y = (float)screen_h - 80.0f;
