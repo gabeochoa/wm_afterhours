@@ -143,3 +143,19 @@ This confirms:
 | `ui_core_components.h` | 110-113 | Log when rect() produces negative sizes |
 | `autolayout.h` | 297-301 | Log negative parent_size |
 
+### 4. Slider Handle Overflow - Fixed
+
+**File:** `vendor/afterhours/src/plugins/ui/imm_components.h`
+
+**Symptom:**
+```
+Layout wrap: 'slider_handle' in parent 'slider_background'
+Layout overflow: 'slider_handle' extends outside parent 'slider_background' bounds
+```
+
+**Root cause:** The slider handle height was set to `config.size.y_axis` (the full slider config height), but the slider background's resolved height was slightly smaller (~0.8px) due to internal layout. This caused per-frame overflow warnings.
+
+**Fix:** Changed handle height to `percent(1.f)` so it fills the background exactly.
+
+**Future work:** Add a dedicated `with_slider_handle_height(Size)` API to allow oversized knob-style handles that intentionally extend beyond the track. See TODO in `imm_components.h`.
+
