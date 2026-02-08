@@ -87,27 +87,20 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     std::string images_path =
         afterhours::files::get_resource_path("images", "").string();
-    icon_uav_tex = raylib::LoadTexture((images_path + "icon_uav.png").c_str());
-    icon_recon_tex =
-        raylib::LoadTexture((images_path + "icon_recon.png").c_str());
-    icon_shield_tactical_tex =
-        raylib::LoadTexture((images_path + "icon_shield_tactical.png").c_str());
-    icon_strike_tex =
-        raylib::LoadTexture((images_path + "icon_strike.png").c_str());
-    icon_danger_tex =
-        raylib::LoadTexture((images_path + "icon_danger.png").c_str());
-    icon_health_tex =
-        raylib::LoadTexture((images_path + "icon_health.png").c_str());
-    icon_skull_tex =
-        raylib::LoadTexture((images_path + "icon_skull.png").c_str());
-    icon_ammo_tex =
-        raylib::LoadTexture((images_path + "icon_ammo.png").c_str());
-    weapon_grenade_tex =
-        raylib::LoadTexture((images_path + "icon_grenade.png").c_str());
-    weapon_melee_tex =
-        raylib::LoadTexture((images_path + "icon_melee.png").c_str());
-    crosshair_tex =
-        raylib::LoadTexture((images_path + "crosshair_neon.png").c_str());
+    auto load = [&](const char *name) {
+      return raylib::LoadTexture((images_path + name).c_str());
+    };
+    icon_uav_tex = load("icon_uav.png");
+    icon_recon_tex = load("icon_recon.png");
+    icon_shield_tactical_tex = load("icon_shield_tactical.png");
+    icon_strike_tex = load("icon_strike.png");
+    icon_danger_tex = load("icon_danger.png");
+    icon_health_tex = load("icon_health.png");
+    icon_skull_tex = load("icon_skull.png");
+    icon_ammo_tex = load("icon_ammo.png");
+    weapon_grenade_tex = load("icon_grenade.png");
+    weapon_melee_tex = load("icon_melee.png");
+    crosshair_tex = load("crosshair_neon.png");
   }
 
   // Colors matching the inspiration exactly - dark tactical feel
@@ -175,41 +168,23 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Compass cardinal directions
-    div(context, mk(entity, 101),
-        ComponentConfig{}
-            .with_label("N")
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position(compass_cx - 8.0f, compass_top_y - 17.0f)
-            .with_font("EqProRounded", compass_cardinal_size)
-            .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 102),
-        ComponentConfig{}
-            .with_label("S")
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position(compass_cx - 8.0f, compass_top_y + compass_size - 3.0f)
-            .with_font("EqProRounded", compass_cardinal_size)
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 103),
-        ComponentConfig{}
-            .with_label("W")
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position(compass_cx - compass_size / 2.0f - 20.0f, compass_cy - 8.0f)
-            .with_font("EqProRounded", compass_cardinal_size)
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 104),
-        ComponentConfig{}
-            .with_label("E")
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position(compass_cx + compass_size / 2.0f + 3.0f, compass_cy - 8.0f)
-            .with_font("EqProRounded", compass_cardinal_size)
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
+    struct Cardinal { const char *label; int id; float x; float y; afterhours::Color color; };
+    Cardinal cardinals[] = {
+        {"N", 101, compass_cx - 8.0f, compass_top_y - 17.0f, text_tan},
+        {"S", 102, compass_cx - 8.0f, compass_top_y + compass_size - 3.0f, text_muted},
+        {"W", 103, compass_cx - compass_size / 2.0f - 20.0f, compass_cy - 8.0f, text_muted},
+        {"E", 104, compass_cx + compass_size / 2.0f + 3.0f, compass_cy - 8.0f, text_muted},
+    };
+    for (auto &c : cardinals) {
+      div(context, mk(entity, c.id),
+          ComponentConfig{}
+              .with_label(c.label)
+              .with_size(ComponentSize{pixels(20), pixels(20)})
+              .with_absolute_position(c.x, c.y)
+              .with_font("EqProRounded", compass_cardinal_size)
+              .with_custom_text_color(c.color)
+              .with_alignment(TextAlignment::Center));
+    }
 
     // Compass needle (vertical line)
     div(context, mk(entity, 105),
@@ -585,65 +560,47 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     float grenade_x = knife_x - element_gap - eq_box_size;
     float eq_y = (float)screen_h - margin_bottom - eq_box_size - 15.0f;
 
-    // Grenade count label (positioned left of grenade box)
-    div(context, mk(entity, 400),
-        ComponentConfig{}
-            .with_label("x2")
-            .with_size(ComponentSize{pixels(30), pixels(20)})
-            .with_absolute_position(grenade_x - 35.0f, eq_y + eq_box_size / 2.0f - 10.0f)
-            .with_font("EqProRounded", font_normal)
-            .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Right));
-
-    // Grenade box - highlighted with gold border (selected)
-    div(context, mk(entity, 410),
-        ComponentConfig{}
-            .with_720p_size(eq_box_size, eq_box_size)
-            .with_absolute_position(grenade_x, eq_y)
-            .with_custom_background(panel_dark)
-            .with_border(gold_accent, 3.0f));
-
-    if (weapon_grenade_tex.id != 0) {
-      float icon_offset = (eq_box_size - eq_icon_size) / 2.0f;
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)weapon_grenade_tex.width,
-          (float)weapon_grenade_tex.height};
-      sprite(context, mk(entity, 411), weapon_grenade_tex, src,
-             ComponentConfig{}
-                 .with_720p_size(eq_icon_size, eq_icon_size)
-                 .with_absolute_position(grenade_x + icon_offset, eq_y + icon_offset)
-                 .with_debug_name("grenade_icon"));
+    // Equipment boxes - grenade (selected) and knife
+    struct EquipSlot {
+      float x; int base_id; raylib::Texture2D *tex;
+      afterhours::Color border; float border_w;
+      const char *count; float count_x; float count_y;
+      float count_font; afterhours::Color count_color;
+    };
+    float icon_offset = (eq_box_size - eq_icon_size) / 2.0f;
+    EquipSlot equip_slots[] = {
+        {grenade_x, 410, &weapon_grenade_tex, gold_accent, 3.0f,
+         "x2", grenade_x - 35.0f, eq_y + eq_box_size / 2.0f - 10.0f, font_normal, text_tan},
+        {knife_x, 420, &weapon_melee_tex, border_dark, 2.0f,
+         "x1", knife_x + eq_box_size - 25.0f, eq_y + eq_box_size - 16.0f, font_small, text_muted},
+    };
+    for (auto &slot : equip_slots) {
+      // Count label
+      div(context, mk(entity, slot.base_id - 10),
+          ComponentConfig{}
+              .with_label(slot.count)
+              .with_size(ComponentSize{pixels(30), pixels(20)})
+              .with_absolute_position(slot.count_x, slot.count_y)
+              .with_font("EqProRounded", slot.count_font)
+              .with_custom_text_color(slot.count_color)
+              .with_alignment(TextAlignment::Right));
+      // Box background
+      div(context, mk(entity, slot.base_id),
+          ComponentConfig{}
+              .with_720p_size(eq_box_size, eq_box_size)
+              .with_absolute_position(slot.x, eq_y)
+              .with_custom_background(panel_dark)
+              .with_border(slot.border, slot.border_w));
+      // Icon
+      if (slot.tex && slot.tex->id != 0) {
+        afterhours::texture_manager::Rectangle src{
+            0, 0, (float)slot.tex->width, (float)slot.tex->height};
+        sprite(context, mk(entity, slot.base_id + 1), *slot.tex, src,
+               ComponentConfig{}
+                   .with_720p_size(eq_icon_size, eq_icon_size)
+                   .with_absolute_position(slot.x + icon_offset, eq_y + icon_offset));
+      }
     }
-
-    // Knife box
-    div(context, mk(entity, 420),
-        ComponentConfig{}
-            .with_720p_size(eq_box_size, eq_box_size)
-            .with_absolute_position(knife_x, eq_y)
-            .with_custom_background(panel_dark)
-            .with_border(border_dark, 2.0f)
-            .with_debug_name("knife_bg"));
-
-    if (weapon_melee_tex.id != 0) {
-      float icon_offset = (eq_box_size - eq_icon_size) / 2.0f;
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
-      sprite(context, mk(entity, 422), weapon_melee_tex, src,
-             ComponentConfig{}
-                 .with_720p_size(eq_icon_size, eq_icon_size)
-                 .with_absolute_position(knife_x + icon_offset, eq_y + icon_offset)
-                 .with_debug_name("knife_icon"));
-    }
-
-    // x1 label positioned at bottom-right corner of knife box
-    div(context, mk(entity, 421),
-        ComponentConfig{}
-            .with_label("x1")
-            .with_size(ComponentSize{pixels(25), pixels(16)})
-            .with_absolute_position(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size - 16.0f)
-            .with_font("EqProRounded", font_small)
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right));
 
     // ========== CENTER: Crosshair ==========
     if (crosshair_tex.id != 0) {

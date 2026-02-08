@@ -217,34 +217,22 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     float col_price_x = list_x + list_w - 90.0f;
     float hdr_y = list_y + 8.0f;
 
-    div(context, mk(entity, 101),
-        ComponentConfig{}
-            .with_label("Item")
-            .with_size(ComponentSize{pixels(120), pixels(22)})
-            .with_absolute_position(col_name_x, hdr_y)
-            .with_custom_text_color(muted));
-
-    div(context, mk(entity, 102),
-        ComponentConfig{}
-            .with_label("Type")
-            .with_size(ComponentSize{pixels(80), pixels(22)})
-            .with_absolute_position(col_cat_x, hdr_y)
-            .with_custom_text_color(muted));
-
-    div(context, mk(entity, 103),
-        ComponentConfig{}
-            .with_label("Stock")
-            .with_size(ComponentSize{pixels(50), pixels(22)})
-            .with_absolute_position(col_stock_x, hdr_y)
-            .with_custom_text_color(muted));
-
-    div(context, mk(entity, 104),
-        ComponentConfig{}
-            .with_label("Price")
-            .with_size(ComponentSize{pixels(70), pixels(22)})
-            .with_absolute_position(col_price_x, hdr_y)
-            .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Right));
+    struct ColHeader { const char *label; int id; float x; int w; TextAlignment align; };
+    ColHeader headers[] = {
+        {"Item", 101, col_name_x, 120, TextAlignment::None},
+        {"Type", 102, col_cat_x, 80, TextAlignment::None},
+        {"Stock", 103, col_stock_x, 50, TextAlignment::None},
+        {"Price", 104, col_price_x, 70, TextAlignment::Right},
+    };
+    for (auto &hdr : headers) {
+      auto cfg = ComponentConfig{}
+          .with_label(hdr.label)
+          .with_size(ComponentSize{pixels(hdr.w), pixels(22)})
+          .with_absolute_position(hdr.x, hdr_y)
+          .with_custom_text_color(muted);
+      if (hdr.align != TextAlignment::None) cfg.with_alignment(hdr.align);
+      div(context, mk(entity, hdr.id), cfg);
+    }
 
     // Separator
     div(context, mk(entity, 105),

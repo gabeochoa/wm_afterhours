@@ -181,21 +181,28 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_w = L.tab_width;
     float tab_start_x = L.tab_start_x;
 
-    // L bumper indicator with shadow for depth
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_label("L")
-            .with_720p_size(L.bumper_size, L.bumper_size)
-            .with_absolute_position(tab_start_x - 42.0f, tab_y + 4.0f)
-            .with_custom_background(tab_bg_unselected)
-            .with_border(tab_border, 2.0f)
-            .with_font("EqProRounded", h720(L.bumper_font_size))
-            .with_custom_text_color(tab_text_unselected)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
-            .with_soft_shadow(L.shadow_offset_x, L.shadow_offset_y,
-                              L.shadow_blur, shadow_color));
+    // L/R bumper indicators
+    struct Bumper { const char *label; int id; float x; };
+    Bumper bumpers[] = {
+        {"L", 20, tab_start_x - 42.0f},
+        {"R", 40, tab_start_x + 4 * tab_w + 10.0f},
+    };
+    for (auto &b : bumpers) {
+      div(context, mk(entity, b.id),
+          ComponentConfig{}
+              .with_label(b.label)
+              .with_720p_size(L.bumper_size, L.bumper_size)
+              .with_absolute_position(b.x, tab_y + 4.0f)
+              .with_custom_background(tab_bg_unselected)
+              .with_border(tab_border, 2.0f)
+              .with_font("EqProRounded", h720(L.bumper_font_size))
+              .with_custom_text_color(tab_text_unselected)
+              .with_alignment(TextAlignment::Center)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.2f)
+              .with_soft_shadow(L.shadow_offset_x, L.shadow_offset_y,
+                                L.shadow_blur, shadow_color));
+    }
 
     // Tab buttons with shadows on selected tab
     for (size_t i = 0; i < tabs.size(); i++) {
@@ -227,22 +234,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
         selected_tab = i;
       }
     }
-
-    // R bumper indicator with shadow
-    div(context, mk(entity, 40),
-        ComponentConfig{}
-            .with_label("R")
-            .with_720p_size(L.bumper_size, L.bumper_size)
-            .with_absolute_position(tab_start_x + 4 * tab_w + 10.0f, tab_y + 4.0f)
-            .with_custom_background(tab_bg_unselected)
-            .with_border(tab_border, 2.0f)
-            .with_font("EqProRounded", h720(L.bumper_font_size))
-            .with_custom_text_color(tab_text_unselected)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
-            .with_soft_shadow(L.shadow_offset_x, L.shadow_offset_y,
-                              L.shadow_blur, shadow_color));
 
     // Decorative line under tabs - aligned precisely with tab bar
     div(context, mk(entity, 45),
@@ -471,93 +462,56 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_debug_name("prompt_bg"));
 
-    // D-pad
-    div(context, mk(entity, 400),
-        ComponentConfig{}
-            .with_label("+")
-            .with_720p_size(btn_size, btn_size)
-            .with_absolute_position(prompt_x, prompt_y)
-            .with_custom_background(menu_item_bg)
-            .with_border(text_gray, 2.0f)
-            .with_font("EqProRounded", h720(22.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f));
+    // Button prompts - data-driven
+    struct Prompt {
+      const char *btn; const char *action; int id;
+      afterhours::Color bg; float roundness; int label_w;
+    };
+    Prompt prompts[] = {
+        {"+", ": Select", 400, menu_item_bg, 0.15f, 90},
+        {"A", ": Confirm", 410, {180, 60, 60, 255}, 1.0f, 100},
+        {"B", ": Return", 420, {180, 160, 60, 255}, 1.0f, 90},
+    };
+    for (size_t pi = 0; pi < 3; pi++) {
+      auto &p = prompts[pi];
+      float px = prompt_x + (float)pi * hint_spacing;
 
-    div(context, mk(entity, 401),
-        ComponentConfig{}
-            .with_label(": Select")
-            .with_size(ComponentSize{pixels(90), pixels(36)})
-            .with_absolute_position(prompt_x + btn_size + 6.0f, prompt_y)
-            .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white));
+      auto btn_cfg = ComponentConfig{}
+          .with_label(p.btn)
+          .with_720p_size(btn_size, btn_size)
+          .with_absolute_position(px, prompt_y)
+          .with_custom_background(p.bg)
+          .with_custom_text_color(text_white)
+          .with_alignment(TextAlignment::Center)
+          .with_rounded_corners(RoundedCorners())
+          .with_roundness(p.roundness);
+      if (p.roundness < 0.5f) btn_cfg.with_border(text_gray, 2.0f)
+          .with_font("EqProRounded", h720(22.0f));
+      div(context, mk(entity, p.id), btn_cfg);
 
-    // A button (confirm)
-    div(context, mk(entity, 410),
-        ComponentConfig{}
-            .with_label("A")
-            .with_720p_size(btn_size, btn_size)
-            .with_absolute_position(prompt_x + hint_spacing, prompt_y)
-            .with_custom_background(afterhours::Color{180, 60, 60, 255})
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    div(context, mk(entity, 411),
-        ComponentConfig{}
-            .with_label(": Confirm")
-            .with_size(ComponentSize{pixels(100), pixels(36)})
-            .with_absolute_position(prompt_x + hint_spacing + btn_size + 6.0f, prompt_y)
-            .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white));
-
-    // B button (return)
-    div(context, mk(entity, 420),
-        ComponentConfig{}
-            .with_label("B")
-            .with_720p_size(btn_size, btn_size)
-            .with_absolute_position(prompt_x + hint_spacing * 2, prompt_y)
-            .with_custom_background(afterhours::Color{180, 160, 60, 255})
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    div(context, mk(entity, 421),
-        ComponentConfig{}
-            .with_label(": Return")
-            .with_size(ComponentSize{pixels(90), pixels(36)})
-            .with_absolute_position(prompt_x + hint_spacing * 2 + btn_size + 6.0f, prompt_y)
-            .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white));
+      div(context, mk(entity, p.id + 1),
+          ComponentConfig{}
+              .with_label(p.action)
+              .with_size(ComponentSize{pixels(p.label_w), pixels(36)})
+              .with_absolute_position(px + btn_size + 6.0f, prompt_y)
+              .with_font("EqProRounded", h720(L.prompt_font_size))
+              .with_custom_text_color(text_white));
+    }
 
     // L/R for change entry
-    div(context, mk(entity, 430),
-        ComponentConfig{}
-            .with_label("L")
-            .with_720p_size(btn_size - 4, btn_size - 4)
-            .with_absolute_position(prompt_x + hint_spacing * 3, prompt_y + 2.0f)
-            .with_custom_background(menu_item_bg)
-            .with_border(text_gray, 2.0f)
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f));
-
-    div(context, mk(entity, 431),
-        ComponentConfig{}
-            .with_label("R")
-            .with_720p_size(btn_size - 4, btn_size - 4)
-            .with_absolute_position(prompt_x + hint_spacing * 3 + btn_size, prompt_y + 2.0f)
-            .with_custom_background(menu_item_bg)
-            .with_border(text_gray, 2.0f)
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f));
-
+    for (int lr = 0; lr < 2; lr++) {
+      div(context, mk(entity, 430 + lr),
+          ComponentConfig{}
+              .with_label(lr == 0 ? "L" : "R")
+              .with_720p_size(btn_size - 4, btn_size - 4)
+              .with_absolute_position(prompt_x + hint_spacing * 3 + (float)lr * btn_size, prompt_y + 2.0f)
+              .with_custom_background(menu_item_bg)
+              .with_border(text_gray, 2.0f)
+              .with_custom_text_color(text_white)
+              .with_alignment(TextAlignment::Center)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.15f));
+    }
     div(context, mk(entity, 432),
         ComponentConfig{}
             .with_label(": Change Entry")

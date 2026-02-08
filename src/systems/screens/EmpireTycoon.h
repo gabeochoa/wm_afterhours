@@ -266,48 +266,35 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     float stat_y = 80.0f;
     float stat_icon_size = 60.0f;
 
-    // Happiness icon - larger and more prominent (minimum 44px)
-    div(context, mk(entity, 60),
-        ComponentConfig{}
-            .with_720p_size(stat_icon_size, stat_icon_size)
-            .with_absolute_position((float)screen_w - 210.0f, stat_y)
-            .with_custom_background(afterhours::Color{255, 220, 150, 255})
-            .with_border(afterhours::Color{220, 180, 100, 255}, 3.0f)
-            .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 50})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("happy_bg"));
-    if (icon_happiness_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)icon_happiness_tex.width,
-          (float)icon_happiness_tex.height};
-      sprite(context, mk(entity, 61), icon_happiness_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(48), pixels(48)})
-                 .with_absolute_position((float)screen_w - 204.0f, stat_y + 6.0f)
-                 .with_debug_name("happy_icon"));
-    }
-
-    // Resource gauge icon - larger and more prominent (minimum 44px)
-    div(context, mk(entity, 62),
-        ComponentConfig{}
-            .with_720p_size(stat_icon_size, stat_icon_size)
-            .with_absolute_position((float)screen_w - 85.0f, stat_y)
-            .with_custom_background(afterhours::Color{180, 210, 245, 255})
-            .with_border(afterhours::Color{140, 175, 215, 255}, 3.0f)
-            .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 50})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("gauge_bg"));
-    if (icon_resources_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)icon_resources_tex.width,
-          (float)icon_resources_tex.height};
-      sprite(context, mk(entity, 63), icon_resources_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(48), pixels(48)})
-                 .with_absolute_position((float)screen_w - 79.0f, stat_y + 6.0f)
-                 .with_debug_name("resource_icon"));
+    // Status icons - data-driven
+    struct StatIcon {
+      int base_id; float x; raylib::Texture2D *tex;
+      afterhours::Color bg; afterhours::Color border;
+    };
+    StatIcon stat_icons[] = {
+        {60, (float)screen_w - 210.0f, &icon_happiness_tex,
+         {255, 220, 150, 255}, {220, 180, 100, 255}},
+        {62, (float)screen_w - 85.0f, &icon_resources_tex,
+         {180, 210, 245, 255}, {140, 175, 215, 255}},
+    };
+    for (auto &si : stat_icons) {
+      div(context, mk(entity, si.base_id),
+          ComponentConfig{}
+              .with_720p_size(stat_icon_size, stat_icon_size)
+              .with_absolute_position(si.x, stat_y)
+              .with_custom_background(si.bg)
+              .with_border(si.border, 3.0f)
+              .with_soft_shadow(2.0f, 3.0f, 10.0f, afterhours::Color{0, 0, 0, 50})
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(1.0f));
+      if (si.tex && si.tex->id != 0) {
+        afterhours::texture_manager::Rectangle src{
+            0, 0, (float)si.tex->width, (float)si.tex->height};
+        sprite(context, mk(entity, si.base_id + 1), *si.tex, src,
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(48), pixels(48)})
+                   .with_absolute_position(si.x + 6.0f, stat_y + 6.0f));
+      }
     }
 
     // ========== METERS ==========

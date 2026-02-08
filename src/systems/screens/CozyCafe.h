@@ -37,23 +37,18 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     std::string images_path =
         afterhours::files::get_resource_path("images", "").string();
-    star_filled_tex =
-        raylib::LoadTexture((images_path + "star_filled.png").c_str());
-    star_empty_tex =
-        raylib::LoadTexture((images_path + "star_empty.png").c_str());
-    clock_tex = raylib::LoadTexture((images_path + "clock_icon.png").c_str());
-    flower_tex =
-        raylib::LoadTexture((images_path + "flower_blossom.png").c_str());
-    avatar_guildmate_tex =
-        raylib::LoadTexture((images_path + "avatar_guildmate.png").c_str());
-    avatar_devteam_tex =
-        raylib::LoadTexture((images_path + "avatar_devteam.png").c_str());
-    icon_inventory_tex =
-        raylib::LoadTexture((images_path + "icon_inventory.png").c_str());
-    icon_research_tex =
-        raylib::LoadTexture((images_path + "icon_research.png").c_str());
-    icon_crafting_tex =
-        raylib::LoadTexture((images_path + "icon_crafting.png").c_str());
+    auto load = [&](const char *name) {
+      return raylib::LoadTexture((images_path + name).c_str());
+    };
+    star_filled_tex = load("star_filled.png");
+    star_empty_tex = load("star_empty.png");
+    clock_tex = load("clock_icon.png");
+    flower_tex = load("flower_blossom.png");
+    avatar_guildmate_tex = load("avatar_guildmate.png");
+    avatar_devteam_tex = load("avatar_devteam.png");
+    icon_inventory_tex = load("icon_inventory.png");
+    icon_research_tex = load("icon_research.png");
+    icon_crafting_tex = load("icon_crafting.png");
   }
 
   std::vector<std::string> daily_specials = {"Lavender Latte", "Honey Toast",
@@ -582,123 +577,58 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     float icon_offset = (icon_size - icon_img_size) / 2.0f;
     float icon_spacing = 82.0f;
 
-    // Inventory icon with badge (minimum 44px)
-    button(context, mk(entity, 500),
-           ComponentConfig{}
-               .with_720p_size(icon_size, icon_size)
-               .with_absolute_position(icon_x, icon_y)
-               .with_custom_background(cream_surface)
-               .with_border(brown_border, 2.0f)
-               .with_rounded_corners(RoundedCorners())
-               .with_debug_name("inventory_btn"));
-    if (icon_inventory_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)icon_inventory_tex.width,
-          (float)icon_inventory_tex.height};
-      sprite(
-          context, mk(entity, 501), icon_inventory_tex, src,
-          ComponentConfig{}
-              .with_720p_size(icon_img_size, icon_img_size)
-              .with_absolute_position(icon_x + icon_offset, icon_y + icon_offset)
-              .with_debug_name("inventory_icon"));
-    }
-    ui_workarounds::notification_badge(context, entity, 502, "2",
-                                       icon_x + icon_size - 14.0f,
-                                       icon_y - 5.0f, 22.0f, badge_red);
-    div(context, mk(entity, 503),
-        ComponentConfig{}
-            .with_label("Inventory")
-            .with_size(ComponentSize{pxf(icon_size + 16),
-                                     pixels(22)})
-            .with_absolute_position(icon_x - 8.0f, icon_y + icon_size + 4.0f)
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center));
-    // Badge hint: explain what "2" means
-    div(context, mk(entity, 504),
-        ComponentConfig{}
-            .with_label("2 new items")
-            .with_size(ComponentSize{pxf(icon_size + 24),
-                                     pixels(18)})
-            .with_absolute_position(icon_x - 12.0f, icon_y + icon_size + 24.0f)
-            .with_font("Gaegu-Bold", h720(13.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center));
+    // Bottom-right icon buttons - data-driven
+    struct IconBtn {
+      int base_id; raylib::Texture2D *tex; const char *label;
+      const char *badge; const char *hint; float hint_extra_w;
+    };
+    IconBtn icon_btns[] = {
+        {500, &icon_inventory_tex, "Inventory", "2", "2 new items", 24.0f},
+        {510, &icon_research_tex, "Research", "!", "Ready!", 30.0f},
+        {520, &icon_crafting_tex, "Crafting", nullptr, nullptr, 0.0f},
+    };
+    for (size_t ib = 0; ib < 3; ib++) {
+      auto &btn = icon_btns[ib];
+      float bx = icon_x + (float)ib * icon_spacing;
 
-    // Research icon with badge (minimum 44px)
-    button(context, mk(entity, 510),
-           ComponentConfig{}
-               .with_720p_size(icon_size, icon_size)
-               .with_absolute_position(icon_x + icon_spacing, icon_y)
-               .with_custom_background(cream_surface)
-               .with_border(brown_border, 2.0f)
-               .with_rounded_corners(RoundedCorners())
-               .with_debug_name("research_btn"));
-    if (icon_research_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)icon_research_tex.width,
-          (float)icon_research_tex.height};
-      sprite(
-          context, mk(entity, 511), icon_research_tex, src,
+      button(context, mk(entity, btn.base_id),
+             ComponentConfig{}
+                 .with_720p_size(icon_size, icon_size)
+                 .with_absolute_position(bx, icon_y)
+                 .with_custom_background(cream_surface)
+                 .with_border(brown_border, 2.0f)
+                 .with_rounded_corners(RoundedCorners()));
+      if (btn.tex && btn.tex->id != 0) {
+        afterhours::texture_manager::Rectangle src{
+            0, 0, (float)btn.tex->width, (float)btn.tex->height};
+        sprite(context, mk(entity, btn.base_id + 1), *btn.tex, src,
+               ComponentConfig{}
+                   .with_720p_size(icon_img_size, icon_img_size)
+                   .with_absolute_position(bx + icon_offset, icon_y + icon_offset));
+      }
+      if (btn.badge) {
+        ui_workarounds::notification_badge(
+            context, entity, btn.base_id + 2, btn.badge,
+            bx + icon_size - 14.0f, icon_y - 5.0f, 22.0f, badge_red);
+      }
+      div(context, mk(entity, btn.base_id + 3),
           ComponentConfig{}
-              .with_720p_size(icon_img_size, icon_img_size)
-              .with_absolute_position(icon_x + icon_spacing + icon_offset,
-                              icon_y + icon_offset)
-              .with_debug_name("research_icon"));
+              .with_label(btn.label)
+              .with_size(ComponentSize{pxf(icon_size + 16), pixels(22)})
+              .with_absolute_position(bx - 8.0f, icon_y + icon_size + 4.0f)
+              .with_custom_text_color(dark_text)
+              .with_alignment(TextAlignment::Center));
+      if (btn.hint) {
+        div(context, mk(entity, btn.base_id + 4),
+            ComponentConfig{}
+                .with_label(btn.hint)
+                .with_size(ComponentSize{pxf(icon_size + btn.hint_extra_w), pixels(18)})
+                .with_absolute_position(bx - btn.hint_extra_w / 2.0f, icon_y + icon_size + 24.0f)
+                .with_font("Gaegu-Bold", h720(13.0f))
+                .with_custom_text_color(theme.font_muted)
+                .with_alignment(TextAlignment::Center));
+      }
     }
-    ui_workarounds::notification_badge(
-        context, entity, 512, "!", icon_x + icon_spacing + icon_size - 14.0f,
-        icon_y - 5.0f, 22.0f, badge_red);
-    div(context, mk(entity, 513),
-        ComponentConfig{}
-            .with_label("Research")
-            .with_size(ComponentSize{pxf(icon_size + 16),
-                                     pixels(22)})
-            .with_absolute_position(icon_x + icon_spacing - 8.0f,
-                            icon_y + icon_size + 4.0f)
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center));
-    // Badge hint: explain what "!" means
-    div(context, mk(entity, 514),
-        ComponentConfig{}
-            .with_label("Ready!")
-            .with_size(ComponentSize{pxf(icon_size + 30),
-                                     pixels(18)})
-            .with_absolute_position(icon_x + icon_spacing - 15.0f,
-                            icon_y + icon_size + 24.0f)
-            .with_font("Gaegu-Bold", h720(13.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center));
-
-    // Crafting icon (no badge, minimum 44px)
-    button(context, mk(entity, 520),
-           ComponentConfig{}
-               .with_720p_size(icon_size, icon_size)
-               .with_absolute_position(icon_x + icon_spacing * 2, icon_y)
-               .with_custom_background(cream_surface)
-               .with_border(brown_border, 2.0f)
-               .with_rounded_corners(RoundedCorners())
-               .with_debug_name("crafting_btn"));
-    if (icon_crafting_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)icon_crafting_tex.width,
-          (float)icon_crafting_tex.height};
-      sprite(
-          context, mk(entity, 521), icon_crafting_tex, src,
-          ComponentConfig{}
-              .with_720p_size(icon_img_size, icon_img_size)
-              .with_absolute_position(icon_x + icon_spacing * 2 + icon_offset,
-                              icon_y + icon_offset)
-              .with_debug_name("crafting_icon"));
-    }
-    div(context, mk(entity, 522),
-        ComponentConfig{}
-            .with_label("Crafting")
-            .with_size(ComponentSize{pxf(icon_size + 16),
-                                     pixels(22)})
-            .with_absolute_position(icon_x + icon_spacing * 2 - 8.0f,
-                            icon_y + icon_size + 4.0f)
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center));
 
     // ========== DECORATIVE TAPE (bottom right corner) ==========
     div(context, mk(entity, 600),

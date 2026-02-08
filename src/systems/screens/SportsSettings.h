@@ -683,43 +683,33 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float prompt_y = (float)screen_h - 40.0f;
     float prompt_x = (float)screen_w - 330.0f;
 
-    // Y Reset to default
-    div(context, mk(entity, 400),
-        ComponentConfig{}
-            .with_label("Y")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position(prompt_x, prompt_y)
-            .with_custom_background(afterhours::Color{180, 160, 60, 255})
-            .with_custom_text_color(bg_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    div(context, mk(entity, 401),
-        ComponentConfig{}
-            .with_label("Reset to default")
-            .with_size(ComponentSize{pixels(130), pixels(25)})
-            .with_absolute_position(prompt_x + 35.0f, prompt_y + 2.0f)
-            .with_custom_text_color(text_white));
-
-    // B Back
-    div(context, mk(entity, 402),
-        ComponentConfig{}
-            .with_label("B")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position(prompt_x + 175.0f, prompt_y)
-            .with_custom_background(afterhours::Color{180, 80, 80, 255})
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    div(context, mk(entity, 403),
-        ComponentConfig{}
-            .with_label("Back")
-            .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position(prompt_x + 210.0f, prompt_y + 2.0f)
-            .with_custom_text_color(text_white));
+    // Bottom button prompts
+    struct BtnPrompt {
+      const char *btn; const char *action; int base_id;
+      afterhours::Color bg; afterhours::Color text; float offset; int label_w;
+    };
+    BtnPrompt btn_prompts[] = {
+        {"Y", "Reset to default", 400, {180, 160, 60, 255}, bg_dark, 0.0f, 130},
+        {"B", "Back", 402, {180, 80, 80, 255}, text_white, 175.0f, 50},
+    };
+    for (auto &bp : btn_prompts) {
+      div(context, mk(entity, bp.base_id),
+          ComponentConfig{}
+              .with_label(bp.btn)
+              .with_size(ComponentSize{pixels(28), pixels(28)})
+              .with_absolute_position(prompt_x + bp.offset, prompt_y)
+              .with_custom_background(bp.bg)
+              .with_custom_text_color(bp.text)
+              .with_alignment(TextAlignment::Center)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(1.0f));
+      div(context, mk(entity, bp.base_id + 1),
+          ComponentConfig{}
+              .with_label(bp.action)
+              .with_size(ComponentSize{pixels(bp.label_w), pixels(25)})
+              .with_absolute_position(prompt_x + bp.offset + 35.0f, prompt_y + 2.0f)
+              .with_custom_text_color(text_white));
+    }
   }
 };
 
