@@ -1,27 +1,20 @@
 # Code Review: ModalShowcase
 
 **File:** `src/systems/screens/ModalShowcase.h`
-**Lines:** 607 (no batch changes applied -- uses flexbox layout, not absolute positioning)
+**Original lines:** 607 | **Current lines:** 515
+**Lines saved:** 92
 
-## Remaining Screen-Level Suggestions
+## Completed
 
-### 1. Section creation pattern repeated 5 times identically (~50 lines saved)
-### 2. Button config pattern repeated 8+ times (~30 lines saved)
-### 3. `.with_render_layer(MODAL_CONTENT_LAYER)` on every modal child (~15 lines saved)
-### 4. Button row pattern inside modals repeated 3 times (~15 lines saved)
-### 5. Result string conversion uses if/else chain (~5 lines saved)
-### 6. `static bool` inside for_each_with for modal checkboxes (~0 lines but code smell)
-### 7. `.with_debug_name()` on every section and row (~10 lines saved)
-### 8. Margin patterns repeated (~5 lines saved)
-### 9. `FlexDirection::Row` + `AlignItems::Center` + `JustifyContent::FlexStart` repeated 5 times (~5 lines saved)
-### 10. Composable modal checkbox row could be simpler (~3 lines saved)
+- `.with_debug_name()` removal (auto-derived from labels)
+- Section creation pattern (5 sections) → `make_section` lambda (4 of 5 — section 5 kept inline due to different styling)
 
-## Vendor-Level Suggestions -- Filed
+## Remaining (low ROI)
 
-- V1 Modal children inherit render layer → doc 49
-- V2 `.with_row_layout()` → doc 51
-- V3 `ComponentConfig` presets → doc 50
+1. Button config pattern repeated 8+ times (~15 lines) — buttons differ in size, color, margin; a helper would need many params
+2. `.with_render_layer(MODAL_CONTENT_LAYER)` on every modal child (~15 lines) — needs vendor feature (modal render layer inheritance, doc 49)
+3. Button row pattern inside modals repeated 3 times (~10 lines) — each has different justify/content
+4. Result string if/else chain (~3 lines)
+5. `static bool` inside `for_each_with` (~0 lines, code smell)
 
-## Summary
-- Remaining screen-level: 10 (~138 lines saveable)
-- Remaining vendor-level: 0 (all filed)
+**Verdict:** The big win (`make_section`) is done. Remaining items are modal-specific and mostly blocked on vendor feature doc 49 (render layer inheritance for modal children).

@@ -1,34 +1,28 @@
 # Code Review: CozyCafe
 
 **File:** `src/systems/screens/CozyCafe.h`
-**Original lines:** 800 | **Current lines:** ~695
-**Lines saved so far:** ~105 (batch refactor)
+**Original lines:** 800 | **Current lines:** 615
+**Lines saved:** 185
 
 ## Completed
 
-- ~~std::bitset<4>(0b1111) -> RoundedCorners() (~8 lines)~~
-- ~~.with_absolute_position(x, y) combined call (~45 lines)~~
-- ~~pixels(static_cast<int>(...)) -> pxf() lambda~~
+- Texture loading lambda
+- `std::bitset<4>(0b1111)` → `RoundedCorners()`
+- `.with_absolute_position(x, y)` combined call
+- `pixels(static_cast<int>(...))` → `pxf()` lambda
+- `with_720p_size()` migration
+- `set_default_font()` migration
+- `.with_debug_name()` removal (auto-derived from labels)
+- Bottom-right icon buttons → data-driven loop
+- Star rating triple-branching → unified tex ref
+- Chat avatars duplicated → data-driven loop
 
-## Remaining Screen-Level Suggestions
+## Remaining (low ROI)
 
-### 1. Texture loading is 9 near-identical lines (~12 lines saved)
-### 2. Star rating rendering has triple-branching for each star (~20 lines saved)
-### 3. Chat avatars duplicated for 2 messages (~25 lines saved)
-### 4. Bottom-right icon buttons share identical structure (~40 lines saved)
-### 5. Customer row rendering repeats per customer (~15 lines saved)
-### 6. Menu item buttons share identical sizing/styling (~10 lines saved)
-### 7. Music slider is manual (track + fill + handle) (~15 lines saved)
-### 8. Panel creation pattern repeated for left and right (~10 lines saved)
-### 9. Repeated `.with_font("Gaegu-Bold", h720(X))` pattern (~5 lines saved)
-### 10. `.with_debug_name()` on decorative elements (~10 lines saved)
+1. Customer row rendering repeats per customer (~15 lines) — already looped, inner elements are distinct enough
+2. Music slider manual (track + fill + handle) (~15 lines) — would need vendor slider or helper
+3. Panel creation (left + right) share structure (~10 lines) — differ in border color, shadow, roundness
+4. Menu item buttons share sizing/styling (~10 lines) — already looped with data
+5. Remaining `.with_debug_name()` on label-less decorative elements (~5 lines)
 
-## Vendor-Level Suggestions -- Filed
-
-- V1 `sprite_or_fallback()` → doc 56 (maybe, as generic `fallback()`)
-- V2 `.with_pill()` → doc 47
-- V3 Default font per-screen → not yet filed
-
-## Summary
-- Remaining screen-level: 10 (~162 lines saveable)
-- Remaining vendor-level: 1 unfiled (default font per-screen)
+**Verdict:** Remaining items are 5-15 lines each, mostly requiring vendor changes or yielding marginal gains. Screen is in good shape.

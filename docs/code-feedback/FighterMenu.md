@@ -1,30 +1,25 @@
 # Code Review: FighterMenu
 
 **File:** `src/systems/screens/FighterMenu.h`
-**Original lines:** 641 | **Current lines:** ~565
-**Lines saved so far:** ~76 (batch refactor)
+**Original lines:** 641 | **Current lines:** 527
+**Lines saved:** 114
 
 ## Completed
 
-- ~~std::bitset<4>(0b1111) -> RoundedCorners() (~4 lines)~~
-- ~~.with_absolute_position(x, y) combined call (~30 lines)~~
-- ~~pixels(static_cast<int>(...)) -> pxf() lambda~~
+- `std::bitset<4>(0b1111)` → `RoundedCorners()`
+- `.with_absolute_position(x, y)` combined call
+- `pixels(static_cast<int>(...))` → `pxf()` lambda
+- `with_720p_size()` migration
+- `set_default_font()` migration
+- `.with_debug_name()` removal (auto-derived from labels)
+- L/R bumper indicators → data-driven loop
+- Bottom button prompts → data-driven loop
 
-## Remaining Screen-Level Suggestions
+## Remaining (low ROI)
 
-### 1. Bottom button prompts are 10 entities with repeated patterns (~40 lines saved)
-### 2. L and R bumper indicators are nearly identical (~15 lines saved)
-### 3. Menu option loop could share base configs for icon/item (~15 lines saved)
-### 4. Card panel has 8 entities for what could be structured (~15 lines saved)
-### 5. Shadow colors repeated inline (~3 lines saved)
-### 6. Selected menu item shadow applied twice (~5 lines saved)
-### 7. `.with_debug_name()` on every element (~10 lines saved)
+1. Menu option loop: icon + item bar share base config (~10 lines) — configs differ enough that merging adds complexity
+2. Card panel: 8 entities forming info card (~10 lines) — elements are structurally different
+3. Shadow colors repeated inline (~3 lines) — already uses `shadow_color` variable
+4. Selected item shadow applied in two places (~3 lines)
 
-## Vendor-Level Suggestions -- Filed
-
-- V1 `.with_pill()` / `.with_circle()` → doc 47
-- V2 `ComponentSize` float shorthand → doc 56 (maybe, as `with_720p_size`)
-
-## Summary
-- Remaining screen-level: 7 (~103 lines saveable)
-- Remaining vendor-level: 0 (all filed)
+**Verdict:** Screen is in good shape. Remaining items are <10 lines each.
