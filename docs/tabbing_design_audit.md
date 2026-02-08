@@ -1,0 +1,80 @@
+# Design Audit: Tabbing (Keyboard Nav) Screen
+
+*Audited against the Apple Human Interface Guidelines (1987 Desktop Interface)*
+*Date: February 7, 2026*
+
+---
+
+## Audit Summary: Keyboard Navigation Demo
+
+### Critical Issues (Fix Immediately)
+
+1. **[Color as Sole Differentiator Between Options — HIG 3.1, 8.1]**: The four option buttons (A, B, C, D) are distinguished *exclusively* by fill color — magenta, cyan, lime green, and orange. There is no variation in shape, size, icon, pattern, or border treatment to tell them apart. A colorblind user or a monochrome display would show four nearly identical rectangles. HIG 3.1 requires that "color coding is redundant with shape/position/pattern" and that the design "works in black and white first."
+   → **Fix**: Add a secondary visual differentiator for each button — unique icons, distinct border patterns, or shape variations. At minimum, ensure the options are distinguishable by position alone (with labels that carry meaningful content), and do not rely on color to communicate identity or state.
+
+2. **[Excessive Saturated Color Palette — HIG 3.1, 1.10]**: The screen uses at least seven highly saturated colors simultaneously: dark navy background, magenta title bar, magenta button A, cyan button B, lime green button C, orange button D, bright yellow focus ring, and yellow-green text accents. HIG 3.1 recommends a "limited palette (4–7 colors max for coding)" and warns against a "rainbow of colors overwhelming the interface." Every element is competing for visual attention at maximum intensity, creating a chaotic, carnival-like effect rather than a structured, readable UI.
+   → **Fix**: Reduce the active palette to 3–4 colors. Use a single neutral or muted color for all option buttons with a distinct accent color for the focused/selected state. Reserve saturated color for one or two elements that need emphasis (e.g., the focus indicator and the title). The current "every button is a different saturated color" approach defeats the purpose of visual hierarchy.
+
+3. **[Inconsistent Text Color Across Same-Type Elements — HIG 1.4, 3.2]**: OPTION A uses white text on magenta, while OPTIONS B, C, and D use dark/black text on their respective backgrounds. These are four instances of the same component type (option button) and should use a consistent text treatment. HIG 1.4 requires that "visual styles [are] consistent throughout" and that the "same action produces same result throughout the application." The inconsistency makes OPTION A look like a fundamentally different type of element.
+   → **Fix**: Standardize text color across all option buttons. Either all use white text (with sufficiently dark backgrounds) or all use dark text (with sufficiently light backgrounds). Alternatively, if automatic text color contrast is being applied, ensure the algorithm produces a consistent result across the button set.
+
+4. **[No Default Button Indicated — HIG 2.5, 2.7]**: None of the four buttons is visually marked as a default action. HIG 2.5 requires that a "default button is doubly outlined" and that the default button is "activated by Return/Enter." The subtitle mentions "ENTER to click," implying Enter activates the focused button, but no default/primary action is distinguished from the others. In a keyboard navigation context, indicating the default is especially important.
+   → **Fix**: If one option is the default/primary action, give it a double-outline or heavier border treatment per HIG convention. If all options are equally weighted (no default), this should be communicated visually by making them all look identical — which conflicts with the current all-different-colors approach.
+
+5. **[Focus Indicator Relies Primarily on Color — HIG 3.1, 8.1]**: The keyboard focus on OPTION A is indicated by a bright yellow outline/border. While the outline does add a shape element (border), the yellow color is the primary way the focus ring stands out against the magenta button fill. On a monochrome display or for a user with deuteranopia (red-green colorblindness), the contrast between the yellow ring and magenta fill would be significantly reduced. HIG 8.1 requires that "color [is] not the only distinguisher."
+   → **Fix**: Supplement the focus ring with additional non-color cues: increase the border width significantly (4–6px), add an animated pulse or glow, offset/enlarge the focused button slightly, or add a focus icon/arrow indicator. The focus state is the most critical visual in a keyboard navigation demo and must be unmissable by all users.
+
+### Major Issues (Fix Soon)
+
+6. **[Flat Visual Hierarchy Among Options — HIG 1.10]**: All four option buttons have identical size, proportions, and visual weight (aside from color). The eye has no guidance on where to look first or which option might be most important. HIG 1.10 requires "clear visual hierarchy — most important elements stand out" and warns against "flat visual hierarchy — everything same prominence." For a keyboard nav demo, the focused element should dominate visually; instead, the unfocused buttons are equally or more eye-catching due to their saturated colors.
+   → **Fix**: Visually suppress unfocused buttons (reduce opacity, desaturate, or shrink slightly) so the focused button clearly dominates. The focused state should be the most visually prominent element on the screen, not just one of four equally loud colors.
+
+7. **[Button Labels Are Non-Descriptive — HIG 2.7, 7.1]**: The labels "OPTION A," "OPTION B," "OPTION C," and "OPTION D" are generic placeholders that describe nothing about what each button does. HIG 2.7 requires that button "labels describe the action that will occur." While this is a demo, using realistic action labels (e.g., "Start Game," "Settings," "Credits," "Quit") would better demonstrate how keyboard navigation works in practice and help developers understand proper labeling conventions.
+   → **Fix**: Replace generic labels with realistic action verbs or at minimum descriptive nouns. Even for a demo, labels like "Play," "Options," "Help," "Exit" would communicate button purpose while demonstrating navigation.
+
+8. **[Monospace/Pixel Typography Reduces Readability — HIG 7.1, 1.10]**: All text on the screen — title, instructions, button labels, and the click counter — uses a monospace or pixel-style typeface. Monospace fonts have lower readability for prose and labels because the uniform character widths make word shapes harder to recognize at a glance. The instruction text ("Use TAB to navigate, ENTER to click") is particularly affected, as it's small, thin, and uses this low-readability font.
+   → **Fix**: If the monospace font is a deliberate game-UI design choice, compensate by increasing font size and letter spacing, especially for instructional text. Consider using a proportional font for the instruction subtitle and counter while keeping monospace for button labels, or ensure the chosen monospace has clear, well-differentiated letterforms at small sizes.
+
+9. **[Instruction Text Has Poor Contrast and Size — HIG 3.2, 7.1]**: The subtitle "Use TAB to navigate, ENTER to click" is rendered in small yellow text on a dark purple background. While the color contrast may technically pass minimum thresholds, the combination of small size, thin strokes from the pixel font, and the saturated yellow-on-purple pairing makes this text strenuous to read. HIG 3.2 requires that "text and thin lines have sufficient contrast to be easily visible" and that "small objects use high-contrast colors."
+   → **Fix**: Increase the font size of the instruction text significantly — it contains the most important information on the screen (how to interact). Use white or a very light neutral color instead of yellow for better contrast. Consider making this text at least 75% of the button label size.
+
+10. **["Total Clicks: 0" Feedback Lacks Context — HIG 1.7, 1.10]**: The click counter at the bottom ("Total Clicks: 0") is placed outside the button group with no visual association to any specific button. It's unclear whether it tracks all button clicks, only the focused button, or something else. HIG 1.7 requires feedback to be "brief, direct, uses user vocabulary" and clearly connected to the action it tracks. The small, low-prominence placement also means users may not notice it updating.
+    → **Fix**: Either (a) add per-button click counts adjacent to each button, (b) add a brief label clarifying scope ("All buttons clicked: 0"), or (c) increase the counter's visual prominence and position it immediately below the button group with a clear visual connection. For a keyboard nav demo, showing *which* button was last activated would be more useful feedback than a raw total.
+
+11. **[Title Bar Styling Disconnected from Content — HIG 1.4, 1.10]**: The "KEYBOARD NAV" title bar uses a magenta/pink gradient background that matches OPTION A's color. This creates a false visual association between the title and the first button, as if they are part of the same element. The title should be visually distinct from all interactive content to maintain clear hierarchy. HIG 1.10 warns against "different things looking the same."
+    → **Fix**: Use a distinct, neutral background treatment for the title bar — either a darker shade of the panel background, a simple text heading without a colored bar, or a color that is not reused by any interactive element.
+
+### Minor Issues (Consider Fixing)
+
+12. **[ALL CAPS Typography Throughout — HIG 7.1]**: The title ("KEYBOARD NAV") and all button labels ("OPTION A" through "OPTION D") use all-uppercase text. All-caps reduces readability because word shapes become uniform rectangles, forcing letter-by-letter reading. HIG 7.1 requires messages to be "concise and simple" — all-caps works against this by making text harder to parse quickly.
+    → **Fix**: Use title case or sentence case for button labels ("Option A" or "option a") and the title ("Keyboard Nav"). Reserve all-caps for very short labels (1–2 characters) or decorative headings where readability is not the primary concern.
+
+13. **[Tight Vertical Spacing Between Buttons — HIG 1.10, 5.1]**: The four option buttons are stacked with minimal vertical gaps between them. The tight spacing makes individual buttons harder to perceive as separate interactive targets, especially since the buttons span the full width of the panel. The visual density works against quick scanning and increases the chance of misidentifying which button is focused.
+    → **Fix**: Increase the vertical gap between buttons to at least 50% of the button height. This creates clear breathing room, makes each button a distinct target, and makes the focus ring easier to parse at a glance.
+
+14. **[No Visible Cancel/Escape Mechanism — HIG 1.8, 2.5]**: The panel has no visible close button, back arrow, or cancel option. HIG 1.8 (Forgiveness) requires "cancel available in all dialogs" and HIG 2.5 requires a "cancel button always available." While Escape may work, there is no visual indicator of this. For a keyboard navigation demo, all available keyboard actions should be visible or documented.
+    → **Fix**: Add a visible "Back" or "Cancel" button, or include Escape in the instruction text ("Use TAB to navigate, ENTER to click, ESC to close"). Making all keyboard interactions visible is especially important in a screen specifically demonstrating keyboard navigation.
+
+15. **[Arbitrary Color Coding Without Semantic Meaning — HIG 3.1, 1.10]**: Each button is a different color (magenta, cyan, green, orange), but the colors convey no meaning — they are purely decorative. HIG 3.1 states that color should be "supplementary, not required" and HIG 1.10 requires that "graphics support understanding, not just decoration." The arbitrary color assignment actively misleads by suggesting the colors mean something (priority, category, state) when they don't.
+    → **Fix**: Either (a) make all buttons the same color to show they are equivalent choices, or (b) assign semantic meaning to the colors and document it (e.g., green = confirm, red = destructive, blue = informational). Do not use different colors for identical-type elements unless the color carries meaning.
+
+16. **[Panel Border Treatment Adds Visual Noise — HIG 1.10, 3.2]**: The main panel has a thick gray/lavender rounded border that adds a substantial decorative element without improving usability. Combined with the title bar's colored background, the four colored buttons, and the yellow focus ring, this border contributes to the overall visual clutter. HIG 1.10 warns against "decoration that distracts from function."
+    → **Fix**: Reduce the border width or remove it entirely, relying on the panel's background color difference from the page background to define its edges. If a border is needed, use a thin (1–2px) subtle line rather than a thick decorative frame.
+
+17. **[Counter Text Uses Decorative Color — HIG 3.2]**: "Total Clicks: 0" uses a yellow-green color that matches the decorative palette rather than prioritizing readability. The small text size combined with the decorative color choice reduces legibility. HIG 3.2 requires "text and thin lines have sufficient contrast to be easily visible."
+    → **Fix**: Use white or a neutral light gray for the counter text. Reserve decorative colors for larger, more visually prominent elements where reduced readability has less impact.
+
+18. **[No Visual Affordance for Keyboard Interaction — HIG 1.3, 1.7]**: The buttons look like standard clickable buttons with no visual indication that they are keyboard-navigable. There are no key icons, tab indicators, or sequential numbering that would suggest keyboard interaction. The only hint is the subtitle text, which is easy to miss. HIG 1.3 requires that "all available actions are visible in menus or on screen."
+    → **Fix**: Add subtle keyboard affordance cues — small key icons (Tab/Enter), sequential numbers (1–4), or directional arrows next to buttons. Since this screen specifically demonstrates keyboard navigation, the keyboard affordance should be visually prominent, not buried in a small subtitle.
+
+### Strengths
+
+- **Focus Ring Is Present**: The yellow outline around OPTION A provides a visible keyboard focus indicator, which is essential for accessibility and demonstrates the core purpose of the screen.
+- **Instructional Text Is Provided**: The subtitle "Use TAB to navigate, ENTER to click" tells users how to interact, supporting the see-and-point principle for keyboard navigation.
+- **Clean Layout Structure**: The vertical stack of equally-sized buttons creates a predictable, scannable layout with a clear top-to-bottom navigation order.
+- **Interactive Feedback Exists**: The "Total Clicks: 0" counter provides feedback that buttons are functional and interactive, supporting HIG 1.7.
+- **Centered Panel Composition**: The centered, contained panel against the dark background creates a clear focal area and avoids edge-clipping issues.
+
+### Overall Score: 3/10
+
+The Keyboard Navigation demo has the right structural intent — showing focus management across a button group — but the execution undermines its own purpose. The screen's most critical job is demonstrating that keyboard focus is clearly visible and easy to track, yet the focus ring is overwhelmed by four competing saturated button colors that make it the *least* visually prominent element. The arbitrary rainbow palette violates core HIG principles around color restraint, consistency, and accessibility. Each button being a different color with inconsistent text colors suggests meaningful differentiation that doesn't exist, actively misleading users. The instruction text — the most important content for a first-time user — is the smallest, least readable element on screen. For a screen whose sole purpose is showcasing keyboard navigation, the focus indicator should be unmissable and the color palette should be subdued enough to let the focus state dominate visually. Instead, the decorative choices compete with and overshadow the functional purpose.
