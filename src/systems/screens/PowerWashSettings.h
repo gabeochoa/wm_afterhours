@@ -94,6 +94,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(16.0f));
     Theme theme;
     theme.font = text_white;
     theme.darkfont = bg_dark;
@@ -226,7 +227,6 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   pxf(dropdown_w - 92), pixels(44)})
               .with_absolute_position(row_x + label_w + 65.0f, ry - 8.0f)
               .with_custom_background(dd_bg)
-              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("value_" + std::to_string(i)));
@@ -364,7 +364,6 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position(prompt_x, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("x_btn"));
@@ -385,7 +384,6 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position(prompt_x + 100.0f, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("o_btn"));
@@ -406,7 +404,6 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position(prompt_x + 195.0f, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("square_btn"));

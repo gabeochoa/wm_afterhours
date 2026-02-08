@@ -36,6 +36,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = text_white;
@@ -293,7 +294,6 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(52), pixels(36)})
             .with_absolute_position(char_x - 110.0f, char_y)
             .with_custom_background(text_dark)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -318,7 +318,6 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(52), pixels(36)})
             .with_absolute_position(char_x + 170.0f, char_y)
             .with_custom_background(text_dark)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -331,7 +330,6 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("FAVOURITE")
             .with_size(ComponentSize{pixels(150), pixels(28)})
             .with_absolute_position(char_x - 25.0f, char_y + 38.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("favourite"));
@@ -342,7 +340,6 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Change the game's settings")
             .with_size(ComponentSize{pixels(320), pixels(32)})
             .with_absolute_position(55.0f, (float)screen_h - 50.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(afterhours::Color{180, 180, 180, 255})
             .with_debug_name("bottom_hint"));
 

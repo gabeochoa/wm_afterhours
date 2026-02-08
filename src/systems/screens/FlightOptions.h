@@ -60,6 +60,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
     Theme theme;
     // Use pure white/black for auto_text_color to achieve WCAG AA contrast
     theme.font =
@@ -307,7 +308,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(160.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("enter_key"));
@@ -317,7 +317,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("OK")
             .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position(224.0f, btn_y)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("ok_label"));
 
@@ -329,7 +328,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(275.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("esc_key"));
@@ -339,7 +337,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("BACK")
             .with_size(ComponentSize{pixels(56), pixels(36)})
             .with_absolute_position(331.0f, btn_y)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("back_label"));
   }

@@ -96,6 +96,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = text_white;
@@ -188,7 +189,6 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(close_x, close_y)
                .with_custom_background(close_red)
                .with_border(close_red_dark, cfg_close_btn_border)
-               .with_font("EqProRounded", h720(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
@@ -283,7 +283,6 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Save/Load")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(saveload_x + 14.0f, saveload_y + 14.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_title"));
 
@@ -292,7 +291,6 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Progress")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(saveload_x + 14.0f, saveload_y + 40.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("save_load_progress"));
 
@@ -356,7 +354,6 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(26), pixels(26)})
             .with_absolute_position(left_btn_x + 16.0f,
                             btn_row1_y + (cfg_pill_btn_height - 26.0f) / 2.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(notif_icon_color)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("notif_icon"));

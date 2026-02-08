@@ -90,6 +90,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(16.0f));
     Theme theme;
     theme.font = white;
     theme.darkfont = bg_dark;
@@ -196,7 +197,6 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("#")
             .with_size(ComponentSize{pixels(40), pixels(24)})
             .with_absolute_position(col_pos_x, header_y)
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_pos"));
 
@@ -205,7 +205,6 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("RACER")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(col_name_x, header_y)
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_name"));
 
@@ -214,7 +213,6 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("TIME")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(col_time_x, header_y)
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_time"));
 
@@ -223,7 +221,6 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("PTS")
             .with_size(ComponentSize{pixels(60), pixels(24)})
             .with_absolute_position(col_pts_x, header_y)
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("col_pts"));
@@ -403,7 +400,6 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(cup_w - 20),
                                      pixels(24)})
             .with_absolute_position(cup_x + 10.0f, lap_y + 12.0f)
-            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lap_header"));

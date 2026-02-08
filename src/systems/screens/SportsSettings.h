@@ -270,6 +270,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(19.0f));
     Theme theme;
     theme.font = text_white;
     theme.darkfont = bg_dark;
@@ -662,7 +663,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(help_w), pixels(50)})
             .with_absolute_position(help_x, help_y + 40.0f)
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help_desc1"));
 
@@ -672,7 +672,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(help_w), pixels(30)})
             .with_absolute_position(help_x, help_y + 70.0f)
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help_desc2"));
 
@@ -682,7 +681,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(help_w), pixels(30)})
             .with_absolute_position(help_x, help_y + 110.0f)
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("help_default"));
 
@@ -697,7 +695,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position(prompt_x, prompt_y)
             .with_custom_background(afterhours::Color{180, 160, 60, 255})
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -709,7 +706,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Reset to default")
             .with_size(ComponentSize{pixels(130), pixels(25)})
             .with_absolute_position(prompt_x + 35.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("reset_label"));
 
@@ -720,7 +716,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_absolute_position(prompt_x + 175.0f, prompt_y)
             .with_custom_background(afterhours::Color{180, 80, 80, 255})
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -732,7 +727,6 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Back")
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position(prompt_x + 210.0f, prompt_y + 2.0f)
-            .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("back_label"));
   }

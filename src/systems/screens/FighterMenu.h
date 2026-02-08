@@ -117,6 +117,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
     Theme theme;
     theme.font = text_white;
     theme.darkfont = bg_dark;
@@ -373,7 +374,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Select Character")
             .with_size(ComponentSize{pixels(180), pixels(28)})
             .with_absolute_position(character_x - 10.0f, L.character_y_offset + 180.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_gray)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("character_label"));
@@ -512,7 +512,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(btn_size, btn_size)
             .with_absolute_position(prompt_x + hint_spacing, prompt_y)
             .with_custom_background(afterhours::Color{180, 60, 60, 255})
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -535,7 +534,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(btn_size, btn_size)
             .with_absolute_position(prompt_x + hint_spacing * 2, prompt_y)
             .with_custom_background(afterhours::Color{180, 160, 60, 255})
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -559,7 +557,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(prompt_x + hint_spacing * 3, prompt_y + 2.0f)
             .with_custom_background(menu_item_bg)
             .with_border(text_gray, 2.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -573,7 +570,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(prompt_x + hint_spacing * 3 + btn_size, prompt_y + 2.0f)
             .with_custom_background(menu_item_bg)
             .with_border(text_gray, 2.0f)
-            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())

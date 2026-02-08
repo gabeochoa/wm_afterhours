@@ -101,6 +101,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(14.0f));
     Theme theme;
     theme.font = white;
     theme.darkfont = dark_text;
@@ -224,7 +225,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Item")
             .with_size(ComponentSize{pixels(120), pixels(22)})
             .with_absolute_position(col_name_x, hdr_y)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_item"));
 
@@ -233,7 +233,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Type")
             .with_size(ComponentSize{pixels(80), pixels(22)})
             .with_absolute_position(col_cat_x, hdr_y)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_type"));
 
@@ -242,7 +241,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Stock")
             .with_size(ComponentSize{pixels(50), pixels(22)})
             .with_absolute_position(col_stock_x, hdr_y)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_stock"));
 
@@ -251,7 +249,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Price")
             .with_size(ComponentSize{pixels(70), pixels(22)})
             .with_absolute_position(col_price_x, hdr_y)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Right)
             .with_debug_name("col_price"));
@@ -352,7 +349,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(item.category)
               .with_size(ComponentSize{pixels(90), pixels(24)})
               .with_absolute_position(col_cat_x, ry + 12.0f)
-              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(muted)
               .with_debug_name("cat_" + std::to_string(i)));
 
@@ -434,7 +430,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(detail_x + 95.0f, detail_y + 48.0f)
             .with_custom_background(panel_light)
             .with_border(border_wood, 1.0f)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(cream)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -574,7 +569,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(detail_w - 30),
                                      pixels(22)})
             .with_absolute_position(detail_x + 15.0f, sep_y + 38.0f)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(can_afford_total ? muted : accent_red)
             .with_debug_name("remaining"));
 
@@ -608,7 +602,6 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("A: Select   B: Back   X: Add to Cart   Y: Remove")
             .with_size(ComponentSize{pixels(screen_w - 50), pixels(20)})
             .with_absolute_position(25.0f, status_y)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("prompts"));

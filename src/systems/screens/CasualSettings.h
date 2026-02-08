@@ -31,6 +31,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(18.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = white;
@@ -136,7 +137,6 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_absolute_position(tx, toggle_y)
                      .with_custom_background(toggle_bg)
                      .with_border(toggle_border, 4.0f)
-                     .with_font("Gaegu-Bold", h720(18.0f))
                      .with_custom_text_color(*state_ptr ? text_dark : white)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(RoundedCorners())
@@ -156,7 +156,6 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_absolute_position(wifi_x, toggle_y + 5.0f)
             .with_custom_background(btn_green)
-            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -171,7 +170,6 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(wifi_x - 220.0f, toggle_y)
                .with_custom_background(white)
                .with_border(afterhours::Color{200, 195, 185, 255}, 3.0f)
-               .with_font("Gaegu-Bold", h720(18.0f))
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
@@ -337,7 +335,6 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      about_y + about_h - 48.0f)
                      .with_custom_background(btn_green)
                      .with_border(btn_green_dark, 3.0f)
-                     .with_font("Gaegu-Bold", h720(18.0f))
                      .with_custom_text_color(text_dark)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(RoundedCorners())

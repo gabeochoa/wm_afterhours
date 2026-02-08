@@ -82,6 +82,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(14.0f));
     Theme theme;
     theme.font = white;
     theme.darkfont = dark_text;
@@ -230,7 +231,6 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(recipes[i].effect)
               .with_size(ComponentSize{pixels(200), pixels(22)})
               .with_absolute_position(list_x + 70.0f, ry + 32.0f)
-              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(muted)
               .with_debug_name("recipe_effect_" + std::to_string(i)));
 
@@ -240,7 +240,6 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(std::to_string(recipes[i].brew_time) + "s")
               .with_size(ComponentSize{pixels(50), pixels(22)})
               .with_absolute_position(list_x + 70.0f, ry + 50.0f)
-              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(muted)
               .with_debug_name("recipe_time_" + std::to_string(i)));
     }
@@ -422,7 +421,6 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pxf(slot_size),
                                        pixels(18)})
               .with_absolute_position(sx, sy + slot_size - 20.0f)
-              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(has_enough ? accent_green : afterhours::Color{220, 80, 80, 255})
               .with_alignment(TextAlignment::Center)
               .with_debug_name("slot_count_" + std::to_string(i)));
@@ -520,7 +518,6 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pxf(inv_cell_w - 55),
                                        pixels(40)})
               .with_absolute_position(ix + 46.0f, iy + 8.0f)
-              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(white)
               .with_debug_name("inv_name_" + std::to_string(i)));
     }
@@ -534,7 +531,6 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                         "  |  Potions Brewed: 47")
             .with_size(ComponentSize{pixels(screen_w - 50), pixels(22)})
             .with_absolute_position(25.0f, status_y)
-            .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("status"));

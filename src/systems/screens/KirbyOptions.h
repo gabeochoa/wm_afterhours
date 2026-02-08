@@ -53,6 +53,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(20.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = panel_white;
@@ -92,7 +93,6 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(tab_start_x - 55.0f, tab_bar_y + 11.0f)
             .with_custom_background(tab_purple)
             .with_border(tab_purple_dark, 2.0f)
-            .with_font("Gaegu-Bold", h720(20.0f))
             .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -142,7 +142,6 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                             tab_bar_y + 11.0f)
             .with_custom_background(tab_purple)
             .with_border(tab_purple_dark, 2.0f)
-            .with_font("Gaegu-Bold", h720(20.0f))
             .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -303,7 +302,6 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Common")
             .with_size(ComponentSize{pixels(100), pixels(28)})
             .with_absolute_position(panel_x + 25.0f, panel_y + 105.0f)
-            .with_font("Gaegu-Bold", h720(20.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("common_label"));
 

@@ -58,6 +58,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(22.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = bg_cream;
@@ -131,7 +132,6 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(160), pixels(48)})
                      .with_absolute_position(205.0f, tab_y)
                      .with_custom_background(tab_bg)
-                     .with_font("EqProRounded", h720(22.0f))
                      .with_custom_text_color(text_dark)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("tab_" + std::to_string(i)))) {
@@ -182,7 +182,6 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_absolute_position(content_x + 340.0f, row_y - 5.0f)
                      .with_custom_background(toggle_bg)
                      .with_border(toggle_circle, 3.0f)
-                     .with_font("EqProRounded", h720(22.0f))
                      .with_custom_text_color(icon_color)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(RoundedCorners())
@@ -212,7 +211,6 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Controller Cursor Sensitivity")
             .with_size(ComponentSize{pixels(340), pixels(40)})
             .with_absolute_position(content_x, sens_y)
-            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("sens_label"));
 
@@ -296,7 +294,6 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(170), pixels(56)})
             .with_absolute_position((float)screen_w - 205.0f, (float)screen_h - 70.0f)
             .with_custom_background(btn_teal)
-            .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
             .with_alignment(TextAlignment::Center)
             .with_debug_name("tutorial"));

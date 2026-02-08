@@ -89,6 +89,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     load_textures_if_needed();
 
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(18.0f));
     Theme theme;
     theme.font = dark_text;
     theme.darkfont = cream_surface;
@@ -155,7 +156,6 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Gold:  $" + std::to_string(gold_coins))
             .with_size(ComponentSize{pixels(130), pixels(28)})
             .with_absolute_position(377.0f, 33.0f)
-            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("gold_text"));
 
@@ -429,7 +429,6 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(52), pixels(32)})
               .with_absolute_position(right_panel_x + 365.0f, row_y + 2.0f)
               .with_custom_background(time_bg)
-              .with_font("Gaegu-Bold", h720(18.0f))
               .with_custom_text_color(cream_surface)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.4f)
@@ -501,7 +500,6 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                         "%")
             .with_size(ComponentSize{pixels(140), pixels(26)})
             .with_absolute_position(left_panel_x, slider_y + 36.0f)
-            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_debug_name("music_label"));
 
@@ -628,7 +626,6 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(icon_size + 16),
                                      pixels(22)})
             .with_absolute_position(icon_x - 8.0f, icon_y + icon_size + 4.0f)
-            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("inventory_label"));
@@ -675,7 +672,6 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(22)})
             .with_absolute_position(icon_x + icon_spacing - 8.0f,
                             icon_y + icon_size + 4.0f)
-            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("research_label"));
@@ -720,7 +716,6 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(22)})
             .with_absolute_position(icon_x + icon_spacing * 2 - 8.0f,
                             icon_y + icon_size + 4.0f)
-            .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("crafting_label"));

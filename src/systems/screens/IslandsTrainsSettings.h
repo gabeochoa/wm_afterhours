@@ -54,6 +54,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(15.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = panel_cream;
@@ -219,7 +220,6 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(content_x,
                                controls_row_y + 2 * (row_h + section_gap))
                .with_custom_background(btn_cream)
-               .with_font("EqProRounded", h720(15.0f))
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
@@ -267,7 +267,6 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_720p_size(row_w, row_h)
                .with_absolute_position(content_x, tutorial_y + 22.0f)
                .with_custom_background(btn_cream)
-               .with_font("EqProRounded", h720(15.0f))
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
@@ -308,7 +307,6 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(160), pxf(h)})
             .with_absolute_position(x + 16.0f, y + 8.0f)
-            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
 
@@ -341,7 +339,6 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(display_value)
             .with_size(ComponentSize{pixels(110), pxf(h)})
             .with_absolute_position(x + w - 140.0f, y + 8.0f)
-            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("value_" + std::to_string(base_id)));
@@ -383,7 +380,6 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(label)
             .with_size(ComponentSize{pixels(175), pxf(h)})
             .with_absolute_position(x + 16.0f, y + 8.0f)
-            .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
 

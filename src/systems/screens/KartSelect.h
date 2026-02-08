@@ -66,6 +66,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(20.0f));
     Theme theme;
     theme.font = white;
     theme.darkfont = dark_text;
@@ -121,7 +122,6 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(32)})
             .with_absolute_position((float)screen_w - 60.0f, 18.0f)
             .with_custom_background(accent_yellow)
-            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -342,7 +342,6 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(kart_w - 20), pixels(30)})
             .with_absolute_position(kart_x + 10.0f, kart_y + 10.0f)
-            .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(accent_yellow)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("kart_header"));
@@ -363,7 +362,6 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                          pxf(kart_w - 40), pixels(38)})
                      .with_absolute_position(kart_x + 20.0f, ky)
                      .with_custom_background(kart_bg)
-                     .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(kart_text)
                      .with_alignment(TextAlignment::Center)
                      .with_rounded_corners(RoundedCorners())
