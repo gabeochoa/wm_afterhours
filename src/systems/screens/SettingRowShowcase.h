@@ -49,7 +49,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_background(Theme::Usage::None)
             .with_custom_text_color(context.theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
+            .with_font_size(pixels(22.0f))
             .with_margin(Margin{.right = DefaultSpacing::large()})
             .with_debug_name(
                 std::string(debug_prefix) + "_label"));
@@ -77,7 +77,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::None)
             .with_custom_text_color(
                 afterhours::Color{180, 200, 220, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font_size(h720(16.0f))
             .with_margin(Margin{.left = pixels(8)})
             .with_debug_name(
                 std::string(debug_prefix) + "_pct"));
@@ -92,6 +92,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = afterhours::Color{45, 48, 58, 255};
     theme.roundness = 0.12f;
     context.theme = theme;
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
 
     auto root =
         div(context, mk(entity, 0),
@@ -112,7 +113,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font_size(h720(20.0f))
             .with_alignment(TextAlignment::Center)
             .with_roundness(0.1f)
             .with_debug_name("title"));
@@ -137,7 +138,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("TOGGLES")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{120, 190, 150, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font_size(h720(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("toggle_label"));
 
@@ -158,7 +159,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("OPTIONS")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{110, 170, 220, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font_size(h720(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("stepper_label"));
 
@@ -178,7 +179,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("VOLUME")
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{220, 140, 120, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font_size(h720(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_debug_name("slider_label"));
 
@@ -194,7 +195,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Toggle, Stepper, Slider, Dropdown, Display")
             .with_size(ComponentSize{percent(0.95f), pixels(36)})
             .with_custom_text_color(afterhours::Color{100, 110, 130, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font_size(h720(18.0f))
             .with_alignment(TextAlignment::Center)
             .with_debug_name("footer"));
   }

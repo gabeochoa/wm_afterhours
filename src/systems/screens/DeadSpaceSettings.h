@@ -6,6 +6,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/ui/ui_decorators.h>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -61,6 +62,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     theme.segments = 4;
     context.theme = theme;
+    UIStylingDefaults::get().set_default_font("EqProRounded", h720(16.0f));
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
@@ -107,7 +109,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(32)})
             .with_absolute_position()
             .with_translate(sidebar_x, sidebar_y)
-            .with_font("EqProRounded", h720(20.0f))
+            .with_font_size(h720(20.0f))
             .with_custom_text_color(text_white)
             .with_padding(Padding{.left = pixels(8)})
             .with_alignment(TextAlignment::Left)
@@ -140,7 +142,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          pixels(static_cast<int>(sidebar_w)), pixels(34)})
                      .with_absolute_position()
                      .with_translate(sidebar_x, item_y)
-                     .with_font("EqProRounded", h720(18.0f))
+                     .with_font_size(h720(18.0f))
                      .with_custom_text_color(item_color)
                      .with_padding(Padding{.left = pixels(8)})
                      .with_alignment(TextAlignment::Left)
@@ -150,7 +152,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== MAIN PANEL: SETTINGS ==========
-    // Panel background with border
+    // Panel background with border + corner bracket decorations
     div(context, mk(entity, 100),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
@@ -159,7 +161,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(panel_x, panel_y)
             .with_custom_background(panel_dark)
             .with_border(panel_border, 2.0f)
-            .with_debug_name("main_panel"));
+            .with_debug_name("main_panel"))
+        .decorate(with_brackets(context, teal_highlight, 15.0f, 2.0f));
 
     // Panel header: // SETTINGS
     div(context, mk(entity, 110),
@@ -170,7 +173,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(panel_x + 2.0f, panel_y + 2.0f)
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
-            .with_font("EqProRounded", h720(22.0f))
+            .with_font_size(h720(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("panel_header"));
@@ -222,7 +225,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                        pixels(static_cast<int>(item_h - 8))})
                      .with_absolute_position()
                      .with_translate(panel_x + 25.0f, item_y + 8.0f)
-                     .with_font("EqProRounded", h720(20.0f))
+                     .with_font_size(h720(20.0f))
                      .with_custom_text_color(text_color)
                      .with_debug_name("setting_" + std::to_string(i)))) {
         selected_main = i;
@@ -241,7 +244,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), pixels(22)})
             .with_absolute_position()
             .with_translate(prompt_x + 105.0f, prompt_y + 3.0f)
-            .with_font("EqProRounded", h720(19.0f))
+            .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_small"));
 
@@ -263,7 +266,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 15.0f, prompt_y + 35.0f)
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
-            .with_font("EqProRounded", h720(19.0f))
+            .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("enter_key"));
@@ -274,7 +277,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 55.0f, prompt_y + 35.0f)
-            .with_font("EqProRounded", h720(19.0f))
+            .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_label"));
 
@@ -286,7 +289,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position()
             .with_translate(prompt_x + 135.0f, prompt_y + 35.0f)
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
-            .with_font("EqProRounded", h720(19.0f))
+            .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("esc_key"));
@@ -297,82 +300,11 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position()
             .with_translate(prompt_x + 175.0f, prompt_y + 35.0f)
-            .with_font("EqProRounded", h720(19.0f))
+            .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("back_label"));
 
-    // ========== DECORATIVE TECH ELEMENTS ==========
-    // Corner brackets on main panel
-    int bracket_size = 15;
-    afterhours::Color bracket_color = teal_highlight;
-
-    // Top-left bracket
-    div(context, mk(entity, 300),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
-            .with_absolute_position()
-            .with_translate(panel_x - 2.0f, panel_y - 2.0f)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_tl_h"));
-    div(context, mk(entity, 301),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
-            .with_absolute_position()
-            .with_translate(panel_x - 2.0f, panel_y - 2.0f)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_tl_v"));
-
-    // Top-right bracket
-    div(context, mk(entity, 302),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
-            .with_absolute_position()
-            .with_translate(panel_x + panel_w - bracket_size + 2.0f,
-                            panel_y - 2.0f)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_tr_h"));
-    div(context, mk(entity, 303),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
-            .with_absolute_position()
-            .with_translate(panel_x + panel_w, panel_y - 2.0f)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_tr_v"));
-
-    // Bottom-left bracket
-    div(context, mk(entity, 304),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
-            .with_absolute_position()
-            .with_translate(panel_x - 2.0f, panel_y + panel_h)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_bl_h"));
-    div(context, mk(entity, 305),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
-            .with_absolute_position()
-            .with_translate(panel_x - 2.0f,
-                            panel_y + panel_h - bracket_size + 2.0f)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_bl_v"));
-
-    // Bottom-right bracket
-    div(context, mk(entity, 306),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(bracket_size), pixels(2)})
-            .with_absolute_position()
-            .with_translate(panel_x + panel_w - bracket_size + 2.0f,
-                            panel_y + panel_h)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_br_h"));
-    div(context, mk(entity, 307),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels(bracket_size)})
-            .with_absolute_position()
-            .with_translate(panel_x + panel_w,
-                            panel_y + panel_h - bracket_size + 2.0f)
-            .with_custom_background(bracket_color)
-            .with_debug_name("bracket_br_v"));
+    // (corner brackets applied via .decorate() on main_panel above)
   }
 };
 
