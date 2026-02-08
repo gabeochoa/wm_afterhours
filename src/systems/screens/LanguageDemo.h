@@ -126,8 +126,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(sample.title)
             .with_size(ComponentSize{expand(), expand()})
             .with_font(font_config.font_name, 24.0f * font_config.size_scale)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("title_text"));
+            .with_alignment(TextAlignment::Left));
 
     // Button row container - needs enough width for 3 buttons
     // Height increased to accommodate full language names when enabled
@@ -217,8 +216,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_background(Theme::Usage::Accent)
             .with_font(font_config.font_name, 26.0f * font_config.size_scale)
-            .with_margin(Spacing::xs)
-            .with_debug_name("greeting"));
+            .with_margin(Spacing::xs));
 
     // Menu items - 44px touch targets
     for (int i = 0; i < 4; i++) {
@@ -264,8 +262,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("all_lang_title"));
+            .with_margin(Spacing::xs));
 
     // English sample
     auto en = get_sample(Language::English);
@@ -275,8 +272,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font("Gaegu-Bold", h720(18.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("en_sample"));
+            .with_margin(Spacing::xs));
 
     // Korean sample
     auto ko = get_sample(Language::Korean);
@@ -286,8 +282,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font("NotoSansKR", h720(18.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("ko_sample"));
+            .with_margin(Spacing::xs));
 
     // Japanese sample
     auto ja = get_sample(Language::Japanese);
@@ -297,8 +292,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font("Sazanami", h720(18.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("ja_sample"));
+            .with_margin(Spacing::xs));
 
     // ===== FOOTER ROW =====
     auto footer = div(context, mk(main.ent(), 2),
@@ -306,8 +300,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                           .with_size(ComponentSize{percent(1.0f), pixels(55)})
                           .with_background(Theme::Usage::Surface)
                           .with_padding(Spacing::xs)
-                          .with_flex_direction(FlexDirection::Column)
-                          .with_debug_name("footer"));
+                          .with_flex_direction(FlexDirection::Column));
 
     std::string lang_name = current_language == Language::English  ? "ENGLISH"
                             : current_language == Language::Korean ? "KOREAN"
@@ -319,16 +312,14 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                         " | Font: " + font_config.font_name)
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("lang_indicator"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     div(context, mk(footer.ent(), 1),
         ComponentConfig{}
             .with_label("Press 1/2/3 to switch languages")
             .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("instructions"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
   }
 };
 

@@ -73,8 +73,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(0.0f, 20.0f * scale)
             .with_font("Gaegu-Bold", h720(36.0f * scale))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Subtitle
     div(context, mk(entity, 2),
@@ -85,8 +84,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(0.0f, 65.0f * scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f * scale))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     float content_y = 95.0f * scale;
     float card_width = 200.0f * scale;
@@ -121,8 +119,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x, content_y + 15.0f * scale)
             .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card1_title"));
+            .with_alignment(TextAlignment::Center));
 
     // 75% progress indicator
     circular_progress(
@@ -142,8 +139,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x, content_y + 145.0f * scale)
             .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_cyan)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card1_value"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 14),
         ComponentConfig{}
@@ -152,8 +148,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x, content_y + 175.0f * scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card1_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== CARD 2: Animated Progress ==========
     float card2_x = start_x + card_width + card_gap;
@@ -175,8 +170,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card2_x, content_y + 15.0f * scale)
             .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card2_title"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated progress indicator
     circular_progress(
@@ -197,8 +191,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card2_x, content_y + 145.0f * scale)
             .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_purple)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card2_value"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 24),
         ComponentConfig{}
@@ -207,8 +200,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card2_x, content_y + 175.0f * scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card2_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== CARD 3: Thick Ring ==========
     float card3_x = start_x + (card_width + card_gap) * 2;
@@ -230,8 +222,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card3_x, content_y + 15.0f * scale)
             .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card3_title"));
+            .with_alignment(TextAlignment::Center));
 
     // Thick ring progress (scaled thickness)
     circular_progress(
@@ -251,8 +242,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card3_x, content_y + 145.0f * scale)
             .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_green)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card3_value"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 34),
         ComponentConfig{}
@@ -261,8 +251,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card3_x, content_y + 175.0f * scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card3_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== CARD 4: Thin Ring ==========
     float card4_x = start_x + (card_width + card_gap) * 3;
@@ -284,8 +273,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card4_x, content_y + 15.0f * scale)
             .with_font("Gaegu-Bold", h720(title_font))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card4_title"));
+            .with_alignment(TextAlignment::Center));
 
     // Thin ring progress (scaled thickness)
     circular_progress(
@@ -305,8 +293,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card4_x, content_y + 145.0f * scale)
             .with_font("Gaegu-Bold", h720(value_font))
             .with_custom_text_color(accent_orange)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card4_value"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 44),
         ComponentConfig{}
@@ -315,8 +302,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card4_x, content_y + 175.0f * scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(desc_font))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("card4_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== Bottom row: Size variations ==========
     float bottom_y = content_y + card_height + 30.0f * scale;
@@ -334,8 +320,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(0.0f, bottom_y - 5.0f * scale)
             .with_font("Gaegu-Bold", h720(24.0f * scale))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("size_title"));
+            .with_alignment(TextAlignment::Center));
 
     bottom_y += 30.0f * scale;
 

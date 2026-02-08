@@ -172,8 +172,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(compass_cx - compass_size / 2.0f, compass_top_y)
             .with_font("EqProRounded", compass_font_size)
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("compass_ring"));
+            .with_alignment(TextAlignment::Center));
 
     // Compass cardinal directions
     div(context, mk(entity, 101),
@@ -183,8 +182,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(compass_cx - 8.0f, compass_top_y - 17.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("compass_n"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 102),
         ComponentConfig{}
@@ -193,8 +191,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(compass_cx - 8.0f, compass_top_y + compass_size - 3.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("compass_s"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 103),
         ComponentConfig{}
@@ -203,8 +200,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(compass_cx - compass_size / 2.0f - 20.0f, compass_cy - 8.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("compass_w"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 104),
         ComponentConfig{}
@@ -213,8 +209,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(compass_cx + compass_size / 2.0f + 3.0f, compass_cy - 8.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("compass_e"));
+            .with_alignment(TextAlignment::Center));
 
     // Compass needle (vertical line)
     div(context, mk(entity, 105),
@@ -224,8 +219,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(compass_cx - 10.0f, compass_cy - 12.0f)
             .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("compass_needle"));
+            .with_alignment(TextAlignment::Center));
 
     // Compass tick marks (8 positions around the ring)
     for (int i = 0; i < 8; i++) {
@@ -252,8 +246,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 330.0f, 18.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("score"));
+            .with_alignment(TextAlignment::Right));
 
     div(context, mk(entity, 111),
         ComponentConfig{}
@@ -265,8 +258,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("score_icon"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 115),
         ComponentConfig{}
@@ -276,8 +268,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(gold_accent)
             .with_font("BlackOpsOne", h720(16.0f))
             .with_custom_text_color(bg_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("objective"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== KILL FEED ==========
     float kill_y = 120.0f;
@@ -300,8 +291,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(26)})
             .with_absolute_position((float)screen_w - 270.0f, 195.0f)
             .with_font("EqProRounded", h720(21.0f))
-            .with_custom_text_color(text_tan)
-            .with_debug_name("voice"));
+            .with_custom_text_color(text_tan));
 
     // ========== LEFT: Killstreak Icons ==========
     // Array of skill textures and labels (only show ks_sidebar_count)
@@ -386,8 +376,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(minimap_width, minimap_label_height)
             .with_absolute_position(margin_edge, map_label_y)
             .with_font("EqProRounded", font_large)
-            .with_custom_text_color(text_tan)
-            .with_debug_name("map_label"));
+            .with_custom_text_color(text_tan));
 
     // Minimap background
     div(context, mk(entity, 220),
@@ -395,8 +384,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(minimap_width, minimap_height)
             .with_absolute_position(margin_edge, map_content_y)
             .with_custom_background(minimap_green)
-            .with_border(border_dark, 2.0f)
-            .with_debug_name("minimap"));
+            .with_border(border_dark, 2.0f));
 
     // Map grid lines (vertical)
     float grid_cell_w = minimap_width / 4.0f;
@@ -440,8 +428,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(player_map_x, player_map_y)
             .with_font("EqProRounded", font_large)
             .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("player_icon"));
+            .with_alignment(TextAlignment::Center));
 
     // Objective marker - red dot
     div(context, mk(entity, 261),
@@ -474,8 +461,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pxf(ks_bar_height - 4.0f)})
             .with_absolute_position(margin_edge + 8.0f, ks_bar_y + 2.0f)
             .with_font("EqProRounded", font_medium)
-            .with_custom_text_color(text_tan)
-            .with_debug_name("ks_text"));
+            .with_custom_text_color(text_tan));
 
     // Killstreak progress boxes (dynamic based on killstreak_count)
     float boxes_start_x = margin_edge + ks_bar_width - (ks_box_size * killstreak_max + ks_box_gap * (killstreak_max - 1)) - 10.0f;
@@ -500,8 +486,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(55)})
             .with_absolute_position(ammo_x, ammo_y)
             .with_font("EqProRounded", font_xlarge)
-            .with_custom_text_color(text_tan)
-            .with_debug_name("ammo"));
+            .with_custom_text_color(text_tan));
 
     // ========== BOTTOM CENTER: Health & Armor ==========
     float health_x = ammo_x + 150.0f;
@@ -533,8 +518,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(health_x + 8.0f, health_y + 12.0f)
               .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(text_tan)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("skull"));
+              .with_alignment(TextAlignment::Center));
     }
 
     // Health label with percentage
@@ -545,16 +529,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(20)})
             .with_absolute_position(health_x + 50.0f, health_y + 5.0f)
             .with_font("EqProRounded", font_normal)
-            .with_custom_text_color(text_tan)
-            .with_debug_name("health_label"));
+            .with_custom_text_color(text_tan));
 
     // Health bar bg
     div(context, mk(entity, 320),
         ComponentConfig{}
             .with_720p_size(health_bar_width, health_bar_height)
             .with_absolute_position(health_x + 50.0f, health_y + 26.0f)
-            .with_custom_background(afterhours::Color{25, 25, 22, 255})
-            .with_debug_name("health_bg"));
+            .with_custom_background(afterhours::Color{25, 25, 22, 255}));
 
     // Health bar fill
     div(context, mk(entity, 321),
@@ -577,16 +559,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(armor_label_width), pixels(14)})
             .with_absolute_position(health_x + 50.0f, health_y + 44.0f)
             .with_font("EqProRounded", font_small)
-            .with_custom_text_color(text_muted)
-            .with_debug_name("armor_label"));
+            .with_custom_text_color(text_muted));
 
     // Armor bar bg
     div(context, mk(entity, 330),
         ComponentConfig{}
             .with_720p_size(armor_bar_actual_width, armor_bar_height)
             .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
-            .with_custom_background(afterhours::Color{25, 25, 22, 255})
-            .with_debug_name("armor_bg"));
+            .with_custom_background(afterhours::Color{25, 25, 22, 255}));
 
     // Armor bar fill
     div(context, mk(entity, 331),
@@ -613,8 +593,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(grenade_x - 35.0f, eq_y + eq_box_size / 2.0f - 10.0f)
             .with_font("EqProRounded", font_normal)
             .with_custom_text_color(text_tan)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("x2"));
+            .with_alignment(TextAlignment::Right));
 
     // Grenade box - highlighted with gold border (selected)
     div(context, mk(entity, 410),
@@ -622,8 +601,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(eq_box_size, eq_box_size)
             .with_absolute_position(grenade_x, eq_y)
             .with_custom_background(panel_dark)
-            .with_border(gold_accent, 3.0f)
-            .with_debug_name("grenade_bg"));
+            .with_border(gold_accent, 3.0f));
 
     if (weapon_grenade_tex.id != 0) {
       float icon_offset = (eq_box_size - eq_icon_size) / 2.0f;
@@ -665,8 +643,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size - 16.0f)
             .with_font("EqProRounded", font_small)
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("x1"));
+            .with_alignment(TextAlignment::Right));
 
     // ========== CENTER: Crosshair ==========
     if (crosshair_tex.id != 0) {

@@ -113,8 +113,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(42.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Subtitle
     float sub_scale = elastic_pop(anim_t - 0.15f, 1.05f, 3.0f);
@@ -127,8 +126,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // Layout
     float box_size = 100.0f;
@@ -159,8 +157,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("box1_label"));
+            .with_alignment(TextAlignment::Center));
 
     if (button(context, mk(entity, 11),
                ComponentConfig{}
@@ -194,8 +191,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("box2_label"));
+            .with_alignment(TextAlignment::Center));
 
     if (button(context, mk(entity, 21),
                ComponentConfig{}
@@ -227,8 +223,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("box3_label"));
+            .with_alignment(TextAlignment::Center));
 
     if (button(context, mk(entity, 31),
                ComponentConfig{}
@@ -261,8 +256,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("box4_label"));
+            .with_alignment(TextAlignment::Center));
 
     if (button(context, mk(entity, 41),
                ComponentConfig{}
@@ -294,8 +288,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("box5_label"));
+            .with_alignment(TextAlignment::Center));
 
     if (button(context, mk(entity, 51),
                ComponentConfig{}
@@ -328,8 +321,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("counter"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== Restart Button ==========
     float btn_scale = elastic_pop(anim_t - 1.0f, 1.08f, 3.0f);

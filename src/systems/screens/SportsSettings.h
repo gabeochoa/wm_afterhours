@@ -428,8 +428,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(150), pixels(30)})
             .with_absolute_position(50.0f, header_y)
             .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("section_header"));
+            .with_custom_text_color(text_white));
 
     // ========== LEFT PANEL: Settings ==========
     float panel_x = 50.0f;
@@ -654,8 +653,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pxf(help_w), pixels(35)})
             .with_absolute_position(help_x, help_y)
             .with_font("EqProRounded", h720(22.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("help_title"));
+            .with_custom_text_color(text_white));
 
     div(context, mk(entity, 701),
         ComponentConfig{}
@@ -663,8 +661,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(help_w), pixels(50)})
             .with_absolute_position(help_x, help_y + 40.0f)
-            .with_custom_text_color(text_white)
-            .with_debug_name("help_desc1"));
+            .with_custom_text_color(text_white));
 
     div(context, mk(entity, 702),
         ComponentConfig{}
@@ -672,8 +669,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(help_w), pixels(30)})
             .with_absolute_position(help_x, help_y + 70.0f)
-            .with_custom_text_color(text_white)
-            .with_debug_name("help_desc2"));
+            .with_custom_text_color(text_white));
 
     div(context, mk(entity, 703),
         ComponentConfig{}
@@ -681,8 +677,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pxf(help_w), pixels(30)})
             .with_absolute_position(help_x, help_y + 110.0f)
-            .with_custom_text_color(text_muted)
-            .with_debug_name("help_default"));
+            .with_custom_text_color(text_muted));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
     float prompt_y = (float)screen_h - 40.0f;
@@ -698,16 +693,14 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("y_btn"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("Reset to default")
             .with_size(ComponentSize{pixels(130), pixels(25)})
             .with_absolute_position(prompt_x + 35.0f, prompt_y + 2.0f)
-            .with_custom_text_color(text_white)
-            .with_debug_name("reset_label"));
+            .with_custom_text_color(text_white));
 
     // B Back
     div(context, mk(entity, 402),
@@ -719,16 +712,14 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("b_btn"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 403),
         ComponentConfig{}
             .with_label("Back")
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position(prompt_x + 210.0f, prompt_y + 2.0f)
-            .with_custom_text_color(text_white)
-            .with_debug_name("back_label"));
+            .with_custom_text_color(text_white));
   }
 };
 

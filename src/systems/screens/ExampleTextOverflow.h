@@ -62,8 +62,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(20.0f, 20.0f)
             .with_font("Gaegu-Bold", h720(32.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Instructions
     std::string instructions =
@@ -86,8 +85,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
                 warning_orange
 #endif
                 )
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("instructions"));
+            .with_alignment(TextAlignment::Center));
 
     float card_y = 120.0f;
     float card_spacing = 16.0f;
@@ -108,8 +106,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(success_green)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("section_working"));
+            .with_alignment(TextAlignment::Left));
 
     card_y += 35.0f;
 
@@ -131,8 +128,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col_x + 10.0f, card_y + 10.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_ok_1"));
+            .with_alignment(TextAlignment::Center));
 
     card_y += card_height + card_spacing;
 
@@ -153,8 +149,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_ok_2"));
+            .with_alignment(TextAlignment::Center));
 
     card_y += 60 + card_spacing;
 
@@ -175,8 +170,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col_x + 4.0f, card_y + 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_ok_3"));
+            .with_alignment(TextAlignment::Center));
 
     // Reset for right column
     card_y = 130.0f;
@@ -190,8 +184,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(error_red)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("section_overflow"));
+            .with_alignment(TextAlignment::Left));
 
     card_y += 35.0f;
 
@@ -212,8 +205,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 5.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_overflow_1"));
+            .with_alignment(TextAlignment::Center));
 
     card_y += 30 + card_spacing;
 
@@ -235,8 +227,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_overflow_2"));
+            .with_alignment(TextAlignment::Center));
 
     card_y += 50 + card_spacing;
 
@@ -257,8 +248,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 4.0f, card_y + 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_overflow_3"));
+            .with_alignment(TextAlignment::Center));
 
     // Label for the tiny box
     div(context, mk(entity, 27),
@@ -268,8 +258,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 54.0f, card_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("tiny_label"));
+            .with_alignment(TextAlignment::Left));
 
     card_y += 54 + card_spacing;
 
@@ -290,8 +279,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 5.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("text_overflow_4"));
+            .with_alignment(TextAlignment::Center));
 
     card_y += 25 + card_spacing;
 
@@ -303,8 +291,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("shrinking_label"));
+            .with_alignment(TextAlignment::Left));
 
     card_y += 25.0f;
 
@@ -355,8 +342,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("min_size_note"));
+            .with_alignment(TextAlignment::Left));
   }
 };
 

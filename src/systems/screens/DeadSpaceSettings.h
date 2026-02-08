@@ -111,8 +111,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(20.0f))
             .with_custom_text_color(text_white)
             .with_padding(Padding{.left = pixels(8)})
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("sidebar_header"));
+            .with_alignment(TextAlignment::Left));
 
     // Sidebar items
     for (size_t i = 0; i < initial_settings.size(); i++) {
@@ -169,8 +168,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
             .with_font_size(h720(22.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("panel_header"));
+            .with_alignment(TextAlignment::Center));
 
     // Settings list items
     float header_h = 50.0f;
@@ -234,8 +232,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), pixels(22)})
             .with_absolute_position(prompt_x + 105.0f, prompt_y + 3.0f)
             .with_font_size(h720(19.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("select_small"));
+            .with_custom_text_color(text_white));
 
     // Main prompt bar
     div(context, mk(entity, 210),
@@ -243,8 +240,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(280), pixels(35)})
             .with_absolute_position(prompt_x, prompt_y + 30.0f)
             .with_custom_background(panel_dark)
-            .with_border(panel_border, 1.0f)
-            .with_debug_name("prompt_bar"));
+            .with_border(panel_border, 1.0f));
 
     // Enter key
     div(context, mk(entity, 211),
@@ -255,8 +251,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("enter_key"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 212),
         ComponentConfig{}
@@ -264,8 +259,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), pixels(25)})
             .with_absolute_position(prompt_x + 55.0f, prompt_y + 35.0f)
             .with_font_size(h720(19.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("select_label"));
+            .with_custom_text_color(text_white));
 
     // Esc key
     div(context, mk(entity, 213),
@@ -276,8 +270,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("esc_key"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 214),
         ComponentConfig{}
@@ -285,8 +278,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_absolute_position(prompt_x + 175.0f, prompt_y + 35.0f)
             .with_font_size(h720(19.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("back_label"));
+            .with_custom_text_color(text_white));
 
     // (corner brackets applied via .decorate() on main_panel above)
   }

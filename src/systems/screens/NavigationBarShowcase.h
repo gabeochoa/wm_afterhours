@@ -55,8 +55,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("title"));
+            .with_skip_tabbing(true));
 
     // Section 1: Settings Categories
     div(context, mk(main_container.ent(), 1),
@@ -68,15 +67,13 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_skip_tabbing(true)
-            .with_debug_name("section1_label"));
+            .with_skip_tabbing(true));
 
     navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
                        .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                       .with_debug_name("navbar_categories"));
+                       .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Section 2: Game Modes
     div(context, mk(main_container.ent(), 4),
@@ -88,15 +85,13 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_skip_tabbing(true)
-            .with_debug_name("section2_label"));
+            .with_skip_tabbing(true));
 
     navigation_bar(context, mk(main_container.ent(), 5), modes, mode_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
                        .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                       .with_debug_name("navbar_modes"));
+                       .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Section 3: Level Selector (more options)
     div(context, mk(main_container.ent(), 7),
@@ -108,14 +103,12 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_skip_tabbing(true)
-            .with_debug_name("section3_label"));
+            .with_skip_tabbing(true));
 
     navigation_bar(context, mk(main_container.ent(), 8), levels, level_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-                       .with_debug_name("navbar_levels"));
+                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
   }
 };
 

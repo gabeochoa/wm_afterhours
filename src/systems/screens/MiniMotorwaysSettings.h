@@ -94,8 +94,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(56), pixels(56)})
             .with_absolute_position(35.0f, 35.0f)
             .with_font("EqProRounded", h720(32.0f))
-            .with_custom_text_color(text_dark)
-            .with_debug_name("back_arrow"));
+            .with_custom_text_color(text_dark));
 
     // ========== LEFT: Category Tabs ==========
     // Vertical metro-style line
@@ -104,8 +103,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(4), pixels(380)})
             .with_absolute_position(line_x, 150.0f)
-            .with_custom_background(grid_line)
-            .with_debug_name("metro_line"));
+            .with_custom_background(grid_line));
 
     // Metro style horizontal connectors
     float tab_start_y = 160.0f;
@@ -211,8 +209,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Controller Cursor Sensitivity")
             .with_size(ComponentSize{pixels(340), pixels(40)})
             .with_absolute_position(content_x, sens_y)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("sens_label"));
+            .with_custom_text_color(text_dark));
 
     // Left arrow - use configurable stepper size for accessibility
     int stepper_size = static_cast<int>(stepper_button_size);
@@ -243,8 +240,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(content_x + 390.0f, sens_y)
             .with_font("EqProRounded", 22.0f)
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("sens_value"));
+            .with_alignment(TextAlignment::Center));
 
     // Right arrow - use configurable stepper size for accessibility
     if (button(context, mk(entity, 123),
@@ -283,8 +279,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(480), pixels(28)})
             .with_absolute_position(35.0f, (float)screen_h - 45.0f)
             .with_font("EqProRounded", h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("version"));
+            .with_custom_text_color(text_muted));
 
     // ========== TUTORIAL BUTTON ==========
     button(
@@ -295,8 +290,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 205.0f, (float)screen_h - 70.0f)
             .with_custom_background(btn_teal)
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("tutorial"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

@@ -91,8 +91,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w / 2.0f - 100.0f, panel_y - 50.0f)
             .with_font("Gaegu-Bold", h720(38.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== CLOSE BUTTON (X) ==========
     if (button(context, mk(entity, 30),
@@ -159,8 +158,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("wifi_icon"));
+            .with_roundness(1.0f));
 
     // Save/Load Progress button (positioned to the left of wifi icon with gap)
     button(context, mk(entity, 50),
@@ -173,8 +171,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_debug_name("save_load"));
+               .with_roundness(0.5f));
 
     // ========== MENU BUTTONS ==========
     std::vector<std::string> left_buttons = {"Notifications: OFF", "Language"};
@@ -254,8 +251,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(150), pixels(20)})
             .with_absolute_position(left_x + 135.0f, info_y + 22.0f)
             .with_font("Gaegu-Bold", h720(17.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("version_simple"));
+            .with_custom_text_color(text_muted));
 
     // ========== ABOUT PANEL (shows technical info when toggled) ==========
     if (show_about) {
@@ -293,8 +289,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(about_x + about_w / 2.0f - 50.0f, about_y + 12.0f)
               .with_font("Gaegu-Bold", h720(24.0f))
               .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("about_title"));
+              .with_alignment(TextAlignment::Center));
 
       // Build number
       div(context, mk(entity, 303),
@@ -303,8 +298,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(340), pixels(22)})
               .with_absolute_position(about_x + 20.0f, about_y + 50.0f)
               .with_font("Gaegu-Bold", h720(16.0f))
-              .with_custom_text_color(text_muted)
-              .with_debug_name("about_build"));
+              .with_custom_text_color(text_muted));
 
       // Full version
       div(context, mk(entity, 304),
@@ -313,8 +307,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(220), pixels(22)})
               .with_absolute_position(about_x + 20.0f, about_y + 75.0f)
               .with_font("Gaegu-Bold", h720(16.0f))
-              .with_custom_text_color(text_muted)
-              .with_debug_name("about_version"));
+              .with_custom_text_color(text_muted));
 
       // Player ID
       div(context, mk(entity, 305),
@@ -323,8 +316,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(240), pixels(22)})
               .with_absolute_position(about_x + 20.0f, about_y + 100.0f)
               .with_font("Gaegu-Bold", h720(16.0f))
-              .with_custom_text_color(text_muted)
-              .with_debug_name("about_player_id"));
+              .with_custom_text_color(text_muted));
 
       // Close About button
       if (button(context, mk(entity, 306),

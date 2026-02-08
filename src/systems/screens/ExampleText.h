@@ -70,16 +70,14 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + 30.0f, panel_y + 25.0f)
             .with_font("Garamond", h720(36.0f))
             .with_custom_text_color(gold_accent)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Gold accent line under title
     div(context, mk(entity, 3),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(180), pixels(2)})
             .with_absolute_position(panel_x + (panel_w - 180) / 2.0f, panel_y + 78.0f)
-            .with_custom_background(gold_accent)
-            .with_debug_name("title_line"));
+            .with_custom_background(gold_accent));
 
     // Typography examples in a refined layout
     float content_y = panel_y + 110.0f;
@@ -97,8 +95,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position(left_col, content_y)
             .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("size_label"));
+            .with_custom_text_color(gold_accent));
 
     // Display text - large
     div(context, mk(entity, 11),
@@ -107,8 +104,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(56)})
             .with_absolute_position(left_col, content_y + left_spacing * 0.5f)
             .with_font("Garamond", h720(48.0f))
-            .with_custom_text_color(cream_text)
-            .with_debug_name("display_text"));
+            .with_custom_text_color(cream_text));
 
     div(context, mk(entity, 12),
         ComponentConfig{}
@@ -116,8 +112,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(44)})
             .with_absolute_position(left_col, content_y + left_spacing * 1.3f)
             .with_font("Garamond", h720(36.0f))
-            .with_custom_text_color(silver_text)
-            .with_debug_name("headline_text"));
+            .with_custom_text_color(silver_text));
 
     div(context, mk(entity, 13),
         ComponentConfig{}
@@ -125,8 +120,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(36)})
             .with_absolute_position(left_col, content_y + left_spacing * 2.0f)
             .with_font("Garamond", h720(28.0f))
-            .with_custom_text_color(silver_text)
-            .with_debug_name("subheading_text"));
+            .with_custom_text_color(silver_text));
 
     div(context, mk(entity, 14),
         ComponentConfig{}
@@ -136,8 +130,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(80)})
             .with_absolute_position(left_col, content_y + left_spacing * 2.7f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
-            .with_custom_text_color(muted_text)
-            .with_debug_name("body_text"));
+            .with_custom_text_color(muted_text));
 
     div(context, mk(entity, 15),
         ComponentConfig{}
@@ -145,16 +138,14 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(28)})
             .with_absolute_position(left_col, content_y + left_spacing * 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_custom_text_color(muted_text)
-            .with_debug_name("caption_text"));
+            .with_custom_text_color(muted_text));
 
     // Divider line
     div(context, mk(entity, 16),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(1), pixels(content_height)})
             .with_absolute_position(panel_x + panel_w / 2.0f, content_y)
-            .with_custom_background(divider)
-            .with_debug_name("divider"));
+            .with_custom_background(divider));
 
     // Right column - Color variations
     float right_item_spacing = (content_height - 30.0f) / 5.0f; // Space for 5 items plus header
@@ -165,8 +156,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
             .with_absolute_position(right_col, content_y)
             .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("color_label"));
+            .with_custom_text_color(gold_accent));
 
     struct ColorExample {
       std::string label;
@@ -215,8 +205,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + 50.0f, panel_y + panel_h - 45.0f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
             .with_custom_text_color(muted_text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

@@ -48,8 +48,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Subtitle
     div(context, mk(entity, 2),
@@ -60,8 +59,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // Layout constants
     float button_size = 100.0f;
@@ -84,8 +82,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_animation(Anim::on_hover().scale(1.0f, 1.2f).spring(10.0f, 6.0f))
-            .with_animation(Anim::on_hover().translate_y(0.0f, -8.0f).spring(12.0f, 7.0f))
-            .with_debug_name("hover_btn"));
+            .with_animation(Anim::on_hover().translate_y(0.0f, -8.0f).spring(12.0f, 7.0f)));
 
     // ========== BUTTON 2: Click Scale ==========
     float btn2_x = center_x - spacing * 0.5f - button_size / 2.0f;
@@ -138,8 +135,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_animation(Anim::on_appear().scale(0.3f, 1.0f).spring(10.0f, 6.0f))
-            .with_animation(Anim::on_appear().opacity(0.0f, 1.0f).ease_out(0.2f))
-            .with_debug_name("appear_btn"));
+            .with_animation(Anim::on_appear().opacity(0.0f, 1.0f).ease_out(0.2f)));
 
     // Second row - different animation types (all buttons for hover tracking)
     float row2_y = button_y + button_size + 60.0f;
@@ -155,8 +151,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
-            .with_animation(Anim::on_hover().translate_x(0.0f, 20.0f).spring(15.0f, 8.0f))
-            .with_debug_name("slide_btn"));
+            .with_animation(Anim::on_hover().translate_x(0.0f, 20.0f).spring(15.0f, 8.0f)));
 
     // ========== Bounce on hover ==========
     button(context, mk(entity, 60),
@@ -169,8 +164,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
-            .with_animation(Anim::on_hover().translate_y(0.0f, -15.0f).spring(12.0f, 5.0f))
-            .with_debug_name("bounce_btn"));
+            .with_animation(Anim::on_hover().translate_y(0.0f, -15.0f).spring(12.0f, 5.0f)));
 
     // ========== Fade on hover ==========
     button(context, mk(entity, 70),
@@ -183,8 +177,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
-            .with_animation(Anim::on_hover().opacity(1.0f, 0.6f).ease_out(0.1f))
-            .with_debug_name("fade_btn"));
+            .with_animation(Anim::on_hover().opacity(1.0f, 0.6f).ease_out(0.1f)));
 
     // ========== Loop animation ==========
     div(context, mk(entity, 80),
@@ -197,8 +190,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
-            .with_animation(Anim::loop().scale(0.95f, 1.05f).ease_in_out(0.4f))
-            .with_debug_name("pulse_btn"));
+            .with_animation(Anim::loop().scale(0.95f, 1.05f).ease_in_out(0.4f)));
 
     // Third row - composition tests (slide+rotate combinations)
     float row3_y = row2_y + button_size + 60.0f;
@@ -215,8 +207,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_animation(Anim::on_hover().translate_x(0.0f, 15.0f).spring(10.0f, 6.0f))
-            .with_animation(Anim::on_hover().rotate(0.0f, 5.0f).spring(12.0f, 7.0f))
-            .with_debug_name("slide_rotate_btn"));
+            .with_animation(Anim::on_hover().rotate(0.0f, 5.0f).spring(12.0f, 7.0f)));
 
     // ========== Rotate then Slide (rotate + translate_x) ==========
     button(context, mk(entity, 120),
@@ -230,8 +221,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_animation(Anim::on_hover().rotate(0.0f, -5.0f).spring(12.0f, 7.0f))
-            .with_animation(Anim::on_hover().translate_x(0.0f, -15.0f).spring(10.0f, 6.0f))
-            .with_debug_name("rotate_slide_btn"));
+            .with_animation(Anim::on_hover().translate_x(0.0f, -15.0f).spring(10.0f, 6.0f)));
 
     // ========== All combined: scale + translate + rotate ==========
     button(context, mk(entity, 130),
@@ -246,8 +236,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_animation(Anim::on_hover().scale(1.0f, 1.15f).spring(10.0f, 6.0f))
             .with_animation(Anim::on_hover().translate_y(0.0f, -10.0f).spring(12.0f, 7.0f))
-            .with_animation(Anim::on_hover().rotate(0.0f, 3.0f).spring(14.0f, 8.0f))
-            .with_debug_name("all_three_btn"));
+            .with_animation(Anim::on_hover().rotate(0.0f, 3.0f).spring(14.0f, 8.0f)));
 
     // Click counter display
     div(context, mk(entity, 90),
@@ -258,8 +247,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("click_counter"));
+            .with_alignment(TextAlignment::Center));
 
     // Code comparison
     div(context, mk(entity, 100),
@@ -270,8 +258,7 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("comparison"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

@@ -249,8 +249,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(white)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_debug_name("coin"));
+              .with_roundness(1.0f));
     }
 
     // Hero number style currency display - large 28.0f+ font
@@ -261,8 +260,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(cur_x + 62.0f, 20.0f)
             .with_font("EqProRounded", h720(32.0f))
             .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("money"));
+            .with_alignment(TextAlignment::Right));
 
     // ========== STATUS ICONS ==========
     float stat_y = 80.0f;
@@ -339,16 +337,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("happy_icon"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 82),
         ComponentConfig{}
             .with_label("Happiness")
             .with_size(ComponentSize{pixels(90), pixels(22)})
             .with_absolute_position((float)screen_w - 302.0f, meter_y + 9.0f)
-            .with_custom_text_color(dark_text)
-            .with_debug_name("happy_text"));
+            .with_custom_text_color(dark_text));
 
     // Happiness bar background
     div(context, mk(entity, 83),
@@ -357,8 +353,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 200.0f, meter_y + 8.0f)
             .with_custom_background(afterhours::Color{225, 230, 235, 255})
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("happy_bar_bg"));
+            .with_roundness(0.5f));
 
     // Happiness bar fill
     div(context, mk(entity, 84),
@@ -390,8 +385,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 124.0f, meter_y + 4.0f)
             .with_font("EqProRounded", h720(26.0f))
             .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("happy_pct"));
+            .with_alignment(TextAlignment::Center));
 
     // Resources meter with label - second row, no overlap
     div(context, mk(entity, 85),
@@ -414,16 +408,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("res_icon"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 87),
         ComponentConfig{}
             .with_label("Resources")
             .with_size(ComponentSize{pixels(90), pixels(22)})
             .with_absolute_position((float)screen_w - 302.0f, meter_row2_y + 9.0f)
-            .with_custom_text_color(dark_text)
-            .with_debug_name("res_text"));
+            .with_custom_text_color(dark_text));
 
     // Resources bar background
     div(context, mk(entity, 90),
@@ -432,8 +424,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 200.0f, meter_row2_y + 8.0f)
             .with_custom_background(afterhours::Color{225, 230, 235, 255})
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("res_bar_bg"));
+            .with_roundness(0.5f));
 
     // Resources bar fill
     div(context, mk(entity, 91),
@@ -456,8 +447,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(130), pixels(30)})
             .with_absolute_position((float)screen_w - 128.0f, meter_row2_y + 5.0f)
             .with_custom_text_color(panel_blue)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("res_pct"));
+            .with_alignment(TextAlignment::Right));
 
     // ========== LEFT: Navigation Tabs ==========
     // Center the main content area
@@ -583,8 +573,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(250), pixels(32)})
             .with_absolute_position(panel_x + 30.0f, panel_y + 20.0f)
             .with_font("EqProRounded", h720(24.0f))
-            .with_custom_text_color(dark_text)
-            .with_debug_name("prod_header"));
+            .with_custom_text_color(dark_text));
 
     // Trend indicator legend - prominent pill at top right of panel
     div(context, mk(entity, 212),
@@ -598,8 +587,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(happy_green, 2.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("trend_legend"));
+            .with_alignment(TextAlignment::Center));
 
     // Production box - uses clip_children for text overflow protection
     div(context, mk(entity, 211),
@@ -644,8 +632,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(220), pixels(32)})
             .with_absolute_position(panel_x + 420.0f, panel_y + 20.0f)
             .with_font("EqProRounded", h720(24.0f))
-            .with_custom_text_color(dark_text)
-            .with_debug_name("proj_header"));
+            .with_custom_text_color(dark_text));
 
     // Projects box - uses clip_children for text overflow protection
     div(context, mk(entity, 251),
@@ -752,8 +739,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(160), pixels(26)})
             .with_absolute_position(ms_x, (float)screen_h - 90.0f)
             .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("milestone_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Milestone bar with percentage label
     div(context, mk(entity, 411),
@@ -788,8 +774,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                             (float)screen_h - 55.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("milestone_pct"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== BOTTOM RIGHT: Icons ==========
     std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>

@@ -53,8 +53,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(0.0f, 20.0f)
             .with_font("Gaegu-Bold", h720(42.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== LEFT CARD: Horizontal Separators ==========
     div(context, mk(entity, 10),
@@ -79,8 +78,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(40)})
             .with_absolute_position(start_x + pad, y)
             .with_font("Gaegu-Bold", h720(30.0f))
-            .with_custom_text_color(text_dark)
-            .with_debug_name("h_title"));
+            .with_custom_text_color(text_dark));
     y += 48.0f;
 
     // Basic separator
@@ -90,16 +88,14 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("h_label1"));
+            .with_custom_text_color(text_muted));
     y += 36.0f;
 
     div(context, mk(entity, 13),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(item_width), pixels(3)})
             .with_absolute_position(start_x + pad, y)
-            .with_custom_background(border_light)
-            .with_debug_name("sep1"));
+            .with_custom_background(border_light));
     y += 32.0f;
 
     // Thick separator
@@ -109,16 +105,14 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("h_label2"));
+            .with_custom_text_color(text_muted));
     y += 36.0f;
 
     div(context, mk(entity, 15),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(item_width), pixels(6)})
             .with_absolute_position(start_x + pad, y)
-            .with_custom_background(border_light)
-            .with_debug_name("sep2"));
+            .with_custom_background(border_light));
     y += 32.0f;
 
     // Blue separator
@@ -128,16 +122,14 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("h_label3"));
+            .with_custom_text_color(text_muted));
     y += 36.0f;
 
     div(context, mk(entity, 17),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(item_width), pixels(3)})
             .with_absolute_position(start_x + pad, y)
-            .with_custom_background(accent_blue)
-            .with_debug_name("sep3"));
+            .with_custom_background(accent_blue));
     y += 32.0f;
 
     // Partial width separator
@@ -147,8 +139,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("h_label4"));
+            .with_custom_text_color(text_muted));
     y += 36.0f;
 
     float partial_width = item_width * 0.6f;
@@ -156,8 +147,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(partial_width), pixels(3)})
             .with_absolute_position(start_x + pad + (item_width - partial_width) / 2, y)
-            .with_custom_background(accent_purple)
-            .with_debug_name("sep4"));
+            .with_custom_background(accent_purple));
     y += 40.0f;
 
     // Labeled separator section title
@@ -167,8 +157,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(34)})
             .with_absolute_position(start_x + pad, y)
             .with_font("Gaegu-Bold", h720(26.0f))
-            .with_custom_text_color(text_dark)
-            .with_debug_name("labeled_title"));
+            .with_custom_text_color(text_dark));
     y += 40.0f;
 
     // --- OR --- style separator
@@ -177,8 +166,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(line_width), pixels(3)})
             .with_absolute_position(start_x + pad, y + 12)
-            .with_custom_background(border_light)
-            .with_debug_name("or_line1"));
+            .with_custom_background(border_light));
 
     div(context, mk(entity, 22),
         ComponentConfig{}
@@ -187,15 +175,13 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x + pad + line_width + 5, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("or_label"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 23),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(line_width), pixels(3)})
             .with_absolute_position(start_x + pad + line_width + 60, y + 12)
-            .with_custom_background(border_light)
-            .with_debug_name("or_line2"));
+            .with_custom_background(border_light));
     y += 40.0f;
 
     // --- Settings --- style separator
@@ -215,8 +201,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x + pad + settings_line_width + 15, y)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(accent_blue)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("settings_label"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 26),
         ComponentConfig{}
@@ -224,8 +209,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x + pad + settings_line_width +
                                 settings_label_width + 30,
                             y + 14)
-            .with_custom_background(accent_blue)
-            .with_debug_name("settings_line2"));
+            .with_custom_background(accent_blue));
 
     // ========== RIGHT CARD: Vertical Separators ==========
     float right_x = start_x + col_width + col_gap;
@@ -249,8 +233,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(40)})
             .with_absolute_position(right_x + pad, y)
             .with_font("Gaegu-Bold", h720(30.0f))
-            .with_custom_text_color(text_dark)
-            .with_debug_name("v_title"));
+            .with_custom_text_color(text_dark));
     y += 48.0f;
 
     div(context, mk(entity, 32),
@@ -259,8 +242,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
             .with_absolute_position(right_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("v_desc"));
+            .with_custom_text_color(text_muted));
     y += 40.0f;
 
     // Navigation row with vertical separators
@@ -325,15 +307,13 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_x + pad + gallery_line_width + 5, y)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("gallery_label"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 62),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(gallery_line_width), pixels(3)})
             .with_absolute_position(right_x + pad + gallery_line_width + 140, y + 14)
-            .with_custom_background(border_light)
-            .with_debug_name("gallery_line2"));
+            .with_custom_background(border_light));
     y += 40.0f;
 
     // Color rows
@@ -369,8 +349,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

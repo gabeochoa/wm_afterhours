@@ -164,8 +164,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::medium()})
-            .with_debug_name("title"));
+            .with_margin(Margin{.bottom = DefaultSpacing::medium()}));
 
     // Content area - three columns with clearer group separation
     auto content =
@@ -199,8 +198,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("fruit_header"));
+            .with_skip_tabbing(true));
 
     // Radio group with configurable styling for clearer indicator
     custom_radio_group(context, mk(col1.ent(), 1), fruit_options, fruit_idx,
@@ -231,8 +229,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("size_header"));
+            .with_skip_tabbing(true));
 
     // Radio group with configurable styling for clearer indicator
     custom_radio_group(context, mk(col2.ent(), 1), size_options, size_idx,
@@ -263,8 +260,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("color_header"));
+            .with_skip_tabbing(true));
 
     // Radio group with configurable styling for clearer indicator
     custom_radio_group(context, mk(col3.ent(), 1), color_options, color_idx,
@@ -289,8 +285,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("status"));
+            .with_skip_tabbing(true));
   }
 };
 

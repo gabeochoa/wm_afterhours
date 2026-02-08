@@ -101,8 +101,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_light)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.15f)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Instruction text
     div(context, mk(entity, 4),
@@ -112,8 +111,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + 20.0f, panel_y + 62.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("instructions"));
+            .with_alignment(TextAlignment::Center));
 
     // Button colors
     afterhours::Color btn_colors[] = {btn_magenta, btn_cyan, btn_lime,
@@ -171,8 +169,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(panel_x + 20.0f, panel_y + panel_height - 40.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(btn_lime)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("footer"));
+              .with_alignment(TextAlignment::Center));
     }
   }
 };

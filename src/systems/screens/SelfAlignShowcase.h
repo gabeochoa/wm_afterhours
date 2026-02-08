@@ -41,8 +41,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("title"));
+            .with_skip_tabbing(true));
 
     // Subtitle
     div(context, mk(main.ent(), 1),
@@ -54,8 +53,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = DefaultSpacing::small(),
                                 .left = pixels(0), .right = pixels(0)})
-            .with_skip_tabbing(true)
-            .with_debug_name("subtitle"));
+            .with_skip_tabbing(true));
 
     // Demo container - a column, so children stack vertically
     // but can use SelfAlign to control their horizontal position
@@ -84,8 +82,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
-            .with_skip_tabbing(true)
-            .with_debug_name("flex_start"));
+            .with_skip_tabbing(true));
 
     // Center - centers horizontally
     div(context, mk(demo.ent(), 1),
@@ -96,8 +93,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("center"));
+            .with_skip_tabbing(true));
 
     // FlexEnd - aligns right with margin for visual spacing from edge
     div(context, mk(demo.ent(), 2),
@@ -110,8 +106,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
-            .with_skip_tabbing(true)
-            .with_debug_name("flex_end"));
+            .with_skip_tabbing(true));
 
     // Visual legend row showing color-to-position mapping
     auto legend = div(context, mk(main.ent(), 3),
@@ -134,8 +129,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_alignment(TextAlignment::Center)
-            .with_skip_tabbing(true)
-            .with_debug_name("legend_left"));
+            .with_skip_tabbing(true));
 
     // Legend: center
     div(context, mk(legend.ent(), 1),
@@ -146,8 +140,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_alignment(TextAlignment::Center)
-            .with_skip_tabbing(true)
-            .with_debug_name("legend_center"));
+            .with_skip_tabbing(true));
 
     // Legend: right
     div(context, mk(legend.ent(), 2),
@@ -158,8 +151,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_alignment(TextAlignment::Center)
-            .with_skip_tabbing(true)
-            .with_debug_name("legend_right"));
+            .with_skip_tabbing(true));
 
     // Summary line
     div(context, mk(main.ent(), 4),
@@ -171,8 +163,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = pixels(0),
                                 .left = pixels(0), .right = pixels(0)})
-            .with_skip_tabbing(true)
-            .with_debug_name("summary"));
+            .with_skip_tabbing(true));
   }
 };
 

@@ -145,8 +145,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(afterhours::Color{130, 140, 130, 255})
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(1.0f)
-               .with_debug_name("close"));
+               .with_roundness(1.0f));
 
     // ========== TITLE ==========
     div(context, mk(entity, 60),
@@ -156,8 +155,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + panel_w / 2.0f - 125.0f, panel_y + 18.0f)
             .with_font("EqProRounded", h720(30.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     float content_x = panel_x + 15.0f;
     float content_y = panel_y + 60.0f;
@@ -173,8 +171,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(22)})
             .with_absolute_position(content_x, content_y)
             .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_debug_name("display_header"));
+            .with_custom_text_color(header_olive));
 
     float display_row_y = content_y + 22.0f;
 
@@ -198,8 +195,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(22)})
             .with_absolute_position(content_x, controls_y)
             .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_debug_name("controls_header"));
+            .with_custom_text_color(header_olive));
 
     float controls_row_y = controls_y + 22.0f;
 
@@ -223,8 +219,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_debug_name("keyboard_btn"));
+               .with_roundness(0.5f));
 
     // ========== AUDIO SECTION ==========
     float audio_y =
@@ -235,8 +230,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(22)})
             .with_absolute_position(content_x, audio_y)
             .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_debug_name("audio_header"));
+            .with_custom_text_color(header_olive));
 
     float audio_row_y = audio_y + 22.0f;
 
@@ -258,8 +252,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(22)})
             .with_absolute_position(content_x, tutorial_y)
             .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_debug_name("tutorial_header"));
+            .with_custom_text_color(header_olive));
 
     button(context, mk(entity, 250),
            ComponentConfig{}
@@ -270,8 +263,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_debug_name("tutorial_btn"));
+               .with_roundness(0.5f));
 
     // ========== RESET TO DEFAULTS ==========
     // Positioned at SCREEN bottom, outside the panel (matching inspiration)
@@ -282,8 +274,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(sw / 2.0f - 125.0f, sh - 70.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("reset"));
+            .with_alignment(TextAlignment::Center));
   }
 
   void render_selector_row(UIContext<InputAction> &context,

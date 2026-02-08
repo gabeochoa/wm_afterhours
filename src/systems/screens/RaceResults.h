@@ -150,8 +150,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(30.0f, 18.0f)
             .with_font("Fredoka", h720(36.0f))
             .with_custom_text_color(gold)
-            .with_text_stroke(afterhours::Color{160, 120, 0, 255}, 3.0f)
-            .with_debug_name("title"));
+            .with_text_stroke(afterhours::Color{160, 120, 0, 255}, 3.0f));
 
     // Track and race info
     div(context, mk(entity, 101),
@@ -163,8 +162,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 530.0f, 18.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("track_info"));
+            .with_alignment(TextAlignment::Right));
 
     // ========== MAIN RESULTS TABLE ==========
     float table_x = 30.0f;
@@ -197,24 +195,21 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("#")
             .with_size(ComponentSize{pixels(40), pixels(24)})
             .with_absolute_position(col_pos_x, header_y)
-            .with_custom_text_color(muted)
-            .with_debug_name("col_pos"));
+            .with_custom_text_color(muted));
 
     div(context, mk(entity, 202),
         ComponentConfig{}
             .with_label("RACER")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(col_name_x, header_y)
-            .with_custom_text_color(muted)
-            .with_debug_name("col_name"));
+            .with_custom_text_color(muted));
 
     div(context, mk(entity, 203),
         ComponentConfig{}
             .with_label("TIME")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(col_time_x, header_y)
-            .with_custom_text_color(muted)
-            .with_debug_name("col_time"));
+            .with_custom_text_color(muted));
 
     div(context, mk(entity, 204),
         ComponentConfig{}
@@ -222,8 +217,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), pixels(24)})
             .with_absolute_position(col_pts_x, header_y)
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("col_pts"));
+            .with_alignment(TextAlignment::Right));
 
     // Separator
     div(context, mk(entity, 205),
@@ -231,8 +225,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(table_w - 30),
                                      pixels(1)})
             .with_absolute_position(table_x + 15.0f, header_y + 28.0f)
-            .with_custom_background(border_blue)
-            .with_debug_name("header_sep"));
+            .with_custom_background(border_blue));
 
     // Results rows
     float row_start_y = header_y + 38.0f;
@@ -340,8 +333,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(cup_x + 10.0f, cup_y + 10.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(gold)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("cup_header"));
+            .with_alignment(TextAlignment::Center));
 
     // Standings rows
     for (size_t i = 0; i < standings.size(); i++) {
@@ -401,8 +393,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(24)})
             .with_absolute_position(cup_x + 10.0f, lap_y + 12.0f)
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("lap_header"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 452),
         ComponentConfig{}
@@ -412,8 +403,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(cup_x + 10.0f, lap_y + 40.0f)
             .with_font("Fredoka", h720(32.0f))
             .with_custom_text_color(accent_green)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("lap_time"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 453),
         ComponentConfig{}
@@ -423,8 +413,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(cup_x + 10.0f, lap_y + 75.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(gold)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("lap_best"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== BOTTOM ACTIONS ==========
     float bottom_y = (float)screen_h - 80.0f;
@@ -441,8 +430,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.3f)
-               .with_debug_name("replay_btn"));
+               .with_roundness(0.3f));
 
     // Next Race button
     button(context, mk(entity, 510),
@@ -458,8 +446,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.3f)
                .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                                 afterhours::Color{0, 0, 0, 60})
-               .with_debug_name("next_btn"));
+                                 afterhours::Color{0, 0, 0, 60}));
 
     // Quit button
     button(context, mk(entity, 520),
@@ -473,8 +460,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.3f)
-               .with_debug_name("quit_btn"));
+               .with_roundness(0.3f));
 
     // Controller prompts
     div(context, mk(entity, 530),
@@ -484,8 +470,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w / 2.0f - 200.0f, (float)screen_h - 25.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("prompts"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

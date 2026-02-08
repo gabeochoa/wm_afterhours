@@ -120,8 +120,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_padding(Padding{.left = pixels(6)})
-            .with_skip_tabbing(true)
-            .with_debug_name("title_text"));
+            .with_skip_tabbing(true));
 
     // Window controls container - groups buttons on the right
     // Height matches title bar (28px), width accounts for 3 buttons (24px each + 2px margins)
@@ -146,8 +145,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
               .with_margin(Margin{.left = pixels(2)})
               .disable_rounded_corners()
-              .with_skip_tabbing(true)
-              .with_debug_name("ctrl_btn"));
+              .with_skip_tabbing(true));
     }
 
     // Menu bar
@@ -169,8 +167,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(AIMColors::text_default())
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_padding(Padding{.left = pixels(6)})
-              .with_skip_tabbing(true)
-              .with_debug_name("menu_item"));
+              .with_skip_tabbing(true));
     }
 
     // Buddy info bar
@@ -191,16 +188,14 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(AIMColors::warning_yellow())
             .with_custom_text_color(AIMColors::text_default())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("buddy_icon_available"));
+            .with_skip_tabbing(true));
 
     auto buddy_info =
         div(context, mk(buddy_bar.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(210), pixels(40)})
                 .with_flex_direction(FlexDirection::Column)
-                .with_padding(Padding{.left = pixels(10)})
-                .with_debug_name("buddy_info"));
+                .with_padding(Padding{.left = pixels(10)}));
 
     div(context, mk(buddy_info.ent(), 0),
         ComponentConfig{}
@@ -209,8 +204,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(AIMColors::buddy_text())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("buddy_name_display"));
+            .with_skip_tabbing(true));
 
     // Status row with indicator dot and text
     auto status_row =
@@ -218,8 +212,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(120), pixels(18)})
                 .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_debug_name("status_row"));
+                .with_align_items(AlignItems::Center));
 
     // Green status indicator dot
     div(context, mk(status_row.ent(), 0),
@@ -239,8 +232,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("buddy_status"));
+            .with_skip_tabbing(true));
 
     // Chat history container - holds scroll view and scroll indicator side by side
     auto chat_container =
@@ -248,8 +240,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(280)})
                 .with_flex_direction(FlexDirection::Row)
-                .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)})
-                .with_debug_name("chat_container"));
+                .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)}));
 
     // Chat history area - uses scroll_view for scrollable messages
     auto chat_area =
@@ -289,8 +280,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Left)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_margin(Margin{.bottom = pixels(4)})
-              .with_skip_tabbing(true)
-              .with_debug_name("chat_msg"));
+              .with_skip_tabbing(true));
     }
 
     // Scroll bar track (vertical indicator for chat area)
@@ -338,8 +328,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_padding(Padding{.left = pixels(PAD)})
-            .with_skip_tabbing(true)
-            .with_debug_name("send_to_label"));
+            .with_skip_tabbing(true));
 
     // Message input - multiline text area
     // 3 lines at 18px line height = 54px, plus padding
@@ -388,8 +377,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_absolute_position(pixels(6), pixels(6))
               .with_skip_tabbing(true)
-              .with_render_layer(10)  // Render on top of text_area
-              .with_debug_name("placeholder_text"));
+              .with_render_layer(10)); // Render on top of text_area
     }
 
     // Button bar - padding to keep buttons from window edge
@@ -443,8 +431,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                .with_border(AIMColors::button_shadow(), 2.0f)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
-               .disable_rounded_corners()
-               .with_debug_name("send_btn"));
+               .disable_rounded_corners());
 
     // Status bar
     div(context, mk(window.ent(), 8),
@@ -456,8 +443,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_padding(Padding{.left = pixels(PAD)})
-            .with_skip_tabbing(true)
-            .with_debug_name("status_bar"));
+            .with_skip_tabbing(true));
 
     // Confirmation dialog for Warn action
     afterhours::modal::confirm(

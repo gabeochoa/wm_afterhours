@@ -52,8 +52,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("title"));
+                                .right = pixels(0)}));
 
     // Row 1: Basic button states
     auto row1 = div(context, mk(main_container.ent(), 1),
@@ -72,8 +71,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_debug_name("states_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f)));
 
     // Normal button
     if (button(context, mk(row1.ent(), 1),
@@ -134,8 +132,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_border(disabled_border_color, 2.0f)
                .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                .with_margin(Spacing::xs)
-               .with_roundness(0.08f)
-               .with_debug_name("btn_disabled"));
+               .with_roundness(0.08f));
 
     // Row 2: Different sizes - AlignItems::Center vertically centers buttons
     auto row2 = div(context, mk(main_container.ent(), 2),
@@ -157,8 +154,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_debug_name("sizes_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f)));
 
     // Small button - increased height to meet 44px touch target, larger font for visibility
     if (button(context, mk(row2.ent(), 1),
@@ -223,8 +219,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_debug_name("group_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f)));
 
     // Create individual buttons styled as a group with gaps between them
     std::array<std::string_view, 4> group_labels = {"One", "Two", "Three",
@@ -272,8 +267,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(45)})
             .with_background(Theme::Usage::Surface)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_debug_name("custom_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f)));
 
     // Custom color button - coral
     if (button(context, mk(row4.ent(), 1),
@@ -319,8 +313,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
                .with_margin(Spacing::xs)
-               .disable_rounded_corners()
-               .with_debug_name("btn_sharp"));
+               .disable_rounded_corners());
 
     // Click counter display
     int total_clicks = 0;
@@ -335,8 +328,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("click_counter"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
   }
 };
 

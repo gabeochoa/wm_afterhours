@@ -116,8 +116,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Subtitle
     div(context, mk(entity, 2),
@@ -128,8 +127,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // Layout constants
     float box_size = 120.0f;
@@ -149,8 +147,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("slide_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated box with position offset
     div(context, mk(entity, 21),
@@ -171,8 +168,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("slide_value"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== BOX 2: Fade In (center position) ==========
     float fade_x = center_x - box_size / 2.0f;
@@ -186,8 +182,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("fade_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated box with opacity
     div(context, mk(entity, 11),
@@ -209,8 +204,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("fade_value"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== BOX 3: Scale Up ==========
     float scale_x = center_x + spacing - box_size / 2.0f;
@@ -224,8 +218,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("scale_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated box with scale - using with_scale() for smooth animations
     div(context, mk(entity, 31),
@@ -247,8 +240,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("scale_value"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== Restart Button ==========
     if (button(context, mk(entity, 100),

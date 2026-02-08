@@ -76,8 +76,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::small(),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("title"));
+                                .right = pixels(0)}));
 
     // Content area - two columns - adjusted height for all content
     auto content =
@@ -110,8 +109,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font_size(theme.font_size_md())  // 20px - section headers
-            .with_skip_tabbing(true)
-            .with_debug_name("sliders_header"));
+            .with_skip_tabbing(true));
 
     // Volume slider - use font_size_sm for control labels, increased handle visibility
     slider(context, mk(left_col.ent(), 1), volume_slider,
@@ -155,8 +153,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font_size(theme.font_size_md())  // 20px - section headers
-            .with_skip_tabbing(true)
-            .with_debug_name("progress_header"));
+            .with_skip_tabbing(true));
 
     // Progress bar showing volume value (dynamic)
     progress_bar(context, mk(left_col.ent(), 5), volume_slider,
@@ -185,8 +182,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                              .with_custom_background(afterhours::colors::darken(
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
-                             .with_flex_direction(FlexDirection::Column)
-                             .with_debug_name("right_column"));
+                             .with_flex_direction(FlexDirection::Column));
 
     // Checkboxes section header - font_size_md for section headers
     div(context, mk(right_col.ent(), 0),
@@ -197,8 +193,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font_size(theme.font_size_md())  // 20px - section headers
-            .with_skip_tabbing(true)
-            .with_debug_name("checkboxes_header"));
+            .with_skip_tabbing(true));
 
     // Audio checkboxes - font_size_sm for checkbox labels, standardized checkmark color via Primary
     checkbox(context, mk(right_col.ent(), 1), enable_music,
@@ -207,8 +202,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font_size(theme.font_size_sm())  // 16px - labels
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("music_checkbox"));
+                 .with_margin(Spacing::xs));
 
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
              ComponentConfig{}
@@ -216,8 +210,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font_size(theme.font_size_sm())  // 16px - labels
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("sfx_checkbox"));
+                 .with_margin(Spacing::xs));
 
     // Display checkboxes - standardized checkmark color via Primary
     checkbox(context, mk(right_col.ent(), 3), fullscreen,
@@ -226,8 +219,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font_size(theme.font_size_sm())  // 16px - labels
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("fullscreen_checkbox"));
+                 .with_margin(Spacing::xs));
 
     checkbox(context, mk(right_col.ent(), 4), vsync,
              ComponentConfig{}
@@ -235,8 +227,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font_size(theme.font_size_sm())  // 16px - labels
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("vsync_checkbox"));
+                 .with_margin(Spacing::xs));
 
     checkbox(context, mk(right_col.ent(), 5), show_fps,
              ComponentConfig{}
@@ -244,8 +235,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
                  .with_font_size(theme.font_size_sm())  // 16px - labels
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("fps_checkbox"));
+                 .with_margin(Spacing::xs));
 
     // Disabled checkbox example - standardized checkmark color via Primary
     // Enhanced disabled styling: reduced opacity for stronger visual differentiation
@@ -258,8 +248,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_disabled(true)
                  .with_opacity(0.5f)
                  .with_font_size(theme.font_size_sm())  // 16px - labels
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("disabled_checkbox"));
+                 .with_margin(Spacing::xs));
 
     // Language dropdown - font_size_sm for dropdown values
     dropdown(context, mk(right_col.ent(), 7), languages, language_index,
@@ -286,8 +275,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("status"));
+                                .right = pixels(0)}));
 
     // Clipboard demo section with help text
     div(context, mk(main_container.ent(), 3),
@@ -301,8 +289,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("clipboard_help"));
+                                .right = pixels(0)}));
 
     auto clipboard_row =
         div(context, mk(main_container.ent(), 4),
@@ -355,8 +342,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(400), pixels(44)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font_size(theme.font_size_sm() - 2.0f)  // 14px - secondary text
-            .with_debug_name("clipboard_display"));
+            .with_font_size(theme.font_size_sm() - 2.0f)); // 14px - secondary text
   }
 };
 

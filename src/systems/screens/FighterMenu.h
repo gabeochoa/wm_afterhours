@@ -164,8 +164,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(380), pixels(75)})
             .with_absolute_position(L.title_x, L.title_y)
             .with_font("Gaegu-Bold", h720(L.title_font_size))
-            .with_custom_text_color(title_yellow)
-            .with_debug_name("title"));
+            .with_custom_text_color(title_yellow));
 
     // ========== CURRENCY DISPLAY (top right on black header) ==========
     div(context, mk(entity, 10),
@@ -175,8 +174,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - L.currency_margin_right, L.currency_y)
             .with_font("EqProRounded", h720(L.currency_font_size))
             .with_custom_text_color(gold_text)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("currency"));
+            .with_alignment(TextAlignment::Right));
 
     // ========== TAB BAR ==========
     float tab_y = L.tab_y;
@@ -197,8 +195,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.2f)
             .with_soft_shadow(L.shadow_offset_x, L.shadow_offset_y,
-                              L.shadow_blur, shadow_color)
-            .with_debug_name("l_bumper"));
+                              L.shadow_blur, shadow_color));
 
     // Tab buttons with shadows on selected tab
     for (size_t i = 0; i < tabs.size(); i++) {
@@ -245,8 +242,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.2f)
             .with_soft_shadow(L.shadow_offset_x, L.shadow_offset_y,
-                              L.shadow_blur, shadow_color)
-            .with_debug_name("r_bumper"));
+                              L.shadow_blur, shadow_color));
 
     // Decorative line under tabs - aligned precisely with tab bar
     div(context, mk(entity, 45),
@@ -332,8 +328,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(32)})
             .with_absolute_position(offline_x, 165.0f)
             .with_font("EqProRounded", h720(22.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("offline_mode"));
+            .with_custom_text_color(text_white));
 
     // Background panel with improved styling and shadow
     div(context, mk(entity, 205),
@@ -365,8 +360,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(character_x, L.character_y_offset + 10.0f)
             .with_font("EqProRounded", h720(L.character_font_size))
             .with_custom_text_color(text_gray)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("character"));
+            .with_alignment(TextAlignment::Center));
 
     // Character label
     div(context, mk(entity, 211),
@@ -375,8 +369,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(180), pixels(28)})
             .with_absolute_position(character_x - 10.0f, L.character_y_offset + 180.0f)
             .with_custom_text_color(text_gray)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("character_label"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== RIGHT PANEL: Info Card ==========
     float card_w = L.card_width;
@@ -428,8 +421,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.25f)
             .with_soft_shadow(L.shadow_offset_x, L.shadow_offset_y,
-                              L.shadow_blur, afterhours::Color{0, 0, 0, 30})
-            .with_debug_name("gear_icon"));
+                              L.shadow_blur, afterhours::Color{0, 0, 0, 30}));
 
     // Card title - dynamically updated based on selection
     div(context, mk(entity, 320),
@@ -438,8 +430,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(48)})
             .with_absolute_position(card_x + 35.0f, card_y + 195.0f)
             .with_font("Gaegu-Bold", h720(L.card_title_font_size))
-            .with_custom_text_color(bg_dark)
-            .with_debug_name("card_title"));
+            .with_custom_text_color(bg_dark));
 
     // Description background panel for visual grouping
     div(context, mk(entity, 325),
@@ -461,8 +452,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(80)})
             .with_absolute_position(card_x + 35.0f, card_y + 250.0f)
             .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(afterhours::Color{50, 50, 55, 255})
-            .with_debug_name("card_desc"));
+            .with_custom_text_color(afterhours::Color{50, 50, 55, 255}));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
     float prompt_y = (float)screen_h - L.prompt_margin_bottom;
@@ -493,8 +483,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("dpad"));
+            .with_roundness(0.15f));
 
     div(context, mk(entity, 401),
         ComponentConfig{}
@@ -502,8 +491,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(90), pixels(36)})
             .with_absolute_position(prompt_x + btn_size + 6.0f, prompt_y)
             .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white)
-            .with_debug_name("select_label"));
+            .with_custom_text_color(text_white));
 
     // A button (confirm)
     div(context, mk(entity, 410),
@@ -515,8 +503,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("a_btn"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 411),
         ComponentConfig{}
@@ -524,8 +511,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(36)})
             .with_absolute_position(prompt_x + hint_spacing + btn_size + 6.0f, prompt_y)
             .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white)
-            .with_debug_name("confirm_label"));
+            .with_custom_text_color(text_white));
 
     // B button (return)
     div(context, mk(entity, 420),
@@ -537,8 +523,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("b_btn"));
+            .with_roundness(1.0f));
 
     div(context, mk(entity, 421),
         ComponentConfig{}
@@ -546,8 +531,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(90), pixels(36)})
             .with_absolute_position(prompt_x + hint_spacing * 2 + btn_size + 6.0f, prompt_y)
             .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white)
-            .with_debug_name("return_label"));
+            .with_custom_text_color(text_white));
 
     // L/R for change entry
     div(context, mk(entity, 430),
@@ -560,8 +544,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("l_btn"));
+            .with_roundness(0.15f));
 
     div(context, mk(entity, 431),
         ComponentConfig{}
@@ -573,8 +556,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("r_btn"));
+            .with_roundness(0.15f));
 
     div(context, mk(entity, 432),
         ComponentConfig{}
@@ -582,8 +564,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(130), pixels(36)})
             .with_absolute_position(prompt_x + hint_spacing * 3 + btn_size * 2 + 8.0f, prompt_y)
             .with_font("EqProRounded", h720(L.prompt_font_size))
-            .with_custom_text_color(text_white)
-            .with_debug_name("change_label"));
+            .with_custom_text_color(text_white));
   }
 };
 

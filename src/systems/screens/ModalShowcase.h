@@ -82,8 +82,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::small(),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("title"));
+                                .right = pixels(0)}));
 
     // =========================================================================
     // Section 1: Basic Modals
@@ -109,8 +108,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("section1_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     auto row1 =
         div(context, mk(section1.ent(), 1),
@@ -170,8 +168,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("section2_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     auto row2 =
         div(context, mk(section2.ent(), 1),
@@ -246,8 +243,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("section3_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     auto row3 =
         div(context, mk(section3.ent(), 1),
@@ -294,8 +290,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("section4_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     auto row4 =
         div(context, mk(section4.ent(), 1),
@@ -330,8 +325,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_padding(Spacing::xs)
-            .with_roundness(BUTTON_ROUNDNESS)
-            .with_debug_name("bg_click_count"));
+            .with_roundness(BUTTON_ROUNDNESS));
 
     // =========================================================================
     // Section 5: Results Display
@@ -356,8 +350,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("section5_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     auto row5 =
         div(context, mk(section5.ent(), 1),
@@ -396,8 +389,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(BUTTON_HEIGHT)})
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("results"));
+            .with_alignment(TextAlignment::Left));
 
     // =========================================================================
     // Modal implementations
@@ -456,8 +448,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                                   .with_size(ComponentSize{percent(1.0f), children()})
                                   .with_flex_direction(FlexDirection::Row)
                                   .with_align_items(AlignItems::Center)
-                                  .with_render_layer(MODAL_CONTENT_LAYER)
-                                  .with_debug_name("checkbox_row"));
+                                  .with_render_layer(MODAL_CONTENT_LAYER));
 
       static bool check1 = false, check2 = true;
       checkbox(context, mk(checkbox_row.ent(), 0), check1,

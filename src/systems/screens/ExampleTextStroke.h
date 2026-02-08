@@ -48,8 +48,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_font("BlackOpsOne", h720(36.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 3.0f)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("page_title"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 2),
         ComponentConfig{}
@@ -58,8 +57,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(20.0f, 65.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("page_subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     int id = 10;
     float margin = 80.0f;  // Side margins
@@ -93,8 +91,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(col1_x, row1_y)
             .with_font(bold_font, h720(36.0f))
             .with_custom_text_color(yellow)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("no_stroke_1"));
+            .with_alignment(TextAlignment::Left));
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -104,8 +101,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_font(bold_font, h720(36.0f))
             .with_custom_text_color(yellow)
             .with_text_stroke(dark_outline, 5.0f)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("with_stroke_1"));
+            .with_alignment(TextAlignment::Left));
 
     float desc1_y = row1_y + row1_text_h + desc_gap;
     div(context, mk(entity, id++),
@@ -114,8 +110,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
             .with_absolute_position(col1_x, desc1_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("desc_1"));
+            .with_custom_text_color(text_muted));
 
     // Row 2: BOLD thick stroke (8px - more legible than 12px)
     afterhours::Color hot_pink{255, 50, 150, 255};
@@ -132,8 +127,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_font(bold_font, h720(72.0f))
             .with_custom_text_color(hot_pink)
             .with_text_stroke(deep_purple, 8.0f)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("bold"));
+            .with_alignment(TextAlignment::Left));
 
     float desc2_y = row2_y + row2_text_h + desc_gap;
     div(context, mk(entity, id++),
@@ -142,8 +136,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
             .with_absolute_position(col1_x, desc2_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("desc_2"));
+            .with_custom_text_color(text_muted));
 
     // Row 3: Contrasting stroke color (cyan text, red stroke)
     afterhours::Color cyan{80, 255, 255, 255};
@@ -160,8 +153,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_font(bold_font, h720(56.0f))
             .with_custom_text_color(cyan)
             .with_text_stroke(red_stroke, 8.0f)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("contrast"));
+            .with_alignment(TextAlignment::Left));
 
     float desc3_y = row3_y + row3_text_h + desc_gap;
     div(context, mk(entity, id++),
@@ -170,8 +162,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
             .with_absolute_position(col1_x, desc3_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("desc_3"));
+            .with_custom_text_color(text_muted));
 
     // Row 4: "Glow" effect - dark text with bright stroke
     afterhours::Color dark_text{20, 20, 40, 255};
@@ -188,8 +179,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_font(bold_font, h720(56.0f))
             .with_custom_text_color(dark_text)
             .with_text_stroke(glow_cyan, 8.0f)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("glow"));
+            .with_alignment(TextAlignment::Left));
 
     float desc4_y = row4_y + row4_text_h + desc_gap;
     div(context, mk(entity, id++),
@@ -198,8 +188,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
             .with_absolute_position(col1_x, desc4_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("desc_4"));
+            .with_custom_text_color(text_muted));
 
     // Row 5: White on light background - stroke makes it readable
     afterhours::Color light_bg{220, 225, 235, 255};
@@ -227,8 +216,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(col1_x + 30.0f, white_text_y)
             .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("white_no_stroke"));
+            .with_alignment(TextAlignment::Left));
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -238,8 +226,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 4.0f)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("white_with_stroke"));
+            .with_alignment(TextAlignment::Left));
 
     float desc5_y = row5_y + row5_panel_h + desc_gap;
     div(context, mk(entity, id++),
@@ -248,8 +235,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position(col1_x + 50.0f, desc5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
-            .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
-            .with_debug_name("desc_5a"));
+            .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -257,8 +243,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position(col1_x + light_panel_width * 0.5f + 20.0f, desc5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
-            .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
-            .with_debug_name("desc_5b"));
+            .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
 
     // ========== RIGHT COLUMN: Thickness comparison ==========
 
@@ -270,8 +255,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(right_col_width), pixels(34)})
             .with_absolute_position(col2_x, content_start)
             .with_font("Gaegu-Bold", h720(26.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("thickness_title"));
+            .with_custom_text_color(text_white));
 
     afterhours::Color orange{255, 180, 60, 255};
     afterhours::Color dark_orange{80, 40, 0, 255}; // Darker for more contrast
@@ -322,8 +306,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(margin + 10.0f, code_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("code_text"));
+            .with_alignment(TextAlignment::Left));
   }
 };
 

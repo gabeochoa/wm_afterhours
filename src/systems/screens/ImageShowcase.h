@@ -73,8 +73,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_debug_name("title"));
+            .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     raylib::Rectangle full_src{0, 0, 128, 128};
 
@@ -95,8 +94,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_debug_name("sprite_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     // Helper lambda to create sprite with label for row1
     auto create_labeled_sprite = [&](int idx, const raylib::Texture2D& tex,
@@ -148,8 +146,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_debug_name("imgbtn_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     // Helper lambda to create image button with label
     auto create_labeled_button = [&](int idx, const raylib::Texture2D& tex,
@@ -195,8 +192,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_margin(Margin{.left = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("click_counter"));
+            .with_skip_tabbing(true));
 
     // Row 3: Image with background demo
     auto row3 = div(context, mk(main_container.ent(), 3),
@@ -216,8 +212,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_debug_name("withbg_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     auto img_container =
         div(context, mk(row3.ent(), 1),
@@ -244,8 +239,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_margin(Margin{.left = DefaultSpacing::tiny()})
-            .with_skip_tabbing(true)
-            .with_debug_name("settings_label"));
+            .with_skip_tabbing(true));
 
     // Row 4: Icon row demo with labels
     auto row4 = div(context, mk(main_container.ent(), 4),
@@ -265,8 +259,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_debug_name("iconrow_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     auto icon_row_container =
         div(context, mk(row4.ent(), 1),

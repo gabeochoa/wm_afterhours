@@ -140,8 +140,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_absolute_position(screen_x + 15.0f, status_y - 2.0f)
             .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("time_label"));
+            .with_custom_text_color(text_muted));
 
     div(context, mk(entity, 20),
         ComponentConfig{}
@@ -149,8 +148,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), pixels(26)})
             .with_absolute_position(screen_x + 15.0f, status_y + 12.0f)
             .with_font_size(h720(20.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("time"));
+            .with_custom_text_color(text_white));
 
     // Signal bars
     div(context, mk(entity, 21),
@@ -159,8 +157,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(40), pixels(22)})
             .with_absolute_position(screen_x + screen_inner_w - 95.0f, status_y)
             .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("signal"));
+            .with_custom_text_color(text_white));
 
     // Battery
     div(context, mk(entity, 22),
@@ -180,8 +177,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(170), pixels(44)})
             .with_absolute_position(screen_x + 15.0f, status_y + 35.0f)
             .with_font_size(h720(32.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("title"));
+            .with_custom_text_color(text_white));
 
     // ========== SETTINGS ROWS ==========
     float row_x = screen_x + 8.0f;
@@ -259,8 +255,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pixels(20)})
             .with_absolute_position(row_x + 8.0f, legend_y)
             .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_title"));
+            .with_custom_text_color(text_muted));
 
     // Legend items - data-driven loop
     float legend_item_y = legend_y + 22.0f;
@@ -329,8 +324,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(quest_x + 12.0f, quest_y + 14.0f)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("quest_check1"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 252),
         ComponentConfig{}
@@ -338,8 +332,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(285), pixels(22)})
             .with_absolute_position(quest_x + 40.0f, quest_y + 14.0f)
             .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("quest_text1"));
+            .with_custom_text_color(text_white));
 
     // Quest item 2 (incomplete)
     div(context, mk(entity, 253),
@@ -349,8 +342,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(quest_x + 12.0f, quest_y + 48.0f)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("quest_check2"));
+            .with_alignment(TextAlignment::Center));
 
     // Level badge
     div(context, mk(entity, 254),
@@ -363,8 +355,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("quest_level"));
+            .with_roundness(0.3f));
 
     div(context, mk(entity, 255),
         ComponentConfig{}
@@ -372,8 +363,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(240), pixels(22)})
             .with_absolute_position(quest_x + 78.0f, quest_y + 48.0f)
             .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("quest_text2"));
+            .with_custom_text_color(text_white));
 
     // ========== HUD ELEMENTS (right side) ==========
     // LIVE indicator
@@ -387,8 +377,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("live"));
+            .with_roundness(0.3f));
 
     // Eye/viewers icon
     div(context, mk(entity, 301),
@@ -397,8 +386,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(22), pixels(22)})
             .with_absolute_position((float)screen_w - 235.0f, 28.0f)
             .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("eye_icon"));
+            .with_custom_text_color(text_white));
 
     div(context, mk(entity, 302),
         ComponentConfig{}
@@ -406,8 +394,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(20), pixels(22)})
             .with_absolute_position((float)screen_w - 212.0f, 28.0f)
             .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("viewers_count"));
+            .with_custom_text_color(text_white));
 
     // Diamond/score
     div(context, mk(entity, 303),
@@ -416,8 +403,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(22), pixels(22)})
             .with_absolute_position((float)screen_w - 185.0f, 28.0f)
             .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("diamond_icon"));
+            .with_custom_text_color(text_white));
 
     div(context, mk(entity, 304),
         ComponentConfig{}
@@ -425,8 +411,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(25), pixels(22)})
             .with_absolute_position((float)screen_w - 162.0f, 28.0f)
             .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("score"));
+            .with_custom_text_color(text_white));
 
     // Username
     div(context, mk(entity, 305),
@@ -435,8 +420,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(28)})
             .with_absolute_position((float)screen_w - 120.0f, 25.0f)
             .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("username"));
+            .with_custom_text_color(text_white));
 
     // ========== CHAT MESSAGES (right side) ==========
     float chat_x = (float)screen_w - 250.0f;
@@ -479,8 +463,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
-            .with_debug_name("speedometer"));
+            .with_roundness(0.2f));
 
     div(context, mk(entity, 401),
         ComponentConfig{}
@@ -489,8 +472,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 90.0f, (float)screen_h - 45.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("speed_unit"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 402),
         ComponentConfig{}
@@ -499,8 +481,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 100.0f, (float)screen_h - 28.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(slider_orange)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("vehicle_name"));
+            .with_alignment(TextAlignment::Center));
   }
 
   // ---- Shared helpers to reduce boilerplate ----
@@ -661,8 +642,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(x + w - 145.0f, y + 12.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("lang_value"));
+            .with_alignment(TextAlignment::Center));
 
     if (render_chevron(context, entity, base_id + 5, x + w - 44.0f, y, ">",
                        "lang_right")) {

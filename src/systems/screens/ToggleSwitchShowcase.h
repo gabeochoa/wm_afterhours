@@ -53,8 +53,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::md)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
-            .with_skip_tabbing(true)
-            .with_debug_name("main_title"));
+            .with_skip_tabbing(true));
 
     // Section: Pill Style - Best for binary settings (on/off, enabled/disabled)
     div(context, mk(main_container.ent(), 1),
@@ -66,8 +65,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("pill_title"));
+            .with_skip_tabbing(true));
 
     toggle_switch(context, mk(main_container.ent(), 2), enable_notifications,
                   ComponentConfig{}
@@ -112,8 +110,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true)
-            .with_debug_name("circle_title"));
+            .with_skip_tabbing(true));
 
     toggle_switch(context, mk(main_container.ent(), 6), dark_mode,
                   ComponentConfig{}
@@ -162,8 +159,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("status"));
+            .with_skip_tabbing(true));
   }
 };
 

@@ -46,8 +46,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_debug_name("title"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f)));
 
     // Row 1: Basic cards - all simple like theme swatches
     auto row1 = div(context, mk(main_container.ent(), 1),
@@ -68,8 +67,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm)
-            .with_skip_tabbing(true)
-            .with_debug_name("styles_label"));
+            .with_skip_tabbing(true));
 
     // Card 1: Basic surface card (simple) - standardized height
     div(context, mk(row1.ent(), 0),
@@ -81,8 +79,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
-            .with_skip_tabbing(true)
-            .with_debug_name("card1_surface"));
+            .with_skip_tabbing(true));
 
     // Card 2: Primary colored card (simple)
     div(context, mk(row1.ent(), 1),
@@ -94,8 +91,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
-            .with_skip_tabbing(true)
-            .with_debug_name("card2_primary"));
+            .with_skip_tabbing(true));
 
     // Card 3: Accent card with sharp corners
     div(context, mk(row1.ent(), 2),
@@ -108,8 +104,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .disable_rounded_corners()
-            .with_skip_tabbing(true)
-            .with_debug_name("card3_sharp"));
+            .with_skip_tabbing(true));
 
     // Card 4: Secondary card with custom corners
     div(context, mk(row1.ent(), 3),
@@ -124,8 +119,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(
                 RoundedCorners().all_sharp().round(TOP_LEFT).round(
                     BOTTOM_RIGHT))
-            .with_skip_tabbing(true)
-            .with_debug_name("card4_custom_radius"));
+            .with_skip_tabbing(true));
 
     // Row 2: Nested cards
     auto row2 = div(context, mk(main_container.ent(), 2),
@@ -146,8 +140,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm)
-            .with_skip_tabbing(true)
-            .with_debug_name("nested_label"));
+            .with_skip_tabbing(true));
 
     // Nested card container - sized proportionally to fit within row
     auto nested_container =
@@ -170,8 +163,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true)
-            .with_debug_name("nested_title"));
+            .with_skip_tabbing(true));
 
     // Inner cards row - prevent wrapping, ensure enough height for cards
     auto inner_row =
@@ -194,8 +186,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
-            .with_skip_tabbing(true)
-            .with_debug_name("inner1"));
+            .with_skip_tabbing(true));
 
     // Inner card 2
     div(context, mk(inner_row.ent(), 1),
@@ -207,8 +198,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
-            .with_skip_tabbing(true)
-            .with_debug_name("inner2"));
+            .with_skip_tabbing(true));
 
     // Inner card 3
     div(context, mk(inner_row.ent(), 2),
@@ -220,8 +210,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
-            .with_skip_tabbing(true)
-            .with_debug_name("inner3"));
+            .with_skip_tabbing(true));
 
     // Info panel with different opacity
     auto info_panel =
@@ -245,8 +234,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true)
-            .with_debug_name("info_title"));
+            .with_skip_tabbing(true));
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
@@ -256,8 +244,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(theme.font)
-            .with_skip_tabbing(true)
-            .with_debug_name("info_body"));
+            .with_skip_tabbing(true));
 
     // Row 3: Theme comparison
     auto row3 = div(context, mk(main_container.ent(), 3),
@@ -277,8 +264,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Spacing::xs)
-            .with_skip_tabbing(true)
-            .with_debug_name("theme_label"));
+            .with_skip_tabbing(true));
 
     // Color swatches - with gaps between them
     div(context, mk(row3.ent(), 1),
@@ -288,8 +274,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_margin(Spacing::xs)
-            .with_skip_tabbing(true)
-            .with_debug_name("swatch_primary"));
+            .with_skip_tabbing(true));
 
     div(context, mk(row3.ent(), 2),
         ComponentConfig{}
@@ -298,8 +283,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_margin(Spacing::xs)
-            .with_skip_tabbing(true)
-            .with_debug_name("swatch_secondary"));
+            .with_skip_tabbing(true));
 
     div(context, mk(row3.ent(), 3),
         ComponentConfig{}
@@ -308,8 +292,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_margin(Spacing::xs)
-            .with_skip_tabbing(true)
-            .with_debug_name("swatch_accent"));
+            .with_skip_tabbing(true));
 
     div(context, mk(row3.ent(), 4),
         ComponentConfig{}
@@ -318,8 +301,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_margin(Spacing::xs)
-            .with_skip_tabbing(true)
-            .with_debug_name("swatch_surface"));
+            .with_skip_tabbing(true));
 
     div(context, mk(row3.ent(), 5),
         ComponentConfig{}
@@ -328,8 +310,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Background)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_margin(Spacing::xs)
-            .with_skip_tabbing(true)
-            .with_debug_name("swatch_background"));
+            .with_skip_tabbing(true));
   }
 };
 

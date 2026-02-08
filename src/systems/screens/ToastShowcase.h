@@ -50,8 +50,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("title"));
+                                .right = pixels(0)}));
 
     // =========================================================================
     // Section 1: Simple toasts
@@ -76,8 +75,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(8)})
-            .with_debug_name("section1_label"));
+            .with_margin(Margin{.bottom = pixels(8)}));
 
     auto button_row =
         div(context, mk(section1.ent(), 1),
@@ -168,8 +166,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(8)})
-            .with_debug_name("section2_label"));
+            .with_margin(Margin{.bottom = pixels(8)}));
 
     auto second_row =
         div(context, mk(section2.ent(), 1),
@@ -269,8 +266,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(8)})
-            .with_debug_name("section3_label"));
+            .with_margin(Margin{.bottom = pixels(8)}));
 
     auto third_row =
         div(context, mk(section3.ent(), 1),

@@ -90,8 +90,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.10f)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Theme validation status badge
     float status_y = panel_y + 70.0f;
@@ -111,8 +110,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("theme_status"));
+            .with_alignment(TextAlignment::Center));
 
     // Content area - two columns
     float content_y = status_y + 55.0f;
@@ -130,8 +128,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_rounded_corners(std::bitset<4>(0b1100))
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("left_header"));
+            .with_alignment(TextAlignment::Center));
 
     // Left column - without auto text color (manual theme.font)
     afterhours::Color demo_bg_light = {225, 225, 235, 255};
@@ -147,8 +144,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
             .with_auto_text_color(false) // Manual text color, no auto-contrast
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_rounded_corners(RoundedCorners())
-            .with_debug_name("light_no_auto"));
+            .with_rounded_corners(RoundedCorners()));
 
     button(context, mk(entity, 12),
            ComponentConfig{}
@@ -158,8 +154,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(demo_bg_dark)
                .with_auto_text_color(false)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_rounded_corners(RoundedCorners())
-               .with_debug_name("dark_no_auto"));
+               .with_rounded_corners(RoundedCorners()));
 
     // Note about the issue
     div(context, mk(entity, 13),
@@ -169,8 +164,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_x, content_y + 162.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("left_note"));
+            .with_alignment(TextAlignment::Center));
 
     // Right column header
     div(context, mk(entity, 20),
@@ -182,8 +176,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("right_header"));
+            .with_alignment(TextAlignment::Center));
 
     // Right column - with auto text color
     button(context, mk(entity, 21),
@@ -194,8 +187,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(demo_bg_light)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_rounded_corners(RoundedCorners())
-               .with_debug_name("light_auto"));
+               .with_rounded_corners(RoundedCorners()));
 
     button(context, mk(entity, 22),
            ComponentConfig{}
@@ -205,8 +197,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(demo_bg_dark)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_rounded_corners(RoundedCorners())
-               .with_debug_name("dark_auto"));
+               .with_rounded_corners(RoundedCorners()));
 
     // Note about the solution
     div(context, mk(entity, 23),
@@ -216,8 +207,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_x, content_y + 162.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(accent_green)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("right_note"));
+            .with_alignment(TextAlignment::Center));
 
     // Color showcase section
     float showcase_y = content_y + 200.0f;
@@ -229,8 +219,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + 30.0f, showcase_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("showcase_title"));
+            .with_alignment(TextAlignment::Center));
 
     // Variety of background colors to showcase
     afterhours::Color showcase_colors[] = {
@@ -294,8 +283,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + 30.0f, panel_y + panel_h - 44.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

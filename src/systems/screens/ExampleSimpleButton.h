@@ -92,8 +92,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card_x + card_padding, card_y + card_padding + 4.0f)
             .with_font("Gaegu-Bold", h720(28.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Subtitle
     div(context, mk(entity, 3),
@@ -103,8 +102,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card_x + card_padding, card_y + card_padding + 42.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // The button!
     float button_width = 360.0f;
@@ -127,8 +125,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                    .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.5f)
                    .with_alignment(TextAlignment::Center)
-                   .with_padding(Spacing::md)
-                   .with_debug_name("example_button"));
+                   .with_padding(Spacing::md));
 
     if (button_result) {
       button_click_count++;
@@ -176,8 +173,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card_x + (card_w - (counter_width - 10)) / 2.0f, counter_y + 5.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(counter_color)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("click_counter"));
+            .with_alignment(TextAlignment::Center));
 
     // Additional button variations section
     afterhours::Color secondary_btn{100, 180, 200, 255};
@@ -204,8 +200,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(card_x + card_padding, more_styles_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("more_styles_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Secondary button (blue/teal style)
     float small_btn_w = 170.0f;
@@ -228,8 +223,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_alignment(TextAlignment::Center)
-               .with_padding(Spacing::sm)
-               .with_debug_name("secondary_button"));
+               .with_padding(Spacing::sm));
 
     // Outline button style - add subtle shadow for depth consistency
     button(context, mk(entity, 33),
@@ -246,8 +240,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_alignment(TextAlignment::Center)
-               .with_padding(Spacing::sm)
-               .with_debug_name("outline_button"));
+               .with_padding(Spacing::sm));
 
     // Small pill buttons row - with subtle shadows for visual consistency
     float pill_btn_w = 105.0f;
@@ -269,8 +262,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_dark)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("small_button_1"));
+               .with_alignment(TextAlignment::Center));
 
     button(context, mk(entity, 35),
            ComponentConfig{}
@@ -284,8 +276,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_dark)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("small_button_2"));
+               .with_alignment(TextAlignment::Center));
 
     button(context, mk(entity, 36),
            ComponentConfig{}
@@ -299,8 +290,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_dark)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("small_button_3"));
+               .with_alignment(TextAlignment::Center));
   }
 };
 

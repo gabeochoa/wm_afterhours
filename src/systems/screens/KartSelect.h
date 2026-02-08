@@ -101,8 +101,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(30.0f, 15.0f)
             .with_font("Fredoka", h720(38.0f))
             .with_custom_text_color(accent_yellow)
-            .with_text_stroke(afterhours::Color{180, 130, 0, 255}, 3.0f)
-            .with_debug_name("title"));
+            .with_text_stroke(afterhours::Color{180, 130, 0, 255}, 3.0f));
 
     // Race mode indicator
     div(context, mk(entity, 6),
@@ -112,8 +111,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 310.0f, 20.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(muted_text)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("mode"));
+            .with_alignment(TextAlignment::Right));
 
     // Player indicator
     div(context, mk(entity, 7),
@@ -125,8 +123,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("player"));
+            .with_roundness(0.3f));
 
     // ========== LEFT: CHARACTER GRID ==========
     float grid_x = 30.0f;
@@ -247,8 +244,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                              afterhours::Color{0, 0, 0, 60})
-            .with_debug_name("big_portrait"));
+                              afterhours::Color{0, 0, 0, 60}));
 
     // Character name
     div(context, mk(entity, 102),
@@ -260,8 +256,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                             preview_y + big_portrait + 25.0f)
             .with_font("Fredoka", h720(28.0f))
             .with_custom_text_color(accent_yellow)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("sel_name"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== STAT BARS ==========
     struct StatDef {
@@ -343,8 +338,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                 ComponentSize{pxf(kart_w - 20), pixels(30)})
             .with_absolute_position(kart_x + 10.0f, kart_y + 10.0f)
             .with_custom_text_color(accent_yellow)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("kart_header"));
+            .with_alignment(TextAlignment::Center));
 
     // Kart options
     for (size_t i = 0; i < kart_names.size(); i++) {
@@ -397,8 +391,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.3f)
-               .with_debug_name("back_btn"));
+               .with_roundness(0.3f));
 
     // Selected info
     div(context, mk(entity, 320),
@@ -408,8 +401,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w / 2.0f - 200.0f, bottom_y + 17.0f)
             .with_font("EqProRounded", h720(24.0f))
             .with_custom_text_color(white)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("selection_info"));
+            .with_alignment(TextAlignment::Center));
 
     // Ready button
     button(context, mk(entity, 330),
@@ -425,8 +417,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                                 afterhours::Color{0, 0, 0, 60})
-               .with_debug_name("ready_btn"));
+                                 afterhours::Color{0, 0, 0, 60}));
 
     // ========== BOTTOM PROMPTS ==========
     float prompt_y = (float)screen_h - 35.0f;
@@ -437,8 +428,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w / 2.0f - 200.0f, prompt_y)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted_text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("prompts"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

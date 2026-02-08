@@ -62,8 +62,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Auto Text Color")
             .with_size({pixels(350.0f), pixels(60.0f)})
             .with_font(UIComponent::DEFAULT_FONT, h720(42.0f))
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Badge for "Now Default!" - bright badge that stands out clearly
     div(context, mk(title_row.ent(), 1),
@@ -76,8 +75,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.4f)
-            .with_debug_name("now_default_badge"));
+            .with_roundness(0.4f));
 
     div(context, mk(content.ent()),
         ComponentConfig{}
@@ -85,23 +83,20 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         "against any background")
             .with_size({percent(1.0f), pixels(40.0f)})
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // Section 1: Default behavior (auto enabled by default)
     auto section1 = div(context, mk(content.ent()),
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column)
-                            .with_debug_name("section1"));
+                            .with_flex_direction(FlexDirection::Column));
 
     div(context, mk(section1.ent()),
         ComponentConfig{}
             .with_label("Default Behavior (no config needed)")
             .with_size({percent(1.0f), pixels(40.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_debug_name("section1_title"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
     // Row of buttons with various backgrounds - auto contrast just works
     auto row1 = div(context, mk(section1.ent()),
@@ -110,8 +105,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row1"));
+                        .with_no_wrap());
 
     // Dark backgrounds
     afterhours::Color dark_colors[] = {
@@ -140,8 +134,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row2"));
+                        .with_no_wrap());
 
     afterhours::Color light_colors[] = {
         {240, 240, 245, 255}, // Near white
@@ -167,15 +160,13 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column)
-                            .with_debug_name("section2"));
+                            .with_flex_direction(FlexDirection::Column));
 
     div(context, mk(section2.ent()),
         ComponentConfig{}
             .with_label("Mid-tone Colors (best contrast)")
             .with_size({percent(1.0f), pixels(40.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_debug_name("section2_title"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
     auto row3 = div(context, mk(section2.ent()),
                     ComponentConfig{}
@@ -183,8 +174,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row3"));
+                        .with_no_wrap());
 
     // Mid-tone colors where the choice isn't obvious
     afterhours::Color mid_colors[] = {
@@ -213,15 +203,13 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column)
-                            .with_debug_name("section3"));
+                            .with_flex_direction(FlexDirection::Column));
 
     div(context, mk(section3.ent()),
         ComponentConfig{}
             .with_label("Explicit Control Options")
             .with_size({percent(1.0f), pixels(40.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_debug_name("section3_title"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
     auto row4 = div(context, mk(section3.ent()),
                     ComponentConfig{}
@@ -229,8 +217,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row4"));
+                        .with_no_wrap());
 
     // Compare auto vs disabled vs explicit text color
     afterhours::Color light_bg = {230, 230, 230, 255};
@@ -242,8 +229,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_size({percent(0.31f), pixels(44.0f)})
                .with_custom_background(
                    light_bg) // Light bg -> auto picks dark text
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("auto_enabled"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     button(context, mk(row4.ent(), 1),
            ComponentConfig{}
@@ -253,8 +239,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                    dark_bg) // Dark bg works with white theme font
                .with_auto_text_color(
                    false) // Explicitly disable - uses theme font color
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("auto_disabled"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     button(context, mk(row4.ent(), 2),
            ComponentConfig{}
@@ -263,23 +248,20 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(light_bg)
                .with_custom_text_color(
                    {140, 30, 30, 255}) // Explicit dark red for contrast
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("explicit_color"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Section 4: Theme colors with auto contrast
     auto section4 = div(context, mk(content.ent()),
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column)
-                            .with_debug_name("section4"));
+                            .with_flex_direction(FlexDirection::Column));
 
     div(context, mk(section4.ent()),
         ComponentConfig{}
             .with_label("Works with Theme Colors Too")
             .with_size({percent(1.0f), pixels(40.0f)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_debug_name("section4_title"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
     auto row5 = div(context, mk(section4.ent()),
                     ComponentConfig{}
@@ -287,48 +269,42 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row5"));
+                        .with_no_wrap());
 
     button(context, mk(row5.ent(), 0),
            ComponentConfig{}
                .with_label("Primary")
                .with_size({percent(0.185f), pixels(44.0f)})
                .with_background(Theme::Usage::Primary)
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("theme_primary"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     button(context, mk(row5.ent(), 1),
            ComponentConfig{}
                .with_label("Accent")
                .with_size({percent(0.185f), pixels(44.0f)})
                .with_background(Theme::Usage::Accent)
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("theme_accent"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     button(context, mk(row5.ent(), 2),
            ComponentConfig{}
                .with_label("Secondary")
                .with_size({percent(0.185f), pixels(44.0f)})
                .with_background(Theme::Usage::Secondary)
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("theme_secondary"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     button(context, mk(row5.ent(), 3),
            ComponentConfig{}
                .with_label("Background")
                .with_size({percent(0.185f), pixels(44.0f)})
                .with_background(Theme::Usage::Background)
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("theme_background"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     button(context, mk(row5.ent(), 4),
            ComponentConfig{}
                .with_label("Surface")
                .with_size({percent(0.185f), pixels(44.0f)})
                .with_background(Theme::Usage::Surface)
-               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_debug_name("theme_surface"));
+               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
   }
 };
 

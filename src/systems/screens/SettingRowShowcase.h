@@ -115,8 +115,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::md)
             .with_font_size(h720(20.0f))
             .with_alignment(TextAlignment::Center)
-            .with_roundness(0.1f)
-            .with_debug_name("title"));
+            .with_roundness(0.1f));
 
     // Content panel - increased height to prevent clipping
     auto content = div(context, mk(root.ent(), 1),
@@ -139,8 +138,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{120, 190, 150, 255})
             .with_font_size(h720(18.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("toggle_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Toggle rows - use full API with icons for clear visual context
     setting_row_toggle(context, mk(content.ent(), 1), "Music", music_enabled);
@@ -160,8 +158,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{110, 170, 220, 255})
             .with_font_size(h720(18.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("stepper_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Stepper rows
     setting_row_stepper(context, mk(content.ent(), 6), "Language", language_idx, languages);
@@ -170,8 +167,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(content.ent(), 8),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(8)})
-            .with_debug_name("spacer2"));
+            .with_size(ComponentSize{percent(1.0f), pixels(8)}));
 
     // Slider section label - tinted warm to match volume/slider theme
     div(context, mk(content.ent(), 9),
@@ -180,8 +176,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(140), pixels(28)})
             .with_custom_text_color(afterhours::Color{220, 140, 120, 255})
             .with_font_size(h720(18.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("slider_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Slider rows - custom rows with percentage value labels
     slider_row_with_pct(context, mk(content.ent(), 10),
@@ -196,8 +191,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(36)})
             .with_custom_text_color(afterhours::Color{100, 110, 130, 255})
             .with_font_size(h720(18.0f))
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

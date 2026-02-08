@@ -59,8 +59,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{120, 130, 150, 255}, 2.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_custom_text_color(text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 2),
         ComponentConfig{}
@@ -71,8 +70,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(30.0f, 68.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("legend"));
+            .with_alignment(TextAlignment::Center));
 
     struct StyleRow {
       const char *label;

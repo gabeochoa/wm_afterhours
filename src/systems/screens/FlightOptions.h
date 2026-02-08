@@ -144,8 +144,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(50)})
             .with_absolute_position(135.0f, 60.0f)
             .with_font("EqProRounded", h720(36.0f))
-            .with_custom_text_color(text_cyan)
-            .with_debug_name("title"));
+            .with_custom_text_color(text_cyan));
 
     // ========== MENU CATEGORIES ==========
     // menu_x and menu_y already defined above with decorative elements
@@ -214,8 +213,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(28)})
             .with_absolute_position(sub_x, sub_y - 36.0f)
             .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(text_cyan)
-            .with_debug_name("sub_header"));
+            .with_custom_text_color(text_cyan));
 
     // Sub-option items
     bool vibration_unavailable = true;
@@ -271,8 +269,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(280), pixels(20)})
               .with_absolute_position(sub_x + 18.0f, sub_y + 3 * 36.0f + 24.0f)
               .with_font("EqProRounded", h720(14.0f))
-              .with_custom_text_color(text_muted)
-              .with_debug_name("vibration_tooltip"));
+              .with_custom_text_color(text_muted));
     }
 
     // ========== HELP TEXT ==========
@@ -294,8 +291,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(500), pixels(36)})
             .with_absolute_position(170.0f, (float)screen_h - 180.0f)
             .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(text_bright)
-            .with_debug_name("help"));
+            .with_custom_text_color(text_bright));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
     float btn_y = (float)screen_h - 60.0f;
@@ -309,16 +305,14 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
             .with_custom_text_color(text_bright)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("enter_key"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("OK")
             .with_size(ComponentSize{pixels(36), pixels(36)})
             .with_absolute_position(224.0f, btn_y)
-            .with_custom_text_color(text_bright)
-            .with_debug_name("ok_label"));
+            .with_custom_text_color(text_bright));
 
     // Esc key box
     div(context, mk(entity, 402),
@@ -329,16 +323,14 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
             .with_custom_text_color(text_bright)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("esc_key"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 403),
         ComponentConfig{}
             .with_label("BACK")
             .with_size(ComponentSize{pixels(56), pixels(36)})
             .with_absolute_position(331.0f, btn_y)
-            .with_custom_text_color(text_bright)
-            .with_debug_name("back_label"));
+            .with_custom_text_color(text_bright));
   }
 };
 

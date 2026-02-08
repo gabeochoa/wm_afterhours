@@ -75,8 +75,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Subtitle
     div(context, mk(entity, 2),
@@ -87,8 +86,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // Layout constants - use larger boxes for smoother size animations
     // Larger boxes = more pixel steps during resize = smoother animation
@@ -109,8 +107,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("pulse1_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated box - translate moves it in/out smoothly
     div(context, mk(entity, 11),
@@ -134,8 +131,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("pulse2_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated box with opacity
     div(context, mk(entity, 21),
@@ -160,8 +156,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("bounce_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Animated box (bounces down)
     div(context, mk(entity, 31),
@@ -185,8 +180,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("rotate_label"));
+            .with_alignment(TextAlignment::Center));
 
     // Spinning indicator orbits the center
     float angle_rad = rotation * 3.14159f / 180.0f;
@@ -227,8 +221,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("footer"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

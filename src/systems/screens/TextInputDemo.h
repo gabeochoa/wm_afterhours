@@ -58,8 +58,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("title"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Form container - uses flex_grow to fill available space, leaving room for
     // status and instructions at the bottom of main_container
@@ -130,8 +129,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
             .with_skip_tabbing(true)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("password_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Password row container (input + toggle button)
     auto password_row =
@@ -188,8 +186,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(396), pixels(34)})
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_debug_name("search_label"));
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Search input - no label so field uses full width
     if (text_input(context, mk(form_container.ent(), 8), search_query,
@@ -224,8 +221,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Margin{.top = DefaultSpacing::tiny()})
-            .with_debug_name("status"));
+            .with_margin(Margin{.top = DefaultSpacing::tiny()}));
 
     // Instructions - brief contextual navigation hint
     div(context, mk(main_container.ent(), 3),
@@ -237,8 +233,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::tiny()})
-            .with_debug_name("instructions"));
+            .with_margin(Margin{.top = DefaultSpacing::tiny()}));
   }
 };
 

@@ -56,8 +56,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.08f)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Row dimensions
     float row_w = panel_w - 60.0f;
@@ -73,8 +72,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_w), pixels(28)})
             .with_absolute_position(row_x, row1_y - 32.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_auto_text_color(true)
-            .with_debug_name("row1_label"));
+            .with_auto_text_color(true));
 
     // Color row 1: Theme colors background
     div(context, mk(entity, 10),
@@ -83,8 +81,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(row_x, row1_y)
             .with_background(Theme::Usage::Background)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
-            .with_debug_name("row1_bg"));
+            .with_roundness(0.04f));
 
     // Theme color swatches - with increased gaps
     float swatch_w = 150.0f;
@@ -128,8 +125,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(row_w), pixels(28)})
             .with_absolute_position(row_x, row2_y - 32.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_auto_text_color(true)
-            .with_debug_name("row2_label"));
+            .with_auto_text_color(true));
 
     // Color row 2: Custom colors background
     div(context, mk(entity, 30),
@@ -138,8 +134,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(row_x, row2_y)
             .with_background(Theme::Usage::Background)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
-            .with_debug_name("row2_bg"));
+            .with_roundness(0.04f));
 
     // Custom color swatches with hex values
     struct CustomColorInfo {
@@ -183,8 +178,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)
-            .with_skip_tabbing(true)
-            .with_debug_name("info"));
+            .with_skip_tabbing(true));
   }
 };
 

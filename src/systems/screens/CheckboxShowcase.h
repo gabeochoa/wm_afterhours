@@ -95,8 +95,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(TITLE_FONT))
             .with_alignment(TextAlignment::Center)
-            .with_skip_tabbing(true)
-            .with_debug_name("title"));
+            .with_skip_tabbing(true));
 
     // Content row - two columns
     auto content = div(context, mk(card.ent(), 1),
@@ -125,8 +124,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
-            .with_skip_tabbing(true)
-            .with_debug_name("with_label_hdr"));
+            .with_skip_tabbing(true));
 
     checkbox(context, mk(left_col.ent(), 1), labeled_primary,
              ComponentConfig{}
@@ -134,8 +132,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Primary)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
-                 .with_debug_name("cb_primary"));
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
     checkbox(context, mk(left_col.ent(), 2), labeled_secondary,
              ComponentConfig{}
@@ -143,8 +140,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Secondary)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
-                 .with_debug_name("cb_secondary"));
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
     checkbox(context, mk(left_col.ent(), 3), labeled_accent,
              ComponentConfig{}
@@ -152,8 +148,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
                  .with_background(Theme::Usage::Accent)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
-                 .with_debug_name("cb_accent"));
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
     // Box Only section - use Primary for consistent section headers
     div(context, mk(left_col.ent(), 4),
@@ -164,16 +159,14 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
-            .with_skip_tabbing(true)
-            .with_debug_name("box_only_hdr"));
+            .with_skip_tabbing(true));
 
     auto no_label_row = div(context, mk(left_col.ent(), 5),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44 + 8.0f * scale)})
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("no_label_row"));
+            .with_align_items(AlignItems::Center));
 
     float box_size = 32.0f * scale;
     // Add aria-labels via debug_name for accessibility identification
@@ -218,8 +211,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
-            .with_skip_tabbing(true)
-            .with_debug_name("disabled_hdr"));
+            .with_skip_tabbing(true));
 
     // Use a darker background for disabled checkboxes to ensure the label text
     // maintains sufficient contrast (WCAG AA 4.5:1) after the framework applies
@@ -236,8 +228,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_auto_text_color(true)
                  .with_disabled(true)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
-                 .with_debug_name("cb_dis_on"));
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
     checkbox(context, mk(left_col.ent(), 8), disabled_unchecked,
              ComponentConfig{}
@@ -247,8 +238,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_auto_text_color(true)
                  .with_disabled(true)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT))
-                 .with_debug_name("cb_dis_off"));
+                 .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
     // ========== RIGHT COLUMN ==========
     auto right_col = div(context, mk(content.ent(), 1),
@@ -272,8 +262,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
-            .with_skip_tabbing(true)
-            .with_debug_name("multi_hdr"));
+            .with_skip_tabbing(true));
 
     // Individual checkboxes for multi-select - 44px touch targets
     bool opt_a = options_group.test(0);
@@ -337,8 +326,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
-            .with_skip_tabbing(true)
-            .with_debug_name("minmax_hdr"));
+            .with_skip_tabbing(true));
 
     // Individual checkboxes for min/max with constraints - 44px touch targets
     bool ch_1 = min_max_group.test(0);
@@ -405,8 +393,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(STATUS_FONT))
             .with_alignment(TextAlignment::Center)
-            .with_skip_tabbing(true)
-            .with_debug_name("status"));
+            .with_skip_tabbing(true));
   }
 };
 

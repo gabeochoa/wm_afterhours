@@ -51,8 +51,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(24.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(10.0f)})
-            .with_debug_name("title"));
+            .with_margin(Margin{.top = h720(10.0f)}));
 
     div(context, mk(root.ent(), 1),
         ComponentConfig{}
@@ -60,8 +59,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Composable visual effects via .decorate()")
             .with_font_size(h720(13.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== CONTENT ROW ==========
     auto content = div(context, mk(root.ent(), 2),
@@ -70,8 +68,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceBetween)
             .with_align_items(AlignItems::FlexStart)
-            .with_margin(Margin{.top = h720(10.0f)})
-            .with_debug_name("content"));
+            .with_margin(Margin{.top = h720(10.0f)}));
 
     // ====================================================================
     // COLUMN 1: Corner Brackets
@@ -90,8 +87,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(14.0f))
             .with_custom_text_color(teal)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.bottom = h720(8.0f)})
-            .with_debug_name("brackets_title"));
+            .with_margin(Margin{.bottom = h720(8.0f)}));
 
     // Demo 1: HUD-style panel with brackets
     {
@@ -113,16 +109,14 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label("SYSTEM STATUS")
               .with_font_size(h720(15.0f))
               .with_custom_text_color(teal)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("panel1_title"));
+              .with_alignment(TextAlignment::Center));
 
       div(context, mk(panel.ent(), 1),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.6f), h720(3.0f)})
               .with_custom_background(C{teal.r, teal.g, teal.b, 80})
               .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_margin(Margin{.top = h720(6.0f)})
-              .with_debug_name("panel1_divider"));
+              .with_margin(Margin{.top = h720(6.0f)}));
 
       div(context, mk(panel.ent(), 2),
           ComponentConfig{}
@@ -130,8 +124,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label("All systems operational")
               .with_font_size(h720(11.0f))
               .with_custom_text_color(theme.font_muted)
-              .with_margin(Margin{.top = h720(6.0f)})
-              .with_debug_name("panel1_status"));
+              .with_margin(Margin{.top = h720(6.0f)}));
     }
 
     // Demo 2: Amber warning panel
@@ -155,8 +148,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label("! WARNING !")
               .with_font_size(h720(14.0f))
               .with_custom_text_color(amber)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("panel2_title"));
+              .with_alignment(TextAlignment::Center));
 
       div(context, mk(panel.ent(), 1),
           ComponentConfig{}
@@ -164,8 +156,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label("Hull integrity at 47%")
               .with_font_size(h720(11.0f))
               .with_custom_text_color(C{180, 150, 90, 200})
-              .with_margin(Margin{.top = h720(4.0f)})
-              .with_debug_name("panel2_sub"));
+              .with_margin(Margin{.top = h720(4.0f)}));
     }
 
     // Demo 3: Small green status
@@ -197,8 +188,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{children(), children()})
               .with_label("ONLINE")
               .with_font_size(h720(13.0f))
-              .with_custom_text_color(green)
-              .with_debug_name("status_label"));
+              .with_custom_text_color(green));
     }
 
     // Desc
@@ -209,8 +199,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(10.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(10.0f)})
-            .with_debug_name("col1_desc"));
+            .with_margin(Margin{.top = h720(10.0f)}));
 
     // ====================================================================
     // COLUMN 2: Grid Background
@@ -219,8 +208,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
             .with_flex_direction(FlexDirection::Column)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("col_grid"));
+            .with_align_items(AlignItems::Center));
 
     div(context, mk(col2.ent(), 0),
         ComponentConfig{}
@@ -229,8 +217,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(14.0f))
             .with_custom_text_color(teal)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.bottom = h720(8.0f)})
-            .with_debug_name("grid_title"));
+            .with_margin(Margin{.bottom = h720(8.0f)}));
 
     // Demo 1: Radar-style grid
     {
@@ -239,8 +226,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.88f), h720(130.0f)})
               .with_custom_background(C{10, 18, 20, 255})
               .with_border(C{30, 65, 65, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_debug_name("grid_panel_1"))
+              .with_rounded_corners(RoundedCorners().all_sharp()))
           .decorate(with_grid_bg(context, 20.0f,
                                  C{35, 75, 75, 180}, 1.0f));
 
@@ -291,8 +277,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{children(), children()})
               .with_label("SECTOR 7-G")
               .with_font_size(h720(13.0f))
-              .with_custom_text_color(amber)
-              .with_debug_name("combo_text"));
+              .with_custom_text_color(amber));
     }
 
     // Desc
@@ -303,8 +288,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(10.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(10.0f)})
-            .with_debug_name("col2_desc"));
+            .with_margin(Margin{.top = h720(10.0f)}));
 
     // ====================================================================
     // COLUMN 3: Quotes / Accent Bars
@@ -313,8 +297,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
             .with_flex_direction(FlexDirection::Column)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("col_quote"));
+            .with_align_items(AlignItems::Center));
 
     div(context, mk(col3.ent(), 0),
         ComponentConfig{}
@@ -323,8 +306,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(14.0f))
             .with_custom_text_color(teal)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.bottom = h720(8.0f)})
-            .with_debug_name("quote_title"));
+            .with_margin(Margin{.bottom = h720(8.0f)}));
 
     // Demo 1: Simple quote with teal accent
     {
@@ -348,8 +330,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font_size(h720(12.0f))
               .with_custom_text_color(theme.font)
               .with_alignment(TextAlignment::Left)
-              .with_padding(Spacing::sm)
-              .with_debug_name("quote_text_1"));
+              .with_padding(Spacing::sm));
     }
 
     // Demo 2: Amber quote with attribution
@@ -383,8 +364,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label("I should go.")
               .with_font_size(h720(14.0f))
               .with_custom_text_color(theme.font)
-              .with_alignment(TextAlignment::Left)
-              .with_debug_name("q2_text"));
+              .with_alignment(TextAlignment::Left));
 
       div(context, mk(text_col.ent(), 1),
           ComponentConfig{}
@@ -393,8 +373,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font_size(h720(11.0f))
               .with_custom_text_color(C{amber.r, amber.g, amber.b, 160})
               .with_alignment(TextAlignment::Left)
-              .with_margin(Margin{.top = h720(6.0f)})
-              .with_debug_name("q2_attr"));
+              .with_margin(Margin{.top = h720(6.0f)}));
     }
 
     // Demo 3: Green quote + brackets chained
@@ -427,8 +406,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label("The cake is a lie.")
               .with_font_size(h720(14.0f))
               .with_custom_text_color(theme.font)
-              .with_alignment(TextAlignment::Left)
-              .with_debug_name("q3_text"));
+              .with_alignment(TextAlignment::Left));
 
       div(context, mk(text_col.ent(), 1),
           ComponentConfig{}
@@ -437,8 +415,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font_size(h720(11.0f))
               .with_custom_text_color(C{green.r, green.g, green.b, 160})
               .with_alignment(TextAlignment::Left)
-              .with_margin(Margin{.top = h720(6.0f)})
-              .with_debug_name("q3_attr"));
+              .with_margin(Margin{.top = h720(6.0f)}));
     }
 
     // Desc
@@ -449,8 +426,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(h720(10.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(10.0f)})
-            .with_debug_name("col3_desc"));
+            .with_margin(Margin{.top = h720(10.0f)}));
   }
 };
 

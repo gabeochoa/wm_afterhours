@@ -97,8 +97,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.35f)
-            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
-            .with_debug_name("l_bumper"));
+            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30}));
 
     // Tab icons
     for (size_t i = 0; i < tabs.size(); i++) {
@@ -146,8 +145,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.35f)
-            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
-            .with_debug_name("r_bumper"));
+            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30}));
 
     // ========== "Options" LABEL under selected tab ==========
     div(context, mk(entity, 40),
@@ -161,8 +159,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b0011))
-            .with_roundness(0.4f)
-            .with_debug_name("options_label"));
+            .with_roundness(0.4f));
 
     // ========== MAIN CONTENT PANEL ==========
     float panel_x = 130.0f;
@@ -234,8 +231,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_black)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("avatar"));
+            .with_roundness(1.0f));
 
     // Name text
     div(context, mk(entity, 102),
@@ -244,8 +240,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(40)})
             .with_absolute_position(name_x + 65.0f, name_y + 10.0f)
             .with_font("Gaegu-Bold", h720(28.0f))
-            .with_custom_text_color(text_dark)
-            .with_debug_name("name_text"));
+            .with_custom_text_color(text_dark));
 
     // Delete Data button with confirmation barrier
     // Positioned in bottom-right corner of panel, away from main options
@@ -292,8 +287,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(panel_white)
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.25f)
-              .with_debug_name("confirm_delete"));
+              .with_roundness(0.25f));
     }
 
     // ========== COMMON LABEL ==========
@@ -302,8 +296,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Common")
             .with_size(ComponentSize{pixels(100), pixels(28)})
             .with_absolute_position(panel_x + 25.0f, panel_y + 105.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("common_label"));
+            .with_custom_text_color(text_dark));
 
     // ========== OPTIONS GRID (2 columns) ==========
     float grid_x = panel_x + 80.0f;  // More centered
@@ -378,8 +371,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("description"));
+            .with_roundness(0.3f));
   }
 };
 

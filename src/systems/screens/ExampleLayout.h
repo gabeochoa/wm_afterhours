@@ -40,8 +40,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::medium(),
                                 .left = pixels(0),
-                                .right = pixels(0)})
-            .with_debug_name("title"));
+                                .right = pixels(0)}));
 
     // Row layout demo - JustifyContent::Center to keep panels within container
     auto row_container =
@@ -64,8 +63,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Spacing::sm)
-            .with_debug_name("left_panel"));
+            .with_margin(Spacing::sm));
 
     div(context, mk(row_container.ent(), 1),
         ComponentConfig{}
@@ -75,8 +73,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Spacing::sm)
-            .with_debug_name("center_panel"));
+            .with_margin(Spacing::sm));
 
     div(context, mk(row_container.ent(), 2),
         ComponentConfig{}
@@ -86,8 +83,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Spacing::sm)
-            .with_debug_name("right_panel"));
+            .with_margin(Spacing::sm));
 
     // Column layout demo - stacked items demonstration
     auto col_container =
@@ -124,8 +120,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("stack1"));
+            .with_margin(Spacing::xs));
 
     div(context, mk(left_col.ent(), 1),
         ComponentConfig{}
@@ -134,8 +129,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("stack2"));
+            .with_margin(Spacing::xs));
 
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
@@ -144,8 +138,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_margin(Spacing::xs)
-            .with_debug_name("stack3"));
+            .with_margin(Spacing::xs));
 
     // Layout guide - positioned below demo content to avoid obstruction
     auto desc_panel = div(context, mk(main_container.ent(), 3),
@@ -170,8 +163,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("desc_line1"));
+            .with_skip_tabbing(true));
 
     div(context, mk(desc_panel.ent(), 1),
         ComponentConfig{}
@@ -180,8 +172,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("desc_line2"));
+            .with_skip_tabbing(true));
 
     div(context, mk(desc_panel.ent(), 2),
         ComponentConfig{}
@@ -190,8 +181,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("desc_line3"));
+            .with_skip_tabbing(true));
 
     // Info footer - use percent width
     div(context, mk(main_container.ent(), 4),
@@ -206,8 +196,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                                 .bottom = pixels(0),
                                 .left = pixels(0),
                                 .right = pixels(0)})
-            .with_skip_tabbing(true)
-            .with_debug_name("footer"));
+            .with_skip_tabbing(true));
   }
 };
 

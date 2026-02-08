@@ -115,8 +115,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(380), pixels(45)})
             .with_absolute_position(25.0f, 12.0f)
             .with_font("Gaegu-Bold", h720(34.0f))
-            .with_custom_text_color(accent_gold)
-            .with_debug_name("title"));
+            .with_custom_text_color(accent_gold));
 
     // Gold display
     div(context, mk(entity, 6),
@@ -136,8 +135,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 175.0f, 18.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(accent_gold)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("gold_text"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== TAB BAR ==========
     float tab_y = 58.0f;
@@ -271,8 +269,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(30)})
             .with_absolute_position(brew_x + 15.0f, brew_y + 12.0f)
             .with_font("Gaegu-Bold", h720(24.0f))
-            .with_custom_text_color(accent_gold)
-            .with_debug_name("brew_header"));
+            .with_custom_text_color(accent_gold));
 
     // Large potion flask visualization
     float flask_size = 120.0f;
@@ -346,8 +343,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(brew_x + 30.0f, prog_y + 28.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("brew_pct"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== INGREDIENT SLOTS ==========
     float slots_y = prog_y + 60.0f;
@@ -358,8 +354,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(22)})
             .with_absolute_position(brew_x + 30.0f, slots_y)
             .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(white)
-            .with_debug_name("req_label"));
+            .with_custom_text_color(white));
 
     float slot_size = 60.0f;
     float slot_gap = 15.0f;
@@ -441,8 +436,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                                 afterhours::Color{0, 0, 0, 60})
-               .with_debug_name("brew_btn"));
+                                 afterhours::Color{0, 0, 0, 60}));
 
     // ========== RIGHT: INGREDIENT INVENTORY ==========
     float inv_x = brew_x + brew_w + 16.0f;
@@ -469,8 +463,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(inv_x + 10.0f, inv_y + 10.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(accent_gold)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("inv_header"));
+            .with_alignment(TextAlignment::Center));
 
     // Ingredient grid (2 columns)
     int inv_cols = 2;
@@ -532,8 +525,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 50), pixels(22)})
             .with_absolute_position(25.0f, status_y)
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("status"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

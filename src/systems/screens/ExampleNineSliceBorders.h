@@ -140,8 +140,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(panel_015, 16)
             .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Row 1: Basic panel styles
     struct PanelDemo {
@@ -163,8 +162,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(label_height)})
             .with_absolute_position(start_x, start_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("row1_label"));
+            .with_custom_text_color(gold_accent));
 
     float row1_y = start_y + label_height + 5;
     for (int i = 0; i < 6; i++) {
@@ -190,8 +188,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(label_height)})
             .with_absolute_position(start_x, row2_y - label_height - 5)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("row2_label"));
+            .with_custom_text_color(gold_accent));
 
     PanelDemo row2[] = {
         {"Border A", &border_000, 16},      {"Border B", &border_005, 16},
@@ -224,8 +221,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(400), pixels(label_height)})
             .with_absolute_position(start_x, row3_y - label_height - 5)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("row3_label"));
+            .with_custom_text_color(gold_accent));
 
     // Small
     div(context, mk(entity, 50),
@@ -236,8 +232,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(panel_010, 16)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("size_small"));
+            .with_alignment(TextAlignment::Center));
 
     // Medium
     div(context, mk(entity, 51),
@@ -248,8 +243,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(panel_010, 16)
             .with_font(UIComponent::DEFAULT_FONT, h720(15.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("size_medium"));
+            .with_alignment(TextAlignment::Center));
 
     // Large
     div(context, mk(entity, 52),
@@ -260,8 +254,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(panel_010, 16)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("size_large"));
+            .with_alignment(TextAlignment::Center));
 
     // Wide
     div(context, mk(entity, 53),
@@ -272,8 +265,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(panel_015, 16)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("size_wide"));
+            .with_alignment(TextAlignment::Center));
 
     // Tall
     div(context, mk(entity, 54),
@@ -284,8 +276,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(panel_005, 16)
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("size_tall"));
+            .with_alignment(TextAlignment::Center));
 
     // Row 4: Double-width borders and tinting
     float row4_y = row3_y + 100 + gap + label_height;
@@ -296,8 +287,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(label_height)})
             .with_absolute_position(start_x, row4_y - label_height - 5)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("row4_label"));
+            .with_custom_text_color(gold_accent));
 
     // Double-width border
     div(context, mk(entity, 65),
@@ -309,8 +299,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                                     32) // Double needs larger slice
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("double_a"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 66),
         ComponentConfig{}
@@ -320,8 +309,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_nine_slice_border(double_panel_010, 32)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("double_b"));
+            .with_alignment(TextAlignment::Center));
 
     // Tinted panels - using high-contrast text colors for accessibility
     div(context, mk(entity, 67),
@@ -333,8 +321,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 NineSliceBorder::uniform(panel_010, 16, gold_accent))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_on_gold)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("tint_gold"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 68),
         ComponentConfig{}
@@ -345,8 +332,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 panel_010, 16, afterhours::Color{100, 150, 220, 255}))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_on_blue)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("tint_blue"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 69),
         ComponentConfig{}
@@ -357,8 +343,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 panel_010, 16, afterhours::Color{200, 80, 80, 255}))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_on_red)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("tint_red"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 70),
         ComponentConfig{}
@@ -369,8 +354,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 panel_010, 16, afterhours::Color{80, 180, 100, 255}))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_on_green)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("tint_green"));
+            .with_alignment(TextAlignment::Center));
 
     // Interactive button example
     float row5_y = row4_y + box_height + gap + 5;
@@ -381,8 +365,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(350), pixels(label_height)})
             .with_absolute_position(start_x, row5_y - label_height - 5)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(gold_accent)
-            .with_debug_name("row5_label"));
+            .with_custom_text_color(gold_accent));
 
     auto btn_result =
         button(context, mk(entity, 80),
@@ -393,8 +376,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_nine_slice_border(panel_020, 16)
                    .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                    .with_custom_text_color(text_dark)
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("nine_slice_button"));
+                   .with_alignment(TextAlignment::Center));
 
     if (btn_result) {
       log_info("Nine-slice button clicked!");
@@ -418,8 +400,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x + 215, row5_y + 15)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("dialog_text"));
+            .with_alignment(TextAlignment::Left));
 
     // Nested panels example - with visible outer panel
     div(context, mk(entity, 90),
@@ -437,8 +418,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x + 535, row5_y + 8)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("nested_title"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 92),
         ComponentConfig{}
@@ -449,8 +429,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 border_005, 16, afterhours::Color{180, 140, 80, 255}))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("nested_inner_a"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 93),
         ComponentConfig{}
@@ -461,8 +440,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 border_010, 16, afterhours::Color{100, 140, 180, 255}))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("nested_inner_b"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

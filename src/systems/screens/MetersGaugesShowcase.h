@@ -68,8 +68,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(FONT, h720(24.0f))
-            .with_rounded_corners(corners)
-            .with_debug_name("mg_title"));
+            .with_rounded_corners(corners));
 
     // =================================================================
     // Row 1: Inline Meters
@@ -92,16 +91,14 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font(FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("mg_meters_label"));
+            .with_skip_tabbing(true));
 
     auto meters_row = div(context, mk(row1.ent(), 1),
                           ComponentConfig{}
                               .with_size(ComponentSize{percent(1.0f), percent(0.73f)})
                               .with_background(Theme::Usage::Surface)
                               .with_flex_direction(FlexDirection::Row)
-                              .with_align_items(AlignItems::Center)
-                              .with_debug_name("mg_meters_row"));
+                              .with_align_items(AlignItems::Center));
 
     struct MeterInfo {
       const char *label;
@@ -172,16 +169,14 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font(FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("mg_stacked_label"));
+            .with_skip_tabbing(true));
 
     auto stack_row = div(context, mk(row2.ent(), 1),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(0.9f), percent(0.6f)})
                              .with_background(Theme::Usage::Surface)
                              .with_flex_direction(FlexDirection::Row)
-                             .with_align_items(AlignItems::Center)
-                             .with_debug_name("mg_stacked_row"));
+                             .with_align_items(AlignItems::Center));
 
     progress_bar(context, mk(stack_row.ent(), 0), control_value,
                  ComponentConfig{}
@@ -227,16 +222,14 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font(FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("mg_anim_label"));
+            .with_skip_tabbing(true));
 
     auto anim_row = div(context, mk(row3.ent(), 1),
                         ComponentConfig{}
                             .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
                             .with_background(Theme::Usage::Surface)
                             .with_flex_direction(FlexDirection::Row)
-                            .with_align_items(AlignItems::Center)
-                            .with_debug_name("mg_anim_row"));
+                            .with_align_items(AlignItems::Center));
 
     progress_bar(context, mk(anim_row.ent(), 0), anim_progress,
                  ComponentConfig{}
@@ -276,8 +269,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font(FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("mg_circular_label"));
+            .with_skip_tabbing(true));
 
     auto circles_row =
         div(context, mk(row4.ent(), 1),
@@ -285,8 +277,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), percent(0.82f)})
                 .with_background(Theme::Usage::Surface)
                 .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_debug_name("mg_circles_row"));
+                .with_align_items(AlignItems::Center));
 
     struct GaugeInfo {
       float value;
@@ -349,8 +340,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font(FONT, h720(16.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("mg_slider_label"));
+            .with_skip_tabbing(true));
 
     slider(context, mk(row5.ent(), 1), control_value,
            ComponentConfig{}

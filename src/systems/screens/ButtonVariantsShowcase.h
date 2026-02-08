@@ -39,8 +39,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(FONT, h720(30.0f))
-            .with_debug_name("bv_title"));
+            .with_font(FONT, h720(30.0f)));
 
     // Helper lambda for row labels
     auto row_label = [&](afterhours::Entity &parent, int id, const char *text) {
@@ -118,8 +117,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_button_variant(ButtonVariant::Filled)
                .with_disabled(true)
                .with_font(FONT, btn_font)
-               .with_margin(Spacing::xs)
-               .with_debug_name("bv_filled_disabled"));
+               .with_margin(Spacing::xs));
 
     // --- Row 2: Outline variant ---
     auto row2 = div(context, mk(root.ent(), 2),
@@ -177,8 +175,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_button_variant(ButtonVariant::Outline)
                .with_disabled(true)
                .with_font(FONT, btn_font)
-               .with_margin(Spacing::xs)
-               .with_debug_name("bv_outline_disabled"));
+               .with_margin(Spacing::xs));
 
     // --- Row 3: Ghost variant ---
     auto row3 = div(context, mk(root.ent(), 3),
@@ -236,8 +233,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_button_variant(ButtonVariant::Ghost)
                .with_disabled(true)
                .with_font(FONT, btn_font)
-               .with_margin(Spacing::xs)
-               .with_debug_name("bv_ghost_disabled"));
+               .with_margin(Spacing::xs));
 
     // --- Row 4: Size variants ---
     auto row4 = div(context, mk(root.ent(), 4),
@@ -299,8 +295,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_background(Theme::Usage::Accent)
                .with_button_variant(ButtonVariant::Outline)
                .with_font(FONT, h720(24.0f))
-               .with_margin(Spacing::xs)
-               .with_debug_name("bv_size_lg_outline"));
+               .with_margin(Spacing::xs));
 
     // --- Row 5: Theme comparison ---
     auto row5 = div(context, mk(root.ent(), 5),
@@ -415,8 +410,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), percent(0.05f)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::xs)
-            .with_font(FONT, h720(16.0f))
-            .with_debug_name("bv_click_counter"));
+            .with_font(FONT, h720(16.0f)));
   }
 };
 

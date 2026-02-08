@@ -173,8 +173,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                             panel_y + cfg_title_y_offset)
             .with_font("Fredoka", h720(cfg_title_font_size))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Close button (X) - positioned inside header bounds
     float close_x = panel_x + panel_w - cfg_close_btn_margin - cfg_close_btn_size;
@@ -194,8 +193,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(1.0f)
                .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                                 afterhours::Color{0, 0, 0, 30})
-               .with_debug_name("close_btn"));
+                                 afterhours::Color{0, 0, 0, 30}));
 
     // ========== TOGGLE BUTTONS (Music, Sound, Vibration) ==========
     float toggle_y = panel_y + cfg_toggle_y_offset;
@@ -283,16 +281,14 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Save/Load")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(saveload_x + 14.0f, saveload_y + 14.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("save_load_title"));
+            .with_custom_text_color(text_dark));
 
     div(context, mk(entity, 42),
         ComponentConfig{}
             .with_label("Progress")
             .with_size(ComponentSize{pixels(120), pixels(24)})
             .with_absolute_position(saveload_x + 14.0f, saveload_y + 40.0f)
-            .with_custom_text_color(text_dark)
-            .with_debug_name("save_load_progress"));
+            .with_custom_text_color(text_dark));
 
     // Sync button (right side of group, vertically centered)
     float sync_x = saveload_x + cfg_saveload_width - cfg_sync_btn_size - 14.0f;
@@ -312,8 +308,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                                 afterhours::Color{0, 0, 0, 25})
-               .with_debug_name("sync_btn"));
+                                 afterhours::Color{0, 0, 0, 25}));
 
     // ========== BLUE PILL BUTTONS ==========
     float btn_row1_y = toggle_y + cfg_toggle_height + 35.0f + cfg_toggle_label_gap;
@@ -355,8 +350,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_btn_x + 16.0f,
                             btn_row1_y + (cfg_pill_btn_height - 26.0f) / 2.0f)
             .with_custom_text_color(notif_icon_color)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("notif_icon"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 52),
         ComponentConfig{}
@@ -365,8 +359,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_btn_x + 46.0f,
                             btn_row1_y + (cfg_pill_btn_height - 28.0f) / 2.0f)
             .with_font("EqProRounded", h720(17.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("notif_text"));
+            .with_custom_text_color(text_white));
 
     // Credits
     button(context, mk(entity, 55),
@@ -443,8 +436,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pxf(cfg_info_line_height)})
             .with_absolute_position(left_btn_x, info_y)
             .with_font("EqProRounded", h720(cfg_info_font_size))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("build_id"));
+            .with_custom_text_color(text_muted));
 
     div(context, mk(entity, 71),
         ComponentConfig{}
@@ -453,8 +445,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pxf(cfg_info_line_height)})
             .with_absolute_position(left_btn_x, info_y + cfg_info_line_height + 2.0f)
             .with_font("EqProRounded", h720(cfg_info_font_size))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("version"));
+            .with_custom_text_color(text_muted));
 
     div(context, mk(entity, 72),
         ComponentConfig{}
@@ -464,8 +455,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_btn_x,
                             info_y + (cfg_info_line_height + 2.0f) * 2.0f)
             .with_font("EqProRounded", h720(cfg_info_font_size))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("player_id"));
+            .with_custom_text_color(text_muted));
 
     // Terms and Privacy
     button(context, mk(entity, 75),

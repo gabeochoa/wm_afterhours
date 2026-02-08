@@ -47,8 +47,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
-            .with_padding(Spacing::sm)
-            .with_debug_name("title"));
+            .with_padding(Spacing::sm));
 
     // Instructions
     div(context, mk(root.ent(), 1),
@@ -56,8 +55,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Scroll: mouse wheel | Horizontal: Shift + scroll wheel or trackpad swipe")
             .with_custom_text_color(theme.font_muted)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("instructions"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Invert scroll toggle row with label
     auto toggle_row = div(context, mk(root.ent(), 2),
@@ -65,8 +63,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.95f), pixels(36)})
                  .with_flex_direction(FlexDirection::Row)
                  .with_align_items(AlignItems::Center)
-                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                 .with_debug_name("toggle_row"));
+                 .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     checkbox(context, mk(toggle_row.ent(), 0), invert_scroll,
              ComponentConfig{}
@@ -74,16 +71,14 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Invert Scroll")
                  .with_background(Theme::Usage::Secondary)
                  .with_custom_text_color(theme.font)
-                 .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                 .with_debug_name("invert_toggle"));
+                 .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     // Container for both scroll views side by side
     auto container = div(context, mk(root.ent(), 3),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
                              .with_flex_direction(FlexDirection::Row)
-                             .with_justify_content(JustifyContent::SpaceAround)
-                             .with_debug_name("container"));
+                             .with_justify_content(JustifyContent::SpaceAround));
 
     // === VERTICAL SCROLL VIEW ===
     auto vert_section = div(context, mk(container.ent(), 0),
@@ -97,8 +92,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Vertical Scroll")
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("vert_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Vertical scroll container - uses clip_children to ensure items
     // are properly scissored to container bounds
@@ -131,8 +125,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Item {} of {} ({}%)", visible_item, total_items, scroll_pct))
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_custom_text_color(theme.font_muted)
-              .with_debug_name("vert_info"));
+              .with_custom_text_color(theme.font_muted));
     }
 
     // Vertical scroll items - increased text size for touch targets
@@ -153,16 +146,14 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     auto horiz_section = div(context, mk(container.ent(), 1),
                              ComponentConfig{}
                                  .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
-                                 .with_flex_direction(FlexDirection::Column)
-                                 .with_debug_name("horiz_section"));
+                                 .with_flex_direction(FlexDirection::Column));
 
     div(context, mk(horiz_section.ent(), 0),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Horizontal Scroll")
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("horiz_label"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Horizontal scroll container - uses clip_children to ensure items
     // are properly scissored to container bounds
@@ -196,8 +187,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Item {} of {} ({}%)", visible_item, total_items, scroll_pct))
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_custom_text_color(theme.font_muted)
-              .with_debug_name("horiz_info"));
+              .with_custom_text_color(theme.font_muted));
 
       // Horizontal scroll indicator
       float track_width = 150.0f;

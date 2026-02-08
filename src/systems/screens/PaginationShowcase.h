@@ -65,8 +65,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(content_x, current_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_auto_text_color(true)
-            .with_alignment(TextAlignment::Left)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Left));
 
     current_y += 76.0f;
 
@@ -80,8 +79,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("section1_label"));
+            .with_skip_tabbing(true));
 
     current_y += 52.0f;
 
@@ -103,8 +101,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
-               .with_disabled(pag1_left_disabled)
-               .with_debug_name("pag1_left"));
+               .with_disabled(pag1_left_disabled));
 
     pag1_x += arrow_width + btn_gap;
 
@@ -133,8 +130,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
-               .with_disabled(pag1_right_disabled)
-               .with_debug_name("pag1_right"));
+               .with_disabled(pag1_right_disabled));
 
     current_y += 58.0f;
 
@@ -145,8 +141,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position(content_x, current_y)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("status1"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     current_y += 50.0f;
 
@@ -160,8 +155,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("section2_label"));
+            .with_skip_tabbing(true));
 
     current_y += 52.0f;
 
@@ -177,8 +171,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
-               .with_disabled(pag2_left_disabled)
-               .with_debug_name("pag2_left"));
+               .with_disabled(pag2_left_disabled));
 
     pag2_x += arrow_width + btn_gap;
 
@@ -205,8 +198,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
-               .with_disabled(pag2_right_disabled)
-               .with_debug_name("pag2_right"));
+               .with_disabled(pag2_right_disabled));
 
     current_y += 58.0f;
 
@@ -217,8 +209,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position(content_x, current_y)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("status2"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     current_y += 50.0f;
 
@@ -232,8 +223,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_skip_tabbing(true)
-            .with_debug_name("section3_label"));
+            .with_skip_tabbing(true));
 
     current_y += 52.0f;
 
@@ -249,8 +239,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
-               .with_disabled(pag3_left_disabled)
-               .with_debug_name("pag3_left"));
+               .with_disabled(pag3_left_disabled));
 
     pag3_x += arrow_width + btn_gap;
 
@@ -277,8 +266,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_absolute_position(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
-               .with_disabled(pag3_right_disabled)
-               .with_debug_name("pag3_right"));
+               .with_disabled(pag3_right_disabled));
 
     current_y += 58.0f;
 
@@ -289,8 +277,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(36)})
             .with_absolute_position(content_x, current_y)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_debug_name("status3"));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
   }
 };
 

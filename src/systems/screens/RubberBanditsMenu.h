@@ -87,8 +87,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("Fredoka", h720(44.0f))
             .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("title_rubber"));
+            .with_roundness(0.15f));
 
     // BANDITS text with $ for S
     div(context, mk(entity, 11),
@@ -100,8 +99,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("Fredoka", h720(44.0f))
             .with_custom_text_color(accent_green)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("title_bandits"));
+            .with_roundness(0.15f));
 
     // ========== TOP RIGHT: Player info ==========
     float info_x = (float)screen_w - 220.0f;
@@ -128,8 +126,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("online_status"));
+            .with_roundness(0.5f));
 
     // Player count
     div(context, mk(entity, 21),
@@ -143,8 +140,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("player_count"));
+            .with_roundness(1.0f));
 
     // Lightning bolt (premium currency)
     div(context, mk(entity, 22),
@@ -158,8 +154,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("lightning"));
+            .with_roundness(1.0f));
 
     // ========== MENU ITEMS ==========
     float menu_x = 55.0f;
@@ -233,8 +228,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(180), pixels(24)})
               .with_absolute_position(promo_x + 10.0f, promo_y + 8.0f)
               .with_font("EqProRounded", h720(14.0f))
-              .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
-              .with_debug_name("promo_text1"));
+              .with_custom_text_color(afterhours::Color{100, 85, 55, 255}));
 
       div(context, mk(entity, 202),
           ComponentConfig{}
@@ -242,8 +236,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(180), pixels(20)})
               .with_absolute_position(promo_x + 10.0f, promo_y + 30.0f)
               .with_font("EqProRounded", h720(12.0f))
-              .with_custom_text_color(afterhours::Color{130, 115, 85, 255})
-              .with_debug_name("promo_text2"));
+              .with_custom_text_color(afterhours::Color{130, 115, 85, 255}));
 
       // Dismiss X button
       if (button(context, mk(entity, 205),
@@ -284,8 +277,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(200), pixels(24)})
             .with_absolute_position(char_x - 50.0f, char_y - 28.0f)
             .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
-            .with_debug_name("char_label"));
+            .with_custom_text_color(afterhours::Color{100, 85, 55, 255}));
 
     // LB button
     div(context, mk(entity, 300),
@@ -297,8 +289,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("lb"));
+            .with_roundness(0.3f));
 
     // Character name
     div(context, mk(entity, 301),
@@ -308,8 +299,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(char_x - 55.0f, char_y)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("char_name"));
+            .with_alignment(TextAlignment::Center));
 
     // RB button
     div(context, mk(entity, 302),
@@ -321,8 +311,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("rb"));
+            .with_roundness(0.3f));
 
     // FAVOURITE label
     div(context, mk(entity, 303),
@@ -331,8 +320,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(150), pixels(28)})
             .with_absolute_position(char_x - 25.0f, char_y + 38.0f)
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("favourite"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== BOTTOM HINT ==========
     div(context, mk(entity, 400),
@@ -340,8 +328,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Change the game's settings")
             .with_size(ComponentSize{pixels(320), pixels(32)})
             .with_absolute_position(55.0f, (float)screen_h - 50.0f)
-            .with_custom_text_color(afterhours::Color{180, 180, 180, 255})
-            .with_debug_name("bottom_hint"));
+            .with_custom_text_color(afterhours::Color{180, 180, 180, 255}));
 
     // Note: Decorative coin elements removed to reduce clutter
   }

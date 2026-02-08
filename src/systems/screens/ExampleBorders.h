@@ -67,8 +67,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("EqProRounded", h720(26.0f))
             .with_custom_text_color(bg_deep)
             .with_padding(Spacing::xs)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("title"));
+            .with_alignment(TextAlignment::Center));
 
     // Legend - explanation of border types
     div(context, mk(entity, 2),
@@ -78,8 +77,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x, 56.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("legend"));
+            .with_alignment(TextAlignment::Center));
 
     // Row 1: Basic borders with labels
     struct BorderDemo {
@@ -130,8 +128,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(row_label_x, start_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("row1_label"));
+            .with_alignment(TextAlignment::Right));
 
     // Row 2: Rounded corners and shadows
     float row2_y = start_y + box_size + gap + 5;
@@ -147,8 +144,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.2f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("rounded"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 21),
         ComponentConfig{}
@@ -161,8 +157,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.5f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("pill"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 22),
         ComponentConfig{}
@@ -175,8 +170,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.25f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("top_only"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 23),
         ComponentConfig{}
@@ -189,8 +183,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.3f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("diagonal"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 24),
         ComponentConfig{}
@@ -202,8 +195,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_hard_shadow(5.0f, 5.0f, afterhours::Color{0, 0, 0, 120})
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("hard_shadow"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 25),
         ComponentConfig{}
@@ -216,8 +208,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_soft_shadow(4.0f, 6.0f, 14.0f, afterhours::Color{0, 0, 0, 80})
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("soft_shadow"));
+            .with_alignment(TextAlignment::Center));
 
     // Row 2 label
     div(context, mk(entity, 29),
@@ -227,8 +218,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(row_label_x, row2_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("row2_label"));
+            .with_alignment(TextAlignment::Right));
 
     // Row 3: Themed examples
     float row3_y = row2_y + box_size + gap + 5;
@@ -243,8 +233,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("dark_mode"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 31),
         ComponentConfig{}
@@ -257,8 +246,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{0, 255, 200, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("neon_glow"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 32),
         ComponentConfig{}
@@ -273,8 +261,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(afterhours::Color{80, 60, 45, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("cozy"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 33),
         ComponentConfig{}
@@ -286,8 +273,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{255, 180, 180, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("danger"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 34),
         ComponentConfig{}
@@ -299,8 +285,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{180, 255, 200, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("success"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 35),
         ComponentConfig{}
@@ -312,8 +297,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("outline_only"));
+            .with_alignment(TextAlignment::Center));
 
     // Row 3 label
     div(context, mk(entity, 39),
@@ -323,8 +307,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(row_label_x, row3_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("row3_label"));
+            .with_alignment(TextAlignment::Right));
 
     // Interactive button with border
     float row4_y = row3_y + box_size + gap + 15;
@@ -338,8 +321,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(row_label_x, row4_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
             .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("row4_label"));
+            .with_alignment(TextAlignment::Right));
 
     auto btn_result = button(
         context, mk(entity, 40),
@@ -355,8 +337,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.4f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("bordered_button"));
+            .with_alignment(TextAlignment::Center));
 
     if (btn_result) {
       log_info("Bordered button clicked!");
@@ -379,8 +360,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(260), pixels(22)})
             .with_absolute_position(start_x + 240.0f, row4_y + 5)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_custom_text_color(accent_cyan)
-            .with_debug_name("nested_title"));
+            .with_custom_text_color(accent_cyan));
 
     div(context, mk(entity, 52),
         ComponentConfig{}
@@ -392,8 +372,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("nested_child"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 53),
         ComponentConfig{}
@@ -405,8 +384,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("nested_child2"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

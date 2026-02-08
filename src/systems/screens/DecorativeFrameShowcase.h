@@ -41,8 +41,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(8.0f)})
-            .with_debug_name("title"));
+            .with_margin(Margin{.top = h720(8.0f)}));
 
     // Subtitle
     div(context, mk(main.ent(), 1),
@@ -51,8 +50,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Three style variants for decorative borders")
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("subtitle"));
+            .with_alignment(TextAlignment::Center));
 
     // Layout configuration parameters
     constexpr float frame_row_height_pct = 0.38f;    // Compact height to reduce gap before info section
@@ -112,8 +110,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(label_top_margin_px)})
-            .with_debug_name("kraft_label"));
+            .with_margin(Margin{.top = h720(label_top_margin_px)}));
 
     div(context, mk(kraft_col.ent(), 2),
         ComponentConfig{}
@@ -121,8 +118,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Layered + corners")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("kraft_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== SIMPLE STYLE ==========
     afterhours::Color simple_frame_color{70, 130, 180, 255};
@@ -151,8 +147,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(label_top_margin_px)})
-            .with_debug_name("simple_label"));
+            .with_margin(Margin{.top = h720(label_top_margin_px)}));
 
     div(context, mk(simple_col.ent(), 2),
         ComponentConfig{}
@@ -160,8 +155,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Border + background")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("simple_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== INSET STYLE ==========
     afterhours::Color inset_frame_color{128, 128, 128, 255};
@@ -190,8 +184,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(label_top_margin_px)})
-            .with_debug_name("inset_label"));
+            .with_margin(Margin{.top = h720(label_top_margin_px)}));
 
     div(context, mk(inset_col.ent(), 2),
         ComponentConfig{}
@@ -199,8 +192,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Sunken shadow")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("inset_desc"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== INFO SECTION ==========
     constexpr float info_section_height_pct = 0.20f;  // Height of info section
@@ -224,8 +216,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Usage Tips")
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(theme.font)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("info_title"));
+            .with_alignment(TextAlignment::Center));
 
     div(context, mk(info_section.ent(), 1),
         ComponentConfig{}
@@ -233,8 +224,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("KraftPaper: Rustic warmth | Simple: Clean minimal | Inset: Depth effect")
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("info_content"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 

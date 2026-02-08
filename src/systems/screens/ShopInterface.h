@@ -135,8 +135,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(300), pixels(45)})
             .with_absolute_position(25.0f, 12.0f)
             .with_font("Gaegu-Bold", h720(36.0f))
-            .with_custom_text_color(accent_gold)
-            .with_debug_name("title"));
+            .with_custom_text_color(accent_gold));
 
     // Shopkeeper quote
     div(context, mk(entity, 6),
@@ -145,8 +144,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(420), pixels(24)})
             .with_absolute_position(25.0f, 52.0f)
             .with_font("EqProRounded", h720(15.0f))
-            .with_custom_text_color(muted)
-            .with_debug_name("quote"));
+            .with_custom_text_color(muted));
 
     // Player gold display
     div(context, mk(entity, 8),
@@ -166,8 +164,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position((float)screen_w - 205.0f, 16.0f)
             .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(accent_gold)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("gold_text"));
+            .with_alignment(TextAlignment::Center));
 
     // ========== BUY/SELL TABS ==========
     std::vector<std::string> tab_labels = {"Buy", "Sell"};
@@ -225,24 +222,21 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Item")
             .with_size(ComponentSize{pixels(120), pixels(22)})
             .with_absolute_position(col_name_x, hdr_y)
-            .with_custom_text_color(muted)
-            .with_debug_name("col_item"));
+            .with_custom_text_color(muted));
 
     div(context, mk(entity, 102),
         ComponentConfig{}
             .with_label("Type")
             .with_size(ComponentSize{pixels(80), pixels(22)})
             .with_absolute_position(col_cat_x, hdr_y)
-            .with_custom_text_color(muted)
-            .with_debug_name("col_type"));
+            .with_custom_text_color(muted));
 
     div(context, mk(entity, 103),
         ComponentConfig{}
             .with_label("Stock")
             .with_size(ComponentSize{pixels(50), pixels(22)})
             .with_absolute_position(col_stock_x, hdr_y)
-            .with_custom_text_color(muted)
-            .with_debug_name("col_stock"));
+            .with_custom_text_color(muted));
 
     div(context, mk(entity, 104),
         ComponentConfig{}
@@ -250,8 +244,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(70), pixels(22)})
             .with_absolute_position(col_price_x, hdr_y)
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("col_price"));
+            .with_alignment(TextAlignment::Right));
 
     // Separator
     div(context, mk(entity, 105),
@@ -259,8 +252,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(list_w - 20),
                                      pixels(1)})
             .with_absolute_position(list_x + 10.0f, hdr_y + 24.0f)
-            .with_custom_background(border_wood)
-            .with_debug_name("hdr_sep"));
+            .with_custom_background(border_wood));
 
     // Item rows
     float row_start_y = hdr_y + 32.0f;
@@ -408,8 +400,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
-            .with_debug_name("detail_icon"));
+            .with_roundness(0.2f));
 
     // Item name
     div(context, mk(entity, 302),
@@ -419,8 +410,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(30)})
             .with_absolute_position(detail_x + 95.0f, detail_y + 15.0f)
             .with_font("Gaegu-Bold", h720(26.0f))
-            .with_custom_text_color(accent_gold)
-            .with_debug_name("detail_name"));
+            .with_custom_text_color(accent_gold));
 
     // Category badge
     div(context, mk(entity, 303),
@@ -433,8 +423,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(cream)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_debug_name("detail_cat"));
+            .with_roundness(0.3f));
 
     // Description
     div(context, mk(entity, 304),
@@ -444,8 +433,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(40)})
             .with_absolute_position(detail_x + 15.0f, detail_y + 95.0f)
             .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(white)
-            .with_debug_name("detail_desc"));
+            .with_custom_text_color(white));
 
     // Price in detail
     div(context, mk(entity, 305),
@@ -454,8 +442,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(160), pixels(28)})
             .with_absolute_position(detail_x + 15.0f, detail_y + 140.0f)
             .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(accent_gold)
-            .with_debug_name("detail_price"));
+            .with_custom_text_color(accent_gold));
 
     // Add to cart button
     button(context, mk(entity, 306),
@@ -470,8 +457,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.3f)
-               .with_debug_name("add_btn"));
+               .with_roundness(0.3f));
 
     // ========== CART ==========
     float cart_y = detail_y + detail_h + 15.0f;
@@ -496,8 +482,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(28)})
             .with_absolute_position(detail_x + 10.0f, cart_y + 8.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
-            .with_custom_text_color(accent_gold)
-            .with_debug_name("cart_header"));
+            .with_custom_text_color(accent_gold));
 
     // Cart items
     for (size_t i = 0; i < cart.size(); i++) {
@@ -548,8 +533,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(28)})
             .with_absolute_position(detail_x + 15.0f, sep_y + 10.0f)
             .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(white)
-            .with_debug_name("total_label"));
+            .with_custom_text_color(white));
 
     div(context, mk(entity, 452),
         ComponentConfig{}
@@ -558,8 +542,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(detail_x + detail_w - 135.0f, sep_y + 10.0f)
             .with_font("Gaegu-Bold", h720(24.0f))
             .with_custom_text_color(can_afford_total ? accent_gold : accent_red)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("total_amount"));
+            .with_alignment(TextAlignment::Right));
 
     // Remaining gold
     div(context, mk(entity, 453),
@@ -569,8 +552,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(detail_w - 30),
                                      pixels(22)})
             .with_absolute_position(detail_x + 15.0f, sep_y + 38.0f)
-            .with_custom_text_color(can_afford_total ? muted : accent_red)
-            .with_debug_name("remaining"));
+            .with_custom_text_color(can_afford_total ? muted : accent_red));
 
     // Purchase button
     button(
@@ -603,8 +585,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 50), pixels(20)})
             .with_absolute_position(25.0f, status_y)
             .with_custom_text_color(muted)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("prompts"));
+            .with_alignment(TextAlignment::Center));
   }
 };
 
