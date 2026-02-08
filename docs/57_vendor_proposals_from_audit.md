@@ -4,13 +4,13 @@ These are vendor/afterhours-level changes identified by the 4-auditor design rev
 
 ---
 
-## 1. Checkbox "v" → "✓" (P0, ~1 line)
+## 1. Checkbox "v" → "X" (P0, ~1 line) — DONE
 
 **Source:** Subagent 1 — Color as Sole State Indicator
 
-The checkbox component in `imm_components.h` uses the ASCII character `"v"` for the checked state. This is ambiguous — it could be confused with the letter V.
+The checkbox component in `imm_components.h` used the ASCII character `"v"` for the checked state. This was ambiguous — it could be confused with the letter V.
 
-**Proposed fix:** Change to `"✓"` or equivalent Unicode checkmark. One line in vendor code.
+**Fix applied:** Changed default to `"X"` in both `checkbox_no_label()` and toggle switch. Also fixed toggle switch unchecked indicator from `"x"` to `" "` for consistency.
 
 **Impact:** All checkbox screens automatically improve.
 
@@ -202,8 +202,8 @@ auto config = ComponentConfig()
 
 | # | Proposal | Priority | Effort | Status |
 |---|----------|----------|--------|--------|
-| 1 | Checkbox "v" → "✓" | P0 | 1 line | Ready |
-| 2 | Auto disabled opacity | P0 | ~15 lines | Ready |
+| 1 | Checkbox "v" → "X" | P0 | 1 line | **DONE** |
+| 2 | Auto disabled opacity | P0 | ~15 lines | **DONE** (theme.h disabled_opacity) |
 | 3 | Gallery section header helpers | P1 | ~20 lines | Ready |
 | 4 | Gallery status bar helper | P1 | ~15 lines | Ready |
 | 5 | Tab default styling | P1 | ~15 lines | Ready |
