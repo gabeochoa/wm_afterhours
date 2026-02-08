@@ -37,6 +37,7 @@ backward::SignalHandling sh;
 #include "systems/screens/ExampleColors.h"
 #include "systems/screens/ExampleFlexAlignment.h"
 #include "systems/screens/ExampleLayout.h"
+#include "systems/screens/MetersGaugesShowcase.h"
 #include "systems/screens/ExampleNineSliceBorders.h"
 #include "systems/screens/ExampleSeparators.h"
 #include "systems/screens/ExampleSimpleButton.h"
