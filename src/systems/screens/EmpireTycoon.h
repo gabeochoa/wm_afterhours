@@ -161,18 +161,18 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     if (cloud_tex.id != 0) {
       afterhours::texture_manager::Rectangle src{0, 0, (float)cloud_tex.width,
                                                  (float)cloud_tex.height};
-      sprite(context, mk(entity, 6), cloud_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(80), pixels(40)})
-                 .with_absolute_position((float)screen_w - 130.0f, 15.0f)
-                 .with_opacity(0.6f)
-                 .with_debug_name("cloud1"));
-      sprite(context, mk(entity, 7), cloud_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(60), pixels(30)})
-                 .with_absolute_position((float)screen_w - 200.0f, 55.0f)
-                 .with_opacity(0.4f)
-                 .with_debug_name("cloud2"));
+      struct Cloud { int id; int w; int h; float x; float y; float opacity; };
+      Cloud clouds[] = {
+          {6, 80, 40, (float)screen_w - 130.0f, 15.0f, 0.6f},
+          {7, 60, 30, (float)screen_w - 200.0f, 55.0f, 0.4f},
+      };
+      for (auto &c : clouds) {
+        sprite(context, mk(entity, c.id), cloud_tex, src,
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(c.w), pixels(c.h)})
+                   .with_absolute_position(c.x, c.y)
+                   .with_opacity(c.opacity));
+      }
     }
 
     // ========== TITLE: DREAM INCORPORATED (large puffy 3D text) ==========
@@ -298,141 +298,95 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== METERS ==========
-    // IDs 80-95 for meters
-    // Two rows: happiness on top, resources below
-    float meter_y = 152.0f;
-    float meter_row2_y = meter_y + 44.0f;
+    float meter_base_y = 152.0f;
+    float meter_x = (float)screen_w - 340.0f;
 
-    // Happiness meter with label - full row
-    div(context, mk(entity, 80),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(40)})
-            .with_absolute_position((float)screen_w - 340.0f, meter_y)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("happiness_pill"));
+    struct MeterRow {
+      int base_id; float y; const char *icon; const char *label;
+      afterhours::Color icon_bg; float icon_font_sz;
+      float pct; afterhours::Color fill_color;
+    };
+    MeterRow meters[] = {
+        {80, meter_base_y, ":)", "Happiness",
+         {255, 210, 130, 255}, 14.0f, happiness_pct, happy_green},
+        {85, meter_base_y + 44.0f, "*", "Resources",
+         {195, 215, 240, 255}, 16.0f, resources_pct, panel_blue},
+    };
+    for (auto &m : meters) {
+      // Pill background
+      div(context, mk(entity, m.base_id),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(280), pixels(40)})
+              .with_absolute_position(meter_x, m.y)
+              .with_custom_background(white)
+              .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.5f));
+      // Icon circle
+      div(context, mk(entity, m.base_id + 1),
+          ComponentConfig{}
+              .with_label(m.icon)
+              .with_size(ComponentSize{pixels(26), pixels(26)})
+              .with_absolute_position(meter_x + 5.0f, m.y + 7.0f)
+              .with_custom_background(m.icon_bg)
+              .with_font("EqProRounded", h720(m.icon_font_sz))
+              .with_custom_text_color(dark_text)
+              .with_alignment(TextAlignment::Center)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(1.0f));
+      // Label
+      div(context, mk(entity, m.base_id + 2),
+          ComponentConfig{}
+              .with_label(m.label)
+              .with_size(ComponentSize{pixels(90), pixels(22)})
+              .with_absolute_position(meter_x + 38.0f, m.y + 9.0f)
+              .with_custom_text_color(dark_text));
+      // Bar background
+      div(context, mk(entity, m.base_id + 3),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(80), pixels(24)})
+              .with_absolute_position(meter_x + 140.0f, m.y + 8.0f)
+              .with_custom_background(afterhours::Color{225, 230, 235, 255})
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.5f));
+      // Bar fill
+      div(context, mk(entity, m.base_id + 4),
+          ComponentConfig{}
+              .with_size(ComponentSize{pxf(74 * m.pct), pixels(20)})
+              .with_absolute_position(meter_x + 143.0f, m.y + 10.0f)
+              .with_custom_background(m.fill_color)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.5f));
+    }
 
-    div(context, mk(entity, 81),
-        ComponentConfig{}
-            .with_label(":)")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
-            .with_absolute_position((float)screen_w - 335.0f, meter_y + 7.0f)
-            .with_custom_background(afterhours::Color{255, 210, 130, 255})
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    div(context, mk(entity, 82),
-        ComponentConfig{}
-            .with_label("Happiness")
-            .with_size(ComponentSize{pixels(90), pixels(22)})
-            .with_absolute_position((float)screen_w - 302.0f, meter_y + 9.0f)
-            .with_custom_text_color(dark_text));
-
-    // Happiness bar background
-    div(context, mk(entity, 83),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(80), pixels(24)})
-            .with_absolute_position((float)screen_w - 200.0f, meter_y + 8.0f)
-            .with_custom_background(afterhours::Color{225, 230, 235, 255})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f));
-
-    // Happiness bar fill
-    div(context, mk(entity, 84),
-        ComponentConfig{}
-            .with_size(ComponentSize{
-                pxf(74 * happiness_pct), pixels(20)})
-            .with_absolute_position((float)screen_w - 197.0f, meter_y + 10.0f)
-            .with_custom_background(happy_green)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("happy_bar_fill"));
-
-    // Happiness percentage label - large and prominent with background highlight
+    // Happiness percentage - highlighted pill
     int happy_val = static_cast<int>(happiness_pct * 100);
     div(context, mk(entity, 92),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(68), pixels(32)})
-            .with_absolute_position((float)screen_w - 124.0f, meter_y + 4.0f)
+            .with_absolute_position((float)screen_w - 124.0f, meter_base_y + 4.0f)
             .with_custom_background(afterhours::Color{220, 245, 220, 255})
             .with_border(happy_green, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("happy_pct_bg"));
-
+            .with_roundness(0.5f));
     div(context, mk(entity, 88),
         ComponentConfig{}
             .with_label(std::to_string(happy_val) + "%")
             .with_size(ComponentSize{pixels(68), pixels(32)})
-            .with_absolute_position((float)screen_w - 124.0f, meter_y + 4.0f)
+            .with_absolute_position((float)screen_w - 124.0f, meter_base_y + 4.0f)
             .with_font("EqProRounded", h720(26.0f))
             .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
             .with_alignment(TextAlignment::Center));
 
-    // Resources meter with label - second row, no overlap
-    div(context, mk(entity, 85),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(40)})
-            .with_absolute_position((float)screen_w - 340.0f, meter_row2_y)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("resources_pill"));
-
-    div(context, mk(entity, 86),
-        ComponentConfig{}
-            .with_label("*")
-            .with_size(ComponentSize{pixels(26), pixels(26)})
-            .with_absolute_position((float)screen_w - 335.0f, meter_row2_y + 7.0f)
-            .with_custom_background(afterhours::Color{195, 215, 240, 255})
-            .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    div(context, mk(entity, 87),
-        ComponentConfig{}
-            .with_label("Resources")
-            .with_size(ComponentSize{pixels(90), pixels(22)})
-            .with_absolute_position((float)screen_w - 302.0f, meter_row2_y + 9.0f)
-            .with_custom_text_color(dark_text));
-
-    // Resources bar background
-    div(context, mk(entity, 90),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(80), pixels(24)})
-            .with_absolute_position((float)screen_w - 200.0f, meter_row2_y + 8.0f)
-            .with_custom_background(afterhours::Color{225, 230, 235, 255})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f));
-
-    // Resources bar fill
-    div(context, mk(entity, 91),
-        ComponentConfig{}
-            .with_size(ComponentSize{
-                pxf(74 * resources_pct), pixels(20)})
-            .with_absolute_position((float)screen_w - 197.0f, meter_row2_y + 10.0f)
-            .with_custom_background(panel_blue)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("res_bar_fill"));
-
-    // Resources percentage label with current/max context
-    int res_current = static_cast<int>(resources_pct * 1000);  // Simulated current value
-    int res_max = 1000;  // Simulated max value
+    // Resources value - current/max display
+    int res_current = static_cast<int>(resources_pct * 1000);
+    int res_max = 1000;
     int res_pct_val = static_cast<int>(resources_pct * 100);
     div(context, mk(entity, 89),
         ComponentConfig{}
             .with_label(std::to_string(res_current) + "/" + std::to_string(res_max) + " (" + std::to_string(res_pct_val) + "%)")
             .with_size(ComponentSize{pixels(130), pixels(30)})
-            .with_absolute_position((float)screen_w - 128.0f, meter_row2_y + 5.0f)
+            .with_absolute_position((float)screen_w - 128.0f, meter_base_y + 44.0f + 5.0f)
             .with_custom_text_color(panel_blue)
             .with_alignment(TextAlignment::Right));
 
@@ -553,16 +507,37 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.2f)
             .with_debug_name("main_panel"));
 
-    // Production Overview section
-    div(context, mk(entity, 210),
-        ComponentConfig{}
-            .with_label("Production Overview")
-            .with_size(ComponentSize{pixels(250), pixels(32)})
-            .with_absolute_position(panel_x + 30.0f, panel_y + 20.0f)
-            .with_font("EqProRounded", h720(24.0f))
-            .with_custom_text_color(dark_text));
+    // Production & Projects sections - shared structure
+    struct PanelSection {
+      const char *title; int title_id; int title_w;
+      int box_id; int box_w; float offset_x;
+      int item_id_base; int arrow_id_base; int text_w; float arrow_x;
+    };
+    PanelSection sections[] = {
+        {"Production Overview", 210, 250, 211, 340, 30.0f, 220, 230, 280, 330.0f},
+        {"Current Projects", 250, 220, 251, 420, 400.0f, 260, 270, 360, 780.0f},
+    };
+    for (auto &sec : sections) {
+      // Section title
+      div(context, mk(entity, sec.title_id),
+          ComponentConfig{}
+              .with_label(sec.title)
+              .with_size(ComponentSize{pixels(sec.title_w), pixels(32)})
+              .with_absolute_position(panel_x + sec.offset_x, panel_y + 20.0f)
+              .with_font("EqProRounded", h720(24.0f))
+              .with_custom_text_color(dark_text));
+      // Content box
+      div(context, mk(entity, sec.box_id),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(sec.box_w), pixels(190)})
+              .with_absolute_position(panel_x + sec.offset_x, panel_y + 60.0f)
+              .with_custom_background(white)
+              .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
+              .with_rounded_corners(RoundedCorners())
+              .with_clip_children(true));
+    }
 
-    // Trend indicator legend - prominent pill at top right of panel
+    // Trend indicator legend
     div(context, mk(entity, 212),
         ComponentConfig{}
             .with_label("^ = Trending Up")
@@ -576,31 +551,16 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.5f)
             .with_alignment(TextAlignment::Center));
 
-    // Production box - uses clip_children for text overflow protection
-    div(context, mk(entity, 211),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(340), pixels(190)})
-            .with_absolute_position(panel_x + 30.0f, panel_y + 60.0f)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_clip_children(true)
-            .with_debug_name("prod_box"));
-
     // Production items
     for (size_t i = 0; i < production.size(); i++) {
       float item_y = panel_y + 80.0f + (float)i * 54.0f;
-
       div(context, mk(entity, 220 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(production[i].name + ": " +
                           std::to_string(production[i].rate) + "/min")
               .with_size(ComponentSize{pixels(280), pixels(36)})
               .with_absolute_position(panel_x + 50.0f, item_y)
-              .with_custom_text_color(dark_text)
-              .with_debug_name("prod_" + std::to_string(i)));
-
-      // Up arrow
+              .with_custom_text_color(dark_text));
       div(context, mk(entity, 230 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label("^")
@@ -608,49 +568,23 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(panel_x + 330.0f, item_y + 4.0f)
               .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(happy_green)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("prod_arrow_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Center));
     }
 
-    // Current Projects section
-    div(context, mk(entity, 250),
-        ComponentConfig{}
-            .with_label("Current Projects")
-            .with_size(ComponentSize{pixels(220), pixels(32)})
-            .with_absolute_position(panel_x + 420.0f, panel_y + 20.0f)
-            .with_font("EqProRounded", h720(24.0f))
-            .with_custom_text_color(dark_text));
-
-    // Projects box - uses clip_children for text overflow protection
-    div(context, mk(entity, 251),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(420), pixels(190)})
-            .with_absolute_position(panel_x + 400.0f, panel_y + 60.0f)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_clip_children(true)
-            .with_debug_name("proj_box"));
-
-    // Project items with progress bar labels
+    // Project items
     for (size_t i = 0; i < projects.size(); i++) {
       float item_y = panel_y + 80.0f + (float)i * 54.0f;
-
       std::string proj_text =
           projects[i].name + " - " + std::to_string(projects[i].progress) + "%";
-      if (projects[i].rate > 0) {
+      if (projects[i].rate > 0)
         proj_text = projects[i].name + " - " +
                     std::to_string(projects[i].rate) + "/min";
-      }
-
       div(context, mk(entity, 260 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(proj_text)
               .with_size(ComponentSize{pixels(360), pixels(36)})
               .with_absolute_position(panel_x + 420.0f, item_y)
-              .with_custom_text_color(dark_text)
-              .with_debug_name("proj_" + std::to_string(i)));
-
+              .with_custom_text_color(dark_text));
       div(context, mk(entity, 270 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label("^")
@@ -658,8 +592,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(panel_x + 780.0f, item_y + 4.0f)
               .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(happy_green)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("proj_arrow_" + std::to_string(i)));
+              .with_alignment(TextAlignment::Center));
     }
 
     // ========== ACTION BUTTONS ==========
