@@ -540,7 +540,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Trend indicator legend
     div(context, mk(entity, 212),
         ComponentConfig{}
-            .with_label("^ = Trending Up")
+            .with_label("^ = Trending Up (arrow)")
             .with_size(ComponentSize{pixels(190), pixels(32)})
             .with_absolute_position(panel_x + panel_w - 210.0f, panel_y + 22.0f)
             .with_font("EqProRounded", h720(20.0f))
@@ -645,7 +645,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(chat_msgs[i])
               .with_size(ComponentSize{pixels(460), pixels(24)})
               .with_absolute_position(32.0f, bottom_y + 14.0f + (float)i * 30.0f)
-              .with_font("EqProRounded", h720(14.0f))
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(dark_text)
               .with_debug_name("chat" + std::to_string(i + 1)));
     }
@@ -692,7 +692,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(60), pixels(24)})
             .with_absolute_position((float)screen_w / 2.0f - 30.0f,
                             (float)screen_h - 55.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center));
 

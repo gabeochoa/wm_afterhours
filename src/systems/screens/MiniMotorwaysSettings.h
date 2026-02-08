@@ -90,10 +90,10 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== BACK ARROW ==========
     button(context, mk(entity, 50),
         ComponentConfig{}
-            .with_label("<-")
-            .with_size(ComponentSize{pixels(56), pixels(56)})
+            .with_label("< Back")
+            .with_size(ComponentSize{pixels(80), pixels(56)})
             .with_absolute_position(35.0f, 35.0f)
-            .with_font("EqProRounded", h720(32.0f))
+            .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_dark));
 
     // ========== LEFT: Category Tabs ==========
@@ -147,15 +147,15 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       float row_y = content_y + (float)i * row_h;
       bool is_on = *(toggles[i].value);
 
-      // Label
+      // Label with ON/OFF suffix for accessibility
+      std::string label_with_state = toggles[i].label + (is_on ? "  ON" : "  OFF");
       div(context, mk(entity, 100 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_label(toggles[i].label)
-              .with_size(ComponentSize{pixels(300), pixels(40)})
+              .with_label(label_with_state)
+              .with_size(ComponentSize{pixels(340), pixels(40)})
               .with_absolute_position(content_x, row_y)
               .with_font("EqProRounded", h720(24.0f))
-              .with_custom_text_color(text_dark)
-              .with_debug_name("label_" + std::to_string(i)));
+              .with_custom_text_color(text_dark));
 
       // Toggle circle - use configurable indicator style
       std::string toggle_icon;

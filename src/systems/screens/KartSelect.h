@@ -274,13 +274,15 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < stats.size(); i++) {
       float sy = stat_y + (float)i * 28.0f;
 
-      // Label
+      // Label with numeric value for accessibility
+      int stat_val = static_cast<int>(stats[i].value * 10.0f);
+      std::string stat_label = stats[i].label + " " + std::to_string(stat_val) + "/10";
       div(context, mk(entity, 110 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_label(stats[i].label)
-              .with_size(ComponentSize{pixels(40), pixels(22)})
+              .with_label(stat_label)
+              .with_size(ComponentSize{pixels(90), pixels(22)})
               .with_absolute_position(preview_x + 20.0f, sy)
-              .with_font("EqProRounded", h720(16.0f))
+              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(white));
 
       // Bar background
@@ -417,9 +419,9 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 340),
         ComponentConfig{}
             .with_label("A: Select   B: Back   L/R: Switch Kart")
-            .with_size(ComponentSize{pixels(400), pixels(18)})
+            .with_size(ComponentSize{pixels(400), pixels(22)})
             .with_absolute_position((float)screen_w / 2.0f - 200.0f, prompt_y)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted_text)
             .with_alignment(TextAlignment::Center));
   }

@@ -272,7 +272,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Primary")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -281,7 +281,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Secondary")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -290,7 +290,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Accent")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -299,7 +299,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Surface")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Surface)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -308,7 +308,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Background")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Background)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
   }

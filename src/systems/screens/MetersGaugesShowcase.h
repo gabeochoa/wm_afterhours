@@ -138,7 +138,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                        .with_size(ComponentSize{percent(0.75f), percent(0.7f)})
                        .with_custom_background(meters[m].color)
                        .with_color_usage(Theme::Usage::Custom)
-                       .with_font(FONT, h720(12.0f))
+                       .with_font(FONT, h720(14.0f))
                        .with_skip_tabbing(true)
                        .with_rounded_corners(corners)
                        .with_debug_name(fmt::format("{}_bar", meters[m].name)),
@@ -183,7 +183,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_label("Health")
                      .with_size(ComponentSize{percent(0.47f), percent(0.7f)})
                      .with_custom_background(health_color)
-                     .with_font(FONT, h720(12.0f))
+                     .with_font(FONT, h720(14.0f))
                      .with_skip_tabbing(true)
                      .with_rounded_corners(corners)
                      .with_margin(Spacing::xs)
@@ -195,7 +195,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_label("Shield")
                      .with_size(ComponentSize{percent(0.47f), percent(0.7f)})
                      .with_custom_background(shield_color)
-                     .with_font(FONT, h720(12.0f))
+                     .with_font(FONT, h720(14.0f))
                      .with_skip_tabbing(true)
                      .with_rounded_corners(corners)
                      .with_margin(Spacing::xs)
@@ -235,7 +235,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(0.55f), percent(0.6f)})
                      .with_background(Theme::Usage::Primary)
-                     .with_font(FONT, h720(12.0f))
+                     .with_font(FONT, h720(14.0f))
                      .with_margin(Spacing::xs)
                      .with_rounded_corners(corners)
                      .with_debug_name("mg_anim_bar"),

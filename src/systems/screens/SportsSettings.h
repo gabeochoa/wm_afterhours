@@ -460,7 +460,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
 
       float value_x = panel_x + 220.0f;
-      float arrow_size = 24.0f;
+      float arrow_size = 28.0f;  // Minimum accessible touch target
       float step = 0.05f; // 5% per click for sliders
 
       // Left arrow < (skip tabbing - use row's keyboard handling) - render

@@ -139,7 +139,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Game Time:")
             .with_size(ComponentSize{pixels(80), pixels(18)})
             .with_absolute_position(screen_x + 15.0f, status_y - 2.0f)
-            .with_font_size(h720(12.0f))
+            .with_font_size(h720(14.0f))
             .with_custom_text_color(text_muted));
 
     div(context, mk(entity, 20),
@@ -283,7 +283,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_roundness(1.0f);
       if (legend_items[i].icon[0] != '\0') {
         icon_cfg.with_label(legend_items[i].icon)
-            .with_font_size(h720(12.0f))
+            .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center);
       }
@@ -295,7 +295,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(legend_items[i].label)
               .with_size(ComponentSize{pixels(80), pixels(18)})
               .with_absolute_position(lx + 22.0f, ly)
-              .with_font_size(h720(12.0f))
+              .with_font_size(h720(14.0f))
               .with_custom_text_color(text_muted));
     }
 
@@ -339,7 +339,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(q.text)
               .with_size(ComponentSize{pixels(q.text_w), pixels(22)})
               .with_absolute_position(quest_x + q.text_x_off, quest_y + q.y_off)
-              .with_font_size(h720(12.0f))
+              .with_font_size(h720(14.0f))
               .with_custom_text_color(text_white));
     }
 
@@ -350,7 +350,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(32), pixels(20)})
             .with_absolute_position(quest_x + 40.0f, quest_y + 50.0f)
             .with_custom_background(slider_orange)
-            .with_font_size(h720(12.0f))
+            .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -402,7 +402,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(username)
               .with_size(ComponentSize{pixels(150), pixels(18)})
               .with_absolute_position(chat_x, chat_y)
-              .with_font_size(h720(12.0f))
+              .with_font_size(h720(14.0f))
               .with_custom_text_color(slider_orange)
               .with_debug_name("chat_user_" + std::to_string(i)));
 
@@ -412,7 +412,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(message)
               .with_size(ComponentSize{pixels(85), pixels(18)})
               .with_absolute_position(chat_x + 148.0f, chat_y)
-              .with_font_size(h720(12.0f))
+              .with_font_size(h720(14.0f))
               .with_custom_text_color(text_white)
               .with_debug_name("chat_msg_" + std::to_string(i)));
     }

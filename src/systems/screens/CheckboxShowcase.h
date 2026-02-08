@@ -381,8 +381,8 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Status bar
-    std::string status = "Selected: Group " + std::to_string(options_group.count()) + "/4";
-    status += "  |  MinMax " + std::to_string(min_max_group.count()) + "/3";
+    std::string status = "Group selected: " + std::to_string(options_group.count()) + " of 4";
+    status += "   MinMax selected: " + std::to_string(min_max_group.count()) + " of 3";
 
     div(context, mk(card.ent(), 2),
         ComponentConfig{}

@@ -157,7 +157,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("EN", "English", "1"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(12.0f) : h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(13.0f) : h720(16.0f))
                    .with_background(current_language == Language::English
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -169,7 +169,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("KO", "Korean", "2"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(12.0f) : h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(13.0f) : h720(16.0f))
                    .with_background(current_language == Language::Korean
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -181,7 +181,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("JA", "Japanese", "3"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(12.0f) : h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(13.0f) : h720(16.0f))
                    .with_background(current_language == Language::Japanese
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {

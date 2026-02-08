@@ -30,7 +30,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   float cfg_title_y_offset = 20.0f;
 
   // Close button configuration
-  float cfg_close_btn_size = 42.0f;
+  float cfg_close_btn_size = 44.0f;
   float cfg_close_btn_margin = 22.0f;
   float cfg_close_btn_border = 3.0f;
 
@@ -87,7 +87,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color btn_blue{85, 155, 210, 255};      // Softer blue pill
   afterhours::Color btn_blue_dark{55, 120, 175, 255}; // Blue shadow
   afterhours::Color text_dark{65, 55, 45, 255};       // Dark brown text
-  afterhours::Color text_muted{120, 105, 85, 255};    // Muted brown for info
+  afterhours::Color text_muted{95, 80, 60, 255};       // Darker brown for info (4.5:1 on cream)
   afterhours::Color text_white{255, 255, 255, 255};
   afterhours::Color close_red{235, 75, 85, 255};   // Brighter close button red
   afterhours::Color close_red_dark{195, 55, 65, 255}; // Darker close red

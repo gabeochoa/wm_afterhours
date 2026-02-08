@@ -251,10 +251,11 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 120 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(kill_feed[i])
-              .with_size(ComponentSize{pixels(550), pixels(28)})
-              .with_absolute_position(cx - 275.0f, kill_y + (float)i * 30.0f)
-              .with_font("EqProRounded", h720(18.0f))
-              .with_custom_text_color(text_muted)
+              .with_size(ComponentSize{pixels(550), pixels(30)})
+              .with_absolute_position(cx - 275.0f, kill_y + (float)i * 32.0f)
+              .with_font("EqProRounded", h720(19.0f))
+              .with_custom_background(afterhours::Color{0, 0, 0, 100})
+              .with_custom_text_color(afterhours::Color{200, 210, 215, 255})
               .with_alignment(TextAlignment::Center)
               .with_debug_name("kill_" + std::to_string(i)));
     }
@@ -273,9 +274,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>
         skill_icons = {
             {&icon_uav_tex, "[T]", "UAV"},
-            {&icon_recon_tex, "[O]", ""},
-            {&icon_shield_tactical_tex, "[U]", ""},
-            {&icon_strike_tex, "[X]", ""},
+            {&icon_recon_tex, "[O]", "Recon"},
+            {&icon_shield_tactical_tex, "[U]", "Shield"},
+            {&icon_strike_tex, "[X]", "Strike"},
         };
 
     size_t icons_to_show = std::min(static_cast<size_t>(ks_sidebar_count), skill_icons.size());

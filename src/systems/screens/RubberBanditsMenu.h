@@ -235,8 +235,8 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label("More characters in shop")
               .with_size(ComponentSize{pixels(180), pixels(20)})
               .with_absolute_position(promo_x + 10.0f, promo_y + 30.0f)
-              .with_font("EqProRounded", h720(12.0f))
-              .with_custom_text_color(afterhours::Color{130, 115, 85, 255}));
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(afterhours::Color{100, 85, 55, 255}));
 
       // Dismiss X button
       if (button(context, mk(entity, 205),
@@ -328,7 +328,11 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Change the game's settings")
             .with_size(ComponentSize{pixels(320), pixels(32)})
             .with_absolute_position(55.0f, (float)screen_h - 50.0f)
-            .with_custom_text_color(afterhours::Color{180, 180, 180, 255}));
+            .with_custom_background(afterhours::Color{60, 45, 25, 140})
+            .with_font("EqProRounded", h720(18.0f))
+            .with_custom_text_color(afterhours::Color{255, 250, 235, 255})
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.15f));
 
     // Note: Decorative coin elements removed to reduce clutter
   }

@@ -149,7 +149,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(130), pixels(34)})
                      .with_absolute_position(25.0f + (float)i * 140.0f, tab_y)
                      .with_custom_background(tab_bg)
-                     .with_border(border_purple, 2.0f)
+                     .with_border(is_sel ? accent_gold : border_purple, is_sel ? 3.0f : 2.0f)
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(tab_text)
                      .with_alignment(TextAlignment::Center)
@@ -216,12 +216,13 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
               .with_font("Gaegu-Bold", h720(22.0f))
               .with_custom_text_color(is_sel ? accent_gold : white));
 
-      // Effect text
+      // Effect text — larger for readability
       div(context, mk(entity, 113 + static_cast<int>(i) * 4),
           ComponentConfig{}
               .with_label(recipes[i].effect)
-              .with_size(ComponentSize{pixels(200), pixels(22)})
+              .with_size(ComponentSize{pixels(200), pixels(24)})
               .with_absolute_position(list_x + 70.0f, ry + 32.0f)
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(muted));
 
       // Brew time
@@ -500,8 +501,9 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Alchemy Level: 12  |  Recipes Known: " +
                         std::to_string(recipes.size()) +
                         "  |  Potions Brewed: 47")
-            .with_size(ComponentSize{pixels(screen_w - 50), pixels(22)})
+            .with_size(ComponentSize{pixels(screen_w - 50), pixels(24)})
             .with_absolute_position(25.0f, status_y)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center));
   }

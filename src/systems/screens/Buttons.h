@@ -320,14 +320,17 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 12; i++) {
       total_clicks += click_counts[i];
     }
-    std::string counter_text = "Total clicks: " + std::to_string(total_clicks);
+    std::string counter_text = "Total clicks across all buttons: " + std::to_string(total_clicks);
 
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
             .with_label(counter_text)
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::xs)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_custom_background(afterhours::colors::lighten(theme.background, 0.08f))
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.1f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
   }
 };

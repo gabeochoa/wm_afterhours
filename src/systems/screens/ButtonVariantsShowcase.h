@@ -406,10 +406,13 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(root.ent(), 6),
         ComponentConfig{}
-            .with_label("Total clicks: " + std::to_string(total))
+            .with_label("Total clicks across all variants: " + std::to_string(total))
             .with_size(ComponentSize{percent(1.0f), percent(0.05f)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::xs)
+            .with_custom_background(afterhours::colors::lighten(context.theme.background, 0.08f))
+            .with_auto_text_color(true)
+            .with_padding(Spacing::sm)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.1f)
             .with_font(FONT, h720(16.0f)));
   }
 };

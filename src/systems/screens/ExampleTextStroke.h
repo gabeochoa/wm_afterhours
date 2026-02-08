@@ -234,7 +234,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_label("invisible")
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position(col1_x + 50.0f, desc5_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
 
     div(context, mk(entity, id++),
@@ -242,7 +242,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
             .with_label("visible!")
             .with_size(ComponentSize{pixels(100), pixels(20)})
             .with_absolute_position(col1_x + light_panel_width * 0.5f + 20.0f, desc5_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
 
     // ========== RIGHT COLUMN: Thickness comparison ==========

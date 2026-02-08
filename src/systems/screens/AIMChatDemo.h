@@ -142,7 +142,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(UIConfig::WINDOW_CONTROL_SIZE), pixels(UIConfig::WINDOW_CONTROL_SIZE)})
               .with_custom_background(AIMColors::button_face())
               .with_custom_text_color(AIMColors::text_default())
-              .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+              .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
               .with_margin(Margin{.left = pixels(2)})
               .disable_rounded_corners()
               .with_skip_tabbing(true));

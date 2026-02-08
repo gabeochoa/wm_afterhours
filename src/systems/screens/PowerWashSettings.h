@@ -270,9 +270,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     struct HelpLine { int id; const std::string &text; int h; float y_off; float font_sz; afterhours::Color color; };
     HelpLine help_lines[] = {
         {151, help_title, 28, 12.0f, 17.0f, text_cyan},
-        {152, help_line1, 25, 45.0f, 13.0f, text_white},
-        {153, help_line2, 25, 65.0f, 13.0f, text_white},
-        {154, current_val, 25, 100.0f, 13.0f, text_muted},
+        {152, help_line1, 25, 45.0f, 14.0f, text_white},
+        {153, help_line2, 25, 65.0f, 14.0f, text_white},
+        {154, current_val, 25, 100.0f, 14.0f, text_muted},
     };
     for (auto &hl : help_lines) {
       div(context, mk(entity, hl.id),
@@ -305,20 +305,20 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_absolute_position(tx, tab_y)
                   .with_custom_background(tab_bg)
                   .with_border(panel_border, 1.0f)
-                  .with_font("EqProRounded", h720(14.0f))
+                  .with_font("EqProRounded", h720(15.0f))
                   .with_custom_text_color(tab_text)
                   .with_alignment(TextAlignment::Center))) {
         selected_tab = i;
       }
 
-      // Underline on selected - thicker for visibility
+      // Active tab: thick underline + subtle bg highlight
       if (is_selected) {
         div(context, mk(entity, 210 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_size(ComponentSize{pxf(tab_w - 10),
-                                         pixels(5)})
-                .with_absolute_position(tx + 2.0f, tab_y + tab_h - 7.0f)
-                .with_custom_background(highlight_blue));
+                                         pixels(4)})
+                .with_absolute_position(tx + 2.0f, tab_y + tab_h - 6.0f)
+                .with_custom_background(text_cyan));
       }
     }
 
@@ -347,7 +347,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(p.label)
               .with_size(ComponentSize{pixels(p.label_w), pixels(25)})
               .with_absolute_position(prompt_x + p.x_off + 35.0f, prompt_y + 2.0f)
-              .with_font("EqProRounded", h720(14.0f))
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(text_white));
     }
   }

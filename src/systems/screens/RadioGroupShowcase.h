@@ -272,7 +272,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Status display - 44px touch target
     std::string status =
-        fmt::format("Selected: {} {} {}",
+        fmt::format("Selected: Fruit={}, Size={}, Color={}",
                     fruit_options[fruit_idx], size_options[size_idx],
                     color_options[color_idx]);
 
@@ -280,9 +280,11 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status)
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_background(Theme::Usage::Surface)
+            .with_custom_background(afterhours::colors::lighten(context.theme.background, 0.08f))
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.1f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_skip_tabbing(true));

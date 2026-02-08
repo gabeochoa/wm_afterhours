@@ -57,7 +57,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color silver{200, 210, 225, 255};
   afterhours::Color bronze{205, 140, 70, 255};
   afterhours::Color white{255, 255, 255, 255};
-  afterhours::Color muted{120, 135, 170, 255};
+  afterhours::Color muted{155, 168, 200, 255};  // Brighter for 4.5:1 on dark
   afterhours::Color player_highlight{60, 90, 160, 255};
   afterhours::Color accent_green{80, 200, 100, 255};
   afterhours::Color accent_red{220, 70, 70, 255};
@@ -244,10 +244,11 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_font("Fredoka", h720(22.0f))
               .with_custom_text_color(position_color(r.position)));
 
-      // Name
+      // Name — add "> " prefix for player row as secondary indicator
+      std::string display_name = r.is_player ? "> " + r.name : r.name;
       div(context, mk(entity, 212 + static_cast<int>(i) * 5),
           ComponentConfig{}
-              .with_label(r.name)
+              .with_label(display_name)
               .with_size(ComponentSize{pixels(200), pixels(32)})
               .with_absolute_position(col_name_x, ry + 6.0f)
               .with_font("EqProRounded",
@@ -420,9 +421,9 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 530),
         ComponentConfig{}
             .with_label("A: Select   B: Back   X: Replay")
-            .with_size(ComponentSize{pixels(400), pixels(20)})
+            .with_size(ComponentSize{pixels(400), pixels(22)})
             .with_absolute_position((float)screen_w / 2.0f - 200.0f, (float)screen_h - 25.0f)
-            .with_font("EqProRounded", h720(14.0f))
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center));
   }

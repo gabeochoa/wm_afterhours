@@ -27,21 +27,21 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<ShopItem> buy_items = {
-      {"Iron Sword", "Weapon", "/", 250, 5, "A sturdy blade for beginners.",
+      {"Iron Sword", "Weapon", "SWD", 250, 5, "A sturdy blade for beginners.",
        {180, 180, 190, 255}},
-      {"Health Potion", "Consumable", "+", 50, 20, "Restores 50 HP instantly.",
+      {"Health Potion", "Consumable", "HP", 50, 20, "Restores 50 HP instantly.",
        {220, 60, 80, 255}},
-      {"Mana Potion", "Consumable", "~", 75, 15, "Restores 30 MP instantly.",
+      {"Mana Potion", "Consumable", "MP", 75, 15, "Restores 30 MP instantly.",
        {80, 120, 220, 255}},
-      {"Leather Armor", "Armor", "#", 180, 8, "Light protection for adventurers.",
+      {"Leather Armor", "Armor", "ARM", 180, 8, "Light protection for adventurers.",
        {160, 120, 80, 255}},
-      {"Fire Scroll", "Magic", "*", 320, 3, "Casts Fireball (25 damage).",
+      {"Fire Scroll", "Magic", "FIR", 320, 3, "Casts Fireball (25 damage).",
        {240, 140, 40, 255}},
-      {"Torch", "Tool", "!", 15, 50, "Lights dark areas for 10 minutes.",
+      {"Torch", "Tool", "TCH", 15, 50, "Lights dark areas for 10 minutes.",
        {255, 200, 80, 255}},
-      {"Antidote", "Consumable", "o", 35, 12, "Cures poison status.",
+      {"Antidote", "Consumable", "ANT", 35, 12, "Cures poison status.",
        {120, 200, 120, 255}},
-      {"Steel Shield", "Armor", "=", 400, 2, "Blocks 15% incoming damage.",
+      {"Steel Shield", "Armor", "SHL", 400, 2, "Blocks 15% incoming damage.",
        {140, 150, 170, 255}},
   };
 
@@ -181,7 +181,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_absolute_position(25.0f + (float)i * 110.0f, tab_y)
                      .with_custom_background(tab_bg)
-                     .with_border(border_wood, 2.0f)
+                     .with_border(is_sel ? accent_gold : border_wood, is_sel ? 3.0f : 2.0f)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(tab_text)
                      .with_alignment(TextAlignment::Center)
@@ -335,8 +335,8 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       // Stock
       div(context, mk(entity, 115 + static_cast<int>(i) * 6),
           ComponentConfig{}
-              .with_label(std::to_string(item.stock))
-              .with_size(ComponentSize{pixels(40), pixels(24)})
+              .with_label(item.stock <= 3 ? std::to_string(item.stock) + " Low" : std::to_string(item.stock))
+              .with_size(ComponentSize{pixels(60), pixels(24)})
               .with_absolute_position(col_stock_x + 5.0f, ry + 12.0f)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(item.stock <= 3 ? accent_red : white)
@@ -570,8 +570,9 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 500),
         ComponentConfig{}
             .with_label("A: Select   B: Back   X: Add to Cart   Y: Remove")
-            .with_size(ComponentSize{pixels(screen_w - 50), pixels(20)})
+            .with_size(ComponentSize{pixels(screen_w - 50), pixels(22)})
             .with_absolute_position(25.0f, status_y)
+            .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center));
   }

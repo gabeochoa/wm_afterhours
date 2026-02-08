@@ -217,7 +217,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Sub-option items
     bool vibration_unavailable = true;
-    afterhours::Color disabled_color{70, 85, 105, 255};  // Dimmer than text_muted
+    afterhours::Color disabled_color{80, 95, 115, 128};  // 50% opacity + dimmer for clear disabled
 
     for (size_t i = 0; i < suboptions.size(); i++) {
       bool is_selected = (i == selected_option);

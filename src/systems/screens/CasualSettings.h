@@ -26,7 +26,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color btn_blue_dark{65, 145, 185, 255};
   afterhours::Color close_red{230, 75, 85, 255};
   afterhours::Color text_dark{55, 45, 40, 255};
-  afterhours::Color text_muted{120, 105, 95, 255};
+  afterhours::Color text_muted{90, 75, 60, 255};  // Darker for 4.5:1 on cream
   afterhours::Color white{255, 255, 255, 255};
 
   void for_each_with(afterhours::Entity &entity,
@@ -151,7 +151,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float wifi_x = panel_x + panel_w - 75.0f;
     div(context, mk(entity, 51),
         ComponentConfig{}
-            .with_label("((*))")
+            .with_label("Sync")
             .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_absolute_position(wifi_x, toggle_y + 5.0f)
             .with_custom_background(btn_green)

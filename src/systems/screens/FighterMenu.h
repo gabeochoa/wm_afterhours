@@ -36,7 +36,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_font_size = 20.0f;
     float bumper_size = 35.0f;
     float bumper_font_size = 19.0f;
-    float tab_underline_height = 3.0f;
+    float tab_underline_height = 4.0f;
 
     // Left sidebar menu
     float menu_x = 45.0f;
@@ -112,7 +112,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       {"F3", "Display Options", "Modify screen resolution and visual effects."},
       {"F4", "Sound & Language", "Set audio levels and language preferences."},
       {"F5", "Network Options", "Configure online play and connection settings."},
-      {"F6", "Button Settings", "Customize controller layout and key bindings."},
+      {"F6", "Button Settings", "Remap controller layout and key bindings."},
   };
 
   void for_each_with(afterhours::Entity &entity,

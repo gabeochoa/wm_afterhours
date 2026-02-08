@@ -236,7 +236,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // Counter display with visual containment - use lightened surface for distinction
     div(context, mk(row4.ent(), 1),
         ComponentConfig{}
-            .with_label("BG Clicks: " + std::to_string(background_click_count))
+            .with_label("Background Clicks: " + std::to_string(background_click_count))
             .with_size(ComponentSize{pixels(180), pixels(BUTTON_HEIGHT)})
             .with_custom_background(afterhours::colors::lighten(theme.background, 0.15f))
             .with_auto_text_color(true)

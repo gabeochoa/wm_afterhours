@@ -268,9 +268,12 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_background(Theme::Usage::Surface)
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_custom_background(afterhours::colors::lighten(theme.background, 0.08f))
+            .with_auto_text_color(true)
             .with_padding(Spacing::sm)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.1f)
             .with_font_size(theme.font_size_sm())  // 16px - body text
             .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),

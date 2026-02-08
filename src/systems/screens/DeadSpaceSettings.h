@@ -23,7 +23,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color teal_bright{85, 175, 175, 255};
   afterhours::Color text_white{220, 230, 235, 255};
   afterhours::Color text_muted{185, 200, 205, 255};
-  afterhours::Color text_dim{120, 135, 140, 255};
+  afterhours::Color text_dim{155, 170, 175, 255};  // Brighter for 4.5:1 on dark
 
   std::vector<std::string> initial_settings = {
       "Resume Game",
@@ -132,17 +132,17 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("initial_bg_" + std::to_string(i)));
       }
 
+      // Use consistent font size for all sidebar items (no auto-shrink)
       if (button(context, mk(entity, 70 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(initial_settings[i])
                      .with_size(ComponentSize{
                          pxf(sidebar_w), pixels(34)})
                      .with_absolute_position(sidebar_x, item_y)
-                     .with_font_size(h720(18.0f))
+                     .with_font_size(h720(17.0f))
                      .with_custom_text_color(item_color)
                      .with_padding(Padding{.left = pixels(8)})
-                     .with_alignment(TextAlignment::Left)
-                     .with_debug_name("initial_" + std::to_string(i)))) {
+                     .with_alignment(TextAlignment::Left))) {
         selected_initial = i;
       }
     }

@@ -351,15 +351,16 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(dark_text)
               .with_debug_name("cust_" + std::to_string(i)));
 
-      // Patience label for progress bar context
+      // Patience label with warning text for low patience
+      bool low_patience = c.progress < 0.35f;
+      std::string patience_text = low_patience ? "Patience: LOW" : "Patience:";
       div(context, mk(entity, 215 + static_cast<int>(i) * 10),
           ComponentConfig{}
-              .with_label("Patience:")
-              .with_size(ComponentSize{pixels(80), pixels(22)})
-              .with_absolute_position(right_panel_x + 195.0f, row_y + 6.0f)
+              .with_label(patience_text)
+              .with_size(ComponentSize{pixels(120), pixels(22)})
+              .with_absolute_position(right_panel_x + 175.0f, row_y + 6.0f)
               .with_font("Gaegu-Bold", h720(14.0f))
-              .with_custom_text_color(theme.font_muted)
-              .with_debug_name("patience_label_" + std::to_string(i)));
+              .with_custom_text_color(low_patience ? badge_red : theme.font_muted));
 
       // Progress bar bg with label
       div(context, mk(entity, 211 + static_cast<int>(i) * 10),
@@ -521,7 +522,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(24), pixels(24)})
                 .with_absolute_position(left_panel_x + 10.0f, cm.y)
                 .with_custom_background(cm.fallback_bg)
-                .with_font("Gaegu-Bold", h720(12.0f))
+                .with_font("Gaegu-Bold", h720(14.0f))
                 .with_custom_text_color(cream_surface)
                 .with_rounded_corners(RoundedCorners())
                 .with_roundness(1.0f)
@@ -592,7 +593,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_label(btn.hint)
                 .with_size(ComponentSize{pxf(icon_size + btn.hint_extra_w), pixels(18)})
                 .with_absolute_position(bx - btn.hint_extra_w / 2.0f, icon_y + icon_size + 24.0f)
-                .with_font("Gaegu-Bold", h720(13.0f))
+                .with_font("Gaegu-Bold", h720(14.0f))
                 .with_custom_text_color(theme.font_muted)
                 .with_alignment(TextAlignment::Center));
       }
