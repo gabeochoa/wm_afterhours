@@ -122,7 +122,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{children(), children()})
               .with_label("All systems operational")
-              .with_font_size(h720(11.0f))
+              .with_font_size(h720(12.0f))
               .with_custom_text_color(theme.font_muted)
               .with_margin(Margin{.top = h720(6.0f)}));
     }
@@ -154,7 +154,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{children(), children()})
               .with_label("Hull integrity at 47%")
-              .with_font_size(h720(11.0f))
+              .with_font_size(h720(12.0f))
               .with_custom_text_color(C{180, 150, 90, 200})
               .with_margin(Margin{.top = h720(4.0f)}));
     }
@@ -196,7 +196,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.88f), h720(18.0f)})
             .with_label("Sharp panels + L-shaped corner brackets")
-            .with_font_size(h720(10.0f))
+            .with_font_size(h720(12.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = h720(10.0f)}));
@@ -285,7 +285,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.88f), h720(18.0f)})
             .with_label("Sharp panels + line grid overlays")
-            .with_font_size(h720(10.0f))
+            .with_font_size(h720(12.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = h720(10.0f)}));
@@ -370,7 +370,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), children()})
               .with_label("- Commander Shepard")
-              .with_font_size(h720(11.0f))
+              .with_font_size(h720(12.0f))
               .with_custom_text_color(C{amber.r, amber.g, amber.b, 160})
               .with_alignment(TextAlignment::Left)
               .with_margin(Margin{.top = h720(6.0f)}));
@@ -412,7 +412,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), children()})
               .with_label("- GLaDOS")
-              .with_font_size(h720(11.0f))
+              .with_font_size(h720(12.0f))
               .with_custom_text_color(C{green.r, green.g, green.b, 160})
               .with_alignment(TextAlignment::Left)
               .with_margin(Margin{.top = h720(6.0f)}));
@@ -423,7 +423,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.88f), h720(18.0f)})
             .with_label("Left accent bar + optional attribution")
-            .with_font_size(h720(10.0f))
+            .with_font_size(h720(12.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.top = h720(10.0f)}));
