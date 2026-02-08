@@ -43,6 +43,9 @@ static void configure_validation() {
   config.enforce_child_containment = true;
   config.enforce_contrast_ratio = true;
   config.enforce_min_font_size = true;
+  config.enforce_zero_size_detection = true;
+  config.enforce_absolute_margin_conflict = true;
+  config.enforce_label_has_font = true;
   config.safe_area_margin = 16.0f;
   config.min_font_size = 12.0f;
   config.min_contrast_ratio = 4.5f;
