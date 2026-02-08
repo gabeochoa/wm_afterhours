@@ -65,8 +65,7 @@ void inject_scheduled_click() {
   mouse_state.simulation_active = true;
   mouse_state.left_button_held = true;
   mouse_state.left_button_pressed_this_frame = true;
-  raylib::SetMousePosition(static_cast<int>(pending_click.pos.x),
-                           static_cast<int>(pending_click.pos.y));
+  // Synthetic position is enough — no need to move the real OS cursor
 }
 
 void hold_key_for_duration(int keycode, float duration) {
@@ -130,7 +129,11 @@ bool is_key_synthetically_down(int keycode) {
 void set_mouse_position(int x, int y) {
   mouse_state.position = {static_cast<float>(x), static_cast<float>(y)};
   mouse_state.simulation_active = true;
-  raylib::SetMousePosition(x, y);
+  // NOTE: We intentionally do NOT call raylib::SetMousePosition() here.
+  // The synthetic position is already returned by get_mouse_position() when
+  // simulation_active is true, so the UI framework sees the injected position
+  // without moving the real OS cursor. This allows hover testing without
+  // hijacking the user's mouse.
 }
 
 vec2 get_mouse_position() {
