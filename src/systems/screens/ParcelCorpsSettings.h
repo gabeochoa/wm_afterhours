@@ -83,6 +83,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     UIStylingDefaults::get().set_default_font("EqProRounded", h720(16.0f));
 
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
@@ -103,12 +105,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Phone outer frame
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(phone_w)),
-                                     pixels(static_cast<int>(phone_h))})
-            .with_absolute_position()
-            .with_translate(phone_x, phone_y)
+            .with_size(ComponentSize{pxf(phone_w),
+                                     pxf(phone_h)})
+            .with_absolute_position(phone_x, phone_y)
             .with_custom_background(phone_black)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.12f)
             .with_soft_shadow(6.0f, 8.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 120})
@@ -123,12 +124,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 11),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(screen_inner_w)),
-                                     pixels(static_cast<int>(screen_inner_h))})
-            .with_absolute_position()
-            .with_translate(screen_x, screen_y)
+            .with_size(ComponentSize{pxf(screen_inner_w),
+                                     pxf(screen_inner_h)})
+            .with_absolute_position(screen_x, screen_y)
             .with_custom_background(afterhours::Color{22, 26, 32, 255})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.08f)
             .with_debug_name("phone_screen"));
 
@@ -140,8 +140,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Game Time:")
             .with_size(ComponentSize{pixels(80), pixels(18)})
-            .with_absolute_position()
-            .with_translate(screen_x + 15.0f, status_y - 2.0f)
+            .with_absolute_position(screen_x + 15.0f, status_y - 2.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("time_label"));
@@ -150,8 +149,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("23:45")
             .with_size(ComponentSize{pixels(70), pixels(26)})
-            .with_absolute_position()
-            .with_translate(screen_x + 15.0f, status_y + 12.0f)
+            .with_absolute_position(screen_x + 15.0f, status_y + 12.0f)
             .with_font_size(h720(20.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("time"));
@@ -161,8 +159,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("||||")
             .with_size(ComponentSize{pixels(40), pixels(22)})
-            .with_absolute_position()
-            .with_translate(screen_x + screen_inner_w - 95.0f, status_y)
+            .with_absolute_position(screen_x + screen_inner_w - 95.0f, status_y)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("signal"));
@@ -171,11 +168,10 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 22),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(32), pixels(14)})
-            .with_absolute_position()
-            .with_translate(screen_x + screen_inner_w - 48.0f, status_y + 4.0f)
+            .with_absolute_position(screen_x + screen_inner_w - 48.0f, status_y + 4.0f)
             .with_custom_background(toggle_green)
             .with_border(text_white, 1.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f)
             .with_debug_name("battery"));
 
@@ -184,8 +180,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Settings")
             .with_size(ComponentSize{pixels(170), pixels(44)})
-            .with_absolute_position()
-            .with_translate(screen_x + 15.0f, status_y + 35.0f)
+            .with_absolute_position(screen_x + 15.0f, status_y + 35.0f)
             .with_font_size(h720(32.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("title"));
@@ -209,22 +204,22 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 115),
         ComponentConfig{}
             .with_size(
-                ComponentSize{pixels(static_cast<int>(row_w)), pixels(1)})
-            .with_absolute_position()
-            .with_translate(row_x, row_start_y + 2 * (row_h + row_gap))
+                ComponentSize{pxf(row_w), pixels(1)})
+            .with_absolute_position(row_x, row_start_y + 2 * (row_h + row_gap))
             .with_custom_background(row_separator)
             .with_debug_name("separator1"));
 
     float section2_y = row_start_y + 2 * (row_h + row_gap) + 6.0f;
 
     // Resolution (rainbow/multicolor icon)
-    render_display_row_rainbow(context, entity, 120, row_x, section2_y, row_w,
-                               row_h, "Resolution", "2560 x 1440");
+    render_display_row(context, entity, 120, row_x, section2_y, row_w, row_h,
+                       "Resolution", "2560 x 1440", icon_rainbow1, true);
 
     // Full Screen toggle (rainbow icon)
-    render_toggle_row_rainbow(context, entity, 130, row_x,
-                              section2_y + row_h + row_gap, row_w, row_h,
-                              "Full Screen", fullscreen);
+    render_toggle_row_with_icon(context, entity, 130, row_x,
+                                section2_y + row_h + row_gap, row_w, row_h,
+                                "Full Screen", fullscreen, icon_rainbow1, "",
+                                true);
 
     // MSAA (blue icon) - interactive
     render_selector_row(context, entity, 140, row_x,
@@ -264,167 +259,52 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Icon Legend:")
             .with_size(ComponentSize{pixels(110), pixels(20)})
-            .with_absolute_position()
-            .with_translate(row_x + 8.0f, legend_y)
+            .with_absolute_position(row_x + 8.0f, legend_y)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("legend_title"));
 
-    // Legend items - row 1
+    // Legend items - data-driven loop
     float legend_item_y = legend_y + 22.0f;
     float legend_col_w = (row_w - 16.0f) / 2.0f;
 
-    // @ = Language/Globe
-    div(context, mk(entity, 221),
-        ComponentConfig{}
-            .with_label("@")
-            .with_size(ComponentSize{pixels(18), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + 8.0f, legend_item_y)
-            .with_custom_background(icon_purple)
+    struct LegendItem { const char *icon; const char *label; afterhours::Color color; };
+    LegendItem legend_items[] = {
+        {"@", "Language", icon_purple}, {"~", "Sync", icon_purple},
+        {"X", "Effects", icon_red},    {"*", "Quality", icon_blue},
+        {"...", "Text", icon_green},   {"", "Display", icon_rainbow1},
+    };
+
+    for (int i = 0; i < 6; i++) {
+      int col = i % 2, row = i / 2;
+      float lx = row_x + (float)col * legend_col_w + 8.0f;
+      float ly = legend_item_y + (float)row * 22.0f;
+      int base = 221 + i * 2;
+
+      // Icon circle
+      auto icon_cfg = ComponentConfig{}
+          .with_size(ComponentSize{pixels(18), pixels(18)})
+          .with_absolute_position(lx, ly)
+          .with_custom_background(legend_items[i].color)
+          .with_rounded_corners(RoundedCorners())
+          .with_roundness(1.0f);
+      if (legend_items[i].icon[0] != '\0') {
+        icon_cfg.with_label(legend_items[i].icon)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("legend_globe"));
+            .with_alignment(TextAlignment::Center);
+      }
+      div(context, mk(entity, base), icon_cfg);
 
-    div(context, mk(entity, 222),
-        ComponentConfig{}
-            .with_label("Language")
-            .with_size(ComponentSize{pixels(80), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + 30.0f, legend_item_y)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_globe_text"));
-
-    // ~ = Sync/VSync
-    div(context, mk(entity, 223),
-        ComponentConfig{}
-            .with_label("~")
-            .with_size(ComponentSize{pixels(18), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 8.0f, legend_item_y)
-            .with_custom_background(icon_purple)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("legend_sync"));
-
-    div(context, mk(entity, 224),
-        ComponentConfig{}
-            .with_label("Sync")
-            .with_size(ComponentSize{pixels(50), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 30.0f, legend_item_y)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_sync_text"));
-
-    // Legend items - row 2
-    float legend_item_y2 = legend_item_y + 22.0f;
-
-    // X = Motion/Effects
-    div(context, mk(entity, 225),
-        ComponentConfig{}
-            .with_label("X")
-            .with_size(ComponentSize{pixels(18), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + 8.0f, legend_item_y2)
-            .with_custom_background(icon_red)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("legend_motion"));
-
-    div(context, mk(entity, 226),
-        ComponentConfig{}
-            .with_label("Effects")
-            .with_size(ComponentSize{pixels(80), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + 30.0f, legend_item_y2)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_motion_text"));
-
-    // * = Quality
-    div(context, mk(entity, 227),
-        ComponentConfig{}
-            .with_label("*")
-            .with_size(ComponentSize{pixels(18), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 8.0f, legend_item_y2)
-            .with_custom_background(icon_blue)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("legend_quality"));
-
-    div(context, mk(entity, 228),
-        ComponentConfig{}
-            .with_label("Quality")
-            .with_size(ComponentSize{pixels(70), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 30.0f, legend_item_y2)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_quality_text"));
-
-    // Legend items - row 3
-    float legend_item_y3 = legend_item_y2 + 22.0f;
-
-    // ... = Subtitles/Text
-    div(context, mk(entity, 229),
-        ComponentConfig{}
-            .with_label("...")
-            .with_size(ComponentSize{pixels(18), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + 8.0f, legend_item_y3)
-            .with_custom_background(icon_green)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("legend_subtitles"));
-
-    div(context, mk(entity, 230),
-        ComponentConfig{}
-            .with_label("Text")
-            .with_size(ComponentSize{pixels(50), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + 30.0f, legend_item_y3)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_subtitles_text"));
-
-    // Rainbow = Display
-    div(context, mk(entity, 231),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(18), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 8.0f, legend_item_y3)
-            .with_custom_background(icon_rainbow1)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("legend_display"));
-
-    div(context, mk(entity, 232),
-        ComponentConfig{}
-            .with_label("Display")
-            .with_size(ComponentSize{pixels(70), pixels(18)})
-            .with_absolute_position()
-            .with_translate(row_x + legend_col_w + 30.0f, legend_item_y3)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("legend_display_text"));
+      // Label text
+      div(context, mk(entity, base + 1),
+          ComponentConfig{}
+              .with_label(legend_items[i].label)
+              .with_size(ComponentSize{pixels(80), pixels(18)})
+              .with_absolute_position(lx + 22.0f, ly)
+              .with_font_size(h720(12.0f))
+              .with_custom_text_color(text_muted));
+    }
 
     // ========== QUEST PANEL (moved to right side to avoid overlapping phone) ==========
     float quest_x = (float)screen_w - 370.0f;
@@ -435,13 +315,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Quest panel background
     div(context, mk(entity, 250),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(quest_w)),
-                                     pixels(static_cast<int>(quest_h))})
-            .with_absolute_position()
-            .with_translate(quest_x, quest_y)
+            .with_size(ComponentSize{pxf(quest_w),
+                                     pxf(quest_h)})
+            .with_absolute_position(quest_x, quest_y)
             .with_custom_background(quest_blue)
             .with_border(quest_blue_dark, 3.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("quest_panel"));
 
@@ -450,8 +329,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("[X]")
             .with_size(ComponentSize{pixels(24), pixels(24)})
-            .with_absolute_position()
-            .with_translate(quest_x + 12.0f, quest_y + 14.0f)
+            .with_absolute_position(quest_x + 12.0f, quest_y + 14.0f)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -461,8 +339,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SIGN UP A BUSINESS TO YOUR DELIVERY APP")
             .with_size(ComponentSize{pixels(285), pixels(22)})
-            .with_absolute_position()
-            .with_translate(quest_x + 40.0f, quest_y + 14.0f)
+            .with_absolute_position(quest_x + 40.0f, quest_y + 14.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("quest_text1"));
@@ -472,8 +349,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("[ ]")
             .with_size(ComponentSize{pixels(24), pixels(24)})
-            .with_absolute_position()
-            .with_translate(quest_x + 12.0f, quest_y + 48.0f)
+            .with_absolute_position(quest_x + 12.0f, quest_y + 48.0f)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -484,13 +360,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Lv0")
             .with_size(ComponentSize{pixels(32), pixels(20)})
-            .with_absolute_position()
-            .with_translate(quest_x + 40.0f, quest_y + 50.0f)
+            .with_absolute_position(quest_x + 40.0f, quest_y + 50.0f)
             .with_custom_background(slider_orange)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f)
             .with_debug_name("quest_level"));
 
@@ -498,8 +373,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP")
             .with_size(ComponentSize{pixels(240), pixels(22)})
-            .with_absolute_position()
-            .with_translate(quest_x + 78.0f, quest_y + 48.0f)
+            .with_absolute_position(quest_x + 78.0f, quest_y + 48.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("quest_text2"));
@@ -510,13 +384,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("LIVE")
             .with_size(ComponentSize{pixels(55), pixels(28)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 300.0f, 25.0f)
+            .with_absolute_position((float)screen_w - 300.0f, 25.0f)
             .with_custom_background(icon_red)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f)
             .with_debug_name("live"));
 
@@ -525,8 +398,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("O")
             .with_size(ComponentSize{pixels(22), pixels(22)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 235.0f, 28.0f)
+            .with_absolute_position((float)screen_w - 235.0f, 28.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("eye_icon"));
@@ -535,8 +407,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("8")
             .with_size(ComponentSize{pixels(20), pixels(22)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 212.0f, 28.0f)
+            .with_absolute_position((float)screen_w - 212.0f, 28.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("viewers_count"));
@@ -546,8 +417,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("<>")
             .with_size(ComponentSize{pixels(22), pixels(22)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 185.0f, 28.0f)
+            .with_absolute_position((float)screen_w - 185.0f, 28.0f)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("diamond_icon"));
@@ -556,8 +426,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("10")
             .with_size(ComponentSize{pixels(25), pixels(22)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 162.0f, 28.0f)
+            .with_absolute_position((float)screen_w - 162.0f, 28.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("score"));
@@ -567,8 +436,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("EDDCOATES")
             .with_size(ComponentSize{pixels(100), pixels(28)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 120.0f, 25.0f)
+            .with_absolute_position((float)screen_w - 120.0f, 25.0f)
             .with_font_size(h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("username"));
@@ -587,8 +455,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(username)
               .with_size(ComponentSize{pixels(150), pixels(18)})
-              .with_absolute_position()
-              .with_translate(chat_x, chat_y)
+              .with_absolute_position(chat_x, chat_y)
               .with_font_size(h720(12.0f))
               .with_custom_text_color(slider_orange)
               .with_debug_name("chat_user_" + std::to_string(i)));
@@ -598,8 +465,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(message)
               .with_size(ComponentSize{pixels(85), pixels(18)})
-              .with_absolute_position()
-              .with_translate(chat_x + 148.0f, chat_y)
+              .with_absolute_position(chat_x + 148.0f, chat_y)
               .with_font_size(h720(12.0f))
               .with_custom_text_color(text_white)
               .with_debug_name("chat_msg_" + std::to_string(i)));
@@ -610,13 +476,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("009")
             .with_size(ComponentSize{pixels(85), pixels(55)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 120.0f, (float)screen_h - 90.0f)
+            .with_absolute_position((float)screen_w - 120.0f, (float)screen_h - 90.0f)
             .with_custom_background(afterhours::Color{25, 30, 38, 230})
             .with_font_size(h720(36.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.2f)
             .with_debug_name("speedometer"));
 
@@ -624,8 +489,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("M/h")
             .with_size(ComponentSize{pixels(50), pixels(20)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 90.0f, (float)screen_h - 45.0f)
+            .with_absolute_position((float)screen_w - 90.0f, (float)screen_h - 45.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -635,257 +499,203 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("GAMON")
             .with_size(ComponentSize{pixels(70), pixels(18)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 100.0f, (float)screen_h - 28.0f)
+            .with_absolute_position((float)screen_w - 100.0f, (float)screen_h - 28.0f)
             .with_font_size(h720(12.0f))
             .with_custom_text_color(slider_orange)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("vehicle_name"));
   }
 
+  // ---- Shared helpers to reduce boilerplate ----
+
+  // Row background (rounded, dark, absolute-positioned)
+  void render_row_bg(UIContext<InputAction> &context, afterhours::Entity &entity,
+                     int id, float x, float y, float w, float h,
+                     const std::string &name) {
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    div(context, mk(entity, id),
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(w), pxf(h)})
+            .with_absolute_position(x, y)
+            .with_custom_background(row_dark)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.15f)
+            .with_debug_name(name));
+  }
+
+  // Clickable row background (returns true when clicked)
+  bool render_row_bg_button(UIContext<InputAction> &context,
+                            afterhours::Entity &entity, int id, float x,
+                            float y, float w, float h,
+                            const std::string &name) {
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    return button(context, mk(entity, id),
+                  ComponentConfig{}
+                      .with_size(ComponentSize{pxf(w), pxf(h)})
+                      .with_absolute_position(x, y)
+                      .with_custom_background(row_dark)
+                      .with_rounded_corners(RoundedCorners())
+                      .with_roundness(0.15f)
+                      .with_debug_name(name));
+  }
+
+  // 28x28 colored circle icon with optional text symbol
+  void render_icon(UIContext<InputAction> &context, afterhours::Entity &entity,
+                   int id, float x, float y, afterhours::Color color,
+                   const std::string &symbol, const std::string &name) {
+    auto cfg = ComponentConfig{}
+                   .with_size(ComponentSize{pixels(28), pixels(28)})
+                   .with_absolute_position(x, y)
+                   .with_custom_background(color)
+                   .with_rounded_corners(RoundedCorners())
+                   .with_roundness(1.0f)
+                   .with_debug_name(name);
+    if (!symbol.empty()) {
+      cfg.with_label(symbol)
+          .with_font_size(h720(14.0f))
+          .with_custom_text_color(text_white)
+          .with_alignment(TextAlignment::Center);
+    }
+    div(context, mk(entity, id), cfg);
+  }
+
+  // Rainbow icon (3 concentric circles)
+  void render_rainbow_icon(UIContext<InputAction> &context,
+                           afterhours::Entity &entity, int base_id, float x,
+                           float y, const std::string &prefix) {
+    struct Ring { int sz; float off; afterhours::Color c; int id_off; };
+    Ring rings[] = {
+        {28, 0, icon_rainbow1, 1},
+        {16, 6, icon_rainbow2, 5},
+        {8, 10, icon_rainbow3, 6},
+    };
+    for (auto &r : rings) {
+      div(context, mk(entity, base_id + r.id_off),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(r.sz), pixels(r.sz)})
+              .with_absolute_position(x + r.off, y + r.off)
+              .with_custom_background(r.c)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(1.0f)
+              .with_debug_name(prefix + std::to_string(base_id)));
+    }
+  }
+
+  // Row label text
+  void render_row_label(UIContext<InputAction> &context,
+                        afterhours::Entity &entity, int id, float x, float y,
+                        float h, int label_w, const std::string &label,
+                        const std::string &name) {
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    div(context, mk(entity, id),
+        ComponentConfig{}
+            .with_label(label)
+            .with_size(ComponentSize{pixels(label_w), pxf(h)})
+            .with_absolute_position(x + 42.0f, y + 12.0f)
+            .with_font_size(h720(18.0f))
+            .with_custom_text_color(text_white)
+            .with_debug_name(name));
+  }
+
+  // Toggle track + knob
+  void render_toggle(UIContext<InputAction> &context,
+                     afterhours::Entity &entity, int base_id, float x, float y,
+                     float w, bool value) {
+    afterhours::Color track_color = value ? toggle_green : toggle_track;
+    div(context, mk(entity, base_id),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(48), pixels(24)})
+            .with_absolute_position(x + w - 58.0f, y + 10.0f)
+            .with_custom_background(track_color)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.5f)
+            .with_debug_name("toggle_track_" + std::to_string(base_id)));
+    float knob_x = value ? (x + w - 34.0f) : (x + w - 56.0f);
+    div(context, mk(entity, base_id + 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(20), pixels(20)})
+            .with_absolute_position(knob_x, y + 12.0f)
+            .with_custom_background(text_white)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(1.0f)
+            .with_debug_name("toggle_knob_" + std::to_string(base_id)));
+  }
+
+  // Chevron button (< or >)
+  bool render_chevron(UIContext<InputAction> &context,
+                      afterhours::Entity &entity, int id, float x, float y,
+                      const std::string &symbol, const std::string &name) {
+    return button(context, mk(entity, id),
+                  ComponentConfig{}
+                      .with_label(symbol)
+                      .with_size(ComponentSize{pixels(44), pixels(44)})
+                      .with_absolute_position(x, y)
+                      .with_font_size(h720(22.0f))
+                      .with_custom_text_color(text_muted)
+                      .with_custom_background(afterhours::Color{55, 60, 70, 180})
+                      .with_rounded_corners(RoundedCorners())
+                      .with_roundness(0.3f)
+                      .with_debug_name(name));
+  }
+
+  // ---- Row renderers (now using shared helpers) ----
+
   void render_language_row(UIContext<InputAction> &context,
                            afterhours::Entity &entity, int base_id, float x,
                            float y, float w, float h) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("lang_row"));
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    render_row_bg(context, entity, base_id, x, y, w, h, "lang_row");
+    render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_purple,
+                "@", "lang_icon");
+    render_row_label(context, entity, base_id + 2, x, y, h, 90, "Language",
+                     "lang_label");
 
-    // Globe icon (purple) - consistent size (minimum 44px touch)
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_label("@")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_purple)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("lang_icon"));
-
-    // Label - consistent font size (18.0f minimum)
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label("Language")
-            .with_size(ComponentSize{pixels(90), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("lang_label"));
-
-    // Left chevron (increased size for better touch target)
-    if (button(context, mk(entity, base_id + 3),
-               ComponentConfig{}
-                   .with_label("<")
-                   .with_size(ComponentSize{pixels(44), pixels(44)})
-                   .with_absolute_position()
-                   .with_translate(x + w - 190.0f, y)
-                   .with_font_size(h720(22.0f))
-                   .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{55, 60, 70, 180})
-                   .with_rounded_corners(std::bitset<4>(0b1111))
-                   .with_roundness(0.3f)
-                   .with_debug_name("lang_left"))) {
+    if (render_chevron(context, entity, base_id + 3, x + w - 190.0f, y, "<",
+                       "lang_left")) {
       language_idx = (language_idx == 0)
                          ? static_cast<int>(languages.size()) - 1
                          : language_idx - 1;
     }
 
-    // Language value
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(languages[language_idx])
-            .with_size(ComponentSize{pixels(115), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 145.0f, y + 12.0f)
+            .with_size(ComponentSize{pixels(115), pxf(h)})
+            .with_absolute_position(x + w - 145.0f, y + 12.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("lang_value"));
 
-    // Right chevron (increased size for better touch target)
-    if (button(context, mk(entity, base_id + 5),
-               ComponentConfig{}
-                   .with_label(">")
-                   .with_size(ComponentSize{pixels(44), pixels(44)})
-                   .with_absolute_position()
-                   .with_translate(x + w - 44.0f, y)
-                   .with_font_size(h720(22.0f))
-                   .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{55, 60, 70, 180})
-                   .with_rounded_corners(std::bitset<4>(0b1111))
-                   .with_roundness(0.3f)
-                   .with_debug_name("lang_right"))) {
+    if (render_chevron(context, entity, base_id + 5, x + w - 44.0f, y, ">",
+                       "lang_right")) {
       language_idx = (language_idx + 1) % languages.size();
     }
   }
 
+  // Unified toggle row: pass rainbow=true for multicolor icon, else solid icon
   void render_toggle_row_with_icon(UIContext<InputAction> &context,
                                    afterhours::Entity &entity, int base_id,
                                    float x, float y, float w, float h,
                                    const std::string &label, bool &value,
                                    afterhours::Color icon_color,
-                                   const std::string &icon_symbol) {
-    // Row background - clickable to toggle (44px minimum)
-    if (button(context, mk(entity, base_id),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                            pixels(static_cast<int>(h))})
-                   .with_absolute_position()
-                   .with_translate(x, y)
-                   .with_custom_background(row_dark)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
-                   .with_roundness(0.15f)
-                   .with_debug_name("toggle_row_" + std::to_string(base_id)))) {
-      value = !value; // Toggle the boolean on click
+                                   const std::string &icon_symbol,
+                                   bool rainbow = false) {
+    if (render_row_bg_button(context, entity, base_id, x, y, w, h,
+                             "toggle_row_" + std::to_string(base_id))) {
+      value = !value;
     }
-
-    // Icon (colored circle with symbol) - consistent size (minimum 44px)
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_label(icon_symbol)
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_color)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("toggle_icon_" + std::to_string(base_id)));
-
-    // Label (18.0f minimum font)
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(140), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("toggle_label_" + std::to_string(base_id)));
-
-    // Toggle track - larger for improved touch (44px minimum)
-    afterhours::Color track_color = value ? toggle_green : toggle_track;
-    div(context, mk(entity, base_id + 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(48), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x + w - 58.0f, y + 10.0f)
-            .with_custom_background(track_color)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.5f)
-            .with_debug_name("toggle_track_" + std::to_string(base_id)));
-
-    // Toggle knob
-    float knob_x = value ? (x + w - 34.0f) : (x + w - 56.0f);
-    div(context, mk(entity, base_id + 4),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position()
-            .with_translate(knob_x, y + 12.0f)
-            .with_custom_background(text_white)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("toggle_knob_" + std::to_string(base_id)));
-  }
-
-  // Rainbow icon for Resolution/Full Screen rows
-  void render_toggle_row_rainbow(UIContext<InputAction> &context,
-                                 afterhours::Entity &entity, int base_id,
-                                 float x, float y, float w, float h,
-                                 const std::string &label, bool &value) {
-    // Row background - clickable to toggle
-    if (button(context, mk(entity, base_id),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                            pixels(static_cast<int>(h))})
-                   .with_absolute_position()
-                   .with_translate(x, y)
-                   .with_custom_background(row_dark)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
-                   .with_roundness(0.15f)
-                   .with_debug_name("toggle_row_" + std::to_string(base_id)))) {
-      value = !value; // Toggle the boolean on click
+    if (rainbow) {
+      render_rainbow_icon(context, entity, base_id, x + 8.0f, y + 8.0f,
+                          "rainbow_");
+    } else {
+      render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f,
+                  icon_color, icon_symbol,
+                  "toggle_icon_" + std::to_string(base_id));
     }
-
-    // Rainbow icon (multicolor circle using nested elements) - consistent size
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_rainbow1)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("rainbow_outer_" + std::to_string(base_id)));
-
-    div(context, mk(entity, base_id + 5),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
-            .with_absolute_position()
-            .with_translate(x + 14.0f, y + 14.0f)
-            .with_custom_background(icon_rainbow2)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("rainbow_mid_" + std::to_string(base_id)));
-
-    div(context, mk(entity, base_id + 6),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(8), pixels(8)})
-            .with_absolute_position()
-            .with_translate(x + 18.0f, y + 18.0f)
-            .with_custom_background(icon_rainbow3)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("rainbow_inner_" + std::to_string(base_id)));
-
-    // Label
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("toggle_label_" + std::to_string(base_id)));
-
-    // Toggle track - consistent size with other toggle rows
-    afterhours::Color track_color = value ? toggle_green : toggle_track;
-    div(context, mk(entity, base_id + 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(48), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x + w - 58.0f, y + 10.0f)
-            .with_custom_background(track_color)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.5f)
-            .with_debug_name("toggle_track_" + std::to_string(base_id)));
-
-    // Toggle knob
-    float knob_x = value ? (x + w - 34.0f) : (x + w - 56.0f);
-    div(context, mk(entity, base_id + 4),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position()
-            .with_translate(knob_x, y + 12.0f)
-            .with_custom_background(text_white)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("toggle_knob_" + std::to_string(base_id)));
+    render_row_label(context, entity, base_id + 2, x, y, h, 140, label,
+                     "toggle_label_" + std::to_string(base_id));
+    render_toggle(context, entity, base_id + 3, x, y, w, value);
   }
 
   void render_selector_row(UIContext<InputAction> &context,
@@ -893,213 +703,61 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                            float y, float w, float h, const std::string &label,
                            const std::vector<std::string> &options,
                            size_t &option_idx, afterhours::Color icon_color) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("selector_row_" + std::to_string(base_id)));
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    render_row_bg(context, entity, base_id, x, y, w, h,
+                  "selector_row_" + std::to_string(base_id));
+    render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
+                "*", "selector_icon_" + std::to_string(base_id));
+    render_row_label(context, entity, base_id + 2, x, y, h, 100, label,
+                     "selector_label_" + std::to_string(base_id));
 
-    // Icon
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_label("*")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_color)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("selector_icon_" + std::to_string(base_id)));
-
-    // Label
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(100), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("selector_label_" + std::to_string(base_id)));
-
-    // Left arrow < (increased size for better touch target)
-    if (button(
-            context, mk(entity, base_id + 3),
-            ComponentConfig{}
-                .with_label("<")
-                .with_size(ComponentSize{pixels(44), pixels(44)})
-                .with_absolute_position()
-                .with_translate(x + w - 130.0f, y)
-                .with_font_size(h720(22.0f))
-                .with_custom_text_color(text_muted)
-                .with_custom_background(afterhours::Color{55, 60, 70, 180})
-                .with_rounded_corners(std::bitset<4>(0b1111))
-                .with_roundness(0.3f)
-                .with_debug_name("selector_left_" + std::to_string(base_id)))) {
+    if (render_chevron(context, entity, base_id + 3, x + w - 130.0f, y, "<",
+                       "selector_left_" + std::to_string(base_id))) {
       option_idx = (option_idx == 0) ? options.size() - 1 : option_idx - 1;
     }
 
-    // Value
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(options[option_idx])
-            .with_size(ComponentSize{pixels(50), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 85.0f, y + 9.0f)
+            .with_size(ComponentSize{pixels(50), pxf(h)})
+            .with_absolute_position(x + w - 85.0f, y + 9.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("selector_value_" + std::to_string(base_id)));
 
-    // Right arrow > (increased size for better touch target)
-    if (button(context, mk(entity, base_id + 5),
-               ComponentConfig{}
-                   .with_label(">")
-                   .with_size(ComponentSize{pixels(44), pixels(44)})
-                   .with_absolute_position()
-                   .with_translate(x + w - 44.0f, y)
-                   .with_font_size(h720(22.0f))
-                   .with_custom_text_color(text_muted)
-                   .with_custom_background(afterhours::Color{55, 60, 70, 180})
-                   .with_rounded_corners(std::bitset<4>(0b1111))
-                   .with_roundness(0.3f)
-                   .with_debug_name("selector_right_" +
-                                    std::to_string(base_id)))) {
+    if (render_chevron(context, entity, base_id + 5, x + w - 44.0f, y, ">",
+                       "selector_right_" + std::to_string(base_id))) {
       option_idx = (option_idx + 1) % options.size();
     }
   }
 
+  // Unified display row: pass rainbow=true for multicolor icon
   void render_display_row(UIContext<InputAction> &context,
                           afterhours::Entity &entity, int base_id, float x,
                           float y, float w, float h, const std::string &label,
                           const std::string &value,
-                          afterhours::Color icon_color) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("display_row_" + std::to_string(base_id)));
+                          afterhours::Color icon_color,
+                          bool rainbow = false) {
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    render_row_bg(context, entity, base_id, x, y, w, h,
+                  "display_row_" + std::to_string(base_id));
+    if (rainbow) {
+      render_rainbow_icon(context, entity, base_id, x + 8.0f, y + 8.0f,
+                          "rainbow_");
+    } else {
+      render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f,
+                  icon_color, "*",
+                  "display_icon_" + std::to_string(base_id));
+    }
+    render_row_label(context, entity, base_id + 2, x, y, h, 130, label,
+                     "display_label_" + std::to_string(base_id));
 
-    // Icon
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_label("*")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_color)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("display_icon_" + std::to_string(base_id)));
-
-    // Label
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("display_label_" + std::to_string(base_id)));
-
-    // Value
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
             .with_label(value)
-            .with_size(ComponentSize{pixels(85), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 92.0f, y + 12.0f)
-            .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Right)
-            .with_debug_name("display_value_" + std::to_string(base_id)));
-  }
-
-  void render_display_row_rainbow(UIContext<InputAction> &context,
-                                  afterhours::Entity &entity, int base_id,
-                                  float x, float y, float w, float h,
-                                  const std::string &label,
-                                  const std::string &value) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("display_row_" + std::to_string(base_id)));
-
-    // Rainbow icon (multicolor circle) - consistent size with other icons
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_rainbow1)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("rainbow_outer_" + std::to_string(base_id)));
-
-    div(context, mk(entity, base_id + 5),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(16), pixels(16)})
-            .with_absolute_position()
-            .with_translate(x + 14.0f, y + 14.0f)
-            .with_custom_background(icon_rainbow2)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("rainbow_mid_" + std::to_string(base_id)));
-
-    div(context, mk(entity, base_id + 6),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(8), pixels(8)})
-            .with_absolute_position()
-            .with_translate(x + 18.0f, y + 18.0f)
-            .with_custom_background(icon_rainbow3)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("rainbow_inner_" + std::to_string(base_id)));
-
-    // Label
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(130), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("display_label_" + std::to_string(base_id)));
-
-    // Value
-    div(context, mk(entity, base_id + 3),
-        ComponentConfig{}
-            .with_label(value)
-            .with_size(ComponentSize{pixels(85), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 92.0f, y + 12.0f)
+            .with_size(ComponentSize{pixels(85), pxf(h)})
+            .with_absolute_position(x + w - 92.0f, y + 12.0f)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
@@ -1110,90 +768,47 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                             afterhours::Entity &entity, int base_id, float x,
                             float y, float w, float h, const std::string &label,
                             float &value, afterhours::Color icon_color) {
-    // Row background
-    div(context, mk(entity, base_id),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
-            .with_custom_background(row_dark)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(0.15f)
-            .with_debug_name("volume_row_" + std::to_string(base_id)));
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    render_row_bg(context, entity, base_id, x, y, w, h,
+                  "volume_row_" + std::to_string(base_id));
+    render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
+                "*", "volume_icon_" + std::to_string(base_id));
+    render_row_label(context, entity, base_id + 2, x, y, h, 110, label,
+                     "volume_label_" + std::to_string(base_id));
 
-    // Icon (speaker/music note in red)
-    div(context, mk(entity, base_id + 1),
-        ComponentConfig{}
-            .with_label("*")
-            .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(x + 8.0f, y + 8.0f)
-            .with_custom_background(icon_color)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
-            .with_roundness(1.0f)
-            .with_debug_name("volume_icon_" + std::to_string(base_id)));
+    float slider_w = 130.0f, slider_x = x + w - slider_w - 10.0f;
+    float slider_y_pos = y + 10.0f, slider_h = 20.0f;
 
-    // Label (18.0f minimum font)
-    div(context, mk(entity, base_id + 2),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 42.0f, y + 12.0f)
-            .with_font_size(h720(18.0f))
-            .with_custom_text_color(text_white)
-            .with_debug_name("volume_label_" + std::to_string(base_id)));
-
-    // Visual slider track and handle (custom rendering for absolute
-    // positioning)
-    float slider_w = 130.0f;
-    float slider_x = x + w - slider_w - 10.0f;
-    float slider_y_pos = y + 10.0f;
-    float slider_h = 20.0f;
-
-    // Track background
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(slider_w)),
-                                     pixels(static_cast<int>(slider_h))})
-            .with_absolute_position()
-            .with_translate(slider_x, slider_y_pos)
+            .with_size(ComponentSize{pxf(slider_w), pxf(slider_h)})
+            .with_absolute_position(slider_x, slider_y_pos)
             .with_custom_background(slider_track)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_debug_name("volume_track_" + std::to_string(base_id)));
 
-    // Filled portion
     float fill_w = slider_w * value;
     if (fill_w > 2.0f) {
       div(context, mk(entity, base_id + 4),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(fill_w)),
-                                       pixels(static_cast<int>(slider_h))})
-              .with_absolute_position()
-              .with_translate(slider_x, slider_y_pos)
+              .with_size(ComponentSize{pxf(fill_w), pxf(slider_h)})
+              .with_absolute_position(slider_x, slider_y_pos)
               .with_custom_background(slider_green)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.5f)
               .with_debug_name("volume_fill_" + std::to_string(base_id)));
     }
 
-    // Handle - increased size for better visibility (minimum 44px touch target)
     float handle_w = 28.0f;
     float handle_x = slider_x + (slider_w - handle_w) * value;
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(handle_w)),
-                                     pixels(static_cast<int>(slider_h + 8))})
-            .with_absolute_position()
-            .with_translate(handle_x, slider_y_pos - 4.0f)
+            .with_size(ComponentSize{pxf(handle_w), pxf(slider_h + 8)})
+            .with_absolute_position(handle_x, slider_y_pos - 4.0f)
             .with_custom_background(text_white)
             .with_border(slider_green, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_debug_name("volume_handle_" + std::to_string(base_id)));
   }
