@@ -361,26 +361,23 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(minimap_green)
             .with_border(border_dark, 2.0f));
 
-    // Map grid lines (vertical)
+    // Map grid lines (vertical + horizontal)
     float grid_cell_w = minimap_width / 4.0f;
     float grid_cell_h = minimap_height / 4.0f;
+    afterhours::Color grid_color{60, 70, 60, 180};
     for (int i = 1; i < 4; i++) {
+      // Vertical
       div(context, mk(entity, 230 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(1), pxf(minimap_height - 15.0f)})
               .with_absolute_position(margin_edge + (float)i * grid_cell_w, map_content_y + 8.0f)
-              .with_custom_background(afterhours::Color{60, 70, 60, 180})
-              .with_debug_name("grid_v_" + std::to_string(i)));
-    }
-
-    // Map grid lines (horizontal)
-    for (int i = 1; i < 4; i++) {
+              .with_custom_background(grid_color));
+      // Horizontal
       div(context, mk(entity, 240 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pxf(minimap_width - 15.0f), pixels(1)})
               .with_absolute_position(margin_edge + 8.0f, map_content_y + (float)i * grid_cell_h)
-              .with_custom_background(afterhours::Color{60, 70, 60, 180})
-              .with_debug_name("grid_h_" + std::to_string(i)));
+              .with_custom_background(grid_color));
     }
 
     // Red danger zone on map
@@ -496,60 +493,58 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center));
     }
 
-    // Health label with percentage
-    int health_val = static_cast<int>(health_pct * 100);
-    div(context, mk(entity, 312),
-        ComponentConfig{}
-            .with_label(std::to_string(health_val) + " HEALTH")
-            .with_size(ComponentSize{pixels(140), pixels(20)})
-            .with_absolute_position(health_x + 50.0f, health_y + 5.0f)
-            .with_font("EqProRounded", font_normal)
-            .with_custom_text_color(text_tan));
-
-    // Health bar bg
-    div(context, mk(entity, 320),
-        ComponentConfig{}
-            .with_720p_size(health_bar_width, health_bar_height)
-            .with_absolute_position(health_x + 50.0f, health_y + 26.0f)
-            .with_custom_background(afterhours::Color{25, 25, 22, 255}));
-
-    // Health bar fill
-    div(context, mk(entity, 321),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>((health_bar_width - 5.0f) * health_pct)),
-                                     pxf(health_bar_height)})
-            .with_absolute_position(health_x + 50.0f, health_y + 26.0f)
-            .with_custom_background(health_cyan)
-            .with_debug_name("health_fill"));
-
-    // Armor label and bar (label left of bar)
-    int armor_val = static_cast<int>(armor_pct * 100);
+    // Health and armor bars - data-driven
+    afterhours::Color bar_track{25, 25, 22, 255};
     float armor_label_width = 60.0f;
     float armor_bar_start_x = health_x + 50.0f + armor_label_width + 4.0f;
     float armor_bar_actual_width = health_bar_width - armor_label_width - 4.0f;
 
-    div(context, mk(entity, 332),
-        ComponentConfig{}
-            .with_label(std::to_string(armor_val) + "%")
-            .with_size(ComponentSize{pxf(armor_label_width), pixels(14)})
-            .with_absolute_position(health_x + 50.0f, health_y + 44.0f)
-            .with_font("EqProRounded", font_small)
-            .with_custom_text_color(text_muted));
+    struct StatBar {
+      int label_id; const char *label_fmt; int val; float label_x; float label_y;
+      int label_w; float label_font; afterhours::Color label_color;
+      int bg_id; float bar_x; float bar_y; float bar_w; float bar_h;
+      int fill_id; float fill_pct; afterhours::Color fill_color;
+    };
+    int health_val = static_cast<int>(health_pct * 100);
+    int armor_val = static_cast<int>(armor_pct * 100);
+    StatBar bars[] = {
+        {312, nullptr, health_val, health_x + 50.0f, health_y + 5.0f,
+         140, font_normal, text_tan,
+         320, health_x + 50.0f, health_y + 26.0f, health_bar_width, health_bar_height,
+         321, health_pct, health_cyan},
+        {332, nullptr, armor_val, health_x + 50.0f, health_y + 44.0f,
+         static_cast<int>(armor_label_width), font_small, text_muted,
+         330, armor_bar_start_x, health_y + 44.0f, armor_bar_actual_width, armor_bar_height,
+         331, armor_pct, armor_blue},
+    };
+    // Health label is "80 HEALTH", armor label is "45%"
+    std::string health_label_str = std::to_string(health_val) + " HEALTH";
+    std::string armor_label_str = std::to_string(armor_val) + "%";
+    const char *bar_labels[] = {health_label_str.c_str(), armor_label_str.c_str()};
 
-    // Armor bar bg
-    div(context, mk(entity, 330),
-        ComponentConfig{}
-            .with_720p_size(armor_bar_actual_width, armor_bar_height)
-            .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
-            .with_custom_background(afterhours::Color{25, 25, 22, 255}));
-
-    // Armor bar fill
-    div(context, mk(entity, 331),
-        ComponentConfig{}
-            .with_720p_size(armor_bar_actual_width * armor_pct, armor_bar_height)
-            .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
-            .with_custom_background(armor_blue)
-            .with_debug_name("armor_fill"));
+    for (int bi = 0; bi < 2; bi++) {
+      auto &b = bars[bi];
+      // Label
+      div(context, mk(entity, b.label_id),
+          ComponentConfig{}
+              .with_label(bar_labels[bi])
+              .with_size(ComponentSize{pixels(b.label_w), pixels(20)})
+              .with_absolute_position(b.label_x, b.label_y)
+              .with_font("EqProRounded", b.label_font)
+              .with_custom_text_color(b.label_color));
+      // Bar bg
+      div(context, mk(entity, b.bg_id),
+          ComponentConfig{}
+              .with_720p_size(b.bar_w, b.bar_h)
+              .with_absolute_position(b.bar_x, b.bar_y)
+              .with_custom_background(bar_track));
+      // Bar fill
+      div(context, mk(entity, b.fill_id),
+          ComponentConfig{}
+              .with_720p_size(b.bar_w * b.fill_pct, b.bar_h)
+              .with_absolute_position(b.bar_x, b.bar_y)
+              .with_custom_background(b.fill_color));
+    }
 
     // ========== BOTTOM RIGHT: Equipment ==========
     // Two boxes with gap between them, positioned from right edge

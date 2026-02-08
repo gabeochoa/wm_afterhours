@@ -159,34 +159,28 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       {"Crossing", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 2},
   };
 
+  struct TabInfo {
+    std::vector<SettingRow> *settings;
+    const char *header;
+  };
+
+  TabInfo get_tab_info() {
+    TabInfo infos[] = {
+        {&gameplay_settings, "Gameplay"},
+        {&graphics_settings, "Graphics"},
+        {&audio_settings, "Audio"},
+        {&controls_settings, "Controls"},
+    };
+    size_t idx = selected_tab < 4 ? selected_tab : 1;
+    return infos[idx];
+  }
+
   std::vector<SettingRow> &get_current_settings() {
-    switch (selected_tab) {
-    case 0:
-      return gameplay_settings;
-    case 1:
-      return graphics_settings;
-    case 2:
-      return audio_settings;
-    case 3:
-      return controls_settings;
-    default:
-      return graphics_settings;
-    }
+    return *get_tab_info().settings;
   }
 
   std::string get_section_header() {
-    switch (selected_tab) {
-    case 0:
-      return "Gameplay";
-    case 1:
-      return "Graphics";
-    case 2:
-      return "Audio";
-    case 3:
-      return "Controls";
-    default:
-      return "Graphics";
-    }
+    return get_tab_info().header;
   }
 
   // Get description text for a setting (tooltips for abbreviations)
@@ -226,28 +220,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   // Helper to format slider value for display - works with current tab's
   // settings
   std::string format_slider_value(size_t index, float pct) {
-    std::vector<SettingRow> *settings_ptr = nullptr;
-    switch (selected_tab) {
-    case 0:
-      settings_ptr = &gameplay_settings;
-      break;
-    case 1:
-      settings_ptr = &graphics_settings;
-      break;
-    case 2:
-      settings_ptr = &audio_settings;
-      break;
-    case 3:
-      settings_ptr = &controls_settings;
-      break;
-    default:
-      settings_ptr = &graphics_settings;
-      break;
-    }
-
-    if (index >= settings_ptr->size())
+    auto &settings = get_current_settings();
+    if (index >= settings.size())
       return "---";
-    auto &setting = (*settings_ptr)[index];
+    auto &setting = settings[index];
     int val = setting.min_val +
               static_cast<int>(pct * (setting.max_val - setting.min_val));
 
@@ -347,33 +323,37 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_h = 35.0f;
     float tab_start_x = 70.0f;
 
-    // LB button - cycle tabs left (skip tabbing - use keyboard shortcut)
-    if (button(context, mk(entity, 5),
-               ComponentConfig{}
-                   .with_label("LB")
-                   .with_size(ComponentSize{pixels(35), pixels(28)})
-                   .with_absolute_position(tab_start_x - 50.0f, tab_y + 4.0f)
-                   .with_custom_background(panel_dark)
-                   .with_border(text_muted, 1.0f)
-                   .with_font("EqProRounded", h720(16.0f))
-                   .with_custom_text_color(text_white)
-                   .with_alignment(TextAlignment::Center)
-                   .with_skip_tabbing(true)
-                   .with_debug_name("lb_btn"))) {
-      if (selected_tab > 0) {
-        selected_tab--;
-      } else {
-        selected_tab = tabs.size() - 1; // Wrap to last tab
+    // LB/RB bumper buttons
+    struct TabBumper { const char *label; int id; float x; };
+    TabBumper bumpers[] = {
+        {"LB", 5, tab_start_x - 50.0f},
+        {"RB", 6, tab_start_x + (float)tabs.size() * tab_w},
+    };
+    for (auto &tb : bumpers) {
+      if (button(context, mk(entity, tb.id),
+                 ComponentConfig{}
+                     .with_label(tb.label)
+                     .with_size(ComponentSize{pixels(35), pixels(28)})
+                     .with_absolute_position(tb.x, tab_y + 4.0f)
+                     .with_custom_background(panel_dark)
+                     .with_border(text_muted, 1.0f)
+                     .with_font("EqProRounded", h720(16.0f))
+                     .with_custom_text_color(text_white)
+                     .with_alignment(TextAlignment::Center)
+                     .with_skip_tabbing(true))) {
+        if (tb.id == 5) {
+          selected_tab = (selected_tab == 0) ? tabs.size() - 1 : selected_tab - 1;
+        } else {
+          selected_tab = (selected_tab + 1) % tabs.size();
+        }
       }
     }
 
     for (size_t i = 0; i < tabs.size(); i++) {
       float tx = tab_start_x + (float)i * tab_w;
       bool is_selected = (i == selected_tab);
-      // Use white for selected (on dark bg), muted for unselected
       afterhours::Color tab_text = is_selected ? text_white : text_muted;
 
-      // Tab buttons skip tabbing - use LB/RB or click to switch
       if (button(
               context, mk(entity, 10 + static_cast<int>(i)),
               ComponentConfig{}
@@ -382,41 +362,19 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_absolute_position(tx, tab_y)
                   .with_font("EqProRounded", h720(16.0f))
                   .with_custom_text_color(tab_text)
-                  .with_custom_background(
-                      afterhours::Color{0, 0, 0, 0}) // Transparent bg
+                  .with_custom_background(afterhours::Color{0, 0, 0, 0})
                   .with_alignment(TextAlignment::Center)
-                  .with_skip_tabbing(true)
-                  .with_debug_name("tab_" + std::to_string(i)))) {
+                  .with_skip_tabbing(true))) {
         selected_tab = i;
       }
 
-      // Underline on selected tab
       if (is_selected) {
         div(context, mk(entity, 20 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pxf(tab_w - 20),
-                                         pixels(4)})
+                .with_size(ComponentSize{pxf(tab_w - 20), pixels(4)})
                 .with_absolute_position(tx + 5.0f, tab_y + tab_h + 2.0f)
-                .with_custom_background(accent_green)
-                .with_debug_name("tab_underline_" + std::to_string(i)));
+                .with_custom_background(accent_green));
       }
-    }
-
-    // RB button - cycle tabs right (skip tabbing - use keyboard shortcut)
-    if (button(context, mk(entity, 6),
-               ComponentConfig{}
-                   .with_label("RB")
-                   .with_size(ComponentSize{pixels(35), pixels(28)})
-                   .with_absolute_position(tab_start_x + (float)tabs.size() * tab_w,
-                                   tab_y + 4.0f)
-                   .with_custom_background(panel_dark)
-                   .with_border(text_muted, 1.0f)
-                   .with_font("EqProRounded", h720(16.0f))
-                   .with_custom_text_color(text_white)
-                   .with_alignment(TextAlignment::Center)
-                   .with_skip_tabbing(true)
-                   .with_debug_name("rb_btn"))) {
-      selected_tab = (selected_tab + 1) % tabs.size();
     }
 
     // ========== SECTION HEADER ==========
@@ -646,38 +604,24 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     std::string desc_line2 =
         get_setting_description_line2(selected_setting.label, current_val);
 
-    div(context, mk(entity, 700),
-        ComponentConfig{}
-            .with_label(selected_setting.label)
-            .with_size(
-                ComponentSize{pxf(help_w), pixels(35)})
-            .with_absolute_position(help_x, help_y)
-            .with_font("EqProRounded", h720(22.0f))
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 701),
-        ComponentConfig{}
-            .with_label(desc_line1)
-            .with_size(
-                ComponentSize{pxf(help_w), pixels(50)})
-            .with_absolute_position(help_x, help_y + 40.0f)
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 702),
-        ComponentConfig{}
-            .with_label(desc_line2)
-            .with_size(
-                ComponentSize{pxf(help_w), pixels(30)})
-            .with_absolute_position(help_x, help_y + 70.0f)
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 703),
-        ComponentConfig{}
-            .with_label("Current: " + current_val)
-            .with_size(
-                ComponentSize{pxf(help_w), pixels(30)})
-            .with_absolute_position(help_x, help_y + 110.0f)
-            .with_custom_text_color(text_muted));
+    // Help text lines
+    struct HelpLine { int id; const char *text; float y_off; int h; float font; afterhours::Color color; };
+    std::string current_label = "Current: " + current_val;
+    HelpLine help_lines[] = {
+        {700, selected_setting.label.c_str(), 0.0f, 35, 22.0f, text_white},
+        {701, desc_line1.c_str(), 40.0f, 50, 0.0f, text_white},
+        {702, desc_line2.c_str(), 70.0f, 30, 0.0f, text_white},
+        {703, current_label.c_str(), 110.0f, 30, 0.0f, text_muted},
+    };
+    for (auto &hl : help_lines) {
+      auto cfg = ComponentConfig{}
+          .with_label(hl.text)
+          .with_size(ComponentSize{pxf(help_w), pixels(hl.h)})
+          .with_absolute_position(help_x, help_y + hl.y_off)
+          .with_custom_text_color(hl.color);
+      if (hl.font > 0.0f) cfg.with_font("EqProRounded", h720(hl.font));
+      div(context, mk(entity, hl.id), cfg);
+    }
 
     // ========== BOTTOM BUTTON PROMPTS ==========
     float prompt_y = (float)screen_h - 40.0f;

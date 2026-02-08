@@ -316,35 +316,34 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.15f)
             .with_debug_name("quest_panel"));
 
-    // Quest item 1 (completed)
-    div(context, mk(entity, 251),
-        ComponentConfig{}
-            .with_label("[X]")
-            .with_size(ComponentSize{pixels(24), pixels(24)})
-            .with_absolute_position(quest_x + 12.0f, quest_y + 14.0f)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center));
+    // Quest items
+    struct QuestItem {
+      int check_id; const char *check; float y_off;
+      int text_id; const char *text; float text_x_off; int text_w;
+    };
+    QuestItem quests[] = {
+        {251, "[X]", 14.0f, 252, "SIGN UP A BUSINESS TO YOUR DELIVERY APP", 40.0f, 285},
+        {253, "[ ]", 48.0f, 255, "SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP", 78.0f, 240},
+    };
+    for (auto &q : quests) {
+      div(context, mk(entity, q.check_id),
+          ComponentConfig{}
+              .with_label(q.check)
+              .with_size(ComponentSize{pixels(24), pixels(24)})
+              .with_absolute_position(quest_x + 12.0f, quest_y + q.y_off)
+              .with_font_size(h720(14.0f))
+              .with_custom_text_color(text_white)
+              .with_alignment(TextAlignment::Center));
+      div(context, mk(entity, q.text_id),
+          ComponentConfig{}
+              .with_label(q.text)
+              .with_size(ComponentSize{pixels(q.text_w), pixels(22)})
+              .with_absolute_position(quest_x + q.text_x_off, quest_y + q.y_off)
+              .with_font_size(h720(12.0f))
+              .with_custom_text_color(text_white));
+    }
 
-    div(context, mk(entity, 252),
-        ComponentConfig{}
-            .with_label("SIGN UP A BUSINESS TO YOUR DELIVERY APP")
-            .with_size(ComponentSize{pixels(285), pixels(22)})
-            .with_absolute_position(quest_x + 40.0f, quest_y + 14.0f)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white));
-
-    // Quest item 2 (incomplete)
-    div(context, mk(entity, 253),
-        ComponentConfig{}
-            .with_label("[ ]")
-            .with_size(ComponentSize{pixels(24), pixels(24)})
-            .with_absolute_position(quest_x + 12.0f, quest_y + 48.0f)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center));
-
-    // Level badge
+    // Level badge for quest 2
     div(context, mk(entity, 254),
         ComponentConfig{}
             .with_label("Lv0")
@@ -357,70 +356,36 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f));
 
-    div(context, mk(entity, 255),
-        ComponentConfig{}
-            .with_label("SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP")
-            .with_size(ComponentSize{pixels(240), pixels(22)})
-            .with_absolute_position(quest_x + 78.0f, quest_y + 48.0f)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_white));
-
     // ========== HUD ELEMENTS (right side) ==========
-    // LIVE indicator
-    div(context, mk(entity, 300),
-        ComponentConfig{}
-            .with_label("LIVE")
-            .with_size(ComponentSize{pixels(55), pixels(28)})
-            .with_absolute_position((float)screen_w - 300.0f, 25.0f)
-            .with_custom_background(icon_red)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f));
-
-    // Eye/viewers icon
-    div(context, mk(entity, 301),
-        ComponentConfig{}
-            .with_label("O")
-            .with_size(ComponentSize{pixels(22), pixels(22)})
-            .with_absolute_position((float)screen_w - 235.0f, 28.0f)
-            .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 302),
-        ComponentConfig{}
-            .with_label("8")
-            .with_size(ComponentSize{pixels(20), pixels(22)})
-            .with_absolute_position((float)screen_w - 212.0f, 28.0f)
-            .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_white));
-
-    // Diamond/score
-    div(context, mk(entity, 303),
-        ComponentConfig{}
-            .with_label("<>")
-            .with_size(ComponentSize{pixels(22), pixels(22)})
-            .with_absolute_position((float)screen_w - 185.0f, 28.0f)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white));
-
-    div(context, mk(entity, 304),
-        ComponentConfig{}
-            .with_label("10")
-            .with_size(ComponentSize{pixels(25), pixels(22)})
-            .with_absolute_position((float)screen_w - 162.0f, 28.0f)
-            .with_font_size(h720(16.0f))
-            .with_custom_text_color(text_white));
-
-    // Username
-    div(context, mk(entity, 305),
-        ComponentConfig{}
-            .with_label("EDDCOATES")
-            .with_size(ComponentSize{pixels(100), pixels(28)})
-            .with_absolute_position((float)screen_w - 120.0f, 25.0f)
-            .with_font_size(h720(14.0f))
-            .with_custom_text_color(text_white));
+    struct HudElement {
+      int id; const char *label; int w; int h; float x_off; float y;
+      float font; afterhours::Color text_color;
+      bool has_bg; afterhours::Color bg; bool rounded;
+    };
+    float sw = (float)screen_w;
+    HudElement hud_elems[] = {
+        {300, "LIVE", 55, 28, -300.0f, 25.0f, 14.0f, text_white, true, icon_red, true},
+        {301, "O", 22, 22, -235.0f, 28.0f, 16.0f, text_white, false, {}, false},
+        {302, "8", 20, 22, -212.0f, 28.0f, 16.0f, text_white, false, {}, false},
+        {303, "<>", 22, 22, -185.0f, 28.0f, 14.0f, text_white, false, {}, false},
+        {304, "10", 25, 22, -162.0f, 28.0f, 16.0f, text_white, false, {}, false},
+        {305, "EDDCOATES", 100, 28, -120.0f, 25.0f, 14.0f, text_white, false, {}, false},
+    };
+    for (auto &he : hud_elems) {
+      auto cfg = ComponentConfig{}
+          .with_label(he.label)
+          .with_size(ComponentSize{pixels(he.w), pixels(he.h)})
+          .with_absolute_position(sw + he.x_off, he.y)
+          .with_font_size(h720(he.font))
+          .with_custom_text_color(he.text_color);
+      if (he.has_bg) cfg.with_custom_background(he.bg);
+      if (he.rounded) {
+        cfg.with_alignment(TextAlignment::Center)
+           .with_rounded_corners(RoundedCorners())
+           .with_roundness(0.3f);
+      }
+      div(context, mk(entity, he.id), cfg);
+    }
 
     // ========== CHAT MESSAGES (right side) ==========
     float chat_x = (float)screen_w - 250.0f;
@@ -453,11 +418,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== SPEEDOMETER (bottom right) ==========
+    float sh = (float)screen_h;
     div(context, mk(entity, 400),
         ComponentConfig{}
             .with_label("009")
             .with_size(ComponentSize{pixels(85), pixels(55)})
-            .with_absolute_position((float)screen_w - 120.0f, (float)screen_h - 90.0f)
+            .with_absolute_position(sw - 120.0f, sh - 90.0f)
             .with_custom_background(afterhours::Color{25, 30, 38, 230})
             .with_font_size(h720(36.0f))
             .with_custom_text_color(text_white)
@@ -465,23 +431,21 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.2f));
 
-    div(context, mk(entity, 401),
-        ComponentConfig{}
-            .with_label("M/h")
-            .with_size(ComponentSize{pixels(50), pixels(20)})
-            .with_absolute_position((float)screen_w - 90.0f, (float)screen_h - 45.0f)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 402),
-        ComponentConfig{}
-            .with_label("GAMON")
-            .with_size(ComponentSize{pixels(70), pixels(18)})
-            .with_absolute_position((float)screen_w - 100.0f, (float)screen_h - 28.0f)
-            .with_font_size(h720(12.0f))
-            .with_custom_text_color(slider_orange)
-            .with_alignment(TextAlignment::Center));
+    struct SpeedLabel { int id; const char *text; int w; int h; float x; float y; float font; afterhours::Color color; };
+    SpeedLabel speed_labels[] = {
+        {401, "M/h", 50, 20, sw - 90.0f, sh - 45.0f, 12.0f, text_muted},
+        {402, "GAMON", 70, 18, sw - 100.0f, sh - 28.0f, 12.0f, slider_orange},
+    };
+    for (auto &sl : speed_labels) {
+      div(context, mk(entity, sl.id),
+          ComponentConfig{}
+              .with_label(sl.text)
+              .with_size(ComponentSize{pixels(sl.w), pixels(sl.h)})
+              .with_absolute_position(sl.x, sl.y)
+              .with_font_size(h720(sl.font))
+              .with_custom_text_color(sl.color)
+              .with_alignment(TextAlignment::Center));
+    }
   }
 
   // ---- Shared helpers to reduce boilerplate ----

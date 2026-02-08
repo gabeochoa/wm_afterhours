@@ -84,40 +84,47 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                                 .left = pixels(0),
                                 .right = pixels(0)}));
 
+    // Helper to create a section with header and content row
+    auto make_section = [&](int section_id, const char *header_label,
+                            const char *section_name, const char *row_name) {
+      auto section =
+          div(context, mk(main_container.ent(), section_id),
+              ComponentConfig{}
+                  .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
+                  .with_background(Theme::Usage::Surface)
+                  .with_padding(Spacing::md)
+                  .with_roundness(SECTION_ROUNDNESS)
+                  .with_flex_direction(FlexDirection::Column)
+                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                  .with_debug_name(section_name));
+
+      div(context, mk(section.ent(), 0),
+          ComponentConfig{}
+              .with_label(header_label)
+              .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
+              .with_background(Theme::Usage::Primary)
+              .with_auto_text_color(true)
+              .with_padding(Spacing::sm)
+              .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
+              .with_alignment(TextAlignment::Left)
+              .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
+
+      auto row =
+          div(context, mk(section.ent(), 1),
+              ComponentConfig{}
+                  .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
+                  .with_flex_direction(FlexDirection::Row)
+                  .with_align_items(AlignItems::Center)
+                  .with_justify_content(JustifyContent::FlexStart)
+                  .with_debug_name(row_name));
+
+      return row;
+    };
+
     // =========================================================================
     // Section 1: Basic Modals
     // =========================================================================
-    auto section1 =
-        div(context, mk(main_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
-                .with_roundness(SECTION_ROUNDNESS)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("section1"));
-
-    // Section header
-    div(context, mk(section1.ent(), 0),
-        ComponentConfig{}
-            .with_label("BASIC MODALS")
-            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
-
-    auto row1 =
-        div(context, mk(section1.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::FlexStart)
-                .with_debug_name("row1"));
+    auto row1 = make_section(1, "BASIC MODALS", "section1", "row1");
 
     if (button(context, mk(row1.ent(), 0),
                ComponentConfig{}
@@ -147,37 +154,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     // Section 2: Helper Functions
     // =========================================================================
-    auto section2 =
-        div(context, mk(main_container.ent(), 2),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
-                .with_roundness(SECTION_ROUNDNESS)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("section2"));
-
-    // Section header
-    div(context, mk(section2.ent(), 0),
-        ComponentConfig{}
-            .with_label("HELPER FUNCTIONS")
-            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
-
-    auto row2 =
-        div(context, mk(section2.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::FlexStart)
-                .with_debug_name("row2"));
+    auto row2 = make_section(2, "HELPER FUNCTIONS", "section2", "row2");
 
     if (button(context, mk(row2.ent(), 0),
                ComponentConfig{}
@@ -222,37 +199,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     // Section 3: Modal Stacking
     // =========================================================================
-    auto section3 =
-        div(context, mk(main_container.ent(), 3),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
-                .with_roundness(SECTION_ROUNDNESS)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("section3"));
-
-    // Section header
-    div(context, mk(section3.ent(), 0),
-        ComponentConfig{}
-            .with_label("MODAL STACKING")
-            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
-
-    auto row3 =
-        div(context, mk(section3.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::FlexStart)
-                .with_debug_name("row3"));
+    auto row3 = make_section(3, "MODAL STACKING", "section3", "row3");
 
     if (button(context, mk(row3.ent(), 0),
                ComponentConfig{}
@@ -269,37 +216,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     // Section 4: Input Blocking Test
     // =========================================================================
-    auto section4 =
-        div(context, mk(main_container.ent(), 4),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
-                .with_roundness(SECTION_ROUNDNESS)
-                .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("section4"));
-
-    // Section header
-    div(context, mk(section4.ent(), 0),
-        ComponentConfig{}
-            .with_label("INPUT BLOCKING TEST")
-            .with_size(ComponentSize{percent(1.0f), pixels(HEADER_HEIGHT)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
-
-    auto row4 =
-        div(context, mk(section4.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::FlexStart)
-                .with_debug_name("row4"));
+    auto row4 = make_section(4, "INPUT BLOCKING TEST", "section4", "row4");
 
     // This button is used to test input blocking - when a modal is open,
     // clicking this button should NOT increment the counter
@@ -330,6 +247,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     // Section 5: Results Display
     // =========================================================================
+    // Note: section5 omits bottom margin, and row5 has extra styling
     auto section5 =
         div(context, mk(main_container.ent(), 5),
             ComponentConfig{}
@@ -340,7 +258,6 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section5"));
 
-    // Section header
     div(context, mk(section5.ent(), 0),
         ComponentConfig{}
             .with_label("RESULTS")

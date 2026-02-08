@@ -178,22 +178,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     float star_gap = 32.0f;
     for (int i = 0; i < 5; i++) {
       bool is_filled = (i < 4);
-      if (is_filled && star_filled_tex.id != 0) {
+      auto &star_tex = is_filled ? star_filled_tex : star_empty_tex;
+      if (star_tex.id != 0) {
         afterhours::texture_manager::Rectangle src{
-            0, 0, (float)star_filled_tex.width, (float)star_filled_tex.height};
-        sprite(context, mk(entity, 33 + i), star_filled_tex, src,
+            0, 0, (float)star_tex.width, (float)star_tex.height};
+        sprite(context, mk(entity, 33 + i), star_tex, src,
                ComponentConfig{}
                    .with_720p_size(star_sz, star_sz)
-                   .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
-                   .with_debug_name("star_" + std::to_string(i)));
-      } else if (!is_filled && star_empty_tex.id != 0) {
-        afterhours::texture_manager::Rectangle src{
-            0, 0, (float)star_empty_tex.width, (float)star_empty_tex.height};
-        sprite(context, mk(entity, 33 + i), star_empty_tex, src,
-               ComponentConfig{}
-                   .with_720p_size(star_sz, star_sz)
-                   .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
-                   .with_debug_name("star_" + std::to_string(i)));
+                   .with_absolute_position(star_x + (float)i * star_gap, 20.0f));
       } else {
         div(context, mk(entity, 33 + i),
             ComponentConfig{}
@@ -201,8 +193,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
                 .with_custom_background(is_filled ? star_gold : star_empty_color)
                 .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.3f)
-                .with_debug_name("star_" + std::to_string(i)));
+                .with_roundness(0.3f));
       }
     }
 
@@ -501,72 +492,49 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_debug_name("chat_box"));
 
-    // Chat avatar 1 (guildmate)
+    // Chat messages with avatars - data-driven
+    struct ChatMsg {
+      int avatar_id; int text_id; float y;
+      raylib::Texture2D *tex; const char *fallback; afterhours::Color fallback_bg;
+      const char *message;
+    };
     float chat_line1_y = chat_y + 10.0f;
     float chat_line2_y = chat_y + 45.0f;
-
-    if (avatar_guildmate_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)avatar_guildmate_tex.width,
-          (float)avatar_guildmate_tex.height};
-      sprite(context, mk(entity, 405), avatar_guildmate_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(26), pixels(26)})
-                 .with_absolute_position(left_panel_x + 10.0f, chat_line1_y)
-                 .with_debug_name("avatar1"));
-    } else {
-      div(context, mk(entity, 405),
+    ChatMsg chat_msgs[] = {
+        {405, 401, chat_line1_y, &avatar_guildmate_tex, "@",
+         {180, 160, 140, 255}, "Guildmate23: need help with the recipe?"},
+        {406, 402, chat_line2_y, &avatar_devteam_tex, "D",
+         {120, 150, 180, 255}, "DevTeam_Support: Check out the new update!"},
+    };
+    for (auto &cm : chat_msgs) {
+      if (cm.tex && cm.tex->id != 0) {
+        afterhours::texture_manager::Rectangle src{
+            0, 0, (float)cm.tex->width, (float)cm.tex->height};
+        sprite(context, mk(entity, cm.avatar_id), *cm.tex, src,
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(26), pixels(26)})
+                   .with_absolute_position(left_panel_x + 10.0f, cm.y));
+      } else {
+        div(context, mk(entity, cm.avatar_id),
+            ComponentConfig{}
+                .with_label(cm.fallback)
+                .with_size(ComponentSize{pixels(24), pixels(24)})
+                .with_absolute_position(left_panel_x + 10.0f, cm.y)
+                .with_custom_background(cm.fallback_bg)
+                .with_font("Gaegu-Bold", h720(12.0f))
+                .with_custom_text_color(cream_surface)
+                .with_rounded_corners(RoundedCorners())
+                .with_roundness(1.0f)
+                .with_alignment(TextAlignment::Center));
+      }
+      div(context, mk(entity, cm.text_id),
           ComponentConfig{}
-              .with_label("@")
-              .with_size(ComponentSize{pixels(24), pixels(24)})
-              .with_absolute_position(left_panel_x + 10.0f, chat_line1_y)
-              .with_custom_background(afterhours::Color{180, 160, 140, 255})
-              .with_font("Gaegu-Bold", h720(12.0f))
-              .with_custom_text_color(cream_surface)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_alignment(TextAlignment::Center));
+              .with_label(cm.message)
+              .with_size(ComponentSize{pixels(370), pixels(28)})
+              .with_absolute_position(left_panel_x + 42.0f, cm.y + 2.0f)
+              .with_font("Gaegu-Bold", h720(14.0f))
+              .with_custom_text_color(dark_text));
     }
-
-    div(context, mk(entity, 401),
-        ComponentConfig{}
-            .with_label("Guildmate23: need help with the recipe?")
-            .with_size(ComponentSize{pixels(370), pixels(28)})
-            .with_absolute_position(left_panel_x + 42.0f, chat_line1_y + 2.0f)
-            .with_font("Gaegu-Bold", h720(14.0f))
-            .with_custom_text_color(dark_text));
-
-    // Chat avatar 2 (devteam)
-    if (avatar_devteam_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{
-          0, 0, (float)avatar_devteam_tex.width,
-          (float)avatar_devteam_tex.height};
-      sprite(context, mk(entity, 406), avatar_devteam_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(26), pixels(26)})
-                 .with_absolute_position(left_panel_x + 10.0f, chat_line2_y)
-                 .with_debug_name("avatar2"));
-    } else {
-      div(context, mk(entity, 406),
-          ComponentConfig{}
-              .with_label("D")
-              .with_size(ComponentSize{pixels(24), pixels(24)})
-              .with_absolute_position(left_panel_x + 10.0f, chat_line2_y)
-              .with_custom_background(afterhours::Color{120, 150, 180, 255})
-              .with_font("Gaegu-Bold", h720(12.0f))
-              .with_custom_text_color(cream_surface)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_alignment(TextAlignment::Center));
-    }
-
-    div(context, mk(entity, 402),
-        ComponentConfig{}
-            .with_label("DevTeam_Support: Check out the new update!")
-            .with_size(ComponentSize{pixels(370), pixels(28)})
-            .with_absolute_position(left_panel_x + 42.0f, chat_line2_y + 2.0f)
-            .with_font("Gaegu-Bold", h720(14.0f))
-            .with_custom_text_color(dark_text));
 
     // ========== BOTTOM RIGHT: Icons with Badges ==========
     // Connected to right panel via consistent positioning
