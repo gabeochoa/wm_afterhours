@@ -171,8 +171,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(list_w),
-                                     pxf(list_h)})
+            .with_720p_size(list_w, list_h)
             .with_absolute_position(list_x, list_y)
             .with_custom_background(panel_purple)
             .with_border(border_purple, 2.0f)
@@ -255,8 +254,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(brew_w),
-                                     pxf(brew_h)})
+            .with_720p_size(brew_w, brew_h)
             .with_absolute_position(brew_x, brew_y)
             .with_custom_background(panel_purple)
             .with_border(border_purple, 2.0f)
@@ -285,8 +283,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     // Flask outline
     div(context, mk(entity, 210),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(flask_size),
-                                     pxf(flask_size)})
+            .with_720p_size(flask_size, flask_size)
             .with_absolute_position(flask_x, flask_y)
             .with_custom_background(brew_bg)
             .with_border(border_purple, 3.0f)
@@ -298,8 +295,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     float fill_h = flask_size * brew_progress;
     div(context, mk(entity, 211),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(flask_size - 10),
-                                     pxf(fill_h)})
+            .with_720p_size(flask_size - 10, fill_h)
             .with_absolute_position(flask_x + 5.0f,
                             flask_y + flask_size - fill_h - 3.0f)
             .with_custom_background(sel_recipe.potion_color)
@@ -395,8 +391,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
       // Slot background
       div(context, mk(entity, 240 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(slot_size),
-                                       pxf(slot_size)})
+              .with_720p_size(slot_size, slot_size)
               .with_absolute_position(sx, sy)
               .with_custom_background(slot_filled)
               .with_border(has_enough ? accent_green
@@ -459,8 +454,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(inv_w),
-                                     pxf(inv_h)})
+            .with_720p_size(inv_w, inv_h)
             .with_absolute_position(inv_x, inv_y)
             .with_custom_background(panel_purple)
             .with_border(border_purple, 2.0f)

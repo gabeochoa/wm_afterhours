@@ -173,8 +173,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_white)
             .with_border(border_gray, 3.0f)
@@ -338,8 +337,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(entity, 200 + static_cast<int>(i) * 2),
               ComponentConfig{}
                   .with_label(icon)
-                  .with_size(ComponentSize{pxf(icon_size),
-                                           pxf(icon_size)})
+                  .with_720p_size(icon_size, icon_size)
                   .with_absolute_position(ox, oy)
                   .with_custom_background(opt_bg)
                   .with_border(is_selected ? afterhours::Color{0, 0, 0, 0}

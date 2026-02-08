@@ -141,8 +141,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(grid_panel_w),
-                                     pxf(grid_panel_h)})
+            .with_720p_size(grid_panel_w, grid_panel_h)
             .with_absolute_position(grid_x, grid_y)
             .with_custom_background(panel_blue)
             .with_border(border_blue, 3.0f)
@@ -170,8 +169,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(
               context, mk(entity, 20 + static_cast<int>(i)),
               ComponentConfig{}
-                  .with_size(ComponentSize{pxf(cell_size),
-                                           pxf(cell_size)})
+                  .with_720p_size(cell_size, cell_size)
                   .with_absolute_position(cx, cy)
                   .with_custom_background(cell_bg)
                   .with_border(cell_border, border_w)
@@ -222,8 +220,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     // Preview panel
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(preview_w),
-                                     pxf(preview_h)})
+            .with_720p_size(preview_w, preview_h)
             .with_absolute_position(preview_x, preview_y)
             .with_custom_background(panel_blue)
             .with_border(border_blue, 3.0f)
@@ -239,8 +236,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 101),
         ComponentConfig{}
             .with_label(sel.label)
-            .with_size(ComponentSize{pxf(big_portrait),
-                                     pxf(big_portrait)})
+            .with_720p_size(big_portrait, big_portrait)
             .with_absolute_position(preview_x + (preview_w - big_portrait) / 2.0f,
                             preview_y + 15.0f)
             .with_custom_background(portrait_colors[selected_character])
@@ -329,8 +325,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     // Kart panel
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(kart_w),
-                                     pxf(kart_h)})
+            .with_720p_size(kart_w, kart_h)
             .with_absolute_position(kart_x, kart_y)
             .with_custom_background(panel_blue)
             .with_border(border_blue, 3.0f)

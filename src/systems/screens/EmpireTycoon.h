@@ -270,8 +270,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Happiness icon - larger and more prominent (minimum 44px)
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(stat_icon_size),
-                                     pxf(stat_icon_size)})
+            .with_720p_size(stat_icon_size, stat_icon_size)
             .with_absolute_position((float)screen_w - 210.0f, stat_y)
             .with_custom_background(afterhours::Color{255, 220, 150, 255})
             .with_border(afterhours::Color{220, 180, 100, 255}, 3.0f)
@@ -293,8 +292,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Resource gauge icon - larger and more prominent (minimum 44px)
     div(context, mk(entity, 62),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(stat_icon_size),
-                                     pxf(stat_icon_size)})
+            .with_720p_size(stat_icon_size, stat_icon_size)
             .with_absolute_position((float)screen_w - 85.0f, stat_y)
             .with_custom_background(afterhours::Color{180, 210, 245, 255})
             .with_border(afterhours::Color{140, 175, 215, 255}, 3.0f)
@@ -572,8 +570,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Main panel background - bigger with thicker border to match inspiration
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_blue)
             .with_border(border_blue, 6.0f)
@@ -817,7 +814,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       // Button background - reduced saturation
       button(context, mk(entity, 500 + static_cast<int>(i)),
              ComponentConfig{}
-                 .with_size(ComponentSize{pxf(icon_size), pxf(icon_size)})
+                 .with_720p_size(icon_size, icon_size)
                  .with_absolute_position(ix, icon_btn_y)
                  .with_custom_background(afterhours::Color{255, 215, 100, 255})
                  .with_border(btn_yellow_dark, 2.0f)
@@ -831,15 +828,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                                                    (float)tex_ptr->height};
         sprite(context, mk(entity, 520 + static_cast<int>(i)), *tex_ptr, src,
                ComponentConfig{}
-                   .with_size(ComponentSize{pxf(icon_img_size),
-                                            pxf(icon_img_size)})
+                   .with_720p_size(icon_img_size, icon_img_size)
                    .with_absolute_position(ix + icon_offset, icon_btn_y + icon_offset)
                    .with_debug_name("icon_img_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 520 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_label(fallback)
-                .with_size(ComponentSize{pxf(icon_size), pxf(icon_size)})
+                .with_720p_size(icon_size, icon_size)
                 .with_absolute_position(ix, icon_btn_y)
                 .with_font("EqProRounded", h720(28.0f))
                 .with_custom_text_color(dark_text)

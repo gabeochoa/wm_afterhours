@@ -65,8 +65,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Orange border/frame
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w + 16),
-                                     pxf(panel_h + 16)})
+            .with_720p_size(panel_w + 16, panel_h + 16)
             .with_absolute_position(panel_x - 8.0f, panel_y - 8.0f)
             .with_custom_background(panel_orange)
             .with_rounded_corners(RoundedCorners())
@@ -76,8 +75,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Cream inner panel
     div(context, mk(entity, 11),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_cream)
             .with_rounded_corners(RoundedCorners())
@@ -197,8 +195,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(entity, 100 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(left_buttons[i])
-                 .with_size(ComponentSize{pxf(btn_w),
-                                          pxf(btn_h)})
+                 .with_720p_size(btn_w, btn_h)
                  .with_absolute_position(left_x, row_y + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
@@ -217,8 +214,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(entity, 110 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(right_buttons[i])
-                 .with_size(ComponentSize{pxf(btn_w),
-                                          pxf(btn_h)})
+                 .with_720p_size(btn_w, btn_h)
                  .with_absolute_position(right_x, row_y + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
@@ -274,8 +270,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Orange border for About panel
       div(context, mk(entity, 300),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(about_w + 12),
-                                       pxf(about_h + 12)})
+              .with_720p_size(about_w + 12, about_h + 12)
               .with_absolute_position(about_x - 6.0f, about_y - 6.0f)
               .with_custom_background(panel_orange)
               .with_rounded_corners(RoundedCorners())
@@ -285,8 +280,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Cream inner panel
       div(context, mk(entity, 301),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(about_w),
-                                       pxf(about_h)})
+              .with_720p_size(about_w, about_h)
               .with_absolute_position(about_x, about_y)
               .with_custom_background(panel_cream)
               .with_rounded_corners(RoundedCorners())

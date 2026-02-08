@@ -203,8 +203,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     // List panel
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(list_w),
-                                     pxf(list_h)})
+            .with_720p_size(list_w, list_h)
             .with_absolute_position(list_x, list_y)
             .with_custom_background(panel_wood)
             .with_border(border_wood, 2.0f)
@@ -390,8 +389,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     // Item detail panel
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(detail_w),
-                                     pxf(detail_h)})
+            .with_720p_size(detail_w, detail_h)
             .with_absolute_position(detail_x, detail_y)
             .with_custom_background(panel_wood)
             .with_border(border_wood, 2.0f)
@@ -486,8 +484,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(detail_w),
-                                     pxf(cart_h)})
+            .with_720p_size(detail_w, cart_h)
             .with_absolute_position(detail_x, cart_y)
             .with_custom_background(panel_wood)
             .with_border(border_wood, 2.0f)

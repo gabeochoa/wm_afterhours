@@ -192,8 +192,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             0, 0, (float)star_filled_tex.width, (float)star_filled_tex.height};
         sprite(context, mk(entity, 33 + i), star_filled_tex, src,
                ComponentConfig{}
-                   .with_size(ComponentSize{pxf(star_sz),
-                                            pxf(star_sz)})
+                   .with_720p_size(star_sz, star_sz)
                    .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
                    .with_debug_name("star_" + std::to_string(i)));
       } else if (!is_filled && star_empty_tex.id != 0) {
@@ -201,15 +200,13 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             0, 0, (float)star_empty_tex.width, (float)star_empty_tex.height};
         sprite(context, mk(entity, 33 + i), star_empty_tex, src,
                ComponentConfig{}
-                   .with_size(ComponentSize{pxf(star_sz),
-                                            pxf(star_sz)})
+                   .with_720p_size(star_sz, star_sz)
                    .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
                    .with_debug_name("star_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 33 + i),
             ComponentConfig{}
-                .with_size(ComponentSize{pxf(star_sz),
-                                         pxf(star_sz)})
+                .with_720p_size(star_sz, star_sz)
                 .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
                 .with_custom_background(is_filled ? star_gold : star_empty_color)
                 .with_rounded_corners(RoundedCorners())
@@ -249,8 +246,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(left_panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(left_panel_w, panel_h)
             .with_absolute_position(left_panel_x, panel_y)
             .with_custom_background(cream_surface)
             .with_border(brown_border, 3.0f)
@@ -339,8 +335,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(right_panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(right_panel_w, panel_h)
             .with_absolute_position(right_panel_x, panel_y)
             .with_custom_background(cream_surface)
             .with_border(sage_header, 4.0f)
@@ -607,8 +602,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Inventory icon with badge (minimum 44px)
     button(context, mk(entity, 500),
            ComponentConfig{}
-               .with_size(ComponentSize{pxf(icon_size),
-                                        pxf(icon_size)})
+               .with_720p_size(icon_size, icon_size)
                .with_absolute_position(icon_x, icon_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
@@ -621,8 +615,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       sprite(
           context, mk(entity, 501), icon_inventory_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(icon_img_size),
-                                       pxf(icon_img_size)})
+              .with_720p_size(icon_img_size, icon_img_size)
               .with_absolute_position(icon_x + icon_offset, icon_y + icon_offset)
               .with_debug_name("inventory_icon"));
     }
@@ -654,8 +647,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Research icon with badge (minimum 44px)
     button(context, mk(entity, 510),
            ComponentConfig{}
-               .with_size(ComponentSize{pxf(icon_size),
-                                        pxf(icon_size)})
+               .with_720p_size(icon_size, icon_size)
                .with_absolute_position(icon_x + icon_spacing, icon_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
@@ -668,8 +660,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       sprite(
           context, mk(entity, 511), icon_research_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(icon_img_size),
-                                       pxf(icon_img_size)})
+              .with_720p_size(icon_img_size, icon_img_size)
               .with_absolute_position(icon_x + icon_spacing + icon_offset,
                               icon_y + icon_offset)
               .with_debug_name("research_icon"));
@@ -704,8 +695,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Crafting icon (no badge, minimum 44px)
     button(context, mk(entity, 520),
            ComponentConfig{}
-               .with_size(ComponentSize{pxf(icon_size),
-                                        pxf(icon_size)})
+               .with_720p_size(icon_size, icon_size)
                .with_absolute_position(icon_x + icon_spacing * 2, icon_y)
                .with_custom_background(cream_surface)
                .with_border(brown_border, 2.0f)
@@ -718,8 +708,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       sprite(
           context, mk(entity, 521), icon_crafting_tex, src,
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(icon_img_size),
-                                       pxf(icon_img_size)})
+              .with_720p_size(icon_img_size, icon_img_size)
               .with_absolute_position(icon_x + icon_spacing * 2 + icon_offset,
                               icon_y + icon_offset)
               .with_debug_name("crafting_icon"));

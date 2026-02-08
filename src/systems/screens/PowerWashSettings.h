@@ -154,8 +154,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
@@ -259,8 +258,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 150),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(help_w),
-                                     pxf(help_h)})
+            .with_720p_size(help_w, help_h)
             .with_absolute_position(help_x, help_y)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
@@ -332,8 +330,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(entity, 200 + static_cast<int>(i)),
               ComponentConfig{}
                   .with_label(tabs[i])
-                  .with_size(ComponentSize{pxf(tab_w - 6),
-                                           pxf(tab_h)})
+                  .with_720p_size(tab_w - 6, tab_h)
                   .with_absolute_position(tx, tab_y)
                   .with_custom_background(tab_bg)
                   .with_border(panel_border, 1.0f)

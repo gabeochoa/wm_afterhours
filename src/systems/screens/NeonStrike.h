@@ -168,8 +168,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 100),
         ComponentConfig{}
             .with_label("O")
-            .with_size(ComponentSize{pxf(compass_size),
-                                     pxf(compass_size)})
+            .with_720p_size(compass_size, compass_size)
             .with_absolute_position(compass_cx - compass_size / 2.0f, compass_top_y)
             .with_font("EqProRounded", compass_font_size)
             .with_custom_text_color(text_muted)
@@ -237,8 +236,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           compass_cy + std::sin(angle) * compass_radius - compass_tick_size / 2.0f;
       div(context, mk(entity, 106 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(compass_tick_size),
-                                       pxf(compass_tick_size)})
+              .with_720p_size(compass_tick_size, compass_tick_size)
               .with_absolute_position(tick_x, tick_y)
               .with_custom_background(text_muted)
               .with_rounded_corners(RoundedCorners())
@@ -333,8 +331,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       // Icon box background
       div(context, mk(entity, 141 + static_cast<int>(i) * 4),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(ks_icon_size),
-                                       pxf(ks_icon_size)})
+              .with_720p_size(ks_icon_size, ks_icon_size)
               .with_absolute_position(margin_edge + 20.0f, row_y)
               .with_custom_background(panel_dark)
               .with_border(border_dark, 1.0f)
@@ -354,8 +351,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 142 + static_cast<int>(i) * 4),
             ComponentConfig{}
                 .with_label(fallback_label)
-                .with_size(ComponentSize{pxf(ks_icon_size),
-                                         pxf(ks_icon_size)})
+                .with_720p_size(ks_icon_size, ks_icon_size)
                 .with_absolute_position(margin_edge + 20.0f, row_y)
                 .with_font("EqProRounded", h720(20.0f))
                 .with_custom_text_color(text_tan)
@@ -387,8 +383,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("7B Pop <192>")
-            .with_size(ComponentSize{pxf(minimap_width),
-                                     pxf(minimap_label_height)})
+            .with_720p_size(minimap_width, minimap_label_height)
             .with_absolute_position(margin_edge, map_label_y)
             .with_font("EqProRounded", font_large)
             .with_custom_text_color(text_tan)
@@ -397,8 +392,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Minimap background
     div(context, mk(entity, 220),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(minimap_width),
-                                     pxf(minimap_height)})
+            .with_720p_size(minimap_width, minimap_height)
             .with_absolute_position(margin_edge, map_content_y)
             .with_custom_background(minimap_green)
             .with_border(border_dark, 2.0f)
@@ -468,8 +462,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(ks_bar_width),
-                                     pxf(ks_bar_height)})
+            .with_720p_size(ks_bar_width, ks_bar_height)
             .with_absolute_position(margin_edge, ks_bar_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 1.0f)
@@ -490,8 +483,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::Color box_color = (i < killstreak_count) ? text_tan : border_dark;
       div(context, mk(entity, 202 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(ks_box_size),
-                                       pxf(ks_box_size)})
+              .with_720p_size(ks_box_size, ks_box_size)
               .with_absolute_position(boxes_start_x + (float)i * (ks_box_size + ks_box_gap),
                               ks_bar_y + (ks_bar_height - ks_box_size) / 2.0f)
               .with_custom_background(box_color)
@@ -518,8 +510,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Health panel
     div(context, mk(entity, 310),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(health_panel_width),
-                                     pxf(health_panel_height)})
+            .with_720p_size(health_panel_width, health_panel_height)
             .with_absolute_position(health_x, health_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 1.0f)
@@ -560,8 +551,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Health bar bg
     div(context, mk(entity, 320),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(health_bar_width),
-                                     pxf(health_bar_height)})
+            .with_720p_size(health_bar_width, health_bar_height)
             .with_absolute_position(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
             .with_debug_name("health_bg"));
@@ -593,8 +583,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Armor bar bg
     div(context, mk(entity, 330),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(armor_bar_actual_width),
-                                     pxf(armor_bar_height)})
+            .with_720p_size(armor_bar_actual_width, armor_bar_height)
             .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
             .with_debug_name("armor_bg"));
@@ -602,8 +591,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Armor bar fill
     div(context, mk(entity, 331),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(armor_bar_actual_width * armor_pct),
-                                     pxf(armor_bar_height)})
+            .with_720p_size(armor_bar_actual_width * armor_pct, armor_bar_height)
             .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
             .with_custom_background(armor_blue)
             .with_debug_name("armor_fill"));
@@ -631,8 +619,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Grenade box - highlighted with gold border (selected)
     div(context, mk(entity, 410),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(eq_box_size),
-                                     pxf(eq_box_size)})
+            .with_720p_size(eq_box_size, eq_box_size)
             .with_absolute_position(grenade_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(gold_accent, 3.0f)
@@ -645,8 +632,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           (float)weapon_grenade_tex.height};
       sprite(context, mk(entity, 411), weapon_grenade_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pxf(eq_icon_size),
-                                          pxf(eq_icon_size)})
+                 .with_720p_size(eq_icon_size, eq_icon_size)
                  .with_absolute_position(grenade_x + icon_offset, eq_y + icon_offset)
                  .with_debug_name("grenade_icon"));
     }
@@ -654,8 +640,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Knife box
     div(context, mk(entity, 420),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(eq_box_size),
-                                     pxf(eq_box_size)})
+            .with_720p_size(eq_box_size, eq_box_size)
             .with_absolute_position(knife_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 2.0f)
@@ -667,8 +652,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
       sprite(context, mk(entity, 422), weapon_melee_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pxf(eq_icon_size),
-                                          pxf(eq_icon_size)})
+                 .with_720p_size(eq_icon_size, eq_icon_size)
                  .with_absolute_position(knife_x + icon_offset, eq_y + icon_offset)
                  .with_debug_name("knife_icon"));
     }
@@ -690,8 +674,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           0, 0, (float)crosshair_tex.width, (float)crosshair_tex.height};
       sprite(context, mk(entity, 600), crosshair_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pxf(crosshair_size),
-                                          pxf(crosshair_size)})
+                 .with_720p_size(crosshair_size, crosshair_size)
                  .with_absolute_position(cx - crosshair_size / 2.0f, cy - crosshair_size / 2.0f)
                  .with_debug_name("crosshair"));
     }

@@ -118,8 +118,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_cream)
             .with_rounded_corners(RoundedCorners())
@@ -137,8 +136,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 55),
            ComponentConfig{}
                .with_label("X")
-               .with_size(ComponentSize{pxf(close_size),
-                                        pxf(close_size)})
+               .with_720p_size(close_size, close_size)
                .with_absolute_position(close_x, close_y)
                .with_custom_background(close_bg)
                .with_border(close_border, 2.0f)
@@ -217,8 +215,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 180),
            ComponentConfig{}
                .with_label("KEYBOARD")
-               .with_size(ComponentSize{pxf(row_w),
-                                        pxf(row_h)})
+               .with_720p_size(row_w, row_h)
                .with_absolute_position(content_x,
                                controls_row_y + 2 * (row_h + section_gap))
                .with_custom_background(btn_cream)
@@ -267,8 +264,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 250),
            ComponentConfig{}
                .with_label("PLAY TUTORIAL")
-               .with_size(ComponentSize{pxf(row_w),
-                                        pxf(row_h)})
+               .with_720p_size(row_w, row_h)
                .with_absolute_position(content_x, tutorial_y + 22.0f)
                .with_custom_background(btn_cream)
                .with_font("EqProRounded", h720(15.0f))
@@ -299,8 +295,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Row background - pill shaped with subtle roundness
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(w),
-                                     pxf(h)})
+            .with_720p_size(w, h)
             .with_absolute_position(x, y)
             .with_custom_background(row_cream)
             .with_rounded_corners(RoundedCorners())
@@ -375,8 +370,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Row background - pill shaped
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(w),
-                                     pxf(h)})
+            .with_720p_size(w, h)
             .with_absolute_position(x, y)
             .with_custom_background(row_cream)
             .with_rounded_corners(RoundedCorners())
@@ -424,8 +418,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Each segment is clickable to set value
       if (button(context, mk(entity, base_id + 10 + i),
                  ComponentConfig{}
-                     .with_size(ComponentSize{pxf(seg_w),
-                                              pxf(seg_h)})
+                     .with_720p_size(seg_w, seg_h)
                      .with_absolute_position(slider_start_x + static_cast<float>(i) *
                                                           (seg_w + seg_gap),
                                      y + 11.0f)

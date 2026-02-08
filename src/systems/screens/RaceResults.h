@@ -174,8 +174,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     // Table panel
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(table_w),
-                                     pxf(table_h)})
+            .with_720p_size(table_w, table_h)
             .with_absolute_position(table_x, table_y)
             .with_custom_background(panel_dark)
             .with_border(border_blue, 2.0f)
@@ -250,7 +249,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
       if (i % 2 == 0 && !r.is_player) {
         div(context, mk(entity, 260 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pxf(table_w - 20), pxf(row_h - 4)})
+                .with_720p_size(table_w - 20, row_h - 4)
                 .with_absolute_position(table_x + 10.0f, ry - 2.0f)
                 .with_custom_background(afterhours::Color{30, 35, 55, 255})
                 .with_rounded_corners(RoundedCorners())
@@ -325,8 +324,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     // Cup panel
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(cup_w),
-                                     pxf(cup_h)})
+            .with_720p_size(cup_w, cup_h)
             .with_absolute_position(cup_x, cup_y)
             .with_custom_background(panel_dark)
             .with_border(border_blue, 2.0f)
@@ -391,8 +389,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 450),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(cup_w),
-                                     pxf(lap_h)})
+            .with_720p_size(cup_w, lap_h)
             .with_absolute_position(cup_x, lap_y)
             .with_custom_background(panel_dark)
             .with_border(border_blue, 2.0f)

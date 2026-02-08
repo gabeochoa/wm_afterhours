@@ -152,8 +152,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Panel background with border + corner bracket decorations
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_dark)
             .with_border(panel_border, 2.0f)
@@ -189,8 +188,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(entity, 120 + static_cast<int>(i) * 2),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(panel_w - 20),
-                                       pxf(item_h - 4)})
+              .with_720p_size(panel_w - 20, item_h - 4)
               .with_absolute_position(panel_x + 10.0f, item_y)
               .with_custom_background(item_bg)
               .with_border(is_selected ? teal_highlight : panel_border, 1.0f)

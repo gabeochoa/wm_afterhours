@@ -105,8 +105,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Phone outer frame
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(phone_w),
-                                     pxf(phone_h)})
+            .with_720p_size(phone_w, phone_h)
             .with_absolute_position(phone_x, phone_y)
             .with_custom_background(phone_black)
             .with_rounded_corners(RoundedCorners())
@@ -124,8 +123,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 11),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(screen_inner_w),
-                                     pxf(screen_inner_h)})
+            .with_720p_size(screen_inner_w, screen_inner_h)
             .with_absolute_position(screen_x, screen_y)
             .with_custom_background(afterhours::Color{22, 26, 32, 255})
             .with_rounded_corners(RoundedCorners())
@@ -315,8 +313,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Quest panel background
     div(context, mk(entity, 250),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(quest_w),
-                                     pxf(quest_h)})
+            .with_720p_size(quest_w, quest_h)
             .with_absolute_position(quest_x, quest_y)
             .with_custom_background(quest_blue)
             .with_border(quest_blue_dark, 3.0f)
@@ -515,7 +512,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     div(context, mk(entity, id),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(w), pxf(h)})
+            .with_720p_size(w, h)
             .with_absolute_position(x, y)
             .with_custom_background(row_dark)
             .with_rounded_corners(RoundedCorners())
@@ -531,7 +528,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     return button(context, mk(entity, id),
                   ComponentConfig{}
-                      .with_size(ComponentSize{pxf(w), pxf(h)})
+                      .with_720p_size(w, h)
                       .with_absolute_position(x, y)
                       .with_custom_background(row_dark)
                       .with_rounded_corners(RoundedCorners())
@@ -781,7 +778,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(slider_w), pxf(slider_h)})
+            .with_720p_size(slider_w, slider_h)
             .with_absolute_position(slider_x, slider_y_pos)
             .with_custom_background(slider_track)
             .with_rounded_corners(RoundedCorners())
@@ -792,7 +789,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (fill_w > 2.0f) {
       div(context, mk(entity, base_id + 4),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(fill_w), pxf(slider_h)})
+              .with_720p_size(fill_w, slider_h)
               .with_absolute_position(slider_x, slider_y_pos)
               .with_custom_background(slider_green)
               .with_rounded_corners(RoundedCorners())
@@ -804,7 +801,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float handle_x = slider_x + (slider_w - handle_w) * value;
     div(context, mk(entity, base_id + 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(handle_w), pxf(slider_h + 8)})
+            .with_720p_size(handle_w, slider_h + 8)
             .with_absolute_position(handle_x, slider_y_pos - 4.0f)
             .with_custom_background(text_white)
             .with_border(slider_green, 2.0f)

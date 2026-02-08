@@ -130,8 +130,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Panel shadow
     div(context, mk(entity, 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x + cfg_panel_shadow_offset_x,
                             panel_y + cfg_panel_shadow_offset_y)
             .with_custom_background(afterhours::Color{
@@ -143,8 +142,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Main panel background
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w),
-                                     pxf(panel_h)})
+            .with_720p_size(panel_w, panel_h)
             .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_cream)
             .with_border(header_dark, cfg_panel_border_width)

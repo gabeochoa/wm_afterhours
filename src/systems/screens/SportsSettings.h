@@ -377,8 +377,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(entity, 10 + static_cast<int>(i)),
               ComponentConfig{}
                   .with_label(tabs[i])
-                  .with_size(ComponentSize{pxf(tab_w - 10),
-                                           pxf(tab_h)})
+                  .with_720p_size(tab_w - 10, tab_h)
                   .with_absolute_position(tx, tab_y)
                   .with_font("EqProRounded", h720(16.0f))
                   .with_custom_text_color(tab_text)
@@ -466,8 +465,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Row background - render first (behind everything)
       div(context, mk(entity, 50 + static_cast<int>(i)),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(panel_w),
-                                       pxf(row_h - 2)})
+              .with_720p_size(panel_w, row_h - 2)
               .with_absolute_position(panel_x - 10.0f, ry)
               .with_custom_background(is_selected
                                           ? highlight_row
@@ -577,8 +575,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         // Slider track background with border for contrast
         div(context, mk(entity, 500 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pxf(bar_w),
-                                         pxf(bar_h)})
+                .with_720p_size(bar_w, bar_h)
                 .with_absolute_position(bar_x, bar_y)
                 .with_custom_background(slider_track)
                 .with_border(slider_empty_border, 1.0f)
@@ -590,8 +587,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         if (fill_w > 2.0f) {
           div(context, mk(entity, 600 + static_cast<int>(i)),
               ComponentConfig{}
-                  .with_size(ComponentSize{pxf(fill_w),
-                                           pxf(bar_h)})
+                  .with_720p_size(fill_w, bar_h)
                   .with_absolute_position(bar_x, bar_y)
                   .with_custom_background(accent_green)
                   .with_render_layer(1)
@@ -620,8 +616,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           div(context,
               mk(entity, 800 + static_cast<int>(i) * 20 + static_cast<int>(j)),
               ComponentConfig{}
-                  .with_size(ComponentSize{pxf(seg_w),
-                                           pxf(dot_h)})
+                  .with_720p_size(seg_w, dot_h)
                   .with_absolute_position(sx, bar_y)
                   .with_custom_background(seg_color)
                   .with_border(seg_border, 1.0f)
