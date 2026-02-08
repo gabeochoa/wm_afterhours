@@ -20,6 +20,7 @@ backward::SignalHandling sh;
 #include "systems/screens/AnimationSpringDemo.h"
 #include "systems/screens/AnimationDeclarativeDemo.h"
 #include "systems/screens/AutoTextColorShowcase.h"
+#include "systems/screens/ButtonVariantsShowcase.h"
 #include "systems/screens/Buttons.h"
 #include "systems/screens/Cards.h"
 #include "systems/screens/CasualSettings.h"
