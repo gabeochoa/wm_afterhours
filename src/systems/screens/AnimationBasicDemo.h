@@ -112,8 +112,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Animation Basics")
             .with_size(ComponentSize{pixels(screen_w), pixels(60)})
-            .with_absolute_position()
-            .with_translate(0.0f, 30.0f)
+            .with_absolute_position(0.0f, 30.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -125,8 +124,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Fade, Slide, and Scale animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position()
-            .with_translate(0.0f, 90.0f)
+            .with_absolute_position(0.0f, 90.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -147,8 +145,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Slide In")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(slide_base_x, box_y - 40.0f)
+            .with_absolute_position(slide_base_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -159,10 +156,9 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 21),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(slide_base_x + slide_offset, box_y)
+            .with_absolute_position(slide_base_x + slide_offset, box_y)
             .with_custom_background(box_green)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("slide_box"));
 
@@ -171,8 +167,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("x offset: {:.0f}px", slide_offset))
             .with_size(ComponentSize{pixels(box_size + 40), pixels(24)})
-            .with_absolute_position()
-            .with_translate(slide_base_x - 20.0f, box_y + box_size + 10.0f)
+            .with_absolute_position(slide_base_x - 20.0f, box_y + box_size + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -187,8 +182,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Fade In")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(fade_x, box_y - 40.0f)
+            .with_absolute_position(fade_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -199,11 +193,10 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(fade_x, box_y)
+            .with_absolute_position(fade_x, box_y)
             .with_custom_background(
                 afterhours::colors::opacity_pct(box_blue, fade_opacity))
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("fade_box"));
 
@@ -212,8 +205,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("opacity: {:.0f}%", fade_opacity * 100))
             .with_size(ComponentSize{pixels(box_size), pixels(24)})
-            .with_absolute_position()
-            .with_translate(fade_x, box_y + box_size + 10.0f)
+            .with_absolute_position(fade_x, box_y + box_size + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -228,8 +220,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Scale Up")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(scale_x, box_y - 40.0f)
+            .with_absolute_position(scale_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -240,11 +231,10 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 31),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(scale_x, box_y)
+            .with_absolute_position(scale_x, box_y)
             .with_scale(scale_factor)  // Smooth visual scaling after layout
             .with_custom_background(box_purple)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("scale_box"));
 
@@ -253,8 +243,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("scale: {:.0f}%", scale_factor * 100))
             .with_size(ComponentSize{pixels(box_size), pixels(24)})
-            .with_absolute_position()
-            .with_translate(scale_x, box_y + box_size + 10.0f)
+            .with_absolute_position(scale_x, box_y + box_size + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -266,12 +255,11 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label("Restart Animations")
                    .with_size(ComponentSize{pixels(200), pixels(48)})
-                   .with_absolute_position()
-                   .with_translate(center_x - 100.0f, screen_h - 100.0f)
+                   .with_absolute_position(center_x - 100.0f, screen_h - 100.0f)
                    .with_background(Theme::Usage::Primary)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.25f)
                    .with_debug_name("restart_btn"))) {
       animations_started = false;

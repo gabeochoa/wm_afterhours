@@ -202,6 +202,26 @@ class MCPClient:
         log("  WARNING: Screenshot returned no data")
         return None
     
+    def mouse_move(self, x, y):
+        log_debug(f"Moving mouse to ({x}, {y})")
+        result = self.call_tool("mouse_move", {"x": x, "y": y})
+        return result
+    
+    def dump_ui_tree(self):
+        """Get the UI component tree with interactivity info."""
+        log_debug("Dumping UI tree...")
+        response = self.call_tool("dump_ui_tree")
+        if response and "result" in response:
+            content = response["result"]["content"][0]
+            if content.get("type") == "text":
+                try:
+                    return json.loads(content["text"])
+                except json.JSONDecodeError:
+                    log("WARNING: Failed to parse UI tree JSON")
+                    return None
+        log("WARNING: dump_ui_tree returned no data")
+        return None
+
     def key_press(self, key):
         log_debug(f"Pressing key: {key}")
         result = self.call_tool("key_press", {"key": key})
@@ -248,6 +268,41 @@ class MCPClient:
             self.proc.kill()
         except Exception as e:
             log(f"Error during close: {e}")
+
+
+def find_interactive_elements(tree_data, max_elements=5):
+    """Walk the UI tree and find visible, clickable elements.
+    Returns list of (label, center_x, center_y, width, height) tuples."""
+    results = []
+    
+    def walk(node):
+        if len(results) >= max_elements:
+            return
+        
+        # Check if this node is visible and clickable
+        is_visible = node.get("visible", False)
+        is_clickable = node.get("clickable", False)
+        rect = node.get("rect", {})
+        w = rect.get("width", 0)
+        h = rect.get("height", 0)
+        
+        if is_visible and is_clickable and w > 10 and h > 10:
+            x = rect.get("x", 0)
+            y = rect.get("y", 0)
+            label = node.get("label", node.get("name", f"id:{node.get('id', '?')}"))
+            center_x = int(x + w / 2)
+            center_y = int(y + h / 2)
+            results.append((label, center_x, center_y, int(w), int(h)))
+        
+        # Recurse into children
+        for child in node.get("children", []):
+            walk(child)
+    
+    if tree_data and "tree" in tree_data:
+        for root in tree_data["tree"]:
+            walk(root)
+    
+    return results
 
 
 def get_screen_count(executable):
@@ -317,10 +372,23 @@ def ensure_build():
 def main():
     executable = "./output/ui_tester.exe"
     output_dir = "/tmp/ui_showcase_screenshots"
+    
+    # Parse args
+    with_hover = "--with-hover" in sys.argv
+    hover_count = 3  # Number of interactive elements to hover per screen
+    for arg in sys.argv:
+        if arg.startswith("--hover-count="):
+            hover_count = int(arg.split("=")[1])
+    
     os.makedirs(output_dir, exist_ok=True)
+    if with_hover:
+        hover_dir = os.path.join(output_dir, "hover")
+        os.makedirs(hover_dir, exist_ok=True)
     
     log("=" * 60)
     log("Screenshot All Screens - Starting")
+    if with_hover:
+        log(f"  Hover mode: ON (capturing up to {hover_count} hover states per screen)")
     log("=" * 60)
     
     # Ensure build is up-to-date
@@ -348,7 +416,8 @@ def main():
     
     # Set up overall timeout
     signal.signal(signal.SIGALRM, timeout_handler)
-    signal.alarm(180)  # 3 minute total timeout
+    timeout_secs = 600 if with_hover else 180  # 10 min with hover, 3 min without
+    signal.alarm(timeout_secs)
     
     client = None
     try:
@@ -384,6 +453,7 @@ def main():
         log("=" * 60)
         
         results = {}
+        hover_results = {}
         start_time = time.time()
         
         for i in range(screen_count):
@@ -393,13 +463,51 @@ def main():
             # Wait for screen to render fully
             time.sleep(0.6)
             
-            # Take screenshot
+            # Take default screenshot (no hover)
+            # First move mouse off-screen to ensure clean default state
+            if with_hover:
+                client.mouse_move(0, 0)
+                time.sleep(0.2)
+            
             screenshot_path = os.path.join(output_dir, f"{screen_name}.png")
             if client.screenshot(screenshot_path):
                 results[screen_name] = True
             else:
                 log(f"  FAILED to capture: {screen_name}")
                 results[screen_name] = False
+            
+            # Capture hover-state screenshots if requested
+            if with_hover and results.get(screen_name):
+                tree = client.dump_ui_tree()
+                interactive = find_interactive_elements(tree, max_elements=hover_count)
+                
+                if interactive:
+                    log(f"  Found {len(interactive)} interactive elements")
+                    hover_results[screen_name] = []
+                    
+                    for idx, (label, cx, cy, w, h) in enumerate(interactive):
+                        # Move mouse to center of element
+                        client.mouse_move(cx, cy)
+                        time.sleep(0.15)  # Wait for hover state to render
+                        
+                        # Take hover screenshot
+                        safe_label = re.sub(r'[^\w\-]', '_', label[:30])
+                        hover_path = os.path.join(
+                            hover_dir, f"{screen_name}_hover_{idx}_{safe_label}.png"
+                        )
+                        if client.screenshot(hover_path):
+                            hover_results[screen_name].append(
+                                (label, hover_path)
+                            )
+                            log(f"    hover[{idx}]: '{label}' at ({cx},{cy})")
+                        else:
+                            log(f"    FAILED hover for '{label}'")
+                    
+                    # Move mouse off-screen to reset for next screen
+                    client.mouse_move(0, 0)
+                    time.sleep(0.1)
+                else:
+                    log(f"  No interactive elements found")
             
             # Navigate to next screen (unless this is the last one)
             if i < screen_count - 1:
@@ -421,7 +529,16 @@ def main():
         
         for screen, success in results.items():
             status = "✓" if success else "✗"
-            print(f"  {status} {screen}", file=sys.stderr)
+            hover_info = ""
+            if with_hover and screen in hover_results:
+                hover_info = f" (+{len(hover_results[screen])} hover)"
+            print(f"  {status} {screen}{hover_info}", file=sys.stderr)
+        
+        if with_hover:
+            total_hovers = sum(len(v) for v in hover_results.values())
+            screens_with_hovers = len(hover_results)
+            print(f"\n  Hover screenshots: {total_hovers} across {screens_with_hovers} screens", file=sys.stderr)
+            print(f"  Hover output: {hover_dir}", file=sys.stderr)
         
         # Print validation summary
         if warnings or errors:

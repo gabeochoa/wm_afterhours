@@ -97,8 +97,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Interactive Animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(60)})
-            .with_absolute_position()
-            .with_translate(0.0f, 30.0f)
+            .with_absolute_position(0.0f, 30.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -110,8 +109,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Click buttons to see press animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position()
-            .with_translate(0.0f, 90.0f)
+            .with_absolute_position(0.0f, 90.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -138,13 +136,12 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Click!")
                    .with_size(ComponentSize{pixels(button_size),
                                             pixels(button_size)})
-                   .with_absolute_position()
-                   .with_translate(btn1_x, button_y)
+                   .with_absolute_position(btn1_x, button_y)
                    .with_scale(scale1)  // Smooth visual scaling after layout
                    .with_custom_background(box_blue)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.15f)
                    .with_debug_name("btn1"))) {
       click_count++;
@@ -159,13 +156,12 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Press!")
                    .with_size(ComponentSize{pixels(button_size),
                                             pixels(button_size)})
-                   .with_absolute_position()
-                   .with_translate(btn2_x, button_y)
+                   .with_absolute_position(btn2_x, button_y)
                    .with_scale(scale2)  // Smooth visual scaling after layout
                    .with_custom_background(box_green)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.15f)
                    .with_debug_name("btn2"))) {
       click_count++;
@@ -180,13 +176,12 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Tap!")
                    .with_size(ComponentSize{pixels(button_size),
                                             pixels(button_size)})
-                   .with_absolute_position()
-                   .with_translate(btn3_x, button_y)
+                   .with_absolute_position(btn3_x, button_y)
                    .with_scale(scale3)  // Smooth visual scaling after layout
                    .with_custom_background(box_purple)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.15f)
                    .with_debug_name("btn3"))) {
       click_count++;
@@ -198,8 +193,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("Total clicks: {}", click_count))
             .with_size(ComponentSize{pixels(200), pixels(40)})
-            .with_absolute_position()
-            .with_translate(center_x - 100.0f, button_y + button_size + 40.0f)
+            .with_absolute_position(center_x - 100.0f, button_y + button_size + 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -211,8 +205,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Using with_scale() for smooth visual scaling animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position()
-            .with_translate(0.0f, screen_h - 80.0f)
+            .with_absolute_position(0.0f, screen_h - 80.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)

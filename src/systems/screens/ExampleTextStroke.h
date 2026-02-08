@@ -44,8 +44,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text Stroke / Outline")
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
-            .with_absolute_position()
-            .with_translate(20.0f, 15.0f)
+            .with_absolute_position(20.0f, 15.0f)
             .with_font("BlackOpsOne", h720(36.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 3.0f)
@@ -56,8 +55,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Create bold outlines for game titles and headers")
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
-            .with_absolute_position()
-            .with_translate(20.0f, 65.0f)
+            .with_absolute_position(20.0f, 65.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -92,8 +90,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("NO STROKE")
             .with_size(ComponentSize{pixels(280), pixels(row1_text_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, row1_y)
+            .with_absolute_position(col1_x, row1_y)
             .with_font(bold_font, h720(36.0f))
             .with_custom_text_color(yellow)
             .with_alignment(TextAlignment::Left)
@@ -103,8 +100,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("WITH STROKE")
             .with_size(ComponentSize{pixels(320), pixels(row1_text_h)})
-            .with_absolute_position()
-            .with_translate(col1_x + 290.0f, row1_y)
+            .with_absolute_position(col1_x + 290.0f, row1_y)
             .with_font(bold_font, h720(36.0f))
             .with_custom_text_color(yellow)
             .with_text_stroke(dark_outline, 5.0f)
@@ -116,8 +112,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Same yellow color with dark outline for contrast")
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, desc1_y)
+            .with_absolute_position(col1_x, desc1_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_1"));
@@ -133,8 +128,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BOLD")
             .with_size(ComponentSize{pixels(col1_width), pixels(row2_text_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, row2_y)
+            .with_absolute_position(col1_x, row2_y)
             .with_font(bold_font, h720(72.0f))
             .with_custom_text_color(hot_pink)
             .with_text_stroke(deep_purple, 8.0f)
@@ -146,8 +140,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Thick 8px stroke creates a chunky game-style effect")
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, desc2_y)
+            .with_absolute_position(col1_x, desc2_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_2"));
@@ -163,8 +156,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("CONTRAST")
             .with_size(ComponentSize{pixels(col1_width), pixels(row3_text_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, row3_y)
+            .with_absolute_position(col1_x, row3_y)
             .with_font(bold_font, h720(56.0f))
             .with_custom_text_color(cyan)
             .with_text_stroke(red_stroke, 8.0f)
@@ -176,8 +168,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Cyan text with red outline for a vibrant look")
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, desc3_y)
+            .with_absolute_position(col1_x, desc3_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_3"));
@@ -193,8 +184,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("GLOW")
             .with_size(ComponentSize{pixels(col1_width), pixels(row4_text_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, row4_y)
+            .with_absolute_position(col1_x, row4_y)
             .with_font(bold_font, h720(56.0f))
             .with_custom_text_color(dark_text)
             .with_text_stroke(glow_cyan, 8.0f)
@@ -206,8 +196,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Dark text with bright outline creates a glow effect")
             .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, desc4_y)
+            .with_absolute_position(col1_x, desc4_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("desc_4"));
@@ -223,10 +212,9 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(light_panel_width), pixels(row5_panel_h)})
-            .with_absolute_position()
-            .with_translate(col1_x, row5_y)
+            .with_absolute_position(col1_x, row5_y)
             .with_custom_background(light_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("light_bg"));
 
@@ -236,8 +224,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("WHITE")
             .with_size(ComponentSize{pixels(180), pixels(55)})
-            .with_absolute_position()
-            .with_translate(col1_x + 30.0f, white_text_y)
+            .with_absolute_position(col1_x + 30.0f, white_text_y)
             .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Left)
@@ -247,8 +234,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("WHITE")
             .with_size(ComponentSize{pixels(180), pixels(55)})
-            .with_absolute_position()
-            .with_translate(col1_x + light_panel_width * 0.5f, white_text_y)
+            .with_absolute_position(col1_x + light_panel_width * 0.5f, white_text_y)
             .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 4.0f)
@@ -260,8 +246,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("invisible")
             .with_size(ComponentSize{pixels(100), pixels(20)})
-            .with_absolute_position()
-            .with_translate(col1_x + 50.0f, desc5_y)
+            .with_absolute_position(col1_x + 50.0f, desc5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
             .with_debug_name("desc_5a"));
@@ -270,8 +255,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("visible!")
             .with_size(ComponentSize{pixels(100), pixels(20)})
-            .with_absolute_position()
-            .with_translate(col1_x + light_panel_width * 0.5f + 20.0f, desc5_y)
+            .with_absolute_position(col1_x + light_panel_width * 0.5f + 20.0f, desc5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255})
             .with_debug_name("desc_5b"));
@@ -284,8 +268,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Outline Thickness:")
             .with_size(ComponentSize{pixels(right_col_width), pixels(34)})
-            .with_absolute_position()
-            .with_translate(col2_x, content_start)
+            .with_absolute_position(col2_x, content_start)
             .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("thickness_title"));
@@ -303,8 +286,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("STROKE")
               .with_size(ComponentSize{pixels(220), pixels(60)})
-              .with_absolute_position()
-              .with_translate(col2_x, thickness_y + i * 85.0f)
+              .with_absolute_position(col2_x, thickness_y + i * 85.0f)
               .with_font(bold_font, h720(40.0f))
               .with_custom_text_color(orange)
               .with_text_stroke(dark_orange, thicknesses[i])
@@ -315,8 +297,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(thickness_labels[i])
               .with_size(ComponentSize{pixels(160), pixels(34)})
-              .with_absolute_position()
-              .with_translate(col2_x + 230.0f, thickness_y + i * 85.0f + 14.0f)
+              .with_absolute_position(col2_x + 230.0f, thickness_y + i * 85.0f + 14.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("thickness_label_" + std::to_string(i)));
@@ -328,10 +309,9 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w - 2 * margin), pixels(44)})
-            .with_absolute_position()
-            .with_translate(margin, code_y)
+            .with_absolute_position(margin, code_y)
             .with_custom_background(surface)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.2f)
             .with_debug_name("code_bg"));
 
@@ -339,8 +319,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Tip: Use 2-6px for readable text, 6-10px for decorative titles and headers")
             .with_size(ComponentSize{pixels(screen_w - 2 * margin - 20), pixels(28)})
-            .with_absolute_position()
-            .with_translate(margin + 10.0f, code_y + 10.0f)
+            .with_absolute_position(margin + 10.0f, code_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
             .with_alignment(TextAlignment::Left)

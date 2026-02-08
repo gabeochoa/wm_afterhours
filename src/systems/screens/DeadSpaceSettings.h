@@ -66,6 +66,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
@@ -90,8 +91,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 5 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(40 + i * 20), pixels(1)})
-              .with_absolute_position()
-              .with_translate(content_margin + (float)i * 70.0f,
+              .with_absolute_position(content_margin + (float)i * 70.0f,
                               (float)screen_h - 20.0f)
               .with_custom_background(afterhours::Color{30, 50, 55, 120})
               .with_debug_name("techline_" + std::to_string(i)));
@@ -106,9 +106,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("PAUSE MENU")
             .with_size(
-                ComponentSize{pixels(static_cast<int>(sidebar_w)), pixels(32)})
-            .with_absolute_position()
-            .with_translate(sidebar_x, sidebar_y)
+                ComponentSize{pxf(sidebar_w), pixels(32)})
+            .with_absolute_position(sidebar_x, sidebar_y)
             .with_font_size(h720(20.0f))
             .with_custom_text_color(text_white)
             .with_padding(Padding{.left = pixels(8)})
@@ -127,9 +126,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 65 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_size(ComponentSize{
-                    pixels(static_cast<int>(sidebar_w)), pixels(34)})
-                .with_absolute_position()
-                .with_translate(sidebar_x, item_y)
+                    pxf(sidebar_w), pixels(34)})
+                .with_absolute_position(sidebar_x, item_y)
                 .with_custom_background(item_bg)
                 .with_border(teal_highlight, 1.0f)
                 .with_debug_name("initial_bg_" + std::to_string(i)));
@@ -139,9 +137,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(initial_settings[i])
                      .with_size(ComponentSize{
-                         pixels(static_cast<int>(sidebar_w)), pixels(34)})
-                     .with_absolute_position()
-                     .with_translate(sidebar_x, item_y)
+                         pxf(sidebar_w), pixels(34)})
+                     .with_absolute_position(sidebar_x, item_y)
                      .with_font_size(h720(18.0f))
                      .with_custom_text_color(item_color)
                      .with_padding(Padding{.left = pixels(8)})
@@ -155,10 +152,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Panel background with border + corner bracket decorations
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
-                                     pixels(static_cast<int>(panel_h))})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_size(ComponentSize{pxf(panel_w),
+                                     pxf(panel_h)})
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_dark)
             .with_border(panel_border, 2.0f)
             .with_debug_name("main_panel"))
@@ -168,10 +164,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 110),
         ComponentConfig{}
             .with_label("// SETTINGS")
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 4)),
+            .with_size(ComponentSize{pxf(panel_w - 4),
                                      pixels(44)})
-            .with_absolute_position()
-            .with_translate(panel_x + 2.0f, panel_y + 2.0f)
+            .with_absolute_position(panel_x + 2.0f, panel_y + 2.0f)
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
             .with_font_size(h720(22.0f))
             .with_custom_text_color(text_white)
@@ -194,10 +189,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(entity, 120 + static_cast<int>(i) * 2),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 20)),
-                                       pixels(static_cast<int>(item_h - 4))})
-              .with_absolute_position()
-              .with_translate(panel_x + 10.0f, item_y)
+              .with_size(ComponentSize{pxf(panel_w - 20),
+                                       pxf(item_h - 4)})
+              .with_absolute_position(panel_x + 10.0f, item_y)
               .with_custom_background(item_bg)
               .with_border(is_selected ? teal_highlight : panel_border, 1.0f)
               .with_debug_name("item_bg_" + std::to_string(i)));
@@ -206,10 +200,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (is_selected) {
         div(context, mk(entity, 180 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 22)),
+                .with_size(ComponentSize{pxf(panel_w - 22),
                                          pixels(4)})
-                .with_absolute_position()
-                .with_translate(panel_x + 11.0f, item_y + item_h - 8.0f)
+                .with_absolute_position(panel_x + 11.0f, item_y + item_h - 8.0f)
                 .with_custom_background(teal_highlight)
                 .with_debug_name("highlight_" + std::to_string(i)));
       }
@@ -221,10 +214,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(main_settings[i])
                      .with_size(
-                         ComponentSize{pixels(static_cast<int>(panel_w - 40)),
-                                       pixels(static_cast<int>(item_h - 8))})
-                     .with_absolute_position()
-                     .with_translate(panel_x + 25.0f, item_y + 8.0f)
+                         ComponentSize{pxf(panel_w - 40),
+                                       pxf(item_h - 8)})
+                     .with_absolute_position(panel_x + 25.0f, item_y + 8.0f)
                      .with_font_size(h720(20.0f))
                      .with_custom_text_color(text_color)
                      .with_debug_name("setting_" + std::to_string(i)))) {
@@ -242,8 +234,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SELECT")
             .with_size(ComponentSize{pixels(70), pixels(22)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 105.0f, prompt_y + 3.0f)
+            .with_absolute_position(prompt_x + 105.0f, prompt_y + 3.0f)
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_small"));
@@ -252,8 +243,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(280), pixels(35)})
-            .with_absolute_position()
-            .with_translate(prompt_x, prompt_y + 30.0f)
+            .with_absolute_position(prompt_x, prompt_y + 30.0f)
             .with_custom_background(panel_dark)
             .with_border(panel_border, 1.0f)
             .with_debug_name("prompt_bar"));
@@ -263,8 +253,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("[<-")
             .with_size(ComponentSize{pixels(35), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 15.0f, prompt_y + 35.0f)
+            .with_absolute_position(prompt_x + 15.0f, prompt_y + 35.0f)
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
@@ -275,8 +264,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SELECT")
             .with_size(ComponentSize{pixels(60), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 55.0f, prompt_y + 35.0f)
+            .with_absolute_position(prompt_x + 55.0f, prompt_y + 35.0f)
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_label"));
@@ -286,8 +274,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Esc")
             .with_size(ComponentSize{pixels(35), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 135.0f, prompt_y + 35.0f)
+            .with_absolute_position(prompt_x + 135.0f, prompt_y + 35.0f)
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
@@ -298,8 +285,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BACK")
             .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 175.0f, prompt_y + 35.0f)
+            .with_absolute_position(prompt_x + 175.0f, prompt_y + 35.0f)
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("back_label"));

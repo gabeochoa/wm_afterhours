@@ -227,8 +227,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(afterhours::Color{0, 120, 215, 255})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.5f)
-              .with_absolute_position()
-              .with_translate(pixels(thumb_offset), pixels(0))
+              .with_absolute_position(pixels(thumb_offset), pixels(0))
               .with_debug_name("horiz_indicator_thumb"));
     }
 

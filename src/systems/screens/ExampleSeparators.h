@@ -50,8 +50,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Separator Widget Demo")
             .with_size(ComponentSize{pixels(screen_width), pixels(50)})
-            .with_absolute_position()
-            .with_translate(0.0f, 20.0f)
+            .with_absolute_position(0.0f, 20.0f)
             .with_font("Gaegu-Bold", h720(42.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -61,12 +60,11 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(col_width), pixels(card_height)})
-            .with_absolute_position()
-            .with_translate(start_x, content_y)
+            .with_absolute_position(start_x, content_y)
             .with_custom_background(card_white)
             .with_soft_shadow(6.0f, 10.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 30})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_debug_name("left_card_bg"));
 
@@ -79,8 +77,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Horizontal Separators")
             .with_size(ComponentSize{pixels(item_width), pixels(40)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("h_title"));
@@ -91,8 +88,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Basic separator - default style")
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label1"));
@@ -101,8 +97,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 13),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(item_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_custom_background(border_light)
             .with_debug_name("sep1"));
     y += 32.0f;
@@ -112,8 +107,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Thick separator - 6 pixels tall")
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label2"));
@@ -122,8 +116,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 15),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(item_width), pixels(6)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_custom_background(border_light)
             .with_debug_name("sep2"));
     y += 32.0f;
@@ -133,8 +126,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Custom color - blue accent")
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label3"));
@@ -143,8 +135,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 17),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(item_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_custom_background(accent_blue)
             .with_debug_name("sep3"));
     y += 32.0f;
@@ -154,8 +145,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Partial width - 60% centered")
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("h_label4"));
@@ -165,8 +155,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 19),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(partial_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad + (item_width - partial_width) / 2, y)
+            .with_absolute_position(start_x + pad + (item_width - partial_width) / 2, y)
             .with_custom_background(accent_purple)
             .with_debug_name("sep4"));
     y += 40.0f;
@@ -176,8 +165,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Labeled Separators")
             .with_size(ComponentSize{pixels(item_width), pixels(34)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y)
+            .with_absolute_position(start_x + pad, y)
             .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("labeled_title"));
@@ -188,8 +176,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 21),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(line_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y + 12)
+            .with_absolute_position(start_x + pad, y + 12)
             .with_custom_background(border_light)
             .with_debug_name("or_line1"));
 
@@ -197,8 +184,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("OR")
             .with_size(ComponentSize{pixels(50), pixels(28)})
-            .with_absolute_position()
-            .with_translate(start_x + pad + line_width + 5, y)
+            .with_absolute_position(start_x + pad + line_width + 5, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -207,8 +193,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 23),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(line_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad + line_width + 60, y + 12)
+            .with_absolute_position(start_x + pad + line_width + 60, y + 12)
             .with_custom_background(border_light)
             .with_debug_name("or_line2"));
     y += 40.0f;
@@ -219,8 +204,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 24),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(settings_line_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad, y + 14)
+            .with_absolute_position(start_x + pad, y + 14)
             .with_custom_background(accent_blue)
             .with_debug_name("settings_line1"));
 
@@ -228,8 +212,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Settings")
             .with_size(ComponentSize{pixels(settings_label_width), pixels(30)})
-            .with_absolute_position()
-            .with_translate(start_x + pad + settings_line_width + 15, y)
+            .with_absolute_position(start_x + pad + settings_line_width + 15, y)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(accent_blue)
             .with_alignment(TextAlignment::Center)
@@ -238,8 +221,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 26),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(settings_line_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(start_x + pad + settings_line_width +
+            .with_absolute_position(start_x + pad + settings_line_width +
                                 settings_label_width + 30,
                             y + 14)
             .with_custom_background(accent_blue)
@@ -250,12 +232,11 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(col_width), pixels(card_height)})
-            .with_absolute_position()
-            .with_translate(right_x, content_y)
+            .with_absolute_position(right_x, content_y)
             .with_custom_background(card_white)
             .with_soft_shadow(6.0f, 10.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 30})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_debug_name("right_card_bg"));
 
@@ -266,8 +247,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Vertical Separators")
             .with_size(ComponentSize{pixels(item_width), pixels(40)})
-            .with_absolute_position()
-            .with_translate(right_x + pad, y)
+            .with_absolute_position(right_x + pad, y)
             .with_font("Gaegu-Bold", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("v_title"));
@@ -277,8 +257,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Use between navigation items:")
             .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(right_x + pad, y)
+            .with_absolute_position(right_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("v_desc"));
@@ -294,10 +273,9 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 33),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(nav_width), pixels(nav_height)})
-            .with_absolute_position()
-            .with_translate(right_x + pad, y)
+            .with_absolute_position(right_x + pad, y)
             .with_custom_background(bg_slate)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.12f)
             .with_debug_name("nav_bg"));
 
@@ -311,8 +289,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
               .with_label(nav_items[i])
               .with_size(
                   ComponentSize{pixels(nav_item_width), pixels(nav_height)})
-              .with_absolute_position()
-              .with_translate(nav_x, y)
+              .with_absolute_position(nav_x, y)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
@@ -324,8 +301,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 50 + i),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(3), pixels(40)})
-                .with_absolute_position()
-                .with_translate(nav_x + sep_spacing, y + 12)
+                .with_absolute_position(nav_x + sep_spacing, y + 12)
                 .with_custom_background(sep_colors[i])
                 .with_debug_name(std::string("vsep_") + std::to_string(i)));
         nav_x += sep_spacing * 2 + 3;
@@ -338,8 +314,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 60),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(gallery_line_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(right_x + pad, y + 14)
+            .with_absolute_position(right_x + pad, y + 14)
             .with_custom_background(border_light)
             .with_debug_name("gallery_line1"));
 
@@ -347,8 +322,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Color Gallery")
             .with_size(ComponentSize{pixels(130), pixels(30)})
-            .with_absolute_position()
-            .with_translate(right_x + pad + gallery_line_width + 5, y)
+            .with_absolute_position(right_x + pad + gallery_line_width + 5, y)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -357,8 +331,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 62),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(gallery_line_width), pixels(3)})
-            .with_absolute_position()
-            .with_translate(right_x + pad + gallery_line_width + 140, y + 14)
+            .with_absolute_position(right_x + pad + gallery_line_width + 140, y + 14)
             .with_custom_background(border_light)
             .with_debug_name("gallery_line2"));
     y += 40.0f;
@@ -373,8 +346,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(color_names[i])
               .with_size(ComponentSize{pixels(90), pixels(32)})
-              .with_absolute_position()
-              .with_translate(right_x + pad, y)
+              .with_absolute_position(right_x + pad, y)
               .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name(std::string("color_") + color_names[i]));
@@ -382,8 +354,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 80 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(item_width - 110), pixels(4)})
-              .with_absolute_position()
-              .with_translate(right_x + pad + 100, y + 14)
+              .with_absolute_position(right_x + pad + 100, y + 14)
               .with_custom_background(colors[i])
               .with_debug_name(std::string("colorbar_") + color_names[i]));
       y += 40.0f;
@@ -395,8 +366,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Separators help organize and structure UI content")
             .with_size(ComponentSize{pixels(item_width), pixels(30)})
-            .with_absolute_position()
-            .with_translate(right_x + pad, y)
+            .with_absolute_position(right_x + pad, y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)

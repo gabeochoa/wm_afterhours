@@ -72,12 +72,11 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(panel_w), pixels(panel_h)})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_dark)
             .with_soft_shadow(6.0f, 10.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 50})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_debug_name("main_panel"));
 
     // Header - use same roundness as container and match its top edge
@@ -85,8 +84,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Accessibility Features")
             .with_size(ComponentSize{pixels(panel_w), pixels(55)})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(accent_green)
             .with_font("EqProRounded", h720(28.0f))
             .with_auto_text_color(true)
@@ -107,12 +105,11 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status_text)
             .with_size(ComponentSize{pixels(280), pixels(38)})
-            .with_absolute_position()
-            .with_translate(panel_x + (panel_w - 280) / 2.0f, status_y)
+            .with_absolute_position(panel_x + (panel_w - 280) / 2.0f, status_y)
             .with_custom_background(status_color)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("theme_status"));
@@ -128,8 +125,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Without Automatic Contrast")
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position()
-            .with_translate(left_x, content_y)
+            .with_absolute_position(left_x, content_y)
             .with_custom_background(panel_light)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
@@ -146,25 +142,23 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Light BG - Manual Dark Text")
             .with_size(ComponentSize{pixels(col_w), pixels(52)})
-            .with_absolute_position()
-            .with_translate(left_x, content_y + 40.0f)
+            .with_absolute_position(left_x, content_y + 40.0f)
             .with_custom_background(demo_bg_light)
             .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
             .with_auto_text_color(false) // Manual text color, no auto-contrast
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_debug_name("light_no_auto"));
 
     button(context, mk(entity, 12),
            ComponentConfig{}
                .with_label("Dark BG - Works Fine")
                .with_size(ComponentSize{pixels(col_w), pixels(52)})
-               .with_absolute_position()
-               .with_translate(left_x, content_y + 100.0f)
+               .with_absolute_position(left_x, content_y + 100.0f)
                .with_custom_background(demo_bg_dark)
                .with_auto_text_color(false)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_debug_name("dark_no_auto"));
 
     // Note about the issue
@@ -172,8 +166,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Manual text color applied")
             .with_size(ComponentSize{pixels(col_w), pixels(28)})
-            .with_absolute_position()
-            .with_translate(left_x, content_y + 162.0f)
+            .with_absolute_position(left_x, content_y + 162.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -184,8 +177,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("With Automatic Contrast")
             .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position()
-            .with_translate(right_x, content_y)
+            .with_absolute_position(right_x, content_y)
             .with_custom_background(accent_green)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
@@ -198,24 +190,22 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Light BG - Auto Dark Text")
                .with_size(ComponentSize{pixels(col_w), pixels(52)})
-               .with_absolute_position()
-               .with_translate(right_x, content_y + 40.0f)
+               .with_absolute_position(right_x, content_y + 40.0f)
                .with_custom_background(demo_bg_light)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_debug_name("light_auto"));
 
     button(context, mk(entity, 22),
            ComponentConfig{}
                .with_label("Dark BG - Auto Light Text")
                .with_size(ComponentSize{pixels(col_w), pixels(52)})
-               .with_absolute_position()
-               .with_translate(right_x, content_y + 100.0f)
+               .with_absolute_position(right_x, content_y + 100.0f)
                .with_custom_background(demo_bg_dark)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_debug_name("dark_auto"));
 
     // Note about the solution
@@ -223,8 +213,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Automatically picks best contrast!")
             .with_size(ComponentSize{pixels(col_w), pixels(28)})
-            .with_absolute_position()
-            .with_translate(right_x, content_y + 162.0f)
+            .with_absolute_position(right_x, content_y + 162.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(accent_green)
             .with_alignment(TextAlignment::Center)
@@ -237,8 +226,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Auto-Contrast on Various Backgrounds")
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(32)})
-            .with_absolute_position()
-            .with_translate(panel_x + 30.0f, showcase_y)
+            .with_absolute_position(panel_x + 30.0f, showcase_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -262,13 +250,12 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Auto")
                  .with_size(ComponentSize{pixels(btn_w), pixels(52)})
-                 .with_absolute_position()
-                 .with_translate(panel_x + 30.0f + i * (btn_w + 5),
+                 .with_absolute_position(panel_x + 30.0f + i * (btn_w + 5),
                                  showcase_y + 35.0f)
                  .with_custom_background(showcase_colors[i])
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                 .with_rounded_corners(std::bitset<4>(0b1111))
+                 .with_rounded_corners(RoundedCorners())
                  .with_debug_name("color_" + std::to_string(i)));
     }
 
@@ -289,13 +276,12 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label("Auto")
                  .with_size(ComponentSize{pixels(btn_w), pixels(52)})
-                 .with_absolute_position()
-                 .with_translate(panel_x + 30.0f + i * (btn_w + 5),
+                 .with_absolute_position(panel_x + 30.0f + i * (btn_w + 5),
                                  showcase_y + 95.0f)
                  .with_custom_background(dark_colors[i])
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                 .with_rounded_corners(std::bitset<4>(0b1111))
+                 .with_rounded_corners(RoundedCorners())
                  .with_debug_name("dark_" + std::to_string(i)));
     }
 
@@ -305,8 +291,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_label("Automatic contrast is enabled by default - text "
                         "always remains readable")
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(32)})
-            .with_absolute_position()
-            .with_translate(panel_x + 30.0f, panel_y + panel_h - 44.0f)
+            .with_absolute_position(panel_x + 30.0f, panel_y + panel_h - 44.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)

@@ -81,8 +81,7 @@ ElementResult custom_radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
       div(ctx, mk(ring.ent(), 0),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(dot_sz), pixels(dot_sz)})
-              .with_absolute_position()
-              .with_translate(offset, offset)
+              .with_absolute_position(offset, offset)
               .with_background(Theme::Usage::Accent)
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(1.0f)

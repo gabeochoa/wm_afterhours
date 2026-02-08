@@ -59,8 +59,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text Overflow Debug Demo")
             .with_size(ComponentSize{pixels(screen_width - 40), pixels(50)})
-            .with_absolute_position()
-            .with_translate(20.0f, 20.0f)
+            .with_absolute_position(20.0f, 20.0f)
             .with_font("Gaegu-Bold", h720(32.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -78,8 +77,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(instructions)
             .with_size(ComponentSize{pixels(screen_width - 40), pixels(34)})
-            .with_absolute_position()
-            .with_translate(20.0f, 75.0f)
+            .with_absolute_position(20.0f, 75.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
@@ -107,8 +105,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Good: Text Fits Container")
             .with_size(ComponentSize{pixels(card_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(left_col_x, card_y)
+            .with_absolute_position(left_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(success_green)
             .with_alignment(TextAlignment::Left)
@@ -120,10 +117,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position()
-            .with_translate(left_col_x, card_y)
+            .with_absolute_position(left_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(success_green, success_border_thickness)
             .with_debug_name("card_ok_1"));
 
@@ -132,8 +128,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_label("This text fits perfectly")
             .with_size(ComponentSize{pixels(card_width - 20),
                                      pixels(card_height - 20)})
-            .with_absolute_position()
-            .with_translate(left_col_x + 10.0f, card_y + 10.0f)
+            .with_absolute_position(left_col_x + 10.0f, card_y + 10.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -145,10 +140,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 13),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_width), pixels(60)})
-            .with_absolute_position()
-            .with_translate(left_col_x, card_y)
+            .with_absolute_position(left_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(success_green, success_border_thickness)
             .with_debug_name("card_ok_2"));
 
@@ -156,8 +150,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Short text")
             .with_size(ComponentSize{pixels(card_width - 20), pixels(50)})
-            .with_absolute_position()
-            .with_translate(left_col_x + 10.0f, card_y + 5.0f)
+            .with_absolute_position(left_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -169,10 +162,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 15),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(52), pixels(52)})
-            .with_absolute_position()
-            .with_translate(left_col_x, card_y)
+            .with_absolute_position(left_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(success_green, success_border_thickness)
             .with_debug_name("card_ok_3"));
 
@@ -180,8 +172,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("OK")
             .with_size(ComponentSize{pixels(44), pixels(44)})
-            .with_absolute_position()
-            .with_translate(left_col_x + 4.0f, card_y + 4.0f)
+            .with_absolute_position(left_col_x + 4.0f, card_y + 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -196,8 +187,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Problem: Text Too Large")
             .with_size(ComponentSize{pixels(card_width), pixels(28)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(error_red)
             .with_alignment(TextAlignment::Left)
@@ -209,10 +199,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 21),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(150), pixels(30)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_1"));
 
@@ -220,8 +209,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("This is way too much text for this tiny container!")
             .with_size(ComponentSize{pixels(140), pixels(20)})
-            .with_absolute_position()
-            .with_translate(right_col_x + 5.0f, card_y + 5.0f)
+            .with_absolute_position(right_col_x + 5.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -234,10 +222,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 23),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_width), pixels(50)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_2"));
 
@@ -245,8 +232,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Height is too small!")
             .with_size(ComponentSize{pixels(card_width - 20), pixels(40)})
-            .with_absolute_position()
-            .with_translate(right_col_x + 10.0f, card_y + 5.0f)
+            .with_absolute_position(right_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -258,10 +244,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 25),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(44), pixels(44)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_3"));
 
@@ -269,8 +254,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("No way this fits")
             .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_absolute_position()
-            .with_translate(right_col_x + 4.0f, card_y + 4.0f)
+            .with_absolute_position(right_col_x + 4.0f, card_y + 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -281,8 +265,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("<-- Small 44x44 box with long text")
             .with_size(ComponentSize{pixels(280), pixels(24)})
-            .with_absolute_position()
-            .with_translate(right_col_x + 54.0f, card_y + 10.0f)
+            .with_absolute_position(right_col_x + 54.0f, card_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
@@ -294,10 +277,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 28),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(100), pixels(25)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_custom_background(card_bg)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_border(error_red, error_border_thickness)
             .with_debug_name("card_overflow_4"));
 
@@ -305,8 +287,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Long text in narrow space")
             .with_size(ComponentSize{pixels(90), pixels(15)})
-            .with_absolute_position()
-            .with_translate(right_col_x + 5.0f, card_y + 5.0f)
+            .with_absolute_position(right_col_x + 5.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center)
@@ -319,8 +300,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("How containers handle different text sizes:")
             .with_size(ComponentSize{pixels(card_width), pixels(24)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)
@@ -346,10 +326,9 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 40 + i * 2),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(size), pixels(size)})
-              .with_absolute_position()
-              .with_translate(box_x, card_y)
+              .with_absolute_position(box_x, card_y)
               .with_custom_background(card_bg)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_border(text_fits ? success_green : error_red,
                            text_fits ? success_border_thickness : error_border_thickness)
               .with_debug_name("shrink_box_" + std::to_string(i)));
@@ -358,8 +337,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("ABC")
               .with_size(ComponentSize{pixels(size - 8), pixels(size - 8)})
-              .with_absolute_position()
-              .with_translate(box_x + 4.0f, card_y + 4.0f)
+              .with_absolute_position(box_x + 4.0f, card_y + 4.0f)
               .with_font(UIComponent::DEFAULT_FONT, font_size)
               .with_custom_text_color(text_light)
               .with_alignment(TextAlignment::Center)
@@ -374,8 +352,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Minimum touch target size is 44px. Smaller containers trigger overflow warnings.")
             .with_size(ComponentSize{pixels(card_width), pixels(44)})
-            .with_absolute_position()
-            .with_translate(right_col_x, card_y)
+            .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left)

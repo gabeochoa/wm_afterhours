@@ -54,6 +54,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         afterhours::window_manager::ProvidesCurrentResolution>();
     int screen_w = res ? res->current_resolution.width : 1280;
     int screen_h = res ? res->current_resolution.height : 720;
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
@@ -66,8 +67,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 5),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), pixels(150)})
-            .with_absolute_position()
-            .with_translate(0.0f, (float)screen_h - 150.0f)
+            .with_absolute_position(0.0f, (float)screen_h - 150.0f)
             .with_custom_background(bg_yellow_dark)
             .with_debug_name("ground"));
 
@@ -81,12 +81,11 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("RUBBER")
             .with_size(ComponentSize{pixels(320), pixels(56)})
-            .with_absolute_position()
-            .with_translate(title_x, title_y)
+            .with_absolute_position(title_x, title_y)
             .with_custom_background(afterhours::Color{60, 45, 25, 180})
             .with_font("Fredoka", h720(44.0f))
             .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("title_rubber"));
 
@@ -95,12 +94,11 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BANDIT$")
             .with_size(ComponentSize{pixels(340), pixels(56)})
-            .with_absolute_position()
-            .with_translate(title_x, title_y + 50.0f)
+            .with_absolute_position(title_x, title_y + 50.0f)
             .with_custom_background(afterhours::Color{0, 0, 0, 60})
             .with_font("Fredoka", h720(44.0f))
             .with_custom_text_color(accent_green)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("title_bandits"));
 
@@ -111,11 +109,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 19),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(16), pixels(16)})
-            .with_absolute_position()
-            .with_translate(info_x - 135.0f, 28.0f)
+            .with_absolute_position(info_x - 135.0f, 28.0f)
             .with_custom_background(afterhours::Color{85, 185, 75, 255})
             .with_border(afterhours::Color{65, 155, 55, 255}, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("online_dot"));
 
@@ -123,14 +120,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("thia9uers - Online")
             .with_size(ComponentSize{pixels(285), pixels(42)})
-            .with_absolute_position()
-            .with_translate(info_x - 125.0f, 15.0f)
+            .with_absolute_position(info_x - 125.0f, 15.0f)
             .with_custom_background(online_pill)
             .with_border(afterhours::Color{115, 155, 105, 255}, 3.0f)
             .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_debug_name("online_status"));
 
@@ -139,14 +135,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(std::to_string(player_count))
             .with_size(ComponentSize{pixels(45), pixels(45)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 70.0f, 12.0f)
+            .with_absolute_position((float)screen_w - 70.0f, 12.0f)
             .with_custom_background(accent_blue)
             .with_border(afterhours::Color{65, 145, 185, 255}, 3.0f)
             .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("player_count"));
 
@@ -155,14 +150,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("*")
             .with_size(ComponentSize{pixels(45), pixels(45)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 70.0f, 65.0f)
+            .with_absolute_position((float)screen_w - 70.0f, 65.0f)
             .with_custom_background(lightning)
             .with_border(afterhours::Color{215, 190, 55, 255}, 3.0f)
             .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("lightning"));
 
@@ -175,11 +169,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 45),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(280), pixels(static_cast<int>(menu_items.size() * menu_item_h + 20))})
-            .with_absolute_position()
-            .with_translate(menu_x - 15.0f, menu_y - 10.0f)
+            .with_absolute_position(menu_x - 15.0f, menu_y - 10.0f)
             .with_custom_background(menu_bg)
             .with_border(afterhours::Color{180, 165, 125, 255}, 3.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
             .with_debug_name("menu_bg"));
 
@@ -193,8 +186,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(">")
                 .with_size(ComponentSize{pixels(28), pixels(36)})
-                .with_absolute_position()
-                .with_translate(menu_x - 28.0f, item_y + 4.0f)
+                .with_absolute_position(menu_x - 28.0f, item_y + 4.0f)
                 .with_font("EqProRounded", h720(24.0f))
                 .with_custom_text_color(text_dark)
                 .with_debug_name("arrow_" + std::to_string(i)));
@@ -206,13 +198,12 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(menu_items[i])
                      .with_size(ComponentSize{pixels(240), pixels(44)})
-                     .with_absolute_position()
-                     .with_translate(menu_x, item_y)
+                     .with_absolute_position(menu_x, item_y)
                      .with_custom_background(item_bg)
                      .with_border(is_selected ? afterhours::Color{220, 190, 100, 255} : afterhours::Color{0, 0, 0, 0}, 2.0f)
                      .with_font("EqProRounded", h720(22.0f))
                      .with_custom_text_color(text_dark)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.15f)
                      .with_debug_name("menu_" + std::to_string(i)))) {
         selected_item = i;
@@ -228,11 +219,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 200),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(220), pixels(55)})
-              .with_absolute_position()
-              .with_translate(promo_x, promo_y)
+              .with_absolute_position(promo_x, promo_y)
               .with_custom_background(afterhours::Color{245, 235, 210, 160})
               .with_border(afterhours::Color{180, 165, 135, 140}, 1.5f)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.15f)
               .with_debug_name("promo_box"));
 
@@ -240,8 +230,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Supporter pack available")
               .with_size(ComponentSize{pixels(180), pixels(24)})
-              .with_absolute_position()
-              .with_translate(promo_x + 10.0f, promo_y + 8.0f)
+              .with_absolute_position(promo_x + 10.0f, promo_y + 8.0f)
               .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
               .with_debug_name("promo_text1"));
@@ -250,8 +239,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("More characters in shop")
               .with_size(ComponentSize{pixels(180), pixels(20)})
-              .with_absolute_position()
-              .with_translate(promo_x + 10.0f, promo_y + 30.0f)
+              .with_absolute_position(promo_x + 10.0f, promo_y + 30.0f)
               .with_font("EqProRounded", h720(12.0f))
               .with_custom_text_color(afterhours::Color{130, 115, 85, 255})
               .with_debug_name("promo_text2"));
@@ -261,13 +249,12 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("X")
                      .with_size(ComponentSize{pixels(24), pixels(24)})
-                     .with_absolute_position()
-                     .with_translate(promo_x + 190.0f, promo_y + 5.0f)
+                     .with_absolute_position(promo_x + 190.0f, promo_y + 5.0f)
                      .with_custom_background(afterhours::Color{180, 165, 135, 200})
                      .with_font("EqProRounded", h720(14.0f))
                      .with_custom_text_color(afterhours::Color{80, 70, 50, 255})
                      .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.5f)
                      .with_debug_name("promo_dismiss"))) {
         promo_dismissed = true;
@@ -282,11 +269,10 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 298),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(400), pixels(100)})
-            .with_absolute_position()
-            .with_translate(char_x - 145.0f, char_y - 34.0f)
+            .with_absolute_position(char_x - 145.0f, char_y - 34.0f)
             .with_custom_background(afterhours::Color{255, 245, 200, 150})
             .with_border(afterhours::Color{180, 165, 125, 120}, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("char_selector_bg"));
 
@@ -295,8 +281,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SELECT CHARACTER")
             .with_size(ComponentSize{pixels(200), pixels(24)})
-            .with_absolute_position()
-            .with_translate(char_x - 50.0f, char_y - 28.0f)
+            .with_absolute_position(char_x - 50.0f, char_y - 28.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_debug_name("char_label"));
@@ -306,13 +291,12 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("LB")
             .with_size(ComponentSize{pixels(52), pixels(36)})
-            .with_absolute_position()
-            .with_translate(char_x - 110.0f, char_y)
+            .with_absolute_position(char_x - 110.0f, char_y)
             .with_custom_background(text_dark)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f)
             .with_debug_name("lb"));
 
@@ -321,8 +305,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("EARL THE BIRD")
             .with_size(ComponentSize{pixels(220), pixels(36)})
-            .with_absolute_position()
-            .with_translate(char_x - 55.0f, char_y)
+            .with_absolute_position(char_x - 55.0f, char_y)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -333,13 +316,12 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("RB")
             .with_size(ComponentSize{pixels(52), pixels(36)})
-            .with_absolute_position()
-            .with_translate(char_x + 170.0f, char_y)
+            .with_absolute_position(char_x + 170.0f, char_y)
             .with_custom_background(text_dark)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f)
             .with_debug_name("rb"));
 
@@ -348,8 +330,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("FAVOURITE")
             .with_size(ComponentSize{pixels(150), pixels(28)})
-            .with_absolute_position()
-            .with_translate(char_x - 25.0f, char_y + 38.0f)
+            .with_absolute_position(char_x - 25.0f, char_y + 38.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_alignment(TextAlignment::Center)
@@ -360,8 +341,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Change the game's settings")
             .with_size(ComponentSize{pixels(320), pixels(32)})
-            .with_absolute_position()
-            .with_translate(55.0f, (float)screen_h - 50.0f)
+            .with_absolute_position(55.0f, (float)screen_h - 50.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(afterhours::Color{180, 180, 180, 255})
             .with_debug_name("bottom_hint"));

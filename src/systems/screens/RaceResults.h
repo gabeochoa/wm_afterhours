@@ -106,6 +106,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
@@ -123,9 +124,8 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 1 + i),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(16),
-                                         pixels(static_cast<int>(stripe_h))})
-                .with_absolute_position()
-                .with_translate((float)i * 16.0f, 0.0f)
+                                         pxf(stripe_h)})
+                .with_absolute_position((float)i * 16.0f, 0.0f)
                 .with_custom_background(white)
                 .with_debug_name("checker_r0_" + std::to_string(i)));
       }
@@ -134,9 +134,8 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 1 + stripe_count + i),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(16),
-                                         pixels(static_cast<int>(stripe_h))})
-                .with_absolute_position()
-                .with_translate((float)i * 16.0f, stripe_h)
+                                         pxf(stripe_h)})
+                .with_absolute_position((float)i * 16.0f, stripe_h)
                 .with_custom_background(white)
                 .with_debug_name("checker_r1_" + std::to_string(i)));
       }
@@ -147,8 +146,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("RACE RESULTS")
             .with_size(ComponentSize{pixels(400), pixels(50)})
-            .with_absolute_position()
-            .with_translate(30.0f, 18.0f)
+            .with_absolute_position(30.0f, 18.0f)
             .with_font("Fredoka", h720(36.0f))
             .with_custom_text_color(gold)
             .with_text_stroke(afterhours::Color{160, 120, 0, 255}, 3.0f)
@@ -161,8 +159,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
                         std::to_string(race_number) + "/" +
                         std::to_string(total_races))
             .with_size(ComponentSize{pixels(500), pixels(28)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 530.0f, 18.0f)
+            .with_absolute_position((float)screen_w - 530.0f, 18.0f)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Right)
@@ -177,13 +174,12 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     // Table panel
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(table_w)),
-                                     pixels(static_cast<int>(table_h))})
-            .with_absolute_position()
-            .with_translate(table_x, table_y)
+            .with_size(ComponentSize{pxf(table_w),
+                                     pxf(table_h)})
+            .with_absolute_position(table_x, table_y)
             .with_custom_background(panel_dark)
             .with_border(border_blue, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_soft_shadow(3.0f, 4.0f, 12.0f,
                               afterhours::Color{0, 0, 0, 80})
@@ -200,8 +196,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("#")
             .with_size(ComponentSize{pixels(40), pixels(24)})
-            .with_absolute_position()
-            .with_translate(col_pos_x, header_y)
+            .with_absolute_position(col_pos_x, header_y)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_pos"));
@@ -210,8 +205,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("RACER")
             .with_size(ComponentSize{pixels(120), pixels(24)})
-            .with_absolute_position()
-            .with_translate(col_name_x, header_y)
+            .with_absolute_position(col_name_x, header_y)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_name"));
@@ -220,8 +214,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("TIME")
             .with_size(ComponentSize{pixels(120), pixels(24)})
-            .with_absolute_position()
-            .with_translate(col_time_x, header_y)
+            .with_absolute_position(col_time_x, header_y)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_debug_name("col_time"));
@@ -230,8 +223,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("PTS")
             .with_size(ComponentSize{pixels(60), pixels(24)})
-            .with_absolute_position()
-            .with_translate(col_pts_x, header_y)
+            .with_absolute_position(col_pts_x, header_y)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Right)
@@ -240,10 +232,9 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     // Separator
     div(context, mk(entity, 205),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(table_w - 30)),
+            .with_size(ComponentSize{pxf(table_w - 30),
                                      pixels(1)})
-            .with_absolute_position()
-            .with_translate(table_x + 15.0f, header_y + 28.0f)
+            .with_absolute_position(table_x + 15.0f, header_y + 28.0f)
             .with_custom_background(border_blue)
             .with_debug_name("header_sep"));
 
@@ -259,11 +250,10 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
       if (i % 2 == 0 && !r.is_player) {
         div(context, mk(entity, 260 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(table_w - 20)), pixels(static_cast<int>(row_h - 4))})
-                .with_absolute_position()
-                .with_translate(table_x + 10.0f, ry - 2.0f)
+                .with_size(ComponentSize{pxf(table_w - 20), pxf(row_h - 4)})
+                .with_absolute_position(table_x + 10.0f, ry - 2.0f)
                 .with_custom_background(afterhours::Color{30, 35, 55, 255})
-                .with_rounded_corners(std::bitset<4>(0b1111))
+                .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.1f)
                 .with_debug_name("alt_row_" + std::to_string(i)));
       }
@@ -273,12 +263,11 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 210 + static_cast<int>(i) * 5),
             ComponentConfig{}
                 .with_size(
-                    ComponentSize{pixels(static_cast<int>(table_w - 20)),
-                                  pixels(static_cast<int>(row_h - 4))})
-                .with_absolute_position()
-                .with_translate(table_x + 10.0f, ry - 2.0f)
+                    ComponentSize{pxf(table_w - 20),
+                                  pxf(row_h - 4)})
+                .with_absolute_position(table_x + 10.0f, ry - 2.0f)
                 .with_custom_background(player_highlight)
-                .with_rounded_corners(std::bitset<4>(0b1111))
+                .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.15f)
                 .with_debug_name("player_row"));
       }
@@ -289,8 +278,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(std::to_string(r.position) +
                           position_suffix(r.position))
               .with_size(ComponentSize{pixels(44), pixels(32)})
-              .with_absolute_position()
-              .with_translate(col_pos_x, ry + 6.0f)
+              .with_absolute_position(col_pos_x, ry + 6.0f)
               .with_font("Fredoka", h720(22.0f))
               .with_custom_text_color(position_color(r.position))
               .with_debug_name("pos_" + std::to_string(i)));
@@ -300,8 +288,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(r.name)
               .with_size(ComponentSize{pixels(200), pixels(32)})
-              .with_absolute_position()
-              .with_translate(col_name_x, ry + 6.0f)
+              .with_absolute_position(col_name_x, ry + 6.0f)
               .with_font("EqProRounded",
                           h720(r.is_player ? 22.0f : 20.0f))
               .with_custom_text_color(r.is_player ? gold : white)
@@ -312,8 +299,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(r.time)
               .with_size(ComponentSize{pixels(140), pixels(28)})
-              .with_absolute_position()
-              .with_translate(col_time_x, ry + 8.0f)
+              .with_absolute_position(col_time_x, ry + 8.0f)
               .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(white)
               .with_debug_name("time_" + std::to_string(i)));
@@ -323,8 +309,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("+" + std::to_string(r.points))
               .with_size(ComponentSize{pixels(60), pixels(28)})
-              .with_absolute_position()
-              .with_translate(col_pts_x, ry + 8.0f)
+              .with_absolute_position(col_pts_x, ry + 8.0f)
               .with_font("EqProRounded", h720(20.0f))
               .with_custom_text_color(accent_green)
               .with_alignment(TextAlignment::Right)
@@ -340,13 +325,12 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     // Cup panel
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(cup_w)),
-                                     pixels(static_cast<int>(cup_h))})
-            .with_absolute_position()
-            .with_translate(cup_x, cup_y)
+            .with_size(ComponentSize{pxf(cup_w),
+                                     pxf(cup_h)})
+            .with_absolute_position(cup_x, cup_y)
             .with_custom_background(panel_dark)
             .with_border(border_blue, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_soft_shadow(3.0f, 4.0f, 12.0f,
                               afterhours::Color{0, 0, 0, 80})
@@ -356,10 +340,9 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("CUP STANDINGS")
-            .with_size(ComponentSize{pixels(static_cast<int>(cup_w - 20)),
+            .with_size(ComponentSize{pxf(cup_w - 20),
                                      pixels(30)})
-            .with_absolute_position()
-            .with_translate(cup_x + 10.0f, cup_y + 10.0f)
+            .with_absolute_position(cup_x + 10.0f, cup_y + 10.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(gold)
             .with_alignment(TextAlignment::Center)
@@ -375,8 +358,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(std::to_string(i + 1) + ".")
               .with_size(ComponentSize{pixels(30), pixels(28)})
-              .with_absolute_position()
-              .with_translate(cup_x + 15.0f, sy)
+              .with_absolute_position(cup_x + 15.0f, sy)
               .with_font("EqProRounded", h720(20.0f))
               .with_custom_text_color(position_color(static_cast<int>(i + 1)))
               .with_debug_name("cup_pos_" + std::to_string(i)));
@@ -386,8 +368,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(s.name)
               .with_size(ComponentSize{pixels(120), pixels(28)})
-              .with_absolute_position()
-              .with_translate(cup_x + 50.0f, sy)
+              .with_absolute_position(cup_x + 50.0f, sy)
               .with_font("EqProRounded", h720(20.0f))
               .with_custom_text_color(s.is_player ? gold : white)
               .with_debug_name("cup_name_" + std::to_string(i)));
@@ -397,8 +378,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(std::to_string(s.total_points) + " pts")
               .with_size(ComponentSize{pixels(80), pixels(28)})
-              .with_absolute_position()
-              .with_translate(cup_x + cup_w - 100.0f, sy)
+              .with_absolute_position(cup_x + cup_w - 100.0f, sy)
               .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(muted)
               .with_alignment(TextAlignment::Right)
@@ -411,23 +391,21 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 450),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(cup_w)),
-                                     pixels(static_cast<int>(lap_h))})
-            .with_absolute_position()
-            .with_translate(cup_x, lap_y)
+            .with_size(ComponentSize{pxf(cup_w),
+                                     pxf(lap_h)})
+            .with_absolute_position(cup_x, lap_y)
             .with_custom_background(panel_dark)
             .with_border(border_blue, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_debug_name("lap_panel"));
 
     div(context, mk(entity, 451),
         ComponentConfig{}
             .with_label("BEST LAP")
-            .with_size(ComponentSize{pixels(static_cast<int>(cup_w - 20)),
+            .with_size(ComponentSize{pxf(cup_w - 20),
                                      pixels(24)})
-            .with_absolute_position()
-            .with_translate(cup_x + 10.0f, lap_y + 12.0f)
+            .with_absolute_position(cup_x + 10.0f, lap_y + 12.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center)
@@ -436,10 +414,9 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 452),
         ComponentConfig{}
             .with_label("0:48.220")
-            .with_size(ComponentSize{pixels(static_cast<int>(cup_w - 20)),
+            .with_size(ComponentSize{pxf(cup_w - 20),
                                      pixels(40)})
-            .with_absolute_position()
-            .with_translate(cup_x + 10.0f, lap_y + 40.0f)
+            .with_absolute_position(cup_x + 10.0f, lap_y + 40.0f)
             .with_font("Fredoka", h720(32.0f))
             .with_custom_text_color(accent_green)
             .with_alignment(TextAlignment::Center)
@@ -448,10 +425,9 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 453),
         ComponentConfig{}
             .with_label("New Personal Best!")
-            .with_size(ComponentSize{pixels(static_cast<int>(cup_w - 20)),
+            .with_size(ComponentSize{pxf(cup_w - 20),
                                      pixels(20)})
-            .with_absolute_position()
-            .with_translate(cup_x + 10.0f, lap_y + 75.0f)
+            .with_absolute_position(cup_x + 10.0f, lap_y + 75.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(gold)
             .with_alignment(TextAlignment::Center)
@@ -465,14 +441,13 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Replay")
                .with_size(ComponentSize{pixels(140), pixels(50)})
-               .with_absolute_position()
-               .with_translate(30.0f, bottom_y)
+               .with_absolute_position(30.0f, bottom_y)
                .with_custom_background(panel_blue)
                .with_border(border_blue, 2.0f)
                .with_font("EqProRounded", h720(22.0f))
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.3f)
                .with_debug_name("replay_btn"));
 
@@ -481,14 +456,13 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Next Race >>")
                .with_size(ComponentSize{pixels(200), pixels(50)})
-               .with_absolute_position()
-               .with_translate((float)screen_w - 230.0f, bottom_y)
+               .with_absolute_position((float)screen_w - 230.0f, bottom_y)
                .with_custom_background(accent_green)
                .with_border(afterhours::Color{50, 160, 70, 255}, 3.0f)
                .with_font("Fredoka", h720(24.0f))
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.3f)
                .with_soft_shadow(2.0f, 3.0f, 10.0f,
                                  afterhours::Color{0, 0, 0, 60})
@@ -499,14 +473,13 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Quit Cup")
                .with_size(ComponentSize{pixels(120), pixels(50)})
-               .with_absolute_position()
-               .with_translate(210.0f, bottom_y)
+               .with_absolute_position(210.0f, bottom_y)
                .with_custom_background(afterhours::Color{100, 40, 40, 255})
                .with_border(accent_red, 2.0f)
                .with_font("EqProRounded", h720(20.0f))
                .with_custom_text_color(white)
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.3f)
                .with_debug_name("quit_btn"));
 
@@ -515,8 +488,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("A: Select   B: Back   X: Replay")
             .with_size(ComponentSize{pixels(400), pixels(20)})
-            .with_absolute_position()
-            .with_translate((float)screen_w / 2.0f - 200.0f, (float)screen_h - 25.0f)
+            .with_absolute_position((float)screen_w / 2.0f - 200.0f, (float)screen_h - 25.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center)

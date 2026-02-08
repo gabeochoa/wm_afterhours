@@ -75,7 +75,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_border({255, 210, 60, 255}, 2.0f)      // Lighter gold border
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.4f)
             .with_debug_name("now_default_badge"));
 

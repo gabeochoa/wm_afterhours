@@ -147,6 +147,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // Full screen dark background with grain effect simulation
     div(context, mk(entity, 0),
@@ -167,10 +168,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 100),
         ComponentConfig{}
             .with_label("O")
-            .with_size(ComponentSize{pixels(static_cast<int>(compass_size)),
-                                     pixels(static_cast<int>(compass_size))})
-            .with_absolute_position()
-            .with_translate(compass_cx - compass_size / 2.0f, compass_top_y)
+            .with_size(ComponentSize{pxf(compass_size),
+                                     pxf(compass_size)})
+            .with_absolute_position(compass_cx - compass_size / 2.0f, compass_top_y)
             .with_font("EqProRounded", compass_font_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -181,8 +181,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("N")
             .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position()
-            .with_translate(compass_cx - 8.0f, compass_top_y - 17.0f)
+            .with_absolute_position(compass_cx - 8.0f, compass_top_y - 17.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
@@ -192,8 +191,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("S")
             .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position()
-            .with_translate(compass_cx - 8.0f, compass_top_y + compass_size - 3.0f)
+            .with_absolute_position(compass_cx - 8.0f, compass_top_y + compass_size - 3.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -203,8 +201,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("W")
             .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position()
-            .with_translate(compass_cx - compass_size / 2.0f - 20.0f, compass_cy - 8.0f)
+            .with_absolute_position(compass_cx - compass_size / 2.0f - 20.0f, compass_cy - 8.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -214,8 +211,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("E")
             .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position()
-            .with_translate(compass_cx + compass_size / 2.0f + 3.0f, compass_cy - 8.0f)
+            .with_absolute_position(compass_cx + compass_size / 2.0f + 3.0f, compass_cy - 8.0f)
             .with_font("EqProRounded", compass_cardinal_size)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -226,8 +222,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("|")
             .with_size(ComponentSize{pixels(20), pixels(30)})
-            .with_absolute_position()
-            .with_translate(compass_cx - 10.0f, compass_cy - 12.0f)
+            .with_absolute_position(compass_cx - 10.0f, compass_cy - 12.0f)
             .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
@@ -242,12 +237,11 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           compass_cy + std::sin(angle) * compass_radius - compass_tick_size / 2.0f;
       div(context, mk(entity, 106 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(compass_tick_size)),
-                                       pixels(static_cast<int>(compass_tick_size))})
-              .with_absolute_position()
-              .with_translate(tick_x, tick_y)
+              .with_size(ComponentSize{pxf(compass_tick_size),
+                                       pxf(compass_tick_size)})
+              .with_absolute_position(tick_x, tick_y)
               .with_custom_background(text_muted)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(1.0f)
               .with_debug_name("compass_tick_" + std::to_string(i)));
     }
@@ -257,8 +251,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SCORE: 15,000")
             .with_size(ComponentSize{pixels(260), pixels(28)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 330.0f, 18.0f)
+            .with_absolute_position((float)screen_w - 330.0f, 18.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Right)
@@ -268,13 +261,12 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("(U)")
             .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 40.0f, 15.0f)
+            .with_absolute_position((float)screen_w - 40.0f, 15.0f)
             .with_custom_background(text_tan)
             .with_font("EqProRounded", h720(19.0f))
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("score_icon"));
 
@@ -282,8 +274,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(">> SECURE OBJECTIVE B")
             .with_size(ComponentSize{pixels(230), pixels(30)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 255.0f, 52.0f)
+            .with_absolute_position((float)screen_w - 255.0f, 52.0f)
             .with_custom_background(gold_accent)
             .with_font("BlackOpsOne", h720(16.0f))
             .with_custom_text_color(bg_dark)
@@ -297,8 +288,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(kill_feed[i])
               .with_size(ComponentSize{pixels(550), pixels(28)})
-              .with_absolute_position()
-              .with_translate(cx - 275.0f, kill_y + (float)i * 30.0f)
+              .with_absolute_position(cx - 275.0f, kill_y + (float)i * 30.0f)
               .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(text_muted)
               .with_alignment(TextAlignment::Center)
@@ -310,8 +300,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("@ * Alpha_Six: Under fire!")
             .with_size(ComponentSize{pixels(250), pixels(26)})
-            .with_absolute_position()
-            .with_translate((float)screen_w - 270.0f, 195.0f)
+            .with_absolute_position((float)screen_w - 270.0f, 195.0f)
             .with_font("EqProRounded", h720(21.0f))
             .with_custom_text_color(text_tan)
             .with_debug_name("voice"));
@@ -336,8 +325,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("*")
               .with_size(ComponentSize{pixels(16), pixels(16)})
-              .with_absolute_position()
-              .with_translate(margin_edge - 2.0f, row_y + ks_icon_size / 2.0f - 8.0f)
+              .with_absolute_position(margin_edge - 2.0f, row_y + ks_icon_size / 2.0f - 8.0f)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("cog_" + std::to_string(i)));
@@ -345,10 +333,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       // Icon box background
       div(context, mk(entity, 141 + static_cast<int>(i) * 4),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(ks_icon_size)),
-                                       pixels(static_cast<int>(ks_icon_size))})
-              .with_absolute_position()
-              .with_translate(margin_edge + 20.0f, row_y)
+              .with_size(ComponentSize{pxf(ks_icon_size),
+                                       pxf(ks_icon_size)})
+              .with_absolute_position(margin_edge + 20.0f, row_y)
               .with_custom_background(panel_dark)
               .with_border(border_dark, 1.0f)
               .with_debug_name("ks_bg_" + std::to_string(i)));
@@ -361,17 +348,15 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
                src,
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(48), pixels(48)})
-                   .with_absolute_position()
-                   .with_translate(margin_edge + 26.0f, row_y + 6.0f)
+                   .with_absolute_position(margin_edge + 26.0f, row_y + 6.0f)
                    .with_debug_name("ks_icon_" + std::to_string(i)));
       } else {
         div(context, mk(entity, 142 + static_cast<int>(i) * 4),
             ComponentConfig{}
                 .with_label(fallback_label)
-                .with_size(ComponentSize{pixels(static_cast<int>(ks_icon_size)),
-                                         pixels(static_cast<int>(ks_icon_size))})
-                .with_absolute_position()
-                .with_translate(margin_edge + 20.0f, row_y)
+                .with_size(ComponentSize{pxf(ks_icon_size),
+                                         pxf(ks_icon_size)})
+                .with_absolute_position(margin_edge + 20.0f, row_y)
                 .with_font("EqProRounded", h720(20.0f))
                 .with_custom_text_color(text_tan)
                 .with_alignment(TextAlignment::Center)
@@ -383,9 +368,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 143 + static_cast<int>(i) * 4),
             ComponentConfig{}
                 .with_label(label)
-                .with_size(ComponentSize{pixels(static_cast<int>(ks_icon_size)), pixels(16)})
-                .with_absolute_position()
-                .with_translate(margin_edge + 20.0f, row_y + ks_icon_size + 2.0f)
+                .with_size(ComponentSize{pxf(ks_icon_size), pixels(16)})
+                .with_absolute_position(margin_edge + 20.0f, row_y + ks_icon_size + 2.0f)
                 .with_font("EqProRounded", font_medium)
                 .with_custom_text_color(text_muted)
                 .with_alignment(TextAlignment::Center)
@@ -403,10 +387,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 210),
         ComponentConfig{}
             .with_label("7B Pop <192>")
-            .with_size(ComponentSize{pixels(static_cast<int>(minimap_width)),
-                                     pixels(static_cast<int>(minimap_label_height))})
-            .with_absolute_position()
-            .with_translate(margin_edge, map_label_y)
+            .with_size(ComponentSize{pxf(minimap_width),
+                                     pxf(minimap_label_height)})
+            .with_absolute_position(margin_edge, map_label_y)
             .with_font("EqProRounded", font_large)
             .with_custom_text_color(text_tan)
             .with_debug_name("map_label"));
@@ -414,10 +397,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Minimap background
     div(context, mk(entity, 220),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(minimap_width)),
-                                     pixels(static_cast<int>(minimap_height))})
-            .with_absolute_position()
-            .with_translate(margin_edge, map_content_y)
+            .with_size(ComponentSize{pxf(minimap_width),
+                                     pxf(minimap_height)})
+            .with_absolute_position(margin_edge, map_content_y)
             .with_custom_background(minimap_green)
             .with_border(border_dark, 2.0f)
             .with_debug_name("minimap"));
@@ -428,9 +410,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 1; i < 4; i++) {
       div(context, mk(entity, 230 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(1), pixels(static_cast<int>(minimap_height - 15.0f))})
-              .with_absolute_position()
-              .with_translate(margin_edge + (float)i * grid_cell_w, map_content_y + 8.0f)
+              .with_size(ComponentSize{pixels(1), pxf(minimap_height - 15.0f)})
+              .with_absolute_position(margin_edge + (float)i * grid_cell_w, map_content_y + 8.0f)
               .with_custom_background(afterhours::Color{60, 70, 60, 180})
               .with_debug_name("grid_v_" + std::to_string(i)));
     }
@@ -439,9 +420,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 1; i < 4; i++) {
       div(context, mk(entity, 240 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(minimap_width - 15.0f)), pixels(1)})
-              .with_absolute_position()
-              .with_translate(margin_edge + 8.0f, map_content_y + (float)i * grid_cell_h)
+              .with_size(ComponentSize{pxf(minimap_width - 15.0f), pixels(1)})
+              .with_absolute_position(margin_edge + 8.0f, map_content_y + (float)i * grid_cell_h)
               .with_custom_background(afterhours::Color{60, 70, 60, 180})
               .with_debug_name("grid_h_" + std::to_string(i)));
     }
@@ -450,10 +430,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 250),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(50), pixels(50)})
-            .with_absolute_position()
-            .with_translate(margin_edge + minimap_width - 65.0f, map_content_y + 10.0f)
+            .with_absolute_position(margin_edge + minimap_width - 65.0f, map_content_y + 10.0f)
             .with_custom_background(afterhours::Color{140, 50, 40, 120})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("danger_zone"));
 
@@ -464,8 +443,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("^")
             .with_size(ComponentSize{pixels(16), pixels(16)})
-            .with_absolute_position()
-            .with_translate(player_map_x, player_map_y)
+            .with_absolute_position(player_map_x, player_map_y)
             .with_font("EqProRounded", font_large)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Center)
@@ -475,10 +453,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 261),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(12), pixels(12)})
-            .with_absolute_position()
-            .with_translate(margin_edge + minimap_width - 45.0f, map_content_y + 30.0f)
+            .with_absolute_position(margin_edge + minimap_width - 45.0f, map_content_y + 30.0f)
             .with_custom_background(dot_red)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("obj_marker"));
 
@@ -491,10 +468,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(ks_bar_width)),
-                                     pixels(static_cast<int>(ks_bar_height))})
-            .with_absolute_position()
-            .with_translate(margin_edge, ks_bar_y)
+            .with_size(ComponentSize{pxf(ks_bar_width),
+                                     pxf(ks_bar_height)})
+            .with_absolute_position(margin_edge, ks_bar_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 1.0f)
             .with_debug_name("ks_bar"));
@@ -502,9 +478,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 201),
         ComponentConfig{}
             .with_label("KILLSTREAK")
-            .with_size(ComponentSize{pixels(120), pixels(static_cast<int>(ks_bar_height - 4.0f))})
-            .with_absolute_position()
-            .with_translate(margin_edge + 8.0f, ks_bar_y + 2.0f)
+            .with_size(ComponentSize{pixels(120), pxf(ks_bar_height - 4.0f)})
+            .with_absolute_position(margin_edge + 8.0f, ks_bar_y + 2.0f)
             .with_font("EqProRounded", font_medium)
             .with_custom_text_color(text_tan)
             .with_debug_name("ks_text"));
@@ -515,10 +490,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::Color box_color = (i < killstreak_count) ? text_tan : border_dark;
       div(context, mk(entity, 202 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(ks_box_size)),
-                                       pixels(static_cast<int>(ks_box_size))})
-              .with_absolute_position()
-              .with_translate(boxes_start_x + (float)i * (ks_box_size + ks_box_gap),
+              .with_size(ComponentSize{pxf(ks_box_size),
+                                       pxf(ks_box_size)})
+              .with_absolute_position(boxes_start_x + (float)i * (ks_box_size + ks_box_gap),
                               ks_bar_y + (ks_bar_height - ks_box_size) / 2.0f)
               .with_custom_background(box_color)
               .with_debug_name("ks_box" + std::to_string(i)));
@@ -532,8 +506,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(std::to_string(ammo_clip) + "/" +
                         std::to_string(ammo_reserve))
             .with_size(ComponentSize{pixels(140), pixels(55)})
-            .with_absolute_position()
-            .with_translate(ammo_x, ammo_y)
+            .with_absolute_position(ammo_x, ammo_y)
             .with_font("EqProRounded", font_xlarge)
             .with_custom_text_color(text_tan)
             .with_debug_name("ammo"));
@@ -545,10 +518,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Health panel
     div(context, mk(entity, 310),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(health_panel_width)),
-                                     pixels(static_cast<int>(health_panel_height))})
-            .with_absolute_position()
-            .with_translate(health_x, health_y)
+            .with_size(ComponentSize{pxf(health_panel_width),
+                                     pxf(health_panel_height)})
+            .with_absolute_position(health_x, health_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 1.0f)
             .with_debug_name("health_panel"));
@@ -560,16 +532,14 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
       sprite(context, mk(entity, 311), icon_skull_tex, src,
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(32), pixels(32)})
-                 .with_absolute_position()
-                 .with_translate(health_x + 10.0f, health_y + 14.0f)
+                 .with_absolute_position(health_x + 10.0f, health_y + 14.0f)
                  .with_debug_name("skull_icon"));
     } else {
       div(context, mk(entity, 311),
           ComponentConfig{}
               .with_label("@")
               .with_size(ComponentSize{pixels(35), pixels(35)})
-              .with_absolute_position()
-              .with_translate(health_x + 8.0f, health_y + 12.0f)
+              .with_absolute_position(health_x + 8.0f, health_y + 12.0f)
               .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(text_tan)
               .with_alignment(TextAlignment::Center)
@@ -582,8 +552,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(std::to_string(health_val) + " HEALTH")
             .with_size(ComponentSize{pixels(140), pixels(20)})
-            .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 5.0f)
+            .with_absolute_position(health_x + 50.0f, health_y + 5.0f)
             .with_font("EqProRounded", font_normal)
             .with_custom_text_color(text_tan)
             .with_debug_name("health_label"));
@@ -591,10 +560,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Health bar bg
     div(context, mk(entity, 320),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(health_bar_width)),
-                                     pixels(static_cast<int>(health_bar_height))})
-            .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 26.0f)
+            .with_size(ComponentSize{pxf(health_bar_width),
+                                     pxf(health_bar_height)})
+            .with_absolute_position(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
             .with_debug_name("health_bg"));
 
@@ -602,9 +570,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 321),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(static_cast<int>((health_bar_width - 5.0f) * health_pct)),
-                                     pixels(static_cast<int>(health_bar_height))})
-            .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 26.0f)
+                                     pxf(health_bar_height)})
+            .with_absolute_position(health_x + 50.0f, health_y + 26.0f)
             .with_custom_background(health_cyan)
             .with_debug_name("health_fill"));
 
@@ -617,9 +584,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 332),
         ComponentConfig{}
             .with_label(std::to_string(armor_val) + "%")
-            .with_size(ComponentSize{pixels(static_cast<int>(armor_label_width)), pixels(14)})
-            .with_absolute_position()
-            .with_translate(health_x + 50.0f, health_y + 44.0f)
+            .with_size(ComponentSize{pxf(armor_label_width), pixels(14)})
+            .with_absolute_position(health_x + 50.0f, health_y + 44.0f)
             .with_font("EqProRounded", font_small)
             .with_custom_text_color(text_muted)
             .with_debug_name("armor_label"));
@@ -627,20 +593,18 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Armor bar bg
     div(context, mk(entity, 330),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(armor_bar_actual_width)),
-                                     pixels(static_cast<int>(armor_bar_height))})
-            .with_absolute_position()
-            .with_translate(armor_bar_start_x, health_y + 44.0f)
+            .with_size(ComponentSize{pxf(armor_bar_actual_width),
+                                     pxf(armor_bar_height)})
+            .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
             .with_custom_background(afterhours::Color{25, 25, 22, 255})
             .with_debug_name("armor_bg"));
 
     // Armor bar fill
     div(context, mk(entity, 331),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(armor_bar_actual_width * armor_pct)),
-                                     pixels(static_cast<int>(armor_bar_height))})
-            .with_absolute_position()
-            .with_translate(armor_bar_start_x, health_y + 44.0f)
+            .with_size(ComponentSize{pxf(armor_bar_actual_width * armor_pct),
+                                     pxf(armor_bar_height)})
+            .with_absolute_position(armor_bar_start_x, health_y + 44.0f)
             .with_custom_background(armor_blue)
             .with_debug_name("armor_fill"));
 
@@ -658,8 +622,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("x2")
             .with_size(ComponentSize{pixels(30), pixels(20)})
-            .with_absolute_position()
-            .with_translate(grenade_x - 35.0f, eq_y + eq_box_size / 2.0f - 10.0f)
+            .with_absolute_position(grenade_x - 35.0f, eq_y + eq_box_size / 2.0f - 10.0f)
             .with_font("EqProRounded", font_normal)
             .with_custom_text_color(text_tan)
             .with_alignment(TextAlignment::Right)
@@ -668,10 +631,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Grenade box - highlighted with gold border (selected)
     div(context, mk(entity, 410),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)),
-                                     pixels(static_cast<int>(eq_box_size))})
-            .with_absolute_position()
-            .with_translate(grenade_x, eq_y)
+            .with_size(ComponentSize{pxf(eq_box_size),
+                                     pxf(eq_box_size)})
+            .with_absolute_position(grenade_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(gold_accent, 3.0f)
             .with_debug_name("grenade_bg"));
@@ -683,20 +645,18 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           (float)weapon_grenade_tex.height};
       sprite(context, mk(entity, 411), weapon_grenade_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(static_cast<int>(eq_icon_size)),
-                                          pixels(static_cast<int>(eq_icon_size))})
-                 .with_absolute_position()
-                 .with_translate(grenade_x + icon_offset, eq_y + icon_offset)
+                 .with_size(ComponentSize{pxf(eq_icon_size),
+                                          pxf(eq_icon_size)})
+                 .with_absolute_position(grenade_x + icon_offset, eq_y + icon_offset)
                  .with_debug_name("grenade_icon"));
     }
 
     // Knife box
     div(context, mk(entity, 420),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(eq_box_size)),
-                                     pixels(static_cast<int>(eq_box_size))})
-            .with_absolute_position()
-            .with_translate(knife_x, eq_y)
+            .with_size(ComponentSize{pxf(eq_box_size),
+                                     pxf(eq_box_size)})
+            .with_absolute_position(knife_x, eq_y)
             .with_custom_background(panel_dark)
             .with_border(border_dark, 2.0f)
             .with_debug_name("knife_bg"));
@@ -707,10 +667,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           0, 0, (float)weapon_melee_tex.width, (float)weapon_melee_tex.height};
       sprite(context, mk(entity, 422), weapon_melee_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(static_cast<int>(eq_icon_size)),
-                                          pixels(static_cast<int>(eq_icon_size))})
-                 .with_absolute_position()
-                 .with_translate(knife_x + icon_offset, eq_y + icon_offset)
+                 .with_size(ComponentSize{pxf(eq_icon_size),
+                                          pxf(eq_icon_size)})
+                 .with_absolute_position(knife_x + icon_offset, eq_y + icon_offset)
                  .with_debug_name("knife_icon"));
     }
 
@@ -719,8 +678,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("x1")
             .with_size(ComponentSize{pixels(25), pixels(16)})
-            .with_absolute_position()
-            .with_translate(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size - 16.0f)
+            .with_absolute_position(knife_x + eq_box_size - 25.0f, eq_y + eq_box_size - 16.0f)
             .with_font("EqProRounded", font_small)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
@@ -732,10 +690,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
           0, 0, (float)crosshair_tex.width, (float)crosshair_tex.height};
       sprite(context, mk(entity, 600), crosshair_tex, src,
              ComponentConfig{}
-                 .with_size(ComponentSize{pixels(static_cast<int>(crosshair_size)),
-                                          pixels(static_cast<int>(crosshair_size))})
-                 .with_absolute_position()
-                 .with_translate(cx - crosshair_size / 2.0f, cy - crosshair_size / 2.0f)
+                 .with_size(ComponentSize{pxf(crosshair_size),
+                                          pxf(crosshair_size)})
+                 .with_absolute_position(cx - crosshair_size / 2.0f, cy - crosshair_size / 2.0f)
                  .with_debug_name("crosshair"));
     }
   }

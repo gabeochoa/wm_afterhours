@@ -76,8 +76,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto header = div(context, mk(background.ent(), 0),
                       ComponentConfig{}
                           .with_size(ComponentSize{screen_pct(0.90f), pixels(60)})
-                          .with_absolute_position()
-                          .with_translate(0.0f, 0.0f)
+                          .with_absolute_position(0.0f, 0.0f)
                           .with_background(Theme::Usage::Surface)
                           .with_padding(Spacing::sm)
                           .with_flex_direction(FlexDirection::Row)
@@ -110,8 +109,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto content = div(context, mk(background.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{screen_pct(0.90f), pixels(530)})
-                           .with_absolute_position()
-                           .with_translate(0.0f, 75.0f)
+                           .with_absolute_position(0.0f, 75.0f)
                            .with_background(Theme::Usage::Background)
                            .with_flex_direction(FlexDirection::Row)
                            .with_debug_name("content"));

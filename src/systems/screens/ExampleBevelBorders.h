@@ -54,8 +54,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BEVEL BORDERS")
             .with_size(ComponentSize{pixels(screen_width - 60.0f), pixels(44)})
-            .with_absolute_position()
-            .with_translate(30.0f, 20.0f)
+            .with_absolute_position(30.0f, 20.0f)
             .with_custom_background(panel)
             .with_border(afterhours::Color{120, 130, 150, 255}, 2.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
@@ -69,8 +68,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 "Raised: light top/left, dark bottom/right. Sunken: inverted.")
             .with_size(
                 ComponentSize{pixels(screen_width - 60.0f), pixels(24.0f)})
-            .with_absolute_position()
-            .with_translate(30.0f, 68.0f)
+            .with_absolute_position(30.0f, 68.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
@@ -105,8 +103,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(fmt::format("{}px", static_cast<int>(thicknesses[c])))
               .with_size(ComponentSize{pixels(cell), pixels(col_header_height)})
-              .with_absolute_position()
-              .with_translate(start_x + c * (cell + gap), start_y - col_header_height - 8.0f)
+              .with_absolute_position(start_x + c * (cell + gap), start_y - col_header_height - 8.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(column_header_font_size))
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
@@ -120,8 +117,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(rows[r].label)
               .with_size(ComponentSize{pixels(row_label_width), pixels(cell)})
-              .with_absolute_position()
-              .with_translate(row_label_x, start_y + r * (cell + gap))
+              .with_absolute_position(row_label_x, start_y + r * (cell + gap))
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
@@ -138,8 +134,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_label(
                     fmt::format("{}px", static_cast<int>(thicknesses[c])))
                 .with_size(ComponentSize{pixels(cell), pixels(cell)})
-                .with_absolute_position()
-                .with_translate(x, y)
+                .with_absolute_position(x, y)
                 .with_custom_background(fill)
                 .with_bevel(rows[r].style, light_edge, dark_edge,
                             thicknesses[c])

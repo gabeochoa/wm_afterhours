@@ -248,8 +248,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(panel.ent(), 100),
           ComponentConfig{}
               .with_size(ComponentSize{h720(6.0f), h720(6.0f)})
-              .with_absolute_position()
-              .with_translate(
+              .with_absolute_position(
                   panel.cmp().computed[Axis::X] * 0.5f - 3.0f,
                   panel.cmp().computed[Axis::Y] * 0.5f - 3.0f)
               .with_custom_background(teal)

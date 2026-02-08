@@ -70,6 +70,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     float sw = static_cast<float>(screen_w);
     float sh = static_cast<float>(screen_h);
 
@@ -117,12 +118,11 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
-                                     pixels(static_cast<int>(panel_h))})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_size(ComponentSize{pxf(panel_w),
+                                     pxf(panel_h)})
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_cream)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.03f)
             .with_soft_shadow(4.0f, 6.0f, 20.0f,
                               afterhours::Color{50, 60, 50, 30})
@@ -137,16 +137,15 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 55),
            ComponentConfig{}
                .with_label("X")
-               .with_size(ComponentSize{pixels(static_cast<int>(close_size)),
-                                        pixels(static_cast<int>(close_size))})
-               .with_absolute_position()
-               .with_translate(close_x, close_y)
+               .with_size(ComponentSize{pxf(close_size),
+                                        pxf(close_size)})
+               .with_absolute_position(close_x, close_y)
                .with_custom_background(close_bg)
                .with_border(close_border, 2.0f)
                .with_font("EqProRounded", h720(28.0f))
                .with_custom_text_color(afterhours::Color{130, 140, 130, 255})
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(1.0f)
                .with_debug_name("close"));
 
@@ -155,8 +154,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SETTINGS")
             .with_size(ComponentSize{pixels(250), pixels(45)})
-            .with_absolute_position()
-            .with_translate(panel_x + panel_w / 2.0f - 125.0f, panel_y + 18.0f)
+            .with_absolute_position(panel_x + panel_w / 2.0f - 125.0f, panel_y + 18.0f)
             .with_font("EqProRounded", h720(30.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -174,8 +172,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("DISPLAY")
             .with_size(ComponentSize{pixels(100), pixels(22)})
-            .with_absolute_position()
-            .with_translate(content_x, content_y)
+            .with_absolute_position(content_x, content_y)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("display_header"));
@@ -200,8 +197,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("CONTROLS")
             .with_size(ComponentSize{pixels(120), pixels(22)})
-            .with_absolute_position()
-            .with_translate(content_x, controls_y)
+            .with_absolute_position(content_x, controls_y)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("controls_header"));
@@ -221,16 +217,15 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 180),
            ComponentConfig{}
                .with_label("KEYBOARD")
-               .with_size(ComponentSize{pixels(static_cast<int>(row_w)),
-                                        pixels(static_cast<int>(row_h))})
-               .with_absolute_position()
-               .with_translate(content_x,
+               .with_size(ComponentSize{pxf(row_w),
+                                        pxf(row_h)})
+               .with_absolute_position(content_x,
                                controls_row_y + 2 * (row_h + section_gap))
                .with_custom_background(btn_cream)
                .with_font("EqProRounded", h720(15.0f))
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_debug_name("keyboard_btn"));
 
@@ -241,8 +236,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("AUDIO")
             .with_size(ComponentSize{pixels(80), pixels(22)})
-            .with_absolute_position()
-            .with_translate(content_x, audio_y)
+            .with_absolute_position(content_x, audio_y)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("audio_header"));
@@ -265,8 +259,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("TUTORIAL")
             .with_size(ComponentSize{pixels(100), pixels(22)})
-            .with_absolute_position()
-            .with_translate(content_x, tutorial_y)
+            .with_absolute_position(content_x, tutorial_y)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(header_olive)
             .with_debug_name("tutorial_header"));
@@ -274,15 +267,14 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(entity, 250),
            ComponentConfig{}
                .with_label("PLAY TUTORIAL")
-               .with_size(ComponentSize{pixels(static_cast<int>(row_w)),
-                                        pixels(static_cast<int>(row_h))})
-               .with_absolute_position()
-               .with_translate(content_x, tutorial_y + 22.0f)
+               .with_size(ComponentSize{pxf(row_w),
+                                        pxf(row_h)})
+               .with_absolute_position(content_x, tutorial_y + 22.0f)
                .with_custom_background(btn_cream)
                .with_font("EqProRounded", h720(15.0f))
                .with_custom_text_color(text_muted)
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_debug_name("tutorial_btn"));
 
@@ -292,8 +284,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("RESET TO DEFAULTS")
             .with_size(ComponentSize{pixels(250), pixels(30)})
-            .with_absolute_position()
-            .with_translate(sw / 2.0f - 125.0f, sh - 70.0f)
+            .with_absolute_position(sw / 2.0f - 125.0f, sh - 70.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -304,15 +295,15 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                            afterhours::Entity &entity, int base_id, float x,
                            float y, float w, float h, const std::string &label,
                            int &value_idx, int max_options) {
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     // Row background - pill shaped with subtle roundness
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
+            .with_size(ComponentSize{pxf(w),
+                                     pxf(h)})
+            .with_absolute_position(x, y)
             .with_custom_background(row_cream)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.55f)
             .with_debug_name("row_" + std::to_string(base_id)));
 
@@ -320,9 +311,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(160), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 16.0f, y + 8.0f)
+            .with_size(ComponentSize{pixels(160), pxf(h)})
+            .with_absolute_position(x + 16.0f, y + 8.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
@@ -332,9 +322,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label("<")
                    .with_size(
-                       ComponentSize{pixels(28), pixels(static_cast<int>(h))})
-                   .with_absolute_position()
-                   .with_translate(x + w - 165.0f, y + 7.0f)
+                       ComponentSize{pixels(28), pxf(h)})
+                   .with_absolute_position(x + w - 165.0f, y + 7.0f)
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -355,9 +344,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
             .with_label(display_value)
-            .with_size(ComponentSize{pixels(110), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + w - 140.0f, y + 8.0f)
+            .with_size(ComponentSize{pixels(110), pxf(h)})
+            .with_absolute_position(x + w - 140.0f, y + 8.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -368,9 +356,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(">")
                    .with_size(
-                       ComponentSize{pixels(28), pixels(static_cast<int>(h))})
-                   .with_absolute_position()
-                   .with_translate(x + w - 28.0f, y + 7.0f)
+                       ComponentSize{pixels(28), pxf(h)})
+                   .with_absolute_position(x + w - 28.0f, y + 7.0f)
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -384,15 +371,15 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                          afterhours::Entity &entity, int base_id, float x,
                          float y, float w, float h, const std::string &label,
                          int &value, int max_val) {
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     // Row background - pill shaped
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(w)),
-                                     pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x, y)
+            .with_size(ComponentSize{pxf(w),
+                                     pxf(h)})
+            .with_absolute_position(x, y)
             .with_custom_background(row_cream)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.55f)
             .with_debug_name("row_" + std::to_string(base_id)));
 
@@ -400,9 +387,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{pixels(175), pixels(static_cast<int>(h))})
-            .with_absolute_position()
-            .with_translate(x + 16.0f, y + 8.0f)
+            .with_size(ComponentSize{pixels(175), pxf(h)})
+            .with_absolute_position(x + 16.0f, y + 8.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("label_" + std::to_string(base_id)));
@@ -412,9 +398,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label("<")
                    .with_size(
-                       ComponentSize{pixels(28), pixels(static_cast<int>(h))})
-                   .with_absolute_position()
-                   .with_translate(x + w - 190.0f, y + 7.0f)
+                       ComponentSize{pixels(28), pxf(h)})
+                   .with_absolute_position(x + w - 190.0f, y + 7.0f)
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -439,14 +424,13 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Each segment is clickable to set value
       if (button(context, mk(entity, base_id + 10 + i),
                  ComponentConfig{}
-                     .with_size(ComponentSize{pixels(static_cast<int>(seg_w)),
-                                              pixels(static_cast<int>(seg_h))})
-                     .with_absolute_position()
-                     .with_translate(slider_start_x + static_cast<float>(i) *
+                     .with_size(ComponentSize{pxf(seg_w),
+                                              pxf(seg_h)})
+                     .with_absolute_position(slider_start_x + static_cast<float>(i) *
                                                           (seg_w + seg_gap),
                                      y + 11.0f)
                      .with_custom_background(seg_color)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.2f)
                      .with_debug_name("seg_" + std::to_string(base_id) + "_" +
                                       std::to_string(i)))) {
@@ -459,9 +443,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(">")
                    .with_size(
-                       ComponentSize{pixels(28), pixels(static_cast<int>(h))})
-                   .with_absolute_position()
-                   .with_translate(x + w - 28.0f, y + 7.0f)
+                       ComponentSize{pixels(28), pxf(h)})
+                   .with_absolute_position(x + w - 28.0f, y + 7.0f)
                    .with_font("EqProRounded", h720(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})

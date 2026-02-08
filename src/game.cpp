@@ -98,6 +98,16 @@ nlohmann::json build_ui_tree_json(afterhours::Entity &entity,
   node["absolute"] = cmp.absolute;
   node["visible"] = cmp.was_rendered_to_screen;
 
+  // Interactivity flags
+  node["clickable"] = entity.has<afterhours::ui::HasClickListener>();
+  node["draggable"] = entity.has<afterhours::ui::HasDragListener>();
+  node["focusable"] = !entity.has<afterhours::ui::SkipWhenTabbing>();
+
+  // Label text (if present)
+  if (entity.has<afterhours::ui::HasLabel>()) {
+    node["label"] = entity.get<afterhours::ui::HasLabel>().label;
+  }
+
   // Add children recursively
   nlohmann::json children_arr = nlohmann::json::array();
   for (afterhours::EntityID child_id : cmp.children) {

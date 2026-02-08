@@ -78,8 +78,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto card = div(context, mk(entity, 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position()
-            .with_translate(card_x, card_y)
+            .with_absolute_position(card_x, card_y)
             .with_background(Theme::Usage::Surface)
             .with_roundness(0.02f)
             .with_padding(Spacing::sm)

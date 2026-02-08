@@ -69,6 +69,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
@@ -88,14 +89,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("L")
             .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_absolute_position()
-            .with_translate(tab_start_x - 55.0f, tab_bar_y + 11.0f)
+            .with_absolute_position(tab_start_x - 55.0f, tab_bar_y + 11.0f)
             .with_custom_background(tab_purple)
             .with_border(tab_purple_dark, 2.0f)
             .with_font("Gaegu-Bold", h720(20.0f))
             .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.35f)
             .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
             .with_debug_name("l_bumper"));
@@ -115,8 +115,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               ComponentConfig{}
                   .with_label(icon)
                   .with_size(ComponentSize{pixels(size), pixels(size)})
-                  .with_absolute_position()
-                  .with_translate(tx - (scale - 1.0f) * tab_size / 2.0f,
+                  .with_absolute_position(tx - (scale - 1.0f) * tab_size / 2.0f,
                                   tab_bar_y - (scale - 1.0f) * tab_size / 2.0f)
                   .with_custom_background(tab_bg)
                   .with_border(is_selected ? tab_purple_dark
@@ -125,7 +124,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_font("Gaegu-Bold", h720(18.0f * scale))
                   .with_custom_text_color(text_black)
                   .with_alignment(TextAlignment::Center)
-                  .with_rounded_corners(std::bitset<4>(0b1111))
+                  .with_rounded_corners(RoundedCorners())
                   .with_roundness(0.25f)
                   .with_soft_shadow(2.0f, 3.0f, 8.0f,
                                     afterhours::Color{0, 0, 0, 40})
@@ -139,15 +138,14 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("R")
             .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_absolute_position()
-            .with_translate(tab_start_x + 6 * tab_spacing + 10.0f,
+            .with_absolute_position(tab_start_x + 6 * tab_spacing + 10.0f,
                             tab_bar_y + 11.0f)
             .with_custom_background(tab_purple)
             .with_border(tab_purple_dark, 2.0f)
             .with_font("Gaegu-Bold", h720(20.0f))
             .with_custom_text_color(panel_white)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.35f)
             .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
             .with_debug_name("r_bumper"));
@@ -157,8 +155,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Options")
             .with_size(ComponentSize{pixels(100), pixels(28)})
-            .with_absolute_position()
-            .with_translate(tab_start_x + 5 * tab_spacing - 15.0f,
+            .with_absolute_position(tab_start_x + 5 * tab_spacing - 15.0f,
                             tab_bar_y + tab_size + 8.0f)
             .with_custom_background(tab_purple)
             .with_font("Gaegu-Bold", h720(19.0f))
@@ -176,13 +173,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
-                                     pixels(static_cast<int>(panel_h))})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_size(ComponentSize{pxf(panel_w),
+                                     pxf(panel_h)})
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_white)
             .with_border(border_gray, 3.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.08f)
             .with_soft_shadow(3.0f, 5.0f, 15.0f, afterhours::Color{0, 0, 0, 35})
             .with_debug_name("main_panel"));
@@ -202,14 +198,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(icon)
               .with_size(ComponentSize{pixels(52), pixels(52)})
-              .with_absolute_position()
-              .with_translate(tools_x, tools_y + (float)i * 60.0f)
+              .with_absolute_position(tools_x, tools_y + (float)i * 60.0f)
               .with_custom_background(panel_white)
               .with_border(border_gray, 2.0f)
               .with_font("Gaegu-Bold", h720(18.0f))
               .with_custom_text_color(color)
               .with_alignment(TextAlignment::Center)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.2f)
               .with_debug_name("tool_" + std::to_string(i)));
     }
@@ -222,11 +217,10 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 100),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(260), pixels(58)})
-            .with_absolute_position()
-            .with_translate(name_x, name_y)
+            .with_absolute_position(name_x, name_y)
             .with_custom_background(btn_yellow)
             .with_border(btn_yellow_dark, 4.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
             .with_debug_name("name_btn"));
@@ -236,13 +230,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("@")
             .with_size(ComponentSize{pixels(42), pixels(42)})
-            .with_absolute_position()
-            .with_translate(name_x + 12.0f, name_y + 8.0f)
+            .with_absolute_position(name_x + 12.0f, name_y + 8.0f)
             .with_custom_background(icon_blue)
             .with_font("Gaegu-Bold", h720(24.0f))
             .with_custom_text_color(text_black)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("avatar"));
 
@@ -251,8 +244,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Name")
             .with_size(ComponentSize{pixels(120), pixels(40)})
-            .with_absolute_position()
-            .with_translate(name_x + 65.0f, name_y + 10.0f)
+            .with_absolute_position(name_x + 65.0f, name_y + 10.0f)
             .with_font("Gaegu-Bold", h720(28.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("name_text"));
@@ -265,13 +257,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Data...")
               .with_size(ComponentSize{pixels(80), pixels(24)})
-              .with_absolute_position()
-              .with_translate(panel_x + panel_w - 110.0f, panel_y + panel_h - 65.0f)
+              .with_absolute_position(panel_x + panel_w - 110.0f, panel_y + panel_h - 65.0f)
               .with_custom_background(afterhours::Color{230, 228, 225, 255})
               .with_border(afterhours::Color{210, 208, 205, 255}, 1.0f)
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(text_muted)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.25f)
               .with_debug_name("data_menu"))) {
         show_delete_confirm = true;
@@ -283,13 +274,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Cancel")
               .with_size(ComponentSize{pixels(70), pixels(24)})
-              .with_absolute_position()
-              .with_translate(panel_x + panel_w - 190.0f, panel_y + panel_h - 65.0f)
+              .with_absolute_position(panel_x + panel_w - 190.0f, panel_y + panel_h - 65.0f)
               .with_custom_background(afterhours::Color{210, 208, 205, 255})
               .with_border(border_gray, 1.0f)
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(text_dark)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.25f)
               .with_debug_name("cancel_delete"))) {
         show_delete_confirm = false;
@@ -299,12 +289,11 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Delete")
               .with_size(ComponentSize{pixels(70), pixels(24)})
-              .with_absolute_position()
-              .with_translate(panel_x + panel_w - 110.0f, panel_y + panel_h - 65.0f)
+              .with_absolute_position(panel_x + panel_w - 110.0f, panel_y + panel_h - 65.0f)
               .with_custom_background(afterhours::Color{180, 120, 110, 255})
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(panel_white)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.25f)
               .with_debug_name("confirm_delete"));
     }
@@ -314,8 +303,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Common")
             .with_size(ComponentSize{pixels(100), pixels(28)})
-            .with_absolute_position()
-            .with_translate(panel_x + 25.0f, panel_y + 105.0f)
+            .with_absolute_position(panel_x + 25.0f, panel_y + 105.0f)
             .with_font("Gaegu-Bold", h720(20.0f))
             .with_custom_text_color(text_dark)
             .with_debug_name("common_label"));
@@ -350,10 +338,9 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(entity, 200 + static_cast<int>(i) * 2),
               ComponentConfig{}
                   .with_label(icon)
-                  .with_size(ComponentSize{pixels(static_cast<int>(icon_size)),
-                                           pixels(static_cast<int>(icon_size))})
-                  .with_absolute_position()
-                  .with_translate(ox, oy)
+                  .with_size(ComponentSize{pxf(icon_size),
+                                           pxf(icon_size)})
+                  .with_absolute_position(ox, oy)
                   .with_custom_background(opt_bg)
                   .with_border(is_selected ? afterhours::Color{0, 0, 0, 0}
                                            : border_gray,
@@ -361,7 +348,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_font("Gaegu-Bold", h720(16.0f))
                   .with_custom_text_color(opt_text)
                   .with_alignment(TextAlignment::Center)
-                  .with_rounded_corners(std::bitset<4>(0b1111))
+                  .with_rounded_corners(RoundedCorners())
                   .with_roundness(0.25f)
                   .with_soft_shadow(2.0f, 3.0f, 8.0f,
                                     afterhours::Color{0, 0, 0, 30})
@@ -373,10 +360,9 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 201 + static_cast<int>(i) * 2),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(static_cast<int>(icon_size + 50)),
+              .with_size(ComponentSize{pxf(icon_size + 50),
                                        pixels(28)})
-              .with_absolute_position()
-              .with_translate(ox - 25.0f, oy + icon_size + 5.0f)
+              .with_absolute_position(ox - 25.0f, oy + icon_size + 5.0f)
               .with_font("Gaegu-Bold", h720(18.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
@@ -387,16 +373,15 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 300),
         ComponentConfig{}
             .with_label("Enter a new name and customize your controls.")
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w - 40)),
+            .with_size(ComponentSize{pxf(panel_w - 40),
                                      pixels(46)})
-            .with_absolute_position()
-            .with_translate(panel_x + 20.0f, panel_y + panel_h - 55.0f)
+            .with_absolute_position(panel_x + 20.0f, panel_y + panel_h - 55.0f)
             .with_custom_background(afterhours::Color{240, 235, 230, 255})
             .with_border(border_gray, 1.0f)
             .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.3f)
             .with_debug_name("description"));
   }

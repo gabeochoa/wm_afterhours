@@ -71,8 +71,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Looping Animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(60)})
-            .with_absolute_position()
-            .with_translate(0.0f, 30.0f)
+            .with_absolute_position(0.0f, 30.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -84,8 +83,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Smooth continuous pulse, bounce, and spin effects")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position()
-            .with_translate(0.0f, 90.0f)
+            .with_absolute_position(0.0f, 90.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -107,8 +105,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Breathe")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(pulse1_x, box_y - 40.0f)
+            .with_absolute_position(pulse1_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -119,10 +116,9 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(pulse1_x + pulse1_offset, box_y + pulse1_offset)
+            .with_absolute_position(pulse1_x + pulse1_offset, box_y + pulse1_offset)
             .with_custom_background(box_blue)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)  // Circle
             .with_debug_name("pulse1_box"));
 
@@ -134,8 +130,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Glow")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(pulse2_x, box_y - 40.0f)
+            .with_absolute_position(pulse2_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -146,11 +141,10 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 21),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(pulse2_x, box_y)
+            .with_absolute_position(pulse2_x, box_y)
             .with_custom_background(
                 afterhours::colors::opacity_pct(box_green, pulse2_opacity))
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)  // Circle
             .with_debug_name("pulse2_box"));
 
@@ -162,8 +156,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Bounce")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(bounce_x, box_y - 40.0f)
+            .with_absolute_position(bounce_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -174,10 +167,9 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 31),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(bounce_x, box_y + bounce_offset)
+            .with_absolute_position(bounce_x, box_y + bounce_offset)
             .with_custom_background(box_purple)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)  // Circle
             .with_debug_name("bounce_box"));
 
@@ -189,8 +181,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Spin")
             .with_size(ComponentSize{pixels(box_size), pixels(30)})
-            .with_absolute_position()
-            .with_translate(rotate_x, box_y - 40.0f)
+            .with_absolute_position(rotate_x, box_y - 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -210,11 +201,10 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 41),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position()
-            .with_translate(rotate_x, box_y)
+            .with_absolute_position(rotate_x, box_y)
             .with_custom_background(
                 afterhours::colors::opacity_pct(box_orange, 0.3f))
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_debug_name("rotate_ring"));
 
@@ -222,10 +212,9 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 42),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(indicator_size), pixels(indicator_size)})
-            .with_absolute_position()
-            .with_translate(indicator_x, indicator_y)
+            .with_absolute_position(indicator_x, indicator_y)
             .with_custom_background(box_orange)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_debug_name("rotate_indicator"));
 
@@ -234,8 +223,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Smooth time-based animations using sin/cos")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position()
-            .with_translate(0.0f, screen_h - 80.0f)
+            .with_absolute_position(0.0f, screen_h - 80.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)

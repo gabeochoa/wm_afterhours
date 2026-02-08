@@ -47,6 +47,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // ========== BLURRED BACKGROUND (simulated with gradient) ==========
     div(context, mk(entity, 0),
@@ -64,24 +65,22 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Orange border/frame
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w + 16)),
-                                     pixels(static_cast<int>(panel_h + 16))})
-            .with_absolute_position()
-            .with_translate(panel_x - 8.0f, panel_y - 8.0f)
+            .with_size(ComponentSize{pxf(panel_w + 16),
+                                     pxf(panel_h + 16)})
+            .with_absolute_position(panel_x - 8.0f, panel_y - 8.0f)
             .with_custom_background(panel_orange)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_debug_name("panel_border"));
 
     // Cream inner panel
     div(context, mk(entity, 11),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
-                                     pixels(static_cast<int>(panel_h))})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_size(ComponentSize{pxf(panel_w),
+                                     pxf(panel_h)})
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_cream)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.12f)
             .with_debug_name("panel_inner"));
 
@@ -90,8 +89,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Settings")
             .with_size(ComponentSize{pixels(200), pixels(45)})
-            .with_absolute_position()
-            .with_translate((float)screen_w / 2.0f - 100.0f, panel_y - 50.0f)
+            .with_absolute_position((float)screen_w / 2.0f - 100.0f, panel_y - 50.0f)
             .with_font("Gaegu-Bold", h720(38.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -102,14 +100,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label("X")
                    .with_size(ComponentSize{pixels(52), pixels(52)})
-                   .with_absolute_position()
-                   .with_translate(panel_x + panel_w - 30.0f, panel_y - 10.0f)
+                   .with_absolute_position(panel_x + panel_w - 30.0f, panel_y - 10.0f)
                    .with_custom_background(close_red)
                    .with_border(afterhours::Color{190, 55, 65, 255}, 4.0f)
                    .with_font("Gaegu-Bold", h720(28.0f))
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Center)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(1.0f)
                    .with_debug_name("close_btn"))) {
       // Close action
@@ -138,14 +135,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(display)
                      .with_size(ComponentSize{pixels(90), pixels(58)})
-                     .with_absolute_position()
-                     .with_translate(tx, toggle_y)
+                     .with_absolute_position(tx, toggle_y)
                      .with_custom_background(toggle_bg)
                      .with_border(toggle_border, 4.0f)
                      .with_font("Gaegu-Bold", h720(18.0f))
                      .with_custom_text_color(*state_ptr ? text_dark : white)
                      .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.5f)
                      .with_soft_shadow(1.0f, 2.0f, 4.0f,
                                        afterhours::Color{0, 0, 0, 35})
@@ -160,13 +156,12 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("((*))")
             .with_size(ComponentSize{pixels(45), pixels(45)})
-            .with_absolute_position()
-            .with_translate(wifi_x, toggle_y + 5.0f)
+            .with_absolute_position(wifi_x, toggle_y + 5.0f)
             .with_custom_background(btn_green)
             .with_font("Gaegu-Bold", h720(18.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("wifi_icon"));
 
@@ -175,14 +170,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Save/Load Progress")
                .with_size(ComponentSize{pixels(210), pixels(55)})
-               .with_absolute_position()
-               .with_translate(wifi_x - 220.0f, toggle_y)
+               .with_absolute_position(wifi_x - 220.0f, toggle_y)
                .with_custom_background(white)
                .with_border(afterhours::Color{200, 195, 185, 255}, 3.0f)
                .with_font("Gaegu-Bold", h720(18.0f))
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_debug_name("save_load"));
 
@@ -203,16 +197,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(entity, 100 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(left_buttons[i])
-                 .with_size(ComponentSize{pixels(static_cast<int>(btn_w)),
-                                          pixels(static_cast<int>(btn_h))})
-                 .with_absolute_position()
-                 .with_translate(left_x, row_y + (float)i * row_spacing)
+                 .with_size(ComponentSize{pxf(btn_w),
+                                          pxf(btn_h)})
+                 .with_absolute_position(left_x, row_y + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
                  .with_font("Gaegu-Bold", h720(22.0f))
                  .with_custom_text_color(white)
                  .with_alignment(TextAlignment::Center)
-                 .with_rounded_corners(std::bitset<4>(0b1111))
+                 .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.5f)
                  .with_soft_shadow(1.0f, 2.0f, 5.0f,
                                    afterhours::Color{0, 0, 0, 30})
@@ -224,16 +217,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(entity, 110 + static_cast<int>(i)),
              ComponentConfig{}
                  .with_label(right_buttons[i])
-                 .with_size(ComponentSize{pixels(static_cast<int>(btn_w)),
-                                          pixels(static_cast<int>(btn_h))})
-                 .with_absolute_position()
-                 .with_translate(right_x, row_y + (float)i * row_spacing)
+                 .with_size(ComponentSize{pxf(btn_w),
+                                          pxf(btn_h)})
+                 .with_absolute_position(right_x, row_y + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
                  .with_font("Gaegu-Bold", h720(22.0f))
                  .with_custom_text_color(white)
                  .with_alignment(TextAlignment::Center)
-                 .with_rounded_corners(std::bitset<4>(0b1111))
+                 .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.5f)
                  .with_soft_shadow(1.0f, 2.0f, 5.0f,
                                    afterhours::Color{0, 0, 0, 30})
@@ -247,14 +239,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label("About")
                    .with_size(ComponentSize{pixels(120), pixels(45)})
-                   .with_absolute_position()
-                   .with_translate(left_x, info_y + 10.0f)
+                   .with_absolute_position(left_x, info_y + 10.0f)
                    .with_custom_background(btn_blue)
                    .with_border(btn_blue_dark, 3.0f)
                    .with_font("Gaegu-Bold", h720(20.0f))
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Center)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.5f)
                    .with_soft_shadow(1.0f, 2.0f, 5.0f,
                                      afterhours::Color{0, 0, 0, 30})
@@ -267,8 +258,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Version 1.11.0")
             .with_size(ComponentSize{pixels(150), pixels(20)})
-            .with_absolute_position()
-            .with_translate(left_x + 135.0f, info_y + 22.0f)
+            .with_absolute_position(left_x + 135.0f, info_y + 22.0f)
             .with_font("Gaegu-Bold", h720(17.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("version_simple"));
@@ -284,24 +274,22 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Orange border for About panel
       div(context, mk(entity, 300),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(about_w + 12)),
-                                       pixels(static_cast<int>(about_h + 12))})
-              .with_absolute_position()
-              .with_translate(about_x - 6.0f, about_y - 6.0f)
+              .with_size(ComponentSize{pxf(about_w + 12),
+                                       pxf(about_h + 12)})
+              .with_absolute_position(about_x - 6.0f, about_y - 6.0f)
               .with_custom_background(panel_orange)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.12f)
               .with_debug_name("about_border"));
 
       // Cream inner panel
       div(context, mk(entity, 301),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(static_cast<int>(about_w)),
-                                       pixels(static_cast<int>(about_h))})
-              .with_absolute_position()
-              .with_translate(about_x, about_y)
+              .with_size(ComponentSize{pxf(about_w),
+                                       pxf(about_h)})
+              .with_absolute_position(about_x, about_y)
               .with_custom_background(panel_cream)
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.1f)
               .with_debug_name("about_inner"));
 
@@ -310,8 +298,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("About")
               .with_size(ComponentSize{pixels(100), pixels(30)})
-              .with_absolute_position()
-              .with_translate(about_x + about_w / 2.0f - 50.0f, about_y + 12.0f)
+              .with_absolute_position(about_x + about_w / 2.0f - 50.0f, about_y + 12.0f)
               .with_font("Gaegu-Bold", h720(24.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
@@ -322,8 +309,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Build: 15555-1-114203-20-10200-01")
               .with_size(ComponentSize{pixels(340), pixels(22)})
-              .with_absolute_position()
-              .with_translate(about_x + 20.0f, about_y + 50.0f)
+              .with_absolute_position(about_x + 20.0f, about_y + 50.0f)
               .with_font("Gaegu-Bold", h720(16.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("about_build"));
@@ -333,8 +319,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Version: 1.11.0.12346")
               .with_size(ComponentSize{pixels(220), pixels(22)})
-              .with_absolute_position()
-              .with_translate(about_x + 20.0f, about_y + 75.0f)
+              .with_absolute_position(about_x + 20.0f, about_y + 75.0f)
               .with_font("Gaegu-Bold", h720(16.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("about_version"));
@@ -344,8 +329,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Player ID: 281676956389")
               .with_size(ComponentSize{pixels(240), pixels(22)})
-              .with_absolute_position()
-              .with_translate(about_x + 20.0f, about_y + 100.0f)
+              .with_absolute_position(about_x + 20.0f, about_y + 100.0f)
               .with_font("Gaegu-Bold", h720(16.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("about_player_id"));
@@ -355,15 +339,14 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Close")
                      .with_size(ComponentSize{pixels(100), pixels(38)})
-                     .with_absolute_position()
-                     .with_translate(about_x + about_w / 2.0f - 50.0f,
+                     .with_absolute_position(about_x + about_w / 2.0f - 50.0f,
                                      about_y + about_h - 48.0f)
                      .with_custom_background(btn_green)
                      .with_border(btn_green_dark, 3.0f)
                      .with_font("Gaegu-Bold", h720(18.0f))
                      .with_custom_text_color(text_dark)
                      .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.5f)
                      .with_debug_name("about_close"))) {
         show_about = false;

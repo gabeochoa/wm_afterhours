@@ -49,8 +49,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position()
-            .with_translate(card_x, card_y)
+            .with_absolute_position(card_x, card_y)
             .with_background(Theme::Usage::Surface)
             .with_roundness(0.05f)
             .with_debug_name("card"));
@@ -63,8 +62,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Pagination Component Showcase")
             .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(56)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Left)
@@ -77,8 +75,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Basic Pagination")
             .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
@@ -103,8 +100,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("<")
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
-               .with_absolute_position()
-               .with_translate(pag1_x, current_y)
+               .with_absolute_position(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
                .with_disabled(pag1_left_disabled)
@@ -119,8 +115,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(pages[i])
                  .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
-                 .with_absolute_position()
-                 .with_translate(pag1_x, current_y)
+                 .with_absolute_position(pag1_x, current_y)
                  .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -135,8 +130,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label(">")
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
-               .with_absolute_position()
-               .with_translate(pag1_x, current_y)
+               .with_absolute_position(pag1_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
                .with_disabled(pag1_right_disabled)
@@ -149,8 +143,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Selected: " + pages[page_idx])
             .with_size(ComponentSize{pixels(300), pixels(36)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("status1"));
@@ -162,8 +155,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Difficulty Selector (4 options)")
             .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
@@ -182,8 +174,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("<")
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
-               .with_absolute_position()
-               .with_translate(pag2_x, current_y)
+               .with_absolute_position(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
                .with_disabled(pag2_left_disabled)
@@ -197,8 +188,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(difficulties[i])
                  .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
-                 .with_absolute_position()
-                 .with_translate(pag2_x, current_y)
+                 .with_absolute_position(pag2_x, current_y)
                  .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -212,8 +202,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label(">")
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
-               .with_absolute_position()
-               .with_translate(pag2_x, current_y)
+               .with_absolute_position(pag2_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
                .with_disabled(pag2_right_disabled)
@@ -226,8 +215,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Difficulty: " + difficulties[difficulty_idx])
             .with_size(ComponentSize{pixels(300), pixels(36)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("status2"));
@@ -239,8 +227,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Option Selector (5 options)")
             .with_size(ComponentSize{pixels(card_width - 80.0f), pixels(44)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
@@ -259,8 +246,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("<")
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
-               .with_absolute_position()
-               .with_translate(pag3_x, current_y)
+               .with_absolute_position(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
                .with_disabled(pag3_left_disabled)
@@ -274,8 +260,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(color_options[i])
                  .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
-                 .with_absolute_position()
-                 .with_translate(pag3_x, current_y)
+                 .with_absolute_position(pag3_x, current_y)
                  .with_background(selected ? Theme::Usage::Accent : Theme::Usage::Primary)
                  .with_auto_text_color(true)
                  .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -289,8 +274,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label(">")
                .with_size(ComponentSize{pixels(arrow_width), pixels(btn_height)})
-               .with_absolute_position()
-               .with_translate(pag3_x, current_y)
+               .with_absolute_position(pag3_x, current_y)
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::SYMBOL_FONT, h720(22.0f))
                .with_disabled(pag3_right_disabled)
@@ -303,8 +287,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Selected: " + color_options[color_idx])
             .with_size(ComponentSize{pixels(300), pixels(36)})
-            .with_absolute_position()
-            .with_translate(content_x, current_y)
+            .with_absolute_position(content_x, current_y)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_debug_name("status3"));

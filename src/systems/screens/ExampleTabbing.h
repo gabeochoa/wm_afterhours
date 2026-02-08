@@ -73,10 +73,9 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(panel_width + 8),
                                      pixels(panel_height + 8)})
-            .with_absolute_position()
-            .with_translate(panel_x - 4.0f, panel_y - 4.0f)
+            .with_absolute_position(panel_x - 4.0f, panel_y - 4.0f)
             .with_custom_background(afterhours::Color{100, 60, 140, 60})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.12f)
             .with_debug_name("panel_glow"));
 
@@ -84,11 +83,10 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(panel_width), pixels(panel_height)})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_bg)
             .with_border(border_glow, 2.0f)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
             .with_debug_name("main_panel"));
 
@@ -97,8 +95,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("KEYBOARD NAV")
             .with_size(ComponentSize{pixels(panel_width - 4), pixels(50)})
-            .with_absolute_position()
-            .with_translate(panel_x + 2.0f, panel_y + 2.0f)
+            .with_absolute_position(panel_x + 2.0f, panel_y + 2.0f)
             .with_custom_background(btn_magenta)
             .with_font("EqProRounded", h720(26.0f))
             .with_custom_text_color(text_light)
@@ -112,8 +109,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Use TAB to navigate, ENTER to click")
             .with_size(ComponentSize{pixels(panel_width - 40), pixels(24)})
-            .with_absolute_position()
-            .with_translate(panel_x + 20.0f, panel_y + 62.0f)
+            .with_absolute_position(panel_x + 20.0f, panel_y + 62.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center)
@@ -143,8 +139,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
                      .with_label(label)
                      .with_size(ComponentSize{pixels(button_width),
                                               pixels(button_height)})
-                     .with_absolute_position()
-                     .with_translate(start_x, button_y)
+                     .with_absolute_position(start_x, button_y)
                      .with_custom_background(btn_colors[i])
                      .with_border(
                          afterhours::colors::lighten(btn_colors[i], 1.3f), 2.0f)
@@ -152,7 +147,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
                                        afterhours::Color{0, 0, 0, 80})
                      .with_auto_text_color(true)
                      .with_font("EqProRounded", h720(22.0f))
-                     .with_rounded_corners(std::bitset<4>(0b1111))
+                     .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.4f)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("tab_button_" + std::to_string(i)));
@@ -173,8 +168,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Total Clicks: " + std::to_string(total_clicks))
               .with_size(ComponentSize{pixels(panel_width - 40), pixels(28)})
-              .with_absolute_position()
-              .with_translate(panel_x + 20.0f, panel_y + panel_height - 40.0f)
+              .with_absolute_position(panel_x + 20.0f, panel_y + panel_height - 40.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(btn_lime)
               .with_alignment(TextAlignment::Center)

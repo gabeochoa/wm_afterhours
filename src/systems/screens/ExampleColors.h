@@ -37,12 +37,11 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(panel_w), pixels(panel_h)})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_absolute_position(panel_x, panel_y)
             .with_background(Theme::Usage::Surface)
             .with_soft_shadow(6.0f, 10.0f, 25.0f,
                               afterhours::Color{0, 0, 0, 50})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.08f)
             .with_debug_name("main_panel"));
 
@@ -51,8 +50,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Theme Color Swatches")
             .with_size(ComponentSize{pixels(panel_w), pixels(50)})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_absolute_position(panel_x, panel_y)
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
@@ -73,8 +71,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Theme Colors")
             .with_size(ComponentSize{pixels(row_w), pixels(28)})
-            .with_absolute_position()
-            .with_translate(row_x, row1_y - 32.0f)
+            .with_absolute_position(row_x, row1_y - 32.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_debug_name("row1_label"));
@@ -83,10 +80,9 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 10),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(row_w), pixels(row_h)})
-            .with_absolute_position()
-            .with_translate(row_x, row1_y)
+            .with_absolute_position(row_x, row1_y)
             .with_background(Theme::Usage::Background)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.04f)
             .with_debug_name("row1_bg"));
 
@@ -114,13 +110,12 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(theme_swatches[i].label)
               .with_size(ComponentSize{pixels(swatch_w), pixels(swatch_h)})
-              .with_absolute_position()
-              .with_translate(swatches_start_x + i * (swatch_w + swatch_gap),
+              .with_absolute_position(swatches_start_x + i * (swatch_w + swatch_gap),
                               swatch_y)
               .with_background(theme_swatches[i].usage)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.10f)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("swatch_" + std::to_string(i)));
@@ -131,8 +126,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Custom Colors")
             .with_size(ComponentSize{pixels(row_w), pixels(28)})
-            .with_absolute_position()
-            .with_translate(row_x, row2_y - 32.0f)
+            .with_absolute_position(row_x, row2_y - 32.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_debug_name("row2_label"));
@@ -141,10 +135,9 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(row_w), pixels(row_h)})
-            .with_absolute_position()
-            .with_translate(row_x, row2_y)
+            .with_absolute_position(row_x, row2_y)
             .with_background(Theme::Usage::Background)
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.04f)
             .with_debug_name("row2_bg"));
 
@@ -169,13 +162,12 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(label)
               .with_size(ComponentSize{pixels(swatch_w), pixels(swatch_h)})
-              .with_absolute_position()
-              .with_translate(swatches_start_x + i * (swatch_w + swatch_gap),
+              .with_absolute_position(swatches_start_x + i * (swatch_w + swatch_gap),
                               custom_swatch_y)
               .with_custom_background(custom_colors[i].color)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(0.10f)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("custom_" + std::to_string(i)));
@@ -187,8 +179,7 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
             .with_label("Using Midnight theme. Top row: theme colors. Bottom "
                         "row: custom colors with hex values.")
             .with_size(ComponentSize{pixels(panel_w - 60), pixels(36)})
-            .with_absolute_position()
-            .with_translate(panel_x + 30.0f, panel_y + panel_h - 55.0f)
+            .with_absolute_position(panel_x + 30.0f, panel_y + panel_h - 55.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_auto_text_color(true)
             .with_alignment(TextAlignment::Center)

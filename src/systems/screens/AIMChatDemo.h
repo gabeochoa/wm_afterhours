@@ -315,8 +315,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(SCROLL_TRACK_WIDTH), pixels(thumb_height)})
             .with_custom_background(afterhours::Color{100, 100, 100, 255})
-            .with_absolute_position()
-            .with_translate(pixels(0), pixels(thumb_offset))
+            .with_absolute_position(pixels(0), pixels(thumb_offset))
             .disable_rounded_corners()
             .with_skip_tabbing(true)
             .with_debug_name("scroll_thumb"));
@@ -387,8 +386,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(AIMColors::placeholder_text())
               .with_alignment(TextAlignment::Left)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_absolute_position()
-              .with_translate(pixels(6), pixels(6))
+              .with_absolute_position(pixels(6), pixels(6))
               .with_skip_tabbing(true)
               .with_render_layer(10)  // Render on top of text_area
               .with_debug_name("placeholder_text"));

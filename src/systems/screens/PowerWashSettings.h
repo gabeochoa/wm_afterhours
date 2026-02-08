@@ -110,6 +110,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
+    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // ========== BACKGROUND ==========
     div(context, mk(entity, 0),
@@ -126,8 +127,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("X")
             .with_size(ComponentSize{pixels(30), pixels(30)})
-            .with_absolute_position()
-            .with_translate(25.0f, top_y + 5.0f)
+            .with_absolute_position(25.0f, top_y + 5.0f)
             .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -138,8 +138,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("SETTINGS")
             .with_size(ComponentSize{pixels(120), pixels(30)})
-            .with_absolute_position()
-            .with_translate(65.0f, top_y + 5.0f)
+            .with_absolute_position(65.0f, top_y + 5.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("title"));
@@ -155,10 +154,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)),
-                                     pixels(static_cast<int>(panel_h))})
-            .with_absolute_position()
-            .with_translate(panel_x, panel_y)
+            .with_size(ComponentSize{pxf(panel_w),
+                                     pxf(panel_h)})
+            .with_absolute_position(panel_x, panel_y)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
             .with_debug_name("main_panel"));
@@ -186,10 +184,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 50 + static_cast<int>(i) * 4),
                  ComponentConfig{}
                      .with_label(current_settings[i].label)
-                     .with_size(ComponentSize{pixels(static_cast<int>(label_w)),
+                     .with_size(ComponentSize{pxf(label_w),
                                               pixels(44)})
-                     .with_absolute_position()
-                     .with_translate(row_x, ry - 8.0f)
+                     .with_absolute_position(row_x, ry - 8.0f)
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(label_color)
                      .with_debug_name("label_" + std::to_string(i)))) {
@@ -207,8 +204,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("<")
                      .with_size(ComponentSize{pixels(44), pixels(44)})
-                     .with_absolute_position()
-                     .with_translate(row_x + label_w + 20.0f, ry - 8.0f)
+                     .with_absolute_position(row_x + label_w + 20.0f, ry - 8.0f)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", h720(18.0f))
@@ -228,9 +224,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(
                   current_settings[i].options[current_settings[i].option_idx])
               .with_size(ComponentSize{
-                  pixels(static_cast<int>(dropdown_w - 92)), pixels(44)})
-              .with_absolute_position()
-              .with_translate(row_x + label_w + 65.0f, ry - 8.0f)
+                  pxf(dropdown_w - 92), pixels(44)})
+              .with_absolute_position(row_x + label_w + 65.0f, ry - 8.0f)
               .with_custom_background(dd_bg)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(text_white)
@@ -242,8 +237,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(">")
                      .with_size(ComponentSize{pixels(44), pixels(44)})
-                     .with_absolute_position()
-                     .with_translate(
+                     .with_absolute_position(
                          row_x + label_w + 20.0f + dropdown_w - 24.0f, ry - 8.0f)
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
@@ -265,10 +259,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 150),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w)),
-                                     pixels(static_cast<int>(help_h))})
-            .with_absolute_position()
-            .with_translate(help_x, help_y)
+            .with_size(ComponentSize{pxf(help_w),
+                                     pxf(help_h)})
+            .with_absolute_position(help_x, help_y)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
             .with_debug_name("help_panel"));
@@ -285,10 +278,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 151),
         ComponentConfig{}
             .with_label(help_title)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
+            .with_size(ComponentSize{pxf(help_w - 24),
                                      pixels(28)})
-            .with_absolute_position()
-            .with_translate(help_x + 12.0f, help_y + 12.0f)
+            .with_absolute_position(help_x + 12.0f, help_y + 12.0f)
             .with_font("EqProRounded", h720(17.0f))
             .with_custom_text_color(text_cyan)
             .with_debug_name("help_title"));
@@ -296,10 +288,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 152),
         ComponentConfig{}
             .with_label(help_line1)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
+            .with_size(ComponentSize{pxf(help_w - 24),
                                      pixels(25)})
-            .with_absolute_position()
-            .with_translate(help_x + 12.0f, help_y + 45.0f)
+            .with_absolute_position(help_x + 12.0f, help_y + 45.0f)
             .with_font("EqProRounded", h720(13.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help1"));
@@ -307,10 +298,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 153),
         ComponentConfig{}
             .with_label(help_line2)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
+            .with_size(ComponentSize{pxf(help_w - 24),
                                      pixels(25)})
-            .with_absolute_position()
-            .with_translate(help_x + 12.0f, help_y + 65.0f)
+            .with_absolute_position(help_x + 12.0f, help_y + 65.0f)
             .with_font("EqProRounded", h720(13.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("help2"));
@@ -318,10 +308,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 154),
         ComponentConfig{}
             .with_label(current_val)
-            .with_size(ComponentSize{pixels(static_cast<int>(help_w - 24)),
+            .with_size(ComponentSize{pxf(help_w - 24),
                                      pixels(25)})
-            .with_absolute_position()
-            .with_translate(help_x + 12.0f, help_y + 100.0f)
+            .with_absolute_position(help_x + 12.0f, help_y + 100.0f)
             .with_font("EqProRounded", h720(13.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("help_current"));
@@ -343,10 +332,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(entity, 200 + static_cast<int>(i)),
               ComponentConfig{}
                   .with_label(tabs[i])
-                  .with_size(ComponentSize{pixels(static_cast<int>(tab_w - 6)),
-                                           pixels(static_cast<int>(tab_h))})
-                  .with_absolute_position()
-                  .with_translate(tx, tab_y)
+                  .with_size(ComponentSize{pxf(tab_w - 6),
+                                           pxf(tab_h)})
+                  .with_absolute_position(tx, tab_y)
                   .with_custom_background(tab_bg)
                   .with_border(panel_border, 1.0f)
                   .with_font("EqProRounded", h720(14.0f))
@@ -360,10 +348,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (is_selected) {
         div(context, mk(entity, 210 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(tab_w - 10)),
+                .with_size(ComponentSize{pxf(tab_w - 10),
                                          pixels(5)})
-                .with_absolute_position()
-                .with_translate(tx + 2.0f, tab_y + tab_h - 7.0f)
+                .with_absolute_position(tx + 2.0f, tab_y + tab_h - 7.0f)
                 .with_custom_background(highlight_blue)
                 .with_debug_name("tab_underline_" + std::to_string(i)));
       }
@@ -378,8 +365,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("X")
             .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(prompt_x, prompt_y)
+            .with_absolute_position(prompt_x, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
@@ -390,8 +376,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Close")
             .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 35.0f, prompt_y + 2.0f)
+            .with_absolute_position(prompt_x + 35.0f, prompt_y + 2.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("close_label"));
@@ -401,8 +386,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("O")
             .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 100.0f, prompt_y)
+            .with_absolute_position(prompt_x + 100.0f, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
@@ -413,8 +397,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Reset")
             .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 135.0f, prompt_y + 2.0f)
+            .with_absolute_position(prompt_x + 135.0f, prompt_y + 2.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("reset_label"));
@@ -424,8 +407,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("[]")
             .with_size(ComponentSize{pixels(28), pixels(28)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 195.0f, prompt_y)
+            .with_absolute_position(prompt_x + 195.0f, prompt_y)
             .with_custom_background(afterhours::Color{55, 75, 95, 255})
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_white)
@@ -436,8 +418,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Select")
             .with_size(ComponentSize{pixels(55), pixels(25)})
-            .with_absolute_position()
-            .with_translate(prompt_x + 230.0f, prompt_y + 2.0f)
+            .with_absolute_position(prompt_x + 230.0f, prompt_y + 2.0f)
             .with_font("EqProRounded", h720(14.0f))
             .with_custom_text_color(text_white)
             .with_debug_name("select_label"));

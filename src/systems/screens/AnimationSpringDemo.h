@@ -108,8 +108,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Springy!")
             .with_size(ComponentSize{pixels(400), pixels(70)})
-            .with_absolute_position()
-            .with_translate(center_x - 200.0f, 25.0f)
+            .with_absolute_position(center_x - 200.0f, 25.0f)
             .with_scale(title_scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(42.0f))
             .with_background(Theme::Usage::Surface)
@@ -123,8 +122,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Click the boxes or restart to see them bounce")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position()
-            .with_translate(0.0f, 100.0f)
+            .with_absolute_position(0.0f, 100.0f)
             .with_scale(sub_scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
@@ -157,8 +155,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Boing!")
             .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x1 - 10.0f, box_y - 35.0f)
+            .with_absolute_position(x1 - 10.0f, box_y - 35.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -168,11 +165,10 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 11),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(box_size), pixels(box_size * squash1)})
-                   .with_absolute_position()
-                   .with_translate(x1, box_y)
+                   .with_absolute_position(x1, box_y)
                    .with_scale(scale1)
                    .with_custom_background(box_pink)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.3f)
                    .with_debug_name("box1"))) {
       box_click_times[0] = time_elapsed;
@@ -194,8 +190,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Jelly")
             .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x2 - 10.0f, box_y - 35.0f)
+            .with_absolute_position(x2 - 10.0f, box_y - 35.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -205,11 +200,10 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 21),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position()
-                   .with_translate(x2 + wobble2, box_y)
+                   .with_absolute_position(x2 + wobble2, box_y)
                    .with_scale(scale2)
                    .with_custom_background(box_cyan)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.5f)  // Circle
                    .with_debug_name("box2"))) {
       box_click_times[1] = time_elapsed;
@@ -229,8 +223,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Balloon")
             .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x3 - 10.0f, box_y - 35.0f)
+            .with_absolute_position(x3 - 10.0f, box_y - 35.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -240,11 +233,10 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 31),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position()
-                   .with_translate(x3, box_y)
+                   .with_absolute_position(x3, box_y)
                    .with_scale(scale3)
                    .with_custom_background(box_yellow)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.2f)
                    .with_debug_name("box3"))) {
       box_click_times[2] = time_elapsed;
@@ -265,8 +257,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Drop")
             .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x4 - 10.0f, box_y - 35.0f)
+            .with_absolute_position(x4 - 10.0f, box_y - 35.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -276,10 +267,9 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 41),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position()
-                   .with_translate(x4, box_y + drop_offset)
+                   .with_absolute_position(x4, box_y + drop_offset)
                    .with_custom_background(box_lime)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.15f)
                    .with_debug_name("box4"))) {
       box_click_times[3] = time_elapsed;
@@ -300,8 +290,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Rocker")
             .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position()
-            .with_translate(x5 - 10.0f, box_y - 35.0f)
+            .with_absolute_position(x5 - 10.0f, box_y - 35.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -311,10 +300,9 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 51),
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position()
-                   .with_translate(x5 + rock, box_y)
+                   .with_absolute_position(x5 + rock, box_y)
                    .with_custom_background(box_violet)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.4f)
                    .with_debug_name("box5"))) {
       box_click_times[4] = time_elapsed;
@@ -335,8 +323,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("Bounces: {}", bounce_count))
             .with_size(ComponentSize{pixels(200), pixels(50)})
-            .with_absolute_position()
-            .with_translate(center_x - 100.0f, box_y + box_size + 50.0f)
+            .with_absolute_position(center_x - 100.0f, box_y + box_size + 50.0f)
             .with_scale(counter_scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
             .with_background(Theme::Usage::Surface)
@@ -350,13 +337,12 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label("Restart!")
                    .with_size(ComponentSize{pixels(180), pixels(50)})
-                   .with_absolute_position()
-                   .with_translate(center_x - 90.0f, screen_h - 90.0f)
+                   .with_absolute_position(center_x - 90.0f, screen_h - 90.0f)
                    .with_scale(btn_scale)
                    .with_background(Theme::Usage::Primary)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.5f)
                    .with_debug_name("restart_btn"))) {
       trigger_time = time_elapsed;

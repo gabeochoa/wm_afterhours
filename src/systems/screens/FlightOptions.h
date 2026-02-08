@@ -101,8 +101,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 60),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(80), pixels(2)})
-            .with_absolute_position()
-            .with_translate(line_origin_x - 80.0f, line_origin_y)
+            .with_absolute_position(line_origin_x - 80.0f, line_origin_y)
             .with_custom_background(highlight_line)
             .with_debug_name("line_top"));
 
@@ -111,8 +110,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 61),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(2), pixels((int)vertical_line_height)})
-            .with_absolute_position()
-            .with_translate(line_origin_x, line_origin_y)
+            .with_absolute_position(line_origin_x, line_origin_y)
             .with_custom_background(highlight_line)
             .with_debug_name("line_vert"));
 
@@ -120,10 +118,9 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 62),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(6), pixels(6)})
-            .with_absolute_position()
-            .with_translate(line_origin_x - 2.0f, line_origin_y - 2.0f)
+            .with_absolute_position(line_origin_x - 2.0f, line_origin_y - 2.0f)
             .with_custom_background(afterhours::Color{255, 200, 80, 255})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
             .with_debug_name("glow_dot"));
 
@@ -133,8 +130,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 70 + static_cast<int>(i)),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(10), pixels(2)})
-              .with_absolute_position()
-              .with_translate(line_origin_x + 2.0f, tick_y)  // Tick extends from line toward menu
+              .with_absolute_position(line_origin_x + 2.0f, tick_y)  // Tick extends from line toward menu
               .with_custom_background(i == selected_category ? text_cyan
                                                              : text_muted)
               .with_debug_name("tick_" + std::to_string(i)));
@@ -145,8 +141,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("OPTIONS")
             .with_size(ComponentSize{pixels(200), pixels(50)})
-            .with_absolute_position()
-            .with_translate(135.0f, 60.0f)
+            .with_absolute_position(135.0f, 60.0f)
             .with_font("EqProRounded", h720(36.0f))
             .with_custom_text_color(text_cyan)
             .with_debug_name("title"));
@@ -162,8 +157,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(categories[i])
                      .with_size(ComponentSize{pixels(200), pixels(32)})
-                     .with_absolute_position()
-                     .with_translate(menu_x, menu_y + (float)i * 36.0f)
+                     .with_absolute_position(menu_x, menu_y + (float)i * 36.0f)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(item_color)
                      .with_alignment(TextAlignment::Left)
@@ -177,8 +171,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 150 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(4), pixels(26)})
-                .with_absolute_position()
-                .with_translate(menu_x - 18.0f,
+                .with_absolute_position(menu_x - 18.0f,
                                 menu_y + (float)i * 36.0f + 3.0f)
                 .with_custom_background(text_cyan)
                 .with_debug_name("select_bar_" + std::to_string(i)));
@@ -197,8 +190,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 160),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(3), pixels((int)(connector_bottom - connector_top))})
-            .with_absolute_position()
-            .with_translate(connector_x, connector_top)
+            .with_absolute_position(connector_x, connector_top)
             .with_custom_background(connector_line)
             .with_debug_name("connector_line"));
 
@@ -208,8 +200,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 170 + static_cast<int>(i)),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(12), pixels(2)})
-              .with_absolute_position()
-              .with_translate(connector_x + 3.0f, branch_y)
+              .with_absolute_position(connector_x + 3.0f, branch_y)
               .with_custom_background(connector_line)
               .with_debug_name("branch_" + std::to_string(i)));
     }
@@ -220,8 +211,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(sub_header)
             .with_size(ComponentSize{pixels(300), pixels(28)})
-            .with_absolute_position()
-            .with_translate(sub_x, sub_y - 36.0f)
+            .with_absolute_position(sub_x, sub_y - 36.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_cyan)
             .with_debug_name("sub_header"));
@@ -251,8 +241,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(label)
                      .with_size(ComponentSize{pixels(300), pixels(32)})
-                     .with_absolute_position()
-                     .with_translate(sub_x, sub_y + (float)i * 36.0f)
+                     .with_absolute_position(sub_x, sub_y + (float)i * 36.0f)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(opt_color)
                      .with_disabled(is_disabled)
@@ -269,10 +258,9 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 249),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(6), pixels(6)})
-              .with_absolute_position()
-              .with_translate(sub_x + 8.0f, sub_y + 3 * 36.0f + 28.0f)
+              .with_absolute_position(sub_x + 8.0f, sub_y + 3 * 36.0f + 28.0f)
               .with_custom_background(afterhours::Color{180, 140, 50, 255})
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(1.0f)
               .with_debug_name("vibration_warn_dot"));
 
@@ -280,8 +268,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Requires compatible controller")
               .with_size(ComponentSize{pixels(280), pixels(20)})
-              .with_absolute_position()
-              .with_translate(sub_x + 18.0f, sub_y + 3 * 36.0f + 24.0f)
+              .with_absolute_position(sub_x + 18.0f, sub_y + 3 * 36.0f + 24.0f)
               .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("vibration_tooltip"));
@@ -304,8 +291,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(help_text)
             .with_size(ComponentSize{pixels(500), pixels(36)})
-            .with_absolute_position()
-            .with_translate(170.0f, (float)screen_h - 180.0f)
+            .with_absolute_position(170.0f, (float)screen_h - 180.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("help"));
@@ -318,8 +304,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Enter")
             .with_size(ComponentSize{pixels(56), pixels(36)})
-            .with_absolute_position()
-            .with_translate(160.0f, btn_y)
+            .with_absolute_position(160.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
             .with_font("EqProRounded", h720(18.0f))
@@ -331,8 +316,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("OK")
             .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_absolute_position()
-            .with_translate(224.0f, btn_y)
+            .with_absolute_position(224.0f, btn_y)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("ok_label"));
@@ -342,8 +326,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Esc")
             .with_size(ComponentSize{pixels(48), pixels(36)})
-            .with_absolute_position()
-            .with_translate(275.0f, btn_y)
+            .with_absolute_position(275.0f, btn_y)
             .with_custom_background(afterhours::Color{35, 50, 70, 255})
             .with_border(text_muted, 1.0f)
             .with_font("EqProRounded", h720(18.0f))
@@ -355,8 +338,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BACK")
             .with_size(ComponentSize{pixels(56), pixels(36)})
-            .with_absolute_position()
-            .with_translate(331.0f, btn_y)
+            .with_absolute_position(331.0f, btn_y)
             .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(text_bright)
             .with_debug_name("back_label"));

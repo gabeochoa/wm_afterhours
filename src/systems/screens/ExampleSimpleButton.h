@@ -58,12 +58,11 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 100 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(dot_size), pixels(dot_size)})
-              .with_absolute_position()
-              .with_translate(screen_width * dot_positions[i][0],
+              .with_absolute_position(screen_width * dot_positions[i][0],
                               screen_height * dot_positions[i][1])
               .with_custom_background(
                   afterhours::colors::opacity_pct(confetti[i % 4], 0.6f))
-              .with_rounded_corners(std::bitset<4>(0b1111))
+              .with_rounded_corners(RoundedCorners())
               .with_roundness(1.0f)
               .with_debug_name("confetti_" + std::to_string(i)));
     }
@@ -77,12 +76,11 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_w), pixels(card_h)})
-            .with_absolute_position()
-            .with_translate(card_x, card_y)
+            .with_absolute_position(card_x, card_y)
             .with_custom_background(card_white)
             .with_soft_shadow(8.0f, 12.0f, 30.0f,
                               afterhours::Color{80, 60, 100, 40})
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.12f)
             .with_debug_name("card"));
 
@@ -91,8 +89,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Simple Button Demo")
             .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(36)})
-            .with_absolute_position()
-            .with_translate(card_x + card_padding, card_y + card_padding + 4.0f)
+            .with_absolute_position(card_x + card_padding, card_y + card_padding + 4.0f)
             .with_font("Gaegu-Bold", h720(28.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -103,8 +100,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Go ahead, give it a click!")
             .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(22)})
-            .with_absolute_position()
-            .with_translate(card_x + card_padding, card_y + card_padding + 42.0f)
+            .with_absolute_position(card_x + card_padding, card_y + card_padding + 42.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -122,14 +118,13 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Click Me!")
                    .with_size(ComponentSize{pixels(button_width),
                                             pixels(button_height)})
-                   .with_absolute_position()
-                   .with_translate(button_x, button_y)
+                   .with_absolute_position(button_x, button_y)
                    .with_custom_background(btn_coral)
                    .with_soft_shadow(4.0f, 6.0f, 14.0f,
                                      afterhours::Color{255, 100, 90, 50})
                    .with_font("Gaegu-Bold", h720(26.0f))
                    .with_custom_text_color(card_white)
-                   .with_rounded_corners(std::bitset<4>(0b1111))
+                   .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.5f)
                    .with_alignment(TextAlignment::Center)
                    .with_padding(Spacing::md)
@@ -167,11 +162,10 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 20),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(counter_width), pixels(counter_height)})
-            .with_absolute_position()
-            .with_translate(card_x + (card_w - counter_width) / 2.0f, counter_y)
+            .with_absolute_position(card_x + (card_w - counter_width) / 2.0f, counter_y)
             .with_custom_background(
                 afterhours::colors::opacity_pct(counter_color, 0.12f))
-            .with_rounded_corners(std::bitset<4>(0b1111))
+            .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
             .with_debug_name("counter_bg"));
 
@@ -179,8 +173,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(counter_text)
             .with_size(ComponentSize{pixels(counter_width - 10), pixels(32)})
-            .with_absolute_position()
-            .with_translate(card_x + (card_w - (counter_width - 10)) / 2.0f, counter_y + 5.0f)
+            .with_absolute_position(card_x + (card_w - (counter_width - 10)) / 2.0f, counter_y + 5.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(counter_color)
             .with_alignment(TextAlignment::Center)
@@ -197,8 +190,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(divider_width), pixels(1)})
-            .with_absolute_position()
-            .with_translate(card_x + (card_w - divider_width) / 2.0f, divider_y)
+            .with_absolute_position(card_x + (card_w - divider_width) / 2.0f, divider_y)
             .with_custom_background(afterhours::colors::opacity_pct(text_muted, 0.35f))
             .with_debug_name("divider"));
 
@@ -209,8 +201,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("More Styles")
             .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(20)})
-            .with_absolute_position()
-            .with_translate(card_x + card_padding, more_styles_y)
+            .with_absolute_position(card_x + card_padding, more_styles_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
@@ -228,14 +219,13 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Secondary")
                .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
-               .with_absolute_position()
-               .with_translate(left_btn_x, small_btn_y)
+               .with_absolute_position(left_btn_x, small_btn_y)
                .with_custom_background(secondary_btn)
                .with_soft_shadow(3.0f, 4.0f, 10.0f,
                                  afterhours::Color{80, 160, 180, 40})
                .with_font("Gaegu-Bold", h720(18.0f))
                .with_custom_text_color(card_white)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_alignment(TextAlignment::Center)
                .with_padding(Spacing::sm)
@@ -246,15 +236,14 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Outline")
                .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
-               .with_absolute_position()
-               .with_translate(right_btn_x, small_btn_y)
+               .with_absolute_position(right_btn_x, small_btn_y)
                .with_custom_background(card_white)
                .with_border(outline_border, 2.0f)
                .with_soft_shadow(2.0f, 3.0f, 8.0f,
                                  afterhours::Color{100, 90, 110, 25})
                .with_font("Gaegu-Bold", h720(18.0f))
                .with_custom_text_color(text_dark)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
                .with_alignment(TextAlignment::Center)
                .with_padding(Spacing::sm)
@@ -272,14 +261,13 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Small")
                .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
-               .with_absolute_position()
-               .with_translate(pill_start_x, pill_y)
+               .with_absolute_position(pill_start_x, pill_y)
                .with_custom_background(confetti_mint)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{140, 200, 170, 35})
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                .with_custom_text_color(text_dark)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("small_button_1"));
@@ -288,14 +276,13 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Pill")
                .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
-               .with_absolute_position()
-               .with_translate(pill_start_x + pill_btn_w + pill_gap, pill_y)
+               .with_absolute_position(pill_start_x + pill_btn_w + pill_gap, pill_y)
                .with_custom_background(confetti_pink)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{220, 150, 160, 35})
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                .with_custom_text_color(text_dark)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("small_button_2"));
@@ -304,14 +291,13 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Buttons")
                .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
-               .with_absolute_position()
-               .with_translate(pill_start_x + (pill_btn_w + pill_gap) * 2, pill_y)
+               .with_absolute_position(pill_start_x + (pill_btn_w + pill_gap) * 2, pill_y)
                .with_custom_background(confetti_gold)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{220, 185, 120, 35})
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                .with_custom_text_color(text_dark)
-               .with_rounded_corners(std::bitset<4>(0b1111))
+               .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("small_button_3"));
