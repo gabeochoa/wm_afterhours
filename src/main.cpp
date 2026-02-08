@@ -28,6 +28,7 @@ backward::SignalHandling sh;
 #include "systems/screens/CozyCafe.h"
 #include "systems/screens/DeadSpaceSettings.h"
 #include "systems/screens/DecorativeFrameShowcase.h"
+#include "systems/screens/DecoratorShowcase.h"
 #include "systems/screens/EmpireTycoon.h"
 #include "systems/screens/ExampleAccessibility.h"
 #include "systems/screens/ExampleBevelBorders.h"

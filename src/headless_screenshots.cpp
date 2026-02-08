@@ -375,20 +375,20 @@ void run_headless_screenshots() {
       }
     }
 
-    // Run update systems
-    {
-      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
-      systems.tick_all(entities, 0.016f);
+    // Run two tick+render passes so that decorators which depend on
+    // computed sizes from the previous frame (e.g. corner brackets,
+    // grid backgrounds) have valid data on the second pass.
+    for (int pass = 0; pass < 2; pass++) {
+      {
+        auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+        systems.tick_all(entities, 0.016f);
+      }
+      {
+        auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+        systems.render(entities, 0.016f);
+      }
+      afterhours::EntityHelper::cleanup();
     }
-
-    // Run render systems
-    {
-      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
-      systems.render(entities, 0.016f);
-    }
-
-    // Cleanup any entities marked during tick
-    afterhours::EntityHelper::cleanup();
 
     // Ensure GPU operations complete and flush render batch
     raylib::rlDrawRenderBatchActive();
