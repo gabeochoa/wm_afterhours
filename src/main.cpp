@@ -7,6 +7,7 @@ backward::SignalHandling sh;
 
 #include "argh.h"
 #include "game.h"
+#include "headless_screenshots.h"
 #include "preload.h"
 #include "settings.h"
 #include <afterhours/src/graphics/graphics.h>
@@ -80,6 +81,7 @@ backward::SignalHandling sh;
 #include "testing/tests/all_tests.h"
 #include <cstdio>
 #include <iostream>
+#include <sstream>
 
 #ifdef AFTER_HOURS_ENABLE_MCP
 #include "engine/input_injector.h"
@@ -143,6 +145,10 @@ int main(int argc, char *argv[]) {
     std::cout << "  --headless-screenshots [dir] Render all screens to PNG without display (default: output/)\n";
     std::cout << "  --image-backend              Alias for --headless-screenshots\n";
     std::cout << "  --image-output <dir>         Output directory override (default: output/)\n";
+    std::cout << "  --resolution <res,...>        Resolutions for headless screenshots (default: 720p)\n";
+    std::cout << "                               Examples: --resolution=480p,720p,1080p\n";
+    std::cout << "                               Named: 480p (854x480), 720p (1280x720), 1080p (1920x1080)\n";
+    std::cout << "                               Custom: --resolution=1600x900\n";
     std::cout << "\nE2E Testing:\n";
     std::cout << "  --e2e                        Enable E2E test mode\n";
     std::cout << "  --test-script <path>         Run single E2E script\n";
@@ -193,7 +199,49 @@ int main(int argc, char *argv[]) {
     }
     g_headless_output_dir = output_dir;
 
+    // Parse --resolution flag (comma-separated list of named or WxH values)
+    std::string resolution_str;
+    if (cmdl({"--resolution"}) >> resolution_str) {
+      // Parse comma-separated resolution specs
+      std::istringstream ss(resolution_str);
+      std::string token;
+      while (std::getline(ss, token, ',')) {
+        // Trim whitespace
+        while (!token.empty() && token.front() == ' ') token.erase(token.begin());
+        while (!token.empty() && token.back() == ' ') token.pop_back();
+        if (token.empty()) continue;
+
+        if (token == "480p") {
+          g_headless_resolutions.push_back({854, 480, "480p"});
+        } else if (token == "720p") {
+          g_headless_resolutions.push_back({1280, 720, "720p"});
+        } else if (token == "1080p") {
+          g_headless_resolutions.push_back({1920, 1080, "1080p"});
+        } else {
+          // Try WxH format
+          auto x_pos = token.find('x');
+          if (x_pos != std::string::npos) {
+            int w = std::stoi(token.substr(0, x_pos));
+            int h = std::stoi(token.substr(x_pos + 1));
+            std::string label = std::to_string(h) + "p";
+            g_headless_resolutions.push_back({w, h, label});
+          } else {
+            std::cout << "Warning: ignoring unknown resolution: " << token << "\n";
+          }
+        }
+      }
+    }
+    // Default: 720p if no --resolution specified
+    // (g_headless_resolutions empty → run_headless_screenshots defaults to 720p)
+
     std::cout << "Headless mode enabled, output dir: " << g_headless_output_dir << "\n";
+    if (!g_headless_resolutions.empty()) {
+      std::cout << "Resolutions:";
+      for (const auto &r : g_headless_resolutions) {
+        std::cout << " " << r.label << "(" << r.width << "x" << r.height << ")";
+      }
+      std::cout << "\n";
+    }
     run_headless_screenshots();
     return 0;
   }

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-Screenshot all screens in the UI showcase.
+Screenshot all screens in the UI showcase at multiple resolutions.
 Dynamically detects available screens by running --list-screens.
+
+Default resolutions: 480p (854x480), 720p (1280x720), 1080p (1920x1080)
+Use --quick for 720p only. Use --resolution=WxH,... to customize.
 """
 
 import subprocess
@@ -15,6 +18,20 @@ import signal
 
 # Verbose logging flag
 VERBOSE = True
+
+# Named resolution presets
+RESOLUTION_PRESETS = {
+    "480p":  {"width": 854,  "height": 480,  "label": "480p"},
+    "720p":  {"width": 1280, "height": 720,  "label": "720p"},
+    "1080p": {"width": 1920, "height": 1080, "label": "1080p"},
+}
+
+DEFAULT_RESOLUTIONS = [
+    RESOLUTION_PRESETS["480p"],
+    RESOLUTION_PRESETS["720p"],
+    RESOLUTION_PRESETS["1080p"],
+]
+
 
 def log(msg):
     """Print a log message with timestamp."""
@@ -34,6 +51,28 @@ class TimeoutError(Exception):
 
 def timeout_handler(signum, frame):
     raise TimeoutError("Operation timed out")
+
+
+def parse_resolutions(arg_str):
+    """Parse comma-separated resolution specs.
+    Accepts named presets (480p, 720p, 1080p) or WxH format (1600x900)."""
+    resolutions = []
+    for part in arg_str.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if part in RESOLUTION_PRESETS:
+            resolutions.append(RESOLUTION_PRESETS[part])
+        elif "x" in part:
+            try:
+                w, h = part.split("x")
+                w, h = int(w), int(h)
+                resolutions.append({"width": w, "height": h, "label": f"{h}p"})
+            except ValueError:
+                log(f"WARNING: Invalid resolution format: {part}")
+        else:
+            log(f"WARNING: Unknown resolution: {part}")
+    return resolutions
 
 
 class MCPClient:
@@ -369,26 +408,152 @@ def ensure_build():
     return True
 
 
+def capture_screens_at_resolution(executable, screen_names, screen_count,
+                                   output_dir, width, height, res_label,
+                                   with_hover=False, hover_count=3):
+    """Capture all screens at a specific resolution.
+    Returns (results_dict, hover_results_dict, warnings_list, errors_list)."""
+
+    results = {}
+    hover_results = {}
+    hover_dir = os.path.join(output_dir, "hover") if with_hover else None
+
+    if with_hover and hover_dir:
+        os.makedirs(hover_dir, exist_ok=True)
+
+    # Start app on first screen with this resolution
+    first_screen = screen_names[0] if screen_names else "buttons"
+    log(f"[{res_label}] Starting app at {width}x{height} on screen: {first_screen}")
+    client = MCPClient(executable, [
+        "--mcp", f"--screen={first_screen}",
+        "-w", str(width), "-h", str(height),
+    ])
+    client.set_screen_names(screen_names)
+
+    # Wait for app to start
+    time.sleep(1.0)
+
+    # Check if process is still running
+    if client.proc.poll() is not None:
+        log(f"[{res_label}] ERROR: Process exited with code {client.proc.returncode}")
+        return results, hover_results, [], []
+
+    # Initialize and verify connection
+    init_result = client.initialize()
+    if not init_result:
+        log(f"[{res_label}] ERROR: Initialize returned None")
+        client.close()
+        return results, hover_results, [], []
+
+    time.sleep(0.3)
+
+    if not client.ping():
+        log(f"[{res_label}] ERROR: Failed to connect to MCP server")
+        client.close()
+        return results, hover_results, [], []
+
+    log(f"[{res_label}] Connected to MCP server!")
+
+    start_time = time.time()
+
+    for i in range(screen_count):
+        screen_name = client.get_current_screen_name()
+        log(f"[{res_label}] [{i+1}/{screen_count}] Capturing: {screen_name}")
+
+        # Wait for screen to render fully
+        time.sleep(0.6)
+
+        # Move mouse off-screen for clean default state
+        if with_hover:
+            client.mouse_move(0, 0)
+            time.sleep(0.2)
+
+        # Screenshot: {screen}_{label}.png
+        screenshot_path = os.path.join(output_dir, f"{screen_name}_{res_label}.png")
+        if client.screenshot(screenshot_path):
+            results[screen_name] = True
+        else:
+            log(f"[{res_label}]   FAILED to capture: {screen_name}")
+            results[screen_name] = False
+
+        # Capture hover-state screenshots if requested
+        if with_hover and results.get(screen_name):
+            tree = client.dump_ui_tree()
+            interactive = find_interactive_elements(tree, max_elements=hover_count)
+
+            if interactive:
+                log(f"[{res_label}]   Found {len(interactive)} interactive elements")
+                hover_results[screen_name] = []
+
+                for idx, (label, cx, cy, w, h) in enumerate(interactive):
+                    client.mouse_move(cx, cy)
+                    time.sleep(0.15)
+
+                    safe_label = re.sub(r'[^\w\-]', '_', label[:30])
+                    hover_path = os.path.join(
+                        hover_dir, f"{screen_name}_{res_label}_hover_{idx}_{safe_label}.png"
+                    )
+                    if client.screenshot(hover_path):
+                        hover_results[screen_name].append((label, hover_path))
+                        log(f"[{res_label}]     hover[{idx}]: '{label}' at ({cx},{cy})")
+                    else:
+                        log(f"[{res_label}]     FAILED hover for '{label}'")
+
+                client.mouse_move(0, 0)
+                time.sleep(0.1)
+            else:
+                log(f"[{res_label}]   No interactive elements found")
+
+        # Navigate to next screen
+        if i < screen_count - 1:
+            client.next_screen()
+            time.sleep(1.2)
+
+    elapsed = time.time() - start_time
+
+    # Get validation summary before closing
+    warnings, errors = client.get_validation_summary()
+
+    # Tag warnings/errors with resolution label
+    tagged_warnings = [f"[{res_label}] {w}" for w in warnings]
+    tagged_errors = [f"[{res_label}] {e}" for e in errors]
+
+    client.close()
+
+    log(f"[{res_label}] Completed in {elapsed:.1f}s — {sum(results.values())}/{len(results)} succeeded")
+
+    return results, hover_results, tagged_warnings, tagged_errors
+
+
 def main():
     executable = "./output/ui_tester.exe"
     output_dir = "/tmp/ui_showcase_screenshots"
     
     # Parse args
     with_hover = "--with-hover" in sys.argv
-    hover_count = 3  # Number of interactive elements to hover per screen
+    hover_count = 3
+    resolutions = DEFAULT_RESOLUTIONS  # 480p, 720p, 1080p
+
     for arg in sys.argv:
         if arg.startswith("--hover-count="):
             hover_count = int(arg.split("=")[1])
+        elif arg.startswith("--resolution="):
+            resolutions = parse_resolutions(arg.split("=", 1)[1])
+        elif arg == "--quick":
+            resolutions = [RESOLUTION_PRESETS["720p"]]
     
+    if not resolutions:
+        log("ERROR: No valid resolutions specified")
+        return 1
+
     os.makedirs(output_dir, exist_ok=True)
-    if with_hover:
-        hover_dir = os.path.join(output_dir, "hover")
-        os.makedirs(hover_dir, exist_ok=True)
     
+    res_summary = ", ".join(f"{r['label']}({r['width']}x{r['height']})" for r in resolutions)
     log("=" * 60)
-    log("Screenshot All Screens - Starting")
+    log("Screenshot All Screens - Multi-Resolution")
+    log(f"  Resolutions: {res_summary}")
     if with_hover:
-        log(f"  Hover mode: ON (capturing up to {hover_count} hover states per screen)")
+        log(f"  Hover mode: ON (up to {hover_count} hover states per screen)")
     log("=" * 60)
     
     # Ensure build is up-to-date
@@ -414,164 +579,102 @@ def main():
     log(f"Output directory: {output_dir}")
     log("=" * 60)
     
-    # Set up overall timeout
+    # Set up overall timeout: ~3 min per resolution (more with hover)
     signal.signal(signal.SIGALRM, timeout_handler)
-    timeout_secs = 600 if with_hover else 180  # 10 min with hover, 3 min without
-    signal.alarm(timeout_secs)
+    per_res_timeout = 600 if with_hover else 180
+    total_timeout = per_res_timeout * len(resolutions) + 60  # extra buffer
+    signal.alarm(total_timeout)
     
-    client = None
+    all_results = {}
+    all_hover_results = {}
+    all_warnings = []
+    all_errors = []
+    overall_start = time.time()
+
     try:
-        # Start app on first screen (alphabetical order)
-        first_screen = screen_names[0] if screen_names else "buttons"
-        log(f"Starting app on screen: {first_screen}")
-        client = MCPClient(executable, ["--mcp", f"--screen={first_screen}"])
-        client.set_screen_names(screen_names)
-        
-        # Wait for app to start
-        log("Waiting for app to start...")
-        time.sleep(1.0)
-        
-        # Check if process is still running
-        if client.proc.poll() is not None:
-            log(f"ERROR: Process exited with code {client.proc.returncode}")
-            return 1
-        
-        # Initialize and verify connection
-        init_result = client.initialize()
-        if not init_result:
-            log("ERROR: Initialize returned None")
-            return 1
-            
-        time.sleep(0.3)
-        
-        if not client.ping():
-            log("ERROR: Failed to connect to MCP server")
-            client.close()
-            return 1
-        
-        log("Connected to MCP server!")
+        for res in resolutions:
+            label = res["label"]
+            width = res["width"]
+            height = res["height"]
+
+            log("")
+            log("=" * 60)
+            log(f"=== Resolution: {label} ({width}x{height}) ===")
+            log("=" * 60)
+
+            results, hover_results, warnings, errors = capture_screens_at_resolution(
+                executable, screen_names, screen_count,
+                output_dir, width, height, label,
+                with_hover=with_hover, hover_count=hover_count
+            )
+
+            all_results[label] = results
+            all_hover_results[label] = hover_results
+            all_warnings.extend(warnings)
+            all_errors.extend(errors)
+
+        overall_elapsed = time.time() - overall_start
+
+        # Print summary
+        log("")
         log("=" * 60)
-        
-        results = {}
-        hover_results = {}
-        start_time = time.time()
-        
-        for i in range(screen_count):
-            screen_name = client.get_current_screen_name()
-            log(f"[{i+1}/{screen_count}] Capturing: {screen_name}")
-            
-            # Wait for screen to render fully
-            time.sleep(0.6)
-            
-            # Take default screenshot (no hover)
-            # First move mouse off-screen to ensure clean default state
-            if with_hover:
-                client.mouse_move(0, 0)
-                time.sleep(0.2)
-            
-            screenshot_path = os.path.join(output_dir, f"{screen_name}.png")
-            if client.screenshot(screenshot_path):
-                results[screen_name] = True
-            else:
-                log(f"  FAILED to capture: {screen_name}")
-                results[screen_name] = False
-            
-            # Capture hover-state screenshots if requested
-            if with_hover and results.get(screen_name):
-                tree = client.dump_ui_tree()
-                interactive = find_interactive_elements(tree, max_elements=hover_count)
-                
-                if interactive:
-                    log(f"  Found {len(interactive)} interactive elements")
-                    hover_results[screen_name] = []
-                    
-                    for idx, (label, cx, cy, w, h) in enumerate(interactive):
-                        # Move mouse to center of element
-                        client.mouse_move(cx, cy)
-                        time.sleep(0.15)  # Wait for hover state to render
-                        
-                        # Take hover screenshot
-                        safe_label = re.sub(r'[^\w\-]', '_', label[:30])
-                        hover_path = os.path.join(
-                            hover_dir, f"{screen_name}_hover_{idx}_{safe_label}.png"
-                        )
-                        if client.screenshot(hover_path):
-                            hover_results[screen_name].append(
-                                (label, hover_path)
-                            )
-                            log(f"    hover[{idx}]: '{label}' at ({cx},{cy})")
-                        else:
-                            log(f"    FAILED hover for '{label}'")
-                    
-                    # Move mouse off-screen to reset for next screen
-                    client.mouse_move(0, 0)
-                    time.sleep(0.1)
-                else:
-                    log(f"  No interactive elements found")
-            
-            # Navigate to next screen (unless this is the last one)
-            if i < screen_count - 1:
-                client.next_screen()
-                time.sleep(1.2)  # Longer pause for screen transition to complete
-        
-        elapsed = time.time() - start_time
-        
-        # Get validation summary before closing
-        warnings, errors = client.get_validation_summary()
-        
-        # Clean exit
-        client.close()
-        client = None
-        
+        log(f"All resolutions completed in {overall_elapsed:.1f}s")
         log("=" * 60)
-        log(f"Completed in {elapsed:.1f}s")
-        log(f"Results: {sum(results.values())}/{len(results)} succeeded")
-        
-        for screen, success in results.items():
-            status = "✓" if success else "✗"
-            hover_info = ""
-            if with_hover and screen in hover_results:
-                hover_info = f" (+{len(hover_results[screen])} hover)"
-            print(f"  {status} {screen}{hover_info}", file=sys.stderr)
-        
+
+        total_ok = 0
+        total_fail = 0
+        for label, results in all_results.items():
+            ok = sum(results.values())
+            fail = len(results) - ok
+            total_ok += ok
+            total_fail += fail
+            print(f"\n  [{label}] {ok}/{len(results)} succeeded", file=sys.stderr)
+            for screen, success in results.items():
+                status = "ok" if success else "FAIL"
+                hover_info = ""
+                if with_hover and label in all_hover_results and screen in all_hover_results[label]:
+                    hover_info = f" (+{len(all_hover_results[label][screen])} hover)"
+                if not success:
+                    print(f"    {status} {screen}{hover_info}", file=sys.stderr)
+
+        print(f"\n  Total: {total_ok} ok, {total_fail} failed across {len(resolutions)} resolution(s)", file=sys.stderr)
+
         if with_hover:
-            total_hovers = sum(len(v) for v in hover_results.values())
-            screens_with_hovers = len(hover_results)
-            print(f"\n  Hover screenshots: {total_hovers} across {screens_with_hovers} screens", file=sys.stderr)
-            print(f"  Hover output: {hover_dir}", file=sys.stderr)
-        
+            for label, hover_results in all_hover_results.items():
+                total_hovers = sum(len(v) for v in hover_results.values())
+                if total_hovers:
+                    print(f"  [{label}] Hover screenshots: {total_hovers}", file=sys.stderr)
+
         # Print validation summary
-        if warnings or errors:
+        if all_warnings or all_errors:
             print("\n" + "=" * 60, file=sys.stderr)
             print("VALIDATION SUMMARY", file=sys.stderr)
             print("=" * 60, file=sys.stderr)
             
-            if errors:
-                print(f"\n❌ ERRORS ({len(errors)}):", file=sys.stderr)
-                # Deduplicate similar errors
-                unique_errors = list(dict.fromkeys(errors))
-                for err in unique_errors[:20]:  # Show max 20
+            if all_errors:
+                print(f"\nERRORS ({len(all_errors)}):", file=sys.stderr)
+                unique_errors = list(dict.fromkeys(all_errors))
+                for err in unique_errors[:30]:
                     print(f"  {err}", file=sys.stderr)
-                if len(unique_errors) > 20:
-                    print(f"  ... and {len(unique_errors) - 20} more", file=sys.stderr)
+                if len(unique_errors) > 30:
+                    print(f"  ... and {len(unique_errors) - 30} more", file=sys.stderr)
             
-            if warnings:
-                print(f"\n⚠️  WARNINGS ({len(warnings)}):", file=sys.stderr)
-                # Deduplicate similar warnings
-                unique_warnings = list(dict.fromkeys(warnings))
-                for warn in unique_warnings[:20]:  # Show max 20
+            if all_warnings:
+                print(f"\nWARNINGS ({len(all_warnings)}):", file=sys.stderr)
+                unique_warnings = list(dict.fromkeys(all_warnings))
+                for warn in unique_warnings[:30]:
                     print(f"  {warn}", file=sys.stderr)
-                if len(unique_warnings) > 20:
-                    print(f"  ... and {len(unique_warnings) - 20} more", file=sys.stderr)
+                if len(unique_warnings) > 30:
+                    print(f"  ... and {len(unique_warnings) - 30} more", file=sys.stderr)
             
             print("=" * 60, file=sys.stderr)
         else:
-            print("\n✅ No validation warnings or errors detected!", file=sys.stderr)
+            print("\nNo validation warnings or errors detected!", file=sys.stderr)
         
-        return 0 if all(results.values()) else 1
+        return 0 if total_fail == 0 else 1
             
     except TimeoutError:
-        log("ERROR: Overall timeout exceeded (180s)")
+        log(f"ERROR: Overall timeout exceeded ({total_timeout}s)")
         return 1
     except KeyboardInterrupt:
         log("Interrupted by user")
@@ -583,11 +686,6 @@ def main():
         return 1
     finally:
         signal.alarm(0)
-        if client:
-            try:
-                client.close()
-            except:
-                pass
 
 
 if __name__ == "__main__":

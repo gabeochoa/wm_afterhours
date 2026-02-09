@@ -5,6 +5,7 @@
 #include "game.h"
 #include "input_mapping.h"
 #include "log.h"
+#include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
 #include "systems/RenderSystemHelpers.h"
 
@@ -21,12 +22,9 @@ extern afterhours::SystemBase *g_current_screen;
 
 // Globals defined in main.cpp (declared in headless_screenshots.h)
 // bool g_headless_mode and std::string g_headless_output_dir
+std::vector<HeadlessResolution> g_headless_resolutions;
 
 namespace {
-
-// Screenshot resolution
-constexpr int SCREENSHOT_WIDTH = 1280;
-constexpr int SCREENSHOT_HEIGHT = 720;
 
 // Helper function to load fonts in headless mode
 // raylib's LoadFont/LoadFontEx fail to create textures in headless mode,
@@ -148,14 +146,14 @@ void configure_validation() {
 }
 
 // Setup ECS singletons for headless rendering
-void setup_ecs_singletons() {
+void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   // Create window_manager resolution singleton
   afterhours::Entity &resolution_entity =
       afterhours::EntityHelper::createPermanentEntity();
   resolution_entity
       .addComponent<afterhours::window_manager::ProvidesCurrentResolution>(
-          afterhours::window_manager::Resolution{.width = SCREENSHOT_WIDTH,
-                                                 .height = SCREENSHOT_HEIGHT});
+          afterhours::window_manager::Resolution{.width = screenshot_width,
+                                                 .height = screenshot_height});
   resolution_entity.addComponent<afterhours::window_manager::ProvidesTargetFPS>(60);
   resolution_entity.addComponent<
       afterhours::window_manager::ProvidesAvailableWindowResolutions>();
@@ -294,37 +292,39 @@ afterhours::SystemManager create_screen_systems(const std::string &screen_name) 
 
 } // namespace
 
-void run_headless_screenshots() {
+// Capture all screens at a single resolution
+void run_headless_screenshots_at(int width, int height, const std::string &label) {
   // 1. Configure and initialize graphics backend
   afterhours::graphics::Config cfg;
   cfg.display = afterhours::graphics::DisplayMode::Headless;
-  cfg.width = SCREENSHOT_WIDTH;
-  cfg.height = SCREENSHOT_HEIGHT;
+  cfg.width = width;
+  cfg.height = height;
   cfg.title = "Headless Screenshots";
   cfg.target_fps = 60;
 
   if (!afterhours::graphics::init(cfg)) {
-    log_error("[Headless] Failed to initialize graphics backend");
+    log_error("[Headless] Failed to initialize graphics backend for {}", label);
     return;
   }
-  log_info("[Headless] Graphics backend initialized ({}x{})", SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
+  log_info("[Headless] Graphics backend initialized ({}x{} = {})", width, height, label);
+
+  // 1b. Update Settings singleton so screens using Settings::get().get_screen_width/height()
+  //     see the correct resolution
+  Settings::get().update_resolution(
+      afterhours::window_manager::Resolution{.width = width, .height = height});
 
   // 2. Initialize files plugin (required for resource loading)
   afterhours::files::init("Prime Pressure", "resources");
-  log_info("[Headless] Initialized files plugin");
 
   // 3. Set up global render textures
-  // Get the render texture from the graphics backend for mainRT
   mainRT = afterhours::graphics::get_render_texture();
-  screenRT = raylib::LoadRenderTexture(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
-  log_info("[Headless] Render textures ready");
+  screenRT = raylib::LoadRenderTexture(width, height);
 
   // 4. Load main font for legacy usage
   uiFont = load_font_headless(
       afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
           .string()
           .c_str());
-  log_info("[Headless] Loaded font (textureId: {})", uiFont.texture.id);
 
   // 5. Configure UI validation
   configure_validation();
@@ -335,19 +335,18 @@ void run_headless_screenshots() {
 
   if (screen_names.empty()) {
     log_error("[Headless] No screens available");
-    // Note: mainRT is owned by the graphics backend, do not unload it manually
     raylib::UnloadRenderTexture(screenRT);
     afterhours::graphics::shutdown();
     return;
   }
 
-  log_info("[Headless] Found {} screens to render", screen_names.size());
+  log_info("[Headless][{}] Rendering {} screens", label, screen_names.size());
 
   // 7. Ensure output directory exists
   std::filesystem::create_directories(g_headless_output_dir);
 
   // 8. Setup ECS singletons
-  setup_ecs_singletons();
+  setup_ecs_singletons(width, height);
 
   int ui_entity_id = afterhours::EntityHelper::get_singleton<
                          afterhours::ui::UIContext<InputAction>>()
@@ -393,12 +392,13 @@ void run_headless_screenshots() {
     // Ensure GPU operations complete and flush render batch
     raylib::rlDrawRenderBatchActive();
 
-    // Capture screenshot using graphics API
+    // Capture screenshot: {screen}_{label}.png
+    std::string filename = screen_name + "_" + label + ".png";
     std::filesystem::path output_path =
-        std::filesystem::path(g_headless_output_dir) / (screen_name + ".png");
+        std::filesystem::path(g_headless_output_dir) / filename;
     afterhours::graphics::capture_frame(output_path);
 
-    log_info("[Headless] Saved: {}", output_path.string());
+    log_info("[Headless][{}] Saved: {}", label, output_path.string());
   }
 
   // 10. Cleanup
@@ -415,5 +415,20 @@ void run_headless_screenshots() {
   raylib::UnloadRenderTexture(screenRT);
   afterhours::graphics::shutdown();
 
-  log_info("[Headless] Completed - rendered {} screens", screen_names.size());
+  log_info("[Headless][{}] Completed - rendered {} screens", label, screen_names.size());
+}
+
+void run_headless_screenshots() {
+  auto resolutions = g_headless_resolutions;
+  if (resolutions.empty()) {
+    // Default: 720p only (backward compat)
+    resolutions = {{1280, 720, "720p"}};
+  }
+
+  log_info("[Headless] Capturing at {} resolution(s)", resolutions.size());
+  for (const auto &res : resolutions) {
+    log_info("[Headless] === {} ({}x{}) ===", res.label, res.width, res.height);
+    run_headless_screenshots_at(res.width, res.height, res.label);
+  }
+  log_info("[Headless] All resolutions complete");
 }
