@@ -37,6 +37,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_roundness(0.04f)
                 .with_padding(Spacing::lg)
                 .with_flex_direction(FlexDirection::Column)
+                .with_justify_content(JustifyContent::Center)
                 .with_debug_name("scroll_bg"));
 
     // Title

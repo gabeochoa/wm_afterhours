@@ -155,6 +155,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_debug_name("light_btn_" + std::to_string(i)));
     }
 
+    // Separator between Section 1 and Section 2
+    div(context, mk(content.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.9f), pixels(1)})
+            .with_custom_background(afterhours::Color{255, 255, 255, 40})
+            .with_self_align(SelfAlign::Center)
+            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_debug_name("section_separator_1"));
+
     // Section 2: Mid-tone colors (edge cases)
     auto section2 = div(context, mk(content.ent()),
                         ComponentConfig{}
@@ -197,6 +206,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                  .with_debug_name("mid_btn_" + std::to_string(i)));
     }
+
+    // Separator between Section 2 and Section 3
+    div(context, mk(content.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.9f), pixels(1)})
+            .with_custom_background(afterhours::Color{255, 255, 255, 40})
+            .with_self_align(SelfAlign::Center)
+            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_debug_name("section_separator_2"));
 
     // Section 3: How to disable auto text color
     auto section3 = div(context, mk(content.ent()),
@@ -249,6 +267,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(
                    {140, 30, 30, 255}) // Explicit dark red for contrast
                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+
+    // Separator between Section 3 and Section 4
+    div(context, mk(content.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.9f), pixels(1)})
+            .with_custom_background(afterhours::Color{255, 255, 255, 40})
+            .with_self_align(SelfAlign::Center)
+            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_debug_name("section_separator_3"));
 
     // Section 4: Theme colors with auto contrast
     auto section4 = div(context, mk(content.ent()),

@@ -25,6 +25,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
+                .with_justify_content(JustifyContent::Center)
                 .with_roundness(0.08f)
                 .with_debug_name("layout_main"));
 
@@ -85,6 +86,16 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_margin(Spacing::sm));
 
+    // Separator between row demo and column demo
+    div(context, mk(main_container.ent(), 10),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.9f), pixels(1)})
+            .with_custom_background(
+                afterhours::colors::darken(theme.surface, 0.7f))
+            .with_self_align(SelfAlign::Center)
+            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_debug_name("section_separator_1"));
+
     // Column layout demo - stacked items demonstration
     auto col_container =
         div(context, mk(main_container.ent(), 2),
@@ -139,6 +150,16 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_margin(Spacing::xs));
+
+    // Separator between column demo and description
+    div(context, mk(main_container.ent(), 11),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.9f), pixels(1)})
+            .with_custom_background(
+                afterhours::colors::darken(theme.surface, 0.7f))
+            .with_self_align(SelfAlign::Center)
+            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_debug_name("section_separator_2"));
 
     // Layout guide - positioned below demo content to avoid obstruction
     auto desc_panel = div(context, mk(main_container.ent(), 3),

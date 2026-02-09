@@ -299,6 +299,58 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(text_muted));
     }
 
+    // ========== SEPARATOR BEFORE FOOTER ==========
+    float footer_sep_y = legend_item_y + 3 * 22.0f + 8.0f;
+    div(context, mk(entity, 240),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels((int)(row_w - 16.0f)), pixels(1)})
+            .with_absolute_position(row_x + 8.0f, footer_sep_y)
+            .with_custom_background(afterhours::Color{255, 255, 255, 40})
+            .with_debug_name("section_separator_footer"));
+
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float phone_footer_y = footer_sep_y + 8.0f;
+    float phone_footer_x = row_x + row_w - 230.0f;
+
+    button(context, mk(entity, 241),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(65), pixels(28)})
+               .with_absolute_position(phone_footer_x, phone_footer_y)
+               .with_custom_background(slider_orange)
+               .with_font_size(h720(14.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.3f)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 242),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(65), pixels(28)})
+               .with_absolute_position(phone_footer_x + 72.0f, phone_footer_y)
+               .with_custom_background(afterhours::Color{60, 65, 75, 255})
+               .with_font_size(h720(14.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.3f)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 243),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(65), pixels(28)})
+               .with_absolute_position(phone_footer_x + 144.0f, phone_footer_y)
+               .with_custom_background(afterhours::Color{60, 65, 75, 255})
+               .with_font_size(h720(14.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.3f)
+               .with_debug_name("btn_apply"));
+
     // ========== QUEST PANEL (moved to right side to avoid overlapping phone) ==========
     float quest_x = (float)screen_w - 370.0f;
     float quest_y = 180.0f;

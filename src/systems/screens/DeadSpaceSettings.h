@@ -13,7 +13,7 @@ using namespace afterhours::ui::imm;
 
 struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_initial = 1; // Menu Narration selected
-  size_t selected_main = 1;    // Gameplay selected
+  size_t active_tab = 0;       // Settings category tab
 
   // Colors matching Dead Space inspiration - dark sci-fi horror aesthetic
   afterhours::Color bg_black{8, 8, 10, 255};
@@ -113,6 +113,14 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Padding{.left = pixels(8)})
             .with_alignment(TextAlignment::Left));
 
+    // Separator between sidebar header and items
+    div(context, mk(entity, 61),
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(sidebar_w - 16.0f), pixels(1)})
+            .with_absolute_position(sidebar_x + 8.0f, sidebar_y + 35.0f)
+            .with_custom_background(panel_border)
+            .with_debug_name("section_separator_sidebar"));
+
     // Sidebar items
     for (size_t i = 0; i < initial_settings.size(); i++) {
       float item_y = sidebar_y + 40.0f + (float)i * 38.0f;
@@ -170,55 +178,75 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
-    // Settings list items
-    float header_h = 50.0f;
-    float list_y = panel_y + header_h + 10.0f;
-    float list_area_h = panel_h - header_h - 20.0f;
-    float item_h = list_area_h / (float)main_settings.size();
+    // Settings category tabs
+    tab_container(context, mk(entity, 115), main_settings, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(panel_w - 20), pixels(36)})
+            .with_absolute_position(panel_x + 10.0f, panel_y + 52.0f));
 
-    for (size_t i = 0; i < main_settings.size(); i++) {
-      float item_y = list_y + (float)i * item_h;
-      bool is_selected = (i == selected_main);
+    // Tab content area
+    float content_y = panel_y + 100.0f;
+    float content_x = panel_x + 25.0f;
+    float content_w = panel_w - 50.0f;
 
-      // Item background
-      afterhours::Color item_bg =
-          is_selected ? afterhours::Color{35, 70, 72, 255} : panel_dark;
+    std::string tab_title = main_settings[active_tab];
+    std::string tab_desc = tab_title + " options will be displayed here.";
 
-      div(context, mk(entity, 120 + static_cast<int>(i) * 2),
-          ComponentConfig{}
-              .with_720p_size(panel_w - 20, item_h - 4)
-              .with_absolute_position(panel_x + 10.0f, item_y)
-              .with_custom_background(item_bg)
-              .with_border(is_selected ? teal_highlight : panel_border, 1.0f)
-              .with_debug_name("item_bg_" + std::to_string(i)));
+    div(context, mk(entity, 120),
+        ComponentConfig{}
+            .with_label(tab_title)
+            .with_size(ComponentSize{pxf(content_w), pixels(40)})
+            .with_absolute_position(content_x, content_y)
+            .with_font_size(h720(22.0f))
+            .with_custom_text_color(teal_bright));
 
-      // Highlight bar on selected
-      if (is_selected) {
-        div(context, mk(entity, 180 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_size(ComponentSize{pxf(panel_w - 22),
-                                         pixels(4)})
-                .with_absolute_position(panel_x + 11.0f, item_y + item_h - 8.0f)
-                .with_custom_background(teal_highlight)
-                .with_debug_name("highlight_" + std::to_string(i)));
-      }
+    div(context, mk(entity, 121),
+        ComponentConfig{}
+            .with_label(tab_desc)
+            .with_size(ComponentSize{pxf(content_w), pixels(30)})
+            .with_absolute_position(content_x, content_y + 45.0f)
+            .with_font_size(h720(17.0f))
+            .with_custom_text_color(text_muted));
 
-      // Item text
-      afterhours::Color text_color = is_selected ? text_white : text_muted;
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float footer_btn_x = panel_x + panel_w - 290.0f;
+    float footer_btn_y = panel_y + panel_h - 50.0f;
 
-      if (button(context, mk(entity, 121 + static_cast<int>(i) * 2),
-                 ComponentConfig{}
-                     .with_label(main_settings[i])
-                     .with_size(
-                         ComponentSize{pxf(panel_w - 40),
-                                       pxf(item_h - 8)})
-                     .with_absolute_position(panel_x + 25.0f, item_y + 8.0f)
-                     .with_font_size(h720(20.0f))
-                     .with_custom_text_color(text_color)
-                     .with_debug_name("setting_" + std::to_string(i)))) {
-        selected_main = i;
-      }
-    }
+    button(context, mk(entity, 195),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x, footer_btn_y)
+               .with_custom_background(teal_highlight)
+               .with_border(teal_bright, 1.0f)
+               .with_font_size(h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 196),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 90.0f, footer_btn_y)
+               .with_custom_background(panel_dark)
+               .with_border(panel_border, 1.0f)
+               .with_font_size(h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 197),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 180.0f, footer_btn_y)
+               .with_custom_background(panel_dark)
+               .with_border(panel_border, 1.0f)
+               .with_font_size(h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_apply"));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
     float prompt_bar_w = 280.0f;

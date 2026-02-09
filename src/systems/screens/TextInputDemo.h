@@ -234,6 +234,41 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_skip_tabbing(true)
             .with_margin(Margin{.top = DefaultSpacing::tiny()}));
+
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    auto footer = div(context, mk(main_container.ent(), 4),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_flex_direction(FlexDirection::Row)
+            .with_justify_content(JustifyContent::FlexEnd)
+            .with_align_items(AlignItems::Center)
+            .with_padding(Padding{.right = DefaultSpacing::medium()})
+            .with_margin(Margin{.top = DefaultSpacing::small()})
+            .with_background(Theme::Usage::None)
+            .with_debug_name("dialog_footer"));
+
+    button(context, mk(footer.ent(), 0),
+        ComponentConfig{}
+            .with_label("OK")
+            .with_size(ComponentSize{pixels(80), pixels(36)})
+            .with_background(Theme::Usage::Primary)
+            .with_margin(Margin{.right = DefaultSpacing::small()})
+            .with_debug_name("btn_ok"));
+
+    button(context, mk(footer.ent(), 1),
+        ComponentConfig{}
+            .with_label("Cancel")
+            .with_size(ComponentSize{pixels(80), pixels(36)})
+            .with_background(Theme::Usage::Surface)
+            .with_margin(Margin{.right = DefaultSpacing::small()})
+            .with_debug_name("btn_cancel"));
+
+    button(context, mk(footer.ent(), 2),
+        ComponentConfig{}
+            .with_label("Apply")
+            .with_size(ComponentSize{pixels(80), pixels(36)})
+            .with_background(Theme::Usage::Surface)
+            .with_debug_name("btn_apply"));
   }
 };
 

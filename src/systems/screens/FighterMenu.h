@@ -13,7 +13,7 @@ using namespace afterhours::ui::imm;
 
 struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_tab = 3;    // Options tab selected
-  size_t selected_option = 0; // System Options selected
+  size_t active_tab = 0;      // Options sub-category tab
   int currency = 25000;
 
   // ========== LAYOUT CONFIGURATION ==========
@@ -243,67 +243,20 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(tab_selected)
             .with_debug_name("tab_underline"));
 
-    // ========== LEFT SIDEBAR MENU ==========
+    // ========== OPTIONS SUB-CATEGORY TABS ==========
     float menu_x = L.menu_x;
     float menu_y = L.menu_y;
-    float menu_item_h = L.menu_item_height;
-    float icon_w = L.menu_icon_width;
     float menu_item_w = L.menu_item_width;
 
-    for (size_t i = 0; i < menu_options.size(); i++) {
-      bool is_selected = (i == selected_option);
-      float item_y = menu_y + (float)i * menu_item_h;
-      const auto &opt = menu_options[i];
-
-      // Icon box on left with shadow when selected
-      afterhours::Color icon_bg = is_selected ? menu_highlight : menu_item_bg;
-      afterhours::Color icon_color = is_selected ? bg_dark : text_white;
-
-      auto icon_config = ComponentConfig{}
-          .with_label(opt.icon)
-          .with_720p_size(icon_w, menu_item_h - 4)
-          .with_absolute_position(menu_x, item_y)
-          .with_custom_background(icon_bg)
-          .with_font("EqProRounded", h720(L.menu_icon_font_size))
-          .with_custom_text_color(icon_color)
-          .with_alignment(TextAlignment::Center)
-          .with_debug_name("icon_" + std::to_string(i));
-
-      if (is_selected) {
-        icon_config = icon_config.with_soft_shadow(
-            L.shadow_offset_x, L.shadow_offset_y, L.shadow_blur,
-            afterhours::Color{0, 0, 0, 50});
-      }
-
-      div(context, mk(entity, 100 + static_cast<int>(i) * 3), icon_config);
-
-      // Menu item bar with improved selection state
-      afterhours::Color item_bg = is_selected ? menu_highlight : menu_item_bg;
-      afterhours::Color item_text = is_selected ? bg_dark : menu_text_unselected;
-      afterhours::Color item_border = is_selected ? holograph_teal
-                                                  : afterhours::Color{40, 40, 40, 255};
-
-      auto item_config = ComponentConfig{}
-          .with_label(opt.label)
-          .with_720p_size(menu_item_w - icon_w, menu_item_h - 4)
-          .with_absolute_position(menu_x + icon_w, item_y)
-          .with_custom_background(item_bg)
-          .with_border(item_border, is_selected ? 2.0f : 0.0f)
-          .with_font("EqProRounded", h720(L.menu_label_font_size))
-          .with_custom_text_color(item_text)
-          .with_alignment(TextAlignment::Left)
-          .with_debug_name("menu_" + std::to_string(i));
-
-      if (is_selected) {
-        item_config = item_config.with_soft_shadow(
-            L.shadow_offset_x, L.shadow_offset_y, L.shadow_blur,
-            afterhours::Color{0, 0, 0, 50});
-      }
-
-      if (button(context, mk(entity, 101 + static_cast<int>(i) * 3), item_config)) {
-        selected_option = i;
-      }
+    std::vector<std::string> option_labels;
+    for (const auto &opt : menu_options) {
+      option_labels.push_back(opt.label);
     }
+
+    tab_container(context, mk(entity, 100), option_labels, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(menu_item_w + 200)), pixels(44)})
+            .with_absolute_position(menu_x, menu_y));
 
     // ========== CENTER CHARACTER AREA ==========
     float center_area_start = menu_x + menu_item_w + 30.0f;
@@ -369,7 +322,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float card_y = L.card_y;
 
     // Get current selected option for dynamic card content
-    const auto &current_opt = menu_options[selected_option];
+    const auto &current_opt = menu_options[active_tab];
 
     // Card background with shadow
     div(context, mk(entity, 300),

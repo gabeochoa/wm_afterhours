@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_category = 0;
+  size_t active_tab = 0;
   bool night_mode = false;
   bool vibration = false;
   bool hold_to_draw = true;
@@ -96,52 +96,19 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("EqProRounded", h720(28.0f))
             .with_custom_text_color(text_dark));
 
-    // ========== LEFT: Category Tabs ==========
-    // Vertical metro-style line
-    float line_x = 180.0f;
-    div(context, mk(entity, 55),
+    // ========== CATEGORY TABS ==========
+    tab_container(context, mk(entity, 55), categories, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(4), pixels(380)})
-            .with_absolute_position(line_x, 150.0f)
-            .with_custom_background(grid_line));
-
-    // Metro style horizontal connectors
-    float tab_start_y = 160.0f;
-    float tab_h = 52.0f;
-
-    for (size_t i = 0; i < categories.size(); i++) {
-      float tab_y = tab_start_y + (float)i * tab_h;
-      bool selected = (i == selected_category);
-
-      // Horizontal connector to tab
-      div(context, mk(entity, 60 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(25), pixels(4)})
-              .with_absolute_position(line_x - 2.0f, tab_y + 22.0f)
-              .with_custom_background(grid_line)
-              .with_debug_name("connector_" + std::to_string(i)));
-
-      // Tab button
-      afterhours::Color tab_bg = selected ? highlight_yellow : tab_teal;
-
-      if (button(context, mk(entity, 70 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(categories[i])
-                     .with_size(ComponentSize{pixels(160), pixels(48)})
-                     .with_absolute_position(205.0f, tab_y)
-                     .with_custom_background(tab_bg)
-                     .with_custom_text_color(text_dark)
-                     .with_alignment(TextAlignment::Center)
-                     .with_debug_name("tab_" + std::to_string(i)))) {
-        selected_category = i;
-      }
-    }
+            .with_size(ComponentSize{pixels(700), pixels(48)})
+            .with_absolute_position(180.0f, 120.0f));
 
     // ========== RIGHT: Settings Content ==========
     float content_x = 500.0f;
     float content_y = 180.0f;
     float row_h = 75.0f;
 
+    // Tab 0: Game settings (toggles + sensitivity)
+    if (active_tab == 0) {
     // Toggles with X/checkmark style
     for (size_t i = 0; i < toggles.size(); i++) {
       float row_y = content_y + (float)i * row_h;
@@ -263,6 +230,26 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(content_x, sens_y + 50.0f)
             .with_custom_background(grid_line)
             .with_debug_name("separator"));
+    } // end active_tab == 0 (Game)
+
+    // Other tabs: placeholder content
+    if (active_tab >= 1 && active_tab < categories.size()) {
+      std::string tab_name = categories[active_tab];
+      div(context, mk(entity, 140),
+          ComponentConfig{}
+              .with_label(tab_name + " settings")
+              .with_size(ComponentSize{pixels(400), pixels(40)})
+              .with_absolute_position(content_x, content_y)
+              .with_font("EqProRounded", h720(24.0f))
+              .with_custom_text_color(text_dark));
+      div(context, mk(entity, 141),
+          ComponentConfig{}
+              .with_label("Options will be displayed here.")
+              .with_size(ComponentSize{pixels(400), pixels(40)})
+              .with_absolute_position(content_x, content_y + 40.0f)
+              .with_font("EqProRounded", h720(24.0f))
+              .with_custom_text_color(text_muted));
+    }
 
     // ========== VERSION INFO ==========
     // Use configurable version display style
@@ -291,6 +278,40 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(btn_teal)
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
             .with_alignment(TextAlignment::Center));
+
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float footer_y = (float)screen_h - 60.0f;
+    float footer_btn_x = (float)screen_w / 2.0f - 150.0f;
+
+    button(context, mk(entity, 220),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x, footer_y)
+               .with_custom_background(btn_teal)
+               .with_custom_text_color(text_dark)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 221),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 90.0f, footer_y)
+               .with_custom_background(afterhours::Color{215, 210, 200, 255})
+               .with_custom_text_color(text_dark)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 222),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 180.0f, footer_y)
+               .with_custom_background(afterhours::Color{215, 210, 200, 255})
+               .with_custom_text_color(text_dark)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_apply"));
   }
 };
 

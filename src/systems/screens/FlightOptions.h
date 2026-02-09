@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_category = 0;
+  size_t active_tab = 0;
   size_t selected_option = 0;
 
   // Colors matching Ace Combat inspiration - dark cyber/military aesthetic
@@ -92,11 +92,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // Note: Grid lines removed to reduce visual clutter - clean background only
 
     // ========== DECORATIVE HUD LINES ==========
-    // Position decorative elements adjacent to menu for visual connection
     float menu_x = 185.0f;
     float menu_y = 150.0f;
-    float line_origin_x = menu_x - 20.0f;  // Position line close to menu items
-    float line_origin_y = menu_y - 15.0f;  // Align with menu start
+    float line_origin_x = menu_x - 20.0f;
+    float line_origin_y = menu_y - 15.0f;
 
     // Top angled line connecting to title area
     div(context, mk(entity, 60),
@@ -105,37 +104,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(line_origin_x - 80.0f, line_origin_y)
             .with_custom_background(highlight_line)
             .with_debug_name("line_top"));
-
-    // Connecting vertical line running alongside menu categories
-    float vertical_line_height = (float)categories.size() * 36.0f + 20.0f;
-    div(context, mk(entity, 61),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(2), pixels((int)vertical_line_height)})
-            .with_absolute_position(line_origin_x, line_origin_y)
-            .with_custom_background(highlight_line)
-            .with_debug_name("line_vert"));
-
-    // Glow dot at intersection - positioned at line corner
-    div(context, mk(entity, 62),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(6), pixels(6)})
-            .with_absolute_position(line_origin_x - 2.0f, line_origin_y - 2.0f)
-            .with_custom_background(afterhours::Color{255, 200, 80, 255})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_debug_name("glow_dot"));
-
-    // Horizontal tick marks aligned with each menu category
-    for (size_t i = 0; i < categories.size(); i++) {
-      float tick_y = menu_y + (float)i * 36.0f + 10.0f;  // Center tick with menu item
-      div(context, mk(entity, 70 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(10), pixels(2)})
-              .with_absolute_position(line_origin_x + 2.0f, tick_y)  // Tick extends from line toward menu
-              .with_custom_background(i == selected_category ? text_cyan
-                                                             : text_muted)
-              .with_debug_name("tick_" + std::to_string(i)));
-    }
 
     // ========== TITLE: OPTIONS ==========
     div(context, mk(entity, 100),
@@ -146,37 +114,11 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font("EqProRounded", h720(36.0f))
             .with_custom_text_color(text_cyan));
 
-    // ========== MENU CATEGORIES ==========
-    // menu_x and menu_y already defined above with decorative elements
-
-    for (size_t i = 0; i < categories.size(); i++) {
-      bool selected = (i == selected_category);
-      afterhours::Color item_color = selected ? text_bright : text_cyan;
-
-      if (button(context, mk(entity, 110 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(categories[i])
-                     .with_size(ComponentSize{pixels(200), pixels(32)})
-                     .with_absolute_position(menu_x, menu_y + (float)i * 36.0f)
-                     .with_font("EqProRounded", h720(20.0f))
-                     .with_custom_text_color(item_color)
-                     .with_alignment(TextAlignment::Left)
-                     .with_padding(Padding{.left = pixels(8)})
-                     .with_debug_name("cat_" + std::to_string(i)))) {
-        selected_category = i;
-      }
-
-      // Selection indicator bar
-      if (selected) {
-        div(context, mk(entity, 150 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(4), pixels(26)})
-                .with_absolute_position(menu_x - 18.0f,
-                                menu_y + (float)i * 36.0f + 3.0f)
-                .with_custom_background(text_cyan)
-                .with_debug_name("select_bar_" + std::to_string(i)));
-      }
-    }
+    // ========== CATEGORY TABS ==========
+    tab_container(context, mk(entity, 110), categories, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(800), pixels(32)})
+            .with_absolute_position(menu_x - 50.0f, 110.0f));
 
     // ========== SUB-OPTIONS (right side) ==========
     float sub_x = 400.0f;
@@ -206,7 +148,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Sub-option header showing which category's settings are displayed
-    std::string sub_header = categories[selected_category] + " SETTINGS";
+    std::string sub_header = categories[active_tab] + " SETTINGS";
     div(context, mk(entity, 195),
         ComponentConfig{}
             .with_label(sub_header)
@@ -275,12 +217,12 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== HELP TEXT ==========
     // Generate context-aware help text based on current selection
     std::string help_text;
-    if (selected_category == 0 && selected_option < suboption_help.size()) {
+    if (active_tab == 0 && selected_option < suboption_help.size()) {
       // When on Flight System category, show suboption-specific help
       help_text = suboption_help[selected_option];
-    } else if (selected_category < category_help.size()) {
+    } else if (active_tab < category_help.size()) {
       // Show category-specific help for other categories
-      help_text = category_help[selected_category];
+      help_text = category_help[active_tab];
     } else {
       help_text = "Use arrow keys to browse categories and options.";
     }
@@ -292,6 +234,46 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(170.0f, (float)screen_h - 180.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_bright));
+
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float footer_btn_y = (float)screen_h - 120.0f;
+    float footer_btn_x = 500.0f;
+
+    button(context, mk(entity, 350),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x, footer_btn_y)
+               .with_custom_background(highlight_line)
+               .with_border(text_muted, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_bright)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 351),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 90.0f, footer_btn_y)
+               .with_custom_background(afterhours::Color{35, 50, 70, 255})
+               .with_border(text_muted, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_bright)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 352),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 180.0f, footer_btn_y)
+               .with_custom_background(afterhours::Color{35, 50, 70, 255})
+               .with_border(text_muted, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_bright)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_apply"));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
     float btn_y = (float)screen_h - 60.0f;

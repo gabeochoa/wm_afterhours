@@ -432,6 +432,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.5f)
             .with_alignment(TextAlignment::Center));
 
+    // ========== SEPARATOR: Between main panels and bottom sections ==========
+    div(context, mk(entity, 299),
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(content_width * 0.9f), pixels(1)})
+            .with_absolute_position(left_panel_x + content_width * 0.05f, panel_y + panel_h + 8.0f)
+            .with_custom_background(afterhours::Color{130, 110, 90, 60})
+            .with_debug_name("section_separator_1"));
+
     // ========== MUSIC SLIDER ==========
     // Connected to main layout via left_panel_x
     float slider_y = panel_y + panel_h + 18.0f;
@@ -545,6 +553,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     float icon_img_size = 40.0f;
     float icon_offset = (icon_size - icon_img_size) / 2.0f;
     float icon_spacing = 82.0f;
+
+    // ========== SEPARATOR: Between chat and icons ==========
+    div(context, mk(entity, 499),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(1), pixels(80)})
+            .with_absolute_position(icon_x - 20.0f, chat_y + 2.0f)
+            .with_custom_background(afterhours::Color{130, 110, 90, 60})
+            .with_debug_name("section_separator_2"));
 
     // Bottom-right icon buttons - data-driven
     struct IconBtn {

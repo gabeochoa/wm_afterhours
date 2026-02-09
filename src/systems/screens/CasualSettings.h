@@ -185,6 +185,14 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float row_y = panel_y + 145.0f;
     float row_spacing = 70.0f;
 
+    // ========== SEPARATOR: Between toggles and menu buttons ==========
+    div(context, mk(entity, 99),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels((int)(panel_w - 80.0f)), pixels(1)})
+            .with_absolute_position(panel_x + 40.0f, row_y - 15.0f)
+            .with_custom_background(afterhours::Color{55, 45, 40, 40})
+            .with_debug_name("section_separator_toggles"));
+
     // Left column
     for (size_t i = 0; i < left_buttons.size(); i++) {
       button(context, mk(entity, 100 + static_cast<int>(i)),
@@ -252,6 +260,60 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_x + 135.0f, info_y + 22.0f)
             .with_font("Gaegu-Bold", h720(17.0f))
             .with_custom_text_color(text_muted));
+
+    // ========== SEPARATOR BEFORE FOOTER ==========
+    div(context, mk(entity, 202),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels((int)(panel_w - 80.0f)), pixels(1)})
+            .with_absolute_position(panel_x + 40.0f, panel_y + panel_h - 60.0f)
+            .with_custom_background(afterhours::Color{55, 45, 40, 40})
+            .with_debug_name("section_separator_footer"));
+
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float footer_y = panel_y + panel_h - 50.0f;
+    float footer_btn_x = panel_x + panel_w - 300.0f;
+
+    button(context, mk(entity, 210),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x, footer_y)
+               .with_custom_background(btn_green)
+               .with_border(btn_green_dark, 3.0f)
+               .with_font("Gaegu-Bold", h720(20.0f))
+               .with_custom_text_color(white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.4f)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 211),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 90.0f, footer_y)
+               .with_custom_background(btn_blue)
+               .with_border(btn_blue_dark, 3.0f)
+               .with_font("Gaegu-Bold", h720(20.0f))
+               .with_custom_text_color(white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.4f)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 212),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 180.0f, footer_y)
+               .with_custom_background(btn_blue)
+               .with_border(btn_blue_dark, 3.0f)
+               .with_font("Gaegu-Bold", h720(20.0f))
+               .with_custom_text_color(white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.4f)
+               .with_debug_name("btn_apply"));
 
     // ========== ABOUT PANEL (shows technical info when toggled) ==========
     if (show_about) {

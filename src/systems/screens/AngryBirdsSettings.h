@@ -11,6 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
+  size_t active_tab = 0;
   bool music_on = true;
   bool sound_on = true;
   bool vibration_on = false;
@@ -195,8 +196,17 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_soft_shadow(1.0f, 2.0f, 4.0f,
                                  afterhours::Color{0, 0, 0, 30}));
 
+    // ========== SETTINGS TABS ==========
+    std::vector<std::string> settings_tabs = {"Audio", "General", "Info"};
+    tab_container(context, mk(entity, 26), settings_tabs, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(panel_w - 40), pixels(36)})
+            .with_absolute_position(panel_x + 20.0f,
+                            panel_y + cfg_header_height + cfg_header_inset + 8.0f));
+
+    if (active_tab == 0) {
     // ========== TOGGLE BUTTONS (Music, Sound, Vibration) ==========
-    float toggle_y = panel_y + cfg_toggle_y_offset;
+    float toggle_y = panel_y + cfg_toggle_y_offset + 30.0f;
     float toggle_x = panel_x + cfg_toggle_x_offset;
 
     // Toggle buttons with ON/OFF text for clarity
@@ -256,10 +266,15 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== SAVE/LOAD + SYNC GROUP ==========
+    } // end active_tab == 0 (Audio)
+
+    if (active_tab == 1) {
+    // ========== GENERAL SETTINGS ==========
     // Simplified single card design (no nested boxes)
+    float general_y = panel_y + cfg_toggle_y_offset + 30.0f;
     float saveload_x = panel_x + panel_w - cfg_saveload_width -
                        cfg_saveload_padding - 20.0f;
-    float saveload_y = toggle_y - 4.0f;
+    float saveload_y = general_y - 4.0f;
 
     div(context, mk(entity, 39),
         ComponentConfig{}
@@ -309,11 +324,19 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                  afterhours::Color{0, 0, 0, 25}));
 
     // ========== BLUE PILL BUTTONS ==========
-    float btn_row1_y = toggle_y + cfg_toggle_height + 35.0f + cfg_toggle_label_gap;
+    float btn_row1_y = general_y + cfg_toggle_height + 35.0f + cfg_toggle_label_gap;
     float btn_row2_y = btn_row1_y + cfg_pill_btn_spacing;
     float btn_row3_y = btn_row2_y + cfg_pill_btn_spacing;
     float left_btn_x = panel_x + cfg_pill_left_margin;
     float right_btn_x = panel_x + panel_w / 2.0f + cfg_pill_right_margin;
+
+    // ========== SEPARATOR: Between toggles and pill buttons ==========
+    div(context, mk(entity, 49),
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
+            .with_absolute_position(panel_x + 40.0f, btn_row1_y - 12.0f)
+            .with_custom_background(afterhours::Color{65, 55, 45, 40})
+            .with_debug_name("section_separator_toggles"));
 
     // Notifications: ON/OFF (clickable)
     std::string notif_text =
@@ -363,9 +386,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     struct PillBtn { const char *label; int id; float x; float y; };
     afterhours::Color pill_shadow{0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
     PillBtn pill_btns[] = {
-        {"Credits", 55, right_btn_x, btn_row1_y},
         {"Language", 60, left_btn_x, btn_row2_y},
-        {"Support", 65, right_btn_x, btn_row2_y},
     };
     for (auto &pb : pill_btns) {
       button(context, mk(entity, pb.id),
@@ -382,9 +403,50 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_roundness(0.5f)
                  .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, pill_shadow));
     }
+    } // end active_tab == 1 (General)
+
+    if (active_tab == 2) {
+    // ========== INFO TAB ==========
+    float info_base_y = panel_y + cfg_toggle_y_offset + 30.0f;
+    float info_left_x = panel_x + cfg_pill_left_margin;
+    float info_right_x = panel_x + panel_w / 2.0f + cfg_pill_right_margin;
+    float info_row1_y = info_base_y;
+    float info_row2_y = info_row1_y + cfg_pill_btn_spacing;
+    float info_row3_y = info_row2_y + cfg_pill_btn_spacing;
+    afterhours::Color info_pill_shadow{0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
+
+    // Credits button
+    button(context, mk(entity, 55),
+           ComponentConfig{}
+               .with_label("Credits")
+               .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
+               .with_absolute_position(info_left_x, info_row1_y)
+               .with_custom_background(btn_blue)
+               .with_border(btn_blue_dark, cfg_pill_border_width)
+               .with_font("EqProRounded", h720(cfg_pill_font_size))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.5f)
+               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
+
+    // Support button
+    button(context, mk(entity, 65),
+           ComponentConfig{}
+               .with_label("Support")
+               .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
+               .with_absolute_position(info_right_x, info_row1_y)
+               .with_custom_background(btn_blue)
+               .with_border(btn_blue_dark, cfg_pill_border_width)
+               .with_font("EqProRounded", h720(cfg_pill_font_size))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.5f)
+               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
 
     // ========== BOTTOM INFO (left column) ==========
-    float info_y = btn_row3_y + 4.0f;
+    float info_y = info_row3_y + 4.0f;
     const char *info_lines[] = {
         "Build: 15555.1.114203", "Version 1.11.0.12346", "Player: #281-676-956"};
     for (int il = 0; il < 3; il++) {
@@ -392,7 +454,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(info_lines[il])
               .with_size(ComponentSize{pixels(200), pxf(cfg_info_line_height)})
-              .with_absolute_position(left_btn_x, info_y + (float)il * (cfg_info_line_height + 2.0f))
+              .with_absolute_position(info_left_x, info_y + (float)il * (cfg_info_line_height + 2.0f))
               .with_font("EqProRounded", h720(cfg_info_font_size))
               .with_custom_text_color(text_muted));
     }
@@ -402,7 +464,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Terms and Privacy")
                .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
-               .with_absolute_position(right_btn_x, btn_row3_y)
+               .with_absolute_position(info_right_x, info_row3_y)
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, cfg_pill_border_width)
                .with_font("EqProRounded", h720(17.0f))
@@ -410,7 +472,62 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, pill_shadow));
+               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
+    } // end active_tab == 2 (Info)
+
+    // ========== SEPARATOR BEFORE FOOTER ==========
+    div(context, mk(entity, 76),
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
+            .with_absolute_position(panel_x + 40.0f, panel_y + panel_h - 60.0f)
+            .with_custom_background(afterhours::Color{65, 55, 45, 40})
+            .with_debug_name("section_separator_footer"));
+
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float footer_y = panel_y + panel_h - 50.0f;
+    float footer_btn_x = panel_x + panel_w - 300.0f;
+
+    button(context, mk(entity, 80),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x, footer_y)
+               .with_custom_background(btn_green)
+               .with_border(btn_green_dark, 3.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.4f)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 81),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 90.0f, footer_y)
+               .with_custom_background(btn_blue)
+               .with_border(btn_blue_dark, 3.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.4f)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 82),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 180.0f, footer_y)
+               .with_custom_background(btn_blue)
+               .with_border(btn_blue_dark, 3.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_rounded_corners(RoundedCorners())
+               .with_roundness(0.4f)
+               .with_debug_name("btn_apply"));
   }
 };
 

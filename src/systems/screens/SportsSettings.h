@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_tab = 1; // VIDEO tab
+  size_t active_tab = 1; // VIDEO tab
   size_t selected_row = 6; // Anti-Aliasing method selected to show TSR tooltip
 
   // Colors matching Rematch/FIFA style - dark with bright green accents
@@ -171,7 +171,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         {&audio_settings, "Audio"},
         {&controls_settings, "Controls"},
     };
-    size_t idx = selected_tab < 4 ? selected_tab : 1;
+    size_t idx = active_tab < 4 ? active_tab : 1;
     return infos[idx];
   }
 
@@ -228,7 +228,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               static_cast<int>(pct * (setting.max_val - setting.min_val));
 
     // Special case for gamma in graphics tab
-    if (selected_tab == 1 &&
+    if (active_tab == 1 &&
         index == 5) { // Gamma - divide by 10 for decimal display
       return fmt::format("{:.1f}", val / 10.0f);
     }
@@ -319,63 +319,12 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== TOP TAB BAR ==========
     float tab_y = 15.0f;
-    float tab_w = 130.0f;
-    float tab_h = 35.0f;
     float tab_start_x = 70.0f;
 
-    // LB/RB bumper buttons
-    struct TabBumper { const char *label; int id; float x; };
-    TabBumper bumpers[] = {
-        {"LB", 5, tab_start_x - 50.0f},
-        {"RB", 6, tab_start_x + (float)tabs.size() * tab_w},
-    };
-    for (auto &tb : bumpers) {
-      if (button(context, mk(entity, tb.id),
-                 ComponentConfig{}
-                     .with_label(tb.label)
-                     .with_size(ComponentSize{pixels(35), pixels(28)})
-                     .with_absolute_position(tb.x, tab_y + 4.0f)
-                     .with_custom_background(panel_dark)
-                     .with_border(text_muted, 1.0f)
-                     .with_font("EqProRounded", h720(16.0f))
-                     .with_custom_text_color(text_white)
-                     .with_alignment(TextAlignment::Center)
-                     .with_skip_tabbing(true))) {
-        if (tb.id == 5) {
-          selected_tab = (selected_tab == 0) ? tabs.size() - 1 : selected_tab - 1;
-        } else {
-          selected_tab = (selected_tab + 1) % tabs.size();
-        }
-      }
-    }
-
-    for (size_t i = 0; i < tabs.size(); i++) {
-      float tx = tab_start_x + (float)i * tab_w;
-      bool is_selected = (i == selected_tab);
-      afterhours::Color tab_text = is_selected ? text_white : text_muted;
-
-      if (button(
-              context, mk(entity, 10 + static_cast<int>(i)),
-              ComponentConfig{}
-                  .with_label(tabs[i])
-                  .with_720p_size(tab_w - 10, tab_h)
-                  .with_absolute_position(tx, tab_y)
-                  .with_font("EqProRounded", h720(16.0f))
-                  .with_custom_text_color(tab_text)
-                  .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                  .with_alignment(TextAlignment::Center)
-                  .with_skip_tabbing(true))) {
-        selected_tab = i;
-      }
-
-      if (is_selected) {
-        div(context, mk(entity, 20 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_size(ComponentSize{pxf(tab_w - 20), pixels(4)})
-                .with_absolute_position(tx + 5.0f, tab_y + tab_h + 2.0f)
-                .with_custom_background(accent_green));
-      }
-    }
+    tab_container(context, mk(entity, 10), tabs, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(520), pixels(35)})
+            .with_absolute_position(tab_start_x, tab_y));
 
     // ========== SECTION HEADER ==========
     float header_y = tab_y + 55.0f;
@@ -387,6 +336,14 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(50.0f, header_y)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_white));
+
+    // Separator between header and settings rows
+    div(context, mk(entity, 31),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(520), pixels(1)})
+            .with_absolute_position(50.0f, header_y + 32.0f)
+            .with_custom_background(afterhours::Color{85, 195, 145, 60})
+            .with_debug_name("section_separator_header"));
 
     // ========== LEFT PANEL: Settings ==========
     float panel_x = 50.0f;

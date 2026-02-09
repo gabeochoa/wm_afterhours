@@ -255,6 +255,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Padding{.top = pixels(8), .left = pixels(12),
                                   .bottom = pixels(8), .right = pixels(12)})
             .with_flex_direction(FlexDirection::Column)
+            .with_justify_content(JustifyContent::Center)
             .with_debug_name("root"));
 
     // Title row

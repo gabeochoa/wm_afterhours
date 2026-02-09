@@ -31,6 +31,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Background)
             .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
+            .with_justify_content(JustifyContent::Center)
             .with_debug_name("main"));
 
     // Title

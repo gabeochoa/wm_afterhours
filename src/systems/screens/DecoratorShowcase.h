@@ -61,6 +61,15 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Center));
 
+    // Separator between title and content
+    div(context, mk(root.ent(), 10),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(0.85f), pixels(1)})
+            .with_custom_background(afterhours::Color{255, 255, 255, 40})
+            .with_self_align(SelfAlign::Center)
+            .with_margin(Margin{.top = h720(4.0f), .bottom = h720(4.0f)})
+            .with_debug_name("section_separator_title"));
+
     // ========== CONTENT ROW ==========
     auto content = div(context, mk(root.ent(), 2),
         ComponentConfig{}

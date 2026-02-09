@@ -12,7 +12,7 @@ using namespace afterhours::ui::imm;
 
 struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_tab = 5;    // Options tab (gear icon)
-  size_t selected_option = 0; // Controller selected
+  size_t active_tab = 0;      // Options category tab
   bool show_delete_confirm = false; // Confirmation barrier for delete
 
   // Colors matching Kirby Air Ride inspiration - bright Nintendo aesthetic
@@ -298,65 +298,37 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(panel_x + 25.0f, panel_y + 105.0f)
             .with_custom_text_color(text_dark));
 
-    // ========== OPTIONS GRID (2 columns) ==========
-    float grid_x = panel_x + 80.0f;  // More centered
-    float grid_y = panel_y + 135.0f;
-    float icon_size = 95.0f;   // Larger icons for full labels
-    float col_spacing = 160.0f;
-    float row_spacing = 115.0f;
-
-    for (size_t i = 0; i < options.size(); i++) {
-      auto &[icon, label, color] = options[i];
-      int row = static_cast<int>(i) / 3;
-      int col = static_cast<int>(i) % 3;
-
-      // Calculate how many items are in this row
-      size_t items_in_row = (row == 0) ? 3 : (options.size() - 3);
-      // Center incomplete rows by offsetting by half the missing columns
-      float row_offset = (3 - items_in_row) * col_spacing / 2.0f;
-
-      float ox = grid_x + row_offset + (float)col * col_spacing;
-      float oy = grid_y + (float)row * row_spacing;
-
-      bool is_selected = (i == selected_option);
-      afterhours::Color opt_bg =
-          is_selected ? color : afterhours::Color{235, 230, 225, 255};
-      afterhours::Color opt_text = is_selected ? text_black : color;
-
-      // Option icon button
-      if (button(
-              context, mk(entity, 200 + static_cast<int>(i) * 2),
-              ComponentConfig{}
-                  .with_label(icon)
-                  .with_720p_size(icon_size, icon_size)
-                  .with_absolute_position(ox, oy)
-                  .with_custom_background(opt_bg)
-                  .with_border(is_selected ? afterhours::Color{0, 0, 0, 0}
-                                           : border_gray,
-                               2.0f)
-                  .with_font("Gaegu-Bold", h720(16.0f))
-                  .with_custom_text_color(opt_text)
-                  .with_alignment(TextAlignment::Center)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.25f)
-                  .with_soft_shadow(2.0f, 3.0f, 8.0f,
-                                    afterhours::Color{0, 0, 0, 30})
-                  .with_debug_name("opt_icon_" + std::to_string(i)))) {
-        selected_option = i;
-      }
-
-      // Option label
-      div(context, mk(entity, 201 + static_cast<int>(i) * 2),
-          ComponentConfig{}
-              .with_label(label)
-              .with_size(ComponentSize{pxf(icon_size + 50),
-                                       pixels(28)})
-              .with_absolute_position(ox - 25.0f, oy + icon_size + 5.0f)
-              .with_font("Gaegu-Bold", h720(18.0f))
-              .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("opt_label_" + std::to_string(i)));
+    // ========== OPTIONS TABS ==========
+    std::vector<std::string> option_labels;
+    for (auto &[icon, label, color] : options) {
+      option_labels.push_back(label);
     }
+
+    tab_container(context, mk(entity, 200), option_labels, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(panel_w - 50), pixels(40)})
+            .with_absolute_position(panel_x + 25.0f, panel_y + 135.0f));
+
+    // Tab content area
+    float tab_content_y = panel_y + 190.0f;
+    auto &[tab_icon, tab_label, tab_color] = options[active_tab];
+    std::string tab_desc = tab_label + " options will be displayed here.";
+
+    div(context, mk(entity, 210),
+        ComponentConfig{}
+            .with_label(tab_label)
+            .with_size(ComponentSize{pxf(panel_w - 80), pixels(40)})
+            .with_absolute_position(panel_x + 40.0f, tab_content_y)
+            .with_font("Gaegu-Bold", h720(28.0f))
+            .with_custom_text_color(tab_color));
+
+    div(context, mk(entity, 211),
+        ComponentConfig{}
+            .with_label(tab_desc)
+            .with_size(ComponentSize{pxf(panel_w - 80), pixels(30)})
+            .with_absolute_position(panel_x + 40.0f, tab_content_y + 45.0f)
+            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_custom_text_color(text_muted));
 
     // ========== DESCRIPTION TEXT (more prominent) ==========
     div(context, mk(entity, 300),

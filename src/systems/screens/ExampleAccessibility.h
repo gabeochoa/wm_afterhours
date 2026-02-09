@@ -112,6 +112,14 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.5f)
             .with_alignment(TextAlignment::Center));
 
+    // Separator between status badge and content columns
+    div(context, mk(entity, 4),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels((int)(panel_w * 0.85f)), pixels(1)})
+            .with_absolute_position(panel_x + panel_w * 0.075f, status_y + 46.0f)
+            .with_custom_background(divider)
+            .with_debug_name("section_separator_1"));
+
     // Content area - two columns
     float content_y = status_y + 55.0f;
     float col_w = (panel_w - 80) / 2.0f;
@@ -208,6 +216,14 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(accent_green)
             .with_alignment(TextAlignment::Center));
+
+    // Separator between columns section and color showcase
+    div(context, mk(entity, 24),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels((int)(panel_w * 0.85f)), pixels(1)})
+            .with_absolute_position(panel_x + panel_w * 0.075f, content_y + 195.0f)
+            .with_custom_background(divider)
+            .with_debug_name("section_separator_2"));
 
     // Color showcase section
     float showcase_y = content_y + 200.0f;

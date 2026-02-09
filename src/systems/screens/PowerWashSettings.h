@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_tab = 2; // VIDEO tab selected
+  size_t active_tab = 2; // VIDEO tab selected
   size_t selected_row = 4; // Anti-Aliasing selected
 
   // Colors matching PowerWash Simulator - dark blue interface
@@ -76,7 +76,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<SettingRow> &get_current_settings() {
-    switch (selected_tab) {
+    switch (active_tab) {
     case 0:
       return general_settings;
     case 1:
@@ -284,46 +284,56 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(hl.color));
     }
 
-    // ========== BOTTOM TAB BAR ==========
+    // ========== FOOTER: OK / Cancel / Apply ==========
+    float footer_btn_x = panel_x + panel_w - 290.0f;
+    float footer_btn_y = panel_y + panel_h - 50.0f;
+
+    button(context, mk(entity, 190),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x, footer_btn_y)
+               .with_custom_background(panel_border)
+               .with_border(text_cyan, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(entity, 191),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 90.0f, footer_btn_y)
+               .with_custom_background(panel_blue)
+               .with_border(panel_border, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(entity, 192),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_absolute_position(footer_btn_x + 180.0f, footer_btn_y)
+               .with_custom_background(panel_blue)
+               .with_border(panel_border, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_apply"));
+
+    // ========== TAB BAR ==========
     float tab_y = panel_y + panel_h + 15.0f;
-    float tab_w = 95.0f;
-    float tab_h = 44.0f;
-    float tab_total = tab_w * (float)tabs.size();
-    float tab_start_x = panel_x + (panel_w - tab_total) / 2.0f;
 
-    for (size_t i = 0; i < tabs.size(); i++) {
-      float tx = tab_start_x + (float)i * tab_w;
-      bool is_selected = (i == selected_tab);
-      afterhours::Color tab_bg = is_selected ? tab_selected : panel_blue;
-      afterhours::Color tab_text = is_selected ? text_white : text_muted;
-
-      if (button(
-              context, mk(entity, 200 + static_cast<int>(i)),
-              ComponentConfig{}
-                  .with_label(tabs[i])
-                  .with_720p_size(tab_w - 6, tab_h)
-                  .with_absolute_position(tx, tab_y)
-                  .with_custom_background(tab_bg)
-                  .with_border(panel_border, 1.0f)
-                  .with_font("EqProRounded", h720(15.0f))
-                  .with_custom_text_color(tab_text)
-                  .with_alignment(TextAlignment::Center))) {
-        selected_tab = i;
-      }
-
-      // Active tab: thick underline + subtle bg highlight
-      if (is_selected) {
-        div(context, mk(entity, 210 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_size(ComponentSize{pxf(tab_w - 10),
-                                         pixels(4)})
-                .with_absolute_position(tx + 2.0f, tab_y + tab_h - 6.0f)
-                .with_custom_background(text_cyan));
-      }
-    }
+    tab_container(context, mk(entity, 200), tabs, active_tab,
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), pixels(44)})
+            .with_absolute_position(panel_x, tab_y));
 
     // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_y = panel_y + panel_h + 55.0f;
+    float prompt_y = panel_y + panel_h + 75.0f;
     float prompt_x = panel_x;
 
     struct Prompt { const char *icon; const char *label; int icon_id; int label_id; float x_off; int label_w; };
