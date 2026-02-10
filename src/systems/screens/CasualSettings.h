@@ -121,30 +121,73 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         {"Vibrate", &vibrate_on, "vibrate"}
     };
 
+    constexpr float cs_track_w = 60.0f, cs_track_h = 32.0f;
+    constexpr float cs_knob_pad = 4.0f;
+    constexpr float cs_knob_sz = cs_track_h - cs_knob_pad * 2.0f;  // 24px
+    constexpr float cs_knob_travel = cs_track_w - cs_knob_sz - cs_knob_pad * 2.0f;
+
     for (size_t i = 0; i < toggles.size(); i++) {
       auto &[label, state_ptr, name] = toggles[i];
       float tx = toggle_start_x + (float)i * toggle_spacing;
-      std::string display = label + (*state_ptr ? ": ON" : ": OFF");
-      afterhours::Color toggle_bg = *state_ptr ? btn_green : text_muted;
-      afterhours::Color toggle_border =
-          *state_ptr ? btn_green_dark : afterhours::Color{95, 85, 75, 255};
+      bool is_on = *state_ptr;
+      // OFF track: light warm gray visible on cream, ON: bright green
+      afterhours::Color cs_track_off{185, 175, 165, 255};
+      afterhours::Color track_col = is_on ? btn_green : cs_track_off;
+      afterhours::Color track_border_col =
+          is_on ? btn_green_dark : afterhours::Color{165, 155, 145, 255};
 
-      if (button(context, mk(entity, 40 + static_cast<int>(i)),
+      float track_y = toggle_y + 10.0f;
+
+      // IDs: i*4+55 range to avoid colliding with IDs 50-51 (Save/Load, Wifi)
+      int base = 55 + static_cast<int>(i) * 4;
+
+      // Track visual (div — immune to hover color override)
+      div(context, mk(entity, base),
+          ComponentConfig{}
+              .with_size(ComponentSize{pxf(cs_track_w), pxf(cs_track_h)})
+              .with_absolute_position(tx, track_y)
+              .with_custom_background(track_col)
+              .with_border(track_border_col, 2.0f)
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_soft_shadow(1.0f, 2.0f, 4.0f,
+                                afterhours::Color{0, 0, 0, 35})
+              .with_debug_name("toggle_track_" + name));
+
+      // Transparent click target (overlays the track — no background)
+      if (button(context, mk(entity, base + 1),
                  ComponentConfig{}
-                     .with_label(display)
-                     .with_size(ComponentSize{pixels(90), pixels(58)})
-                     .with_absolute_position(tx, toggle_y)
-                     .with_custom_background(toggle_bg)
-                     .with_border(toggle_border, 4.0f)
-                     .with_custom_text_color(*state_ptr ? text_dark : white)
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.5f)
-                     .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                                       afterhours::Color{0, 0, 0, 35})
-                     .with_debug_name("toggle_" + name))) {
+                     .with_size(ComponentSize{pxf(cs_track_w), pxf(cs_track_h)})
+                     .with_absolute_position(tx, track_y)
+                     .with_color_usage(Theme::Usage::None)
+                     .with_debug_name("toggle_btn_" + name))) {
         *state_ptr = !*state_ptr;
       }
+
+      // White sliding knob (sibling div — screen coordinates)
+      float knob_x = tx + cs_knob_pad + (is_on ? cs_knob_travel : 0.0f);
+      float knob_y = track_y + cs_knob_pad;
+      div(context, mk(entity, base + 2),
+          ComponentConfig{}
+              .with_size(ComponentSize{pxf(cs_knob_sz), pxf(cs_knob_sz)})
+              .with_absolute_position(knob_x, knob_y)
+              .with_custom_background(white)
+              .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(1.0f)
+              .with_skip_tabbing(true)
+              .with_debug_name("toggle_knob_" + name));
+
+      // Label below
+      std::string display = label + (is_on ? ": ON" : ": OFF");
+      div(context, mk(entity, base + 3),
+          ComponentConfig{}
+              .with_label(display)
+              .with_size(ComponentSize{pxf(cs_track_w + 30.0f), pixels(22)})
+              .with_absolute_position(tx - 15.0f, track_y + cs_track_h + 4.0f)
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(text_dark)
+              .with_alignment(TextAlignment::Center));
     }
 
     // Wifi icon (positioned first, then Save/Load button to its left)

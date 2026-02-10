@@ -591,26 +591,35 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name(name));
   }
 
-  // Toggle track + knob
+  // Pill toggle: track (52×28) + sliding white knob (22×22)
+  static constexpr float pc_track_w = 52.0f, pc_track_h = 28.0f;
+  static constexpr float pc_knob_pad = 4.0f;
+  static constexpr float pc_knob_sz = pc_track_h - pc_knob_pad * 2.0f;  // 20px
+  static constexpr float pc_knob_travel = pc_track_w - pc_knob_sz - pc_knob_pad * 2.0f;
+
   void render_toggle(UIContext<InputAction> &context,
                      afterhours::Entity &entity, int base_id, float x, float y,
                      float w, bool value) {
     afterhours::Color track_color = value ? toggle_green : toggle_track;
+    float track_x = x + w - pc_track_w - 8.0f;
+    float track_y = y + 8.0f;
     div(context, mk(entity, base_id),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(48), pixels(24)})
-            .with_absolute_position(x + w - 58.0f, y + 10.0f)
+            .with_size(ComponentSize{pixels(pc_track_w), pixels(pc_track_h)})
+            .with_absolute_position(track_x, track_y)
             .with_custom_background(track_color)
-            .with_rounded_corners(RoundedCorners())
+            .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.5f)
             .with_debug_name("toggle_track_" + std::to_string(base_id)));
-    float knob_x = value ? (x + w - 34.0f) : (x + w - 56.0f);
+    float knob_x = track_x + pc_knob_pad + (value ? pc_knob_travel : 0.0f);
+    float knob_y = track_y + pc_knob_pad;
     div(context, mk(entity, base_id + 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(20), pixels(20)})
-            .with_absolute_position(knob_x, y + 12.0f)
+            .with_size(ComponentSize{pixels(pc_knob_sz), pixels(pc_knob_sz)})
+            .with_absolute_position(knob_x, knob_y)
             .with_custom_background(text_white)
-            .with_rounded_corners(RoundedCorners())
+            .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
+            .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(1.0f)
             .with_debug_name("toggle_knob_" + std::to_string(base_id)));
   }

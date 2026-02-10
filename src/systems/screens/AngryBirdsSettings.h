@@ -37,13 +37,13 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   // Toggle section configuration
   float cfg_toggle_y_offset = 115.0f;
-  float cfg_toggle_x_offset = 70.0f;
-  float cfg_toggle_spacing = 95.0f;
-  float cfg_toggle_width = 72.0f;
-  float cfg_toggle_height = 52.0f;
-  float cfg_toggle_label_gap = 8.0f;
-  float cfg_toggle_border_width = 4.0f;
-  float cfg_toggle_font_size = 20.0f;
+  float cfg_toggle_x_offset = 55.0f;
+  float cfg_toggle_spacing = 110.0f;
+  float cfg_toggle_track_w = 60.0f;
+  float cfg_toggle_track_h = 32.0f;
+  float cfg_toggle_knob_sz = 24.0f;  // track_h - 2*pad for capsule fit
+  float cfg_toggle_pad = 4.0f;
+  float cfg_toggle_label_gap = 6.0f;
   float cfg_toggle_label_font_size = 16.0f;
 
   // Save/Load group configuration
@@ -223,42 +223,65 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < toggles.size(); i++) {
       float tx = toggle_x + (float)i * cfg_toggle_spacing;
       bool is_on = *toggles[i].state;
-      afterhours::Color bg_col = is_on ? btn_green : btn_gray;
-      afterhours::Color border_col = is_on ? btn_green_dark : btn_gray_dark;
-      std::string btn_text = is_on ? "ON" : "OFF";
+      afterhours::Color track_col = is_on ? btn_green : btn_gray;
+      afterhours::Color track_border = is_on ? btn_green_dark : btn_gray_dark;
 
-      // Toggle button with ON/OFF text
+      float track_center_y = toggle_y + 5.0f;
+
+      // Track visual (div — immune to hover color override)
+      div(context, mk(entity, 30 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_size(ComponentSize{
+                  pxf(cfg_toggle_track_w),
+                  pxf(cfg_toggle_track_h)})
+              .with_absolute_position(tx, track_center_y)
+              .with_custom_background(track_col)
+              .with_border(track_border, 2.0f)
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_soft_shadow(
+                  1.0f, 2.0f, cfg_btn_shadow_blur,
+                  afterhours::Color{0, 0, 0,
+                                    static_cast<unsigned char>(
+                                        cfg_btn_shadow_alpha)})
+              .with_debug_name("toggle_track_" + std::to_string(i)));
+
+      // Transparent click target (overlays the track — no background)
       if (button(
-              context, mk(entity, 30 + static_cast<int>(i)),
+              context, mk(entity, 33 + static_cast<int>(i)),
               ComponentConfig{}
-                  .with_label(btn_text)
                   .with_size(ComponentSize{
-                      pxf(cfg_toggle_width),
-                      pxf(cfg_toggle_height)})
-                  .with_absolute_position(tx, toggle_y)
-                  .with_custom_background(bg_col)
-                  .with_border(border_col, cfg_toggle_border_width)
-                  .with_font("EqProRounded", h720(cfg_toggle_font_size))
-                  .with_custom_text_color(text_white)
-                  .with_alignment(TextAlignment::Center)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.55f)
-                  .with_soft_shadow(
-                      2.0f, 3.0f, cfg_btn_shadow_blur,
-                      afterhours::Color{0, 0, 0,
-                                        static_cast<unsigned char>(
-                                            cfg_btn_shadow_alpha)}))) {
+                      pxf(cfg_toggle_track_w),
+                      pxf(cfg_toggle_track_h)})
+                  .with_absolute_position(tx, track_center_y)
+                  .with_color_usage(Theme::Usage::None)
+                  .with_debug_name("toggle_btn_" + std::to_string(i)))) {
         *toggles[i].state = !(*toggles[i].state);
       }
 
-      // Text label below the button
-      div(context, mk(entity, 35 + static_cast<int>(i)),
+      // White sliding knob (sibling div — screen coordinates)
+      float knob_travel = cfg_toggle_track_w - cfg_toggle_knob_sz - cfg_toggle_pad * 2.0f;
+      float knob_x = tx + cfg_toggle_pad + (is_on ? knob_travel : 0.0f);
+      float knob_y = track_center_y + cfg_toggle_pad;
+      div(context, mk(entity, 36 + static_cast<int>(i)),
           ComponentConfig{}
-              .with_label(toggles[i].label)
-              .with_size(ComponentSize{
-                  pxf(cfg_toggle_width),
-                  pixels(22)})
-              .with_absolute_position(tx, toggle_y + cfg_toggle_height +
+              .with_size(ComponentSize{pxf(cfg_toggle_knob_sz),
+                                       pxf(cfg_toggle_knob_sz)})
+              .with_absolute_position(knob_x, knob_y)
+              .with_custom_background(afterhours::Color{255, 255, 255, 255})
+              .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(1.0f)
+              .with_skip_tabbing(true)
+              .with_debug_name("toggle_knob_" + std::to_string(i)));
+
+      // Label + state below
+      std::string toggle_label = toggles[i].label + (is_on ? ": ON" : ": OFF");
+      div(context, mk(entity, 39 + static_cast<int>(i)),
+          ComponentConfig{}
+              .with_label(toggle_label)
+              .with_size(ComponentSize{pxf(cfg_toggle_track_w + 20.0f), pixels(22)})
+              .with_absolute_position(tx - 10.0f, track_center_y + cfg_toggle_track_h +
                                       cfg_toggle_label_gap)
               .with_font("EqProRounded", h720(cfg_toggle_label_font_size))
               .with_custom_text_color(text_dark)
@@ -324,7 +347,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                  afterhours::Color{0, 0, 0, 25}));
 
     // ========== BLUE PILL BUTTONS ==========
-    float btn_row1_y = general_y + cfg_toggle_height + 35.0f + cfg_toggle_label_gap;
+    float btn_row1_y = general_y + cfg_toggle_track_h + 35.0f + cfg_toggle_label_gap;
     float btn_row2_y = btn_row1_y + cfg_pill_btn_spacing;
     float btn_row3_y = btn_row2_y + cfg_pill_btn_spacing;
     float left_btn_x = panel_x + cfg_pill_left_margin;

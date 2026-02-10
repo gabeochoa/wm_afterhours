@@ -19,8 +19,6 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   int sensitivity_level = 1; // 0=Low, 1=Default, 2=High
 
   // === CONFIGURABLE UI OPTIONS ===
-  // Toggle indicator style: "checkmark" (standard) or "vx" (V/X style)
-  std::string toggle_indicator_style = "checkmark";
   // Sensitivity stepper button size (pixels) - minimum 48 for accessibility
   float stepper_button_size = 52.0f;
   // Version display style: "simple" (Version 1.10.2) or "technical" (release-10-patch-2...)
@@ -34,7 +32,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color highlight_yellow{255, 195, 85, 255}; // Selected tab yellow
   afterhours::Color tab_teal{145, 195, 185, 255};        // Teal tab
   afterhours::Color btn_teal{125, 185, 175, 255};        // Tutorial button teal
-  afterhours::Color toggle_circle{60, 60, 60, 255};      // Toggle circle
+  // (toggle_circle removed — now uses pill-style toggles)
 
   std::vector<std::string> categories = {
       "Game", "Video", "Audio", "Language", "Controls", "Cross-Save", "Credits",
@@ -109,14 +107,22 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Tab 0: Game settings (toggles + sensitivity)
     if (active_tab == 0) {
-    // Toggles with X/checkmark style
+    // Pill-style toggles — clean minimal design matching MiniMotorways aesthetic
+    constexpr float mm_track_w = 56.0f, mm_track_h = 30.0f;
+    constexpr float mm_knob_pad = 4.0f;
+    constexpr float mm_knob_sz = mm_track_h - mm_knob_pad * 2.0f;  // 22px
+    constexpr float mm_knob_travel = mm_track_w - mm_knob_sz - mm_knob_pad * 2.0f;
+    afterhours::Color mm_track_on = highlight_yellow;
+    afterhours::Color mm_track_off = afterhours::Color{190, 185, 175, 255};
+    afterhours::Color mm_knob_white = afterhours::Color{255, 255, 255, 255};
+
     for (size_t i = 0; i < toggles.size(); i++) {
       float row_y = content_y + (float)i * row_h;
       bool is_on = *(toggles[i].value);
 
-      // Label with ON/OFF suffix for accessibility
+      // Label with ON/OFF suffix
       std::string label_with_state = toggles[i].label + (is_on ? "  ON" : "  OFF");
-      div(context, mk(entity, 100 + static_cast<int>(i) * 3),
+      div(context, mk(entity, 100 + static_cast<int>(i) * 4),
           ComponentConfig{}
               .with_label(label_with_state)
               .with_size(ComponentSize{pixels(340), pixels(40)})
@@ -124,48 +130,44 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_font("EqProRounded", h720(24.0f))
               .with_custom_text_color(text_dark));
 
-      // Toggle circle - use configurable indicator style
-      std::string toggle_icon;
-      afterhours::Color toggle_bg;
-      if (toggle_indicator_style == "vx") {
-        // Original V/X style
-        toggle_icon = is_on ? "V" : "X";
-        toggle_bg = afterhours::Color{0, 0, 0, 0};  // Transparent
-      } else {
-        // Standard filled/empty circle style (more universally recognized)
-        // Empty circle for off, filled inner circle for on
-        toggle_icon = "";  // No text - use visual fill instead
-        // For "on" state, use a smaller filled circle inside the ring
-        toggle_bg = afterhours::Color{0, 0, 0, 0};  // Handle fill separately
-      }
-      afterhours::Color icon_color = is_on ? text_dark : text_muted;
+      float toggle_x = content_x + 340.0f;
+      float toggle_y_pos = row_y + 4.0f;
+      afterhours::Color track_col = is_on ? mm_track_on : mm_track_off;
 
-      if (button(context, mk(entity, 101 + static_cast<int>(i) * 3),
+      // Track visual (div — immune to hover color override)
+      div(context, mk(entity, 101 + static_cast<int>(i) * 4),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(mm_track_w), pixels(mm_track_h)})
+              .with_absolute_position(toggle_x, toggle_y_pos)
+              .with_custom_background(track_col)
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.5f)
+              .with_skip_tabbing(true)
+              .with_debug_name("toggle_track_" + std::to_string(i)));
+
+      // Transparent click target (overlays the track — no background)
+      if (button(context, mk(entity, 102 + static_cast<int>(i) * 4),
                  ComponentConfig{}
-                     .with_label(toggle_icon)
-                     .with_size(ComponentSize{pixels(52), pixels(52)})
-                     .with_absolute_position(content_x + 340.0f, row_y - 5.0f)
-                     .with_custom_background(toggle_bg)
-                     .with_border(toggle_circle, 3.0f)
-                     .with_custom_text_color(icon_color)
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(1.0f)
-                     .with_debug_name("toggle_" + std::to_string(i)))) {
+                     .with_size(ComponentSize{pixels(mm_track_w), pixels(mm_track_h)})
+                     .with_absolute_position(toggle_x, toggle_y_pos)
+                     .with_color_usage(Theme::Usage::None)
+                     .with_debug_name("toggle_btn_" + std::to_string(i)))) {
         *(toggles[i].value) = !is_on;
       }
 
-      // For checkmark style: add filled inner circle when on
-      if (toggle_indicator_style != "vx" && is_on) {
-        div(context, mk(entity, 102 + static_cast<int>(i) * 3),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(28), pixels(28)})
-                .with_absolute_position(content_x + 340.0f + 12.0f, row_y - 5.0f + 12.0f)
-                .with_custom_background(toggle_circle)
-                .with_rounded_corners(RoundedCorners())
-                .with_roundness(1.0f)
-                .with_debug_name("toggle_fill_" + std::to_string(i)));
-      }
+      // White knob (sibling div — screen coordinates)
+      float knob_x = toggle_x + mm_knob_pad + (is_on ? mm_knob_travel : 0.0f);
+      float knob_y = toggle_y_pos + mm_knob_pad;
+      div(context, mk(entity, 103 + static_cast<int>(i) * 4),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(mm_knob_sz), pixels(mm_knob_sz)})
+              .with_absolute_position(knob_x, knob_y)
+              .with_custom_background(mm_knob_white)
+              .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(1.0f)
+              .with_skip_tabbing(true)
+              .with_debug_name("toggle_knob_" + std::to_string(i)));
     }
 
     // Sensitivity slider row
