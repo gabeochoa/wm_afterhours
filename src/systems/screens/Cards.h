@@ -148,6 +148,9 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.35f), pixels(130)})
                 .with_background(Theme::Usage::Surface)
+                .with_border(
+                    afterhours::colors::darken(context.theme.surface, 0.75f),
+                    2.0f)
                 .with_padding(Spacing::sm)  // Reduced padding
                 .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)

@@ -66,7 +66,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(container_width), pixels(container_height)})
             .with_custom_background(afterhours::Color{45, 50, 55, 255})
-            .with_border(afterhours::Color{80, 80, 80, 255}, 1.0f)
+            .with_border(afterhours::Color{100, 110, 120, 255}, 2.0f)
             .with_flex_direction(FlexDirection::Column)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_debug_name("demo"));
