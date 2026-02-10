@@ -20,7 +20,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     bool show_prominent_keyboard_hints = true;  // Show hints on language buttons
 
     // Issue 2: Show full language names below ISO codes
-    bool show_full_language_names = true;  // Display "English", "Korean", "Japanese" below codes
+    // NOTE: Disabled by default — multiline labels caused the button_row to
+    // overflow the header's right edge at 68px button width.
+    bool show_full_language_names = false;
 
     // Issue 3: Button color consistency
     bool use_consistent_button_colors = true;  // Use Primary instead of Accent for Continue button
@@ -157,7 +159,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("EN", "English", "1"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(13.0f) : h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, h720(config.show_full_language_names ? 13.0f : 16.0f))
                    .with_background(current_language == Language::English
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -169,7 +171,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("KO", "Korean", "2"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(13.0f) : h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, h720(config.show_full_language_names ? 13.0f : 16.0f))
                    .with_background(current_language == Language::Korean
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -181,7 +183,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("JA", "Japanese", "3"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, config.show_full_language_names ? h720(13.0f) : h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, h720(config.show_full_language_names ? 13.0f : 16.0f))
                    .with_background(current_language == Language::Japanese
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {

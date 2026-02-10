@@ -83,7 +83,12 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float gap = 30.0f;
     float panel_x = sidebar_x + sidebar_w + gap;
     float panel_w = (float)screen_w - panel_x - content_margin;
-    float panel_y = 60.0f;
+    // NOTE: Increased panel_y from 60 to 90 to give the tab_container room.
+    // Afterhours tab_container renders its tab strip above/at the container's
+    // top edge, which was clipping at the top of the screen at y=60.
+    // TODO(afterhours): tab_container tab strip clips screen edge when
+    // container is positioned near top — needs internal clamping or offset.
+    float panel_y = 90.0f;
     float panel_h = (float)screen_h - panel_y - 90.0f;
 
     // Subtle decorative tech lines along the bottom edge of the screen
@@ -178,11 +183,36 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
-    // Settings category tabs
-    tab_container(context, mk(entity, 115), main_settings, active_tab,
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w - 20), pixels(36)})
-            .with_absolute_position(panel_x + 10.0f, panel_y + 52.0f));
+    // MANUAL TAB BUTTONS — workaround for afterhours tab_container rendering
+    // tab strip outside parent bounds when using absolute_position.
+    // See AFTERHOURS_GAPS.md #1.
+    {
+      float tabs_x = panel_x + 10.0f;
+      float tabs_y = panel_y + 52.0f;
+      float total_tabs_w = panel_w - 20.0f;
+      float tab_w = total_tabs_w / (float)main_settings.size();
+      for (size_t ti = 0; ti < main_settings.size(); ti++) {
+        bool is_active = (ti == active_tab);
+        afterhours::Color tab_bg = is_active
+            ? teal_highlight
+            : afterhours::Color{25, 45, 50, 255};
+        afterhours::Color tab_text = is_active ? text_white : text_dim;
+
+        if (button(context, mk(entity, 115 + static_cast<int>(ti)),
+                   ComponentConfig{}
+                       .with_label(main_settings[ti])
+                       .with_size(ComponentSize{pxf(tab_w - 2.0f), pixels(32)})
+                       .with_absolute_position(tabs_x + (float)ti * tab_w,
+                                               tabs_y)
+                       .with_custom_background(tab_bg)
+                       .with_custom_text_color(tab_text)
+                       .with_font_size(h720(13.0f))
+                       .with_alignment(TextAlignment::Center)
+                       .with_debug_name("tab_" + std::to_string(ti)))) {
+          active_tab = ti;
+        }
+      }
+    }
 
     // Tab content area
     float content_y = panel_y + 100.0f;

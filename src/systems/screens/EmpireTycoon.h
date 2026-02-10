@@ -701,14 +701,16 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
         icon_data = {{&icon_shop_tex, "$", "Shop"},
                      {&icon_settings_tex, "@", "Settings"},
                      {&star_trophy_tex, "#", "Leaderboard"}};
-    float icon_x = (float)screen_w - 290.0f;
+    // Positioned to keep "Leaderboard" label within screen bounds
+    float icon_x = (float)screen_w - 320.0f;
     float icon_size = 56.0f;  // Minimum 44px for touch targets
     float icon_img_size = 36.0f;
     float icon_offset = (icon_size - icon_img_size) / 2.0f;
     float icon_btn_y = (float)screen_h - 110.0f; // Move icons up to leave room for labels
+    float icon_spacing = 85.0f; // Reduced from 90 to fit within screen bounds
 
     for (size_t i = 0; i < icon_data.size(); i++) {
-      float ix = icon_x + (float)i * 90.0f;
+      float ix = icon_x + (float)i * icon_spacing;
       auto &[tex_ptr, fallback, label] = icon_data[i];
 
       // Button background - reduced saturation
