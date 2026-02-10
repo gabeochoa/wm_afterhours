@@ -183,6 +183,27 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     return get_tab_info().header;
   }
 
+  // Returns a group header label at the start of each logical section.
+  // nullptr means no header at this row index.
+  const char *get_group_header(size_t tab, size_t row) {
+    if (tab == 0) { // GAMEPLAY
+      if (row == 0) return "Match";
+      if (row == 4) return "Camera";
+      if (row == 6) return "Display";
+    } else if (tab == 1) { // VIDEO / Graphics
+      if (row == 0) return "Display";
+      if (row == 6) return "Anti-Aliasing & Performance";
+      if (row == 10) return "Quality";
+    } else if (tab == 2) { // AUDIO
+      if (row == 0) return "Volume";
+      if (row == 5) return "Options";
+    } else if (tab == 3) { // CONTROLS
+      if (row == 0) return "Vibration";
+      if (row == 2) return "Assistance";
+    }
+    return nullptr;
+  }
+
   // Get description text for a setting (tooltips for abbreviations)
   std::string get_setting_description(const std::string &label,
                                       const std::string &current_value) {
@@ -357,8 +378,41 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Each row is a single tabbable element - the entire row is selectable
+    float group_offset = 0.0f;
+    constexpr float group_header_h = 28.0f; // Height of group header + separator
     for (size_t i = 0; i < current_settings.size(); i++) {
-      float ry = panel_y + (float)i * row_h;
+      // Check for group header at this row
+      const char *group_label = get_group_header(active_tab, i);
+      if (group_label) {
+        float gh_y = panel_y + (float)i * row_h + group_offset;
+        // Add extra spacing before non-first groups
+        if (i > 0) {
+          group_offset += 8.0f; // gap before separator
+          gh_y += 8.0f;
+        }
+        // Group separator line
+        div(context, mk(entity, 1200 + static_cast<int>(i)),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels((int)(panel_w - 20)), pixels(1)})
+                .with_absolute_position(panel_x - 5.0f, gh_y)
+                .with_custom_background(
+                    i > 0 ? afterhours::Color{85, 195, 145, 40}
+                           : afterhours::Color{0, 0, 0, 0}) // invisible for first group
+                .with_skip_tabbing(true)
+                .with_debug_name(std::string("group_sep_") + std::to_string(i)));
+        // Group header label
+        div(context, mk(entity, 1250 + static_cast<int>(i)),
+            ComponentConfig{}
+                .with_label(group_label)
+                .with_size(ComponentSize{pixels(250), pixels(20)})
+                .with_absolute_position(panel_x + 20.0f, gh_y + 3.0f)
+                .with_font("EqProRounded", h720(14.0f))
+                .with_custom_text_color(afterhours::Color{85, 195, 145, 180})
+                .with_skip_tabbing(true)
+                .with_debug_name(std::string("group_lbl_") + std::to_string(i)));
+        group_offset += group_header_h;
+      }
+      float ry = panel_y + (float)i * row_h + group_offset;
       bool is_selected = (i == selected_row);
       auto &setting = current_settings[i];
 

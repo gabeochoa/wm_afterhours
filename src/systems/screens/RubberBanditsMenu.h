@@ -95,9 +95,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("BANDIT$")
             .with_size(ComponentSize{pixels(340), pixels(56)})
             .with_absolute_position(title_x, title_y + 50.0f)
-            .with_custom_background(afterhours::Color{0, 0, 0, 60})
+            .with_custom_background(afterhours::Color{40, 30, 15, 200})
             .with_font("Fredoka", h720(44.0f))
-            .with_custom_text_color(accent_green)
+            .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f));
 

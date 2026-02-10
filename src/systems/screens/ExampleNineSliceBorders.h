@@ -14,7 +14,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color bg_dark{35, 28, 22, 255};       // Dark wood/leather
   afterhours::Color bg_medium{55, 45, 38, 255};     // Medium brown
   afterhours::Color parchment{245, 235, 220, 255};  // Parchment background
-  afterhours::Color gold_accent{218, 165, 32, 255}; // Gold
+  afterhours::Color gold_accent{230, 185, 60, 255}; // Gold (brightened for contrast)
   afterhours::Color text_dark{45, 35, 25, 255};     // Dark text
   afterhours::Color text_light{235, 225, 210, 255}; // Light text
 

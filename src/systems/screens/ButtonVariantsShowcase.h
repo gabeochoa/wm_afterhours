@@ -116,6 +116,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_auto_text_color(true)
                .with_button_variant(ButtonVariant::Filled)
                .with_disabled(true)
+               .with_opacity(0.5f)
                .with_font(FONT, btn_font)
                .with_margin(Spacing::xs));
 
@@ -174,6 +175,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_background(Theme::Usage::Primary)
                .with_button_variant(ButtonVariant::Outline)
                .with_disabled(true)
+               .with_opacity(0.5f)
                .with_font(FONT, btn_font)
                .with_margin(Spacing::xs));
 
@@ -232,6 +234,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_background(Theme::Usage::Primary)
                .with_button_variant(ButtonVariant::Ghost)
                .with_disabled(true)
+               .with_opacity(0.5f)
                .with_font(FONT, btn_font)
                .with_margin(Spacing::xs));
 

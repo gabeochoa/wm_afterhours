@@ -186,6 +186,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(opt_color)
                      .with_disabled(is_disabled)
+                     .with_opacity(is_disabled ? 0.5f : 1.0f)
                      .with_debug_name("opt_" + std::to_string(i)))) {
         if (!is_disabled) {
           selected_option = i;

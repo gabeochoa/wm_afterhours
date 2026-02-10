@@ -227,6 +227,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(disabled_bg)
                  .with_auto_text_color(true)
                  .with_disabled(true)
+                 .with_opacity(0.5f)
                  .with_checkbox_indicators("V", " ")
                  .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
@@ -237,6 +238,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(disabled_bg)
                  .with_auto_text_color(true)
                  .with_disabled(true)
+                 .with_opacity(0.5f)
                  .with_checkbox_indicators("V", " ")
                  .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 

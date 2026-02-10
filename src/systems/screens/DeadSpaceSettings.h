@@ -20,7 +20,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color panel_dark{18, 28, 32, 255};
   afterhours::Color panel_border{45, 65, 72, 255};
   afterhours::Color teal_highlight{65, 145, 145, 255};
-  afterhours::Color teal_bright{85, 175, 175, 255};
+  afterhours::Color teal_bright{100, 195, 195, 255};
   afterhours::Color text_white{220, 230, 235, 255};
   afterhours::Color text_muted{185, 200, 205, 255};
   afterhours::Color text_dim{155, 170, 175, 255};  // Brighter for 4.5:1 on dark

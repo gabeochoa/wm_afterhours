@@ -295,6 +295,18 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== GENERAL SETTINGS ==========
     // Simplified single card design (no nested boxes)
     float general_y = panel_y + cfg_toggle_y_offset + 30.0f;
+
+    // ========== SECTION HEADER: Data & Sync ==========
+    div(context, mk(entity, 44),
+        ComponentConfig{}
+            .with_label("Data & Sync")
+            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_absolute_position(panel_x + panel_w - cfg_saveload_width -
+                            cfg_saveload_padding - 20.0f, general_y - 22.0f)
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_data"));
+
     float saveload_x = panel_x + panel_w - cfg_saveload_width -
                        cfg_saveload_padding - 20.0f;
     float saveload_y = general_y - 4.0f;
@@ -353,13 +365,28 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float left_btn_x = panel_x + cfg_pill_left_margin;
     float right_btn_x = panel_x + panel_w / 2.0f + cfg_pill_right_margin;
 
-    // ========== SEPARATOR: Between toggles and pill buttons ==========
+    // ========== SEPARATOR: Between Save/Load and Preferences ==========
     div(context, mk(entity, 49),
         ComponentConfig{}
             .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
-            .with_absolute_position(panel_x + 40.0f, btn_row1_y - 12.0f)
+            .with_absolute_position(panel_x + 40.0f, btn_row1_y - 18.0f)
             .with_custom_background(afterhours::Color{65, 55, 45, 40})
-            .with_debug_name("section_separator_toggles"));
+            .with_debug_name("section_separator_preferences"));
+
+    // ========== SECTION HEADER: Preferences ==========
+    div(context, mk(entity, 45),
+        ComponentConfig{}
+            .with_label("Preferences")
+            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_absolute_position(panel_x + cfg_pill_left_margin, btn_row1_y - 16.0f)
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_preferences"));
+
+    float pref_offset = 10.0f;
+    btn_row1_y += pref_offset;
+    btn_row2_y += pref_offset;
+    btn_row3_y += pref_offset;
 
     // Notifications: ON/OFF (clickable)
     std::string notif_text =
@@ -433,10 +460,20 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float info_base_y = panel_y + cfg_toggle_y_offset + 30.0f;
     float info_left_x = panel_x + cfg_pill_left_margin;
     float info_right_x = panel_x + panel_w / 2.0f + cfg_pill_right_margin;
-    float info_row1_y = info_base_y;
+    float info_row1_y = info_base_y + 14.0f;
     float info_row2_y = info_row1_y + cfg_pill_btn_spacing;
     float info_row3_y = info_row2_y + cfg_pill_btn_spacing;
     afterhours::Color info_pill_shadow{0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
+
+    // ========== SECTION HEADER: Links ==========
+    div(context, mk(entity, 46),
+        ComponentConfig{}
+            .with_label("Links")
+            .with_size(ComponentSize{pixels(80), pixels(20)})
+            .with_absolute_position(info_left_x, info_base_y - 4.0f)
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_links"));
 
     // Credits button
     button(context, mk(entity, 55),
@@ -467,6 +504,24 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
                .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
+
+    // ========== SEPARATOR: Between links and about info ==========
+    div(context, mk(entity, 47),
+        ComponentConfig{}
+            .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
+            .with_absolute_position(panel_x + 40.0f, info_row2_y + cfg_pill_btn_height + 12.0f)
+            .with_custom_background(afterhours::Color{65, 55, 45, 40})
+            .with_debug_name("section_separator_about"));
+
+    // ========== SECTION HEADER: About ==========
+    div(context, mk(entity, 48),
+        ComponentConfig{}
+            .with_label("About")
+            .with_size(ComponentSize{pixels(80), pixels(20)})
+            .with_absolute_position(info_left_x, info_row2_y + cfg_pill_btn_height + 16.0f)
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_about"));
 
     // ========== BOTTOM INFO (left column) ==========
     float info_y = info_row3_y + 4.0f;

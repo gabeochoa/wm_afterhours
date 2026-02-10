@@ -23,7 +23,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = afterhours::Color{50, 120, 120, 255};
     theme.accent = afterhours::Color{200, 160, 80, 255};
     theme.font = afterhours::Color{210, 220, 230, 255};
-    theme.font_muted = afterhours::Color{120, 135, 145, 255};
+    theme.font_muted = afterhours::Color{160, 175, 185, 255};
     context.theme = theme;
     UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
 
@@ -164,7 +164,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{children(), children()})
               .with_label("Hull integrity at 47%")
               .with_font_size(h720(12.0f))
-              .with_custom_text_color(C{180, 150, 90, 200})
+              .with_custom_text_color(C{210, 180, 110, 255})
               .with_margin(Margin{.top = h720(4.0f)}));
     }
 
@@ -380,7 +380,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), children()})
               .with_label("- Commander Shepard")
               .with_font_size(h720(12.0f))
-              .with_custom_text_color(C{amber.r, amber.g, amber.b, 160})
+              .with_custom_text_color(C{amber.r, amber.g, amber.b, 220})
               .with_alignment(TextAlignment::Left)
               .with_margin(Margin{.top = h720(6.0f)}));
     }
@@ -422,7 +422,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), children()})
               .with_label("- GLaDOS")
               .with_font_size(h720(12.0f))
-              .with_custom_text_color(C{green.r, green.g, green.b, 160})
+              .with_custom_text_color(C{green.r, green.g, green.b, 220})
               .with_alignment(TextAlignment::Left)
               .with_margin(Margin{.top = h720(6.0f)}));
     }

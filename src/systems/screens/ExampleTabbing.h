@@ -37,7 +37,7 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
     Theme theme;
     theme.font = text_light;
     theme.darkfont = bg_dark;
-    theme.font_muted = afterhours::Color{140, 130, 160, 255};
+    theme.font_muted = afterhours::Color{180, 170, 200, 255};
     theme.background = bg_dark;
     theme.surface = panel_bg;
     theme.primary = btn_magenta;

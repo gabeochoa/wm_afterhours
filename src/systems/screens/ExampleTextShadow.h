@@ -310,7 +310,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(screen_w - 60), pixels(28)})
             .with_absolute_position(30.0f, code_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
+            .with_custom_text_color(afterhours::Color{40, 120, 50, 255})
             .with_alignment(TextAlignment::Left));
   }
 };

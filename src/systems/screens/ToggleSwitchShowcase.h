@@ -18,6 +18,9 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
   bool dark_mode = true;
   bool auto_save = false;
   bool cloud_sync = true;
+  // Disabled toggles (non-interactive)
+  bool disabled_on = true;
+  bool disabled_off = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -117,6 +120,63 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     make_toggle_row(6, "Dark Mode", dark_mode, ToggleSwitchStyle::Circle);
     make_toggle_row(7, "Auto-Save", auto_save, ToggleSwitchStyle::Circle);
     make_toggle_row(8, "Cloud Sync", cloud_sync, ToggleSwitchStyle::Circle);
+
+    // Separator
+    div(context, mk(card.ent(), 11),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(1)})
+            .with_custom_background(
+                afterhours::Color{255, 255, 255, 20})
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true));
+
+    // ── Disabled Section ──
+    div(context, mk(card.ent(), 12),
+        ComponentConfig{}
+            .with_label("Disabled")
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_color_usage(Theme::Usage::None)
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true));
+
+    // Disabled pill toggle (ON state, non-interactive)
+    toggle_switch(
+        context, mk(card.ent(), 13), disabled_on,
+        ComponentConfig{}
+            .with_label("Locked Setting (ON)")
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_custom_background(
+                afterhours::colors::lighten(theme.surface, 0.06f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_padding(Padding{.left = DefaultSpacing::small(),
+                                  .right = DefaultSpacing::small()})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.06f)
+            .with_disabled(true)
+            .with_opacity(0.45f),
+        ToggleSwitchStyle::Pill);
+
+    // Disabled circle toggle (OFF state, non-interactive)
+    toggle_switch(
+        context, mk(card.ent(), 14), disabled_off,
+        ComponentConfig{}
+            .with_label("Unavailable Option (OFF)")
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_custom_background(
+                afterhours::colors::lighten(theme.surface, 0.06f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_padding(Padding{.left = DefaultSpacing::small(),
+                                  .right = DefaultSpacing::small()})
+            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.06f)
+            .with_disabled(true)
+            .with_opacity(0.45f),
+        ToggleSwitchStyle::Circle);
 
     // Status bar
     std::string status = fmt::format(

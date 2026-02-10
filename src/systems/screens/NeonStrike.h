@@ -106,7 +106,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
   // Colors matching the inspiration exactly - dark tactical feel
   afterhours::Color bg_dark{22, 20, 18, 255};
   afterhours::Color text_tan{205, 195, 175, 255};
-  afterhours::Color text_muted{120, 115, 105, 255};
+  afterhours::Color text_muted{160, 155, 145, 255};
   afterhours::Color gold_accent{190, 145, 55, 255};
   afterhours::Color panel_dark{30, 28, 25, 230};
   afterhours::Color border_dark{65, 60, 52, 255};

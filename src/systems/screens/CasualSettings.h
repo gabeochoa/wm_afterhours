@@ -110,8 +110,19 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Close action
     }
 
+    // ========== SECTION HEADER: Audio ==========
+    float section_label_y = panel_y + 16.0f;
+    div(context, mk(entity, 5),
+        ComponentConfig{}
+            .with_label("Audio")
+            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_absolute_position(panel_x + 40.0f, section_label_y)
+            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_audio"));
+
     // ========== TOGGLE BUTTONS (Music, Sound, Vibrate) ==========
-    float toggle_y = panel_y + 40.0f;
+    float toggle_y = panel_y + 44.0f;
     float toggle_start_x = panel_x + 40.0f;
     float toggle_spacing = 100.0f;
 
@@ -190,6 +201,16 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center));
     }
 
+    // ========== SECTION HEADER: Data ==========
+    div(context, mk(entity, 6),
+        ComponentConfig{}
+            .with_label("Data")
+            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_absolute_position(panel_x + panel_w - 295.0f, section_label_y)
+            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_data"));
+
     // Wifi icon (positioned first, then Save/Load button to its left)
     float wifi_x = panel_x + panel_w - 75.0f;
     div(context, mk(entity, 51),
@@ -232,9 +253,21 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 99),
         ComponentConfig{}
             .with_size(ComponentSize{pixels((int)(panel_w - 80.0f)), pixels(1)})
-            .with_absolute_position(panel_x + 40.0f, row_y - 15.0f)
+            .with_absolute_position(panel_x + 40.0f, row_y - 20.0f)
             .with_custom_background(afterhours::Color{55, 45, 40, 40})
             .with_debug_name("section_separator_toggles"));
+
+    // ========== SECTION HEADER: Menu ==========
+    div(context, mk(entity, 7),
+        ComponentConfig{}
+            .with_label("Menu")
+            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_absolute_position(panel_x + 40.0f, row_y - 14.0f)
+            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_custom_text_color(text_muted)
+            .with_debug_name("section_header_menu"));
+
+    float menu_offset = 14.0f; // Shift menu buttons down to make room for header
 
     // Left column
     for (size_t i = 0; i < left_buttons.size(); i++) {
@@ -242,7 +275,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(left_buttons[i])
                  .with_720p_size(btn_w, btn_h)
-                 .with_absolute_position(left_x, row_y + (float)i * row_spacing)
+                 .with_absolute_position(left_x, row_y + menu_offset + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
                  .with_font("Gaegu-Bold", h720(22.0f))
@@ -261,7 +294,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(right_buttons[i])
                  .with_720p_size(btn_w, btn_h)
-                 .with_absolute_position(right_x, row_y + (float)i * row_spacing)
+                 .with_absolute_position(right_x, row_y + menu_offset + (float)i * row_spacing)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
                  .with_font("Gaegu-Bold", h720(22.0f))
