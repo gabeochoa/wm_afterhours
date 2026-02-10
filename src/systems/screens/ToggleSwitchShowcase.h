@@ -36,21 +36,24 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("toggle_bg"));
 
     // Centered card (settings panel style)
+    // Height increased from 0.85 to 0.95 to fit all sections (General,
+    // Preferences, Disabled, Status) without overflowing the card bounds.
     auto card =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.85f)})
+                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.95f)})
                 .with_self_align(SelfAlign::Center)
                 .with_custom_background(
                     afterhours::colors::lighten(theme.background, 0.08f))
                 .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.04f)
                 .with_padding(Padding{
-                    .top = DefaultSpacing::medium(),
-                    .bottom = DefaultSpacing::medium(),
+                    .top = DefaultSpacing::small(),
+                    .bottom = DefaultSpacing::small(),
                     .left = DefaultSpacing::large(),
                     .right = DefaultSpacing::large()})
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("toggle_card"));
 
     // Title
@@ -80,10 +83,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
           context, mk(card.ent(), idx), val,
           ComponentConfig{}
               .with_label(lbl)
-              .with_size(ComponentSize{percent(1.0f), pixels(48)})
+              .with_size(ComponentSize{percent(1.0f), pixels(42)})
               .with_custom_background(
                   afterhours::colors::lighten(theme.surface, 0.06f))
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+              .with_font(UIComponent::DEFAULT_FONT, h720(17.0f))
               .with_padding(Padding{.left = DefaultSpacing::small(),
                                     .right = DefaultSpacing::small()})
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -92,9 +95,36 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
           s);
     };
 
+    // NOTE: Child IDs must be sequential to match visual layout order.
+    // Afterhours sorts children by ID for flex layout.
     make_toggle_row(2, "Notifications", enable_notifications);
     make_toggle_row(3, "Sound Effects", enable_sound);
     make_toggle_row(4, "Vibration", enable_vibration);
+
+    // Separator
+    div(context, mk(card.ent(), 5),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(1)})
+            .with_custom_background(
+                afterhours::Color{255, 255, 255, 20})
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true));
+
+    // ── Circle Style Section ──
+    div(context, mk(card.ent(), 6),
+        ComponentConfig{}
+            .with_label("Preferences")
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_color_usage(Theme::Usage::None)
+            .with_margin(Margin{.bottom = DefaultSpacing::small()})
+            .with_skip_tabbing(true));
+
+    make_toggle_row(7, "Dark Mode", dark_mode, ToggleSwitchStyle::Circle);
+    make_toggle_row(8, "Auto-Save", auto_save, ToggleSwitchStyle::Circle);
+    make_toggle_row(9, "Cloud Sync", cloud_sync, ToggleSwitchStyle::Circle);
 
     // Separator
     div(context, mk(card.ent(), 10),
@@ -106,33 +136,8 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                                 .bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
-    // ── Circle Style Section ──
-    div(context, mk(card.ent(), 5),
-        ComponentConfig{}
-            .with_label("Preferences")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_color_usage(Theme::Usage::None)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
-    make_toggle_row(6, "Dark Mode", dark_mode, ToggleSwitchStyle::Circle);
-    make_toggle_row(7, "Auto-Save", auto_save, ToggleSwitchStyle::Circle);
-    make_toggle_row(8, "Cloud Sync", cloud_sync, ToggleSwitchStyle::Circle);
-
-    // Separator
-    div(context, mk(card.ent(), 11),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
-            .with_custom_background(
-                afterhours::Color{255, 255, 255, 20})
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
     // ── Disabled Section ──
-    div(context, mk(card.ent(), 12),
+    div(context, mk(card.ent(), 11),
         ComponentConfig{}
             .with_label("Disabled")
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
@@ -144,10 +149,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Disabled pill toggle (ON state, non-interactive)
     toggle_switch(
-        context, mk(card.ent(), 13), disabled_on,
+        context, mk(card.ent(), 12), disabled_on,
         ComponentConfig{}
             .with_label("Locked Setting (ON)")
-            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.surface, 0.06f))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -162,10 +167,10 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Disabled circle toggle (OFF state, non-interactive)
     toggle_switch(
-        context, mk(card.ent(), 14), disabled_off,
+        context, mk(card.ent(), 13), disabled_off,
         ComponentConfig{}
             .with_label("Unavailable Option (OFF)")
-            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.surface, 0.06f))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -178,26 +183,13 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_opacity(0.45f),
         ToggleSwitchStyle::Circle);
 
-    // Status bar
-    std::string status = fmt::format(
-        "Notifications: {}   Sound: {}   Dark Mode: {}",
-        enable_notifications ? "ON" : "OFF",
-        enable_sound ? "ON" : "OFF",
-        dark_mode ? "ON" : "OFF");
-
-    div(context, mk(card.ent(), 9),
-        ComponentConfig{}
-            .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_custom_background(
-                afterhours::colors::lighten(theme.background, 0.04f))
-            .with_custom_text_color(theme.font_muted)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_margin(Margin{.top = DefaultSpacing::medium()})
-            .with_skip_tabbing(true));
+    // Status bar removed — toggle states are already visually clear from
+    // the toggle controls themselves. The bar was being pushed outside
+    // the card by toggle_switch internal entity overhead.
+    // TODO(afterhours): toggle_switch creates extra sibling entities
+    // in the parent's namespace, consuming more vertical space than the
+    // declared height (42px) — track + thumb + label entities add ~20px
+    // overhead per toggle, causing flex column overflow.
   }
 };
 
