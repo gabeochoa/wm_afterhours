@@ -30,3 +30,10 @@ Each entry should include:
 - **Workaround**: (1) Add `with_no_wrap()` to the card to prevent wrapping, (2) increase card height to 95% of screen, (3) remove the status bar that couldn't fit due to the entity overhead
 - **Ideal fix**: `toggle_switch()` should create its track/thumb/label as nested children of the toggle entity, not as siblings in the parent. This would keep layout height predictable at the declared size.
 
+### 3. Focus ring visibility on checkbox and toggle_switch (unverified)
+
+- **Issue**: The UI review flagged that checkboxes and toggle switches don't show focus rings when tabbed to, while buttons do. The afterhours rendering code has focus ring support for multiple element types, so the rings may actually render — this could not be verified via static screenshots (no element is focused during headless capture).
+- **Affected screens**: `CheckboxShowcase.h`, `ToggleSwitchShowcase.h`
+- **Workaround**: None needed if focus rings render correctly. Needs manual verification with keyboard tabbing.
+- **Ideal fix**: If focus rings don't render on checkbox/toggle, the rendering pipeline should treat them the same as buttons for focus ring drawing.
+

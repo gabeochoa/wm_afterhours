@@ -304,10 +304,41 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       option_labels.push_back(label);
     }
 
-    tab_container(context, mk(entity, 200), option_labels, active_tab,
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w - 50), pixels(40)})
-            .with_absolute_position(panel_x + 25.0f, panel_y + 135.0f));
+    // MANUAL TAB BUTTONS — workaround for afterhours tab_container rendering
+    // tab strip outside parent bounds when using absolute_position.
+    // See AFTERHOURS_GAPS.md #1.
+    {
+      float tabs_x = panel_x + 25.0f;
+      float tabs_y = panel_y + 135.0f;
+      float total_tabs_w = panel_w - 50.0f;
+      float tab_w = total_tabs_w / (float)option_labels.size();
+      for (size_t ti = 0; ti < option_labels.size(); ti++) {
+        bool is_active = (ti == active_tab);
+        afterhours::Color opt_tab_bg = is_active
+            ? tab_purple
+            : afterhours::Color{230, 226, 220, 255};
+        afterhours::Color opt_tab_text = is_active ? panel_white : text_dark;
+
+        if (button(context, mk(entity, 200 + static_cast<int>(ti)),
+                   ComponentConfig{}
+                       .with_label(option_labels[ti])
+                       .with_size(ComponentSize{pxf(tab_w - 2.0f), pixels(36)})
+                       .with_absolute_position(tabs_x + (float)ti * tab_w,
+                                               tabs_y)
+                       .with_custom_background(opt_tab_bg)
+                       .with_custom_text_color(opt_tab_text)
+                       .with_font("Gaegu-Bold", h720(16.0f))
+                       .with_alignment(TextAlignment::Center)
+                       .with_border(is_active ? tab_purple_dark : border_gray,
+                                    is_active ? 2.0f : 1.0f)
+                       .with_rounded_corners(
+                           std::bitset<4>(0b1100)) // top corners only
+                       .with_roundness(0.2f)
+                       .with_debug_name("opt_tab_" + std::to_string(ti)))) {
+          active_tab = ti;
+        }
+      }
+    }
 
     // Tab content area
     float tab_content_y = panel_y + 190.0f;
