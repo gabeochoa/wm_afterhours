@@ -14,10 +14,10 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Apply a theme for this screen
-    // TODO: Add font configuration when fonts are selected
+    // Apply ocean navy theme with default font configuration
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
 
     // Main container background - centered on screen with padding
     auto root =

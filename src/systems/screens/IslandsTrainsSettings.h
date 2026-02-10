@@ -384,7 +384,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-// TODO: Fix entity ID conflict in vertical_gradient before re-enabling
-// REGISTER_EXAMPLE_SCREEN(islands_trains_settings, "Game Mockups",
-//                         "Calm puzzle game settings (Islands & Trains style)",
-//                         IslandsTrainsSettingsScreen)
+// Entity ID conflict resolved: gradient base IDs (1-35) don't overlap
+// with panel content IDs (50+). Re-enabled.
+REGISTER_EXAMPLE_SCREEN(islands_trains_settings, "Game Mockups",
+                        "Calm puzzle game settings (Islands & Trains style)",
+                        IslandsTrainsSettingsScreen)

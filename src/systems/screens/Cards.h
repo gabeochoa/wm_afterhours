@@ -12,10 +12,10 @@ using namespace afterhours::ui::imm;
 struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Apply cozy kraft theme
-    // TODO: Add font configuration when fonts are selected
+    // Apply cozy kraft theme with handwritten font to match warm aesthetic
     auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(18.0f));
 
     // Main container background - centered with padding
     auto root =
