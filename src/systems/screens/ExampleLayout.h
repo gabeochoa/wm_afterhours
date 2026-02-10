@@ -21,7 +21,8 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto main_container =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.85f)})
+                .with_size(ComponentSize{screen_pct(0.88f), screen_pct(0.90f)})
+                .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)

@@ -42,6 +42,9 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_width = res ? res->current_resolution.width : 1280;
     int screen_height = res ? res->current_resolution.height : 720;
 
+    // Center content vertically: content spans ~336px (title to grid bottom)
+    float y_offset = std::max(0.0f, (screen_height - 336.0f) / 2.0f - 20.0f);
+
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
@@ -54,7 +57,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BEVEL BORDERS")
             .with_size(ComponentSize{pixels(screen_width - 60.0f), pixels(44)})
-            .with_absolute_position(30.0f, 20.0f)
+            .with_absolute_position(30.0f, 20.0f + y_offset)
             .with_custom_background(panel)
             .with_border(afterhours::Color{120, 130, 150, 255}, 2.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
@@ -67,7 +70,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 "Raised: light top/left, dark bottom/right. Sunken: inverted.")
             .with_size(
                 ComponentSize{pixels(screen_width - 60.0f), pixels(24.0f)})
-            .with_absolute_position(30.0f, 68.0f)
+            .with_absolute_position(30.0f, 68.0f + y_offset)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center));
@@ -91,7 +94,7 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     float content_width = row_label_width + 20.0f + grid_width;
 
     // Header area: title bar ends at ~60, legend ends at ~88
-    float header_bottom = 96.0f;
+    float header_bottom = 96.0f + y_offset;
 
     float start_x = (screen_width - content_width) / 2.0f + row_label_width + 20.0f;
     float start_y = header_bottom + col_header_height + 16.0f;

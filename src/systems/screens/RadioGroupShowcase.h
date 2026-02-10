@@ -140,7 +140,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.75f)})
+                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.88f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)

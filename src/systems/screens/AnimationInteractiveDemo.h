@@ -85,6 +85,9 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
+    // Center content vertically: content spans ~370px (title to click counter)
+    float y_offset = std::max(0.0f, (screen_h - 370.0f) / 2.0f - 30.0f);
+
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
@@ -97,7 +100,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Interactive Animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(60)})
-            .with_absolute_position(0.0f, 30.0f)
+            .with_absolute_position(0.0f, 30.0f + y_offset)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -108,7 +111,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Click buttons to see press animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position(0.0f, 90.0f)
+            .with_absolute_position(0.0f, 90.0f + y_offset)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -116,7 +119,7 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Layout constants
     float button_size = 100.0f;
-    float button_y = 220.0f;
+    float button_y = 220.0f + y_offset;
     float spacing = 160.0f;
     float center_x = screen_w / 2.0f;
 

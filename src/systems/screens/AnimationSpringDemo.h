@@ -95,6 +95,9 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     int screen_h = Settings::get().get_screen_height();
     float center_x = screen_w / 2.0f;
 
+    // Center content vertically: content spans ~375px (title to bounce counter)
+    float y_offset = std::max(0.0f, (screen_h - 375.0f) / 2.0f - 25.0f);
+
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
@@ -108,7 +111,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Springy!")
             .with_size(ComponentSize{pixels(400), pixels(70)})
-            .with_absolute_position(center_x - 200.0f, 25.0f)
+            .with_absolute_position(center_x - 200.0f, 25.0f + y_offset)
             .with_scale(title_scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(42.0f))
             .with_background(Theme::Usage::Surface)
@@ -121,7 +124,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Click the boxes or restart to see them bounce")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position(0.0f, 100.0f)
+            .with_absolute_position(0.0f, 100.0f + y_offset)
             .with_scale(sub_scale)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_background(Theme::Usage::Surface)
@@ -130,7 +133,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Layout
     float box_size = 100.0f;
-    float box_y = 200.0f;
+    float box_y = 200.0f + y_offset;
     float spacing = 150.0f;
 
     // Store click times for each box

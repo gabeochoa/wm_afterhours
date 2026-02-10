@@ -100,6 +100,9 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
+    // Center content vertically: content spans ~404px (title to value indicators)
+    float y_offset = std::max(0.0f, (screen_h - 404.0f) / 2.0f - 30.0f);
+
     // Background
     div(context, mk(entity, 0),
         ComponentConfig{}
@@ -112,7 +115,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Animation Basics")
             .with_size(ComponentSize{pixels(screen_w), pixels(60)})
-            .with_absolute_position(0.0f, 30.0f)
+            .with_absolute_position(0.0f, 30.0f + y_offset)
             .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -123,7 +126,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Fade, Slide, and Scale animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position(0.0f, 90.0f)
+            .with_absolute_position(0.0f, 90.0f + y_offset)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -131,7 +134,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Layout constants
     float box_size = 120.0f;
-    float box_y = 280.0f;
+    float box_y = 280.0f + y_offset;
     float spacing = 200.0f;
     float center_x = screen_w / 2.0f;
 

@@ -45,7 +45,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     auto *res = afterhours::EntityHelper::get_singleton_cmp<
         afterhours::window_manager::ProvidesCurrentResolution>();
     int screen_width = res ? res->current_resolution.width : 1280;
-    (void)res; // screen_height not needed since we use screen_pct for background
+    int screen_height = res ? res->current_resolution.height : 720;
+
+    // Center content vertically: content spans ~533px
+    float y_offset = std::max(0.0f, (screen_height - 533.0f) / 2.0f - 20.0f);
 
     // Background - use screen_pct for reliable full-screen coverage
     div(context, mk(entity, 0),
@@ -59,7 +62,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text Overflow Debug Demo")
             .with_size(ComponentSize{pixels(screen_width - 40), pixels(50)})
-            .with_absolute_position(20.0f, 20.0f)
+            .with_absolute_position(20.0f, 20.0f + y_offset)
             .with_font("Gaegu-Bold", h720(32.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center));
@@ -76,7 +79,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(instructions)
             .with_size(ComponentSize{pixels(screen_width - 40), pixels(34)})
-            .with_absolute_position(20.0f, 75.0f)
+            .with_absolute_position(20.0f, 75.0f + y_offset)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
@@ -87,7 +90,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
                 )
             .with_alignment(TextAlignment::Center));
 
-    float card_y = 120.0f;
+    float card_y = 120.0f + y_offset;
     float card_spacing = 16.0f;
     float card_height = 100.0f;
     float card_width = 380.0f;
@@ -173,7 +176,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Reset for right column
-    card_y = 130.0f;
+    card_y = 130.0f + y_offset;
 
     // === OVERFLOW EXAMPLES (Right Column) ===
     // Section header
