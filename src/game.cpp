@@ -29,6 +29,7 @@
 #include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
+#include <afterhours/src/plugins/ui/ui_collection.h>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -132,7 +133,9 @@ std::string dump_ui_tree() {
   result["tree"] = nlohmann::json::array();
 
   // Find all root UI components (those with AutoLayoutRoot)
-  auto roots = afterhours::EntityQuery()
+  auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+  ui_coll.merge_entity_arrays();
+  auto roots = afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
                    .whereHasComponent<afterhours::ui::AutoLayoutRoot>()
                    .whereHasComponent<afterhours::ui::UIComponent>()
                    .gen();
@@ -554,6 +557,13 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
         e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
       }
     }
+    for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+      if (!e)
+        continue;
+      if (e->has<afterhours::ui::UIComponent>()) {
+        e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
+      }
+    }
 
     std::string new_screen_name = screen_names[index];
     current_screen_system =
@@ -755,6 +765,13 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
       }
     }
+    for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+      if (!e)
+        continue;
+      if (e->has<afterhours::ui::UIComponent>()) {
+        e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
+      }
+    }
 
     std::string new_screen_name = screen_names[index];
     current_screen_system =
@@ -868,8 +885,10 @@ int run_e2e_tests(const e2e::E2EArgs &args,
 
       const std::string &target_name = cmd.arg(0);
 
-      // Search for entity with matching debug_name
-      auto opt = afterhours::EntityQuery()
+      // Search for entity with matching debug_name in UI collection
+      auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+      ui_coll.merge_entity_arrays();
+      auto opt = afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
                      .whereHasComponent<afterhours::ui::UIComponentDebug>()
                      .whereLambda([&](const afterhours::Entity &e) {
                        return e.get<afterhours::ui::UIComponentDebug>().name() ==
@@ -894,8 +913,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         // Use the LAST matching child since text_input puts field after label
         for (int child_id : ui_cmp.children) {
           auto child_opt =
-              afterhours::EntityQuery().whereID(child_id).gen_first();
-          if (child_opt &&
+              afterhours::ui::UICollectionHolder::getEntityForID(child_id);
+          if (child_opt.valid() &&
               child_opt.asE().has<afterhours::ui::InFocusCluster>()) {
             focus_target_id = child_id; // Keep updating to get the LAST one
           }
@@ -1039,6 +1058,13 @@ void reset_e2e_state() {
       e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
     }
   }
+  for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+    if (!e)
+      continue;
+    if (e->has<afterhours::ui::UIComponent>()) {
+      e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
+    }
+  }
 
   // Wipe UI component entities between scripts to avoid state leakage.
   for (const auto &e : afterhours::EntityHelper::get_entities()) {
@@ -1049,4 +1075,14 @@ void reset_e2e_state() {
     }
   }
   afterhours::EntityHelper::cleanup();
+
+  // Also wipe non-permanent UI collection entities.
+  for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+    if (!e)
+      continue;
+    if (e->has<afterhours::ui::UIComponent>()) {
+      e->cleanup = true;
+    }
+  }
+  afterhours::ui::UICollectionHolder::get().collection.cleanup();
 }

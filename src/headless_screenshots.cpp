@@ -12,6 +12,8 @@
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/toast.h>
+#include <afterhours/src/plugins/ui/ui_collection.h>
+#include <afterhours/src/plugins/ui/entity_management.h>
 #include <filesystem>
 
 // Globals defined in game.cpp
@@ -165,10 +167,8 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   afterhours::EntityHelper::registerSingleton<
       afterhours::window_manager::ProvidesAvailableWindowResolutions>(resolution_entity);
 
-  // Create UI singleton components using library function
-  afterhours::Entity &ui_entity =
-      afterhours::EntityHelper::createPermanentEntity();
-  afterhours::ui::add_singleton_components<InputAction>(ui_entity);
+  // Initialize UI plugin (creates root + singletons in UI collection)
+  afterhours::ui::init_ui_plugin<InputAction>();
 
   // Load custom fonts for headless rendering
   auto *font_mgr =
@@ -176,15 +176,6 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   if (font_mgr) {
     load_fonts_into_manager(*font_mgr);
   }
-
-  // Add root UI component for headless
-  ui_entity.addComponent<afterhours::ui::UIComponent>(ui_entity.id)
-      .set_desired_width(afterhours::ui::screen_pct(1.f))
-      .set_desired_height(afterhours::ui::screen_pct(1.f))
-      .enable_font(afterhours::ui::UIComponent::DEFAULT_FONT,
-                   afterhours::ui::pixels(75.f));
-  ui_entity.addComponent<afterhours::ui::AutoLayoutRoot>();
-  ui_entity.addComponent<afterhours::ui::UIComponentDebug>("headless_root");
 
   // Create input singleton components
   afterhours::Entity &input_entity =
@@ -194,6 +185,10 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
 
 // Reset state between screens
 void reset_screen_state(int ui_entity_id) {
+  // Clear cached source-location → entity-ID mappings so stale IDs from the
+  // previous screen don't cause lookup failures in mk().
+  afterhours::ui::imm::clear_existing_ui_elements();
+
   // Reset UI context
   auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
       afterhours::ui::UIContext<InputAction>>();
@@ -236,7 +231,7 @@ void reset_screen_state(int ui_entity_id) {
     modal_singleton.cleanup = true;
   }
 
-  // Clean up UI entities (except permanent root)
+  // Clean up UI entities (except permanent root) - default collection
   for (const auto &e : afterhours::EntityHelper::get_entities()) {
     if (!e) continue;
     if (e->id == ui_entity_id) continue;
@@ -245,6 +240,17 @@ void reset_screen_state(int ui_entity_id) {
     }
   }
   afterhours::EntityHelper::cleanup();
+
+  // Clean up UI collection entities (except permanent root)
+  auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+  for (const auto &e : ui_coll.get_entities()) {
+    if (!e) continue;
+    if (e->id == ui_entity_id) continue;
+    if (e->has<afterhours::ui::UIComponent>()) {
+      e->cleanup = true;
+    }
+  }
+  ui_coll.cleanup();
 
   // Reset root entity's children
   auto &root_entity = afterhours::EntityHelper::get_singleton<
@@ -409,6 +415,16 @@ void run_headless_screenshots_at(int width, int height, const std::string &label
     e->cleanup = true;
   }
   afterhours::EntityHelper::cleanup();
+
+  // Also clean UI collection entities
+  {
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+    for (const auto &e : ui_coll.get_entities()) {
+      if (!e) continue;
+      e->cleanup = true;
+    }
+    ui_coll.cleanup();
+  }
 
   raylib::UnloadFont(uiFont);
   // Note: mainRT is owned by the graphics backend, do not unload it manually

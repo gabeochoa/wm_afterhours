@@ -168,11 +168,11 @@ Preload &Preload::make_singleton() {
   {
     input::add_singleton_components(sophie, get_mapping());
     window_manager::add_singleton_components(sophie, 200);
-    ui::add_singleton_components<InputAction>(sophie);
+    ui::init_ui_plugin<InputAction>();
 
     // Load all fonts using the shared font configuration
     // In headless mode, use special font loading that works without a window
-    auto &font_mgr = sophie.get<ui::FontManager>();
+    auto &font_mgr = *EntityHelper::get_singleton_cmp<ui::FontManager>();
     bool is_headless = afterhours::graphics::is_headless();
 
     for (const auto &font_def : font_config::get_all_fonts()) {
@@ -228,13 +228,6 @@ Preload &Preload::make_singleton() {
         .set_theme_color(ui::Theme::Usage::Accent, raylib::GREEN);
 
     ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
-
-    sophie.addComponent<ui::AutoLayoutRoot>();
-    sophie.addComponent<ui::UIComponentDebug>("sophie");
-    sophie.addComponent<ui::UIComponent>(sophie.id)
-        .set_desired_width(afterhours::ui::screen_pct(1.f))
-        .set_desired_height(afterhours::ui::screen_pct(1.f))
-        .enable_font(afterhours::ui::UIComponent::DEFAULT_FONT, 75.f);
   }
   return *this;
 }
