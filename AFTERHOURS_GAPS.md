@@ -14,6 +14,12 @@ Each entry should include:
 
 ---
 
+## See Also
+
+- `docs/vendor_ui_sizing_issues.md` — additional verified vendor bugs (dropdown sizing, toggle font size, slider handle overflow) with debug logging details and applied fixes
+
+---
+
 ## Gaps
 
 ### 1. tab_container tab strip renders outside parent bounds

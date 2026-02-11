@@ -1,5 +1,7 @@
 # Vendor UI Library Sizing Issues
 
+**See also:** `AFTERHOURS_GAPS.md` — layout/positioning gaps discovered during RALPH_TASK (tab_container absolute positioning, toggle_switch entity overhead, focus ring visibility)
+
 ## Overview
 
 Several UI components in the vendor `afterhours` library have internal sizing that ignores or overrides the sizes specified in `ComponentConfig`. This causes layout warnings when the internal components exceed their parent container bounds.
