@@ -2,6 +2,7 @@
 
 **Severity:** Critical (4/4 auditor agreement)
 **Affected screens:** 10+
+**Staleness review (2026-02-10):** RALPH_TASK modified ToggleSwitchShowcase (layout fix) and Buttons/Forms (font config) but did NOT change any disabled state styling. **All findings remain valid.**
 
 ---
 

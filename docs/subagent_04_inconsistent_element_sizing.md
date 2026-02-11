@@ -2,6 +2,7 @@
 
 **Severity:** Critical (4/4 auditor agreement)
 **Affected screens:** 12
+**Staleness review (2026-02-10):** RALPH_TASK modified KirbyOptions, DeadSpaceSettings, and EmpireTycoon but only fixed tab/positioning issues — element sizing consistency was NOT changed. **All findings remain valid.**
 
 ---
 

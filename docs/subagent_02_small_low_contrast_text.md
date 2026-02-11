@@ -2,6 +2,7 @@
 
 **Severity:** Critical (4/4 auditor agreement)
 **Affected screens:** 20+
+**Staleness review (2026-02-10):** RALPH_TASK modified DeadSpaceSettings and EmpireTycoon but only fixed layout/positioning — font sizes and contrast were NOT changed. Full `screenshot_all_screens.py --quick` validation passes with 0 ContrastRatio and 0 MinFontSize engine warnings, but the engine thresholds are more lenient than the recommendations below. **All findings remain valid.**
 
 ---
 

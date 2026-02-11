@@ -2,6 +2,7 @@
 
 **Severity:** Critical (4/4 auditor agreement)
 **Affected screens:** 14
+**Staleness review (2026-02-10):** RALPH_TASK fixed toggle layout overflow and checkbox verification but did NOT add non-color state indicators (icons, patterns, labels). **All findings remain valid.**
 
 ---
 

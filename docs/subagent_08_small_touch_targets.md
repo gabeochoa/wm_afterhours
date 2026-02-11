@@ -2,6 +2,7 @@
 
 **Severity:** High (3/4 auditor agreement)
 **Affected screens:** 10
+**Staleness review (2026-02-10):** RALPH_TASK repositioned EmpireTycoon bottom icons (shifted left) but did NOT increase their size. No touch target sizes were changed in any screen. **All findings remain valid.**
 
 ---
 

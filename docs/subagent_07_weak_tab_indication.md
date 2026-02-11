@@ -2,6 +2,7 @@
 
 **Severity:** High (3/4 auditor agreement)
 **Affected screens:** 8
+**Staleness review (2026-02-10):** RALPH_TASK replaced `tab_container()` with manual tab buttons in KirbyOptions and DeadSpaceSettings (afterhours gap #1 workaround). The manual buttons have explicit active/inactive color styling, which **partially addresses** tab indication for those two screens. Other affected screens (PotionCrafting, ShopInterface, PowerWash, Sports, Fighter, TabContainer) were NOT modified. **6 of 8 findings remain valid; 2 partially addressed.**
 
 ---
 
@@ -18,7 +19,7 @@ Screens with tab bars don't make the active tab visually distinct enough from in
 | `PowerWashSettings.h` | GENERAL / GAMEPLAY / VIDEO / AUDIO / CONTROLS | Active tab is LARGER text | Size change shifts layout; jarring |
 | `SportsSettings.h` | LB GAMEPLAY / VIDEO / AUDIO / CONTROLS RB | Active underline | Underline is subtle |
 | `FighterMenu.h` | Offline / Online / Customize / Options | Green/yellow highlight | Highlight is subtle on dark bg |
-| `KirbyOptions.h` | L WiFi Control Home Mail Star Gear R | Yellow bg on active | OK but icons themselves unclear |
+| `KirbyOptions.h` | L WiFi Control Home Mail Star Gear R | Yellow bg on active | ~~OK but icons themselves unclear~~ **Partially addressed** — manual tab buttons with explicit active/inactive colors (RALPH_TASK) |
 | `RaceResults.h` | N/A (no tabs) | — | Not applicable |
 | `TabContainerShowcase.h` | Demo tabs | Showcase — shows selected state | Underline is thin |
 

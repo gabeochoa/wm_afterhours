@@ -2,6 +2,7 @@
 
 **Severity:** High (3/4 auditor agreement)
 **Affected screens:** 10+
+**Staleness review (2026-02-10):** RALPH_TASK documented focus ring verification as afterhours gap #3 (cannot verify via static screenshots). No hover/focus/pressed state demos were added to any gallery screen. **All findings remain valid.**
 
 ---
 

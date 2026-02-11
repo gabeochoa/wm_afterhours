@@ -2,6 +2,7 @@
 
 **Severity:** Moderate (3/4 auditor agreement)
 **Affected screens:** 8
+**Staleness review (2026-02-10):** RALPH_TASK removed the status bar from ToggleSwitchShowcase (overflow workaround), which eliminates one instance of debug-like text. Other affected screens were NOT modified. **7 of 8 findings remain valid; 1 removed (ToggleSwitchShowcase).**
 
 ---
 

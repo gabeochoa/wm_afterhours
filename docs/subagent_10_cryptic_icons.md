@@ -2,6 +2,7 @@
 
 **Severity:** Moderate (3/4 auditor agreement)
 **Affected screens:** 6
+**Staleness review (2026-02-10):** RALPH_TASK fixed EmpireTycoon bottom icon positioning so "Leaderboard" label no longer clips the screen edge — the "ensure labels always visible" concern is **addressed** for that screen. Other affected screens (ShopInterface, PotionCrafting, KirbyOptions, CozyCafe, ParcelCorps, NeonStrike, ModalShowcase) were NOT modified. **7 of 8 findings remain valid; 1 addressed.**
 
 ---
 
@@ -16,7 +17,7 @@ Several screens use abstract single-character icons, abbreviations, or symbol-on
 | `ShopInterface.h` | Item icons (/, +, -, #, *, !, O, =) | Single character in colored circle | No connection to item type | Use descriptive icons (sword, potion, shield) or item-type abbreviation |
 | `PotionCrafting.h` | Ingredient icons (S, *, M, F, H, X) | Single letter in colored circle | Requires memorization | Show full name beside icon (already done in right panel — match in recipe area) |
 | `KirbyOptions.h` | Tab bar icons (WiFi, Control, Home, etc.) | Small colored icons, most unlabeled | Function unclear | Add text labels below all tab icons |
-| `EmpireTycoon.h` | Bottom icons (Shop, Settings, Leaderboard) | Abstract circular icons | Function unclear at first glance | Increase size; ensure labels always visible |
+| `EmpireTycoon.h` | Bottom icons (Shop, Settings, Leaderboard) | Abstract circular icons | Function unclear at first glance | ~~Increase size; ensure labels always visible~~ **Labels now visible** — icon group repositioned to keep "Leaderboard" within screen bounds (RALPH_TASK). Size increase still recommended. |
 | `CozyCafe.h` | Bottom icons (Inventory, Research, Crafting) | Abstract icons with tiny labels | Labels too small to read quickly | Increase icon + label size |
 | `ParcelCorpsSettings.h` | Settings category icons (colored dots) | Color-coded dots with separate legend | Legend is tiny and far from icons | Replace dots with inline text labels |
 | `NeonStrike.h` | Left weapon/equipment icons | Abstract shapes | Function unclear | Add text labels beside icons |
