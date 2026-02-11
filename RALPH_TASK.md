@@ -149,10 +149,11 @@ These are partially fixed but some clipping persists. The root cause may be in t
 
 ### Bonus: Inline TODOs
 
-17. [x] **Font configuration TODO** — `Cards.h`, `Buttons.h`
+17. [x] **Font configuration TODO** — `Cards.h`, `Forms.h`, `Buttons.h`
     - Cards.h: added `set_default_font("Gaegu-Bold", h720(18.0f))` for Cozy Kraft theme
     - Buttons.h: added `set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f))` for Ocean Navy theme
-    - Validated: themed fonts render correctly in screenshots
+    - Forms.h: font was already configured but stale TODO comment remained — removed
+    - Validated: themed fonts render correctly in screenshots, no remaining TODO comments
 
 18. [x] **IslandsTrains entity ID conflict** — `src/systems/screens/IslandsTrainsSettings.h`
     - Analyzed `GradientBackground.h`: gradient base IDs (1-35) don't overlap with panel content IDs (50+)

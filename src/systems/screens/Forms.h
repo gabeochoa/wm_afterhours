@@ -39,8 +39,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Apply neon dark theme for this screen
-    // TODO: Add font configuration when fonts are selected
+    // Apply neon dark theme with default font for this screen
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
     UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
