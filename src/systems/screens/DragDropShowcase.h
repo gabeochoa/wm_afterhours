@@ -70,10 +70,23 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("card_" + card.title));
   }
 
+  // Map from drag_group entity ID -> column index (populated each frame)
+  std::map<afterhours::EntityID, int> group_to_column;
+
+  std::vector<Card> &column_data(int col) {
+    switch (col) {
+    case 0: return todo_items;
+    case 1: return progress_items;
+    case 2: return done_items;
+    default: return todo_items;
+    }
+  }
+
   void render_column(UIContext<InputAction> &context,
                      afterhours::Entity &parent, int id,
                      const std::string &title,
-                     const std::vector<Card> &items, const Theme &theme) {
+                     std::vector<Card> &items, const Theme &theme,
+                     int column_index) {
     // Column container
     auto column =
         div(context, mk(parent, id),
@@ -90,13 +103,16 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
     render_column_header(context, column.ent(), 0, title,
                          static_cast<int>(items.size()), theme);
 
-    // Cards area
+    // Cards area — use drag_group() instead of div() to enable drag-and-drop
     auto cards_area =
-        div(context, mk(column.ent(), 1),
+        drag_group(context, mk(column.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), children()})
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("cards_" + title));
+
+    // Register entity ID -> column mapping for event dispatch
+    group_to_column[cards_area.ent().id] = column_index;
 
     for (int i = 0; i < static_cast<int>(items.size()); i++) {
       render_card(context, cards_area.ent(), i, items[i], theme);
@@ -129,6 +145,42 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    // --- Consume drag-and-drop events first ---
+    auto *drag_state =
+        afterhours::EntityHelper::get_singleton_cmp<DragGroupState>();
+    if (drag_state) {
+      for (auto &evt : drag_state->events) {
+        auto src_it = group_to_column.find(evt.source_group);
+        auto tgt_it = group_to_column.find(evt.target_group);
+        if (src_it == group_to_column.end() ||
+            tgt_it == group_to_column.end())
+          continue;
+
+        auto &src = column_data(src_it->second);
+        auto &tgt = column_data(tgt_it->second);
+
+        if (evt.source_index < 0 ||
+            evt.source_index >= static_cast<int>(src.size()))
+          continue;
+
+        Card card = src[evt.source_index];
+        src.erase(src.begin() + evt.source_index);
+
+        int insert_at = evt.target_index;
+        // When moving within the same column, account for removal offset.
+        if (src_it->second == tgt_it->second &&
+            evt.source_index < insert_at) {
+          insert_at--;
+        }
+        insert_at = std::clamp(insert_at, 0, static_cast<int>(tgt.size()));
+        tgt.insert(tgt.begin() + insert_at, card);
+      }
+      drag_state->events.clear();
+    }
+
+    // --- Build UI ---
+    group_to_column.clear();
+
     Theme theme;
     theme.background = afterhours::Color{24, 26, 32, 255};
     theme.surface = afterhours::Color{35, 37, 44, 255};
@@ -187,10 +239,10 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_debug_name("columns_container"));
 
-    render_column(context, columns.ent(), 0, "To Do", todo_items, theme);
+    render_column(context, columns.ent(), 0, "To Do", todo_items, theme, 0);
     render_column(context, columns.ent(), 1, "In Progress", progress_items,
-                  theme);
-    render_column(context, columns.ent(), 2, "Done", done_items, theme);
+                  theme, 1);
+    render_column(context, columns.ent(), 2, "Done", done_items, theme, 2);
   }
 };
 
