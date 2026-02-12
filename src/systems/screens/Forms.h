@@ -22,6 +22,13 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
   bool fullscreen = false;
   bool vsync = true;
   bool show_fps = false;
+  bool show_hud = true;
+  bool auto_save = true;
+  bool subtitles = false;
+  bool motion_blur = true;
+  bool anti_aliasing = true;
+  bool ambient_occlusion = false;
+  bool bloom_effect = true;
 
   // Dropdown values
   size_t resolution_index = 2;
@@ -174,14 +181,15 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                      .with_debug_name("level_progress"),
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);
 
-    // Right column - Checkboxes - reduced width to fit within container
+    // Right column - Checkboxes - scrollable when content overflows
     auto right_col = div(context, mk(content.ent(), 1),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(0.40f), percent(1.0f)})
                              .with_custom_background(afterhours::colors::darken(
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
-                             .with_flex_direction(FlexDirection::Column));
+                             .with_flex_direction(FlexDirection::Column)
+                             .with_overflow(Overflow::Scroll, Axis::Y));
 
     // Checkboxes section header - font_size_md for section headers
     div(context, mk(right_col.ent(), 0),
@@ -236,10 +244,67 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_font_size(theme.font_size_sm())  // 16px - labels
                  .with_margin(Spacing::xs));
 
+    // Additional graphics/gameplay checkboxes (make content overflow for scroll)
+    checkbox(context, mk(right_col.ent(), 6), show_hud,
+             ComponentConfig{}
+                 .with_label("Show HUD")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
+    checkbox(context, mk(right_col.ent(), 7), auto_save,
+             ComponentConfig{}
+                 .with_label("Auto Save")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
+    checkbox(context, mk(right_col.ent(), 8), subtitles,
+             ComponentConfig{}
+                 .with_label("Subtitles")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
+    checkbox(context, mk(right_col.ent(), 9), motion_blur,
+             ComponentConfig{}
+                 .with_label("Motion Blur")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
+    checkbox(context, mk(right_col.ent(), 10), anti_aliasing,
+             ComponentConfig{}
+                 .with_label("Anti-Aliasing")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
+    checkbox(context, mk(right_col.ent(), 11), ambient_occlusion,
+             ComponentConfig{}
+                 .with_label("Ambient Occlusion")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
+    checkbox(context, mk(right_col.ent(), 12), bloom_effect,
+             ComponentConfig{}
+                 .with_label("Bloom Effect")
+                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
+                 .with_background(Theme::Usage::Primary)
+                 .with_font_size(theme.font_size_sm())
+                 .with_margin(Spacing::xs));
+
     // Disabled checkbox example - standardized checkmark color via Primary
     // Enhanced disabled styling: reduced opacity for stronger visual differentiation
     bool disabled_value = true;
-    checkbox(context, mk(right_col.ent(), 6), disabled_value,
+    checkbox(context, mk(right_col.ent(), 13), disabled_value,
              ComponentConfig{}
                  .with_label("Disabled")
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
@@ -250,7 +315,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_margin(Spacing::xs));
 
     // Language dropdown - font_size_sm for dropdown values
-    dropdown(context, mk(right_col.ent(), 7), languages, language_index,
+    dropdown(context, mk(right_col.ent(), 14), languages, language_index,
              ComponentConfig{}
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Secondary)

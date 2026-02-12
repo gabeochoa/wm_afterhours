@@ -13,20 +13,39 @@ expect_text "Horizontal Scroll"
 # Verify initial items are visible (items rendered at the top of the list)
 expect_text "Item 1"
 expect_text "Item 2"
+expect_text "Item 3"
+
+# Items near the bottom should NOT be visible before scrolling
+expect_no_text "Item 18"
+expect_no_text "Item 20"
+
+screenshot scroll_view_before_scroll
 
 # --- Test vertical scrolling ---
 # Move mouse into the vertical scroll area (left half, mid-height)
 mouse_move 25% 55%
 wait 0.2
 
-# Scroll down (negative y = scroll content up, showing lower items)
-scroll_wheel 0 -5
+# Scroll down significantly (negative y = scroll content up, showing later items)
+scroll_wheel 0 -15
 wait 0.3
 
-# After scrolling, later items should become visible
-expect_text "Item 5"
+# After scrolling, later items should now be visible
+expect_text "Item 15"
 
 screenshot scroll_view_after_scroll
+
+# Scroll down even more to reach the bottom items
+scroll_wheel 0 -30
+wait 0.3
+
+# The last items should now be visible
+expect_text "Item 20"
+
+# Early items should no longer be visible after scrolling far down
+expect_no_text "Item 1"
+
+screenshot scroll_view_scrolled_to_bottom
 
 # --- Test horizontal scrolling ---
 # Move mouse into the horizontal scroll area (right half, lower portion)
