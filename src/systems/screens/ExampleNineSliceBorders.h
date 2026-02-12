@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/files.h>
 #include "../../theme_presets.h"
 
 using namespace afterhours::ui;

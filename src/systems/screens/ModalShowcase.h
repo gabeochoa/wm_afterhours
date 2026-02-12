@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../external.h"
+#include "../../input_mapping.h"
 #include "../../settings.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"

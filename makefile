@@ -127,6 +127,7 @@ TRACE_FILE := $(TRACE_DIR)/ui_tester.trace
 MAIN_SRC := $(wildcard src/*.cpp)
 MAIN_SRC += $(wildcard src/components/*.cpp)
 MAIN_SRC += $(wildcard src/systems/*.cpp)
+MAIN_SRC += $(wildcard src/systems/screens/*.cpp)
 MAIN_SRC += $(wildcard src/ui/*.cpp)
 MAIN_SRC += $(wildcard src/testing/*.cpp)
 MAIN_SRC += $(wildcard src/engine/*.cpp)

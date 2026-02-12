@@ -1,6 +1,7 @@
 #pragma once
 
 #include <afterhours/ah.h>
+#include "../settings.h"
 #include <functional>
 #include <map>
 #include <memory>

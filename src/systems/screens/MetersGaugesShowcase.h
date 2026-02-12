@@ -2,6 +2,7 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 
