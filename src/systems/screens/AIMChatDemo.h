@@ -242,26 +242,24 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)}));
 
-    // Chat history area - uses scroll_view for scrollable messages
+    // Chat history area - scrollable messages
     auto chat_area =
-        scroll_view(context, mk(chat_container.ent(), 0),
+        div(context, mk(chat_container.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(INNER_W - PAD * 2 - 14), pixels(280)})
                 .with_custom_background(AIMColors::chat_bg())
                 .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::FlexStart)
                 .with_padding(Padding{.left = pixels(6), .top = pixels(4)})
-                .with_clip_children(true)
+                .with_overflow(Overflow::Scroll, Axis::Y)
                 .disable_rounded_corners()
                 .with_debug_name("chat_area"));
 
-    // Configure vertical scrolling for chat
+    // Read scroll state for chat indicator
     float chat_max_scroll = 0.0f;
     float chat_scroll_ratio = 0.0f;
     if (chat_area.ent().has<HasScrollView>()) {
       auto &sv = chat_area.ent().get<HasScrollView>();
-      sv.vertical_enabled = true;
-      sv.horizontal_enabled = false;
       chat_max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
       chat_scroll_ratio = chat_max_scroll > 0.0f ? sv.scroll_offset.y / chat_max_scroll : 0.0f;
     }

@@ -95,9 +95,8 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
-    // Vertical scroll container - uses clip_children to ensure items
-    // are properly scissored to container bounds
-    auto vert_scroll = scroll_view(
+    // Vertical scroll container
+    auto vert_scroll = div(
         context, mk(vert_section.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
@@ -106,15 +105,13 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Column)
-            .with_clip_children(true)
+            .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("vert_scroll"));
 
-    // Configure vertical scrolling
+    // Configure scroll runtime settings
     if (vert_scroll.ent().has<HasScrollView>()) {
       auto &sv = vert_scroll.ent().get<HasScrollView>();
-      sv.vertical_enabled = true;
-      sv.horizontal_enabled = false;
       sv.invert_scroll = invert_scroll;
 
       float max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
@@ -156,9 +153,8 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
-    // Horizontal scroll container - uses clip_children to ensure items
-    // are properly scissored to container bounds
-    auto horiz_scroll = scroll_view(
+    // Horizontal scroll container
+    auto horiz_scroll = div(
         context, mk(horiz_section.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
@@ -168,15 +164,13 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.05f)
             .with_flex_direction(FlexDirection::Row)
             .with_no_wrap()
-            .with_clip_children(true)
+            .with_overflow(Overflow::Scroll, Axis::X)
             .with_padding(Spacing::xs)
             .with_debug_name("horiz_scroll"));
 
-    // Configure horizontal scrolling
+    // Configure scroll runtime settings
     if (horiz_scroll.ent().has<HasScrollView>()) {
       auto &sv = horiz_scroll.ent().get<HasScrollView>();
-      sv.vertical_enabled = false;
-      sv.horizontal_enabled = true;
       sv.invert_scroll = invert_scroll;
 
       float max_scroll = std::max(0.0f, sv.content_size.x - sv.viewport_size.x);

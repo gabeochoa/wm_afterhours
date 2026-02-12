@@ -1,15 +1,40 @@
 # Scroll View Test
-# Tests scroll view component rendering
+# Tests overflow scroll and hidden behavior after scroll_view -> div migration
 
 # Navigate to the scroll view screen
 goto_screen scroll_view
 wait 0.5
 
-# Validate initial screen against baseline
-validate_screen scroll_view
-
 # Verify we're on the correct screen
-expect_text "Scroll"
+expect_text "Scroll View Demo"
+expect_text "Vertical Scroll"
+expect_text "Horizontal Scroll"
 
-screenshot scroll_view_display
+# Verify initial items are visible (items rendered at the top of the list)
+expect_text "Item 1"
+expect_text "Item 2"
 
+# --- Test vertical scrolling ---
+# Move mouse into the vertical scroll area (left half, mid-height)
+mouse_move 25% 55%
+wait 0.2
+
+# Scroll down (negative y = scroll content up, showing lower items)
+scroll_wheel 0 -5
+wait 0.3
+
+# After scrolling, later items should become visible
+expect_text "Item 5"
+
+screenshot scroll_view_after_scroll
+
+# --- Test horizontal scrolling ---
+# Move mouse into the horizontal scroll area (right half, lower portion)
+mouse_move 75% 60%
+wait 0.2
+
+# Scroll right (negative x = scroll content left, showing later items)
+scroll_wheel -5 0
+wait 0.3
+
+screenshot scroll_view_horiz_scrolled

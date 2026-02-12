@@ -534,7 +534,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(white)
               .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
               .with_rounded_corners(RoundedCorners())
-              .with_clip_children(true));
+              .with_overflow(Overflow::Hidden));
     }
 
     // Trend indicator legend
