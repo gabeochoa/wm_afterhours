@@ -94,12 +94,13 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Horizontal drag group for the tags
     auto tags_area =
-        drag_group(context, mk(row.ent(), 1),
-                   ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.0f), children()})
-                       .with_flex_direction(FlexDirection::Row)
-                       .with_align_items(AlignItems::Center)
-                       .with_debug_name("tags_" + label));
+        div(context, mk(row.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), children()})
+                .with_flex_direction(FlexDirection::Row)
+                .with_align_items(AlignItems::Center)
+                .with_draggable_children()
+                .with_debug_name("tags_" + label));
 
     group_to_row[tags_area.ent().id] = row_index;
 

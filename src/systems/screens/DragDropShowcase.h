@@ -103,12 +103,13 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
     render_column_header(context, column.ent(), 0, title,
                          static_cast<int>(items.size()), theme);
 
-    // Cards area — use drag_group() instead of div() to enable drag-and-drop
+    // Cards area — draggable children enables drag-and-drop reordering
     auto cards_area =
-        drag_group(context, mk(column.ent(), 1),
+        div(context, mk(column.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), children()})
                 .with_flex_direction(FlexDirection::Column)
+                .with_draggable_children()
                 .with_debug_name("cards_" + title));
 
     // Register entity ID -> column mapping for event dispatch
