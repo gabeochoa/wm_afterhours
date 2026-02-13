@@ -21,7 +21,7 @@
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
 #include "testing/tests/SimpleButtonClickTest.h"
-#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>

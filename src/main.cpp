@@ -10,7 +10,7 @@ backward::SignalHandling sh;
 #include "headless_screenshots.h"
 #include "preload.h"
 #include "settings.h"
-#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/files.h>
 #include "systems/ExampleScreenRegistry.h"
 #include "testing/e2e_integration.h"

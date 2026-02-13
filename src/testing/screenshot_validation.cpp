@@ -3,7 +3,7 @@
 #include "../log.h"
 #include "../rl.h"
 
-#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/graphics.h>
 #include <cmath>
 #include <filesystem>
 

@@ -1,6 +1,6 @@
 #include "headless_screenshots.h"
 
-#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/graphics.h>
 #include "font_config.h"
 #include "game.h"
 #include "input_mapping.h"

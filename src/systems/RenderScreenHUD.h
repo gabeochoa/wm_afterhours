@@ -3,7 +3,7 @@
 #include "../game.h"
 #include "../render_backend.h"
 #include <afterhours/ah.h>
-#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/graphics.h>
 #include <string>
 
 // Global state for the HUD (simple approach for screen demo)

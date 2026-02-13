@@ -12,7 +12,7 @@
 
 #include "input_mapping.h"
 #include "settings.h"
-#include <afterhours/src/graphics/graphics.h>
+#include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/color.h>
 #include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/files.h>
