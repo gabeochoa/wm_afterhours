@@ -10,6 +10,7 @@ build/
 *.exe
 a.out
 *.trace
+src/screen_includes.gen
 
 # IDE/Editor
 .cache/

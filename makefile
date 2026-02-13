@@ -123,11 +123,25 @@ OUTPUT_DIR := output
 TRACE_DIR := $(OUTPUT_DIR)/traces
 TRACE_FILE := $(TRACE_DIR)/ui_tester.trace
 
-# Source files
+# Screen includes (auto-generated from wildcard or SCREEN= filter)
+# Usage: make SCREEN=StepperShowcase  (builds only that screen)
+#        make                          (builds all screens)
+ifdef SCREEN
+    SCREEN_HEADERS := src/systems/screens/$(SCREEN).h
+    ifeq ($(wildcard $(SCREEN_HEADERS)),)
+        $(error Screen "$(SCREEN)" not found. Expected: $(SCREEN_HEADERS))
+    endif
+    CXXFLAGS += -DSINGLE_SCREEN_NAME=\"$(SCREEN)\"
+else
+    SCREEN_HEADERS := $(sort $(wildcard src/systems/screens/*.h))
+endif
+
+SCREEN_INCLUDES_GEN := src/screen_includes.gen
+
+# Source files (no screens/*.cpp -- screens are included via generated header in main.cpp)
 MAIN_SRC := $(wildcard src/*.cpp)
 MAIN_SRC += $(wildcard src/components/*.cpp)
 MAIN_SRC += $(wildcard src/systems/*.cpp)
-MAIN_SRC += $(wildcard src/systems/screens/*.cpp)
 MAIN_SRC += $(wildcard src/ui/*.cpp)
 MAIN_SRC += $(wildcard src/testing/*.cpp)
 MAIN_SRC += $(wildcard src/engine/*.cpp)
@@ -176,6 +190,15 @@ $(OBJ_DIR)/main/vendor_afterhours_files.o: vendor/afterhours/src/plugins/files.c
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MD -MP -MF $(@:.o=.d) -MT $@
 
+# Generate screen includes file (all screens or single SCREEN=)
+$(SCREEN_INCLUDES_GEN): $(SCREEN_HEADERS)
+	@echo "Generating screen includes ($(words $(SCREEN_HEADERS)) screens)..."
+	@printf "" > $@
+	@for f in $(SCREEN_HEADERS); do echo "#include \"$${f#src/}\"" >> $@; done
+
+# main.cpp depends on the generated screen includes
+$(OBJ_DIR)/main/main.o: $(SCREEN_INCLUDES_GEN)
+
 # Note: Graphics module is now header-only - no .cpp files to compile
 
 # Force dependency regeneration by removing dependency files
@@ -188,6 +211,7 @@ deps:
 clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf $(OBJ_DIR)
+	rm -f $(SCREEN_INCLUDES_GEN)
 	@echo "Clean complete"
 
 clean-all: clean
