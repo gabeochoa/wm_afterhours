@@ -179,7 +179,8 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(300), pixels(56)})
                 .with_font_size(h720(26.0f))
-                .with_margin(Margin{.bottom = DefaultSpacing::large()}));
+                .with_margin(Margin{.bottom = DefaultSpacing::large()}),
+            3);
 
     // Card display
     auto &card = cards[card_idx % cards.size()];
