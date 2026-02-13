@@ -56,7 +56,7 @@ inline Color cozy_border_color() { return Color{139, 119, 101, 255}; }
 inline Theme neon_dark() {
   Theme t = Theme::create().with_palette({
       .background = {6, 8, 14, 255},       // deep blue-black
-      .surface = {14, 18, 28, 255},        // dark blue-gray
+      .surface = {28, 34, 48, 255},        // dark blue-gray (3:1 vs background)
       .primary = {0, 75, 95, 255},         // dark teal (5.8:1)
       .secondary = {50, 30, 95, 255},      // dark purple (5.5:1)
       .accent = {140, 25, 60, 255},        // dark magenta (5.0:1)
