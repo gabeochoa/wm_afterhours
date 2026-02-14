@@ -25,7 +25,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::lg)  // Padding on root
+                .with_padding(Spacing::sm)  // Padding on root
                 .with_debug_name("cards_bg"));
 
     // Content container - no padding since root has it
@@ -34,7 +34,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
-                .with_justify_content(JustifyContent::SpaceAround)
+                .with_justify_content(JustifyContent::SpaceBetween)
                 .with_no_wrap()
                 .with_debug_name("cards_main"));
 
@@ -51,11 +51,12 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 1: Basic cards - all simple like theme swatches
     auto row1 = div(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(0.95f), pixels(130)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(150)})
                         .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::sm)
+                        .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
+                        .with_no_wrap()
                         .with_debug_name("row1_cards"));
 
     // Section label - aligned with card row
@@ -124,29 +125,30 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 2: Nested cards
     auto row2 = div(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(0.95f), pixels(150)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(165)})
                         .with_background(Theme::Usage::None)
                         .with_padding(Spacing::xs)
                         .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
+                        .with_no_wrap()
                         .with_debug_name("row2_nested"));
 
     // Section label for nested cards
     div(context, mk(row2.ent(), 100),
         ComponentConfig{}
             .with_label("Nested:")
-            .with_size(ComponentSize{pixels(100), pixels(44)})
+            .with_size(ComponentSize{pixels(80), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Spacing::sm)
+            .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
     // Nested card container - sized proportionally to fit within row
     auto nested_container =
         div(context, mk(row2.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.35f), pixels(130)})
+                .with_size(ComponentSize{percent(0.33f), pixels(130)})
                 .with_background(Theme::Usage::Surface)
                 .with_border(
                     afterhours::colors::darken(context.theme.surface, 0.75f),
@@ -219,7 +221,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto info_panel =
         div(context, mk(row2.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.35f), pixels(130)})
+                .with_size(ComponentSize{percent(0.33f), pixels(130)})
                 .with_custom_background(
                     afterhours::colors::opacity_pct(theme.primary, 0.3f))
                 .with_padding(Spacing::sm)

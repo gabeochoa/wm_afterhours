@@ -24,25 +24,23 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{screen_pct(0.88f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::Center)
                 .with_roundness(0.08f)
+                .with_no_wrap()
                 .with_debug_name("layout_main"));
 
     // Title - use percent sizing to stay within parent
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Layout System Demo")
-            .with_size(ComponentSize{percent(0.95f), pixels(60)})
+            .with_size(ComponentSize{percent(0.95f), pixels(48)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_padding(Spacing::md)
+            .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)}));
+            .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Row layout demo - JustifyContent::Center to keep panels within container
     auto row_container =
@@ -116,41 +114,41 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         div(context, mk(col_container.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.60f), pixels(180)})
+                .with_size(ComponentSize{percent(0.60f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
-                .with_padding(Spacing::sm)
+                .with_padding(Spacing::xs)
                 .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::Center)
+                .with_no_wrap()
                 .with_debug_name("stacked_column"));
 
     // Stacked items - use percent of parent column
     div(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("Stacked Item 1")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.bottom = pixels(3)}));
 
     div(context, mk(left_col.ent(), 1),
         ComponentConfig{}
             .with_label("Stacked Item 2")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.bottom = pixels(3)}));
 
     div(context, mk(left_col.ent(), 2),
         ComponentConfig{}
             .with_label("Stacked Item 3")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_margin(Spacing::xs));
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f)));
 
     // Separator between column demo and description
     div(context, mk(main_container.ent(), 11),
@@ -209,15 +207,12 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), pixels(36)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = pixels(0),
-                                .left = pixels(0),
-                                .right = pixels(0)})
+            .with_padding(Spacing::xs)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
   }
 };

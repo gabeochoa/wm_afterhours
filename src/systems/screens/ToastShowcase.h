@@ -36,7 +36,8 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::SpaceAround)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
+                .with_no_wrap()
                 .with_debug_name("toast_main"));
 
     div(context, mk(main_container.ent(), 0),
@@ -59,9 +60,9 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section1 =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(130)})
+                .with_size(ComponentSize{percent(1.0f), pixels(140)})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_roundness(0.1f)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section1"));
@@ -146,12 +147,12 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section2 =
         div(context, mk(main_container.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(130)})
+                .with_size(ComponentSize{percent(1.0f), pixels(140)})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_roundness(0.1f)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.top = DefaultSpacing::medium(),
+                .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
                                     .right = pixels(0)})
@@ -246,12 +247,12 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section3 =
         div(context, mk(main_container.ent(), 3),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(130)})
+                .with_size(ComponentSize{percent(1.0f), pixels(140)})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_roundness(0.1f)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Margin{.top = DefaultSpacing::medium(),
+                .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
                                     .right = pixels(0)})

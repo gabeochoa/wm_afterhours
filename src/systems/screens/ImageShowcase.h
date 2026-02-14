@@ -264,7 +264,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto icon_row_container =
         div(context, mk(row4.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(600), pixels(90)})
+                .with_size(ComponentSize{pixels(600), pixels(100)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::SpaceAround)

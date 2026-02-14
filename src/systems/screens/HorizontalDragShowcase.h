@@ -99,6 +99,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{percent(1.0f), children()})
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
+                .with_flex_wrap(FlexWrap::Wrap)
                 .with_draggable_children()
                 .with_debug_name("tags_" + label));
 
@@ -172,12 +173,13 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity, 100),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.92f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.02f)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("hdrag_root"));
 
     // Title

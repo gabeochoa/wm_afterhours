@@ -79,23 +79,22 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     theme.accent = AIMColors::button_shadow();
     context.theme = theme;
 
-    // Window dimensions - sized for comfortable chat viewing with safe area margins
-    // Note: Children use INNER_W to avoid fractional overflow warnings (W - 3)
+    // Window dimensions - sized for comfortable chat viewing
+    // Children use percent(1.0f) to fill content area; small padding
+    // provides the classic Win98 border inset.
     constexpr int W = 500;
     constexpr int H = 600;
-    constexpr int INNER_W = 485;  // Account for safe area margin
-    constexpr int PAD = 10;  // Increased padding for safe areas
-    constexpr int SAFE_MARGIN = 8;  // Safe area margin at screen edges
+    constexpr int PAD = 8;
 
-    // Main window - sharp corners for Windows 98 aesthetic with safe area margin
-    // Centered on screen to utilize available space
+    // Main window - sharp corners for Windows 98 aesthetic
     auto window =
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(W), pixels(H)})
                 .with_custom_background(AIMColors::window_bg())
                 .with_flex_direction(FlexDirection::Column)
-                .with_padding(Spacing::sm)
+                .with_padding(Padding{.top = pixels(PAD), .left = pixels(PAD),
+                                      .bottom = pixels(PAD), .right = pixels(PAD)})
                 .disable_rounded_corners()
                 .with_self_align(SelfAlign::Center)
                 .with_debug_name("aim_window"));
@@ -104,18 +103,18 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto title_bar =
         div(context, mk(window.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W), pixels(28)})
+                .with_size(ComponentSize{percent(1.0f), pixels(28)})
                 .with_custom_background(AIMColors::title_bar())
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceBetween)
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("title_bar"));
 
-    // Title text - width calculated to leave room for controls (82px + 2px margin + 4px buffer) within parent (INNER_W=485px)
+    // Title text - expand to fill remaining space after controls
     div(context, mk(title_bar.ent(), 0),
         ComponentConfig{}
             .with_label(buddy_name + " - Instant Message")
-            .with_size(ComponentSize{pixels(INNER_W - 90), pixels(28)})  // 485 - 90 = 395, leaves room for 82px controls + margins + buffer
+            .with_size(ComponentSize{expand(), pixels(28)})
             .with_custom_text_color(AIMColors::title_text())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -152,7 +151,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto menu_bar =
         div(context, mk(window.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W), pixels(24)})
+                .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_custom_background(AIMColors::button_face())
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
@@ -174,7 +173,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto buddy_bar =
         div(context, mk(window.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W), pixels(50)})
+                .with_size(ComponentSize{percent(1.0f), pixels(50)})
                 .with_custom_background(AIMColors::window_bg())
                 .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
@@ -238,15 +237,14 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto chat_container =
         div(context, mk(window.ent(), 3),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(280)})
-                .with_flex_direction(FlexDirection::Row)
-                .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)}));
+                .with_size(ComponentSize{percent(1.0f), pixels(280)})
+                .with_flex_direction(FlexDirection::Row));
 
     // Chat history area - scrollable messages
     auto chat_area =
         div(context, mk(chat_container.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W - PAD * 2 - 14), pixels(280)})
+                .with_size(ComponentSize{expand(), pixels(280)})
                 .with_custom_background(AIMColors::chat_bg())
                 .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::FlexStart)
@@ -273,7 +271,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(chat_area.ent(), msg_idx++),
           ComponentConfig{}
               .with_label(formatted)
-              .with_size(ComponentSize{pixels(INNER_W - PAD * 4 - 14), pixels(28)})
+              .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_text_color(is_me ? AIMColors::my_text() : AIMColors::buddy_text())
               .with_alignment(TextAlignment::Left)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -311,7 +309,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     // Separator
     div(context, mk(window.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(INNER_W), pixels(3)})
+            .with_size(ComponentSize{percent(1.0f), pixels(3)})
             .with_custom_background(AIMColors::button_shadow())
             .with_margin(Margin{.top = pixels(4), .bottom = pixels(4)})
             .with_skip_tabbing(true)
@@ -321,7 +319,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(window.ent(), 5),
         ComponentConfig{}
             .with_label("Send to: " + buddy_name)
-            .with_size(ComponentSize{pixels(INNER_W), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -338,14 +336,13 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto input_wrapper =
         div(context, mk(window.ent(), 6),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(INPUT_HEIGHT + 4)})
-                .with_margin(Margin{.left = pixels(PAD), .right = pixels(PAD)})
+                .with_size(ComponentSize{percent(1.0f), pixels(INPUT_HEIGHT + 4)})
                 .with_debug_name("input_wrapper"));
 
     auto input_container =
         div(context, mk(input_wrapper.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(INPUT_HEIGHT + 4)})
+                .with_size(ComponentSize{percent(1.0f), pixels(INPUT_HEIGHT + 4)})
                 .with_custom_background(AIMColors::input_bg())
                 .disable_rounded_corners()
                 .with_debug_name("input_container"));
@@ -353,7 +350,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     if (afterhours::text_input::text_area(
             context, mk(input_container.ent(), 0), message_input,
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W - PAD * 4), pixels(INPUT_HEIGHT)})
+                .with_size(ComponentSize{percent(1.0f), pixels(INPUT_HEIGHT)})
                 .with_custom_background(AIMColors::input_bg())
                 .with_custom_text_color(AIMColors::my_text())
                 .with_line_height(pixels(INPUT_LINE_HEIGHT))
@@ -369,7 +366,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(input_wrapper.ent(), 1),
           ComponentConfig{}
               .with_label(placeholder_text)
-              .with_size(ComponentSize{pixels(INNER_W - PAD * 4), pixels(INPUT_LINE_HEIGHT)})
+              .with_size(ComponentSize{percent(1.0f), pixels(INPUT_LINE_HEIGHT)})
               .with_custom_text_color(AIMColors::placeholder_text())
               .with_alignment(TextAlignment::Left)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -382,11 +379,11 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto button_bar =
         div(context, mk(window.ent(), 7),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(INNER_W - PAD * 2), pixels(48)})
+                .with_size(ComponentSize{percent(1.0f), pixels(48)})
                 .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::FlexEnd)
                 .with_align_items(AlignItems::Center)
-                .with_margin(Margin{.top = pixels(6), .left = pixels(PAD), .right = pixels(UIConfig::BUTTON_BAR_MARGIN)})
+                .with_margin(Margin{.top = pixels(6)})
                 .with_debug_name("button_bar"));
 
     // Warn button - shows confirmation dialog explaining consequences
@@ -435,7 +432,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(window.ent(), 8),
         ComponentConfig{}
             .with_label("Direct Connection Established")
-            .with_size(ComponentSize{pixels(INNER_W), pixels(28)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_custom_background(AIMColors::button_face())
             .with_custom_text_color(AIMColors::text_default())
             .with_alignment(TextAlignment::Left)

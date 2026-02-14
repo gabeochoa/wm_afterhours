@@ -40,11 +40,11 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
   // Configurable design parameters
   static constexpr float SECTION_ROUNDNESS = 0.08f;
   static constexpr float BUTTON_ROUNDNESS = 0.08f;
-  static constexpr float SECTION_HEIGHT = 95.0f;
+  static constexpr float SECTION_HEIGHT = 100.0f;
   static constexpr float ROW_HEIGHT = 44.0f;
   static constexpr float BUTTON_HEIGHT = 40.0f;
   static constexpr float HEADER_HEIGHT = 30.0f;
-  static constexpr float TITLE_HEIGHT = 50.0f;
+  static constexpr float TITLE_HEIGHT = 44.0f;
   static constexpr float HELPER_BUTTON_WIDTH = 170.0f;  // Uniform width for helper buttons
 
   void for_each_with(afterhours::Entity &entity,
@@ -67,7 +67,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_flex_direction(FlexDirection::Column)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
+                .with_no_wrap()
                 .with_debug_name("modal_main"));
 
     // Title - use theme font sizes
@@ -93,10 +94,10 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               ComponentConfig{}
                   .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                   .with_background(Theme::Usage::Surface)
-                  .with_padding(Spacing::md)
+                  .with_padding(Spacing::sm)
                   .with_roundness(SECTION_ROUNDNESS)
                   .with_flex_direction(FlexDirection::Column)
-                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                  .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                   .with_debug_name(section_name));
 
       div(context, mk(section.ent(), 0),
@@ -254,7 +255,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_roundness(SECTION_ROUNDNESS)
                 .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section5"));

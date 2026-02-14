@@ -91,7 +91,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
     auto column =
         div(context, mk(parent, id),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::Color{42, 44, 54, 255})
                 .with_roundness(0.04f)
@@ -200,8 +200,9 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.02f)
-                .with_padding(Spacing::md)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("drag_drop_root"));
 
     // Title bar
@@ -235,9 +236,10 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
     auto columns =
         div(context, mk(root.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.90f)})
+                .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
                 .with_flex_direction(FlexDirection::Row)
-                .with_justify_content(JustifyContent::SpaceAround)
+                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_no_wrap()
                 .with_debug_name("columns_container"));
 
     render_column(context, columns.ent(), 0, "To Do", todo_items, theme, 0);

@@ -34,11 +34,11 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.98f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::md)  // Moderate padding on root
+                .with_padding(Spacing::sm)  // Smaller padding for more content space
                 .with_debug_name("text_input_demo_bg"));
 
     // Content container - use percent for proper sizing
@@ -54,26 +54,23 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Text Input Demo")
-            .with_size(ComponentSize{percent(1.0f), pixels(45)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
+            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f)));
 
     // Form container - uses flex_grow to fill available space, leaving room for
     // status and instructions at the bottom of main_container
     auto form_container =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.95f), pixels(426)})
+                .with_size(ComponentSize{percent(0.95f), expand()})
                 .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::sm)
+                .with_padding(Spacing::xs)
                 .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_align_items(AlignItems::FlexStart)  // Align children left
                 .with_self_align(SelfAlign::Center)  // Center the form container
-                .with_margin(Margin{.top = DefaultSpacing::tiny(),
-                                    .bottom = DefaultSpacing::tiny()})
                 .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("form_container"));
 
@@ -176,8 +173,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Separator - indices 0-5 used by 3 label/input pairs above
     separator(context, mk(form_container.ent(), 6),
-              SeparatorOrientation::Horizontal,
-              ComponentConfig{}.with_margin(Spacing::sm));
+              SeparatorOrientation::Horizontal);
 
     // Search input (no label)
     div(context, mk(form_container.ent(), 7),
@@ -217,40 +213,37 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status_message)
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_margin(Margin{.top = DefaultSpacing::tiny()}));
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Instructions - brief contextual navigation hint
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Tab / Enter")
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_skip_tabbing(true)
-            .with_margin(Margin{.top = DefaultSpacing::tiny()}));
+            .with_skip_tabbing(true));
 
     // ========== FOOTER: OK / Cancel / Apply ==========
     auto footer = div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::Center)
             .with_padding(Padding{.right = DefaultSpacing::medium()})
-            .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_background(Theme::Usage::None)
             .with_debug_name("dialog_footer"));
 
     button(context, mk(footer.ent(), 0),
         ComponentConfig{}
             .with_label("OK")
-            .with_size(ComponentSize{pixels(80), pixels(36)})
+            .with_size(ComponentSize{pixels(80), pixels(30)})
             .with_background(Theme::Usage::Primary)
             .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_debug_name("btn_ok"));
@@ -258,7 +251,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent(), 1),
         ComponentConfig{}
             .with_label("Cancel")
-            .with_size(ComponentSize{pixels(80), pixels(36)})
+            .with_size(ComponentSize{pixels(80), pixels(30)})
             .with_background(Theme::Usage::Surface)
             .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_debug_name("btn_cancel"));
@@ -266,7 +259,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent(), 2),
         ComponentConfig{}
             .with_label("Apply")
-            .with_size(ComponentSize{pixels(80), pixels(36)})
+            .with_size(ComponentSize{pixels(80), pixels(30)})
             .with_background(Theme::Usage::Surface)
             .with_debug_name("btn_apply"));
   }

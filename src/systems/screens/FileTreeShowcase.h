@@ -113,12 +113,13 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     int screen_width = Settings::get().get_screen_width();
     int screen_height = Settings::get().get_screen_height();
 
-    // Main background
+    // Main background (absolute so it doesn't affect layout flow)
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(
                 ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(theme.background)
+            .with_absolute_position(pixels(0), pixels(0))
             .with_debug_name("bg"));
 
     // Main container

@@ -41,7 +41,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     auto card =
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.95f)})
+                .with_size(ComponentSize{screen_pct(0.5f), screen_pct(1.0f)})
                 .with_self_align(SelfAlign::Center)
                 .with_custom_background(
                     afterhours::colors::lighten(theme.background, 0.08f))

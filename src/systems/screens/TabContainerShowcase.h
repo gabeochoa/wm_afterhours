@@ -224,7 +224,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     // Content panel with proper padding
     auto content_panel = div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+            .with_size(ComponentSize{percent(1.0f), expand()})
             .with_background(Theme::Usage::Surface)
             .with_padding(Padding{
                 .top = pixels(16),

@@ -45,12 +45,11 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row.ent(), 0),
         ComponentConfig{}
             .with_label(label_text)
-            .with_size(ComponentSize{pixels(200), pixels(44)})
+            .with_size(ComponentSize{percent(0.35f), pixels(44)})
             .with_alignment(TextAlignment::Left)
             .with_background(Theme::Usage::None)
             .with_custom_text_color(context.theme.font)
             .with_font_size(pixels(22.0f))
-            .with_margin(Margin{.right = DefaultSpacing::large()})
             .with_debug_name(
                 std::string(debug_prefix) + "_label"));
 
@@ -58,7 +57,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     float slider_value = value;
     if (auto result = slider(context, mk(row.ent(), 1), slider_value,
                              ComponentConfig{}
-                                 .with_size(ComponentSize{pixels(200), pixels(28)})
+                                 .with_size(ComponentSize{percent(0.45f), pixels(28)})
                                  .with_debug_name(
                                      std::string(debug_prefix) + "_slider"),
                              SliderHandleValueLabelPosition::None);
@@ -78,7 +77,6 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(
                 afterhours::Color{180, 200, 220, 255})
             .with_font_size(h720(16.0f))
-            .with_margin(Margin{.left = pixels(8)})
             .with_debug_name(
                 std::string(debug_prefix) + "_pct"));
   }
@@ -97,12 +95,12 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.70f), screen_pct(0.80f)})
+                .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.88f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_translate(0.0f, -40.0f)
+                .with_no_wrap()
                 .with_debug_name("root"));
 
     // Title bar
@@ -120,14 +118,15 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Content panel - increased height to prevent clipping
     auto content = div(context, mk(root.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.95f), pixels(520)})
+                           .with_size(ComponentSize{percent(0.95f), percent(0.82f)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Padding{
-                               .top = pixels(16),
-                               .left = pixels(24),
-                               .bottom = pixels(20),
-                               .right = pixels(24)})
+                               .top = pixels(10),
+                               .left = pixels(16),
+                               .bottom = pixels(10),
+                               .right = pixels(16)})
                            .with_flex_direction(FlexDirection::Column)
+                           .with_no_wrap()
                            .with_roundness(0.06f)
                            .with_debug_name("content"));
 

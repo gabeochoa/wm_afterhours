@@ -63,64 +63,68 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
 
-    // Full screen background with padding to contain shadows
+    // Full screen background - uses normal flow layout (Column)
     auto background =
         div(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                 .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::lg)
+                .with_padding(Padding{.top = pixels(20), .left = pixels(40),
+                                       .right = pixels(40), .bottom = pixels(10)})
+                .with_align_items(AlignItems::Center)
+                .with_no_wrap()
                 .with_debug_name("main_bg"));
 
     // ========== HEADER ==========
     auto header = div(context, mk(background.ent(), 0),
                       ComponentConfig{}
-                          .with_size(ComponentSize{screen_pct(0.90f), pixels(60)})
-                          .with_absolute_position(0.0f, 0.0f)
+                          .with_size(ComponentSize{percent(1.0f), pixels(52)})
                           .with_background(Theme::Usage::Surface)
-                          .with_padding(Spacing::sm)
+                          .with_padding(Padding{.left = pixels(8), .right = pixels(8)})
                           .with_flex_direction(FlexDirection::Row)
+                          .with_no_wrap()
                           .with_align_items(AlignItems::Center)
                           .with_soft_shadow(3.0f, 4.0f, 10.0f)
+                          .with_margin(Margin{.bottom = DefaultSpacing::small()})
                           .with_debug_name("header"));
 
     div(context, mk(header.ent(), 0),
         ComponentConfig{}
             .with_label("Theme Switcher")
-            .with_size(ComponentSize{pixels(250), pixels(40)})
+            .with_size(ComponentSize{pixels(220), pixels(38)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font_size(h720(24.0f))
+            .with_font_size(h720(22.0f))
             .with_padding(Spacing::xs));
 
     div(context, mk(header.ent(), 1),
         ComponentConfig{}
             .with_label("Active: " + get_theme_name(current_theme))
-            .with_size(ComponentSize{pixels(280), pixels(44)})
+            .with_size(ComponentSize{pixels(260), pixels(38)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font_size(h720(21.0f))
+            .with_font_size(h720(19.0f))
             .with_margin(Margin{.left = DefaultSpacing::medium()})
             .with_hard_shadow(3.0f, 3.0f));
 
     // ========== MAIN CONTENT ==========
     auto content = div(context, mk(background.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{screen_pct(0.90f), pixels(530)})
-                           .with_absolute_position(0.0f, 75.0f)
+                           .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
                            .with_background(Theme::Usage::Background)
                            .with_flex_direction(FlexDirection::Row)
+                           .with_no_wrap()
                            .with_debug_name("content"));
 
     // LEFT - Theme Selection
     auto selector_panel =
         div(context, mk(content.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(200), pixels(480)})
+                .with_size(ComponentSize{pixels(200), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::sm)
+                .with_margin(Margin{.right = DefaultSpacing::small()})
                 .with_soft_shadow(3.0f, 4.0f, 8.0f)
                 .with_debug_name("selector_panel"));
 
@@ -171,11 +175,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto preview_panel =
         div(context, mk(content.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(520), pixels(480)})
+                .with_size(ComponentSize{percent(0.78f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
-                .with_margin(Spacing::sm)
+                .with_no_wrap()
                 .with_soft_shadow(3.0f, 4.0f, 8.0f)
                 .with_debug_name("preview_panel"));
 

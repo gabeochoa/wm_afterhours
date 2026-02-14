@@ -119,7 +119,6 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{expand(), pixels(50)})
                 .with_background(Theme::Usage::Primary)
                 .with_padding(Spacing::sm)
-                .with_margin(Margin{.right = pixels(8)})
                 .with_debug_name("title_container"));
 
     // Title text - use expand() to fill title_container after it's resolved
@@ -218,7 +217,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_background(Theme::Usage::Accent)
             .with_font(font_config.font_name, 26.0f * font_config.size_scale)
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // Menu items - 44px touch targets
     for (int i = 0; i < 4; i++) {
@@ -226,7 +225,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(sample.menu_items[i])
                  .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                 .with_margin(Spacing::xs)
+                 .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)})
                  .with_flex_direction(FlexDirection::Row)
                  .with_font(font_config.font_name, scaled_size)
                  .with_background(Theme::Usage::Primary));
@@ -238,7 +237,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label(sample.button_text)
                .with_size(ComponentSize{percent(1.0f), pixels(44)})
-               .with_margin(Spacing::xs)
+               .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)})
                .with_flex_direction(FlexDirection::Row)
                .with_font(font_config.font_name, 18.0f * font_config.size_scale)
                .with_background(config.use_consistent_button_colors
@@ -264,7 +263,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // English sample
     auto en = get_sample(Language::English);
@@ -274,7 +273,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font("Gaegu-Bold", h720(18.0f))
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // Korean sample
     auto ko = get_sample(Language::Korean);
@@ -284,7 +283,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font("NotoSansKR", h720(18.0f))
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // Japanese sample
     auto ja = get_sample(Language::Japanese);
@@ -294,7 +293,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
             .with_font("Sazanami", h720(18.0f))
-            .with_margin(Spacing::xs));
+            .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // ===== FOOTER ROW =====
     auto footer = div(context, mk(main.ent(), 2),

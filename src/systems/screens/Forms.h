@@ -66,8 +66,9 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("forms_main"));
 
     // Title - use font_size_xl for screen title (largest in hierarchy)
@@ -88,7 +89,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto content =
         div(context, mk(main_container.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.78f)})
+                .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Row)
@@ -406,7 +407,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(clipboard_row.ent(), 2),
         ComponentConfig{}
             .with_label(display_text)
-            .with_size(ComponentSize{pixels(400), pixels(44)})
+            .with_size(ComponentSize{expand(), pixels(44)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_font_size(theme.font_size_sm() - 2.0f)); // 14px - secondary text

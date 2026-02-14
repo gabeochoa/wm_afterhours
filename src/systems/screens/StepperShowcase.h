@@ -68,38 +68,41 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root =
         div(context, mk(entity),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.85f)})
+                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::sm)
                 .with_flex_direction(FlexDirection::Column)
+                .with_no_wrap()
                 .with_debug_name("root"));
 
     // Title
     div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("Stepper Showcase")
-            .with_size(ComponentSize{percent(1.0f), pixels(56)})
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_font_size(h720(36.0f))
             .with_alignment(TextAlignment::Center)
             .with_roundness(0.08f)
-            .with_margin(Margin{.bottom = DefaultSpacing::medium()}));
+            .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Two-column layout
     auto columns =
         div(context, mk(root.ent()),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
                 .with_flex_direction(FlexDirection::Row)
+                .with_justify_content(JustifyContent::SpaceBetween)
+                .with_no_wrap()
                 .with_debug_name("columns"));
 
     // ========== LEFT COLUMN: Various steppers ==========
     auto left_col =
         div(context, mk(columns.ent()),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
@@ -146,17 +149,11 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     labeled_stepper(3, "Difficulty", difficulties, difficulty_idx);
     labeled_stepper(4, "Framerate", framerates, framerate_idx);
 
-    // Spacer between columns
-    div(context, mk(columns.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(24), percent(1.0f)})
-            .with_debug_name("col_spacer"));
-
     // ========== RIGHT COLUMN: Stepper controlling a card ==========
     auto right_col =
         div(context, mk(columns.ent()),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(0.48f), percent(1.0f)})
+                .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
                 .with_flex_direction(FlexDirection::Column)
