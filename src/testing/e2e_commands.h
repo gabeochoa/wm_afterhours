@@ -2,6 +2,7 @@
 // Screen navigation commands specific to this application
 #pragma once
 
+#include "../settings.h"
 #include "../systems/ExampleScreenRegistry.h"
 
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
@@ -117,9 +118,33 @@ private:
   ValidateFn validate_fn_;
 };
 
+// Handle 'resize w h' — extend vendor resize to also update game Settings
+struct HandleResizeWithSettingsCommand : System<testing::PendingE2ECommand> {
+  virtual void for_each_with(Entity &, testing::PendingE2ECommand &cmd,
+                             float) override {
+    if (cmd.is_consumed() || !cmd.is("resize"))
+      return;
+    if (!cmd.has_args(2)) {
+      // Let the vendor handler report the error
+      return;
+    }
+
+    int w = cmd.arg_as<int>(0);
+    int h = cmd.arg_as<int>(1);
+    if (w > 0 && h > 0) {
+      Settings::get().update_resolution(
+          afterhours::window_manager::Resolution{.width = w, .height = h});
+    }
+    // Don't consume — let the vendor HandleResizeCommand do the ECS update
+  }
+};
+
 // Register app-specific commands
 template <typename ScreenManager>
 inline void register_app_commands(SystemManager &sm) {
+  // App-level resize hook runs before vendor handler to sync Settings
+  sm.register_update_system(
+      std::make_unique<HandleResizeWithSettingsCommand>());
   sm.register_update_system(std::make_unique<HandleNextScreenCommand>());
   sm.register_update_system(std::make_unique<HandlePrevScreenCommand>());
 }

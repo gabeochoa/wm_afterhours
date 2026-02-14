@@ -117,6 +117,36 @@ struct TestApp {
 
   static void simulate_escape() { test_input::simulate_escape(); }
 
+  /// Simulate a window resize by updating the ProvidesCurrentResolution
+  /// singleton and Settings. The UI layout system will pick up the new
+  /// dimensions on the next frame's BeforeUIUpdates pass.
+  static void simulate_window_resize(int width, int height) {
+    // Update the ECS resolution singleton that the UI system reads
+    auto *pcr = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    if (pcr) {
+      pcr->current_resolution.width = width;
+      pcr->current_resolution.height = height;
+      pcr->should_refetch = false; // Prevent CollectCurrentResolution overwrite
+    }
+    // Update Settings so screens that read from Settings directly also see it
+    Settings::get().update_resolution(
+        afterhours::window_manager::Resolution{.width = width,
+                                               .height = height});
+  }
+
+  /// Check that the current screen resolution matches expected values.
+  static void expect_screen_size(int expected_w, int expected_h) {
+    int actual_w = Settings::get().get_screen_width();
+    int actual_h = Settings::get().get_screen_height();
+    if (actual_w != expected_w || actual_h != expected_h) {
+      throw std::runtime_error(
+          "Expected screen size " + std::to_string(expected_w) + "x" +
+          std::to_string(expected_h) + ", but got " +
+          std::to_string(actual_w) + "x" + std::to_string(actual_h));
+    }
+  }
+
   static afterhours::Entity *
   find_ui_element_by_label(const std::string &label) {
     // Search UI collection where immediate-mode UI elements live.
@@ -314,6 +344,111 @@ struct TestApp {
       }
       throw std::runtime_error("Expected no focus, but element with label '" +
                                label + "' is focused");
+    }
+  }
+
+  // ========== Responsive Layout Validation ==========
+
+  struct OverflowViolation {
+    std::string name;  // debug name or label
+    float x, y, w, h; // computed rect
+  };
+
+  /// Walk all rendered UI elements and return any whose rect OR text content
+  /// extends outside the viewport [0,0,viewport_w,viewport_h].
+  static std::vector<OverflowViolation>
+  check_viewport_overflow(int viewport_w, int viewport_h) {
+    std::vector<OverflowViolation> violations;
+    // Don't use force_merge: we only want entities that completed the layout
+    // pipeline (force_merge includes freshly-created entities at position 0,0)
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+    auto all_ui = afterhours::EntityQuery(ui_coll)
+                      .whereHasComponent<afterhours::ui::UIComponent>()
+                      .gen();
+
+    auto *font_mgr = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::FontManager>();
+
+    float vw = static_cast<float>(viewport_w);
+    float vh = static_cast<float>(viewport_h);
+    constexpr float TOLERANCE = 2.0f;
+
+    for (afterhours::Entity &entity : all_ui) {
+      auto &cmp = entity.get<afterhours::ui::UIComponent>();
+      if (!cmp.was_rendered_to_screen || cmp.should_hide)
+        continue;
+
+      auto rect = cmp.rect();
+      if (rect.width < 1.0f || rect.height < 1.0f)
+        continue;
+      // Skip elements that haven't been laid out yet (default computed values)
+      if (cmp.computed[afterhours::ui::Axis::X] < 0 ||
+          cmp.computed[afterhours::ui::Axis::Y] < 0)
+        continue;
+
+      // Check 1: element rect outside viewport
+      bool rect_out = (rect.x + rect.width > vw + TOLERANCE) ||
+                      (rect.y + rect.height > vh + TOLERANCE) ||
+                      (rect.x < -TOLERANCE) ||
+                      (rect.y < -TOLERANCE);
+
+      // Check 2: text truncation (text wider than its container element)
+      // Skip text check for elements at origin (0,0) - likely stale/unprocessed
+      bool text_truncated = false;
+      if (entity.has<afterhours::ui::HasLabel>() && font_mgr &&
+          (rect.x > 0.5f || rect.y > 0.5f)) {
+        auto &label = entity.get<afterhours::ui::HasLabel>();
+        if (!label.label.empty() && label.label.length() > 1) {
+          std::string fname = cmp.font_name;
+          if (fname == afterhours::ui::UIComponent::UNSET_FONT ||
+              fname == afterhours::ui::UIComponent::DEFAULT_FONT) {
+            fname = font_mgr->active_font;
+          }
+          if (font_mgr->fonts.contains(fname)) {
+            afterhours::Font font = font_mgr->fonts.at(fname);
+            float font_size = cmp.font_size.value;
+            if (font_size < 1.0f) font_size = 14.0f;
+            auto text_sz = afterhours::measure_text(
+                font, label.label.c_str(), font_size, 1.0f);
+            if (text_sz.x > rect.width + 4.0f) text_truncated = true;
+          }
+        }
+      }
+
+      if (!rect_out && !text_truncated)
+        continue;
+
+      std::string name;
+      if (entity.has<afterhours::ui::UIComponentDebug>()) {
+        name = entity.get<afterhours::ui::UIComponentDebug>().name();
+      } else if (entity.has<afterhours::ui::HasLabel>()) {
+        name = "\"" + entity.get<afterhours::ui::HasLabel>().label + "\"";
+      } else {
+        name = "entity_" + std::to_string(entity.id);
+      }
+      violations.push_back(
+          {name, rect.x, rect.y, rect.width, rect.height});
+    }
+    return violations;
+  }
+
+  /// Assert no UI elements overflow the viewport at the given resolution.
+  /// Throws with a detailed message listing all violating elements.
+  static void assert_no_viewport_overflow(int viewport_w, int viewport_h) {
+    auto violations = check_viewport_overflow(viewport_w, viewport_h);
+    if (!violations.empty()) {
+      std::string msg = "Responsive layout check FAILED at " +
+                        std::to_string(viewport_w) + "x" +
+                        std::to_string(viewport_h) + ": " +
+                        std::to_string(violations.size()) +
+                        " element(s) overflow the viewport:\n";
+      for (auto &v : violations) {
+        msg += "  - " + v.name + " at (" + std::to_string((int)v.x) + "," +
+               std::to_string((int)v.y) + ") size " +
+               std::to_string((int)v.w) + "x" + std::to_string((int)v.h) +
+               "\n";
+      }
+      throw std::runtime_error(msg);
     }
   }
 

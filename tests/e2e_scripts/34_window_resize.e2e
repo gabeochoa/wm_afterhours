@@ -1,0 +1,52 @@
+# Window Resize Test
+# Tests that resizing the window updates layout and UI still renders correctly.
+# Also validates responsive layout: no UI elements should overflow the viewport
+# at any tested resolution.
+
+# Start on sports settings screen (uses absolute positioning with screen dims)
+goto_screen sports_settings
+wait 0.5
+
+# Verify initial state at default 1280x720 (minimum supported resolution)
+expect_text "VIDEO"
+expect_text "Window mode"
+expect_text "Resolution"
+
+# Assert all elements fit within the 720p viewport
+assert_no_overflow
+
+screenshot resize_1280x720
+
+# Resize to 1920x1080
+resize 1920 1080
+wait 0.5
+
+# UI should still render all elements and fit within viewport
+expect_text "VIDEO"
+expect_text "Window mode"
+expect_text "Resolution"
+assert_no_overflow
+
+screenshot resize_1920x1080
+
+# Resize to 800x600 (smaller than minimum, help panel should hide)
+resize 800 600
+wait 0.5
+
+# UI should still render core elements and fit within viewport
+expect_text "VIDEO"
+expect_text "Window mode"
+assert_no_overflow
+
+screenshot resize_800x600
+
+# Resize back to original
+resize 1280 720
+wait 0.5
+
+expect_text "VIDEO"
+expect_text "Window mode"
+expect_text "Resolution"
+assert_no_overflow
+
+screenshot resize_restored

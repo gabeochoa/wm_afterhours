@@ -282,9 +282,18 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
+    // Read resolution from the ECS singleton (authoritative source, updated by resize commands)
+    auto *pcr = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    int screen_w = pcr ? pcr->width() : Settings::get().get_screen_width();
+    int screen_h = pcr ? pcr->height() : Settings::get().get_screen_height();
     auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+
+    // Scale factors: all layout is authored for 1280x720 reference
+    float sx = (float)screen_w / 1280.0f;
+    float sy = (float)screen_h / 720.0f;
+    // Show the right help panel only when there's enough horizontal space
+    bool show_help_panel = screen_w >= 900;
 
     // ========== SYNC SELECTION WITH FOCUS ==========
     // Update selected_row based on focus FIRST (before keyboard handling)
@@ -339,38 +348,39 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // ========== TOP TAB BAR ==========
-    float tab_y = 15.0f;
-    float tab_start_x = 70.0f;
+    float tab_y = 15.0f * sy;
+    float tab_start_x = 70.0f * sx;
 
     tab_container(context, mk(entity, 10), tabs, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(520), pixels(35)})
+            .with_size(ComponentSize{pxf(520.0f * sx), pxf(35.0f * sy)})
             .with_absolute_position(tab_start_x, tab_y));
 
     // ========== SECTION HEADER ==========
-    float header_y = tab_y + 55.0f;
+    float header_y = tab_y + 55.0f * sy;
 
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_label(get_section_header())
-            .with_size(ComponentSize{pixels(150), pixels(30)})
-            .with_absolute_position(50.0f, header_y)
+            .with_size(ComponentSize{pxf(150.0f * sx), pxf(30.0f * sy)})
+            .with_absolute_position(50.0f * sx, header_y)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(text_white));
 
     // Separator between header and settings rows
     div(context, mk(entity, 31),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(520), pixels(1)})
-            .with_absolute_position(50.0f, header_y + 32.0f)
+            .with_size(ComponentSize{pxf(520.0f * sx), pixels(1)})
+            .with_absolute_position(50.0f * sx, header_y + 32.0f * sy)
             .with_custom_background(afterhours::Color{85, 195, 145, 60})
             .with_debug_name("section_separator_header"));
 
     // ========== LEFT PANEL: Settings ==========
-    float panel_x = 50.0f;
-    float panel_y = header_y + 40.0f;
-    float panel_w = 520.0f;
-    float row_h = 42.0f;
+    float panel_x = 50.0f * sx;
+    float panel_y = header_y + 40.0f * sy;
+    // When help panel is hidden, settings can use more horizontal space
+    float panel_w = show_help_panel ? 520.0f * sx : (float)screen_w - 100.0f * sx;
+    float row_h = 42.0f * sy;
 
     // Reset selected_row if out of bounds for current tab
     if (selected_row >= current_settings.size()) {
@@ -379,7 +389,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Each row is a single tabbable element - the entire row is selectable
     float group_offset = 0.0f;
-    constexpr float group_header_h = 28.0f; // Height of group header + separator
+    float group_header_h = 28.0f * sy; // Height of group header + separator
     for (size_t i = 0; i < current_settings.size(); i++) {
       // Check for group header at this row
       const char *group_label = get_group_header(active_tab, i);
@@ -387,25 +397,25 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         float gh_y = panel_y + (float)i * row_h + group_offset;
         // Add extra spacing before non-first groups
         if (i > 0) {
-          group_offset += 8.0f; // gap before separator
-          gh_y += 8.0f;
+          group_offset += 8.0f * sy;
+          gh_y += 8.0f * sy;
         }
         // Group separator line
         div(context, mk(entity, 1200 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels((int)(panel_w - 20)), pixels(1)})
-                .with_absolute_position(panel_x - 5.0f, gh_y)
+                .with_size(ComponentSize{pxf(panel_w - 20.0f * sx), pixels(1)})
+                .with_absolute_position(panel_x - 5.0f * sx, gh_y)
                 .with_custom_background(
                     i > 0 ? afterhours::Color{85, 195, 145, 40}
-                           : afterhours::Color{0, 0, 0, 0}) // invisible for first group
+                           : afterhours::Color{0, 0, 0, 0})
                 .with_skip_tabbing(true)
                 .with_debug_name(std::string("group_sep_") + std::to_string(i)));
         // Group header label
         div(context, mk(entity, 1250 + static_cast<int>(i)),
             ComponentConfig{}
                 .with_label(group_label)
-                .with_size(ComponentSize{pixels(250), pixels(20)})
-                .with_absolute_position(panel_x + 20.0f, gh_y + 3.0f)
+                .with_size(ComponentSize{pxf(250.0f * sx), pxf(20.0f * sy)})
+                .with_absolute_position(panel_x + 20.0f * sx, gh_y + 3.0f * sy)
                 .with_font("EqProRounded", h720(14.0f))
                 .with_custom_text_color(afterhours::Color{85, 195, 145, 180})
                 .with_skip_tabbing(true)
@@ -434,8 +444,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Row background - render first (behind everything)
       div(context, mk(entity, 50 + static_cast<int>(i)),
           ComponentConfig{}
-              .with_720p_size(panel_w, row_h - 2)
-              .with_absolute_position(panel_x - 10.0f, ry)
+              .with_size(ComponentSize{pxf(panel_w), pxf(row_h - 2.0f * sy)})
+              .with_absolute_position(panel_x - 10.0f * sx, ry)
               .with_custom_background(is_selected
                                           ? highlight_row
                                           : afterhours::Color{35, 45, 55, 255})
@@ -446,42 +456,41 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (is_selected) {
         div(context, mk(entity, 60 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(4),
-                                         pxf(row_h - 8)})
-                .with_absolute_position(panel_x - 15.0f, ry + 3.0f)
+                .with_size(ComponentSize{pxf(4.0f * sx),
+                                         pxf(row_h - 8.0f * sy)})
+                .with_absolute_position(panel_x - 15.0f * sx, ry + 3.0f * sy)
                 .with_custom_background(accent_green)
                 .with_render_layer(1)
                 .with_debug_name("row_accent_" + std::to_string(i)));
       }
 
       // Label button - click to select row (this is tabbable)
+      float label_w = 175.0f * sx;
       if (button(context, mk(entity, 100 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(setting.label)
                      .with_size(ComponentSize{
-                         pixels(200), pxf(row_h - 4)})
-                     .with_absolute_position(panel_x + 20.0f, ry + 2.0f)
+                         pxf(label_w), pxf(row_h - 4.0f * sy)})
+                     .with_absolute_position(panel_x + 20.0f * sx, ry + 2.0f * sy)
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(label_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Left)
-                     .with_padding(Padding{.left = pixels(4)})
+                     .with_padding(Padding{.left = pxf(4.0f * sx)})
                      .with_debug_name("label_" + std::to_string(i)))) {
         selected_row = i;
       }
 
-      float value_x = panel_x + 220.0f;
-      float arrow_size = 28.0f;  // Minimum accessible touch target
+      float value_x = panel_x + 195.0f * sx;
+      float arrow_btn_sz = 44.0f * sy;
       float step = 0.05f; // 5% per click for sliders
 
-      // Left arrow < (skip tabbing - use row's keyboard handling) - render
-      // above button
+      // Left arrow <
       if (button(context, mk(entity, 300 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{
-                         pixels(44), pixels(44)})
-                     .with_absolute_position(value_x, ry + 0.0f)
+                     .with_size(ComponentSize{pxf(arrow_btn_sz), pxf(arrow_btn_sz)})
+                     .with_absolute_position(value_x, ry)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -498,27 +507,26 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }
       }
 
-      // Value display text (skip tabbing) - render above button
+      // Value display text - wide enough for longest option (e.g. "TSR (Temporal Super Resolution)")
+      float val_text_w = 210.0f * sx;
       div(context, mk(entity, 301 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(display_value)
-              .with_size(ComponentSize{pixels(130), pixels(44)})
-              .with_absolute_position(value_x + 44.0f + 4.0f, ry + 0.0f)
-              .with_font("EqProRounded", h720(18.0f))
+              .with_size(ComponentSize{pxf(val_text_w), pxf(arrow_btn_sz)})
+              .with_absolute_position(value_x + arrow_btn_sz + 4.0f * sx, ry)
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(value_color)
               .with_alignment(TextAlignment::Center)
               .with_skip_tabbing(true)
               .with_render_layer(2)
               .with_debug_name("value_" + std::to_string(i)));
 
-      // Right arrow > (skip tabbing - use row's keyboard handling) - render
-      // above button
+      // Right arrow >
       if (button(context, mk(entity, 302 + static_cast<int>(i) * 3),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{
-                         pixels(44), pixels(44)})
-                     .with_absolute_position(value_x + 44.0f + 148.0f, ry + 0.0f)
+                     .with_size(ComponentSize{pxf(arrow_btn_sz), pxf(arrow_btn_sz)})
+                     .with_absolute_position(value_x + arrow_btn_sz + val_text_w + 18.0f * sx, ry)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -534,48 +542,43 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }
       }
 
-      // Slider visual bar (static display - matches arrow control values)
+      // Slider / segment indicator bar
+      float bar_start_x = value_x + 2.0f * arrow_btn_sz + val_text_w + 28.0f * sx;
       if (setting.is_slider) {
-        float bar_x = value_x + arrow_size + 170.0f;
-        float bar_y = ry + 12.0f;
-        float bar_w = 100.0f;
-        float bar_h = 14.0f;
+        float bar_y_pos = ry + 12.0f * sy;
+        float bar_w = 100.0f * sx;
+        float bar_h = 14.0f * sy;
 
-        // Slider track background with border for contrast
         div(context, mk(entity, 500 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_720p_size(bar_w, bar_h)
-                .with_absolute_position(bar_x, bar_y)
+                .with_size(ComponentSize{pxf(bar_w), pxf(bar_h)})
+                .with_absolute_position(bar_start_x, bar_y_pos)
                 .with_custom_background(slider_track)
                 .with_border(slider_empty_border, 1.0f)
                 .with_skip_tabbing(true)
                 .with_debug_name("slider_bg_" + std::to_string(i)));
 
-        // Slider fill (shows current value)
         float fill_w = bar_w * setting.slider_pct;
         if (fill_w > 2.0f) {
           div(context, mk(entity, 600 + static_cast<int>(i)),
               ComponentConfig{}
-                  .with_720p_size(fill_w, bar_h)
-                  .with_absolute_position(bar_x, bar_y)
+                  .with_size(ComponentSize{pxf(fill_w), pxf(bar_h)})
+                  .with_absolute_position(bar_start_x, bar_y_pos)
                   .with_custom_background(accent_green)
                   .with_render_layer(1)
                   .with_skip_tabbing(true)
                   .with_debug_name("slider_fill_" + std::to_string(i)));
         }
       } else if (setting.options.size() > 1) {
-        // Segmented position indicator for non-slider settings
-        // Shows dots/segments matching the slider bar position and style
-        float bar_x = value_x + arrow_size + 170.0f;
-        float bar_y = ry + 14.0f;
-        float bar_w = 100.0f;
-        float dot_h = 10.0f;
+        float bar_y_pos = ry + 14.0f * sy;
+        float bar_w = 100.0f * sx;
+        float dot_h = 10.0f * sy;
         size_t num_opts = setting.options.size();
-        float total_gap = 4.0f * (float)(num_opts - 1); // gaps between segments
+        float total_gap = 4.0f * sx * (float)(num_opts - 1);
         float seg_w = (bar_w - total_gap) / (float)num_opts;
 
         for (size_t j = 0; j < num_opts; j++) {
-          float sx = bar_x + (float)j * (seg_w + 4.0f);
+          float seg_x = bar_start_x + (float)j * (seg_w + 4.0f * sx);
           bool is_active = (j == setting.option_idx);
           afterhours::Color seg_color =
               is_active ? accent_green : slider_track;
@@ -585,8 +588,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           div(context,
               mk(entity, 800 + static_cast<int>(i) * 20 + static_cast<int>(j)),
               ComponentConfig{}
-                  .with_720p_size(seg_w, dot_h)
-                  .with_absolute_position(sx, bar_y)
+                  .with_size(ComponentSize{pxf(seg_w), pxf(dot_h)})
+                  .with_absolute_position(seg_x, bar_y_pos)
                   .with_custom_background(seg_color)
                   .with_border(seg_border, 1.0f)
                   .with_skip_tabbing(true)
@@ -596,11 +599,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // ========== RIGHT PANEL: Help/Info ==========
-    float help_x = panel_x + panel_w + 100.0f;
-    float help_y = 85.0f;
-    float help_w = 350.0f;
-
+    // ========== RIGHT PANEL: Help/Info (hidden at narrow widths) ==========
     auto &selected_setting = current_settings[selected_row];
     std::string current_val =
         selected_setting.is_slider
@@ -609,49 +608,56 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    ? "---"
                    : selected_setting.options[selected_setting.option_idx]);
 
-    // Get dynamic descriptions (with tooltips for abbreviations like TSR)
-    std::string desc_line1 =
-        get_setting_description(selected_setting.label, current_val);
-    std::string desc_line2 =
-        get_setting_description_line2(selected_setting.label, current_val);
+    if (show_help_panel) {
+      float help_x = panel_x + panel_w + 100.0f * sx;
+      float help_y = 85.0f * sy;
+      float help_w = (float)screen_w - help_x - 20.0f * sx; // Fill to right edge
+      if (help_w < 100.0f) help_w = 100.0f; // minimum
 
-    // Help text lines
-    struct HelpLine { int id; const char *text; float y_off; int h; float font; afterhours::Color color; };
-    std::string current_label = "Current: " + current_val;
-    HelpLine help_lines[] = {
-        {700, selected_setting.label.c_str(), 0.0f, 35, 22.0f, text_white},
-        {701, desc_line1.c_str(), 40.0f, 50, 0.0f, text_white},
-        {702, desc_line2.c_str(), 70.0f, 30, 0.0f, text_white},
-        {703, current_label.c_str(), 110.0f, 30, 0.0f, text_muted},
-    };
-    for (auto &hl : help_lines) {
-      auto cfg = ComponentConfig{}
-          .with_label(hl.text)
-          .with_size(ComponentSize{pxf(help_w), pixels(hl.h)})
-          .with_absolute_position(help_x, help_y + hl.y_off)
-          .with_custom_text_color(hl.color);
-      if (hl.font > 0.0f) cfg.with_font("EqProRounded", h720(hl.font));
-      div(context, mk(entity, hl.id), cfg);
+      std::string desc_line1 =
+          get_setting_description(selected_setting.label, current_val);
+      std::string desc_line2 =
+          get_setting_description_line2(selected_setting.label, current_val);
+
+      struct HelpLine { int id; const char *text; float y_off; float h; float font; afterhours::Color color; };
+      std::string current_label = "Current: " + current_val;
+      HelpLine help_lines[] = {
+          {700, selected_setting.label.c_str(), 0.0f, 35.0f * sy, 22.0f, text_white},
+          {701, desc_line1.c_str(), 40.0f * sy, 50.0f * sy, 0.0f, text_white},
+          {702, desc_line2.c_str(), 70.0f * sy, 30.0f * sy, 0.0f, text_white},
+          {703, current_label.c_str(), 110.0f * sy, 30.0f * sy, 0.0f, text_muted},
+      };
+      for (auto &hl : help_lines) {
+        auto cfg = ComponentConfig{}
+            .with_label(hl.text)
+            .with_size(ComponentSize{pxf(help_w), pxf(hl.h)})
+            .with_absolute_position(help_x, help_y + hl.y_off)
+            .with_custom_text_color(hl.color);
+        if (hl.font > 0.0f) cfg.with_font("EqProRounded", h720(hl.font));
+        div(context, mk(entity, hl.id), cfg);
+      }
     }
 
-    // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_y = (float)screen_h - 40.0f;
-    float prompt_x = (float)screen_w - 330.0f;
+    // ========== BOTTOM BUTTON PROMPTS (anchored to bottom-right) ==========
+    float prompt_y = (float)screen_h - 40.0f * sy;
+    float prompt_x = (float)screen_w - 330.0f * sx;
+    // Clamp to ensure prompts stay on screen even at small sizes
+    if (prompt_x < 10.0f) prompt_x = 10.0f;
 
-    // Bottom button prompts
     struct BtnPrompt {
       const char *btn; const char *action; int base_id;
-      afterhours::Color bg; afterhours::Color text; float offset; int label_w;
+      afterhours::Color bg; afterhours::Color text; float offset; float label_w;
     };
     BtnPrompt btn_prompts[] = {
-        {"Y", "Reset to default", 400, {180, 160, 60, 255}, bg_dark, 0.0f, 130},
-        {"B", "Back", 402, {180, 80, 80, 255}, text_white, 175.0f, 50},
+        {"Y", "Reset to default", 400, {180, 160, 60, 255}, bg_dark, 0.0f, 130.0f * sx},
+        {"B", "Back", 402, {180, 80, 80, 255}, text_white, 175.0f * sx, 50.0f * sx},
     };
+    float btn_sz = 28.0f * sy;
     for (auto &bp : btn_prompts) {
       div(context, mk(entity, bp.base_id),
           ComponentConfig{}
               .with_label(bp.btn)
-              .with_size(ComponentSize{pixels(28), pixels(28)})
+              .with_size(ComponentSize{pxf(btn_sz), pxf(btn_sz)})
               .with_absolute_position(prompt_x + bp.offset, prompt_y)
               .with_custom_background(bp.bg)
               .with_custom_text_color(bp.text)
@@ -661,8 +667,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, bp.base_id + 1),
           ComponentConfig{}
               .with_label(bp.action)
-              .with_size(ComponentSize{pixels(bp.label_w), pixels(25)})
-              .with_absolute_position(prompt_x + bp.offset + 35.0f, prompt_y + 2.0f)
+              .with_size(ComponentSize{pxf(bp.label_w), pxf(25.0f * sy)})
+              .with_absolute_position(prompt_x + bp.offset + 35.0f * sx, prompt_y + 2.0f * sy)
               .with_custom_text_color(text_white));
     }
   }

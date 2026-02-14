@@ -1,0 +1,50 @@
+# Responsive Audit - Test multiple screens at 720p minimum
+# Verifies no UI elements overflow the viewport at minimum supported resolution
+
+# Test sports_settings (we fixed this one)
+goto_screen sports_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_sports_settings_720p
+
+# Test fighter_menu
+goto_screen fighter_menu
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_fighter_menu_720p
+
+# Test shop_interface
+goto_screen shop_interface
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_shop_interface_720p
+
+# Test forms
+goto_screen forms
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_forms_720p
+
+# Test buttons
+goto_screen buttons
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_buttons_720p
+
+# Test cards
+goto_screen cards
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_cards_720p
