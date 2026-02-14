@@ -31,10 +31,9 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("toast_bg"));
 
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_padding(Spacing::sm)
                 .with_no_wrap()
@@ -58,13 +57,12 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section 1: Simple toasts
     // =========================================================================
     auto section1 =
-        div(context, mk(main_container.ent(), 1),
+        vstack(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(140)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_roundness(0.1f)
-                .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section1"));
 
     // Section header
@@ -144,13 +142,12 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section 2: Duration and spam
     // =========================================================================
     auto section2 =
-        div(context, mk(main_container.ent(), 2),
+        vstack(context, mk(main_container.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(140)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_roundness(0.1f)
-                .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),
@@ -243,13 +240,12 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section 3: Interactive toasts with buttons
     // =========================================================================
     auto section3 =
-        div(context, mk(main_container.ent(), 3),
+        vstack(context, mk(main_container.ent(), 3),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(140)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_roundness(0.1f)
-                .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
                                     .left = pixels(0),

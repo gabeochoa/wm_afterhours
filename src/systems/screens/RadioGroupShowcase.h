@@ -147,11 +147,10 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("radio_bg"));
 
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_debug_name("radio_main"));
 
@@ -178,14 +177,13 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Column 1 - Fruit selection (with border for clearer group separation)
     auto col1 =
-        div(context, mk(content.ent(), 0),
+        vstack(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_border(theme.accent, 2.0f)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.08f)
                 .with_debug_name("col1"));
 
@@ -209,14 +207,13 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Column 2 - Size selection (with border for clearer group separation)
     auto col2 =
-        div(context, mk(content.ent(), 1),
+        vstack(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_border(theme.accent, 2.0f)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.08f)
                 .with_debug_name("col2"));
 
@@ -240,14 +237,13 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Column 3 - Color selection (with border for clearer group separation)
     auto col3 =
-        div(context, mk(content.ent(), 2),
+        vstack(context, mk(content.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_border(theme.accent, 2.0f)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.08f)
                 .with_debug_name("col3"));
 

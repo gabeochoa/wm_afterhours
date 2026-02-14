@@ -38,11 +38,10 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                         .with_debug_name("root_bg"));
 
     // Content container with padding
-    auto content = div(context, mk(root.ent(), 0),
+    auto content = vstack(context, mk(root.ent(), 0),
                        ComponentConfig{}
                            .with_size({percent(1.0f), percent(1.0f)})
                            .with_padding(Spacing::lg)
-                           .with_flex_direction(FlexDirection::Column)
                            .with_debug_name("root"));
 
     // Title section - row with title text and badge
@@ -85,11 +84,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Section 1: Default behavior (auto enabled by default)
-    auto section1 = div(context, mk(content.ent()),
+    auto section1 = vstack(context, mk(content.ent()),
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column));
+                            );
 
     div(context, mk(section1.ent()),
         ComponentConfig{}
@@ -162,11 +161,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_separator_1"));
 
     // Section 2: Mid-tone colors (edge cases)
-    auto section2 = div(context, mk(content.ent()),
+    auto section2 = vstack(context, mk(content.ent()),
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column));
+                            );
 
     div(context, mk(section2.ent()),
         ComponentConfig{}
@@ -213,11 +212,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_separator_2"));
 
     // Section 3: How to disable auto text color
-    auto section3 = div(context, mk(content.ent()),
+    auto section3 = vstack(context, mk(content.ent()),
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column));
+                            );
 
     div(context, mk(section3.ent()),
         ComponentConfig{}
@@ -273,11 +272,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_separator_3"));
 
     // Section 4: Theme colors with auto contrast
-    auto section4 = div(context, mk(content.ent()),
+    auto section4 = vstack(context, mk(content.ent()),
                         ComponentConfig{}
                             .with_size({percent(1.0f), children()})
                             .with_padding(Spacing::sm)
-                            .with_flex_direction(FlexDirection::Column));
+                            );
 
     div(context, mk(section4.ent()),
         ComponentConfig{}

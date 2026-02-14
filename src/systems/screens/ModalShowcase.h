@@ -63,10 +63,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("modal_bg"));
 
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_padding(Spacing::sm)
                 .with_no_wrap()
                 .with_debug_name("modal_main"));
@@ -90,13 +89,12 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     auto make_section = [&](int section_id, const char *header_label,
                             const char *section_name, const char *row_name) {
       auto section =
-          div(context, mk(main_container.ent(), section_id),
+          vstack(context, mk(main_container.ent(), section_id),
               ComponentConfig{}
                   .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                   .with_background(Theme::Usage::Surface)
                   .with_padding(Spacing::sm)
                   .with_roundness(SECTION_ROUNDNESS)
-                  .with_flex_direction(FlexDirection::Column)
                   .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                   .with_debug_name(section_name));
 
@@ -250,13 +248,12 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     // Note: section5 omits bottom margin, and row5 has extra styling
     auto section5 =
-        div(context, mk(main_container.ent(), 5),
+        vstack(context, mk(main_container.ent(), 5),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
                 .with_roundness(SECTION_ROUNDNESS)
-                .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("section5"));
 
     div(context, mk(section5.ent(), 0),

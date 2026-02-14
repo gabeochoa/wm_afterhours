@@ -124,7 +124,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Main container
     auto root =
-        div(context, mk(entity, 1),
+        vstack(context, mk(entity, 1),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.8f), screen_pct(0.85f)})
                 .with_self_align(SelfAlign::Center)
@@ -133,7 +133,6 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.02f)
                 .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("main_container"));
 
     // Title bar

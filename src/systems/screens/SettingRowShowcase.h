@@ -92,13 +92,12 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
 
     auto root =
-        div(context, mk(entity, 0),
+        vstack(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.88f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("root"));
 
@@ -115,7 +114,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.1f));
 
     // Content panel - increased height to prevent clipping
-    auto content = div(context, mk(root.ent(), 1),
+    auto content = vstack(context, mk(root.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(0.95f), percent(0.82f)})
                            .with_background(Theme::Usage::Surface)
@@ -124,7 +123,6 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
                                .left = pixels(16),
                                .bottom = pixels(10),
                                .right = pixels(16)})
-                           .with_flex_direction(FlexDirection::Column)
                            .with_no_wrap()
                            .with_roundness(0.06f)
                            .with_debug_name("content"));

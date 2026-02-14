@@ -39,7 +39,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     // Height increased from 0.85 to 0.95 to fit all sections (General,
     // Preferences, Disabled, Status) without overflowing the card bounds.
     auto card =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.5f), screen_pct(1.0f)})
                 .with_self_align(SelfAlign::Center)
@@ -52,7 +52,6 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                     .bottom = DefaultSpacing::small(),
                     .left = DefaultSpacing::large(),
                     .right = DefaultSpacing::large()})
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("toggle_card"));
 

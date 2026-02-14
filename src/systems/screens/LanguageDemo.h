@@ -92,10 +92,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("main_bg"));
 
     // Content container - use percent(1.0f) to resolve during parent phase
-    auto main = div(context, mk(root.ent(), 0),
+    auto main = vstack(context, mk(root.ent(), 0),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                        .with_flex_direction(FlexDirection::Column)
                         .with_no_wrap()
                         .with_debug_name("main"));
 
@@ -197,12 +196,11 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Left panel - current language demo
     auto left_panel =
-        div(context, mk(content.ent(), 0),
+        vstack(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_margin(Margin{.right = pixels(4)})
                 .with_debug_name("left_panel"));
@@ -243,12 +241,11 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Right panel - all languages comparison
     auto right_panel =
-        div(context, mk(content.ent(), 1),
+        vstack(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_margin(Margin{.left = pixels(4)})
                 .with_debug_name("right_panel"));
@@ -293,12 +290,12 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // ===== FOOTER ROW =====
-    auto footer = div(context, mk(main.ent(), 2),
+    auto footer = vstack(context, mk(main.ent(), 2),
                       ComponentConfig{}
                           .with_size(ComponentSize{percent(1.0f), pixels(55)})
                           .with_background(Theme::Usage::Surface)
                           .with_padding(Spacing::xs)
-                          .with_flex_direction(FlexDirection::Column));
+                          );
 
     std::string lang_name = current_language == Language::English  ? "ENGLISH"
                             : current_language == Language::Korean ? "KOREAN"

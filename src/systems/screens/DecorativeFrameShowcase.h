@@ -25,11 +25,10 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
 
     // Main container with background
-    auto main = div(context, mk(entity, 0),
+    auto main = vstack(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
             .with_background(Theme::Usage::Background)
-            .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::Center)
             .with_debug_name("main"));
@@ -87,10 +86,9 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color kraft_frame_color{101, 67, 33, 255};
     afterhours::Color kraft_bg{222, 184, 135, 255};
 
-    auto kraft_col = div(context, mk(row.ent(), 0),
+    auto kraft_col = vstack(context, mk(row.ent(), 0),
         ComponentConfig{}
             .with_size(ComponentSize{col_width, percent(1.0f)})
-            .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("kraft_col"));
@@ -124,10 +122,9 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color simple_frame_color{70, 130, 180, 255};
     afterhours::Color simple_bg{240, 248, 255, 255};
 
-    auto simple_col = div(context, mk(row.ent(), 1),
+    auto simple_col = vstack(context, mk(row.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{col_width, percent(1.0f)})
-            .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("simple_col"));
@@ -161,10 +158,9 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color inset_frame_color{128, 128, 128, 255};
     afterhours::Color inset_bg{220, 220, 220, 255};
 
-    auto inset_col = div(context, mk(row.ent(), 2),
+    auto inset_col = vstack(context, mk(row.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{col_width, percent(1.0f)})
-            .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("inset_col"));
@@ -199,12 +195,11 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     constexpr float info_section_width_pct = 0.90f;   // Width of info section
     constexpr float info_section_margin_top_px = 8.0f; // Reduced gap before info section
 
-    auto info_section = div(context, mk(main.ent(), 3),
+    auto info_section = vstack(context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_size(ComponentSize{percent(info_section_width_pct), percent(info_section_height_pct)})
             .with_background(Theme::Usage::Surface)
             .with_border(theme.secondary, h720(2.0f))
-            .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::Center)
             .with_margin(Margin{.top = h720(info_section_margin_top_px)})

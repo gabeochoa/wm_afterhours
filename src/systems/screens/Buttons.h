@@ -32,10 +32,9 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Content container - no padding since root has it
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_no_wrap()  // Prevent flex wrapping
                 .with_debug_name("buttons_main"));

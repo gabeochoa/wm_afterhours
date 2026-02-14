@@ -75,14 +75,13 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     float card_x = (screen_width - card_width) / 2.0f;
     float card_y = (screen_height - card_height) / 2.0f;
 
-    auto card = div(context, mk(entity, 1),
+    auto card = vstack(context, mk(entity, 1),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
             .with_absolute_position(card_x, card_y)
             .with_background(Theme::Usage::Surface)
             .with_roundness(0.02f)
             .with_padding(Spacing::sm)
-            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("card"));
 
     // Title
@@ -105,12 +104,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("content"));
 
     // ========== LEFT COLUMN ==========
-    auto left_col = div(context, mk(content.ent(), 0),
+    auto left_col = vstack(context, mk(content.ent(), 0),
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::xs)
-            .with_flex_direction(FlexDirection::Column)
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("left_col"));
 
@@ -241,12 +239,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_font(UIComponent::DEFAULT_FONT, h720(CHECKBOX_FONT)));
 
     // ========== RIGHT COLUMN ==========
-    auto right_col = div(context, mk(content.ent(), 1),
+    auto right_col = vstack(context, mk(content.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
             .with_custom_background(afterhours::colors::darken(theme.surface, 0.95f))
             .with_padding(Spacing::xs)
-            .with_flex_direction(FlexDirection::Column)
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("right_col"));
 

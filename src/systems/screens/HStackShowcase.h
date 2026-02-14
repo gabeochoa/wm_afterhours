@@ -28,14 +28,13 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto panel_bg = afterhours::Color{20, 26, 40, 255};
 
     // Full-screen root
-    auto root = div(
+    auto root = vstack(
         context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_background(Theme::Usage::Background)
             .with_padding(Padding{.top = pixels(8), .left = pixels(16),
                                   .bottom = pixels(8), .right = pixels(16)})
-            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("root"));
 
     // Title
@@ -94,7 +93,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     for (int j = 0; j < 5; j++) {
-      auto col = div(
+      auto col = vstack(
           context, mk(row2.ent(), j),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.19f), percent(1.0f)})
@@ -102,7 +101,6 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_padding(Padding{.top = pixels(4), .left = pixels(4),
                                     .bottom = pixels(4), .right = pixels(4)})
               .with_margin(Margin{.left = pixels(2), .right = pixels(2)})
-              .with_flex_direction(FlexDirection::Column)
               .with_debug_name(fmt::format("jc_{}", justifies[j].label)));
 
       // Label at top
@@ -157,7 +155,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     float heights[] = {0.85f, 0.50f, 0.65f};
 
     for (int a = 0; a < 3; a++) {
-      auto col = div(
+      auto col = vstack(
           context, mk(row3.ent(), a),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.19f), percent(1.0f)})
@@ -165,7 +163,6 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_padding(Padding{.top = pixels(4), .left = pixels(4),
                                     .bottom = pixels(4), .right = pixels(4)})
               .with_margin(Margin{.left = pixels(2), .right = pixels(2)})
-              .with_flex_direction(FlexDirection::Column)
               .with_debug_name(fmt::format("ai_{}", aligns[a].label)));
 
       div(context, mk(col.ent(), 0),
@@ -198,14 +195,13 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // RIGHT: Real-world toolbar pattern
-    auto patterns = div(
+    auto patterns = vstack(
         context, mk(row3.ent(), 10),
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.39f), percent(1.0f)})
             .with_custom_background(panel_bg)
             .with_padding(Spacing::sm)
             .with_margin(Margin{.left = pixels(4)})
-            .with_flex_direction(FlexDirection::Column)
             .with_debug_name("patterns"));
 
     div(context, mk(patterns.ent(), 0),

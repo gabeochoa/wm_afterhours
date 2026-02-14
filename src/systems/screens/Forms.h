@@ -63,11 +63,10 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Content container with padding
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("forms_main"));
 
@@ -97,13 +96,12 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Left column - Sliders
     auto left_col =
-        div(context, mk(content.ent(), 0),
+        vstack(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.9f))
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("left_column"));
 
     // Sliders section header - font_size_md for section headers
@@ -182,13 +180,12 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);
 
     // Right column - Checkboxes - scrollable when content overflows
-    auto right_col = div(context, mk(content.ent(), 1),
+    auto right_col = vstack(context, mk(content.ent(), 1),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(0.40f), percent(1.0f)})
                              .with_custom_background(afterhours::colors::darken(
                                  theme.surface, 0.9f))
                              .with_padding(Spacing::sm)
-                             .with_flex_direction(FlexDirection::Column)
                              .with_overflow(Overflow::Scroll, Axis::Y));
 
     // Checkboxes section header - font_size_md for section headers

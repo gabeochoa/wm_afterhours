@@ -196,11 +196,10 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("root"));
 
     // Main container with padding to keep tabs inside bounds
-    auto main_container = div(context, mk(root.ent(), 0),
+    auto main_container = vstack(context, mk(root.ent(), 0),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
             .with_padding(Spacing::lg)
-            .with_flex_direction(FlexDirection::Column)
             .with_justify_content(JustifyContent::Center)
             .with_debug_name("main_container"));
 
@@ -221,7 +220,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Content panel with proper padding
-    auto content_panel = div(context, mk(main_container.ent(), 1),
+    auto content_panel = vstack(context, mk(main_container.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), expand()})
             .with_background(Theme::Usage::Surface)
@@ -230,7 +229,6 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
                 .left = pixels(24),
                 .bottom = pixels(16),
                 .right = pixels(24)})
-            .with_flex_direction(FlexDirection::Column)
             .with_margin(Margin{.top = pixels(4)})
             .with_debug_name("content_panel"));
 

@@ -43,10 +43,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Content container - use percent for proper sizing
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()  // Prevent children from wrapping
                 .with_debug_name("text_input_main"));
 
@@ -62,12 +61,11 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     // Form container - uses flex_grow to fill available space, leaving room for
     // status and instructions at the bottom of main_container
     auto form_container =
-        div(context, mk(main_container.ent(), 1),
+        vstack(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), expand()})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_align_items(AlignItems::FlexStart)  // Align children left
                 .with_self_align(SelfAlign::Center)  // Center the form container

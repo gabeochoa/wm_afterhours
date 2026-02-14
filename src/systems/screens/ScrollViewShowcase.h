@@ -28,7 +28,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Main container - centered on screen
     auto root =
-        div(context, mk(entity, 100),
+        vstack(context, mk(entity, 100),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
                 .with_self_align(SelfAlign::Center)
@@ -36,7 +36,6 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_border(theme.font_muted, 1.0f)
                 .with_roundness(0.04f)
                 .with_padding(Spacing::lg)
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::Center)
                 .with_debug_name("scroll_bg"));
 
@@ -80,10 +79,9 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                              .with_justify_content(JustifyContent::SpaceAround));
 
     // === VERTICAL SCROLL VIEW ===
-    auto vert_section = div(context, mk(container.ent(), 0),
+    auto vert_section = vstack(context, mk(container.ent(), 0),
                             ComponentConfig{}
                                 .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
-                                .with_flex_direction(FlexDirection::Column)
                                 .with_debug_name("vert_section"));
 
     div(context, mk(vert_section.ent(), 0),
@@ -94,7 +92,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Vertical scroll container
-    auto vert_scroll = div(
+    auto vert_scroll = vstack(
         context, mk(vert_section.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
@@ -102,7 +100,6 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
-            .with_flex_direction(FlexDirection::Column)
             .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("vert_scroll"));
@@ -139,10 +136,10 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // === HORIZONTAL SCROLL VIEW ===
-    auto horiz_section = div(context, mk(container.ent(), 1),
+    auto horiz_section = vstack(context, mk(container.ent(), 1),
                              ComponentConfig{}
                                  .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
-                                 .with_flex_direction(FlexDirection::Column));
+                                 );
 
     div(context, mk(horiz_section.ent(), 0),
         ComponentConfig{}

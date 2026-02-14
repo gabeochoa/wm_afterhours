@@ -89,7 +89,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
                      int column_index) {
     // Column container
     auto column =
-        div(context, mk(parent, id),
+        vstack(context, mk(parent, id),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                 .with_custom_background(
@@ -97,7 +97,6 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_roundness(0.04f)
                 .with_border(afterhours::Color{58, 60, 72, 255}, 1.0f)
                 .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("column_" + title));
 
     render_column_header(context, column.ent(), 0, title,
@@ -105,10 +104,9 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Cards area — draggable children enables drag-and-drop reordering
     auto cards_area =
-        div(context, mk(column.ent(), 1),
+        vstack(context, mk(column.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), children()})
-                .with_flex_direction(FlexDirection::Column)
                 .with_draggable_children()
                 .with_debug_name("cards_" + title));
 
@@ -193,23 +191,21 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Root container
     auto root =
-        div(context, mk(entity, 100),
+        vstack(context, mk(entity, 100),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.02f)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("drag_drop_root"));
 
     // Title bar
     auto title_bar =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::Center)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("title_bar"));

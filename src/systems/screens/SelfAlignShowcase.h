@@ -23,11 +23,10 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     int sh = Settings::get().get_screen_height();
 
     // Main centered container
-    auto main = div(context, mk(entity, 0),
+    auto main = vstack(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels((float)sw), pixels((float)sh)})
             .with_background(Theme::Usage::Background)
-            .with_flex_direction(FlexDirection::Column)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::Center)
             .with_debug_name("main"));
@@ -62,12 +61,11 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     float container_width = 600.0f;
     float container_height = 224.0f;
 
-    auto demo = div(context, mk(main.ent(), 2),
+    auto demo = vstack(context, mk(main.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(container_width), pixels(container_height)})
             .with_custom_background(afterhours::Color{45, 50, 55, 255})
             .with_border(afterhours::Color{100, 110, 120, 255}, 2.0f)
-            .with_flex_direction(FlexDirection::Column)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_debug_name("demo"));
 

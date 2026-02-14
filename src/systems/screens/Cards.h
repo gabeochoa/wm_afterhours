@@ -30,10 +30,9 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Content container - no padding since root has it
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::SpaceBetween)
                 .with_no_wrap()
                 .with_debug_name("cards_main"));
@@ -144,7 +143,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Nested card container - sized proportionally to fit within row
     auto nested_container =
-        div(context, mk(row2.ent(), 0),
+        vstack(context, mk(row2.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.33f), pixels(130)})
                 .with_background(Theme::Usage::Surface)
@@ -152,7 +151,6 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                     afterhours::colors::darken(context.theme.surface, 0.75f),
                     2.0f)
                 .with_padding(Spacing::sm)  // Reduced padding
-                .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
                 .with_roundness(0.08f)
                 .with_debug_name("nested_container"));
@@ -216,13 +214,12 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Info panel with different opacity
     auto info_panel =
-        div(context, mk(row2.ent(), 1),
+        vstack(context, mk(row2.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.33f), pixels(130)})
                 .with_custom_background(
                     afterhours::colors::opacity_pct(theme.primary, 0.3f))
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_margin(Spacing::xs)
                 .with_roundness(0.08f)  // Match nested_container roundness
                 .with_debug_name("info_panel"));

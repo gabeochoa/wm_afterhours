@@ -70,7 +70,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                   afterhours::Color accent, const Theme &theme,
                   int row_index) {
     // Row container
-    auto row = div(context, mk(parent, id),
+    auto row = vstack(context, mk(parent, id),
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(1.0f), children()})
                        .with_custom_background(afterhours::Color{38, 40, 50, 255})
@@ -78,7 +78,6 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                        .with_border(afterhours::Color{55, 57, 68, 255}, 1.0f)
                        .with_padding(Spacing::sm)
                        .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                       .with_flex_direction(FlexDirection::Column)
                        .with_debug_name("row_" + label));
 
     // Row header
@@ -170,23 +169,21 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Root
     auto root =
-        div(context, mk(entity, 100),
+        vstack(context, mk(entity, 100),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.92f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.02f)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("hdrag_root"));
 
     // Title
     auto title_bar =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::Center)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_debug_name("title_bar"));
@@ -209,10 +206,9 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Rows container
     auto rows =
-        div(context, mk(root.ent(), 1),
+        vstack(context, mk(root.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), children()})
-                .with_flex_direction(FlexDirection::Column)
                 .with_debug_name("rows_container"));
 
     render_row(context, rows.ent(), 0, "High Priority", high_items,

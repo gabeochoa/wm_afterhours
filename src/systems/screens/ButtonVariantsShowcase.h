@@ -21,13 +21,12 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Main container
     auto root =
-        div(context, mk(entity, 0),
+        vstack(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.95f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("bv_root"));
 
@@ -325,12 +324,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
       context.theme = demo;
 
       auto col =
-          div(context, mk(row5.ent(), 1 + t),
+          vstack(context, mk(row5.ent(), 1 + t),
               ComponentConfig{}
                   .with_size(ComponentSize{w1280(200), percent(0.95f)})
                   .with_custom_background(demo.background)
                   .with_padding(Spacing::xs)
-                  .with_flex_direction(FlexDirection::Column)
                   .with_align_items(AlignItems::Center)
                   .with_margin(Spacing::xs)
                   .with_debug_name(

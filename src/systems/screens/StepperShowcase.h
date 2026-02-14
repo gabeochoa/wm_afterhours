@@ -66,13 +66,12 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Root container
     auto root =
-        div(context, mk(entity),
+        vstack(context, mk(entity),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("root"));
 
@@ -99,12 +98,11 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // ========== LEFT COLUMN: Various steppers ==========
     auto left_col =
-        div(context, mk(columns.ent()),
+        vstack(context, mk(columns.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.06f)
                 .with_debug_name("left_col"));
 
@@ -149,12 +147,11 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // ========== RIGHT COLUMN: Stepper controlling a card ==========
     auto right_col =
-        div(context, mk(columns.ent()),
+        vstack(context, mk(columns.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::Center)
                 .with_roundness(0.06f)
                 .with_debug_name("right_col"));
@@ -181,12 +178,11 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto &card = cards[card_idx % cards.size()];
 
     auto card_container =
-        div(context, mk(right_col.ent()),
+        vstack(context, mk(right_col.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(300), pixels(220)})
                 .with_custom_background(card.color)
                 .with_padding(Spacing::lg)
-                .with_flex_direction(FlexDirection::Column)
                 .with_roundness(0.10f)
                 .with_debug_name("card"));
 

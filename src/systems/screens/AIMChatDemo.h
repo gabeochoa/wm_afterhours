@@ -88,11 +88,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Main window - sharp corners for Windows 98 aesthetic
     auto window =
-        div(context, mk(entity, 0),
+        vstack(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(W), pixels(H)})
                 .with_custom_background(AIMColors::window_bg())
-                .with_flex_direction(FlexDirection::Column)
                 .with_padding(Padding{.top = pixels(PAD), .left = pixels(PAD),
                                       .bottom = pixels(PAD), .right = pixels(PAD)})
                 .disable_rounded_corners()
@@ -186,10 +185,9 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     auto buddy_info =
-        div(context, mk(buddy_bar.ent(), 1),
+        vstack(context, mk(buddy_bar.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(210), pixels(40)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_padding(Padding{.left = pixels(10)}));
 
     div(context, mk(buddy_info.ent(), 0),
@@ -237,11 +235,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Chat history area - scrollable messages
     auto chat_area =
-        div(context, mk(chat_container.ent(), 0),
+        vstack(context, mk(chat_container.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{expand(), pixels(280)})
                 .with_custom_background(AIMColors::chat_bg())
-                .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::FlexStart)
                 .with_padding(Padding{.left = pixels(6), .top = pixels(4)})
                 .with_overflow(Overflow::Scroll, Axis::Y)

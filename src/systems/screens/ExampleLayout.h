@@ -19,13 +19,12 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     // Main container with column layout - use smaller percentage for screen
     // safe area
     auto main_container =
-        div(context, mk(entity, 0),
+        vstack(context, mk(entity, 0),
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.88f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_justify_content(JustifyContent::Center)
                 .with_roundness(0.08f)
                 .with_no_wrap()
@@ -110,13 +109,12 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
 
     // Column with stacked items - centered within container
     auto left_col =
-        div(context, mk(col_container.ent(), 0),
+        vstack(context, mk(col_container.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.60f), percent(1.0f)})
                 .with_custom_background(
                     afterhours::colors::darken(theme.surface, 0.95f))
                 .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Column)
                 .with_align_items(AlignItems::Center)
                 .with_no_wrap()
                 .with_debug_name("stacked_column"));

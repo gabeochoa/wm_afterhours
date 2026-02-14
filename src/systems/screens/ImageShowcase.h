@@ -57,10 +57,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Content container
     auto main_container =
-        div(context, mk(root.ent(), 0),
+        vstack(context, mk(root.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_debug_name("image_main"));
 
@@ -98,10 +97,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Helper lambda to create sprite with label for row1
     auto create_labeled_sprite = [&](int idx, const raylib::Texture2D& tex,
                                       const std::string& label_text) {
-      auto sprite_wrapper = div(context, mk(row1.ent(), idx),
+      auto sprite_wrapper = vstack(context, mk(row1.ent(), idx),
                                 ComponentConfig{}
                                     .with_size(ComponentSize{pixels(88), pixels(90)})
-                                    .with_flex_direction(FlexDirection::Column)
                                     .with_align_items(AlignItems::Center)
                                     .with_margin(Spacing::xs)
                                     .with_debug_name("sprite_wrapper_" + std::to_string(idx)));
@@ -150,10 +148,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto create_labeled_button = [&](int idx, const raylib::Texture2D& tex,
                                       const std::string& label_text,
                                       Theme::Usage bg_usage) {
-      auto btn_wrapper = div(context, mk(row2.ent(), idx),
+      auto btn_wrapper = vstack(context, mk(row2.ent(), idx),
                              ComponentConfig{}
                                  .with_size(ComponentSize{pixels(88), pixels(90)})
-                                 .with_flex_direction(FlexDirection::Column)
                                  .with_align_items(AlignItems::Center)
                                  .with_margin(Spacing::xs)
                                  .with_debug_name("btn_wrapper_" + std::to_string(idx)));
@@ -273,10 +270,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Helper lambda to create icon with label
     auto create_labeled_icon = [&](int idx, const raylib::Texture2D& tex,
                                     const std::string& label_text) {
-      auto icon_wrapper = div(context, mk(icon_row_container.ent(), idx),
+      auto icon_wrapper = vstack(context, mk(icon_row_container.ent(), idx),
                               ComponentConfig{}
                                   .with_size(ComponentSize{pixels(90), pixels(82)})
-                                  .with_flex_direction(FlexDirection::Column)
                                   .with_align_items(AlignItems::Center)
                                   .with_debug_name("icon_wrapper_" + std::to_string(idx)));
 

@@ -116,12 +116,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
 
     // LEFT - Theme Selection
     auto selector_panel =
-        div(context, mk(content.ent(), 0),
+        vstack(context, mk(content.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(200), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_margin(Margin{.right = DefaultSpacing::small()})
                 .with_soft_shadow(3.0f, 4.0f, 8.0f)
                 .with_debug_name("selector_panel"));
@@ -171,12 +170,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
 
     // RIGHT - Component Preview
     auto preview_panel =
-        div(context, mk(content.ent(), 1),
+        vstack(context, mk(content.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.78f), percent(1.0f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Column)
                 .with_no_wrap()
                 .with_soft_shadow(3.0f, 4.0f, 8.0f)
                 .with_debug_name("preview_panel"));
