@@ -109,10 +109,9 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Visual legend row showing color-to-position mapping
-    auto legend = div(context, mk(main.ent(), 3),
+    auto legend = hstack(context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(container_width), pixels(36)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center)
             .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = pixels(0),

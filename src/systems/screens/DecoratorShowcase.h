@@ -71,10 +71,9 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_separator_title"));
 
     // ========== CONTENT ROW ==========
-    auto content = div(context, mk(root.ent(), 2),
+    auto content = hstack(context, mk(root.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.94f), percent(0.82f)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceBetween)
             .with_align_items(AlignItems::FlexStart)
             .with_margin(Margin{.top = h720(10.0f)}));
@@ -170,13 +169,12 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 3: Small green status
     {
-      auto panel = div(context, mk(col1.ent(), 3),
+      auto panel = hstack(context, mk(col1.ent(), 3),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.88f), h720(55.0f)})
               .with_custom_background(C{12, 22, 16, 255})
               .with_border(C{30, 55, 35, 255}, 1.0f)
               .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_flex_direction(FlexDirection::Row)
               .with_align_items(AlignItems::Center)
               .with_justify_content(JustifyContent::Center)
               .with_padding(Spacing::sm)
@@ -319,13 +317,12 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 1: Simple quote with teal accent
     {
-      auto panel = div(context, mk(col3.ent(), 1),
+      auto panel = hstack(context, mk(col3.ent(), 1),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.88f), h720(90.0f)})
               .with_custom_background(panel_bg)
               .with_border(panel_border, 1.0f)
               .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_flex_direction(FlexDirection::Row)
               .with_align_items(AlignItems::Stretch)
               .with_debug_name("quote_panel_1"))
           .decorate(with_quote(context,
@@ -344,13 +341,12 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 2: Amber quote with attribution
     {
-      auto panel = div(context, mk(col3.ent(), 2),
+      auto panel = hstack(context, mk(col3.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.88f), h720(100.0f)})
               .with_custom_background(C{22, 18, 12, 255})
               .with_border(C{50, 40, 25, 255}, 1.0f)
               .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_flex_direction(FlexDirection::Row)
               .with_align_items(AlignItems::Stretch)
               .with_margin(Margin{.top = h720(12.0f)})
               .with_debug_name("quote_panel_2"))
@@ -387,13 +383,12 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 3: Green quote + brackets chained
     {
-      auto panel = div(context, mk(col3.ent(), 3),
+      auto panel = hstack(context, mk(col3.ent(), 3),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.88f), h720(100.0f)})
               .with_custom_background(C{12, 20, 14, 255})
               .with_border(C{30, 50, 32, 255}, 1.0f)
               .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_flex_direction(FlexDirection::Row)
               .with_align_items(AlignItems::Stretch)
               .with_margin(Margin{.top = h720(12.0f)})
               .with_debug_name("quote_panel_3"))

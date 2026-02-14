@@ -32,10 +32,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
                            EntityParent ep_pair, const char *label_text,
                            float &value, const char *debug_prefix) {
     // Row container
-    auto row = div(context, ep_pair,
+    auto row = hstack(context, ep_pair,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                       .with_flex_direction(FlexDirection::Row)
                        .with_align_items(AlignItems::Center)
                        .with_margin(Margin{.bottom = pixels(6)})
                        .with_debug_name(

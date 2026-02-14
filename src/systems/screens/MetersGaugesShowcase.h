@@ -94,11 +94,10 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, h720(16.0f))
             .with_skip_tabbing(true));
 
-    auto meters_row = div(context, mk(row1.ent(), 1),
+    auto meters_row = hstack(context, mk(row1.ent(), 1),
                           ComponentConfig{}
                               .with_size(ComponentSize{percent(1.0f), percent(0.73f)})
                               .with_background(Theme::Usage::Surface)
-                              .with_flex_direction(FlexDirection::Row)
                               .with_align_items(AlignItems::Center));
 
     struct MeterInfo {
@@ -114,11 +113,10 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     for (int m = 0; m < 3; m++) {
-      auto meter = div(context, mk(meters_row.ent(), m),
+      auto meter = hstack(context, mk(meters_row.ent(), m),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(0.31f), percent(0.9f)})
                            .with_background(Theme::Usage::Surface)
-                           .with_flex_direction(FlexDirection::Row)
                            .with_align_items(AlignItems::Center)
                            .with_debug_name(meters[m].name));
 
@@ -172,11 +170,10 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, h720(16.0f))
             .with_skip_tabbing(true));
 
-    auto stack_row = div(context, mk(row2.ent(), 1),
+    auto stack_row = hstack(context, mk(row2.ent(), 1),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(0.9f), percent(0.6f)})
                              .with_background(Theme::Usage::Surface)
-                             .with_flex_direction(FlexDirection::Row)
                              .with_align_items(AlignItems::Center));
 
     progress_bar(context, mk(stack_row.ent(), 0), control_value,
@@ -225,11 +222,10 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, h720(16.0f))
             .with_skip_tabbing(true));
 
-    auto anim_row = div(context, mk(row3.ent(), 1),
+    auto anim_row = hstack(context, mk(row3.ent(), 1),
                         ComponentConfig{}
                             .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
                             .with_background(Theme::Usage::Surface)
-                            .with_flex_direction(FlexDirection::Row)
                             .with_align_items(AlignItems::Center));
 
     progress_bar(context, mk(anim_row.ent(), 0), anim_progress,
@@ -273,11 +269,10 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     auto circles_row =
-        div(context, mk(row4.ent(), 1),
+        hstack(context, mk(row4.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.82f)})
                 .with_background(Theme::Usage::Surface)
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center));
 
     struct GaugeInfo {

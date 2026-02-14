@@ -121,14 +121,13 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Empty state placeholder - uses same height as a card
     if (items.empty()) {
-      auto empty_box = div(context, mk(cards_area.ent(), 999),
+      auto empty_box = hstack(context, mk(cards_area.ent(), 999),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(60)})
               .with_custom_background(
                   afterhours::Color{45, 47, 55, 255})
               .with_roundness(0.06f)
               .with_border(afterhours::Color{70, 72, 80, 100}, 1.0f)
-              .with_flex_direction(FlexDirection::Row)
               .with_align_items(AlignItems::Center)
               .with_justify_content(JustifyContent::Center)
               .with_skip_tabbing(true));
@@ -234,10 +233,9 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Columns container
     auto columns =
-        div(context, mk(root.ent(), 1),
+        hstack(context, mk(root.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceBetween)
                 .with_no_wrap()
                 .with_debug_name("columns_container"));

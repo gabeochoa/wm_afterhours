@@ -58,12 +58,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     auto btn_font = h720(20.0f);
 
     // --- Row 1: Filled variant ---
-    auto row1 = div(context, mk(root.ent(), 1),
+    auto row1 = hstack(context, mk(root.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("bv_row_filled"));
 
@@ -121,12 +120,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 2: Outline variant ---
-    auto row2 = div(context, mk(root.ent(), 2),
+    auto row2 = hstack(context, mk(root.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("bv_row_outline"));
 
@@ -180,12 +178,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 3: Ghost variant ---
-    auto row3 = div(context, mk(root.ent(), 3),
+    auto row3 = hstack(context, mk(root.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("bv_row_ghost"));
 
@@ -239,12 +236,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 4: Size variants ---
-    auto row4 = div(context, mk(root.ent(), 4),
+    auto row4 = hstack(context, mk(root.ent(), 4),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("bv_row_sizes"));
 
@@ -301,12 +297,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 5: Theme comparison ---
-    auto row5 = div(context, mk(root.ent(), 5),
+    auto row5 = hstack(context, mk(root.ent(), 5),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), percent(0.24f)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::FlexStart)
                         .with_debug_name("bv_row_themes"));
 

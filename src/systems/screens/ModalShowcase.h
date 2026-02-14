@@ -112,10 +112,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
       auto row =
-          div(context, mk(section.ent(), 1),
+          hstack(context, mk(section.ent(), 1),
               ComponentConfig{}
                   .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                  .with_flex_direction(FlexDirection::Row)
                   .with_align_items(AlignItems::Center)
                   .with_justify_content(JustifyContent::FlexStart)
                   .with_debug_name(row_name));
@@ -272,10 +271,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     auto row5 =
-        div(context, mk(section5.ent(), 1),
+        hstack(context, mk(section5.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_background(Theme::Usage::Background)
@@ -330,10 +328,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_padding(Spacing::md)
               .with_render_layer(MODAL_CONTENT_LAYER));
 
-      auto btn_row = div(context, mk(m.ent(), 1),
+      auto btn_row = hstack(context, mk(m.ent(), 1),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                             .with_flex_direction(FlexDirection::Row)
                              .with_justify_content(JustifyContent::Center)
                              .with_align_items(AlignItems::Center)
                              .with_flex_wrap(FlexWrap::NoWrap)
@@ -362,10 +359,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_render_layer(MODAL_CONTENT_LAYER));
 
       // Checkboxes
-      auto checkbox_row = div(context, mk(m.ent(), 1),
+      auto checkbox_row = hstack(context, mk(m.ent(), 1),
                               ComponentConfig{}
                                   .with_size(ComponentSize{percent(1.0f), children()})
-                                  .with_flex_direction(FlexDirection::Row)
                                   .with_align_items(AlignItems::Center)
                                   .with_render_layer(MODAL_CONTENT_LAYER));
 
@@ -392,10 +388,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_render_layer(MODAL_CONTENT_LAYER));
 
       // Buttons row
-      auto btn_row = div(context, mk(m.ent(), 3),
+      auto btn_row = hstack(context, mk(m.ent(), 3),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                             .with_flex_direction(FlexDirection::Row)
                              .with_justify_content(JustifyContent::FlexEnd)
                              .with_align_items(AlignItems::Center)
                              .with_flex_wrap(FlexWrap::NoWrap)
@@ -472,10 +467,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(1.0f), pixels(40)})
                    .with_render_layer(MODAL_CONTENT_LAYER));
 
-      auto btn_row = div(context, mk(settings.ent(), 3),
+      auto btn_row = hstack(context, mk(settings.ent(), 3),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                             .with_flex_direction(FlexDirection::Row)
                              .with_justify_content(JustifyContent::SpaceBetween)
                              .with_align_items(AlignItems::Center)
                              .with_flex_wrap(FlexWrap::NoWrap)

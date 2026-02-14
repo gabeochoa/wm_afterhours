@@ -76,12 +76,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("main_bg"));
 
     // ========== HEADER ==========
-    auto header = div(context, mk(background.ent(), 0),
+    auto header = hstack(context, mk(background.ent(), 0),
                       ComponentConfig{}
                           .with_size(ComponentSize{percent(1.0f), pixels(52)})
                           .with_background(Theme::Usage::Surface)
                           .with_padding(Padding{.left = pixels(8), .right = pixels(8)})
-                          .with_flex_direction(FlexDirection::Row)
                           .with_no_wrap()
                           .with_align_items(AlignItems::Center)
                           .with_soft_shadow(3.0f, 4.0f, 10.0f)
@@ -108,11 +107,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_hard_shadow(3.0f, 3.0f));
 
     // ========== MAIN CONTENT ==========
-    auto content = div(context, mk(background.ent(), 1),
+    auto content = hstack(context, mk(background.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
                            .with_background(Theme::Usage::Background)
-                           .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_debug_name("content"));
 
@@ -193,11 +191,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::xs));
 
     // Buttons row
-    auto btn_row = div(context, mk(preview_panel.ent(), 1),
+    auto btn_row = hstack(context, mk(preview_panel.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(0.95f), pixels(45)})
                            .with_background(Theme::Usage::Surface)
-                           .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_margin(Spacing::xs)
                            .with_debug_name("btn_row"));
@@ -268,11 +265,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Cards with shadows demo
     auto cards_row =
-        div(context, mk(preview_panel.ent(), 5),
+        hstack(context, mk(preview_panel.ent(), 5),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(55)})
                 .with_background(Theme::Usage::Surface)
-                .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_margin(Margin{.top = DefaultSpacing::small()})
                 .with_debug_name("cards_row"));
@@ -306,11 +302,10 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Text display row for theme colors
     auto text_row =
-        div(context, mk(preview_panel.ent(), 6),
+        hstack(context, mk(preview_panel.ent(), 6),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(50)})
                 .with_background(Theme::Usage::Surface)
-                .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_margin(Margin{.top = DefaultSpacing::small()})
                 .with_debug_name("text_row"));

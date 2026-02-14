@@ -59,10 +59,9 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Invert scroll toggle row with label
-    auto toggle_row = div(context, mk(root.ent(), 2),
+    auto toggle_row = hstack(context, mk(root.ent(), 2),
              ComponentConfig{}
                  .with_size(ComponentSize{percent(0.95f), pixels(36)})
-                 .with_flex_direction(FlexDirection::Row)
                  .with_align_items(AlignItems::Center)
                  .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
@@ -75,10 +74,9 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     // Container for both scroll views side by side
-    auto container = div(context, mk(root.ent(), 3),
+    auto container = hstack(context, mk(root.ent(), 3),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
-                             .with_flex_direction(FlexDirection::Row)
                              .with_justify_content(JustifyContent::SpaceAround));
 
     // === VERTICAL SCROLL VIEW ===
@@ -154,7 +152,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
 
     // Horizontal scroll container
-    auto horiz_scroll = div(
+    auto horiz_scroll = hstack(
         context, mk(horiz_section.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
@@ -162,7 +160,6 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_border(theme.font_muted, 1.0f)
             .with_rounded_corners(RoundedCorners().all_round())
             .with_roundness(0.05f)
-            .with_flex_direction(FlexDirection::Row)
             .with_no_wrap()
             .with_overflow(Overflow::Scroll, Axis::X)
             .with_padding(Spacing::xs)

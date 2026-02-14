@@ -101,11 +101,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Title bar
     auto title_bar =
-        div(context, mk(window.ent(), 0),
+        hstack(context, mk(window.ent(), 0),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(28)})
                 .with_custom_background(AIMColors::title_bar())
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceBetween)
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("title_bar"));
@@ -124,10 +123,9 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     // Window controls container - groups buttons on the right
     // Height matches title bar (28px), width accounts for 3 buttons (24px each + 2px margins)
     auto controls_container =
-        div(context, mk(title_bar.ent(), 1),
+        hstack(context, mk(title_bar.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(82), pixels(28)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexEnd)
                 .with_margin(Margin{.right = pixels(2)})
@@ -149,11 +147,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Menu bar
     auto menu_bar =
-        div(context, mk(window.ent(), 1),
+        hstack(context, mk(window.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_custom_background(AIMColors::button_face())
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("menu_bar"));
 
@@ -171,11 +168,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Buddy info bar
     auto buddy_bar =
-        div(context, mk(window.ent(), 2),
+        hstack(context, mk(window.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(50)})
                 .with_custom_background(AIMColors::window_bg())
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_padding(Padding{.left = pixels(PAD)})
                 .with_debug_name("buddy_bar"));
@@ -207,10 +203,9 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Status row with indicator dot and text
     auto status_row =
-        div(context, mk(buddy_info.ent(), 1),
+        hstack(context, mk(buddy_info.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(120), pixels(18)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center));
 
     // Green status indicator dot
@@ -235,10 +230,10 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Chat history container - holds scroll view and scroll indicator side by side
     auto chat_container =
-        div(context, mk(window.ent(), 3),
+        hstack(context, mk(window.ent(), 3),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(280)})
-                .with_flex_direction(FlexDirection::Row));
+                );
 
     // Chat history area - scrollable messages
     auto chat_area =
@@ -377,10 +372,9 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Button bar - padding to keep buttons from window edge
     auto button_bar =
-        div(context, mk(window.ent(), 7),
+        hstack(context, mk(window.ent(), 7),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(48)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::FlexEnd)
                 .with_align_items(AlignItems::Center)
                 .with_margin(Margin{.top = pixels(6)})

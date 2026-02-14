@@ -49,12 +49,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f)));
 
     // Row 1: Basic cards - all simple like theme swatches
-    auto row1 = div(context, mk(main_container.ent(), 1),
+    auto row1 = hstack(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(150)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap()
                         .with_debug_name("row1_cards"));
@@ -123,12 +122,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Row 2: Nested cards
-    auto row2 = div(context, mk(main_container.ent(), 2),
+    auto row2 = hstack(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(165)})
                         .with_background(Theme::Usage::None)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap()
                         .with_debug_name("row2_nested"));
@@ -172,11 +170,10 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Inner cards row - prevent wrapping, ensure enough height for cards
     auto inner_row =
-        div(context, mk(nested_container.ent(), 1),
+        hstack(context, mk(nested_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(75)})
                 .with_background(Theme::Usage::None)
-                .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("inner_row"));
@@ -252,12 +249,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Row 3: Theme comparison
-    auto row3 = div(context, mk(main_container.ent(), 3),
+    auto row3 = hstack(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(0.95f), pixels(70)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("row3_themes"));
 

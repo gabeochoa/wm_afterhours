@@ -100,13 +100,12 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                         .with_debug_name("main"));
 
     // ===== HEADER ROW =====
-    auto header = div(context, mk(main.ent(), 0),
+    auto header = hstack(context, mk(main.ent(), 0),
                       ComponentConfig{}
                           .with_size(ComponentSize{percent(1.0f), pixels(70)})
                           .with_background(Theme::Usage::Surface)
                           .with_padding(Padding{.left = pixels(16), .right = pixels(16),
                                                 .top = pixels(8), .bottom = pixels(8)})
-                          .with_flex_direction(FlexDirection::Row)
                           .with_no_wrap()
                           .with_justify_content(JustifyContent::SpaceBetween)
                           .with_align_items(AlignItems::Center)
@@ -133,10 +132,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // Height increased to accommodate full language names when enabled
     // Using children() instead of fixed pixels to avoid overflow in header
     auto button_row =
-        div(context, mk(header.ent(), 1),
+        hstack(context, mk(header.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{children(), pixels(54)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_no_wrap()
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("button_row"));
@@ -191,10 +189,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ===== CONTENT ROW ===== - fixed height to enable child percent sizing
     // Main is ~554px. Header=70, Footer=55, so content = 554-70-55 = 429
-    auto content = div(context, mk(main.ent(), 1),
+    auto content = hstack(context, mk(main.ent(), 1),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), h720(425)})
-                           .with_flex_direction(FlexDirection::Row)
                            .with_no_wrap()
                            .with_debug_name("content"));
 

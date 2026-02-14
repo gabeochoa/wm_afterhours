@@ -90,10 +90,9 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Two-column layout
     auto columns =
-        div(context, mk(root.ent()),
+        hstack(context, mk(root.ent()),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceBetween)
                 .with_no_wrap()
                 .with_debug_name("columns"));
@@ -120,10 +119,9 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     // Each stepper with a label
     auto labeled_stepper = [&](int index, const char *label, auto &options,
                                size_t &idx) {
-      auto row = div(context, mk(left_col.ent(), index),
+      auto row = hstack(context, mk(left_col.ent(), index),
                      ComponentConfig{}
                          .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                         .with_flex_direction(FlexDirection::Row)
                          .with_align_items(AlignItems::Center)
                          .with_justify_content(JustifyContent::SpaceBetween)
                          .with_margin(Margin{.bottom = pixels(8)}));

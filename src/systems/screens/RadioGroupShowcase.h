@@ -168,12 +168,11 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Content area - three columns with clearer group separation
     auto content =
-        div(context, mk(main_container.ent(), 1),
+        hstack(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_debug_name("content"));
 

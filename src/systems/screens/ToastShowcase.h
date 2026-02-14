@@ -80,10 +80,9 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(8)}));
 
     auto button_row =
-        div(context, mk(section1.ent(), 1),
+        hstack(context, mk(section1.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("button_row"));
@@ -171,10 +170,9 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(8)}));
 
     auto second_row =
-        div(context, mk(section2.ent(), 1),
+        hstack(context, mk(section2.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("second_row"));
@@ -271,10 +269,9 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(8)}));
 
     auto third_row =
-        div(context, mk(section3.ent(), 1),
+        hstack(context, mk(section3.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::FlexStart)
                 .with_debug_name("third_row"));

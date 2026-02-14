@@ -55,12 +55,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)}));
 
     // Row 1: Basic button states
-    auto row1 = div(context, mk(main_container.ent(), 1),
+    auto row1 = hstack(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(80)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("row1_states"));
 
@@ -135,12 +134,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_roundness(0.08f));
 
     // Row 2: Different sizes - AlignItems::Center vertically centers buttons
-    auto row2 = div(context, mk(main_container.ent(), 2),
+    auto row2 = hstack(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(90)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),
@@ -200,12 +198,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Row 3: Button group - need more height to accommodate the group
-    auto row3 = div(context, mk(main_container.ent(), 3),
+    auto row3 = hstack(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(100)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),
@@ -248,12 +245,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Row 4: Custom styled buttons
-    auto row4 = div(context, mk(main_container.ent(), 4),
+    auto row4 = hstack(context, mk(main_container.ent(), 4),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(80)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::sm)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::small(),
                                             .bottom = pixels(0),

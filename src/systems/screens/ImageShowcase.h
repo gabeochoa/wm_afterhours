@@ -78,12 +78,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     raylib::Rectangle full_src{0, 0, 128, 128};
 
     // Row 1: sprite() demo
-    auto row1 = div(context, mk(main_container.ent(), 1),
+    auto row1 = hstack(context, mk(main_container.ent(), 1),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(110)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_debug_name("row1_sprites"));
 
@@ -129,12 +128,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     create_labeled_sprite(5, play_tex, "Play");
 
     // Row 2: image_button() demo
-    auto row2 = div(context, mk(main_container.ent(), 2),
+    auto row2 = hstack(context, mk(main_container.ent(), 2),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(110)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::tiny()})
                         .with_debug_name("row2_buttons"));
@@ -195,12 +193,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Row 3: Image with background demo
-    auto row3 = div(context, mk(main_container.ent(), 3),
+    auto row3 = hstack(context, mk(main_container.ent(), 3),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(80)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::tiny()})
                         .with_debug_name("row3_image"));
@@ -215,14 +212,13 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     auto img_container =
-        div(context, mk(row3.ent(), 1),
+        hstack(context, mk(row3.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(200), pixels(56)})
                 .with_background(Theme::Usage::Secondary)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(0.1f)
                 .with_padding(Spacing::xs)
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_margin(Spacing::xs)
                 .with_debug_name("image_container"));
@@ -242,12 +238,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Row 4: Icon row demo with labels
-    auto row4 = div(context, mk(main_container.ent(), 4),
+    auto row4 = hstack(context, mk(main_container.ent(), 4),
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.0f), pixels(115)})
                         .with_background(Theme::Usage::Surface)
                         .with_padding(Spacing::xs)
-                        .with_flex_direction(FlexDirection::Row)
                         .with_align_items(AlignItems::Center)
                         .with_margin(Margin{.top = DefaultSpacing::tiny()})
                         .with_debug_name("row4_iconrow"));
@@ -262,10 +257,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
 
     auto icon_row_container =
-        div(context, mk(row4.ent(), 1),
+        hstack(context, mk(row4.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(600), pixels(100)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_align_items(AlignItems::Center)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_custom_background(

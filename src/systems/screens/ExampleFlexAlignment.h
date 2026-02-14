@@ -34,7 +34,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name(label + "_outer"));
 
     // Title label
-    div(context, mk(outer.ent(), 0),
+    hstack(context, mk(outer.ent(), 0),
         ComponentConfig{}
             .with_label(label)
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
@@ -42,7 +42,6 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
-            .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
 
     // Container with visible background for demo items
@@ -59,14 +58,13 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 
     // 3 boxes - sized to fit within container
     for (int i = 0; i < 3; i++) {
-      div(context, mk(container.ent(), i),
+      hstack(context, mk(container.ent(), i),
           ComponentConfig{}
               .with_label(std::to_string(i + 1))
               .with_size(ComponentSize{percent(0.85f), percent(0.22f)})
               .with_background(Theme::Usage::Primary)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_flex_direction(FlexDirection::Row)
               .with_debug_name(label + "_" + std::to_string(i)));
     }
   }
@@ -89,7 +87,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name(label + "_outer"));
 
     // Title
-    div(context, mk(container.ent(), 0),
+    hstack(context, mk(container.ent(), 0),
         ComponentConfig{}
             .with_label(label)
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
@@ -97,18 +95,16 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
-            .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
 
     // Inner row container with justify
-    auto inner = div(
+    auto inner = hstack(
         context, mk(container.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
             .with_custom_background(afterhours::Color{35, 45, 65, 255})
             .with_padding(Spacing::xs)
             .with_margin(Margin{.top = pixels(4)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(jc)
             .with_debug_name(label + "_inner"));
 
@@ -141,7 +137,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name(label + "_outer"));
 
     // Title label at top
-    div(context, mk(outer.ent(), 0),
+    hstack(context, mk(outer.ent(), 0),
         ComponentConfig{}
             .with_label(label)
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
@@ -149,11 +145,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_skip_tabbing(true)
-            .with_flex_direction(FlexDirection::Row)
             .with_debug_name(label + "_title"));
 
     // Container with visible background and align items
-    auto container = div(
+    auto container = hstack(
         context, mk(outer.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
@@ -161,7 +156,6 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Padding{.top = pixels(6), .left = pixels(8),
                                   .bottom = pixels(6), .right = pixels(8)})
             .with_margin(Margin{.top = pixels(4)})
-            .with_flex_direction(FlexDirection::Row)
             .with_align_items(ai)
             .with_debug_name(label + "_container"));
 
@@ -184,14 +178,13 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
   void render_self_align_demo(UIContext<InputAction> &context,
                               afterhours::Entity &parent, int id) {
     // Container with AlignItems::Center
-    auto container = div(
+    auto container = hstack(
         context, mk(parent, id),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
             .with_custom_background(afterhours::Color{50, 60, 80, 255})
             .with_padding(Padding{.top = pixels(6), .left = pixels(10),
                                   .bottom = pixels(6), .right = pixels(10)})
-            .with_flex_direction(FlexDirection::Row)
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_debug_name("self_align_container"));
@@ -259,22 +252,22 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("root"));
 
     // Title row
-    div(context, mk(root.ent(), 0),
+    hstack(context, mk(root.ent(), 0),
         ComponentConfig{}
             .with_label("Flexbox Alignment Demo")
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_flex_direction(FlexDirection::Row));
+            );
 
     // Tab selector for focusing on categories
-    auto tab_row = div(
+    auto tab_row = hstack(
         context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_margin(Margin{.top = pixels(6), .bottom = pixels(6)})
-            .with_flex_direction(FlexDirection::Row));
+            );
 
     // Use tab_container for category selection
     if (auto result = tab_container(context, mk(tab_row.ent(), 0), category_labels, active_category,
@@ -288,11 +281,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     // Show All categories (original 2-column layout) or individual category
     if (active_category == 0) {
       // Main content - 2 column layout (original view)
-      auto main_row = div(
+      auto main_row = hstack(
           context, mk(root.ent(), 2),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), percent(0.82f)})
-              .with_flex_direction(FlexDirection::Row)
               .with_debug_name("main_row"));
 
       // LEFT COLUMN - Vertical demos
@@ -308,23 +300,22 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("left_col"));
 
       // Section 1: Vertical justify - user-friendly description
-      div(context, mk(left_col.ent(), 0),
+      hstack(context, mk(left_col.ent(), 0),
           ComponentConfig{}
               .with_label("Vertical Spacing (JustifyContent, Column)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-              .with_flex_direction(FlexDirection::Row));
+              );
 
-      auto jv_row = div(
+      auto jv_row = hstack(
           context, mk(left_col.ent(), 1),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), percent(0.45f)})
               .with_custom_background(afterhours::Color{38, 46, 65, 255})
               .with_padding(Spacing::xs)
               .with_margin(Margin{.bottom = pixels(8)})
-              .with_flex_direction(FlexDirection::Row)
               .with_debug_name("jv_row"));
 
       render_justify_vertical(context, jv_row.ent(), "Start", JustifyContent::FlexStart, 0);
@@ -334,22 +325,22 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       render_justify_vertical(context, jv_row.ent(), "Around", JustifyContent::SpaceAround, 4);
 
       // Section 2: AlignItems - user-friendly description
-      div(context, mk(left_col.ent(), 2),
+      hstack(context, mk(left_col.ent(), 2),
           ComponentConfig{}
               .with_label("Cross-Axis Align (AlignItems)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-              .with_flex_direction(FlexDirection::Row));
+              );
 
-      auto ai_row = div(
+      auto ai_row = hstack(
           context, mk(left_col.ent(), 3),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), percent(0.40f)})
               .with_custom_background(afterhours::Color{38, 46, 65, 255})
               .with_padding(Spacing::xs)
-              .with_flex_direction(FlexDirection::Row));
+              );
 
       render_align_demo(context, ai_row.ent(), "Start", AlignItems::FlexStart, 0);
       render_align_demo(context, ai_row.ent(), "Center", AlignItems::Center, 1);
@@ -368,23 +359,22 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("right_col"));
 
       // Section 3: Horizontal justify - user-friendly description
-      div(context, mk(right_col.ent(), 0),
+      hstack(context, mk(right_col.ent(), 0),
           ComponentConfig{}
               .with_label("Horizontal Spacing (JustifyContent, Row)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-              .with_flex_direction(FlexDirection::Row));
+              );
 
-      auto jh_row = div(
+      auto jh_row = hstack(
           context, mk(right_col.ent(), 1),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), percent(0.35f)})
               .with_custom_background(afterhours::Color{38, 46, 65, 255})
               .with_padding(Spacing::xs)
               .with_margin(Margin{.bottom = pixels(8)})
-              .with_flex_direction(FlexDirection::Row)
               .with_debug_name("jh_row"));
 
       render_justify_horizontal(context, jh_row.ent(), "Start", JustifyContent::FlexStart, 0);
@@ -394,22 +384,22 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       render_justify_horizontal(context, jh_row.ent(), "Around", JustifyContent::SpaceAround, 4);
 
       // Section 4: SelfAlign - user-friendly description
-      div(context, mk(right_col.ent(), 2),
+      hstack(context, mk(right_col.ent(), 2),
           ComponentConfig{}
               .with_label("Individual Override (SelfAlign)")
               .with_size(ComponentSize{percent(1.0f), pixels(28)})
               .with_custom_background(afterhours::Color{45, 55, 75, 255})
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-              .with_flex_direction(FlexDirection::Row));
+              );
 
-      auto sa_row = div(
+      auto sa_row = hstack(
           context, mk(right_col.ent(), 3),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
               .with_custom_background(afterhours::Color{38, 46, 65, 255})
               .with_padding(Spacing::xs)
-              .with_flex_direction(FlexDirection::Row));
+              );
 
       render_self_align_demo(context, sa_row.ent(), 0);
     } else {
@@ -426,23 +416,21 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 
       if (active_category == 1) {
         // Vertical Spacing (JustifyContent: Column)
-        div(context, mk(content_panel.ent(), 0),
+        hstack(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
                 .with_label("Vertical Spacing (JustifyContent, Column): Items distributed top-to-bottom")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
                 .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-                .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)}));
 
-        auto jv_row = div(
+        auto jv_row = hstack(
             context, mk(content_panel.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
                 .with_custom_background(afterhours::Color{38, 46, 65, 255})
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_debug_name("jv_row_focused"));
 
         render_justify_vertical(context, jv_row.ent(), "Start", JustifyContent::FlexStart, 0);
@@ -453,23 +441,21 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 
       } else if (active_category == 2) {
         // Horizontal Spacing (JustifyContent: Row)
-        div(context, mk(content_panel.ent(), 0),
+        hstack(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
                 .with_label("Horizontal Spacing (JustifyContent, Row): Items distributed left-to-right")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
                 .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-                .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)}));
 
-        auto jh_row = div(
+        auto jh_row = hstack(
             context, mk(content_panel.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
                 .with_custom_background(afterhours::Color{38, 46, 65, 255})
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_debug_name("jh_row_focused"));
 
         render_justify_horizontal(context, jh_row.ent(), "Start", JustifyContent::FlexStart, 0);
@@ -480,23 +466,21 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 
       } else if (active_category == 3) {
         // Cross-Axis Align (AlignItems)
-        div(context, mk(content_panel.ent(), 0),
+        hstack(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
                 .with_label("Cross-Axis Align (AlignItems): Position items perpendicular to main axis")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
                 .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-                .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)}));
 
-        auto ai_row = div(
+        auto ai_row = hstack(
             context, mk(content_panel.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
                 .with_custom_background(afterhours::Color{38, 46, 65, 255})
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_debug_name("ai_row_focused"));
 
         render_align_demo(context, ai_row.ent(), "Start", AlignItems::FlexStart, 0);
@@ -505,23 +489,21 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
 
       } else if (active_category == 4) {
         // Individual Override (SelfAlign)
-        div(context, mk(content_panel.ent(), 0),
+        hstack(context, mk(content_panel.ent(), 0),
             ComponentConfig{}
                 .with_label("Individual Override (SelfAlign): Each item overrides parent alignment")
                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
                 .with_custom_background(afterhours::Color{45, 55, 75, 255})
                 .with_auto_text_color(true)
                 .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-                .with_flex_direction(FlexDirection::Row)
                 .with_margin(Margin{.bottom = pixels(12)}));
 
-        auto sa_row = div(
+        auto sa_row = hstack(
             context, mk(content_panel.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
                 .with_custom_background(afterhours::Color{38, 46, 65, 255})
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_debug_name("sa_row_focused"));
 
         render_self_align_demo(context, sa_row.ent(), 0);

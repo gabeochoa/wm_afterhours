@@ -59,10 +59,9 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     constexpr float frame_row_top_margin = 16.0f;
 
     // Container for the three frames - compact layout
-    auto row = div(context, mk(main.ent(), 2),
+    auto row = hstack(context, mk(main.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{percent(frame_row_width_pct), percent(frame_row_height_pct)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::FlexStart)
             .with_margin(Margin{.top = h720(frame_row_top_margin)})

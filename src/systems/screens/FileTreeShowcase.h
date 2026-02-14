@@ -149,11 +149,10 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // Toolbar
-    auto toolbar = div(
+    auto toolbar = hstack(
         context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(34)})
-            .with_flex_direction(FlexDirection::Row)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_padding(Padding::horizontal(pixels(4)))

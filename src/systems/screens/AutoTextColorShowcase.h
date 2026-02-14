@@ -46,10 +46,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                            .with_debug_name("root"));
 
     // Title section - row with title text and badge
-    auto title_row = div(context, mk(content.ent()),
+    auto title_row = hstack(context, mk(content.ent()),
                          ComponentConfig{}
                              .with_size({percent(1.0f), pixels(70.0f)})
-                             .with_flex_direction(FlexDirection::Row)
                              .with_justify_content(JustifyContent::Center)
                              .with_align_items(AlignItems::Center)
                              .with_no_wrap()
@@ -99,10 +98,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
     // Row of buttons with various backgrounds - auto contrast just works
-    auto row1 = div(context, mk(section1.ent()),
+    auto row1 = hstack(context, mk(section1.ent()),
                     ComponentConfig{}
                         .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap());
@@ -128,10 +126,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Row of light backgrounds
-    auto row2 = div(context, mk(section1.ent()),
+    auto row2 = hstack(context, mk(section1.ent()),
                     ComponentConfig{}
                         .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap());
@@ -177,10 +174,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size({percent(1.0f), pixels(40.0f)})
             .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
-    auto row3 = div(context, mk(section2.ent()),
+    auto row3 = hstack(context, mk(section2.ent()),
                     ComponentConfig{}
                         .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap());
@@ -229,10 +225,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size({percent(1.0f), pixels(40.0f)})
             .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
-    auto row4 = div(context, mk(section3.ent()),
+    auto row4 = hstack(context, mk(section3.ent()),
                     ComponentConfig{}
                         .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap());
@@ -290,10 +285,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size({percent(1.0f), pixels(40.0f)})
             .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
 
-    auto row5 = div(context, mk(section4.ent()),
+    auto row5 = hstack(context, mk(section4.ent()),
                     ComponentConfig{}
                         .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_flex_direction(FlexDirection::Row)
                         .with_justify_content(JustifyContent::SpaceAround)
                         .with_align_items(AlignItems::Center)
                         .with_no_wrap());

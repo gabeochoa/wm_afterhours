@@ -87,12 +87,11 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Content area - two columns - adjusted height for all content
     auto content =
-        div(context, mk(main_container.ent(), 1),
+        hstack(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::Center)
                 .with_debug_name("content"));
 
@@ -360,10 +359,9 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                                 .right = pixels(0)}));
 
     auto clipboard_row =
-        div(context, mk(main_container.ent(), 4),
+        hstack(context, mk(main_container.ent(), 4),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceAround)
                 .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                     .bottom = pixels(0),

@@ -44,12 +44,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
 
     // Row layout demo - JustifyContent::Center to keep panels within container
     auto row_container =
-        div(context, mk(main_container.ent(), 1),
+        hstack(context, mk(main_container.ent(), 1),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(120)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::sm)
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::Center)
                 .with_align_items(AlignItems::Center)
                 .with_debug_name("row_container"));
@@ -97,12 +96,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
 
     // Column layout demo - stacked items demonstration
     auto col_container =
-        div(context, mk(main_container.ent(), 2),
+        hstack(context, mk(main_container.ent(), 2),
             ComponentConfig{}
                 .with_size(ComponentSize{percent(0.95f), pixels(220)})
                 .with_background(Theme::Usage::Surface)
                 .with_padding(Spacing::md)
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::Center)
                 .with_margin(Margin{.top = DefaultSpacing::small(),
                                     .bottom = pixels(0),
@@ -161,12 +159,11 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_separator_2"));
 
     // Layout guide - positioned below demo content to avoid obstruction
-    auto desc_panel = div(context, mk(main_container.ent(), 3),
+    auto desc_panel = hstack(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_size(ComponentSize{percent(0.95f), pixels(44)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center)
             .with_margin(Margin{.top = DefaultSpacing::small(),

@@ -158,10 +158,9 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         {87, 255, 87, 255}, {87, 189, 255, 255}, {189, 87, 255, 255},
     };
 
-    auto swatch_row = div(context, mk(root, 10),
+    auto swatch_row = hstack(context, mk(root, 10),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(70)})
-            .with_flex_direction(FlexDirection::Row)
             .with_debug_name("swatch_row"));
 
     for (int i = 0; i < 6; ++i) {
@@ -245,10 +244,9 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     (this->*render_fns[active_tab])(context, content_panel.ent(), theme);
 
     // ========== FOOTER: OK / Cancel / Apply ==========
-    auto footer = div(context, mk(main_container.ent(), 2),
+    auto footer = hstack(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::Center)
             .with_padding(Padding{.right = DefaultSpacing::medium()})

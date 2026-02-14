@@ -130,10 +130,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Password row container (input + toggle button)
     auto password_row =
-        div(context, mk(form_container.ent(), 5),
+        hstack(context, mk(form_container.ent(), 5),
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(396), pixels(38)})
-                .with_flex_direction(FlexDirection::Row)
                 .with_justify_content(JustifyContent::SpaceBetween)
                 .with_align_items(AlignItems::Center)
                 .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -230,10 +229,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // ========== FOOTER: OK / Cancel / Apply ==========
-    auto footer = div(context, mk(main_container.ent(), 4),
+    auto footer = hstack(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::Center)
             .with_padding(Padding{.right = DefaultSpacing::medium()})

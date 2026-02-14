@@ -98,10 +98,9 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Content row - two columns
-    auto content = div(context, mk(card.ent(), 1),
+    auto content = hstack(context, mk(card.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(column_content_height)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_debug_name("content"));
 
@@ -161,10 +160,9 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(HEADER_FONT))
             .with_skip_tabbing(true));
 
-    auto no_label_row = div(context, mk(left_col.ent(), 5),
+    auto no_label_row = hstack(context, mk(left_col.ent(), 5),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44 + 8.0f * scale)})
-            .with_flex_direction(FlexDirection::Row)
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center));
 
