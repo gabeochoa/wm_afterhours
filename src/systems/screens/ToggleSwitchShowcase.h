@@ -77,8 +77,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
-    auto make_toggle_row = [&](int idx, const std::string &lbl, bool &val,
-                               ToggleSwitchStyle s = ToggleSwitchStyle::Pill) {
+    auto make_toggle_row = [&](int idx, const std::string &lbl, bool &val) {
       toggle_switch(
           context, mk(card.ent(), idx), val,
           ComponentConfig{}
@@ -91,8 +90,25 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                                     .right = DefaultSpacing::small()})
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f),
-          s);
+              .with_roundness(0.06f));
+    };
+
+    // Circle-style checkbox rows (round checkbox with check/X indicator)
+    auto make_checkbox_circle_row = [&](int idx, const std::string &lbl,
+                                        bool &val,
+                                        ComponentConfig extra = ComponentConfig{}) {
+      checkbox(
+          context, mk(card.ent(), idx), val,
+          ComponentConfig{}
+              .with_label(lbl)
+              .with_size(ComponentSize{percent(1.0f), pixels(42)})
+              .with_custom_background(
+                  afterhours::colors::lighten(theme.surface, 0.06f))
+              .with_font(UIComponent::DEFAULT_FONT, h720(17.0f))
+              .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_disabled(extra.disabled)
+              .with_opacity(extra.opacity));
     };
 
     // NOTE: Child IDs must be sequential to match visual layout order.
@@ -122,9 +138,9 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
-    make_toggle_row(7, "Dark Mode", dark_mode, ToggleSwitchStyle::Circle);
-    make_toggle_row(8, "Auto-Save", auto_save, ToggleSwitchStyle::Circle);
-    make_toggle_row(9, "Cloud Sync", cloud_sync, ToggleSwitchStyle::Circle);
+    make_checkbox_circle_row(7, "Dark Mode", dark_mode);
+    make_checkbox_circle_row(8, "Auto-Save", auto_save);
+    make_checkbox_circle_row(9, "Cloud Sync", cloud_sync);
 
     // Separator
     div(context, mk(card.ent(), 10),
@@ -162,26 +178,11 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
             .with_disabled(true)
-            .with_opacity(0.45f),
-        ToggleSwitchStyle::Pill);
+            .with_opacity(0.45f));
 
-    // Disabled circle toggle (OFF state, non-interactive)
-    toggle_switch(
-        context, mk(card.ent(), 13), disabled_off,
-        ComponentConfig{}
-            .with_label("Unavailable Option (OFF)")
-            .with_size(ComponentSize{percent(1.0f), pixels(42)})
-            .with_custom_background(
-                afterhours::colors::lighten(theme.surface, 0.06f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_padding(Padding{.left = DefaultSpacing::small(),
-                                  .right = DefaultSpacing::small()})
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.06f)
-            .with_disabled(true)
-            .with_opacity(0.45f),
-        ToggleSwitchStyle::Circle);
+    // Disabled circle checkbox (OFF state, non-interactive)
+    make_checkbox_circle_row(13, "Unavailable Option (OFF)", disabled_off,
+        ComponentConfig{}.with_disabled(true).with_opacity(0.45f));
 
     // Status bar removed — toggle states are already visually clear from
     // the toggle controls themselves. The bar was being pushed outside
@@ -194,5 +195,5 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 };
 
 REGISTER_EXAMPLE_SCREEN(toggle_switches, "Component Galleries",
-                        "Toggle switch: Pill (iOS) and Circle (X/V) styles",
+                        "Toggle switch (Pill) and round checkbox styles",
                         ToggleSwitchShowcase)
