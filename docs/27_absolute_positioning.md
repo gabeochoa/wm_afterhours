@@ -1,8 +1,19 @@
 # Absolute Positioning and Layout Issues
 
-**Status:** Critical bugs  
+**Status:** Resolved  
 **Priority:** High  
 **Source:** break_ross migration experience
+
+### Resolution Summary
+
+All issues from this doc have been addressed:
+
+- **Issue 1** (margins cause negative sizes): Fixed — `rect()` skips margin subtraction for absolute elements.
+- **Issue 2** (negative sizes not warned): Covered by `ValidateZeroSize` and `ValidateAbsoluteMarginConflict` validation systems.
+- **Issue 3** (position logging misses translate): Fixed — `get_final_rect()` helper added; `print_debug_autolayout_tree` now shows Translate and FinalPos for elements with translate offsets.
+- **Issue 4** (documentation): `AbsolutePositioningShowcase` screen demonstrates correct patterns.
+- **API**: `with_absolute_position(x, y)` overloads exist; warning logged when margins used with absolute.
+- **Tests**: 12 absolute positioning tests added to `vendor/afterhours/examples/autolayout_test.cpp`.
 
 ---
 
