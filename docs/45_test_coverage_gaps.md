@@ -26,7 +26,7 @@ The building blocks are in place but aren't wired together end-to-end:
 | Makefile targets | **Done** | `make update-baselines`, `make validate-screenshots`, `make ci` |
 | `.gitattributes` for PNG binary | **Done** | `.gitattributes` |
 | Run all `TestApp` tests headlessly | **Missing** | — |
-| Pre-commit hook | **Missing** | — |
+| Pre-commit hook | **Done** | `scripts/pre-commit-screenshots` |
 | Diff artifact output on failure | **Done** | `scripts/compare_baselines.py --save-diffs` writes to `test-failures/` |
 
 ## Goal
