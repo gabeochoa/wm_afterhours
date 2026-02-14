@@ -166,37 +166,45 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
 
     float box_size = 32.0f * scale;
     // Add aria-labels via debug_name for accessibility identification
-    checkbox_no_label(context, mk(no_label_row.ent(), 0), no_label_1,
+    primitive::toggle_button(context, mk(no_label_row.ent(), 0),
         ComponentConfig{}
+            .with_label(no_label_1 ? "V" : " ")
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Primary)
-            .with_checkbox_indicators("V", " ")
             .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
-            .with_debug_name("nl_option_1"));
+            .with_auto_text_color(true)
+            .with_debug_name("nl_option_1"),
+        no_label_1);
 
-    checkbox_no_label(context, mk(no_label_row.ent(), 1), no_label_2,
+    primitive::toggle_button(context, mk(no_label_row.ent(), 1),
         ComponentConfig{}
+            .with_label(no_label_2 ? "V" : " ")
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Secondary)
-            .with_checkbox_indicators("V", " ")
             .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
-            .with_debug_name("nl_option_2"));
+            .with_auto_text_color(true)
+            .with_debug_name("nl_option_2"),
+        no_label_2);
 
-    checkbox_no_label(context, mk(no_label_row.ent(), 2), no_label_3,
+    primitive::toggle_button(context, mk(no_label_row.ent(), 2),
         ComponentConfig{}
+            .with_label(no_label_3 ? "V" : " ")
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Accent)
-            .with_checkbox_indicators("V", " ")
             .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
-            .with_debug_name("nl_option_3"));
+            .with_auto_text_color(true)
+            .with_debug_name("nl_option_3"),
+        no_label_3);
 
-    checkbox_no_label(context, mk(no_label_row.ent(), 3), no_label_4,
+    primitive::toggle_button(context, mk(no_label_row.ent(), 3),
         ComponentConfig{}
+            .with_label(no_label_4 ? "V" : " ")
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_background(Theme::Usage::Primary)
-            .with_checkbox_indicators("V", " ")
             .with_font(UIComponent::SYMBOL_FONT, h720(20.0f * scale))
-            .with_debug_name("nl_option_4"));
+            .with_auto_text_color(true)
+            .with_debug_name("nl_option_4"),
+        no_label_4);
 
     // Disabled section - use Primary for consistent section headers
     div(context, mk(left_col.ent(), 6),
