@@ -1,6 +1,6 @@
 # Headless Screenshot Testing & CI Validation
 
-**Status:** Partially implemented  
+**Status:** Mostly implemented  
 **Priority:** High
 
 ---
@@ -21,10 +21,13 @@ The building blocks are in place but aren't wired together end-to-end:
 | Script-based E2E runner (`E2ERunner`) | Done | `e2e_testing/runner.h` |
 | `--headless` flag for E2E | Done | `main.cpp` line 213 |
 | Snapshot capture + UI state JSON | Done | `testing/test_snapshot.h/cpp` |
-| Committed baseline directory | **Missing** | — |
+| Committed baseline directory | **Done** | `screenshot-baselines/screens/` (70 screens at 720p) |
+| Baseline comparison script | **Done** | `scripts/compare_baselines.py` — PIL diff with per-screen overrides |
+| Makefile targets | **Done** | `make update-baselines`, `make validate-screenshots`, `make ci` |
+| `.gitattributes` for PNG binary | **Done** | `.gitattributes` |
 | Run all `TestApp` tests headlessly | **Missing** | — |
-| Pre-commit / CI validation gate | **Missing** | — |
-| Diff artifact output on failure | **Partial** | `test_snapshot.cpp` saves `_diff.png` but no CI collects it |
+| Pre-commit hook | **Missing** | — |
+| Diff artifact output on failure | **Done** | `scripts/compare_baselines.py --save-diffs` writes to `test-failures/` |
 
 ## Goal
 

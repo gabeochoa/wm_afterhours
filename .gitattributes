@@ -1,0 +1,2 @@
+# Mark screenshot baselines as binary so git doesn't try to diff them as text
+screenshot-baselines/**/*.png binary

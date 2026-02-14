@@ -242,6 +242,7 @@ run: output
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
+.PHONY: update-baselines validate-screenshots ci
 
 # Screenshot generation (cleans old screenshots then generates new ones at 720p)
 screenshots: $(MAIN_EXE)
@@ -250,6 +251,34 @@ screenshots: $(MAIN_EXE)
 	@echo "Generating screenshots..."
 	./$(MAIN_EXE) --headless-screenshots
 	@echo "Screenshots saved to $(OUTPUT_DIR)/"
+
+# Baseline management for visual regression testing
+BASELINE_DIR := screenshot-baselines/screens
+VALIDATE_DIR := /tmp/screenshot-validate
+
+# Generate/update committed baselines (run after intentional visual changes)
+update-baselines: $(MAIN_EXE)
+	@echo "Generating screen baselines..."
+	@mkdir -p $(BASELINE_DIR)
+	./$(MAIN_EXE) --headless-screenshots --image-output $(BASELINE_DIR)/
+	@echo ""
+	@echo "Baselines updated in $(BASELINE_DIR)/."
+	@echo "Review changes with: git diff --stat screenshot-baselines/"
+	@echo "Then commit: git add screenshot-baselines/ && git commit -m 'Update screenshot baselines'"
+
+# Validate current build against committed baselines
+validate-screenshots: $(MAIN_EXE)
+	@echo "Rendering current screenshots..."
+	@mkdir -p $(VALIDATE_DIR)
+	@rm -f $(VALIDATE_DIR)/*.png
+	./$(MAIN_EXE) --headless-screenshots --image-output $(VALIDATE_DIR)/
+	@echo ""
+	@echo "Comparing against baselines..."
+	python3 scripts/compare_baselines.py $(BASELINE_DIR) $(VALIDATE_DIR)
+
+# CI target: build + validate
+ci: $(MAIN_EXE) validate-screenshots
+	@echo "CI passed."
 
 # Code counting
 count:

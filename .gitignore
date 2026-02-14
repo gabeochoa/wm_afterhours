@@ -38,6 +38,7 @@ build-analysis.txt
 
 # Test artifacts
 tests/screenshots/
+test-failures/
 
 # Other
 .obsidian/
