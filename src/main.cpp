@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
         << "  -h, --height <pixels>         Screen height (default: 720)\n";
     std::cout << "  --list-tests                 List all available tests\n";
     std::cout << "  --run-test <name>            Run a specific test\n";
+    std::cout << "  --run-all-tests              Run all tests headlessly (for CI)\n";
     std::cout
         << "  --slow                       Run test in slow mode (visible)\n";
     std::cout << "  --hold-on-end                Keep window open after test "
@@ -109,6 +110,11 @@ int main(int argc, char *argv[]) {
       std::cout << "  - " << name << "\n";
     }
     return 0;
+  }
+
+  if (cmdl["--run-all-tests"]) {
+    int failures = run_all_tests_headless();
+    return failures == 0 ? 0 : 1;
   }
 
   if (cmdl["--list-screens"]) {

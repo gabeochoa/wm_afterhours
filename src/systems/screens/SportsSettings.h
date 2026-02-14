@@ -291,7 +291,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // This ensures arrow keys work on the currently focused row
     auto &current_settings = get_current_settings();
     auto focus_id = context.focus_id;
-    auto opt_focused = afterhours::EntityHelper::getEntityForID(focus_id);
+    auto opt_focused = afterhours::ui::UICollectionHolder::getEntityForID(focus_id);
     if (opt_focused.has_value()) {
       auto &focused = opt_focused.asE();
       if (focused.has<afterhours::ui::HasLabel>()) {

@@ -1,6 +1,6 @@
 # Headless Screenshot Testing & CI Validation
 
-**Status:** Mostly implemented  
+**Status:** Complete  
 **Priority:** High
 
 ---
@@ -25,7 +25,7 @@ The building blocks are in place but aren't wired together end-to-end:
 | Baseline comparison script | **Done** | `scripts/compare_baselines.py` — PIL diff with per-screen overrides |
 | Makefile targets | **Done** | `make update-baselines`, `make validate-screenshots`, `make ci` |
 | `.gitattributes` for PNG binary | **Done** | `.gitattributes` |
-| Run all `TestApp` tests headlessly | **Missing** | — |
+| Run all `TestApp` tests headlessly | **Done** | `--run-all-tests`, `make run-all-tests` (16/20 passing) |
 | Pre-commit hook | **Done** | `scripts/pre-commit-screenshots` |
 | Diff artifact output on failure | **Done** | `scripts/compare_baselines.py --save-diffs` writes to `test-failures/` |
 

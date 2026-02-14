@@ -12,17 +12,18 @@
 // 2. Clicking < > arrows changes setting values
 // 3. Clicking on the label focuses/selects the row
 // 4. Pressing left/right arrow keys changes value when row is focused
-// 5. Pressing up/down navigates between rows
-// 6. Pressing tab goes to the next row
-// 7. Pressing tab then left/right changes value
+// 5. Pressing tab goes to the next row
+// 6. Clicking rows changes focus and tab continues from there
+// 7. Pressing tab then left/right changes value on the focused row
+// 8. Clicking all four tab headers to cycle categories
 // =========================================================================
 
 // Test: Tab header clicking changes category
 TEST(sports_settings_tab_click_changes_category) {
   co_await TestApp::wait_for_frames(10);
 
-  // Should start on VIDEO tab (selected_tab = 1) showing GRAPHICS header
-  TestApp::expect_ui_exists("GRAPHICS");
+  // Should start on VIDEO tab (selected_tab = 1) showing Display header
+  TestApp::expect_ui_exists("VIDEO");
   TestApp::expect_ui_exists("Window mode");
 
   // Click on GAMEPLAY tab
@@ -141,8 +142,35 @@ TEST(sports_settings_tab_navigates_rows) {
   TestApp::expect_focus("Screen percentage");
 }
 
-// Test: Down arrow navigates to next row (WidgetNext)
-TEST(sports_settings_down_arrow_navigates) {
+// Test: Clicking different rows changes focus correctly
+TEST(sports_settings_click_changes_focus) {
+  co_await TestApp::wait_for_frames(10);
+
+  // Click V Sync to focus it
+  TestApp::click_button("V Sync");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::expect_focus("V Sync");
+
+  // Click Window mode to jump back
+  TestApp::click_button("Window mode");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(3);
+
+  TestApp::expect_focus("Window mode");
+
+  // Tab forward from here should go to Resolution
+  TestApp::simulate_tab();
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_focus("Resolution");
+}
+
+// Test: Multiple tabs navigate through several rows in sequence
+TEST(sports_settings_multi_tab_navigation) {
   co_await TestApp::wait_for_frames(10);
 
   // Focus Window mode
@@ -153,30 +181,22 @@ TEST(sports_settings_down_arrow_navigates) {
 
   TestApp::expect_focus("Window mode");
 
-  // Press Down arrow (KEY_DOWN is mapped to WidgetNext)
-  TestApp::simulate_arrow_key(raylib::KEY_DOWN);
+  // Tab through several rows
+  TestApp::simulate_tab();
   co_await TestApp::wait_for_frames(5);
-
-  TestApp::expect_focus("Resolution");
-}
-
-// Test: Up arrow navigates to previous row (WidgetBack)
-TEST(sports_settings_up_arrow_navigates) {
-  co_await TestApp::wait_for_frames(10);
-
-  // Focus Resolution
-  TestApp::click_button("Resolution");
-  co_await TestApp::wait_for_frames(1);
-  TestApp::release_mouse_button();
-  co_await TestApp::wait_for_frames(3);
-
   TestApp::expect_focus("Resolution");
 
-  // Press Up arrow (KEY_UP is mapped to WidgetBack)
-  TestApp::simulate_arrow_key(raylib::KEY_UP);
+  TestApp::simulate_tab();
   co_await TestApp::wait_for_frames(5);
+  TestApp::expect_focus("Screen percentage");
 
-  TestApp::expect_focus("Window mode");
+  TestApp::simulate_tab();
+  co_await TestApp::wait_for_frames(5);
+  TestApp::expect_focus("V Sync");
+
+  TestApp::simulate_tab();
+  co_await TestApp::wait_for_frames(5);
+  TestApp::expect_focus("Max FPS");
 }
 
 // Test: Left/Right arrows change value when row is focused
@@ -243,36 +263,38 @@ TEST(sports_settings_tab_then_arrows) {
   TestApp::expect_ui_exists("3840x2160");
 }
 
-// Test: LB/RB buttons cycle through tabs
-TEST(sports_settings_lb_rb_cycle_tabs) {
+// Test: Clicking all four tab headers cycles through all categories
+TEST(sports_settings_click_all_tabs) {
   co_await TestApp::wait_for_frames(10);
 
   // Start on VIDEO tab
-  TestApp::expect_ui_exists("GRAPHICS");
+  TestApp::expect_ui_exists("VIDEO");
+  TestApp::expect_ui_exists("Window mode");
 
-  // Click RB to go to next tab (AUDIO)
-  TestApp::click_button("RB");
+  // Click CONTROLS tab
+  TestApp::click_button("CONTROLS");
   co_await TestApp::wait_for_frames(1);
   TestApp::release_mouse_button();
   co_await TestApp::wait_for_frames(5);
 
-  TestApp::expect_ui_exists("AUDIO");
-  TestApp::expect_ui_exists("Master Volume");
-
-  // Click RB again to go to CONTROLS
-  TestApp::click_button("RB");
-  co_await TestApp::wait_for_frames(1);
-  TestApp::release_mouse_button();
-  co_await TestApp::wait_for_frames(5);
-
-  TestApp::expect_ui_exists("CONTROLS");
   TestApp::expect_ui_exists("Vibration");
+  TestApp::expect_ui_exists("Pass Assistance");
 
-  // Click LB to go back to AUDIO
-  TestApp::click_button("LB");
+  // Click GAMEPLAY tab
+  TestApp::click_button("GAMEPLAY");
   co_await TestApp::wait_for_frames(1);
   TestApp::release_mouse_button();
   co_await TestApp::wait_for_frames(5);
 
-  TestApp::expect_ui_exists("AUDIO");
+  TestApp::expect_ui_exists("Difficulty");
+  TestApp::expect_ui_exists("Game Speed");
+
+  // Click AUDIO tab
+  TestApp::click_button("AUDIO");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
+  co_await TestApp::wait_for_frames(5);
+
+  TestApp::expect_ui_exists("Master Volume");
+  TestApp::expect_ui_exists("Commentary Volume");
 }

@@ -1,17 +1,7 @@
 {
   "elements": [
     {
-      "debug_name": "click_counter",
-      "has_focus": false,
-      "height": 32.0,
-      "label": "Clicks: 0",
-      "visible": true,
-      "width": 199.11111450195313,
-      "x": 0.0,
-      "y": 0.0
-    },
-    {
-      "debug_name": "sophie",
+      "debug_name": "ui_root",
       "has_focus": false,
       "height": 720.0,
       "label": "",
@@ -21,12 +11,12 @@
       "y": 0.0
     },
     {
-      "debug_name": "test_button",
-      "has_focus": true,
-      "height": 60.0,
-      "label": "Click Me",
-      "visible": true,
-      "width": 199.11111450195313,
+      "debug_name": "",
+      "has_focus": false,
+      "height": 0.0,
+      "label": "",
+      "visible": false,
+      "width": 0.0,
       "x": 0.0,
       "y": 0.0
     }

@@ -242,7 +242,7 @@ run: output
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
-.PHONY: update-baselines validate-screenshots ci
+.PHONY: update-baselines validate-screenshots ci run-all-tests
 
 # Screenshot generation (cleans old screenshots then generates new ones at 720p)
 screenshots: $(MAIN_EXE)
@@ -276,8 +276,12 @@ validate-screenshots: $(MAIN_EXE)
 	@echo "Comparing against baselines..."
 	python3 scripts/compare_baselines.py $(BASELINE_DIR) $(VALIDATE_DIR)
 
-# CI target: build + validate
-ci: $(MAIN_EXE) validate-screenshots
+# Run all coroutine-based tests headlessly
+run-all-tests: $(MAIN_EXE)
+	./$(MAIN_EXE) --run-all-tests
+
+# CI target: build + validate + run tests
+ci: $(MAIN_EXE) validate-screenshots run-all-tests
 	@echo "CI passed."
 
 # Code counting

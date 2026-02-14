@@ -8,12 +8,19 @@
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
 #include "systems/RenderSystemHelpers.h"
+#include "systems/SetupSimpleButtonTest.h"
+#include "systems/SetupTabbingTest.h"
+#include "systems/TestSystem.h"
+#include "testing/test_app.h"
+#include "testing/test_input.h"
+#include "testing/test_macros.h"
 
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/ui/ui_collection.h>
 #include <afterhours/src/plugins/ui/entity_management.h>
+#include <afterhours/src/plugins/ui/validation_systems.h>
 #include <filesystem>
 
 // Globals defined in game.cpp
@@ -177,10 +184,10 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
     load_fonts_into_manager(*font_mgr);
   }
 
-  // Create input singleton components
+  // Create input singleton components (with game's input mapping for test input)
   afterhours::Entity &input_entity =
       afterhours::EntityHelper::createPermanentEntity();
-  afterhours::input::add_singleton_components(input_entity);
+  afterhours::input::add_singleton_components(input_entity, get_mapping());
 }
 
 // Reset state between screens
@@ -447,4 +454,210 @@ void run_headless_screenshots() {
     run_headless_screenshots_at(res.width, res.height, res.label);
   }
   log_info("[Headless] All resolutions complete");
+}
+
+// ---------------------------------------------------------------------------
+// run_all_tests_headless -- drive every registered coroutine-based TestApp
+// in headless mode (no window).  Returns the number of failures.
+// ---------------------------------------------------------------------------
+int run_all_tests_headless() {
+  constexpr int WIDTH = 1280;
+  constexpr int HEIGHT = 720;
+  constexpr int MAX_FRAMES = 10000; // safety timeout per test
+
+  // 1. Init headless graphics
+  afterhours::graphics::Config cfg;
+  cfg.display = afterhours::graphics::DisplayMode::Headless;
+  cfg.width = WIDTH;
+  cfg.height = HEIGHT;
+  cfg.title = "Headless Tests";
+  cfg.target_fps = 60;
+
+  if (!afterhours::graphics::init(cfg)) {
+    log_error("[HeadlessTests] Failed to init graphics backend");
+    return -1;
+  }
+
+  Settings::get().update_resolution(
+      afterhours::window_manager::Resolution{.width = WIDTH, .height = HEIGHT});
+
+  afterhours::files::init("Prime Pressure", "resources");
+
+  mainRT = afterhours::graphics::get_render_texture();
+  screenRT = raylib::LoadRenderTexture(WIDTH, HEIGHT);
+
+  uiFont = load_font_headless(
+      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+          .string()
+          .c_str());
+
+  configure_validation();
+  setup_ecs_singletons(WIDTH, HEIGHT);
+
+  int ui_entity_id = afterhours::EntityHelper::get_singleton<
+                         afterhours::ui::UIContext<InputAction>>()
+                         .get()
+                         .id;
+
+  // 2. Gather tests
+  TestRegistry &registry = TestRegistry::get();
+  if (registry.tests.empty()) {
+    log_error("[HeadlessTests] No tests registered");
+    raylib::UnloadRenderTexture(screenRT);
+    afterhours::graphics::shutdown();
+    return -1;
+  }
+
+  int total = static_cast<int>(registry.tests.size());
+  int passed = 0;
+  int failed = 0;
+  std::vector<std::string> failures;
+
+  log_info("[HeadlessTests] Running {} tests", total);
+
+  // 3. Run each test
+  for (const auto &[test_name, test_func] : registry.tests) {
+    // Reset state between tests
+    reset_screen_state(ui_entity_id);
+    test_input::test_mode = true;
+    test_input::slow_test_mode = false;
+    test_input::clear_queue();
+    test_app::frame_counter = 0;
+
+    // Build systems for this test
+    afterhours::SystemManager systems;
+
+    afterhours::ui::enforce_singletons<InputAction>(systems);
+    afterhours::input::enforce_singletons(systems);
+    afterhours::toast::enforce_singletons(systems);
+    afterhours::modal::enforce_singletons(systems);
+
+    afterhours::input::register_update_systems(systems);
+    afterhours::toast::register_update_systems(systems);
+    afterhours::toast::register_layout_systems<InputAction>(systems);
+    afterhours::modal::register_update_systems<InputAction>(systems);
+
+    // TestSystem drives the coroutine
+    auto test_system = std::make_unique<TestSystem>();
+    TestSystem *test_system_ptr = test_system.get();
+    systems.register_update_system(std::move(test_system));
+
+    // UI pre-update
+    afterhours::ui::register_before_ui_updates<InputAction>(systems);
+
+    // Find matching screen for the test name (same logic as run_test)
+    bool screen_found = false;
+    for (const auto &screen_name :
+         ExampleScreenRegistry::get().get_screen_names()) {
+      if (test_name.find(screen_name + "_") == 0 ||
+          test_name == screen_name) {
+        auto screen = ExampleScreenRegistry::get().create_screen(screen_name);
+        if (screen) {
+          g_current_screen = screen.get();
+          systems.register_update_system(std::move(screen));
+          screen_found = true;
+          break;
+        }
+      }
+    }
+
+    if (!screen_found) {
+      if (test_name == "tabbing") {
+        systems.register_update_system(std::make_unique<SetupTabbingTest>());
+      } else {
+        systems.register_update_system(
+            std::make_unique<SetupSimpleButtonTest>());
+      }
+    }
+
+    // UI post-update
+    afterhours::ui::register_after_ui_updates<InputAction>(systems);
+
+    // Render systems (needed for layout even in headless)
+    systems.register_render_system(std::make_unique<BeginWorldRender>());
+    afterhours::modal::register_render_systems<InputAction>(systems);
+    afterhours::ui::register_batched_render_systems<InputAction>(
+        systems, InputAction::ToggleUILayoutDebug);
+    systems.register_render_system(std::make_unique<EndWorldRender>());
+
+    afterhours::ui::validation::register_systems<InputAction>(systems);
+
+    // Create and set the test coroutine
+    TestApp test = test_func();
+    test_system_ptr->set_test(test_name, std::move(test));
+
+    // Tick loop
+    bool timed_out = true;
+    for (int frame = 0; frame < MAX_FRAMES; frame++) {
+      {
+        auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+        systems.tick_all(entities, 0.016f);
+      }
+      {
+        auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+        systems.render(entities, 0.016f);
+      }
+      afterhours::EntityHelper::cleanup();
+
+      if (test_system_ptr->is_complete()) {
+        timed_out = false;
+        break;
+      }
+    }
+
+    // Check result
+    if (timed_out) {
+      std::cout << "FAIL  " << test_name << "  (timed out after "
+                << MAX_FRAMES << " frames)" << std::endl;
+      failed++;
+      failures.push_back(test_name + " (timeout)");
+    } else {
+      std::string error = test_system_ptr->get_error();
+      if (!error.empty()) {
+        std::cout << "FAIL  " << test_name << "  " << error << std::endl;
+        failed++;
+        failures.push_back(test_name + ": " + error);
+      } else {
+        std::cout << "PASS  " << test_name << std::endl;
+        passed++;
+      }
+    }
+
+    test_input::test_mode = false;
+    g_current_screen = nullptr;
+  }
+
+  // 4. Summary
+  std::cout << "\n========================================" << std::endl;
+  std::cout << "Results: " << passed << " passed, " << failed << " failed, "
+            << total << " total" << std::endl;
+  if (!failures.empty()) {
+    std::cout << "\nFailed tests:" << std::endl;
+    for (const auto &f : failures) {
+      std::cout << "  - " << f << std::endl;
+    }
+  }
+  std::cout << "========================================" << std::endl;
+
+  // 5. Cleanup
+  for (const auto &e : afterhours::EntityHelper::get_entities()) {
+    if (!e) continue;
+    e->cleanup = true;
+  }
+  afterhours::EntityHelper::cleanup();
+
+  {
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+    for (const auto &e : ui_coll.get_entities()) {
+      if (!e) continue;
+      e->cleanup = true;
+    }
+    ui_coll.cleanup();
+  }
+
+  raylib::UnloadFont(uiFont);
+  raylib::UnloadRenderTexture(screenRT);
+  afterhours::graphics::shutdown();
+
+  return failed;
 }

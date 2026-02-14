@@ -8,6 +8,7 @@
 #include "test_input.h"
 #include "test_snapshot.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/ui_collection.h>
 #include <coroutine>
 #include <functional>
 #include <string>
@@ -118,8 +119,13 @@ struct TestApp {
 
   static afterhours::Entity *
   find_ui_element_by_label(const std::string &label) {
+    // Search UI collection where immediate-mode UI elements live.
+    // Use force_merge to include recently-created temp entities.
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
     afterhours::OptEntity opt =
-        afterhours::EntityQuery()
+        afterhours::EntityQuery(
+            ui_coll,
+            afterhours::EntityQuery<>::QueryOptions{.force_merge = true})
             .whereHasComponent<afterhours::ui::HasLabel>()
             .whereLambda([&label](const afterhours::Entity &e) {
               return e.get<afterhours::ui::HasLabel>().label == label;
@@ -130,7 +136,12 @@ struct TestApp {
 
   static std::optional<afterhours::EntityHandle>
   find_ui_element_handle_by_label(const std::string &label) {
-    return afterhours::EntityQuery()
+    // Search UI collection where immediate-mode UI elements live.
+    // Use force_merge to include recently-created temp entities.
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+    return afterhours::EntityQuery(
+               ui_coll,
+               afterhours::EntityQuery<>::QueryOptions{.force_merge = true})
         .whereHasComponent<afterhours::ui::HasLabel>()
         .whereLambda([&label](const afterhours::Entity &e) {
           return e.get<afterhours::ui::HasLabel>().label == label;
@@ -267,8 +278,9 @@ struct TestApp {
     if (context->focus_id == context->ROOT) {
       return nullptr;
     }
+    // Search both UI and default collections for the focused entity
     auto opt_entity =
-        afterhours::EntityHelper::getEntityForID(context->focus_id);
+        afterhours::ui::UICollectionHolder::getEntityForID(context->focus_id);
     if (!opt_entity.has_value()) {
       return nullptr;
     }

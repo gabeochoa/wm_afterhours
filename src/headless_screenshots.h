@@ -21,3 +21,7 @@ extern std::vector<HeadlessResolution> g_headless_resolutions;
 // at each resolution in g_headless_resolutions.
 // Outputs PNG files to g_headless_output_dir as {screen}_{label}.png
 void run_headless_screenshots();
+
+// Run all registered coroutine-based tests in headless mode.
+// Returns the number of test failures (0 = all passed).
+int run_all_tests_headless();
