@@ -15,18 +15,17 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_row = 4; // Anti-Aliasing selected
 
   // Colors matching PowerWash Simulator - dark blue interface
-  afterhours::Color bg_dark{25, 45, 75, 255};       // Dark navy blue
-  afterhours::Color panel_blue{35, 65, 105, 255};   // Panel background
-  afterhours::Color panel_border{55, 95, 145, 255}; // Panel border
-  afterhours::Color header_bar{45, 80, 130, 255};   // Header bar
-  afterhours::Color text_white{235, 240, 245, 255}; // White text
-  afterhours::Color text_cyan{145, 215, 245, 255};  // Cyan accent text
-  afterhours::Color text_muted{165, 190, 215,
-                               255}; // Muted text (lighter for readability)
-  afterhours::Color dropdown_bg{55, 90, 140, 255};      // Dropdown background
-  afterhours::Color dropdown_border{75, 120, 175, 255}; // Dropdown border
-  afterhours::Color tab_selected{65, 105, 165, 255};    // Selected tab
-  afterhours::Color highlight_blue{85, 145, 215, 255};  // Highlight color
+  afterhours::Color bg_dark{25, 45, 75, 255};
+  afterhours::Color panel_blue{35, 65, 105, 255};
+  afterhours::Color panel_border{55, 95, 145, 255};
+  afterhours::Color header_bar{45, 80, 130, 255};
+  afterhours::Color text_white{235, 240, 245, 255};
+  afterhours::Color text_cyan{145, 215, 245, 255};
+  afterhours::Color text_muted{165, 190, 215, 255};
+  afterhours::Color dropdown_bg{55, 90, 140, 255};
+  afterhours::Color dropdown_border{75, 120, 175, 255};
+  afterhours::Color tab_selected{65, 105, 165, 255};
+  afterhours::Color highlight_blue{85, 145, 215, 255};
 
   std::vector<std::string> tabs = {"GENERAL", "GAMEPLAY", "VIDEO", "AUDIO",
                                    "CONTROLS"};
@@ -53,8 +52,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       {"Language", {"English", "Spanish", "French", "German"}, 0},
       {"Subtitles", {"Off", "On"}, 1},
       {"Colorblind Mode",
-       {"Off", "Deuteranopia", "Protanopia", "Tritanopia"},
-       0},
+       {"Off", "Deuteranopia", "Protanopia", "Tritanopia"}, 0},
   };
 
   std::vector<SettingRow> gameplay_settings = {
@@ -77,18 +75,12 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::vector<SettingRow> &get_current_settings() {
     switch (active_tab) {
-    case 0:
-      return general_settings;
-    case 1:
-      return gameplay_settings;
-    case 2:
-      return video_settings;
-    case 3:
-      return audio_settings;
-    case 4:
-      return controls_settings;
-    default:
-      return video_settings;
+    case 0: return general_settings;
+    case 1: return gameplay_settings;
+    case 2: return video_settings;
+    case 3: return audio_settings;
+    case 4: return controls_settings;
+    default: return video_settings;
     }
   }
 
@@ -109,104 +101,106 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 6;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
-
-    // ========== BACKGROUND ==========
-    div(context, mk(entity, 0),
+    // ═══════════════════════════════════════════════════════════════
+    // ROOT
+    // ═══════════════════════════════════════════════════════════════
+    auto root = vstack(
+        context, mk(entity),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
-            .with_debug_name("bg"));
+            .with_padding(Padding{.top = h720(20), .left = w1280(55),
+                                  .bottom = h720(15), .right = w1280(25)})
+            .with_no_wrap()
+            .with_debug_name("pw_root"));
 
-    // ========== TOP BAR: Settings title and resources ==========
-    float top_y = 20.0f;
+    // ── Header: X close + SETTINGS title ──
+    auto header = hstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(35)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_debug_name("header"));
 
-    // X close button
-    div(context, mk(entity, 5),
+    div(context, mk(header.ent()),
         ComponentConfig{}
             .with_label("X")
-            .with_size(ComponentSize{pixels(30), pixels(30)})
-            .with_absolute_position(25.0f, top_y + 5.0f)
+            .with_size(ComponentSize{w1280(30), h720(30)})
             .with_font("EqProRounded", h720(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
-    // SETTINGS title
-    div(context, mk(entity, 6),
+    div(context, mk(header.ent()),
         ComponentConfig{}
             .with_label("SETTINGS")
-            .with_size(ComponentSize{pixels(120), pixels(30)})
-            .with_absolute_position(65.0f, top_y + 5.0f)
+            .with_size(ComponentSize{w1280(120), h720(30)})
             .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(text_white));
+            .with_custom_text_color(text_white)
+            .with_margin(Margin{.left = w1280(10)}));
 
-    // NOTE: HUD elements (currency/resources) are intentionally hidden in settings
-    // to avoid confusion - they serve no purpose in this context
-
-    // ========== MAIN PANEL ==========
-    float panel_x = 55.0f;
-    float panel_y = 60.0f;
-    float panel_w = 480.0f;
-    float panel_h = 380.0f;
-
-    div(context, mk(entity, 20),
+    // ── Content area: main panel + help panel ──
+    auto content = hstack(
+        context, mk(root.ent()),
         ComponentConfig{}
-            .with_720p_size(panel_w, panel_h)
-            .with_absolute_position(panel_x, panel_y)
+            .with_size(ComponentSize{percent(1.0f), h720(380)})
+            .with_align_items(AlignItems::FlexStart)
+            .with_no_wrap()
+            .with_margin(Margin{.top = h720(5)})
+            .with_debug_name("content"));
+
+    // Main settings panel
+    auto main_panel = vstack(
+        context, mk(content.ent()),
+        ComponentConfig{}
+            .with_720p_size(480, 380)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
+            .with_padding(Padding{.top = h720(8), .left = w1280(15),
+                                  .bottom = h720(8), .right = w1280(15)})
+            .with_no_wrap()
             .with_debug_name("main_panel"));
 
-    // ========== SETTINGS ROWS ==========
-    float row_x = panel_x + 15.0f;
-    float row_y = panel_y + 15.0f;
-    float row_h = 36.0f;
-    float label_w = 140.0f;
-    float dropdown_w = 220.0f;
-
     auto &current_settings = get_current_settings();
-
-    // Reset selected_row if it's out of bounds for current tab
     if (selected_row >= current_settings.size()) {
       selected_row = 0;
     }
 
     for (size_t i = 0; i < current_settings.size(); i++) {
-      float ry = row_y + (float)i * row_h;
       bool is_selected = (i == selected_row);
       afterhours::Color label_color = is_selected ? text_white : text_muted;
+      afterhours::Color dd_bg = is_selected ? dropdown_bg : panel_blue;
+      afterhours::Color dd_border =
+          is_selected ? dropdown_border : panel_border;
+      afterhours::Color arrow_col = is_selected ? text_white : text_muted;
 
-      // Label - clicking selects the row
-      if (button(context, mk(entity, 50 + static_cast<int>(i) * 4),
+      auto row = hstack(
+          context, mk(main_panel.ent(), static_cast<int>(i)),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), h720(36)})
+              .with_align_items(AlignItems::Center)
+              .with_no_wrap()
+              .with_margin(Margin{.top = i > 0 ? h720(0) : Size{}}));
+
+      if (button(context, mk(row.ent(), 0),
                  ComponentConfig{}
                      .with_label(current_settings[i].label)
-                     .with_size(ComponentSize{pxf(label_w),
-                                              pixels(44)})
-                     .with_absolute_position(row_x, ry - 8.0f)
+                     .with_size(ComponentSize{w1280(140), h720(36)})
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(label_color))) {
         selected_row = i;
       }
 
-      // Dropdown with < > arrows for cycling values
-      afterhours::Color dd_bg = is_selected ? dropdown_bg : panel_blue;
-      afterhours::Color dd_border =
-          is_selected ? dropdown_border : panel_border;
-      afterhours::Color arrow_color = is_selected ? text_white : text_muted;
-
-      // Left arrow <
-      if (button(context, mk(entity, 51 + static_cast<int>(i) * 4),
+      if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{pixels(44), pixels(44)})
-                     .with_absolute_position(row_x + label_w + 20.0f, ry - 8.0f)
+                     .with_size(ComponentSize{w1280(44), h720(36)})
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", h720(18.0f))
-                     .with_custom_text_color(arrow_color)
-                     .with_alignment(TextAlignment::Center))) {
+                     .with_custom_text_color(arrow_col)
+                     .with_alignment(TextAlignment::Center)
+                     .with_margin(Margin{.left = w1280(20)}))) {
         selected_row = i;
         auto &setting = current_settings[i];
         setting.option_idx = (setting.option_idx == 0)
@@ -214,29 +208,23 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                  : setting.option_idx - 1;
       }
 
-      // Value display
-      div(context, mk(entity, 52 + static_cast<int>(i) * 4),
+      div(context, mk(row.ent(), 2),
           ComponentConfig{}
               .with_label(
                   current_settings[i].options[current_settings[i].option_idx])
-              .with_size(ComponentSize{
-                  pxf(dropdown_w - 92), pixels(44)})
-              .with_absolute_position(row_x + label_w + 65.0f, ry - 8.0f)
+              .with_size(ComponentSize{w1280(170), h720(36)})
               .with_custom_background(dd_bg)
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center));
 
-      // Right arrow >
-      if (button(context, mk(entity, 53 + static_cast<int>(i) * 4),
+      if (button(context, mk(row.ent(), 3),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{pixels(44), pixels(44)})
-                     .with_absolute_position(
-                         row_x + label_w + 20.0f + dropdown_w - 24.0f, ry - 8.0f)
+                     .with_size(ComponentSize{w1280(44), h720(36)})
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
                      .with_font("EqProRounded", h720(18.0f))
-                     .with_custom_text_color(arrow_color)
+                     .with_custom_text_color(arrow_col)
                      .with_alignment(TextAlignment::Center))) {
         selected_row = i;
         auto &setting = current_settings[i];
@@ -244,21 +232,70 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // ========== HELP TEXT PANEL ==========
-    float help_x = panel_x + panel_w + 15.0f;
-    float help_y = panel_y;
-    float help_w = 220.0f;
-    float help_h = 140.0f;
-
-    div(context, mk(entity, 150),
+    // Spacer pushes footer to bottom
+    div(context, mk(main_panel.ent()),
         ComponentConfig{}
-            .with_720p_size(help_w, help_h)
-            .with_absolute_position(help_x, help_y)
+            .with_size(ComponentSize{percent(1.0f), expand()})
+            .with_skip_tabbing(true));
+
+    // Footer buttons inside panel
+    auto footer = hstack(
+        context, mk(main_panel.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(36)})
+            .with_justify_content(JustifyContent::FlexEnd)
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_debug_name("footer"));
+
+    button(context, mk(footer.ent()),
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_custom_background(panel_border)
+               .with_border(text_cyan, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_debug_name("btn_ok"));
+
+    button(context, mk(footer.ent()),
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_custom_background(panel_blue)
+               .with_border(panel_border, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_margin(Margin{.left = w1280(10)})
+               .with_debug_name("btn_cancel"));
+
+    button(context, mk(footer.ent()),
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_custom_background(panel_blue)
+               .with_border(panel_border, 1.0f)
+               .with_font("EqProRounded", h720(18.0f))
+               .with_custom_text_color(text_white)
+               .with_alignment(TextAlignment::Center)
+               .with_margin(Margin{.left = w1280(10)})
+               .with_debug_name("btn_apply"));
+
+    // Help panel (right of main)
+    auto help_panel = vstack(
+        context, mk(content.ent()),
+        ComponentConfig{}
+            .with_720p_size(220, 140)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
+            .with_padding(Padding{.top = h720(12), .left = w1280(12),
+                                  .bottom = h720(12), .right = w1280(12)})
+            .with_margin(Margin{.left = w1280(15)})
+            .with_no_wrap()
             .with_debug_name("help_panel"));
 
-    // Dynamic help text based on selected setting
     std::string setting_name = current_settings[selected_row].label;
     std::string help_title = "Help: " + setting_name;
     std::string help_line1 = "Adjust the " + setting_name;
@@ -267,98 +304,74 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         "Current: " + current_settings[selected_row]
                           .options[current_settings[selected_row].option_idx];
 
-    struct HelpLine { int id; const std::string &text; int h; float y_off; float font_sz; afterhours::Color color; };
-    HelpLine help_lines[] = {
-        {151, help_title, 28, 12.0f, 17.0f, text_cyan},
-        {152, help_line1, 25, 45.0f, 14.0f, text_white},
-        {153, help_line2, 25, 65.0f, 14.0f, text_white},
-        {154, current_val, 25, 100.0f, 14.0f, text_muted},
-    };
-    for (auto &hl : help_lines) {
-      div(context, mk(entity, hl.id),
-          ComponentConfig{}
-              .with_label(hl.text)
-              .with_size(ComponentSize{pxf(help_w - 24), pixels(hl.h)})
-              .with_absolute_position(help_x + 12.0f, help_y + hl.y_off)
-              .with_font("EqProRounded", h720(hl.font_sz))
-              .with_custom_text_color(hl.color));
-    }
-
-    // ========== FOOTER: OK / Cancel / Apply ==========
-    float footer_btn_x = panel_x + panel_w - 290.0f;
-    float footer_btn_y = panel_y + panel_h - 50.0f;
-
-    button(context, mk(entity, 190),
-           ComponentConfig{}
-               .with_label("OK")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x, footer_btn_y)
-               .with_custom_background(panel_border)
-               .with_border(text_cyan, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("btn_ok"));
-
-    button(context, mk(entity, 191),
-           ComponentConfig{}
-               .with_label("Cancel")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 90.0f, footer_btn_y)
-               .with_custom_background(panel_blue)
-               .with_border(panel_border, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("btn_cancel"));
-
-    button(context, mk(entity, 192),
-           ComponentConfig{}
-               .with_label("Apply")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 180.0f, footer_btn_y)
-               .with_custom_background(panel_blue)
-               .with_border(panel_border, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_debug_name("btn_apply"));
-
-    // ========== TAB BAR ==========
-    float tab_y = panel_y + panel_h + 15.0f;
-
-    tab_container(context, mk(entity, 200), tabs, active_tab,
+    div(context, mk(help_panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(panel_w)), pixels(44)})
-            .with_absolute_position(panel_x, tab_y));
+            .with_label(help_title)
+            .with_size(ComponentSize{percent(1.0f), h720(28)})
+            .with_font("EqProRounded", h720(17.0f))
+            .with_custom_text_color(text_cyan));
 
-    // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_y = panel_y + panel_h + 75.0f;
-    float prompt_x = panel_x;
+    div(context, mk(help_panel.ent()),
+        ComponentConfig{}
+            .with_label(help_line1)
+            .with_size(ComponentSize{percent(1.0f), h720(25)})
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_white)
+            .with_margin(Margin{.top = h720(5)}));
 
-    struct Prompt { const char *icon; const char *label; int icon_id; int label_id; float x_off; int label_w; };
+    div(context, mk(help_panel.ent()),
+        ComponentConfig{}
+            .with_label(help_line2)
+            .with_size(ComponentSize{percent(1.0f), h720(25)})
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_white));
+
+    div(context, mk(help_panel.ent()),
+        ComponentConfig{}
+            .with_label(current_val)
+            .with_size(ComponentSize{percent(1.0f), h720(25)})
+            .with_font("EqProRounded", h720(14.0f))
+            .with_custom_text_color(text_muted)
+            .with_margin(Margin{.top = h720(10)}));
+
+    // ── Tab bar ──
+    tab_container(context, mk(root.ent()), tabs, active_tab,
+                  ComponentConfig{}
+                      .with_size(ComponentSize{w1280(480), h720(44)})
+                      .with_margin(Margin{.top = h720(15)}));
+
+    // ── Bottom button prompts ──
     afterhours::Color prompt_bg{55, 75, 95, 255};
-    Prompt prompts[] = {
-        {"X", "Close", 300, 301, 0.0f, 50},
-        {"O", "Reset", 302, 303, 100.0f, 50},
-        {"[]", "Select", 304, 305, 195.0f, 55},
+    auto prompts = hstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(28)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_margin(Margin{.top = h720(16)})
+            .with_debug_name("prompts"));
+
+    struct Prompt {
+      const char *icon;
+      const char *label;
     };
-    for (auto &p : prompts) {
-      div(context, mk(entity, p.icon_id),
+    Prompt prompt_data[] = {{"X", "Close"}, {"O", "Reset"}, {"[]", "Select"}};
+    for (int pi = 0; pi < 3; pi++) {
+      div(context, mk(prompts.ent(), pi * 2),
           ComponentConfig{}
-              .with_label(p.icon)
-              .with_size(ComponentSize{pixels(28), pixels(28)})
-              .with_absolute_position(prompt_x + p.x_off, prompt_y)
+              .with_label(prompt_data[pi].icon)
+              .with_size(ComponentSize{w1280(28), h720(28)})
               .with_custom_background(prompt_bg)
               .with_custom_text_color(text_white)
-              .with_alignment(TextAlignment::Center));
-      div(context, mk(entity, p.label_id),
+              .with_alignment(TextAlignment::Center)
+              .with_margin(pi > 0 ? Margin{.left = w1280(20)} : Margin{}));
+      div(context, mk(prompts.ent(), pi * 2 + 1),
           ComponentConfig{}
-              .with_label(p.label)
-              .with_size(ComponentSize{pixels(p.label_w), pixels(25)})
-              .with_absolute_position(prompt_x + p.x_off + 35.0f, prompt_y + 2.0f)
+              .with_label(prompt_data[pi].label)
+              .with_size(ComponentSize{w1280(55), h720(25)})
               .with_font("EqProRounded", h720(16.0f))
-              .with_custom_text_color(text_white));
+              .with_custom_text_color(text_white)
+              .with_margin(Margin{.left = w1280(7)}));
     }
   }
 };

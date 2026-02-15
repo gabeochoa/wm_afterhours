@@ -18,12 +18,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color bg_dark{8, 12, 22, 255};
   afterhours::Color text_cyan{85, 175, 225, 255};
   afterhours::Color text_bright{165, 215, 245, 255};
-  afterhours::Color text_muted{110, 135, 165, 255};  // Brightened for WCAG AA contrast
-  afterhours::Color highlight_line{65, 140, 195,
-                                   255}; // Brightened for better visibility
-  afterhours::Color connector_line{110, 180, 225,
-                                   255}; // High-visibility tree connector
-  afterhours::Color grid_color{15, 25, 40, 120};  // Made more subtle
+  afterhours::Color text_muted{110, 135, 165, 255};
+  afterhours::Color highlight_line{65, 140, 195, 255};
+  afterhours::Color connector_line{110, 180, 225, 255};
+  afterhours::Color grid_color{15, 25, 40, 120};
 
   std::vector<std::string> categories = {
       "FLIGHT SYSTEM", "CONTROLS", "KEYBOARD", "MOUSE",    "FLIGHT STICK",
@@ -37,7 +35,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       "Vibration",
   };
 
-  // Context-aware help text for each suboption
   std::vector<std::string> suboption_help = {
       "Choose between standard or expert control schemes.",
       "Configure high-G maneuver sensitivity.",
@@ -45,7 +42,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       "Vibration feedback requires a compatible controller.",
   };
 
-  // Help text for each category (when no suboption is focused)
   std::vector<std::string> category_help = {
       "Configure flight control behavior and aircraft handling.",
       "Adjust control mappings and input settings.",
@@ -62,11 +58,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
     Theme theme;
-    // Use pure white/black for auto_text_color to achieve WCAG AA contrast
-    theme.font =
-        afterhours::Color{255, 255, 255, 255}; // Pure white for dark bgs
-    theme.darkfont =
-        afterhours::Color{10, 15, 25, 255}; // Near-black for light bgs
+    theme.font = afterhours::Color{255, 255, 255, 255};
+    theme.darkfont = afterhours::Color{10, 15, 25, 255};
     theme.font_muted = text_muted;
     theme.background = bg_dark;
     theme.surface = afterhours::Color{12, 18, 30, 255};
@@ -78,88 +71,62 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    // Note: We only need screen_h for positioning elements relative to screen bottom
-    int screen_h = Settings::get().get_screen_height();
-
-    // ========== BACKGROUND ==========
-    // Use screen_pct(1.0f) to cover full screen regardless of Settings resolution
-    div(context, mk(entity, 0),
+    // ═══════════════════════════════════════════════════════════════
+    // ROOT
+    // ═══════════════════════════════════════════════════════════════
+    auto root = vstack(
+        context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
-            .with_debug_name("bg"));
+            .with_padding(Padding{.top = h720(20), .left = w1280(135),
+                                  .right = w1280(40)})
+            .with_no_wrap()
+            .with_debug_name("flight_root"));
 
-    // Note: Grid lines removed to reduce visual clutter - clean background only
-
-    // ========== DECORATIVE HUD LINES ==========
-    float menu_x = 185.0f;
-    float menu_y = 150.0f;
-    float line_origin_x = menu_x - 20.0f;
-    float line_origin_y = menu_y - 15.0f;
-
-    // Top angled line connecting to title area
-    div(context, mk(entity, 60),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(80), pixels(2)})
-            .with_absolute_position(line_origin_x - 80.0f, line_origin_y)
-            .with_custom_background(highlight_line)
-            .with_debug_name("line_top"));
-
-    // ========== TITLE: OPTIONS ==========
-    div(context, mk(entity, 100),
+    // ── Title ──
+    div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("OPTIONS")
-            .with_size(ComponentSize{pixels(200), pixels(50)})
-            .with_absolute_position(135.0f, 60.0f)
+            .with_size(ComponentSize{w1280(200), h720(50)})
             .with_font("EqProRounded", h720(36.0f))
             .with_custom_text_color(text_cyan));
 
-    // ========== CATEGORY TABS ==========
-    tab_container(context, mk(entity, 110), categories, active_tab,
+    // ── Tab bar ──
+    tab_container(
+        context, mk(root.ent()), categories, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(800), pixels(32)})
-            .with_absolute_position(menu_x - 50.0f, 110.0f));
+            .with_size(ComponentSize{w1280(950), h720(32)})
+            .with_margin(Margin{.top = h720(-5)}));
 
-    // ========== SUB-OPTIONS (right side) ==========
-    float sub_x = 400.0f;
-    float sub_y = 250.0f;
-
-    // ========== VISUAL CONNECTION LINE (menu to submenu) ==========
-    // Vertical connector spanning all suboptions
-    float connector_x = 385.0f;
-    float connector_top = sub_y + 10.0f;
-    float connector_bottom = sub_y + ((float)suboptions.size() - 1) * 36.0f + 10.0f;
-    div(context, mk(entity, 160),
+    // ── Decorative line ──
+    div(context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(3), pixels((int)(connector_bottom - connector_top))})
-            .with_absolute_position(connector_x, connector_top)
-            .with_custom_background(connector_line)
-            .with_debug_name("connector_line"));
+            .with_size(ComponentSize{w1280(80), pixels(2)})
+            .with_custom_background(highlight_line)
+            .with_margin(Margin{.top = h720(10)})
+            .with_debug_name("line_top"));
 
-    // Horizontal branch lines from connector to each suboption
-    for (size_t i = 0; i < suboptions.size(); i++) {
-      float branch_y = sub_y + (float)i * 36.0f + 10.0f;
-      div(context, mk(entity, 170 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(12), pixels(2)})
-              .with_absolute_position(connector_x + 3.0f, branch_y)
-              .with_custom_background(connector_line)
-              .with_debug_name("branch_" + std::to_string(i)));
-    }
-
-    // Sub-option header showing which category's settings are displayed
+    // ── Content area: connector + sub-options ──
     std::string sub_header = categories[active_tab] + " SETTINGS";
-    div(context, mk(entity, 195),
+
+    auto content = vstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(350)})
+            .with_no_wrap()
+            .with_margin(Margin{.top = h720(5), .left = w1280(265)})
+            .with_debug_name("content"));
+
+    div(context, mk(content.ent()),
         ComponentConfig{}
             .with_label(sub_header)
-            .with_size(ComponentSize{pixels(300), pixels(28)})
-            .with_absolute_position(sub_x, sub_y - 36.0f)
+            .with_size(ComponentSize{w1280(300), h720(28)})
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(text_cyan));
 
-    // Sub-option items
     bool vibration_unavailable = true;
-    afterhours::Color disabled_color{80, 95, 115, 128};  // 50% opacity + dimmer for clear disabled
+    afterhours::Color disabled_color{80, 95, 115, 128};
 
     for (size_t i = 0; i < suboptions.size(); i++) {
       bool is_selected = (i == selected_option);
@@ -172,21 +139,20 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         opt_color = is_selected ? text_bright : text_muted;
       }
 
-      // Append "(Unavailable)" to disabled items so the state is clear inline
       std::string label = suboptions[i];
       if (is_disabled) {
         label += "  (Unavailable)";
       }
 
-      if (button(context, mk(entity, 200 + static_cast<int>(i)),
+      if (button(context, mk(content.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(label)
-                     .with_size(ComponentSize{pixels(300), pixels(32)})
-                     .with_absolute_position(sub_x, sub_y + (float)i * 36.0f)
+                     .with_size(ComponentSize{w1280(300), h720(32)})
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(opt_color)
                      .with_disabled(is_disabled)
                      .with_opacity(is_disabled ? 0.5f : 1.0f)
+                     .with_margin(Margin{.top = h720(4)})
                      .with_debug_name("opt_" + std::to_string(i)))) {
         if (!is_disabled) {
           selected_option = i;
@@ -194,57 +160,48 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // Tooltip for disabled Vibration option
+    // Vibration tooltip
     if (vibration_unavailable) {
-      // Small indicator dot to draw attention to the tooltip
-      div(context, mk(entity, 249),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(6), pixels(6)})
-              .with_absolute_position(sub_x + 8.0f, sub_y + 3 * 36.0f + 28.0f)
-              .with_custom_background(afterhours::Color{180, 140, 50, 255})
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f)
-              .with_debug_name("vibration_warn_dot"));
-
-      div(context, mk(entity, 250),
+      div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("Requires compatible controller")
-              .with_size(ComponentSize{pixels(280), pixels(20)})
-              .with_absolute_position(sub_x + 18.0f, sub_y + 3 * 36.0f + 24.0f)
+              .with_size(ComponentSize{w1280(280), h720(20)})
               .with_font("EqProRounded", h720(14.0f))
-              .with_custom_text_color(text_muted));
+              .with_custom_text_color(text_muted)
+              .with_margin(Margin{.left = w1280(18)}));
     }
 
-    // ========== HELP TEXT ==========
-    // Generate context-aware help text based on current selection
+    // ── Help text ──
     std::string help_text;
     if (active_tab == 0 && selected_option < suboption_help.size()) {
-      // When on Flight System category, show suboption-specific help
       help_text = suboption_help[selected_option];
     } else if (active_tab < category_help.size()) {
-      // Show category-specific help for other categories
       help_text = category_help[active_tab];
     } else {
       help_text = "Use arrow keys to browse categories and options.";
     }
 
-    div(context, mk(entity, 300),
+    div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label(help_text)
-            .with_size(ComponentSize{pixels(500), pixels(36)})
-            .with_absolute_position(170.0f, (float)screen_h - 180.0f)
-            .with_font("EqProRounded", h720(20.0f))
-            .with_custom_text_color(text_bright));
+            .with_size(ComponentSize{w1280(500), h720(28)})
+            .with_font("EqProRounded", h720(18.0f))
+            .with_custom_text_color(text_bright)
+            .with_margin(Margin{.left = w1280(35)}));
 
-    // ========== FOOTER: OK / Cancel / Apply ==========
-    float footer_btn_y = (float)screen_h - 120.0f;
-    float footer_btn_x = 500.0f;
+    auto footer_btns = hstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(36)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_margin(Margin{.top = h720(5), .left = w1280(365)})
+            .with_debug_name("footer_btns"));
 
-    button(context, mk(entity, 350),
+    button(context, mk(footer_btns.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x, footer_btn_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(highlight_line)
                .with_border(text_muted, 1.0f)
                .with_font("EqProRounded", h720(18.0f))
@@ -252,68 +209,69 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_debug_name("btn_ok"));
 
-    button(context, mk(entity, 351),
+    button(context, mk(footer_btns.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 90.0f, footer_btn_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(afterhours::Color{35, 50, 70, 255})
                .with_border(text_muted, 1.0f)
                .with_font("EqProRounded", h720(18.0f))
                .with_custom_text_color(text_bright)
                .with_alignment(TextAlignment::Center)
+               .with_margin(Margin{.left = w1280(10)})
                .with_debug_name("btn_cancel"));
 
-    button(context, mk(entity, 352),
+    button(context, mk(footer_btns.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 180.0f, footer_btn_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(afterhours::Color{35, 50, 70, 255})
                .with_border(text_muted, 1.0f)
                .with_font("EqProRounded", h720(18.0f))
                .with_custom_text_color(text_bright)
                .with_alignment(TextAlignment::Center)
+               .with_margin(Margin{.left = w1280(10)})
                .with_debug_name("btn_apply"));
 
-    // ========== BOTTOM BUTTON PROMPTS ==========
-    float btn_y = (float)screen_h - 60.0f;
+    auto prompts = hstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(28)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_margin(Margin{.top = h720(5), .left = w1280(25)})
+            .with_debug_name("prompts"));
 
-    // Enter key box
-    div(context, mk(entity, 400),
+    afterhours::Color key_bg{35, 50, 70, 255};
+    div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("Enter")
-            .with_size(ComponentSize{pixels(56), pixels(36)})
-            .with_absolute_position(160.0f, btn_y)
-            .with_custom_background(afterhours::Color{35, 50, 70, 255})
+            .with_size(ComponentSize{w1280(56), h720(28)})
+            .with_custom_background(key_bg)
             .with_border(text_muted, 1.0f)
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 401),
+    div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("OK")
-            .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_absolute_position(224.0f, btn_y)
-            .with_custom_text_color(text_bright));
-
-    // Esc key box
-    div(context, mk(entity, 402),
+            .with_size(ComponentSize{w1280(36), h720(28)})
+            .with_custom_text_color(text_bright)
+            .with_margin(Margin{.left = w1280(8)}));
+    div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("Esc")
-            .with_size(ComponentSize{pixels(48), pixels(36)})
-            .with_absolute_position(275.0f, btn_y)
-            .with_custom_background(afterhours::Color{35, 50, 70, 255})
+            .with_size(ComponentSize{w1280(48), h720(28)})
+            .with_custom_background(key_bg)
             .with_border(text_muted, 1.0f)
             .with_custom_text_color(text_bright)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 403),
+            .with_alignment(TextAlignment::Center)
+            .with_margin(Margin{.left = w1280(15)}));
+    div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("BACK")
-            .with_size(ComponentSize{pixels(56), pixels(36)})
-            .with_absolute_position(331.0f, btn_y)
-            .with_custom_text_color(text_bright));
+            .with_size(ComponentSize{w1280(56), h720(28)})
+            .with_custom_text_color(text_bright)
+            .with_margin(Margin{.left = w1280(8)}));
   }
 };
 
