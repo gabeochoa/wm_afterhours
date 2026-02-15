@@ -135,15 +135,10 @@ This confirms:
 | `ui_core_components.h:108-109` | Added `fmaxf(0.f, ...)` to clamp width/height to 0 minimum | ✅ Applied |
 | `autolayout.h:301` | Added `fmaxf(0.f, parent_size)` to prevent negative parent sizes | ✅ Applied |
 
-## Debug Logging Added (should be removed before production)
+## Debug Logging Added (removed — no longer present in code)
 
-| File | Line | Purpose |
-|------|------|---------|
-| `imm_components.h` | 311, 326 | Log button_group sizing |
-| `imm_components.h` | 680 | Log h720() font size issue |
-| `rendering.h` | 270-275 | Log negative container heights |
-| `ui_core_components.h` | 110-113 | Log when rect() produces negative sizes |
-| `autolayout.h` | 297-301 | Log negative parent_size |
+Debug logging referenced below was either never committed or already cleaned up.
+All existing log statements are permanent error handling or guarded behind `#ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW`.
 
 ### 4. Slider Handle Overflow - Fixed
 

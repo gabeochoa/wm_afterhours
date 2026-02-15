@@ -67,7 +67,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     // Section label
     div(context, mk(entity, 100),
         ComponentConfig{}
-            .with_label("1: percent(1.0) inside absolute parent (300px wide)")
+            .with_label("[NOT A BUG] 1: percent(1.0) inside absolute parent")
             .with_size(ComponentSize{pixels(600), pixels(18)})
             .with_absolute_position(sec1_x, sec1_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -112,7 +112,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 200),
         ComponentConfig{}
-            .with_label("2: Row children in absolute parent (600px wide)")
+            .with_label("[FIXED] 2: Row children in absolute parent")
             .with_size(ComponentSize{pixels(600), pixels(18)})
             .with_absolute_position(sec2_x, sec2_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -180,7 +180,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_label("3: Flow children inside absolute parent at (400, 310)")
+            .with_label("[FIXED] 3: Flow children inside absolute parent at (400, 310)")
             .with_size(ComponentSize{pixels(600), pixels(18)})
             .with_absolute_position(sec3_x, sec3_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -253,7 +253,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_label("4: Z-order — mk(5000) RED created first, mk(2000) BLUE created second")
+            .with_label("[NOT A BUG] 4: Z-order — entity creation order = render order")
             .with_size(ComponentSize{pixels(700), pixels(18)})
             .with_absolute_position(sec4_x, sec4_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -302,7 +302,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 500),
         ComponentConfig{}
-            .with_label("5: children() width vs manual pixels() for text sizing")
+            .with_label("[FIXED] 5: children() width vs manual pixels() for text sizing")
             .with_size(ComponentSize{pixels(600), pixels(18)})
             .with_absolute_position(sec5_x, sec5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -352,7 +352,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 600),
         ComponentConfig{}
-            .with_label("6: tab_container inside absolute parent")
+            .with_label("[FIXED] 6: tab_container inside absolute parent")
             .with_size(ComponentSize{pixels(500), pixels(18)})
             .with_absolute_position(sec6_x, sec6_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -392,7 +392,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 700),
         ComponentConfig{}
-            .with_label("7: toggle_switch vertical space — 3 toggles in 150px container")
+            .with_label("[NOT A BUG] 7: toggle_switch vertical space — fits correctly")
             .with_size(ComponentSize{pixels(500), pixels(18)})
             .with_absolute_position(sec7_x, sec7_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
