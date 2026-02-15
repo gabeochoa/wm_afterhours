@@ -21,6 +21,7 @@
 #include <afterhours/src/plugins/ui/ui_collection.h>
 #include <afterhours/src/plugins/ui/entity_management.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
+#include <afterhours/src/plugins/e2e_testing/test_input.h>
 #include <filesystem>
 
 // Globals defined in game.cpp
@@ -660,4 +661,181 @@ int run_all_tests_headless() {
   afterhours::graphics::shutdown();
 
   return failed;
+}
+
+// ---------------------------------------------------------------------------
+// run_focus_ring_test -- for each screen, capture initial screenshot then
+// inject Tab keypresses one at a time, capturing after each.
+// ---------------------------------------------------------------------------
+void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
+  constexpr int WIDTH = 1280;
+  constexpr int HEIGHT = 720;
+
+  // 1. Init headless graphics
+  afterhours::graphics::Config cfg;
+  cfg.display = afterhours::graphics::DisplayMode::Headless;
+  cfg.width = WIDTH;
+  cfg.height = HEIGHT;
+  cfg.title = "Focus Ring Test";
+  cfg.target_fps = 60;
+
+  if (!afterhours::graphics::init(cfg)) {
+    log_error("[FocusTest] Failed to init graphics backend");
+    return;
+  }
+
+  Settings::get().update_resolution(
+      afterhours::window_manager::Resolution{.width = WIDTH, .height = HEIGHT});
+
+  afterhours::files::init("Prime Pressure", "resources");
+
+  mainRT = afterhours::graphics::get_render_texture();
+  screenRT = raylib::LoadRenderTexture(WIDTH, HEIGHT);
+
+  uiFont = load_font_headless(
+      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+          .string()
+          .c_str());
+
+  configure_validation();
+  setup_ecs_singletons(WIDTH, HEIGHT);
+
+  int ui_entity_id = afterhours::EntityHelper::get_singleton<
+                         afterhours::ui::UIContext<InputAction>>()
+                         .get()
+                         .id;
+
+  // 2. Determine which screens to test
+  std::vector<std::string> screen_names;
+  if (screen_filter.empty()) {
+    screen_names = ExampleScreenRegistry::get().get_screen_names();
+  } else {
+    if (ExampleScreenRegistry::get().has_screen(screen_filter)) {
+      screen_names.push_back(screen_filter);
+    } else {
+      log_error("[FocusTest] Screen not found: {}", screen_filter);
+      raylib::UnloadRenderTexture(screenRT);
+      afterhours::graphics::shutdown();
+      return;
+    }
+  }
+
+  // 3. Create output directory
+  std::filesystem::path base_dir =
+      std::filesystem::path(g_headless_output_dir) / "focus_test";
+  std::filesystem::create_directories(base_dir);
+
+  log_info("[FocusTest] Testing {} screens, max {} tabs each",
+           screen_names.size(), max_tabs);
+
+  // Enable test input mode so synthetic key presses are consumed
+  test_input::test_mode = true;
+  afterhours::testing::test_input::detail::test_mode = true;
+
+  for (const std::string &screen_name : screen_names) {
+    // Reset state
+    reset_screen_state(ui_entity_id);
+    test_input::clear_queue();
+    afterhours::testing::test_input::clear_queue();
+
+    // Create per-screen output directory
+    std::filesystem::path screen_dir = base_dir / screen_name;
+    std::filesystem::create_directories(screen_dir);
+
+    // Create systems for this screen
+    afterhours::SystemManager systems = create_screen_systems(screen_name);
+
+    // Verify font manager
+    auto *font_mgr =
+        afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::FontManager>();
+    if (font_mgr) {
+      raylib::Font test_font =
+          font_mgr->get_font(afterhours::ui::UIComponent::DEFAULT_FONT);
+      if (test_font.glyphCount == 0 || test_font.glyphs == nullptr ||
+          test_font.texture.id == 0) {
+        log_error("[FocusTest] Font invalid! Skipping: {}", screen_name);
+        continue;
+      }
+    }
+
+    // Initial 2-pass stabilization (no input)
+    for (int pass = 0; pass < 2; pass++) {
+      {
+        auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+        systems.tick_all(entities, 0.016f);
+      }
+      {
+        auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+        systems.render(entities, 0.016f);
+      }
+      afterhours::EntityHelper::cleanup();
+    }
+
+    // Capture initial screenshot (no focus)
+    raylib::rlDrawRenderBatchActive();
+    {
+      std::string filename = "tab_0.png";
+      std::filesystem::path output_path = screen_dir / filename;
+      afterhours::graphics::capture_frame(output_path);
+      log_info("[FocusTest] {}: saved tab_0 (initial)", screen_name);
+    }
+
+    // Tab through elements
+    for (int tab_n = 1; tab_n <= max_tabs; tab_n++) {
+      // Inject tab keypress
+      test_input::simulate_tab();
+      afterhours::testing::test_input::simulate_tab();
+
+      // Run 2 tick+render passes to allow focus to settle and layout to update
+      for (int pass = 0; pass < 2; pass++) {
+        test_input::reset_frame();
+        afterhours::testing::test_input::reset_frame();
+        {
+          auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+          systems.tick_all(entities, 0.016f);
+        }
+        {
+          auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+          systems.render(entities, 0.016f);
+        }
+        afterhours::EntityHelper::cleanup();
+      }
+
+      // Capture screenshot
+      raylib::rlDrawRenderBatchActive();
+      {
+        std::string filename = "tab_" + std::to_string(tab_n) + ".png";
+        std::filesystem::path output_path = screen_dir / filename;
+        afterhours::graphics::capture_frame(output_path);
+      }
+    }
+
+    log_info("[FocusTest] {}: captured {} screenshots", screen_name, max_tabs + 1);
+  }
+
+  // Cleanup
+  test_input::test_mode = false;
+  afterhours::testing::test_input::detail::test_mode = false;
+  g_current_screen = nullptr;
+
+  for (const auto &e : afterhours::EntityHelper::get_entities()) {
+    if (!e) continue;
+    e->cleanup = true;
+  }
+  afterhours::EntityHelper::cleanup();
+
+  {
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+    for (const auto &e : ui_coll.get_entities()) {
+      if (!e) continue;
+      e->cleanup = true;
+    }
+    ui_coll.cleanup();
+  }
+
+  raylib::UnloadFont(uiFont);
+  raylib::UnloadRenderTexture(screenRT);
+  afterhours::graphics::shutdown();
+
+  log_info("[FocusTest] Complete - tested {} screens", screen_names.size());
 }

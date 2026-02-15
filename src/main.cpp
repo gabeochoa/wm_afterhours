@@ -100,6 +100,9 @@ int main(int argc, char *argv[]) {
     std::cout << "  --headless                   Run E2E tests without a window (for CI)\n";
     std::cout << "  --time-scale <float>         Time multiplier for headless mode (default: 1.0, e.g., 10.0 = 10x faster)\n";
     std::cout << "  --capture-interval <int>     Auto-capture screenshot every N frames (0 = disabled)\n";
+    std::cout << "\nFocus Ring Testing:\n";
+    std::cout << "  --focus-test [screen]        Tab through screens capturing focus ring screenshots\n";
+    std::cout << "  --max-tabs <int>             Max tab presses per screen (default: 20)\n";
     return 0;
   }
 
@@ -115,6 +118,26 @@ int main(int argc, char *argv[]) {
   if (cmdl["--run-all-tests"]) {
     int failures = run_all_tests_headless();
     return failures == 0 ? 0 : 1;
+  }
+
+  // Focus ring test mode
+  {
+    std::string focus_screen;
+    bool has_focus_flag = cmdl["--focus-test"];
+    bool has_focus_param = static_cast<bool>(cmdl({"--focus-test"}) >> focus_screen);
+    if (has_focus_flag || has_focus_param) {
+      g_headless_mode = true;
+      int max_tabs = 20;
+      cmdl({"--max-tabs"}, 20) >> max_tabs;
+
+      std::string output_override;
+      if (cmdl({"--image-output"}) >> output_override) {
+        g_headless_output_dir = output_override;
+      }
+
+      run_focus_ring_test(has_focus_param ? focus_screen : "", max_tabs);
+      return 0;
+    }
   }
 
   if (cmdl["--list-screens"]) {
