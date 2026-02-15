@@ -1,15 +1,117 @@
-# Responsive Audit - Test multiple screens at 720p minimum
+# Responsive Audit - Test migrated screens at 720p and 1080p
 # Verifies no UI elements overflow the viewport at minimum supported resolution
+# and at a common larger resolution.
 
-# Test sports_settings (we fixed this one)
+# ── sports_settings ──
 goto_screen sports_settings
 wait 0.5
 resize 1280 720
 wait 0.3
 assert_no_overflow
 screenshot responsive_sports_settings_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_sports_settings_1080p
 
-# Test fighter_menu
+# ── casual_settings ──
+goto_screen casual_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_casual_settings_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_casual_settings_1080p
+
+# ── powerwash_settings ──
+goto_screen powerwash_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_powerwash_settings_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_powerwash_settings_1080p
+
+# ── flight_options ──
+goto_screen flight_options
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_flight_options_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_flight_options_1080p
+
+# ── mini_motorways_settings ──
+goto_screen mini_motorways_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_mini_motorways_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_mini_motorways_1080p
+
+# ── kirby_options ──
+goto_screen kirby_options
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_kirby_options_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_kirby_options_1080p
+
+# ── angry_birds_settings ──
+goto_screen angry_birds_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_angry_birds_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_angry_birds_1080p
+
+# ── deadspace_settings ──
+goto_screen deadspace_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_deadspace_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_deadspace_1080p
+
+# ── rubber_bandits_menu ──
+goto_screen rubber_bandits_menu
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_no_overflow
+screenshot responsive_rubber_bandits_720p
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+screenshot responsive_rubber_bandits_1080p
+
+# ── Non-migrated screens (smoke test at 720p) ──
+
 goto_screen fighter_menu
 wait 0.5
 resize 1280 720
@@ -17,7 +119,6 @@ wait 0.3
 assert_no_overflow
 screenshot responsive_fighter_menu_720p
 
-# Test shop_interface
 goto_screen shop_interface
 wait 0.5
 resize 1280 720
@@ -25,7 +126,6 @@ wait 0.3
 assert_no_overflow
 screenshot responsive_shop_interface_720p
 
-# Test forms
 goto_screen forms
 wait 0.5
 resize 1280 720
@@ -33,7 +133,6 @@ wait 0.3
 assert_no_overflow
 screenshot responsive_forms_720p
 
-# Test buttons
 goto_screen buttons
 wait 0.5
 resize 1280 720
@@ -41,7 +140,6 @@ wait 0.3
 assert_no_overflow
 screenshot responsive_buttons_720p
 
-# Test cards
 goto_screen cards
 wait 0.5
 resize 1280 720

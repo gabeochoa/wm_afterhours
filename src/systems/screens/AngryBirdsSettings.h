@@ -17,83 +17,52 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   bool vibration_on = false;
   bool notifications_off = true;
 
-  // === CONFIGURABLE LAYOUT PARAMETERS ===
-  // Panel dimensions
+  // === CONFIGURABLE SIZE PARAMETERS ===
   float cfg_panel_width = 720.0f;
   float cfg_panel_height = 480.0f;
   float cfg_panel_border_width = 6.0f;
   float cfg_panel_roundness = 0.12f;
-
-  // Header configuration
   float cfg_header_height = 85.0f;
-  float cfg_header_inset = 6.0f;
   float cfg_title_font_size = 44.0f;
-  float cfg_title_y_offset = 20.0f;
-
-  // Close button configuration
   float cfg_close_btn_size = 44.0f;
-  float cfg_close_btn_margin = 22.0f;
   float cfg_close_btn_border = 3.0f;
-
-  // Toggle section configuration
-  float cfg_toggle_y_offset = 115.0f;
-  float cfg_toggle_x_offset = 55.0f;
-  float cfg_toggle_spacing = 110.0f;
   float cfg_toggle_track_w = 60.0f;
   float cfg_toggle_track_h = 32.0f;
-  float cfg_toggle_knob_sz = 24.0f;  // track_h - 2*pad for capsule fit
+  float cfg_toggle_knob_sz = 24.0f;
   float cfg_toggle_pad = 4.0f;
-  float cfg_toggle_label_gap = 6.0f;
   float cfg_toggle_label_font_size = 16.0f;
-
-  // Save/Load group configuration
   float cfg_saveload_width = 240.0f;
   float cfg_saveload_height = 80.0f;
-  float cfg_saveload_padding = 12.0f;
   float cfg_sync_btn_size = 44.0f;
-
-  // Pill button configuration
   float cfg_pill_btn_width = 295.0f;
   float cfg_pill_btn_height = 48.0f;
-  float cfg_pill_btn_spacing = 58.0f;
-  float cfg_pill_left_margin = 50.0f;
-  float cfg_pill_right_margin = 30.0f;
   float cfg_pill_border_width = 4.0f;
   float cfg_pill_font_size = 20.0f;
-
-  // Info section configuration
   float cfg_info_font_size = 16.0f;
   float cfg_info_line_height = 20.0f;
-
-  // Shadow configuration
-  float cfg_panel_shadow_offset_x = 4.0f;
-  float cfg_panel_shadow_offset_y = 5.0f;
   int cfg_panel_shadow_alpha = 45;
   float cfg_btn_shadow_blur = 6.0f;
   int cfg_btn_shadow_alpha = 35;
 
   // Colors matching Angry Birds inspiration - warm, playful mobile game
-  afterhours::Color bg_green{75, 135, 95,
-                             255}; // Softer forest green background
-  afterhours::Color header_coral{245, 145, 100,
-                                 255}; // Warmer coral/orange header
-  afterhours::Color header_dark{215, 105, 60, 255}; // Darker coral border
-  afterhours::Color panel_cream{255, 250, 235,
-                                255}; // Warm cream panel (slightly warmer)
-  afterhours::Color panel_peach{255, 242, 222, 255}; // Inner peach
-  afterhours::Color btn_green{115, 195, 85, 255};    // Bright lime green toggle
-  afterhours::Color btn_green_dark{85, 160, 55, 255}; // Green shadow
-  afterhours::Color btn_gray{155, 155, 155, 255};     // Gray for OFF state
-  afterhours::Color btn_gray_dark{120, 120, 120, 255}; // Gray shadow
-  afterhours::Color btn_blue{85, 155, 210, 255};      // Softer blue pill
-  afterhours::Color btn_blue_dark{55, 120, 175, 255}; // Blue shadow
-  afterhours::Color text_dark{65, 55, 45, 255};       // Dark brown text
-  afterhours::Color text_muted{95, 80, 60, 255};       // Darker brown for info (4.5:1 on cream)
+  afterhours::Color bg_green{75, 135, 95, 255};
+  afterhours::Color header_coral{245, 145, 100, 255};
+  afterhours::Color header_dark{215, 105, 60, 255};
+  afterhours::Color panel_cream{255, 250, 235, 255};
+  afterhours::Color panel_peach{255, 242, 222, 255};
+  afterhours::Color btn_green{115, 195, 85, 255};
+  afterhours::Color btn_green_dark{85, 160, 55, 255};
+  afterhours::Color btn_gray{155, 155, 155, 255};
+  afterhours::Color btn_gray_dark{120, 120, 120, 255};
+  afterhours::Color btn_blue{85, 155, 210, 255};
+  afterhours::Color btn_blue_dark{55, 120, 175, 255};
+  afterhours::Color text_dark{65, 55, 45, 255};
+  afterhours::Color text_muted{95, 80, 60, 255};
   afterhours::Color text_white{255, 255, 255, 255};
-  afterhours::Color close_red{235, 75, 85, 255};   // Brighter close button red
-  afterhours::Color close_red_dark{195, 55, 65, 255}; // Darker close red
-  afterhours::Color wifi_green{75, 195, 135, 255}; // WiFi icon green
-  afterhours::Color wifi_green_dark{55, 165, 110, 255}; // WiFi green shadow
+  afterhours::Color close_red{235, 75, 85, 255};
+  afterhours::Color close_red_dark{195, 55, 65, 255};
+  afterhours::Color wifi_green{75, 195, 135, 255};
+  afterhours::Color wifi_green_dark{55, 165, 110, 255};
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -112,81 +81,71 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 12;
     context.theme = theme;
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    afterhours::Color pill_shadow{
+        0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
 
-    // ========== BACKGROUND ==========
-    div(context, mk(entity, 0),
+    // ═══════════════════════════════════════════════════════════════
+    // ROOT - full screen, center content
+    // ═══════════════════════════════════════════════════════════════
+    auto root = vstack(
+        context, mk(entity),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_green)
-            .with_debug_name("bg"));
+            .with_align_items(AlignItems::Center)
+            .with_justify_content(JustifyContent::Center)
+            .with_no_wrap()
+            .with_debug_name("ab_root"));
 
-    // ========== MAIN PANEL ==========
-    float panel_w = cfg_panel_width;
-    float panel_h = cfg_panel_height;
-    float panel_x = ((float)screen_w - panel_w) / 2.0f;
-    float panel_y = ((float)screen_h - panel_h) / 2.0f;
-
-    // Panel shadow
-    div(context, mk(entity, 5),
+    // ═══════════════════════════════════════════════════════════════
+    // PANEL
+    // ═══════════════════════════════════════════════════════════════
+    auto panel = vstack(
+        context, mk(root.ent()),
         ComponentConfig{}
-            .with_720p_size(panel_w, panel_h)
-            .with_absolute_position(panel_x + cfg_panel_shadow_offset_x,
-                            panel_y + cfg_panel_shadow_offset_y)
-            .with_custom_background(afterhours::Color{
-                0, 0, 0, static_cast<unsigned char>(cfg_panel_shadow_alpha)})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(cfg_panel_roundness)
-            .with_debug_name("panel_shadow"));
-
-    // Main panel background
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_720p_size(panel_w, panel_h)
-            .with_absolute_position(panel_x, panel_y)
+            .with_720p_size(cfg_panel_width, cfg_panel_height)
             .with_custom_background(panel_cream)
             .with_border(header_dark, cfg_panel_border_width)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(cfg_panel_roundness)
+            .with_soft_shadow(4.0f, 5.0f, 12.0f,
+                              afterhours::Color{0, 0, 0, static_cast<unsigned char>(cfg_panel_shadow_alpha)})
+            .with_no_wrap()
             .with_debug_name("panel"));
 
-    // ========== CORAL HEADER ==========
-    float header_inset = cfg_header_inset;
-    div(context, mk(entity, 20),
+    // ── Coral header ──
+    auto header = hstack(
+        context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{
-                pxf(panel_w - header_inset * 2),
-                pxf(cfg_header_height)})
-            .with_absolute_position(panel_x + header_inset, panel_y + header_inset)
+            .with_size(ComponentSize{percent(1.0f), h720(cfg_header_height)})
             .with_custom_background(header_coral)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.10f)
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_padding(Padding{.left = w1280(20), .right = w1280(20)})
             .with_debug_name("header"));
 
-    // Title
-    div(context, mk(entity, 21),
+    div(context, mk(header.ent()),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{pixels(280), pixels(60)})
-            .with_absolute_position(panel_x + panel_w / 2.0f - 140.0f,
-                            panel_y + cfg_title_y_offset)
+            .with_size(ComponentSize{w1280(280), h720(60)})
             .with_font("Fredoka", h720(cfg_title_font_size))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
-    // Close button (X) - positioned inside header bounds
-    float close_x = panel_x + panel_w - cfg_close_btn_margin - cfg_close_btn_size;
-    float close_y = panel_y + header_inset +
-                    (cfg_header_height - cfg_close_btn_size) / 2.0f;
-    button(context, mk(entity, 25),
+    // Spacer
+    div(context, mk(header.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{expand(), h720(1)})
+            .with_skip_tabbing(true));
+
+    // Close button
+    button(context, mk(header.ent()),
            ComponentConfig{}
                .with_label("X")
-               .with_size(ComponentSize{
-                   pxf(cfg_close_btn_size),
-                   pxf(cfg_close_btn_size)})
-               .with_absolute_position(close_x, close_y)
+               .with_size(ComponentSize{w1280(cfg_close_btn_size),
+                                        h720(cfg_close_btn_size)})
                .with_custom_background(close_red)
                .with_border(close_red_dark, cfg_close_btn_border)
                .with_custom_text_color(text_white)
@@ -196,254 +155,213 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_soft_shadow(1.0f, 2.0f, 4.0f,
                                  afterhours::Color{0, 0, 0, 30}));
 
-    // ========== SETTINGS TABS ==========
+    // ── Tab bar ──
     std::vector<std::string> settings_tabs = {"Audio", "General", "Info"};
-    tab_container(context, mk(entity, 26), settings_tabs, active_tab,
+    tab_container(context, mk(panel.ent()), settings_tabs, active_tab,
+                  ComponentConfig{}
+                      .with_size(ComponentSize{percent(1.0f), h720(36)})
+                      .with_margin(Margin{.top = h720(8)}));
+
+    // ── Content area ──
+    auto content = vstack(
+        context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w - 40), pixels(36)})
-            .with_absolute_position(panel_x + 20.0f,
-                            panel_y + cfg_header_height + cfg_header_inset + 8.0f));
+            .with_size(ComponentSize{percent(1.0f), h720(260)})
+            .with_no_wrap()
+            .with_padding(Padding{.top = h720(10), .left = w1280(50),
+                                  .right = w1280(50)})
+            .with_debug_name("content"));
 
     if (active_tab == 0) {
-    // ========== TOGGLE BUTTONS (Music, Sound, Vibration) ==========
-    float toggle_y = panel_y + cfg_toggle_y_offset + 30.0f;
-    float toggle_x = panel_x + cfg_toggle_x_offset;
-
-    // Toggle buttons with ON/OFF text for clarity
-    struct ToggleInfo {
-      std::string label;
-      bool *state;
-    };
-    std::vector<ToggleInfo> toggles = {
-        {"Music", &music_on},
-        {"Sound", &sound_on},
-        {"Vibrate", &vibration_on},
-    };
-
-    for (size_t i = 0; i < toggles.size(); i++) {
-      float tx = toggle_x + (float)i * cfg_toggle_spacing;
-      bool is_on = *toggles[i].state;
-      afterhours::Color track_col = is_on ? btn_green : btn_gray;
-      afterhours::Color track_border = is_on ? btn_green_dark : btn_gray_dark;
-
-      float track_center_y = toggle_y + 5.0f;
-
-      // Track visual (div — immune to hover color override)
-      div(context, mk(entity, 30 + static_cast<int>(i)),
+      // ════════════════ AUDIO TAB ════════════════
+      auto toggle_row = hstack(
+          context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{
-                  pxf(cfg_toggle_track_w),
-                  pxf(cfg_toggle_track_h)})
-              .with_absolute_position(tx, track_center_y)
-              .with_custom_background(track_col)
-              .with_border(track_border, 2.0f)
-              .with_rounded_corners(RoundedCorners().all_round())
-              .with_roundness(0.5f)
-              .with_soft_shadow(
-                  1.0f, 2.0f, cfg_btn_shadow_blur,
-                  afterhours::Color{0, 0, 0,
-                                    static_cast<unsigned char>(
-                                        cfg_btn_shadow_alpha)})
-              .with_debug_name("toggle_track_" + std::to_string(i)));
+              .with_size(ComponentSize{percent(1.0f), h720(75)})
+              .with_align_items(AlignItems::FlexStart)
+              .with_no_wrap()
+              .with_debug_name("toggle_row"));
 
-      // Transparent click target (overlays the track — no background)
-      if (button(
-              context, mk(entity, 33 + static_cast<int>(i)),
-              ComponentConfig{}
-                  .with_size(ComponentSize{
-                      pxf(cfg_toggle_track_w),
-                      pxf(cfg_toggle_track_h)})
-                  .with_absolute_position(tx, track_center_y)
-                  .with_color_usage(Theme::Usage::None)
-                  .with_debug_name("toggle_btn_" + std::to_string(i)))) {
-        *toggles[i].state = !(*toggles[i].state);
+      struct ToggleInfo {
+        std::string label;
+        bool *state;
+      };
+      std::vector<ToggleInfo> toggles = {
+          {"Music", &music_on},
+          {"Sound", &sound_on},
+          {"Vibrate", &vibration_on},
+      };
+
+      for (size_t i = 0; i < toggles.size(); i++) {
+        bool is_on = *toggles[i].state;
+        afterhours::Color track_col = is_on ? btn_green : btn_gray;
+        afterhours::Color track_border = is_on ? btn_green_dark : btn_gray_dark;
+
+        auto toggle_col = vstack(
+            context, mk(toggle_row.ent(), static_cast<int>(i)),
+            ComponentConfig{}
+                .with_size(ComponentSize{w1280(110), percent(1.0f)})
+                .with_align_items(AlignItems::Center)
+                .with_no_wrap()
+                .with_debug_name("toggle_" + std::to_string(i)));
+
+        // Track button
+        if (button(
+                context, mk(toggle_col.ent(), 0),
+                ComponentConfig{}
+                    .with_size(ComponentSize{w1280(cfg_toggle_track_w),
+                                             h720(cfg_toggle_track_h)})
+                    .with_custom_background(track_col)
+                    .with_border(track_border, 2.0f)
+                    .with_rounded_corners(RoundedCorners().all_round())
+                    .with_roundness(0.5f)
+                    .with_soft_shadow(1.0f, 2.0f, cfg_btn_shadow_blur,
+                                      pill_shadow)
+                    .with_debug_name("toggle_track_" + std::to_string(i)))) {
+          *toggles[i].state = !*toggles[i].state;
+        }
+
+        // Knob
+        float knob_travel = cfg_toggle_track_w - cfg_toggle_knob_sz -
+                            cfg_toggle_pad * 2.0f;
+        float knob_x_offset =
+            is_on ? knob_travel + cfg_toggle_pad : cfg_toggle_pad;
+        div(context, mk(toggle_col.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{w1280(cfg_toggle_knob_sz),
+                                         h720(cfg_toggle_knob_sz)})
+                .with_custom_background(
+                    afterhours::Color{255, 255, 255, 255})
+                .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
+                .with_rounded_corners(RoundedCorners().all_round())
+                .with_roundness(1.0f)
+                .with_skip_tabbing(true)
+                .with_translate(
+                    w1280(knob_x_offset - (cfg_toggle_track_w / 2.0f) +
+                          (cfg_toggle_knob_sz / 2.0f)),
+                    h720(-(cfg_toggle_track_h - cfg_toggle_pad)))
+                .with_debug_name("toggle_knob_" + std::to_string(i)));
+
+        // Label
+        std::string toggle_label =
+            toggles[i].label + (is_on ? ": ON" : ": OFF");
+        div(context, mk(toggle_col.ent(), 2),
+            ComponentConfig{}
+                .with_label(toggle_label)
+                .with_size(
+                    ComponentSize{w1280(100), h720(22)})
+                .with_font("EqProRounded", h720(cfg_toggle_label_font_size))
+                .with_custom_text_color(text_dark)
+                .with_alignment(TextAlignment::Center)
+                .with_margin(Margin{.top = h720(-20)}));
       }
-
-      // White sliding knob (sibling div — screen coordinates)
-      float knob_travel = cfg_toggle_track_w - cfg_toggle_knob_sz - cfg_toggle_pad * 2.0f;
-      float knob_x = tx + cfg_toggle_pad + (is_on ? knob_travel : 0.0f);
-      float knob_y = track_center_y + cfg_toggle_pad;
-      div(context, mk(entity, 36 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{pxf(cfg_toggle_knob_sz),
-                                       pxf(cfg_toggle_knob_sz)})
-              .with_absolute_position(knob_x, knob_y)
-              .with_custom_background(afterhours::Color{255, 255, 255, 255})
-              .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_round())
-              .with_roundness(1.0f)
-              .with_skip_tabbing(true)
-              .with_debug_name("toggle_knob_" + std::to_string(i)));
-
-      // Label + state below
-      std::string toggle_label = toggles[i].label + (is_on ? ": ON" : ": OFF");
-      div(context, mk(entity, 39 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(toggle_label)
-              .with_size(ComponentSize{pxf(cfg_toggle_track_w + 20.0f), pixels(22)})
-              .with_absolute_position(tx - 10.0f, track_center_y + cfg_toggle_track_h +
-                                      cfg_toggle_label_gap)
-              .with_font("EqProRounded", h720(cfg_toggle_label_font_size))
-              .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center));
     }
-
-    // ========== SAVE/LOAD + SYNC GROUP ==========
-    } // end active_tab == 0 (Audio)
 
     if (active_tab == 1) {
-    // ========== GENERAL SETTINGS ==========
-    // Simplified single card design (no nested boxes)
-    float general_y = panel_y + cfg_toggle_y_offset + 30.0f;
+      // ════════════════ GENERAL TAB ════════════════
 
-    // ========== SECTION HEADER: Data & Sync ==========
-    div(context, mk(entity, 44),
-        ComponentConfig{}
-            .with_label("Data & Sync")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
-            .with_absolute_position(panel_x + panel_w - cfg_saveload_width -
-                            cfg_saveload_padding - 20.0f, general_y - 22.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("section_header_data"));
+      // Data & Sync section
+      div(context, mk(content.ent()),
+          ComponentConfig{}
+              .with_label("Data & Sync")
+              .with_size(ComponentSize{w1280(120), h720(20)})
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(text_muted));
 
-    float saveload_x = panel_x + panel_w - cfg_saveload_width -
-                       cfg_saveload_padding - 20.0f;
-    float saveload_y = general_y - 4.0f;
+      auto save_group = hstack(
+          context, mk(content.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{w1280(cfg_saveload_width),
+                                       h720(cfg_saveload_height)})
+              .with_custom_background(panel_peach)
+              .with_border(afterhours::Color{210, 195, 175, 255}, 2.0f)
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.25f)
+              .with_align_items(AlignItems::Center)
+              .with_no_wrap()
+              .with_padding(Padding{.left = w1280(14), .right = w1280(14)})
+              .with_margin(Margin{.top = h720(4)})
+              .with_debug_name("save_sync_group"));
 
-    div(context, mk(entity, 39),
-        ComponentConfig{}
-            .with_size(ComponentSize{
-                pxf(cfg_saveload_width),
-                pxf(cfg_saveload_height)})
-            .with_absolute_position(saveload_x, saveload_y)
-            .with_custom_background(panel_peach)
-            .with_border(afterhours::Color{210, 195, 175, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.25f)
-            .with_debug_name("save_sync_group"));
+      auto save_labels = vstack(
+          context, mk(save_group.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{expand(), percent(1.0f)})
+              .with_no_wrap()
+              .with_justify_content(JustifyContent::Center));
 
-    // Save/Load Progress text (left side)
-    div(context, mk(entity, 41),
-        ComponentConfig{}
-            .with_label("Save/Load")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
-            .with_absolute_position(saveload_x + 14.0f, saveload_y + 14.0f)
-            .with_custom_text_color(text_dark));
+      div(context, mk(save_labels.ent()),
+          ComponentConfig{}
+              .with_label("Save/Load")
+              .with_size(ComponentSize{w1280(120), h720(24)})
+              .with_custom_text_color(text_dark));
 
-    div(context, mk(entity, 42),
-        ComponentConfig{}
-            .with_label("Progress")
-            .with_size(ComponentSize{pixels(120), pixels(24)})
-            .with_absolute_position(saveload_x + 14.0f, saveload_y + 40.0f)
-            .with_custom_text_color(text_dark));
+      div(context, mk(save_labels.ent()),
+          ComponentConfig{}
+              .with_label("Progress")
+              .with_size(ComponentSize{w1280(120), h720(24)})
+              .with_custom_text_color(text_dark));
 
-    // Sync button (right side of group, vertically centered)
-    float sync_x = saveload_x + cfg_saveload_width - cfg_sync_btn_size - 14.0f;
-    float sync_y = saveload_y + (cfg_saveload_height - cfg_sync_btn_size) / 2.0f;
-    button(context, mk(entity, 43),
-           ComponentConfig{}
-               .with_label("Sync")
-               .with_size(ComponentSize{
-                   pxf(cfg_sync_btn_size),
-                   pxf(cfg_sync_btn_size)})
-               .with_absolute_position(sync_x, sync_y)
-               .with_custom_background(wifi_green)
-               .with_border(wifi_green_dark, 3.0f)
-               .with_font("EqProRounded", h720(14.0f))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.4f)
-               .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                                 afterhours::Color{0, 0, 0, 25}));
-
-    // ========== BLUE PILL BUTTONS ==========
-    float btn_row1_y = general_y + cfg_toggle_track_h + 35.0f + cfg_toggle_label_gap;
-    float btn_row2_y = btn_row1_y + cfg_pill_btn_spacing;
-    float btn_row3_y = btn_row2_y + cfg_pill_btn_spacing;
-    float left_btn_x = panel_x + cfg_pill_left_margin;
-    float right_btn_x = panel_x + panel_w / 2.0f + cfg_pill_right_margin;
-
-    // ========== SEPARATOR: Between Save/Load and Preferences ==========
-    div(context, mk(entity, 49),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
-            .with_absolute_position(panel_x + 40.0f, btn_row1_y - 18.0f)
-            .with_custom_background(afterhours::Color{65, 55, 45, 40})
-            .with_debug_name("section_separator_preferences"));
-
-    // ========== SECTION HEADER: Preferences ==========
-    div(context, mk(entity, 45),
-        ComponentConfig{}
-            .with_label("Preferences")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
-            .with_absolute_position(panel_x + cfg_pill_left_margin, btn_row1_y - 16.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("section_header_preferences"));
-
-    float pref_offset = 10.0f;
-    btn_row1_y += pref_offset;
-    btn_row2_y += pref_offset;
-    btn_row3_y += pref_offset;
-
-    // Notifications: ON/OFF (clickable)
-    std::string notif_text =
-        notifications_off ? "Notifications: OFF" : "Notifications: ON";
-    afterhours::Color notif_icon_color =
-        notifications_off ? close_red : btn_green;
-    std::string notif_icon = notifications_off ? "X" : "OK";
-
-    if (button(context, mk(entity, 50),
-               ComponentConfig{}
-                   .with_size(ComponentSize{
-                       pxf(cfg_pill_btn_width),
-                       pxf(cfg_pill_btn_height)})
-                   .with_absolute_position(left_btn_x, btn_row1_y)
-                   .with_custom_background(btn_blue)
-                   .with_border(btn_blue_dark, cfg_pill_border_width)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.5f)
-                   .with_soft_shadow(
-                       2.0f, 3.0f, cfg_btn_shadow_blur,
-                       afterhours::Color{
-                           0, 0, 0,
-                           static_cast<unsigned char>(cfg_btn_shadow_alpha)})
-                   .with_debug_name("notifications_btn"))) {
-      notifications_off = !notifications_off;
-    }
-
-    div(context, mk(entity, 51),
-        ComponentConfig{}
-            .with_label(notif_icon)
-            .with_size(ComponentSize{pixels(26), pixels(26)})
-            .with_absolute_position(left_btn_x + 16.0f,
-                            btn_row1_y + (cfg_pill_btn_height - 26.0f) / 2.0f)
-            .with_custom_text_color(notif_icon_color)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 52),
-        ComponentConfig{}
-            .with_label(notif_text)
-            .with_size(ComponentSize{pixels(200), pixels(28)})
-            .with_absolute_position(left_btn_x + 46.0f,
-                            btn_row1_y + (cfg_pill_btn_height - 28.0f) / 2.0f)
-            .with_font("EqProRounded", h720(17.0f))
-            .with_custom_text_color(text_white));
-
-    // Blue pill buttons - data-driven
-    struct PillBtn { const char *label; int id; float x; float y; };
-    afterhours::Color pill_shadow{0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
-    PillBtn pill_btns[] = {
-        {"Language", 60, left_btn_x, btn_row2_y},
-    };
-    for (auto &pb : pill_btns) {
-      button(context, mk(entity, pb.id),
+      button(context, mk(save_group.ent()),
              ComponentConfig{}
-                 .with_label(pb.label)
-                 .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
-                 .with_absolute_position(pb.x, pb.y)
+                 .with_label("Sync")
+                 .with_size(ComponentSize{w1280(cfg_sync_btn_size),
+                                          h720(cfg_sync_btn_size)})
+                 .with_custom_background(wifi_green)
+                 .with_border(wifi_green_dark, 3.0f)
+                 .with_font("EqProRounded", h720(14.0f))
+                 .with_custom_text_color(text_white)
+                 .with_alignment(TextAlignment::Center)
+                 .with_rounded_corners(RoundedCorners())
+                 .with_roundness(0.4f)
+                 .with_soft_shadow(1.0f, 2.0f, 4.0f,
+                                   afterhours::Color{0, 0, 0, 25}));
+
+      // Separator
+      div(context, mk(content.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), pixels(1)})
+              .with_custom_background(afterhours::Color{65, 55, 45, 40})
+              .with_margin(Margin{.top = h720(10), .bottom = h720(6)})
+              .with_debug_name("sep_preferences"));
+
+      // Preferences section
+      div(context, mk(content.ent()),
+          ComponentConfig{}
+              .with_label("Preferences")
+              .with_size(ComponentSize{w1280(120), h720(20)})
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(text_muted));
+
+      // Notifications button
+      std::string notif_text =
+          notifications_off ? "Notifications: OFF" : "Notifications: ON";
+      if (button(
+              context, mk(content.ent()),
+              ComponentConfig{}
+                  .with_label(notif_text)
+                  .with_size(ComponentSize{w1280(cfg_pill_btn_width),
+                                           h720(cfg_pill_btn_height)})
+                  .with_custom_background(btn_blue)
+                  .with_border(btn_blue_dark, cfg_pill_border_width)
+                  .with_font("EqProRounded", h720(cfg_pill_font_size))
+                  .with_custom_text_color(text_white)
+                  .with_alignment(TextAlignment::Center)
+                  .with_rounded_corners(RoundedCorners())
+                  .with_roundness(0.5f)
+                  .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
+                                    pill_shadow)
+                  .with_margin(Margin{.top = h720(8)})
+                  .with_debug_name("notifications_btn"))) {
+        notifications_off = !notifications_off;
+      }
+
+      // Language button
+      button(context, mk(content.ent()),
+             ComponentConfig{}
+                 .with_label("Language")
+                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
+                                          h720(cfg_pill_btn_height)})
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, cfg_pill_border_width)
                  .with_font("EqProRounded", h720(cfg_pill_font_size))
@@ -451,125 +369,150 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.5f)
-                 .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, pill_shadow));
+                 .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
+                                   pill_shadow)
+                 .with_margin(Margin{.top = h720(8)}));
     }
-    } // end active_tab == 1 (General)
 
     if (active_tab == 2) {
-    // ========== INFO TAB ==========
-    float info_base_y = panel_y + cfg_toggle_y_offset + 30.0f;
-    float info_left_x = panel_x + cfg_pill_left_margin;
-    float info_right_x = panel_x + panel_w / 2.0f + cfg_pill_right_margin;
-    float info_row1_y = info_base_y + 14.0f;
-    float info_row2_y = info_row1_y + cfg_pill_btn_spacing;
-    float info_row3_y = info_row2_y + cfg_pill_btn_spacing;
-    afterhours::Color info_pill_shadow{0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
+      // ════════════════ INFO TAB ════════════════
 
-    // ========== SECTION HEADER: Links ==========
-    div(context, mk(entity, 46),
-        ComponentConfig{}
-            .with_label("Links")
-            .with_size(ComponentSize{pixels(80), pixels(20)})
-            .with_absolute_position(info_left_x, info_base_y - 4.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("section_header_links"));
-
-    // Credits button
-    button(context, mk(entity, 55),
-           ComponentConfig{}
-               .with_label("Credits")
-               .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
-               .with_absolute_position(info_left_x, info_row1_y)
-               .with_custom_background(btn_blue)
-               .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", h720(cfg_pill_font_size))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
-
-    // Support button
-    button(context, mk(entity, 65),
-           ComponentConfig{}
-               .with_label("Support")
-               .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
-               .with_absolute_position(info_right_x, info_row1_y)
-               .with_custom_background(btn_blue)
-               .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", h720(cfg_pill_font_size))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
-
-    // ========== SEPARATOR: Between links and about info ==========
-    div(context, mk(entity, 47),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
-            .with_absolute_position(panel_x + 40.0f, info_row2_y + cfg_pill_btn_height + 12.0f)
-            .with_custom_background(afterhours::Color{65, 55, 45, 40})
-            .with_debug_name("section_separator_about"));
-
-    // ========== SECTION HEADER: About ==========
-    div(context, mk(entity, 48),
-        ComponentConfig{}
-            .with_label("About")
-            .with_size(ComponentSize{pixels(80), pixels(20)})
-            .with_absolute_position(info_left_x, info_row2_y + cfg_pill_btn_height + 16.0f)
-            .with_font("EqProRounded", h720(14.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("section_header_about"));
-
-    // ========== BOTTOM INFO (left column) ==========
-    float info_y = info_row3_y + 4.0f;
-    const char *info_lines[] = {
-        "Build: 15555.1.114203", "Version 1.11.0.12346", "Player: #281-676-956"};
-    for (int il = 0; il < 3; il++) {
-      div(context, mk(entity, 70 + il),
+      // Links section
+      div(context, mk(content.ent()),
           ComponentConfig{}
-              .with_label(info_lines[il])
-              .with_size(ComponentSize{pixels(200), pxf(cfg_info_line_height)})
-              .with_absolute_position(info_left_x, info_y + (float)il * (cfg_info_line_height + 2.0f))
-              .with_font("EqProRounded", h720(cfg_info_font_size))
+              .with_label("Links")
+              .with_size(ComponentSize{w1280(80), h720(20)})
+              .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(text_muted));
+
+      auto links_row = hstack(
+          context, mk(content.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), h720(cfg_pill_btn_height + 10)})
+              .with_no_wrap()
+              .with_margin(Margin{.top = h720(8)})
+              .with_debug_name("links_row"));
+
+      // Credits button
+      button(context, mk(links_row.ent()),
+             ComponentConfig{}
+                 .with_label("Credits")
+                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
+                                          h720(cfg_pill_btn_height)})
+                 .with_custom_background(btn_blue)
+                 .with_border(btn_blue_dark, cfg_pill_border_width)
+                 .with_font("EqProRounded", h720(cfg_pill_font_size))
+                 .with_custom_text_color(text_white)
+                 .with_alignment(TextAlignment::Center)
+                 .with_rounded_corners(RoundedCorners())
+                 .with_roundness(0.5f)
+                 .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
+                                   pill_shadow));
+
+      // Support button
+      button(context, mk(links_row.ent()),
+             ComponentConfig{}
+                 .with_label("Support")
+                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
+                                          h720(cfg_pill_btn_height)})
+                 .with_custom_background(btn_blue)
+                 .with_border(btn_blue_dark, cfg_pill_border_width)
+                 .with_font("EqProRounded", h720(cfg_pill_font_size))
+                 .with_custom_text_color(text_white)
+                 .with_alignment(TextAlignment::Center)
+                 .with_rounded_corners(RoundedCorners())
+                 .with_roundness(0.5f)
+                 .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
+                                   pill_shadow)
+                 .with_margin(Margin{.left = w1280(15)}));
+
+      // Separator
+      div(context, mk(content.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), pixels(1)})
+              .with_custom_background(afterhours::Color{65, 55, 45, 40})
+              .with_margin(Margin{.top = h720(10), .bottom = h720(6)})
+              .with_debug_name("sep_about"));
+
+      // About section
+      div(context, mk(content.ent()),
+          ComponentConfig{}
+              .with_label("About")
+              .with_size(ComponentSize{w1280(80), h720(20)})
+              .with_font("EqProRounded", h720(14.0f))
+              .with_custom_text_color(text_muted));
+
+      auto info_row = hstack(
+          context, mk(content.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), h720(80)})
+              .with_no_wrap()
+              .with_align_items(AlignItems::FlexStart)
+              .with_margin(Margin{.top = h720(8)})
+              .with_debug_name("info_row"));
+
+      // Info lines column
+      auto info_col = vstack(
+          context, mk(info_row.ent()),
+          ComponentConfig{}
+              .with_size(ComponentSize{expand(), percent(1.0f)})
+              .with_no_wrap());
+
+      const char *info_lines[] = {"Build: 15555.1.114203",
+                                  "Version 1.11.0.12346",
+                                  "Player: #281-676-956"};
+      for (int il = 0; il < 3; il++) {
+        div(context, mk(info_col.ent(), il),
+            ComponentConfig{}
+                .with_label(info_lines[il])
+                .with_size(
+                    ComponentSize{w1280(200), h720(cfg_info_line_height)})
+                .with_font("EqProRounded", h720(cfg_info_font_size))
+                .with_custom_text_color(text_muted)
+                .with_margin(il > 0 ? Margin{.top = h720(2)} : Margin{}));
+      }
+
+      // Terms and Privacy button
+      button(context, mk(info_row.ent()),
+             ComponentConfig{}
+                 .with_label("Terms and Privacy")
+                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
+                                          h720(cfg_pill_btn_height)})
+                 .with_custom_background(btn_blue)
+                 .with_border(btn_blue_dark, cfg_pill_border_width)
+                 .with_font("EqProRounded", h720(17.0f))
+                 .with_custom_text_color(text_white)
+                 .with_alignment(TextAlignment::Center)
+                 .with_rounded_corners(RoundedCorners())
+                 .with_roundness(0.5f)
+                 .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
+                                   pill_shadow));
     }
 
-    // Terms and Privacy (same pill style, slightly smaller font)
-    button(context, mk(entity, 75),
-           ComponentConfig{}
-               .with_label("Terms and Privacy")
-               .with_size(ComponentSize{pxf(cfg_pill_btn_width), pxf(cfg_pill_btn_height)})
-               .with_absolute_position(info_right_x, info_row3_y)
-               .with_custom_background(btn_blue)
-               .with_border(btn_blue_dark, cfg_pill_border_width)
-               .with_font("EqProRounded", h720(17.0f))
-               .with_custom_text_color(text_white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur, info_pill_shadow));
-    } // end active_tab == 2 (Info)
-
-    // ========== SEPARATOR BEFORE FOOTER ==========
-    div(context, mk(entity, 76),
+    // ═══════════════════════════════════════════════════════════════
+    // FOOTER SEPARATOR + BUTTONS
+    // ═══════════════════════════════════════════════════════════════
+    div(context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(panel_w - 80.0f), pixels(1)})
-            .with_absolute_position(panel_x + 40.0f, panel_y + panel_h - 60.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(1)})
             .with_custom_background(afterhours::Color{65, 55, 45, 40})
-            .with_debug_name("section_separator_footer"));
+            .with_margin(Margin{.left = w1280(40), .right = w1280(40)})
+            .with_debug_name("sep_footer"));
 
-    // ========== FOOTER: OK / Cancel / Apply ==========
-    float footer_y = panel_y + panel_h - 50.0f;
-    float footer_btn_x = panel_x + panel_w - 300.0f;
+    auto footer = hstack(
+        context, mk(panel.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(42)})
+            .with_justify_content(JustifyContent::FlexEnd)
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_padding(Padding{.right = w1280(40), .bottom = h720(8)})
+            .with_debug_name("footer"));
 
-    button(context, mk(entity, 80),
+    button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x, footer_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(btn_green)
                .with_border(btn_green_dark, 3.0f)
                .with_font("EqProRounded", h720(18.0f))
@@ -579,11 +522,10 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_roundness(0.4f)
                .with_debug_name("btn_ok"));
 
-    button(context, mk(entity, 81),
+    button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 90.0f, footer_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, 3.0f)
                .with_font("EqProRounded", h720(18.0f))
@@ -591,13 +533,13 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
+               .with_margin(Margin{.left = w1280(10)})
                .with_debug_name("btn_cancel"));
 
-    button(context, mk(entity, 82),
+    button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 180.0f, footer_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, 3.0f)
                .with_font("EqProRounded", h720(18.0f))
@@ -605,6 +547,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
+               .with_margin(Margin{.left = w1280(10)})
                .with_debug_name("btn_apply"));
   }
 };

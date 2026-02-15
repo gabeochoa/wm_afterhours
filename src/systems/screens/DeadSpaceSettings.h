@@ -23,7 +23,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color teal_bright{100, 195, 195, 255};
   afterhours::Color text_white{220, 230, 235, 255};
   afterhours::Color text_muted{185, 200, 205, 255};
-  afterhours::Color text_dim{155, 170, 175, 255};  // Brighter for 4.5:1 on dark
+  afterhours::Color text_dim{155, 170, 175, 255};
 
   std::vector<std::string> initial_settings = {
       "Resume Game",
@@ -66,187 +66,200 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
-    // ========== BACKGROUND ==========
-    div(context, mk(entity, 0),
+    // ═══════════════════════════════════════════════════════════════
+    // ROOT - full screen
+    // ═══════════════════════════════════════════════════════════════
+    auto root = vstack(
+        context, mk(entity),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_black)
-            .with_debug_name("bg"));
+            .with_no_wrap()
+            .with_debug_name("ds_root"));
 
-    // Calculate responsive layout values
-    float content_margin = 30.0f;
-    float sidebar_w = 200.0f;
-    float sidebar_x = content_margin;
-    float sidebar_y = 100.0f;
-    float gap = 30.0f;
-    float panel_x = sidebar_x + sidebar_w + gap;
-    float panel_w = (float)screen_w - panel_x - content_margin;
-    // NOTE: Increased panel_y from 60 to 90 to give the tab_container room.
-    // Afterhours tab_container renders its tab strip above/at the container's
-    // top edge, which was clipping at the top of the screen at y=60.
-    // TODO(afterhours): tab_container tab strip clips screen edge when
-    // container is positioned near top — needs internal clamping or offset.
-    float panel_y = 90.0f;
-    float panel_h = (float)screen_h - panel_y - 90.0f;
-
-    // Subtle decorative tech lines along the bottom edge of the screen
+    // Decorative tech lines (screen-edge decoration, kept absolute)
     for (int i = 0; i < 3; i++) {
       div(context, mk(entity, 5 + i),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(40 + i * 20), pixels(1)})
-              .with_absolute_position(content_margin + (float)i * 70.0f,
-                              (float)screen_h - 20.0f)
+              .with_absolute_position(30.0f + (float)i * 70.0f,
+                                      (float)screen_h - 20.0f)
               .with_custom_background(afterhours::Color{30, 50, 55, 120})
               .with_debug_name("techline_" + std::to_string(i)));
     }
 
-    // Title removed - consolidated with panel header "// SETTINGS" to avoid duplication
+    // ═══════════════════════════════════════════════════════════════
+    // MAIN CONTENT AREA (sidebar + panel)
+    // ═══════════════════════════════════════════════════════════════
+    auto main_area = hstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), expand()})
+            .with_no_wrap()
+            .with_padding(Padding{.top = h720(90), .left = w1280(30),
+                                  .right = w1280(30), .bottom = h720(10)})
+            .with_align_items(AlignItems::FlexStart)
+            .with_debug_name("main_area"));
 
-    // ========== LEFT SIDEBAR: INITIAL SETTINGS ==========
+    // ── LEFT SIDEBAR ──
+    auto sidebar = vstack(
+        context, mk(main_area.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{w1280(200), percent(1.0f)})
+            .with_no_wrap()
+            .with_padding(Padding{.top = h720(10)})
+            .with_debug_name("sidebar"));
 
     // Sidebar header
-    div(context, mk(entity, 60),
+    div(context, mk(sidebar.ent()),
         ComponentConfig{}
             .with_label("PAUSE MENU")
-            .with_size(
-                ComponentSize{pxf(sidebar_w), pixels(32)})
-            .with_absolute_position(sidebar_x, sidebar_y)
+            .with_size(ComponentSize{percent(1.0f), h720(32)})
             .with_font_size(h720(20.0f))
             .with_custom_text_color(text_white)
-            .with_padding(Padding{.left = pixels(8)})
+            .with_padding(Padding{.left = w1280(8)})
             .with_alignment(TextAlignment::Left));
 
-    // Separator between sidebar header and items
-    div(context, mk(entity, 61),
+    // Separator
+    div(context, mk(sidebar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(sidebar_w - 16.0f), pixels(1)})
-            .with_absolute_position(sidebar_x + 8.0f, sidebar_y + 35.0f)
+            .with_size(ComponentSize{percent(1.0f), pixels(1)})
             .with_custom_background(panel_border)
-            .with_debug_name("section_separator_sidebar"));
+            .with_margin(Margin{.top = h720(3), .bottom = h720(5),
+                                .left = w1280(8), .right = w1280(8)})
+            .with_debug_name("sep_sidebar"));
 
     // Sidebar items
     for (size_t i = 0; i < initial_settings.size(); i++) {
-      float item_y = sidebar_y + 40.0f + (float)i * 38.0f;
       bool is_selected = (i == selected_initial);
       afterhours::Color item_color = is_selected ? text_white : text_muted;
-      afterhours::Color item_bg = is_selected ? afterhours::Color{35, 70, 72, 255} : afterhours::Color{0, 0, 0, 0};
+      afterhours::Color item_bg =
+          is_selected ? afterhours::Color{35, 70, 72, 255}
+                      : afterhours::Color{0, 0, 0, 0};
+      afterhours::Color item_border_color =
+          is_selected ? teal_highlight : afterhours::Color{0, 0, 0, 0};
 
-      // Item background for selection highlight
-      if (is_selected) {
-        div(context, mk(entity, 65 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_size(ComponentSize{
-                    pxf(sidebar_w), pixels(34)})
-                .with_absolute_position(sidebar_x, item_y)
-                .with_custom_background(item_bg)
-                .with_border(teal_highlight, 1.0f)
-                .with_debug_name("initial_bg_" + std::to_string(i)));
-      }
-
-      // Use consistent font size for all sidebar items (no auto-shrink)
-      if (button(context, mk(entity, 70 + static_cast<int>(i)),
+      if (button(context, mk(sidebar.ent(), static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(initial_settings[i])
-                     .with_size(ComponentSize{
-                         pxf(sidebar_w), pixels(34)})
-                     .with_absolute_position(sidebar_x, item_y)
+                     .with_size(ComponentSize{percent(1.0f), h720(34)})
+                     .with_custom_background(item_bg)
+                     .with_border(item_border_color, is_selected ? 1.0f : 0.0f)
                      .with_font_size(h720(17.0f))
                      .with_custom_text_color(item_color)
-                     .with_padding(Padding{.left = pixels(8)})
+                     .with_padding(Padding{.left = w1280(8)})
                      .with_alignment(TextAlignment::Left))) {
         selected_initial = i;
       }
     }
 
-    // ========== MAIN PANEL: SETTINGS ==========
-    // Panel background with border + corner bracket decorations
-    div(context, mk(entity, 100),
+    // ── GAP ──
+    div(context, mk(main_area.ent()),
         ComponentConfig{}
-            .with_720p_size(panel_w, panel_h)
-            .with_absolute_position(panel_x, panel_y)
+            .with_size(ComponentSize{w1280(30), h720(1)})
+            .with_skip_tabbing(true));
+
+    // ── MAIN PANEL ──
+    auto panel = vstack(
+        context, mk(main_area.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{expand(), percent(1.0f)})
             .with_custom_background(panel_dark)
             .with_border(panel_border, 2.0f)
-            .with_debug_name("main_panel"))
-        .decorate(with_brackets(context, teal_highlight, 15.0f, 2.0f));
+            .with_no_wrap()
+            .with_debug_name("main_panel"));
+    panel.decorate(with_brackets(context, teal_highlight, 15.0f, 2.0f));
 
     // Panel header: // SETTINGS
-    div(context, mk(entity, 110),
+    div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("// SETTINGS")
-            .with_size(ComponentSize{pxf(panel_w - 4),
-                                     pixels(44)})
-            .with_absolute_position(panel_x + 2.0f, panel_y + 2.0f)
+            .with_size(ComponentSize{percent(1.0f), h720(44)})
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
             .with_font_size(h720(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
-    // MANUAL TAB BUTTONS — workaround for afterhours tab_container rendering
-    // tab strip outside parent bounds when using absolute_position.
-    // See AFTERHOURS_GAPS.md #1.
-    {
-      float tabs_x = panel_x + 10.0f;
-      float tabs_y = panel_y + 52.0f;
-      float total_tabs_w = panel_w - 20.0f;
-      float tab_w = total_tabs_w / (float)main_settings.size();
-      for (size_t ti = 0; ti < main_settings.size(); ti++) {
-        bool is_active = (ti == active_tab);
-        afterhours::Color tab_bg = is_active
-            ? teal_highlight
-            : afterhours::Color{25, 45, 50, 255};
-        afterhours::Color tab_text = is_active ? text_white : text_dim;
+    // Tab row
+    auto tab_row = hstack(
+        context, mk(panel.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(32)})
+            .with_no_wrap()
+            .with_padding(Padding{.left = w1280(10), .right = w1280(10)})
+            .with_margin(Margin{.top = h720(8)})
+            .with_debug_name("tab_row"));
 
-        if (button(context, mk(entity, 115 + static_cast<int>(ti)),
-                   ComponentConfig{}
-                       .with_label(main_settings[ti])
-                       .with_size(ComponentSize{pxf(tab_w - 2.0f), pixels(32)})
-                       .with_absolute_position(tabs_x + (float)ti * tab_w,
-                                               tabs_y)
-                       .with_custom_background(tab_bg)
-                       .with_custom_text_color(tab_text)
-                       .with_font_size(h720(13.0f))
-                       .with_alignment(TextAlignment::Center)
-                       .with_debug_name("tab_" + std::to_string(ti)))) {
-          active_tab = ti;
-        }
+    for (size_t ti = 0; ti < main_settings.size(); ti++) {
+      bool is_active = (ti == active_tab);
+      afterhours::Color tab_bg =
+          is_active ? teal_highlight : afterhours::Color{25, 45, 50, 255};
+      afterhours::Color tab_text = is_active ? text_white : text_dim;
+
+      if (button(context, mk(tab_row.ent(), static_cast<int>(ti)),
+                 ComponentConfig{}
+                     .with_label(main_settings[ti])
+                     .with_size(ComponentSize{expand(), percent(1.0f)})
+                     .with_custom_background(tab_bg)
+                     .with_custom_text_color(tab_text)
+                     .with_font_size(h720(13.0f))
+                     .with_alignment(TextAlignment::Center)
+                     .with_margin(Margin{.right = w1280(2)})
+                     .with_debug_name("tab_" + std::to_string(ti)))) {
+        active_tab = ti;
       }
     }
 
-    // Tab content area
-    float content_y = panel_y + 100.0f;
-    float content_x = panel_x + 25.0f;
-    float content_w = panel_w - 50.0f;
+    // Tab content
+    auto tab_content = vstack(
+        context, mk(panel.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), expand()})
+            .with_no_wrap()
+            .with_padding(Padding{.top = h720(16), .left = w1280(25),
+                                  .right = w1280(25)})
+            .with_debug_name("tab_content"));
 
     std::string tab_title = main_settings[active_tab];
     std::string tab_desc = tab_title + " options will be displayed here.";
 
-    div(context, mk(entity, 120),
+    div(context, mk(tab_content.ent()),
         ComponentConfig{}
             .with_label(tab_title)
-            .with_size(ComponentSize{pxf(content_w), pixels(40)})
-            .with_absolute_position(content_x, content_y)
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_font_size(h720(22.0f))
             .with_custom_text_color(teal_bright));
 
-    div(context, mk(entity, 121),
+    div(context, mk(tab_content.ent()),
         ComponentConfig{}
             .with_label(tab_desc)
-            .with_size(ComponentSize{pxf(content_w), pixels(30)})
-            .with_absolute_position(content_x, content_y + 45.0f)
+            .with_size(ComponentSize{percent(1.0f), h720(30)})
             .with_font_size(h720(17.0f))
-            .with_custom_text_color(text_muted));
+            .with_custom_text_color(text_muted)
+            .with_margin(Margin{.top = h720(5)}));
 
-    // ========== FOOTER: OK / Cancel / Apply ==========
-    float footer_btn_x = panel_x + panel_w - 290.0f;
-    float footer_btn_y = panel_y + panel_h - 50.0f;
+    // Footer: OK / Cancel / Apply (inside panel, pushed to bottom)
+    // Spacer
+    div(context, mk(panel.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), expand()})
+            .with_skip_tabbing(true));
 
-    button(context, mk(entity, 195),
+    auto footer = hstack(
+        context, mk(panel.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(50)})
+            .with_justify_content(JustifyContent::FlexEnd)
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_padding(Padding{.right = w1280(20)})
+            .with_debug_name("footer"));
+
+    button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x, footer_btn_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(teal_highlight)
                .with_border(teal_bright, 1.0f)
                .with_font_size(h720(18.0f))
@@ -254,91 +267,105 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_debug_name("btn_ok"));
 
-    button(context, mk(entity, 196),
+    button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 90.0f, footer_btn_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(panel_dark)
                .with_border(panel_border, 1.0f)
                .with_font_size(h720(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
+               .with_margin(Margin{.left = w1280(10)})
                .with_debug_name("btn_cancel"));
 
-    button(context, mk(entity, 197),
+    button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{pixels(80), pixels(36)})
-               .with_absolute_position(footer_btn_x + 180.0f, footer_btn_y)
+               .with_size(ComponentSize{w1280(80), h720(36)})
                .with_custom_background(panel_dark)
                .with_border(panel_border, 1.0f)
                .with_font_size(h720(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
+               .with_margin(Margin{.left = w1280(10)})
                .with_debug_name("btn_apply"));
 
-    // ========== BOTTOM BUTTON PROMPTS ==========
-    float prompt_bar_w = 280.0f;
-    float prompt_x = panel_x + (panel_w - prompt_bar_w) / 2.0f;
-    float prompt_y = panel_y + panel_h + 10.0f;
+    // ═══════════════════════════════════════════════════════════════
+    // BOTTOM PROMPT BAR
+    // ═══════════════════════════════════════════════════════════════
+    auto prompt_area = hstack(
+        context, mk(root.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), h720(70)})
+            .with_justify_content(JustifyContent::Center)
+            .with_align_items(AlignItems::FlexStart)
+            .with_no_wrap()
+            .with_debug_name("prompt_area"));
 
-    // Enter prompt (smaller, just for SELECT)
-    div(context, mk(entity, 200),
+    auto prompt_col = vstack(
+        context, mk(prompt_area.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{w1280(280), percent(1.0f)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap());
+
+    // SELECT label
+    div(context, mk(prompt_col.ent()),
         ComponentConfig{}
             .with_label("SELECT")
-            .with_size(ComponentSize{pixels(70), pixels(22)})
-            .with_absolute_position(prompt_x + 105.0f, prompt_y + 3.0f)
+            .with_size(ComponentSize{w1280(70), h720(22)})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white));
 
-    // Main prompt bar
-    div(context, mk(entity, 210),
+    // Prompt bar background
+    auto prompt_bar = hstack(
+        context, mk(prompt_col.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(35)})
-            .with_absolute_position(prompt_x, prompt_y + 30.0f)
+            .with_size(ComponentSize{w1280(280), h720(35)})
             .with_custom_background(panel_dark)
-            .with_border(panel_border, 1.0f));
+            .with_border(panel_border, 1.0f)
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap()
+            .with_padding(Padding{.left = w1280(15)})
+            .with_margin(Margin{.top = h720(5)}));
 
-    // Enter key
-    div(context, mk(entity, 211),
+    // [<- SELECT
+    div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("[<-")
-            .with_size(ComponentSize{pixels(35), pixels(25)})
-            .with_absolute_position(prompt_x + 15.0f, prompt_y + 35.0f)
+            .with_size(ComponentSize{w1280(35), h720(25)})
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
-    div(context, mk(entity, 212),
+    div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("SELECT")
-            .with_size(ComponentSize{pixels(60), pixels(25)})
-            .with_absolute_position(prompt_x + 55.0f, prompt_y + 35.0f)
+            .with_size(ComponentSize{w1280(60), h720(25)})
             .with_font_size(h720(19.0f))
-            .with_custom_text_color(text_white));
+            .with_custom_text_color(text_white)
+            .with_margin(Margin{.left = w1280(5)}));
 
-    // Esc key
-    div(context, mk(entity, 213),
+    // Esc BACK
+    div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("Esc")
-            .with_size(ComponentSize{pixels(35), pixels(25)})
-            .with_absolute_position(prompt_x + 135.0f, prompt_y + 35.0f)
+            .with_size(ComponentSize{w1280(35), h720(25)})
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
             .with_font_size(h720(19.0f))
             .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Center));
+            .with_alignment(TextAlignment::Center)
+            .with_margin(Margin{.left = w1280(20)}));
 
-    div(context, mk(entity, 214),
+    div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("BACK")
-            .with_size(ComponentSize{pixels(50), pixels(25)})
-            .with_absolute_position(prompt_x + 175.0f, prompt_y + 35.0f)
+            .with_size(ComponentSize{w1280(50), h720(25)})
             .with_font_size(h720(19.0f))
-            .with_custom_text_color(text_white));
-
-    // (corner brackets applied via .decorate() on main_panel above)
+            .with_custom_text_color(text_white)
+            .with_margin(Margin{.left = w1280(5)}));
   }
 };
 
