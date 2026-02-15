@@ -62,7 +62,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     theme.segments = 4;
     context.theme = theme;
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(16.0f));
+    context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(16.0f));
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
@@ -97,8 +98,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), expand()})
             .with_no_wrap()
-            .with_padding(Padding{.top = h720(90), .left = w1280(30),
-                                  .right = w1280(30), .bottom = h720(10)})
+            .with_padding(Padding{.top = pixels(90), .left = pixels(30),
+                                  .right = pixels(30), .bottom = pixels(10)})
             .with_align_items(AlignItems::FlexStart)
             .with_debug_name("main_area"));
 
@@ -106,19 +107,19 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto sidebar = vstack(
         context, mk(main_area.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(200), percent(1.0f)})
+            .with_size(ComponentSize{pixels(200), percent(1.0f)})
             .with_no_wrap()
-            .with_padding(Padding{.top = h720(10)})
+            .with_padding(Padding{.top = pixels(10)})
             .with_debug_name("sidebar"));
 
     // Sidebar header
     div(context, mk(sidebar.ent()),
         ComponentConfig{}
             .with_label("PAUSE MENU")
-            .with_size(ComponentSize{percent(1.0f), h720(32)})
-            .with_font_size(h720(20.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
+            .with_font_size(pixels(20.0f))
             .with_custom_text_color(text_white)
-            .with_padding(Padding{.left = w1280(8)})
+            .with_padding(Padding{.left = pixels(8)})
             .with_alignment(TextAlignment::Left));
 
     // Separator
@@ -126,8 +127,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(1)})
             .with_custom_background(panel_border)
-            .with_margin(Margin{.top = h720(3), .bottom = h720(5),
-                                .left = w1280(8), .right = w1280(8)})
+            .with_margin(Margin{.top = pixels(3), .bottom = pixels(5),
+                                .left = pixels(8), .right = pixels(8)})
             .with_debug_name("sep_sidebar"));
 
     // Sidebar items
@@ -143,12 +144,12 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(sidebar.ent(), static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(initial_settings[i])
-                     .with_size(ComponentSize{percent(1.0f), h720(34)})
+                     .with_size(ComponentSize{percent(1.0f), pixels(34)})
                      .with_custom_background(item_bg)
                      .with_border(item_border_color, is_selected ? 1.0f : 0.0f)
-                     .with_font_size(h720(17.0f))
+                     .with_font_size(pixels(17.0f))
                      .with_custom_text_color(item_color)
-                     .with_padding(Padding{.left = w1280(8)})
+                     .with_padding(Padding{.left = pixels(8)})
                      .with_alignment(TextAlignment::Left))) {
         selected_initial = i;
       }
@@ -157,7 +158,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ── GAP ──
     div(context, mk(main_area.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(30), h720(1)})
+            .with_size(ComponentSize{pixels(30), pixels(1)})
             .with_skip_tabbing(true));
 
     // ── MAIN PANEL ──
@@ -175,9 +176,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("// SETTINGS")
-            .with_size(ComponentSize{percent(1.0f), h720(44)})
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_custom_background(afterhours::Color{35, 55, 60, 255})
-            .with_font_size(h720(22.0f))
+            .with_font_size(pixels(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
@@ -185,10 +186,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto tab_row = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(32)})
+            .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_no_wrap()
-            .with_padding(Padding{.left = w1280(10), .right = w1280(10)})
-            .with_margin(Margin{.top = h720(8)})
+            .with_padding(Padding{.left = pixels(10), .right = pixels(10)})
+            .with_margin(Margin{.top = pixels(8)})
             .with_debug_name("tab_row"));
 
     for (size_t ti = 0; ti < main_settings.size(); ti++) {
@@ -203,9 +204,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{expand(), percent(1.0f)})
                      .with_custom_background(tab_bg)
                      .with_custom_text_color(tab_text)
-                     .with_font_size(h720(13.0f))
+                     .with_font_size(pixels(13.0f))
                      .with_alignment(TextAlignment::Center)
-                     .with_margin(Margin{.right = w1280(2)})
+                     .with_margin(Margin{.right = pixels(2)})
                      .with_debug_name("tab_" + std::to_string(ti)))) {
         active_tab = ti;
       }
@@ -217,8 +218,8 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), expand()})
             .with_no_wrap()
-            .with_padding(Padding{.top = h720(16), .left = w1280(25),
-                                  .right = w1280(25)})
+            .with_padding(Padding{.top = pixels(16), .left = pixels(25),
+                                  .right = pixels(25)})
             .with_debug_name("tab_content"));
 
     std::string tab_title = main_settings[active_tab];
@@ -227,17 +228,17 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(tab_content.ent()),
         ComponentConfig{}
             .with_label(tab_title)
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
-            .with_font_size(h720(22.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_font_size(pixels(22.0f))
             .with_custom_text_color(teal_bright));
 
     div(context, mk(tab_content.ent()),
         ComponentConfig{}
             .with_label(tab_desc)
-            .with_size(ComponentSize{percent(1.0f), h720(30)})
-            .with_font_size(h720(17.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(30)})
+            .with_font_size(pixels(17.0f))
             .with_custom_text_color(text_muted)
-            .with_margin(Margin{.top = h720(5)}));
+            .with_margin(Margin{.top = pixels(5)}));
 
     // Footer: OK / Cancel / Apply (inside panel, pushed to bottom)
     // Spacer
@@ -249,20 +250,20 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.right = w1280(20)})
+            .with_padding(Padding{.right = pixels(20)})
             .with_debug_name("footer"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(teal_highlight)
                .with_border(teal_bright, 1.0f)
-               .with_font_size(h720(18.0f))
+               .with_font_size(pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("btn_ok"));
@@ -270,25 +271,25 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(panel_dark)
                .with_border(panel_border, 1.0f)
-               .with_font_size(h720(18.0f))
+               .with_font_size(pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_cancel"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(panel_dark)
                .with_border(panel_border, 1.0f)
-               .with_font_size(h720(18.0f))
+               .with_font_size(pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_apply"));
 
     // ═══════════════════════════════════════════════════════════════
@@ -297,7 +298,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto prompt_area = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(70)})
+            .with_size(ComponentSize{percent(1.0f), pixels(70)})
             .with_justify_content(JustifyContent::Center)
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
@@ -306,7 +307,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto prompt_col = vstack(
         context, mk(prompt_area.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(280), percent(1.0f)})
+            .with_size(ComponentSize{pixels(280), percent(1.0f)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap());
 
@@ -314,58 +315,58 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(prompt_col.ent()),
         ComponentConfig{}
             .with_label("SELECT")
-            .with_size(ComponentSize{w1280(70), h720(22)})
-            .with_font_size(h720(19.0f))
+            .with_size(ComponentSize{pixels(70), pixels(22)})
+            .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white));
 
     // Prompt bar background
     auto prompt_bar = hstack(
         context, mk(prompt_col.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(280), h720(35)})
+            .with_size(ComponentSize{pixels(280), pixels(35)})
             .with_custom_background(panel_dark)
             .with_border(panel_border, 1.0f)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.left = w1280(15)})
-            .with_margin(Margin{.top = h720(5)}));
+            .with_padding(Padding{.left = pixels(15)})
+            .with_margin(Margin{.top = pixels(5)}));
 
     // [<- SELECT
     div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("[<-")
-            .with_size(ComponentSize{w1280(35), h720(25)})
+            .with_size(ComponentSize{pixels(35), pixels(25)})
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
-            .with_font_size(h720(19.0f))
+            .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
     div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("SELECT")
-            .with_size(ComponentSize{w1280(60), h720(25)})
-            .with_font_size(h720(19.0f))
+            .with_size(ComponentSize{pixels(60), pixels(25)})
+            .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white)
-            .with_margin(Margin{.left = w1280(5)}));
+            .with_margin(Margin{.left = pixels(5)}));
 
     // Esc BACK
     div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("Esc")
-            .with_size(ComponentSize{w1280(35), h720(25)})
+            .with_size(ComponentSize{pixels(35), pixels(25)})
             .with_custom_background(afterhours::Color{55, 75, 80, 255})
-            .with_font_size(h720(19.0f))
+            .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.left = w1280(20)}));
+            .with_margin(Margin{.left = pixels(20)}));
 
     div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("BACK")
-            .with_size(ComponentSize{w1280(50), h720(25)})
-            .with_font_size(h720(19.0f))
+            .with_size(ComponentSize{pixels(50), pixels(25)})
+            .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white)
-            .with_margin(Margin{.left = w1280(5)}));
+            .with_margin(Margin{.left = pixels(5)}));
   }
 };
 

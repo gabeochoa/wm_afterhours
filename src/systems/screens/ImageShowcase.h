@@ -43,6 +43,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container background - centered on screen with padding
     auto root =
@@ -71,7 +72,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     raylib::Rectangle full_src{0, 0, 128, 128};
@@ -92,7 +93,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
 
     // Helper lambda to create sprite with label for row1
     auto create_labeled_sprite = [&](int idx, const raylib::Texture2D& tex,
@@ -114,7 +115,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(label_text)
               .with_size(ComponentSize{pixels(80), pixels(22)})
               .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
               .with_skip_tabbing(true)
               .with_debug_name("sprite_label_" + std::to_string(idx)));
     };
@@ -142,7 +143,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
 
     // Helper lambda to create image button with label
     auto create_labeled_button = [&](int idx, const raylib::Texture2D& tex,
@@ -170,7 +171,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(label_text)
               .with_size(ComponentSize{pixels(80), pixels(22)})
               .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
               .with_skip_tabbing(true)
               .with_debug_name("btn_label_" + std::to_string(idx)));
     };
@@ -185,7 +186,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(110), pixels(40)})
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_margin(Margin{.left = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
@@ -206,7 +207,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
 
     auto img_container =
         hstack(context, mk(row3.ent(), 1),
@@ -230,7 +231,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Settings")
             .with_size(ComponentSize{pixels(100), pixels(32)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_margin(Margin{.left = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
@@ -251,7 +252,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
 
     auto icon_row_container =
         hstack(context, mk(row4.ent(), 1),
@@ -286,7 +287,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(label_text)
               .with_size(ComponentSize{pixels(84), pixels(22)})
               .with_custom_text_color(theme.font)
-              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
               .with_skip_tabbing(true)
               .with_debug_name("label_" + std::to_string(idx)));
     };

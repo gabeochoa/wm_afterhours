@@ -17,6 +17,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     const auto teal = afterhours::Color{0, 180, 220, 255};
     const auto pink = afterhours::Color{220, 60, 120, 255};
@@ -44,7 +45,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(34)})
             .with_custom_background(teal)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f)));
 
     // =================================================================
     // TOP SECTION: Five JustifyContent demos
@@ -82,7 +83,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(20)})
               .with_custom_background(pink)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
               .with_skip_tabbing(true));
 
       // vstack demo showing this justify mode
@@ -131,7 +132,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(20)})
             .with_custom_background(green)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
             .with_skip_tabbing(true));
 
     auto ai_row = hstack(
@@ -164,7 +165,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(18)})
               .with_custom_background(green)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
               .with_skip_tabbing(true));
 
       auto demo = vstack(
@@ -200,7 +201,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(20)})
             .with_custom_background(blue)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
             .with_skip_tabbing(true));
 
     auto layout = hstack(
@@ -226,7 +227,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(1.0f), pixels(28)})
                  .with_custom_background(nav_c[i])
                  .with_auto_text_color(true)
-                 .with_font(UIComponent::DEFAULT_FONT, h720(11.0f))
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(11.0f))
                  .with_margin(Margin{.bottom = pixels(3)})
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.06f));
@@ -247,7 +248,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(22)})
             .with_custom_background(purple)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f)));
 
     const char *cards[] = {"Alerts", "Activity", "Stats"};
     afterhours::Color card_c[] = {teal, green, orange};
@@ -258,7 +259,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(26)})
               .with_custom_background(card_c[i])
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(11.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(11.0f))
               .with_margin(Margin{.top = pixels(3)})
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.06f));

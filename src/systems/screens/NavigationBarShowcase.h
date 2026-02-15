@@ -25,6 +25,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
                      float) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container - centered on screen, expanded for more screen use
     auto root = div(context, mk(entity, 0),
@@ -53,7 +54,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
@@ -65,14 +66,14 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
     navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+                       .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Section 2: Game Modes
@@ -83,14 +84,14 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
     navigation_bar(context, mk(main_container.ent(), 5), modes, mode_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+                       .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Section 3: Level Selector (more options)
@@ -101,14 +102,14 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
     navigation_bar(context, mk(main_container.ent(), 8), levels, level_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
-                       .with_font(UIComponent::DEFAULT_FONT, h720(22.0f)));
+                       .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f)));
   }
 };
 

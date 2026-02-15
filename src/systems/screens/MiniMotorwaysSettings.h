@@ -52,7 +52,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(22.0f));
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(22.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = bg_cream;
@@ -66,6 +66,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     theme.segments = 4;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     constexpr float mm_track_w = 56.0f, mm_track_h = 30.0f;
     constexpr float mm_knob_pad = 4.0f;
@@ -84,8 +85,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_cream)
-            .with_padding(Padding{.top = h720(20), .left = w1280(35),
-                                  .bottom = h720(5), .right = w1280(35)})
+            .with_padding(Padding{.top = pixels(20), .left = pixels(35),
+                                  .bottom = pixels(5), .right = pixels(35)})
             .with_no_wrap()
             .with_debug_name("mm_root"));
 
@@ -93,24 +94,24 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(root.ent()),
            ComponentConfig{}
                .with_label("< Back")
-               .with_size(ComponentSize{w1280(80), h720(56)})
-               .with_font("EqProRounded", h720(28.0f))
+               .with_size(ComponentSize{pixels(80), pixels(56)})
+               .with_font("EqProRounded", pixels(28.0f))
                .with_custom_text_color(text_dark));
 
     // ── Tab bar ──
     tab_container(
         context, mk(root.ent()), categories, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(700), h720(48)})
-            .with_margin(Margin{.top = h720(10), .left = w1280(145)}));
+            .with_size(ComponentSize{pixels(700), pixels(48)})
+            .with_margin(Margin{.top = pixels(10), .left = pixels(145)}));
 
     // ── Content area ──
     auto content = vstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(350)})
+            .with_size(ComponentSize{percent(1.0f), pixels(350)})
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(8), .left = w1280(465)})
+            .with_margin(Margin{.top = pixels(8), .left = pixels(465)})
             .with_debug_name("content"));
 
     if (active_tab == 0) {
@@ -122,25 +123,25 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         auto toggle_row = hstack(
             context, mk(content.ent(), static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), h720(40)})
+                .with_size(ComponentSize{percent(1.0f), pixels(40)})
                 .with_align_items(AlignItems::Center)
                 .with_no_wrap()
-                .with_margin(Margin{.top = i > 0 ? h720(25) : Size{}}));
+                .with_margin(Margin{.top = i > 0 ? pixels(25) : Size{}}));
 
         std::string label_with_state =
             toggles[i].label + (is_on ? "  ON" : "  OFF");
         div(context, mk(toggle_row.ent(), 0),
             ComponentConfig{}
                 .with_label(label_with_state)
-                .with_size(ComponentSize{w1280(340), h720(40)})
-                .with_font("EqProRounded", h720(24.0f))
+                .with_size(ComponentSize{pixels(340), pixels(40)})
+                .with_font("EqProRounded", pixels(24.0f))
                 .with_custom_text_color(text_dark));
 
         // Toggle track (clickable button)
         if (button(context, mk(toggle_row.ent(), 1),
                    ComponentConfig{}
                        .with_size(
-                           ComponentSize{w1280(mm_track_w), h720(mm_track_h)})
+                           ComponentSize{pixels(mm_track_w), pixels(mm_track_h)})
                        .with_custom_background(track_col)
                        .with_rounded_corners(RoundedCorners().all_round())
                        .with_roundness(0.5f)
@@ -155,14 +156,14 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(toggle_row.ent(), 2),
             ComponentConfig{}
                 .with_size(
-                    ComponentSize{w1280(mm_knob_sz), h720(mm_knob_sz)})
+                    ComponentSize{pixels(mm_knob_sz), pixels(mm_knob_sz)})
                 .with_custom_background(mm_knob_white)
                 .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(1.0f)
                 .with_skip_tabbing(true)
                 .with_translate(
-                    w1280(knob_x_offset - mm_track_w - mm_knob_sz / 2.0f +
+                    pixels(knob_x_offset - mm_track_w - mm_knob_sz / 2.0f +
                           mm_knob_pad),
                     Size{})
                 .with_debug_name("toggle_knob_" + std::to_string(i)));
@@ -172,23 +173,23 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto sens_row = hstack(
           context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(52)})
+              .with_size(ComponentSize{percent(1.0f), pixels(52)})
               .with_align_items(AlignItems::Center)
               .with_no_wrap()
-              .with_margin(Margin{.top = h720(25)})
+              .with_margin(Margin{.top = pixels(25)})
               .with_debug_name("sens_row"));
 
       div(context, mk(sens_row.ent()),
           ComponentConfig{}
               .with_label("Controller Cursor Sensitivity")
-              .with_size(ComponentSize{w1280(340), h720(40)})
+              .with_size(ComponentSize{pixels(340), pixels(40)})
               .with_custom_text_color(text_dark));
 
       if (button(context, mk(sens_row.ent()),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{w1280(52), h720(52)})
-                     .with_font("EqProRounded", h720(28.0f))
+                     .with_size(ComponentSize{pixels(52), pixels(52)})
+                     .with_font("EqProRounded", pixels(28.0f))
                      .with_custom_text_color(text_dark)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("sens_left"))) {
@@ -205,7 +206,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(sens_row.ent()),
           ComponentConfig{}
               .with_label(sens_text)
-              .with_size(ComponentSize{w1280(110), h720(40)})
+              .with_size(ComponentSize{pixels(110), pixels(40)})
               .with_font("EqProRounded", 22.0f)
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center));
@@ -213,8 +214,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(sens_row.ent()),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{w1280(52), h720(52)})
-                     .with_font("EqProRounded", h720(28.0f))
+                     .with_size(ComponentSize{pixels(52), pixels(52)})
+                     .with_font("EqProRounded", pixels(28.0f))
                      .with_custom_text_color(text_dark)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("sens_right"))) {
@@ -225,9 +226,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Separator
       div(context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{w1280(450), pixels(2)})
+              .with_size(ComponentSize{pixels(450), pixels(2)})
               .with_custom_background(grid_line)
-              .with_margin(Margin{.top = h720(15)})
+              .with_margin(Margin{.top = pixels(15)})
               .with_debug_name("separator"));
     }
 
@@ -237,14 +238,14 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label(tab_name + " settings")
-              .with_size(ComponentSize{w1280(400), h720(40)})
-              .with_font("EqProRounded", h720(24.0f))
+              .with_size(ComponentSize{pixels(400), pixels(40)})
+              .with_font("EqProRounded", pixels(24.0f))
               .with_custom_text_color(text_dark));
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("Options will be displayed here.")
-              .with_size(ComponentSize{w1280(400), h720(40)})
-              .with_font("EqProRounded", h720(24.0f))
+              .with_size(ComponentSize{pixels(400), pixels(40)})
+              .with_font("EqProRounded", pixels(24.0f))
               .with_custom_text_color(text_muted));
     }
 
@@ -252,7 +253,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto bottom = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(56)})
+            .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_align_items(AlignItems::FlexEnd)
             .with_no_wrap()
             .with_debug_name("bottom"));
@@ -267,21 +268,21 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(bottom.ent()),
         ComponentConfig{}
             .with_label(version_label)
-            .with_size(ComponentSize{w1280(480), h720(28)})
-            .with_font("EqProRounded", h720(18.0f))
+            .with_size(ComponentSize{pixels(480), pixels(28)})
+            .with_font("EqProRounded", pixels(18.0f))
             .with_custom_text_color(text_muted));
 
     // Spacer
     div(context, mk(bottom.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     // Tutorial button
     button(context, mk(bottom.ent()),
            ComponentConfig{}
                .with_label("Tutorial  ->")
-               .with_size(ComponentSize{w1280(170), h720(56)})
+               .with_size(ComponentSize{pixels(170), pixels(56)})
                .with_custom_background(btn_teal)
                .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                .with_alignment(TextAlignment::Center));
@@ -290,17 +291,17 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_justify_content(JustifyContent::Center)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(5)})
+            .with_margin(Margin{.top = pixels(5)})
             .with_debug_name("footer"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(btn_teal)
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
@@ -309,21 +310,21 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(afterhours::Color{215, 210, 200, 255})
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_cancel"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(afterhours::Color{215, 210, 200, 255})
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_apply"));
   }
 };

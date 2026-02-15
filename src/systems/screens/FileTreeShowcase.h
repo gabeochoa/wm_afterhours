@@ -109,6 +109,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.darkfont = afterhours::Color{40, 40, 40, 255};
     theme.font_muted = afterhours::Color{140, 140, 140, 255};
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     int screen_width = Settings::get().get_screen_width();
     int screen_height = Settings::get().get_screen_height();
@@ -142,7 +143,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("File Tree")
             .with_custom_background(afterhours::Color{50, 50, 50, 255})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
             .with_rounded_corners(RoundedCorners().bottom_sharp())
             .with_roundness(0.1f)
             .with_debug_name("title"));
@@ -163,7 +164,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(60), pixels(26)})
                    .with_label("Home")
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_background(Theme::Usage::Secondary)
                    .with_margin(Margin{.right = pixels(4)})
                    .with_debug_name("home_btn"))) {
@@ -177,7 +178,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(40), pixels(26)})
                    .with_label("Up")
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_background(Theme::Usage::Secondary)
                    .with_margin(Margin{.right = pixels(4)})
                    .with_debug_name("up_btn"))) {
@@ -195,7 +196,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{pixels(70), pixels(26)})
                    .with_label("Refresh")
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_background(Theme::Usage::Secondary)
                    .with_debug_name("refresh_btn"))) {
       cached_roots.clear();
@@ -207,7 +208,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_label(current_root)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Left)
             .with_padding(Padding::horizontal(pixels(8)))
@@ -284,7 +285,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_label(status_text)
-            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
             .with_custom_text_color(theme.font_muted)
             .with_alignment(TextAlignment::Left)
             .with_padding(Padding::horizontal(pixels(8)))

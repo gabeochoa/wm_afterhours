@@ -43,7 +43,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label(fmt::format("{} ({})", title, count))
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(40.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(40.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true)
             .with_debug_name(title + "_header"));
@@ -65,7 +65,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{75, 78, 90, 255}, 1.0f)
             .with_label(card.title)
             .with_custom_text_color(afterhours::Color{235, 235, 240, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(34.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(34.0f))
             .with_skip_tabbing(true)
             .with_debug_name("card_" + card.title));
   }
@@ -136,7 +136,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{children(), pixels(48)})
               .with_custom_text_color(
                   afterhours::Color{120, 120, 135, 255})
-              .with_font(UIComponent::DEFAULT_FONT, h720(30.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(30.0f))
               .with_skip_tabbing(true));
     }
   }
@@ -188,6 +188,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font = afterhours::Color{230, 230, 235, 255};
     theme.font_muted = afterhours::Color{140, 140, 150, 255};
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Root container
     auto root =
@@ -215,7 +216,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Drag & Drop Demo")
             .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(48.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(48.0f))
             .with_skip_tabbing(true));
 
     div(context, mk(title_bar.ent(), 1),
@@ -224,7 +225,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(30)})
             .with_custom_text_color(
                 afterhours::Color{185, 185, 195, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_skip_tabbing(true));
 
     // Columns container

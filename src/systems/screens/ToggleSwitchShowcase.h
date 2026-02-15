@@ -26,6 +26,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Full-screen dark background
     auto root =
@@ -60,7 +61,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Settings")
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
             .with_color_usage(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_skip_tabbing(true));
@@ -70,7 +71,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("General")
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font_muted)
             .with_color_usage(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -84,7 +85,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(42)})
               .with_custom_background(
                   afterhours::colors::lighten(theme.surface, 0.06f))
-              .with_font(UIComponent::DEFAULT_FONT, h720(17.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
               .with_padding(Padding{.left = DefaultSpacing::small(),
                                     .right = DefaultSpacing::small()})
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -103,7 +104,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(42)})
               .with_custom_background(
                   afterhours::colors::lighten(theme.surface, 0.06f))
-              .with_font(UIComponent::DEFAULT_FONT, h720(17.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_disabled(extra.disabled)
@@ -131,7 +132,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Preferences")
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font_muted)
             .with_color_usage(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -156,7 +157,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Disabled")
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font_muted)
             .with_color_usage(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -170,7 +171,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.surface, 0.06f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_padding(Padding{.left = DefaultSpacing::small(),
                                   .right = DefaultSpacing::small()})
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})

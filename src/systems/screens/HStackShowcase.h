@@ -17,6 +17,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Bright, high-contrast colors for demo boxes
     const auto teal = afterhours::Color{0, 180, 220, 255};
@@ -44,7 +45,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_background(teal)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_debug_name("title"));
 
     // == Row 1: Basic hstack with 3 large boxes ==
@@ -69,7 +70,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.30f), percent(0.85f)})
               .with_custom_background(row1_colors[i])
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.08f)
               .with_debug_name(fmt::format("box_{}", i)));
@@ -110,7 +111,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(22)})
               .with_custom_background(pink)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_skip_tabbing(true));
 
       // hstack container showing this justify mode
@@ -171,7 +172,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(1.0f), pixels(22)})
               .with_custom_background(green)
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_skip_tabbing(true));
 
       auto ar = hstack(
@@ -210,7 +211,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(22)})
             .with_custom_background(blue)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_skip_tabbing(true));
 
     auto toolbar = hstack(
@@ -236,14 +237,14 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(t[i])
               .with_size(ComponentSize{pixels(50), pixels(30)})
               .with_button_variant(ButtonVariant::Ghost)
-              .with_font(UIComponent::DEFAULT_FONT, h720(13.0f)));
+              .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f)));
     }
     button(context, mk(toolbar.ent(), 1),
         ComponentConfig{}
             .with_label("Settings")
             .with_size(ComponentSize{pixels(70), pixels(30)})
             .with_button_variant(ButtonVariant::Outline)
-            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f)));
 
     // Card row
     div(context, mk(patterns.ent(), 2),
@@ -252,7 +253,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(22)})
             .with_custom_background(blue)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Margin{.top = pixels(6)})
             .with_skip_tabbing(true));
 
@@ -274,7 +275,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.22f), percent(0.85f)})
               .with_custom_background(card_c[i])
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.12f));
     }
@@ -298,7 +299,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.15f), percent(0.80f)})
               .with_custom_background(dash_c[i])
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.10f));
     }

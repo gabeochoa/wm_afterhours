@@ -15,7 +15,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Apply cozy kraft theme with handwritten font to match warm aesthetic
     auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
-    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(18.0f));
+    context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", pixels(18.0f));
 
     // Main container background - centered with padding
     auto root =
@@ -45,7 +46,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f)));
 
     // Row 1: Basic cards - all simple like theme swatches
     auto row1 = hstack(context, mk(main_container.ent(), 1),
@@ -64,7 +65,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(100), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Spacing::sm)
             .with_skip_tabbing(true));
 
@@ -76,7 +77,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_auto_text_color(true)
             .with_skip_tabbing(true));
 
@@ -88,7 +89,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_auto_text_color(true)
             .with_skip_tabbing(true));
 
@@ -100,7 +101,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_auto_text_color(true)
             .disable_rounded_corners()
             .with_skip_tabbing(true));
@@ -113,7 +114,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_padding(Spacing::md)
             .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_auto_text_color(true)
             .with_rounded_corners(
                 RoundedCorners().all_sharp().round(TOP_LEFT).round(
@@ -137,7 +138,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(80), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
@@ -162,7 +163,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_alignment(TextAlignment::Left)
             .with_skip_tabbing(true));
 
@@ -184,7 +185,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true));
 
@@ -196,7 +197,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true));
 
@@ -208,7 +209,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true));
 
@@ -231,7 +232,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_alignment(TextAlignment::Left)
             .with_skip_tabbing(true));
 
@@ -241,7 +242,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                         "overlay effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_custom_text_color(theme.font)
             .with_skip_tabbing(true));
 
@@ -260,7 +261,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.14f), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -270,7 +271,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Primary")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -279,7 +280,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Secondary")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -288,7 +289,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Accent")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -297,7 +298,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Surface")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Surface)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
@@ -306,7 +307,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_label("Background")
             .with_size(ComponentSize{percent(0.13f), pixels(44)})
             .with_background(Theme::Usage::Background)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
   }

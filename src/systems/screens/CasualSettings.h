@@ -31,7 +31,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(18.0f));
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", pixels(18.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = white;
@@ -45,6 +45,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.18f;
     theme.segments = 16;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Toggle constants
     constexpr float cs_track_w = 60.0f, cs_track_h = 32.0f;
@@ -72,11 +73,11 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{w1280(200), h720(45)})
-            .with_font("Gaegu-Bold", h720(38.0f))
+            .with_size(ComponentSize{pixels(200), pixels(45)})
+            .with_font("Gaegu-Bold", pixels(38.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.bottom = h720(8)}));
+            .with_margin(Margin{.bottom = pixels(8)}));
 
     // ═══════════════════════════════════════════════════════════════
     // PANEL (orange border via border prop, cream interior)
@@ -89,8 +90,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(panel_orange, 8.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.12f)
-            .with_padding(Padding{.top = h720(8), .left = w1280(40),
-                                  .bottom = h720(12), .right = w1280(40)})
+            .with_padding(Padding{.top = pixels(8), .left = pixels(40),
+                                  .bottom = pixels(12), .right = pixels(40)})
             .with_no_wrap()
             .with_debug_name("panel"));
 
@@ -98,7 +99,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto close_row = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(42)})
+            .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
@@ -107,10 +108,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(close_row.ent()),
                ComponentConfig{}
                    .with_label("X")
-                   .with_size(ComponentSize{w1280(46), h720(46)})
+                   .with_size(ComponentSize{pixels(46), pixels(46)})
                    .with_custom_background(close_red)
                    .with_border(afterhours::Color{190, 55, 65, 255}, 4.0f)
-                   .with_font("Gaegu-Bold", h720(28.0f))
+                   .with_font("Gaegu-Bold", pixels(28.0f))
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Center)
                    .with_rounded_corners(RoundedCorners())
@@ -123,7 +124,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto top_sections = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(90)})
+            .with_size(ComponentSize{percent(1.0f), pixels(90)})
             .with_align_items(AlignItems::FlexStart)
             .with_justify_content(JustifyContent::SpaceBetween)
             .with_no_wrap()
@@ -133,15 +134,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto audio_sec = vstack(
         context, mk(top_sections.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(340), percent(1.0f)})
+            .with_size(ComponentSize{pixels(340), percent(1.0f)})
             .with_no_wrap()
             .with_debug_name("audio_sec"));
 
     div(context, mk(audio_sec.ent()),
         ComponentConfig{}
             .with_label("Audio")
-            .with_size(ComponentSize{w1280(80), h720(22)})
-            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_font("Gaegu-Bold", pixels(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("section_header_audio"));
 
@@ -149,10 +150,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto toggle_row = hstack(
         context, mk(audio_sec.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(65)})
+            .with_size(ComponentSize{percent(1.0f), pixels(65)})
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(4)})
+            .with_margin(Margin{.top = pixels(4)})
             .with_debug_name("toggle_row"));
 
     struct ToggleInfo {
@@ -172,7 +173,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto toggle_col = vstack(
           context, mk(toggle_row.ent(), ti),
           ComponentConfig{}
-              .with_size(ComponentSize{w1280(95), percent(1.0f)})
+              .with_size(ComponentSize{pixels(95), percent(1.0f)})
               .with_align_items(AlignItems::Center)
               .with_no_wrap()
               .with_debug_name(std::string("toggle_") + toggles[ti].label));
@@ -180,8 +181,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Track button (clickable, styled as the track)
       if (button(context, mk(toggle_col.ent(), 0),
                  ComponentConfig{}
-                     .with_size(ComponentSize{w1280(cs_track_w),
-                                              h720(cs_track_h)})
+                     .with_size(ComponentSize{pixels(cs_track_w),
+                                              pixels(cs_track_h)})
                      .with_custom_background(track_col)
                      .with_border(track_border_col, 2.0f)
                      .with_rounded_corners(RoundedCorners().all_round())
@@ -197,15 +198,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       float knob_x_offset = is_on ? cs_knob_travel + cs_knob_pad : cs_knob_pad;
       div(context, mk(toggle_col.ent(), 1),
           ComponentConfig{}
-              .with_size(ComponentSize{w1280(cs_knob_sz), h720(cs_knob_sz)})
+              .with_size(ComponentSize{pixels(cs_knob_sz), pixels(cs_knob_sz)})
               .with_custom_background(white)
               .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(1.0f)
               .with_skip_tabbing(true)
-              .with_translate(w1280(knob_x_offset - (cs_track_w / 2.0f) +
+              .with_translate(pixels(knob_x_offset - (cs_track_w / 2.0f) +
                                     (cs_knob_sz / 2.0f)),
-                              h720(-(cs_track_h - cs_knob_pad)))
+                              pixels(-(cs_track_h - cs_knob_pad)))
               .with_debug_name(std::string("toggle_knob_") +
                                toggles[ti].label));
 
@@ -215,54 +216,54 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(toggle_col.ent(), 2),
           ComponentConfig{}
               .with_label(display)
-              .with_size(ComponentSize{w1280(90), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{pixels(90), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
-              .with_margin(Margin{.top = h720(-20)}));
+              .with_margin(Margin{.top = pixels(-20)}));
     }
 
     // ── Data section (right side of top) ──
     auto data_sec = vstack(
         context, mk(top_sections.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(260), percent(1.0f)})
+            .with_size(ComponentSize{pixels(260), percent(1.0f)})
             .with_no_wrap()
             .with_debug_name("data_sec"));
 
     div(context, mk(data_sec.ent()),
         ComponentConfig{}
             .with_label("Data")
-            .with_size(ComponentSize{w1280(80), h720(22)})
-            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_size(ComponentSize{pixels(80), pixels(22)})
+            .with_font("Gaegu-Bold", pixels(20.0f))
             .with_custom_text_color(text_muted)
             .with_debug_name("section_header_data"));
 
     auto data_btns = hstack(
         context, mk(data_sec.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(55)})
+            .with_size(ComponentSize{percent(1.0f), pixels(55)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(4)})
+            .with_margin(Margin{.top = pixels(4)})
             .with_debug_name("data_btns"));
 
     button(context, mk(data_btns.ent()),
            ComponentConfig{}
                .with_label("Save/Load Progress")
-               .with_size(ComponentSize{w1280(200), h720(50)})
+               .with_size(ComponentSize{pixels(200), pixels(50)})
                .with_custom_background(white)
                .with_border(afterhours::Color{200, 195, 185, 255}, 3.0f)
                .with_custom_text_color(text_dark)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_margin(Margin{.right = w1280(10)}));
+               .with_margin(Margin{.right = pixels(10)}));
 
     div(context, mk(data_btns.ent()),
         ComponentConfig{}
             .with_label("Sync")
-            .with_size(ComponentSize{w1280(42), h720(42)})
+            .with_size(ComponentSize{pixels(42), pixels(42)})
             .with_custom_background(btn_green)
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
@@ -276,23 +277,23 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(1)})
             .with_custom_background(afterhours::Color{55, 45, 40, 40})
-            .with_margin(Margin{.top = h720(6), .bottom = h720(4)})
+            .with_margin(Margin{.top = pixels(6), .bottom = pixels(4)})
             .with_debug_name("sep_toggles"));
 
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("Menu")
-            .with_size(ComponentSize{w1280(80), h720(20)})
-            .with_font("Gaegu-Bold", h720(20.0f))
+            .with_size(ComponentSize{pixels(80), pixels(20)})
+            .with_font("Gaegu-Bold", pixels(20.0f))
             .with_custom_text_color(text_muted)
-            .with_margin(Margin{.bottom = h720(6)})
+            .with_margin(Margin{.bottom = pixels(6)})
             .with_debug_name("section_header_menu"));
 
     // ── Menu buttons: two columns ──
     auto menu_row = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(195)})
+            .with_size(ComponentSize{percent(1.0f), pixels(195)})
             .with_justify_content(JustifyContent::SpaceBetween)
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
@@ -305,21 +306,21 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_720p_size(280, 55)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
-                 .with_font("Gaegu-Bold", h720(22.0f))
+                 .with_font("Gaegu-Bold", pixels(22.0f))
                  .with_custom_text_color(white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.5f)
                  .with_soft_shadow(1.0f, 2.0f, 5.0f,
                                    afterhours::Color{0, 0, 0, 30})
-                 .with_margin(Margin{.bottom = h720(12)}));
+                 .with_margin(Margin{.bottom = pixels(12)}));
     };
 
     // Left column
     auto left_col = vstack(
         context, mk(menu_row.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(285), percent(1.0f)})
+            .with_size(ComponentSize{pixels(285), percent(1.0f)})
             .with_no_wrap()
             .with_debug_name("menu_left"));
 
@@ -330,7 +331,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto right_col = vstack(
         context, mk(menu_row.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(285), percent(1.0f)})
+            .with_size(ComponentSize{pixels(285), percent(1.0f)})
             .with_no_wrap()
             .with_debug_name("menu_right"));
 
@@ -345,13 +346,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(1)})
             .with_custom_background(afterhours::Color{55, 45, 40, 40})
-            .with_margin(Margin{.bottom = h720(8)})
+            .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("sep_footer"));
 
     auto footer = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(42)})
+            .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_debug_name("footer"));
@@ -360,10 +361,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(footer.ent()),
                ComponentConfig{}
                    .with_label("About")
-                   .with_size(ComponentSize{w1280(110), h720(38)})
+                   .with_size(ComponentSize{pixels(110), pixels(38)})
                    .with_custom_background(btn_blue)
                    .with_border(btn_blue_dark, 3.0f)
-                   .with_font("Gaegu-Bold", h720(20.0f))
+                   .with_font("Gaegu-Bold", pixels(20.0f))
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Center)
                    .with_rounded_corners(RoundedCorners())
@@ -378,15 +379,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(footer.ent()),
         ComponentConfig{}
             .with_label("Version 1.11.0")
-            .with_size(ComponentSize{w1280(140), h720(22)})
-            .with_font("Gaegu-Bold", h720(17.0f))
+            .with_size(ComponentSize{pixels(140), pixels(22)})
+            .with_font("Gaegu-Bold", pixels(17.0f))
             .with_custom_text_color(text_muted)
-            .with_margin(Margin{.left = w1280(12)}));
+            .with_margin(Margin{.left = pixels(12)}));
 
     // Spacer pushes OK/Cancel/Apply to the right
     div(context, mk(footer.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     auto make_footer_btn = [&](int id, const char *label,
@@ -395,15 +396,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(footer.ent(), id),
              ComponentConfig{}
                  .with_label(label)
-                 .with_size(ComponentSize{w1280(80), h720(36)})
+                 .with_size(ComponentSize{pixels(80), pixels(36)})
                  .with_custom_background(bg)
                  .with_border(border, 3.0f)
-                 .with_font("Gaegu-Bold", h720(20.0f))
+                 .with_font("Gaegu-Bold", pixels(20.0f))
                  .with_custom_text_color(white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.4f)
-                 .with_margin(Margin{.left = w1280(8)}));
+                 .with_margin(Margin{.left = pixels(8)}));
     };
 
     make_footer_btn(3, "OK", btn_green, btn_green_dark);
@@ -440,55 +441,55 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(panel_cream)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.1f)
-              .with_padding(Padding{.top = h720(12), .left = w1280(20),
-                                    .bottom = h720(12), .right = w1280(20)})
+              .with_padding(Padding{.top = pixels(12), .left = pixels(20),
+                                    .bottom = pixels(12), .right = pixels(20)})
               .with_no_wrap()
               .with_debug_name("about_inner"));
 
       div(context, mk(about_panel.ent()),
           ComponentConfig{}
               .with_label("About")
-              .with_size(ComponentSize{percent(1.0f), h720(30)})
-              .with_font("Gaegu-Bold", h720(24.0f))
+              .with_size(ComponentSize{percent(1.0f), pixels(30)})
+              .with_font("Gaegu-Bold", pixels(24.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center));
 
       div(context, mk(about_panel.ent()),
           ComponentConfig{}
               .with_label("Build: 15555-1-114203-20-10200-01")
-              .with_size(ComponentSize{percent(1.0f), h720(22)})
-              .with_font("Gaegu-Bold", h720(16.0f))
+              .with_size(ComponentSize{percent(1.0f), pixels(22)})
+              .with_font("Gaegu-Bold", pixels(16.0f))
               .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = h720(6)}));
+              .with_margin(Margin{.top = pixels(6)}));
 
       div(context, mk(about_panel.ent()),
           ComponentConfig{}
               .with_label("Version: 1.11.0.12346")
-              .with_size(ComponentSize{percent(1.0f), h720(22)})
-              .with_font("Gaegu-Bold", h720(16.0f))
+              .with_size(ComponentSize{percent(1.0f), pixels(22)})
+              .with_font("Gaegu-Bold", pixels(16.0f))
               .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = h720(2)}));
+              .with_margin(Margin{.top = pixels(2)}));
 
       div(context, mk(about_panel.ent()),
           ComponentConfig{}
               .with_label("Player ID: 281676956389")
-              .with_size(ComponentSize{percent(1.0f), h720(22)})
-              .with_font("Gaegu-Bold", h720(16.0f))
+              .with_size(ComponentSize{percent(1.0f), pixels(22)})
+              .with_font("Gaegu-Bold", pixels(16.0f))
               .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = h720(2)}));
+              .with_margin(Margin{.top = pixels(2)}));
 
       auto about_footer = hstack(
           context, mk(about_panel.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(38)})
+              .with_size(ComponentSize{percent(1.0f), pixels(38)})
               .with_justify_content(JustifyContent::Center)
               .with_align_items(AlignItems::Center)
-              .with_margin(Margin{.top = h720(6)}));
+              .with_margin(Margin{.top = pixels(6)}));
 
       if (button(context, mk(about_footer.ent()),
                  ComponentConfig{}
                      .with_label("Close")
-                     .with_size(ComponentSize{w1280(100), h720(36)})
+                     .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_custom_background(btn_green)
                      .with_border(btn_green_dark, 3.0f)
                      .with_custom_text_color(text_dark)

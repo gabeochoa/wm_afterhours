@@ -52,6 +52,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     Theme theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     auto root = div(
         context, mk(entity, 0),

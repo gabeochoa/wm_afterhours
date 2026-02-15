@@ -178,7 +178,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(19.0f));
+    // Adaptive scaling: pixels() scales with ui_scale, layout reflows on resize
+    context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_scaling_mode(ScalingMode::Adaptive);
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(19.0f));
     Theme theme;
     theme.font = text_white;
     theme.darkfont = bg_dark;
@@ -199,7 +202,11 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     int screen_h = pcr ? pcr->height() : Settings::get().get_screen_height();
     float sw = static_cast<float>(screen_w);
     float sh = static_cast<float>(screen_h);
-    bool show_help_panel = screen_w >= 900;
+
+    // Use logical width for breakpoint (respects ui_scale zoom)
+    auto layout_info = LayoutInfo::make(sw, sh, theme.ui_scale,
+                                        ScalingMode::Adaptive);
+    bool show_help_panel = layout_info.logical_w >= 900;
 
     // ── Sync selection with focus ──
     auto &current_settings = get_current_settings();
@@ -241,7 +248,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (selected_row >= current_settings.size()) selected_row = 0;
 
     // ── Layout dimensions ──
-    // All authored for 1280x720; h720/w1280 scale proportionally
+    // Top-level regions use screen_pct for proportional layout;
+    // inner elements use pixels() which scales with ui_scale in Adaptive mode
     float tab_area_h = 50.f / sh;    // tab bar region
     float hdr_area_h = 45.f / sh;    // section header region
     float bottom_h = 45.f / sh;      // bottom prompt bar
@@ -275,7 +283,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(tab_area_h)})
-            .with_padding(Padding{.top = h720(15), .left = w1280(70),
+            .with_padding(Padding{.top = pixels(15), .left = pixels(70),
                                   .bottom = {}, .right = {}})
             .with_align_items(AlignItems::FlexEnd)
             .with_no_wrap()
@@ -283,7 +291,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     tab_container(context, mk(tab_area.ent(), 0), tabs, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(520), h720(35)}));
+            .with_size(ComponentSize{pixels(520), pixels(35)}));
 
     // ═══════════════════════════════════════════════════════════════
     // SECTION HEADER
@@ -292,7 +300,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(hdr_area_h)})
-            .with_padding(Padding{.top = h720(10), .left = w1280(50),
+            .with_padding(Padding{.top = pixels(10), .left = pixels(50),
                                   .bottom = {}, .right = {}})
             .with_no_wrap()
             .with_debug_name("header_section"));
@@ -300,15 +308,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(hdr.ent(), 0),
         ComponentConfig{}
             .with_label(get_section_header())
-            .with_size(ComponentSize{w1280(200), h720(28)})
-            .with_font("EqProRounded", h720(20.0f))
+            .with_size(ComponentSize{pixels(200), pixels(28)})
+            .with_font("EqProRounded", pixels(20.0f))
             .with_custom_text_color(text_white));
 
     div(context, mk(hdr.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(520), pixels(1)})
+            .with_size(ComponentSize{pixels(520), pixels(1)})
             .with_custom_background(afterhours::Color{85, 195, 145, 60})
-            .with_margin(Margin{.top = h720(4)})
+            .with_margin(Margin{.top = pixels(4)})
             .with_debug_name("section_sep"));
 
     // ═══════════════════════════════════════════════════════════════
@@ -344,17 +352,17 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               ComponentConfig{}
                   .with_size(ComponentSize{percent(0.95f), pixels(1)})
                   .with_custom_background(afterhours::Color{85, 195, 145, 40})
-                  .with_margin(Margin{.top = h720(8)})
+                  .with_margin(Margin{.top = pixels(8)})
                   .with_skip_tabbing(true)
                   .with_debug_name("group_sep"));
         }
         div(context, mk(settings_panel.ent(), child_id++),
             ComponentConfig{}
                 .with_label(group_label)
-                .with_size(ComponentSize{w1280(300), h720(22)})
-                .with_font("EqProRounded", h720(14.0f))
+                .with_size(ComponentSize{pixels(300), pixels(22)})
+                .with_font("EqProRounded", pixels(14.0f))
                 .with_custom_text_color(afterhours::Color{85, 195, 145, 180})
-                .with_margin(Margin{.left = w1280(20), .bottom = h720(2)})
+                .with_margin(Margin{.left = pixels(20), .bottom = pixels(2)})
                 .with_skip_tabbing(true)
                 .with_debug_name("group_lbl"));
       }
@@ -379,32 +387,32 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto row = hstack(
           context, mk(settings_panel.ent(), child_id++),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(40)})
+              .with_size(ComponentSize{percent(1.0f), pixels(40)})
               .with_custom_background(is_selected ? highlight_row
                                                   : afterhours::Color{35, 45, 55, 255})
               .with_align_items(AlignItems::Center)
               .with_no_wrap()
-              .with_margin(Margin{.bottom = h720(2)})
+              .with_margin(Margin{.bottom = pixels(2)})
               .with_debug_name("row_" + std::to_string(i)));
 
       // Selection accent bar
       div(context, mk(row.ent(), 0),
           ComponentConfig{}
-              .with_size(ComponentSize{w1280(4), h720(32)})
+              .with_size(ComponentSize{pixels(4), pixels(32)})
               .with_custom_background(
                   is_selected ? accent_green : afterhours::Color{0, 0, 0, 0})
-              .with_margin(Margin{.right = w1280(12)}));
+              .with_margin(Margin{.right = pixels(12)}));
 
       // Label (tabbable button)
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label(setting.label)
-                     .with_size(ComponentSize{w1280(175), percent(1.0f)})
-                     .with_font("EqProRounded", h720(18.0f))
+                     .with_size(ComponentSize{pixels(175), percent(1.0f)})
+                     .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(label_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Left)
-                     .with_padding(Padding{.left = w1280(4)})
+                     .with_padding(Padding{.left = pixels(4)})
                      .with_debug_name("label_" + std::to_string(i)))) {
         selected_row = i;
       }
@@ -413,8 +421,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 2),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{w1280(40), h720(40)})
-                     .with_font("EqProRounded", h720(20.0f))
+                     .with_size(ComponentSize{pixels(40), pixels(40)})
+                     .with_font("EqProRounded", pixels(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Center)
@@ -433,8 +441,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(row.ent(), 3),
           ComponentConfig{}
               .with_label(display_value)
-              .with_size(ComponentSize{w1280(240), percent(1.0f)})
-              .with_font("EqProRounded", h720(16.0f))
+              .with_size(ComponentSize{pixels(240), percent(1.0f)})
+              .with_font("EqProRounded", pixels(16.0f))
               .with_custom_text_color(value_color)
               .with_alignment(TextAlignment::Center)
               .with_skip_tabbing(true)
@@ -444,8 +452,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 4),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{w1280(40), h720(40)})
-                     .with_font("EqProRounded", h720(20.0f))
+                     .with_size(ComponentSize{pixels(40), pixels(40)})
+                     .with_font("EqProRounded", pixels(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Center)
@@ -464,7 +472,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         auto bar_bg = div(
             context, mk(row.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{w1280(100), h720(14)})
+                .with_size(ComponentSize{pixels(100), pixels(14)})
                 .with_custom_background(slider_track)
                 .with_border(slider_empty_border, 1.0f)
                 .with_skip_tabbing(true)
@@ -484,7 +492,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         auto segs = hstack(
             context, mk(row.ent(), 5),
             ComponentConfig{}
-                .with_size(ComponentSize{w1280(100), h720(10)})
+                .with_size(ComponentSize{pixels(100), pixels(10)})
                 .with_align_items(AlignItems::Center)
                 .with_no_wrap()
                 .with_skip_tabbing(true)
@@ -522,7 +530,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{screen_pct(help_w_pct), percent(1.0f)})
               .with_margin(Margin{.left = screen_pct(help_gap_pct)})
-              .with_padding(Padding{.top = h720(5)})
+              .with_padding(Padding{.top = pixels(5)})
               .with_no_wrap()
               .with_debug_name("help_panel"));
 
@@ -533,29 +541,29 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(help.ent(), 0),
           ComponentConfig{}
               .with_label(selected_setting.label)
-              .with_size(ComponentSize{percent(1.0f), h720(35)})
-              .with_font("EqProRounded", h720(22.0f))
+              .with_size(ComponentSize{percent(1.0f), pixels(35)})
+              .with_font("EqProRounded", pixels(22.0f))
               .with_custom_text_color(text_white));
 
       div(context, mk(help.ent(), 1),
           ComponentConfig{}
               .with_label(desc1)
-              .with_size(ComponentSize{percent(1.0f), h720(30)})
+              .with_size(ComponentSize{percent(1.0f), pixels(30)})
               .with_custom_text_color(text_white)
-              .with_margin(Margin{.top = h720(8)}));
+              .with_margin(Margin{.top = pixels(8)}));
 
       div(context, mk(help.ent(), 2),
           ComponentConfig{}
               .with_label(desc2)
-              .with_size(ComponentSize{percent(1.0f), h720(25)})
+              .with_size(ComponentSize{percent(1.0f), pixels(25)})
               .with_custom_text_color(text_white));
 
       div(context, mk(help.ent(), 3),
           ComponentConfig{}
               .with_label(current_label)
-              .with_size(ComponentSize{percent(1.0f), h720(25)})
+              .with_size(ComponentSize{percent(1.0f), pixels(25)})
               .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = h720(10)}));
+              .with_margin(Margin{.top = pixels(10)}));
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -565,7 +573,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 4),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(bottom_h)})
-            .with_padding(Padding{.left = w1280(20), .right = w1280(20)})
+            .with_padding(Padding{.left = pixels(20), .right = pixels(20)})
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::FlexEnd)
             .with_no_wrap()
@@ -575,7 +583,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(bottom.ent(), 0),
         ComponentConfig{}
             .with_label("Y")
-            .with_size(ComponentSize{w1280(28), h720(28)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_custom_background(afterhours::Color{180, 160, 60, 255})
             .with_custom_text_color(bg_dark)
             .with_alignment(TextAlignment::Center)
@@ -584,15 +592,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(bottom.ent(), 1),
         ComponentConfig{}
             .with_label("Reset to default")
-            .with_size(ComponentSize{w1280(150), h720(25)})
+            .with_size(ComponentSize{pixels(150), pixels(25)})
             .with_custom_text_color(text_white)
-            .with_margin(Margin{.left = w1280(8), .right = w1280(30)}));
+            .with_margin(Margin{.left = pixels(8), .right = pixels(30)}));
 
     // B - Back
     div(context, mk(bottom.ent(), 2),
         ComponentConfig{}
             .with_label("B")
-            .with_size(ComponentSize{w1280(28), h720(28)})
+            .with_size(ComponentSize{pixels(28), pixels(28)})
             .with_custom_background(afterhours::Color{180, 80, 80, 255})
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -601,9 +609,9 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(bottom.ent(), 3),
         ComponentConfig{}
             .with_label("Back")
-            .with_size(ComponentSize{w1280(50), h720(25)})
+            .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_custom_text_color(text_white)
-            .with_margin(Margin{.left = w1280(8)}));
+            .with_margin(Margin{.left = pixels(8)}));
   }
 };
 

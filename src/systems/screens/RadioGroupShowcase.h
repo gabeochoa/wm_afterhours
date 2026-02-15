@@ -135,6 +135,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container - centered on screen (wider to fit all groups with borders)
     auto root =
@@ -162,7 +163,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::medium()}));
 
     // Content area - three columns with clearer group separation
@@ -194,14 +195,14 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_skip_tabbing(true));
 
     // Radio group with configurable styling for clearer indicator
     custom_radio_group(context, mk(col1.ent(), 1), fruit_options, fruit_idx,
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                           .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                           .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                            .with_debug_name("fruit_radios"),
                        radio_style);
 
@@ -224,14 +225,14 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_skip_tabbing(true));
 
     // Radio group with configurable styling for clearer indicator
     custom_radio_group(context, mk(col2.ent(), 1), size_options, size_idx,
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                           .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                           .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                            .with_debug_name("size_radios"),
                        radio_style);
 
@@ -254,14 +255,14 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_skip_tabbing(true));
 
     // Radio group with configurable styling for clearer indicator
     custom_radio_group(context, mk(col3.ent(), 1), color_options, color_idx,
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                           .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                           .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                            .with_debug_name("color_radios"),
                        radio_style);
 
@@ -280,7 +281,7 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Margin{.top = DefaultSpacing::small()})
             .with_skip_tabbing(true));
   }

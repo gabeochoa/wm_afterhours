@@ -56,7 +56,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(18.0f));
     Theme theme;
     theme.font = afterhours::Color{255, 255, 255, 255};
     theme.darkfont = afterhours::Color{10, 15, 25, 255};
@@ -70,6 +70,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     theme.segments = 4;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // ═══════════════════════════════════════════════════════════════
     // ROOT
@@ -79,8 +80,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
-            .with_padding(Padding{.top = h720(20), .left = w1280(135),
-                                  .right = w1280(40)})
+            .with_padding(Padding{.top = pixels(20), .left = pixels(135),
+                                  .right = pixels(40)})
             .with_no_wrap()
             .with_debug_name("flight_root"));
 
@@ -88,23 +89,23 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("OPTIONS")
-            .with_size(ComponentSize{w1280(200), h720(50)})
-            .with_font("EqProRounded", h720(36.0f))
+            .with_size(ComponentSize{pixels(200), pixels(50)})
+            .with_font("EqProRounded", pixels(36.0f))
             .with_custom_text_color(text_cyan));
 
     // ── Tab bar ──
     tab_container(
         context, mk(root.ent()), categories, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(950), h720(32)})
-            .with_margin(Margin{.top = h720(-5)}));
+            .with_size(ComponentSize{pixels(950), pixels(32)})
+            .with_margin(Margin{.top = pixels(-5)}));
 
     // ── Decorative line ──
     div(context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(80), pixels(2)})
+            .with_size(ComponentSize{pixels(80), pixels(2)})
             .with_custom_background(highlight_line)
-            .with_margin(Margin{.top = h720(10)})
+            .with_margin(Margin{.top = pixels(10)})
             .with_debug_name("line_top"));
 
     // ── Content area: connector + sub-options ──
@@ -113,16 +114,16 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto content = vstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(350)})
+            .with_size(ComponentSize{percent(1.0f), pixels(350)})
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(5), .left = w1280(265)})
+            .with_margin(Margin{.top = pixels(5), .left = pixels(265)})
             .with_debug_name("content"));
 
     div(context, mk(content.ent()),
         ComponentConfig{}
             .with_label(sub_header)
-            .with_size(ComponentSize{w1280(300), h720(28)})
-            .with_font("EqProRounded", h720(16.0f))
+            .with_size(ComponentSize{pixels(300), pixels(28)})
+            .with_font("EqProRounded", pixels(16.0f))
             .with_custom_text_color(text_cyan));
 
     bool vibration_unavailable = true;
@@ -147,12 +148,12 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(content.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(label)
-                     .with_size(ComponentSize{w1280(300), h720(32)})
-                     .with_font("EqProRounded", h720(20.0f))
+                     .with_size(ComponentSize{pixels(300), pixels(32)})
+                     .with_font("EqProRounded", pixels(20.0f))
                      .with_custom_text_color(opt_color)
                      .with_disabled(is_disabled)
                      .with_opacity(is_disabled ? 0.5f : 1.0f)
-                     .with_margin(Margin{.top = h720(4)})
+                     .with_margin(Margin{.top = pixels(4)})
                      .with_debug_name("opt_" + std::to_string(i)))) {
         if (!is_disabled) {
           selected_option = i;
@@ -165,10 +166,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("Requires compatible controller")
-              .with_size(ComponentSize{w1280(280), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{pixels(280), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_muted)
-              .with_margin(Margin{.left = w1280(18)}));
+              .with_margin(Margin{.left = pixels(18)}));
     }
 
     // ── Help text ──
@@ -184,27 +185,27 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label(help_text)
-            .with_size(ComponentSize{w1280(500), h720(28)})
-            .with_font("EqProRounded", h720(18.0f))
+            .with_size(ComponentSize{pixels(500), pixels(28)})
+            .with_font("EqProRounded", pixels(18.0f))
             .with_custom_text_color(text_bright)
-            .with_margin(Margin{.left = w1280(35)}));
+            .with_margin(Margin{.left = pixels(35)}));
 
     auto footer_btns = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(5), .left = w1280(365)})
+            .with_margin(Margin{.top = pixels(5), .left = pixels(365)})
             .with_debug_name("footer_btns"));
 
     button(context, mk(footer_btns.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(highlight_line)
                .with_border(text_muted, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_bright)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("btn_ok"));
@@ -212,41 +213,41 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer_btns.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(afterhours::Color{35, 50, 70, 255})
                .with_border(text_muted, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_bright)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_cancel"));
 
     button(context, mk(footer_btns.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(afterhours::Color{35, 50, 70, 255})
                .with_border(text_muted, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_bright)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_apply"));
 
     auto prompts = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(28)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(5), .left = w1280(25)})
+            .with_margin(Margin{.top = pixels(5), .left = pixels(25)})
             .with_debug_name("prompts"));
 
     afterhours::Color key_bg{35, 50, 70, 255};
     div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("Enter")
-            .with_size(ComponentSize{w1280(56), h720(28)})
+            .with_size(ComponentSize{pixels(56), pixels(28)})
             .with_custom_background(key_bg)
             .with_border(text_muted, 1.0f)
             .with_custom_text_color(text_bright)
@@ -254,24 +255,24 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("OK")
-            .with_size(ComponentSize{w1280(36), h720(28)})
+            .with_size(ComponentSize{pixels(36), pixels(28)})
             .with_custom_text_color(text_bright)
-            .with_margin(Margin{.left = w1280(8)}));
+            .with_margin(Margin{.left = pixels(8)}));
     div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("Esc")
-            .with_size(ComponentSize{w1280(48), h720(28)})
+            .with_size(ComponentSize{pixels(48), pixels(28)})
             .with_custom_background(key_bg)
             .with_border(text_muted, 1.0f)
             .with_custom_text_color(text_bright)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.left = w1280(15)}));
+            .with_margin(Margin{.left = pixels(15)}));
     div(context, mk(prompts.ent()),
         ComponentConfig{}
             .with_label("BACK")
-            .with_size(ComponentSize{w1280(56), h720(28)})
+            .with_size(ComponentSize{pixels(56), pixels(28)})
             .with_custom_text_color(text_bright)
-            .with_margin(Margin{.left = w1280(8)}));
+            .with_margin(Margin{.left = pixels(8)}));
   }
 };
 

@@ -86,7 +86,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(16.0f));
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(16.0f));
     Theme theme;
     theme.font = text_white;
     theme.darkfont = bg_dark;
@@ -100,6 +100,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.08f;
     theme.segments = 6;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // ═══════════════════════════════════════════════════════════════
     // ROOT
@@ -109,8 +110,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
-            .with_padding(Padding{.top = h720(20), .left = w1280(55),
-                                  .bottom = h720(15), .right = w1280(25)})
+            .with_padding(Padding{.top = pixels(20), .left = pixels(55),
+                                  .bottom = pixels(15), .right = pixels(25)})
             .with_no_wrap()
             .with_debug_name("pw_root"));
 
@@ -118,7 +119,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto header = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(35)})
+            .with_size(ComponentSize{percent(1.0f), pixels(35)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_debug_name("header"));
@@ -126,27 +127,27 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(header.ent()),
         ComponentConfig{}
             .with_label("X")
-            .with_size(ComponentSize{w1280(30), h720(30)})
-            .with_font("EqProRounded", h720(22.0f))
+            .with_size(ComponentSize{pixels(30), pixels(30)})
+            .with_font("EqProRounded", pixels(22.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
 
     div(context, mk(header.ent()),
         ComponentConfig{}
             .with_label("SETTINGS")
-            .with_size(ComponentSize{w1280(120), h720(30)})
-            .with_font("EqProRounded", h720(20.0f))
+            .with_size(ComponentSize{pixels(120), pixels(30)})
+            .with_font("EqProRounded", pixels(20.0f))
             .with_custom_text_color(text_white)
-            .with_margin(Margin{.left = w1280(10)}));
+            .with_margin(Margin{.left = pixels(10)}));
 
     // ── Content area: main panel + help panel ──
     auto content = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(380)})
+            .with_size(ComponentSize{percent(1.0f), pixels(380)})
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(5)})
+            .with_margin(Margin{.top = pixels(5)})
             .with_debug_name("content"));
 
     // Main settings panel
@@ -156,8 +157,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(480, 380)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
-            .with_padding(Padding{.top = h720(8), .left = w1280(15),
-                                  .bottom = h720(8), .right = w1280(15)})
+            .with_padding(Padding{.top = pixels(8), .left = pixels(15),
+                                  .bottom = pixels(8), .right = pixels(15)})
             .with_no_wrap()
             .with_debug_name("main_panel"));
 
@@ -177,16 +178,16 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto row = hstack(
           context, mk(main_panel.ent(), static_cast<int>(i)),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(36)})
+              .with_size(ComponentSize{percent(1.0f), pixels(36)})
               .with_align_items(AlignItems::Center)
               .with_no_wrap()
-              .with_margin(Margin{.top = i > 0 ? h720(0) : Size{}}));
+              .with_margin(Margin{.top = i > 0 ? pixels(0) : Size{}}));
 
       if (button(context, mk(row.ent(), 0),
                  ComponentConfig{}
                      .with_label(current_settings[i].label)
-                     .with_size(ComponentSize{w1280(140), h720(36)})
-                     .with_font("EqProRounded", h720(18.0f))
+                     .with_size(ComponentSize{pixels(140), pixels(36)})
+                     .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(label_color))) {
         selected_row = i;
       }
@@ -194,13 +195,13 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{w1280(44), h720(36)})
+                     .with_size(ComponentSize{pixels(44), pixels(36)})
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
-                     .with_font("EqProRounded", h720(18.0f))
+                     .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(arrow_col)
                      .with_alignment(TextAlignment::Center)
-                     .with_margin(Margin{.left = w1280(20)}))) {
+                     .with_margin(Margin{.left = pixels(20)}))) {
         selected_row = i;
         auto &setting = current_settings[i];
         setting.option_idx = (setting.option_idx == 0)
@@ -212,7 +213,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(
                   current_settings[i].options[current_settings[i].option_idx])
-              .with_size(ComponentSize{w1280(170), h720(36)})
+              .with_size(ComponentSize{pixels(170), pixels(36)})
               .with_custom_background(dd_bg)
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center));
@@ -220,10 +221,10 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 3),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{w1280(44), h720(36)})
+                     .with_size(ComponentSize{pixels(44), pixels(36)})
                      .with_custom_background(dd_bg)
                      .with_border(dd_border, 1.0f)
-                     .with_font("EqProRounded", h720(18.0f))
+                     .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(arrow_col)
                      .with_alignment(TextAlignment::Center))) {
         selected_row = i;
@@ -242,7 +243,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer = hstack(
         context, mk(main_panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
@@ -251,10 +252,10 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(panel_border)
                .with_border(text_cyan, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("btn_ok"));
@@ -262,25 +263,25 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(panel_blue)
                .with_border(panel_border, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_cancel"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(panel_blue)
                .with_border(panel_border, 1.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_apply"));
 
     // Help panel (right of main)
@@ -290,9 +291,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_720p_size(220, 140)
             .with_custom_background(panel_blue)
             .with_border(panel_border, 2.0f)
-            .with_padding(Padding{.top = h720(12), .left = w1280(12),
-                                  .bottom = h720(12), .right = w1280(12)})
-            .with_margin(Margin{.left = w1280(15)})
+            .with_padding(Padding{.top = pixels(12), .left = pixels(12),
+                                  .bottom = pixels(12), .right = pixels(12)})
+            .with_margin(Margin{.left = pixels(15)})
             .with_no_wrap()
             .with_debug_name("help_panel"));
 
@@ -307,48 +308,48 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(help_panel.ent()),
         ComponentConfig{}
             .with_label(help_title)
-            .with_size(ComponentSize{percent(1.0f), h720(28)})
-            .with_font("EqProRounded", h720(17.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
+            .with_font("EqProRounded", pixels(17.0f))
             .with_custom_text_color(text_cyan));
 
     div(context, mk(help_panel.ent()),
         ComponentConfig{}
             .with_label(help_line1)
-            .with_size(ComponentSize{percent(1.0f), h720(25)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(25)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(text_white)
-            .with_margin(Margin{.top = h720(5)}));
+            .with_margin(Margin{.top = pixels(5)}));
 
     div(context, mk(help_panel.ent()),
         ComponentConfig{}
             .with_label(help_line2)
-            .with_size(ComponentSize{percent(1.0f), h720(25)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(25)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(text_white));
 
     div(context, mk(help_panel.ent()),
         ComponentConfig{}
             .with_label(current_val)
-            .with_size(ComponentSize{percent(1.0f), h720(25)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(25)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(text_muted)
-            .with_margin(Margin{.top = h720(10)}));
+            .with_margin(Margin{.top = pixels(10)}));
 
     // ── Tab bar ──
     tab_container(context, mk(root.ent()), tabs, active_tab,
                   ComponentConfig{}
-                      .with_size(ComponentSize{w1280(480), h720(44)})
-                      .with_margin(Margin{.top = h720(15)}));
+                      .with_size(ComponentSize{pixels(480), pixels(44)})
+                      .with_margin(Margin{.top = pixels(15)}));
 
     // ── Bottom button prompts ──
     afterhours::Color prompt_bg{55, 75, 95, 255};
     auto prompts = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(28)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(16)})
+            .with_margin(Margin{.top = pixels(16)})
             .with_debug_name("prompts"));
 
     struct Prompt {
@@ -360,18 +361,18 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(prompts.ent(), pi * 2),
           ComponentConfig{}
               .with_label(prompt_data[pi].icon)
-              .with_size(ComponentSize{w1280(28), h720(28)})
+              .with_size(ComponentSize{pixels(28), pixels(28)})
               .with_custom_background(prompt_bg)
               .with_custom_text_color(text_white)
               .with_alignment(TextAlignment::Center)
-              .with_margin(pi > 0 ? Margin{.left = w1280(20)} : Margin{}));
+              .with_margin(pi > 0 ? Margin{.left = pixels(20)} : Margin{}));
       div(context, mk(prompts.ent(), pi * 2 + 1),
           ComponentConfig{}
               .with_label(prompt_data[pi].label)
-              .with_size(ComponentSize{w1280(55), h720(25)})
-              .with_font("EqProRounded", h720(16.0f))
+              .with_size(ComponentSize{pixels(55), pixels(25)})
+              .with_font("EqProRounded", pixels(16.0f))
               .with_custom_text_color(text_white)
-              .with_margin(Margin{.left = w1280(7)}));
+              .with_margin(Margin{.left = pixels(7)}));
     }
   }
 };

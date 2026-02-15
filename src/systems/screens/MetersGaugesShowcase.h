@@ -18,6 +18,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float dt) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     const auto FONT = UIComponent::DEFAULT_FONT;
 
@@ -67,7 +68,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(FONT, h720(24.0f))
+            .with_font(FONT, pixels(24.0f))
             .with_rounded_corners(corners));
 
     // =================================================================
@@ -89,7 +90,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), percent(0.22f)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font(FONT, h720(16.0f))
+            .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     auto meters_row = hstack(context, mk(row1.ent(), 1),
@@ -125,7 +126,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.2f), percent(0.9f)})
               .with_background(Theme::Usage::Surface)
               .with_auto_text_color(true)
-              .with_font(FONT, h720(16.0f))
+              .with_font(FONT, pixels(16.0f))
               .with_skip_tabbing(true)
               .with_debug_name(fmt::format("{}_label", meters[m].name)));
 
@@ -135,7 +136,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                        .with_size(ComponentSize{percent(0.75f), percent(0.7f)})
                        .with_custom_background(meters[m].color)
                        .with_color_usage(Theme::Usage::Custom)
-                       .with_font(FONT, h720(14.0f))
+                       .with_font(FONT, pixels(14.0f))
                        .with_skip_tabbing(true)
                        .with_rounded_corners(corners)
                        .with_debug_name(fmt::format("{}_bar", meters[m].name)),
@@ -164,7 +165,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), percent(0.25f)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font(FONT, h720(16.0f))
+            .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     auto stack_row = hstack(context, mk(row2.ent(), 1),
@@ -178,7 +179,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_label("Health")
                      .with_size(ComponentSize{percent(0.47f), percent(0.7f)})
                      .with_custom_background(health_color)
-                     .with_font(FONT, h720(14.0f))
+                     .with_font(FONT, pixels(14.0f))
                      .with_skip_tabbing(true)
                      .with_rounded_corners(corners)
                      .with_margin(Spacing::xs)
@@ -190,7 +191,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_label("Shield")
                      .with_size(ComponentSize{percent(0.47f), percent(0.7f)})
                      .with_custom_background(shield_color)
-                     .with_font(FONT, h720(14.0f))
+                     .with_font(FONT, pixels(14.0f))
                      .with_skip_tabbing(true)
                      .with_rounded_corners(corners)
                      .with_margin(Spacing::xs)
@@ -215,7 +216,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), percent(0.28f)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font(FONT, h720(16.0f))
+            .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     auto anim_row = hstack(context, mk(row3.ent(), 1),
@@ -228,7 +229,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(0.55f), percent(0.6f)})
                      .with_background(Theme::Usage::Primary)
-                     .with_font(FONT, h720(14.0f))
+                     .with_font(FONT, pixels(14.0f))
                      .with_margin(Spacing::xs)
                      .with_rounded_corners(corners)
                      .with_debug_name("mg_anim_bar"),
@@ -236,9 +237,9 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
 
     circular_progress(context, mk(anim_row.ent(), 1), anim_progress,
                       ComponentConfig{}
-                          .with_size(ComponentSize{h720(70), h720(70)})
+                          .with_size(ComponentSize{pixels(70), pixels(70)})
                           .with_background(Theme::Usage::Primary)
-                          .with_border(track_color, h720(7.0f))
+                          .with_border(track_color, pixels(7.0f))
                           .with_margin(Spacing::sm)
                           .with_debug_name("mg_anim_circle"));
 
@@ -260,7 +261,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), percent(0.14f)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font(FONT, h720(16.0f))
+            .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     auto circles_row =
@@ -293,9 +294,9 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
       circular_progress(
           context, mk(gauge_col.ent(), 0), gauges[g].value,
           ComponentConfig{}
-              .with_size(ComponentSize{h720(90), h720(90)})
+              .with_size(ComponentSize{pixels(90), pixels(90)})
               .with_custom_background(gauges[g].color)
-              .with_border(track_color, h720(8.0f))
+              .with_border(track_color, pixels(8.0f))
               .with_debug_name(fmt::format("{}_ring", gauges[g].name)));
 
       div(context, mk(gauge_col.ent(), 1),
@@ -305,7 +306,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.8f), percent(0.18f)})
               .with_background(Theme::Usage::Surface)
               .with_auto_text_color(true)
-              .with_font(FONT, h720(16.0f))
+              .with_font(FONT, pixels(16.0f))
               .with_skip_tabbing(true)
               .with_debug_name(fmt::format("{}_label", gauges[g].name)));
     }
@@ -328,7 +329,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), percent(0.3f)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font(FONT, h720(16.0f))
+            .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     slider(context, mk(row5.ent(), 1), control_value,
@@ -336,7 +337,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_label("Value")
                .with_size(ComponentSize{percent(0.7f), percent(0.55f)})
                .with_background(Theme::Usage::Accent)
-               .with_font(FONT, h720(14.0f))
+               .with_font(FONT, pixels(14.0f))
                .with_margin(Spacing::xs)
                .with_debug_name("mg_slider"),
            SliderHandleValueLabelPosition::WithLabel);

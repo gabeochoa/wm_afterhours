@@ -66,7 +66,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(18.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = text_white;
@@ -80,6 +80,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.15f;
     theme.segments = 12;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     afterhours::Color pill_shadow{
         0, 0, 0, static_cast<unsigned char>(cfg_btn_shadow_alpha)};
@@ -117,35 +118,35 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto header = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(cfg_header_height)})
+            .with_size(ComponentSize{percent(1.0f), pixels(cfg_header_height)})
             .with_custom_background(header_coral)
             .with_rounded_corners(std::bitset<4>(0b1100))
             .with_roundness(0.10f)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.left = w1280(20), .right = w1280(20)})
+            .with_padding(Padding{.left = pixels(20), .right = pixels(20)})
             .with_debug_name("header"));
 
     div(context, mk(header.ent()),
         ComponentConfig{}
             .with_label("Settings")
-            .with_size(ComponentSize{w1280(280), h720(60)})
-            .with_font("Fredoka", h720(cfg_title_font_size))
+            .with_size(ComponentSize{pixels(280), pixels(60)})
+            .with_font("Fredoka", pixels(cfg_title_font_size))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
     // Spacer
     div(context, mk(header.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     // Close button
     button(context, mk(header.ent()),
            ComponentConfig{}
                .with_label("X")
-               .with_size(ComponentSize{w1280(cfg_close_btn_size),
-                                        h720(cfg_close_btn_size)})
+               .with_size(ComponentSize{pixels(cfg_close_btn_size),
+                                        pixels(cfg_close_btn_size)})
                .with_custom_background(close_red)
                .with_border(close_red_dark, cfg_close_btn_border)
                .with_custom_text_color(text_white)
@@ -159,17 +160,17 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     std::vector<std::string> settings_tabs = {"Audio", "General", "Info"};
     tab_container(context, mk(panel.ent()), settings_tabs, active_tab,
                   ComponentConfig{}
-                      .with_size(ComponentSize{percent(1.0f), h720(36)})
-                      .with_margin(Margin{.top = h720(8)}));
+                      .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                      .with_margin(Margin{.top = pixels(8)}));
 
     // ── Content area ──
     auto content = vstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(260)})
+            .with_size(ComponentSize{percent(1.0f), pixels(260)})
             .with_no_wrap()
-            .with_padding(Padding{.top = h720(10), .left = w1280(50),
-                                  .right = w1280(50)})
+            .with_padding(Padding{.top = pixels(10), .left = pixels(50),
+                                  .right = pixels(50)})
             .with_debug_name("content"));
 
     if (active_tab == 0) {
@@ -177,7 +178,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto toggle_row = hstack(
           context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(75)})
+              .with_size(ComponentSize{percent(1.0f), pixels(75)})
               .with_align_items(AlignItems::FlexStart)
               .with_no_wrap()
               .with_debug_name("toggle_row"));
@@ -200,7 +201,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         auto toggle_col = vstack(
             context, mk(toggle_row.ent(), static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{w1280(110), percent(1.0f)})
+                .with_size(ComponentSize{pixels(110), percent(1.0f)})
                 .with_align_items(AlignItems::Center)
                 .with_no_wrap()
                 .with_debug_name("toggle_" + std::to_string(i)));
@@ -209,8 +210,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         if (button(
                 context, mk(toggle_col.ent(), 0),
                 ComponentConfig{}
-                    .with_size(ComponentSize{w1280(cfg_toggle_track_w),
-                                             h720(cfg_toggle_track_h)})
+                    .with_size(ComponentSize{pixels(cfg_toggle_track_w),
+                                             pixels(cfg_toggle_track_h)})
                     .with_custom_background(track_col)
                     .with_border(track_border, 2.0f)
                     .with_rounded_corners(RoundedCorners().all_round())
@@ -228,8 +229,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             is_on ? knob_travel + cfg_toggle_pad : cfg_toggle_pad;
         div(context, mk(toggle_col.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{w1280(cfg_toggle_knob_sz),
-                                         h720(cfg_toggle_knob_sz)})
+                .with_size(ComponentSize{pixels(cfg_toggle_knob_sz),
+                                         pixels(cfg_toggle_knob_sz)})
                 .with_custom_background(
                     afterhours::Color{255, 255, 255, 255})
                 .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
@@ -237,9 +238,9 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_roundness(1.0f)
                 .with_skip_tabbing(true)
                 .with_translate(
-                    w1280(knob_x_offset - (cfg_toggle_track_w / 2.0f) +
+                    pixels(knob_x_offset - (cfg_toggle_track_w / 2.0f) +
                           (cfg_toggle_knob_sz / 2.0f)),
-                    h720(-(cfg_toggle_track_h - cfg_toggle_pad)))
+                    pixels(-(cfg_toggle_track_h - cfg_toggle_pad)))
                 .with_debug_name("toggle_knob_" + std::to_string(i)));
 
         // Label
@@ -249,11 +250,11 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(toggle_label)
                 .with_size(
-                    ComponentSize{w1280(100), h720(22)})
-                .with_font("EqProRounded", h720(cfg_toggle_label_font_size))
+                    ComponentSize{pixels(100), pixels(22)})
+                .with_font("EqProRounded", pixels(cfg_toggle_label_font_size))
                 .with_custom_text_color(text_dark)
                 .with_alignment(TextAlignment::Center)
-                .with_margin(Margin{.top = h720(-20)}));
+                .with_margin(Margin{.top = pixels(-20)}));
       }
     }
 
@@ -264,23 +265,23 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("Data & Sync")
-              .with_size(ComponentSize{w1280(120), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{pixels(120), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_muted));
 
       auto save_group = hstack(
           context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{w1280(cfg_saveload_width),
-                                       h720(cfg_saveload_height)})
+              .with_size(ComponentSize{pixels(cfg_saveload_width),
+                                       pixels(cfg_saveload_height)})
               .with_custom_background(panel_peach)
               .with_border(afterhours::Color{210, 195, 175, 255}, 2.0f)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.25f)
               .with_align_items(AlignItems::Center)
               .with_no_wrap()
-              .with_padding(Padding{.left = w1280(14), .right = w1280(14)})
-              .with_margin(Margin{.top = h720(4)})
+              .with_padding(Padding{.left = pixels(14), .right = pixels(14)})
+              .with_margin(Margin{.top = pixels(4)})
               .with_debug_name("save_sync_group"));
 
       auto save_labels = vstack(
@@ -293,23 +294,23 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(save_labels.ent()),
           ComponentConfig{}
               .with_label("Save/Load")
-              .with_size(ComponentSize{w1280(120), h720(24)})
+              .with_size(ComponentSize{pixels(120), pixels(24)})
               .with_custom_text_color(text_dark));
 
       div(context, mk(save_labels.ent()),
           ComponentConfig{}
               .with_label("Progress")
-              .with_size(ComponentSize{w1280(120), h720(24)})
+              .with_size(ComponentSize{pixels(120), pixels(24)})
               .with_custom_text_color(text_dark));
 
       button(context, mk(save_group.ent()),
              ComponentConfig{}
                  .with_label("Sync")
-                 .with_size(ComponentSize{w1280(cfg_sync_btn_size),
-                                          h720(cfg_sync_btn_size)})
+                 .with_size(ComponentSize{pixels(cfg_sync_btn_size),
+                                          pixels(cfg_sync_btn_size)})
                  .with_custom_background(wifi_green)
                  .with_border(wifi_green_dark, 3.0f)
-                 .with_font("EqProRounded", h720(14.0f))
+                 .with_font("EqProRounded", pixels(14.0f))
                  .with_custom_text_color(text_white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
@@ -322,15 +323,15 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(1)})
               .with_custom_background(afterhours::Color{65, 55, 45, 40})
-              .with_margin(Margin{.top = h720(10), .bottom = h720(6)})
+              .with_margin(Margin{.top = pixels(10), .bottom = pixels(6)})
               .with_debug_name("sep_preferences"));
 
       // Preferences section
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("Preferences")
-              .with_size(ComponentSize{w1280(120), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{pixels(120), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_muted));
 
       // Notifications button
@@ -340,18 +341,18 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               context, mk(content.ent()),
               ComponentConfig{}
                   .with_label(notif_text)
-                  .with_size(ComponentSize{w1280(cfg_pill_btn_width),
-                                           h720(cfg_pill_btn_height)})
+                  .with_size(ComponentSize{pixels(cfg_pill_btn_width),
+                                           pixels(cfg_pill_btn_height)})
                   .with_custom_background(btn_blue)
                   .with_border(btn_blue_dark, cfg_pill_border_width)
-                  .with_font("EqProRounded", h720(cfg_pill_font_size))
+                  .with_font("EqProRounded", pixels(cfg_pill_font_size))
                   .with_custom_text_color(text_white)
                   .with_alignment(TextAlignment::Center)
                   .with_rounded_corners(RoundedCorners())
                   .with_roundness(0.5f)
                   .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
                                     pill_shadow)
-                  .with_margin(Margin{.top = h720(8)})
+                  .with_margin(Margin{.top = pixels(8)})
                   .with_debug_name("notifications_btn"))) {
         notifications_off = !notifications_off;
       }
@@ -360,18 +361,18 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(content.ent()),
              ComponentConfig{}
                  .with_label("Language")
-                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
-                                          h720(cfg_pill_btn_height)})
+                 .with_size(ComponentSize{pixels(cfg_pill_btn_width),
+                                          pixels(cfg_pill_btn_height)})
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, cfg_pill_border_width)
-                 .with_font("EqProRounded", h720(cfg_pill_font_size))
+                 .with_font("EqProRounded", pixels(cfg_pill_font_size))
                  .with_custom_text_color(text_white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.5f)
                  .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
                                    pill_shadow)
-                 .with_margin(Margin{.top = h720(8)}));
+                 .with_margin(Margin{.top = pixels(8)}));
     }
 
     if (active_tab == 2) {
@@ -381,27 +382,27 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("Links")
-              .with_size(ComponentSize{w1280(80), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{pixels(80), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_muted));
 
       auto links_row = hstack(
           context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(cfg_pill_btn_height + 10)})
+              .with_size(ComponentSize{percent(1.0f), pixels(cfg_pill_btn_height + 10)})
               .with_no_wrap()
-              .with_margin(Margin{.top = h720(8)})
+              .with_margin(Margin{.top = pixels(8)})
               .with_debug_name("links_row"));
 
       // Credits button
       button(context, mk(links_row.ent()),
              ComponentConfig{}
                  .with_label("Credits")
-                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
-                                          h720(cfg_pill_btn_height)})
+                 .with_size(ComponentSize{pixels(cfg_pill_btn_width),
+                                          pixels(cfg_pill_btn_height)})
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, cfg_pill_border_width)
-                 .with_font("EqProRounded", h720(cfg_pill_font_size))
+                 .with_font("EqProRounded", pixels(cfg_pill_font_size))
                  .with_custom_text_color(text_white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
@@ -413,42 +414,42 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(links_row.ent()),
              ComponentConfig{}
                  .with_label("Support")
-                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
-                                          h720(cfg_pill_btn_height)})
+                 .with_size(ComponentSize{pixels(cfg_pill_btn_width),
+                                          pixels(cfg_pill_btn_height)})
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, cfg_pill_border_width)
-                 .with_font("EqProRounded", h720(cfg_pill_font_size))
+                 .with_font("EqProRounded", pixels(cfg_pill_font_size))
                  .with_custom_text_color(text_white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.5f)
                  .with_soft_shadow(2.0f, 3.0f, cfg_btn_shadow_blur,
                                    pill_shadow)
-                 .with_margin(Margin{.left = w1280(15)}));
+                 .with_margin(Margin{.left = pixels(15)}));
 
       // Separator
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(1)})
               .with_custom_background(afterhours::Color{65, 55, 45, 40})
-              .with_margin(Margin{.top = h720(10), .bottom = h720(6)})
+              .with_margin(Margin{.top = pixels(10), .bottom = pixels(6)})
               .with_debug_name("sep_about"));
 
       // About section
       div(context, mk(content.ent()),
           ComponentConfig{}
               .with_label("About")
-              .with_size(ComponentSize{w1280(80), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{pixels(80), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_muted));
 
       auto info_row = hstack(
           context, mk(content.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(80)})
+              .with_size(ComponentSize{percent(1.0f), pixels(80)})
               .with_no_wrap()
               .with_align_items(AlignItems::FlexStart)
-              .with_margin(Margin{.top = h720(8)})
+              .with_margin(Margin{.top = pixels(8)})
               .with_debug_name("info_row"));
 
       // Info lines column
@@ -466,21 +467,21 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(info_lines[il])
                 .with_size(
-                    ComponentSize{w1280(200), h720(cfg_info_line_height)})
-                .with_font("EqProRounded", h720(cfg_info_font_size))
+                    ComponentSize{pixels(200), pixels(cfg_info_line_height)})
+                .with_font("EqProRounded", pixels(cfg_info_font_size))
                 .with_custom_text_color(text_muted)
-                .with_margin(il > 0 ? Margin{.top = h720(2)} : Margin{}));
+                .with_margin(il > 0 ? Margin{.top = pixels(2)} : Margin{}));
       }
 
       // Terms and Privacy button
       button(context, mk(info_row.ent()),
              ComponentConfig{}
                  .with_label("Terms and Privacy")
-                 .with_size(ComponentSize{w1280(cfg_pill_btn_width),
-                                          h720(cfg_pill_btn_height)})
+                 .with_size(ComponentSize{pixels(cfg_pill_btn_width),
+                                          pixels(cfg_pill_btn_height)})
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, cfg_pill_border_width)
-                 .with_font("EqProRounded", h720(17.0f))
+                 .with_font("EqProRounded", pixels(17.0f))
                  .with_custom_text_color(text_white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
@@ -496,26 +497,26 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(1)})
             .with_custom_background(afterhours::Color{65, 55, 45, 40})
-            .with_margin(Margin{.left = w1280(40), .right = w1280(40)})
+            .with_margin(Margin{.left = pixels(40), .right = pixels(40)})
             .with_debug_name("sep_footer"));
 
     auto footer = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(42)})
+            .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_justify_content(JustifyContent::FlexEnd)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.right = w1280(40), .bottom = h720(8)})
+            .with_padding(Padding{.right = pixels(40), .bottom = pixels(8)})
             .with_debug_name("footer"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("OK")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(btn_green)
                .with_border(btn_green_dark, 3.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
@@ -525,29 +526,29 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Cancel")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, 3.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_cancel"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
                .with_label("Apply")
-               .with_size(ComponentSize{w1280(80), h720(36)})
+               .with_size(ComponentSize{pixels(80), pixels(36)})
                .with_custom_background(btn_blue)
                .with_border(btn_blue_dark, 3.0f)
-               .with_font("EqProRounded", h720(18.0f))
+               .with_font("EqProRounded", pixels(18.0f))
                .with_custom_text_color(text_white)
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.4f)
-               .with_margin(Margin{.left = w1280(10)})
+               .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_apply"));
   }
 };

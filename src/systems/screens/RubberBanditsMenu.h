@@ -36,7 +36,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(18.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = text_white;
@@ -50,6 +50,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     theme.segments = 4;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // ═══════════════════════════════════════════════════════════════
     // ROOT - full screen
@@ -68,27 +69,27 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto top_bar = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(120)})
+            .with_size(ComponentSize{percent(1.0f), pixels(120)})
             .with_no_wrap()
             .with_align_items(AlignItems::FlexStart)
-            .with_padding(Padding{.top = h720(30), .left = w1280(45),
-                                  .right = w1280(25)})
+            .with_padding(Padding{.top = pixels(30), .left = pixels(45),
+                                  .right = pixels(25)})
             .with_debug_name("top_bar"));
 
     // Title area
     auto title_area = vstack(
         context, mk(top_bar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(340), percent(1.0f)})
+            .with_size(ComponentSize{pixels(340), percent(1.0f)})
             .with_no_wrap());
 
     // RUBBER text
     div(context, mk(title_area.ent()),
         ComponentConfig{}
             .with_label("RUBBER")
-            .with_size(ComponentSize{w1280(320), h720(56)})
+            .with_size(ComponentSize{pixels(320), pixels(56)})
             .with_custom_background(afterhours::Color{60, 45, 25, 180})
-            .with_font("Fredoka", h720(44.0f))
+            .with_font("Fredoka", pixels(44.0f))
             .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f));
@@ -97,9 +98,9 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(title_area.ent()),
         ComponentConfig{}
             .with_label("BANDIT$")
-            .with_size(ComponentSize{w1280(340), h720(56)})
+            .with_size(ComponentSize{pixels(340), pixels(56)})
             .with_custom_background(afterhours::Color{40, 30, 15, 200})
-            .with_font("Fredoka", h720(44.0f))
+            .with_font("Fredoka", pixels(44.0f))
             .with_custom_text_color(afterhours::Color{250, 245, 235, 255})
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f));
@@ -107,21 +108,21 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(top_bar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     // Online status pill
     auto online_area = hstack(
         context, mk(top_bar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(350), h720(50)})
+            .with_size(ComponentSize{pixels(350), pixels(50)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap());
 
     // Online dot
     div(context, mk(online_area.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(16), h720(16)})
+            .with_size(ComponentSize{pixels(16), pixels(16)})
             .with_custom_background(afterhours::Color{85, 185, 75, 255})
             .with_border(afterhours::Color{65, 155, 55, 255}, 2.0f)
             .with_rounded_corners(RoundedCorners())
@@ -131,32 +132,32 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(online_area.ent()),
         ComponentConfig{}
             .with_label("thia9uers - Online")
-            .with_size(ComponentSize{w1280(285), h720(42)})
+            .with_size(ComponentSize{pixels(285), pixels(42)})
             .with_custom_background(online_pill)
             .with_border(afterhours::Color{115, 155, 105, 255}, 3.0f)
-            .with_font("EqProRounded", h720(22.0f))
+            .with_font("EqProRounded", pixels(22.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.5f)
-            .with_margin(Margin{.left = w1280(5)}));
+            .with_margin(Margin{.left = pixels(5)}));
 
     // Player count + lightning badges
     auto badges = vstack(
         context, mk(top_bar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(55), percent(1.0f)})
+            .with_size(ComponentSize{pixels(55), percent(1.0f)})
             .with_no_wrap()
             .with_align_items(AlignItems::Center)
-            .with_margin(Margin{.left = w1280(10)}));
+            .with_margin(Margin{.left = pixels(10)}));
 
     div(context, mk(badges.ent()),
         ComponentConfig{}
             .with_label(std::to_string(player_count))
-            .with_size(ComponentSize{w1280(45), h720(45)})
+            .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_custom_background(accent_blue)
             .with_border(afterhours::Color{65, 145, 185, 255}, 3.0f)
-            .with_font("EqProRounded", h720(28.0f))
+            .with_font("EqProRounded", pixels(28.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
@@ -165,15 +166,15 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(badges.ent()),
         ComponentConfig{}
             .with_label("*")
-            .with_size(ComponentSize{w1280(45), h720(45)})
+            .with_size(ComponentSize{pixels(45), pixels(45)})
             .with_custom_background(lightning)
             .with_border(afterhours::Color{215, 190, 55, 255}, 3.0f)
-            .with_font("EqProRounded", h720(28.0f))
+            .with_font("EqProRounded", pixels(28.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
-            .with_margin(Margin{.top = h720(8)}));
+            .with_margin(Margin{.top = pixels(8)}));
 
     // ═══════════════════════════════════════════════════════════════
     // MIDDLE: Menu + Promo
@@ -184,23 +185,23 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), expand()})
             .with_no_wrap()
             .with_align_items(AlignItems::FlexStart)
-            .with_padding(Padding{.top = h720(15), .left = w1280(40),
-                                  .right = w1280(40)})
+            .with_padding(Padding{.top = pixels(15), .left = pixels(40),
+                                  .right = pixels(40)})
             .with_debug_name("middle"));
 
     // Menu panel
     auto menu_panel = vstack(
         context, mk(middle.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(280), h720(static_cast<float>(
+            .with_size(ComponentSize{pixels(280), pixels(static_cast<float>(
                                                      menu_items.size() * 48 + 20))})
             .with_custom_background(menu_bg)
             .with_border(afterhours::Color{180, 165, 125, 255}, 3.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
             .with_no_wrap()
-            .with_padding(Padding{.top = h720(10), .bottom = h720(10),
-                                  .left = w1280(15), .right = w1280(15)})
+            .with_padding(Padding{.top = pixels(10), .bottom = pixels(10),
+                                  .left = pixels(15), .right = pixels(15)})
             .with_debug_name("menu_bg"));
 
     for (size_t i = 0; i < menu_items.size(); i++) {
@@ -210,7 +211,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       auto item_row = hstack(
           context, mk(menu_panel.ent(), static_cast<int>(i)),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(44)})
+              .with_size(ComponentSize{percent(1.0f), pixels(44)})
               .with_align_items(AlignItems::Center)
               .with_no_wrap());
 
@@ -219,8 +220,8 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(item_row.ent(), 0),
             ComponentConfig{}
                 .with_label(">")
-                .with_size(ComponentSize{w1280(28), h720(36)})
-                .with_font("EqProRounded", h720(24.0f))
+                .with_size(ComponentSize{pixels(28), pixels(36)})
+                .with_font("EqProRounded", pixels(24.0f))
                 .with_custom_text_color(text_dark));
       }
 
@@ -234,7 +235,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                                    ? afterhours::Color{220, 190, 100, 255}
                                    : afterhours::Color{0, 0, 0, 0},
                                2.0f)
-                  .with_font("EqProRounded", h720(22.0f))
+                  .with_font("EqProRounded", pixels(22.0f))
                   .with_custom_text_color(text_dark)
                   .with_rounded_corners(RoundedCorners())
                   .with_roundness(0.15f)
@@ -246,7 +247,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // Spacer between menu and promo
     div(context, mk(middle.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     // Promo box (dismissible)
@@ -254,38 +255,38 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       auto promo = vstack(
           context, mk(middle.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{w1280(220), h720(55)})
+              .with_size(ComponentSize{pixels(220), pixels(55)})
               .with_custom_background(afterhours::Color{245, 235, 210, 160})
               .with_border(afterhours::Color{180, 165, 135, 140}, 1.5f)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.15f)
               .with_no_wrap()
-              .with_padding(Padding{.top = h720(8), .left = w1280(10),
-                                    .right = w1280(10)})
+              .with_padding(Padding{.top = pixels(8), .left = pixels(10),
+                                    .right = pixels(10)})
               .with_debug_name("promo_box"));
 
       auto promo_top = hstack(
           context, mk(promo.ent()),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), h720(24)})
+              .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_no_wrap()
               .with_align_items(AlignItems::Center));
 
       div(context, mk(promo_top.ent()),
           ComponentConfig{}
               .with_label("Supporter pack available")
-              .with_size(ComponentSize{expand(), h720(24)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{expand(), pixels(24)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(afterhours::Color{100, 85, 55, 255}));
 
       // Dismiss X
       if (button(context, mk(promo_top.ent()),
                  ComponentConfig{}
                      .with_label("X")
-                     .with_size(ComponentSize{w1280(24), h720(24)})
+                     .with_size(ComponentSize{pixels(24), pixels(24)})
                      .with_custom_background(
                          afterhours::Color{180, 165, 135, 200})
-                     .with_font("EqProRounded", h720(14.0f))
+                     .with_font("EqProRounded", pixels(14.0f))
                      .with_custom_text_color(
                          afterhours::Color{80, 70, 50, 255})
                      .with_alignment(TextAlignment::Center)
@@ -298,8 +299,8 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(promo.ent()),
           ComponentConfig{}
               .with_label("More characters in shop")
-              .with_size(ComponentSize{percent(1.0f), h720(20)})
-              .with_font("EqProRounded", h720(14.0f))
+              .with_size(ComponentSize{percent(1.0f), pixels(20)})
+              .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(afterhours::Color{100, 85, 55, 255}));
     }
 
@@ -309,7 +310,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto bottom = vstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(150)})
+            .with_size(ComponentSize{percent(1.0f), pixels(150)})
             .with_custom_background(bg_yellow_dark)
             .with_no_wrap()
             .with_debug_name("ground"));
@@ -318,7 +319,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto char_row = hstack(
         context, mk(bottom.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(100)})
+            .with_size(ComponentSize{percent(1.0f), pixels(100)})
             .with_justify_content(JustifyContent::Center)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
@@ -327,22 +328,22 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto char_box = vstack(
         context, mk(char_row.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(400), h720(100)})
+            .with_size(ComponentSize{pixels(400), pixels(100)})
             .with_custom_background(afterhours::Color{255, 245, 200, 150})
             .with_border(afterhours::Color{180, 165, 125, 120}, 2.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
             .with_no_wrap()
             .with_align_items(AlignItems::Center)
-            .with_padding(Padding{.top = h720(6)})
+            .with_padding(Padding{.top = pixels(6)})
             .with_debug_name("char_selector_bg"));
 
     // SELECT CHARACTER label
     div(context, mk(char_box.ent()),
         ComponentConfig{}
             .with_label("SELECT CHARACTER")
-            .with_size(ComponentSize{w1280(200), h720(24)})
-            .with_font("EqProRounded", h720(16.0f))
+            .with_size(ComponentSize{pixels(200), pixels(24)})
+            .with_font("EqProRounded", pixels(16.0f))
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_alignment(TextAlignment::Center));
 
@@ -350,7 +351,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto name_row = hstack(
         context, mk(char_box.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_justify_content(JustifyContent::Center)
             .with_align_items(AlignItems::Center)
             .with_no_wrap());
@@ -358,7 +359,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(name_row.ent()),
         ComponentConfig{}
             .with_label("LB")
-            .with_size(ComponentSize{w1280(52), h720(36)})
+            .with_size(ComponentSize{pixels(52), pixels(36)})
             .with_custom_background(text_dark)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -368,15 +369,15 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(name_row.ent()),
         ComponentConfig{}
             .with_label("EARL THE BIRD")
-            .with_size(ComponentSize{w1280(220), h720(36)})
-            .with_font("EqProRounded", h720(20.0f))
+            .with_size(ComponentSize{pixels(220), pixels(36)})
+            .with_font("EqProRounded", pixels(20.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
     div(context, mk(name_row.ent()),
         ComponentConfig{}
             .with_label("RB")
-            .with_size(ComponentSize{w1280(52), h720(36)})
+            .with_size(ComponentSize{pixels(52), pixels(36)})
             .with_custom_background(text_dark)
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -387,7 +388,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(char_box.ent()),
         ComponentConfig{}
             .with_label("FAVOURITE")
-            .with_size(ComponentSize{w1280(150), h720(28)})
+            .with_size(ComponentSize{pixels(150), pixels(28)})
             .with_custom_text_color(afterhours::Color{100, 85, 55, 255})
             .with_alignment(TextAlignment::Center));
 
@@ -395,17 +396,17 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto hint_row = hstack(
         context, mk(bottom.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.left = w1280(55)}));
+            .with_padding(Padding{.left = pixels(55)}));
 
     div(context, mk(hint_row.ent()),
         ComponentConfig{}
             .with_label("Change the game's settings")
-            .with_size(ComponentSize{w1280(320), h720(32)})
+            .with_size(ComponentSize{pixels(320), pixels(32)})
             .with_custom_background(afterhours::Color{60, 45, 25, 140})
-            .with_font("EqProRounded", h720(18.0f))
+            .with_font("EqProRounded", pixels(18.0f))
             .with_custom_text_color(afterhours::Color{255, 250, 235, 255})
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f));

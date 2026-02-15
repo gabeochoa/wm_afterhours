@@ -15,6 +15,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     // Apply sage natural theme for this screen
     auto theme = afterhours::ui::theme_presets::sage_natural();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container with column layout - use smaller percentage for screen
     // safe area
@@ -38,7 +39,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Row layout demo - JustifyContent::Center to keep panels within container
@@ -60,7 +61,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Spacing::sm));
 
     div(context, mk(row_container.ent(), 1),
@@ -70,7 +71,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Spacing::sm));
 
     div(context, mk(row_container.ent(), 2),
@@ -80,7 +81,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Spacing::sm));
 
     // Separator between row demo and column demo
@@ -126,7 +127,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = pixels(3)}));
 
     div(context, mk(left_col.ent(), 1),
@@ -135,7 +136,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = pixels(3)}));
 
     div(context, mk(left_col.ent(), 2),
@@ -144,7 +145,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(40)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f)));
 
     // Separator between column demo and description
     div(context, mk(main_container.ent(), 11),
@@ -177,7 +178,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.30f), pixels(32)})
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     div(context, mk(desc_panel.ent(), 1),
@@ -186,7 +187,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.30f), pixels(32)})
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     div(context, mk(desc_panel.ent(), 2),
@@ -195,7 +196,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.30f), pixels(32)})
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
     // Info footer - use percent width
@@ -206,7 +207,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_margin(Margin{.top = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
   }

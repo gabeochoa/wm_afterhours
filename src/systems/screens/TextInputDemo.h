@@ -29,6 +29,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     // Apply a clean theme
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container - centered on screen
     auto root =
@@ -56,7 +57,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f)));
 
     // Form container - uses flex_grow to fill available space, leaving room for
     // status and instructions at the bottom of main_container
@@ -82,7 +83,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
               .with_label(label_text + ":")
               .with_size(ComponentSize{pixels(396), pixels(34)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
@@ -92,7 +93,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       auto input_config = ComponentConfig{}
           .with_size(ComponentSize{pixels(396), pixels(38)})
           .with_background(bg)
-          .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+          .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
           .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
           .with_rounded_corners(RoundedCorners().all_round())
           .with_roundness(0.15f)
@@ -122,7 +123,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_label("Password:")
             .with_size(ComponentSize{pixels(396), pixels(34)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_skip_tabbing(true)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
@@ -140,7 +141,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto password_config = ComponentConfig{}
         .with_size(ComponentSize{pixels(310), pixels(38)})
         .with_background(Theme::Usage::Secondary)
-        .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+        .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
         .with_rounded_corners(RoundedCorners().all_round())
         .with_roundness(0.15f)
         .with_debug_name("password_input");
@@ -160,7 +161,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_label(show_password ? "Hide" : "Show")
                    .with_size(ComponentSize{pixels(76), pixels(38)})
                    .with_background(Theme::Usage::Accent)
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_rounded_corners(RoundedCorners().all_round())
                    .with_roundness(0.15f)
                    .with_debug_name("password_toggle"))) {
@@ -178,7 +179,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_label("Search (no label version):")
             .with_size(ComponentSize{pixels(396), pixels(34)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Search input - no label so field uses full width
@@ -186,7 +187,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                    ComponentConfig{}
                        .with_size(ComponentSize{pixels(396), pixels(38)})
                        .with_background(Theme::Usage::Primary)
-                       .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                       .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_rounded_corners(RoundedCorners().all_round())
                        .with_roundness(0.15f)
@@ -200,7 +201,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Submit")
                    .with_size(ComponentSize{pixels(200), pixels(44)})
                    .with_background(Theme::Usage::Accent)
-                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                    .with_margin(Margin{.top = DefaultSpacing::tiny()})
                    .with_debug_name("submit_btn"))) {
       status_message = "Submitted! User: " + username + ", Email: " + email;
@@ -213,7 +214,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(36)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     // Instructions - brief contextual navigation hint
     div(context, mk(main_container.ent(), 3),
@@ -223,7 +224,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_skip_tabbing(true));
 
     // ========== FOOTER: OK / Cancel / Apply ==========

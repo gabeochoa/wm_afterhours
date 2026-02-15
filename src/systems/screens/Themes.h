@@ -61,7 +61,8 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     auto theme = get_theme_for_choice(current_theme);
     context.theme = theme;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
+    context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, pixels(16.0f));
 
     // Full screen background - uses normal flow layout (Column)
     auto background =
@@ -93,7 +94,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(220), pixels(38)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font_size(h720(22.0f))
+            .with_font_size(pixels(22.0f))
             .with_padding(Spacing::xs));
 
     div(context, mk(header.ent(), 1),
@@ -102,7 +103,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(260), pixels(38)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font_size(h720(19.0f))
+            .with_font_size(pixels(19.0f))
             .with_margin(Margin{.left = DefaultSpacing::medium()})
             .with_hard_shadow(3.0f, 3.0f));
 
@@ -131,7 +132,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(35)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font_size(h720(18.0f))
+            .with_font_size(pixels(18.0f))
             .with_padding(Spacing::xs));
 
     // Theme buttons
@@ -150,7 +151,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
               .with_background(selected ? Theme::Usage::Accent
                                          : Theme::Usage::Secondary)
               .with_auto_text_color(true)
-              .with_font_size(selected ? h720(19.0f) : h720(17.0f))
+              .with_font_size(selected ? pixels(19.0f) : pixels(17.0f))
               .with_margin(Spacing::xs)
               .with_debug_name("theme_btn_" + std::to_string(btn_idx));
 
@@ -185,7 +186,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.95f), pixels(32)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font_size(h720(16.0f))
+            .with_font_size(pixels(16.0f))
             .with_padding(Spacing::xs));
 
     // Buttons row
@@ -203,7 +204,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{percent(0.23f), percent(0.85f)})
                .with_background(Theme::Usage::Primary)
                .with_auto_text_color(true)
-               .with_font_size(h720(18.0f)));
+               .with_font_size(pixels(18.0f)));
 
     button(context, mk(btn_row.ent(), 1),
            ComponentConfig{}
@@ -211,7 +212,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{percent(0.23f), percent(0.85f)})
                .with_background(Theme::Usage::Secondary)
                .with_auto_text_color(true)
-               .with_font_size(h720(18.0f)));
+               .with_font_size(pixels(18.0f)));
 
     button(context, mk(btn_row.ent(), 2),
            ComponentConfig{}
@@ -219,7 +220,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{percent(0.23f), percent(0.85f)})
                .with_background(Theme::Usage::Accent)
                .with_auto_text_color(true)
-               .with_font_size(h720(18.0f)));
+               .with_font_size(pixels(18.0f)));
 
     button(context, mk(btn_row.ent(), 3),
            ComponentConfig{}
@@ -227,7 +228,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                .with_size(ComponentSize{percent(0.23f), percent(0.85f)})
                .with_background(Theme::Usage::Primary)
                .with_auto_text_color(true)
-               .with_font_size(h720(18.0f))
+               .with_font_size(pixels(18.0f))
                .with_disabled(true)
                .with_opacity(0.5f));
 
@@ -236,7 +237,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_size(ComponentSize{percent(0.95f), pixels(40)})
                .with_background(Theme::Usage::Primary)
-               .with_font_size(h720(14.0f))
+               .with_font_size(pixels(14.0f))
                .with_margin(Spacing::xs)
                .with_debug_name("preview_slider"),
            SliderHandleValueLabelPosition::None);
@@ -248,7 +249,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{percent(0.95f), pixels(36)})
                  .with_background(Theme::Usage::Primary)
                  .with_auto_text_color(true)
-                 .with_font_size(h720(14.0f))
+                 .with_font_size(pixels(14.0f))
                  .with_margin(Spacing::xs));
 
     // Toggle switch - increased height to fit toggle_track
@@ -258,7 +259,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                       .with_size(ComponentSize{percent(0.95f), pixels(48)})
                       .with_background(Theme::Usage::Secondary)
                       .with_auto_text_color(true)
-                      .with_font_size(h720(14.0f))
+                      .with_font_size(pixels(14.0f))
                       .with_margin(Spacing::xs));
 
     // Cards with shadows demo
@@ -277,7 +278,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.30f), percent(0.75f)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font_size(h720(14.0f))
+            .with_font_size(pixels(14.0f))
             .with_hard_shadow(2.0f, 2.0f));
 
     div(context, mk(cards_row.ent(), 1),
@@ -286,7 +287,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.30f), percent(0.75f)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font_size(h720(14.0f))
+            .with_font_size(pixels(14.0f))
             .with_soft_shadow(2.0f, 3.0f, 6.0f));
 
     div(context, mk(cards_row.ent(), 2),
@@ -295,7 +296,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.30f), percent(0.75f)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
-            .with_font_size(h720(14.0f))
+            .with_font_size(pixels(14.0f))
             .with_soft_shadow(2.0f, 2.0f, 5.0f));
 
     // Text display row for theme colors
@@ -314,7 +315,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font_size(h720(13.0f)));
+            .with_font_size(pixels(13.0f)));
 
     div(context, mk(text_row.ent(), 1),
         ComponentConfig{}
@@ -322,7 +323,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font_size(h720(13.0f)));
+            .with_font_size(pixels(13.0f)));
 
     div(context, mk(text_row.ent(), 2),
         ComponentConfig{}
@@ -330,7 +331,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.32f), percent(0.85f)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font_size(h720(13.0f))
+            .with_font_size(pixels(13.0f))
             .with_soft_shadow(1.0f, 1.0f, 4.0f));
 
     // Labeled separator
@@ -345,7 +346,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
                      .with_background(Theme::Usage::Primary)
                      .with_auto_text_color(true)
-                     .with_font_size(h720(13.0f))
+                     .with_font_size(pixels(13.0f))
                      .with_margin(Spacing::xs));
   }
 };

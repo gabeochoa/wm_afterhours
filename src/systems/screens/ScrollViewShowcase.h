@@ -25,6 +25,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font = afterhours::Color{33, 33, 33, 255};
     theme.font_muted = afterhours::Color{128, 128, 128, 255};
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container - centered on screen
     auto root =
@@ -46,7 +47,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Scroll View Demo")
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_padding(Spacing::sm));
 
     // Instructions
@@ -55,7 +56,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_label("Scroll: mouse wheel | Horizontal: Shift + scroll wheel or trackpad swipe")
             .with_custom_text_color(theme.font_muted)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     // Invert scroll toggle row with label
     auto toggle_row = hstack(context, mk(root.ent(), 2),
@@ -70,7 +71,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Invert Scroll")
                  .with_background(Theme::Usage::Secondary)
                  .with_custom_text_color(theme.font)
-                 .with_font(UIComponent::DEFAULT_FONT, h720(16.0f)));
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
 
     // Container for both scroll views side by side
     auto container = hstack(context, mk(root.ent(), 3),
@@ -89,7 +90,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Vertical Scroll")
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     // Vertical scroll container
     auto vert_scroll = vstack(
@@ -117,7 +118,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Item {} of {} ({}%)", visible_item, total_items, scroll_pct))
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
               .with_custom_text_color(theme.font_muted));
     }
 
@@ -128,7 +129,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{percent(0.95f), pixels(44)})
               .with_label(fmt::format("Item {}", i + 1))
               .with_background(Theme::Usage::Primary)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
               .with_margin(Margin{.top = pixels(3), .bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)
@@ -146,7 +147,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label("Horizontal Scroll")
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     // Horizontal scroll container
     auto horiz_scroll = hstack(
@@ -175,7 +176,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_label(fmt::format("Item {} of {} ({}%)", visible_item, total_items, scroll_pct))
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
               .with_custom_text_color(theme.font_muted));
 
       // Horizontal scroll indicator
@@ -218,7 +219,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(70), pixels(70)})
               .with_label(fmt::format("{}", i + 1))
               .with_background(Theme::Usage::Accent)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
               .with_margin(Margin{.left = pixels(4), .right = pixels(4)})
               .with_rounded_corners(RoundedCorners().all_round())
               .with_roundness(0.15f)

@@ -49,7 +49,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Apply neon dark theme with default font for this screen
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, h720(16.0f));
+    context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, pixels(16.0f));
 
     // Main container background - centered on screen
     auto root =
@@ -164,7 +165,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Audio Level")
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font_size(h720(16.0f))
+                     .with_font_size(pixels(16.0f))
                      .with_margin(Spacing::xs)
                      .with_debug_name("volume_progress"),
                  ProgressBarLabelStyle::Percentage);
@@ -174,7 +175,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label("Level Progress")
                      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font_size(h720(16.0f))
+                     .with_font_size(pixels(16.0f))
                      .with_margin(Spacing::xs)
                      .with_debug_name("level_progress"),
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);

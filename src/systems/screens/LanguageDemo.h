@@ -75,6 +75,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
 
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     const FontConfig &font_config = theme.get_font_config(current_language);
     float scaled_size = theme.get_scaled_font_size(current_language, 20.0f);
@@ -155,7 +156,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("EN", "English", "1"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, h720(config.show_full_language_names ? 13.0f : 16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(config.show_full_language_names ? 13.0f : 16.0f))
                    .with_background(current_language == Language::English
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -167,7 +168,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("KO", "Korean", "2"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, h720(config.show_full_language_names ? 13.0f : 16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(config.show_full_language_names ? 13.0f : 16.0f))
                    .with_background(current_language == Language::Korean
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -179,7 +180,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_label(make_lang_label("JA", "Japanese", "3"))
                    .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(UIComponent::DEFAULT_FONT, h720(config.show_full_language_names ? 13.0f : 16.0f))
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(config.show_full_language_names ? 13.0f : 16.0f))
                    .with_background(current_language == Language::Japanese
                                         ? Theme::Usage::Primary
                                         : Theme::Usage::Secondary))) {
@@ -190,7 +191,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     // Main is ~554px. Header=70, Footer=55, so content = 554-70-55 = 429
     auto content = hstack(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), h720(425)})
+                           .with_size(ComponentSize{percent(1.0f), pixels(425)})
                            .with_no_wrap()
                            .with_debug_name("content"));
 
@@ -256,7 +257,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("All Languages")
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
             .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // English sample
@@ -266,7 +267,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("EN: " + en.greeting + " - " + en.menu_items[0])
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
-            .with_font("Gaegu-Bold", h720(18.0f))
+            .with_font("Gaegu-Bold", pixels(18.0f))
             .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // Korean sample
@@ -276,7 +277,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("KO: " + ko.greeting + " - " + ko.menu_items[0])
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
-            .with_font("NotoSansKR", h720(18.0f))
+            .with_font("NotoSansKR", pixels(18.0f))
             .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // Japanese sample
@@ -286,7 +287,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("JA: " + ja.greeting + " - " + ja.menu_items[0])
             .with_size(ComponentSize{percent(1.0f), pixels(38)})
             .with_background(Theme::Usage::None)
-            .with_font("Sazanami", h720(18.0f))
+            .with_font("Sazanami", pixels(18.0f))
             .with_margin(Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
 
     // ===== FOOTER ROW =====
@@ -307,14 +308,14 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
                         " | Font: " + font_config.font_name)
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     div(context, mk(footer.ent(), 1),
         ComponentConfig{}
             .with_label("Press 1/2/3 to switch languages")
             .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
   }
 };
 

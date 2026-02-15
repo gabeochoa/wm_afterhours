@@ -280,35 +280,40 @@ Update `HandleExpectTextCommand`, `HandleExpectUIExistsCommand`, etc. to use thi
 
 ## Migration Plan
 
-### Phase 1: Infrastructure (no behavior change)
-- Add `ScalingMode` enum to `layout_types.h`
-- Add `float ui_scale = 1.0f` to Theme, `Builder::with_ui_scale()`
-- Add `ScalingMode scaling_mode` to UIStylingDefaults
-- Add `optional<ScalingMode> scaling_mode` to UIContext and ComponentConfig
-- Add `ScalingMode resolved_scaling_mode` to UIComponent (set during creation)
-- Add `resolve_pixels()` to AutoLayout (default Proportional = no behavior change)
-- Scale absolute positions by `ui_scale` in Adaptive mode
-- Add `LayoutInfo` breakpoint helper
+### Phase 1: Infrastructure (no behavior change) -- DONE
+- [x] Add `ScalingMode` enum to `layout_types.h`
+- [x] Add `float ui_scale = 1.0f` to Theme, `Builder::with_ui_scale()`
+- [x] Add `ScalingMode scaling_mode` to UIStylingDefaults
+- [x] Add `optional<ScalingMode> scaling_mode` to UIContext and ComponentConfig
+- [x] Add `ScalingMode resolved_scaling_mode` to UIComponent (set during creation)
+- [x] Add `resolve_pixels()` to AutoLayout (default Proportional = no behavior change)
+- [x] Scale absolute positions by `ui_scale` in Adaptive mode
+- [x] Add `LayoutInfo` breakpoint helper
+- [x] Add `AdaptiveScalingDemo` screen for interactive testing
 
-### Phase 2: DefaultSpacing becomes mode-aware
-- Update DefaultSpacing to check mode
-- Update TypographyScale similarly
-- All existing screens unchanged (still Proportional)
+### Phase 2: DefaultSpacing becomes mode-aware -- DONE
+- [x] `DefaultSpacing::is_adaptive()` checks `UIStylingDefaults::get().scaling_mode`
+- [x] All spacing methods return `pixels()` in Adaptive, `h720()` in Proportional
+- [x] `TypographyScale` follows the same pattern
+- [x] All existing screens unchanged (still Proportional by default)
 
-### Phase 3: Convert SportsSettings as reference
-- Set `context.scaling_mode = ScalingMode::Adaptive`
-- Remove `sx`/`sy` manual scaling
-- Replace `h720()` with `pixels()` for fonts and sizes
-- Use LayoutInfo for breakpoint decisions (show/hide help panel)
-- Update E2E tests
+### Phase 3: Convert SportsSettings as reference -- DONE
+- [x] Set `context.scaling_mode = ScalingMode::Adaptive`
+- [x] Replace all `h720()`/`w1280()` with `pixels()` for fonts and sizes
+- [x] Use `LayoutInfo` for breakpoint decisions (show/hide help panel uses logical width)
+- [x] E2E responsive audit passes at 720p and 1080p
 
-### Phase 4: E2E visibility enforcement
-- Update expect_text, expect_ui_exists to check viewport visibility
-- Add `assert_no_overflow` text truncation awareness
+### Phase 4: E2E visibility enforcement -- DONE
+- [x] `VisibleTextRegistry::register_text_if_visible()` filters off-screen text
+- [x] Both text rendering paths (immediate + batched) use viewport-aware registration
+- [x] `expect_text` only matches text whose bounding rect is at least partially in viewport
+- [x] `assert_no_overflow` text truncation awareness (existed from earlier work)
 
-### Phase 5: Convert remaining screens as desired
-- Pattern B screens: just add `context.scaling_mode = ScalingMode::Adaptive` and swap `h720()` to `pixels()` for fonts
-- Pattern A screens: more involved, similar to SportsSettings conversion
+### Phase 5: Convert remaining layout-tree screens -- DONE
+- [x] 42 Pattern B screens converted: added `context.scaling_mode = ScalingMode::Adaptive` and swapped all `h720()`/`w1280()` to `pixels()`
+- [x] Converted screens include: all settings screens (DeadSpace, AngryBirds, Kirby, MiniMotorways, Flight, PowerWash, Casual, IslandsTrains, RubberBandits), all gallery/showcase screens (Forms, Buttons, Cards, Checkboxes, RadioGroups, Sliders, Tabs, Toggles, Dropdowns, Decorators, etc.), text editing demos (AIMChat, TextInput, Language), layout demos (VStack, HStack, SelfAlign, ScrollView, Modal, ExampleFlex, ExampleLayout), and utility screens (Themes, FileTree, AutoTextColor, NavigationBar, Pagination, CircularProgress, MetersGauges, Toast, DragDrop, HorizontalDrag, Stepper, SettingRow, Image, DecorativeFrame)
+- [x] All 20 C++ tests pass, all 37 E2E scripts pass
+- 28 screens remain on Proportional: all are heavily absolute-positioned game HUD mockups (EmpireTycoon, CozyCafe, NeonStrike, ShopInterface, etc.), animation demos, or low-level showcase demos (borders, text rendering, colors) where absolute positioning is the intended design
 
 ## Design Decisions (Resolved)
 

@@ -42,7 +42,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(15.0f));
+    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(15.0f));
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = panel_cream;
@@ -56,6 +56,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.12f;
     theme.segments = 8;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
@@ -97,17 +98,17 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.top = h720(35), .bottom = h720(30)})
+            .with_padding(Padding{.top = pixels(35), .bottom = pixels(30)})
             .with_debug_name("it_root"));
 
     // Close button (top-right, using translate to position)
     auto close_row = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(50)})
+            .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_justify_content(JustifyContent::FlexEnd)
             .with_no_wrap()
-            .with_padding(Padding{.right = w1280(25)})
+            .with_padding(Padding{.right = pixels(25)})
             .with_debug_name("close_row"));
 
     button(context, mk(close_row.ent()),
@@ -116,7 +117,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_720p_size(50, 50)
                .with_custom_background(close_bg)
                .with_border(close_border, 2.0f)
-               .with_font("EqProRounded", h720(28.0f))
+               .with_font("EqProRounded", pixels(28.0f))
                .with_custom_text_color(afterhours::Color{130, 140, 130, 255})
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
@@ -132,18 +133,18 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.03f)
             .with_soft_shadow(4.0f, 6.0f, 20.0f,
                               afterhours::Color{50, 60, 50, 30})
-            .with_padding(Padding{.top = h720(18), .left = w1280(15),
-                                  .bottom = h720(15), .right = w1280(15)})
+            .with_padding(Padding{.top = pixels(18), .left = pixels(15),
+                                  .bottom = pixels(15), .right = pixels(15)})
             .with_no_wrap()
-            .with_margin(Margin{.top = h720(-50)})
+            .with_margin(Margin{.top = pixels(-50)})
             .with_debug_name("panel"));
 
     // Title
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("SETTINGS")
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
-            .with_font("EqProRounded", h720(30.0f))
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_font("EqProRounded", pixels(30.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
@@ -151,10 +152,10 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("DISPLAY")
-            .with_size(ComponentSize{w1280(120), h720(20)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = h720(8)}));
+            .with_margin(Margin{.top = pixels(8)}));
 
     render_selector_row(context, panel.ent(), 10, "Mode", display_mode,
                         static_cast<int>(modes.size()), true);
@@ -165,10 +166,10 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("CONTROLS")
-            .with_size(ComponentSize{w1280(120), h720(20)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = h720(8)}));
+            .with_margin(Margin{.top = pixels(8)}));
 
     render_slider_row(context, panel.ent(), 20, "Cam panning speed",
                       cam_pan_speed, 10);
@@ -184,16 +185,16 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_margin(Margin{.top = h720(5)}));
+               .with_margin(Margin{.top = pixels(5)}));
 
     // ── AUDIO section ──
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("AUDIO")
-            .with_size(ComponentSize{w1280(120), h720(20)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = h720(8)}));
+            .with_margin(Margin{.top = pixels(8)}));
 
     render_slider_row(context, panel.ent(), 30, "Effects Volume",
                       effects_volume, 10);
@@ -204,10 +205,10 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("TUTORIAL")
-            .with_size(ComponentSize{w1280(120), h720(20)})
-            .with_font("EqProRounded", h720(14.0f))
+            .with_size(ComponentSize{pixels(120), pixels(20)})
+            .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = h720(8)}));
+            .with_margin(Margin{.top = pixels(8)}));
 
     button(context, mk(panel.ent()),
            ComponentConfig{}
@@ -218,17 +219,17 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center)
                .with_rounded_corners(RoundedCorners())
                .with_roundness(0.5f)
-               .with_margin(Margin{.top = h720(2)}));
+               .with_margin(Margin{.top = pixels(2)}));
 
     // ── RESET TO DEFAULTS (below panel) ──
     div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("RESET TO DEFAULTS")
-            .with_size(ComponentSize{w1280(250), h720(30)})
-            .with_font("EqProRounded", h720(16.0f))
+            .with_size(ComponentSize{pixels(250), pixels(30)})
+            .with_font("EqProRounded", pixels(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = h720(20)}));
+            .with_margin(Margin{.top = pixels(20)}));
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -247,26 +248,26 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.55f)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.left = w1280(16), .right = w1280(8)})
-            .with_margin(Margin{.top = h720(5)}));
+            .with_padding(Padding{.left = pixels(16), .right = pixels(8)})
+            .with_margin(Margin{.top = pixels(5)}));
 
     div(context, mk(row.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{w1280(160), h720(30)})
+            .with_size(ComponentSize{pixels(160), pixels(30)})
             .with_custom_text_color(text_dark));
 
     // Spacer
     div(context, mk(row.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     if (button(context, mk(row.ent(), 2),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{w1280(28), h720(30)})
-                   .with_font("EqProRounded", h720(17.0f))
+                   .with_size(ComponentSize{pixels(28), pixels(30)})
+                   .with_font("EqProRounded", pixels(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center))) {
@@ -280,15 +281,15 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row.ent(), 3),
         ComponentConfig{}
             .with_label(display_value)
-            .with_size(ComponentSize{w1280(110), h720(30)})
+            .with_size(ComponentSize{pixels(110), pixels(30)})
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
     if (button(context, mk(row.ent(), 4),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{w1280(28), h720(30)})
-                   .with_font("EqProRounded", h720(17.0f))
+                   .with_size(ComponentSize{pixels(28), pixels(30)})
+                   .with_font("EqProRounded", pixels(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center))) {
@@ -311,26 +312,26 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.55f)
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
-            .with_padding(Padding{.left = w1280(16), .right = w1280(8)})
-            .with_margin(Margin{.top = h720(5)}));
+            .with_padding(Padding{.left = pixels(16), .right = pixels(8)})
+            .with_margin(Margin{.top = pixels(5)}));
 
     div(context, mk(row.ent(), 0),
         ComponentConfig{}
             .with_label(label)
-            .with_size(ComponentSize{w1280(175), h720(30)})
+            .with_size(ComponentSize{pixels(175), pixels(30)})
             .with_custom_text_color(text_dark));
 
     // Spacer
     div(context, mk(row.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), h720(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_skip_tabbing(true));
 
     if (button(context, mk(row.ent(), 2),
                ComponentConfig{}
                    .with_label("<")
-                   .with_size(ComponentSize{w1280(28), h720(30)})
-                   .with_font("EqProRounded", h720(17.0f))
+                   .with_size(ComponentSize{pixels(28), pixels(30)})
+                   .with_font("EqProRounded", pixels(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center))) {
@@ -342,7 +343,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto segs = hstack(
         context, mk(row.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{w1280(130), h720(15)})
+            .with_size(ComponentSize{pixels(130), pixels(15)})
             .with_no_wrap()
             .with_align_items(AlignItems::Center));
 
@@ -355,7 +356,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_custom_background(seg_color)
                      .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.2f)
-                     .with_margin(si > 0 ? Margin{.left = w1280(2)}
+                     .with_margin(si > 0 ? Margin{.left = pixels(2)}
                                          : Margin{}))) {
         value = si + 1;
       }
@@ -364,8 +365,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row.ent(), 4),
                ComponentConfig{}
                    .with_label(">")
-                   .with_size(ComponentSize{w1280(28), h720(30)})
-                   .with_font("EqProRounded", h720(17.0f))
+                   .with_size(ComponentSize{pixels(28), pixels(30)})
+                   .with_font("EqProRounded", pixels(17.0f))
                    .with_custom_text_color(arrow_color)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center))) {

@@ -16,6 +16,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     const auto FONT = UIComponent::DEFAULT_FONT;
 
@@ -38,23 +39,23 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font(FONT, h720(30.0f)));
+            .with_font(FONT, pixels(30.0f)));
 
     // Helper lambda for row labels
     auto row_label = [&](afterhours::Entity &parent, int id, const char *text) {
       div(context, mk(parent, id),
           ComponentConfig{}
               .with_label(text)
-              .with_size(ComponentSize{w1280(120), percent(0.9f)})
+              .with_size(ComponentSize{pixels(120), percent(0.9f)})
               .with_background(Theme::Usage::Surface)
               .with_skip_tabbing(true)
-              .with_font(FONT, h720(20.0f))
+              .with_font(FONT, pixels(20.0f))
               .with_debug_name(fmt::format("bv_label_{}", text)));
     };
 
     // Common button size
-    auto btn_size = ComponentSize{w1280(180), percent(0.85f)};
-    auto btn_font = h720(20.0f);
+    auto btn_size = ComponentSize{pixels(180), percent(0.85f)};
+    auto btn_font = pixels(20.0f);
 
     // --- Row 1: Filled variant ---
     auto row1 = hstack(context, mk(root.ent(), 1),
@@ -249,10 +250,10 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row4.ent(), 1),
                ComponentConfig{}
                    .with_label("Small")
-                   .with_size(ComponentSize{w1280(100), percent(0.6f)})
+                   .with_size(ComponentSize{pixels(100), percent(0.6f)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(FONT, h720(14.0f))
+                   .with_font(FONT, pixels(14.0f))
                    .with_padding(Spacing::xs)
                    .with_margin(Spacing::xs)
                    .with_debug_name("bv_size_small"))) {
@@ -276,10 +277,10 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row4.ent(), 3),
                ComponentConfig{}
                    .with_label("Large")
-                   .with_size(ComponentSize{w1280(200), percent(0.9f)})
+                   .with_size(ComponentSize{pixels(200), percent(0.9f)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
-                   .with_font(FONT, h720(24.0f))
+                   .with_font(FONT, pixels(24.0f))
                    .with_margin(Spacing::xs)
                    .with_debug_name("bv_size_large"))) {
       click_counts[11]++;
@@ -289,10 +290,10 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row4.ent(), 4),
            ComponentConfig{}
                .with_label("Lg Outline")
-               .with_size(ComponentSize{w1280(180), percent(0.9f)})
+               .with_size(ComponentSize{pixels(180), percent(0.9f)})
                .with_background(Theme::Usage::Accent)
                .with_button_variant(ButtonVariant::Outline)
-               .with_font(FONT, h720(24.0f))
+               .with_font(FONT, pixels(24.0f))
                .with_margin(Spacing::xs));
 
     // --- Row 5: Theme comparison ---
@@ -326,7 +327,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
       auto col =
           vstack(context, mk(row5.ent(), 1 + t),
               ComponentConfig{}
-                  .with_size(ComponentSize{w1280(200), percent(0.95f)})
+                  .with_size(ComponentSize{pixels(200), percent(0.95f)})
                   .with_custom_background(demo.background)
                   .with_padding(Spacing::xs)
                   .with_align_items(AlignItems::Center)
@@ -347,7 +348,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(demo.background)
               .with_auto_text_color(false)
               .with_custom_text_color(demo.font)
-              .with_font(FONT, h720(18.0f))
+              .with_font(FONT, pixels(18.0f))
               .with_skip_tabbing(true)
               .with_debug_name(
                   fmt::format("bv_theme_name_{}", themes[t].name)));
@@ -360,7 +361,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(demo.primary)
                  .with_auto_text_color(false)
                  .with_custom_text_color(filled_text)
-                 .with_font(FONT, h720(16.0f))
+                 .with_font(FONT, pixels(16.0f))
                  .with_padding(Spacing::xs)
                  .with_debug_name(
                      fmt::format("bv_theme_filled_{}", themes[t].name)));
@@ -373,8 +374,8 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(demo.background)
                  .with_auto_text_color(false)
                  .with_custom_text_color(demo.font)
-                 .with_border(demo.primary, h720(2.0f))
-                 .with_font(FONT, h720(16.0f))
+                 .with_border(demo.primary, pixels(2.0f))
+                 .with_font(FONT, pixels(16.0f))
                  .with_padding(Spacing::xs)
                  .with_debug_name(
                      fmt::format("bv_theme_outline_{}", themes[t].name)));
@@ -387,7 +388,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(demo.background)
                  .with_auto_text_color(false)
                  .with_custom_text_color(demo.font)
-                 .with_font(FONT, h720(16.0f))
+                 .with_font(FONT, pixels(16.0f))
                  .with_padding(Spacing::xs)
                  .with_debug_name(
                      fmt::format("bv_theme_ghost_{}", themes[t].name)));
@@ -409,7 +410,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Spacing::sm)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
-            .with_font(FONT, h720(16.0f)));
+            .with_font(FONT, pixels(16.0f)));
   }
 };
 

@@ -22,7 +22,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Profile Settings")
-            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))  // font_size_lg for section headers
+            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))  // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -31,7 +31,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Username: player_one")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -39,7 +39,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Email: player@example.com")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -47,7 +47,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Account created: January 2024")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -55,7 +55,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Subscription: Premium")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -63,7 +63,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Last login: Today at 10:30 AM")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font));
   }
 
@@ -74,7 +74,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Audio Settings")
-            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))  // font_size_lg for section headers
+            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))  // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -83,7 +83,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Master Volume: 80%")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -91,7 +91,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Music Volume: 60%")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -99,7 +99,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Sound Effects: 75%")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -123,7 +123,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Display Settings")
-            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))  // font_size_lg for section headers
+            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))  // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -132,7 +132,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Resolution: 1920x1080")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -140,7 +140,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("Fullscreen: Enabled")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(8)}));
 
@@ -148,7 +148,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_label("VSync: On")
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -185,6 +185,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font = afterhours::Color{33, 33, 33, 255};
     theme.font_muted = afterhours::Color{55, 55, 55, 255};
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Root container - centered on screen, expanded to fill more screen
     auto root = div(context, mk(entity, 0),
@@ -210,7 +211,7 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     if (auto result = tab_container(context, mk(main_container.ent(), 0), tab_labels, active_tab,
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
-                .with_font(UIComponent::DEFAULT_FONT, h720(22.0f))
+                .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
                 .with_no_wrap()
                 .with_padding(Padding{
                     .left = pixels(1),

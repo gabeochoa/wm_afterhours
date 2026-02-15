@@ -61,8 +61,9 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     theme.roundness = 0.10f;
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
     UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
-                                              h720(24.0f));
+                                              pixels(24.0f));
 
     // Root container
     auto root =
@@ -82,7 +83,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(50)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
-            .with_font_size(h720(36.0f))
+            .with_font_size(pixels(36.0f))
             .with_alignment(TextAlignment::Center)
             .with_roundness(0.08f)
             .with_margin(Margin{.bottom = DefaultSpacing::small()}));
@@ -111,7 +112,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Stepper Variants")
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_text_color(afterhours::Color{180, 220, 255, 255})
-            .with_font_size(h720(28.0f))
+            .with_font_size(pixels(28.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
     // Each stepper with a label
@@ -130,13 +131,13 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{children(), pixels(56)})
               .with_background(Theme::Usage::None)
               .with_custom_text_color(context.theme.font)
-              .with_font_size(h720(24.0f))
+              .with_font_size(pixels(24.0f))
               .with_alignment(TextAlignment::Left));
 
       stepper(context, mk(row.ent()), options, idx,
               ComponentConfig{}
                   .with_size(ComponentSize{pixels(240), pixels(48)})
-                  .with_font_size(h720(24.0f)));
+                  .with_font_size(pixels(24.0f)));
     };
 
     labeled_stepper(0, "Resolution", resolutions, resolution_idx);
@@ -161,7 +162,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Card Selector")
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_text_color(afterhours::Color{180, 220, 255, 255})
-            .with_font_size(h720(28.0f))
+            .with_font_size(pixels(28.0f))
             .with_alignment(TextAlignment::Center)
             .with_margin(Margin{.bottom = DefaultSpacing::medium()}));
 
@@ -170,7 +171,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     stepper(context, mk(right_col.ent()), names, card_idx,
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(300), pixels(56)})
-                .with_font_size(h720(26.0f))
+                .with_font_size(pixels(26.0f))
                 .with_margin(Margin{.bottom = DefaultSpacing::large()}),
             3);
 
@@ -191,7 +192,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label(card.title)
             .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-            .with_font_size(h720(32.0f))
+            .with_font_size(pixels(32.0f))
             .with_alignment(TextAlignment::Center)
             .with_background(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::medium()}));
@@ -201,7 +202,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label(card.description)
             .with_size(ComponentSize{percent(1.0f), children()})
             .with_custom_text_color(afterhours::Color{230, 230, 230, 255})
-            .with_font_size(h720(24.0f))
+            .with_font_size(pixels(24.0f))
             .with_alignment(TextAlignment::Left)
             .with_background(Theme::Usage::None));
   }

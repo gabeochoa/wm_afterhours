@@ -59,7 +59,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.right = DefaultSpacing::small()})
             .with_label(tag.label)
             .with_custom_text_color(afterhours::Color{20, 20, 25, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_skip_tabbing(true)
             .with_debug_name("tag_" + tag.label));
   }
@@ -87,7 +87,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                 fmt::format("{} ({})", label, static_cast<int>(items.size())))
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_custom_text_color(accent)
-            .with_font(UIComponent::DEFAULT_FONT, h720(36.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(36.0f))
             .with_skip_tabbing(true)
             .with_debug_name(label + "_header"));
 
@@ -116,7 +116,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_roundness(0.3f)
               .with_label("Drop tags here")
               .with_custom_text_color(afterhours::Color{100, 100, 115, 255})
-              .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
               .with_skip_tabbing(true));
     }
   }
@@ -166,6 +166,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font = afterhours::Color{230, 230, 235, 255};
     theme.font_muted = afterhours::Color{140, 140, 150, 255};
     context.theme = theme;
+    context.scaling_mode = ScalingMode::Adaptive;
 
     // Root
     auto root =
@@ -193,7 +194,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Horizontal Drag & Drop")
             .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_custom_text_color(theme.font)
-            .with_font(UIComponent::DEFAULT_FONT, h720(48.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(48.0f))
             .with_skip_tabbing(true));
 
     div(context, mk(title_bar.ent(), 1),
@@ -201,7 +202,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Drag tags between priority lanes")
             .with_size(ComponentSize{percent(1.0f), pixels(30)})
             .with_custom_text_color(afterhours::Color{185, 185, 195, 255})
-            .with_font(UIComponent::DEFAULT_FONT, h720(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
             .with_skip_tabbing(true));
 
     // Rows container
