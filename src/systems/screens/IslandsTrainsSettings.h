@@ -67,6 +67,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
+            .with_absolute_position()
             .with_custom_background(bg_olive_mid)
             .with_debug_name("bg_base"));
 
@@ -225,7 +226,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent()),
         ComponentConfig{}
             .with_label("RESET TO DEFAULTS")
-            .with_size(ComponentSize{pixels(250), pixels(30)})
+            .with_size(ComponentSize{pixels(250), pixels(36)})
             .with_font("EqProRounded", pixels(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)

@@ -107,7 +107,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto sidebar = vstack(
         context, mk(main_area.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(200), percent(1.0f)})
+            .with_size(ComponentSize{pixels(200), pixels(300)})
             .with_no_wrap()
             .with_padding(Padding{.top = pixels(10)})
             .with_debug_name("sidebar"));
@@ -125,7 +125,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Separator
     div(context, mk(sidebar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
+            .with_size(ComponentSize{expand(), pixels(1)})
             .with_custom_background(panel_border)
             .with_margin(Margin{.top = pixels(3), .bottom = pixels(5),
                                 .left = pixels(8), .right = pixels(8)})
@@ -144,7 +144,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(sidebar.ent(), static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(initial_settings[i])
-                     .with_size(ComponentSize{percent(1.0f), pixels(34)})
+                     .with_size(ComponentSize{percent(1.0f), pixels(30)})
                      .with_custom_background(item_bg)
                      .with_border(item_border_color, is_selected ? 1.0f : 0.0f)
                      .with_font_size(pixels(17.0f))
@@ -162,10 +162,11 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // ── MAIN PANEL ──
+    float panel_w = static_cast<float>(screen_w) - 290.0f;
     auto panel = vstack(
         context, mk(main_area.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), percent(1.0f)})
+            .with_size(ComponentSize{pixels(panel_w), pixels(230)})
             .with_custom_background(panel_dark)
             .with_border(panel_border, 2.0f)
             .with_no_wrap()
@@ -188,7 +189,6 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_no_wrap()
-            .with_padding(Padding{.left = pixels(10), .right = pixels(10)})
             .with_margin(Margin{.top = pixels(8)})
             .with_debug_name("tab_row"));
 
@@ -206,7 +206,6 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_custom_text_color(tab_text)
                      .with_font_size(pixels(13.0f))
                      .with_alignment(TextAlignment::Center)
-                     .with_margin(Margin{.right = pixels(2)})
                      .with_debug_name("tab_" + std::to_string(ti)))) {
         active_tab = ti;
       }
@@ -216,7 +215,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto tab_content = vstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), expand()})
+            .with_size(ComponentSize{percent(1.0f), pixels(90)})
             .with_no_wrap()
             .with_padding(Padding{.top = pixels(16), .left = pixels(25),
                                   .right = pixels(25)})
@@ -240,13 +239,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_muted)
             .with_margin(Margin{.top = pixels(5)}));
 
-    // Footer: OK / Cancel / Apply (inside panel, pushed to bottom)
-    // Spacer
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), expand()})
-            .with_skip_tabbing(true));
-
+    // Footer: OK / Cancel / Apply (inside panel)
     auto footer = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}

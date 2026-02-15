@@ -495,7 +495,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     div(context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
+            .with_size(ComponentSize{pixels(640), pixels(1)})
             .with_custom_background(afterhours::Color{65, 55, 45, 40})
             .with_margin(Margin{.left = pixels(40), .right = pixels(40)})
             .with_debug_name("sep_footer"));

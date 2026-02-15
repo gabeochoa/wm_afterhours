@@ -238,7 +238,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     auto chat_area =
         vstack(context, mk(chat_container.ent(), 0),
             ComponentConfig{}
-                .with_size(ComponentSize{expand(), pixels(280)})
+                .with_size(ComponentSize{percent(1.0f), pixels(280)})
                 .with_custom_background(AIMColors::chat_bg())
                 .with_align_items(AlignItems::FlexStart)
                 .with_padding(Padding{.left = pixels(6), .top = pixels(4)})

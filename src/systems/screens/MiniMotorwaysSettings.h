@@ -109,7 +109,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto content = vstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(350)})
+            .with_size(ComponentSize{pixels(745), pixels(350)})
             .with_no_wrap()
             .with_margin(Margin{.top = pixels(8), .left = pixels(465)})
             .with_debug_name("content"));

@@ -253,10 +253,43 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       option_labels.push_back(opt.label);
     }
 
-    tab_container(context, mk(entity, 100), option_labels, active_tab,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<int>(menu_item_w + 200)), pixels(44)})
-            .with_absolute_position(menu_x, menu_y));
+    // Manual tab buttons to avoid expand() height issues in absolute positioning
+    {
+      float tab_total_w = menu_item_w + 200.0f;
+      float tab_item_w = tab_total_w / static_cast<float>(option_labels.size());
+      float tab_h = 44.0f;
+      for (size_t i = 0; i < option_labels.size(); i++) {
+        bool is_active = (i == active_tab);
+        afterhours::Color tab_bg_color = is_active
+            ? context.theme.surface
+            : afterhours::colors::darken(context.theme.background, 0.92f);
+        afterhours::Color tab_text_color = is_active ? context.theme.font : context.theme.font_muted;
+        afterhours::Color underline_color = is_active ? context.theme.accent
+            : afterhours::colors::darken(context.theme.background, 0.80f);
+        float underline_h = is_active ? 4.0f : 1.0f;
+
+        if (button(context, mk(entity, 100 + static_cast<int>(i)),
+                   ComponentConfig{}
+                       .with_label(option_labels[i])
+                       .with_size(ComponentSize{pixels(static_cast<int>(tab_item_w)),
+                                                pixels(static_cast<int>(tab_h - underline_h))})
+                       .with_absolute_position(menu_x + static_cast<float>(i) * tab_item_w, menu_y)
+                       .with_custom_background(tab_bg_color)
+                       .with_custom_text_color(tab_text_color)
+                       .with_font("EqProRounded", h720(18.0f))
+                       .with_alignment(TextAlignment::Center))) {
+          active_tab = i;
+        }
+        // Underline
+        div(context, mk(entity, 110 + static_cast<int>(i)),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(static_cast<int>(tab_item_w)),
+                                         pixels(static_cast<int>(underline_h))})
+                .with_absolute_position(menu_x + static_cast<float>(i) * tab_item_w,
+                                        menu_y + tab_h - underline_h)
+                .with_custom_background(underline_color));
+      }
+    }
 
     // ========== CENTER CHARACTER AREA ==========
     float center_area_start = menu_x + menu_item_w + 30.0f;

@@ -69,7 +69,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto top_bar = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(120)})
+            .with_size(ComponentSize{percent(1.0f), pixels(145)})
             .with_no_wrap()
             .with_align_items(AlignItems::FlexStart)
             .with_padding(Padding{.top = pixels(30), .left = pixels(45),
@@ -146,7 +146,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto badges = vstack(
         context, mk(top_bar.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(55), percent(1.0f)})
+            .with_size(ComponentSize{pixels(55), children()})
             .with_no_wrap()
             .with_align_items(AlignItems::Center)
             .with_margin(Margin{.left = pixels(10)}));

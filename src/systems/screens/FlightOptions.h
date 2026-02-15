@@ -114,7 +114,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto content = vstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(350)})
+            .with_size(ComponentSize{pixels(840), pixels(350)})
             .with_no_wrap()
             .with_margin(Margin{.top = pixels(5), .left = pixels(265)})
             .with_debug_name("content"));
@@ -193,7 +193,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer_btns = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{pixels(740), pixels(36)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_margin(Margin{.top = pixels(5), .left = pixels(365)})
@@ -237,7 +237,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto prompts = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
+            .with_size(ComponentSize{pixels(1080), pixels(28)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_margin(Margin{.top = pixels(5), .left = pixels(25)})

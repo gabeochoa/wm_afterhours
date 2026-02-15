@@ -126,7 +126,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(panel.ent(), 2),
           ComponentConfig{}
-              .with_size(ComponentSize{children(), children()})
+              .with_size(ComponentSize{children(), pixels(18.0f)})
               .with_label("All systems operational")
               .with_font_size(pixels(12.0f))
               .with_custom_text_color(theme.font_muted)
@@ -157,7 +157,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(panel.ent(), 1),
           ComponentConfig{}
-              .with_size(ComponentSize{children(), children()})
+              .with_size(ComponentSize{children(), pixels(18.0f)})
               .with_label("Hull integrity at 47%")
               .with_font_size(pixels(12.0f))
               .with_custom_text_color(C{210, 180, 110, 255})
@@ -198,7 +198,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     // Desc
     div(context, mk(col1.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.88f), pixels(18.0f)})
+            .with_size(ComponentSize{percent(0.88f), pixels(22.0f)})
             .with_label("Sharp panels + L-shaped corner brackets")
             .with_font_size(pixels(12.0f))
             .with_custom_text_color(theme.font_muted)
@@ -285,7 +285,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     // Desc
     div(context, mk(col2.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.88f), pixels(18.0f)})
+            .with_size(ComponentSize{percent(0.88f), pixels(22.0f)})
             .with_label("Sharp panels + line grid overlays")
             .with_font_size(pixels(12.0f))
             .with_custom_text_color(theme.font_muted)
@@ -366,7 +366,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(text_col.ent(), 1),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), children()})
+              .with_size(ComponentSize{percent(1.0f), pixels(18.0f)})
               .with_label("- Commander Shepard")
               .with_font_size(pixels(12.0f))
               .with_custom_text_color(C{amber.r, amber.g, amber.b, 220})
@@ -406,7 +406,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(text_col.ent(), 1),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), children()})
+              .with_size(ComponentSize{percent(1.0f), pixels(18.0f)})
               .with_label("- GLaDOS")
               .with_font_size(pixels(12.0f))
               .with_custom_text_color(C{green.r, green.g, green.b, 220})
@@ -417,7 +417,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     // Desc
     div(context, mk(col3.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.88f), pixels(18.0f)})
+            .with_size(ComponentSize{percent(0.88f), pixels(22.0f)})
             .with_label("Left accent bar + optional attribution")
             .with_font_size(pixels(12.0f))
             .with_custom_text_color(theme.font_muted)

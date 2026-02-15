@@ -293,7 +293,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto menu_row = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(195)})
+            .with_size(ComponentSize{percent(1.0f), pixels(165)})
             .with_justify_content(JustifyContent::SpaceBetween)
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
@@ -303,7 +303,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(parent.ent(), id),
              ComponentConfig{}
                  .with_label(label)
-                 .with_720p_size(280, 55)
+                 .with_720p_size(280, 45)
                  .with_custom_background(btn_blue)
                  .with_border(btn_blue_dark, 4.0f)
                  .with_font("Gaegu-Bold", pixels(22.0f))
@@ -313,7 +313,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_roundness(0.5f)
                  .with_soft_shadow(1.0f, 2.0f, 5.0f,
                                    afterhours::Color{0, 0, 0, 30})
-                 .with_margin(Margin{.bottom = pixels(12)}));
+                 .with_margin(Margin{.bottom = pixels(8)}));
     };
 
     // Left column
@@ -354,14 +354,23 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(42)})
             .with_align_items(AlignItems::Center)
+            .with_justify_content(JustifyContent::SpaceBetween)
             .with_no_wrap()
             .with_debug_name("footer"));
 
+    // Left group: About + Version
+    auto footer_left = hstack(
+        context, mk(footer.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(246), pixels(42)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap());
+
     // About button
-    if (button(context, mk(footer.ent()),
+    if (button(context, mk(footer_left.ent()),
                ComponentConfig{}
                    .with_label("About")
-                   .with_size(ComponentSize{pixels(110), pixels(38)})
+                   .with_size(ComponentSize{pixels(100), pixels(38)})
                    .with_custom_background(btn_blue)
                    .with_border(btn_blue_dark, 3.0f)
                    .with_font("Gaegu-Bold", pixels(20.0f))
@@ -376,27 +385,29 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Version
-    div(context, mk(footer.ent()),
+    div(context, mk(footer_left.ent()),
         ComponentConfig{}
             .with_label("Version 1.11.0")
-            .with_size(ComponentSize{pixels(140), pixels(22)})
+            .with_size(ComponentSize{pixels(130), pixels(22)})
             .with_font("Gaegu-Bold", pixels(17.0f))
             .with_custom_text_color(text_muted)
-            .with_margin(Margin{.left = pixels(12)}));
+            .with_margin(Margin{.left = pixels(8)}));
 
-    // Spacer pushes OK/Cancel/Apply to the right
-    div(context, mk(footer.ent()),
+    // Right group: OK/Cancel/Apply
+    auto footer_right = hstack(
+        context, mk(footer.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), pixels(1)})
-            .with_skip_tabbing(true));
+            .with_size(ComponentSize{pixels(215), pixels(42)})
+            .with_align_items(AlignItems::Center)
+            .with_no_wrap());
 
     auto make_footer_btn = [&](int id, const char *label,
                                afterhours::Color bg,
                                afterhours::Color border) {
-      button(context, mk(footer.ent(), id),
+      button(context, mk(footer_right.ent(), id),
              ComponentConfig{}
                  .with_label(label)
-                 .with_size(ComponentSize{pixels(80), pixels(36)})
+                 .with_size(ComponentSize{pixels(65), pixels(36)})
                  .with_custom_background(bg)
                  .with_border(border, 3.0f)
                  .with_font("Gaegu-Bold", pixels(20.0f))
@@ -404,7 +415,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
                  .with_roundness(0.4f)
-                 .with_margin(Margin{.left = pixels(8)}));
+                 .with_margin(Margin{.left = pixels(5)}));
     };
 
     make_footer_btn(3, "OK", btn_green, btn_green_dark);

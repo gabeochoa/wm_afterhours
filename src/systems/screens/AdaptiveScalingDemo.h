@@ -240,7 +240,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(card.ent(), 1),
           ComponentConfig{}
               .with_label("This card is 280x160 px.")
-              .with_size(ComponentSize{percent(1.0f), pixels(18)})
+              .with_size(ComponentSize{percent(1.0f), pixels(22)})
               .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
               .with_custom_text_color(muted)
               .with_margin(Margin::Bottom(pixels(10))));

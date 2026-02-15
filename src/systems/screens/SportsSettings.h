@@ -387,7 +387,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto row = hstack(
           context, mk(settings_panel.ent(), child_id++),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(40)})
+              .with_size(ComponentSize{percent(1.0f), pixels(38)})
               .with_custom_background(is_selected ? highlight_row
                                                   : afterhours::Color{35, 45, 55, 255})
               .with_align_items(AlignItems::Center)
@@ -421,7 +421,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 2),
                  ComponentConfig{}
                      .with_label("<")
-                     .with_size(ComponentSize{pixels(40), pixels(40)})
+                     .with_size(ComponentSize{pixels(40), pixels(38)})
                      .with_font("EqProRounded", pixels(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
@@ -452,7 +452,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 4),
                  ComponentConfig{}
                      .with_label(">")
-                     .with_size(ComponentSize{pixels(40), pixels(40)})
+                     .with_size(ComponentSize{pixels(40), pixels(38)})
                      .with_font("EqProRounded", pixels(20.0f))
                      .with_custom_text_color(arrow_color)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})

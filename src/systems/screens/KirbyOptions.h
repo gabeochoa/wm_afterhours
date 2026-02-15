@@ -81,7 +81,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto tab_bar = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(70)})
+            .with_size(ComponentSize{expand(), pixels(70)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_margin(Margin{.left = pixels(135)})
@@ -222,7 +222,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto name_row = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(58)})
+            .with_size(ComponentSize{children(), pixels(58)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_margin(Margin{.left = pixels(155)})
@@ -335,7 +335,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto panel_bottom = hstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{children(), pixels(50)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_debug_name("panel_bottom"));
