@@ -255,7 +255,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Manual tab buttons to avoid expand() height issues in absolute positioning
     {
-      float tab_total_w = menu_item_w + 200.0f;
+      float tab_total_w = menu_item_w + 430.0f;
       float tab_item_w = tab_total_w / static_cast<float>(option_labels.size());
       float tab_h = 44.0f;
       for (size_t i = 0; i < option_labels.size(); i++) {
@@ -276,7 +276,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                        .with_absolute_position(menu_x + static_cast<float>(i) * tab_item_w, menu_y)
                        .with_custom_background(tab_bg_color)
                        .with_custom_text_color(tab_text_color)
-                       .with_font("EqProRounded", h720(18.0f))
+                       .with_font("EqProRounded", h720(16.0f))
                        .with_alignment(TextAlignment::Center))) {
           active_tab = i;
         }
@@ -425,8 +425,8 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 326),
         ComponentConfig{}
             .with_label(current_opt.description)
-            .with_size(ComponentSize{pxf(card_w - 80),
-                                     pixels(80)})
+            .with_size(ComponentSize{pxf(card_w - 60),
+                                     pixels(90)})
             .with_absolute_position(card_x + 35.0f, card_y + 250.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(afterhours::Color{50, 50, 55, 255}));

@@ -170,7 +170,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto names = card_names();
     stepper(context, mk(right_col.ent()), names, card_idx,
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(300), pixels(56)})
+                .with_size(ComponentSize{pixels(340), pixels(56)})
                 .with_font_size(pixels(26.0f))
                 .with_margin(Margin{.bottom = DefaultSpacing::large()}),
             3);
