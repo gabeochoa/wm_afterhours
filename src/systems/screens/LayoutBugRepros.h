@@ -11,6 +11,14 @@ using namespace afterhours::ui::imm;
 
 struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
+  // State for tab_container repro
+  size_t active_tab = 0;
+
+  // State for toggle_switch repro
+  bool toggle_a = true;
+  bool toggle_b = false;
+  bool toggle_c = true;
+
   // Colors for bug signal indicators
   afterhours::Color bg_dark{30, 30, 35, 255};
   afterhours::Color panel_bg{50, 50, 58, 255};
@@ -332,6 +340,104 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_label("Green=children() auto | Blue=pixels(250) manual | Compare for clipping/padding mismatch")
             .with_size(ComponentSize{pixels(700), pixels(16)})
             .with_absolute_position(sec5_x, sec5_y + 114.f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_custom_text_color(muted_text)
+            .with_alignment(TextAlignment::Left));
+
+    // =========================================================
+    // Repro 6: tab_container inside absolute parent
+    // =========================================================
+    float sec6_x = 700.f;
+    float sec6_y = 45.f;
+
+    div(context, mk(entity, 600),
+        ComponentConfig{}
+            .with_label("6: tab_container inside absolute parent")
+            .with_size(ComponentSize{pixels(500), pixels(18)})
+            .with_absolute_position(sec6_x, sec6_y)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_custom_text_color(muted_text)
+            .with_alignment(TextAlignment::Left));
+
+    // Absolute parent for the tab_container
+    auto r6_parent = div(context, mk(entity, 601),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{pixels(500), pixels(60)})
+                             .with_absolute_position(sec6_x, sec6_y + 22.f)
+                             .with_custom_background(panel_bg)
+                             .with_border(green_bg, 2.f)
+                             .with_debug_name("r6_parent"));
+
+    std::vector<std::string> tab_labels = {"Tab A", "Tab B", "Tab C"};
+    tab_container(context, mk(r6_parent.ent(), 0), tab_labels, active_tab,
+                  ComponentConfig{}
+                      .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                      .with_no_wrap()
+                      .with_debug_name("r6_tabs"));
+
+    div(context, mk(entity, 602),
+        ComponentConfig{}
+            .with_label("Expected: tabs inside green border | Bug: tabs at screen origin")
+            .with_size(ComponentSize{pixels(500), pixels(16)})
+            .with_absolute_position(sec6_x, sec6_y + 86.f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
+            .with_custom_text_color(muted_text)
+            .with_alignment(TextAlignment::Left));
+
+    // =========================================================
+    // Repro 7: toggle_switch vertical space overflow
+    // =========================================================
+    float sec7_x = 700.f;
+    float sec7_y = 160.f;
+
+    div(context, mk(entity, 700),
+        ComponentConfig{}
+            .with_label("7: toggle_switch vertical space — 3 toggles in 150px container")
+            .with_size(ComponentSize{pixels(500), pixels(18)})
+            .with_absolute_position(sec7_x, sec7_y)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_custom_text_color(muted_text)
+            .with_alignment(TextAlignment::Left));
+
+    // Container with exact height: 3 toggles at 42px each = 126px + margins
+    // If toggles take more space than declared, they'll overflow the green border
+    auto r7_parent = vstack(context, mk(entity, 701),
+                            ComponentConfig{}
+                                .with_size(ComponentSize{pixels(450), pixels(150)})
+                                .with_absolute_position(sec7_x, sec7_y + 22.f)
+                                .with_custom_background(panel_bg)
+                                .with_border(green_bg, 2.f)
+                                .with_no_wrap()
+                                .with_debug_name("r7_parent"));
+
+    toggle_switch(context, mk(r7_parent.ent(), 0), toggle_a,
+                  ComponentConfig{}
+                      .with_label("Toggle A")
+                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+                      .with_margin(Margin{.bottom = pixels(4)})
+                      .with_debug_name("r7_toggle_a"));
+
+    toggle_switch(context, mk(r7_parent.ent(), 1), toggle_b,
+                  ComponentConfig{}
+                      .with_label("Toggle B")
+                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+                      .with_margin(Margin{.bottom = pixels(4)})
+                      .with_debug_name("r7_toggle_b"));
+
+    toggle_switch(context, mk(r7_parent.ent(), 2), toggle_c,
+                  ComponentConfig{}
+                      .with_label("Toggle C")
+                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+                      .with_debug_name("r7_toggle_c"));
+
+    div(context, mk(entity, 702),
+        ComponentConfig{}
+            .with_label("Expected: 3 toggles fit inside green border | Bug: overflow bottom")
+            .with_size(ComponentSize{pixels(500), pixels(16)})
+            .with_absolute_position(sec7_x, sec7_y + 178.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(muted_text)
             .with_alignment(TextAlignment::Left));

@@ -22,19 +22,16 @@ Each entry should include:
 
 ## Gaps
 
-### 1. tab_container tab strip renders outside parent bounds
+### 1. ~~tab_container tab strip renders outside parent bounds~~ (FIXED)
 
 - **Issue**: When `tab_container()` is used with `with_absolute_position()`, the tab strip (the row of tab buttons) renders at the top of the screen instead of relative to the container's position. Moving the container's y-position has no effect on the tab strip position.
-- **Affected screens**: `DeadSpaceSettings.h` — the 8 settings category tabs clip at the top screen edge
-- **Workaround**: Replace `tab_container()` with manually-created tab buttons in a row, giving us full positioning control. See `DeadSpaceSettings.h` "MANUAL TAB BUTTONS" section.
-- **Ideal fix**: `tab_container()` should respect the parent's absolute position and constrain its tab strip within its declared bounds. The tab strip should be a child of the container, not rendered at a screen-relative position.
+- **Root cause**: `with_absolute_position(x,y)` stored the position as a translate in `HasUIModifiers` (render-time only), but `compute_rect_bounds` used `parent.computed_rel` (which was 0,0) for child offsets.
+- **Fix**: Added `absolute_pos_x/y` fields to `UIComponent`, set during `apply_visuals` in component_init.h, used in `compute_relative_positions` in autolayout.h.
 
-### 2. toggle_switch creates sibling entities that consume parent layout space
+### 2. ~~toggle_switch creates sibling entities that consume parent layout space~~ (NOT A BUG)
 
-- **Issue**: `toggle_switch()` creates internal entities (track, thumb, label) as siblings in the parent's entity namespace rather than children of the toggle entity. This means each toggle_switch consumes more vertical space in a flex column than its declared height (e.g., a 42px toggle actually takes ~60px of layout space). When a flex column doesn't use `with_no_wrap()`, excess content wraps to a new column (right side), causing elements to render outside their expected container.
-- **Affected screens**: `ToggleSwitchShowcase.h` — disabled toggles and status bar were rendering at the top-right corner of the screen, outside the card
-- **Workaround**: (1) Add `with_no_wrap()` to the card to prevent wrapping, (2) increase card height to 95% of screen, (3) remove the status bar that couldn't fit due to the entity overhead
-- **Ideal fix**: `toggle_switch()` should create its track/thumb/label as nested children of the toggle entity, not as siblings in the parent. This would keep layout height predictable at the declared size.
+- **Original report**: `toggle_switch()` creates internal entities as siblings in the parent's entity namespace, consuming more vertical space than declared.
+- **Investigation**: The internal entities (label, track, knob) ARE children of the toggle entity, not siblings. `mk(entity)` correctly creates them as children. The ToggleSwitchShowcase overflow was caused by the total content (title + sections + separators + toggles + checkboxes + disabled section) exceeding the card height, not by individual toggles taking extra space. A repro with 3 toggles at 42px in a 150px container confirmed they fit correctly.
 
 ### 3. Focus ring visibility on checkbox and toggle_switch (unverified)
 

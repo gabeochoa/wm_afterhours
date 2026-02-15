@@ -186,11 +186,8 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Status bar removed — toggle states are already visually clear from
     // the toggle controls themselves. The bar was being pushed outside
-    // the card by toggle_switch internal entity overhead.
-    // TODO(afterhours): toggle_switch creates extra sibling entities
-    // in the parent's namespace, consuming more vertical space than the
-    // declared height (42px) — track + thumb + label entities add ~20px
-    // overhead per toggle, causing flex column overflow.
+    // the card because the total content (title + sections + separators +
+    // toggles + checkboxes + disabled row) exceeded the card height.
   }
 };
 
