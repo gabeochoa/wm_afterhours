@@ -71,7 +71,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("demo"));
 
     // FlexStart - aligns left with margin for visual spacing from edge
-    div(context, mk(demo.ent(), 0),
+    button(context, mk(demo.ent(), 0),
         ComponentConfig{}
             .with_label("FlexStart (left)")
             .with_size(ComponentSize{pixels(184), pixels(48)})
@@ -80,22 +80,20 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(0)})
-            .with_skip_tabbing(true));
+                                .left = pixels(0), .right = pixels(0)}));
 
     // Center - centers horizontally
-    div(context, mk(demo.ent(), 1),
+    button(context, mk(demo.ent(), 1),
         ComponentConfig{}
             .with_label("Center")
             .with_size(ComponentSize{pixels(184), pixels(48)})
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Secondary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_skip_tabbing(true));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f)));
 
     // FlexEnd - aligns right with margin for visual spacing from edge
-    div(context, mk(demo.ent(), 2),
+    button(context, mk(demo.ent(), 2),
         ComponentConfig{}
             .with_label("FlexEnd (right)")
             .with_size(ComponentSize{pixels(184), pixels(48)})
@@ -104,8 +102,7 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(0)})
-            .with_skip_tabbing(true));
+                                .left = pixels(0), .right = pixels(0)}));
 
     // Visual legend row showing color-to-position mapping
     auto legend = hstack(context, mk(main.ent(), 3),

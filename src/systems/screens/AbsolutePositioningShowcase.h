@@ -80,7 +80,7 @@ struct AbsolutePositioningShowcase
             .with_debug_name("s1_container"));
 
     // Absolute box positioned via translate
-    div(context, mk(s1_container.ent(), 0),
+    button(context, mk(s1_container.ent(), 0),
         ComponentConfig{}
             .with_label("translate(100,10)")
             .with_size(ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
@@ -91,7 +91,7 @@ struct AbsolutePositioningShowcase
             .with_debug_name("abs_translate"));
 
     // Another absolute box further right
-    div(context, mk(s1_container.ent(), 1),
+    button(context, mk(s1_container.ent(), 1),
         ComponentConfig{}
             .with_label("translate(300,10)")
             .with_size(ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
@@ -132,7 +132,7 @@ struct AbsolutePositioningShowcase
             .with_debug_name("corner_area"));
 
     // Top-left
-    div(context, mk(corner_area.ent(), 0),
+    button(context, mk(corner_area.ent(), 0),
         ComponentConfig{}
             .with_label("TL")
             .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
@@ -143,7 +143,7 @@ struct AbsolutePositioningShowcase
             .with_debug_name("corner_tl"));
 
     // Top-right
-    div(context, mk(corner_area.ent(), 1),
+    button(context, mk(corner_area.ent(), 1),
         ComponentConfig{}
             .with_label("TR")
             .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
@@ -154,7 +154,7 @@ struct AbsolutePositioningShowcase
             .with_debug_name("corner_tr"));
 
     // Bottom-left
-    div(context, mk(corner_area.ent(), 2),
+    button(context, mk(corner_area.ent(), 2),
         ComponentConfig{}
             .with_label("BL")
             .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
@@ -165,7 +165,7 @@ struct AbsolutePositioningShowcase
             .with_debug_name("corner_bl"));
 
     // Bottom-right
-    div(context, mk(corner_area.ent(), 3),
+    button(context, mk(corner_area.ent(), 3),
         ComponentConfig{}
             .with_label("BR")
             .with_size(ComponentSize{pixels(box_s), pixels(box_s)})

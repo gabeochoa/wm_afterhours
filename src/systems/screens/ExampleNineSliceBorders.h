@@ -168,7 +168,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     float row1_y = start_y + label_height + 5;
     for (int i = 0; i < 6; i++) {
       float x = start_x + i * (box_width + gap);
-      div(context, mk(entity, 10 + i),
+      button(context, mk(entity, 10 + i),
           ComponentConfig{}
               .with_label(row1[i].label)
               .with_size(ComponentSize{pixels(box_width), pixels(box_height)})

@@ -358,7 +358,8 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.2f)
                      .with_margin(si > 0 ? Margin{.left = pixels(2)}
-                                         : Margin{}))) {
+                                         : Margin{})
+                     .with_skip_tabbing(true))) {
         value = si + 1;
       }
     }

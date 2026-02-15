@@ -54,7 +54,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("row_container"));
 
     // Three panels with fixed sizes that fit within container
-    div(context, mk(row_container.ent(), 0),
+    button(context, mk(row_container.ent(), 0),
         ComponentConfig{}
             .with_label("Left Panel")
             .with_size(ComponentSize{pixels(180), pixels(80)})
@@ -64,7 +64,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Spacing::sm));
 
-    div(context, mk(row_container.ent(), 1),
+    button(context, mk(row_container.ent(), 1),
         ComponentConfig{}
             .with_label("Center Panel")
             .with_size(ComponentSize{pixels(180), pixels(80)})
@@ -74,7 +74,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Spacing::sm));
 
-    div(context, mk(row_container.ent(), 2),
+    button(context, mk(row_container.ent(), 2),
         ComponentConfig{}
             .with_label("Right Panel")
             .with_size(ComponentSize{pixels(180), pixels(80)})
@@ -121,7 +121,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("stacked_column"));
 
     // Stacked items - use percent of parent column
-    div(context, mk(left_col.ent(), 0),
+    button(context, mk(left_col.ent(), 0),
         ComponentConfig{}
             .with_label("Stacked Item 1")
             .with_size(ComponentSize{percent(0.95f), pixels(40)})
@@ -130,7 +130,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = pixels(3)}));
 
-    div(context, mk(left_col.ent(), 1),
+    button(context, mk(left_col.ent(), 1),
         ComponentConfig{}
             .with_label("Stacked Item 2")
             .with_size(ComponentSize{percent(0.95f), pixels(40)})
@@ -139,7 +139,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
             .with_margin(Margin{.bottom = pixels(3)}));
 
-    div(context, mk(left_col.ent(), 2),
+    button(context, mk(left_col.ent(), 2),
         ComponentConfig{}
             .with_label("Stacked Item 3")
             .with_size(ComponentSize{percent(0.95f), pixels(40)})

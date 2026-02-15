@@ -295,7 +295,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("cog_" + std::to_string(i)));
 
       // Icon box background
-      div(context, mk(entity, 141 + static_cast<int>(i) * 4),
+      button(context, mk(entity, 141 + static_cast<int>(i) * 4),
           ComponentConfig{}
               .with_720p_size(ks_icon_size, ks_icon_size)
               .with_absolute_position(margin_edge + 20.0f, row_y)

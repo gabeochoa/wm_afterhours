@@ -102,7 +102,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     for (int i = 0; i < 6; i++) {
       float x = start_x + i * (box_size + gap);
-      div(context, mk(entity, 10 + i),
+      button(context, mk(entity, 10 + i),
           ComponentConfig{}
               .with_label(row1[i].label)
               .with_size(ComponentSize{pixels(box_size), pixels(box_size)})

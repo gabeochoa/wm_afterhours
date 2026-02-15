@@ -49,7 +49,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void render_tag(UIContext<InputAction> &context,
                   afterhours::Entity &parent, int id, const Tag &tag) {
-    div(context, mk(parent, id),
+    button(context, mk(parent, id),
         ComponentConfig{}
             .with_size(ComponentSize{children(), pixels(44)})
             .with_custom_background(tag.color)
@@ -60,7 +60,6 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label(tag.label)
             .with_custom_text_color(afterhours::Color{20, 20, 25, 255})
             .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
-            .with_skip_tabbing(true)
             .with_debug_name("tag_" + tag.label));
   }
 
