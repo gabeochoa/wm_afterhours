@@ -5,3 +5,4 @@
 #include "SnapshotTest.h"
 #include "SportsSettingsTest.h"
 #include "TabbingTest.h"
+#include "TrayTest.h"

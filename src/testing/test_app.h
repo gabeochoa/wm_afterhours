@@ -347,6 +347,39 @@ struct TestApp {
     }
   }
 
+  /// Check that the visual focus ring is drawn on the element with the given
+  /// label. This differs from expect_focus() which checks the logical focus
+  /// (e.g. the tray root). Visual focus follows visual_focus_id which, for
+  /// trays, points to the selected child.
+  static void expect_visual_focus(const std::string &label) {
+    auto *context = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::UIContext<InputAction>>();
+    if (!context) {
+      throw std::runtime_error("No UIContext singleton found");
+    }
+    if (context->visual_focus_id == context->ROOT) {
+      throw std::runtime_error(
+          "Expected visual focus on '" + label + "', but visual_focus_id is ROOT");
+    }
+    auto opt_entity =
+        afterhours::ui::UICollectionHolder::getEntityForID(context->visual_focus_id);
+    if (!opt_entity.has_value()) {
+      throw std::runtime_error(
+          "Expected visual focus on '" + label +
+          "', but visual_focus_id entity not found");
+    }
+    afterhours::Entity &ve = opt_entity.asE();
+    if (!ve.has<afterhours::ui::HasLabel>()) {
+      throw std::runtime_error(
+          "Visual focus element does not have a label (expected '" + label + "')");
+    }
+    const std::string &actual = ve.get<afterhours::ui::HasLabel>().label;
+    if (actual != label) {
+      throw std::runtime_error("Expected visual focus on '" + label +
+                               "', but visual focus is on '" + actual + "'");
+    }
+  }
+
   // ========== Responsive Layout Validation ==========
 
   struct OverflowViolation {
