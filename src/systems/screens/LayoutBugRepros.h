@@ -410,10 +410,13 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
                                 .with_no_wrap()
                                 .with_debug_name("r7_parent"));
 
+    // Use explicit pixel width (parent 450px - 2px border each side = 446px)
+    // instead of percent(1.0f) to avoid expand() resolution issues
+    // inside absolutely-positioned containers
     toggle_switch(context, mk(r7_parent.ent(), 0), toggle_a,
                   ComponentConfig{}
                       .with_label("Toggle A")
-                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_size(ComponentSize{pixels(446), pixels(42)})
                       .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                       .with_margin(Margin{.bottom = pixels(4)})
                       .with_debug_name("r7_toggle_a"));
@@ -421,7 +424,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     toggle_switch(context, mk(r7_parent.ent(), 1), toggle_b,
                   ComponentConfig{}
                       .with_label("Toggle B")
-                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_size(ComponentSize{pixels(446), pixels(42)})
                       .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                       .with_margin(Margin{.bottom = pixels(4)})
                       .with_debug_name("r7_toggle_b"));
@@ -429,7 +432,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     toggle_switch(context, mk(r7_parent.ent(), 2), toggle_c,
                   ComponentConfig{}
                       .with_label("Toggle C")
-                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_size(ComponentSize{pixels(446), pixels(42)})
                       .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
                       .with_debug_name("r7_toggle_c"));
 
