@@ -1,6 +1,6 @@
 # Tree Node / Collapsible Header
 
-**Status:** Not implemented  
+**Status:** Implemented (as `tree_view()` in `vendor/afterhours/src/plugins/ui/tree_view.h`)
 **Priority:** Medium
 
 ## Problem

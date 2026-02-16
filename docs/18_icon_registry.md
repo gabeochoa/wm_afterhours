@@ -1,9 +1,8 @@
 # Icon Registry
 
-## Working Implementation
-See `src/ui/icon_registry.h` for a complete working example.
+**Status:** Not implemented
 
-Extracted clean version: `src/extracted/icon_registry.h`
+The paths below are aspirational — no actual code exists yet.
 
 ## Problem
 Afterhours does not provide a centralized icon management system. Games and apps

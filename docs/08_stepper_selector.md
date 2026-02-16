@@ -1,6 +1,6 @@
 # Stepper/Selector with Arrows
 
-**Status:** Not implemented  
+**Status:** Implemented
 **Priority:** High
 
 ## Problem

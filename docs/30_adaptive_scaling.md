@@ -1,5 +1,7 @@
 # Doc 30: Adaptive Scaling Mode
 
+**Status:** Implemented (ScalingMode enum, AdaptiveScalingDemo screen)
+
 ## The Web Model
 
 In a web browser, there are two independent controls:

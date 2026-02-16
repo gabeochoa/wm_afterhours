@@ -1,10 +1,10 @@
 # Button Variants
 
-**Status:** Partially implemented  
+**Status:** Implemented
 **Priority:** Low
 
-> ✅ `button()`, `button_group()`, and `image_button()` exist in afterhours.  
-> ❌ Button variants (Outline, Ghost) and icon+text buttons not yet implemented.
+> ✅ `button()`, `button_group()`, and `image_button()` exist in afterhours.
+> ✅ ButtonVariant enum with Filled, Outline, Ghost implemented in `imm_components.h`.
 
 ## Problem
 
