@@ -28,6 +28,7 @@
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
+#include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
 #include <afterhours/src/plugins/ui/ui_collection.h>
 #include <chrono>
@@ -824,6 +825,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
 
   // Register E2E command handlers
   afterhours::testing::register_builtin_handlers(systems);
+  afterhours::testing::ui_commands::register_ui_commands<InputAction>(systems);
   systems.register_update_system(
       std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
           reset_fn));

@@ -99,6 +99,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(dropdown_w), pixels(dropdown_h)})
                  .with_margin(Margin{.top = DefaultSpacing::small()})
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("basic_dropdown"));
 
     // === Column 2: Dropdown with label ===
@@ -126,6 +127,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{pixels(dropdown_w + 80), pixels(dropdown_h)})
                  .with_label("Pet")
                  .with_margin(Margin{.top = DefaultSpacing::small()})
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("labeled_dropdown"));
 
     // === Column 3: Many options ===
@@ -152,6 +154,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(dropdown_w), pixels(dropdown_h)})
                  .with_margin(Margin{.top = DefaultSpacing::small()})
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("many_dropdown"));
 
     // Second row
@@ -187,6 +190,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{pixels(dropdown_w), pixels(dropdown_h)})
                  .with_dropdown_indicators(" [-]", " [+]")
                  .with_margin(Margin{.top = DefaultSpacing::small()})
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("indicator_dropdown"));
 
     // === Column 5: Disabled ===
@@ -214,6 +218,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_size(ComponentSize{pixels(dropdown_w), pixels(dropdown_h)})
                  .with_disabled(true)
                  .with_margin(Margin{.top = DefaultSpacing::small()})
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("disabled_dropdown"));
 
     // === Column 6: Styled ===
@@ -243,6 +248,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_border(theme.font, 2.0f)
                  .with_roundness(0.3f)
                  .with_margin(Margin{.top = DefaultSpacing::small()})
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("styled_dropdown"));
 
     // Status bar

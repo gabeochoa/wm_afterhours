@@ -5,6 +5,7 @@
 #include "e2e_commands.h"
 
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
+#include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 
 namespace e2e {
 
@@ -31,6 +32,9 @@ inline void register_e2e_systems(SystemManager &sm,
                                  const E2EConfig &config = {}) {
   // Phase 1: Built-in command handlers
   register_builtin_handlers(sm);
+
+  // Phase 2: UI command handlers (tab, enter, arrow, focus_ui, click_ui, etc.)
+  ui_commands::register_ui_commands<InputAction>(sm);
 
   // Phase 2: Screenshot handler (needs callback)
   sm.register_update_system(
