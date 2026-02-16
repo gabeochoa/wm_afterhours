@@ -140,6 +140,42 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_custom_text_color(muted_text));
 
+    // Letter Spacing section
+    div(context, mk(entity, 40),
+        ComponentConfig{}
+            .with_label("Letter Spacing")
+            .with_size(ComponentSize{pixels(col_w), pixels(28)})
+            .with_absolute_position(left_col, content_y + left_spacing * 4.5f)
+            .with_font("Garamond", h720(22.0f))
+            .with_custom_text_color(gold_accent));
+
+    div(context, mk(entity, 41),
+        ComponentConfig{}
+            .with_label("TIGHT TRACKING")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
+            .with_absolute_position(left_col, content_y + left_spacing * 5.0f)
+            .with_font("Garamond", h720(22.0f))
+            .with_custom_text_color(cream_text)
+            .with_letter_spacing(-1.0f));
+
+    div(context, mk(entity, 42),
+        ComponentConfig{}
+            .with_label("WIDE TRACKING")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
+            .with_absolute_position(left_col, content_y + left_spacing * 5.5f)
+            .with_font("Garamond", h720(22.0f))
+            .with_custom_text_color(cream_text)
+            .with_letter_spacing(4.0f));
+
+    div(context, mk(entity, 43),
+        ComponentConfig{}
+            .with_label("ULTRA SPACED")
+            .with_size(ComponentSize{pixels(col_w), pixels(32)})
+            .with_absolute_position(left_col, content_y + left_spacing * 6.0f)
+            .with_font("Garamond", h720(22.0f))
+            .with_custom_text_color(silver_text)
+            .with_letter_spacing(8.0f));
+
     // Divider line
     div(context, mk(entity, 16),
         ComponentConfig{}

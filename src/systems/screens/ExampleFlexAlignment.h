@@ -14,8 +14,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
   // Interactive tab selector - 0: All, 1: Justify Column, 2: Justify Row, 3: Align Items, 4: Self Align
   size_t active_category = 0;
 
-  std::array<std::string_view, 5> category_labels = {
-    "All", "Vertical", "Horizontal", "Cross-Axis", "Self Align"
+  std::array<std::string_view, 6> category_labels = {
+    "All", "Vertical", "Horizontal", "Cross-Axis", "Self Align", "Gap"
   };
 
   // Vertical justify demo (Column direction) - compact
@@ -498,6 +498,168 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name("sa_row_focused"));
 
         render_self_align_demo(context, sa_row.ent(), 0);
+      } else if (active_category == 5) {
+        // Gap demo
+        hstack(context, mk(content_panel.ent(), 0),
+            ComponentConfig{}
+                .with_label("Flex Gap: Uniform spacing between children without per-child margins")
+                .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                .with_custom_background(afterhours::Color{45, 55, 75, 255})
+                .with_auto_text_color(true)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+                .with_margin(Margin{.bottom = pixels(12)}));
+
+        auto gap_row = hstack(
+            context, mk(content_panel.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+                .with_custom_background(afterhours::Color{38, 46, 65, 255})
+                .with_padding(Spacing::sm)
+                .with_justify_content(JustifyContent::SpaceAround)
+                .with_align_items(AlignItems::FlexStart)
+                .with_debug_name("gap_demo_row"));
+
+        // Column without gap
+        auto no_gap_outer = vstack(
+            context, mk(gap_row.ent(), 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.22f), percent(1.0f)})
+                .with_debug_name("no_gap_outer"));
+
+        hstack(context, mk(no_gap_outer.ent(), 0),
+            ComponentConfig{}
+                .with_label("No Gap (Column)")
+                .with_size(ComponentSize{percent(1.0f), pixels(28)})
+                .with_custom_background(afterhours::Color{80, 90, 110, 255})
+                .with_auto_text_color(true)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_skip_tabbing(true));
+
+        auto no_gap_col = vstack(
+            context, mk(no_gap_outer.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+                .with_custom_background(afterhours::Color{50, 60, 80, 255})
+                .with_padding(Spacing::xs)
+                .with_margin(Margin{.top = pixels(4)})
+                .with_debug_name("no_gap_col"));
+
+        for (int i = 0; i < 4; i++) {
+          hstack(context, mk(no_gap_col.ent(), i),
+              ComponentConfig{}
+                  .with_label(std::to_string(i + 1))
+                  .with_size(ComponentSize{percent(0.85f), percent(0.18f)})
+                  .with_background(Theme::Usage::Primary)
+                  .with_auto_text_color(true)
+                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
+        }
+
+        // Column with gap
+        auto gap_col_outer = vstack(
+            context, mk(gap_row.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.22f), percent(1.0f)})
+                .with_debug_name("gap_col_outer"));
+
+        hstack(context, mk(gap_col_outer.ent(), 0),
+            ComponentConfig{}
+                .with_label("Gap 10px (Column)")
+                .with_size(ComponentSize{percent(1.0f), pixels(28)})
+                .with_custom_background(afterhours::Color{80, 90, 110, 255})
+                .with_auto_text_color(true)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_skip_tabbing(true));
+
+        auto gap_col = vstack(
+            context, mk(gap_col_outer.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+                .with_custom_background(afterhours::Color{50, 60, 80, 255})
+                .with_padding(Spacing::xs)
+                .with_margin(Margin{.top = pixels(4)})
+                .with_gap(pixels(10.0f))
+                .with_debug_name("gap_col"));
+
+        for (int i = 0; i < 4; i++) {
+          hstack(context, mk(gap_col.ent(), i),
+              ComponentConfig{}
+                  .with_label(std::to_string(i + 1))
+                  .with_size(ComponentSize{percent(0.85f), percent(0.18f)})
+                  .with_background(Theme::Usage::Primary)
+                  .with_auto_text_color(true)
+                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
+        }
+
+        // Row without gap
+        auto no_gap_row_outer = vstack(
+            context, mk(gap_row.ent(), 2),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.22f), percent(1.0f)})
+                .with_debug_name("no_gap_row_outer"));
+
+        hstack(context, mk(no_gap_row_outer.ent(), 0),
+            ComponentConfig{}
+                .with_label("No Gap (Row)")
+                .with_size(ComponentSize{percent(1.0f), pixels(28)})
+                .with_custom_background(afterhours::Color{80, 90, 110, 255})
+                .with_auto_text_color(true)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_skip_tabbing(true));
+
+        auto no_gap_hrow = hstack(
+            context, mk(no_gap_row_outer.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
+                .with_custom_background(afterhours::Color{50, 60, 80, 255})
+                .with_padding(Spacing::xs)
+                .with_margin(Margin{.top = pixels(4)})
+                .with_debug_name("no_gap_hrow"));
+
+        for (int i = 0; i < 4; i++) {
+          vstack(context, mk(no_gap_hrow.ent(), i),
+              ComponentConfig{}
+                  .with_label(std::to_string(i + 1))
+                  .with_size(ComponentSize{percent(0.20f), percent(0.80f)})
+                  .with_background(Theme::Usage::Accent)
+                  .with_auto_text_color(true)
+                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
+        }
+
+        // Row with gap
+        auto gap_row_outer = vstack(
+            context, mk(gap_row.ent(), 3),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(0.22f), percent(1.0f)})
+                .with_debug_name("gap_row_outer"));
+
+        hstack(context, mk(gap_row_outer.ent(), 0),
+            ComponentConfig{}
+                .with_label("Gap 10px (Row)")
+                .with_size(ComponentSize{percent(1.0f), pixels(28)})
+                .with_custom_background(afterhours::Color{80, 90, 110, 255})
+                .with_auto_text_color(true)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_skip_tabbing(true));
+
+        auto gap_hrow = hstack(
+            context, mk(gap_row_outer.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
+                .with_custom_background(afterhours::Color{50, 60, 80, 255})
+                .with_padding(Spacing::xs)
+                .with_margin(Margin{.top = pixels(4)})
+                .with_gap(pixels(10.0f))
+                .with_debug_name("gap_hrow"));
+
+        for (int i = 0; i < 4; i++) {
+          vstack(context, mk(gap_hrow.ent(), i),
+              ComponentConfig{}
+                  .with_label(std::to_string(i + 1))
+                  .with_size(ComponentSize{percent(0.20f), percent(0.80f)})
+                  .with_background(Theme::Usage::Accent)
+                  .with_auto_text_color(true)
+                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
+        }
       }
     }
   }

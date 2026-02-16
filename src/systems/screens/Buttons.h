@@ -82,6 +82,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)
+                   .with_cursor(CursorType::Pointer)
                    .with_debug_name("btn_normal"))) {
       click_counts[0]++;
     }
@@ -275,6 +276,8 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)  // Match theme default roundness
+                   .with_custom_hover_bg(afterhours::Color{255, 160, 120, 255})
+                   .with_cursor(CursorType::Pointer)
                    .with_debug_name("btn_coral"))) {
       click_counts[10]++;
     }
@@ -289,6 +292,8 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                    .with_margin(Spacing::xs)
                    .with_roundness(0.08f)  // Match Coral button roundness
+                   .with_custom_hover_bg(afterhours::Color{0, 140, 140, 255})
+                   .with_cursor(CursorType::Pointer)
                    .with_debug_name("btn_teal"))) {
       click_counts[11]++;
     }

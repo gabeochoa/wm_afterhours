@@ -72,7 +72,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Legend - explanation of border types
     div(context, mk(entity, 2),
         ComponentConfig{}
-            .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | Row 3: Themed | Row 4: Interactive")
+            .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | Row 3: Themed | Row 4: Interactive | Row 5: Per-Side")
             .with_size(ComponentSize{pixels(content_width), pixels(22)})
             .with_absolute_position(start_x, 56.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -384,6 +384,78 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
+            .with_alignment(TextAlignment::Center));
+
+    // Row 5: Per-side borders (new feature demo)
+    float row5_y = row4_y + row4_height + 15;
+    float ps_box = 90.0f;
+
+    div(context, mk(entity, 59),
+        ComponentConfig{}
+            .with_label("Per-Side")
+            .with_size(ComponentSize{pixels(row_label_width), pixels(ps_box)})
+            .with_absolute_position(row_label_x, row5_y)
+            .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right));
+
+    div(context, mk(entity, 60),
+        ComponentConfig{}
+            .with_label("Top Only")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x, row5_y)
+            .with_custom_background(sample_white)
+            .with_border_top(accent_blue, pixels(3.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 61),
+        ComponentConfig{}
+            .with_label("Bottom Only")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + ps_box + gap, row5_y)
+            .with_custom_background(sample_white)
+            .with_border_bottom(accent_cyan, pixels(3.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 62),
+        ComponentConfig{}
+            .with_label("Left+Right")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + 2 * (ps_box + gap), row5_y)
+            .with_custom_background(sample_white)
+            .with_border_left(accent_orange, pixels(3.0f))
+            .with_border_right(accent_orange, pixels(3.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 63),
+        ComponentConfig{}
+            .with_label("Mixed")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + 3 * (ps_box + gap), row5_y)
+            .with_custom_background(sample_white)
+            .with_border_top(accent_blue, pixels(3.0f))
+            .with_border_right(accent_cyan, pixels(2.0f))
+            .with_border_bottom(accent_orange, pixels(3.0f))
+            .with_border_left(text_light, pixels(2.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 64),
+        ComponentConfig{}
+            .with_label("Underline")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + 4 * (ps_box + gap), row5_y)
+            .with_custom_background(sample_white)
+            .with_border_bottom(afterhours::Color{200, 60, 60, 255}, pixels(4.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
   }
 };

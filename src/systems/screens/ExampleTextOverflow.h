@@ -175,6 +175,60 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center));
 
+    card_y += 68;
+
+    // === ELLIPSIS TRUNCATION SECTION (Left Column, below "good" examples) ===
+    div(context, mk(entity, 70),
+        ComponentConfig{}
+            .with_label("Solution: Ellipsis Truncation")
+            .with_size(ComponentSize{pixels(card_width), pixels(28)})
+            .with_absolute_position(left_col_x, card_y)
+            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+            .with_custom_text_color(afterhours::Color{100, 180, 255, 255})
+            .with_alignment(TextAlignment::Left));
+
+    card_y += 35.0f;
+
+    // Ellipsis demo 1: Long text truncated with "..."
+    div(context, mk(entity, 71),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(card_width), pixels(50)})
+            .with_absolute_position(left_col_x, card_y)
+            .with_custom_background(card_bg)
+            .with_rounded_corners(RoundedCorners())
+            .with_border(afterhours::Color{100, 180, 255, 255}, 2.0f)
+            .with_debug_name("card_ellipsis_1"));
+
+    div(context, mk(entity, 72),
+        ComponentConfig{}
+            .with_label("This is way too much text for this tiny container!")
+            .with_size(ComponentSize{pixels(card_width - 20), pixels(40)})
+            .with_absolute_position(left_col_x + 10.0f, card_y + 5.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_custom_text_color(text_light)
+            .with_text_overflow(TextOverflow::Ellipsis));
+
+    card_y += 50 + card_spacing;
+
+    // Ellipsis demo 2: Narrow container
+    div(context, mk(entity, 73),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(200), pixels(40)})
+            .with_absolute_position(left_col_x, card_y)
+            .with_custom_background(card_bg)
+            .with_rounded_corners(RoundedCorners())
+            .with_border(afterhours::Color{100, 180, 255, 255}, 2.0f)
+            .with_debug_name("card_ellipsis_2"));
+
+    div(context, mk(entity, 74),
+        ComponentConfig{}
+            .with_label("Long text in narrow space gets truncated nicely")
+            .with_size(ComponentSize{pixels(180), pixels(30)})
+            .with_absolute_position(left_col_x + 10.0f, card_y + 5.0f)
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+            .with_custom_text_color(text_light)
+            .with_text_overflow(TextOverflow::Ellipsis));
+
     // Reset for right column
     card_y = 130.0f + y_offset;
 
