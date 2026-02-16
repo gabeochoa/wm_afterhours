@@ -131,7 +131,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Right));
 
     // Row 2: Rounded corners and shadows
-    float row2_y = start_y + box_size + gap + 5;
+    float row2_y = start_y + box_size + gap;
 
     div(context, mk(entity, 20),
         ComponentConfig{}
@@ -221,7 +221,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Right));
 
     // Row 3: Themed examples
-    float row3_y = row2_y + box_size + gap + 5;
+    float row3_y = row2_y + box_size + gap;
 
     div(context, mk(entity, 30),
         ComponentConfig{}
@@ -310,7 +310,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Right));
 
     // Interactive button with border
-    float row4_y = row3_y + box_size + gap + 15;
+    float row4_y = row3_y + box_size + gap + 5;
     float row4_height = 110.0f;
 
     // Row 4 label
@@ -387,7 +387,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Row 5: Per-side borders (new feature demo)
-    float row5_y = row4_y + row4_height + 15;
+    float row5_y = row4_y + row4_height + 5;
     float ps_box = 90.0f;
 
     div(context, mk(entity, 59),

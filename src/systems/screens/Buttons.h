@@ -11,6 +11,7 @@ using namespace afterhours::ui::imm;
 
 struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
   int click_counts[12] = {0};
+  int selected_group = -1; // Track which group button is selected
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -231,17 +232,21 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
       else
         corners = corners.all_sharp();
 
+      bool is_selected = (selected_group == static_cast<int>(i));
+      auto btn_bg = is_selected ? Theme::Usage::Accent : Theme::Usage::Primary;
+
       if (button(context, mk(row3.ent(), 1 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(std::string(group_labels[i]))
                      .with_size(ComponentSize{pixels(90), pixels(45)})
-                     .with_background(Theme::Usage::Primary)
+                     .with_background(btn_bg)
                      .with_auto_text_color(true)
                      .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                      .with_rounded_corners(corners)
                      .with_margin(Spacing::xs)
                      .with_debug_name("btn_group_" + std::to_string(i)))) {
         click_counts[6 + i]++;
+        selected_group = static_cast<int>(i);
       }
     }
 

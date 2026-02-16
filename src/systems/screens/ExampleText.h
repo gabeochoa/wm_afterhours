@@ -14,9 +14,9 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color bg_charcoal{28, 26, 24, 255};    // Rich charcoal
   afterhours::Color panel_dark{42, 38, 35, 255};     // Dark panel
   afterhours::Color gold_accent{205, 175, 110, 255}; // Warm gold
-  afterhours::Color silver_text{195, 195, 200, 255}; // Silver text
+  afterhours::Color silver_text{210, 210, 215, 255}; // Silver text
   afterhours::Color cream_text{250, 245, 235, 255};  // Cream white
-  afterhours::Color muted_text{180, 175, 170, 255};  // Muted brown-gray (brightened further for clarity)
+  afterhours::Color muted_text{195, 190, 185, 255};  // Muted brown-gray
   afterhours::Color divider{65, 58, 52, 255};        // Subtle divider
 
   void for_each_with(afterhours::Entity &entity,
@@ -130,7 +130,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(col_w), pixels(80)})
             .with_absolute_position(left_col, content_y + left_spacing * 2.7f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
-            .with_custom_text_color(muted_text));
+            .with_custom_text_color(muted_text)
+            .with_text_overflow(TextOverflow::Ellipsis));
 
     div(context, mk(entity, 15),
         ComponentConfig{}
