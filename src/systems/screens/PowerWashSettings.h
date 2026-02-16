@@ -358,15 +358,21 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     };
     Prompt prompt_data[] = {{"X", "Close"}, {"O", "Reset"}, {"[]", "Select"}};
     for (int pi = 0; pi < 3; pi++) {
-      div(context, mk(prompts.ent(), pi * 2),
+      // Spacer between prompt groups
+      if (pi > 0) {
+        div(context, mk(prompts.ent(), pi * 3),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(20), pixels(1)})
+                .with_skip_tabbing(true));
+      }
+      div(context, mk(prompts.ent(), pi * 3 + 1),
           ComponentConfig{}
               .with_label(prompt_data[pi].icon)
               .with_size(ComponentSize{pixels(28), pixels(28)})
               .with_custom_background(prompt_bg)
               .with_custom_text_color(text_white)
-              .with_alignment(TextAlignment::Center)
-              .with_margin(pi > 0 ? Margin{.left = pixels(20)} : Margin{}));
-      div(context, mk(prompts.ent(), pi * 2 + 1),
+              .with_alignment(TextAlignment::Center));
+      div(context, mk(prompts.ent(), pi * 3 + 2),
           ComponentConfig{}
               .with_label(prompt_data[pi].label)
               .with_size(ComponentSize{pixels(55), pixels(25)})

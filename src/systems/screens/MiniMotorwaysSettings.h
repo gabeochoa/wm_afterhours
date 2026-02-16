@@ -133,7 +133,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(toggle_row.ent(), 0),
             ComponentConfig{}
                 .with_label(label_with_state)
-                .with_size(ComponentSize{pixels(340), pixels(40)})
+                .with_size(ComponentSize{expand(), pixels(40)})
                 .with_font("EqProRounded", pixels(24.0f))
                 .with_custom_text_color(text_dark));
 
@@ -165,7 +165,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_translate(
                     pixels(knob_x_offset - mm_track_w - mm_knob_sz / 2.0f +
                           mm_knob_pad),
-                    Size{})
+                    pixels(0))
                 .with_debug_name("toggle_knob_" + std::to_string(i)));
       }
 
@@ -182,7 +182,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(sens_row.ent()),
           ComponentConfig{}
               .with_label("Controller Cursor Sensitivity")
-              .with_size(ComponentSize{pixels(340), pixels(40)})
+              .with_size(ComponentSize{expand(), pixels(40)})
               .with_custom_text_color(text_dark));
 
       if (button(context, mk(sens_row.ent()),

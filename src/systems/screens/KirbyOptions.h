@@ -81,7 +81,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto tab_bar = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(70)})
+            .with_size(ComponentSize{pixels(1030), pixels(70)})
             .with_align_items(AlignItems::Center)
             .with_no_wrap()
             .with_margin(Margin{.left = pixels(135)})
@@ -159,13 +159,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(std::bitset<4>(0b0011))
             .with_roundness(0.4f)
-            .with_margin(Margin{.left = pixels(530)}));
+            .with_translate(pixels(530), pixels(0)));
 
     // ── Main content area: tools sidebar + panel ──
     auto body = hstack(
         context, mk(root.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(430)})
+            .with_size(ComponentSize{percent(1.0f), pixels(540)})
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
             .with_margin(Margin{.top = pixels(5)})
@@ -205,7 +205,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto panel = vstack(
         context, mk(body.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{expand(), percent(1.0f)})
+            .with_size(ComponentSize{pixels(1100), percent(1.0f)})
             .with_custom_background(panel_white)
             .with_border(border_gray, 3.0f)
             .with_rounded_corners(RoundedCorners())
@@ -215,7 +215,6 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_padding(Padding{.top = pixels(20), .left = pixels(25),
                                   .bottom = pixels(15), .right = pixels(25)})
             .with_no_wrap()
-            .with_margin(Margin{.left = pixels(10)})
             .with_debug_name("main_panel"));
 
     // Name button row
@@ -250,7 +249,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f)
-            .with_translate(pixels(-248), Size{}));
+            .with_translate(pixels(-248), pixels(0)));
 
     div(context, mk(name_row.ent()),
         ComponentConfig{}
@@ -258,7 +257,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(120), pixels(40)})
             .with_font("Gaegu-Bold", pixels(28.0f))
             .with_custom_text_color(text_dark)
-            .with_translate(pixels(-240), Size{}));
+            .with_translate(pixels(-240), pixels(0)));
 
     // "Common" label
     div(context, mk(panel.ent()),
@@ -315,7 +314,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
             .with_font("Gaegu-Bold", pixels(28.0f))
             .with_custom_text_color(tab_color)
-            .with_margin(Margin{.top = pixels(15), .left = pixels(15)}));
+            .with_margin(Margin{.top = pixels(15)})
+            .with_translate(pixels(15), pixels(0)));
 
     div(context, mk(panel.ent()),
         ComponentConfig{}
@@ -323,13 +323,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(30)})
             .with_font("Gaegu-Bold", pixels(20.0f))
             .with_custom_text_color(text_muted)
-            .with_margin(Margin{.top = pixels(10), .left = pixels(15)}));
-
-    // Spacer
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), expand()})
-            .with_skip_tabbing(true));
+            .with_margin(Margin{.top = pixels(10)})
+            .with_translate(pixels(15), pixels(0)));
 
     // Bottom row: delete/data + description
     auto panel_bottom = hstack(
@@ -366,7 +361,6 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_custom_text_color(text_muted)
                      .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.25f)
-                     .with_margin(Margin{.left = pixels(10)})
                      .with_debug_name("data_menu"))) {
         show_delete_confirm = true;
       }

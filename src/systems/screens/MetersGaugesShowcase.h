@@ -177,7 +177,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     progress_bar(context, mk(stack_row.ent(), 0), control_value,
                  ComponentConfig{}
                      .with_label("Health")
-                     .with_size(ComponentSize{percent(0.47f), percent(0.7f)})
+                     .with_size(ComponentSize{percent(0.47f), pixels(28)})
                      .with_custom_background(health_color)
                      .with_font(FONT, pixels(14.0f))
                      .with_skip_tabbing(true)
@@ -189,7 +189,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     progress_bar(context, mk(stack_row.ent(), 1), control_value * 0.45f,
                  ComponentConfig{}
                      .with_label("Shield")
-                     .with_size(ComponentSize{percent(0.47f), percent(0.7f)})
+                     .with_size(ComponentSize{percent(0.47f), pixels(28)})
                      .with_custom_background(shield_color)
                      .with_font(FONT, pixels(14.0f))
                      .with_skip_tabbing(true)
@@ -227,7 +227,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
 
     progress_bar(context, mk(anim_row.ent(), 0), anim_progress,
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(0.55f), percent(0.6f)})
+                     .with_size(ComponentSize{percent(0.55f), pixels(28)})
                      .with_background(Theme::Usage::Primary)
                      .with_font(FONT, pixels(14.0f))
                      .with_margin(Spacing::xs)
@@ -335,7 +335,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     slider(context, mk(row5.ent(), 1), control_value,
            ComponentConfig{}
                .with_label("Value")
-               .with_size(ComponentSize{percent(0.7f), percent(0.55f)})
+               .with_size(ComponentSize{percent(0.7f), pixels(36)})
                .with_background(Theme::Usage::Accent)
                .with_font(FONT, pixels(14.0f))
                .with_margin(Spacing::xs)

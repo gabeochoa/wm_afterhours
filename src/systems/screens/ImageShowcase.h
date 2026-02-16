@@ -34,7 +34,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     star_tex = raylib::LoadTexture((icon_path + "star.png").c_str());
     trophy_tex = raylib::LoadTexture((icon_path + "trophy.png").c_str());
     home_tex = raylib::LoadTexture((icon_path + "home.png").c_str());
-    play_tex = raylib::LoadTexture((icon_path + "forward.png").c_str());
+    play_tex = raylib::LoadTexture((icon_path + "fastForward.png").c_str());
   }
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context,

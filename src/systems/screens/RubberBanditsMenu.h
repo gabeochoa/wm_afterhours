@@ -148,8 +148,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(55), children()})
             .with_no_wrap()
-            .with_align_items(AlignItems::Center)
-            .with_margin(Margin{.left = pixels(10)}));
+            .with_align_items(AlignItems::Center));
 
     div(context, mk(badges.ent()),
         ComponentConfig{}
@@ -173,8 +172,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_margin(Margin{.top = pixels(8)}));
+            .with_roundness(1.0f));
 
     // ═══════════════════════════════════════════════════════════════
     // MIDDLE: Menu + Promo
