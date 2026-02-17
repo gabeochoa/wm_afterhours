@@ -11,31 +11,33 @@ using namespace afterhours::ui::imm;
 
 // Configurable radio button styling parameters
 struct RadioButtonConfig {
-  float visual_circle_size = 28.0f;  // Outer ring size (larger for better visibility)
-  float dot_size = 18.0f;            // Inner dot size (larger for clearer indicator)
-  float border_width = 3.0f;         // Border thickness
-  float group_spacing = 16.0f;       // Extra spacing between groups
-  bool use_accent_color = true;      // Use accent color for selected indicator
+  float visual_circle_size =
+      28.0f;                   // Outer ring size (larger for better visibility)
+  float dot_size = 18.0f;      // Inner dot size (larger for clearer indicator)
+  float border_width = 3.0f;   // Border thickness
+  float group_spacing = 16.0f; // Extra spacing between groups
+  bool use_accent_color = true; // Use accent color for selected indicator
 };
 
 // Custom radio group with configurable styling
 // This allows per-showcase customization without modifying vendor code
 template <size_t N>
-ElementResult custom_radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
-                                 const std::array<std::string_view, N> &labels,
-                                 size_t &selected_index,
-                                 ComponentConfig config,
-                                 const RadioButtonConfig &radio_config = RadioButtonConfig()) {
+ElementResult custom_radio_group(
+    HasUIContext auto &ctx, EntityParent ep_pair,
+    const std::array<std::string_view, N> &labels, size_t &selected_index,
+    ComponentConfig config,
+    const RadioButtonConfig &radio_config = RadioButtonConfig()) {
   bool changed = false;
 
   // Wrap in a tray for single-tab-stop, arrow-key navigation
-  auto t = tray(ctx, ep_pair,
-                ComponentConfig{}
-                    .with_size(config.size.x_axis.value > 0
-                        ? ComponentSize{config.size.x_axis, children()}
-                        : ComponentSize{percent(1.0f), children()})
-                    .with_flex_direction(FlexDirection::Column)
-                    .with_debug_name("radio_tray"));
+  auto t =
+      tray(ctx, ep_pair,
+           ComponentConfig{}
+               .with_size(config.size.x_axis.value > 0
+                              ? ComponentSize{config.size.x_axis, children()}
+                              : ComponentSize{percent(1.0f), children()})
+               .with_flex_direction(FlexDirection::Column)
+               .with_debug_name("radio_tray"));
 
   constexpr float touch_target_sz = MIN_TOUCH_TARGET;
   const float visual_circle_sz = radio_config.visual_circle_size;
@@ -47,18 +49,20 @@ ElementResult custom_radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
 
     // Row button - transparent, for click handling
     auto row_size = config.size;
-    if (row_size.y_axis.dim == Dim::Pixels && row_size.y_axis.value < touch_target_sz) {
+    if (row_size.y_axis.dim == Dim::Pixels &&
+        row_size.y_axis.value < touch_target_sz) {
       row_size.y_axis = pixels(touch_target_sz);
     }
-    auto row = button(ctx, mk(t.ent(), 100 + i),
-                      ComponentConfig{}
-                          .with_size(row_size)
-                          .with_label("")
-                          .with_background(Theme::Usage::None)
-                          .with_flex_direction(FlexDirection::Row)
-                          .with_align_items(AlignItems::Center)
-                          .with_padding(Padding{.left = pixels(6)})
-                          .with_debug_name(fmt::format("{}_{}", config.debug_name, i)));
+    auto row = button(
+        ctx, mk(t.ent(), 100 + i),
+        ComponentConfig{}
+            .with_size(row_size)
+            .with_label("")
+            .with_background(Theme::Usage::None)
+            .with_flex_direction(FlexDirection::Row)
+            .with_align_items(AlignItems::Center)
+            .with_padding(Padding{.left = pixels(6)})
+            .with_debug_name(fmt::format("{}_{}", config.debug_name, i)));
 
     if (row) {
       selected_index = i;
@@ -66,21 +70,22 @@ ElementResult custom_radio_group(HasUIContext auto &ctx, EntityParent ep_pair,
     }
 
     // Outer circle ring - use accent color when selected for better visibility
-    afterhours::Color ring_color = is_selected ? ctx.theme.accent : ctx.theme.font_muted;
+    afterhours::Color ring_color =
+        is_selected ? ctx.theme.accent : ctx.theme.font_muted;
     // Make the ring thicker when selected for additional emphasis
     float effective_border = is_selected ? border_w + 1.0f : border_w;
 
-    auto ring =
-        div(ctx, mk(row.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(visual_circle_sz), pixels(visual_circle_sz)})
-                .with_background(Theme::Usage::Background)
-                .with_border(ring_color, effective_border)
-                .with_rounded_corners(RoundedCorners().all_round())
-                .with_roundness(1.0f)
-                .with_margin(Margin{.right = pixels(12)})
-                .with_skip_tabbing(true)
-                .with_debug_name(fmt::format("radio_ring_{}", i)));
+    auto ring = div(ctx, mk(row.ent(), 0),
+                    ComponentConfig{}
+                        .with_size(ComponentSize{pixels(visual_circle_sz),
+                                                 pixels(visual_circle_sz)})
+                        .with_background(Theme::Usage::Background)
+                        .with_border(ring_color, effective_border)
+                        .with_rounded_corners(RoundedCorners().all_round())
+                        .with_roundness(1.0f)
+                        .with_margin(Margin{.right = pixels(12)})
+                        .with_skip_tabbing(true)
+                        .with_debug_name(fmt::format("radio_ring_{}", i)));
 
     // Inner filled dot when selected - larger and with accent color
     if (is_selected) {
@@ -125,18 +130,18 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
   // Configurable radio button styling - can be adjusted for better visibility
   RadioButtonConfig radio_style{
-      .visual_circle_size = 28.0f,  // Larger outer ring for visibility
-      .dot_size = 18.0f,            // Larger filled dot for clearer selection
-      .border_width = 3.0f,         // Thicker border for emphasis
-      .group_spacing = 20.0f,       // Extra spacing between groups
-      .use_accent_color = true      // Use theme accent for selected state
+      .visual_circle_size = 28.0f, // Larger outer ring for visibility
+      .dot_size = 18.0f,           // Larger filled dot for clearer selection
+      .border_width = 3.0f,        // Thicker border for emphasis
+      .group_spacing = 20.0f,      // Extra spacing between groups
+      .use_accent_color = true     // Use theme accent for selected state
   };
 
   std::array<std::string_view, 3> fruit_options = {"Apple", "Orange",
-                                                    "Watermelon"};
+                                                   "Watermelon"};
   std::array<std::string_view, 3> size_options = {"Small", "Medium", "Large"};
   std::array<std::string_view, 4> color_options = {"Red", "Green", "Blue",
-                                                    "Yellow"};
+                                                   "Yellow"};
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -144,7 +149,8 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
-    // Main container - centered on screen (wider to fit all groups with borders)
+    // Main container - centered on screen (wider to fit all groups with
+    // borders)
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
@@ -156,11 +162,11 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto main_container =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::md)
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_debug_name("radio_main"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_padding(Spacing::md)
+                   .with_justify_content(JustifyContent::SpaceAround)
+                   .with_debug_name("radio_main"));
 
     // Title - increased font size for visibility
     div(context, mk(main_container.ent(), 0),
@@ -176,24 +182,24 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     // Content area - three columns with clearer group separation
     auto content =
         hstack(context, mk(main_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::sm)
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_debug_name("content"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::sm)
+                   .with_justify_content(JustifyContent::SpaceAround)
+                   .with_debug_name("content"));
 
     // Column 1 - Fruit selection (with border for clearer group separation)
     auto col1 =
         vstack(context, mk(content.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.95f))
-                .with_border(theme.accent, 2.0f)
-                .with_padding(Spacing::sm)
-                .with_roundness(0.08f)
-                .with_debug_name("col1"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
+                   .with_custom_background(
+                       afterhours::colors::darken(theme.surface, 0.95f))
+                   .with_border(theme.accent, 2.0f)
+                   .with_padding(Spacing::sm)
+                   .with_roundness(0.08f)
+                   .with_debug_name("col1"));
 
     div(context, mk(col1.ent(), 0),
         ComponentConfig{}
@@ -216,14 +222,14 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     // Column 2 - Size selection (with border for clearer group separation)
     auto col2 =
         vstack(context, mk(content.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.95f))
-                .with_border(theme.accent, 2.0f)
-                .with_padding(Spacing::sm)
-                .with_roundness(0.08f)
-                .with_debug_name("col2"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
+                   .with_custom_background(
+                       afterhours::colors::darken(theme.surface, 0.95f))
+                   .with_border(theme.accent, 2.0f)
+                   .with_padding(Spacing::sm)
+                   .with_roundness(0.08f)
+                   .with_debug_name("col2"));
 
     div(context, mk(col2.ent(), 0),
         ComponentConfig{}
@@ -246,14 +252,14 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
     // Column 3 - Color selection (with border for clearer group separation)
     auto col3 =
         vstack(context, mk(content.ent(), 2),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.95f))
-                .with_border(theme.accent, 2.0f)
-                .with_padding(Spacing::sm)
-                .with_roundness(0.08f)
-                .with_debug_name("col3"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.28f), percent(1.0f)})
+                   .with_custom_background(
+                       afterhours::colors::darken(theme.surface, 0.95f))
+                   .with_border(theme.accent, 2.0f)
+                   .with_padding(Spacing::sm)
+                   .with_roundness(0.08f)
+                   .with_debug_name("col3"));
 
     div(context, mk(col3.ent(), 0),
         ComponentConfig{}
@@ -274,16 +280,16 @@ struct RadioGroupShowcase : ScreenSystem<UIContext<InputAction>> {
                        radio_style);
 
     // Status display - 44px touch target
-    std::string status =
-        fmt::format("Selected: Fruit={}, Size={}, Color={}",
-                    fruit_options[fruit_idx], size_options[size_idx],
-                    color_options[color_idx]);
+    std::string status = fmt::format(
+        "Selected: Fruit={}, Size={}, Color={}", fruit_options[fruit_idx],
+        size_options[size_idx], color_options[color_idx]);
 
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status)
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(afterhours::colors::lighten(context.theme.background, 0.08f))
+            .with_custom_background(
+                afterhours::colors::lighten(context.theme.background, 0.08f))
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_rounded_corners(RoundedCorners())

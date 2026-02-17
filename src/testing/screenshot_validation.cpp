@@ -132,4 +132,3 @@ bool validate_screen_against_baseline(const std::string &screen_name) {
 }
 
 } // namespace screenshot_validation
-

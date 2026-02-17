@@ -33,47 +33,60 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
   };
 
   // Damped spring oscillation (settles to 0)
-  float spring_oscillation(float t, const SpringParams& params) {
-    if (t < 0.0f) return 0.0f;
+  float spring_oscillation(float t, const SpringParams &params) {
+    if (t < 0.0f)
+      return 0.0f;
     float damping = std::exp(-params.decay * t);
     float oscillation = std::sin(params.frequency * t * 6.28318f);
     return params.amplitude * oscillation * damping;
   }
 
   // Spring that settles to target (1.0) with overshoot
-  float spring_to_target(float t, const SpringParams& params) {
-    if (t < 0.0f) return 0.0f;
+  float spring_to_target(float t, const SpringParams &params) {
+    if (t < 0.0f)
+      return 0.0f;
     float damping = std::exp(-params.decay * t);
     float oscillation = std::cos(params.frequency * t * 6.28318f);
     return 1.0f - oscillation * damping;
   }
 
   // Elastic pop - quick overshoot then settle
-  // Returns minimum 0.35 to ensure container stays large enough for text with margins
-  float elastic_pop(float t, float overshoot = 1.3f, float settle_speed = 4.0f) {
-    if (t < 0.0f) return 0.35f;
-    if (t > 2.0f) return 1.0f;
+  // Returns minimum 0.35 to ensure container stays large enough for text with
+  // margins
+  float elastic_pop(float t, float overshoot = 1.3f,
+                    float settle_speed = 4.0f) {
+    if (t < 0.0f)
+      return 0.35f;
+    if (t > 2.0f)
+      return 1.0f;
     float progress = 1.0f - std::exp(-settle_speed * t);
-    float bounce = std::sin(t * 12.0f) * std::exp(-t * 3.0f) * (overshoot - 1.0f);
+    float bounce =
+        std::sin(t * 12.0f) * std::exp(-t * 3.0f) * (overshoot - 1.0f);
     return std::max(0.35f, std::min(1.0f, progress + bounce));
   }
 
   // Balloon pop - deflate to 0 then smoothly inflate back to 1
   float balloon_pop(float t, float duration = 0.8f) {
-    if (t < 0.0f) return 1.0f;  // Before animation, full size
-    if (t >= duration) return 1.0f;  // After animation, full size
+    if (t < 0.0f)
+      return 1.0f; // Before animation, full size
+    if (t >= duration)
+      return 1.0f; // After animation, full size
     // Start at 0, smoothly ease-out to 1
     float progress = t / duration;
     // Ease-out cubic for smooth deceleration
-    float eased = 1.0f - (1.0f - progress) * (1.0f - progress) * (1.0f - progress);
+    float eased =
+        1.0f - (1.0f - progress) * (1.0f - progress) * (1.0f - progress);
     return eased;
   }
 
   // Pendulum rocker - starts swung to one side, oscillates back to center
-  float pendulum_rocker(float t, float amplitude = 15.0f, float frequency = 2.0f, float decay = 2.0f) {
-    if (t < 0.0f) return 0.0f;
+  float pendulum_rocker(float t, float amplitude = 15.0f,
+                        float frequency = 2.0f, float decay = 2.0f) {
+    if (t < 0.0f)
+      return 0.0f;
     // Starts at amplitude (tilted), swings back through center, settles at 0
-    return amplitude * std::cos(frequency * t * 6.28318f) * std::exp(-decay * t);
+    return amplitude * std::cos(frequency * t * 6.28318f) *
+           std::exp(-decay * t);
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -142,10 +155,11 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BOX 1: Super Bouncy ==========
     float delay1 = 0.2f;
     SpringParams bouncy1{.frequency = 4.0f, .decay = 1.5f, .amplitude = 1.0f};
-    // Use click time if clicked since last restart, otherwise entrance animation
+    // Use click time if clicked since last restart, otherwise entrance
+    // animation
     float t1 = (box_click_times[0] > trigger_time)
-        ? (time_elapsed - box_click_times[0])
-        : (anim_t - delay1);
+                   ? (time_elapsed - box_click_times[0])
+                   : (anim_t - delay1);
     float scale1 = 0.0f + 1.0f * spring_to_target(t1, bouncy1);
     // Add a little squash/stretch
     float squash1 = 1.0f + spring_oscillation(t1, {3.0f, 2.0f, 0.08f});
@@ -164,7 +178,8 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
 
     if (button(context, mk(entity, 11),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(box_size), pixels(box_size * squash1)})
+                   .with_size(ComponentSize{pixels(box_size),
+                                            pixels(box_size * squash1)})
                    .with_absolute_position(x1, box_y)
                    .with_scale(scale1)
                    .with_custom_background(box_pink)
@@ -179,8 +194,8 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     float delay2 = 0.35f;
     SpringParams jelly{.frequency = 3.0f, .decay = 1.2f, .amplitude = 1.0f};
     float t2 = (box_click_times[1] > trigger_time)
-        ? (time_elapsed - box_click_times[1])
-        : (anim_t - delay2);
+                   ? (time_elapsed - box_click_times[1])
+                   : (anim_t - delay2);
     float scale2 = spring_to_target(t2, jelly);
     float wobble2 = spring_oscillation(t2, {2.5f, 1.5f, 4.0f});
 
@@ -203,7 +218,7 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_scale(scale2)
                    .with_custom_background(box_cyan)
                    .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.5f)  // Circle
+                   .with_roundness(0.5f) // Circle
                    .with_debug_name("box2"))) {
       box_click_times[1] = time_elapsed;
       bounce_count++;
@@ -212,8 +227,8 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BOX 3: Balloon ==========
     float delay3 = 0.5f;
     float t3 = (box_click_times[2] > trigger_time)
-        ? (time_elapsed - box_click_times[2])
-        : (anim_t - delay3);
+                   ? (time_elapsed - box_click_times[2])
+                   : (anim_t - delay3);
     float scale3 = balloon_pop(t3, 0.6f);
 
     float x3 = center_x - box_size / 2.0f;
@@ -244,9 +259,10 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BOX 4: Drop ==========
     float delay4 = 0.65f;
     float t4 = (box_click_times[3] > trigger_time)
-        ? (time_elapsed - box_click_times[3])
-        : (anim_t - delay4);
-    float drop_offset = -50.0f + 50.0f * spring_to_target(t4, {3.0f, 1.5f, 1.0f});
+                   ? (time_elapsed - box_click_times[3])
+                   : (anim_t - delay4);
+    float drop_offset =
+        -50.0f + 50.0f * spring_to_target(t4, {3.0f, 1.5f, 1.0f});
     drop_offset += spring_oscillation(t4, {4.0f, 2.5f, 8.0f});
 
     float x4 = center_x + spacing - box_size / 2.0f;
@@ -276,8 +292,8 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     // ========== BOX 5: Rocker ==========
     float delay5 = 0.8f;
     float t5 = (box_click_times[4] > trigger_time)
-        ? (time_elapsed - box_click_times[4])
-        : (anim_t - delay5);
+                   ? (time_elapsed - box_click_times[4])
+                   : (anim_t - delay5);
     // Pendulum swing - starts tilted right, swings back and forth, settles
     float rock = pendulum_rocker(t5, 12.0f, 1.5f, 1.5f);
 
@@ -313,7 +329,8 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
       count_bounce_time = time_elapsed;
       last_count = bounce_count;
     }
-    counter_scale = 1.0f + spring_oscillation(time_elapsed - count_bounce_time, {5.0f, 3.0f, 0.15f});
+    counter_scale = 1.0f + spring_oscillation(time_elapsed - count_bounce_time,
+                                              {5.0f, 3.0f, 0.15f});
 
     div(context, mk(entity, 60),
         ComponentConfig{}

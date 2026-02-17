@@ -2,9 +2,9 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -63,7 +63,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     float margin = 80.0f;  // Side margins
     float col_gap = 60.0f; // Gap between columns
     float col1_x = margin;
-    float col1_width = (screen_w - 2 * margin - col_gap) * 0.55f; // Left column: 55% of content area
+    float col1_width = (screen_w - 2 * margin - col_gap) *
+                       0.55f; // Left column: 55% of content area
     float col2_x = margin + col1_width + col_gap;
 
     // ========== LEFT COLUMN: Side-by-side comparisons ==========
@@ -73,8 +74,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     // Consistent vertical spacing for left column rows
     float content_start = 110.0f;
-    float desc_gap = 4.0f;       // Gap between styled text and its description
-    float row_gap = 10.0f;       // Gap between description and next row
+    float desc_gap = 4.0f; // Gap between styled text and its description
+    float row_gap = 10.0f; // Gap between description and next row
     float desc_h = 24.0f;
 
     // Row 1: NO STROKE vs WITH STROKE (same yellow color)
@@ -200,7 +201,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     // Light background panel
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(light_panel_width), pixels(row5_panel_h)})
+            .with_size(
+                ComponentSize{pixels(light_panel_width), pixels(row5_panel_h)})
             .with_absolute_position(col1_x, row5_y)
             .with_custom_background(light_bg)
             .with_rounded_corners(RoundedCorners())
@@ -222,7 +224,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("WHITE")
             .with_size(ComponentSize{pixels(180), pixels(55)})
-            .with_absolute_position(col1_x + light_panel_width * 0.5f, white_text_y)
+            .with_absolute_position(col1_x + light_panel_width * 0.5f,
+                                    white_text_y)
             .with_font(bold_font, h720(40.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 4.0f)
@@ -241,7 +244,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("visible!")
             .with_size(ComponentSize{pixels(100), pixels(20)})
-            .with_absolute_position(col1_x + light_panel_width * 0.5f + 20.0f, desc5_y)
+            .with_absolute_position(col1_x + light_panel_width * 0.5f + 20.0f,
+                                    desc5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
 
@@ -262,8 +266,9 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     float thickness_y = content_start + 50.0f;
     float thicknesses[] = {2.0f, 4.0f, 6.0f, 8.0f, 10.0f};
-    const char *thickness_labels[] = {"2px - subtle", "4px - medium",  "6px - bold",
-                                      "8px - chunky", "10px - heavy"};
+    const char *thickness_labels[] = {"2px - subtle", "4px - medium",
+                                      "6px - bold", "8px - chunky",
+                                      "10px - heavy"};
 
     for (int i = 0; i < 5; i++) {
       div(context, mk(entity, id++),
@@ -281,7 +286,8 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(thickness_labels[i])
               .with_size(ComponentSize{pixels(160), pixels(34)})
-              .with_absolute_position(col2_x + 230.0f, thickness_y + i * 85.0f + 14.0f)
+              .with_absolute_position(col2_x + 230.0f,
+                                      thickness_y + i * 85.0f + 14.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(text_muted)
               .with_debug_name("thickness_label_" + std::to_string(i)));
@@ -301,8 +307,10 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Tip: Use 2-6px for readable text, 6-10px for decorative titles and headers")
-            .with_size(ComponentSize{pixels(screen_w - 2 * margin - 20), pixels(28)})
+            .with_label("Tip: Use 2-6px for readable text, 6-10px for "
+                        "decorative titles and headers")
+            .with_size(
+                ComponentSize{pixels(screen_w - 2 * margin - 20), pixels(28)})
             .with_absolute_position(margin + 10.0f, code_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(afterhours::Color{150, 220, 150, 255})

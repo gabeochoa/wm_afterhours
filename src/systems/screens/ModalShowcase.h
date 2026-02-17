@@ -22,7 +22,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
   bool show_stacked_confirm = false;
 
   // Results tracking
-  afterhours::DialogResult last_confirm_result = afterhours::DialogResult::Pending;
+  afterhours::DialogResult last_confirm_result =
+      afterhours::DialogResult::Pending;
   afterhours::DialogResult last_fyi_result = afterhours::DialogResult::Pending;
   int confirm_count = 0;
   int cancel_count = 0;
@@ -45,7 +46,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
   static constexpr float BUTTON_HEIGHT = 40.0f;
   static constexpr float HEADER_HEIGHT = 30.0f;
   static constexpr float TITLE_HEIGHT = 44.0f;
-  static constexpr float HELPER_BUTTON_WIDTH = 170.0f;  // Uniform width for helper buttons
+  static constexpr float HELPER_BUTTON_WIDTH =
+      170.0f; // Uniform width for helper buttons
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -54,22 +56,22 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
-    auto root = div(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.88f)})
-            .with_background(Theme::Usage::Background)
-            .with_roundness(SECTION_ROUNDNESS)
-            .with_self_align(SelfAlign::Center)
-            .with_debug_name("modal_bg"));
+    auto root =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.88f)})
+                .with_background(Theme::Usage::Background)
+                .with_roundness(SECTION_ROUNDNESS)
+                .with_self_align(SelfAlign::Center)
+                .with_debug_name("modal_bg"));
 
     auto main_container =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::sm)
-                .with_no_wrap()
-                .with_debug_name("modal_main"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_padding(Spacing::sm)
+                   .with_no_wrap()
+                   .with_debug_name("modal_main"));
 
     // Title - use theme font sizes
     div(context, mk(main_container.ent(), 0),
@@ -89,15 +91,15 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // Helper to create a section with header and content row
     auto make_section = [&](int section_id, const char *header_label,
                             const char *section_name, const char *row_name) {
-      auto section =
-          vstack(context, mk(main_container.ent(), section_id),
-              ComponentConfig{}
-                  .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                  .with_background(Theme::Usage::Surface)
-                  .with_padding(Spacing::sm)
-                  .with_roundness(SECTION_ROUNDNESS)
-                  .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                  .with_debug_name(section_name));
+      auto section = vstack(
+          context, mk(main_container.ent(), section_id),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
+              .with_background(Theme::Usage::Surface)
+              .with_padding(Spacing::sm)
+              .with_roundness(SECTION_ROUNDNESS)
+              .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+              .with_debug_name(section_name));
 
       div(context, mk(section.ent(), 0),
           ComponentConfig{}
@@ -110,13 +112,13 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Left)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
-      auto row =
-          hstack(context, mk(section.ent(), 1),
-              ComponentConfig{}
-                  .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                  .with_align_items(AlignItems::Center)
-                  .with_justify_content(JustifyContent::FlexStart)
-                  .with_debug_name(row_name));
+      auto row = hstack(
+          context, mk(section.ent(), 1),
+          ComponentConfig{}
+              .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
+              .with_align_items(AlignItems::Center)
+              .with_justify_content(JustifyContent::FlexStart)
+              .with_debug_name(row_name));
 
       return row;
     };
@@ -159,7 +161,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 0),
                ComponentConfig{}
                    .with_label("Info Dialog")
-                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
+                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH),
+                                            pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
@@ -172,7 +175,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("Confirmation")
-                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
+                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH),
+                                            pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Accent)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
@@ -186,7 +190,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 2),
                ComponentConfig{}
                    .with_label("Notice")
-                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH), pixels(BUTTON_HEIGHT)})
+                   .with_size(ComponentSize{pixels(HELPER_BUTTON_WIDTH),
+                                            pixels(BUTTON_HEIGHT)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
@@ -233,12 +238,15 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
       background_click_count++;
     }
 
-    // Counter display with visual containment - use lightened surface for distinction
+    // Counter display with visual containment - use lightened surface for
+    // distinction
     div(context, mk(row4.ent(), 1),
         ComponentConfig{}
-            .with_label("Background Clicks: " + std::to_string(background_click_count))
+            .with_label("Background Clicks: " +
+                        std::to_string(background_click_count))
             .with_size(ComponentSize{pixels(180), pixels(BUTTON_HEIGHT)})
-            .with_custom_background(afterhours::colors::lighten(theme.background, 0.15f))
+            .with_custom_background(
+                afterhours::colors::lighten(theme.background, 0.15f))
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
             .with_padding(Spacing::xs)
@@ -248,14 +256,14 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // Section 5: Results Display
     // =========================================================================
     // Note: section5 omits bottom margin, and row5 has extra styling
-    auto section5 =
-        vstack(context, mk(main_container.ent(), 5),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::sm)
-                .with_roundness(SECTION_ROUNDNESS)
-                .with_debug_name("section5"));
+    auto section5 = vstack(
+        context, mk(main_container.ent(), 5),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(SECTION_HEIGHT)})
+            .with_background(Theme::Usage::Surface)
+            .with_padding(Spacing::sm)
+            .with_roundness(SECTION_ROUNDNESS)
+            .with_debug_name("section5"));
 
     div(context, mk(section5.ent(), 0),
         ComponentConfig{}
@@ -270,14 +278,14 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto row5 =
         hstack(context, mk(section5.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
-                .with_align_items(AlignItems::Center)
-                .with_justify_content(JustifyContent::FlexStart)
-                .with_background(Theme::Usage::Background)
-                .with_roundness(SECTION_ROUNDNESS)
-                .with_padding(Spacing::sm)
-                .with_debug_name("row5"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(ROW_HEIGHT)})
+                   .with_align_items(AlignItems::Center)
+                   .with_justify_content(JustifyContent::FlexStart)
+                   .with_background(Theme::Usage::Background)
+                   .with_roundness(SECTION_ROUNDNESS)
+                   .with_padding(Spacing::sm)
+                   .with_debug_name("row5"));
 
     std::string confirm_result_str = "Pending";
     if (last_confirm_result == afterhours::DialogResult::Confirmed)
@@ -297,9 +305,9 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(row5.ent(), 0),
         ComponentConfig{}
-            .with_label("Confirm: " + confirm_result_str + "  |  FYI: " +
-                        fyi_result_str + "  |  Confirms: " +
-                        std::to_string(confirm_count) +
+            .with_label("Confirm: " + confirm_result_str +
+                        "  |  FYI: " + fyi_result_str +
+                        "  |  Confirms: " + std::to_string(confirm_count) +
                         "  Cancels: " + std::to_string(cancel_count))
             .with_size(ComponentSize{percent(1.0f), pixels(BUTTON_HEIGHT)})
             .with_auto_text_color(true)
@@ -312,12 +320,12 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Basic modal - uses ClosedBy::Any so it closes on backdrop click
     constexpr int MODAL_CONTENT_LAYER = 1001;
-    if (auto m = afterhours::modal(context, mk(entity, MODAL_BASIC),
-                                   show_basic_modal,
-                                   afterhours::ModalConfig{}
-                                       .with_size(pixels(400), pixels(200))
-                                       .with_title("Basic Modal")
-                                       .with_closed_by(afterhours::ClosedBy::Any))) {
+    if (auto m = afterhours::modal(
+            context, mk(entity, MODAL_BASIC), show_basic_modal,
+            afterhours::ModalConfig{}
+                .with_size(pixels(400), pixels(200))
+                .with_title("Basic Modal")
+                .with_closed_by(afterhours::ClosedBy::Any))) {
       div(context, mk(m.ent(), 0),
           ComponentConfig{}
               .with_label("This is a simple modal dialog.")
@@ -326,13 +334,14 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_padding(Spacing::md)
               .with_render_layer(MODAL_CONTENT_LAYER));
 
-      auto btn_row = hstack(context, mk(m.ent(), 1),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                             .with_justify_content(JustifyContent::Center)
-                             .with_align_items(AlignItems::Center)
-                             .with_flex_wrap(FlexWrap::NoWrap)
-                             .with_render_layer(MODAL_CONTENT_LAYER));
+      auto btn_row =
+          hstack(context, mk(m.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                     .with_justify_content(JustifyContent::Center)
+                     .with_align_items(AlignItems::Center)
+                     .with_flex_wrap(FlexWrap::NoWrap)
+                     .with_render_layer(MODAL_CONTENT_LAYER));
 
       if (button(context, mk(btn_row.ent(), 0),
                  ComponentConfig{}
@@ -357,11 +366,12 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_render_layer(MODAL_CONTENT_LAYER));
 
       // Checkboxes
-      auto checkbox_row = hstack(context, mk(m.ent(), 1),
-                              ComponentConfig{}
-                                  .with_size(ComponentSize{percent(1.0f), children()})
-                                  .with_align_items(AlignItems::Center)
-                                  .with_render_layer(MODAL_CONTENT_LAYER));
+      auto checkbox_row =
+          hstack(context, mk(m.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), children()})
+                     .with_align_items(AlignItems::Center)
+                     .with_render_layer(MODAL_CONTENT_LAYER));
 
       static bool check1 = false, check2 = true;
       checkbox(context, mk(checkbox_row.ent(), 0), check1,
@@ -386,13 +396,14 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_render_layer(MODAL_CONTENT_LAYER));
 
       // Buttons row
-      auto btn_row = hstack(context, mk(m.ent(), 3),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                             .with_justify_content(JustifyContent::FlexEnd)
-                             .with_align_items(AlignItems::Center)
-                             .with_flex_wrap(FlexWrap::NoWrap)
-                             .with_render_layer(MODAL_CONTENT_LAYER));
+      auto btn_row =
+          hstack(context, mk(m.ent(), 3),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                     .with_justify_content(JustifyContent::FlexEnd)
+                     .with_align_items(AlignItems::Center)
+                     .with_flex_wrap(FlexWrap::NoWrap)
+                     .with_render_layer(MODAL_CONTENT_LAYER));
 
       if (button(context, mk(btn_row.ent(), 0),
                  ComponentConfig{}
@@ -414,16 +425,15 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // modal::info helper
-    afterhours::modal::info(context, mk(entity, MODAL_INFO), show_info_modal,
-                "Information",
-                "This is an informational message. Click OK to dismiss.",
-                "Got it");
+    afterhours::modal::info(
+        context, mk(entity, MODAL_INFO), show_info_modal, "Information",
+        "This is an informational message. Click OK to dismiss.", "Got it");
 
     // modal::confirm helper
     auto confirm_result = afterhours::modal::confirm(
-        context, mk(entity, MODAL_CONFIRM), show_confirm_modal, "Confirm Action",
-        "Are you sure you want to proceed with this action?", "Yes, proceed",
-        "Cancel");
+        context, mk(entity, MODAL_CONFIRM), show_confirm_modal,
+        "Confirm Action", "Are you sure you want to proceed with this action?",
+        "Yes, proceed", "Cancel");
 
     // Track confirm results
     if (confirm_result.confirmed()) {
@@ -435,8 +445,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // modal::fyi helper
     auto fyi_result = afterhours::modal::fyi(
         context, mk(entity, MODAL_FYI), show_fyi_modal, "Update Available",
-        "A new version (2.0) is available for download.", "Install Now", "Later",
-        "Release Notes");
+        "A new version (2.0) is available for download.", "Install Now",
+        "Later", "Release Notes");
     last_fyi_result = fyi_result.result();
 
     // Stacked modals - Settings with nested confirm
@@ -465,13 +475,14 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(1.0f), pixels(40)})
                    .with_render_layer(MODAL_CONTENT_LAYER));
 
-      auto btn_row = hstack(context, mk(settings.ent(), 3),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                             .with_justify_content(JustifyContent::SpaceBetween)
-                             .with_align_items(AlignItems::Center)
-                             .with_flex_wrap(FlexWrap::NoWrap)
-                             .with_render_layer(MODAL_CONTENT_LAYER));
+      auto btn_row =
+          hstack(context, mk(settings.ent(), 3),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                     .with_justify_content(JustifyContent::SpaceBetween)
+                     .with_align_items(AlignItems::Center)
+                     .with_flex_wrap(FlexWrap::NoWrap)
+                     .with_render_layer(MODAL_CONTENT_LAYER));
 
       if (button(context, mk(btn_row.ent(), 0),
                  ComponentConfig{}
@@ -506,4 +517,3 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
 
 REGISTER_EXAMPLE_SCREEN(modals, "Component Galleries",
                         "Modal dialog system demo", ModalShowcase)
-

@@ -2,9 +2,9 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -24,7 +24,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color error_red{255, 90, 90, 255};
 
   // Configurable border thicknesses for visibility
-  float success_border_thickness = 4.0f;  // Thicker for better visibility
+  float success_border_thickness = 4.0f; // Thicker for better visibility
   float error_border_thickness = 2.0f;
 
   void for_each_with(afterhours::Entity &entity,
@@ -70,9 +70,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     // Instructions
     std::string instructions =
 #ifdef AFTERHOURS_DEBUG_TEXT_OVERFLOW
-        "Debug mode is ON - red corners appear when text is too large for its container";
+        "Debug mode is ON - red corners appear when text is too large for its "
+        "container";
 #else
-        "Debug mode is OFF - enable to see overflow indicators (compile with debug flag)";
+        "Debug mode is OFF - enable to see overflow indicators (compile with "
+        "debug flag)";
 #endif
 
     div(context, mk(entity, 2),
@@ -374,7 +376,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(card_bg)
               .with_rounded_corners(RoundedCorners())
               .with_border(text_fits ? success_green : error_red,
-                           text_fits ? success_border_thickness : error_border_thickness)
+                           text_fits ? success_border_thickness
+                                     : error_border_thickness)
               .with_debug_name("shrink_box_" + std::to_string(i)));
 
       div(context, mk(entity, 41 + i * 2),
@@ -394,7 +397,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     card_y += 80.0f + card_spacing;
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_label("Minimum touch target size is 44px. Smaller containers trigger overflow warnings.")
+            .with_label("Minimum touch target size is 44px. Smaller containers "
+                        "trigger overflow warnings.")
             .with_size(ComponentSize{pixels(card_width), pixels(44)})
             .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))

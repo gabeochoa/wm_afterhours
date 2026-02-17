@@ -2,28 +2,29 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
   // Fantasy parchment aesthetic
-  afterhours::Color bg_dark{35, 28, 22, 255};       // Dark wood/leather
-  afterhours::Color bg_medium{55, 45, 38, 255};     // Medium brown
-  afterhours::Color parchment{245, 235, 220, 255};  // Parchment background
-  afterhours::Color gold_accent{230, 185, 60, 255}; // Gold (brightened for contrast)
+  afterhours::Color bg_dark{35, 28, 22, 255};      // Dark wood/leather
+  afterhours::Color bg_medium{55, 45, 38, 255};    // Medium brown
+  afterhours::Color parchment{245, 235, 220, 255}; // Parchment background
+  afterhours::Color gold_accent{230, 185, 60,
+                                255}; // Gold (brightened for contrast)
   afterhours::Color text_dark{45, 35, 25, 255};     // Dark text
   afterhours::Color text_light{235, 225, 210, 255}; // Light text
 
   // High-contrast text colors for tinted panels (accessibility)
-  afterhours::Color text_on_gold{30, 20, 10, 255};      // Dark brown on gold
-  afterhours::Color text_on_blue{255, 255, 255, 255};   // White on blue
-  afterhours::Color text_on_red{255, 255, 255, 255};    // White on red
-  afterhours::Color text_on_green{20, 40, 20, 255};     // Dark green on green
+  afterhours::Color text_on_gold{30, 20, 10, 255};    // Dark brown on gold
+  afterhours::Color text_on_blue{255, 255, 255, 255}; // White on blue
+  afterhours::Color text_on_red{255, 255, 255, 255};  // White on red
+  afterhours::Color text_on_green{20, 40, 20, 255};   // Dark green on green
 
   bool textures_loaded = false;
   std::string base_path;
@@ -128,9 +129,9 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     float start_x = 60.0f;
     float start_y = 60.0f; // Reduced to fit more content
     float box_width = 140.0f;
-    float box_height = 85.0f;  // Reduced from 100
-    float gap = 15.0f;  // Reduced from 20
-    float label_height = 22.0f;  // Reduced from 25
+    float box_height = 85.0f;   // Reduced from 100
+    float gap = 15.0f;          // Reduced from 20
+    float label_height = 22.0f; // Reduced from 25
 
     // Title - needs to be tall enough for font + 9-slice border insets
     div(context, mk(entity, 1),
@@ -168,7 +169,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     float row1_y = start_y + label_height + 5;
     for (int i = 0; i < 6; i++) {
       float x = start_x + i * (box_width + gap);
-      button(context, mk(entity, 10 + i),
+      button(
+          context, mk(entity, 10 + i),
           ComponentConfig{}
               .with_label(row1[i].label)
               .with_size(ComponentSize{pixels(box_width), pixels(box_height)})

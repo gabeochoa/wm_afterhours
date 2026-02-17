@@ -2,9 +2,9 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -146,7 +146,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 19),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(partial_width), pixels(3)})
-            .with_absolute_position(start_x + pad + (item_width - partial_width) / 2, y)
+            .with_absolute_position(
+                start_x + pad + (item_width - partial_width) / 2, y)
             .with_custom_background(accent_purple));
     y += 40.0f;
 
@@ -207,8 +208,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(settings_line_width), pixels(3)})
             .with_absolute_position(start_x + pad + settings_line_width +
-                                settings_label_width + 30,
-                            y + 14)
+                                        settings_label_width + 30,
+                                    y + 14)
             .with_custom_background(accent_blue));
 
     // ========== RIGHT CARD: Vertical Separators ==========
@@ -261,7 +262,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.12f)
             .with_debug_name("nav_bg"));
 
-    float nav_x = right_x + pad + 24;  // Added more left padding
+    float nav_x = right_x + pad + 24; // Added more left padding
     const char *nav_items[] = {"Home", "Settings", "Profile", "Help"};
     afterhours::Color sep_colors[] = {text_muted, accent_green, accent_orange};
 
@@ -312,7 +313,8 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 62),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(gallery_line_width), pixels(3)})
-            .with_absolute_position(right_x + pad + gallery_line_width + 140, y + 14)
+            .with_absolute_position(right_x + pad + gallery_line_width + 140,
+                                    y + 14)
             .with_custom_background(border_light));
     y += 40.0f;
 

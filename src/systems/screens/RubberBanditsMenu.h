@@ -28,8 +28,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color online_pill{155, 185, 135, 255};
 
   std::vector<std::string> menu_items = {
-      "OPTIONS",      "CONTROLS",     "LEADERBOARD",
-      "ARMORY",       "PLAY CREDITS", "BACK",
+      "OPTIONS", "CONTROLS", "LEADERBOARD", "ARMORY", "PLAY CREDITS", "BACK",
   };
 
   bool promo_dismissed = false;
@@ -55,13 +54,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // ROOT - full screen
     // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_yellow)
-            .with_no_wrap()
-            .with_debug_name("rb_root"));
+    auto root =
+        vstack(context, mk(entity),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg_yellow)
+                   .with_no_wrap()
+                   .with_debug_name("rb_root"));
 
     // ═══════════════════════════════════════════════════════════════
     // TOP BAR: Title + Online status + Player info
@@ -72,16 +71,16 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(145)})
             .with_no_wrap()
             .with_align_items(AlignItems::FlexStart)
-            .with_padding(Padding{.top = pixels(30), .left = pixels(45),
-                                  .right = pixels(25)})
+            .with_padding(Padding{
+                .top = pixels(30), .left = pixels(45), .right = pixels(25)})
             .with_debug_name("top_bar"));
 
     // Title area
-    auto title_area = vstack(
-        context, mk(top_bar.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(340), percent(1.0f)})
-            .with_no_wrap());
+    auto title_area =
+        vstack(context, mk(top_bar.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(340), percent(1.0f)})
+                   .with_no_wrap());
 
     // RUBBER text
     div(context, mk(title_area.ent()),
@@ -112,12 +111,12 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Online status pill
-    auto online_area = hstack(
-        context, mk(top_bar.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(350), pixels(50)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap());
+    auto online_area =
+        hstack(context, mk(top_bar.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(350), pixels(50)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap());
 
     // Online dot
     div(context, mk(online_area.ent()),
@@ -143,12 +142,11 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.left = pixels(5)}));
 
     // Player count + lightning badges
-    auto badges = vstack(
-        context, mk(top_bar.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(55), children()})
-            .with_no_wrap()
-            .with_align_items(AlignItems::Center));
+    auto badges = vstack(context, mk(top_bar.ent()),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{pixels(55), children()})
+                             .with_no_wrap()
+                             .with_align_items(AlignItems::Center));
 
     div(context, mk(badges.ent()),
         ComponentConfig{}
@@ -177,41 +175,44 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // MIDDLE: Menu + Promo
     // ═══════════════════════════════════════════════════════════════
-    auto middle = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), expand()})
-            .with_no_wrap()
-            .with_align_items(AlignItems::FlexStart)
-            .with_padding(Padding{.top = pixels(15), .left = pixels(40),
-                                  .right = pixels(40)})
-            .with_debug_name("middle"));
+    auto middle = hstack(context, mk(root.ent()),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{percent(1.0f), expand()})
+                             .with_no_wrap()
+                             .with_align_items(AlignItems::FlexStart)
+                             .with_padding(Padding{.top = pixels(15),
+                                                   .left = pixels(40),
+                                                   .right = pixels(40)})
+                             .with_debug_name("middle"));
 
     // Menu panel
-    auto menu_panel = vstack(
-        context, mk(middle.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(280), pixels(static_cast<float>(
-                                                     menu_items.size() * 48 + 20))})
-            .with_custom_background(menu_bg)
-            .with_border(afterhours::Color{180, 165, 125, 255}, 3.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.1f)
-            .with_no_wrap()
-            .with_padding(Padding{.top = pixels(10), .bottom = pixels(10),
-                                  .left = pixels(15), .right = pixels(15)})
-            .with_debug_name("menu_bg"));
+    auto menu_panel =
+        vstack(context, mk(middle.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{
+                       pixels(280),
+                       pixels(static_cast<float>(menu_items.size() * 48 + 20))})
+                   .with_custom_background(menu_bg)
+                   .with_border(afterhours::Color{180, 165, 125, 255}, 3.0f)
+                   .with_rounded_corners(RoundedCorners())
+                   .with_roundness(0.1f)
+                   .with_no_wrap()
+                   .with_padding(Padding{.top = pixels(10),
+                                         .bottom = pixels(10),
+                                         .left = pixels(15),
+                                         .right = pixels(15)})
+                   .with_debug_name("menu_bg"));
 
     for (size_t i = 0; i < menu_items.size(); i++) {
       bool is_selected = (i == selected_item);
       afterhours::Color item_bg = is_selected ? highlight : menu_bg;
 
-      auto item_row = hstack(
-          context, mk(menu_panel.ent(), static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(44)})
-              .with_align_items(AlignItems::Center)
-              .with_no_wrap());
+      auto item_row =
+          hstack(context, mk(menu_panel.ent(), static_cast<int>(i)),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                     .with_align_items(AlignItems::Center)
+                     .with_no_wrap());
 
       // Selection arrow
       if (is_selected) {
@@ -223,21 +224,20 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_text_color(text_dark));
       }
 
-      if (button(
-              context, mk(item_row.ent(), 1),
-              ComponentConfig{}
-                  .with_label(menu_items[i])
-                  .with_size(ComponentSize{expand(), percent(1.0f)})
-                  .with_custom_background(item_bg)
-                  .with_border(is_selected
-                                   ? afterhours::Color{220, 190, 100, 255}
-                                   : afterhours::Color{0, 0, 0, 0},
-                               2.0f)
-                  .with_font("EqProRounded", pixels(22.0f))
-                  .with_custom_text_color(text_dark)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.15f)
-                  .with_debug_name("menu_" + std::to_string(i)))) {
+      if (button(context, mk(item_row.ent(), 1),
+                 ComponentConfig{}
+                     .with_label(menu_items[i])
+                     .with_size(ComponentSize{expand(), percent(1.0f)})
+                     .with_custom_background(item_bg)
+                     .with_border(is_selected
+                                      ? afterhours::Color{220, 190, 100, 255}
+                                      : afterhours::Color{0, 0, 0, 0},
+                                  2.0f)
+                     .with_font("EqProRounded", pixels(22.0f))
+                     .with_custom_text_color(text_dark)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.15f)
+                     .with_debug_name("menu_" + std::to_string(i)))) {
         selected_item = i;
       }
     }
@@ -259,16 +259,16 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.15f)
               .with_no_wrap()
-              .with_padding(Padding{.top = pixels(8), .left = pixels(10),
-                                    .right = pixels(10)})
+              .with_padding(Padding{
+                  .top = pixels(8), .left = pixels(10), .right = pixels(10)})
               .with_debug_name("promo_box"));
 
-      auto promo_top = hstack(
-          context, mk(promo.ent()),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(24)})
-              .with_no_wrap()
-              .with_align_items(AlignItems::Center));
+      auto promo_top =
+          hstack(context, mk(promo.ent()),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(24)})
+                     .with_no_wrap()
+                     .with_align_items(AlignItems::Center));
 
       div(context, mk(promo_top.ent()),
           ComponentConfig{}
@@ -278,19 +278,18 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(afterhours::Color{100, 85, 55, 255}));
 
       // Dismiss X
-      if (button(context, mk(promo_top.ent()),
-                 ComponentConfig{}
-                     .with_label("X")
-                     .with_size(ComponentSize{pixels(24), pixels(24)})
-                     .with_custom_background(
-                         afterhours::Color{180, 165, 135, 200})
-                     .with_font("EqProRounded", pixels(14.0f))
-                     .with_custom_text_color(
-                         afterhours::Color{80, 70, 50, 255})
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.5f)
-                     .with_debug_name("promo_dismiss"))) {
+      if (button(
+              context, mk(promo_top.ent()),
+              ComponentConfig{}
+                  .with_label("X")
+                  .with_size(ComponentSize{pixels(24), pixels(24)})
+                  .with_custom_background(afterhours::Color{180, 165, 135, 200})
+                  .with_font("EqProRounded", pixels(14.0f))
+                  .with_custom_text_color(afterhours::Color{80, 70, 50, 255})
+                  .with_alignment(TextAlignment::Center)
+                  .with_rounded_corners(RoundedCorners())
+                  .with_roundness(0.5f)
+                  .with_debug_name("promo_dismiss"))) {
         promo_dismissed = true;
       }
 
@@ -305,23 +304,23 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // BOTTOM: Ground + Character selector + Hint
     // ═══════════════════════════════════════════════════════════════
-    auto bottom = vstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(150)})
-            .with_custom_background(bg_yellow_dark)
-            .with_no_wrap()
-            .with_debug_name("ground"));
+    auto bottom =
+        vstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(150)})
+                   .with_custom_background(bg_yellow_dark)
+                   .with_no_wrap()
+                   .with_debug_name("ground"));
 
     // Character selector row
-    auto char_row = hstack(
-        context, mk(bottom.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(100)})
-            .with_justify_content(JustifyContent::Center)
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_debug_name("char_selector"));
+    auto char_row =
+        hstack(context, mk(bottom.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                   .with_justify_content(JustifyContent::Center)
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_debug_name("char_selector"));
 
     auto char_box = vstack(
         context, mk(char_row.ent()),
@@ -346,13 +345,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // LB + Name + RB row
-    auto name_row = hstack(
-        context, mk(char_box.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_justify_content(JustifyContent::Center)
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap());
+    auto name_row =
+        hstack(context, mk(char_box.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                   .with_justify_content(JustifyContent::Center)
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap());
 
     div(context, mk(name_row.ent()),
         ComponentConfig{}
@@ -391,13 +390,13 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Bottom hint
-    auto hint_row = hstack(
-        context, mk(bottom.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_padding(Padding{.left = pixels(55)}));
+    auto hint_row =
+        hstack(context, mk(bottom.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_padding(Padding{.left = pixels(55)}));
 
     div(context, mk(hint_row.ent()),
         ComponentConfig{}

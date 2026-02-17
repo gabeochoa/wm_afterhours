@@ -25,12 +25,12 @@
 #include <afterhours/src/plugins/files.h>
 
 #include <afterhours/src/plugins/animation.h>
-#include <afterhours/src/plugins/modal.h>
-#include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/e2e_testing/ui_commands.h>
-#include <afterhours/src/plugins/ui/validation_systems.h>
+#include <afterhours/src/plugins/modal.h>
+#include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/ui/ui_collection.h>
+#include <afterhours/src/plugins/ui/validation_systems.h>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -558,7 +558,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
         e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
       }
     }
-    for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+    for (const auto &e :
+         afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
       if (!e)
         continue;
       if (e->has<afterhours::ui::UIComponent>()) {
@@ -766,7 +767,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
       }
     }
-    for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+    for (const auto &e :
+         afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
       if (!e)
         continue;
       if (e->has<afterhours::ui::UIComponent>()) {
@@ -844,9 +846,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         return;
       }
 
-      auto *ctx =
-          afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::UIContext<
-              InputAction>>();
+      auto *ctx = afterhours::EntityHelper::get_singleton_cmp<
+          afterhours::ui::UIContext<InputAction>>();
       if (!ctx) {
         cmd.fail("UIContext not found");
         return;
@@ -877,9 +878,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         return;
       }
 
-      auto *ctx =
-          afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::UIContext<
-              InputAction>>();
+      auto *ctx = afterhours::EntityHelper::get_singleton_cmp<
+          afterhours::ui::UIContext<InputAction>>();
       if (!ctx) {
         cmd.fail("UIContext not found");
         return;
@@ -890,13 +890,14 @@ int run_e2e_tests(const e2e::E2EArgs &args,
       // Search for entity with matching debug_name in UI collection
       auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
       ui_coll.merge_entity_arrays();
-      auto opt = afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
-                     .whereHasComponent<afterhours::ui::UIComponentDebug>()
-                     .whereLambda([&](const afterhours::Entity &e) {
-                       return e.get<afterhours::ui::UIComponentDebug>().name() ==
-                              target_name;
-                     })
-                     .gen_first();
+      auto opt =
+          afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
+              .whereHasComponent<afterhours::ui::UIComponentDebug>()
+              .whereLambda([&](const afterhours::Entity &e) {
+                return e.get<afterhours::ui::UIComponentDebug>().name() ==
+                       target_name;
+              })
+              .gen_first();
 
       if (!opt) {
         cmd.fail("Element not found: " + target_name);
@@ -987,7 +988,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   };
 
   while (should_continue() && !runner.is_finished()) {
-    if (!afterhours::graphics::is_headless() && raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
+    if (!afterhours::graphics::is_headless() &&
+        raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
       running = false;
       break;
     }
@@ -1060,7 +1062,8 @@ void reset_e2e_state() {
       e->get<afterhours::ui::UIComponent>().was_rendered_to_screen = false;
     }
   }
-  for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+  for (const auto &e :
+       afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
     if (!e)
       continue;
     if (e->has<afterhours::ui::UIComponent>()) {
@@ -1079,7 +1082,8 @@ void reset_e2e_state() {
   afterhours::EntityHelper::cleanup();
 
   // Also wipe non-permanent UI collection entities.
-  for (const auto &e : afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
+  for (const auto &e :
+       afterhours::ui::UICollectionHolder::get().collection.get_entities()) {
     if (!e)
       continue;
     if (e->has<afterhours::ui::UIComponent>()) {

@@ -12,10 +12,9 @@ using namespace afterhours::ui::imm;
 struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
   float current_scale = 1.0f;
   int scale_index = 2; // Index into scale_steps (1.0x)
-  static constexpr float scale_steps[] = {0.5f, 0.75f, 1.0f, 1.25f, 1.5f,
-                                          2.0f, 2.5f,  3.0f};
-  static constexpr int num_steps =
-      sizeof(scale_steps) / sizeof(scale_steps[0]);
+  static constexpr float scale_steps[] = {0.5f, 0.75f, 1.0f, 1.25f,
+                                          1.5f, 2.0f,  2.5f, 3.0f};
+  static constexpr int num_steps = sizeof(scale_steps) / sizeof(scale_steps[0]);
 
   bool use_adaptive = true;
 
@@ -57,21 +56,23 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     float content_h = 1.0f - header_h - controls_h;
     float left_w = 280.f / sw;
     float gap_w = 16.f / sw;
-    // right_col fills remaining space: total - left - gap - 2*horizontal_padding
+    // right_col fills remaining space: total - left - gap -
+    // 2*horizontal_padding
     float right_w = 1.0f - left_w - gap_w - (2.f * pad_x);
 
     // LayoutInfo for breakpoint display
     auto info = LayoutInfo::make(sw, sh, current_scale,
-        use_adaptive ? ScalingMode::Adaptive : ScalingMode::Proportional);
+                                 use_adaptive ? ScalingMode::Adaptive
+                                              : ScalingMode::Proportional);
 
     // ── Full screen root ────────────────────────────────────────
-    auto root = vstack(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg)
-            .with_no_wrap()
-            .with_debug_name("adaptive_root"));
+    auto root =
+        vstack(context, mk(entity, 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg)
+                   .with_no_wrap()
+                   .with_debug_name("adaptive_root"));
 
     // ── Header bar ──────────────────────────────────────────────
     auto header = hstack(
@@ -108,8 +109,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(controls_h)})
-            .with_custom_background(
-                afterhours::colors::darken(surface, 0.85f))
+            .with_custom_background(afterhours::colors::darken(surface, 0.85f))
             .with_padding(Padding{.top = pixels(6),
                                   .left = pixels(16),
                                   .bottom = pixels(6),
@@ -131,20 +131,21 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.3f)
             .with_margin(Margin::Right(pixels(12)))
             .with_alignment(TextAlignment::Center));
-    if (mode_btn) use_adaptive = !use_adaptive;
+    if (mode_btn)
+      use_adaptive = !use_adaptive;
 
-    auto zoom_out = button(
-        context, mk(controls.ent(), 1),
-        ComponentConfig{}
-            .with_label("-")
-            .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_custom_background(accent_dim)
-            .with_custom_text_color(white)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_margin(Margin::Right(pixels(4)))
-            .with_alignment(TextAlignment::Center));
+    auto zoom_out =
+        button(context, mk(controls.ent(), 1),
+               ComponentConfig{}
+                   .with_label("-")
+                   .with_size(ComponentSize{pixels(36), pixels(36)})
+                   .with_custom_background(accent_dim)
+                   .with_custom_text_color(white)
+                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+                   .with_rounded_corners(RoundedCorners())
+                   .with_roundness(0.3f)
+                   .with_margin(Margin::Right(pixels(4)))
+                   .with_alignment(TextAlignment::Center));
     if (zoom_out && scale_index > 0) {
       scale_index--;
       current_scale = scale_steps[scale_index];
@@ -162,27 +163,27 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin::Right(pixels(4)))
             .with_alignment(TextAlignment::Center));
 
-    auto zoom_in = button(
-        context, mk(controls.ent(), 3),
-        ComponentConfig{}
-            .with_label("+")
-            .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_custom_background(accent_dim)
-            .with_custom_text_color(white)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f)
-            .with_margin(Margin::Right(pixels(16)))
-            .with_alignment(TextAlignment::Center));
+    auto zoom_in = button(context, mk(controls.ent(), 3),
+                          ComponentConfig{}
+                              .with_label("+")
+                              .with_size(ComponentSize{pixels(36), pixels(36)})
+                              .with_custom_background(accent_dim)
+                              .with_custom_text_color(white)
+                              .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
+                              .with_rounded_corners(RoundedCorners())
+                              .with_roundness(0.3f)
+                              .with_margin(Margin::Right(pixels(16)))
+                              .with_alignment(TextAlignment::Center));
     if (zoom_in && scale_index < num_steps - 1) {
       scale_index++;
       current_scale = scale_steps[scale_index];
     }
 
-    std::string info_text = std::format(
-        "Logical: {:.0f}x{:.0f}  |  {}",
-        info.logical_w, info.logical_h,
-        info.is_narrow() ? "narrow" : info.is_medium() ? "medium" : "wide");
+    std::string info_text = std::format("Logical: {:.0f}x{:.0f}  |  {}",
+                                        info.logical_w, info.logical_h,
+                                        info.is_narrow()   ? "narrow"
+                                        : info.is_medium() ? "medium"
+                                                           : "wide");
     div(context, mk(controls.ent(), 4),
         ComponentConfig{}
             .with_label(info_text)
@@ -206,28 +207,28 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("content"));
 
     // ── Left column ─────────────────────────────────────────────
-    auto left_col = vstack(
-        context, mk(content.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(left_w),
-                                     screen_pct(content_h - pad_y * 2)})
-            .with_margin(Margin::Right(screen_pct(gap_w)))
-            .with_no_wrap()
-            .with_debug_name("left_col"));
+    auto left_col =
+        vstack(context, mk(content.ent(), 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(left_w),
+                                            screen_pct(content_h - pad_y * 2)})
+                   .with_margin(Margin::Right(screen_pct(gap_w)))
+                   .with_no_wrap()
+                   .with_debug_name("left_col"));
 
     // Card 1: Basic pixel sizing
     {
-      auto card = vstack(
-          context, mk(left_col.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(160)})
-              .with_custom_background(card_bg)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f)
-              .with_padding(Padding::all(pixels(14)))
-              .with_margin(Margin::Bottom(pixels(12)))
-              .with_no_wrap()
-              .with_debug_name("card_pixel"));
+      auto card =
+          vstack(context, mk(left_col.ent(), 0),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(160)})
+                     .with_custom_background(card_bg)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.06f)
+                     .with_padding(Padding::all(pixels(14)))
+                     .with_margin(Margin::Bottom(pixels(12)))
+                     .with_no_wrap()
+                     .with_debug_name("card_pixel"));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -245,12 +246,12 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(muted)
               .with_margin(Margin::Bottom(pixels(10))));
 
-      auto boxes = hstack(
-          context, mk(card.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(48)})
-              .with_align_items(AlignItems::Center)
-              .with_debug_name("boxes"));
+      auto boxes =
+          hstack(context, mk(card.ent(), 2),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(48)})
+                     .with_align_items(AlignItems::Center)
+                     .with_debug_name("boxes"));
 
       afterhours::Color box_colors[] = {red, orange, green, accent};
       for (int i = 0; i < 4; i++) {
@@ -260,24 +261,23 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(box_colors[i])
                 .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.15f)
-                .with_margin(i < 3 ? Margin::Right(pixels(8))
-                                   : Margin{}));
+                .with_margin(i < 3 ? Margin::Right(pixels(8)) : Margin{}));
       }
     }
 
     // Card 2: Buttons
     {
-      auto card = vstack(
-          context, mk(left_col.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(140)})
-              .with_custom_background(card_bg)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f)
-              .with_padding(Padding::all(pixels(14)))
-              .with_margin(Margin::Bottom(pixels(12)))
-              .with_no_wrap()
-              .with_debug_name("card_buttons"));
+      auto card =
+          vstack(context, mk(left_col.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(140)})
+                     .with_custom_background(card_bg)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.06f)
+                     .with_padding(Padding::all(pixels(14)))
+                     .with_margin(Margin::Bottom(pixels(12)))
+                     .with_no_wrap()
+                     .with_debug_name("card_buttons"));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -313,16 +313,16 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Card 3: Padding demo
     {
-      auto card = vstack(
-          context, mk(left_col.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(120)})
-              .with_custom_background(card_bg)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f)
-              .with_padding(Padding::all(pixels(14)))
-              .with_no_wrap()
-              .with_debug_name("card_padding"));
+      auto card =
+          vstack(context, mk(left_col.ent(), 2),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(120)})
+                     .with_custom_background(card_bg)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.06f)
+                     .with_padding(Padding::all(pixels(14)))
+                     .with_no_wrap()
+                     .with_debug_name("card_padding"));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -336,8 +336,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Inner content area")
               .with_size(ComponentSize{percent(1.0f), pixels(46)})
-              .with_custom_background(
-                  afterhours::colors::darken(card_bg, 0.7f))
+              .with_custom_background(afterhours::colors::darken(card_bg, 0.7f))
               .with_custom_text_color(muted)
               .with_font(UIComponent::DEFAULT_FONT, h720(11.0f))
               .with_rounded_corners(RoundedCorners())
@@ -346,27 +345,27 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ── Right column ────────────────────────────────────────────
-    auto right_col = vstack(
-        context, mk(content.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(right_w),
-                                     screen_pct(content_h - pad_y * 2)})
-            .with_no_wrap()
-            .with_debug_name("right_col"));
+    auto right_col =
+        vstack(context, mk(content.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(right_w),
+                                            screen_pct(content_h - pad_y * 2)})
+                   .with_no_wrap()
+                   .with_debug_name("right_col"));
 
     // Card 4: Expand demo
     {
-      auto card = vstack(
-          context, mk(right_col.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(200)})
-              .with_custom_background(card_bg)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f)
-              .with_padding(Padding::all(pixels(14)))
-              .with_margin(Margin::Bottom(pixels(12)))
-              .with_no_wrap()
-              .with_debug_name("card_expand"));
+      auto card =
+          vstack(context, mk(right_col.ent(), 0),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(200)})
+                     .with_custom_background(card_bg)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.06f)
+                     .with_padding(Padding::all(pixels(14)))
+                     .with_margin(Margin::Bottom(pixels(12)))
+                     .with_no_wrap()
+                     .with_debug_name("card_expand"));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -387,25 +386,30 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_margin(Margin::Bottom(pixels(10))));
 
       // Three weighted expand children
-      auto row = hstack(
-          context, mk(card.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(88)})
-              .with_no_wrap()
-              .with_align_items(AlignItems::Center)
-              .with_debug_name("expand_row"));
+      auto row = hstack(context, mk(card.ent(), 2),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{percent(1.0f), pixels(88)})
+                            .with_no_wrap()
+                            .with_align_items(AlignItems::Center)
+                            .with_debug_name("expand_row"));
 
-      struct ExpandItem { const char *label; float weight; afterhours::Color color; afterhours::Color text; };
+      struct ExpandItem {
+        const char *label;
+        float weight;
+        afterhours::Color color;
+        afterhours::Color text;
+      };
       ExpandItem items[] = {
-        {"1x", 1.f, red, white},
-        {"2x", 2.f, orange, {30,30,40,255}},
-        {"3x", 3.f, green, {20,20,30,255}},
+          {"1x", 1.f, red, white},
+          {"2x", 2.f, orange, {30, 30, 40, 255}},
+          {"3x", 3.f, green, {20, 20, 30, 255}},
       };
       for (int i = 0; i < 3; i++) {
         div(context, mk(row.ent(), i),
             ComponentConfig{}
                 .with_label(items[i].label)
-                .with_size(ComponentSize{expand(items[i].weight), percent(1.0f)})
+                .with_size(
+                    ComponentSize{expand(items[i].weight), percent(1.0f)})
                 .with_custom_background(items[i].color)
                 .with_custom_text_color(items[i].text)
                 .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -417,17 +421,17 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Card 5: screen_pct vs pixels comparison
     {
-      auto card = vstack(
-          context, mk(right_col.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(140)})
-              .with_custom_background(card_bg)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f)
-              .with_padding(Padding::all(pixels(14)))
-              .with_margin(Margin::Bottom(pixels(12)))
-              .with_no_wrap()
-              .with_debug_name("card_screenpct"));
+      auto card =
+          vstack(context, mk(right_col.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(140)})
+                     .with_custom_background(card_bg)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.06f)
+                     .with_padding(Padding::all(pixels(14)))
+                     .with_margin(Margin::Bottom(pixels(12)))
+                     .with_no_wrap()
+                     .with_debug_name("card_screenpct"));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -445,13 +449,13 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(muted)
               .with_margin(Margin::Bottom(pixels(8))));
 
-      auto bars = hstack(
-          context, mk(card.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(52)})
-              .with_no_wrap()
-              .with_align_items(AlignItems::Center)
-              .with_debug_name("bars"));
+      auto bars =
+          hstack(context, mk(card.ent(), 2),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                     .with_no_wrap()
+                     .with_align_items(AlignItems::Center)
+                     .with_debug_name("bars"));
 
       // Bar using pixels (scales in Adaptive)
       div(context, mk(bars.ent(), 0),
@@ -484,8 +488,8 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(bars.ent(), 2),
           ComponentConfig{}
               .with_label("scr%")
-              .with_size(ComponentSize{screen_pct(80.0f / 1280.0f),
-                                       percent(1.0f)})
+              .with_size(
+                  ComponentSize{screen_pct(80.0f / 1280.0f), percent(1.0f)})
               .with_custom_background(green)
               .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
               .with_font(UIComponent::DEFAULT_FONT, h720(11.0f))
@@ -496,16 +500,16 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
 
     // Card 6: LayoutInfo breakpoints
     {
-      auto card = vstack(
-          context, mk(right_col.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(90)})
-              .with_custom_background(card_bg)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.06f)
-              .with_padding(Padding::all(pixels(14)))
-              .with_no_wrap()
-              .with_debug_name("card_breakpoints"));
+      auto card =
+          vstack(context, mk(right_col.ent(), 2),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                     .with_custom_background(card_bg)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.06f)
+                     .with_padding(Padding::all(pixels(14)))
+                     .with_no_wrap()
+                     .with_debug_name("card_breakpoints"));
 
       div(context, mk(card.ent(), 0),
           ComponentConfig{}
@@ -515,13 +519,13 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(accent)
               .with_margin(Margin::Bottom(pixels(8))));
 
-      auto pills = hstack(
-          context, mk(card.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(26)})
-              .with_align_items(AlignItems::Center)
-              .with_no_wrap()
-              .with_debug_name("breakpoint_pills"));
+      auto pills =
+          hstack(context, mk(card.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(26)})
+                     .with_align_items(AlignItems::Center)
+                     .with_no_wrap()
+                     .with_debug_name("breakpoint_pills"));
 
       auto pill = [&](int id, const char *label, bool active) {
         div(context, mk(pills.ent(), id),
@@ -529,7 +533,8 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_label(label)
                 .with_size(ComponentSize{pixels(80), pixels(26)})
                 .with_custom_background(active ? accent : surface)
-                .with_custom_text_color(active ? afterhours::Color{20, 20, 30, 255} : muted)
+                .with_custom_text_color(
+                    active ? afterhours::Color{20, 20, 30, 255} : muted)
                 .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
                 .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.4f)

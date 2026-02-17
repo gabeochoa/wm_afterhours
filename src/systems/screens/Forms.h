@@ -50,7 +50,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, pixels(16.0f));
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
+                                              pixels(16.0f));
 
     // Main container background - centered on screen
     auto root =
@@ -65,11 +66,11 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Content container with padding
     auto main_container =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::sm)
-                .with_no_wrap()
-                .with_debug_name("forms_main"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_padding(Spacing::sm)
+                   .with_no_wrap()
+                   .with_debug_name("forms_main"));
 
     // Title - use font_size_xl for screen title (largest in hierarchy)
     div(context, mk(main_container.ent(), 0),
@@ -79,7 +80,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font_size(theme.font_size_xl())  // 42px - screen title
+            .with_font_size(theme.font_size_xl()) // 42px - screen title
             .with_margin(Margin{.top = pixels(0),
                                 .bottom = DefaultSpacing::small(),
                                 .left = pixels(0),
@@ -88,22 +89,22 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Content area - two columns - adjusted height for all content
     auto content =
         hstack(context, mk(main_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::sm)
-                .with_justify_content(JustifyContent::Center)
-                .with_debug_name("content"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::sm)
+                   .with_justify_content(JustifyContent::Center)
+                   .with_debug_name("content"));
 
     // Left column - Sliders
     auto left_col =
         vstack(context, mk(content.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
-                .with_custom_background(
-                    afterhours::colors::darken(theme.surface, 0.9f))
-                .with_padding(Spacing::sm)
-                .with_debug_name("left_column"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
+                   .with_custom_background(
+                       afterhours::colors::darken(theme.surface, 0.9f))
+                   .with_padding(Spacing::sm)
+                   .with_debug_name("left_column"));
 
     // Sliders section header - font_size_md for section headers
     div(context, mk(left_col.ent(), 0),
@@ -113,16 +114,17 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_md())  // 20px - section headers
+            .with_font_size(theme.font_size_md()) // 20px - section headers
             .with_skip_tabbing(true));
 
-    // Volume slider - use font_size_sm for control labels, increased handle visibility
+    // Volume slider - use font_size_sm for control labels, increased handle
+    // visibility
     slider(context, mk(left_col.ent(), 1), volume_slider,
            ComponentConfig{}
                .with_label("Volume")
                .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Primary)
-               .with_font_size(theme.font_size_sm())  // 16px - labels
+               .with_font_size(theme.font_size_sm()) // 16px - labels
                .with_margin(Spacing::xs)
                .with_debug_name("volume_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -133,7 +135,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_label("Brightness")
                .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Accent)
-               .with_font_size(theme.font_size_sm())  // 16px - labels
+               .with_font_size(theme.font_size_sm()) // 16px - labels
                .with_margin(Spacing::xs)
                .with_debug_name("brightness_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -144,7 +146,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                .with_label("Difficulty")
                .with_size(ComponentSize{percent(0.95f), pixels(44)})
                .with_background(Theme::Usage::Secondary)
-               .with_font_size(theme.font_size_sm())  // 16px - labels
+               .with_font_size(theme.font_size_sm()) // 16px - labels
                .with_margin(Spacing::xs)
                .with_debug_name("difficulty_slider"),
            SliderHandleValueLabelPosition::WithLabel);
@@ -157,7 +159,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_md())  // 20px - section headers
+            .with_font_size(theme.font_size_md()) // 20px - section headers
             .with_skip_tabbing(true));
 
     // Progress bar showing volume value (dynamic)
@@ -181,13 +183,14 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);
 
     // Right column - Checkboxes - scrollable when content overflows
-    auto right_col = vstack(context, mk(content.ent(), 1),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(0.40f), percent(1.0f)})
-                             .with_custom_background(afterhours::colors::darken(
-                                 theme.surface, 0.9f))
-                             .with_padding(Spacing::sm)
-                             .with_overflow(Overflow::Scroll, Axis::Y));
+    auto right_col =
+        vstack(context, mk(content.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.40f), percent(1.0f)})
+                   .with_custom_background(
+                       afterhours::colors::darken(theme.surface, 0.9f))
+                   .with_padding(Spacing::sm)
+                   .with_overflow(Overflow::Scroll, Axis::Y));
 
     // Checkboxes section header - font_size_md for section headers
     div(context, mk(right_col.ent(), 0),
@@ -197,16 +200,17 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_md())  // 20px - section headers
+            .with_font_size(theme.font_size_md()) // 20px - section headers
             .with_skip_tabbing(true));
 
-    // Audio checkboxes - font_size_sm for checkbox labels, standardized checkmark color via Primary
+    // Audio checkboxes - font_size_sm for checkbox labels, standardized
+    // checkmark color via Primary
     checkbox(context, mk(right_col.ent(), 1), enable_music,
              ComponentConfig{}
                  .with_label("Music")
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())  // 16px - labels
+                 .with_font_size(theme.font_size_sm()) // 16px - labels
                  .with_margin(Spacing::xs));
 
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
@@ -214,7 +218,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_label("SFX")
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())  // 16px - labels
+                 .with_font_size(theme.font_size_sm()) // 16px - labels
                  .with_margin(Spacing::xs));
 
     // Display checkboxes - standardized checkmark color via Primary
@@ -223,7 +227,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Fullscreen")
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())  // 16px - labels
+                 .with_font_size(theme.font_size_sm()) // 16px - labels
                  .with_margin(Spacing::xs));
 
     checkbox(context, mk(right_col.ent(), 4), vsync,
@@ -231,7 +235,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_label("V-Sync")
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())  // 16px - labels
+                 .with_font_size(theme.font_size_sm()) // 16px - labels
                  .with_margin(Spacing::xs));
 
     checkbox(context, mk(right_col.ent(), 5), show_fps,
@@ -239,10 +243,11 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_label("Show FPS")
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())  // 16px - labels
+                 .with_font_size(theme.font_size_sm()) // 16px - labels
                  .with_margin(Spacing::xs));
 
-    // Additional graphics/gameplay checkboxes (make content overflow for scroll)
+    // Additional graphics/gameplay checkboxes (make content overflow for
+    // scroll)
     checkbox(context, mk(right_col.ent(), 6), show_hud,
              ComponentConfig{}
                  .with_label("Show HUD")
@@ -300,7 +305,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_margin(Spacing::xs));
 
     // Disabled checkbox example - standardized checkmark color via Primary
-    // Enhanced disabled styling: reduced opacity for stronger visual differentiation
+    // Enhanced disabled styling: reduced opacity for stronger visual
+    // differentiation
     bool disabled_value = true;
     checkbox(context, mk(right_col.ent(), 13), disabled_value,
              ComponentConfig{}
@@ -309,7 +315,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                  .with_background(Theme::Usage::Primary)
                  .with_disabled(true)
                  .with_opacity(0.5f)
-                 .with_font_size(theme.font_size_sm())  // 16px - labels
+                 .with_font_size(theme.font_size_sm()) // 16px - labels
                  .with_margin(Spacing::xs));
 
     // Language dropdown - font_size_sm for dropdown values
@@ -317,7 +323,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_size(ComponentSize{percent(0.92f), pixels(34)})
                  .with_background(Theme::Usage::Secondary)
-                 .with_font_size(theme.font_size_sm())  // 16px - values
+                 .with_font_size(theme.font_size_sm()) // 16px - values
                  .with_margin(Spacing::xs)
                  .with_debug_name("language_dropdown"));
 
@@ -331,12 +337,13 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(status)
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_custom_background(afterhours::colors::lighten(theme.background, 0.08f))
+            .with_custom_background(
+                afterhours::colors::lighten(theme.background, 0.08f))
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
-            .with_font_size(theme.font_size_sm())  // 16px - body text
+            .with_font_size(theme.font_size_sm()) // 16px - body text
             .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
@@ -345,12 +352,14 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     // Clipboard demo section with help text
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
-            .with_label("Clipboard Demo: Copy saves current settings, Paste retrieves saved text")
+            .with_label("Clipboard Demo: Copy saves current settings, Paste "
+                        "retrieves saved text")
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(afterhours::colors::darken(theme.surface, 0.9f))
+            .with_custom_background(
+                afterhours::colors::darken(theme.surface, 0.9f))
             .with_custom_text_color(theme.font_muted)
             .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_sm() - 2.0f)  // 12px - help text
+            .with_font_size(theme.font_size_sm() - 2.0f) // 12px - help text
             .with_margin(Margin{.top = DefaultSpacing::tiny(),
                                 .bottom = pixels(0),
                                 .left = pixels(0),
@@ -358,14 +367,14 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
 
     auto clipboard_row =
         hstack(context, mk(main_container.ent(), 4),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_margin(Margin{.top = DefaultSpacing::tiny(),
-                                    .bottom = pixels(0),
-                                    .left = pixels(0),
-                                    .right = pixels(0)})
-                .with_debug_name("clipboard_row"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                   .with_justify_content(JustifyContent::SpaceAround)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                       .bottom = pixels(0),
+                                       .left = pixels(0),
+                                       .right = pixels(0)})
+                   .with_debug_name("clipboard_row"));
 
     // Copy button - copies current status to clipboard
     if (button(context, mk(clipboard_row.ent(), 0),
@@ -373,7 +382,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Copy Status")
                    .with_size(ComponentSize{pixels(150), pixels(44)})
                    .with_background(Theme::Usage::Primary)
-                   .with_font_size(theme.font_size_sm())  // 16px - button text
+                   .with_font_size(theme.font_size_sm()) // 16px - button text
                    .with_debug_name("copy_btn"))) {
       afterhours::clipboard::set_text(status);
       clipboard_display = "Copied!";
@@ -385,7 +394,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Paste")
                    .with_size(ComponentSize{pixels(150), pixels(44)})
                    .with_background(Theme::Usage::Accent)
-                   .with_font_size(theme.font_size_sm())  // 16px - button text
+                   .with_font_size(theme.font_size_sm()) // 16px - button text
                    .with_debug_name("paste_btn"))) {
       if (afterhours::clipboard::has_text()) {
         clipboard_display = afterhours::clipboard::get_text();
@@ -394,7 +403,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // Display clipboard contents (truncated if too long) - smaller font for secondary info
+    // Display clipboard contents (truncated if too long) - smaller font for
+    // secondary info
     std::string display_text = clipboard_display;
     if (display_text.length() > 60) {
       display_text = display_text.substr(0, 57) + "...";
@@ -406,7 +416,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{expand(), pixels(44)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font_size(theme.font_size_sm() - 2.0f)); // 14px - secondary text
+            .with_font_size(theme.font_size_sm() -
+                            2.0f)); // 14px - secondary text
   }
 };
 

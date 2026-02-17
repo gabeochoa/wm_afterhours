@@ -130,9 +130,8 @@ struct TestApp {
       pcr->should_refetch = false; // Prevent CollectCurrentResolution overwrite
     }
     // Update Settings so screens that read from Settings directly also see it
-    Settings::get().update_resolution(
-        afterhours::window_manager::Resolution{.width = width,
-                                               .height = height});
+    Settings::get().update_resolution(afterhours::window_manager::Resolution{
+        .width = width, .height = height});
   }
 
   /// Check that the current screen resolution matches expected values.
@@ -142,8 +141,8 @@ struct TestApp {
     if (actual_w != expected_w || actual_h != expected_h) {
       throw std::runtime_error(
           "Expected screen size " + std::to_string(expected_w) + "x" +
-          std::to_string(expected_h) + ", but got " +
-          std::to_string(actual_w) + "x" + std::to_string(actual_h));
+          std::to_string(expected_h) + ", but got " + std::to_string(actual_w) +
+          "x" + std::to_string(actual_h));
     }
   }
 
@@ -358,20 +357,20 @@ struct TestApp {
       throw std::runtime_error("No UIContext singleton found");
     }
     if (context->visual_focus_id == context->ROOT) {
-      throw std::runtime_error(
-          "Expected visual focus on '" + label + "', but visual_focus_id is ROOT");
+      throw std::runtime_error("Expected visual focus on '" + label +
+                               "', but visual_focus_id is ROOT");
     }
-    auto opt_entity =
-        afterhours::ui::UICollectionHolder::getEntityForID(context->visual_focus_id);
+    auto opt_entity = afterhours::ui::UICollectionHolder::getEntityForID(
+        context->visual_focus_id);
     if (!opt_entity.has_value()) {
-      throw std::runtime_error(
-          "Expected visual focus on '" + label +
-          "', but visual_focus_id entity not found");
+      throw std::runtime_error("Expected visual focus on '" + label +
+                               "', but visual_focus_id entity not found");
     }
     afterhours::Entity &ve = opt_entity.asE();
     if (!ve.has<afterhours::ui::HasLabel>()) {
       throw std::runtime_error(
-          "Visual focus element does not have a label (expected '" + label + "')");
+          "Visual focus element does not have a label (expected '" + label +
+          "')");
     }
     const std::string &actual = ve.get<afterhours::ui::HasLabel>().label;
     if (actual != label) {
@@ -389,16 +388,15 @@ struct TestApp {
       throw std::runtime_error("No UIContext singleton found");
     }
     if (context->visual_focus_id == context->ROOT) {
-      throw std::runtime_error(
-          "Expected visual focus on debug_name '" + debug_name +
-          "', but visual_focus_id is ROOT");
+      throw std::runtime_error("Expected visual focus on debug_name '" +
+                               debug_name + "', but visual_focus_id is ROOT");
     }
-    auto opt_entity =
-        afterhours::ui::UICollectionHolder::getEntityForID(context->visual_focus_id);
+    auto opt_entity = afterhours::ui::UICollectionHolder::getEntityForID(
+        context->visual_focus_id);
     if (!opt_entity.has_value()) {
-      throw std::runtime_error(
-          "Expected visual focus on debug_name '" + debug_name +
-          "', but visual_focus_id entity not found");
+      throw std::runtime_error("Expected visual focus on debug_name '" +
+                               debug_name +
+                               "', but visual_focus_id entity not found");
     }
     afterhours::Entity &ve = opt_entity.asE();
     if (!ve.has<afterhours::ui::UIComponentDebug>()) {
@@ -406,7 +404,8 @@ struct TestApp {
           "Visual focus element does not have UIComponentDebug (expected '" +
           debug_name + "')");
     }
-    const std::string &actual = ve.get<afterhours::ui::UIComponentDebug>().name_value;
+    const std::string &actual =
+        ve.get<afterhours::ui::UIComponentDebug>().name_value;
     if (actual != debug_name) {
       throw std::runtime_error("Expected visual focus on debug_name '" +
                                debug_name + "', but visual focus is on '" +
@@ -417,7 +416,7 @@ struct TestApp {
   // ========== Responsive Layout Validation ==========
 
   struct OverflowViolation {
-    std::string name;  // debug name or label
+    std::string name; // debug name or label
     float x, y, w, h; // computed rect
   };
 
@@ -456,8 +455,7 @@ struct TestApp {
       // Check 1: element rect outside viewport
       bool rect_out = (rect.x + rect.width > vw + TOLERANCE) ||
                       (rect.y + rect.height > vh + TOLERANCE) ||
-                      (rect.x < -TOLERANCE) ||
-                      (rect.y < -TOLERANCE);
+                      (rect.x < -TOLERANCE) || (rect.y < -TOLERANCE);
 
       // Check 2: text truncation (text wider than its container element)
       // Skip text check for elements at origin (0,0) - likely stale/unprocessed
@@ -474,10 +472,12 @@ struct TestApp {
           if (font_mgr->fonts.contains(fname)) {
             afterhours::Font font = font_mgr->fonts.at(fname);
             float font_size = cmp.font_size.value;
-            if (font_size < 1.0f) font_size = 14.0f;
-            auto text_sz = afterhours::measure_text(
-                font, label.label.c_str(), font_size, 1.0f);
-            if (text_sz.x > rect.width + 4.0f) text_truncated = true;
+            if (font_size < 1.0f)
+              font_size = 14.0f;
+            auto text_sz = afterhours::measure_text(font, label.label.c_str(),
+                                                    font_size, 1.0f);
+            if (text_sz.x > rect.width + 4.0f)
+              text_truncated = true;
           }
         }
       }
@@ -493,8 +493,7 @@ struct TestApp {
       } else {
         name = "entity_" + std::to_string(entity.id);
       }
-      violations.push_back(
-          {name, rect.x, rect.y, rect.width, rect.height});
+      violations.push_back({name, rect.x, rect.y, rect.width, rect.height});
     }
     return violations;
   }
@@ -511,9 +510,8 @@ struct TestApp {
                         " element(s) overflow the viewport:\n";
       for (auto &v : violations) {
         msg += "  - " + v.name + " at (" + std::to_string((int)v.x) + "," +
-               std::to_string((int)v.y) + ") size " +
-               std::to_string((int)v.w) + "x" + std::to_string((int)v.h) +
-               "\n";
+               std::to_string((int)v.y) + ") size " + std::to_string((int)v.w) +
+               "x" + std::to_string((int)v.h) + "\n";
       }
       throw std::runtime_error(msg);
     }

@@ -34,17 +34,16 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("tray_bg"));
 
     // Card container
-    auto card = vstack(
-        context, mk(entity, 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(500), pixels(500)})
-            .with_absolute_position(
-                (screen_width - 500.0f) / 2.0f,
-                (screen_height - 500.0f) / 2.0f)
-            .with_background(Theme::Usage::Surface)
-            .with_roundness(0.04f)
-            .with_padding(Spacing::md)
-            .with_debug_name("card"));
+    auto card =
+        vstack(context, mk(entity, 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(500), pixels(500)})
+                   .with_absolute_position((screen_width - 500.0f) / 2.0f,
+                                           (screen_height - 500.0f) / 2.0f)
+                   .with_background(Theme::Usage::Surface)
+                   .with_roundness(0.04f)
+                   .with_padding(Spacing::md)
+                   .with_debug_name("card"));
 
     // Title
     div(context, mk(card.ent(), 0),
@@ -68,16 +67,15 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("h_label"));
 
     // Horizontal tray
-    auto h_tray = tray(
-        context, mk(card.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(60)})
-            .with_flex_direction(FlexDirection::Row)
-            .with_flex_wrap(FlexWrap::NoWrap)
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_align_items(AlignItems::Center)
-            .with_gap(pixels(10.0f))
-            .with_debug_name("h_tray"));
+    auto h_tray = tray(context, mk(card.ent(), 2),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(60)})
+                           .with_flex_direction(FlexDirection::Row)
+                           .with_flex_wrap(FlexWrap::NoWrap)
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_align_items(AlignItems::Center)
+                           .with_gap(pixels(10.0f))
+                           .with_debug_name("h_tray"));
 
     std::string h_labels[] = {"H-Alpha", "H-Beta", "H-Gamma"};
     afterhours::Color h_colors[] = {
@@ -91,16 +89,16 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
       if (h_clicks[i] > 0) {
         label += " (" + std::to_string(h_clicks[i]) + ")";
       }
-      auto btn = button(
-          context, mk(h_tray.ent(), i),
-          ComponentConfig{}
-              .with_label(label)
-              .with_size(ComponentSize{percent(0.30f), pixels(50)})
-              .with_custom_background(h_colors[i])
-              .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("h_btn_" + std::to_string(i)));
+      auto btn =
+          button(context, mk(h_tray.ent(), i),
+                 ComponentConfig{}
+                     .with_label(label)
+                     .with_size(ComponentSize{percent(0.30f), pixels(50)})
+                     .with_custom_background(h_colors[i])
+                     .with_auto_text_color(true)
+                     .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+                     .with_alignment(TextAlignment::Center)
+                     .with_debug_name("h_btn_" + std::to_string(i)));
       if (btn) {
         h_clicks[i]++;
       }
@@ -123,14 +121,13 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("v_label"));
 
     // Vertical tray
-    auto v_tray = tray(
-        context, mk(card.ent(), 5),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(170)})
-            .with_flex_direction(FlexDirection::Column)
-            .with_flex_wrap(FlexWrap::NoWrap)
-            .with_gap(pixels(10.0f))
-            .with_debug_name("v_tray"));
+    auto v_tray = tray(context, mk(card.ent(), 5),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(170)})
+                           .with_flex_direction(FlexDirection::Column)
+                           .with_flex_wrap(FlexWrap::NoWrap)
+                           .with_gap(pixels(10.0f))
+                           .with_debug_name("v_tray"));
 
     std::string v_labels[] = {"V-Alpha", "V-Beta", "V-Gamma"};
     afterhours::Color v_colors[] = {
@@ -144,16 +141,15 @@ struct TrayShowcase : ScreenSystem<UIContext<InputAction>> {
       if (v_clicks[i] > 0) {
         label += " (" + std::to_string(v_clicks[i]) + ")";
       }
-      auto btn = button(
-          context, mk(v_tray.ent(), i),
-          ComponentConfig{}
-              .with_label(label)
-              .with_size(ComponentSize{percent(1.0f), pixels(50)})
-              .with_custom_background(v_colors[i])
-              .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("v_btn_" + std::to_string(i)));
+      auto btn = button(context, mk(v_tray.ent(), i),
+                        ComponentConfig{}
+                            .with_label(label)
+                            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                            .with_custom_background(v_colors[i])
+                            .with_auto_text_color(true)
+                            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+                            .with_alignment(TextAlignment::Center)
+                            .with_debug_name("v_btn_" + std::to_string(i)));
       if (btn) {
         v_clicks[i]++;
       }

@@ -13,16 +13,17 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
   size_t active_tab = 0;
 
   std::array<std::string_view, 3> tab_labels = {"Profile", "Account",
-                                                 "Settings"};
+                                                "Settings"};
 
-  void render_profile_tab(UIContext<InputAction> &context, afterhours::Entity &root,
-                          const Theme &theme) {
+  void render_profile_tab(UIContext<InputAction> &context,
+                          afterhours::Entity &root, const Theme &theme) {
     // Section title - use larger font for clear hierarchy
     div(context, mk(root, 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Profile Settings")
-            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))  // font_size_lg for section headers
+            .with_font(UIComponent::DEFAULT_FONT,
+                       pixels(32.0f)) // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -67,14 +68,15 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(theme.font));
   }
 
-  void render_audio_tab(UIContext<InputAction> &context, afterhours::Entity &root,
-                        const Theme &theme) {
+  void render_audio_tab(UIContext<InputAction> &context,
+                        afterhours::Entity &root, const Theme &theme) {
     // Section title - use larger font for clear hierarchy
     div(context, mk(root, 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Audio Settings")
-            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))  // font_size_lg for section headers
+            .with_font(UIComponent::DEFAULT_FONT,
+                       pixels(32.0f)) // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -116,14 +118,15 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     }
   }
 
-  void render_display_tab(UIContext<InputAction> &context, afterhours::Entity &root,
-                          const Theme &theme) {
+  void render_display_tab(UIContext<InputAction> &context,
+                          afterhours::Entity &root, const Theme &theme) {
     // Section title - use larger font for clear hierarchy
     div(context, mk(root, 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
             .with_label("Display Settings")
-            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))  // font_size_lg for section headers
+            .with_font(UIComponent::DEFAULT_FONT,
+                       pixels(32.0f)) // font_size_lg for section headers
             .with_custom_text_color(theme.font)
             .with_margin(Margin{.bottom = pixels(16)}));
 
@@ -158,10 +161,11 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
         {87, 255, 87, 255}, {87, 189, 255, 255}, {189, 87, 255, 255},
     };
 
-    auto swatch_row = hstack(context, mk(root, 10),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(70)})
-            .with_debug_name("swatch_row"));
+    auto swatch_row =
+        hstack(context, mk(root, 10),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(70)})
+                   .with_debug_name("swatch_row"));
 
     for (int i = 0; i < 6; ++i) {
       div(context, mk(swatch_row.ent(), i),
@@ -188,53 +192,56 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Adaptive;
 
     // Root container - centered on screen, expanded to fill more screen
-    auto root = div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
-            .with_self_align(SelfAlign::Center)
-            .with_background(Theme::Usage::Background)
-            .with_roundness(0.04f)
-            .with_debug_name("root"));
+    auto root =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
+                .with_self_align(SelfAlign::Center)
+                .with_background(Theme::Usage::Background)
+                .with_roundness(0.04f)
+                .with_debug_name("root"));
 
     // Main container with padding to keep tabs inside bounds
-    auto main_container = vstack(context, mk(root.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-            .with_padding(Spacing::lg)
-            .with_justify_content(JustifyContent::Center)
-            .with_debug_name("main_container"));
+    auto main_container =
+        vstack(context, mk(root.ent(), 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_padding(Spacing::lg)
+                   .with_justify_content(JustifyContent::Center)
+                   .with_debug_name("main_container"));
 
     // Use tab_container component - check result for tab changes
     // Note: Small horizontal padding prevents floating-point rounding from
     // causing false layout overflow warnings when tab widths (percent(1/N))
     // sum to exactly the container width.
-    if (auto result = tab_container(context, mk(main_container.ent(), 0), tab_labels, active_tab,
+    if (auto result = tab_container(
+            context, mk(main_container.ent(), 0), tab_labels, active_tab,
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(52)})
                 .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
                 .with_no_wrap()
-                .with_padding(Padding{
-                    .left = pixels(1),
-                    .right = pixels(1)})
-                .with_debug_name("tabs")); result) {
+                .with_padding(Padding{.left = pixels(1), .right = pixels(1)})
+                .with_debug_name("tabs"));
+        result) {
       // Tab changed - could log, play sound, etc.
     }
 
     // Content panel with proper padding
-    auto content_panel = vstack(context, mk(main_container.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), expand()})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Padding{
-                .top = pixels(16),
-                .left = pixels(24),
-                .bottom = pixels(16),
-                .right = pixels(24)})
-            .with_margin(Margin{.top = pixels(4)})
-            .with_debug_name("content_panel"));
+    auto content_panel =
+        vstack(context, mk(main_container.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), expand()})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Padding{.top = pixels(16),
+                                         .left = pixels(24),
+                                         .bottom = pixels(16),
+                                         .right = pixels(24)})
+                   .with_margin(Margin{.top = pixels(4)})
+                   .with_debug_name("content_panel"));
 
     // Render content based on active tab
-    using RenderFn = void (TabContainerShowcase::*)(UIContext<InputAction>&, afterhours::Entity&, const Theme&);
+    using RenderFn = void (TabContainerShowcase::*)(
+        UIContext<InputAction> &, afterhours::Entity &, const Theme &);
     RenderFn render_fns[] = {
         &TabContainerShowcase::render_profile_tab,
         &TabContainerShowcase::render_audio_tab,
@@ -243,38 +250,39 @@ struct TabContainerShowcase : ScreenSystem<UIContext<InputAction>> {
     (this->*render_fns[active_tab])(context, content_panel.ent(), theme);
 
     // ========== FOOTER: OK / Cancel / Apply ==========
-    auto footer = hstack(context, mk(main_container.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_justify_content(JustifyContent::FlexEnd)
-            .with_align_items(AlignItems::Center)
-            .with_padding(Padding{.right = DefaultSpacing::medium()})
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_background(Theme::Usage::None)
-            .with_debug_name("dialog_footer"));
+    auto footer =
+        hstack(context, mk(main_container.ent(), 2),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                   .with_justify_content(JustifyContent::FlexEnd)
+                   .with_align_items(AlignItems::Center)
+                   .with_padding(Padding{.right = DefaultSpacing::medium()})
+                   .with_margin(Margin{.top = DefaultSpacing::small()})
+                   .with_background(Theme::Usage::None)
+                   .with_debug_name("dialog_footer"));
 
     button(context, mk(footer.ent(), 0),
-        ComponentConfig{}
-            .with_label("OK")
-            .with_size(ComponentSize{pixels(80), pixels(36)})
-            .with_background(Theme::Usage::Primary)
-            .with_margin(Margin{.right = DefaultSpacing::small()})
-            .with_debug_name("btn_ok"));
+           ComponentConfig{}
+               .with_label("OK")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_background(Theme::Usage::Primary)
+               .with_margin(Margin{.right = DefaultSpacing::small()})
+               .with_debug_name("btn_ok"));
 
     button(context, mk(footer.ent(), 1),
-        ComponentConfig{}
-            .with_label("Cancel")
-            .with_size(ComponentSize{pixels(80), pixels(36)})
-            .with_background(Theme::Usage::Surface)
-            .with_margin(Margin{.right = DefaultSpacing::small()})
-            .with_debug_name("btn_cancel"));
+           ComponentConfig{}
+               .with_label("Cancel")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_background(Theme::Usage::Surface)
+               .with_margin(Margin{.right = DefaultSpacing::small()})
+               .with_debug_name("btn_cancel"));
 
     button(context, mk(footer.ent(), 2),
-        ComponentConfig{}
-            .with_label("Apply")
-            .with_size(ComponentSize{pixels(80), pixels(36)})
-            .with_background(Theme::Usage::Surface)
-            .with_debug_name("btn_apply"));
+           ComponentConfig{}
+               .with_label("Apply")
+               .with_size(ComponentSize{pixels(80), pixels(36)})
+               .with_background(Theme::Usage::Surface)
+               .with_debug_name("btn_apply"));
   }
 };
 

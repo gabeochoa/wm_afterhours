@@ -26,7 +26,8 @@ struct RenderScreenHUD : afterhours::System<> {
       return;
     }
 
-    // Skip HUD rendering in headless mode (uiFont not loaded, and not needed for tests)
+    // Skip HUD rendering in headless mode (uiFont not loaded, and not needed
+    // for tests)
     if (afterhours::graphics::is_headless()) {
       return;
     }

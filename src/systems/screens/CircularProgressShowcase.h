@@ -2,9 +2,9 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -23,11 +23,13 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color track_dark{55, 65, 81, 150};      // Subtle track
 
   // Animated values
-  float animated_progress = 0.35f; // Start at 35% so screenshots show meaningful progress
+  float animated_progress =
+      0.35f; // Start at 35% so screenshots show meaningful progress
   float animation_speed = 0.3f;
 
-  // Configuration: minimum size (in base pixels, before scaling) to show percentage text
-  // Sizes below this threshold will hide the percentage label for better readability
+  // Configuration: minimum size (in base pixels, before scaling) to show
+  // percentage text Sizes below this threshold will hide the percentage label
+  // for better readability
   float min_size_for_percentage_text = 50.0f;
 
   void for_each_with(afterhours::Entity &entity,
@@ -128,7 +130,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
             .with_absolute_position(start_x + (card_width - ring_size) / 2,
-                            content_y + 50.0f * scale)
+                                    content_y + 50.0f * scale)
             .with_custom_background(accent_cyan)
             .with_border(track_dark, ring_thickness)
             .with_debug_name("progress_basic"));
@@ -179,7 +181,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
             .with_absolute_position(card2_x + (card_width - ring_size) / 2,
-                            content_y + 50.0f * scale)
+                                    content_y + 50.0f * scale)
             .with_custom_background(accent_purple)
             .with_border(track_dark, ring_thickness)
             .with_debug_name("progress_animated"));
@@ -231,7 +233,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
             .with_absolute_position(card3_x + (card_width - ring_size) / 2,
-                            content_y + 50.0f * scale)
+                                    content_y + 50.0f * scale)
             .with_custom_background(accent_green)
             .with_border(track_dark, 16.0f * scale)
             .with_debug_name("progress_thick"));
@@ -282,7 +284,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
             .with_absolute_position(card4_x + (card_width - ring_size) / 2,
-                            content_y + 50.0f * scale)
+                                    content_y + 50.0f * scale)
             .with_custom_background(accent_orange)
             .with_border(track_dark, 3.0f * scale)
             .with_debug_name("progress_thin"));
@@ -353,8 +355,8 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{pixels(size), pixels(size)})
               .with_absolute_position(card_x + (small_card_width - size) / 2,
-                              bottom_y + 15.0f * scale +
-                                  (70.0f * scale - size) / 2)
+                                      bottom_y + 15.0f * scale +
+                                          (70.0f * scale - size) / 2)
               .with_custom_background(colors[i])
               .with_border(track_dark, std::max(3.0f * scale, size * 0.1f))
               .with_debug_name(fmt::format("progress_size_{}", i)));

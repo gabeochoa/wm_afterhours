@@ -24,7 +24,8 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     int sh = Settings::get().get_screen_height();
 
     // Main centered container
-    auto main = vstack(context, mk(entity, 0),
+    auto main = vstack(
+        context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels((float)sw), pixels((float)sh)})
             .with_background(Theme::Usage::Background)
@@ -51,8 +52,10 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(afterhours::Color{180, 180, 180, 255})
             .with_alignment(TextAlignment::Center)
             .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = DefaultSpacing::small(),
-                                .left = pixels(0), .right = pixels(0)})
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                .bottom = DefaultSpacing::small(),
+                                .left = pixels(0),
+                                .right = pixels(0)})
             .with_skip_tabbing(true));
 
     // Demo container - a column, so children stack vertically
@@ -62,56 +65,65 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
     float container_width = 600.0f;
     float container_height = 224.0f;
 
-    auto demo = vstack(context, mk(main.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(container_width), pixels(container_height)})
-            .with_custom_background(afterhours::Color{45, 50, 55, 255})
-            .with_border(afterhours::Color{100, 110, 120, 255}, 2.0f)
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_debug_name("demo"));
+    auto demo =
+        vstack(context, mk(main.ent(), 2),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(container_width),
+                                            pixels(container_height)})
+                   .with_custom_background(afterhours::Color{45, 50, 55, 255})
+                   .with_border(afterhours::Color{100, 110, 120, 255}, 2.0f)
+                   .with_justify_content(JustifyContent::SpaceAround)
+                   .with_debug_name("demo"));
 
     // FlexStart - aligns left with margin for visual spacing from edge
     button(context, mk(demo.ent(), 0),
-        ComponentConfig{}
-            .with_label("FlexStart (left)")
-            .with_size(ComponentSize{pixels(184), pixels(48)})
-            .with_self_align(SelfAlign::FlexStart)
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(0)}));
+           ComponentConfig{}
+               .with_label("FlexStart (left)")
+               .with_size(ComponentSize{pixels(184), pixels(48)})
+               .with_self_align(SelfAlign::FlexStart)
+               .with_background(Theme::Usage::Primary)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+               .with_margin(Margin{.top = pixels(0),
+                                   .bottom = pixels(0),
+                                   .left = pixels(0),
+                                   .right = pixels(0)}));
 
     // Center - centers horizontally
     button(context, mk(demo.ent(), 1),
-        ComponentConfig{}
-            .with_label("Center")
-            .with_size(ComponentSize{pixels(184), pixels(48)})
-            .with_self_align(SelfAlign::Center)
-            .with_background(Theme::Usage::Secondary)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f)));
+           ComponentConfig{}
+               .with_label("Center")
+               .with_size(ComponentSize{pixels(184), pixels(48)})
+               .with_self_align(SelfAlign::Center)
+               .with_background(Theme::Usage::Secondary)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f)));
 
     // FlexEnd - aligns right with margin for visual spacing from edge
     button(context, mk(demo.ent(), 2),
-        ComponentConfig{}
-            .with_label("FlexEnd (right)")
-            .with_size(ComponentSize{pixels(184), pixels(48)})
-            .with_self_align(SelfAlign::FlexEnd)
-            .with_background(Theme::Usage::Accent)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Margin{.top = pixels(0), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(0)}));
+           ComponentConfig{}
+               .with_label("FlexEnd (right)")
+               .with_size(ComponentSize{pixels(184), pixels(48)})
+               .with_self_align(SelfAlign::FlexEnd)
+               .with_background(Theme::Usage::Accent)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+               .with_margin(Margin{.top = pixels(0),
+                                   .bottom = pixels(0),
+                                   .left = pixels(0),
+                                   .right = pixels(0)}));
 
     // Visual legend row showing color-to-position mapping
-    auto legend = hstack(context, mk(main.ent(), 3),
+    auto legend = hstack(
+        context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(container_width), pixels(36)})
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(0)})
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = pixels(0),
+                                .left = pixels(0),
+                                .right = pixels(0)})
             .with_skip_tabbing(true)
             .with_debug_name("legend"));
 
@@ -156,8 +168,10 @@ struct SelfAlignShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(afterhours::Color{160, 170, 180, 255})
             .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = DefaultSpacing::tiny(), .bottom = pixels(0),
-                                .left = pixels(0), .right = pixels(0)})
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                .bottom = pixels(0),
+                                .left = pixels(0),
+                                .right = pixels(0)})
             .with_skip_tabbing(true));
   }
 };

@@ -103,14 +103,14 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("it_root"));
 
     // Close button (top-right, using translate to position)
-    auto close_row = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_justify_content(JustifyContent::FlexEnd)
-            .with_no_wrap()
-            .with_padding(Padding{.right = pixels(25)})
-            .with_debug_name("close_row"));
+    auto close_row =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                   .with_justify_content(JustifyContent::FlexEnd)
+                   .with_no_wrap()
+                   .with_padding(Padding{.right = pixels(25)})
+                   .with_debug_name("close_row"));
 
     button(context, mk(close_row.ent()),
            ComponentConfig{}
@@ -125,20 +125,21 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_roundness(1.0f));
 
     // Panel
-    auto panel = vstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_720p_size(430, 530)
-            .with_custom_background(panel_cream)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.03f)
-            .with_soft_shadow(4.0f, 6.0f, 20.0f,
-                              afterhours::Color{50, 60, 50, 30})
-            .with_padding(Padding{.top = pixels(18), .left = pixels(15),
-                                  .bottom = pixels(15), .right = pixels(15)})
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(-50)})
-            .with_debug_name("panel"));
+    auto panel = vstack(context, mk(root.ent()),
+                        ComponentConfig{}
+                            .with_720p_size(430, 530)
+                            .with_custom_background(panel_cream)
+                            .with_rounded_corners(RoundedCorners())
+                            .with_roundness(0.03f)
+                            .with_soft_shadow(4.0f, 6.0f, 20.0f,
+                                              afterhours::Color{50, 60, 50, 30})
+                            .with_padding(Padding{.top = pixels(18),
+                                                  .left = pixels(15),
+                                                  .bottom = pixels(15),
+                                                  .right = pixels(15)})
+                            .with_no_wrap()
+                            .with_margin(Margin{.top = pixels(-50)})
+                            .with_debug_name("panel"));
 
     // Title
     div(context, mk(panel.ent()),
@@ -341,12 +342,11 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Segments
-    auto segs = hstack(
-        context, mk(row.ent(), 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(130), pixels(15)})
-            .with_no_wrap()
-            .with_align_items(AlignItems::Center));
+    auto segs = hstack(context, mk(row.ent(), 3),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{pixels(130), pixels(15)})
+                           .with_no_wrap()
+                           .with_align_items(AlignItems::Center));
 
     for (int si = 0; si < max_val; si++) {
       bool is_filled = (si < value);
@@ -357,8 +357,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_custom_background(seg_color)
                      .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.2f)
-                     .with_margin(si > 0 ? Margin{.left = pixels(2)}
-                                         : Margin{})
+                     .with_margin(si > 0 ? Margin{.left = pixels(2)} : Margin{})
                      .with_skip_tabbing(true))) {
         value = si + 1;
       }

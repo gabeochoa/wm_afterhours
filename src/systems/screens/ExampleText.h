@@ -76,7 +76,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 3),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(180), pixels(2)})
-            .with_absolute_position(panel_x + (panel_w - 180) / 2.0f, panel_y + 78.0f)
+            .with_absolute_position(panel_x + (panel_w - 180) / 2.0f,
+                                    panel_y + 78.0f)
             .with_custom_background(gold_accent));
 
     // Typography examples in a refined layout
@@ -87,7 +88,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     float content_height = panel_h - 180.0f; // Available height for content
 
     // Left column - Size variations
-    float left_spacing = content_height / 6.0f; // Divide content area into sections
+    float left_spacing =
+        content_height / 6.0f; // Divide content area into sections
 
     div(context, mk(entity, 10),
         ComponentConfig{}
@@ -124,9 +126,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 14),
         ComponentConfig{}
-            .with_label(
-                "Body text for readable content that flows naturally "
-                "and maintains excellent legibility.")
+            .with_label("Body text for readable content that flows naturally "
+                        "and maintains excellent legibility.")
             .with_size(ComponentSize{pixels(col_w), pixels(80)})
             .with_absolute_position(left_col, content_y + left_spacing * 2.7f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
@@ -185,7 +186,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(divider));
 
     // Right column - Color variations
-    float right_item_spacing = (content_height - 30.0f) / 5.0f; // Space for 5 items plus header
+    float right_item_spacing =
+        (content_height - 30.0f) / 5.0f; // Space for 5 items plus header
 
     div(context, mk(entity, 20),
         ComponentConfig{}
@@ -226,7 +228,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 31 + i * 2),
           ComponentConfig{}
               .with_label(examples[i].label)
-              .with_size(ComponentSize{pixels(col_w - 24), pixels(pill_height - 8)})
+              .with_size(
+                  ComponentSize{pixels(col_w - 24), pixels(pill_height - 8)})
               .with_absolute_position(right_col + 12.0f, item_y + 4.0f)
               .with_font("Garamond", h720(24.0f))
               .with_custom_text_color(examples[i].color)

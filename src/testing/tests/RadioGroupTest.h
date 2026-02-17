@@ -37,7 +37,8 @@ TEST(radio_buttons_single_tab_stop) {
   co_await TestApp::wait_for_frames(3);
   auto third_focus = ctx->focus_id;
   if (third_focus == first_focus || third_focus == second_focus) {
-    throw std::runtime_error("Tab did not move to a third distinct radio group");
+    throw std::runtime_error(
+        "Tab did not move to a third distinct radio group");
   }
 
   // Tab wraps back to first radio group
@@ -106,8 +107,10 @@ TEST(radio_buttons_enter_selects) {
   auto check_on_fruit = [&]() -> bool {
     auto opt = afterhours::ui::UICollectionHolder::getEntityForID(
         ctx->visual_focus_id);
-    if (!opt.has_value()) return false;
-    if (!opt.asE().has<afterhours::ui::UIComponentDebug>()) return false;
+    if (!opt.has_value())
+      return false;
+    if (!opt.asE().has<afterhours::ui::UIComponentDebug>())
+      return false;
     auto &name = opt.asE().get<afterhours::ui::UIComponentDebug>().name_value;
     return name.find("fruit_radios") != std::string::npos;
   };

@@ -13,8 +13,7 @@ using namespace afterhours::ui::imm;
 // Demonstrates absolute positioning patterns and verifies correct behavior.
 // Covers: translate positioning, margin-as-offset, corner pinning,
 // centered overlay, mixed absolute+flow, and screen_pct sizing.
-struct AbsolutePositioningShowcase
-    : ScreenSystem<UIContext<InputAction>> {
+struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -34,14 +33,15 @@ struct AbsolutePositioningShowcase
     const float scale = sh / 720.f;
 
     // Full-screen root
-    auto root = vstack(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(sw), pixels(sh)})
-            .with_background(Theme::Usage::Background)
-            .with_padding(Padding{.top = pixels(8), .left = pixels(16),
-                                  .bottom = pixels(8), .right = pixels(16)})
-            .with_debug_name("abs_root"));
+    auto root = vstack(context, mk(entity, 0),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{pixels(sw), pixels(sh)})
+                           .with_background(Theme::Usage::Background)
+                           .with_padding(Padding{.top = pixels(8),
+                                                 .left = pixels(16),
+                                                 .bottom = pixels(8),
+                                                 .right = pixels(16)})
+                           .with_debug_name("abs_root"));
 
     // Title
     div(context, mk(root.ent(), 0),
@@ -72,44 +72,46 @@ struct AbsolutePositioningShowcase
             .with_skip_tabbing(true));
 
     // A container with a relatively-positioned child and an absolute child
-    auto s1_container = div(
-        context, mk(section1.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
-            .with_custom_background(afterhours::Color{30, 36, 50, 255})
-            .with_debug_name("s1_container"));
+    auto s1_container =
+        div(context, mk(section1.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
+                .with_custom_background(afterhours::Color{30, 36, 50, 255})
+                .with_debug_name("s1_container"));
 
     // Absolute box positioned via translate
     button(context, mk(s1_container.ent(), 0),
-        ComponentConfig{}
-            .with_label("translate(100,10)")
-            .with_size(ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
-            .with_custom_background(green)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_absolute_position(h720(100.f), h720(10.f))
-            .with_debug_name("abs_translate"));
+           ComponentConfig{}
+               .with_label("translate(100,10)")
+               .with_size(
+                   ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
+               .with_custom_background(green)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+               .with_absolute_position(h720(100.f), h720(10.f))
+               .with_debug_name("abs_translate"));
 
     // Another absolute box further right
     button(context, mk(s1_container.ent(), 1),
-        ComponentConfig{}
-            .with_label("translate(300,10)")
-            .with_size(ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
-            .with_custom_background(pink)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_absolute_position(h720(300.f), h720(10.f))
-            .with_debug_name("abs_translate_2"));
+           ComponentConfig{}
+               .with_label("translate(300,10)")
+               .with_size(
+                   ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
+               .with_custom_background(pink)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+               .with_absolute_position(h720(300.f), h720(10.f))
+               .with_debug_name("abs_translate_2"));
 
     // -- Section 2: Corner pinning --
-    auto section2 = div(
-        context, mk(root.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(160.f * scale)})
-            .with_custom_background(panel_bg)
-            .with_margin(Margin{.top = pixels(6)})
-            .with_padding(Spacing::sm)
-            .with_debug_name("section_corners"));
+    auto section2 =
+        div(context, mk(root.ent(), 2),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(160.f * scale)})
+                .with_custom_background(panel_bg)
+                .with_margin(Margin{.top = pixels(6)})
+                .with_padding(Spacing::sm)
+                .with_debug_name("section_corners"));
 
     div(context, mk(section2.ent(), 0),
         ComponentConfig{}
@@ -124,56 +126,56 @@ struct AbsolutePositioningShowcase
     float corner_h = 110.f * scale;
     float box_s = 50.f * scale;
 
-    auto corner_area = div(
-        context, mk(section2.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(corner_w), pixels(corner_h)})
-            .with_custom_background(afterhours::Color{30, 36, 50, 255})
-            .with_debug_name("corner_area"));
+    auto corner_area =
+        div(context, mk(section2.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(corner_w), pixels(corner_h)})
+                .with_custom_background(afterhours::Color{30, 36, 50, 255})
+                .with_debug_name("corner_area"));
 
     // Top-left
     button(context, mk(corner_area.ent(), 0),
-        ComponentConfig{}
-            .with_label("TL")
-            .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
-            .with_custom_background(teal)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_absolute_position(0.f, 0.f)
-            .with_debug_name("corner_tl"));
+           ComponentConfig{}
+               .with_label("TL")
+               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_custom_background(teal)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+               .with_absolute_position(0.f, 0.f)
+               .with_debug_name("corner_tl"));
 
     // Top-right
     button(context, mk(corner_area.ent(), 1),
-        ComponentConfig{}
-            .with_label("TR")
-            .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
-            .with_custom_background(pink)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_absolute_position(corner_w - box_s, 0.f)
-            .with_debug_name("corner_tr"));
+           ComponentConfig{}
+               .with_label("TR")
+               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_custom_background(pink)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+               .with_absolute_position(corner_w - box_s, 0.f)
+               .with_debug_name("corner_tr"));
 
     // Bottom-left
     button(context, mk(corner_area.ent(), 2),
-        ComponentConfig{}
-            .with_label("BL")
-            .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
-            .with_custom_background(orange)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_absolute_position(0.f, corner_h - box_s)
-            .with_debug_name("corner_bl"));
+           ComponentConfig{}
+               .with_label("BL")
+               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_custom_background(orange)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+               .with_absolute_position(0.f, corner_h - box_s)
+               .with_debug_name("corner_bl"));
 
     // Bottom-right
     button(context, mk(corner_area.ent(), 3),
-        ComponentConfig{}
-            .with_label("BR")
-            .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
-            .with_custom_background(purple)
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_absolute_position(corner_w - box_s, corner_h - box_s)
-            .with_debug_name("corner_br"));
+           ComponentConfig{}
+               .with_label("BR")
+               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_custom_background(purple)
+               .with_auto_text_color(true)
+               .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
+               .with_absolute_position(corner_w - box_s, corner_h - box_s)
+               .with_debug_name("corner_br"));
 
     // -- Section 3: Mixed absolute + flow --
     auto section3 = vstack(
@@ -224,12 +226,12 @@ struct AbsolutePositioningShowcase
     div(context, mk(mixed_container.ent(), 10),
         ComponentConfig{}
             .with_label("BADGE")
-            .with_size(ComponentSize{pixels(70.f * scale), pixels(24.f * scale)})
+            .with_size(
+                ComponentSize{pixels(70.f * scale), pixels(24.f * scale)})
             .with_custom_background(pink)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
-            .with_absolute_position(
-                sw - 120.f * scale, 4.f * scale)
+            .with_absolute_position(sw - 120.f * scale, 4.f * scale)
             .with_debug_name("abs_badge"));
 
     // -- Section 4: screen_pct sizing --
@@ -250,12 +252,12 @@ struct AbsolutePositioningShowcase
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true));
 
-    auto s4_container = div(
-        context, mk(section4.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
-            .with_custom_background(afterhours::Color{30, 36, 50, 255})
-            .with_debug_name("s4_container"));
+    auto s4_container =
+        div(context, mk(section4.ent(), 1),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
+                .with_custom_background(afterhours::Color{30, 36, 50, 255})
+                .with_debug_name("s4_container"));
 
     // A box sized as 30% of screen width, 8% of screen height
     div(context, mk(s4_container.ent(), 0),

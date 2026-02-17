@@ -36,7 +36,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     std::string name;
     std::string effect;
     std::vector<std::pair<std::string, int>> required; // ingredient name, count
-    int brew_time; // seconds
+    int brew_time;                                     // seconds
     afterhours::Color potion_color;
   };
 
@@ -139,8 +139,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     float tab_y = 58.0f;
     for (size_t i = 0; i < tabs.size(); i++) {
       bool is_sel = (i == selected_tab);
-      afterhours::Color tab_bg =
-          is_sel ? accent_gold : panel_purple;
+      afterhours::Color tab_bg = is_sel ? accent_gold : panel_purple;
       afterhours::Color tab_text = is_sel ? dark_text : muted;
 
       if (button(context, mk(entity, 10 + static_cast<int>(i)),
@@ -149,12 +148,13 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(130), pixels(34)})
                      .with_absolute_position(25.0f + (float)i * 140.0f, tab_y)
                      .with_custom_background(tab_bg)
-                     .with_border(is_sel ? accent_gold : border_purple, is_sel ? 3.0f : 2.0f)
+                     .with_border(is_sel ? accent_gold : border_purple,
+                                  is_sel ? 3.0f : 2.0f)
                      .with_font("EqProRounded", h720(18.0f))
                      .with_custom_text_color(tab_text)
                      .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b1100))
-            .with_roundness(0.2f))) {
+                     .with_rounded_corners(std::bitset<4>(0b1100))
+                     .with_roundness(0.2f))) {
         selected_tab = i;
       }
     }
@@ -184,16 +184,14 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::Color row_border =
           is_sel ? accent_gold : afterhours::Color{0, 0, 0, 0};
 
-      if (button(
-              context, mk(entity, 110 + static_cast<int>(i) * 4),
-              ComponentConfig{}
-                  .with_size(ComponentSize{
-                      pxf(list_w - 20), pixels(72)})
-                  .with_absolute_position(list_x + 10.0f, ry)
-                  .with_custom_background(row_bg)
-                  .with_border(row_border, is_sel ? 2.0f : 0.0f)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.1f))) {
+      if (button(context, mk(entity, 110 + static_cast<int>(i) * 4),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{pxf(list_w - 20), pixels(72)})
+                     .with_absolute_position(list_x + 10.0f, ry)
+                     .with_custom_background(row_bg)
+                     .with_border(row_border, is_sel ? 2.0f : 0.0f)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.1f))) {
         selected_recipe = i;
       }
 
@@ -256,8 +254,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 201),
         ComponentConfig{}
             .with_label("Brewing: " + sel_recipe.name)
-            .with_size(ComponentSize{pxf(brew_w - 30),
-                                     pixels(30)})
+            .with_size(ComponentSize{pxf(brew_w - 30), pixels(30)})
             .with_absolute_position(brew_x + 15.0f, brew_y + 12.0f)
             .with_font("Gaegu-Bold", h720(24.0f))
             .with_custom_text_color(accent_gold));
@@ -283,7 +280,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_720p_size(flask_size - 10, fill_h)
             .with_absolute_position(flask_x + 5.0f,
-                            flask_y + flask_size - fill_h - 3.0f)
+                                    flask_y + flask_size - fill_h - 3.0f)
             .with_custom_background(sel_recipe.potion_color)
             .with_rounded_corners(std::bitset<4>(0b0011))
             .with_roundness(0.3f));
@@ -293,7 +290,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(40), pixels(25)})
             .with_absolute_position(flask_x + (flask_size - 40.0f) / 2.0f,
-                            flask_y - 22.0f)
+                                    flask_y - 22.0f)
             .with_custom_background(brew_bg)
             .with_border(border_purple, 2.0f));
 
@@ -301,8 +298,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     float prog_y = flask_y + flask_size + 15.0f;
     div(context, mk(entity, 220),
         ComponentConfig{}
-            .with_size(ComponentSize{
-                pxf(brew_w - 60), pixels(24)})
+            .with_size(ComponentSize{pxf(brew_w - 60), pixels(24)})
             .with_absolute_position(brew_x + 30.0f, prog_y)
             .with_custom_background(brew_bg)
             .with_border(border_purple, 1.0f)
@@ -324,8 +320,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 222),
         ComponentConfig{}
             .with_label(std::to_string(prog_pct) + "% Brewed")
-            .with_size(ComponentSize{pxf(brew_w - 60),
-                                     pixels(22)})
+            .with_size(ComponentSize{pxf(brew_w - 60), pixels(22)})
             .with_absolute_position(brew_x + 30.0f, prog_y + 28.0f)
             .with_font("EqProRounded", h720(15.0f))
             .with_custom_text_color(muted)
@@ -336,8 +331,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 230),
         ComponentConfig{}
             .with_label("Required Ingredients:")
-            .with_size(ComponentSize{pxf(brew_w - 60),
-                                     pixels(22)})
+            .with_size(ComponentSize{pxf(brew_w - 60), pixels(22)})
             .with_absolute_position(brew_x + 30.0f, slots_y)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(white));
@@ -396,11 +390,13 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
       // Count label
       div(context, mk(entity, 242 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_label(std::string(has_enough ? "v " : "x ") + "x" + std::to_string(req.second))
-              .with_size(ComponentSize{pxf(slot_size),
-                                       pixels(18)})
+              .with_label(std::string(has_enough ? "v " : "x ") + "x" +
+                          std::to_string(req.second))
+              .with_size(ComponentSize{pxf(slot_size), pixels(18)})
               .with_absolute_position(sx, sy + slot_size - 20.0f)
-              .with_custom_text_color(has_enough ? accent_green : afterhours::Color{220, 80, 80, 255})
+              .with_custom_text_color(has_enough
+                                          ? accent_green
+                                          : afterhours::Color{220, 80, 80, 255})
               .with_alignment(TextAlignment::Center));
     }
 
@@ -410,7 +406,8 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Brew!")
                .with_size(ComponentSize{pixels(160), pixels(48)})
-               .with_absolute_position(brew_x + (brew_w - 160.0f) / 2.0f, brew_btn_y)
+               .with_absolute_position(brew_x + (brew_w - 160.0f) / 2.0f,
+                                       brew_btn_y)
                .with_custom_background(accent_gold)
                .with_border(afterhours::Color{180, 150, 50, 255}, 3.0f)
                .with_font("Gaegu-Bold", h720(26.0f))
@@ -440,8 +437,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 301),
         ComponentConfig{}
             .with_label("Ingredients")
-            .with_size(ComponentSize{pxf(inv_w - 20),
-                                     pixels(28)})
+            .with_size(ComponentSize{pxf(inv_w - 20), pixels(28)})
             .with_absolute_position(inv_x + 10.0f, inv_y + 10.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(accent_gold)
@@ -462,8 +458,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 310 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_size(
-                  ComponentSize{pxf(inv_cell_w - 5),
-                                pxf(inv_cell_h - 5)})
+                  ComponentSize{pxf(inv_cell_w - 5), pxf(inv_cell_h - 5)})
               .with_absolute_position(ix, iy)
               .with_custom_background(panel_light)
               .with_border(border_purple, 1.0f)
@@ -488,8 +483,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(ingredients[i].name + "  x" +
                           std::to_string(ingredients[i].count))
-              .with_size(ComponentSize{pxf(inv_cell_w - 55),
-                                       pixels(40)})
+              .with_size(ComponentSize{pxf(inv_cell_w - 55), pixels(40)})
               .with_absolute_position(ix + 46.0f, iy + 8.0f)
               .with_custom_text_color(white));
     }

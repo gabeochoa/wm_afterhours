@@ -57,7 +57,8 @@ struct FontDef {
 };
 
 // Get all font definitions - this is the single source of truth
-// Add new fonts here and they'll be available in both windowed and headless modes
+// Add new fonts here and they'll be available in both windowed and headless
+// modes
 inline std::vector<FontDef> get_all_fonts() {
   return {
       // Core UI fonts
@@ -76,7 +77,8 @@ inline std::vector<FontDef> get_all_fonts() {
 
       // CJK fonts with special codepoint loading
       {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints},
-      {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true, get_japanese_codepoints},
+      {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,
+       get_japanese_codepoints},
   };
 }
 

@@ -26,7 +26,8 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.font_muted = afterhours::Color{160, 175, 185, 255};
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, pixels(16.0f));
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
+                                              pixels(16.0f));
 
     using C = afterhours::Color;
     C teal{65, 150, 150, 255};
@@ -36,12 +37,13 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     C panel_border{35, 50, 55, 255};
 
     // ========== ROOT ==========
-    auto root = vstack(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-            .with_background(Theme::Usage::Background)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("root"));
+    auto root =
+        vstack(context, mk(entity, 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_background(Theme::Usage::Background)
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("root"));
 
     // Title
     div(context, mk(root.ent(), 0),
@@ -71,21 +73,23 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_separator_title"));
 
     // ========== CONTENT ROW ==========
-    auto content = hstack(context, mk(root.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.94f), percent(0.82f)})
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_align_items(AlignItems::FlexStart)
-            .with_margin(Margin{.top = pixels(10.0f)}));
+    auto content =
+        hstack(context, mk(root.ent(), 2),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.94f), percent(0.82f)})
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_margin(Margin{.top = pixels(10.0f)}));
 
     // ====================================================================
     // COLUMN 1: Corner Brackets
     // ====================================================================
-    auto col1 = vstack(context, mk(content.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("col_brackets"));
+    auto col1 =
+        vstack(context, mk(content.ent(), 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("col_brackets"));
 
     div(context, mk(col1.ent(), 0),
         ComponentConfig{}
@@ -98,16 +102,17 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 1: HUD-style panel with brackets
     {
-      auto panel = vstack(context, mk(col1.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(100.0f)})
-              .with_custom_background(panel_bg)
-              .with_border(panel_border, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Center)
-              .with_justify_content(JustifyContent::Center)
-              .with_debug_name("bracket_panel_1"))
-          .decorate(with_brackets(context, teal, 18.0f, 2.0f));
+      auto panel =
+          vstack(context, mk(col1.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(100.0f)})
+                     .with_custom_background(panel_bg)
+                     .with_border(panel_border, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Center)
+                     .with_justify_content(JustifyContent::Center)
+                     .with_debug_name("bracket_panel_1"))
+              .decorate(with_brackets(context, teal, 18.0f, 2.0f));
 
       div(context, mk(panel.ent(), 0),
           ComponentConfig{}
@@ -135,17 +140,18 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 2: Amber warning panel
     {
-      auto panel = vstack(context, mk(col1.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(80.0f)})
-              .with_custom_background(C{25, 20, 14, 255})
-              .with_border(C{55, 45, 25, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Center)
-              .with_justify_content(JustifyContent::Center)
-              .with_margin(Margin{.top = pixels(12.0f)})
-              .with_debug_name("bracket_panel_2"))
-          .decorate(with_brackets(context, amber, 22.0f, 3.0f));
+      auto panel =
+          vstack(context, mk(col1.ent(), 2),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(80.0f)})
+                     .with_custom_background(C{25, 20, 14, 255})
+                     .with_border(C{55, 45, 25, 255}, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Center)
+                     .with_justify_content(JustifyContent::Center)
+                     .with_margin(Margin{.top = pixels(12.0f)})
+                     .with_debug_name("bracket_panel_2"))
+              .decorate(with_brackets(context, amber, 22.0f, 3.0f));
 
       div(context, mk(panel.ent(), 0),
           ComponentConfig{}
@@ -166,18 +172,19 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 3: Small green status
     {
-      auto panel = hstack(context, mk(col1.ent(), 3),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(55.0f)})
-              .with_custom_background(C{12, 22, 16, 255})
-              .with_border(C{30, 55, 35, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Center)
-              .with_justify_content(JustifyContent::Center)
-              .with_padding(Spacing::sm)
-              .with_margin(Margin{.top = pixels(12.0f)})
-              .with_debug_name("bracket_panel_3"))
-          .decorate(with_brackets(context, green, 10.0f, 2.0f));
+      auto panel =
+          hstack(context, mk(col1.ent(), 3),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(55.0f)})
+                     .with_custom_background(C{12, 22, 16, 255})
+                     .with_border(C{30, 55, 35, 255}, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Center)
+                     .with_justify_content(JustifyContent::Center)
+                     .with_padding(Spacing::sm)
+                     .with_margin(Margin{.top = pixels(12.0f)})
+                     .with_debug_name("bracket_panel_3"))
+              .decorate(with_brackets(context, green, 10.0f, 2.0f));
 
       // Status dot
       div(context, mk(panel.ent(), 0),
@@ -208,10 +215,11 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     // ====================================================================
     // COLUMN 2: Grid Background
     // ====================================================================
-    auto col2 = vstack(context, mk(content.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
-            .with_align_items(AlignItems::Center));
+    auto col2 =
+        vstack(context, mk(content.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
+                   .with_align_items(AlignItems::Center));
 
     div(context, mk(col2.ent(), 0),
         ComponentConfig{}
@@ -224,14 +232,14 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 1: Radar-style grid
     {
-      auto panel = div(context, mk(col2.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(130.0f)})
-              .with_custom_background(C{10, 18, 20, 255})
-              .with_border(C{30, 65, 65, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp()))
-          .decorate(with_grid_bg(context, 20.0f,
-                                 C{35, 75, 75, 180}, 1.0f));
+      auto panel =
+          div(context, mk(col2.ent(), 1),
+              ComponentConfig{}
+                  .with_size(ComponentSize{percent(0.88f), pixels(130.0f)})
+                  .with_custom_background(C{10, 18, 20, 255})
+                  .with_border(C{30, 65, 65, 255}, 1.0f)
+                  .with_rounded_corners(RoundedCorners().all_sharp()))
+              .decorate(with_grid_bg(context, 20.0f, C{35, 75, 75, 180}, 1.0f));
 
       // Crosshair center marker
       div(context, mk(panel.ent(), 100),
@@ -255,24 +263,24 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_rounded_corners(RoundedCorners().all_sharp())
               .with_margin(Margin{.top = pixels(12.0f)})
               .with_debug_name("grid_panel_2"))
-          .decorate(with_grid_bg(context, 12.0f,
-                                 C{50, 130, 130, 120}, 1.0f));
+          .decorate(with_grid_bg(context, 12.0f, C{50, 130, 130, 120}, 1.0f));
     }
 
     // Demo 3: Grid + brackets combo
     {
-      auto panel = vstack(context, mk(col2.ent(), 3),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(80.0f)})
-              .with_custom_background(panel_bg)
-              .with_border(panel_border, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Center)
-              .with_justify_content(JustifyContent::Center)
-              .with_margin(Margin{.top = pixels(12.0f)})
-              .with_debug_name("combo_panel"))
-          .decorate(with_grid_bg(context, 24.0f, C{40, 65, 70, 100}, 1.0f))
-          .decorate(with_brackets(context, amber, 16.0f, 2.0f));
+      auto panel =
+          vstack(context, mk(col2.ent(), 3),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(80.0f)})
+                     .with_custom_background(panel_bg)
+                     .with_border(panel_border, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Center)
+                     .with_justify_content(JustifyContent::Center)
+                     .with_margin(Margin{.top = pixels(12.0f)})
+                     .with_debug_name("combo_panel"))
+              .decorate(with_grid_bg(context, 24.0f, C{40, 65, 70, 100}, 1.0f))
+              .decorate(with_brackets(context, amber, 16.0f, 2.0f));
 
       div(context, mk(panel.ent(), 0),
           ComponentConfig{}
@@ -295,10 +303,11 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     // ====================================================================
     // COLUMN 3: Quotes / Accent Bars
     // ====================================================================
-    auto col3 = vstack(context, mk(content.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
-            .with_align_items(AlignItems::Center));
+    auto col3 =
+        vstack(context, mk(content.ent(), 2),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.31f), percent(1.0f)})
+                   .with_align_items(AlignItems::Center));
 
     div(context, mk(col3.ent(), 0),
         ComponentConfig{}
@@ -311,22 +320,24 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 1: Simple quote with teal accent
     {
-      auto panel = hstack(context, mk(col3.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(90.0f)})
-              .with_custom_background(panel_bg)
-              .with_border(panel_border, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Stretch)
-              .with_debug_name("quote_panel_1"))
-          .decorate(with_quote(context,
-              QuoteStyle{.accent_color = teal, .accent_width = 4.0f}));
+      auto panel =
+          hstack(context, mk(col3.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(90.0f)})
+                     .with_custom_background(panel_bg)
+                     .with_border(panel_border, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Stretch)
+                     .with_debug_name("quote_panel_1"))
+              .decorate(with_quote(context, QuoteStyle{.accent_color = teal,
+                                                       .accent_width = 4.0f}));
 
       // Text content next to the accent bar
       div(context, mk(panel.ent(), 10),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.9f), percent(1.0f)})
-              .with_label("The only way to do great work is to love what you do.")
+              .with_label(
+                  "The only way to do great work is to love what you do.")
               .with_font_size(pixels(12.0f))
               .with_custom_text_color(theme.font)
               .with_alignment(TextAlignment::Left)
@@ -335,26 +346,27 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 2: Amber quote with attribution
     {
-      auto panel = hstack(context, mk(col3.ent(), 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(100.0f)})
-              .with_custom_background(C{22, 18, 12, 255})
-              .with_border(C{50, 40, 25, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Stretch)
-              .with_margin(Margin{.top = pixels(12.0f)})
-              .with_debug_name("quote_panel_2"))
-          .decorate(with_quote(context,
-              QuoteStyle{.accent_color = amber,
-                         .accent_width = 5.0f}));
+      auto panel =
+          hstack(context, mk(col3.ent(), 2),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(100.0f)})
+                     .with_custom_background(C{22, 18, 12, 255})
+                     .with_border(C{50, 40, 25, 255}, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Stretch)
+                     .with_margin(Margin{.top = pixels(12.0f)})
+                     .with_debug_name("quote_panel_2"))
+              .decorate(with_quote(context, QuoteStyle{.accent_color = amber,
+                                                       .accent_width = 5.0f}));
 
       // Text column inside the quote
-      auto text_col = vstack(context, mk(panel.ent(), 10),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.85f), percent(1.0f)})
-              .with_justify_content(JustifyContent::Center)
-              .with_padding(Spacing::sm)
-              .with_debug_name("quote_inner_2"));
+      auto text_col =
+          vstack(context, mk(panel.ent(), 10),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.85f), percent(1.0f)})
+                     .with_justify_content(JustifyContent::Center)
+                     .with_padding(Spacing::sm)
+                     .with_debug_name("quote_inner_2"));
 
       div(context, mk(text_col.ent(), 0),
           ComponentConfig{}
@@ -376,25 +388,27 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Demo 3: Green quote + brackets chained
     {
-      auto panel = hstack(context, mk(col3.ent(), 3),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(100.0f)})
-              .with_custom_background(C{12, 20, 14, 255})
-              .with_border(C{30, 50, 32, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_align_items(AlignItems::Stretch)
-              .with_margin(Margin{.top = pixels(12.0f)})
-              .with_debug_name("quote_panel_3"))
-          .decorate(with_quote(context,
-              QuoteStyle{.accent_color = green, .accent_width = 4.0f}))
-          .decorate(with_brackets(context, green, 12.0f, 2.0f));
+      auto panel =
+          hstack(context, mk(col3.ent(), 3),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.88f), pixels(100.0f)})
+                     .with_custom_background(C{12, 20, 14, 255})
+                     .with_border(C{30, 50, 32, 255}, 1.0f)
+                     .with_rounded_corners(RoundedCorners().all_sharp())
+                     .with_align_items(AlignItems::Stretch)
+                     .with_margin(Margin{.top = pixels(12.0f)})
+                     .with_debug_name("quote_panel_3"))
+              .decorate(with_quote(context, QuoteStyle{.accent_color = green,
+                                                       .accent_width = 4.0f}))
+              .decorate(with_brackets(context, green, 12.0f, 2.0f));
 
-      auto text_col = vstack(context, mk(panel.ent(), 10),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.85f), percent(1.0f)})
-              .with_justify_content(JustifyContent::Center)
-              .with_padding(Spacing::sm)
-              .with_debug_name("quote_inner_3"));
+      auto text_col =
+          vstack(context, mk(panel.ent(), 10),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.85f), percent(1.0f)})
+                     .with_justify_content(JustifyContent::Center)
+                     .with_padding(Spacing::sm)
+                     .with_debug_name("quote_inner_3"));
 
       div(context, mk(text_col.ent(), 0),
           ComponentConfig{}

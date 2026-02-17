@@ -97,7 +97,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     // Expected indicator
     div(context, mk(entity, 102),
         ComponentConfig{}
-            .with_label("Expected: red fits inside cyan | Bug: red overflows right")
+            .with_label(
+                "Expected: red fits inside cyan | Bug: red overflows right")
             .with_size(ComponentSize{pixels(500), pixels(16)})
             .with_absolute_position(sec1_x + 320.f, sec1_y + 50.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -120,13 +121,14 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left));
 
     // Absolute parent, Row direction, 600px wide
-    auto r2_parent = hstack(context, mk(entity, 201),
-                            ComponentConfig{}
-                                .with_size(ComponentSize{pixels(600), pixels(80)})
-                                .with_absolute_position(sec2_x, sec2_y + 22.f)
-                                .with_custom_background(panel_bg)
-                                .with_no_wrap()
-                                .with_debug_name("r2_parent"));
+    auto r2_parent =
+        hstack(context, mk(entity, 201),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(600), pixels(80)})
+                   .with_absolute_position(sec2_x, sec2_y + 22.f)
+                   .with_custom_background(panel_bg)
+                   .with_no_wrap()
+                   .with_debug_name("r2_parent"));
 
     // Three children, each 100px wide, different colors
     div(context, mk(r2_parent.ent(), 0),
@@ -165,7 +167,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     // Expected indicator
     div(context, mk(entity, 202),
         ComponentConfig{}
-            .with_label("Expected: [A][B][C] side by side | Bug: overlapping or at screen origin")
+            .with_label("Expected: [A][B][C] side by side | Bug: overlapping "
+                        "or at screen origin")
             .with_size(ComponentSize{pixels(600), pixels(16)})
             .with_absolute_position(sec2_x, sec2_y + 106.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -180,7 +183,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 300),
         ComponentConfig{}
-            .with_label("[FIXED] 3: Flow children inside absolute parent at (400, 310)")
+            .with_label(
+                "[FIXED] 3: Flow children inside absolute parent at (400, 310)")
             .with_size(ComponentSize{pixels(600), pixels(18)})
             .with_absolute_position(sec3_x, sec3_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -191,14 +195,15 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     float r3_px = 400.f;
     float r3_py = sec3_y + 22.f;
 
-    auto r3_parent = vstack(context, mk(entity, 301),
-                            ComponentConfig{}
-                                .with_size(ComponentSize{pixels(300), pixels(100)})
-                                .with_absolute_position(r3_px, r3_py)
-                                .with_custom_background(panel_bg)
-                                .with_border(yellow_bg, 2.f)
-                                .with_no_wrap()
-                                .with_debug_name("r3_parent"));
+    auto r3_parent =
+        vstack(context, mk(entity, 301),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(300), pixels(100)})
+                   .with_absolute_position(r3_px, r3_py)
+                   .with_custom_background(panel_bg)
+                   .with_border(yellow_bg, 2.f)
+                   .with_no_wrap()
+                   .with_debug_name("r3_parent"));
 
     // Two flow children
     div(context, mk(r3_parent.ent(), 0),
@@ -238,7 +243,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 303),
         ComponentConfig{}
-            .with_label("Expected: children inside yellow border | Bug: children at top-left (0,0)")
+            .with_label("Expected: children inside yellow border | Bug: "
+                        "children at top-left (0,0)")
             .with_size(ComponentSize{pixels(700), pixels(16)})
             .with_absolute_position(sec3_x, r3_py + 105.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -253,7 +259,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 400),
         ComponentConfig{}
-            .with_label("[NOT A BUG] 4: Z-order — entity creation order = render order")
+            .with_label(
+                "[NOT A BUG] 4: Z-order — entity creation order = render order")
             .with_size(ComponentSize{pixels(700), pixels(18)})
             .with_absolute_position(sec4_x, sec4_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -286,8 +293,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 402),
         ComponentConfig{}
-            .with_label(
-                "Expected: RED(5000) on top | Bug: BLUE(2000) on top (entity ID order, not mk ID)")
+            .with_label("Expected: RED(5000) on top | Bug: BLUE(2000) on top "
+                        "(entity ID order, not mk ID)")
             .with_size(ComponentSize{pixels(700), pixels(16)})
             .with_absolute_position(sec4_x, sec4_y + 116.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -302,7 +309,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 500),
         ComponentConfig{}
-            .with_label("[FIXED] 5: children() width vs manual pixels() for text sizing")
+            .with_label("[FIXED] 5: children() width vs manual pixels() for "
+                        "text sizing")
             .with_size(ComponentSize{pixels(600), pixels(18)})
             .with_absolute_position(sec5_x, sec5_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -337,7 +345,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 503),
         ComponentConfig{}
-            .with_label("Green=children() auto | Blue=pixels(250) manual | Compare for clipping/padding mismatch")
+            .with_label("Green=children() auto | Blue=pixels(250) manual | "
+                        "Compare for clipping/padding mismatch")
             .with_size(ComponentSize{pixels(700), pixels(16)})
             .with_absolute_position(sec5_x, sec5_y + 114.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -377,7 +386,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 602),
         ComponentConfig{}
-            .with_label("Expected: tabs inside green border | Bug: tabs at screen origin")
+            .with_label("Expected: tabs inside green border | Bug: tabs at "
+                        "screen origin")
             .with_size(ComponentSize{pixels(500), pixels(16)})
             .with_absolute_position(sec6_x, sec6_y + 86.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -392,7 +402,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 700),
         ComponentConfig{}
-            .with_label("[NOT A BUG] 7: toggle_switch vertical space — fits correctly")
+            .with_label(
+                "[NOT A BUG] 7: toggle_switch vertical space — fits correctly")
             .with_size(ComponentSize{pixels(500), pixels(18)})
             .with_absolute_position(sec7_x, sec7_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -400,15 +411,17 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Left));
 
     // Container with exact height: 3 toggles at 42px each = 126px + margins
-    // If toggles take more space than declared, they'll overflow the green border
-    auto r7_parent = vstack(context, mk(entity, 701),
-                            ComponentConfig{}
-                                .with_size(ComponentSize{pixels(450), pixels(150)})
-                                .with_absolute_position(sec7_x, sec7_y + 22.f)
-                                .with_custom_background(panel_bg)
-                                .with_border(green_bg, 2.f)
-                                .with_no_wrap()
-                                .with_debug_name("r7_parent"));
+    // If toggles take more space than declared, they'll overflow the green
+    // border
+    auto r7_parent =
+        vstack(context, mk(entity, 701),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(450), pixels(150)})
+                   .with_absolute_position(sec7_x, sec7_y + 22.f)
+                   .with_custom_background(panel_bg)
+                   .with_border(green_bg, 2.f)
+                   .with_no_wrap()
+                   .with_debug_name("r7_parent"));
 
     // Use explicit pixel width (parent 450px - 2px border each side = 446px)
     // instead of percent(1.0f) to avoid expand() resolution issues
@@ -438,7 +451,8 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 702),
         ComponentConfig{}
-            .with_label("Expected: 3 toggles fit inside green border | Bug: overflow bottom")
+            .with_label("Expected: 3 toggles fit inside green border | Bug: "
+                        "overflow bottom")
             .with_size(ComponentSize{pixels(500), pixels(16)})
             .with_absolute_position(sec7_x, sec7_y + 178.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
@@ -448,5 +462,4 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
 };
 
 REGISTER_EXAMPLE_SCREEN(layout_bug_repros, "Tools",
-                        "Repros for 5 layout engine issues",
-                        LayoutBugRepros)
+                        "Repros for 5 layout engine issues", LayoutBugRepros)

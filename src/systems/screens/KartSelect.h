@@ -35,7 +35,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<std::string> kart_names = {"Standard", "Speedster", "Off-Road",
-                                          "Classic"};
+                                         "Classic"};
 
   // Vibrant racing colors
   afterhours::Color bg_blue{25, 35, 65, 255};
@@ -133,7 +133,8 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     int cols = 4;
 
     // Grid panel background
-    float grid_panel_w = (float)cols * (cell_size + cell_gap) + cell_gap + 20.0f;
+    float grid_panel_w =
+        (float)cols * (cell_size + cell_gap) + cell_gap + 20.0f;
     float grid_panel_h = (float)screen_h - grid_y - 110.0f;
 
     div(context, mk(entity, 10),
@@ -151,10 +152,10 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < characters.size(); i++) {
       int row = static_cast<int>(i) / cols;
       int col = static_cast<int>(i) % cols;
-      float cx = grid_x + 10.0f + cell_gap +
-                 (float)col * (cell_size + cell_gap);
-      float cy = grid_y + 10.0f + cell_gap +
-                 (float)row * (cell_size + cell_gap);
+      float cx =
+          grid_x + 10.0f + cell_gap + (float)col * (cell_size + cell_gap);
+      float cy =
+          grid_y + 10.0f + cell_gap + (float)row * (cell_size + cell_gap);
 
       bool is_selected = (i == selected_character);
       afterhours::Color cell_bg =
@@ -163,15 +164,14 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
           is_selected ? accent_orange : afterhours::Color{60, 80, 130, 255};
       float border_w = is_selected ? 4.0f : 2.0f;
 
-      if (button(
-              context, mk(entity, 20 + static_cast<int>(i)),
-              ComponentConfig{}
-                  .with_720p_size(cell_size, cell_size)
-                  .with_absolute_position(cx, cy)
-                  .with_custom_background(cell_bg)
-                  .with_border(cell_border, border_w)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.15f))) {
+      if (button(context, mk(entity, 20 + static_cast<int>(i)),
+                 ComponentConfig{}
+                     .with_720p_size(cell_size, cell_size)
+                     .with_absolute_position(cx, cy)
+                     .with_custom_background(cell_bg)
+                     .with_border(cell_border, border_w)
+                     .with_rounded_corners(RoundedCorners())
+                     .with_roundness(0.15f))) {
         selected_character = i;
       }
 
@@ -181,10 +181,9 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 30 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(characters[i].label)
-              .with_size(
-                  ComponentSize{pxf(portrait_size),
-                                pxf(portrait_size)})
-              .with_absolute_position(cx + portrait_offset, cy + portrait_offset - 6.0f)
+              .with_size(ComponentSize{pxf(portrait_size), pxf(portrait_size)})
+              .with_absolute_position(cx + portrait_offset,
+                                      cy + portrait_offset - 6.0f)
               .with_custom_background(portrait_colors[i])
               .with_font("Fredoka", h720(28.0f))
               .with_custom_text_color(white)
@@ -197,8 +196,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 40 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(characters[i].name)
-              .with_size(ComponentSize{pxf(cell_size),
-                                       pixels(22)})
+              .with_size(ComponentSize{pxf(cell_size), pixels(22)})
               .with_absolute_position(cx, cy + cell_size - 22.0f)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(name_color)
@@ -220,8 +218,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(border_blue, 3.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f,
-                              afterhours::Color{0, 0, 0, 80})
+            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
             .with_debug_name("preview_panel"));
 
     // Large character portrait
@@ -231,8 +228,9 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(sel.label)
             .with_720p_size(big_portrait, big_portrait)
-            .with_absolute_position(preview_x + (preview_w - big_portrait) / 2.0f,
-                            preview_y + 15.0f)
+            .with_absolute_position(preview_x +
+                                        (preview_w - big_portrait) / 2.0f,
+                                    preview_y + 15.0f)
             .with_custom_background(portrait_colors[selected_character])
             .with_border(accent_yellow, 4.0f)
             .with_font("Fredoka", h720(56.0f))
@@ -247,10 +245,9 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 102),
         ComponentConfig{}
             .with_label(sel.name)
-            .with_size(ComponentSize{pxf(preview_w - 20),
-                                     pixels(36)})
+            .with_size(ComponentSize{pxf(preview_w - 20), pixels(36)})
             .with_absolute_position(preview_x + 10.0f,
-                            preview_y + big_portrait + 25.0f)
+                                    preview_y + big_portrait + 25.0f)
             .with_font("Fredoka", h720(28.0f))
             .with_custom_text_color(accent_yellow)
             .with_alignment(TextAlignment::Center));
@@ -276,7 +273,8 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Label with numeric value for accessibility
       int stat_val = static_cast<int>(stats[i].value * 10.0f);
-      std::string stat_label = stats[i].label + " " + std::to_string(stat_val) + "/10";
+      std::string stat_label =
+          stats[i].label + " " + std::to_string(stat_val) + "/10";
       div(context, mk(entity, 110 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(stat_label)
@@ -288,8 +286,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       // Bar background
       div(context, mk(entity, 111 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_size(ComponentSize{pxf(stat_bar_w),
-                                       pixels(16)})
+              .with_size(ComponentSize{pxf(stat_bar_w), pixels(16)})
               .with_absolute_position(preview_x + 70.0f, sy + 3.0f)
               .with_custom_background(afterhours::Color{25, 35, 60, 255})
               .with_rounded_corners(RoundedCorners())
@@ -298,9 +295,8 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       // Bar fill
       div(context, mk(entity, 112 + static_cast<int>(i) * 3),
           ComponentConfig{}
-              .with_size(ComponentSize{
-                  pxf(stat_bar_w * stats[i].value),
-                  pixels(16)})
+              .with_size(
+                  ComponentSize{pxf(stat_bar_w * stats[i].value), pixels(16)})
               .with_absolute_position(preview_x + 70.0f, sy + 3.0f)
               .with_custom_background(stats[i].color)
               .with_rounded_corners(RoundedCorners())
@@ -322,16 +318,14 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(border_blue, 3.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f,
-                              afterhours::Color{0, 0, 0, 80})
+            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
             .with_debug_name("kart_panel"));
 
     // Kart header
     div(context, mk(entity, 201),
         ComponentConfig{}
             .with_label("VEHICLE")
-            .with_size(
-                ComponentSize{pxf(kart_w - 20), pixels(30)})
+            .with_size(ComponentSize{pxf(kart_w - 20), pixels(30)})
             .with_absolute_position(kart_x + 10.0f, kart_y + 10.0f)
             .with_custom_text_color(accent_yellow)
             .with_alignment(TextAlignment::Center));
@@ -348,8 +342,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(entity, 210 + static_cast<int>(i)),
                  ComponentConfig{}
                      .with_label(kart_names[i])
-                     .with_size(ComponentSize{
-                         pxf(kart_w - 40), pixels(38)})
+                     .with_size(ComponentSize{pxf(kart_w - 40), pixels(38)})
                      .with_absolute_position(kart_x + 20.0f, ky)
                      .with_custom_background(kart_bg)
                      .with_custom_text_color(kart_text)
@@ -393,26 +386,28 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(sel.name + "  +  " + kart_names[selected_kart])
             .with_size(ComponentSize{pixels(400), pixels(36)})
-            .with_absolute_position((float)screen_w / 2.0f - 200.0f, bottom_y + 17.0f)
+            .with_absolute_position((float)screen_w / 2.0f - 200.0f,
+                                    bottom_y + 17.0f)
             .with_font("EqProRounded", h720(24.0f))
             .with_custom_text_color(white)
             .with_alignment(TextAlignment::Center));
 
     // Ready button
-    button(context, mk(entity, 330),
-           ComponentConfig{}
-               .with_label("READY!")
-               .with_size(ComponentSize{pixels(160), pixels(50)})
-               .with_absolute_position((float)screen_w - 210.0f, bottom_y + 10.0f)
-               .with_custom_background(accent_green)
-               .with_border(afterhours::Color{50, 160, 70, 255}, 3.0f)
-               .with_font("Fredoka", h720(28.0f))
-               .with_custom_text_color(white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.4f)
-               .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                                 afterhours::Color{0, 0, 0, 60}));
+    button(
+        context, mk(entity, 330),
+        ComponentConfig{}
+            .with_label("READY!")
+            .with_size(ComponentSize{pixels(160), pixels(50)})
+            .with_absolute_position((float)screen_w - 210.0f, bottom_y + 10.0f)
+            .with_custom_background(accent_green)
+            .with_border(afterhours::Color{50, 160, 70, 255}, 3.0f)
+            .with_font("Fredoka", h720(28.0f))
+            .with_custom_text_color(white)
+            .with_alignment(TextAlignment::Center)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.4f)
+            .with_soft_shadow(2.0f, 3.0f, 10.0f,
+                              afterhours::Color{0, 0, 0, 60}));
 
     // ========== BOTTOM PROMPTS ==========
     float prompt_y = (float)screen_h - 35.0f;

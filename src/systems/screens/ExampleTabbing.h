@@ -24,9 +24,10 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color border_glow{120, 75, 155, 255}; // Purple glow
 
   // Focus ring configuration - high contrast for visibility on colored buttons
-  afterhours::Color focus_ring_color{255, 255, 100, 255}; // Bright yellow for high contrast
-  float focus_ring_thickness = 4.0f;                      // Thicker than default 3.0f
-  float focus_ring_offset = 5.0f;                         // Slightly larger gap
+  afterhours::Color focus_ring_color{255, 255, 100,
+                                     255}; // Bright yellow for high contrast
+  float focus_ring_thickness = 4.0f;       // Thicker than default 3.0f
+  float focus_ring_offset = 5.0f;          // Slightly larger gap
 
   // UI display options
   bool show_total_clicks = true; // Set to false to hide click counter footer
@@ -166,7 +167,8 @@ struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Total Clicks: " + std::to_string(total_clicks))
               .with_size(ComponentSize{pixels(panel_width - 40), pixels(28)})
-              .with_absolute_position(panel_x + 20.0f, panel_y + panel_height - 40.0f)
+              .with_absolute_position(panel_x + 20.0f,
+                                      panel_y + panel_height - 40.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
               .with_custom_text_color(btn_lime)
               .with_alignment(TextAlignment::Center));

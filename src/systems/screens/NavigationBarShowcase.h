@@ -18,33 +18,34 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> categories = {"Graphics", "Audio", "Controls",
                                          "Gameplay"};
   std::vector<std::string> modes = {"Story", "Arcade", "Multiplayer"};
-  std::vector<std::string> levels = {"Level 1", "Level 2", "Level 3", "Level 4",
-                                     "Level 5", "Level 6"};
+  std::vector<std::string> levels = {"Level 1", "Level 2", "Level 3",
+                                     "Level 4", "Level 5", "Level 6"};
 
-  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context,
-                     float) override {
+  void for_each_with(afterhours::Entity &entity,
+                     UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
     // Main container - centered on screen, expanded for more screen use
-    auto root = div(context, mk(entity, 0),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.92f)})
-                        .with_self_align(SelfAlign::Center)
-                        .with_background(Theme::Usage::Background)
-                        .with_roundness(0.04f)
-                        .with_debug_name("navbar_bg"));
+    auto root =
+        div(context, mk(entity, 0),
+            ComponentConfig{}
+                .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.92f)})
+                .with_self_align(SelfAlign::Center)
+                .with_background(Theme::Usage::Background)
+                .with_roundness(0.04f)
+                .with_debug_name("navbar_bg"));
 
     // Content container with padding
     auto main_container =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_padding(Spacing::lg)
-                .with_justify_content(JustifyContent::Center)
-                .with_no_wrap()
-                .with_debug_name("navbar_main"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_padding(Spacing::lg)
+                   .with_justify_content(JustifyContent::Center)
+                   .with_no_wrap()
+                   .with_debug_name("navbar_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
@@ -70,7 +71,8 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
-    navigation_bar(context, mk(main_container.ent(), 2), categories, category_idx,
+    navigation_bar(context, mk(main_container.ent(), 2), categories,
+                   category_idx,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.85f), pixels(64)})
                        .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
@@ -115,4 +117,3 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
 
 REGISTER_EXAMPLE_SCREEN(navigation_bar_demo, "Component Galleries",
                         "Navigation bar widget demo", NavigationBarShowcase)
-

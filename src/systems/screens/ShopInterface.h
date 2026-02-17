@@ -27,21 +27,61 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<ShopItem> buy_items = {
-      {"Iron Sword", "Weapon", "SWD", 250, 5, "A sturdy blade for beginners.",
+      {"Iron Sword",
+       "Weapon",
+       "SWD",
+       250,
+       5,
+       "A sturdy blade for beginners.",
        {180, 180, 190, 255}},
-      {"Health Potion", "Consumable", "HP", 50, 20, "Restores 50 HP instantly.",
+      {"Health Potion",
+       "Consumable",
+       "HP",
+       50,
+       20,
+       "Restores 50 HP instantly.",
        {220, 60, 80, 255}},
-      {"Mana Potion", "Consumable", "MP", 75, 15, "Restores 30 MP instantly.",
+      {"Mana Potion",
+       "Consumable",
+       "MP",
+       75,
+       15,
+       "Restores 30 MP instantly.",
        {80, 120, 220, 255}},
-      {"Leather Armor", "Armor", "ARM", 180, 8, "Light protection for adventurers.",
+      {"Leather Armor",
+       "Armor",
+       "ARM",
+       180,
+       8,
+       "Light protection for adventurers.",
        {160, 120, 80, 255}},
-      {"Fire Scroll", "Magic", "FIR", 320, 3, "Casts Fireball (25 damage).",
+      {"Fire Scroll",
+       "Magic",
+       "FIR",
+       320,
+       3,
+       "Casts Fireball (25 damage).",
        {240, 140, 40, 255}},
-      {"Torch", "Tool", "TCH", 15, 50, "Lights dark areas for 10 minutes.",
+      {"Torch",
+       "Tool",
+       "TCH",
+       15,
+       50,
+       "Lights dark areas for 10 minutes.",
        {255, 200, 80, 255}},
-      {"Antidote", "Consumable", "ANT", 35, 12, "Cures poison status.",
+      {"Antidote",
+       "Consumable",
+       "ANT",
+       35,
+       12,
+       "Cures poison status.",
        {120, 200, 120, 255}},
-      {"Steel Shield", "Armor", "SHL", 400, 2, "Blocks 15% incoming damage.",
+      {"Steel Shield",
+       "Armor",
+       "SHL",
+       400,
+       2,
+       "Blocks 15% incoming damage.",
        {140, 150, 170, 255}},
   };
 
@@ -181,7 +221,8 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_absolute_position(25.0f + (float)i * 110.0f, tab_y)
                      .with_custom_background(tab_bg)
-                     .with_border(is_sel ? accent_gold : border_wood, is_sel ? 3.0f : 2.0f)
+                     .with_border(is_sel ? accent_gold : border_wood,
+                                  is_sel ? 3.0f : 2.0f)
                      .with_font("EqProRounded", h720(20.0f))
                      .with_custom_text_color(tab_text)
                      .with_alignment(TextAlignment::Center)
@@ -217,7 +258,13 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     float col_price_x = list_x + list_w - 90.0f;
     float hdr_y = list_y + 8.0f;
 
-    struct ColHeader { const char *label; int id; float x; int w; TextAlignment align; };
+    struct ColHeader {
+      const char *label;
+      int id;
+      float x;
+      int w;
+      TextAlignment align;
+    };
     ColHeader headers[] = {
         {"Item", 101, col_name_x, 120, TextAlignment::None},
         {"Type", 102, col_cat_x, 80, TextAlignment::None},
@@ -226,19 +273,19 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     };
     for (auto &hdr : headers) {
       auto cfg = ComponentConfig{}
-          .with_label(hdr.label)
-          .with_size(ComponentSize{pixels(hdr.w), pixels(22)})
-          .with_absolute_position(hdr.x, hdr_y)
-          .with_custom_text_color(muted);
-      if (hdr.align != TextAlignment::None) cfg.with_alignment(hdr.align);
+                     .with_label(hdr.label)
+                     .with_size(ComponentSize{pixels(hdr.w), pixels(22)})
+                     .with_absolute_position(hdr.x, hdr_y)
+                     .with_custom_text_color(muted);
+      if (hdr.align != TextAlignment::None)
+        cfg.with_alignment(hdr.align);
       div(context, mk(entity, hdr.id), cfg);
     }
 
     // Separator
     div(context, mk(entity, 105),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(list_w - 20),
-                                     pixels(1)})
+            .with_size(ComponentSize{pxf(list_w - 20), pixels(1)})
             .with_absolute_position(list_x + 10.0f, hdr_y + 24.0f)
             .with_custom_background(border_wood));
 
@@ -261,9 +308,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       if (!is_sel && i % 2 == 0) {
         div(context, mk(entity, 160 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{
-                    pxf(list_w - 10),
-                    pxf(row_h - 4)})
+                .with_size(ComponentSize{pxf(list_w - 10), pxf(row_h - 4)})
                 .with_absolute_position(list_x + 5.0f, ry)
                 .with_custom_background(afterhours::Color{48, 36, 28, 255})
                 .with_rounded_corners(RoundedCorners())
@@ -275,9 +320,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       if (is_sel) {
         div(context, mk(entity, 110 + static_cast<int>(i) * 6),
             ComponentConfig{}
-                .with_size(ComponentSize{
-                    pxf(list_w - 10),
-                    pxf(row_h - 4)})
+                .with_size(ComponentSize{pxf(list_w - 10), pxf(row_h - 4)})
                 .with_absolute_position(list_x + 5.0f, ry)
                 .with_custom_background(selected_bg)
                 .with_border(accent_gold, 1.0f)
@@ -287,15 +330,12 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       }
 
       // Item row button (invisible, for selection)
-      if (button(
-              context, mk(entity, 111 + static_cast<int>(i) * 6),
-              ComponentConfig{}
-                  .with_size(ComponentSize{
-                      pxf(list_w - 10),
-                      pxf(row_h - 4)})
-                  .with_absolute_position(list_x + 5.0f, ry)
-                  .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                  .with_debug_name("row_btn_" + std::to_string(i)))) {
+      if (button(context, mk(entity, 111 + static_cast<int>(i) * 6),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{pxf(list_w - 10), pxf(row_h - 4)})
+                     .with_absolute_position(list_x + 5.0f, ry)
+                     .with_custom_background(afterhours::Color{0, 0, 0, 0})
+                     .with_debug_name("row_btn_" + std::to_string(i)))) {
         selected_item = i;
       }
 
@@ -335,7 +375,8 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       // Stock
       div(context, mk(entity, 115 + static_cast<int>(i) * 6),
           ComponentConfig{}
-              .with_label(item.stock <= 3 ? std::to_string(item.stock) + " Low" : std::to_string(item.stock))
+              .with_label(item.stock <= 3 ? std::to_string(item.stock) + " Low"
+                                          : std::to_string(item.stock))
               .with_size(ComponentSize{pixels(60), pixels(24)})
               .with_absolute_position(col_stock_x + 5.0f, ry + 12.0f)
               .with_font("EqProRounded", h720(16.0f))
@@ -394,8 +435,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 302),
         ComponentConfig{}
             .with_label(sel.name)
-            .with_size(ComponentSize{pxf(detail_w - 110),
-                                     pixels(30)})
+            .with_size(ComponentSize{pxf(detail_w - 110), pixels(30)})
             .with_absolute_position(detail_x + 95.0f, detail_y + 15.0f)
             .with_font("Gaegu-Bold", h720(26.0f))
             .with_custom_text_color(accent_gold));
@@ -417,8 +457,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 304),
         ComponentConfig{}
             .with_label(sel.description)
-            .with_size(ComponentSize{pxf(detail_w - 30),
-                                     pixels(40)})
+            .with_size(ComponentSize{pxf(detail_w - 30), pixels(40)})
             .with_absolute_position(detail_x + 15.0f, detail_y + 95.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(white));
@@ -438,7 +477,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
                .with_label("Add to Cart")
                .with_size(ComponentSize{pixels(130), pixels(36)})
                .with_absolute_position(detail_x + detail_w - 150.0f,
-                               detail_y + detail_h - 52.0f)
+                                       detail_y + detail_h - 52.0f)
                .with_custom_background(accent_green)
                .with_border(afterhours::Color{60, 150, 70, 255}, 2.0f)
                .with_font("EqProRounded", h720(18.0f))
@@ -466,8 +505,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Cart (" + std::to_string(get_cart_item_count()) +
                         " items)")
-            .with_size(ComponentSize{pxf(detail_w - 20),
-                                     pixels(28)})
+            .with_size(ComponentSize{pxf(detail_w - 20), pixels(28)})
             .with_absolute_position(detail_x + 10.0f, cart_y + 8.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(accent_gold));
@@ -482,8 +520,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 410 + static_cast<int>(i) * 2),
           ComponentConfig{}
               .with_label(item.name + "  x" + std::to_string(ci.quantity))
-              .with_size(ComponentSize{pxf(detail_w - 120),
-                                       pixels(24)})
+              .with_size(ComponentSize{pxf(detail_w - 120), pixels(24)})
               .with_absolute_position(detail_x + 15.0f, cy)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(white)
@@ -505,8 +542,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     float sep_y = cart_y + cart_h - 88.0f;
     div(context, mk(entity, 450),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(detail_w - 20),
-                                     pixels(1)})
+            .with_size(ComponentSize{pxf(detail_w - 20), pixels(1)})
             .with_absolute_position(detail_x + 10.0f, sep_y)
             .with_custom_background(border_wood)
             .with_debug_name("cart_sep"));
@@ -535,10 +571,8 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
     // Remaining gold
     div(context, mk(entity, 453),
         ComponentConfig{}
-            .with_label("Remaining: " +
-                        format_gold(player_gold - total) + " G")
-            .with_size(ComponentSize{pxf(detail_w - 30),
-                                     pixels(22)})
+            .with_label("Remaining: " + format_gold(player_gold - total) + " G")
+            .with_size(ComponentSize{pxf(detail_w - 30), pixels(22)})
             .with_absolute_position(detail_x + 15.0f, sep_y + 38.0f)
             .with_custom_text_color(can_afford_total ? muted : accent_red));
 
@@ -547,16 +581,14 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, 460),
         ComponentConfig{}
             .with_label("Purchase")
-            .with_size(ComponentSize{pxf(detail_w - 30),
-                                     pixels(44)})
+            .with_size(ComponentSize{pxf(detail_w - 30), pixels(44)})
             .with_absolute_position(detail_x + 15.0f, cart_y + cart_h - 55.0f)
             .with_custom_background(can_afford_total
                                         ? accent_gold
                                         : afterhours::Color{100, 80, 60, 255})
-            .with_border(
-                can_afford_total ? afterhours::Color{190, 155, 40, 255}
-                                 : afterhours::Color{80, 60, 45, 255},
-                3.0f)
+            .with_border(can_afford_total ? afterhours::Color{190, 155, 40, 255}
+                                          : afterhours::Color{80, 60, 45, 255},
+                         3.0f)
             .with_font("Gaegu-Bold", h720(24.0f))
             .with_custom_text_color(can_afford_total ? dark_text : muted)
             .with_alignment(TextAlignment::Center)

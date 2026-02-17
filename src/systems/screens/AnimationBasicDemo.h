@@ -26,7 +26,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color box_purple{168, 85, 247, 255};
 
   bool animations_started = false;
-  bool first_run = true;  // Start with completed values for screenshot
+  bool first_run = true; // Start with completed values for screenshot
 
   void start_animations() {
     if (animations_started)
@@ -36,11 +36,17 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     if (first_run) {
       // For first run, set to end values so screenshot shows something
       first_run = false;
-      auto &fade_track = afterhours::animation::manager<BasicAnimKey>().ensure_track(BasicAnimKey::FadeIn);
+      auto &fade_track =
+          afterhours::animation::manager<BasicAnimKey>().ensure_track(
+              BasicAnimKey::FadeIn);
       fade_track.current = 1.0f;
-      auto &slide_track = afterhours::animation::manager<BasicAnimKey>().ensure_track(BasicAnimKey::SlideIn);
+      auto &slide_track =
+          afterhours::animation::manager<BasicAnimKey>().ensure_track(
+              BasicAnimKey::SlideIn);
       slide_track.current = 0.0f;
-      auto &scale_track = afterhours::animation::manager<BasicAnimKey>().ensure_track(BasicAnimKey::ScaleUp);
+      auto &scale_track =
+          afterhours::animation::manager<BasicAnimKey>().ensure_track(
+              BasicAnimKey::ScaleUp);
       scale_track.current = 1.0f;
       return;
     }
@@ -69,8 +75,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
   }
 
   float get_anim_value(BasicAnimKey key, float /*default_val*/ = 0.0f) {
-    auto val =
-        afterhours::animation::manager<BasicAnimKey>().get_value(key);
+    auto val = afterhours::animation::manager<BasicAnimKey>().get_value(key);
     if (val.has_value()) {
       return val.value();
     }
@@ -100,7 +105,8 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
     int screen_w = Settings::get().get_screen_width();
     int screen_h = Settings::get().get_screen_height();
 
-    // Center content vertically: content spans ~404px (title to value indicators)
+    // Center content vertically: content spans ~404px (title to value
+    // indicators)
     float y_offset = std::max(0.0f, (screen_h - 404.0f) / 2.0f - 30.0f);
 
     // Background
@@ -167,7 +173,8 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("x offset: {:.0f}px", slide_offset))
             .with_size(ComponentSize{pixels(box_size + 40), pixels(24)})
-            .with_absolute_position(slide_base_x - 20.0f, box_y + box_size + 10.0f)
+            .with_absolute_position(slide_base_x - 20.0f,
+                                    box_y + box_size + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -228,7 +235,7 @@ struct AnimationBasicDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_absolute_position(scale_x, box_y)
-            .with_scale(scale_factor)  // Smooth visual scaling after layout
+            .with_scale(scale_factor) // Smooth visual scaling after layout
             .with_custom_background(box_purple)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)

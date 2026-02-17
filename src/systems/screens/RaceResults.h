@@ -21,14 +21,10 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<RaceEntry> results = {
-      {1, "Zippy", "2:31.450", 15, false},
-      {2, "YOU", "2:33.812", 12, true},
-      {3, "Blaze", "2:35.100", 10, false},
-      {4, "Drift", "2:37.445", 8, false},
-      {5, "Tank", "2:41.220", 6, false},
-      {6, "Flash", "2:42.890", 5, false},
-      {7, "Rumble", "2:45.110", 4, false},
-      {8, "Pebble", "2:48.330", 3, false},
+      {1, "Zippy", "2:31.450", 15, false}, {2, "YOU", "2:33.812", 12, true},
+      {3, "Blaze", "2:35.100", 10, false}, {4, "Drift", "2:37.445", 8, false},
+      {5, "Tank", "2:41.220", 6, false},   {6, "Flash", "2:42.890", 5, false},
+      {7, "Rumble", "2:45.110", 4, false}, {8, "Pebble", "2:48.330", 3, false},
   };
 
   std::string track_name = "Rainbow Circuit";
@@ -44,8 +40,10 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<CupStanding> standings = {
-      {"YOU", 38, true},    {"Zippy", 42, false},
-      {"Blaze", 30, false}, {"Drift", 25, false},
+      {"YOU", 38, true},
+      {"Zippy", 42, false},
+      {"Blaze", 30, false},
+      {"Drift", 25, false},
   };
 
   // Colors - celebratory racing theme
@@ -57,7 +55,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color silver{200, 210, 225, 255};
   afterhours::Color bronze{205, 140, 70, 255};
   afterhours::Color white{255, 255, 255, 255};
-  afterhours::Color muted{155, 168, 200, 255};  // Brighter for 4.5:1 on dark
+  afterhours::Color muted{155, 168, 200, 255}; // Brighter for 4.5:1 on dark
   afterhours::Color player_highlight{60, 90, 160, 255};
   afterhours::Color accent_green{80, 200, 100, 255};
   afterhours::Color accent_red{220, 70, 70, 255};
@@ -165,8 +163,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(border_blue, 2.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f,
-                              afterhours::Color{0, 0, 0, 80})
+            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
             .with_debug_name("table_panel"));
 
     // Column headers
@@ -176,7 +173,13 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     float col_pts_x = table_x + table_w - 80.0f;
     float header_y = table_y + 10.0f;
 
-    struct ColHeader { const char *label; int id; int w; float x; TextAlignment align; };
+    struct ColHeader {
+      const char *label;
+      int id;
+      int w;
+      float x;
+      TextAlignment align;
+    };
     ColHeader headers[] = {
         {"#", 201, 40, col_pos_x, TextAlignment::Left},
         {"RACER", 202, 120, col_name_x, TextAlignment::Left},
@@ -196,8 +199,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     // Separator
     div(context, mk(entity, 205),
         ComponentConfig{}
-            .with_size(ComponentSize{pxf(table_w - 30),
-                                     pixels(1)})
+            .with_size(ComponentSize{pxf(table_w - 30), pixels(1)})
             .with_absolute_position(table_x + 15.0f, header_y + 28.0f)
             .with_custom_background(border_blue));
 
@@ -224,9 +226,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
       if (r.is_player) {
         div(context, mk(entity, 210 + static_cast<int>(i) * 5),
             ComponentConfig{}
-                .with_size(
-                    ComponentSize{pxf(table_w - 20),
-                                  pxf(row_h - 4)})
+                .with_size(ComponentSize{pxf(table_w - 20), pxf(row_h - 4)})
                 .with_absolute_position(table_x + 10.0f, ry - 2.0f)
                 .with_custom_background(player_highlight)
                 .with_rounded_corners(RoundedCorners())
@@ -251,8 +251,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_label(display_name)
               .with_size(ComponentSize{pixels(200), pixels(32)})
               .with_absolute_position(col_name_x, ry + 6.0f)
-              .with_font("EqProRounded",
-                          h720(r.is_player ? 22.0f : 20.0f))
+              .with_font("EqProRounded", h720(r.is_player ? 22.0f : 20.0f))
               .with_custom_text_color(r.is_player ? gold : white));
 
       // Time
@@ -290,16 +289,14 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(border_blue, 2.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.06f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f,
-                              afterhours::Color{0, 0, 0, 80})
+            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
             .with_debug_name("cup_panel"));
 
     // Cup header
     div(context, mk(entity, 401),
         ComponentConfig{}
             .with_label("CUP STANDINGS")
-            .with_size(ComponentSize{pxf(cup_w - 20),
-                                     pixels(30)})
+            .with_size(ComponentSize{pxf(cup_w - 20), pixels(30)})
             .with_absolute_position(cup_x + 10.0f, cup_y + 10.0f)
             .with_font("EqProRounded", h720(20.0f))
             .with_custom_text_color(gold)
@@ -353,7 +350,15 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.06f)
             .with_debug_name("lap_panel"));
 
-    struct LapLine { const char *label; int id; int h; float y_off; const char *font; float font_sz; afterhours::Color color; };
+    struct LapLine {
+      const char *label;
+      int id;
+      int h;
+      float y_off;
+      const char *font;
+      float font_sz;
+      afterhours::Color color;
+    };
     LapLine lap_lines[] = {
         {"BEST LAP", 451, 24, 12.0f, "EqProRounded", 16.0f, muted},
         {"0:48.220", 452, 40, 40.0f, "Fredoka", 32.0f, accent_green},
@@ -422,7 +427,8 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("A: Select   B: Back   X: Replay")
             .with_size(ComponentSize{pixels(400), pixels(22)})
-            .with_absolute_position((float)screen_w / 2.0f - 200.0f, (float)screen_h - 25.0f)
+            .with_absolute_position((float)screen_w / 2.0f - 200.0f,
+                                    (float)screen_h - 25.0f)
             .with_font("EqProRounded", h720(16.0f))
             .with_custom_text_color(muted)
             .with_alignment(TextAlignment::Center));

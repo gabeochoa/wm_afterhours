@@ -19,7 +19,8 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, pixels(16.0f));
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
+                                              pixels(16.0f));
 
     // Main container background - centered on screen with padding
     auto root =
@@ -29,17 +30,17 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::lg)  // Padding on root, not child
+                .with_padding(Spacing::lg) // Padding on root, not child
                 .with_debug_name("buttons_bg"));
 
     // Content container - no padding since root has it
     auto main_container =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_justify_content(JustifyContent::SpaceAround)
-                .with_no_wrap()  // Prevent flex wrapping
-                .with_debug_name("buttons_main"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_justify_content(JustifyContent::SpaceAround)
+                   .with_no_wrap() // Prevent flex wrapping
+                   .with_debug_name("buttons_main"));
 
     // Title
     div(context, mk(main_container.ent(), 0),
@@ -57,14 +58,15 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 1: Basic button states
     auto row1 = hstack(context, mk(main_container.ent(), 1),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::sm)
-                        .with_align_items(AlignItems::Center)
-                        .with_debug_name("row1_states"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_background(Theme::Usage::Surface)
+                           .with_padding(Spacing::sm)
+                           .with_align_items(AlignItems::Center)
+                           .with_debug_name("row1_states"));
 
-    // Section label - fixed width for alignment, auto height to center with controls
+    // Section label - fixed width for alignment, auto height to center with
+    // controls
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
             .with_label("States:")
@@ -118,10 +120,13 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Disabled button
     // Enhanced disabled styling: reduced opacity + dashed border pattern
-    // makes the disabled state more visually obvious per accessibility guidelines.
-    // Configurable: adjust opacity (0.4-0.6) and border color as needed.
-    constexpr float disabled_opacity = 0.5f;  // Configurable: lower = more obvious
-    afterhours::Color disabled_border_color{120, 120, 130, 200};  // Configurable: muted border
+    // makes the disabled state more visually obvious per accessibility
+    // guidelines. Configurable: adjust opacity (0.4-0.6) and border color as
+    // needed.
+    constexpr float disabled_opacity =
+        0.5f; // Configurable: lower = more obvious
+    afterhours::Color disabled_border_color{120, 120, 130,
+                                            200}; // Configurable: muted border
     button(context, mk(row1.ent(), 4),
            ComponentConfig{}
                .with_label("Disabled")
@@ -137,16 +142,16 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 2: Different sizes - AlignItems::Center vertically centers buttons
     auto row2 = hstack(context, mk(main_container.ent(), 2),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(90)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::sm)
-                        .with_align_items(AlignItems::Center)
-                        .with_margin(Margin{.top = DefaultSpacing::small(),
-                                            .bottom = pixels(0),
-                                            .left = pixels(0),
-                                            .right = pixels(0)})
-                        .with_debug_name("row2_sizes"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                           .with_background(Theme::Usage::Surface)
+                           .with_padding(Spacing::sm)
+                           .with_align_items(AlignItems::Center)
+                           .with_margin(Margin{.top = DefaultSpacing::small(),
+                                               .bottom = pixels(0),
+                                               .left = pixels(0),
+                                               .right = pixels(0)})
+                           .with_debug_name("row2_sizes"));
 
     div(context, mk(row2.ent(), 0),
         ComponentConfig{}
@@ -156,7 +161,8 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f)));
 
-    // Small button - increased height to meet 44px touch target, larger font for visibility
+    // Small button - increased height to meet 44px touch target, larger font
+    // for visibility
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("Small")
@@ -201,16 +207,16 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 3: Button group - need more height to accommodate the group
     auto row3 = hstack(context, mk(main_container.ent(), 3),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(100)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::sm)
-                        .with_align_items(AlignItems::Center)
-                        .with_margin(Margin{.top = DefaultSpacing::small(),
-                                            .bottom = pixels(0),
-                                            .left = pixels(0),
-                                            .right = pixels(0)})
-                        .with_debug_name("row3_group"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                           .with_background(Theme::Usage::Surface)
+                           .with_padding(Spacing::sm)
+                           .with_align_items(AlignItems::Center)
+                           .with_margin(Margin{.top = DefaultSpacing::small(),
+                                               .bottom = pixels(0),
+                                               .left = pixels(0),
+                                               .right = pixels(0)})
+                           .with_debug_name("row3_group"));
 
     div(context, mk(row3.ent(), 0),
         ComponentConfig{}
@@ -252,16 +258,16 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 4: Custom styled buttons
     auto row4 = hstack(context, mk(main_container.ent(), 4),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::sm)
-                        .with_align_items(AlignItems::Center)
-                        .with_margin(Margin{.top = DefaultSpacing::small(),
-                                            .bottom = pixels(0),
-                                            .left = pixels(0),
-                                            .right = pixels(0)})
-                        .with_debug_name("row4_custom"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_background(Theme::Usage::Surface)
+                           .with_padding(Spacing::sm)
+                           .with_align_items(AlignItems::Center)
+                           .with_margin(Margin{.top = DefaultSpacing::small(),
+                                               .bottom = pixels(0),
+                                               .left = pixels(0),
+                                               .right = pixels(0)})
+                           .with_debug_name("row4_custom"));
 
     div(context, mk(row4.ent(), 0),
         ComponentConfig{}
@@ -280,7 +286,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                    .with_margin(Spacing::xs)
-                   .with_roundness(0.08f)  // Match theme default roundness
+                   .with_roundness(0.08f) // Match theme default roundness
                    .with_custom_hover_bg(afterhours::Color{255, 160, 120, 255})
                    .with_cursor(CursorType::Pointer)
                    .with_debug_name("btn_coral"))) {
@@ -296,7 +302,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
                    .with_margin(Spacing::xs)
-                   .with_roundness(0.08f)  // Match Coral button roundness
+                   .with_roundness(0.08f) // Match Coral button roundness
                    .with_custom_hover_bg(afterhours::Color{0, 140, 140, 255})
                    .with_cursor(CursorType::Pointer)
                    .with_debug_name("btn_teal"))) {
@@ -306,9 +312,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Sharp corners button - demonstrates .disable_rounded_corners()
     // STYLE GUIDE: When to use sharp vs rounded corners:
     // - ROUNDED (default, 0.08f): Standard buttons, form actions, navigation
-    //   Creates a friendly, approachable feel. Use for primary user interactions.
+    //   Creates a friendly, approachable feel. Use for primary user
+    //   interactions.
     // - SHARP: Technical/utility buttons, toolbars, button groups, data tables
-    //   Creates a precise, structured feel. Use for secondary UI or dense layouts.
+    //   Creates a precise, structured feel. Use for secondary UI or dense
+    //   layouts.
     // - MIXED (as in button groups above): Sharp edges where buttons meet,
     //   rounded on outer edges for visual grouping.
     button(context, mk(row4.ent(), 3),
@@ -326,13 +334,15 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 12; i++) {
       total_clicks += click_counts[i];
     }
-    std::string counter_text = "Total clicks across all buttons: " + std::to_string(total_clicks);
+    std::string counter_text =
+        "Total clicks across all buttons: " + std::to_string(total_clicks);
 
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
             .with_label(counter_text)
             .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_custom_background(afterhours::colors::lighten(theme.background, 0.08f))
+            .with_custom_background(
+                afterhours::colors::lighten(theme.background, 0.08f))
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_rounded_corners(RoundedCorners())

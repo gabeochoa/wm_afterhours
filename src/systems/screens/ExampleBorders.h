@@ -2,9 +2,9 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -22,7 +22,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color sample_white{250, 250, 252, 255}; // Sample card white
 
   // Configurable typography sizes
-  float section_header_font_size = 22.0f;  // Category labels (e.g., "Width & Color")
+  float section_header_font_size =
+      22.0f; // Category labels (e.g., "Width & Color")
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -45,8 +46,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Background - covers entire screen
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(
-                ComponentSize{pixels((float)screen_width), pixels((float)screen_height)})
+            .with_size(ComponentSize{pixels((float)screen_width),
+                                     pixels((float)screen_height)})
             .with_custom_background(bg_deep)
             .with_debug_name("bg"));
 
@@ -72,7 +73,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Legend - explanation of border types
     div(context, mk(entity, 2),
         ComponentConfig{}
-            .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | Row 3: Themed | Row 4: Interactive | Row 5: Per-Side")
+            .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | "
+                        "Row 3: Themed | Row 4: Interactive | Row 5: Per-Side")
             .with_size(ComponentSize{pixels(content_width), pixels(22)})
             .with_absolute_position(start_x, 56.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -103,30 +105,32 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 6; i++) {
       float x = start_x + i * (box_size + gap);
       button(context, mk(entity, 10 + i),
-          ComponentConfig{}
-              .with_label(row1[i].label)
-              .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-              .with_absolute_position(x, start_y)
-              .with_custom_background(row1[i].bg_color)
-              .with_border(row1[i].border_color, row1[i].border_width)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_custom_text_color(bg_deep)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("border_" + std::to_string(i)));
+             ComponentConfig{}
+                 .with_label(row1[i].label)
+                 .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
+                 .with_absolute_position(x, start_y)
+                 .with_custom_background(row1[i].bg_color)
+                 .with_border(row1[i].border_color, row1[i].border_width)
+                 .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+                 .with_custom_text_color(bg_deep)
+                 .with_alignment(TextAlignment::Center)
+                 .with_debug_name("border_" + std::to_string(i)));
     }
 
     // Row 1 label - positioned as a header on the left
     // Ensure labels stay within screen bounds
     float row_label_width = 140.0f;
     float min_left_margin = 15.0f;
-    float row_label_x = std::max(min_left_margin, start_x - row_label_width - 15.0f);
+    float row_label_x =
+        std::max(min_left_margin, start_x - row_label_width - 15.0f);
 
     div(context, mk(entity, 19),
         ComponentConfig{}
             .with_label("Width & Color")
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position(row_label_x, start_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
+            .with_font(UIComponent::DEFAULT_FONT,
+                       h720(section_header_font_size))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right));
 
@@ -216,7 +220,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Corners &\nShadows")
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position(row_label_x, row2_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
+            .with_font(UIComponent::DEFAULT_FONT,
+                       h720(section_header_font_size))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right));
 
@@ -305,7 +310,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Themed Styles")
             .with_size(ComponentSize{pixels(row_label_width), pixels(box_size)})
             .with_absolute_position(row_label_x, row3_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
+            .with_font(UIComponent::DEFAULT_FONT,
+                       h720(section_header_font_size))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right));
 
@@ -317,9 +323,11 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 49),
         ComponentConfig{}
             .with_label("Interactive")
-            .with_size(ComponentSize{pixels(row_label_width), pixels(row4_height)})
+            .with_size(
+                ComponentSize{pixels(row_label_width), pixels(row4_height)})
             .with_absolute_position(row_label_x, row4_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
+            .with_font(UIComponent::DEFAULT_FONT,
+                       h720(section_header_font_size))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right));
 
@@ -395,7 +403,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Per-Side")
             .with_size(ComponentSize{pixels(row_label_width), pixels(ps_box)})
             .with_absolute_position(row_label_x, row5_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(section_header_font_size))
+            .with_font(UIComponent::DEFAULT_FONT,
+                       h720(section_header_font_size))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right));
 
@@ -453,7 +462,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
             .with_absolute_position(start_x + 4 * (ps_box + gap), row5_y)
             .with_custom_background(sample_white)
-            .with_border_bottom(afterhours::Color{200, 60, 60, 255}, pixels(4.0f))
+            .with_border_bottom(afterhours::Color{200, 60, 60, 255},
+                                pixels(4.0f))
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));

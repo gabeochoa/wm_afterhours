@@ -47,37 +47,36 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     }
   }
 
-  void render_tag(UIContext<InputAction> &context,
-                  afterhours::Entity &parent, int id, const Tag &tag) {
+  void render_tag(UIContext<InputAction> &context, afterhours::Entity &parent,
+                  int id, const Tag &tag) {
     button(context, mk(parent, id),
-        ComponentConfig{}
-            .with_size(ComponentSize{children(), pixels(44)})
-            .with_custom_background(tag.color)
-            .with_roundness(0.3f)
-            .with_padding(Padding{.left = DefaultSpacing::small(),
-                                  .right = DefaultSpacing::small()})
-            .with_margin(Margin{.right = DefaultSpacing::small()})
-            .with_label(tag.label)
-            .with_custom_text_color(afterhours::Color{20, 20, 25, 255})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
-            .with_debug_name("tag_" + tag.label));
+           ComponentConfig{}
+               .with_size(ComponentSize{children(), pixels(44)})
+               .with_custom_background(tag.color)
+               .with_roundness(0.3f)
+               .with_padding(Padding{.left = DefaultSpacing::small(),
+                                     .right = DefaultSpacing::small()})
+               .with_margin(Margin{.right = DefaultSpacing::small()})
+               .with_label(tag.label)
+               .with_custom_text_color(afterhours::Color{20, 20, 25, 255})
+               .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
+               .with_debug_name("tag_" + tag.label));
   }
 
-  void render_row(UIContext<InputAction> &context,
-                  afterhours::Entity &parent, int id,
-                  const std::string &label, std::vector<Tag> &items,
-                  afterhours::Color accent, const Theme &theme,
-                  int row_index) {
+  void render_row(UIContext<InputAction> &context, afterhours::Entity &parent,
+                  int id, const std::string &label, std::vector<Tag> &items,
+                  afterhours::Color accent, const Theme &theme, int row_index) {
     // Row container
-    auto row = vstack(context, mk(parent, id),
-                   ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.0f), children()})
-                       .with_custom_background(afterhours::Color{38, 40, 50, 255})
-                       .with_roundness(0.03f)
-                       .with_border(afterhours::Color{55, 57, 68, 255}, 1.0f)
-                       .with_padding(Spacing::sm)
-                       .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                       .with_debug_name("row_" + label));
+    auto row =
+        vstack(context, mk(parent, id),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), children()})
+                   .with_custom_background(afterhours::Color{38, 40, 50, 255})
+                   .with_roundness(0.03f)
+                   .with_border(afterhours::Color{55, 57, 68, 255}, 1.0f)
+                   .with_padding(Spacing::sm)
+                   .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                   .with_debug_name("row_" + label));
 
     // Row header
     div(context, mk(row.ent(), 0),
@@ -93,12 +92,12 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     // Horizontal drag group for the tags
     auto tags_area =
         hstack(context, mk(row.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), children()})
-                .with_align_items(AlignItems::Center)
-                .with_flex_wrap(FlexWrap::Wrap)
-                .with_draggable_children()
-                .with_debug_name("tags_" + label));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), children()})
+                   .with_align_items(AlignItems::Center)
+                   .with_flex_wrap(FlexWrap::Wrap)
+                   .with_draggable_children()
+                   .with_debug_name("tags_" + label));
 
     group_to_row[tags_area.ent().id] = row_index;
 
@@ -143,8 +142,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
         src.erase(src.begin() + evt.source_index);
 
         int insert_at = evt.target_index;
-        if (src_it->second == tgt_it->second &&
-            evt.source_index < insert_at) {
+        if (src_it->second == tgt_it->second && evt.source_index < insert_at) {
           insert_at--;
         }
         insert_at = std::clamp(insert_at, 0, static_cast<int>(tgt.size()));
@@ -168,25 +166,25 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Adaptive;
 
     // Root
-    auto root =
-        vstack(context, mk(entity, 100),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.92f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_roundness(0.02f)
-                .with_padding(Spacing::sm)
-                .with_no_wrap()
-                .with_debug_name("hdrag_root"));
+    auto root = vstack(
+        context, mk(entity, 100),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.92f)})
+            .with_self_align(SelfAlign::Center)
+            .with_background(Theme::Usage::Background)
+            .with_roundness(0.02f)
+            .with_padding(Spacing::sm)
+            .with_no_wrap()
+            .with_debug_name("hdrag_root"));
 
     // Title
     auto title_bar =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(80)})
-                .with_justify_content(JustifyContent::Center)
-                .with_margin(Margin{.bottom = DefaultSpacing::small()})
-                .with_debug_name("title_bar"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                   .with_justify_content(JustifyContent::Center)
+                   .with_margin(Margin{.bottom = DefaultSpacing::small()})
+                   .with_debug_name("title_bar"));
 
     div(context, mk(title_bar.ent(), 0),
         ComponentConfig{}
@@ -205,11 +203,10 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Rows container
-    auto rows =
-        vstack(context, mk(root.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), children()})
-                .with_debug_name("rows_container"));
+    auto rows = vstack(context, mk(root.ent(), 1),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), children()})
+                           .with_debug_name("rows_container"));
 
     render_row(context, rows.ent(), 0, "High Priority", high_items,
                afterhours::Color{220, 80, 80, 255}, theme, 0);

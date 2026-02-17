@@ -2,25 +2,27 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
   // Use richer colors instead of pure gray
-  afterhours::Color bg{45, 55, 75, 255};           // Muted blue-gray background
-  afterhours::Color panel{65, 78, 102, 255};       // Panel surface
-  afterhours::Color text{235, 235, 240, 255};      // High contrast light text
+  afterhours::Color bg{45, 55, 75, 255};      // Muted blue-gray background
+  afterhours::Color panel{65, 78, 102, 255};  // Panel surface
+  afterhours::Color text{235, 235, 240, 255}; // High contrast light text
   afterhours::Color light_edge{180, 190, 205, 255}; // Bevel light edge
-  afterhours::Color dark_edge{30, 38, 52, 255};    // Bevel dark edge
-  afterhours::Color sunken_text{200, 205, 215, 255}; // Slightly dimmer for sunken
+  afterhours::Color dark_edge{30, 38, 52, 255};     // Bevel dark edge
+  afterhours::Color sunken_text{200, 205, 215,
+                                255}; // Slightly dimmer for sunken
 
   // Configurable label sizes
-  float column_header_font_size = 22.0f;  // Font size for column headers ("1px", "2px", etc.)
-  float cell_label_font_size = 22.0f;     // Font size for labels inside bevel cells
+  float column_header_font_size =
+      22.0f; // Font size for column headers ("1px", "2px", etc.)
+  float cell_label_font_size = 22.0f; // Font size for labels inside bevel cells
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -90,13 +92,14 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
     float col_header_height = 28.0f;
 
     // Calculate total content width and center horizontally
-    float grid_width = 6 * cell + 5 * gap;  // 6 cells with 5 gaps between
+    float grid_width = 6 * cell + 5 * gap; // 6 cells with 5 gaps between
     float content_width = row_label_width + 20.0f + grid_width;
 
     // Header area: title bar ends at ~60, legend ends at ~88
     float header_bottom = 96.0f + y_offset;
 
-    float start_x = (screen_width - content_width) / 2.0f + row_label_width + 20.0f;
+    float start_x =
+        (screen_width - content_width) / 2.0f + row_label_width + 20.0f;
     float start_y = header_bottom + col_header_height + 16.0f;
 
     for (int c = 0; c < 6; ++c) {
@@ -104,8 +107,10 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(fmt::format("{}px", static_cast<int>(thicknesses[c])))
               .with_size(ComponentSize{pixels(cell), pixels(col_header_height)})
-              .with_absolute_position(start_x + c * (cell + gap), start_y - col_header_height - 8.0f)
-              .with_font(UIComponent::DEFAULT_FONT, h720(column_header_font_size))
+              .with_absolute_position(start_x + c * (cell + gap),
+                                      start_y - col_header_height - 8.0f)
+              .with_font(UIComponent::DEFAULT_FONT,
+                         h720(column_header_font_size))
               .with_custom_text_color(text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("col_label_" + std::to_string(c)));
@@ -139,7 +144,8 @@ struct ExampleBevelBordersScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(fill)
                 .with_bevel(rows[r].style, light_edge, dark_edge,
                             thicknesses[c])
-                .with_font(UIComponent::DEFAULT_FONT, h720(cell_label_font_size))
+                .with_font(UIComponent::DEFAULT_FONT,
+                           h720(cell_label_font_size))
                 .with_custom_text_color(label_color)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name("bevel_" + std::to_string(r) + "_" +

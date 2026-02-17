@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t active_tab = 1; // VIDEO tab
+  size_t active_tab = 1;   // VIDEO tab
   size_t selected_row = 6; // Anti-Aliasing method selected to show TSR tooltip
 
   // Colors matching Rematch/FIFA style - dark with bright green accents
@@ -26,7 +26,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       45, 75, 95, 160}; // Selected row highlight (semi-transparent)
   afterhours::Color slider_bg{55, 65, 80, 255};    // Slider background
   afterhours::Color slider_track{22, 28, 38, 255}; // Slider track
-  afterhours::Color slider_empty_border{55, 65, 80, 255}; // Border for empty portion
+  afterhours::Color slider_empty_border{55, 65, 80,
+                                        255}; // Border for empty portion
 
   std::vector<std::string> tabs = {"GAMEPLAY", "VIDEO", "AUDIO", "CONTROLS"};
 
@@ -41,33 +42,84 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   };
 
   std::vector<SettingRow> graphics_settings = {
-      {"Window mode", false, 0.0f, 0, 0, {"Fullscreen", "Borderless window", "Windowed"}, 1},
-      {"Resolution", false, 0.0f, 0, 0, {"1920x1080", "2560x1440", "3840x2160"}, 1},
+      {"Window mode",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Fullscreen", "Borderless window", "Windowed"},
+       1},
+      {"Resolution",
+       false,
+       0.0f,
+       0,
+       0,
+       {"1920x1080", "2560x1440", "3840x2160"},
+       1},
       {"Screen percentage", true, 1.0f, 50, 100, {}, 0},
       {"V Sync", false, 0.0f, 0, 0, {"Disabled", "Enabled"}, 1},
       {"Max FPS", true, 0.5f, 30, 240, {}, 0},
       {"Gamma", true, 0.45f, 10, 30, {}, 0},
-      {"Anti-Aliasing method", false, 0.0f, 0, 0,
-       {"Off", "FXAA", "TAA", "TSR (Temporal Super Resolution)", "DLSS"}, 3},
+      {"Anti-Aliasing method",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Off", "FXAA", "TAA", "TSR (Temporal Super Resolution)", "DLSS"},
+       3},
       {"Dynamic resolution", false, 0.0f, 0, 0, {"Disabled", "Enabled"}, 1},
       {"Framerate target", true, 0.4f, 30, 120, {}, 0},
       {"Motion blur", true, 0.7f, 0, 10, {}, 0},
-      {"Graphics quality", false, 0.0f, 0, 0, {"Low", "Medium", "High", "Ultra"}, 3},
-      {"Texture quality", false, 0.0f, 0, 0, {"Low", "Medium", "High", "Ultra"}, 3},
+      {"Graphics quality",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Low", "Medium", "High", "Ultra"},
+       3},
+      {"Texture quality",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Low", "Medium", "High", "Ultra"},
+       3},
   };
 
   std::vector<SettingRow> gameplay_settings = {
-      {"Difficulty", false, 0.0f, 0, 0,
-       {"Beginner", "Amateur", "Semi-Pro", "Professional", "World Class", "Legendary"}, 3},
+      {"Difficulty",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Beginner", "Amateur", "Semi-Pro", "Professional", "World Class",
+        "Legendary"},
+       3},
       {"Game Speed", false, 0.0f, 0, 0, {"Slow", "Normal", "Fast"}, 1},
-      {"Match Length", false, 0.0f, 0, 0,
-       {"4 min", "6 min", "8 min", "10 min", "15 min", "20 min"}, 2},
-      {"Camera Type", false, 0.0f, 0, 0,
-       {"Broadcast", "Co-op", "Dynamic", "End to End", "Pro"}, 0},
+      {"Match Length",
+       false,
+       0.0f,
+       0,
+       0,
+       {"4 min", "6 min", "8 min", "10 min", "15 min", "20 min"},
+       2},
+      {"Camera Type",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Broadcast", "Co-op", "Dynamic", "End to End", "Pro"},
+       0},
       {"Camera Height", true, 0.5f, 0, 20, {}, 0},
       {"Camera Zoom", true, 0.5f, 0, 20, {}, 0},
       {"Ball Indicator", false, 0.0f, 0, 0, {"Off", "On"}, 1},
-      {"Player Names", false, 0.0f, 0, 0, {"Off", "Always", "When Controlled"}, 2},
+      {"Player Names",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Off", "Always", "When Controlled"},
+       2},
   };
 
   std::vector<SettingRow> audio_settings = {
@@ -76,15 +128,26 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       {"Commentary Volume", true, 0.9f, 0, 100, {}, 0},
       {"Crowd Volume", true, 0.85f, 0, 100, {}, 0},
       {"SFX Volume", true, 0.75f, 0, 100, {}, 0},
-      {"Commentary Language", false, 0.0f, 0, 0,
-       {"English", "Spanish", "French", "German", "Italian"}, 0},
+      {"Commentary Language",
+       false,
+       0.0f,
+       0,
+       0,
+       {"English", "Spanish", "French", "German", "Italian"},
+       0},
       {"Crowd Chants", false, 0.0f, 0, 0, {"Off", "On"}, 1},
   };
 
   std::vector<SettingRow> controls_settings = {
       {"Vibration", false, 0.0f, 0, 0, {"Off", "On"}, 1},
       {"Vibration Strength", true, 0.7f, 0, 100, {}, 0},
-      {"Auto Switch", false, 0.0f, 0, 0, {"Off", "Ball Only", "Air Balls", "All"}, 2},
+      {"Auto Switch",
+       false,
+       0.0f,
+       0,
+       0,
+       {"Off", "Ball Only", "Air Balls", "All"},
+       2},
       {"Pass Assistance", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 2},
       {"Shot Assistance", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 1},
       {"Through Ball", false, 0.0f, 0, 0, {"Manual", "Semi", "Assisted"}, 1},
@@ -111,25 +174,33 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     return *get_tab_info().settings;
   }
 
-  std::string get_section_header() {
-    return get_tab_info().header;
-  }
+  std::string get_section_header() { return get_tab_info().header; }
 
   const char *get_group_header(size_t tab, size_t row) {
     if (tab == 0) {
-      if (row == 0) return "Match";
-      if (row == 4) return "Camera";
-      if (row == 6) return "Display";
+      if (row == 0)
+        return "Match";
+      if (row == 4)
+        return "Camera";
+      if (row == 6)
+        return "Display";
     } else if (tab == 1) {
-      if (row == 0) return "Display";
-      if (row == 6) return "Anti-Aliasing & Performance";
-      if (row == 10) return "Quality";
+      if (row == 0)
+        return "Display";
+      if (row == 6)
+        return "Anti-Aliasing & Performance";
+      if (row == 10)
+        return "Quality";
     } else if (tab == 2) {
-      if (row == 0) return "Volume";
-      if (row == 5) return "Options";
+      if (row == 0)
+        return "Volume";
+      if (row == 5)
+        return "Options";
     } else if (tab == 3) {
-      if (row == 0) return "Vibration";
-      if (row == 2) return "Assistance";
+      if (row == 0)
+        return "Vibration";
+      if (row == 2)
+        return "Assistance";
     }
     return nullptr;
   }
@@ -139,9 +210,12 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (label == "Anti-Aliasing method") {
       if (current_value == "TSR (Temporal Super Resolution)")
         return "TSR (Temporal Super Resolution) uses";
-      if (current_value == "TAA") return "TAA (Temporal Anti-Aliasing) smooths";
-      if (current_value == "FXAA") return "FXAA (Fast Approximate AA) is a";
-      if (current_value == "DLSS") return "DLSS (Deep Learning Super Sampling)";
+      if (current_value == "TAA")
+        return "TAA (Temporal Anti-Aliasing) smooths";
+      if (current_value == "FXAA")
+        return "FXAA (Fast Approximate AA) is a";
+      if (current_value == "DLSS")
+        return "DLSS (Deep Learning Super Sampling)";
     }
     return "Adjust this setting to customize your";
   }
@@ -151,16 +225,20 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (label == "Anti-Aliasing method") {
       if (current_value == "TSR (Temporal Super Resolution)")
         return "AI to upscale lower resolution frames.";
-      if (current_value == "TAA") return "edges using temporal frame data.";
-      if (current_value == "FXAA") return "fast, low-cost edge smoothing method.";
-      if (current_value == "DLSS") return "uses NVIDIA AI for quality upscaling.";
+      if (current_value == "TAA")
+        return "edges using temporal frame data.";
+      if (current_value == "FXAA")
+        return "fast, low-cost edge smoothing method.";
+      if (current_value == "DLSS")
+        return "uses NVIDIA AI for quality upscaling.";
     }
     return "gaming experience.";
   }
 
   std::string format_slider_value(size_t index, float pct) {
     auto &settings = get_current_settings();
-    if (index >= settings.size()) return "---";
+    if (index >= settings.size())
+      return "---";
     auto &setting = settings[index];
     int val = setting.min_val +
               static_cast<int>(pct * (setting.max_val - setting.min_val));
@@ -204,14 +282,15 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float sh = static_cast<float>(screen_h);
 
     // Use logical width for breakpoint (respects ui_scale zoom)
-    auto layout_info = LayoutInfo::make(sw, sh, theme.ui_scale,
-                                        ScalingMode::Adaptive);
+    auto layout_info =
+        LayoutInfo::make(sw, sh, theme.ui_scale, ScalingMode::Adaptive);
     bool show_help_panel = layout_info.logical_w >= 900;
 
     // ── Sync selection with focus ──
     auto &current_settings = get_current_settings();
     auto focus_id = context.focus_id;
-    auto opt_focused = afterhours::ui::UICollectionHolder::getEntityForID(focus_id);
+    auto opt_focused =
+        afterhours::ui::UICollectionHolder::getEntityForID(focus_id);
     if (opt_focused.has_value()) {
       auto &focused = opt_focused.asE();
       if (focused.has<afterhours::ui::HasLabel>()) {
@@ -241,40 +320,41 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         if (setting.is_slider)
           setting.slider_pct = std::min(1.0f, setting.slider_pct + step);
         else if (!setting.options.empty())
-          setting.option_idx = (setting.option_idx + 1) % setting.options.size();
+          setting.option_idx =
+              (setting.option_idx + 1) % setting.options.size();
       }
     }
 
-    if (selected_row >= current_settings.size()) selected_row = 0;
+    if (selected_row >= current_settings.size())
+      selected_row = 0;
 
     // ── Layout dimensions ──
     // Top-level regions use screen_pct for proportional layout;
     // inner elements use pixels() which scales with ui_scale in Adaptive mode
-    float tab_area_h = 50.f / sh;    // tab bar region
-    float hdr_area_h = 45.f / sh;    // section header region
-    float bottom_h = 45.f / sh;      // bottom prompt bar
+    float tab_area_h = 50.f / sh; // tab bar region
+    float hdr_area_h = 45.f / sh; // section header region
+    float bottom_h = 45.f / sh;   // bottom prompt bar
     float content_h = 1.0f - tab_area_h - hdr_area_h - bottom_h;
     float pad_l = 50.f / sw;
     float pad_r = 20.f / sw;
     // Settings panel: ~50% when help visible, full width otherwise
-    float settings_w_pct = show_help_panel
-        ? (620.f / sw)
-        : (1.0f - pad_l - pad_r);
+    float settings_w_pct =
+        show_help_panel ? (620.f / sw) : (1.0f - pad_l - pad_r);
     float help_gap_pct = 50.f / sw;
-    float help_w_pct = show_help_panel
-        ? (1.0f - pad_l - pad_r - settings_w_pct - help_gap_pct)
-        : 0.f;
+    float help_w_pct =
+        show_help_panel ? (1.0f - pad_l - pad_r - settings_w_pct - help_gap_pct)
+                        : 0.f;
 
     // ═══════════════════════════════════════════════════════════════
     // ROOT
     // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_dark)
-            .with_no_wrap()
-            .with_debug_name("sports_root"));
+    auto root =
+        vstack(context, mk(entity, 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg_dark)
+                   .with_no_wrap()
+                   .with_debug_name("sports_root"));
 
     // ═══════════════════════════════════════════════════════════════
     // TAB BAR
@@ -283,15 +363,17 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(tab_area_h)})
-            .with_padding(Padding{.top = pixels(15), .left = pixels(70),
-                                  .bottom = {}, .right = {}})
+            .with_padding(Padding{.top = pixels(15),
+                                  .left = pixels(70),
+                                  .bottom = {},
+                                  .right = {}})
             .with_align_items(AlignItems::FlexEnd)
             .with_no_wrap()
             .with_debug_name("tab_area"));
 
-    tab_container(context, mk(tab_area.ent(), 0), tabs, active_tab,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(520), pixels(35)}));
+    tab_container(
+        context, mk(tab_area.ent(), 0), tabs, active_tab,
+        ComponentConfig{}.with_size(ComponentSize{pixels(520), pixels(35)}));
 
     // ═══════════════════════════════════════════════════════════════
     // SECTION HEADER
@@ -300,8 +382,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 2),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(hdr_area_h)})
-            .with_padding(Padding{.top = pixels(10), .left = pixels(50),
-                                  .bottom = {}, .right = {}})
+            .with_padding(Padding{.top = pixels(10),
+                                  .left = pixels(50),
+                                  .bottom = {},
+                                  .right = {}})
             .with_no_wrap()
             .with_debug_name("header_section"));
 
@@ -326,8 +410,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(root.ent(), 3),
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(content_h)})
-            .with_padding(Padding{.top = {}, .left = screen_pct(pad_l),
-                                  .bottom = {}, .right = screen_pct(pad_r)})
+            .with_padding(Padding{.top = {},
+                                  .left = screen_pct(pad_l),
+                                  .bottom = {},
+                                  .right = screen_pct(pad_r)})
             .with_align_items(AlignItems::FlexStart)
             .with_no_wrap()
             .with_debug_name("content"));
@@ -336,8 +422,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto settings_panel = vstack(
         context, mk(content.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(settings_w_pct),
-                                     percent(1.0f)})
+            .with_size(ComponentSize{screen_pct(settings_w_pct), percent(1.0f)})
             .with_no_wrap()
             .with_debug_name("settings_panel"));
 
@@ -384,16 +469,17 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       float step = 0.05f;
 
       // ── Setting row (hstack) ──
-      auto row = hstack(
-          context, mk(settings_panel.ent(), child_id++),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(38)})
-              .with_custom_background(is_selected ? highlight_row
-                                                  : afterhours::Color{35, 45, 55, 255})
-              .with_align_items(AlignItems::Center)
-              .with_no_wrap()
-              .with_margin(Margin{.bottom = pixels(2)})
-              .with_debug_name("row_" + std::to_string(i)));
+      auto row =
+          hstack(context, mk(settings_panel.ent(), child_id++),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(38)})
+                     .with_custom_background(
+                         is_selected ? highlight_row
+                                     : afterhours::Color{35, 45, 55, 255})
+                     .with_align_items(AlignItems::Center)
+                     .with_no_wrap()
+                     .with_margin(Margin{.bottom = pixels(2)})
+                     .with_debug_name("row_" + std::to_string(i)));
 
       // Selection accent bar
       div(context, mk(row.ent(), 0),
@@ -463,20 +549,21 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         if (setting.is_slider)
           setting.slider_pct = std::min(1.0f, setting.slider_pct + step);
         else if (!setting.options.empty())
-          setting.option_idx = (setting.option_idx + 1) % setting.options.size();
+          setting.option_idx =
+              (setting.option_idx + 1) % setting.options.size();
       }
 
       // ── Bar area: slider or segments ──
       if (setting.is_slider) {
         // Slider: background container with fill child
-        auto bar_bg = div(
-            context, mk(row.ent(), 5),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(100), pixels(14)})
-                .with_custom_background(slider_track)
-                .with_border(slider_empty_border, 1.0f)
-                .with_skip_tabbing(true)
-                .with_debug_name("slider_bg_" + std::to_string(i)));
+        auto bar_bg =
+            div(context, mk(row.ent(), 5),
+                ComponentConfig{}
+                    .with_size(ComponentSize{pixels(100), pixels(14)})
+                    .with_custom_background(slider_track)
+                    .with_border(slider_empty_border, 1.0f)
+                    .with_skip_tabbing(true)
+                    .with_debug_name("slider_bg_" + std::to_string(i)));
 
         float fill_pct = setting.slider_pct;
         if (fill_pct > 0.02f) {
@@ -489,23 +576,24 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         }
       } else if (setting.options.size() > 1) {
         // Segments: hstack with equal-weight children
-        auto segs = hstack(
-            context, mk(row.ent(), 5),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(100), pixels(10)})
-                .with_align_items(AlignItems::Center)
-                .with_no_wrap()
-                .with_skip_tabbing(true)
-                .with_debug_name("segs_" + std::to_string(i)));
+        auto segs =
+            hstack(context, mk(row.ent(), 5),
+                   ComponentConfig{}
+                       .with_size(ComponentSize{pixels(100), pixels(10)})
+                       .with_align_items(AlignItems::Center)
+                       .with_no_wrap()
+                       .with_skip_tabbing(true)
+                       .with_debug_name("segs_" + std::to_string(i)));
 
         for (size_t j = 0; j < setting.options.size(); j++) {
           bool is_active = (j == setting.option_idx);
-          div(context,
-              mk(segs.ent(), static_cast<int>(j)),
+          div(context, mk(segs.ent(), static_cast<int>(j)),
               ComponentConfig{}
                   .with_size(ComponentSize{expand(1.f), percent(1.0f)})
-                  .with_custom_background(is_active ? accent_green : slider_track)
-                  .with_border(is_active ? accent_green : slider_empty_border, 1.0f)
+                  .with_custom_background(is_active ? accent_green
+                                                    : slider_track)
+                  .with_border(is_active ? accent_green : slider_empty_border,
+                               1.0f)
                   .with_skip_tabbing(true)
                   .with_debug_name("seg_" + std::to_string(i) + "_" +
                                    std::to_string(j)));
@@ -534,8 +622,10 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_no_wrap()
               .with_debug_name("help_panel"));
 
-      std::string desc1 = get_setting_description(selected_setting.label, current_val);
-      std::string desc2 = get_setting_description_line2(selected_setting.label, current_val);
+      std::string desc1 =
+          get_setting_description(selected_setting.label, current_val);
+      std::string desc2 =
+          get_setting_description_line2(selected_setting.label, current_val);
       std::string current_label = "Current: " + current_val;
 
       div(context, mk(help.ent(), 0),

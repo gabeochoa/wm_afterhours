@@ -57,15 +57,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // ROOT - full screen, center content
     // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_green)
-            .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::Center)
-            .with_no_wrap()
-            .with_debug_name("casual_root"));
+    auto root =
+        vstack(context, mk(entity),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg_green)
+                   .with_align_items(AlignItems::Center)
+                   .with_justify_content(JustifyContent::Center)
+                   .with_no_wrap()
+                   .with_debug_name("casual_root"));
 
     // ═══════════════════════════════════════════════════════════════
     // TITLE
@@ -82,28 +82,29 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // PANEL (orange border via border prop, cream interior)
     // ═══════════════════════════════════════════════════════════════
-    auto panel = vstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_720p_size(680, 420)
-            .with_custom_background(panel_cream)
-            .with_border(panel_orange, 8.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.12f)
-            .with_padding(Padding{.top = pixels(8), .left = pixels(40),
-                                  .bottom = pixels(12), .right = pixels(40)})
-            .with_no_wrap()
-            .with_debug_name("panel"));
+    auto panel = vstack(context, mk(root.ent()),
+                        ComponentConfig{}
+                            .with_720p_size(680, 420)
+                            .with_custom_background(panel_cream)
+                            .with_border(panel_orange, 8.0f)
+                            .with_rounded_corners(RoundedCorners())
+                            .with_roundness(0.12f)
+                            .with_padding(Padding{.top = pixels(8),
+                                                  .left = pixels(40),
+                                                  .bottom = pixels(12),
+                                                  .right = pixels(40)})
+                            .with_no_wrap()
+                            .with_debug_name("panel"));
 
     // ── Close button row (right-aligned) ──
-    auto close_row = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(42)})
-            .with_justify_content(JustifyContent::FlexEnd)
-            .with_align_items(AlignItems::FlexStart)
-            .with_no_wrap()
-            .with_debug_name("close_row"));
+    auto close_row =
+        hstack(context, mk(panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                   .with_justify_content(JustifyContent::FlexEnd)
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_no_wrap()
+                   .with_debug_name("close_row"));
 
     if (button(context, mk(close_row.ent()),
                ComponentConfig{}
@@ -121,22 +122,22 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ── Top sections: Audio (left) + Data (right) ──
-    auto top_sections = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(90)})
-            .with_align_items(AlignItems::FlexStart)
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_no_wrap()
-            .with_debug_name("top_sections"));
+    auto top_sections =
+        hstack(context, mk(panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_no_wrap()
+                   .with_debug_name("top_sections"));
 
     // ── Audio section ──
-    auto audio_sec = vstack(
-        context, mk(top_sections.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(340), percent(1.0f)})
-            .with_no_wrap()
-            .with_debug_name("audio_sec"));
+    auto audio_sec =
+        vstack(context, mk(top_sections.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(340), percent(1.0f)})
+                   .with_no_wrap()
+                   .with_debug_name("audio_sec"));
 
     div(context, mk(audio_sec.ent()),
         ComponentConfig{}
@@ -147,14 +148,14 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_header_audio"));
 
     // Toggle row
-    auto toggle_row = hstack(
-        context, mk(audio_sec.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(65)})
-            .with_align_items(AlignItems::FlexStart)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(4)})
-            .with_debug_name("toggle_row"));
+    auto toggle_row =
+        hstack(context, mk(audio_sec.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(65)})
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(4)})
+                   .with_debug_name("toggle_row"));
 
     struct ToggleInfo {
       const char *label;
@@ -181,8 +182,8 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       // Track button (clickable, styled as the track)
       if (button(context, mk(toggle_col.ent(), 0),
                  ComponentConfig{}
-                     .with_size(ComponentSize{pixels(cs_track_w),
-                                              pixels(cs_track_h)})
+                     .with_size(
+                         ComponentSize{pixels(cs_track_w), pixels(cs_track_h)})
                      .with_custom_background(track_col)
                      .with_border(track_border_col, 2.0f)
                      .with_rounded_corners(RoundedCorners().all_round())
@@ -205,7 +206,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_roundness(1.0f)
               .with_skip_tabbing(true)
               .with_translate(pixels(knob_x_offset - (cs_track_w / 2.0f) +
-                                    (cs_knob_sz / 2.0f)),
+                                     (cs_knob_sz / 2.0f)),
                               pixels(-(cs_track_h - cs_knob_pad)))
               .with_debug_name(std::string("toggle_knob_") +
                                toggles[ti].label));
@@ -224,12 +225,12 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ── Data section (right side of top) ──
-    auto data_sec = vstack(
-        context, mk(top_sections.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(260), percent(1.0f)})
-            .with_no_wrap()
-            .with_debug_name("data_sec"));
+    auto data_sec =
+        vstack(context, mk(top_sections.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(260), percent(1.0f)})
+                   .with_no_wrap()
+                   .with_debug_name("data_sec"));
 
     div(context, mk(data_sec.ent()),
         ComponentConfig{}
@@ -239,14 +240,14 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_muted)
             .with_debug_name("section_header_data"));
 
-    auto data_btns = hstack(
-        context, mk(data_sec.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(55)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(4)})
-            .with_debug_name("data_btns"));
+    auto data_btns =
+        hstack(context, mk(data_sec.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(55)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(4)})
+                   .with_debug_name("data_btns"));
 
     button(context, mk(data_btns.ent()),
            ComponentConfig{}
@@ -290,14 +291,14 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("section_header_menu"));
 
     // ── Menu buttons: two columns ──
-    auto menu_row = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(165)})
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_align_items(AlignItems::FlexStart)
-            .with_no_wrap()
-            .with_debug_name("menu_row"));
+    auto menu_row =
+        hstack(context, mk(panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(165)})
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_no_wrap()
+                   .with_debug_name("menu_row"));
 
     auto make_menu_btn = [&](auto parent, int id, const char *label) {
       button(context, mk(parent.ent(), id),
@@ -317,23 +318,23 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     // Left column
-    auto left_col = vstack(
-        context, mk(menu_row.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(285), percent(1.0f)})
-            .with_no_wrap()
-            .with_debug_name("menu_left"));
+    auto left_col =
+        vstack(context, mk(menu_row.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(285), percent(1.0f)})
+                   .with_no_wrap()
+                   .with_debug_name("menu_left"));
 
     make_menu_btn(left_col, 0, "Notifications: OFF");
     make_menu_btn(left_col, 1, "Language");
 
     // Right column
-    auto right_col = vstack(
-        context, mk(menu_row.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(285), percent(1.0f)})
-            .with_no_wrap()
-            .with_debug_name("menu_right"));
+    auto right_col =
+        vstack(context, mk(menu_row.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(285), percent(1.0f)})
+                   .with_no_wrap()
+                   .with_debug_name("menu_right"));
 
     make_menu_btn(right_col, 0, "Credits");
     make_menu_btn(right_col, 1, "Support");
@@ -349,22 +350,22 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = pixels(8)})
             .with_debug_name("sep_footer"));
 
-    auto footer = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(42)})
-            .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_no_wrap()
-            .with_debug_name("footer"));
+    auto footer =
+        hstack(context, mk(panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                   .with_align_items(AlignItems::Center)
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_no_wrap()
+                   .with_debug_name("footer"));
 
     // Left group: About + Version
-    auto footer_left = hstack(
-        context, mk(footer.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(246), pixels(42)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap());
+    auto footer_left =
+        hstack(context, mk(footer.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(246), pixels(42)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap());
 
     // About button
     if (button(context, mk(footer_left.ent()),
@@ -394,15 +395,14 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.left = pixels(8)}));
 
     // Right group: OK/Cancel/Apply
-    auto footer_right = hstack(
-        context, mk(footer.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(215), pixels(42)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap());
+    auto footer_right =
+        hstack(context, mk(footer.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(215), pixels(42)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap());
 
-    auto make_footer_btn = [&](int id, const char *label,
-                               afterhours::Color bg,
+    auto make_footer_btn = [&](int id, const char *label, afterhours::Color bg,
                                afterhours::Color border) {
       button(context, mk(footer_right.ent(), id),
              ComponentConfig{}
@@ -444,18 +444,19 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name("about_border"));
 
       // Cream inner
-      auto about_panel = vstack(
-          context, mk(entity),
-          ComponentConfig{}
-              .with_720p_size(about_w, about_h)
-              .with_absolute_position(about_x, about_y)
-              .with_custom_background(panel_cream)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.1f)
-              .with_padding(Padding{.top = pixels(12), .left = pixels(20),
-                                    .bottom = pixels(12), .right = pixels(20)})
-              .with_no_wrap()
-              .with_debug_name("about_inner"));
+      auto about_panel = vstack(context, mk(entity),
+                                ComponentConfig{}
+                                    .with_720p_size(about_w, about_h)
+                                    .with_absolute_position(about_x, about_y)
+                                    .with_custom_background(panel_cream)
+                                    .with_rounded_corners(RoundedCorners())
+                                    .with_roundness(0.1f)
+                                    .with_padding(Padding{.top = pixels(12),
+                                                          .left = pixels(20),
+                                                          .bottom = pixels(12),
+                                                          .right = pixels(20)})
+                                    .with_no_wrap()
+                                    .with_debug_name("about_inner"));
 
       div(context, mk(about_panel.ent()),
           ComponentConfig{}
@@ -489,13 +490,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(text_muted)
               .with_margin(Margin{.top = pixels(2)}));
 
-      auto about_footer = hstack(
-          context, mk(about_panel.ent()),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(38)})
-              .with_justify_content(JustifyContent::Center)
-              .with_align_items(AlignItems::Center)
-              .with_margin(Margin{.top = pixels(6)}));
+      auto about_footer =
+          hstack(context, mk(about_panel.ent()),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(38)})
+                     .with_justify_content(JustifyContent::Center)
+                     .with_align_items(AlignItems::Center)
+                     .with_margin(Margin{.top = pixels(6)}));
 
       if (button(context, mk(about_footer.ent()),
                  ComponentConfig{}

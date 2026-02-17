@@ -2,8 +2,8 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../ExampleScreenRegistry.h"
 #include "../../theme_presets.h"
+#include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -40,20 +40,20 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Content container with padding
     auto content = vstack(context, mk(root.ent(), 0),
-                       ComponentConfig{}
-                           .with_size({percent(1.0f), percent(1.0f)})
-                           .with_padding(Spacing::lg)
-                           .with_debug_name("root"));
+                          ComponentConfig{}
+                              .with_size({percent(1.0f), percent(1.0f)})
+                              .with_padding(Spacing::lg)
+                              .with_debug_name("root"));
 
     // Title section - row with title text and badge
     auto title_row = hstack(context, mk(content.ent()),
-                         ComponentConfig{}
-                             .with_size({percent(1.0f), pixels(70.0f)})
-                             .with_justify_content(JustifyContent::Center)
-                             .with_align_items(AlignItems::Center)
-                             .with_no_wrap()
-                             .with_margin(Spacing::xs)
-                             .with_debug_name("title_row"));
+                            ComponentConfig{}
+                                .with_size({percent(1.0f), pixels(70.0f)})
+                                .with_justify_content(JustifyContent::Center)
+                                .with_align_items(AlignItems::Center)
+                                .with_no_wrap()
+                                .with_margin(Spacing::xs)
+                                .with_debug_name("title_row"));
 
     // Main title text - large and prominent
     div(context, mk(title_row.ent(), 0),
@@ -86,10 +86,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Section 1: Default behavior (auto enabled by default)
     auto section1 = vstack(context, mk(content.ent()),
-                        ComponentConfig{}
-                            .with_size({percent(1.0f), children()})
-                            .with_padding(Spacing::sm)
-                            );
+                           ComponentConfig{}
+                               .with_size({percent(1.0f), children()})
+                               .with_padding(Spacing::sm));
 
     div(context, mk(section1.ent()),
         ComponentConfig{}
@@ -99,11 +98,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Row of buttons with various backgrounds - auto contrast just works
     auto row1 = hstack(context, mk(section1.ent()),
-                    ComponentConfig{}
-                        .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_justify_content(JustifyContent::SpaceAround)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap());
+                       ComponentConfig{}
+                           .with_size({percent(1.0f), pixels(50.0f)})
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap());
 
     // Dark backgrounds
     afterhours::Color dark_colors[] = {
@@ -127,11 +126,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Row of light backgrounds
     auto row2 = hstack(context, mk(section1.ent()),
-                    ComponentConfig{}
-                        .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_justify_content(JustifyContent::SpaceAround)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap());
+                       ComponentConfig{}
+                           .with_size({percent(1.0f), pixels(50.0f)})
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap());
 
     afterhours::Color light_colors[] = {
         {240, 240, 245, 255}, // Near white
@@ -158,15 +157,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.9f), pixels(1)})
             .with_custom_background(afterhours::Color{255, 255, 255, 40})
             .with_self_align(SelfAlign::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = DefaultSpacing::small()})
             .with_debug_name("section_separator_1"));
 
     // Section 2: Mid-tone colors (edge cases)
     auto section2 = vstack(context, mk(content.ent()),
-                        ComponentConfig{}
-                            .with_size({percent(1.0f), children()})
-                            .with_padding(Spacing::sm)
-                            );
+                           ComponentConfig{}
+                               .with_size({percent(1.0f), children()})
+                               .with_padding(Spacing::sm));
 
     div(context, mk(section2.ent()),
         ComponentConfig{}
@@ -175,11 +174,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f)));
 
     auto row3 = hstack(context, mk(section2.ent()),
-                    ComponentConfig{}
-                        .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_justify_content(JustifyContent::SpaceAround)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap());
+                       ComponentConfig{}
+                           .with_size({percent(1.0f), pixels(50.0f)})
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap());
 
     // Mid-tone colors where the choice isn't obvious
     afterhours::Color mid_colors[] = {
@@ -209,15 +208,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.9f), pixels(1)})
             .with_custom_background(afterhours::Color{255, 255, 255, 40})
             .with_self_align(SelfAlign::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = DefaultSpacing::small()})
             .with_debug_name("section_separator_2"));
 
     // Section 3: How to disable auto text color
     auto section3 = vstack(context, mk(content.ent()),
-                        ComponentConfig{}
-                            .with_size({percent(1.0f), children()})
-                            .with_padding(Spacing::sm)
-                            );
+                           ComponentConfig{}
+                               .with_size({percent(1.0f), children()})
+                               .with_padding(Spacing::sm));
 
     div(context, mk(section3.ent()),
         ComponentConfig{}
@@ -226,11 +225,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f)));
 
     auto row4 = hstack(context, mk(section3.ent()),
-                    ComponentConfig{}
-                        .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_justify_content(JustifyContent::SpaceAround)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap());
+                       ComponentConfig{}
+                           .with_size({percent(1.0f), pixels(50.0f)})
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap());
 
     // Compare auto vs disabled vs explicit text color
     afterhours::Color light_bg = {230, 230, 230, 255};
@@ -269,15 +268,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.9f), pixels(1)})
             .with_custom_background(afterhours::Color{255, 255, 255, 40})
             .with_self_align(SelfAlign::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(), .bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::small(),
+                                .bottom = DefaultSpacing::small()})
             .with_debug_name("section_separator_3"));
 
     // Section 4: Theme colors with auto contrast
     auto section4 = vstack(context, mk(content.ent()),
-                        ComponentConfig{}
-                            .with_size({percent(1.0f), children()})
-                            .with_padding(Spacing::sm)
-                            );
+                           ComponentConfig{}
+                               .with_size({percent(1.0f), children()})
+                               .with_padding(Spacing::sm));
 
     div(context, mk(section4.ent()),
         ComponentConfig{}
@@ -286,11 +285,11 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f)));
 
     auto row5 = hstack(context, mk(section4.ent()),
-                    ComponentConfig{}
-                        .with_size({percent(1.0f), pixels(50.0f)})
-                        .with_justify_content(JustifyContent::SpaceAround)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap());
+                       ComponentConfig{}
+                           .with_size({percent(1.0f), pixels(50.0f)})
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap());
 
     button(context, mk(row5.ent(), 0),
            ComponentConfig{}

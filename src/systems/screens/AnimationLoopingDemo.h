@@ -37,20 +37,24 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     constexpr float kTwoPi = 2.0f * kPi;
 
     // Calculate smooth animated values using trigonometry
-    // Pulse 1: Breathe using translate (move in/out from center) - avoids layout resize
-    float pulse1_phase = time_elapsed * kTwoPi / 4.0f;  // 4 second cycle
-    float pulse1_offset = 10.0f * std::sin(pulse1_phase);  // -10 to +10 px offset
+    // Pulse 1: Breathe using translate (move in/out from center) - avoids
+    // layout resize
+    float pulse1_phase = time_elapsed * kTwoPi / 4.0f; // 4 second cycle
+    float pulse1_offset =
+        10.0f * std::sin(pulse1_phase); // -10 to +10 px offset
 
     // Pulse 2: Opacity-based pulse - smoother since no layout recalc
-    float pulse2_phase = time_elapsed * kTwoPi / 1.5f;  // 1.5 second cycle
-    float pulse2_opacity = 0.5f + 0.5f * std::sin(pulse2_phase);  // 0 to 1
+    float pulse2_phase = time_elapsed * kTwoPi / 1.5f; // 1.5 second cycle
+    float pulse2_opacity = 0.5f + 0.5f * std::sin(pulse2_phase); // 0 to 1
 
     // Bounce: Use translate instead of resize for smooth motion
     float bounce_phase = time_elapsed * kTwoPi / 2.0f;
-    float bounce_offset = 50.0f * (1.0f - std::cos(bounce_phase));  // 0 to 100 smoothly
+    float bounce_offset =
+        50.0f * (1.0f - std::cos(bounce_phase)); // 0 to 100 smoothly
 
     // Spin: Continuous rotation - full rotation every 3 seconds (slower)
-    float rotation = std::fmod(time_elapsed * 120.0f, 360.0f);  // 120 deg/sec = 3 sec rotation
+    float rotation = std::fmod(time_elapsed * 120.0f,
+                               360.0f); // 120 deg/sec = 3 sec rotation
 
     // Setup theme
     auto theme = afterhours::ui::theme_presets::neon_dark();
@@ -116,10 +120,11 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 11),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-            .with_absolute_position(pulse1_x + pulse1_offset, box_y + pulse1_offset)
+            .with_absolute_position(pulse1_x + pulse1_offset,
+                                    box_y + pulse1_offset)
             .with_custom_background(box_blue)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)  // Circle
+            .with_roundness(0.5f) // Circle
             .with_debug_name("pulse1_box"));
 
     // ========== PULSE 2: Opacity Glow ==========
@@ -144,7 +149,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(
                 afterhours::colors::opacity_pct(box_green, pulse2_opacity))
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)  // Circle
+            .with_roundness(0.5f) // Circle
             .with_debug_name("pulse2_box"));
 
     // ========== BOUNCE ==========
@@ -168,7 +173,7 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(bounce_x, box_y + bounce_offset)
             .with_custom_background(box_purple)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)  // Circle
+            .with_roundness(0.5f) // Circle
             .with_debug_name("bounce_box"));
 
     // ========== SPIN ==========
@@ -208,7 +213,8 @@ struct AnimationLoopingDemo : ScreenSystem<UIContext<InputAction>> {
     // Spinning indicator
     div(context, mk(entity, 42),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(indicator_size), pixels(indicator_size)})
+            .with_size(
+                ComponentSize{pixels(indicator_size), pixels(indicator_size)})
             .with_absolute_position(indicator_x, indicator_y)
             .with_custom_background(box_orange)
             .with_rounded_corners(RoundedCorners())

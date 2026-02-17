@@ -26,17 +26,17 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::sm)  // Padding on root
+                .with_padding(Spacing::sm) // Padding on root
                 .with_debug_name("cards_bg"));
 
     // Content container - no padding since root has it
     auto main_container =
         vstack(context, mk(root.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                .with_justify_content(JustifyContent::SpaceBetween)
-                .with_no_wrap()
-                .with_debug_name("cards_main"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_no_wrap()
+                   .with_debug_name("cards_main"));
 
     // Title - larger font for better visibility
     div(context, mk(main_container.ent(), 0),
@@ -50,13 +50,13 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 1: Basic cards - all simple like theme swatches
     auto row1 = hstack(context, mk(main_container.ent(), 1),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(150)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row1_cards"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(150)})
+                           .with_background(Theme::Usage::Surface)
+                           .with_padding(Spacing::xs)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap()
+                           .with_debug_name("row1_cards"));
 
     // Section label - aligned with card row
     div(context, mk(row1.ent(), 100),
@@ -123,13 +123,13 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 2: Nested cards
     auto row2 = hstack(context, mk(main_container.ent(), 2),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(165)})
-                        .with_background(Theme::Usage::None)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_no_wrap()
-                        .with_debug_name("row2_nested"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(165)})
+                           .with_background(Theme::Usage::None)
+                           .with_padding(Spacing::xs)
+                           .with_align_items(AlignItems::Center)
+                           .with_no_wrap()
+                           .with_debug_name("row2_nested"));
 
     // Section label for nested cards
     div(context, mk(row2.ent(), 100),
@@ -145,16 +145,16 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Nested card container - sized proportionally to fit within row
     auto nested_container =
         vstack(context, mk(row2.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.33f), pixels(130)})
-                .with_background(Theme::Usage::Surface)
-                .with_border(
-                    afterhours::colors::darken(context.theme.surface, 0.75f),
-                    2.0f)
-                .with_padding(Spacing::sm)  // Reduced padding
-                .with_margin(Spacing::xs)
-                .with_roundness(0.08f)
-                .with_debug_name("nested_container"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.33f), pixels(130)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_border(
+                       afterhours::colors::darken(context.theme.surface, 0.75f),
+                       2.0f)
+                   .with_padding(Spacing::sm) // Reduced padding
+                   .with_margin(Spacing::xs)
+                   .with_roundness(0.08f)
+                   .with_debug_name("nested_container"));
 
     div(context, mk(nested_container.ent(), 0),
         ComponentConfig{}
@@ -170,12 +170,12 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Inner cards row - prevent wrapping, ensure enough height for cards
     auto inner_row =
         hstack(context, mk(nested_container.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(75)})
-                .with_background(Theme::Usage::None)
-                .with_no_wrap()
-                .with_align_items(AlignItems::Center)
-                .with_debug_name("inner_row"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(75)})
+                   .with_background(Theme::Usage::None)
+                   .with_no_wrap()
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("inner_row"));
 
     // Inner card 1 - sized proportionally to fit within container
     div(context, mk(inner_row.ent(), 0),
@@ -186,7 +186,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
+            .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true));
 
     // Inner card 2
@@ -198,7 +198,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
+            .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true));
 
     // Inner card 3
@@ -210,20 +210,20 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_roundness(0.06f)  // Slightly smaller than parent (0.08f)
+            .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
             .with_skip_tabbing(true));
 
     // Info panel with different opacity
     auto info_panel =
         vstack(context, mk(row2.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.33f), pixels(130)})
-                .with_custom_background(
-                    afterhours::colors::opacity_pct(theme.primary, 0.3f))
-                .with_padding(Spacing::sm)
-                .with_margin(Spacing::xs)
-                .with_roundness(0.08f)  // Match nested_container roundness
-                .with_debug_name("info_panel"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.33f), pixels(130)})
+                   .with_custom_background(
+                       afterhours::colors::opacity_pct(theme.primary, 0.3f))
+                   .with_padding(Spacing::sm)
+                   .with_margin(Spacing::xs)
+                   .with_roundness(0.08f) // Match nested_container roundness
+                   .with_debug_name("info_panel"));
 
     div(context, mk(info_panel.ent(), 0),
         ComponentConfig{}
@@ -248,12 +248,12 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Row 3: Theme comparison
     auto row3 = hstack(context, mk(main_container.ent(), 3),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(0.95f), pixels(70)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_debug_name("row3_themes"));
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(0.95f), pixels(70)})
+                           .with_background(Theme::Usage::Surface)
+                           .with_padding(Spacing::xs)
+                           .with_align_items(AlignItems::Center)
+                           .with_debug_name("row3_themes"));
 
     div(context, mk(row3.ent(), 0),
         ComponentConfig{}

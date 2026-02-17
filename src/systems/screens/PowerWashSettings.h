@@ -11,7 +11,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t active_tab = 2; // VIDEO tab selected
+  size_t active_tab = 2;   // VIDEO tab selected
   size_t selected_row = 4; // Anti-Aliasing selected
 
   // Colors matching PowerWash Simulator - dark blue interface
@@ -52,7 +52,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       {"Language", {"English", "Spanish", "French", "German"}, 0},
       {"Subtitles", {"Off", "On"}, 1},
       {"Colorblind Mode",
-       {"Off", "Deuteranopia", "Protanopia", "Tritanopia"}, 0},
+       {"Off", "Deuteranopia", "Protanopia", "Tritanopia"},
+       0},
   };
 
   std::vector<SettingRow> gameplay_settings = {
@@ -75,12 +76,18 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   std::vector<SettingRow> &get_current_settings() {
     switch (active_tab) {
-    case 0: return general_settings;
-    case 1: return gameplay_settings;
-    case 2: return video_settings;
-    case 3: return audio_settings;
-    case 4: return controls_settings;
-    default: return video_settings;
+    case 0:
+      return general_settings;
+    case 1:
+      return gameplay_settings;
+    case 2:
+      return video_settings;
+    case 3:
+      return audio_settings;
+    case 4:
+      return controls_settings;
+    default:
+      return video_settings;
     }
   }
 
@@ -105,24 +112,26 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // ROOT
     // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_dark)
-            .with_padding(Padding{.top = pixels(20), .left = pixels(55),
-                                  .bottom = pixels(15), .right = pixels(25)})
-            .with_no_wrap()
-            .with_debug_name("pw_root"));
+    auto root =
+        vstack(context, mk(entity),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg_dark)
+                   .with_padding(Padding{.top = pixels(20),
+                                         .left = pixels(55),
+                                         .bottom = pixels(15),
+                                         .right = pixels(25)})
+                   .with_no_wrap()
+                   .with_debug_name("pw_root"));
 
     // ── Header: X close + SETTINGS title ──
-    auto header = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(35)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_debug_name("header"));
+    auto header =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(35)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_debug_name("header"));
 
     div(context, mk(header.ent()),
         ComponentConfig{}
@@ -141,26 +150,27 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.left = pixels(10)}));
 
     // ── Content area: main panel + help panel ──
-    auto content = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(380)})
-            .with_align_items(AlignItems::FlexStart)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(5)})
-            .with_debug_name("content"));
+    auto content =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(380)})
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(5)})
+                   .with_debug_name("content"));
 
     // Main settings panel
-    auto main_panel = vstack(
-        context, mk(content.ent()),
-        ComponentConfig{}
-            .with_720p_size(480, 380)
-            .with_custom_background(panel_blue)
-            .with_border(panel_border, 2.0f)
-            .with_padding(Padding{.top = pixels(8), .left = pixels(15),
-                                  .bottom = pixels(8), .right = pixels(15)})
-            .with_no_wrap()
-            .with_debug_name("main_panel"));
+    auto main_panel = vstack(context, mk(content.ent()),
+                             ComponentConfig{}
+                                 .with_720p_size(480, 380)
+                                 .with_custom_background(panel_blue)
+                                 .with_border(panel_border, 2.0f)
+                                 .with_padding(Padding{.top = pixels(8),
+                                                       .left = pixels(15),
+                                                       .bottom = pixels(8),
+                                                       .right = pixels(15)})
+                                 .with_no_wrap()
+                                 .with_debug_name("main_panel"));
 
     auto &current_settings = get_current_settings();
     if (selected_row >= current_settings.size()) {
@@ -175,13 +185,13 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           is_selected ? dropdown_border : panel_border;
       afterhours::Color arrow_col = is_selected ? text_white : text_muted;
 
-      auto row = hstack(
-          context, mk(main_panel.ent(), static_cast<int>(i)),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(36)})
-              .with_align_items(AlignItems::Center)
-              .with_no_wrap()
-              .with_margin(Margin{.top = i > 0 ? pixels(0) : Size{}}));
+      auto row =
+          hstack(context, mk(main_panel.ent(), static_cast<int>(i)),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_align_items(AlignItems::Center)
+                     .with_no_wrap()
+                     .with_margin(Margin{.top = i > 0 ? pixels(0) : Size{}}));
 
       if (button(context, mk(row.ent(), 0),
                  ComponentConfig{}
@@ -240,14 +250,14 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Footer buttons inside panel
-    auto footer = hstack(
-        context, mk(main_panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_justify_content(JustifyContent::FlexEnd)
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_debug_name("footer"));
+    auto footer =
+        hstack(context, mk(main_panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                   .with_justify_content(JustifyContent::FlexEnd)
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_debug_name("footer"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}
@@ -285,17 +295,18 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_debug_name("btn_apply"));
 
     // Help panel (right of main)
-    auto help_panel = vstack(
-        context, mk(content.ent()),
-        ComponentConfig{}
-            .with_720p_size(220, 140)
-            .with_custom_background(panel_blue)
-            .with_border(panel_border, 2.0f)
-            .with_padding(Padding{.top = pixels(12), .left = pixels(12),
-                                  .bottom = pixels(12), .right = pixels(12)})
-            .with_margin(Margin{.left = pixels(15)})
-            .with_no_wrap()
-            .with_debug_name("help_panel"));
+    auto help_panel = vstack(context, mk(content.ent()),
+                             ComponentConfig{}
+                                 .with_720p_size(220, 140)
+                                 .with_custom_background(panel_blue)
+                                 .with_border(panel_border, 2.0f)
+                                 .with_padding(Padding{.top = pixels(12),
+                                                       .left = pixels(12),
+                                                       .bottom = pixels(12),
+                                                       .right = pixels(12)})
+                                 .with_margin(Margin{.left = pixels(15)})
+                                 .with_no_wrap()
+                                 .with_debug_name("help_panel"));
 
     std::string setting_name = current_settings[selected_row].label;
     std::string help_title = "Help: " + setting_name;
@@ -343,14 +354,14 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ── Bottom button prompts ──
     afterhours::Color prompt_bg{55, 75, 95, 255};
-    auto prompts = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(16)})
-            .with_debug_name("prompts"));
+    auto prompts =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(28)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(16)})
+                   .with_debug_name("prompts"));
 
     struct Prompt {
       const char *icon;

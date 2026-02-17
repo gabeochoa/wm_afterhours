@@ -10,7 +10,8 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 // Demonstrates the hstack() primitive.
-// Default: percent(1.0) width, children() height -- fills parent, shrinks to content.
+// Default: percent(1.0) width, children() height -- fills parent, shrinks to
+// content.
 struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
@@ -29,14 +30,16 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto panel_bg = afterhours::Color{20, 26, 40, 255};
 
     // Full-screen root
-    auto root = vstack(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_background(Theme::Usage::Background)
-            .with_padding(Padding{.top = pixels(8), .left = pixels(16),
-                                  .bottom = pixels(8), .right = pixels(16)})
-            .with_debug_name("root"));
+    auto root =
+        vstack(context, mk(entity, 0),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_background(Theme::Usage::Background)
+                   .with_padding(Padding{.top = pixels(8),
+                                         .left = pixels(16),
+                                         .bottom = pixels(8),
+                                         .right = pixels(16)})
+                   .with_debug_name("root"));
 
     // Title
     div(context, mk(root.ent(), 0),
@@ -50,16 +53,16 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // == Row 1: Basic hstack with 3 large boxes ==
     // Note: hstack auto-fills parent width; only height needs specifying
-    auto row1 = hstack(
-        context, mk(root.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(80)})  // override height
-            .with_custom_background(panel_bg)
-            .with_padding(Spacing::sm)
-            .with_margin(Margin{.top = pixels(6)})
-            .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_debug_name("basic_row"));
+    auto row1 = hstack(context, mk(root.ent(), 1),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{
+                               percent(1.0f), pixels(80)}) // override height
+                           .with_custom_background(panel_bg)
+                           .with_padding(Spacing::sm)
+                           .with_margin(Margin{.top = pixels(6)})
+                           .with_align_items(AlignItems::Center)
+                           .with_justify_content(JustifyContent::SpaceAround)
+                           .with_debug_name("basic_row"));
 
     afterhours::Color row1_colors[] = {teal, pink, green};
     const char *row1_labels[] = {"Item 1", "Item 2", "Item 3"};
@@ -77,14 +80,16 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // == Row 2: Five JustifyContent demos side-by-side ==
-    auto row2 = hstack(
-        context, mk(root.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(160)})
-            .with_margin(Margin{.top = pixels(6)})
-            .with_debug_name("justify_row"));
+    auto row2 = hstack(context, mk(root.ent(), 2),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(160)})
+                           .with_margin(Margin{.top = pixels(6)})
+                           .with_debug_name("justify_row"));
 
-    struct JDemo { const char *label; JustifyContent jc; };
+    struct JDemo {
+      const char *label;
+      JustifyContent jc;
+    };
     JDemo justifies[] = {
         {"Start", JustifyContent::FlexStart},
         {"End", JustifyContent::FlexEnd},
@@ -99,8 +104,10 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.19f), percent(1.0f)})
               .with_custom_background(panel_bg)
-              .with_padding(Padding{.top = pixels(4), .left = pixels(4),
-                                    .bottom = pixels(4), .right = pixels(4)})
+              .with_padding(Padding{.top = pixels(4),
+                                    .left = pixels(4),
+                                    .bottom = pixels(4),
+                                    .right = pixels(4)})
               .with_margin(Margin{.left = pixels(2), .right = pixels(2)})
               .with_debug_name(fmt::format("jc_{}", justifies[j].label)));
 
@@ -115,16 +122,16 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true));
 
       // hstack container showing this justify mode
-      auto jr = hstack(
-          context, mk(col.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), expand()})
-              .with_custom_background(afterhours::Color{10, 14, 25, 255})
-              .with_padding(Spacing::xs)
-              .with_margin(Margin{.top = pixels(4)})
-              .with_justify_content(justifies[j].jc)
-              .with_align_items(AlignItems::Center)
-              .with_debug_name(fmt::format("jc_row_{}", j)));
+      auto jr =
+          hstack(context, mk(col.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), expand()})
+                     .with_custom_background(afterhours::Color{10, 14, 25, 255})
+                     .with_padding(Spacing::xs)
+                     .with_margin(Margin{.top = pixels(4)})
+                     .with_justify_content(justifies[j].jc)
+                     .with_align_items(AlignItems::Center)
+                     .with_debug_name(fmt::format("jc_row_{}", j)));
 
       for (int k = 0; k < 3; k++) {
         div(context, mk(jr.ent(), k),
@@ -138,16 +145,18 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // == Row 3: AlignItems demos + real-world toolbar ==
-    auto row3 = hstack(
-        context, mk(root.ent(), 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(160)})
-            .with_margin(Margin{.top = pixels(6)})
-            .with_debug_name("align_and_patterns"));
+    auto row3 = hstack(context, mk(root.ent(), 3),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(160)})
+                           .with_margin(Margin{.top = pixels(6)})
+                           .with_debug_name("align_and_patterns"));
 
     // LEFT: 3 AlignItems demos
     afterhours::Color align_colors[] = {green, orange, purple};
-    struct ADemo { const char *label; AlignItems ai; };
+    struct ADemo {
+      const char *label;
+      AlignItems ai;
+    };
     ADemo aligns[] = {
         {"Start", AlignItems::FlexStart},
         {"Center", AlignItems::Center},
@@ -156,15 +165,17 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     float heights[] = {0.85f, 0.50f, 0.65f};
 
     for (int a = 0; a < 3; a++) {
-      auto col = vstack(
-          context, mk(row3.ent(), a),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.19f), percent(1.0f)})
-              .with_custom_background(panel_bg)
-              .with_padding(Padding{.top = pixels(4), .left = pixels(4),
-                                    .bottom = pixels(4), .right = pixels(4)})
-              .with_margin(Margin{.left = pixels(2), .right = pixels(2)})
-              .with_debug_name(fmt::format("ai_{}", aligns[a].label)));
+      auto col =
+          vstack(context, mk(row3.ent(), a),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.19f), percent(1.0f)})
+                     .with_custom_background(panel_bg)
+                     .with_padding(Padding{.top = pixels(4),
+                                           .left = pixels(4),
+                                           .bottom = pixels(4),
+                                           .right = pixels(4)})
+                     .with_margin(Margin{.left = pixels(2), .right = pixels(2)})
+                     .with_debug_name(fmt::format("ai_{}", aligns[a].label)));
 
       div(context, mk(col.ent(), 0),
           ComponentConfig{}
@@ -175,16 +186,16 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_skip_tabbing(true));
 
-      auto ar = hstack(
-          context, mk(col.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), expand()})
-              .with_custom_background(afterhours::Color{10, 14, 25, 255})
-              .with_padding(Spacing::xs)
-              .with_margin(Margin{.top = pixels(4)})
-              .with_align_items(aligns[a].ai)
-              .with_justify_content(JustifyContent::SpaceAround)
-              .with_debug_name(fmt::format("ai_row_{}", a)));
+      auto ar =
+          hstack(context, mk(col.ent(), 1),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), expand()})
+                     .with_custom_background(afterhours::Color{10, 14, 25, 255})
+                     .with_padding(Spacing::xs)
+                     .with_margin(Margin{.top = pixels(4)})
+                     .with_align_items(aligns[a].ai)
+                     .with_justify_content(JustifyContent::SpaceAround)
+                     .with_debug_name(fmt::format("ai_row_{}", a)));
 
       for (int k = 0; k < 3; k++) {
         div(context, mk(ar.ent(), k),
@@ -196,14 +207,14 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // RIGHT: Real-world toolbar pattern
-    auto patterns = vstack(
-        context, mk(row3.ent(), 10),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(0.39f), percent(1.0f)})
-            .with_custom_background(panel_bg)
-            .with_padding(Spacing::sm)
-            .with_margin(Margin{.left = pixels(4)})
-            .with_debug_name("patterns"));
+    auto patterns =
+        vstack(context, mk(row3.ent(), 10),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.39f), percent(1.0f)})
+                   .with_custom_background(panel_bg)
+                   .with_padding(Spacing::sm)
+                   .with_margin(Margin{.left = pixels(4)})
+                   .with_debug_name("patterns"));
 
     div(context, mk(patterns.ent(), 0),
         ComponentConfig{}
@@ -214,37 +225,37 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_skip_tabbing(true));
 
-    auto toolbar = hstack(
-        context, mk(patterns.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_custom_background(afterhours::Color{30, 38, 55, 255})
-            .with_padding(Padding{.left = pixels(6), .right = pixels(6)})
-            .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_margin(Margin{.top = pixels(4)})
-            .with_debug_name("toolbar"));
+    auto toolbar =
+        hstack(context, mk(patterns.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                   .with_custom_background(afterhours::Color{30, 38, 55, 255})
+                   .with_padding(Padding{.left = pixels(6), .right = pixels(6)})
+                   .with_align_items(AlignItems::Center)
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_margin(Margin{.top = pixels(4)})
+                   .with_debug_name("toolbar"));
 
     // Nested hstack: shrinks to content since parent already constrains width
     auto tb_left = hstack(context, mk(toolbar.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{children(), children()})
-            .with_align_items(AlignItems::Center));
+                          ComponentConfig{}
+                              .with_size(ComponentSize{children(), children()})
+                              .with_align_items(AlignItems::Center));
     for (int i = 0; i < 3; i++) {
       const char *t[] = {"File", "Edit", "View"};
       button(context, mk(tb_left.ent(), i),
-          ComponentConfig{}
-              .with_label(t[i])
-              .with_size(ComponentSize{pixels(50), pixels(30)})
-              .with_button_variant(ButtonVariant::Ghost)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f)));
+             ComponentConfig{}
+                 .with_label(t[i])
+                 .with_size(ComponentSize{pixels(50), pixels(30)})
+                 .with_button_variant(ButtonVariant::Ghost)
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f)));
     }
     button(context, mk(toolbar.ent(), 1),
-        ComponentConfig{}
-            .with_label("Settings")
-            .with_size(ComponentSize{pixels(70), pixels(30)})
-            .with_button_variant(ButtonVariant::Outline)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f)));
+           ComponentConfig{}
+               .with_label("Settings")
+               .with_size(ComponentSize{pixels(70), pixels(30)})
+               .with_button_variant(ButtonVariant::Outline)
+               .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f)));
 
     // Card row
     div(context, mk(patterns.ent(), 2),
@@ -257,14 +268,13 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(6)})
             .with_skip_tabbing(true));
 
-    auto cards = hstack(
-        context, mk(patterns.ent(), 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(56)})
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_align_items(AlignItems::Center)
-            .with_margin(Margin{.top = pixels(4)})
-            .with_debug_name("cards"));
+    auto cards = hstack(context, mk(patterns.ent(), 3),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{percent(1.0f), pixels(56)})
+                            .with_justify_content(JustifyContent::SpaceAround)
+                            .with_align_items(AlignItems::Center)
+                            .with_margin(Margin{.top = pixels(4)})
+                            .with_debug_name("cards"));
 
     afterhours::Color card_c[] = {teal, green, orange, purple};
     const char *card_l[] = {"A", "B", "C", "D"};
@@ -281,17 +291,17 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     }
 
     // == Row 4: Dashboard cards spanning full width ==
-    auto row4 = hstack(
-        context, mk(root.ent(), 4),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(120)})
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_align_items(AlignItems::Center)
-            .with_margin(Margin{.top = pixels(6)})
-            .with_debug_name("dashboard"));
+    auto row4 = hstack(context, mk(root.ent(), 4),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(120)})
+                           .with_justify_content(JustifyContent::SpaceBetween)
+                           .with_align_items(AlignItems::Center)
+                           .with_margin(Margin{.top = pixels(6)})
+                           .with_debug_name("dashboard"));
 
     afterhours::Color dash_c[] = {blue, pink, green, orange, purple, teal};
-    const char *dash_l[] = {"Users", "Revenue", "Orders", "Growth", "Active", "Churn"};
+    const char *dash_l[] = {"Users",  "Revenue", "Orders",
+                            "Growth", "Active",  "Churn"};
     for (int i = 0; i < 6; i++) {
       div(context, mk(row4.ent(), i),
           ComponentConfig{}
@@ -307,5 +317,4 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
 };
 
 REGISTER_EXAMPLE_SCREEN(hstack_showcase, "Component Galleries",
-                        "hstack() primitive showcase",
-                        HStackShowcase)
+                        "hstack() primitive showcase", HStackShowcase)

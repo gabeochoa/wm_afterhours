@@ -32,9 +32,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color border_gray{195, 190, 185, 255};
 
   std::vector<std::tuple<std::string, afterhours::Color>> tabs = {
-      {"WiFi", icon_blue},    {"Control", icon_red},
-      {"Home", icon_green},   {"Mail", icon_purple},
-      {"Star", btn_yellow},   {"Gear", tab_purple},
+      {"WiFi", icon_blue},   {"Control", icon_red}, {"Home", icon_green},
+      {"Mail", icon_purple}, {"Star", btn_yellow},  {"Gear", tab_purple},
   };
 
   std::vector<std::tuple<std::string, std::string, afterhours::Color>> options =
@@ -67,25 +66,27 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // ROOT
     // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_cream)
-            .with_padding(Padding{.top = pixels(25), .left = pixels(65),
-                                  .bottom = pixels(20), .right = pixels(50)})
-            .with_no_wrap()
-            .with_debug_name("kirby_root"));
+    auto root =
+        vstack(context, mk(entity),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg_cream)
+                   .with_padding(Padding{.top = pixels(25),
+                                         .left = pixels(65),
+                                         .bottom = pixels(20),
+                                         .right = pixels(50)})
+                   .with_no_wrap()
+                   .with_debug_name("kirby_root"));
 
     // ── Top Tab Bar: L + tab icons + R ──
-    auto tab_bar = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(1030), pixels(70)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.left = pixels(135)})
-            .with_debug_name("tab_bar"));
+    auto tab_bar =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(1030), pixels(70)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_margin(Margin{.left = pixels(135)})
+                   .with_debug_name("tab_bar"));
 
     // L bumper
     div(context, mk(tab_bar.ent()),
@@ -98,8 +99,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.35f)
-            .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                              afterhours::Color{0, 0, 0, 30})
+            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
             .with_margin(Margin{.right = pixels(10)}));
 
     // Tab icons
@@ -126,8 +126,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_roundness(0.25f)
                      .with_soft_shadow(2.0f, 3.0f, 8.0f,
                                        afterhours::Color{0, 0, 0, 40})
-                     .with_margin(Margin{.left = pixels(5),
-                                         .right = pixels(5)})
+                     .with_margin(Margin{.left = pixels(5), .right = pixels(5)})
                      .with_debug_name("tab_" + std::to_string(i)))) {
         selected_tab = i;
       }
@@ -144,8 +143,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.35f)
-            .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                              afterhours::Color{0, 0, 0, 30})
+            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
             .with_margin(Margin{.left = pixels(10)}));
 
     // ── "Options" label ──
@@ -162,23 +160,21 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(pixels(530), pixels(0)));
 
     // ── Main content area: tools sidebar + panel ──
-    auto body = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(540)})
-            .with_align_items(AlignItems::FlexStart)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(5)})
-            .with_debug_name("body"));
+    auto body = hstack(context, mk(root.ent()),
+                       ComponentConfig{}
+                           .with_size(ComponentSize{percent(1.0f), pixels(540)})
+                           .with_align_items(AlignItems::FlexStart)
+                           .with_no_wrap()
+                           .with_margin(Margin{.top = pixels(5)})
+                           .with_debug_name("body"));
 
     // Tool icons sidebar
-    auto tools = vstack(
-        context, mk(body.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(55), pixels(140)})
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(30)})
-            .with_debug_name("tools"));
+    auto tools = vstack(context, mk(body.ent()),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{pixels(55), pixels(140)})
+                            .with_no_wrap()
+                            .with_margin(Margin{.top = pixels(30)})
+                            .with_debug_name("tools"));
 
     std::vector<std::tuple<std::string, afterhours::Color>> tool_icons = {
         {"Edit", text_black},
@@ -210,33 +206,33 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(border_gray, 3.0f)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 5.0f, 15.0f,
-                              afterhours::Color{0, 0, 0, 35})
-            .with_padding(Padding{.top = pixels(20), .left = pixels(25),
-                                  .bottom = pixels(15), .right = pixels(25)})
+            .with_soft_shadow(3.0f, 5.0f, 15.0f, afterhours::Color{0, 0, 0, 35})
+            .with_padding(Padding{.top = pixels(20),
+                                  .left = pixels(25),
+                                  .bottom = pixels(15),
+                                  .right = pixels(25)})
             .with_no_wrap()
             .with_debug_name("main_panel"));
 
     // Name button row
-    auto name_row = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{children(), pixels(58)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.left = pixels(155)})
-            .with_debug_name("name_row"));
+    auto name_row = hstack(context, mk(panel.ent()),
+                           ComponentConfig{}
+                               .with_size(ComponentSize{children(), pixels(58)})
+                               .with_align_items(AlignItems::Center)
+                               .with_no_wrap()
+                               .with_margin(Margin{.left = pixels(155)})
+                               .with_debug_name("name_row"));
 
-    button(context, mk(name_row.ent()),
-           ComponentConfig{}
-               .with_size(ComponentSize{pixels(260), pixels(58)})
-               .with_custom_background(btn_yellow)
-               .with_border(btn_yellow_dark, 4.0f)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_soft_shadow(2.0f, 3.0f, 8.0f,
-                                 afterhours::Color{0, 0, 0, 40})
-               .with_debug_name("name_btn"));
+    button(
+        context, mk(name_row.ent()),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(260), pixels(58)})
+            .with_custom_background(btn_yellow)
+            .with_border(btn_yellow_dark, 4.0f)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.5f)
+            .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
+            .with_debug_name("name_btn"));
 
     // Avatar + Name overlaid on button using translate
     div(context, mk(name_row.ent()),
@@ -273,13 +269,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       option_labels.push_back(label);
     }
 
-    auto opts_tabs = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(8)})
-            .with_debug_name("opts_tabs"));
+    auto opts_tabs =
+        hstack(context, mk(panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(8)})
+                   .with_debug_name("opts_tabs"));
 
     for (size_t ti = 0; ti < option_labels.size(); ti++) {
       bool is_active = (ti == active_tab);
@@ -327,13 +323,13 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_translate(pixels(15), pixels(0)));
 
     // Bottom row: delete/data + description
-    auto panel_bottom = hstack(
-        context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_debug_name("panel_bottom"));
+    auto panel_bottom =
+        hstack(context, mk(panel.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_debug_name("panel_bottom"));
 
     // Description
     div(context, mk(panel_bottom.ent()),
@@ -350,42 +346,41 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Data button
     if (!show_delete_confirm) {
-      if (button(context, mk(panel_bottom.ent()),
-                 ComponentConfig{}
-                     .with_label("Data...")
-                     .with_size(ComponentSize{pixels(80), pixels(24)})
-                     .with_custom_background(
-                         afterhours::Color{230, 228, 225, 255})
-                     .with_border(afterhours::Color{210, 208, 205, 255}, 1.0f)
-                     .with_font("Gaegu-Bold", pixels(14.0f))
-                     .with_custom_text_color(text_muted)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.25f)
-                     .with_debug_name("data_menu"))) {
+      if (button(
+              context, mk(panel_bottom.ent()),
+              ComponentConfig{}
+                  .with_label("Data...")
+                  .with_size(ComponentSize{pixels(80), pixels(24)})
+                  .with_custom_background(afterhours::Color{230, 228, 225, 255})
+                  .with_border(afterhours::Color{210, 208, 205, 255}, 1.0f)
+                  .with_font("Gaegu-Bold", pixels(14.0f))
+                  .with_custom_text_color(text_muted)
+                  .with_rounded_corners(RoundedCorners())
+                  .with_roundness(0.25f)
+                  .with_debug_name("data_menu"))) {
         show_delete_confirm = true;
       }
     } else {
-      if (button(context, mk(panel_bottom.ent()),
-                 ComponentConfig{}
-                     .with_label("Cancel")
-                     .with_size(ComponentSize{pixels(70), pixels(24)})
-                     .with_custom_background(
-                         afterhours::Color{210, 208, 205, 255})
-                     .with_border(border_gray, 1.0f)
-                     .with_font("Gaegu-Bold", pixels(14.0f))
-                     .with_custom_text_color(text_dark)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.25f)
-                     .with_margin(Margin{.left = pixels(10)})
-                     .with_debug_name("cancel_delete"))) {
+      if (button(
+              context, mk(panel_bottom.ent()),
+              ComponentConfig{}
+                  .with_label("Cancel")
+                  .with_size(ComponentSize{pixels(70), pixels(24)})
+                  .with_custom_background(afterhours::Color{210, 208, 205, 255})
+                  .with_border(border_gray, 1.0f)
+                  .with_font("Gaegu-Bold", pixels(14.0f))
+                  .with_custom_text_color(text_dark)
+                  .with_rounded_corners(RoundedCorners())
+                  .with_roundness(0.25f)
+                  .with_margin(Margin{.left = pixels(10)})
+                  .with_debug_name("cancel_delete"))) {
         show_delete_confirm = false;
       }
       button(context, mk(panel_bottom.ent()),
              ComponentConfig{}
                  .with_label("Delete")
                  .with_size(ComponentSize{pixels(70), pixels(24)})
-                 .with_custom_background(
-                     afterhours::Color{180, 120, 110, 255})
+                 .with_custom_background(afterhours::Color{180, 120, 110, 255})
                  .with_font("Gaegu-Bold", pixels(14.0f))
                  .with_custom_text_color(panel_white)
                  .with_rounded_corners(RoundedCorners())

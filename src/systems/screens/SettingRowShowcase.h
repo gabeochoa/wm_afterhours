@@ -33,12 +33,11 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
                            float &value, const char *debug_prefix) {
     // Row container
     auto row = hstack(context, ep_pair,
-                   ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                       .with_align_items(AlignItems::Center)
-                       .with_margin(Margin{.bottom = pixels(6)})
-                       .with_debug_name(
-                           std::string(debug_prefix) + "_row"));
+                      ComponentConfig{}
+                          .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                          .with_align_items(AlignItems::Center)
+                          .with_margin(Margin{.bottom = pixels(6)})
+                          .with_debug_name(std::string(debug_prefix) + "_row"));
 
     // Label
     div(context, mk(row.ent(), 0),
@@ -49,35 +48,31 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::None)
             .with_custom_text_color(context.theme.font)
             .with_font_size(pixels(22.0f))
-            .with_debug_name(
-                std::string(debug_prefix) + "_label"));
+            .with_debug_name(std::string(debug_prefix) + "_label"));
 
     // Slider control (no label on handle to avoid the raw number)
     float slider_value = value;
-    if (auto result = slider(context, mk(row.ent(), 1), slider_value,
-                             ComponentConfig{}
-                                 .with_size(ComponentSize{percent(0.45f), pixels(28)})
-                                 .with_debug_name(
-                                     std::string(debug_prefix) + "_slider"),
-                             SliderHandleValueLabelPosition::None);
+    if (auto result =
+            slider(context, mk(row.ent(), 1), slider_value,
+                   ComponentConfig{}
+                       .with_size(ComponentSize{percent(0.45f), pixels(28)})
+                       .with_debug_name(std::string(debug_prefix) + "_slider"),
+                   SliderHandleValueLabelPosition::None);
         result) {
       value = slider_value;
     }
 
     // Percentage value label
-    std::string pct_text =
-        std::to_string(static_cast<int>(value * 100)) + "%";
+    std::string pct_text = std::to_string(static_cast<int>(value * 100)) + "%";
     div(context, mk(row.ent(), 2),
         ComponentConfig{}
             .with_label(pct_text)
             .with_size(ComponentSize{pixels(52), pixels(44)})
             .with_alignment(TextAlignment::Right)
             .with_background(Theme::Usage::None)
-            .with_custom_text_color(
-                afterhours::Color{180, 200, 220, 255})
+            .with_custom_text_color(afterhours::Color{180, 200, 220, 255})
             .with_font_size(pixels(16.0f))
-            .with_debug_name(
-                std::string(debug_prefix) + "_pct"));
+            .with_debug_name(std::string(debug_prefix) + "_pct"));
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -90,17 +85,18 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.12f;
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT, pixels(16.0f));
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
+                                              pixels(16.0f));
 
-    auto root =
-        vstack(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.88f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::sm)
-                .with_no_wrap()
-                .with_debug_name("root"));
+    auto root = vstack(
+        context, mk(entity, 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.80f), screen_pct(0.88f)})
+            .with_self_align(SelfAlign::Center)
+            .with_background(Theme::Usage::Background)
+            .with_padding(Spacing::sm)
+            .with_no_wrap()
+            .with_debug_name("root"));
 
     // Title bar
     div(context, mk(root.ent(), 0),
@@ -115,18 +111,18 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.1f));
 
     // Content panel - increased height to prevent clipping
-    auto content = vstack(context, mk(root.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.95f), percent(0.82f)})
-                           .with_background(Theme::Usage::Surface)
-                           .with_padding(Padding{
-                               .top = pixels(10),
-                               .left = pixels(16),
-                               .bottom = pixels(10),
-                               .right = pixels(16)})
-                           .with_no_wrap()
-                           .with_roundness(0.06f)
-                           .with_debug_name("content"));
+    auto content =
+        vstack(context, mk(root.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.95f), percent(0.82f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Padding{.top = pixels(10),
+                                         .left = pixels(16),
+                                         .bottom = pixels(10),
+                                         .right = pixels(16)})
+                   .with_no_wrap()
+                   .with_roundness(0.06f)
+                   .with_debug_name("content"));
 
     // Toggle section label - tinted to match toggle green
     div(context, mk(content.ent(), 0),
@@ -139,7 +135,8 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Toggle rows - use full API with icons for clear visual context
     setting_row_toggle(context, mk(content.ent(), 1), "Music", music_enabled);
-    setting_row_toggle(context, mk(content.ent(), 2), "Sound Effects", sound_effects);
+    setting_row_toggle(context, mk(content.ent(), 2), "Sound Effects",
+                       sound_effects);
     setting_row_toggle(context, mk(content.ent(), 3), "Vibration", vibration);
 
     // Spacer
@@ -158,13 +155,14 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Stepper rows
-    setting_row_stepper(context, mk(content.ent(), 6), "Language", language_idx, languages);
-    setting_row_stepper(context, mk(content.ent(), 7), "Graphics", quality_idx, quality_options);
+    setting_row_stepper(context, mk(content.ent(), 6), "Language", language_idx,
+                        languages);
+    setting_row_stepper(context, mk(content.ent(), 7), "Graphics", quality_idx,
+                        quality_options);
 
     // Spacer
     div(context, mk(content.ent(), 8),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(8)}));
+        ComponentConfig{}.with_size(ComponentSize{percent(1.0f), pixels(8)}));
 
     // Slider section label - tinted warm to match volume/slider theme
     div(context, mk(content.ent(), 9),
@@ -176,10 +174,10 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Slider rows - custom rows with percentage value labels
-    slider_row_with_pct(context, mk(content.ent(), 10),
-                        "Master Volume", master_volume, "master_vol");
-    slider_row_with_pct(context, mk(content.ent(), 11),
-                        "Music Volume", music_volume, "music_vol");
+    slider_row_with_pct(context, mk(content.ent(), 10), "Master Volume",
+                        master_volume, "master_vol");
+    slider_row_with_pct(context, mk(content.ent(), 11), "Music Volume",
+                        music_volume, "music_vol");
 
     // Footer - increased text size
     div(context, mk(root.ent(), 2),

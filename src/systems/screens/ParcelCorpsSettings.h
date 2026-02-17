@@ -163,7 +163,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 22),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(32), pixels(14)})
-            .with_absolute_position(screen_x + screen_inner_w - 48.0f, status_y + 4.0f)
+            .with_absolute_position(screen_x + screen_inner_w - 48.0f,
+                                    status_y + 4.0f)
             .with_custom_background(toggle_green)
             .with_border(text_white, 1.0f)
             .with_rounded_corners(RoundedCorners())
@@ -197,8 +198,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Separator
     div(context, mk(entity, 115),
         ComponentConfig{}
-            .with_size(
-                ComponentSize{pxf(row_w), pixels(1)})
+            .with_size(ComponentSize{pxf(row_w), pixels(1)})
             .with_absolute_position(row_x, row_start_y + 2 * (row_h + row_gap))
             .with_custom_background(row_separator)
             .with_debug_name("separator1"));
@@ -210,10 +210,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        "Resolution", "2560 x 1440", icon_rainbow1, true);
 
     // Full Screen toggle (rainbow icon)
-    render_toggle_row_with_icon(context, entity, 130, row_x,
-                                section2_y + row_h + row_gap, row_w, row_h,
-                                "Full Screen", fullscreen, icon_rainbow1, "",
-                                true);
+    render_toggle_row_with_icon(
+        context, entity, 130, row_x, section2_y + row_h + row_gap, row_w, row_h,
+        "Full Screen", fullscreen, icon_rainbow1, "", true);
 
     // MSAA (blue icon) - interactive
     render_selector_row(context, entity, 140, row_x,
@@ -261,11 +260,15 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float legend_item_y = legend_y + 22.0f;
     float legend_col_w = (row_w - 16.0f) / 2.0f;
 
-    struct LegendItem { const char *icon; const char *label; afterhours::Color color; };
+    struct LegendItem {
+      const char *icon;
+      const char *label;
+      afterhours::Color color;
+    };
     LegendItem legend_items[] = {
         {"@", "Language", icon_purple}, {"~", "Sync", icon_purple},
-        {"X", "Effects", icon_red},    {"*", "Quality", icon_blue},
-        {"...", "Text", icon_green},   {"", "Display", icon_rainbow1},
+        {"X", "Effects", icon_red},     {"*", "Quality", icon_blue},
+        {"...", "Text", icon_green},    {"", "Display", icon_rainbow1},
     };
 
     for (int i = 0; i < 6; i++) {
@@ -276,11 +279,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
       // Icon circle
       auto icon_cfg = ComponentConfig{}
-          .with_size(ComponentSize{pixels(18), pixels(18)})
-          .with_absolute_position(lx, ly)
-          .with_custom_background(legend_items[i].color)
-          .with_rounded_corners(RoundedCorners())
-          .with_roundness(1.0f);
+                          .with_size(ComponentSize{pixels(18), pixels(18)})
+                          .with_absolute_position(lx, ly)
+                          .with_custom_background(legend_items[i].color)
+                          .with_rounded_corners(RoundedCorners())
+                          .with_roundness(1.0f);
       if (legend_items[i].icon[0] != '\0') {
         icon_cfg.with_label(legend_items[i].icon)
             .with_font_size(h720(14.0f))
@@ -351,7 +354,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_roundness(0.3f)
                .with_debug_name("btn_apply"));
 
-    // ========== QUEST PANEL (moved to right side to avoid overlapping phone) ==========
+    // ========== QUEST PANEL (moved to right side to avoid overlapping phone)
+    // ==========
     float quest_x = (float)screen_w - 370.0f;
     float quest_y = 180.0f;
     float quest_w = 340.0f;
@@ -370,12 +374,19 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Quest items
     struct QuestItem {
-      int check_id; const char *check; float y_off;
-      int text_id; const char *text; float text_x_off; int text_w;
+      int check_id;
+      const char *check;
+      float y_off;
+      int text_id;
+      const char *text;
+      float text_x_off;
+      int text_w;
     };
     QuestItem quests[] = {
-        {251, "[X]", 14.0f, 252, "SIGN UP A BUSINESS TO YOUR DELIVERY APP", 40.0f, 285},
-        {253, "[ ]", 48.0f, 255, "SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP", 78.0f, 240},
+        {251, "[X]", 14.0f, 252, "SIGN UP A BUSINESS TO YOUR DELIVERY APP",
+         40.0f, 285},
+        {253, "[ ]", 48.0f, 255, "SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP",
+         78.0f, 240},
     };
     for (auto &q : quests) {
       div(context, mk(entity, q.check_id),
@@ -410,31 +421,71 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== HUD ELEMENTS (right side) ==========
     struct HudElement {
-      int id; const char *label; int w; int h; float x_off; float y;
-      float font; afterhours::Color text_color;
-      bool has_bg; afterhours::Color bg; bool rounded;
+      int id;
+      const char *label;
+      int w;
+      int h;
+      float x_off;
+      float y;
+      float font;
+      afterhours::Color text_color;
+      bool has_bg;
+      afterhours::Color bg;
+      bool rounded;
     };
     float sw = (float)screen_w;
     HudElement hud_elems[] = {
-        {300, "LIVE", 55, 28, -300.0f, 25.0f, 14.0f, text_white, true, icon_red, true},
+        {300, "LIVE", 55, 28, -300.0f, 25.0f, 14.0f, text_white, true, icon_red,
+         true},
         {301, "O", 22, 22, -235.0f, 28.0f, 16.0f, text_white, false, {}, false},
         {302, "8", 20, 22, -212.0f, 28.0f, 16.0f, text_white, false, {}, false},
-        {303, "<>", 22, 22, -185.0f, 28.0f, 14.0f, text_white, false, {}, false},
-        {304, "10", 25, 22, -162.0f, 28.0f, 16.0f, text_white, false, {}, false},
-        {305, "EDDCOATES", 100, 28, -120.0f, 25.0f, 14.0f, text_white, false, {}, false},
+        {303,
+         "<>",
+         22,
+         22,
+         -185.0f,
+         28.0f,
+         14.0f,
+         text_white,
+         false,
+         {},
+         false},
+        {304,
+         "10",
+         25,
+         22,
+         -162.0f,
+         28.0f,
+         16.0f,
+         text_white,
+         false,
+         {},
+         false},
+        {305,
+         "EDDCOATES",
+         100,
+         28,
+         -120.0f,
+         25.0f,
+         14.0f,
+         text_white,
+         false,
+         {},
+         false},
     };
     for (auto &he : hud_elems) {
       auto cfg = ComponentConfig{}
-          .with_label(he.label)
-          .with_size(ComponentSize{pixels(he.w), pixels(he.h)})
-          .with_absolute_position(sw + he.x_off, he.y)
-          .with_font_size(h720(he.font))
-          .with_custom_text_color(he.text_color);
-      if (he.has_bg) cfg.with_custom_background(he.bg);
+                     .with_label(he.label)
+                     .with_size(ComponentSize{pixels(he.w), pixels(he.h)})
+                     .with_absolute_position(sw + he.x_off, he.y)
+                     .with_font_size(h720(he.font))
+                     .with_custom_text_color(he.text_color);
+      if (he.has_bg)
+        cfg.with_custom_background(he.bg);
       if (he.rounded) {
         cfg.with_alignment(TextAlignment::Center)
-           .with_rounded_corners(RoundedCorners())
-           .with_roundness(0.3f);
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.3f);
       }
       div(context, mk(entity, he.id), cfg);
     }
@@ -483,7 +534,16 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.2f));
 
-    struct SpeedLabel { int id; const char *text; int w; int h; float x; float y; float font; afterhours::Color color; };
+    struct SpeedLabel {
+      int id;
+      const char *text;
+      int w;
+      int h;
+      float x;
+      float y;
+      float font;
+      afterhours::Color color;
+    };
     SpeedLabel speed_labels[] = {
         {401, "M/h", 50, 20, sw - 90.0f, sh - 45.0f, 12.0f, text_muted},
         {402, "GAMON", 70, 18, sw - 100.0f, sh - 28.0f, 12.0f, slider_orange},
@@ -503,9 +563,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   // ---- Shared helpers to reduce boilerplate ----
 
   // Row background (rounded, dark, absolute-positioned)
-  void render_row_bg(UIContext<InputAction> &context, afterhours::Entity &entity,
-                     int id, float x, float y, float w, float h,
-                     const std::string &name) {
+  void render_row_bg(UIContext<InputAction> &context,
+                     afterhours::Entity &entity, int id, float x, float y,
+                     float w, float h, const std::string &name) {
     auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     div(context, mk(entity, id),
         ComponentConfig{}
@@ -557,7 +617,12 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   void render_rainbow_icon(UIContext<InputAction> &context,
                            afterhours::Entity &entity, int base_id, float x,
                            float y, const std::string &prefix) {
-    struct Ring { int sz; float off; afterhours::Color c; int id_off; };
+    struct Ring {
+      int sz;
+      float off;
+      afterhours::Color c;
+      int id_off;
+    };
     Ring rings[] = {
         {28, 0, icon_rainbow1, 1},
         {16, 6, icon_rainbow2, 5},
@@ -594,8 +659,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   // Pill toggle: track (52×28) + sliding white knob (22×22)
   static constexpr float pc_track_w = 52.0f, pc_track_h = 28.0f;
   static constexpr float pc_knob_pad = 4.0f;
-  static constexpr float pc_knob_sz = pc_track_h - pc_knob_pad * 2.0f;  // 20px
-  static constexpr float pc_knob_travel = pc_track_w - pc_knob_sz - pc_knob_pad * 2.0f;
+  static constexpr float pc_knob_sz = pc_track_h - pc_knob_pad * 2.0f; // 20px
+  static constexpr float pc_knob_travel =
+      pc_track_w - pc_knob_sz - pc_knob_pad * 2.0f;
 
   void render_toggle(UIContext<InputAction> &context,
                      afterhours::Entity &entity, int base_id, float x, float y,
@@ -628,17 +694,18 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   bool render_chevron(UIContext<InputAction> &context,
                       afterhours::Entity &entity, int id, float x, float y,
                       const std::string &symbol, const std::string &name) {
-    return button(context, mk(entity, id),
-                  ComponentConfig{}
-                      .with_label(symbol)
-                      .with_size(ComponentSize{pixels(44), pixels(44)})
-                      .with_absolute_position(x, y)
-                      .with_font_size(h720(22.0f))
-                      .with_custom_text_color(text_muted)
-                      .with_custom_background(afterhours::Color{55, 60, 70, 180})
-                      .with_rounded_corners(RoundedCorners())
-                      .with_roundness(0.3f)
-                      .with_debug_name(name));
+    return button(
+        context, mk(entity, id),
+        ComponentConfig{}
+            .with_label(symbol)
+            .with_size(ComponentSize{pixels(44), pixels(44)})
+            .with_absolute_position(x, y)
+            .with_font_size(h720(22.0f))
+            .with_custom_text_color(text_muted)
+            .with_custom_background(afterhours::Color{55, 60, 70, 180})
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.3f)
+            .with_debug_name(name));
   }
 
   // ---- Row renderers (now using shared helpers) ----
@@ -691,9 +758,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       render_rainbow_icon(context, entity, base_id, x + 8.0f, y + 8.0f,
                           "rainbow_");
     } else {
-      render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f,
-                  icon_color, icon_symbol,
-                  "toggle_icon_" + std::to_string(base_id));
+      render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
+                  icon_symbol, "toggle_icon_" + std::to_string(base_id));
     }
     render_row_label(context, entity, base_id + 2, x, y, h, 140, label,
                      "toggle_label_" + std::to_string(base_id));
@@ -739,8 +805,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                           afterhours::Entity &entity, int base_id, float x,
                           float y, float w, float h, const std::string &label,
                           const std::string &value,
-                          afterhours::Color icon_color,
-                          bool rainbow = false) {
+                          afterhours::Color icon_color, bool rainbow = false) {
     auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     render_row_bg(context, entity, base_id, x, y, w, h,
                   "display_row_" + std::to_string(base_id));
@@ -748,9 +813,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       render_rainbow_icon(context, entity, base_id, x + 8.0f, y + 8.0f,
                           "rainbow_");
     } else {
-      render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f,
-                  icon_color, "*",
-                  "display_icon_" + std::to_string(base_id));
+      render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
+                  "*", "display_icon_" + std::to_string(base_id));
     }
     render_row_label(context, entity, base_id + 2, x, y, h, 130, label,
                      "display_label_" + std::to_string(base_id));

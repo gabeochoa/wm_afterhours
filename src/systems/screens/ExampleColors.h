@@ -107,8 +107,8 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(theme_swatches[i].label)
               .with_size(ComponentSize{pixels(swatch_w), pixels(swatch_h)})
-              .with_absolute_position(swatches_start_x + i * (swatch_w + swatch_gap),
-                              swatch_y)
+              .with_absolute_position(
+                  swatches_start_x + i * (swatch_w + swatch_gap), swatch_y)
               .with_background(theme_swatches[i].usage)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -152,13 +152,15 @@ struct ExampleColors : ScreenSystem<UIContext<InputAction>> {
     float custom_swatch_y = row2_y + 15.0f;
 
     for (int i = 0; i < 5; i++) {
-      std::string label = std::string(custom_colors[i].name) + "\n" + custom_colors[i].hex;
+      std::string label =
+          std::string(custom_colors[i].name) + "\n" + custom_colors[i].hex;
       div(context, mk(entity, 40 + i),
           ComponentConfig{}
               .with_label(label)
               .with_size(ComponentSize{pixels(swatch_w), pixels(swatch_h)})
-              .with_absolute_position(swatches_start_x + i * (swatch_w + swatch_gap),
-                              custom_swatch_y)
+              .with_absolute_position(swatches_start_x +
+                                          i * (swatch_w + swatch_gap),
+                                      custom_swatch_y)
               .with_custom_background(custom_colors[i].color)
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))

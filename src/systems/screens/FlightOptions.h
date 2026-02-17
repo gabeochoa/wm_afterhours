@@ -80,8 +80,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
-            .with_padding(Padding{.top = pixels(20), .left = pixels(135),
-                                  .right = pixels(40)})
+            .with_padding(Padding{
+                .top = pixels(20), .left = pixels(135), .right = pixels(40)})
             .with_no_wrap()
             .with_debug_name("flight_root"));
 
@@ -94,11 +94,10 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_cyan));
 
     // ── Tab bar ──
-    tab_container(
-        context, mk(root.ent()), categories, active_tab,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(950), pixels(32)})
-            .with_margin(Margin{.top = pixels(-5)}));
+    tab_container(context, mk(root.ent()), categories, active_tab,
+                  ComponentConfig{}
+                      .with_size(ComponentSize{pixels(950), pixels(32)})
+                      .with_margin(Margin{.top = pixels(-5)}));
 
     // ── Decorative line ──
     div(context, mk(root.ent()),
@@ -111,13 +110,13 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // ── Content area: connector + sub-options ──
     std::string sub_header = categories[active_tab] + " SETTINGS";
 
-    auto content = vstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(840), pixels(350)})
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(5), .left = pixels(265)})
-            .with_debug_name("content"));
+    auto content =
+        vstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(840), pixels(350)})
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(5), .left = pixels(265)})
+                   .with_debug_name("content"));
 
     div(context, mk(content.ent()),
         ComponentConfig{}
@@ -190,14 +189,14 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_bright)
             .with_margin(Margin{.left = pixels(35)}));
 
-    auto footer_btns = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(740), pixels(36)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(5), .left = pixels(365)})
-            .with_debug_name("footer_btns"));
+    auto footer_btns =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(740), pixels(36)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(5), .left = pixels(365)})
+                   .with_debug_name("footer_btns"));
 
     button(context, mk(footer_btns.ent()),
            ComponentConfig{}
@@ -234,14 +233,14 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Margin{.left = pixels(10)})
                .with_debug_name("btn_apply"));
 
-    auto prompts = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(1080), pixels(28)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(5), .left = pixels(25)})
-            .with_debug_name("prompts"));
+    auto prompts =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(1080), pixels(28)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(5), .left = pixels(25)})
+                   .with_debug_name("prompts"));
 
     afterhours::Color key_bg{35, 50, 70, 255};
     div(context, mk(prompts.ent()),

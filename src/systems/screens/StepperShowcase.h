@@ -66,15 +66,15 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
                                               pixels(24.0f));
 
     // Root container
-    auto root =
-        vstack(context, mk(entity),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::sm)
-                .with_no_wrap()
-                .with_debug_name("root"));
+    auto root = vstack(
+        context, mk(entity),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+            .with_self_align(SelfAlign::Center)
+            .with_background(Theme::Usage::Background)
+            .with_padding(Spacing::sm)
+            .with_no_wrap()
+            .with_debug_name("root"));
 
     // Title
     div(context, mk(root.ent()),
@@ -91,21 +91,21 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     // Two-column layout
     auto columns =
         hstack(context, mk(root.ent()),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
-                .with_justify_content(JustifyContent::SpaceBetween)
-                .with_no_wrap()
-                .with_debug_name("columns"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.88f)})
+                   .with_justify_content(JustifyContent::SpaceBetween)
+                   .with_no_wrap()
+                   .with_debug_name("columns"));
 
     // ========== LEFT COLUMN: Various steppers ==========
     auto left_col =
         vstack(context, mk(columns.ent()),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
-                .with_roundness(0.06f)
-                .with_debug_name("left_col"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::md)
+                   .with_roundness(0.06f)
+                   .with_debug_name("left_col"));
 
     div(context, mk(left_col.ent()),
         ComponentConfig{}
@@ -119,11 +119,11 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto labeled_stepper = [&](int index, const char *label, auto &options,
                                size_t &idx) {
       auto row = hstack(context, mk(left_col.ent(), index),
-                     ComponentConfig{}
-                         .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                         .with_align_items(AlignItems::Center)
-                         .with_justify_content(JustifyContent::SpaceBetween)
-                         .with_margin(Margin{.bottom = pixels(8)}));
+                        ComponentConfig{}
+                            .with_size(ComponentSize{percent(1.0f), pixels(56)})
+                            .with_align_items(AlignItems::Center)
+                            .with_justify_content(JustifyContent::SpaceBetween)
+                            .with_margin(Margin{.bottom = pixels(8)}));
 
       div(context, mk(row.ent()),
           ComponentConfig{}
@@ -149,13 +149,13 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     // ========== RIGHT COLUMN: Stepper controlling a card ==========
     auto right_col =
         vstack(context, mk(columns.ent()),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
-                .with_background(Theme::Usage::Surface)
-                .with_padding(Spacing::md)
-                .with_align_items(AlignItems::Center)
-                .with_roundness(0.06f)
-                .with_debug_name("right_col"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.47f), percent(1.0f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::md)
+                   .with_align_items(AlignItems::Center)
+                   .with_roundness(0.06f)
+                   .with_debug_name("right_col"));
 
     div(context, mk(right_col.ent()),
         ComponentConfig{}
@@ -180,12 +180,12 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto card_container =
         vstack(context, mk(right_col.ent()),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(300), pixels(220)})
-                .with_custom_background(card.color)
-                .with_padding(Spacing::lg)
-                .with_roundness(0.10f)
-                .with_debug_name("card"));
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(300), pixels(220)})
+                   .with_custom_background(card.color)
+                   .with_padding(Spacing::lg)
+                   .with_roundness(0.10f)
+                   .with_debug_name("card"));
 
     div(context, mk(card_container.ent()),
         ComponentConfig{}
@@ -208,6 +208,6 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(stepper_showcase, "Component Galleries",
-                        "Stepper component with various styles and card selector",
-                        StepperShowcase)
+REGISTER_EXAMPLE_SCREEN(
+    stepper_showcase, "Component Galleries",
+    "Stepper component with various styles and card selector", StepperShowcase)

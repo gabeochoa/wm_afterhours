@@ -1,6 +1,5 @@
 #include "headless_screenshots.h"
 
-#include <afterhours/src/graphics.h>
 #include "font_config.h"
 #include "game.h"
 #include "input_mapping.h"
@@ -14,14 +13,15 @@
 #include "testing/test_app.h"
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
+#include <afterhours/src/graphics.h>
 
+#include <afterhours/src/plugins/e2e_testing/test_input.h>
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/toast.h>
-#include <afterhours/src/plugins/ui/ui_collection.h>
 #include <afterhours/src/plugins/ui/entity_management.h>
+#include <afterhours/src/plugins/ui/ui_collection.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
-#include <afterhours/src/plugins/e2e_testing/test_input.h>
 #include <filesystem>
 
 // Globals defined in game.cpp
@@ -61,8 +61,8 @@ raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
     return font;
   }
 
-  raylib::Image atlas = raylib::GenImageFontAtlas(font.glyphs, &font.recs,
-                                                  font.glyphCount, fontSize, 1, 0);
+  raylib::Image atlas = raylib::GenImageFontAtlas(
+      font.glyphs, &font.recs, font.glyphCount, fontSize, 1, 0);
   font.texture = raylib::LoadTextureFromImage(atlas);
   raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_BILINEAR);
 
@@ -74,9 +74,9 @@ raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
 
 // Load font with specific codepoints for CJK support
 raylib::Font load_font_headless_with_codepoints(const char *filename,
-                                                 const int *codepoints,
-                                                 int codepointCount,
-                                                 int fontSize = 32) {
+                                                const int *codepoints,
+                                                int codepointCount,
+                                                int fontSize = 32) {
   raylib::Font font = {0};
 
   int dataSize = 0;
@@ -115,7 +115,8 @@ void load_fonts_into_manager(afterhours::ui::FontManager &font_mgr) {
   int loaded_count = 0;
   for (const auto &font_def : font_config::get_all_fonts()) {
     std::string path =
-        afterhours::files::get_resource_path("fonts", font_def.filename).string();
+        afterhours::files::get_resource_path("fonts", font_def.filename)
+            .string();
 
     if (font_def.needs_codepoints && font_def.get_codepoints) {
       auto codepoints = font_def.get_codepoints();
@@ -164,7 +165,8 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
       .addComponent<afterhours::window_manager::ProvidesCurrentResolution>(
           afterhours::window_manager::Resolution{.width = screenshot_width,
                                                  .height = screenshot_height});
-  resolution_entity.addComponent<afterhours::window_manager::ProvidesTargetFPS>(60);
+  resolution_entity.addComponent<afterhours::window_manager::ProvidesTargetFPS>(
+      60);
   resolution_entity.addComponent<
       afterhours::window_manager::ProvidesAvailableWindowResolutions>();
 
@@ -173,19 +175,21 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   afterhours::EntityHelper::registerSingleton<
       afterhours::window_manager::ProvidesTargetFPS>(resolution_entity);
   afterhours::EntityHelper::registerSingleton<
-      afterhours::window_manager::ProvidesAvailableWindowResolutions>(resolution_entity);
+      afterhours::window_manager::ProvidesAvailableWindowResolutions>(
+      resolution_entity);
 
   // Initialize UI plugin (creates root + singletons in UI collection)
   afterhours::ui::init_ui_plugin<InputAction>();
 
   // Load custom fonts for headless rendering
-  auto *font_mgr =
-      afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::FontManager>();
+  auto *font_mgr = afterhours::EntityHelper::get_singleton_cmp<
+      afterhours::ui::FontManager>();
   if (font_mgr) {
     load_fonts_into_manager(*font_mgr);
   }
 
-  // Create input singleton components (with game's input mapping for test input)
+  // Create input singleton components (with game's input mapping for test
+  // input)
   afterhours::Entity &input_entity =
       afterhours::EntityHelper::createPermanentEntity();
   afterhours::input::add_singleton_components(input_entity, get_mapping());
@@ -206,12 +210,14 @@ void reset_screen_state(int ui_entity_id) {
 
   // Clean up toast singleton
   if (afterhours::EntityHelper::has_singleton<afterhours::toast::ToastRoot>()) {
-    auto &toast_singleton = afterhours::EntityHelper::get_singleton<
-        afterhours::toast::ToastRoot>().get();
+    auto &toast_singleton =
+        afterhours::EntityHelper::get_singleton<afterhours::toast::ToastRoot>()
+            .get();
     if (toast_singleton.has<afterhours::toast::ToastRoot>()) {
       auto &toast_root = toast_singleton.get<afterhours::toast::ToastRoot>();
       if (toast_root.entity_id >= 0) {
-        auto opt_root = afterhours::EntityHelper::getEntityForID(toast_root.entity_id);
+        auto opt_root =
+            afterhours::EntityHelper::getEntityForID(toast_root.entity_id);
         if (opt_root.valid()) {
           opt_root.asE().cleanup = true;
         }
@@ -222,8 +228,9 @@ void reset_screen_state(int ui_entity_id) {
 
   // Clean up modal singleton
   if (afterhours::EntityHelper::has_singleton<afterhours::modal::ModalRoot>()) {
-    auto &modal_singleton = afterhours::EntityHelper::get_singleton<
-        afterhours::modal::ModalRoot>().get();
+    auto &modal_singleton =
+        afterhours::EntityHelper::get_singleton<afterhours::modal::ModalRoot>()
+            .get();
     if (modal_singleton.has<afterhours::modal::ModalRoot>()) {
       auto &modal_root = modal_singleton.get<afterhours::modal::ModalRoot>();
       for (auto modal_id : modal_root.modal_stack) {
@@ -241,8 +248,10 @@ void reset_screen_state(int ui_entity_id) {
 
   // Clean up UI entities (except permanent root) - default collection
   for (const auto &e : afterhours::EntityHelper::get_entities()) {
-    if (!e) continue;
-    if (e->id == ui_entity_id) continue;
+    if (!e)
+      continue;
+    if (e->id == ui_entity_id)
+      continue;
     if (e->has<afterhours::ui::UIComponent>()) {
       e->cleanup = true;
     }
@@ -252,8 +261,10 @@ void reset_screen_state(int ui_entity_id) {
   // Clean up UI collection entities (except permanent root)
   auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
   for (const auto &e : ui_coll.get_entities()) {
-    if (!e) continue;
-    if (e->id == ui_entity_id) continue;
+    if (!e)
+      continue;
+    if (e->id == ui_entity_id)
+      continue;
     if (e->has<afterhours::ui::UIComponent>()) {
       e->cleanup = true;
     }
@@ -262,14 +273,16 @@ void reset_screen_state(int ui_entity_id) {
 
   // Reset root entity's children
   auto &root_entity = afterhours::EntityHelper::get_singleton<
-                          afterhours::ui::UIContext<InputAction>>().get();
+                          afterhours::ui::UIContext<InputAction>>()
+                          .get();
   if (root_entity.has<afterhours::ui::UIComponent>()) {
     root_entity.get<afterhours::ui::UIComponent>().children.clear();
   }
 }
 
 // Create and configure systems for a screen
-afterhours::SystemManager create_screen_systems(const std::string &screen_name) {
+afterhours::SystemManager
+create_screen_systems(const std::string &screen_name) {
   afterhours::SystemManager systems;
 
   afterhours::ui::enforce_singletons<InputAction>(systems);
@@ -307,7 +320,8 @@ afterhours::SystemManager create_screen_systems(const std::string &screen_name) 
 } // namespace
 
 // Capture all screens at a single resolution
-void run_headless_screenshots_at(int width, int height, const std::string &label) {
+void run_headless_screenshots_at(int width, int height,
+                                 const std::string &label) {
   // 1. Configure and initialize graphics backend
   afterhours::graphics::Config cfg;
   cfg.display = afterhours::graphics::DisplayMode::Headless;
@@ -320,9 +334,11 @@ void run_headless_screenshots_at(int width, int height, const std::string &label
     log_error("[Headless] Failed to initialize graphics backend for {}", label);
     return;
   }
-  log_info("[Headless] Graphics backend initialized ({}x{} = {})", width, height, label);
+  log_info("[Headless] Graphics backend initialized ({}x{} = {})", width,
+           height, label);
 
-  // 1b. Update Settings singleton so screens using Settings::get().get_screen_width/height()
+  // 1b. Update Settings singleton so screens using
+  // Settings::get().get_screen_width/height()
   //     see the correct resolution
   Settings::get().update_resolution(
       afterhours::window_manager::Resolution{.width = width, .height = height});
@@ -376,8 +392,8 @@ void run_headless_screenshots_at(int width, int height, const std::string &label
     afterhours::SystemManager systems = create_screen_systems(screen_name);
 
     // Verify font manager
-    auto *font_mgr =
-        afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::FontManager>();
+    auto *font_mgr = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::FontManager>();
     if (font_mgr) {
       raylib::Font test_font =
           font_mgr->get_font(afterhours::ui::UIComponent::DEFAULT_FONT);
@@ -419,7 +435,8 @@ void run_headless_screenshots_at(int width, int height, const std::string &label
   g_current_screen = nullptr;
 
   for (const auto &e : afterhours::EntityHelper::get_entities()) {
-    if (!e) continue;
+    if (!e)
+      continue;
     e->cleanup = true;
   }
   afterhours::EntityHelper::cleanup();
@@ -428,7 +445,8 @@ void run_headless_screenshots_at(int width, int height, const std::string &label
   {
     auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
     for (const auto &e : ui_coll.get_entities()) {
-      if (!e) continue;
+      if (!e)
+        continue;
       e->cleanup = true;
     }
     ui_coll.cleanup();
@@ -439,7 +457,8 @@ void run_headless_screenshots_at(int width, int height, const std::string &label
   raylib::UnloadRenderTexture(screenRT);
   afterhours::graphics::shutdown();
 
-  log_info("[Headless][{}] Completed - rendered {} screens", label, screen_names.size());
+  log_info("[Headless][{}] Completed - rendered {} screens", label,
+           screen_names.size());
 }
 
 void run_headless_screenshots() {
@@ -550,8 +569,7 @@ int run_all_tests_headless() {
     bool screen_found = false;
     for (const auto &screen_name :
          ExampleScreenRegistry::get().get_screen_names()) {
-      if (test_name.find(screen_name + "_") == 0 ||
-          test_name == screen_name) {
+      if (test_name.find(screen_name + "_") == 0 || test_name == screen_name) {
         auto screen = ExampleScreenRegistry::get().create_screen(screen_name);
         if (screen) {
           g_current_screen = screen.get();
@@ -608,8 +626,8 @@ int run_all_tests_headless() {
 
     // Check result
     if (timed_out) {
-      std::cout << "FAIL  " << test_name << "  (timed out after "
-                << MAX_FRAMES << " frames)" << std::endl;
+      std::cout << "FAIL  " << test_name << "  (timed out after " << MAX_FRAMES
+                << " frames)" << std::endl;
       failed++;
       failures.push_back(test_name + " (timeout)");
     } else {
@@ -642,7 +660,8 @@ int run_all_tests_headless() {
 
   // 5. Cleanup
   for (const auto &e : afterhours::EntityHelper::get_entities()) {
-    if (!e) continue;
+    if (!e)
+      continue;
     e->cleanup = true;
   }
   afterhours::EntityHelper::cleanup();
@@ -650,7 +669,8 @@ int run_all_tests_headless() {
   {
     auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
     for (const auto &e : ui_coll.get_entities()) {
-      if (!e) continue;
+      if (!e)
+        continue;
       e->cleanup = true;
     }
     ui_coll.cleanup();
@@ -746,8 +766,8 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
     afterhours::SystemManager systems = create_screen_systems(screen_name);
 
     // Verify font manager
-    auto *font_mgr =
-        afterhours::EntityHelper::get_singleton_cmp<afterhours::ui::FontManager>();
+    auto *font_mgr = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::ui::FontManager>();
     if (font_mgr) {
       raylib::Font test_font =
           font_mgr->get_font(afterhours::ui::UIComponent::DEFAULT_FONT);
@@ -810,7 +830,8 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
       }
     }
 
-    log_info("[FocusTest] {}: captured {} screenshots", screen_name, max_tabs + 1);
+    log_info("[FocusTest] {}: captured {} screenshots", screen_name,
+             max_tabs + 1);
   }
 
   // Cleanup
@@ -819,7 +840,8 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
   g_current_screen = nullptr;
 
   for (const auto &e : afterhours::EntityHelper::get_entities()) {
-    if (!e) continue;
+    if (!e)
+      continue;
     e->cleanup = true;
   }
   afterhours::EntityHelper::cleanup();
@@ -827,7 +849,8 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
   {
     auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
     for (const auto &e : ui_coll.get_entities()) {
-      if (!e) continue;
+      if (!e)
+        continue;
       e->cleanup = true;
     }
     ui_coll.cleanup();

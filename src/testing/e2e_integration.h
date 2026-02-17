@@ -91,10 +91,11 @@ struct E2EArgs {
   float timeout_seconds = 30.0f; // Default 30 second timeout
   bool slow_mode = false;        // Run tests slowly for visibility
   float slow_delay = 0.5f;       // Delay between commands in slow mode
-  bool update_baselines = false; // Update baseline screenshots instead of comparing
-  bool headless = false;         // Use headless graphics backend (no window)
-  float time_scale = 1.0f;       // Time multiplier (1.0 = normal, 10.0 = 10x faster)
-  int capture_interval = 0;      // Auto-capture every N frames (0 = disabled)
+  bool update_baselines =
+      false;                // Update baseline screenshots instead of comparing
+  bool headless = false;    // Use headless graphics backend (no window)
+  float time_scale = 1.0f;  // Time multiplier (1.0 = normal, 10.0 = 10x faster)
+  int capture_interval = 0; // Auto-capture every N frames (0 = disabled)
 };
 
 inline E2EArgs parse_e2e_args(int argc, char *argv[]) {

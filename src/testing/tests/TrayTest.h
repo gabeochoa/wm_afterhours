@@ -22,8 +22,8 @@ TEST(tray_horizontal_navigation) {
   // We know exactly two tab stops exist; use a second tab to switch
   auto *ctx = afterhours::EntityHelper::get_singleton_cmp<
       afterhours::ui::UIContext<InputAction>>();
-  auto opt = afterhours::ui::UICollectionHolder::getEntityForID(
-      ctx->visual_focus_id);
+  auto opt =
+      afterhours::ui::UICollectionHolder::getEntityForID(ctx->visual_focus_id);
   if (opt.has_value() && opt.asE().has<afterhours::ui::HasLabel>() &&
       opt.asE().get<afterhours::ui::HasLabel>().label == "V-Alpha") {
     TestApp::simulate_tab();
@@ -73,8 +73,8 @@ TEST(tray_vertical_navigation) {
 
   auto *ctx = afterhours::EntityHelper::get_singleton_cmp<
       afterhours::ui::UIContext<InputAction>>();
-  auto opt = afterhours::ui::UICollectionHolder::getEntityForID(
-      ctx->visual_focus_id);
+  auto opt =
+      afterhours::ui::UICollectionHolder::getEntityForID(ctx->visual_focus_id);
   if (opt.has_value() && opt.asE().has<afterhours::ui::HasLabel>() &&
       opt.asE().get<afterhours::ui::HasLabel>().label == "H-Alpha") {
     TestApp::simulate_tab();
@@ -121,8 +121,8 @@ TEST(tray_single_tab_stop) {
   // Determine which tray we're on
   auto *ctx = afterhours::EntityHelper::get_singleton_cmp<
       afterhours::ui::UIContext<InputAction>>();
-  auto opt = afterhours::ui::UICollectionHolder::getEntityForID(
-      ctx->visual_focus_id);
+  auto opt =
+      afterhours::ui::UICollectionHolder::getEntityForID(ctx->visual_focus_id);
   bool first_is_horizontal =
       (opt.has_value() && opt.asE().has<afterhours::ui::HasLabel>() &&
        opt.asE().get<afterhours::ui::HasLabel>().label == "H-Alpha");
@@ -161,8 +161,8 @@ TEST(tray_selection_persists) {
   // Navigate to horizontal tray if not already there
   auto *ctx = afterhours::EntityHelper::get_singleton_cmp<
       afterhours::ui::UIContext<InputAction>>();
-  auto opt = afterhours::ui::UICollectionHolder::getEntityForID(
-      ctx->visual_focus_id);
+  auto opt =
+      afterhours::ui::UICollectionHolder::getEntityForID(ctx->visual_focus_id);
   if (opt.has_value() && opt.asE().has<afterhours::ui::HasLabel>() &&
       opt.asE().get<afterhours::ui::HasLabel>().label == "V-Alpha") {
     TestApp::simulate_tab();

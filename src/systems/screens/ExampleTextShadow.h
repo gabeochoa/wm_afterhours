@@ -2,9 +2,9 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
+#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include "../../theme_presets.h"
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -46,8 +46,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 2),
         ComponentConfig{}
-            .with_label(
-                "Add depth and improve legibility with text shadows")
+            .with_label("Add depth and improve legibility with text shadows")
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
             .with_absolute_position(20.0f, 65.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
@@ -56,7 +55,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     int id = 10;
     float col1_x = 20.0f;
-    float col2_x = screen_w * 0.52f;  // Right column starts at 52% of screen width
+    float col2_x =
+        screen_w * 0.52f; // Right column starts at 52% of screen width
 
     // ========== LEFT COLUMN: Side-by-side comparisons ==========
 
@@ -67,7 +67,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color shadow_dark{0, 0, 0,
                                   255}; // Full opacity for max visibility
 
-    float left_col_width = col2_x - col1_x - 20.0f;  // Available width for left column
+    float left_col_width =
+        col2_x - col1_x - 20.0f; // Available width for left column
     float half_left = left_col_width / 2.0f;
 
     // Configurable contrast background for light shadow examples
@@ -78,7 +79,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(left_col_width), pixels(55)})
-            .with_absolute_position(col1_x - contrast_panel_padding / 2.0f, 110.0f)
+            .with_absolute_position(col1_x - contrast_panel_padding / 2.0f,
+                                    110.0f)
             .with_custom_background(contrast_bg)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
@@ -115,11 +117,13 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     // Row 2: SOFT vs HARD shadow presets - larger offsets
     afterhours::Color hot_pink{255, 50, 150, 255};
 
-    // Dark panel behind SOFT/HARD for better shadow visibility (especially soft shadows)
+    // Dark panel behind SOFT/HARD for better shadow visibility (especially soft
+    // shadows)
     div(context, mk(entity, id++),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(left_col_width), pixels(70)})
-            .with_absolute_position(col1_x - contrast_panel_padding / 2.0f, 190.0f)
+            .with_absolute_position(col1_x - contrast_panel_padding / 2.0f,
+                                    190.0f)
             .with_custom_background(contrast_bg)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
@@ -241,7 +245,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     // ========== RIGHT COLUMN: Offset comparison ==========
 
-    float right_col_width = screen_w - col2_x - 20.0f;  // Available width for right column
+    float right_col_width =
+        screen_w - col2_x - 20.0f; // Available width for right column
 
     div(context, mk(entity, id++),
         ComponentConfig{}
@@ -255,7 +260,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     afterhours::Color purple_shadow{60, 20, 100, 200};
 
     float offset_y = 140.0f;
-    float offset_spacing = 62.0f;  // Reduced spacing to fit 6 items
+    float offset_spacing = 62.0f; // Reduced spacing to fit 6 items
     float offsets[] = {1.0f, 2.0f, 4.0f, 6.0f, 8.0f, 10.0f};
     const char *offset_labels[] = {"1px", "2px", "4px", "6px", "8px", "10px"};
 
@@ -263,8 +268,10 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
     float offset_panel_height = 6 * offset_spacing;
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(right_col_width), pixels(offset_panel_height)})
-            .with_absolute_position(col2_x - contrast_panel_padding / 2.0f, offset_y)
+            .with_size(ComponentSize{pixels(right_col_width),
+                                     pixels(offset_panel_height)})
+            .with_absolute_position(col2_x - contrast_panel_padding / 2.0f,
+                                    offset_y)
             .with_custom_background(contrast_bg)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.1f)
@@ -274,7 +281,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, id++),
           ComponentConfig{}
               .with_label("SHADOW")
-              .with_size(ComponentSize{pixels(right_col_width - 60), pixels(48)})
+              .with_size(
+                  ComponentSize{pixels(right_col_width - 60), pixels(48)})
               .with_absolute_position(col2_x, offset_y + i * offset_spacing)
               .with_font(bold_font, h720(34.0f))
               .with_custom_text_color(purple)
@@ -286,9 +294,11 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(offset_labels[i])
               .with_size(ComponentSize{pixels(50), pixels(26)})
-              .with_absolute_position(col2_x + right_col_width - 55, offset_y + i * offset_spacing + 10.0f)
+              .with_absolute_position(col2_x + right_col_width - 55,
+                                      offset_y + i * offset_spacing + 10.0f)
               .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-              .with_custom_text_color(afterhours::Color{180, 185, 200, 255})  // Lighter text for dark bg
+              .with_custom_text_color(afterhours::Color{
+                  180, 185, 200, 255}) // Lighter text for dark bg
               .with_debug_name("offset_label_" + std::to_string(i)));
     }
 
@@ -306,7 +316,8 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, id++),
         ComponentConfig{}
-            .with_label("Tip: Use small offsets (1-4px) for subtle depth, larger offsets (6-10px) for bold effects")
+            .with_label("Tip: Use small offsets (1-4px) for subtle depth, "
+                        "larger offsets (6-10px) for bold effects")
             .with_size(ComponentSize{pixels(screen_w - 60), pixels(28)})
             .with_absolute_position(30.0f, code_y + 10.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))

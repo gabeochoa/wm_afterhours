@@ -22,4 +22,3 @@ void save_screenshot_to(const std::string &path);
 bool validate_screen_against_baseline(const std::string &screen_name);
 
 } // namespace screenshot_validation
-

@@ -14,8 +14,8 @@
 #include "settings.h"
 #include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/color.h>
-#include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/toast.h>
 #include <afterhours/src/plugins/ui/theme.h>
 
 using namespace afterhours;
@@ -112,8 +112,8 @@ raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
     return font;
   }
 
-  raylib::Image atlas = raylib::GenImageFontAtlas(font.glyphs, &font.recs,
-                                                  font.glyphCount, fontSize, 1, 0);
+  raylib::Image atlas = raylib::GenImageFontAtlas(
+      font.glyphs, &font.recs, font.glyphCount, fontSize, 1, 0);
   font.texture = raylib::LoadTextureFromImage(atlas);
   raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_BILINEAR);
 
@@ -125,9 +125,9 @@ raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
 
 // Load font with specific codepoints for CJK support in headless mode
 raylib::Font load_font_headless_with_codepoints(const char *filename,
-                                                 const int *codepoints,
-                                                 int codepointCount,
-                                                 int fontSize = 32) {
+                                                const int *codepoints,
+                                                int codepointCount,
+                                                int fontSize = 32) {
   raylib::Font font = {0};
 
   int dataSize = 0;
@@ -161,7 +161,7 @@ raylib::Font load_font_headless_with_codepoints(const char *filename,
   return font;
 }
 
-}  // namespace
+} // namespace
 
 Preload &Preload::make_singleton() {
   auto &sophie = EntityHelper::createEntity();
@@ -184,18 +184,21 @@ Preload &Preload::make_singleton() {
         if (font_def.needs_codepoints && font_def.get_codepoints) {
           auto codepoints = font_def.get_codepoints();
           raylib::Font font = load_font_headless_with_codepoints(
-              path.c_str(), codepoints.data(), static_cast<int>(codepoints.size()));
+              path.c_str(), codepoints.data(),
+              static_cast<int>(codepoints.size()));
           if (font.glyphCount > 0) {
             font_mgr.load_font(font_def.name, font);
           } else {
-            log_warn("[Preload] Failed to load CJK font in headless: {}", font_def.name);
+            log_warn("[Preload] Failed to load CJK font in headless: {}",
+                     font_def.name);
           }
         } else {
           raylib::Font font = load_font_headless(path.c_str());
           if (font.glyphCount > 0) {
             font_mgr.load_font(font_def.name, font);
           } else {
-            log_warn("[Preload] Failed to load font in headless: {}", font_def.name);
+            log_warn("[Preload] Failed to load font in headless: {}",
+                     font_def.name);
           }
         }
       } else {

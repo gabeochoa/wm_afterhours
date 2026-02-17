@@ -80,15 +80,17 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     // ROOT
     // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_cream)
-            .with_padding(Padding{.top = pixels(20), .left = pixels(35),
-                                  .bottom = pixels(5), .right = pixels(35)})
-            .with_no_wrap()
-            .with_debug_name("mm_root"));
+    auto root =
+        vstack(context, mk(entity),
+               ComponentConfig{}
+                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
+                   .with_custom_background(bg_cream)
+                   .with_padding(Padding{.top = pixels(20),
+                                         .left = pixels(35),
+                                         .bottom = pixels(5),
+                                         .right = pixels(35)})
+                   .with_no_wrap()
+                   .with_debug_name("mm_root"));
 
     // ── Back button ──
     button(context, mk(root.ent()),
@@ -106,13 +108,13 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_margin(Margin{.top = pixels(10), .left = pixels(145)}));
 
     // ── Content area ──
-    auto content = vstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(745), pixels(350)})
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(8), .left = pixels(465)})
-            .with_debug_name("content"));
+    auto content =
+        vstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(745), pixels(350)})
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(8), .left = pixels(465)})
+                   .with_debug_name("content"));
 
     if (active_tab == 0) {
       // Game tab: toggles + sensitivity
@@ -140,13 +142,12 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         // Toggle track (clickable button)
         if (button(context, mk(toggle_row.ent(), 1),
                    ComponentConfig{}
-                       .with_size(
-                           ComponentSize{pixels(mm_track_w), pixels(mm_track_h)})
+                       .with_size(ComponentSize{pixels(mm_track_w),
+                                                pixels(mm_track_h)})
                        .with_custom_background(track_col)
                        .with_rounded_corners(RoundedCorners().all_round())
                        .with_roundness(0.5f)
-                       .with_debug_name("toggle_track_" +
-                                        std::to_string(i)))) {
+                       .with_debug_name("toggle_track_" + std::to_string(i)))) {
           *(toggles[i].value) = !is_on;
         }
 
@@ -162,22 +163,21 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_rounded_corners(RoundedCorners().all_round())
                 .with_roundness(1.0f)
                 .with_skip_tabbing(true)
-                .with_translate(
-                    pixels(knob_x_offset - mm_track_w - mm_knob_sz / 2.0f +
-                          mm_knob_pad),
-                    pixels(0))
+                .with_translate(pixels(knob_x_offset - mm_track_w -
+                                       mm_knob_sz / 2.0f + mm_knob_pad),
+                                pixels(0))
                 .with_debug_name("toggle_knob_" + std::to_string(i)));
       }
 
       // Sensitivity row
-      auto sens_row = hstack(
-          context, mk(content.ent()),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.0f), pixels(52)})
-              .with_align_items(AlignItems::Center)
-              .with_no_wrap()
-              .with_margin(Margin{.top = pixels(25)})
-              .with_debug_name("sens_row"));
+      auto sens_row =
+          hstack(context, mk(content.ent()),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                     .with_align_items(AlignItems::Center)
+                     .with_no_wrap()
+                     .with_margin(Margin{.top = pixels(25)})
+                     .with_debug_name("sens_row"));
 
       div(context, mk(sens_row.ent()),
           ComponentConfig{}
@@ -250,13 +250,13 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ── Bottom area: version + tutorial + footer ──
-    auto bottom = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(56)})
-            .with_align_items(AlignItems::FlexEnd)
-            .with_no_wrap()
-            .with_debug_name("bottom"));
+    auto bottom =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(56)})
+                   .with_align_items(AlignItems::FlexEnd)
+                   .with_no_wrap()
+                   .with_debug_name("bottom"));
 
     // Version
     std::string version_label;
@@ -288,15 +288,15 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_alignment(TextAlignment::Center));
 
     // Footer buttons row
-    auto footer = hstack(
-        context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_justify_content(JustifyContent::Center)
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_margin(Margin{.top = pixels(5)})
-            .with_debug_name("footer"));
+    auto footer =
+        hstack(context, mk(root.ent()),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                   .with_justify_content(JustifyContent::Center)
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_margin(Margin{.top = pixels(5)})
+                   .with_debug_name("footer"));
 
     button(context, mk(footer.ent()),
            ComponentConfig{}

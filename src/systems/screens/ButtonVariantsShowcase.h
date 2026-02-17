@@ -21,15 +21,15 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto FONT = UIComponent::DEFAULT_FONT;
 
     // Main container
-    auto root =
-        vstack(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.95f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::md)
-                .with_no_wrap()
-                .with_debug_name("bv_root"));
+    auto root = vstack(
+        context, mk(entity, 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.95f)})
+            .with_self_align(SelfAlign::Center)
+            .with_background(Theme::Usage::Background)
+            .with_padding(Spacing::md)
+            .with_no_wrap()
+            .with_debug_name("bv_root"));
 
     // Title
     div(context, mk(root.ent(), 0),
@@ -58,13 +58,14 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     auto btn_font = pixels(20.0f);
 
     // --- Row 1: Filled variant ---
-    auto row1 = hstack(context, mk(root.ent(), 1),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_debug_name("bv_row_filled"));
+    auto row1 =
+        hstack(context, mk(root.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("bv_row_filled"));
 
     row_label(row1.ent(), 0, "Filled");
 
@@ -120,13 +121,14 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 2: Outline variant ---
-    auto row2 = hstack(context, mk(root.ent(), 2),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_debug_name("bv_row_outline"));
+    auto row2 =
+        hstack(context, mk(root.ent(), 2),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("bv_row_outline"));
 
     row_label(row2.ent(), 0, "Outline");
 
@@ -178,13 +180,14 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 3: Ghost variant ---
-    auto row3 = hstack(context, mk(root.ent(), 3),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_debug_name("bv_row_ghost"));
+    auto row3 =
+        hstack(context, mk(root.ent(), 3),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("bv_row_ghost"));
 
     row_label(row3.ent(), 0, "Ghost");
 
@@ -236,13 +239,14 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 4: Size variants ---
-    auto row4 = hstack(context, mk(root.ent(), 4),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::Center)
-                        .with_debug_name("bv_row_sizes"));
+    auto row4 =
+        hstack(context, mk(root.ent(), 4),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.16f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_align_items(AlignItems::Center)
+                   .with_debug_name("bv_row_sizes"));
 
     row_label(row4.ent(), 0, "Sizes");
 
@@ -297,13 +301,14 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Spacing::xs));
 
     // --- Row 5: Theme comparison ---
-    auto row5 = hstack(context, mk(root.ent(), 5),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.24f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_align_items(AlignItems::FlexStart)
-                        .with_debug_name("bv_row_themes"));
+    auto row5 =
+        hstack(context, mk(root.ent(), 5),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.24f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_align_items(AlignItems::FlexStart)
+                   .with_debug_name("bv_row_themes"));
 
     row_label(row5.ent(), 0, "Themes");
 
@@ -324,21 +329,19 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
       auto saved_theme = context.theme;
       context.theme = demo;
 
-      auto col =
-          vstack(context, mk(row5.ent(), 1 + t),
-              ComponentConfig{}
-                  .with_size(ComponentSize{pixels(200), percent(0.95f)})
-                  .with_custom_background(demo.background)
-                  .with_padding(Spacing::xs)
-                  .with_align_items(AlignItems::Center)
-                  .with_margin(Spacing::xs)
-                  .with_debug_name(
-                      fmt::format("bv_theme_col_{}", themes[t].name)));
+      auto col = vstack(
+          context, mk(row5.ent(), 1 + t),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(200), percent(0.95f)})
+              .with_custom_background(demo.background)
+              .with_padding(Spacing::xs)
+              .with_align_items(AlignItems::Center)
+              .with_margin(Spacing::xs)
+              .with_debug_name(fmt::format("bv_theme_col_{}", themes[t].name)));
 
       // Auto-pick the best text color for this theme's primary bg
-      afterhours::Color filled_text =
-          afterhours::colors::auto_text_color(demo.primary, demo.font,
-                                              demo.darkfont);
+      afterhours::Color filled_text = afterhours::colors::auto_text_color(
+          demo.primary, demo.font, demo.darkfont);
 
       // Theme name label
       div(context, mk(col.ent(), 0),
@@ -403,9 +406,11 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(root.ent(), 6),
         ComponentConfig{}
-            .with_label("Total clicks across all variants: " + std::to_string(total))
+            .with_label("Total clicks across all variants: " +
+                        std::to_string(total))
             .with_size(ComponentSize{percent(1.0f), percent(0.05f)})
-            .with_custom_background(afterhours::colors::lighten(context.theme.background, 0.08f))
+            .with_custom_background(
+                afterhours::colors::lighten(context.theme.background, 0.08f))
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
             .with_rounded_corners(RoundedCorners())

@@ -47,19 +47,17 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
 
   void animate_button_press(InteractiveAnimKey key) {
     // Quick scale down and back up for press feedback
-    afterhours::animation::anim<InteractiveAnimKey>(key)
-        .from(1.0f)
-        .sequence({
-            {.to_value = 0.85f,
-             .duration = 0.08f,
-             .easing = afterhours::animation::EasingType::EaseOutQuad},
-            {.to_value = 1.1f,
-             .duration = 0.12f,
-             .easing = afterhours::animation::EasingType::EaseOutQuad},
-            {.to_value = 1.0f,
-             .duration = 0.1f,
-             .easing = afterhours::animation::EasingType::EaseOutQuad},
-        });
+    afterhours::animation::anim<InteractiveAnimKey>(key).from(1.0f).sequence({
+        {.to_value = 0.85f,
+         .duration = 0.08f,
+         .easing = afterhours::animation::EasingType::EaseOutQuad},
+        {.to_value = 1.1f,
+         .duration = 0.12f,
+         .easing = afterhours::animation::EasingType::EaseOutQuad},
+        {.to_value = 1.0f,
+         .duration = 0.1f,
+         .easing = afterhours::animation::EasingType::EaseOutQuad},
+    });
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -70,11 +68,17 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     // Initialize animation tracks to 1.0 on first run for screenshot
     if (first_run) {
       first_run = false;
-      auto &track1 = afterhours::animation::manager<InteractiveAnimKey>().ensure_track(InteractiveAnimKey::Button1Scale);
+      auto &track1 =
+          afterhours::animation::manager<InteractiveAnimKey>().ensure_track(
+              InteractiveAnimKey::Button1Scale);
       track1.current = 1.0f;
-      auto &track2 = afterhours::animation::manager<InteractiveAnimKey>().ensure_track(InteractiveAnimKey::Button2Scale);
+      auto &track2 =
+          afterhours::animation::manager<InteractiveAnimKey>().ensure_track(
+              InteractiveAnimKey::Button2Scale);
       track2.current = 1.0f;
-      auto &track3 = afterhours::animation::manager<InteractiveAnimKey>().ensure_track(InteractiveAnimKey::Button3Scale);
+      auto &track3 =
+          afterhours::animation::manager<InteractiveAnimKey>().ensure_track(
+              InteractiveAnimKey::Button3Scale);
       track3.current = 1.0f;
     }
 
@@ -135,10 +139,10 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 10),
                ComponentConfig{}
                    .with_label("Click!")
-                   .with_size(ComponentSize{pixels(button_size),
-                                            pixels(button_size)})
+                   .with_size(
+                       ComponentSize{pixels(button_size), pixels(button_size)})
                    .with_absolute_position(btn1_x, button_y)
-                   .with_scale(scale1)  // Smooth visual scaling after layout
+                   .with_scale(scale1) // Smooth visual scaling after layout
                    .with_custom_background(box_blue)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -155,10 +159,10 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 20),
                ComponentConfig{}
                    .with_label("Press!")
-                   .with_size(ComponentSize{pixels(button_size),
-                                            pixels(button_size)})
+                   .with_size(
+                       ComponentSize{pixels(button_size), pixels(button_size)})
                    .with_absolute_position(btn2_x, button_y)
-                   .with_scale(scale2)  // Smooth visual scaling after layout
+                   .with_scale(scale2) // Smooth visual scaling after layout
                    .with_custom_background(box_green)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -175,10 +179,10 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(entity, 30),
                ComponentConfig{}
                    .with_label("Tap!")
-                   .with_size(ComponentSize{pixels(button_size),
-                                            pixels(button_size)})
+                   .with_size(
+                       ComponentSize{pixels(button_size), pixels(button_size)})
                    .with_absolute_position(btn3_x, button_y)
-                   .with_scale(scale3)  // Smooth visual scaling after layout
+                   .with_scale(scale3) // Smooth visual scaling after layout
                    .with_custom_background(box_purple)
                    .with_custom_text_color(text_light)
                    .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
@@ -194,7 +198,8 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(fmt::format("Total clicks: {}", click_count))
             .with_size(ComponentSize{pixels(200), pixels(40)})
-            .with_absolute_position(center_x - 100.0f, button_y + button_size + 40.0f)
+            .with_absolute_position(center_x - 100.0f,
+                                    button_y + button_size + 40.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_background(Theme::Usage::Surface)
             .with_custom_text_color(text_light)
@@ -203,7 +208,8 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
     // Instructions section
     div(context, mk(entity, 50),
         ComponentConfig{}
-            .with_label("Using with_scale() for smooth visual scaling animations")
+            .with_label(
+                "Using with_scale() for smooth visual scaling animations")
             .with_size(ComponentSize{pixels(screen_w), pixels(30)})
             .with_absolute_position(0.0f, screen_h - 80.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))

@@ -28,7 +28,8 @@ vertical_gradient(Context &context, Entity &entity, int base_id, float x,
 
   for (int i = 0; i < num_strips; i++) {
     float t = static_cast<float>(i) / static_cast<float>(num_strips - 1);
-    afterhours::Color strip_color = afterhours::colors::lerp(top_color, bottom_color, t);
+    afterhours::Color strip_color =
+        afterhours::colors::lerp(top_color, bottom_color, t);
 
     div(context, mk(entity, base_id + i),
         ComponentConfig{}
@@ -53,7 +54,8 @@ inline void horizontal_gradient(Context &context, Entity &entity, int base_id,
 
   for (int i = 0; i < num_strips; i++) {
     float t = static_cast<float>(i) / static_cast<float>(num_strips - 1);
-    afterhours::Color strip_color = afterhours::colors::lerp(left_color, right_color, t);
+    afterhours::Color strip_color =
+        afterhours::colors::lerp(left_color, right_color, t);
 
     div(context, mk(entity, base_id + i),
         ComponentConfig{}

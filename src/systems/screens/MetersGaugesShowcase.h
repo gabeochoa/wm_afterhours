@@ -50,15 +50,15 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     auto corners = RoundedCorners();
 
     // Main container
-    auto root =
-        vstack(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.95f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_padding(Spacing::sm)
-                .with_no_wrap()
-                .with_debug_name("mg_root"));
+    auto root = vstack(
+        context, mk(entity, 0),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.95f)})
+            .with_self_align(SelfAlign::Center)
+            .with_background(Theme::Usage::Background)
+            .with_padding(Spacing::sm)
+            .with_no_wrap()
+            .with_debug_name("mg_root"));
 
     // Title
     div(context, mk(root.ent(), 0),
@@ -75,14 +75,15 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     // Row 1: Inline Meters
     // How to make an inline meter: row div with a label + progress_bar
     // =================================================================
-    auto row1 = vstack(context, mk(root.ent(), 1),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.17f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_rounded_corners(corners)
-                        .with_margin(Margin{.top = DefaultSpacing::tiny()})
-                        .with_debug_name("mg_row_meters"));
+    auto row1 =
+        vstack(context, mk(root.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.17f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_rounded_corners(corners)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
+                   .with_debug_name("mg_row_meters"));
 
     div(context, mk(row1.ent(), 0),
         ComponentConfig{}
@@ -93,11 +94,12 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
-    auto meters_row = hstack(context, mk(row1.ent(), 1),
-                          ComponentConfig{}
-                              .with_size(ComponentSize{percent(1.0f), percent(0.73f)})
-                              .with_background(Theme::Usage::Surface)
-                              .with_align_items(AlignItems::Center));
+    auto meters_row =
+        hstack(context, mk(row1.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.73f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_align_items(AlignItems::Center));
 
     struct MeterInfo {
       const char *label;
@@ -112,12 +114,13 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     for (int m = 0; m < 3; m++) {
-      auto meter = hstack(context, mk(meters_row.ent(), m),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.31f), percent(0.9f)})
-                           .with_background(Theme::Usage::Surface)
-                           .with_align_items(AlignItems::Center)
-                           .with_debug_name(meters[m].name));
+      auto meter =
+          hstack(context, mk(meters_row.ent(), m),
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.31f), percent(0.9f)})
+                     .with_background(Theme::Usage::Surface)
+                     .with_align_items(AlignItems::Center)
+                     .with_debug_name(meters[m].name));
 
       // Label
       div(context, mk(meter.ent(), 0),
@@ -150,14 +153,15 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     // on both bars inside a container. Here we show them side-by-side
     // since absolute positioning with percent sizes triggers config warnings.
     // =================================================================
-    auto row2 = vstack(context, mk(root.ent(), 2),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.15f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_rounded_corners(corners)
-                        .with_margin(Margin{.top = DefaultSpacing::tiny()})
-                        .with_debug_name("mg_row_stacked"));
+    auto row2 =
+        vstack(context, mk(root.ent(), 2),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.15f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_rounded_corners(corners)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
+                   .with_debug_name("mg_row_stacked"));
 
     div(context, mk(row2.ent(), 0),
         ComponentConfig{}
@@ -168,11 +172,12 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
-    auto stack_row = hstack(context, mk(row2.ent(), 1),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(0.9f), percent(0.6f)})
-                             .with_background(Theme::Usage::Surface)
-                             .with_align_items(AlignItems::Center));
+    auto stack_row =
+        hstack(context, mk(row2.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(0.9f), percent(0.6f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_align_items(AlignItems::Center));
 
     progress_bar(context, mk(stack_row.ent(), 0), control_value,
                  ComponentConfig{}
@@ -201,14 +206,15 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     // =================================================================
     // Row 3: Animated Progress
     // =================================================================
-    auto row3 = vstack(context, mk(root.ent(), 3),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.14f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_rounded_corners(corners)
-                        .with_margin(Margin{.top = DefaultSpacing::tiny()})
-                        .with_debug_name("mg_row_animated"));
+    auto row3 =
+        vstack(context, mk(root.ent(), 3),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.14f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_rounded_corners(corners)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
+                   .with_debug_name("mg_row_animated"));
 
     div(context, mk(row3.ent(), 0),
         ComponentConfig{}
@@ -219,11 +225,12 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
-    auto anim_row = hstack(context, mk(row3.ent(), 1),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
-                            .with_background(Theme::Usage::Surface)
-                            .with_align_items(AlignItems::Center));
+    auto anim_row =
+        hstack(context, mk(row3.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.65f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_align_items(AlignItems::Center));
 
     progress_bar(context, mk(anim_row.ent(), 0), anim_progress,
                  ComponentConfig{}
@@ -246,14 +253,15 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     // =================================================================
     // Row 4: Circular Gauges (larger, centered, with visible labels)
     // =================================================================
-    auto row4 = vstack(context, mk(root.ent(), 4),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.24f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_rounded_corners(corners)
-                        .with_margin(Margin{.top = DefaultSpacing::tiny()})
-                        .with_debug_name("mg_row_circular"));
+    auto row4 =
+        vstack(context, mk(root.ent(), 4),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.24f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_rounded_corners(corners)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
+                   .with_debug_name("mg_row_circular"));
 
     div(context, mk(row4.ent(), 0),
         ComponentConfig{}
@@ -266,10 +274,10 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto circles_row =
         hstack(context, mk(row4.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), percent(0.82f)})
-                .with_background(Theme::Usage::Surface)
-                .with_align_items(AlignItems::Center));
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.82f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_align_items(AlignItems::Center));
 
     struct GaugeInfo {
       float value;
@@ -285,11 +293,11 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     for (int g = 0; g < 3; g++) {
       auto gauge_col =
           vstack(context, mk(circles_row.ent(), g),
-              ComponentConfig{}
-                  .with_size(ComponentSize{percent(0.33f), percent(0.95f)})
-                  .with_background(Theme::Usage::Surface)
-                  .with_align_items(AlignItems::Center)
-                  .with_debug_name(gauges[g].name));
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(0.33f), percent(0.95f)})
+                     .with_background(Theme::Usage::Surface)
+                     .with_align_items(AlignItems::Center)
+                     .with_debug_name(gauges[g].name));
 
       circular_progress(
           context, mk(gauge_col.ent(), 0), gauges[g].value,
@@ -314,14 +322,15 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     // =================================================================
     // Row 5: Interactive Slider
     // =================================================================
-    auto row5 = vstack(context, mk(root.ent(), 5),
-                    ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), percent(0.13f)})
-                        .with_background(Theme::Usage::Surface)
-                        .with_padding(Spacing::xs)
-                        .with_rounded_corners(corners)
-                        .with_margin(Margin{.top = DefaultSpacing::tiny()})
-                        .with_debug_name("mg_row_slider"));
+    auto row5 =
+        vstack(context, mk(root.ent(), 5),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.13f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_padding(Spacing::xs)
+                   .with_rounded_corners(corners)
+                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
+                   .with_debug_name("mg_row_slider"));
 
     div(context, mk(row5.ent(), 0),
         ComponentConfig{}

@@ -2,8 +2,8 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../ExampleScreenRegistry.h"
 #include "../../theme_presets.h"
+#include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <filesystem>
 
@@ -68,8 +68,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     return nodes;
   }
 
-  void lazy_load_children(TreeNode<FileEntry> &node,
-                          HasTreeViewState &state) {
+  void lazy_load_children(TreeNode<FileEntry> &node, HasTreeViewState &state) {
     if (!node.data.is_directory)
       return;
     if (!state.is_expanded(node.data.path))
@@ -93,8 +92,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
       return fmt::format("{:.1f} MB",
                          static_cast<double>(bytes) / (1024.0 * 1024.0));
     return fmt::format("{:.1f} GB",
-                       static_cast<double>(bytes) /
-                           (1024.0 * 1024.0 * 1024.0));
+                       static_cast<double>(bytes) / (1024.0 * 1024.0 * 1024.0));
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -124,17 +122,17 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // Main container
-    auto root =
-        vstack(context, mk(entity, 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.8f), screen_pct(0.85f)})
-                .with_self_align(SelfAlign::Center)
-                .with_custom_background(theme.surface)
-                .with_border(theme.font_muted, 1.0f)
-                .with_rounded_corners(RoundedCorners().all_round())
-                .with_roundness(0.02f)
-                .with_padding(Spacing::md)
-                .with_debug_name("main_container"));
+    auto root = vstack(
+        context, mk(entity, 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{screen_pct(0.8f), screen_pct(0.85f)})
+            .with_self_align(SelfAlign::Center)
+            .with_custom_background(theme.surface)
+            .with_border(theme.font_muted, 1.0f)
+            .with_rounded_corners(RoundedCorners().all_round())
+            .with_roundness(0.02f)
+            .with_padding(Spacing::md)
+            .with_debug_name("main_container"));
 
     // Title bar
     div(context, mk(root.ent(), 0),
@@ -149,15 +147,15 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("title"));
 
     // Toolbar
-    auto toolbar = hstack(
-        context, mk(root.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(34)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_padding(Padding::horizontal(pixels(4)))
-            .with_custom_background(afterhours::Color{40, 40, 40, 255})
-            .with_debug_name("toolbar"));
+    auto toolbar =
+        hstack(context, mk(root.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), pixels(34)})
+                   .with_align_items(AlignItems::Center)
+                   .with_no_wrap()
+                   .with_padding(Padding::horizontal(pixels(4)))
+                   .with_custom_background(afterhours::Color{40, 40, 40, 255})
+                   .with_debug_name("toolbar"));
 
     // Home button
     if (button(context, mk(toolbar.ent(), 0),
@@ -249,12 +247,12 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     };
 
     // Tree view
-    auto tree_result = tree_view(
-        context, tree_pair, cached_roots, view_config,
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), expand()})
-            .with_custom_background(theme.background)
-            .with_debug_name("file_tree"));
+    auto tree_result =
+        tree_view(context, tree_pair, cached_roots, view_config,
+                  ComponentConfig{}
+                      .with_size(ComponentSize{percent(1.0f), expand()})
+                      .with_custom_background(theme.background)
+                      .with_debug_name("file_tree"));
 
     // Invalidate children cache when a directory is expanded/collapsed
     if (tree_result) {

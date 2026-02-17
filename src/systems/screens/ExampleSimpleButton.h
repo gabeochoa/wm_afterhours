@@ -2,8 +2,8 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../ExampleScreenRegistry.h"
 #include "../../theme_presets.h"
+#include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 
 using namespace afterhours::ui;
@@ -13,11 +13,11 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
   int button_click_count = 0;
 
   // Playful candy-like color scheme
-  afterhours::Color bg_warm{255, 245, 235, 255};      // Warm cream
-  afterhours::Color card_white{255, 255, 255, 255};   // Pure white
-  afterhours::Color btn_coral{255, 115, 105, 255};    // Vibrant coral
-  afterhours::Color text_dark{55, 50, 60, 255};       // Dark text
-  afterhours::Color text_muted{140, 130, 145, 255};   // Muted text
+  afterhours::Color bg_warm{255, 245, 235, 255};       // Warm cream
+  afterhours::Color card_white{255, 255, 255, 255};    // Pure white
+  afterhours::Color btn_coral{255, 115, 105, 255};     // Vibrant coral
+  afterhours::Color text_dark{55, 50, 60, 255};        // Dark text
+  afterhours::Color text_muted{140, 130, 145, 255};    // Muted text
   afterhours::Color confetti_pink{255, 180, 190, 255}; // Confetti color
   afterhours::Color confetti_blue{160, 200, 255, 255}; // Confetti color
   afterhours::Color confetti_mint{170, 235, 200, 255}; // Confetti color
@@ -25,11 +25,14 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
 
   // Layout configuration - all spacing/sizing in one place
   static constexpr float card_width = 400.0f;
-  static constexpr float card_height = 440.0f;  // Increased for better bottom padding
-  static constexpr float card_padding = 24.0f;  // Consistent card padding
-  static constexpr float section_gap = 20.0f;   // Gap between major sections
-  static constexpr float element_gap = 12.0f;   // Gap between elements within sections
-  static constexpr float divider_margin_y = 18.0f;  // Vertical breathing room for divider
+  static constexpr float card_height =
+      440.0f; // Increased for better bottom padding
+  static constexpr float card_padding = 24.0f; // Consistent card padding
+  static constexpr float section_gap = 20.0f;  // Gap between major sections
+  static constexpr float element_gap =
+      12.0f; // Gap between elements within sections
+  static constexpr float divider_margin_y =
+      18.0f; // Vertical breathing room for divider
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -59,7 +62,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(ComponentSize{pixels(dot_size), pixels(dot_size)})
               .with_absolute_position(screen_width * dot_positions[i][0],
-                              screen_height * dot_positions[i][1])
+                                      screen_height * dot_positions[i][1])
               .with_custom_background(
                   afterhours::colors::opacity_pct(confetti[i % 4], 0.6f))
               .with_rounded_corners(RoundedCorners())
@@ -88,8 +91,10 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_label("Simple Button Demo")
-            .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(36)})
-            .with_absolute_position(card_x + card_padding, card_y + card_padding + 4.0f)
+            .with_size(
+                ComponentSize{pixels(card_w - card_padding * 2), pixels(36)})
+            .with_absolute_position(card_x + card_padding,
+                                    card_y + card_padding + 4.0f)
             .with_font("Gaegu-Bold", h720(28.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
@@ -98,8 +103,10 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 3),
         ComponentConfig{}
             .with_label("Go ahead, give it a click!")
-            .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(22)})
-            .with_absolute_position(card_x + card_padding, card_y + card_padding + 42.0f)
+            .with_size(
+                ComponentSize{pixels(card_w - card_padding * 2), pixels(22)})
+            .with_absolute_position(card_x + card_padding,
+                                    card_y + card_padding + 42.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center));
@@ -108,7 +115,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     float button_width = 360.0f;
     float button_height = 56.0f;
     float button_x = card_x + (card_w - button_width) / 2.0f;
-    float button_y = card_y + card_padding + 76.0f;  // After title and subtitle
+    float button_y = card_y + card_padding + 76.0f; // After title and subtitle
 
     auto button_result =
         button(context, mk(entity, 10),
@@ -158,8 +165,10 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 20),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(counter_width), pixels(counter_height)})
-            .with_absolute_position(card_x + (card_w - counter_width) / 2.0f, counter_y)
+            .with_size(
+                ComponentSize{pixels(counter_width), pixels(counter_height)})
+            .with_absolute_position(card_x + (card_w - counter_width) / 2.0f,
+                                    counter_y)
             .with_custom_background(
                 afterhours::colors::opacity_pct(counter_color, 0.12f))
             .with_rounded_corners(RoundedCorners())
@@ -170,7 +179,9 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(counter_text)
             .with_size(ComponentSize{pixels(counter_width - 10), pixels(32)})
-            .with_absolute_position(card_x + (card_w - (counter_width - 10)) / 2.0f, counter_y + 5.0f)
+            .with_absolute_position(card_x +
+                                        (card_w - (counter_width - 10)) / 2.0f,
+                                    counter_y + 5.0f)
             .with_font("Gaegu-Bold", h720(22.0f))
             .with_custom_text_color(counter_color)
             .with_alignment(TextAlignment::Center));
@@ -186,8 +197,10 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 30),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(divider_width), pixels(1)})
-            .with_absolute_position(card_x + (card_w - divider_width) / 2.0f, divider_y)
-            .with_custom_background(afterhours::colors::opacity_pct(text_muted, 0.35f))
+            .with_absolute_position(card_x + (card_w - divider_width) / 2.0f,
+                                    divider_y)
+            .with_custom_background(
+                afterhours::colors::opacity_pct(text_muted, 0.35f))
             .with_debug_name("divider"));
 
     // "More Styles" label
@@ -196,7 +209,8 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 31),
         ComponentConfig{}
             .with_label("More Styles")
-            .with_size(ComponentSize{pixels(card_w - card_padding * 2), pixels(20)})
+            .with_size(
+                ComponentSize{pixels(card_w - card_padding * 2), pixels(20)})
             .with_absolute_position(card_x + card_padding, more_styles_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_muted)
@@ -206,41 +220,43 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
     float small_btn_w = 170.0f;
     float small_btn_h = 44.0f;
     float small_btn_y = more_styles_y + section_gap + 8.0f;
-    float btn_gap = 10.0f;  // Gap between buttons
+    float btn_gap = 10.0f; // Gap between buttons
     float left_btn_x = card_x + (card_w / 2.0f) - small_btn_w - btn_gap / 2.0f;
     float right_btn_x = card_x + (card_w / 2.0f) + btn_gap / 2.0f;
 
-    button(context, mk(entity, 32),
-           ComponentConfig{}
-               .with_label("Secondary")
-               .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
-               .with_absolute_position(left_btn_x, small_btn_y)
-               .with_custom_background(secondary_btn)
-               .with_soft_shadow(3.0f, 4.0f, 10.0f,
-                                 afterhours::Color{80, 160, 180, 40})
-               .with_font("Gaegu-Bold", h720(18.0f))
-               .with_custom_text_color(card_white)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.4f)
-               .with_alignment(TextAlignment::Center)
-               .with_padding(Spacing::sm));
+    button(
+        context, mk(entity, 32),
+        ComponentConfig{}
+            .with_label("Secondary")
+            .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
+            .with_absolute_position(left_btn_x, small_btn_y)
+            .with_custom_background(secondary_btn)
+            .with_soft_shadow(3.0f, 4.0f, 10.0f,
+                              afterhours::Color{80, 160, 180, 40})
+            .with_font("Gaegu-Bold", h720(18.0f))
+            .with_custom_text_color(card_white)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.4f)
+            .with_alignment(TextAlignment::Center)
+            .with_padding(Spacing::sm));
 
     // Outline button style - add subtle shadow for depth consistency
-    button(context, mk(entity, 33),
-           ComponentConfig{}
-               .with_label("Outline")
-               .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
-               .with_absolute_position(right_btn_x, small_btn_y)
-               .with_custom_background(card_white)
-               .with_border(outline_border, 2.0f)
-               .with_soft_shadow(2.0f, 3.0f, 8.0f,
-                                 afterhours::Color{100, 90, 110, 25})
-               .with_font("Gaegu-Bold", h720(18.0f))
-               .with_custom_text_color(text_dark)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.4f)
-               .with_alignment(TextAlignment::Center)
-               .with_padding(Spacing::sm));
+    button(
+        context, mk(entity, 33),
+        ComponentConfig{}
+            .with_label("Outline")
+            .with_size(ComponentSize{pixels(small_btn_w), pixels(small_btn_h)})
+            .with_absolute_position(right_btn_x, small_btn_y)
+            .with_custom_background(card_white)
+            .with_border(outline_border, 2.0f)
+            .with_soft_shadow(2.0f, 3.0f, 8.0f,
+                              afterhours::Color{100, 90, 110, 25})
+            .with_font("Gaegu-Bold", h720(18.0f))
+            .with_custom_text_color(text_dark)
+            .with_rounded_corners(RoundedCorners())
+            .with_roundness(0.4f)
+            .with_alignment(TextAlignment::Center)
+            .with_padding(Spacing::sm));
 
     // Small pill buttons row - with subtle shadows for visual consistency
     float pill_btn_w = 105.0f;
@@ -268,7 +284,8 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Pill")
                .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
-               .with_absolute_position(pill_start_x + pill_btn_w + pill_gap, pill_y)
+               .with_absolute_position(pill_start_x + pill_btn_w + pill_gap,
+                                       pill_y)
                .with_custom_background(confetti_pink)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{220, 150, 160, 35})
@@ -282,7 +299,8 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Buttons")
                .with_size(ComponentSize{pixels(pill_btn_w), pixels(pill_btn_h)})
-               .with_absolute_position(pill_start_x + (pill_btn_w + pill_gap) * 2, pill_y)
+               .with_absolute_position(
+                   pill_start_x + (pill_btn_w + pill_gap) * 2, pill_y)
                .with_custom_background(confetti_gold)
                .with_soft_shadow(2.0f, 3.0f, 6.0f,
                                  afterhours::Color{220, 185, 120, 35})
