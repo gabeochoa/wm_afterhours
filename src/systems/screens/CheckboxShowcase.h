@@ -12,26 +12,26 @@ using namespace afterhours::ui::imm;
 namespace cs_presets {
 
 inline ComponentConfig SectionHeaderConfig(const std::string &label,
-                                           float height, float font_size) {
+                                           Size height, Size font_size) {
   return ComponentConfig{}
       .with_label(label)
-      .with_size(ComponentSize{percent(1.0f), pixels(height)})
+      .with_size(ComponentSize{percent(1.0f), height})
       .with_background(Theme::Usage::Primary)
       .with_auto_text_color(true)
       .with_padding(Spacing::xs)
-      .with_font(UIComponent::DEFAULT_FONT, pixels(font_size))
+      .with_font(UIComponent::DEFAULT_FONT, font_size)
       .with_skip_tabbing(true);
 }
 
 inline ComponentConfig CheckboxConfig(const std::string &label,
-                                      float font_size,
+                                      Size font_size,
                                       Theme::Usage bg = Theme::Usage::Primary) {
   return ComponentConfig{}
       .with_label(label)
-      .with_size(ComponentSize{percent(1.0f), pixels(44)})
+      .with_size(ComponentSize{percent(1.0f), h720(44)})
       .with_background(bg)
       .with_checkbox_indicators("V", " ")
-      .with_font(UIComponent::DEFAULT_FONT, pixels(font_size));
+      .with_font(UIComponent::DEFAULT_FONT, font_size);
 }
 
 } // namespace cs_presets
@@ -62,56 +62,33 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
-
-    // Scale factor based on screen height (base: 720p)
-    float scale = static_cast<float>(screen_height) / 720.0f;
-
     // Responsive sizing using theme typography scale for visual hierarchy
-    // Title: font_size_xl (42px) - Screen titles
-    // Section headers: font_size_lg (32px) - Section headers
-    // Labels: font_size_md (20px) - Labels
-    // Body text: font_size_sm (16px) - Body text, values
-    const float TITLE_HEIGHT = 60.0f * scale;
-    const float TITLE_FONT = theme.font_size_xl() * scale; // 42px - largest
-    const float HEADER_HEIGHT = 40.0f * scale;
-    const float HEADER_FONT =
-        theme.font_size_lg() * 0.75f * scale; // 24px - section headers
-    const float CHECKBOX_FONT = theme.font_size_md() * scale; // 20px - labels
-    const float STATUS_HEIGHT = 44.0f * scale;
-    const float STATUS_FONT = theme.font_size_sm() * scale; // 16px - body text
+    const Size TITLE_HEIGHT = h720(60.0f);
+    const Size TITLE_FONT = h720(theme.font_size_xl());
+    const Size HEADER_HEIGHT = h720(40.0f);
+    const Size HEADER_FONT = h720(theme.font_size_lg() * 0.75f);
+    const Size CHECKBOX_FONT = h720(theme.font_size_md());
+    const Size STATUS_HEIGHT = h720(44.0f);
+    const Size STATUS_FONT = h720(theme.font_size_sm());
 
     using namespace cs_presets;
 
-    // Left: 3 headers + 3 labeled checkboxes + 1 no-label row + 2 disabled
-    // Right: 2 headers + 7 checkboxes (all use pixels(44) height)
-    float left_content = 3 * HEADER_HEIGHT + 6 * 44.0f + 24.0f * scale;
-    float right_content = 2 * HEADER_HEIGHT + 7 * 44.0f + 24.0f * scale;
-    float column_content_height = std::max(left_content, right_content);
-
-    // Card sized to fit content tightly
-    float card_content = TITLE_HEIGHT + column_content_height + STATUS_HEIGHT;
-    float card_height = card_content + 8.0f * scale;
-    float card_width = screen_width * 0.85f;
-
-    // Root - full screen background
-    div(context, mk(entity, 0),
+    // Root - full screen centering container
+    auto root = vstack(
+        context, mk(entity, 0),
         ComponentConfig{}
             .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
+                ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_background(Theme::Usage::Background)
+            .with_justify_content(JustifyContent::Center)
+            .with_align_items(AlignItems::Center)
             .with_debug_name("bg"));
 
-    // Main card - centered
-    float card_x = (screen_width - card_width) / 2.0f;
-    float card_y = (screen_height - card_height) / 2.0f;
-
+    // Main card - centered via parent flexbox
     auto card = vstack(
-        context, mk(entity, 1),
+        context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position(card_x, card_y)
+            .with_size(ComponentSize{screen_pct(0.85f), children()})
             .with_background(Theme::Usage::Surface)
             .with_roundness(0.02f)
             .with_padding(Spacing::sm)
@@ -121,11 +98,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(card.ent(), 0),
         ComponentConfig{}
             .with_label("Checkbox Components")
-            .with_size(ComponentSize{percent(1.0f), pixels(TITLE_HEIGHT)})
+            .with_size(ComponentSize{percent(1.0f), TITLE_HEIGHT})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(TITLE_FONT))
+            .with_font(UIComponent::DEFAULT_FONT, TITLE_FONT)
             .with_alignment(TextAlignment::Center)
             .with_skip_tabbing(true));
 
@@ -133,7 +110,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto content = hstack(context, mk(card.ent(), 1),
                           ComponentConfig{}
                               .with_size(ComponentSize{
-                                  percent(1.0f), pixels(column_content_height)})
+                                  percent(1.0f), children()})
                               .with_justify_content(JustifyContent::SpaceAround)
                               .with_debug_name("content"));
 
@@ -141,7 +118,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         vstack(context, mk(content.ent(), 0),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
+                   .with_size(ComponentSize{percent(0.49f), children()})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
                    .with_padding(Spacing::xs)
@@ -167,19 +144,20 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto no_label_row = hstack(
         context, mk(left_col.ent(), 5),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(44 + 8.0f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(52.0f)})
             .with_justify_content(JustifyContent::SpaceAround)
             .with_align_items(AlignItems::Center));
 
-    float box_size = 32.0f * scale;
+    Size box_size = h720(32.0f);
+    Size box_font = h720(20.0f);
     // Add aria-labels via debug_name for accessibility identification
     primitive::toggle_button(
         context, mk(no_label_row.ent(), 0),
         ComponentConfig{}
             .with_label(no_label_1 ? "V" : " ")
-            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
+            .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::SYMBOL_FONT, pixels(20.0f * scale))
+            .with_font(UIComponent::SYMBOL_FONT, box_font)
             .with_auto_text_color(true)
             .with_debug_name("nl_option_1"),
         no_label_1);
@@ -188,9 +166,9 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(no_label_row.ent(), 1),
         ComponentConfig{}
             .with_label(no_label_2 ? "V" : " ")
-            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
+            .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::SYMBOL_FONT, pixels(20.0f * scale))
+            .with_font(UIComponent::SYMBOL_FONT, box_font)
             .with_auto_text_color(true)
             .with_debug_name("nl_option_2"),
         no_label_2);
@@ -199,9 +177,9 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(no_label_row.ent(), 2),
         ComponentConfig{}
             .with_label(no_label_3 ? "V" : " ")
-            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
+            .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::SYMBOL_FONT, pixels(20.0f * scale))
+            .with_font(UIComponent::SYMBOL_FONT, box_font)
             .with_auto_text_color(true)
             .with_debug_name("nl_option_3"),
         no_label_3);
@@ -210,9 +188,9 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         context, mk(no_label_row.ent(), 3),
         ComponentConfig{}
             .with_label(no_label_4 ? "V" : " ")
-            .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
+            .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::SYMBOL_FONT, pixels(20.0f * scale))
+            .with_font(UIComponent::SYMBOL_FONT, box_font)
             .with_auto_text_color(true)
             .with_debug_name("nl_option_4"),
         no_label_4);
@@ -232,30 +210,30 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     checkbox(context, mk(left_col.ent(), 7), disabled_checked,
              ComponentConfig{}
                  .with_label("Disabled ON")
-                 .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                 .with_size(ComponentSize{percent(1.0f), h720(44)})
                  .with_custom_background(disabled_bg)
                  .with_auto_text_color(true)
                  .with_disabled(true)
                  .with_opacity(0.5f)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, pixels(CHECKBOX_FONT)));
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT));
 
     checkbox(context, mk(left_col.ent(), 8), disabled_unchecked,
              ComponentConfig{}
                  .with_label("Disabled OFF")
-                 .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                 .with_size(ComponentSize{percent(1.0f), h720(44)})
                  .with_custom_background(disabled_bg)
                  .with_auto_text_color(true)
                  .with_disabled(true)
                  .with_opacity(0.5f)
                  .with_checkbox_indicators("V", " ")
-                 .with_font(UIComponent::DEFAULT_FONT, pixels(CHECKBOX_FONT)));
+                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT));
 
     // ========== RIGHT COLUMN ==========
     auto right_col =
         vstack(context, mk(content.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
+                   .with_size(ComponentSize{percent(0.49f), children()})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
                    .with_padding(Spacing::xs)
@@ -339,12 +317,12 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             context, mk(right_col.ent(), 6), ch_1,
             ComponentConfig{}
                 .with_label("Choice 1")
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), h720(44)})
                 .with_custom_background(dis_1 ? disabled_secondary_bg
                                               : theme.secondary)
                 .with_auto_text_color(true)
                 .with_checkbox_indicators("V", " ")
-                .with_font(UIComponent::DEFAULT_FONT, pixels(CHECKBOX_FONT))
+                .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
                 .with_disabled(dis_1)
                 .with_debug_name("ch_1"))) {
       if (ch_1)
@@ -357,12 +335,12 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             context, mk(right_col.ent(), 7), ch_2,
             ComponentConfig{}
                 .with_label("Choice 2")
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), h720(44)})
                 .with_custom_background(dis_2 ? disabled_secondary_bg
                                               : theme.secondary)
                 .with_auto_text_color(true)
                 .with_checkbox_indicators("V", " ")
-                .with_font(UIComponent::DEFAULT_FONT, pixels(CHECKBOX_FONT))
+                .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
                 .with_disabled(dis_2)
                 .with_debug_name("ch_2"))) {
       if (ch_2)
@@ -375,12 +353,12 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
             context, mk(right_col.ent(), 8), ch_3,
             ComponentConfig{}
                 .with_label("Choice 3")
-                .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                .with_size(ComponentSize{percent(1.0f), h720(44)})
                 .with_custom_background(dis_3 ? disabled_secondary_bg
                                               : theme.secondary)
                 .with_auto_text_color(true)
                 .with_checkbox_indicators("V", " ")
-                .with_font(UIComponent::DEFAULT_FONT, pixels(CHECKBOX_FONT))
+                .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
                 .with_disabled(dis_3)
                 .with_debug_name("ch_3"))) {
       if (ch_3)
@@ -398,11 +376,11 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(card.ent(), 2),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(STATUS_HEIGHT)})
+            .with_size(ComponentSize{percent(1.0f), STATUS_HEIGHT})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(STATUS_FONT))
+            .with_font(UIComponent::DEFAULT_FONT, STATUS_FONT)
             .with_alignment(TextAlignment::Center)
             .with_skip_tabbing(true));
   }
