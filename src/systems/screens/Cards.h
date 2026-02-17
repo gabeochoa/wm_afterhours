@@ -9,6 +9,59 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
+namespace cards_presets {
+
+inline ComponentConfig CardConfig(const std::string &label,
+                                  Theme::Usage bg = Theme::Usage::Surface) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{pixels(140), pixels(100)})
+      .with_background(bg)
+      .with_padding(Spacing::md)
+      .with_margin(Spacing::sm)
+      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+      .with_auto_text_color(true)
+      .with_skip_tabbing(true);
+}
+
+inline ComponentConfig InnerCardConfig(const std::string &label,
+                                       Theme::Usage bg) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.30f), pixels(55)})
+      .with_background(bg)
+      .with_auto_text_color(true)
+      .with_padding(Spacing::xs)
+      .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+      .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
+      .with_skip_tabbing(true);
+}
+
+inline ComponentConfig PanelTitleConfig(const std::string &label) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.95f), pixels(32)})
+      .with_background(Theme::Usage::Surface)
+      .with_auto_text_color(true)
+      .with_padding(Spacing::xs)
+      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+      .with_alignment(TextAlignment::Left)
+      .with_skip_tabbing(true);
+}
+
+inline ComponentConfig SwatchConfig(const std::string &label,
+                                    Theme::Usage bg) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.13f), pixels(44)})
+      .with_background(bg)
+      .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+      .with_margin(Spacing::xs)
+      .with_skip_tabbing(true);
+}
+
+} // namespace cards_presets
+
 struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -17,6 +70,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
     UIStylingDefaults::get().set_default_font("Gaegu-Bold", pixels(18.0f));
+
+    using namespace cards_presets;
 
     // Main container background - centered with padding
     auto root =
@@ -70,56 +125,18 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Card 1: Basic surface card (simple) - standardized height
-    div(context, mk(row1.ent(), 0),
-        ComponentConfig{}
-            .with_label("Surface")
-            .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::md)
-            .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_auto_text_color(true)
-            .with_skip_tabbing(true));
-
+    div(context, mk(row1.ent(), 0), CardConfig("Surface"));
     // Card 2: Primary colored card (simple)
-    div(context, mk(row1.ent(), 1),
-        ComponentConfig{}
-            .with_label("Primary")
-            .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_background(Theme::Usage::Primary)
-            .with_padding(Spacing::md)
-            .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_auto_text_color(true)
-            .with_skip_tabbing(true));
-
+    div(context, mk(row1.ent(), 1), CardConfig("Primary", Theme::Usage::Primary));
     // Card 3: Accent card with sharp corners
     div(context, mk(row1.ent(), 2),
-        ComponentConfig{}
-            .with_label("Sharp")
-            .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_background(Theme::Usage::Accent)
-            .with_padding(Spacing::md)
-            .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_auto_text_color(true)
-            .disable_rounded_corners()
-            .with_skip_tabbing(true));
-
+        CardConfig("Sharp", Theme::Usage::Accent).disable_rounded_corners());
     // Card 4: Secondary card with custom corners
     div(context, mk(row1.ent(), 3),
-        ComponentConfig{}
-            .with_label("Custom")
-            .with_size(ComponentSize{pixels(140), pixels(100)})
-            .with_background(Theme::Usage::Secondary)
-            .with_padding(Spacing::md)
-            .with_margin(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_auto_text_color(true)
+        CardConfig("Custom", Theme::Usage::Secondary)
             .with_rounded_corners(
                 RoundedCorners().all_sharp().round(TOP_LEFT).round(
-                    BOTTOM_RIGHT))
-            .with_skip_tabbing(true));
+                    BOTTOM_RIGHT)));
 
     // Row 2: Nested cards
     auto row2 = hstack(context, mk(main_container.ent(), 2),
@@ -156,16 +173,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_roundness(0.08f)
                    .with_debug_name("nested_container"));
 
-    div(context, mk(nested_container.ent(), 0),
-        ComponentConfig{}
-            .with_label("Nested Cards")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true));
+    div(context, mk(nested_container.ent(), 0), PanelTitleConfig("Nested Cards"));
 
     // Inner cards row - prevent wrapping, ensure enough height for cards
     auto inner_row =
@@ -179,39 +187,13 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Inner card 1 - sized proportionally to fit within container
     div(context, mk(inner_row.ent(), 0),
-        ComponentConfig{}
-            .with_label("Item 1")
-            .with_size(ComponentSize{percent(0.30f), pixels(55)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
-            .with_skip_tabbing(true));
-
+        InnerCardConfig("Item 1", Theme::Usage::Primary));
     // Inner card 2
     div(context, mk(inner_row.ent(), 1),
-        ComponentConfig{}
-            .with_label("Item 2")
-            .with_size(ComponentSize{percent(0.30f), pixels(55)})
-            .with_background(Theme::Usage::Secondary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
-            .with_skip_tabbing(true));
-
+        InnerCardConfig("Item 2", Theme::Usage::Secondary));
     // Inner card 3
     div(context, mk(inner_row.ent(), 2),
-        ComponentConfig{}
-            .with_label("Item 3")
-            .with_size(ComponentSize{percent(0.30f), pixels(55)})
-            .with_background(Theme::Usage::Accent)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
-            .with_skip_tabbing(true));
+        InnerCardConfig("Item 3", Theme::Usage::Accent));
 
     // Info panel with different opacity
     auto info_panel =
@@ -226,15 +208,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("info_panel"));
 
     div(context, mk(info_panel.ent(), 0),
-        ComponentConfig{}
-            .with_label("Semi-Transparent")
-            .with_size(ComponentSize{percent(0.95f), pixels(32)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true));
+        PanelTitleConfig("Semi-Transparent"));
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
@@ -267,49 +241,15 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     // Color swatches - with gaps between them
     div(context, mk(row3.ent(), 1),
-        ComponentConfig{}
-            .with_label("Primary")
-            .with_size(ComponentSize{percent(0.13f), pixels(44)})
-            .with_background(Theme::Usage::Primary)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Spacing::xs)
-            .with_skip_tabbing(true));
-
+        SwatchConfig("Primary", Theme::Usage::Primary));
     div(context, mk(row3.ent(), 2),
-        ComponentConfig{}
-            .with_label("Secondary")
-            .with_size(ComponentSize{percent(0.13f), pixels(44)})
-            .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Spacing::xs)
-            .with_skip_tabbing(true));
-
+        SwatchConfig("Secondary", Theme::Usage::Secondary));
     div(context, mk(row3.ent(), 3),
-        ComponentConfig{}
-            .with_label("Accent")
-            .with_size(ComponentSize{percent(0.13f), pixels(44)})
-            .with_background(Theme::Usage::Accent)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Spacing::xs)
-            .with_skip_tabbing(true));
-
+        SwatchConfig("Accent", Theme::Usage::Accent));
     div(context, mk(row3.ent(), 4),
-        ComponentConfig{}
-            .with_label("Surface")
-            .with_size(ComponentSize{percent(0.13f), pixels(44)})
-            .with_background(Theme::Usage::Surface)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Spacing::xs)
-            .with_skip_tabbing(true));
-
+        SwatchConfig("Surface", Theme::Usage::Surface));
     div(context, mk(row3.ent(), 5),
-        ComponentConfig{}
-            .with_label("Background")
-            .with_size(ComponentSize{percent(0.13f), pixels(44)})
-            .with_background(Theme::Usage::Background)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Spacing::xs)
-            .with_skip_tabbing(true));
+        SwatchConfig("Background", Theme::Usage::Background));
   }
 };
 

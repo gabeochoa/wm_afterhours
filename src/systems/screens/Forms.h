@@ -10,6 +10,50 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
+namespace forms_presets {
+
+inline ComponentConfig CheckboxConfig(const std::string &label) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.92f), pixels(34)})
+      .with_background(Theme::Usage::Primary)
+      .with_font_size(14.0f)
+      .with_margin(Spacing::xs);
+}
+
+inline ComponentConfig SectionHeaderConfig(
+    const std::string &label,
+    Theme::Usage bg = Theme::Usage::Primary) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.95f), pixels(36)})
+      .with_background(bg)
+      .with_auto_text_color(true)
+      .with_padding(Spacing::xs)
+      .with_font_size(20.0f)
+      .with_skip_tabbing(true);
+}
+
+inline ComponentConfig SliderConfig(const std::string &label,
+                                    Theme::Usage bg = Theme::Usage::Primary) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.95f), pixels(44)})
+      .with_background(bg)
+      .with_font_size(14.0f)
+      .with_margin(Spacing::xs);
+}
+
+inline ComponentConfig ProgressBarConfig(const std::string &label) {
+  return ComponentConfig{}
+      .with_label(label)
+      .with_size(ComponentSize{percent(0.95f), pixels(28)})
+      .with_font_size(pixels(16.0f))
+      .with_margin(Spacing::xs);
+}
+
+} // namespace forms_presets
+
 struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
   // Slider values
   float volume_slider = 0.75f;
@@ -52,6 +96,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Adaptive;
     UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
                                               pixels(16.0f));
+
+    using namespace forms_presets;
 
     // Main container background - centered on screen
     auto root =
@@ -107,78 +153,39 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("left_column"));
 
     // Sliders section header - font_size_md for section headers
-    div(context, mk(left_col.ent(), 0),
-        ComponentConfig{}
-            .with_label("Sliders")
-            .with_size(ComponentSize{percent(0.95f), pixels(36)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_md()) // 20px - section headers
-            .with_skip_tabbing(true));
+    div(context, mk(left_col.ent(), 0), SectionHeaderConfig("Sliders"));
 
     // Volume slider - use font_size_sm for control labels, increased handle
     // visibility
     slider(context, mk(left_col.ent(), 1), volume_slider,
-           ComponentConfig{}
-               .with_label("Volume")
-               .with_size(ComponentSize{percent(0.95f), pixels(44)})
-               .with_background(Theme::Usage::Primary)
-               .with_font_size(theme.font_size_sm()) // 16px - labels
-               .with_margin(Spacing::xs)
-               .with_debug_name("volume_slider"),
+           SliderConfig("Volume").with_debug_name("volume_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
     // Brightness slider - increased handle visibility
     slider(context, mk(left_col.ent(), 2), brightness_slider,
-           ComponentConfig{}
-               .with_label("Brightness")
-               .with_size(ComponentSize{percent(0.95f), pixels(44)})
-               .with_background(Theme::Usage::Accent)
-               .with_font_size(theme.font_size_sm()) // 16px - labels
-               .with_margin(Spacing::xs)
+           SliderConfig("Brightness", Theme::Usage::Accent)
                .with_debug_name("brightness_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
     // Difficulty slider - increased handle visibility
     slider(context, mk(left_col.ent(), 3), difficulty_slider,
-           ComponentConfig{}
-               .with_label("Difficulty")
-               .with_size(ComponentSize{percent(0.95f), pixels(44)})
-               .with_background(Theme::Usage::Secondary)
-               .with_font_size(theme.font_size_sm()) // 16px - labels
-               .with_margin(Spacing::xs)
+           SliderConfig("Difficulty", Theme::Usage::Secondary)
                .with_debug_name("difficulty_slider"),
            SliderHandleValueLabelPosition::WithLabel);
 
     // Progress Bars section header - font_size_md for section headers
     div(context, mk(left_col.ent(), 4),
-        ComponentConfig{}
-            .with_label("Progress Bars")
-            .with_size(ComponentSize{percent(0.95f), pixels(36)})
-            .with_background(Theme::Usage::Accent)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_md()) // 20px - section headers
-            .with_skip_tabbing(true));
+        SectionHeaderConfig("Progress Bars", Theme::Usage::Accent));
 
     // Progress bar showing volume value (dynamic)
     progress_bar(context, mk(left_col.ent(), 5), volume_slider,
-                 ComponentConfig{}
-                     .with_label("Audio Level")
-                     .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font_size(pixels(16.0f))
-                     .with_margin(Spacing::xs)
+                 ProgressBarConfig("Audio Level")
                      .with_debug_name("volume_progress"),
                  ProgressBarLabelStyle::Percentage);
 
     // Progress bar with custom range
     progress_bar(context, mk(left_col.ent(), 6), 75.f,
-                 ComponentConfig{}
-                     .with_label("Level Progress")
-                     .with_size(ComponentSize{percent(0.95f), pixels(28)})
-                     .with_font_size(pixels(16.0f))
-                     .with_margin(Spacing::xs)
+                 ProgressBarConfig("Level Progress")
                      .with_debug_name("level_progress"),
                  ProgressBarLabelStyle::Fraction, 0.f, 100.f);
 
@@ -193,130 +200,46 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_overflow(Overflow::Scroll, Axis::Y));
 
     // Checkboxes section header - font_size_md for section headers
-    div(context, mk(right_col.ent(), 0),
-        ComponentConfig{}
-            .with_label("Checkboxes")
-            .with_size(ComponentSize{percent(0.95f), pixels(36)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_md()) // 20px - section headers
-            .with_skip_tabbing(true));
+    div(context, mk(right_col.ent(), 0), SectionHeaderConfig("Checkboxes"));
 
     // Audio checkboxes - font_size_sm for checkbox labels, standardized
     // checkmark color via Primary
     checkbox(context, mk(right_col.ent(), 1), enable_music,
-             ComponentConfig{}
-                 .with_label("Music")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm()) // 16px - labels
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Music"));
     checkbox(context, mk(right_col.ent(), 2), enable_sfx,
-             ComponentConfig{}
-                 .with_label("SFX")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm()) // 16px - labels
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("SFX"));
     // Display checkboxes - standardized checkmark color via Primary
     checkbox(context, mk(right_col.ent(), 3), fullscreen,
-             ComponentConfig{}
-                 .with_label("Fullscreen")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm()) // 16px - labels
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Fullscreen"));
     checkbox(context, mk(right_col.ent(), 4), vsync,
-             ComponentConfig{}
-                 .with_label("V-Sync")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm()) // 16px - labels
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("V-Sync"));
     checkbox(context, mk(right_col.ent(), 5), show_fps,
-             ComponentConfig{}
-                 .with_label("Show FPS")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm()) // 16px - labels
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Show FPS"));
     // Additional graphics/gameplay checkboxes (make content overflow for
     // scroll)
     checkbox(context, mk(right_col.ent(), 6), show_hud,
-             ComponentConfig{}
-                 .with_label("Show HUD")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Show HUD"));
     checkbox(context, mk(right_col.ent(), 7), auto_save,
-             ComponentConfig{}
-                 .with_label("Auto Save")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Auto Save"));
     checkbox(context, mk(right_col.ent(), 8), subtitles,
-             ComponentConfig{}
-                 .with_label("Subtitles")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Subtitles"));
     checkbox(context, mk(right_col.ent(), 9), motion_blur,
-             ComponentConfig{}
-                 .with_label("Motion Blur")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Motion Blur"));
     checkbox(context, mk(right_col.ent(), 10), anti_aliasing,
-             ComponentConfig{}
-                 .with_label("Anti-Aliasing")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Anti-Aliasing"));
     checkbox(context, mk(right_col.ent(), 11), ambient_occlusion,
-             ComponentConfig{}
-                 .with_label("Ambient Occlusion")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
-
+             CheckboxConfig("Ambient Occlusion"));
     checkbox(context, mk(right_col.ent(), 12), bloom_effect,
-             ComponentConfig{}
-                 .with_label("Bloom Effect")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_font_size(theme.font_size_sm())
-                 .with_margin(Spacing::xs));
+             CheckboxConfig("Bloom Effect"));
 
     // Disabled checkbox example - standardized checkmark color via Primary
     // Enhanced disabled styling: reduced opacity for stronger visual
     // differentiation
     bool disabled_value = true;
     checkbox(context, mk(right_col.ent(), 13), disabled_value,
-             ComponentConfig{}
-                 .with_label("Disabled")
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Primary)
+             CheckboxConfig("Disabled")
                  .with_disabled(true)
-                 .with_opacity(0.5f)
-                 .with_font_size(theme.font_size_sm()) // 16px - labels
-                 .with_margin(Spacing::xs));
+                 .with_opacity(0.5f));
 
     // Language dropdown - font_size_sm for dropdown values
     dropdown(context, mk(right_col.ent(), 14), languages, language_index,
