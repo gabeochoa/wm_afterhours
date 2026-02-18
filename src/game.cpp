@@ -1008,10 +1008,16 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     // checks in the next frame after rendering has populated it
     systems.run(dt);
 
-    // Fail fast on first error
+    // Fail fast on first error (single-script mode) or skip to next script
+    // (batch mode)
     if (afterhours::testing::get_command_error_count() > 0) {
-      log_warn("Stopping test early due to error");
-      break;
+      if (runner.is_batch_mode()) {
+        runner.skip_current_script();
+        afterhours::testing::reset_command_error_count();
+      } else {
+        log_warn("Stopping test early due to error");
+        break;
+      }
     }
 
     // Screen navigation via test input (AFTER E2E commands are processed)
