@@ -34,10 +34,8 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.08f;
     context.theme = theme;
 
-    auto *res = afterhours::EntityHelper::get_singleton_cmp<
-        afterhours::window_manager::ProvidesCurrentResolution>();
-    int screen_width = res ? res->current_resolution.width : 1280;
-    int screen_height = res ? res->current_resolution.height : 720;
+    int screen_width = Settings::get().get_screen_width();
+    int screen_height = Settings::get().get_screen_height();
 
     // Full background
     div(context, mk(entity, 0),

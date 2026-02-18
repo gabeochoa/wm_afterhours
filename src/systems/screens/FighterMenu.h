@@ -134,10 +134,8 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    auto *res = afterhours::EntityHelper::get_singleton_cmp<
-        afterhours::window_manager::ProvidesCurrentResolution>();
-    int screen_w = res ? res->current_resolution.width : 1280;
-    int screen_h = res ? res->current_resolution.height : 720;
+    int screen_w = Settings::get().get_screen_width();
+    int screen_h = Settings::get().get_screen_height();
     auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
 
     // Use layout config for all positioning

@@ -26,9 +26,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::cozy_kraft();
     context.theme = theme;
 
-    auto *res = afterhours::EntityHelper::get_singleton_cmp<
-        afterhours::window_manager::ProvidesCurrentResolution>();
-    int screen_width = res ? res->current_resolution.width : 1280;
+    int screen_width = Settings::get().get_screen_width();
     float col_width = 520.0f;
     float card_height = 500.0f;
     float col_gap = 40.0f;

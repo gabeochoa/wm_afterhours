@@ -274,10 +274,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 4;
     context.theme = theme;
 
-    auto *pcr = afterhours::EntityHelper::get_singleton_cmp<
-        afterhours::window_manager::ProvidesCurrentResolution>();
-    int screen_w = pcr ? pcr->width() : Settings::get().get_screen_width();
-    int screen_h = pcr ? pcr->height() : Settings::get().get_screen_height();
+    int screen_w = Settings::get().get_screen_width();
+    int screen_h = Settings::get().get_screen_height();
     float sw = static_cast<float>(screen_w);
     float sh = static_cast<float>(screen_h);
 
