@@ -50,7 +50,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 
   void render_card(UIContext<InputAction> &context, afterhours::Entity &parent,
-                   int id, const Card &card, const Theme &theme) {
+                   int id, const Card &card, const Theme &) {
     // Card with left color accent border
     div(context, mk(parent, id),
         ComponentConfig{}

@@ -26,7 +26,6 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto orange = afterhours::Color{250, 140, 40, 255};
     const auto purple = afterhours::Color{160, 100, 255, 255};
     const auto panel_bg = afterhours::Color{20, 26, 40, 255};
-    const auto dark_overlay = afterhours::Color{0, 0, 0, 140};
     const auto white = afterhours::Color{255, 255, 255, 255};
     const float sw = (float)Settings::get().get_screen_width();
 

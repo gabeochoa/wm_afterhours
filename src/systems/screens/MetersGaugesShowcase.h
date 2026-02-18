@@ -138,7 +138,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(0.75f), percent(0.7f)})
                        .with_custom_background(meters[m].color)
-                       .with_color_usage(Theme::Usage::Custom)
+                       .with_background(Theme::Usage::Custom)
                        .with_font(FONT, pixels(14.0f))
                        .with_skip_tabbing(true)
                        .with_rounded_corners(corners)

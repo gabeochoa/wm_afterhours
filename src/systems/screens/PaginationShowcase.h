@@ -113,7 +113,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < pages.size(); i++) {
       bool selected = (i == page_idx);
       button(
-          context, mk(entity, 101 + i),
+          context, mk(entity, 101 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(pages[i])
               .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
@@ -187,7 +187,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < difficulties.size(); i++) {
       bool selected = (i == difficulty_idx);
       button(
-          context, mk(entity, 201 + i),
+          context, mk(entity, 201 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(difficulties[i])
               .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
@@ -261,7 +261,7 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < color_options.size(); i++) {
       bool selected = (i == color_idx);
       button(
-          context, mk(entity, 301 + i),
+          context, mk(entity, 301 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(color_options[i])
               .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})

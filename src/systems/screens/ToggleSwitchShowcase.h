@@ -61,7 +61,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("Settings")
             .with_size(ComponentSize{percent(1.0f), pixels(44)})
             .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
-            .with_color_usage(Theme::Usage::None)
+            .with_background(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::medium()})
             .with_skip_tabbing(true));
 
@@ -72,7 +72,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_color_usage(Theme::Usage::None)
+            .with_background(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
@@ -130,7 +130,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_color_usage(Theme::Usage::None)
+            .with_background(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 
@@ -154,7 +154,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(32)})
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font_muted)
-            .with_color_usage(Theme::Usage::None)
+            .with_background(Theme::Usage::None)
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
             .with_skip_tabbing(true));
 

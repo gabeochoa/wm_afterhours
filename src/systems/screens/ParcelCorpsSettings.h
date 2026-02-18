@@ -566,7 +566,6 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   void render_row_bg(UIContext<InputAction> &context,
                      afterhours::Entity &entity, int id, float x, float y,
                      float w, float h, const std::string &name) {
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     div(context, mk(entity, id),
         ComponentConfig{}
             .with_720p_size(w, h)
@@ -582,7 +581,6 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                             afterhours::Entity &entity, int id, float x,
                             float y, float w, float h,
                             const std::string &name) {
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     return button(context, mk(entity, id),
                   ComponentConfig{}
                       .with_720p_size(w, h)
@@ -834,7 +832,6 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                             afterhours::Entity &entity, int base_id, float x,
                             float y, float w, float h, const std::string &label,
                             float &value, afterhours::Color icon_color) {
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
     render_row_bg(context, entity, base_id, x, y, w, h,
                   "volume_row_" + std::to_string(base_id));
     render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,

@@ -27,7 +27,6 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto purple = afterhours::Color{160, 100, 255, 255};
     const auto blue = afterhours::Color{70, 140, 255, 255};
     const auto panel_bg = afterhours::Color{30, 38, 58, 255};
-    const auto dark_bg = afterhours::Color{14, 18, 30, 255};
 
     // Full-screen root column
     auto root =

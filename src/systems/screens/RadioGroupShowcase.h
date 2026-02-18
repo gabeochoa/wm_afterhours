@@ -54,7 +54,7 @@ ElementResult custom_radio_group(
       row_size.y_axis = pixels(touch_target_sz);
     }
     auto row = button(
-        ctx, mk(t.ent(), 100 + i),
+        ctx, mk(t.ent(), 100 + static_cast<int>(i)),
         ComponentConfig{}
             .with_size(row_size)
             .with_label("")

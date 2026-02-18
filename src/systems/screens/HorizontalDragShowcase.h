@@ -65,7 +65,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
 
   void render_row(UIContext<InputAction> &context, afterhours::Entity &parent,
                   int id, const std::string &label, std::vector<Tag> &items,
-                  afterhours::Color accent, const Theme &theme, int row_index) {
+                  afterhours::Color accent, const Theme &, int row_index) {
     // Row container
     auto row =
         vstack(context, mk(parent, id),
