@@ -15,7 +15,7 @@ expect_text "Modal Dialogs"
 # Test 1: Click to open modal and validate it opened
 # =========================================================================
 # Click the Simple Modal button
-focus_component btn_simple
+focus_ui btn_simple
 wait 0.2
 key ENTER
 wait 0.5
@@ -51,7 +51,7 @@ expect_text "Basic Modals:"
 expect_text "BG Clicks: 0"
 
 # Open the modal
-focus_component btn_simple
+focus_ui btn_simple
 wait 0.2
 key ENTER
 wait 0.5
@@ -62,7 +62,7 @@ expect_text "Basic Modal"
 # Try to click the background button (should NOT work - modal blocks input)
 # We'll simulate clicking at the location of the background button
 # First, get focus to background button - but it should be blocked
-focus_component btn_background
+focus_ui btn_background
 wait 0.2
 key ENTER
 wait 0.3
@@ -80,7 +80,7 @@ screenshot modals_input_blocking_verified
 # Test 4: Click off modal (backdrop) to dismiss
 # =========================================================================
 # Open the modal again
-focus_component btn_simple
+focus_ui btn_simple
 wait 0.2
 key ENTER
 wait 0.5
@@ -105,7 +105,7 @@ expect_text "Basic Modals:"
 # Test 5: Escape key closes modal
 # =========================================================================
 # Open a modal
-focus_component btn_simple
+focus_ui btn_simple
 wait 0.2
 key ENTER
 wait 0.5
@@ -128,7 +128,7 @@ goto_screen modals
 wait 0.3
 
 # Find and click the modal::confirm button
-focus_component btn_confirm
+focus_ui btn_confirm
 wait 0.2
 key ENTER
 wait 0.5
@@ -155,7 +155,7 @@ screenshot modals_confirm_cancelled
 # Test 7: Modal stacking
 # =========================================================================
 # Open the settings modal
-focus_component btn_stacked
+focus_ui btn_stacked
 wait 0.2
 key ENTER
 wait 0.5

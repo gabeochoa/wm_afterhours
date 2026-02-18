@@ -1,0 +1,148 @@
+# File Tree Showcase Test
+# Tests toolbar buttons (Home, Up, Refresh) and tree navigation
+# on the file tree browser component.
+
+# Navigate to the file tree screen
+goto_screen file_tree
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "File Tree"
+
+# Toolbar buttons should be visible
+expect_text "Home"
+expect_text "Up"
+expect_text "Refresh"
+
+# Status bar should show no selection
+expect_text "No selection"
+
+screenshot file_tree_initial
+
+# =========================================================================
+# Test 1: Click Home button
+# =========================================================================
+# Tab to the Home button and click it
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+# Tree should reload with current directory contents
+screenshot file_tree_after_home
+
+# =========================================================================
+# Test 2: Click Up button to navigate to parent directory
+# =========================================================================
+# Tab to the Up button
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+# Path should change to parent directory
+screenshot file_tree_after_up
+
+# =========================================================================
+# Test 3: Click Refresh button
+# =========================================================================
+# Tab to the Refresh button
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+# Directory listing should reload
+screenshot file_tree_after_refresh
+
+# =========================================================================
+# Test 4: Navigate to Home then interact with tree
+# =========================================================================
+# Go back to home first
+goto_screen file_tree
+wait 0.5
+
+# Click Home to reset
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+# Tab past toolbar buttons into the tree view
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+
+# Navigate within the tree using arrow keys
+key DOWN
+wait 0.2
+key DOWN
+wait 0.2
+
+# Select an item with Enter (expand if directory)
+key ENTER
+wait 0.5
+
+screenshot file_tree_item_selected
+
+# =========================================================================
+# Test 5: Arrow key navigation in tree
+# =========================================================================
+# Move up and down through tree entries
+key UP
+wait 0.2
+key UP
+wait 0.2
+key DOWN
+wait 0.2
+
+screenshot file_tree_navigated
+
+# =========================================================================
+# Test 6: Expand and collapse directory
+# =========================================================================
+# Try to expand a directory with Enter
+key ENTER
+wait 0.5
+
+screenshot file_tree_expanded
+
+# Collapse it by pressing Enter again
+key ENTER
+wait 0.5
+
+screenshot file_tree_collapsed
+
+# =========================================================================
+# Test 7: Verify toolbar buttons remain functional after navigation
+# =========================================================================
+# Navigate up twice via the Up button
+goto_screen file_tree
+wait 0.5
+
+key TAB
+wait 0.2
+# Skip Home
+key TAB
+wait 0.2
+# Click Up
+key ENTER
+wait 0.3
+# Click Up again (re-tab to Up button since screen refreshed)
+goto_screen file_tree
+wait 0.3
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot file_tree_final

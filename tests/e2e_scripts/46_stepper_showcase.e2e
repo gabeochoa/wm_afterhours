@@ -1,0 +1,171 @@
+# Stepper Showcase Test
+# Tests stepper navigation with arrow keys and verifies
+# that the card selector updates the displayed card.
+
+# Navigate to the stepper showcase screen
+goto_screen stepper_showcase
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "Stepper Showcase"
+expect_text "Stepper Variants"
+expect_text "Card Selector"
+
+# Left column: stepper labels
+expect_text "Resolution"
+expect_text "Quality"
+expect_text "Language"
+expect_text "Difficulty"
+expect_text "Framerate"
+
+# Default stepper values
+expect_text "2560x1440"
+expect_text "Medium"
+expect_text "English"
+expect_text "Normal"
+expect_text "60"
+
+# Right column: card display (default is Warrior at index 0)
+expect_text "Warrior"
+expect_text "Heavy armor, melee attacks, high defense."
+
+screenshot stepper_initial
+
+# =========================================================================
+# Test 1: Advance Resolution stepper with Right arrow
+# =========================================================================
+# Tab to the first stepper's right arrow button
+# Steppers have < and > buttons, so we need to tab to >
+key TAB
+wait 0.2
+# This should land on the Resolution stepper's < button
+key TAB
+wait 0.2
+# This should land on the Resolution stepper's > button
+key ENTER
+wait 0.3
+
+# Resolution should advance from 2560x1440 to 3840x2160
+screenshot stepper_resolution_changed
+
+# =========================================================================
+# Test 2: Advance Quality stepper
+# =========================================================================
+# Tab to the Quality stepper's > button
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Quality should advance from Medium to High
+screenshot stepper_quality_changed
+
+# =========================================================================
+# Test 3: Step backward with the < button
+# =========================================================================
+# Go back to Quality stepper's < button (Shift+Tab)
+key SHIFT+TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Quality should go back to Medium
+expect_text "Medium"
+
+screenshot stepper_quality_reversed
+
+# =========================================================================
+# Test 4: Navigate Language stepper
+# =========================================================================
+# Tab forward to Language stepper's > button
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Language should advance from English to Deutsch
+expect_text "Deutsch"
+
+screenshot stepper_language_changed
+
+# =========================================================================
+# Test 5: Card Selector stepper changes displayed card
+# =========================================================================
+# Tab through remaining steppers to reach the card selector
+# Skip Difficulty < and >, Framerate < and >, then card selector < and >
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+
+# Click > to advance from Warrior to Mage
+key ENTER
+wait 0.3
+
+expect_text "Mage"
+expect_text "Ranged spells, low defense, high damage."
+
+screenshot stepper_card_mage
+
+# =========================================================================
+# Test 6: Continue advancing card selector
+# =========================================================================
+# Press > again to go to Rogue
+key ENTER
+wait 0.3
+
+expect_text "Rogue"
+expect_text "Fast attacks, stealth, critical strikes."
+
+screenshot stepper_card_rogue
+
+# Advance one more time to Healer
+key ENTER
+wait 0.3
+
+expect_text "Healer"
+expect_text "Support class, restoration, shields."
+
+screenshot stepper_card_healer
+
+# =========================================================================
+# Test 7: Go back on card selector
+# =========================================================================
+# Shift+Tab to the < button
+key SHIFT+TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should go back to Rogue
+expect_text "Rogue"
+
+screenshot stepper_card_back_to_rogue
+
+# =========================================================================
+# Test 8: Verify all stepper labels remain visible
+# =========================================================================
+expect_text "Resolution"
+expect_text "Quality"
+expect_text "Language"
+expect_text "Difficulty"
+expect_text "Framerate"
+expect_text "Card Selector"
+
+screenshot stepper_final

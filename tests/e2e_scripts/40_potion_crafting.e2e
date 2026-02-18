@@ -1,0 +1,111 @@
+# Potion Crafting Screen Test
+# Tests tab switching, recipe selection, and brew interaction
+# on the fantasy alchemy crafting interface.
+
+# Navigate to the potion crafting screen
+goto_screen potion_crafting
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "Alchemist's Workshop"
+expect_text "Gold: 2,450"
+
+# Tabs should be visible
+expect_text "Recipes"
+expect_text "Inventory"
+expect_text "Journal"
+
+# Default selected recipe is Mana Elixir (index 1)
+expect_text "Brewing: Mana Elixir"
+expect_text "Restores 30 MP"
+expect_text "65% Brewed"
+
+# All recipes should be listed
+expect_text "Healing Potion"
+expect_text "Mana Elixir"
+expect_text "Fire Bomb"
+expect_text "Antidote"
+
+# Ingredient inventory should be visible
+expect_text "Ingredients"
+expect_text "Moonpetal"
+expect_text "Fire Root"
+expect_text "Sea Salt"
+
+# Status bar
+expect_text "Alchemy Level: 12"
+
+screenshot potion_crafting_initial
+
+# =========================================================================
+# Test 1: Select a different recipe
+# =========================================================================
+# Tab to the first recipe row (Healing Potion) and click it
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+# We should now be on one of the tab buttons or recipe rows
+# Use focus_ui to target the recipe button directly
+# Recipes are buttons at entity IDs 110, 114, 118, 122
+# Click on Healing Potion (first recipe)
+key ENTER
+wait 0.3
+
+screenshot potion_crafting_after_first_tab
+
+# =========================================================================
+# Test 2: Tab switching
+# =========================================================================
+# Navigate back to the Inventory tab
+# The tabs are at the top: Recipes(10), Inventory(11), Journal(12)
+# Tab through to find the Inventory tab button
+goto_screen potion_crafting
+wait 0.5
+
+# Tab to the Inventory tab and click it
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot potion_crafting_tab_clicked
+
+# =========================================================================
+# Test 3: Navigate through recipes with Tab
+# =========================================================================
+goto_screen potion_crafting
+wait 0.5
+
+# Tab through the interactive elements
+# Tab order: Recipes tab -> Inventory tab -> Journal tab -> recipe rows -> Brew button
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+
+# Click to select whatever recipe we've landed on
+key ENTER
+wait 0.3
+
+screenshot potion_crafting_recipe_navigated
+
+# =========================================================================
+# Test 4: Verify brew button exists
+# =========================================================================
+expect_text "Brew!"
+
+# Take a final screenshot
+screenshot potion_crafting_final
