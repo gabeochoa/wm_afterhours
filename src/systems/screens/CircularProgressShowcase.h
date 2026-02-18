@@ -53,337 +53,196 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
+    // Ring sizes
+    Size ring_size = h720(80.0f);
+    float ring_thickness = 8.0f;
+    Size title_font = h720(22.0f);
+    Size value_font = h720(26.0f);
+    Size desc_font = h720(18.0f);
 
-    // Background
-    div(context, mk(entity, 0),
+    // Root — centering vstack
+    auto root = vstack(
+        context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_dark)
+            .with_align_items(AlignItems::Center)
             .with_debug_name("bg"));
 
-    // Scale factor based on screen height (designed for 720p)
-    float scale = static_cast<float>(screen_height) / 720.0f;
-
     // Title
-    div(context, mk(entity, 1),
+    div(context, mk(root.ent(), 1),
         ComponentConfig{}
             .with_label("Circular Progress Indicators")
-            .with_size(
-                ComponentSize{pixels(screen_width), pixels(40.0f * scale)})
-            .with_absolute_position(0.0f, 20.0f * scale)
-            .with_font("Gaegu-Bold", pixels(36.0f * scale))
+            .with_size(ComponentSize{percent(1.0f), h720(40.0f)})
+            .with_margin(Margin{.top = h720(20.0f)})
+            .with_font("Gaegu-Bold", h720(36.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center));
 
     // Subtitle
-    div(context, mk(entity, 2),
+    div(context, mk(root.ent(), 2),
         ComponentConfig{}
             .with_label("Radial progress visualization")
-            .with_size(
-                ComponentSize{pixels(screen_width), pixels(28.0f * scale)})
-            .with_absolute_position(0.0f, 65.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f * scale))
+            .with_size(ComponentSize{percent(1.0f), h720(28.0f)})
+            .with_margin(Margin{.top = h720(5.0f)})
+            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center));
 
-    float content_y = 95.0f * scale;
-    float card_width = 200.0f * scale;
-    float card_height = 240.0f * scale;
-    float card_gap = 20.0f * scale;
-    float total_width = card_width * 4 + card_gap * 3;
-    float start_x = (screen_width - total_width) / 2.0f;
-
-    // Ring sizes based on scale
-    float ring_size = 80.0f * scale;
-    float ring_thickness = 8.0f * scale;
-    float title_font = 22.0f * scale;
-    float value_font = 26.0f * scale;
-    float desc_font = 18.0f * scale;
-
-    // ========== CARD 1: Basic Progress ==========
-    div(context, mk(entity, 10),
+    // Top row (4 cards)
+    auto top_row = hstack(
+        context, mk(root.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position(start_x, content_y)
-            .with_custom_background(card_dark)
-            .with_soft_shadow(4.0f * scale, 8.0f * scale, 20.0f * scale,
-                              afterhours::Color{0, 0, 0, 80})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_debug_name("card1"));
+            .with_size(ComponentSize{children(), children()})
+            .with_margin(Margin{.top = h720(10.0f)})
+            .with_justify_content(JustifyContent::Center)
+            .with_gap(h720(20.0f))
+            .with_debug_name("top_row"));
 
-    div(context, mk(entity, 11),
-        ComponentConfig{}
-            .with_label("Basic")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(start_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", pixels(title_font))
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+    // Helper lambda to create a card with circular progress
+    auto make_card = [&](afterhours::Entity &parent, int base_id,
+                         const char *card_title, float progress,
+                         const char *pct_label, const char *desc_label,
+                         afterhours::Color accent, float thickness) {
+      auto card = vstack(
+          context, mk(parent, base_id),
+          ComponentConfig{}
+              .with_size(ComponentSize{h720(200.0f), children()})
+              .with_custom_background(card_dark)
+              .with_soft_shadow(4.0f, 8.0f, 20.0f,
+                                afterhours::Color{0, 0, 0, 80})
+              .with_rounded_corners(RoundedCorners())
+              .with_roundness(0.08f)
+              .with_align_items(AlignItems::Center)
+              .with_padding(Padding{.top = h720(15.0f), .bottom = h720(15.0f)})
+              .with_debug_name(fmt::format("card_{}", base_id)));
 
-    // 75% progress indicator
-    circular_progress(
-        context, mk(entity, 12), 0.75f,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
-            .with_absolute_position(start_x + (card_width - ring_size) / 2,
-                                    content_y + 50.0f * scale)
-            .with_custom_background(accent_cyan)
-            .with_border(track_dark, ring_thickness)
-            .with_debug_name("progress_basic"));
+      // Card title
+      div(context, mk(card.ent(), 0),
+          ComponentConfig{}
+              .with_label(card_title)
+              .with_size(ComponentSize{percent(1.0f), h720(24.0f)})
+              .with_font("Gaegu-Bold", title_font)
+              .with_custom_text_color(text_light)
+              .with_alignment(TextAlignment::Center));
 
-    div(context, mk(entity, 13),
-        ComponentConfig{}
-            .with_label("75%")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(start_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", pixels(value_font))
-            .with_custom_text_color(accent_cyan)
-            .with_alignment(TextAlignment::Center));
+      // Progress ring
+      circular_progress(
+          context, mk(card.ent(), 1), progress,
+          ComponentConfig{}
+              .with_size(ComponentSize{ring_size, ring_size})
+              .with_margin(Margin{.top = h720(15.0f)})
+              .with_custom_background(accent)
+              .with_border(track_dark, h720(thickness))
+              .with_debug_name(fmt::format("progress_{}", base_id)));
 
-    div(context, mk(entity, 14),
-        ComponentConfig{}
-            .with_label("Static value")
-            .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
-            .with_absolute_position(start_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(desc_font))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
+      // Value label
+      div(context, mk(card.ent(), 2),
+          ComponentConfig{}
+              .with_label(pct_label)
+              .with_size(ComponentSize{percent(1.0f), h720(24.0f)})
+              .with_margin(Margin{.top = h720(15.0f)})
+              .with_font("Gaegu-Bold", value_font)
+              .with_custom_text_color(accent)
+              .with_alignment(TextAlignment::Center));
 
-    // ========== CARD 2: Animated Progress ==========
-    float card2_x = start_x + card_width + card_gap;
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position(card2_x, content_y)
-            .with_custom_background(card_dark)
-            .with_soft_shadow(4.0f * scale, 8.0f * scale, 20.0f * scale,
-                              afterhours::Color{0, 0, 0, 80})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_debug_name("card2"));
+      // Description label
+      div(context, mk(card.ent(), 3),
+          ComponentConfig{}
+              .with_label(desc_label)
+              .with_size(ComponentSize{percent(1.0f), h720(20.0f)})
+              .with_margin(Margin{.top = h720(5.0f)})
+              .with_font(UIComponent::DEFAULT_FONT, desc_font)
+              .with_custom_text_color(text_muted)
+              .with_alignment(TextAlignment::Center));
+    };
 
-    div(context, mk(entity, 21),
-        ComponentConfig{}
-            .with_label("Animated")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(card2_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", pixels(title_font))
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+    // Card 1: Basic Progress
+    make_card(top_row.ent(), 10, "Basic", 0.75f, "75%", "Static value",
+              accent_cyan, ring_thickness);
 
-    // Animated progress indicator
-    circular_progress(
-        context, mk(entity, 22), animated_progress,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
-            .with_absolute_position(card2_x + (card_width - ring_size) / 2,
-                                    content_y + 50.0f * scale)
-            .with_custom_background(accent_purple)
-            .with_border(track_dark, ring_thickness)
-            .with_debug_name("progress_animated"));
+    // Card 2: Animated Progress
+    make_card(
+        top_row.ent(), 20, "Animated", animated_progress,
+        fmt::format("{}%", static_cast<int>(animated_progress * 100)).c_str(),
+        "Live updating", accent_purple, ring_thickness);
 
-    div(context, mk(entity, 23),
-        ComponentConfig{}
-            .with_label(
-                fmt::format("{}%", static_cast<int>(animated_progress * 100)))
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(card2_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", pixels(value_font))
-            .with_custom_text_color(accent_purple)
-            .with_alignment(TextAlignment::Center));
+    // Card 3: Thick Ring
+    make_card(top_row.ent(), 30, "Thick Ring", 0.42f, "42%", "Thick ring",
+              accent_green, 16.0f);
 
-    div(context, mk(entity, 24),
-        ComponentConfig{}
-            .with_label("Live updating")
-            .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
-            .with_absolute_position(card2_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(desc_font))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
+    // Card 4: Thin Ring
+    make_card(top_row.ent(), 40, "Thin Ring", 0.88f, "88%", "Thin ring",
+              accent_orange, 3.0f);
 
-    // ========== CARD 3: Thick Ring ==========
-    float card3_x = start_x + (card_width + card_gap) * 2;
-    div(context, mk(entity, 30),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position(card3_x, content_y)
-            .with_custom_background(card_dark)
-            .with_soft_shadow(4.0f * scale, 8.0f * scale, 20.0f * scale,
-                              afterhours::Color{0, 0, 0, 80})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_debug_name("card3"));
-
-    div(context, mk(entity, 31),
-        ComponentConfig{}
-            .with_label("Thick Ring")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(card3_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", pixels(title_font))
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    // Thick ring progress (scaled thickness)
-    circular_progress(
-        context, mk(entity, 32), 0.42f,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
-            .with_absolute_position(card3_x + (card_width - ring_size) / 2,
-                                    content_y + 50.0f * scale)
-            .with_custom_background(accent_green)
-            .with_border(track_dark, 16.0f * scale)
-            .with_debug_name("progress_thick"));
-
-    div(context, mk(entity, 33),
-        ComponentConfig{}
-            .with_label("42%")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(card3_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", pixels(value_font))
-            .with_custom_text_color(accent_green)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 34),
-        ComponentConfig{}
-            .with_label("Thick ring")
-            .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
-            .with_absolute_position(card3_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(desc_font))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    // ========== CARD 4: Thin Ring ==========
-    float card4_x = start_x + (card_width + card_gap) * 3;
-    div(context, mk(entity, 40),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(card_width), pixels(card_height)})
-            .with_absolute_position(card4_x, content_y)
-            .with_custom_background(card_dark)
-            .with_soft_shadow(4.0f * scale, 8.0f * scale, 20.0f * scale,
-                              afterhours::Color{0, 0, 0, 80})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_debug_name("card4"));
-
-    div(context, mk(entity, 41),
-        ComponentConfig{}
-            .with_label("Thin Ring")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(card4_x, content_y + 15.0f * scale)
-            .with_font("Gaegu-Bold", pixels(title_font))
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    // Thin ring progress (scaled thickness)
-    circular_progress(
-        context, mk(entity, 42), 0.88f,
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(ring_size), pixels(ring_size)})
-            .with_absolute_position(card4_x + (card_width - ring_size) / 2,
-                                    content_y + 50.0f * scale)
-            .with_custom_background(accent_orange)
-            .with_border(track_dark, 3.0f * scale)
-            .with_debug_name("progress_thin"));
-
-    div(context, mk(entity, 43),
-        ComponentConfig{}
-            .with_label("88%")
-            .with_size(ComponentSize{pixels(card_width), pixels(24.0f * scale)})
-            .with_absolute_position(card4_x, content_y + 145.0f * scale)
-            .with_font("Gaegu-Bold", pixels(value_font))
-            .with_custom_text_color(accent_orange)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 44),
-        ComponentConfig{}
-            .with_label("Thin ring")
-            .with_size(ComponentSize{pixels(card_width), pixels(20.0f * scale)})
-            .with_absolute_position(card4_x, content_y + 175.0f * scale)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(desc_font))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    // ========== Bottom row: Size variations ==========
-    float bottom_y = content_y + card_height + 30.0f * scale;
-    float small_card_width = 120.0f * scale;
-    float small_card_height = 150.0f * scale;
-    float small_gap = 15.0f * scale;
-    float bottom_total = small_card_width * 5 + small_gap * 4;
-    float bottom_start_x = (screen_width - bottom_total) / 2.0f;
-
-    div(context, mk(entity, 100),
+    // "Size Variations" section header
+    div(context, mk(root.ent(), 100),
         ComponentConfig{}
             .with_label("Size Variations")
-            .with_size(
-                ComponentSize{pixels(screen_width), pixels(28.0f * scale)})
-            .with_absolute_position(0.0f, bottom_y - 5.0f * scale)
-            .with_font("Gaegu-Bold", pixels(24.0f * scale))
+            .with_size(ComponentSize{percent(1.0f), h720(28.0f)})
+            .with_margin(Margin{.top = h720(30.0f)})
+            .with_font("Gaegu-Bold", h720(24.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center));
 
-    bottom_y += 30.0f * scale;
+    // Bottom row (5 small cards)
+    auto bottom_row = hstack(
+        context, mk(root.ent(), 101),
+        ComponentConfig{}
+            .with_size(ComponentSize{children(), children()})
+            .with_margin(Margin{.top = h720(5.0f)})
+            .with_justify_content(JustifyContent::Center)
+            .with_gap(h720(15.0f))
+            .with_debug_name("bottom_row"));
 
-    // Scaled sizes
     float base_sizes[] = {28.0f, 40.0f, 52.0f, 64.0f, 80.0f};
     afterhours::Color colors[] = {accent_cyan, accent_purple, accent_green,
                                   accent_orange, accent_pink};
     float progress_values[] = {0.25f, 0.50f, 0.75f, 0.90f, 1.0f};
 
     for (int i = 0; i < 5; i++) {
-      float card_x = bottom_start_x +
-                     (small_card_width + small_gap) * static_cast<float>(i);
-      float size = base_sizes[i] * scale;
-
-      // Card background
-      div(context, mk(entity, 110 + i),
+      auto card = vstack(
+          context, mk(bottom_row.ent(), 110 + i),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(small_card_width),
-                                       pixels(small_card_height)})
-              .with_absolute_position(card_x, bottom_y)
+              .with_size(ComponentSize{h720(120.0f), children()})
               .with_custom_background(card_dark)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.10f)
+              .with_align_items(AlignItems::Center)
+              .with_padding(Padding{.top = h720(15.0f), .bottom = h720(15.0f)})
               .with_debug_name(fmt::format("size_card_{}", i)));
 
       // Progress indicator
+      Size ring_sz = h720(base_sizes[i]);
       circular_progress(
-          context, mk(entity, 120 + i), progress_values[i],
+          context, mk(card.ent(), 0), progress_values[i],
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(size), pixels(size)})
-              .with_absolute_position(card_x + (small_card_width - size) / 2,
-                                      bottom_y + 15.0f * scale +
-                                          (70.0f * scale - size) / 2)
+              .with_size(ComponentSize{ring_sz, ring_sz})
               .with_custom_background(colors[i])
-              .with_border(track_dark, std::max(3.0f * scale, size * 0.1f))
+              .with_border(track_dark,
+                           h720(std::max(3.0f, base_sizes[i] * 0.1f)))
               .with_debug_name(fmt::format("progress_size_{}", i)));
 
       // Size label
-      div(context, mk(entity, 130 + i),
+      div(context, mk(card.ent(), 1),
           ComponentConfig{}
-              .with_label(fmt::format("{:.0f}px", size))
-              .with_size(ComponentSize{pixels(small_card_width),
-                                       pixels(24.0f * scale)})
-              .with_absolute_position(card_x, bottom_y + 100.0f * scale)
-              .with_font("Gaegu-Bold", pixels(18.0f * scale))
+              .with_label(fmt::format("{:.0f}px", base_sizes[i]))
+              .with_size(ComponentSize{percent(1.0f), h720(24.0f)})
+              .with_margin(Margin{.top = h720(10.0f)})
+              .with_font("Gaegu-Bold", h720(18.0f))
               .with_custom_text_color(colors[i])
               .with_alignment(TextAlignment::Center)
               .with_debug_name(fmt::format("size_label_{}", i)));
 
       // Progress label - only show for sizes above the configured threshold
-      // This improves readability by hiding tiny text on small indicators
       if (base_sizes[i] >= min_size_for_percentage_text) {
-        div(context, mk(entity, 140 + i),
+        div(context, mk(card.ent(), 2),
             ComponentConfig{}
                 .with_label(fmt::format(
                     "{}%", static_cast<int>(progress_values[i] * 100)))
-                .with_size(ComponentSize{pixels(small_card_width),
-                                         pixels(20.0f * scale)})
-                .with_absolute_position(card_x, bottom_y + 122.0f * scale)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f * scale))
+                .with_size(ComponentSize{percent(1.0f), h720(20.0f)})
+                .with_margin(Margin{.top = h720(2.0f)})
+                .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
                 .with_custom_text_color(text_muted)
                 .with_alignment(TextAlignment::Center)
                 .with_debug_name(fmt::format("progress_label_{}", i)));

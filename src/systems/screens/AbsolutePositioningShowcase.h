@@ -29,13 +29,11 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto dark_overlay = afterhours::Color{0, 0, 0, 140};
     const auto white = afterhours::Color{255, 255, 255, 255};
     const float sw = (float)Settings::get().get_screen_width();
-    const float sh = (float)Settings::get().get_screen_height();
-    const float scale = sh / 720.f;
 
     // Full-screen root
     auto root = vstack(context, mk(entity, 0),
                        ComponentConfig{}
-                           .with_size(ComponentSize{pixels(sw), pixels(sh)})
+                           .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
                            .with_background(Theme::Usage::Background)
                            .with_padding(Padding{.top = pixels(8),
                                                  .left = pixels(16),
@@ -47,7 +45,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 0),
         ComponentConfig{}
             .with_label("Absolute Positioning")
-            .with_size(ComponentSize{percent(1.0f), pixels(36.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(36.f)})
             .with_custom_background(teal)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(26.0f))
@@ -57,7 +55,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section1 = vstack(
         context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(120.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(120.f)})
             .with_custom_background(panel_bg)
             .with_margin(Margin{.top = pixels(6)})
             .with_padding(Spacing::sm)
@@ -66,7 +64,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent(), 0),
         ComponentConfig{}
             .with_label("1. Translate + Absolute (correct pattern)")
-            .with_size(ComponentSize{percent(1.0f), pixels(20.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(20.f)})
             .with_custom_text_color(white)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true));
@@ -75,7 +73,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto s1_container =
         div(context, mk(section1.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
+                .with_size(ComponentSize{percent(1.0f), h720(70.f)})
                 .with_custom_background(afterhours::Color{30, 36, 50, 255})
                 .with_debug_name("s1_container"));
 
@@ -84,7 +82,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("translate(100,10)")
                .with_size(
-                   ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
+                   ComponentSize{h720(160.f), h720(50.f)})
                .with_custom_background(green)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -96,7 +94,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("translate(300,10)")
                .with_size(
-                   ComponentSize{pixels(160.f * scale), pixels(50.f * scale)})
+                   ComponentSize{h720(160.f), h720(50.f)})
                .with_custom_background(pink)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -107,7 +105,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section2 =
         div(context, mk(root.ent(), 2),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(160.f * scale)})
+                .with_size(ComponentSize{percent(1.0f), h720(160.f)})
                 .with_custom_background(panel_bg)
                 .with_margin(Margin{.top = pixels(6)})
                 .with_padding(Spacing::sm)
@@ -116,20 +114,21 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent(), 0),
         ComponentConfig{}
             .with_label("2. Corner Pinning (absolute + translate)")
-            .with_size(ComponentSize{percent(1.0f), pixels(20.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(20.f)})
             .with_custom_text_color(white)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true));
 
     // Corner container with known size
     float corner_w = sw - 64.f;
-    float corner_h = 110.f * scale;
-    float box_s = 50.f * scale;
+    float sh = (float)Settings::get().get_screen_height();
+    float box_s = 50.f * sh / 720.f;
+    float corner_h = 110.f * sh / 720.f;
 
     auto corner_area =
         div(context, mk(section2.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(corner_w), pixels(corner_h)})
+                .with_size(ComponentSize{pixels(corner_w), h720(110.f)})
                 .with_custom_background(afterhours::Color{30, 36, 50, 255})
                 .with_debug_name("corner_area"));
 
@@ -137,7 +136,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(corner_area.ent(), 0),
            ComponentConfig{}
                .with_label("TL")
-               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_size(ComponentSize{h720(50.f), h720(50.f)})
                .with_custom_background(teal)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -148,7 +147,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(corner_area.ent(), 1),
            ComponentConfig{}
                .with_label("TR")
-               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_size(ComponentSize{h720(50.f), h720(50.f)})
                .with_custom_background(pink)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -159,7 +158,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(corner_area.ent(), 2),
            ComponentConfig{}
                .with_label("BL")
-               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_size(ComponentSize{h720(50.f), h720(50.f)})
                .with_custom_background(orange)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -170,7 +169,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(corner_area.ent(), 3),
            ComponentConfig{}
                .with_label("BR")
-               .with_size(ComponentSize{pixels(box_s), pixels(box_s)})
+               .with_size(ComponentSize{h720(50.f), h720(50.f)})
                .with_custom_background(purple)
                .with_auto_text_color(true)
                .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -181,7 +180,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section3 = vstack(
         context, mk(root.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(120.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(120.f)})
             .with_custom_background(panel_bg)
             .with_margin(Margin{.top = pixels(6)})
             .with_padding(Spacing::sm)
@@ -190,7 +189,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent(), 0),
         ComponentConfig{}
             .with_label("3. Mixed: Flow children + Absolute overlay")
-            .with_size(ComponentSize{percent(1.0f), pixels(20.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(20.f)})
             .with_custom_text_color(white)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true));
@@ -198,7 +197,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto mixed_container = hstack(
         context, mk(section3.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(70.f)})
             .with_custom_background(afterhours::Color{30, 36, 50, 255})
             .with_align_items(AlignItems::Center)
             .with_justify_content(JustifyContent::SpaceAround)
@@ -227,18 +226,18 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("BADGE")
             .with_size(
-                ComponentSize{pixels(70.f * scale), pixels(24.f * scale)})
+                ComponentSize{h720(70.f), h720(24.f)})
             .with_custom_background(pink)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
-            .with_absolute_position(sw - 120.f * scale, 4.f * scale)
+            .with_absolute_position(sw - 120.f * sh / 720.f, 4.f * sh / 720.f)
             .with_debug_name("abs_badge"));
 
     // -- Section 4: screen_pct sizing --
     auto section4 = vstack(
         context, mk(root.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(120.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(120.f)})
             .with_custom_background(panel_bg)
             .with_margin(Margin{.top = pixels(6)})
             .with_padding(Spacing::sm)
@@ -247,7 +246,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section4.ent(), 0),
         ComponentConfig{}
             .with_label("4. Absolute + screen_pct sizing")
-            .with_size(ComponentSize{percent(1.0f), pixels(20.f * scale)})
+            .with_size(ComponentSize{percent(1.0f), h720(20.f)})
             .with_custom_text_color(white)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_skip_tabbing(true));
@@ -255,7 +254,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
     auto s4_container =
         div(context, mk(section4.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(70.f * scale)})
+                .with_size(ComponentSize{percent(1.0f), h720(70.f)})
                 .with_custom_background(afterhours::Color{30, 36, 50, 255})
                 .with_debug_name("s4_container"));
 
