@@ -8,6 +8,7 @@
 #include "test_input.h"
 #include "test_snapshot.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/components.h>
 #include <afterhours/src/plugins/ui/ui_collection.h>
 #include <coroutine>
 #include <functional>
@@ -192,6 +193,26 @@ struct TestApp {
     // Apply translation modifiers if present (from with_translate)
     if (entity.has<afterhours::ui::HasUIModifiers>()) {
       rect = entity.get<afterhours::ui::HasUIModifiers>().apply_modifier(rect);
+    }
+
+    // Adjust for ancestor scroll offset (match visual position)
+    if (!entity.has<afterhours::ui::HasScrollView>()) {
+      afterhours::EntityID pid = ui_comp.parent;
+      int guard = 0;
+      while (pid >= 0 && guard < 64) {
+        auto opt_p = afterhours::ui::UICollectionHolder::getEntityForID(pid);
+        if (!opt_p.valid()) break;
+        auto &p = opt_p.asE();
+        if (p.has<afterhours::ui::HasScrollView>()) {
+          auto offset = p.get<afterhours::ui::HasScrollView>().scroll_offset;
+          rect.y -= offset.y;
+          rect.x -= offset.x;
+          break;
+        }
+        if (!p.has<afterhours::ui::UIComponent>()) break;
+        pid = p.get<afterhours::ui::UIComponent>().parent;
+        ++guard;
+      }
     }
 
     float center_x = rect.x + rect.width / 2.0f;
