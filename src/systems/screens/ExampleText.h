@@ -43,7 +43,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
+                ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_charcoal)
             .with_debug_name("bg"));
 

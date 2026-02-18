@@ -29,7 +29,6 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     auto *res = afterhours::EntityHelper::get_singleton_cmp<
         afterhours::window_manager::ProvidesCurrentResolution>();
     int screen_width = res ? res->current_resolution.width : 1280;
-    int screen_height = res ? res->current_resolution.height : 720;
     float col_width = 520.0f;
     float card_height = 500.0f;
     float col_gap = 40.0f;
@@ -41,7 +40,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
+                ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_slate)
             .with_debug_name("bg"));
 
