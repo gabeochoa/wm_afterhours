@@ -107,8 +107,8 @@ bool validate_screen_against_baseline(const std::string &screen_name) {
 
   // Check if baseline exists
   if (!std::filesystem::exists(baseline_path)) {
-    log_error("[validate_screen] Baseline not found: {}", baseline_path);
-    log_error("Run with --update-baselines to create it");
+    log_warn("[validate_screen] Baseline not found: {}", baseline_path);
+    log_warn("Run with --update-baselines to create it");
     return false;
   }
 

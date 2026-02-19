@@ -167,7 +167,11 @@ Preload &Preload::make_singleton() {
   auto &sophie = EntityHelper::createEntity();
   {
     input::add_singleton_components(sophie, get_mapping());
-    window_manager::add_singleton_components(sophie, 200);
+    window_manager::add_singleton_components(
+        sophie,
+        window_manager::Resolution{.width = Settings::get().get_screen_width(),
+                                   .height = Settings::get().get_screen_height()},
+        200);
     ui::init_ui_plugin<InputAction>();
 
     // Load all fonts using the shared font configuration

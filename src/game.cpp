@@ -720,7 +720,12 @@ int run_e2e_tests(const e2e::E2EArgs &args,
 
   {
     afterhours::input::register_update_systems(systems);
-    afterhours::window_manager::register_update_systems(systems);
+    // Skip CollectCurrentResolution in headless mode — Raylib's
+    // GetRenderWidth() returns 0 without a window, which overwrites
+    // the correct resolution set by make_singleton().
+    if (!afterhours::graphics::is_headless()) {
+      afterhours::window_manager::register_update_systems(systems);
+    }
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
