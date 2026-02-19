@@ -62,8 +62,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(std::to_string(i + 1))
                  .with_size(ComponentSize{percent(0.85f), percent(0.22f)})
-                 .with_background(Theme::Usage::Primary)
-                 .with_auto_text_color(true)
+                 .with_custom_background(afterhours::Color{0, 110, 140, 255})
+                 .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                  .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -115,8 +115,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(std::to_string(i + 1))
                  .with_size(ComponentSize{pixels(26), percent(0.70f)})
-                 .with_background(Theme::Usage::Accent)
-                 .with_auto_text_color(true)
+                 .with_custom_background(afterhours::Color{180, 50, 80, 255})
+                 .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                  .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -169,8 +169,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
              ComponentConfig{}
                  .with_label(std::to_string(i + 1))
                  .with_size(ComponentSize{pixels(40), percent(heights[i])})
-                 .with_background(Theme::Usage::Accent)
-                 .with_auto_text_color(true)
+                 .with_custom_background(afterhours::Color{180, 50, 80, 255})
+                 .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                  .with_debug_name(label + "_" + std::to_string(i)));
     }
@@ -198,8 +198,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Start")
                .with_size(ComponentSize{pixels(70), percent(0.25f)})
-               .with_background(Theme::Usage::Primary)
-               .with_auto_text_color(true)
+               .with_custom_background(afterhours::Color{0, 110, 140, 255})
+               .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                .with_self_align(SelfAlign::FlexStart));
 
@@ -208,8 +208,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Auto")
                .with_size(ComponentSize{pixels(60), percent(0.25f)})
-               .with_background(Theme::Usage::Secondary)
-               .with_auto_text_color(true)
+               .with_custom_background(afterhours::Color{70, 50, 130, 255})
+               .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                .with_self_align(SelfAlign::Auto));
 
@@ -218,8 +218,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("Center")
                .with_size(ComponentSize{pixels(70), percent(0.25f)})
-               .with_background(Theme::Usage::Accent)
-               .with_auto_text_color(true)
+               .with_custom_background(afterhours::Color{180, 50, 80, 255})
+               .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                .with_self_align(SelfAlign::Center));
 
@@ -228,8 +228,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
            ComponentConfig{}
                .with_label("End")
                .with_size(ComponentSize{pixels(60), percent(0.25f)})
-               .with_custom_background(afterhours::Color{180, 60, 90, 255})
-               .with_auto_text_color(true)
+               .with_custom_background(afterhours::Color{200, 75, 100, 255})
+               .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                .with_self_align(SelfAlign::FlexEnd));
   }
@@ -585,8 +585,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(std::to_string(i + 1))
                      .with_size(ComponentSize{percent(0.85f), percent(0.18f)})
-                     .with_background(Theme::Usage::Primary)
-                     .with_auto_text_color(true)
+                     .with_custom_background(afterhours::Color{0, 110, 140, 255})
+                     .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
         }
 
@@ -621,8 +621,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(std::to_string(i + 1))
                      .with_size(ComponentSize{percent(0.85f), percent(0.18f)})
-                     .with_background(Theme::Usage::Primary)
-                     .with_auto_text_color(true)
+                     .with_custom_background(afterhours::Color{0, 110, 140, 255})
+                     .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
         }
 
@@ -656,8 +656,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(std::to_string(i + 1))
                      .with_size(ComponentSize{percent(0.20f), percent(0.80f)})
-                     .with_background(Theme::Usage::Accent)
-                     .with_auto_text_color(true)
+                     .with_custom_background(afterhours::Color{180, 50, 80, 255})
+                     .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
         }
 
@@ -692,8 +692,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_label(std::to_string(i + 1))
                      .with_size(ComponentSize{percent(0.20f), percent(0.80f)})
-                     .with_background(Theme::Usage::Accent)
-                     .with_auto_text_color(true)
+                     .with_custom_background(afterhours::Color{180, 50, 80, 255})
+                     .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
         }
       }

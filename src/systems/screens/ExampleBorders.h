@@ -52,8 +52,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("bg"));
 
     // Calculate content dimensions and center everything
-    float box_size = 110.0f;
-    float gap = 25.0f;
+    float box_size = 100.0f;
+    float gap = 20.0f;
     float content_width = 6.0f * box_size + 5.0f * gap; // 6 boxes with 5 gaps
     float start_x = (screen_width - content_width) / 2.0f;
     float start_y = 85.0f;
@@ -270,26 +270,26 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 33),
         ComponentConfig{}
-            .with_label("Danger")
+            .with_label("! Danger")
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_absolute_position(start_x + 3 * (box_size + gap), row3_y)
-            .with_custom_background(afterhours::Color{60, 20, 20, 255})
-            .with_border(afterhours::Color{200, 60, 60, 255}, 3.0f)
+            .with_custom_background(afterhours::Color{80, 25, 25, 255})
+            .with_border(afterhours::Color{220, 70, 70, 255}, 3.0f)
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(afterhours::Color{255, 180, 180, 255})
+            .with_custom_text_color(afterhours::Color{255, 220, 220, 255})
             .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 34),
         ComponentConfig{}
-            .with_label("Success")
+            .with_label("* Success")
             .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
             .with_absolute_position(start_x + 4 * (box_size + gap), row3_y)
-            .with_custom_background(afterhours::Color{20, 55, 35, 255})
-            .with_border(afterhours::Color{60, 180, 100, 255}, 3.0f)
+            .with_custom_background(afterhours::Color{25, 70, 40, 255})
+            .with_border(afterhours::Color{80, 200, 120, 255}, 3.0f)
             .with_rounded_corners(RoundedCorners())
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(afterhours::Color{180, 255, 200, 255})
+            .with_custom_text_color(afterhours::Color{220, 255, 230, 255})
             .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 35),
@@ -316,8 +316,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Right));
 
     // Interactive button with border
-    float row4_y = row3_y + box_size + gap + 5;
-    float row4_height = 110.0f;
+    float row4_y = row3_y + box_size + gap;
+    float row4_height = 100.0f;
 
     // Row 4 label
     div(context, mk(entity, 49),
@@ -338,6 +338,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(220.0f), pixels(56.0f)})
             .with_absolute_position(start_x, row4_y)
             .with_custom_background(accent_blue)
+            .with_custom_hover_bg(
+                afterhours::colors::lighten(accent_blue, 1.2f))
             .with_border(afterhours::colors::lighten(accent_blue, 1.3f), 3.0f)
             .with_soft_shadow(3.0f, 5.0f, 12.0f,
                               afterhours::Color{80, 145, 220, 60})
@@ -345,7 +347,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_roundness(0.4f)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(bg_deep)
-            .with_alignment(TextAlignment::Center));
+            .with_alignment(TextAlignment::Center)
+            .with_cursor(CursorType::Pointer));
 
     if (btn_result) {
       log_info("Bordered button clicked!");
@@ -395,8 +398,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Row 5: Per-side borders (new feature demo)
-    float row5_y = row4_y + row4_height + 5;
-    float ps_box = 90.0f;
+    float row5_y = row4_y + row4_height;
+    float ps_box = 80.0f;
 
     div(context, mk(entity, 59),
         ComponentConfig{}

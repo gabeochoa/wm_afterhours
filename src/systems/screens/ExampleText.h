@@ -16,7 +16,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color gold_accent{205, 175, 110, 255}; // Warm gold
   afterhours::Color silver_text{210, 210, 215, 255}; // Silver text
   afterhours::Color cream_text{250, 245, 235, 255};  // Cream white
-  afterhours::Color muted_text{195, 190, 185, 255};  // Muted brown-gray
+  afterhours::Color muted_text{210, 205, 200, 255};  // Brightened for contrast
   afterhours::Color divider{65, 58, 52, 255};        // Subtle divider
 
   void for_each_with(afterhours::Entity &entity,
@@ -165,7 +165,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col, content_y + left_spacing * 5.5f)
             .with_font("Garamond", h720(22.0f))
             .with_custom_text_color(cream_text)
-            .with_letter_spacing(4.0f));
+            .with_letter_spacing(2.0f));
 
     div(context, mk(entity, 43),
         ComponentConfig{}
@@ -174,7 +174,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col, content_y + left_spacing * 6.0f)
             .with_font("Garamond", h720(22.0f))
             .with_custom_text_color(silver_text)
-            .with_letter_spacing(8.0f));
+            .with_letter_spacing(3.0f));
 
     // Divider line
     div(context, mk(entity, 16),
@@ -205,7 +205,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
         {"Light Cream Text", cream_text},
         {"Silver Accent Text", silver_text},
         {"Muted Secondary Text", muted_text},
-        {"Accent Color Highlight", {165, 100, 100, 255}},
+        {"Accent Color Highlight", {210, 140, 140, 255}},
     };
 
     for (int i = 0; i < 5; i++) {

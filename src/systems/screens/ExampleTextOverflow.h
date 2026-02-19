@@ -262,7 +262,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 5.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+            .with_alignment(TextAlignment::Center)
+            .with_text_overflow(TextOverflow::Ellipsis));
 
     card_y += 30 + card_spacing;
 
@@ -284,7 +285,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 10.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+            .with_alignment(TextAlignment::Center)
+            .with_text_overflow(TextOverflow::Ellipsis));
 
     card_y += 50 + card_spacing;
 
@@ -305,7 +307,8 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(right_col_x + 4.0f, card_y + 4.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+            .with_alignment(TextAlignment::Center)
+            .with_text_overflow(TextOverflow::Ellipsis));
 
     // Label for the tiny box
     div(context, mk(entity, 27),
@@ -319,10 +322,10 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
 
     card_y += 54 + card_spacing;
 
-    // Card 4: Zero-margin nightmare
+    // Card 4: Zero-margin nightmare - increased to 44px minimum height
     div(context, mk(entity, 28),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(100), pixels(25)})
+            .with_size(ComponentSize{pixels(100), pixels(44)})
             .with_absolute_position(right_col_x, card_y)
             .with_custom_background(card_bg)
             .with_rounded_corners(RoundedCorners())
@@ -332,13 +335,14 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 29),
         ComponentConfig{}
             .with_label("Long text in narrow space")
-            .with_size(ComponentSize{pixels(90), pixels(15)})
+            .with_size(ComponentSize{pixels(90), pixels(34)})
             .with_absolute_position(right_col_x + 5.0f, card_y + 5.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+            .with_alignment(TextAlignment::Center)
+            .with_text_overflow(TextOverflow::Ellipsis));
 
-    card_y += 25 + card_spacing;
+    card_y += 44 + card_spacing;
 
     // Row of progressively smaller boxes
     div(context, mk(entity, 30),
@@ -386,6 +390,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, font_size)
               .with_custom_text_color(text_light)
               .with_alignment(TextAlignment::Center)
+              .with_text_overflow(TextOverflow::Ellipsis)
               .with_debug_name("shrink_text_" + std::to_string(i)));
 
       box_x += size + box_spacing;

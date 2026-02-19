@@ -119,20 +119,18 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Disabled button
-    // Enhanced disabled styling: reduced opacity + dashed border pattern
-    // makes the disabled state more visually obvious per accessibility
-    // guidelines. Configurable: adjust opacity (0.4-0.6) and border color as
-    // needed.
-    constexpr float disabled_opacity =
-        0.5f; // Configurable: lower = more obvious
-    afterhours::Color disabled_border_color{120, 120, 130,
-                                            200}; // Configurable: muted border
+    // Enhanced disabled styling: reduced opacity + muted border + custom text
+    // color makes the disabled state more visually obvious per accessibility
+    // guidelines.
+    constexpr float disabled_opacity = 0.45f;
+    afterhours::Color disabled_border_color{100, 100, 110,
+                                            180}; // Muted dashed-style border
     button(context, mk(row1.ent(), 4),
            ComponentConfig{}
                .with_label("Disabled")
                .with_size(ComponentSize{pixels(120), pixels(45)})
-               .with_background(Theme::Usage::Primary)
-               .with_auto_text_color(true)
+               .with_custom_background(afterhours::Color{60, 65, 80, 255})
+               .with_custom_text_color(afterhours::Color{140, 140, 150, 255})
                .with_disabled(true)
                .with_opacity(disabled_opacity)
                .with_border(disabled_border_color, 2.0f)
@@ -161,12 +159,11 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f)));
 
-    // Small button - increased height to meet 44px touch target, larger font
-    // for visibility
+    // Small button - height matches Medium for consistent row alignment
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("Small")
-                   .with_size(ComponentSize{pixels(90), pixels(44)})
+                   .with_size(ComponentSize{pixels(90), pixels(45)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
@@ -241,16 +238,24 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
       bool is_selected = (selected_group == static_cast<int>(i));
       auto btn_bg = is_selected ? Theme::Usage::Accent : Theme::Usage::Primary;
 
+      auto group_cfg =
+          ComponentConfig{}
+              .with_label(std::string(group_labels[i]))
+              .with_size(ComponentSize{pixels(90), pixels(45)})
+              .with_background(btn_bg)
+              .with_auto_text_color(true)
+              .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
+              .with_rounded_corners(corners)
+              .with_margin(Spacing::xs)
+              .with_debug_name("btn_group_" + std::to_string(i));
+
+      if (is_selected) {
+        group_cfg = group_cfg.with_border(
+            afterhours::Color{255, 255, 255, 200}, 2.0f);
+      }
+
       if (button(context, mk(row3.ent(), 1 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(std::string(group_labels[i]))
-                     .with_size(ComponentSize{pixels(90), pixels(45)})
-                     .with_background(btn_bg)
-                     .with_auto_text_color(true)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
-                     .with_rounded_corners(corners)
-                     .with_margin(Spacing::xs)
-                     .with_debug_name("btn_group_" + std::to_string(i)))) {
+                 group_cfg)) {
         click_counts[6 + i]++;
         selected_group = static_cast<int>(i);
       }
