@@ -131,7 +131,7 @@ Generated from audit on 2026-02-22. 151 issues across 52 screens (24 screens pas
 
 ### parcel_corps_settings
 - [x] #1 Settings panel content clipped at bottom — Reduced phone_h and row_gap
-- [ ] #2 Objective panel text runs flush against right screen edge
+- [x] #2 Objective panel text runs flush against right screen edge — Fixed: moved quest panel and chat messages inward
 
 ### potion_crafting
 - [x] #1 Potion bottle stopper overflows — Adjusted flask_y position (prior batch)
@@ -155,7 +155,7 @@ Generated from audit on 2026-02-22. 151 issues across 52 screens (24 screens pas
 - [x] #2 "Music Volume" slider row cramped — Increased content panel height
 
 ### shop_interface
-- [ ] #2 Icon badge text clipped in item list
+- [x] #2 Icon badge text clipped in item list — Fixed: widened stock column from 60px to 75px
 - [x] #3 Cart panel price values crowd right edge — Adjusted absolute position (prior batch)
 
 ### sports_settings
@@ -166,7 +166,7 @@ Generated from audit on 2026-02-22. 151 issues across 52 screens (24 screens pas
 - [~] #2 "HealerWarriorMage" stepper text — This is the stepper displaying the selected value; spacing is determined by the option strings
 
 ### text_input
-- [ ] #1 Bottom status bar and action buttons clipped at viewport edge
+- [x] #1 Bottom status bar and action buttons clipped at viewport edge — Fixed: reduced form label sizes from 28px/34px to 22px/28px
 
 ### text_shadow
 - [x] #1 Title "Text Drop Shadow" clipped at top — Moved title down (y: 22 -> 28)
@@ -344,7 +344,7 @@ Generated from audit on 2026-02-22. 151 issues across 52 screens (24 screens pas
 - [x] #1 "CONTROLS" label overlaps with "Close" — Tab container widened to prevent wrapping
 
 ### rubber_bandits_menu
-- [ ] #3 Notification badge overlaps with user status pill
+- [x] #3 Notification badge overlaps with user status pill — Fixed: added left margin to badges container
 
 ### text
 - [x] #1 "ULTRA SPACED" text overlaps with line below — Increased spacing divisor from 6 to 7

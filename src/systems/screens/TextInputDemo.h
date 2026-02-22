@@ -82,9 +82,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(form_container.ent(), idx * 2),
           ComponentConfig{}
               .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(34)})
+              .with_size(ComponentSize{pixels(396), pixels(28)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
               .with_debug_name(label_text + "_label"));
@@ -125,9 +125,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 4),
         ComponentConfig{}
             .with_label("Password:")
-            .with_size(ComponentSize{pixels(396), pixels(34)})
+            .with_size(ComponentSize{pixels(396), pixels(28)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
             .with_skip_tabbing(true)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
@@ -183,9 +183,9 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(form_container.ent(), 7),
         ComponentConfig{}
             .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(34)})
+            .with_size(ComponentSize{pixels(396), pixels(28)})
             .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Search input - no label so field uses full width

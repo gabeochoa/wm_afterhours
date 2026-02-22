@@ -377,8 +377,8 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(item.stock <= 3 ? std::to_string(item.stock) + " Low"
                                           : std::to_string(item.stock))
-              .with_size(ComponentSize{pixels(60), pixels(24)})
-              .with_absolute_position(col_stock_x + 5.0f, ry + 12.0f)
+              .with_size(ComponentSize{pixels(75), pixels(24)})
+              .with_absolute_position(col_stock_x, ry + 12.0f)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(item.stock <= 3 ? accent_red : white)
               .with_alignment(TextAlignment::Center)

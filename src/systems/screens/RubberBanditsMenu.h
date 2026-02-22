@@ -146,7 +146,8 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
                          ComponentConfig{}
                              .with_size(ComponentSize{pixels(55), children()})
                              .with_no_wrap()
-                             .with_align_items(AlignItems::Center));
+                             .with_align_items(AlignItems::Center)
+                             .with_margin(Margin{.left = pixels(10)}));
 
     div(context, mk(badges.ent()),
         ComponentConfig{}

@@ -356,7 +356,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== QUEST PANEL (moved to right side to avoid overlapping phone)
     // ==========
-    float quest_x = (float)screen_w - 370.0f;
+    float quest_x = (float)screen_w - 385.0f;
     float quest_y = 180.0f;
     float quest_w = 340.0f;
     float quest_h = 85.0f;
@@ -491,7 +491,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== CHAT MESSAGES (right side) ==========
-    float chat_x = (float)screen_w - 250.0f;
+    float chat_x = (float)screen_w - 270.0f;
     float chat_start_y = 60.0f;
     float chat_line_h = 20.0f;
 
