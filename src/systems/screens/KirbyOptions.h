@@ -122,6 +122,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_font("Gaegu-Bold", pixels(18.0f * scale))
                      .with_custom_text_color(text_black)
                      .with_alignment(TextAlignment::Center)
+                     .with_text_overflow(TextOverflow::Ellipsis)
                      .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.25f)
                      .with_soft_shadow(2.0f, 3.0f, 8.0f,

@@ -9,7 +9,7 @@ wait 0.5
 validate_screen toggle_switches
 
 # Verify we're on the correct screen
-expect_text "Toggle Switch"
+expect_text "Settings"
 
 # Tab to first toggle and activate
 key TAB

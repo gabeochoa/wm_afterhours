@@ -9,7 +9,7 @@ wait 0.5
 validate_screen images
 
 # Verify we're on the correct screen
-expect_text "Image & Sprite Components Showcase"
+expect_text "Image & Sprite Components"
 
 # Tab to an image button and click
 key TAB

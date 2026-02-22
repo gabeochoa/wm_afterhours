@@ -9,7 +9,7 @@ wait 0.5
 validate_screen tabbing
 
 # Verify we're on the correct screen
-expect_text "Tab"
+expect_text "KEYBOARD NAV"
 
 # Test tabbing through elements
 key TAB

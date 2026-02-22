@@ -96,7 +96,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(root.ent()),
            ComponentConfig{}
                .with_label("< Back")
-               .with_size(ComponentSize{pixels(80), pixels(56)})
+               .with_size(ComponentSize{pixels(100), pixels(56)})
                .with_font("EqProRounded", pixels(28.0f))
                .with_custom_text_color(text_dark));
 
@@ -137,7 +137,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_label(label_with_state)
                 .with_size(ComponentSize{expand(), pixels(40)})
                 .with_font("EqProRounded", pixels(20.0f))
-                .with_custom_text_color(text_dark));
+                .with_custom_text_color(text_dark)
+                .with_text_overflow(TextOverflow::Ellipsis));
 
         // Toggle track (clickable button)
         if (button(context, mk(toggle_row.ent(), 1),
@@ -183,7 +184,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label("Cursor Sensitivity")
               .with_size(ComponentSize{expand(), pixels(40)})
-              .with_custom_text_color(text_dark));
+              .with_custom_text_color(text_dark)
+              .with_text_overflow(TextOverflow::Ellipsis));
 
       if (button(context, mk(sens_row.ent()),
                  ComponentConfig{}

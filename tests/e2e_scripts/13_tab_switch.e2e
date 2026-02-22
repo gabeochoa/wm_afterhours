@@ -9,7 +9,7 @@ wait 0.5
 validate_screen tab_container
 
 # Verify we're on the correct screen
-expect_text "Tab"
+expect_text "Profile"
 
 # Tab to switch between tabs
 key TAB

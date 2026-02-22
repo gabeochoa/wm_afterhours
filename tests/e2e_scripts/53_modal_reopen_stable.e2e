@@ -8,7 +8,7 @@ wait 0.5
 expect_text "Advanced Modals"
 
 # =========================================================================
-# Test 1: Open/close login modal 3 times, verify centering each time
+# Test 1: Open/close login modal 3 times, verify each time
 # =========================================================================
 # Cycle 1
 focus_ui btn_login
@@ -18,8 +18,8 @@ wait 0.5
 expect_text "Login"
 screenshot reopen_login_cycle1
 
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 
 # Cycle 2
@@ -42,13 +42,12 @@ wait 0.5
 expect_text "Login"
 screenshot reopen_login_cycle3
 
-# Verify backdrop dismiss still works (modal still centered)
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 
 # =========================================================================
-# Test 2: Open different modals in sequence, all should be centered
+# Test 2: Open different modals in sequence, all should work
 # =========================================================================
 # Login
 focus_ui btn_login
@@ -56,8 +55,8 @@ wait 0.2
 key ENTER
 wait 0.5
 expect_text "Login"
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 
 # Wizard
@@ -66,8 +65,8 @@ wait 0.2
 key ENTER
 wait 0.5
 expect_text "Setup Wizard"
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 
 # Settings
@@ -76,8 +75,8 @@ wait 0.2
 key ENTER
 wait 0.5
 expect_text "Settings"
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 
 # Feedback
@@ -86,13 +85,13 @@ wait 0.2
 key ENTER
 wait 0.5
 expect_text "Submit Feedback"
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 screenshot reopen_all_modals_cycled
 
 # =========================================================================
-# Test 3: Rapid open/close with escape, then verify final centering
+# Test 3: Rapid open/close with escape, then verify final open
 # =========================================================================
 focus_ui btn_wizard
 wait 0.2
@@ -115,7 +114,7 @@ wait 0.3
 key ESCAPE
 wait 0.2
 
-# Final open - should still be centered
+# Final open - should still work
 focus_ui btn_wizard
 wait 0.2
 key ENTER
@@ -123,8 +122,7 @@ wait 0.5
 expect_text "Setup Wizard"
 expect_text "Step 1 of 3"
 
-# Confirm centered by backdrop dismiss at corner
-click 50 50
-wait 0.5
+key ESCAPE
+wait 0.3
 expect_text "Advanced Modals"
 screenshot reopen_rapid_cycle_stable

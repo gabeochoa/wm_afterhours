@@ -24,15 +24,17 @@ wait 0.3
 expect_text "Email: test@example.com"
 
 # Fill out Password (shows masked)
-focus_element Password_input
+focus_element password_input
 wait 0.2
 type "secretpass"
 wait 0.3
 expect_text "Password changed"
 
-# Fill out Search
+# Fill out Search (clear placeholder text first)
 focus_element search_input
 wait 0.2
+select_all
+wait 0.1
 type "search query"
 wait 0.3
 expect_text "Searching for: search query"

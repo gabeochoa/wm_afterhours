@@ -494,6 +494,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{pixels(175), percent(1.0f)})
                      .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(label_color)
+                     .with_text_overflow(TextOverflow::Ellipsis)
                      .with_custom_background(afterhours::Color{0, 0, 0, 0})
                      .with_alignment(TextAlignment::Left)
                      .with_padding(Padding{.left = pixels(4)})
@@ -682,6 +683,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Reset to default")
             .with_size(ComponentSize{pixels(150), pixels(25)})
             .with_custom_text_color(text_white)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_text_overflow(TextOverflow::Ellipsis)
             .with_margin(Margin{.left = pixels(8), .right = pixels(30)}));
 
     // B - Back
@@ -699,6 +702,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label("Back")
             .with_size(ComponentSize{pixels(50), pixels(25)})
             .with_custom_text_color(text_white)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_text_overflow(TextOverflow::Ellipsis)
             .with_margin(Margin{.left = pixels(8)}));
   }
 };

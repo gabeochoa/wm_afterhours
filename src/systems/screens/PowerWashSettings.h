@@ -329,6 +329,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(1.0f), pixels(25)})
             .with_font("EqProRounded", pixels(14.0f))
             .with_custom_text_color(text_white)
+            .with_text_overflow(TextOverflow::Ellipsis)
             .with_margin(Margin{.top = pixels(5)}));
 
     div(context, mk(help_panel.ent()),
@@ -336,7 +337,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_label(help_line2)
             .with_size(ComponentSize{percent(1.0f), pixels(25)})
             .with_font("EqProRounded", pixels(14.0f))
-            .with_custom_text_color(text_white));
+            .with_custom_text_color(text_white)
+            .with_text_overflow(TextOverflow::Ellipsis));
 
     div(context, mk(help_panel.ent()),
         ComponentConfig{}

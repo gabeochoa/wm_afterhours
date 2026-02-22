@@ -24,8 +24,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color grid_color{15, 25, 40, 120};
 
   std::vector<std::string> categories = {
-      "FLIGHT SYSTEM", "CONTROLS", "KEYBOARD", "MOUSE",    "FLIGHT STICK",
-      "DISPLAY",       "GRAPHICS", "SOUND",    "LANGUAGE",
+      "FLIGHT SYS", "CONTROLS", "KEYBOARD", "MOUSE",    "FLT STICK",
+      "DISPLAY",    "GRAPHICS", "SOUND",    "LANGUAGE",
   };
 
   std::vector<std::string> suboptions = {

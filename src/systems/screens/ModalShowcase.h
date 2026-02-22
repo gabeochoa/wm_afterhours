@@ -104,7 +104,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_margin(Spacing::xs)
-                   .with_roundness(0.08f))) {
+                   .with_roundness(0.08f)
+                   .with_debug_name("btn_simple"))) {
       show_basic_modal = true;
     }
 
@@ -160,7 +161,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_margin(Spacing::xs)
-                   .with_roundness(0.08f))) {
+                   .with_roundness(0.08f)
+                   .with_debug_name("btn_confirm"))) {
       show_confirm_modal = true;
       last_confirm_result = afterhours::DialogResult::Pending;
     }
@@ -206,7 +208,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_margin(Spacing::xs)
-                   .with_roundness(0.08f))) {
+                   .with_roundness(0.08f)
+                   .with_debug_name("btn_stacked"))) {
       show_stacked_settings = true;
     }
 
@@ -238,7 +241,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_margin(Spacing::xs)
-                   .with_roundness(0.08f))) {
+                   .with_roundness(0.08f)
+                   .with_debug_name("btn_background"))) {
       background_click_count++;
     }
 
