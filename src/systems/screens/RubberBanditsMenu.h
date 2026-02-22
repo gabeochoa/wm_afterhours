@@ -307,7 +307,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto bottom =
         vstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(140)})
+                   .with_size(ComponentSize{percent(1.0f), pixels(130)})
                    .with_custom_background(bg_yellow_dark)
                    .with_no_wrap()
                    .with_debug_name("ground"));
@@ -316,7 +316,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto char_row =
         hstack(context, mk(bottom.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                   .with_size(ComponentSize{percent(1.0f), pixels(90)})
                    .with_justify_content(JustifyContent::Center)
                    .with_align_items(AlignItems::Center)
                    .with_no_wrap()
@@ -325,7 +325,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto char_box = vstack(
         context, mk(char_row.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(400), pixels(100)})
+            .with_size(ComponentSize{pixels(400), pixels(90)})
             .with_custom_background(afterhours::Color{255, 245, 200, 150})
             .with_border(afterhours::Color{180, 165, 125, 120}, 2.0f)
             .with_rounded_corners(RoundedCorners())

@@ -313,7 +313,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
          {255, 220, 150, 255},
          {220, 180, 100, 255}},
         {62,
-         (float)screen_w - 100.0f,
+         (float)screen_w - 115.0f,
          &icon_resources_tex,
          {180, 210, 245, 255},
          {140, 175, 215, 255}},
@@ -449,7 +449,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
                         std::to_string(res_max) + " (" +
                         std::to_string(res_pct_val) + "%)")
             .with_size(ComponentSize{pixels(130), pixels(30)})
-            .with_absolute_position((float)screen_w - 128.0f,
+            .with_absolute_position((float)screen_w - 140.0f,
                                     meter_base_y + 44.0f + 5.0f)
             .with_custom_text_color(panel_blue)
             .with_alignment(TextAlignment::Right));

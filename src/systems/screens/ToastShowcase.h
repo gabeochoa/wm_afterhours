@@ -275,6 +275,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(1.0f), pixels(56)})
                    .with_align_items(AlignItems::Center)
                    .with_justify_content(JustifyContent::FlexStart)
+                   .with_gap(pixels(8))
                    .with_debug_name("third_row"));
 
     if (button(context, mk(third_row.ent(), 0),

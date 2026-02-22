@@ -118,8 +118,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(row1.ent(), i),
              ComponentConfig{}
                  .with_label(dark_labels[i])
-                 .with_size({percent(0.24f), pixels(44.0f)})
+                 .with_size({percent(0.23f), pixels(44.0f)})
                  .with_custom_background(dark_colors[i])
+                 .with_border(afterhours::Color{80, 80, 100, 255}, 1.0f)
                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                  .with_debug_name("dark_btn_" + std::to_string(i)));
     }
@@ -145,7 +146,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
       button(context, mk(row2.ent(), i),
              ComponentConfig{}
                  .with_label(light_labels[i])
-                 .with_size({percent(0.24f), pixels(44.0f)})
+                 .with_size({percent(0.23f), pixels(44.0f)})
                  .with_custom_background(light_colors[i])
                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
                  .with_debug_name("light_btn_" + std::to_string(i)));
@@ -294,35 +295,35 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row5.ent(), 0),
            ComponentConfig{}
                .with_label("Primary")
-               .with_size({percent(0.185f), pixels(44.0f)})
+               .with_size({percent(0.18f), pixels(44.0f)})
                .with_background(Theme::Usage::Primary)
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     button(context, mk(row5.ent(), 1),
            ComponentConfig{}
                .with_label("Accent")
-               .with_size({percent(0.185f), pixels(44.0f)})
+               .with_size({percent(0.18f), pixels(44.0f)})
                .with_background(Theme::Usage::Accent)
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     button(context, mk(row5.ent(), 2),
            ComponentConfig{}
                .with_label("Secondary")
-               .with_size({percent(0.185f), pixels(44.0f)})
+               .with_size({percent(0.18f), pixels(44.0f)})
                .with_background(Theme::Usage::Secondary)
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     button(context, mk(row5.ent(), 3),
            ComponentConfig{}
                .with_label("Background")
-               .with_size({percent(0.185f), pixels(44.0f)})
+               .with_size({percent(0.18f), pixels(44.0f)})
                .with_background(Theme::Usage::Background)
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
 
     button(context, mk(row5.ent(), 4),
            ComponentConfig{}
                .with_label("Surface")
-               .with_size({percent(0.185f), pixels(44.0f)})
+               .with_size({percent(0.18f), pixels(44.0f)})
                .with_background(Theme::Usage::Surface)
                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
   }

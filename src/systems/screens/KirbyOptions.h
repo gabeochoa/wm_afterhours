@@ -201,7 +201,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     auto panel = vstack(
         context, mk(body.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(1100), percent(1.0f)})
+            .with_size(ComponentSize{pixels(1050), percent(1.0f)})
             .with_custom_background(panel_white)
             .with_border(border_gray, 3.0f)
             .with_rounded_corners(RoundedCorners())

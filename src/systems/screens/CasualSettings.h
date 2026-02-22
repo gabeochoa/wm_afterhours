@@ -100,9 +100,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto close_row =
         hstack(context, mk(panel.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                   .with_size(ComponentSize{percent(0.96f), pixels(42)})
                    .with_justify_content(JustifyContent::FlexEnd)
                    .with_align_items(AlignItems::FlexStart)
+                   .with_self_align(SelfAlign::Center)
                    .with_no_wrap()
                    .with_debug_name("close_row"));
 
@@ -264,9 +265,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(data_btns.ent()),
         ComponentConfig{}
             .with_label("Sync")
-            .with_size(ComponentSize{pixels(42), pixels(42)})
+            .with_size(ComponentSize{pixels(50), pixels(50)})
             .with_custom_background(btn_green)
             .with_custom_text_color(text_dark)
+            .with_font("Gaegu-Bold", pixels(14.0f))
             .with_alignment(TextAlignment::Center)
             .with_rounded_corners(RoundedCorners())
             .with_roundness(1.0f));
@@ -338,7 +340,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     make_menu_btn(right_col, 0, "Credits");
     make_menu_btn(right_col, 1, "Support");
-    make_menu_btn(right_col, 2, "Terms and Privacy");
+    make_menu_btn(right_col, 2, "Terms & Privacy");
 
     // ═══════════════════════════════════════════════════════════════
     // FOOTER SEPARATOR + BUTTONS

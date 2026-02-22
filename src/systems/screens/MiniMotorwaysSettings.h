@@ -104,7 +104,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     tab_container(
         context, mk(root.ent()), categories, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(700), pixels(48)})
+            .with_size(ComponentSize{pixels(660), pixels(48)})
             .with_margin(Margin{.top = pixels(10), .left = pixels(145)}));
 
     // ── Content area ──
@@ -181,7 +181,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(sens_row.ent()),
           ComponentConfig{}
-              .with_label("Controller Cursor Sensitivity")
+              .with_label("Cursor Sensitivity")
               .with_size(ComponentSize{expand(), pixels(40)})
               .with_custom_text_color(text_dark));
 

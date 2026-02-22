@@ -286,7 +286,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Scroll bar track (vertical indicator for chat area)
-    constexpr float SCROLL_TRACK_HEIGHT = 250.0f;
+    constexpr float SCROLL_TRACK_HEIGHT = 240.0f;
     constexpr float SCROLL_TRACK_WIDTH = 12.0f;
     auto scroll_track =
         div(context, mk(chat_container.ent(), 1),
@@ -294,7 +294,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(SCROLL_TRACK_WIDTH),
                                          pixels(SCROLL_TRACK_HEIGHT)})
                 .with_custom_background(afterhours::Color{200, 200, 200, 255})
-                .with_margin(Margin{.left = pixels(2), .top = pixels(10)})
+                .with_margin(Margin{.left = pixels(2), .top = pixels(16)})
                 .disable_rounded_corners()
                 .with_skip_tabbing(true)
                 .with_debug_name("scroll_track"));

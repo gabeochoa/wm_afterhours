@@ -54,9 +54,9 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float character_font_size = 56.0f;
 
     // Right info card
-    float card_width = 340.0f;
+    float card_width = 310.0f;
     float card_height = 340.0f;
-    float card_margin_right = 40.0f;
+    float card_margin_right = 50.0f;
     float card_y = 195.0f;
     float card_edge_width = 8.0f;
     float card_icon_size = 150.0f;
@@ -264,7 +264,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // Manual tab buttons to avoid expand() height issues in absolute
     // positioning
     {
-      float tab_total_w = menu_item_w + 430.0f;
+      float tab_total_w = menu_item_w + 400.0f;
       float tab_item_w = tab_total_w / static_cast<float>(option_labels.size());
       float tab_h = 44.0f;
       for (size_t i = 0; i < option_labels.size(); i++) {

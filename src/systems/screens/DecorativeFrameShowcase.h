@@ -73,7 +73,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Column and frame configuration parameters
     constexpr float col_width_pct = 0.30f;      // Column width percentage
-    constexpr float frame_size_px = 140.0f;     // Frame dimensions in pixels
+    constexpr float frame_size_px = 130.0f;     // Frame dimensions in pixels
     constexpr float label_height_px = 30.0f;    // Label height
     constexpr float desc_height_px = 24.0f;     // Description height
     constexpr float label_top_margin_px = 6.0f; // Space between frame and label

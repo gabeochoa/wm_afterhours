@@ -98,7 +98,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== PHONE FRAME ==========
     // Expanded settings panel width
     float phone_w = 380.0f;
-    float phone_h = 690.0f; // Increased height to fit volume sliders and legend
+    float phone_h = 680.0f;
     float phone_x = 50.0f;
     float phone_y = ((float)screen_h - phone_h) / 2.0f;
 
@@ -185,7 +185,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float row_start_y = status_y + 85.0f;
     float row_w = screen_inner_w - 16.0f;
     float row_h = 44.0f; // Minimum 44px for touch targets
-    float row_gap = 3.0f;
+    float row_gap = 2.0f;
 
     // Language selector row (purple globe icon)
     render_language_row(context, entity, 100, row_x, row_start_y, row_w, row_h);

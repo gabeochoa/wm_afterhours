@@ -53,7 +53,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = vstack(
         context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.92f)})
+            .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Background)
             .with_padding(Spacing::sm)
@@ -194,7 +194,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     progress_bar(context, mk(stack_row.ent(), 1), control_value * 0.45f,
                  ComponentConfig{}
                      .with_label("Shield")
-                     .with_size(ComponentSize{percent(0.47f), pixels(28)})
+                     .with_size(ComponentSize{percent(0.45f), pixels(28)})
                      .with_custom_background(shield_color)
                      .with_font(FONT, pixels(14.0f))
                      .with_skip_tabbing(true)

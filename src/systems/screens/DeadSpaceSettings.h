@@ -204,7 +204,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{expand(), percent(1.0f)})
                      .with_custom_background(tab_bg)
                      .with_custom_text_color(tab_text)
-                     .with_font_size(pixels(13.0f))
+                     .with_font_size(pixels(12.0f))
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("tab_" + std::to_string(ti)))) {
         active_tab = ti;
@@ -248,6 +248,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    .with_align_items(AlignItems::Center)
                    .with_no_wrap()
                    .with_padding(Padding{.right = pixels(20)})
+                   .with_margin(Margin{.top = pixels(8)})
                    .with_debug_name("footer"));
 
     button(context, mk(footer.ent()),

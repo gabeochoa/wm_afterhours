@@ -59,7 +59,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                .with_margin(Margin{.right = DefaultSpacing::small()})
                .with_label(tag.label)
                .with_custom_text_color(afterhours::Color{20, 20, 25, 255})
-               .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
+               .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
                .with_debug_name("tag_" + tag.label));
   }
 

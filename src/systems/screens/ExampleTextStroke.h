@@ -73,7 +73,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     const char *bold_font = "BlackOpsOne";
 
     // Consistent vertical spacing for left column rows
-    float content_start = 110.0f;
+    float content_start = 115.0f;
     float desc_gap = 4.0f; // Gap between styled text and its description
     float row_gap = 10.0f; // Gap between description and next row
     float desc_h = 24.0f;
@@ -294,7 +294,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== Tip bar at bottom ==========
-    float code_y = screen_h - 70.0f;
+    float code_y = screen_h - 82.0f;
 
     div(context, mk(entity, id++),
         ComponentConfig{}

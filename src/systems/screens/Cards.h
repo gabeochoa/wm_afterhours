@@ -117,11 +117,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row1.ent(), 100),
         ComponentConfig{}
             .with_label("Styles:")
-            .with_size(ComponentSize{pixels(100), pixels(44)})
+            .with_size(ComponentSize{pixels(85), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_margin(Spacing::sm)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+            .with_margin(Spacing::xs)
             .with_skip_tabbing(true));
 
     // Card 1: Basic surface card (simple) - standardized height
@@ -152,11 +152,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row2.ent(), 100),
         ComponentConfig{}
             .with_label("Nested:")
-            .with_size(ComponentSize{pixels(80), pixels(44)})
+            .with_size(ComponentSize{pixels(75), pixels(44)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_margin(Margin{.right = DefaultSpacing::small()})
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+            .with_margin(Margin{.right = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
     // Nested card container - sized proportionally to fit within row
@@ -212,10 +212,10 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
-            .with_label("This panel uses opacity to create a translucent effect.")
+            .with_label("Uses opacity for a translucent effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font)
             .with_skip_tabbing(true));
 

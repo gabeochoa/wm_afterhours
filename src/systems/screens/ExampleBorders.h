@@ -23,7 +23,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
   // Configurable typography sizes
   float section_header_font_size =
-      22.0f; // Category labels (e.g., "Width & Color")
+      18.0f; // Category labels (e.g., "Width & Color")
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {

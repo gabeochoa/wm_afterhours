@@ -119,7 +119,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // Corner container with known size
-    float corner_w = sw - 80.f;
+    float corner_w = sw - 96.f;
     float sh = (float)Settings::get().get_screen_height();
     float box_s = 50.f * sh / 720.f;
     float corner_h = 110.f * sh / 720.f;
@@ -229,7 +229,7 @@ struct AbsolutePositioningShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(pink)
             .with_auto_text_color(true)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
-            .with_absolute_position(sw - 180.f * sh / 720.f, 4.f * sh / 720.f)
+            .with_absolute_position(sw - 210.f * sh / 720.f, 4.f * sh / 720.f)
             .with_debug_name("abs_badge"));
 
     // -- Section 4: screen_pct sizing --

@@ -358,7 +358,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(patience_text)
               .with_size(ComponentSize{pixels(110), pixels(22)})
-              .with_absolute_position(right_panel_x + 200.0f, row_y + 6.0f)
+              .with_absolute_position(right_panel_x + 190.0f, row_y + 6.0f)
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(low_patience ? badge_red
                                                    : theme.font_muted));
@@ -560,7 +560,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
 
     // ========== BOTTOM RIGHT: Icons with Badges ==========
     // Connected to right panel via consistent positioning
-    float icon_x = right_panel_x + right_panel_w - 250.0f;
+    float icon_x = right_panel_x + right_panel_w - 265.0f;
     float icon_y = chat_y + 5.0f;
     float icon_size = 60.0f; // Minimum 44px for touch targets
     float icon_img_size = 40.0f;

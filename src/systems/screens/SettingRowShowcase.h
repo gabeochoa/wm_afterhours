@@ -91,7 +91,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = vstack(
         context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.78f), screen_pct(0.92f)})
+            .with_size(ComponentSize{screen_pct(0.76f), screen_pct(0.90f)})
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Background)
             .with_padding(Spacing::sm)
@@ -114,7 +114,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     auto content =
         vstack(context, mk(root.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.95f), percent(0.82f)})
+                   .with_size(ComponentSize{percent(0.95f), percent(0.85f)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Padding{.top = pixels(10),
                                          .left = pixels(16),

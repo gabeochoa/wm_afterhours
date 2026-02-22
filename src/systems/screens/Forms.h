@@ -193,7 +193,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto right_col =
         vstack(context, mk(content.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.40f), percent(1.0f)})
+                   .with_size(ComponentSize{percent(0.42f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.9f))
                    .with_padding(Spacing::sm)

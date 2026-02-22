@@ -88,7 +88,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     auto card = vstack(
         context, mk(root.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.92f)})
+            .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
             .with_background(Theme::Usage::Surface)
             .with_roundness(0.02f)
             .with_padding(Spacing::sm)

@@ -257,11 +257,11 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
     {
       div(context, mk(col2.ent(), 2),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(0.88f), pixels(95.0f)})
+              .with_size(ComponentSize{percent(0.88f), pixels(90.0f)})
               .with_custom_background(C{8, 14, 16, 255})
               .with_border(teal, 1.0f)
               .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_margin(Margin{.top = pixels(12.0f)})
+              .with_margin(Margin{.top = pixels(10.0f)})
               .with_debug_name("grid_panel_2"))
           .decorate(with_grid_bg(context, 12.0f, C{50, 130, 130, 120}, 1.0f));
     }
@@ -335,7 +335,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
       // Text content next to the accent bar
       div(context, mk(panel.ent(), 10),
           ComponentConfig{}
-              .with_size(ComponentSize{percent(0.9f), percent(1.0f)})
+              .with_size(ComponentSize{percent(0.85f), percent(1.0f)})
               .with_label("The only way to do great work is to love "
                           "what you do.")
               .with_font_size(pixels(11.0f))

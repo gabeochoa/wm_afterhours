@@ -561,7 +561,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       toggle_switch(context, mk(m.ent(), 4), settings_dark_mode,
                     ComponentConfig{}
                         .with_label("Dark Mode")
-                        .with_size(ComponentSize{pixels(340), pixels(40)})
+                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
                         .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                         .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                         .with_render_layer(CL)
@@ -570,7 +570,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       toggle_switch(context, mk(m.ent(), 5), settings_notifs,
                     ComponentConfig{}
                         .with_label("Notifications")
-                        .with_size(ComponentSize{pixels(340), pixels(40)})
+                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
                         .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)

@@ -360,7 +360,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Interactive button example
-    float row5_y = row4_y + box_height + gap + 5;
+    float row5_y = row4_y + box_height + gap + 20;
 
     div(context, mk(entity, 75),
         ComponentConfig{}

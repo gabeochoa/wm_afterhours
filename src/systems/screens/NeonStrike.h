@@ -23,9 +23,9 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
   // ========== CONFIGURABLE LAYOUT PARAMETERS ==========
   // Margins and spacing
-  float margin_edge = 28.0f;
-  float margin_bottom = 25.0f;
-  float element_gap = 10.0f;   // Gap between adjacent elements
+  float margin_edge = 32.0f;
+  float margin_bottom = 28.0f;
+  float element_gap = 12.0f;
 
   // Compass configuration
   float compass_size = 70.0f;
@@ -36,7 +36,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
   // Killstreak sidebar configuration
   float ks_icon_size = 60.0f;
-  float ks_icon_gap = 16.0f; // Reduced gap to fit 4 icons above minimap
+  float ks_icon_gap = 20.0f;
   float ks_start_y = 140.0f;
   int ks_sidebar_count = 4; // Number of skill icons to show on left
 

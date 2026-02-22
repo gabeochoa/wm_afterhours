@@ -87,7 +87,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
 
     // Left column - Size variations
     float left_spacing =
-        content_height / 6.0f; // Divide content area into sections
+        content_height / 7.0f;
 
     div(context, mk(entity, 10),
         ComponentConfig{}

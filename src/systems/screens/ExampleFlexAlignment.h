@@ -163,7 +163,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name(label + "_container"));
 
     // Three boxes of different heights using percent of container
-    const float heights[] = {0.70f, 0.45f, 0.55f};
+    const float heights[] = {0.65f, 0.40f, 0.50f};
     for (int i = 0; i < 3; i++) {
       vstack(context, mk(container.ent(), i),
              ComponentConfig{}

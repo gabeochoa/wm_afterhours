@@ -65,7 +65,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
        0.0f,
        0,
        0,
-       {"Off", "FXAA", "TAA", "TSR (Temporal Super Resolution)", "DLSS"},
+       {"Off", "FXAA", "TAA", "TSR", "DLSS"},
        3},
       {"Dynamic resolution", false, 0.0f, 0, 0, {"Disabled", "Enabled"}, 1},
       {"Framerate target", true, 0.4f, 30, 120, {}, 0},
