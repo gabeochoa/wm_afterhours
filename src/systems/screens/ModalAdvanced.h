@@ -534,7 +534,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
                  .with_render_layer(CL)
                  .with_debug_name("settings_volume_slider"),
-             SliderHandleValueLabelPosition::WithLabel);
+             SliderHandleValueLabelPosition::OnHandle);
 
       // Language dropdown
       div(context, mk(m.ent(), 2),
