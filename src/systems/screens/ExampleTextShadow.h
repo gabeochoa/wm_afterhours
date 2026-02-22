@@ -37,7 +37,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text Drop Shadow")
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
-            .with_absolute_position(20.0f, 15.0f)
+            .with_absolute_position(20.0f, 22.0f)
             .with_font("BlackOpsOne", h720(36.0f))
             .with_custom_text_color(text_dark)
             .with_text_shadow(afterhours::Color{0, 0, 0, 255}, 6.0f,

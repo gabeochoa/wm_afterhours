@@ -383,9 +383,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       int text_w;
     };
     QuestItem quests[] = {
-        {251, "[X]", 14.0f, 252, "SIGN UP A BUSINESS TO YOUR DELIVERY APP",
-         40.0f, 285},
-        {253, "[ ]", 48.0f, 255, "SIGN UP 4 BUSINESSES TO YOUR DELIVERY APP",
+        {251, "[X]", 14.0f, 252, "SIGN UP A BUSINESS TO YOUR APP",
+         40.0f, 280},
+        {253, "[ ]", 48.0f, 255, "SIGN UP 4 BUSINESSES TO YOUR APP",
          78.0f, 240},
     };
     for (auto &q : quests) {

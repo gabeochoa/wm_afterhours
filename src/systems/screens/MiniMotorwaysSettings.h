@@ -136,7 +136,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(label_with_state)
                 .with_size(ComponentSize{expand(), pixels(40)})
-                .with_font("EqProRounded", pixels(24.0f))
+                .with_font("EqProRounded", pixels(20.0f))
                 .with_custom_text_color(text_dark));
 
         // Toggle track (clickable button)

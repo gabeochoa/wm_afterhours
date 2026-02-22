@@ -223,15 +223,15 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_roundness(0.5f)
                .with_margin(Margin{.top = pixels(2)}));
 
-    // ── RESET TO DEFAULTS (below panel) ──
-    div(context, mk(root.ent()),
+    // ── RESET TO DEFAULTS ──
+    div(context, mk(panel.ent()),
         ComponentConfig{}
             .with_label("RESET TO DEFAULTS")
             .with_size(ComponentSize{pixels(250), pixels(36)})
             .with_font("EqProRounded", pixels(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = pixels(20)}));
+            .with_margin(Margin{.top = pixels(10)}));
   }
 
   // ═══════════════════════════════════════════════════════════════

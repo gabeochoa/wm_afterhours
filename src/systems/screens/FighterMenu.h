@@ -54,9 +54,9 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     float character_font_size = 56.0f;
 
     // Right info card
-    float card_width = 380.0f;
+    float card_width = 340.0f;
     float card_height = 340.0f;
-    float card_margin_right = 50.0f;
+    float card_margin_right = 40.0f;
     float card_y = 195.0f;
     float card_edge_width = 8.0f;
     float card_icon_size = 150.0f;
@@ -291,7 +291,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                            menu_x + static_cast<float>(i) * tab_item_w, menu_y)
                        .with_custom_background(tab_bg_color)
                        .with_custom_text_color(tab_text_color)
-                       .with_font("EqProRounded", h720(16.0f))
+                       .with_font("EqProRounded", h720(14.0f))
                        .with_alignment(TextAlignment::Center))) {
           active_tab = i;
         }

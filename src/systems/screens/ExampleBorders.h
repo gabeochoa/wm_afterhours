@@ -51,11 +51,13 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(bg_deep)
             .with_debug_name("bg"));
 
-    // Calculate content dimensions and center everything
-    float box_size = 100.0f;
-    float gap = 20.0f;
-    float content_width = 6.0f * box_size + 5.0f * gap; // 6 boxes with 5 gaps
-    float start_x = (screen_width - content_width) / 2.0f;
+    float sw = static_cast<float>(screen_width);
+    float label_reserve = 160.0f;
+    float avail = sw - label_reserve - 30.0f;
+    float gap = std::min(20.0f, avail * 0.02f);
+    float box_size = std::min(100.0f, (avail - 5.0f * gap) / 6.0f);
+    float content_width = 6.0f * box_size + 5.0f * gap;
+    float start_x = label_reserve + (sw - label_reserve - content_width) / 2.0f;
     float start_y = 85.0f;
 
     // Title - centered above content

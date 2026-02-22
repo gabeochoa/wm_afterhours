@@ -336,9 +336,9 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(panel.ent(), 10),
           ComponentConfig{}
               .with_size(ComponentSize{percent(0.9f), percent(1.0f)})
-              .with_label(
-                  "The only way to do great work is to love what you do.")
-              .with_font_size(pixels(12.0f))
+              .with_label("The only way to do great work is to love "
+                          "what you do.")
+              .with_font_size(pixels(11.0f))
               .with_custom_text_color(theme.font)
               .with_alignment(TextAlignment::Left)
               .with_padding(Spacing::sm));

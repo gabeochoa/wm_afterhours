@@ -23,8 +23,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
 
   // ========== CONFIGURABLE LAYOUT PARAMETERS ==========
   // Margins and spacing
-  float margin_edge = 22.0f;   // Edge margin for UI elements
-  float margin_bottom = 20.0f; // Bottom margin
+  float margin_edge = 28.0f;
+  float margin_bottom = 25.0f;
   float element_gap = 10.0f;   // Gap between adjacent elements
 
   // Compass configuration
@@ -474,7 +474,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== BOTTOM CENTER: Ammo ==========
-    float ammo_x = margin_edge + minimap_width + 20.0f;
+    float ammo_x = margin_edge + minimap_width + 25.0f;
     float ammo_y = (float)screen_h - margin_bottom - 70.0f;
     div(context, mk(entity, 300),
         ComponentConfig{}

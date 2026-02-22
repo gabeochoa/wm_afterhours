@@ -105,7 +105,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto sidebar =
         vstack(context, mk(main_area.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(200), pixels(300)})
+                   .with_size(ComponentSize{pixels(240), pixels(300)})
                    .with_no_wrap()
                    .with_padding(Padding{.top = pixels(10)})
                    .with_debug_name("sidebar"));

@@ -103,6 +103,10 @@ def run_claude_batch(batch_info):
         for p in paths:
             screenshot_dirs.add(os.path.dirname(p))
 
+    prompt_file = os.path.join(output_dir, f"_batch_{batch_id}_prompt.txt")
+    with open(prompt_file, "w") as f:
+        f.write(prompt)
+
     cmd = [
         "claude", "-p",
         "--allowedTools", "Read,Write",
@@ -112,15 +116,18 @@ def run_claude_batch(batch_info):
         cmd.extend(["--add-dir", d])
     cmd.extend(["--add-dir", output_dir])
 
-    cmd.append(prompt)
+    per_screen_timeout = 120
+    batch_timeout = max(600, len(batch) * per_screen_timeout)
 
     try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True, text=True,
-            timeout=300,
-            cwd=project_root,
-        )
+        with open(prompt_file, "r") as pf:
+            result = subprocess.run(
+                cmd,
+                stdin=pf,
+                capture_output=True, text=True,
+                timeout=batch_timeout,
+                cwd=project_root,
+            )
 
         if result.returncode != 0:
             log(f"[Batch {batch_id}] WARNING: claude exited with {result.returncode}")
@@ -145,11 +152,14 @@ def run_claude_batch(batch_info):
         return batch_id, written
 
     except subprocess.TimeoutExpired:
-        log(f"[Batch {batch_id}] ERROR: timed out after 300s")
+        log(f"[Batch {batch_id}] ERROR: timed out after {batch_timeout}s")
         return batch_id, []
     except Exception as e:
         log(f"[Batch {batch_id}] ERROR: {e}")
         return batch_id, []
+    finally:
+        if os.path.isfile(prompt_file):
+            os.remove(prompt_file)
 
 
 def run_cursor_batch(batch, focus, output_dir):

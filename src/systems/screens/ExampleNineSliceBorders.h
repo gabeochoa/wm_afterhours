@@ -308,7 +308,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Double Ornate")
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
-            .with_absolute_position(start_x + box_width + gap, row4_y)
+            .with_absolute_position(start_x + box_width + gap + 20.0f, row4_y)
             .with_nine_slice_border(double_panel_010, 32)
             .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
             .with_custom_text_color(text_dark)

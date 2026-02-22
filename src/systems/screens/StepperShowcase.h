@@ -170,8 +170,8 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto names = card_names();
     stepper(context, mk(right_col.ent()), names, card_idx,
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(340), pixels(56)})
-                .with_font_size(pixels(26.0f))
+                .with_size(ComponentSize{percent(0.9f), pixels(56)})
+                .with_font_size(pixels(22.0f))
                 .with_margin(Margin{.bottom = DefaultSpacing::large()}),
             3);
 
@@ -181,7 +181,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto card_container =
         vstack(context, mk(right_col.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(300), pixels(220)})
+                   .with_size(ComponentSize{percent(0.9f), pixels(220)})
                    .with_custom_background(card.color)
                    .with_padding(Spacing::lg)
                    .with_roundness(0.10f)
@@ -202,7 +202,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label(card.description)
             .with_size(ComponentSize{percent(1.0f), children()})
             .with_custom_text_color(afterhours::Color{230, 230, 230, 255})
-            .with_font_size(pixels(24.0f))
+            .with_font_size(pixels(20.0f))
             .with_alignment(TextAlignment::Left)
             .with_background(Theme::Usage::None));
   }

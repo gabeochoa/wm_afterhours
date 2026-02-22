@@ -166,9 +166,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                  .with_custom_background(panel_blue)
                                  .with_border(panel_border, 2.0f)
                                  .with_padding(Padding{.top = pixels(8),
-                                                       .left = pixels(15),
+                                                       .left = pixels(20),
                                                        .bottom = pixels(8),
-                                                       .right = pixels(15)})
+                                                       .right = pixels(20)})
                                  .with_no_wrap()
                                  .with_debug_name("main_panel"));
 
@@ -196,8 +196,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 0),
                  ComponentConfig{}
                      .with_label(current_settings[i].label)
-                     .with_size(ComponentSize{pixels(140), pixels(36)})
-                     .with_font("EqProRounded", pixels(18.0f))
+                     .with_size(ComponentSize{pixels(170), pixels(36)})
+                     .with_font("EqProRounded", pixels(16.0f))
                      .with_custom_text_color(label_color))) {
         selected_row = i;
       }

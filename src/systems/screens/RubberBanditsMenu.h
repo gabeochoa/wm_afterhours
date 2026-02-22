@@ -307,7 +307,7 @@ struct RubberBanditsMenuScreen : ScreenSystem<UIContext<InputAction>> {
     auto bottom =
         vstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(150)})
+                   .with_size(ComponentSize{percent(1.0f), pixels(140)})
                    .with_custom_background(bg_yellow_dark)
                    .with_no_wrap()
                    .with_debug_name("ground"));

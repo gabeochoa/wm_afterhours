@@ -93,10 +93,10 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
     auto top_row = hstack(
         context, mk(root.ent(), 3),
         ComponentConfig{}
-            .with_size(ComponentSize{children(), children()})
+            .with_size(ComponentSize{screen_pct(0.92f), children()})
             .with_margin(Margin{.top = h720(10.0f)})
-            .with_justify_content(JustifyContent::Center)
-            .with_gap(h720(20.0f))
+            .with_justify_content(JustifyContent::SpaceAround)
+            .with_gap(h720(15.0f))
             .with_debug_name("top_row"));
 
     // Helper lambda to create a card with circular progress
@@ -107,7 +107,7 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
       auto card = vstack(
           context, mk(parent, base_id),
           ComponentConfig{}
-              .with_size(ComponentSize{h720(200.0f), children()})
+              .with_size(ComponentSize{h720(180.0f), children()})
               .with_custom_background(card_dark)
               .with_soft_shadow(4.0f, 8.0f, 20.0f,
                                 afterhours::Color{0, 0, 0, 80})
@@ -189,10 +189,10 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
     auto bottom_row = hstack(
         context, mk(root.ent(), 101),
         ComponentConfig{}
-            .with_size(ComponentSize{children(), children()})
+            .with_size(ComponentSize{screen_pct(0.92f), children()})
             .with_margin(Margin{.top = h720(5.0f)})
-            .with_justify_content(JustifyContent::Center)
-            .with_gap(h720(15.0f))
+            .with_justify_content(JustifyContent::SpaceAround)
+            .with_gap(h720(12.0f))
             .with_debug_name("bottom_row"));
 
     float base_sizes[] = {28.0f, 40.0f, 52.0f, 64.0f, 80.0f};

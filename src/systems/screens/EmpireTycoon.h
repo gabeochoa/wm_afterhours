@@ -615,10 +615,10 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // Trend indicator legend
     div(context, mk(entity, 212),
         ComponentConfig{}
-            .with_label("^ = Trending Up (arrow)")
-            .with_size(ComponentSize{pixels(190), pixels(32)})
-            .with_absolute_position(panel_x + panel_w - 210.0f, panel_y + 22.0f)
-            .with_font("EqProRounded", h720(20.0f))
+            .with_label("^ = Trending Up")
+            .with_size(ComponentSize{pixels(170), pixels(32)})
+            .with_absolute_position(panel_x + panel_w - 190.0f, panel_y + 22.0f)
+            .with_font("EqProRounded", h720(18.0f))
             .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
             .with_custom_background(afterhours::Color{220, 245, 220, 255})
             .with_border(happy_green, 2.0f)

@@ -400,11 +400,11 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
     card_y += 80.0f + card_spacing;
     div(context, mk(entity, 60),
         ComponentConfig{}
-            .with_label("Minimum touch target size is 44px. Smaller containers "
-                        "trigger overflow warnings.")
+            .with_label("Minimum touch target size is 44px. Smaller "
+                        "containers trigger overflow warnings.")
             .with_size(ComponentSize{pixels(card_width), pixels(44)})
             .with_absolute_position(right_col_x, card_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(15.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left));
   }

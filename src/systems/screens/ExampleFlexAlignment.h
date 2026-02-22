@@ -274,7 +274,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
             context, mk(tab_row.ent(), 0), category_labels, active_category,
             ComponentConfig{}
                 .with_size(ComponentSize{percent(1.0f), pixels(40)})
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
                 .with_debug_name("category_tabs"));
         result) {
       // Tab changed

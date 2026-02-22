@@ -357,8 +357,8 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 215 + static_cast<int>(i) * 10),
           ComponentConfig{}
               .with_label(patience_text)
-              .with_size(ComponentSize{pixels(120), pixels(22)})
-              .with_absolute_position(right_panel_x + 175.0f, row_y + 6.0f)
+              .with_size(ComponentSize{pixels(110), pixels(22)})
+              .with_absolute_position(right_panel_x + 200.0f, row_y + 6.0f)
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(low_patience ? badge_red
                                                    : theme.font_muted));
@@ -367,7 +367,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 211 + static_cast<int>(i) * 10),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(84), pixels(30)})
-              .with_absolute_position(right_panel_x + 270.0f, row_y + 3.0f)
+              .with_absolute_position(right_panel_x + 290.0f, row_y + 3.0f)
               .with_custom_background(brown_header)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.4f)

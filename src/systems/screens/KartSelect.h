@@ -278,8 +278,8 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 110 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_label(stat_label)
-              .with_size(ComponentSize{pixels(90), pixels(22)})
-              .with_absolute_position(preview_x + 20.0f, sy)
+              .with_size(ComponentSize{pixels(100), pixels(22)})
+              .with_absolute_position(preview_x + 15.0f, sy)
               .with_font("EqProRounded", h720(14.0f))
               .with_custom_text_color(white));
 
@@ -287,7 +287,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 111 + static_cast<int>(i) * 3),
           ComponentConfig{}
               .with_size(ComponentSize{pxf(stat_bar_w), pixels(16)})
-              .with_absolute_position(preview_x + 70.0f, sy + 3.0f)
+              .with_absolute_position(preview_x + 100.0f, sy + 3.0f)
               .with_custom_background(afterhours::Color{25, 35, 60, 255})
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.5f));
@@ -297,7 +297,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_size(
                   ComponentSize{pxf(stat_bar_w * stats[i].value), pixels(16)})
-              .with_absolute_position(preview_x + 70.0f, sy + 3.0f)
+              .with_absolute_position(preview_x + 100.0f, sy + 3.0f)
               .with_custom_background(stats[i].color)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.5f));
@@ -410,7 +410,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                               afterhours::Color{0, 0, 0, 60}));
 
     // ========== BOTTOM PROMPTS ==========
-    float prompt_y = (float)screen_h - 35.0f;
+    float prompt_y = (float)screen_h - 42.0f;
     div(context, mk(entity, 340),
         ComponentConfig{}
             .with_label("A: Select   B: Back   L/R: Switch Kart")

@@ -84,6 +84,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(1.0f), pixels(56)})
                    .with_align_items(AlignItems::Center)
                    .with_justify_content(JustifyContent::FlexStart)
+                   .with_gap(pixels(8))
                    .with_debug_name("button_row"));
 
     if (button(context, mk(button_row.ent(), 0),
@@ -173,6 +174,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(1.0f), pixels(56)})
                    .with_align_items(AlignItems::Center)
                    .with_justify_content(JustifyContent::FlexStart)
+                   .with_gap(pixels(8))
                    .with_debug_name("second_row"));
 
     // Configurable toast durations for demo

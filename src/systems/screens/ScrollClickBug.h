@@ -28,7 +28,7 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
     auto root = vstack(
         context, mk(entity, 100),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.85f), screen_pct(0.88f)})
+            .with_size(ComponentSize{screen_pct(0.82f), screen_pct(0.85f)})
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Background)
             .with_border(theme.font_muted, 1.0f)

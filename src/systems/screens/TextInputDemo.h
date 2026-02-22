@@ -217,16 +217,16 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 2),
         ComponentConfig{}
             .with_label(status_message)
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
 
     // Instructions - brief contextual navigation hint
     div(context, mk(main_container.ent(), 3),
         ComponentConfig{}
             .with_label("Tab / Enter")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(20)})
             .with_custom_background(
                 afterhours::colors::darken(theme.surface, 0.8f))
             .with_padding(Spacing::sm)
