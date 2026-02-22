@@ -262,7 +262,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     // Large potion flask visualization
     float flask_size = 120.0f;
     float flask_x = brew_x + (brew_w - flask_size) / 2.0f;
-    float flask_y = brew_y + 55.0f;
+    float flask_y = brew_y + 70.0f;
 
     // Flask outline
     div(context, mk(entity, 210),

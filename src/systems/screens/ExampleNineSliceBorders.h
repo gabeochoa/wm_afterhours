@@ -401,7 +401,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
                         "Corners stay crisp!")
             .with_size(ComponentSize{pixels(270), pixels(70)})
             .with_absolute_position(start_x + 215, row5_y + 15)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Left));
 

@@ -4,10 +4,10 @@
 
 ## Issues Found
 
-### 1. Vertical scroll container clips bottom item at an awkward position
+### 1. Vertical scroll container clips bottom item at container border
 **Type:** overflow
 **Screenshot:** idle_720p.png, scroll_view_before_scroll.png, scroll_view_after_scroll.png
-**Detail:** The last visible item in the vertical scroll list (e.g., "Item 5" in the initial state, "Item 11" after scrolling) is clipped at the container's bottom border. Roughly half of the item row is visible, with the text cut off mid-row. The rounded bottom corners of the container cut into the item's rectangular background, creating a jagged visual. This is consistent across scroll positions except when scrolled to the bottom (where Item 20 fits cleanly).
+**Detail:** The last visible item in the vertical scroll list (e.g., "Item 5" in the initial state, "Item 11" after scrolling) is clipped at the container's bottom border. Roughly half of the item row is visible, with the text cut off mid-row. The container's rounded bottom corners cut into the item's rectangular background, creating a jagged visual. When scrolled to the bottom (Item 20), all items fit cleanly, confirming this is a clipping issue at intermediate scroll positions.
 **Suggested fix:** Add bottom padding inside the scroll container, or snap the viewport height to a multiple of item height plus spacing so items are either fully visible or barely peek in to invite scrolling.
 
 ### 2. Status text and scrollbar sit outside container borders

@@ -13,7 +13,7 @@
 ### 2. Dialog text truncated in Interactive Elements section
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the "Interactive Elements" row at the bottom, the dialog panel contains text "This is a dialog using 9-slice. Corn..." which is truncated. The text overflows the visible area and is clipped rather than wrapping or being fully contained.
+**Detail:** In the "Interactive Elements" row at the bottom, the dialog panel contains text "This is a dialog using 9-slice. Corners s..." which is truncated. The text overflows the visible area and is clipped rather than wrapping or being fully contained.
 **Suggested fix:** Either increase the dialog panel width to fit the full text, enable text wrapping within the container, or ensure text ellipsis is applied cleanly.
 
 ### 3. "Interactive Elements" section header overlaps with Double-Width row

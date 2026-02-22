@@ -44,7 +44,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Text Stroke / Outline")
             .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
-            .with_absolute_position(20.0f, 15.0f)
+            .with_absolute_position(20.0f, 22.0f)
             .with_font("BlackOpsOne", h720(36.0f))
             .with_custom_text_color(text_white)
             .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 3.0f)
@@ -294,7 +294,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
     }
 
     // ========== Tip bar at bottom ==========
-    float code_y = screen_h - 60.0f;
+    float code_y = screen_h - 70.0f;
 
     div(context, mk(entity, id++),
         ComponentConfig{}

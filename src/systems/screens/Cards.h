@@ -212,11 +212,10 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(info_panel.ent(), 1),
         ComponentConfig{}
-            .with_label("This panel uses opacity to create a translucent "
-                        "overlay effect.")
+            .with_label("This panel uses opacity to create a translucent effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(80)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_custom_text_color(theme.font)
             .with_skip_tabbing(true));
 

@@ -313,7 +313,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
          {255, 220, 150, 255},
          {220, 180, 100, 255}},
         {62,
-         (float)screen_w - 85.0f,
+         (float)screen_w - 100.0f,
          &icon_resources_tex,
          {180, 210, 245, 255},
          {140, 175, 215, 255}},

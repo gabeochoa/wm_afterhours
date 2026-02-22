@@ -13,17 +13,17 @@
 ### 2. "Sync" button text clipped by circular boundary
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** The green circular "Sync" button next to "Save/Load Progress" has its text label ("Sync") slightly clipped on the right side by the button's circular boundary. The rightmost character is partially truncated, and the button sits very close to the container's right edge.
+**Detail:** The green circular "Sync" button next to "Save/Load Progress" has its text label ("Sync") slightly clipped on the right side by the button's circular boundary. The "c" character is partially cut off, and the button sits close to the container's right edge.
 **Suggested fix:** Increase the button diameter to fully accommodate the text label, or reduce the font size so the label fits cleanly within the circle.
 
-### 3. Asymmetric left/right padding in main container
-**Type:** container_bounds
-**Screenshot:** idle_720p.png
-**Detail:** The left side of the settings container has noticeably more internal padding than the right side. The Audio section starts well-inset from the left edge, but the right-column buttons (Credits, Support, Terms and Privacy) and the OK/Cancel/Apply buttons extend closer to the right border with less margin.
-**Suggested fix:** Ensure consistent horizontal padding on both sides of the container.
-
-### 4. "Terms and Privacy" button breaks two-column grid symmetry
+### 3. "Terms and Privacy" button breaks two-column grid symmetry
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
 **Detail:** The Menu section uses a two-column layout (Notifications/Credits, Language/Support), but "Terms and Privacy" sits alone in the right column with no counterpart on the left, creating a visual gap and asymmetric bottom row.
 **Suggested fix:** Center "Terms and Privacy" across both columns if it is the only item in the last row, or span it full-width.
+
+### 4. Asymmetric left/right padding in main container
+**Type:** container_bounds
+**Screenshot:** idle_720p.png
+**Detail:** The left side of the settings container has noticeably more internal padding than the right side. The Audio section starts well-inset from the left edge, but the right-column buttons (Credits, Support, Terms and Privacy) and the OK/Cancel/Apply buttons extend closer to the right border with less margin.
+**Suggested fix:** Ensure consistent horizontal padding on both sides of the container.

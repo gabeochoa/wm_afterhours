@@ -69,7 +69,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = vstack(
         context, mk(entity),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
+            .with_size(ComponentSize{screen_pct(0.86f), screen_pct(0.90f)})
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Background)
             .with_padding(Spacing::sm)
@@ -202,7 +202,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label(card.description)
             .with_size(ComponentSize{percent(1.0f), children()})
             .with_custom_text_color(afterhours::Color{230, 230, 230, 255})
-            .with_font_size(pixels(20.0f))
+            .with_font_size(pixels(18.0f))
             .with_alignment(TextAlignment::Left)
             .with_background(Theme::Usage::None));
   }

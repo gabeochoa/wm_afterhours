@@ -7,7 +7,7 @@
 ### 1. Description text overflows past the right edge of the viewport
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the "Nested:" row, the description text next to the "Semi-Transparent" card ("This panel uses opacity to create a translu...") is truncated at the right edge of the screen. The word "translucent" (or similar) is cut off mid-word with no ellipsis or wrapping, indicating the text extends beyond the viewport/container boundary.
+**Detail:** In the "Nested:" row, the description text next to the "Semi-Transparent" card ("This panel uses opacity to create a translucent...") is truncated at the right edge of the screen. The text extends beyond the viewport/container boundary with the word cut off mid-word and no ellipsis or wrapping applied.
 **Suggested fix:** Constrain the text element to its parent container width. Apply text wrapping or text-overflow ellipsis so the description stays within bounds. Alternatively, allow the container to expand vertically to accommodate the full text.
 
 ### 2. "Nested:" label positioned outside its row container

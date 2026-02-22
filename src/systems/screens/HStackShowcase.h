@@ -210,7 +210,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     auto patterns =
         vstack(context, mk(row3.ent(), 10),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.39f), percent(1.0f)})
+                   .with_size(ComponentSize{percent(0.37f), percent(1.0f)})
                    .with_custom_background(panel_bg)
                    .with_padding(Spacing::sm)
                    .with_margin(Margin{.left = pixels(4)})
@@ -306,7 +306,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(row4.ent(), i),
           ComponentConfig{}
               .with_label(dash_l[i])
-              .with_size(ComponentSize{percent(0.15f), percent(0.80f)})
+              .with_size(ComponentSize{percent(0.14f), percent(0.80f)})
               .with_custom_background(dash_c[i])
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))

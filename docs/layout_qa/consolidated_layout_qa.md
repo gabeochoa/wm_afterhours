@@ -2,16 +2,16 @@
 
 **Screens audited:** 76
 **Total issues found:** 151
-**Screens with issues:** 53
+**Screens with issues:** 52
 
 | Type | Count | Screens Affected |
 |------|-------|-----------------|
-| overflow | 63 | 43 |
-| container_bounds | 47 | 36 |
-| overlap | 30 | 20 |
-| corners | 11 | 10 |
+| overflow | 62 | 43 |
+| container_bounds | 48 | 39 |
+| overlap | 31 | 21 |
+| corners | 10 | 9 |
 
-## Overflow Issues (63)
+## Overflow Issues (62)
 
 ### absolute_positioning: 1. "TR" corner-pinned element clipped by container/screen edge
 **Type:** overflow
@@ -86,7 +86,7 @@
 ### cards: 1. Description text overflows past the right edge of the viewport
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the "Nested:" row, the description text next to the "Semi-Transparent" card ("This panel uses opacity to create a translu...") is truncated at the right edge of the screen. The word "translucent" (or similar) is cut off mid-word with no ellipsis or wrapping, indicating the text extends beyond the viewport/container boundary.
+**Detail:** In the "Nested:" row, the description text next to the "Semi-Transparent" card ("This panel uses opacity to create a translucent...") is truncated at the right edge of the screen. The text extends beyond the viewport/container boundary with the word cut off mid-word and no ellipsis or wrapping applied.
 **Suggested fix:** Constrain the text element to its parent container width. Apply text wrapping or text-overflow ellipsis so the description stays within bounds. Alternatively, allow the container to expand vertically to accommodate the full text.
 
 
@@ -100,7 +100,7 @@
 ### casual_settings: 2. "Sync" button text clipped by circular boundary
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** The green circular "Sync" button next to "Save/Load Progress" has its text label ("Sync") slightly clipped on the right side by the button's circular boundary. The rightmost character is partially truncated, and the button sits very close to the container's right edge.
+**Detail:** The green circular "Sync" button next to "Save/Load Progress" has its text label ("Sync") slightly clipped on the right side by the button's circular boundary. The "c" character is partially cut off, and the button sits close to the container's right edge.
 **Suggested fix:** Increase the button diameter to fully accommodate the text label, or reduce the font size so the label fits cleanly within the circle.
 
 
@@ -115,14 +115,14 @@
 **Type:** overflow
 **Screenshot:** idle_720p.png
 **Detail:** On the far right side of the screen, a "62%" text and "Thick ring" label appear outside the bounded container area that holds the first three indicators (Basic, Animated, Thick Ring). These elements float in open space to the right of the container with no enclosing panel, appearing to be an overflowing fourth item that escaped the top-row container's right boundary.
-**Suggested fix:** Expand the top-row container to include all items, or remove the duplicate label if it is unintended overflow.
+**Suggested fix:** Expand the top-row container to include all items, or wrap the overflow into the next row. If this is a duplicate label, remove it.
 
 
 ### deadspace_settings: 1. Tab labels truncated in settings tab bar
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** Several tab labels in the horizontal tab bar are truncated: "Display and Graphic" (missing 's'), "Language and Subti" (missing "tles"), and "Policies and Licens" (missing "ing"). The tab bar does not provide enough horizontal space per tab to display the full text of longer labels.
-**Suggested fix:** Use abbreviated labels that fit fully (e.g., "Display", "Language", "Policies"), reduce the tab label font size, implement horizontal scrolling for the tab bar, or widen the tab bar to accommodate full labels.
+**Detail:** The horizontal tab bar spanning "Controls, Gameplay, Display & Graphics, Audio, Language & Subs, Accessibility, Policies & Licenses, Credits" extends to the very right edge of the viewport. While the tab labels appear to display fully at the current font size, they are tightly packed with minimal inter-tab spacing, leaving no right-side margin before the screen edge.
+**Suggested fix:** Add right padding to the tab bar container, or make the tab bar horizontally scrollable. Alternatively, reduce tab label font size or spacing to ensure all tabs fit with adequate margin.
 
 
 ### decorators: 1. with_quote() first quote text overflows container right edge
@@ -132,45 +132,52 @@
 **Suggested fix:** Constrain the quote container width so text wraps to multiple lines within the visible viewport. Ensure the with_quote() container has a max-width that respects screen bounds.
 
 
-### dropdowns: 1. Dropdown menu overflows its parent container card and overlaps the card below
+### dropdowns: 1. Dropdown menu overflows parent container card and overlaps card below
 **Type:** overflow
 **Screenshot:** dropdown_open_initial.png, dropdown_arrow_down_once.png, dropdown_arrow_down_twice.png
-**Detail:** When the "With Label" dropdown (center-top card) is opened, the dropdown option list extends downward past the bottom edge of its parent card container and visually overlaps the "Disabled" card in the row below. The dropdown list items ("Dog", "Cat", "Bird", "Fish", "Disabled") extend well beyond the card's lower boundary, covering the "Disabled" title bar of the card below.
-**Suggested fix:** Either render the dropdown menu in an overlay/portal layer that floats above all cards (so the overlap is intentional and z-ordered correctly), or constrain the dropdown to scroll within the card bounds. If the overlay approach is intended, ensure the card below is not receiving input events from the overlapping dropdown area.
+**Detail:** When the "With Label" dropdown (center-top card) is opened, the dropdown option list ("Dog", "Cat", "Bird", "Fish", "Disabled") extends downward past the bottom edge of its parent card container and visually overlaps the "Disabled" card in the row below. The dropdown list covers the "Disabled" card's title bar area, creating visual ambiguity about whether "Disabled" is a dropdown option or the card header beneath.
+**Suggested fix:** Either render the dropdown menu in an overlay/portal layer that floats above all cards with a distinct shadow boundary, or constrain the dropdown to scroll within the card bounds using max-height with overflow-y scroll. If the overlay approach is used, ensure the dropdown has a clear visual border/shadow so it reads as floating above the grid.
 
 
-### example_borders: 1. "Soft Shadow" and "Outline Only" labels truncated at right edge
+### empire_tycoon: 2. Right-side info panel text clipped at screen edge
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the "Corners & Shadows" row, the "Soft Shadow" label text appears to be clipped/truncated at the right side of its card. Similarly, in the "Themed Styles" row, the "Outline Only" label is partially cut off at the right edge of the visible area. The rightmost cards in several rows are positioned very close to the viewport edge.
-**Suggested fix:** Add horizontal padding or margin on the right side of the overall layout container, or make the grid responsive so that rightmost cards have sufficient space for their labels.
+**Detail:** The right-side "System Options" panel contains description text reading "Configure vibration, save data, and a..." — the text is visibly truncated at the right edge of the viewport. The panel or its content extends beyond the visible screen boundary.
+**Suggested fix:** Constrain the right-side panel width to stay within viewport bounds and apply text wrapping so the description flows to the next line rather than overflowing off-screen.
+
+
+### example_borders: 1. "Soft Shadow" and "Outline Only" labels truncated at right viewport edge
+**Type:** overflow
+**Screenshot:** idle_720p.png
+**Detail:** In the "Corners & Shadows" row, the "Soft Shadow" label text is clipped at the right side of its card. Similarly, in the "Themed Styles" row, the "Outline Only" label is partially cut off ("Outline Only" shows as "Outline On..." at the right edge). The rightmost cards in multiple rows are positioned flush against the viewport boundary with no clearance.
+**Suggested fix:** Add right-side padding/margin to the overall layout container, or reduce the number of cards per row so all rightmost cards have adequate space for their labels.
 
 
 ### example_borders: 2. "Per-Side" row labels truncated
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the bottom "Per-Side" row, the labels "Bottom Only", "Left+Right", and "Underline" appear to have their text cut off or tightly compressed. "Bottom Only" shows as "Bottom On" with the rest clipped, and "Left+Right" text is similarly squeezed.
+**Detail:** In the bottom "Per-Side" row, the labels "Bottom Only" and "Left+Right" are truncated — "Bottom Only" appears as "Bottom Onl" and "Left+Right" as "Left+Righ". The card width is not sufficient to display full label text in this row.
 **Suggested fix:** Increase card width in the Per-Side row, or allow text to wrap within the card labels to prevent truncation.
 
 
-### fighter_menu: 1. System Options description text overflows off-screen to the right
+### fighter_menu: 1. Right panel and description text overflow off-screen
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the right-side panel, the "System Options" description text reads "Configure vibration, save data, and a..." with the text visibly cut off at the right edge of the screen. The text extends beyond the visible viewport and is not fully readable.
-**Suggested fix:** Add text wrapping to the description text container, or constrain the right panel width so that all content remains within the viewport bounds. Alternatively, use text-overflow ellipsis with a tooltip for long descriptions.
+**Detail:** The right-side "System Options" panel extends beyond the right edge of the viewport. The description text reads "Configure vibration, save data, and a..." with the remainder cut off. The panel's right border is not visible, confirming it is clipped by the viewport.
+**Suggested fix:** Constrain the right panel width so it fits within the 720p viewport. Apply text wrapping to the description text container so all content remains visible.
 
 
-### file_tree: 1. Status bar text at bottom is clipped by container edge
+### file_tree: 1. Status bar text clipped at container bottom edge
 **Type:** overflow
 **Screenshot:** file_tree_initial.png, file_tree_after_home.png, file_tree_after_refresh.png, file_tree_after_up.png, file_tree_navigated.png, file_tree_item_activated.png, file_tree_final.png
-**Detail:** The bottom status bar text (showing "No selection" or the current path like "/Users/gabeochoa/p/Fonts") is positioned at the very bottom edge of the file tree container. The text appears to sit on or very close to the container's bottom border, with the bottom portion of the text potentially clipped. In screenshots showing longer paths (e.g., "/Users/gabeochoa/p/Fonts/Radiance"), the text is partially cut off at the right.
-**Suggested fix:** Add bottom padding within the container to give the status bar text breathing room, and ensure long paths are truncated with ellipsis or horizontally scrollable rather than being clipped.
+**Detail:** The bottom status bar text (showing "No selection" or the current path like "/Users/gabeochoa/p/Fonts/Radiance") sits at the very bottom edge of the file tree container with minimal vertical padding. The text appears crowded against the container's bottom border. For longer paths, the text may also be clipped at the right edge.
+**Suggested fix:** Add bottom padding within the container to give the status bar text breathing room. Truncate long paths with ellipsis or make them horizontally scrollable.
 
 
 ### flex_alignment: 1. Cross-Axis Align demo items overflow their container boxes
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the bottom-left "Cross-Axis Align (AlignItems)" section, the demo items (numbered blocks 1, 2, 3) in the "Start" and "End" columns appear to extend slightly beyond their gray container boundaries. The pink numbered blocks have portions that visually bleed past the container edges, particularly at the bottom.
+**Detail:** In the bottom-left "Cross-Axis Align (AlignItems)" section, the demo items (pink numbered blocks 1, 2, 3) in the "Start" and "End" columns extend slightly beyond their gray container boundaries. The blocks have portions that visually bleed past the container edges, particularly at the bottom.
 **Suggested fix:** Increase the container height for the Cross-Axis Align demo boxes, or reduce the size of the demo elements so they fit fully within their parent containers.
 
 
@@ -244,10 +251,10 @@
 **Suggested fix:** Increase the container height or use auto-sizing to ensure all three toggle rows plus padding fit within the green border.
 
 
-### meters_gauges: 1. Shield bar extends beyond parent container
+### meters_gauges: 1. Shield bar track extends beyond parent container
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the "Stacked Bars (Health + Shield)" section, the shield bar (labeled "Shield: 29%") extends noticeably past the right edge of its parent container. The bar's track overshoots the container boundary by several pixels into the dark background area.
+**Detail:** In the "Stacked Bars (Health + Shield)" section, the shield bar (labeled "Shield: 29%") extends noticeably past the right edge of its parent container. The bar's background track overshoots the container boundary by several pixels into the dark background area, while the Health bar above stays within bounds.
 **Suggested fix:** Constrain the shield bar's maximum width to respect the parent container's right padding/boundary. Ensure the stacked bar layout accounts for both bars fitting within the available container width.
 
 
@@ -261,21 +268,21 @@
 ### nine_slice_borders: 2. Dialog text truncated in Interactive Elements section
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the "Interactive Elements" row at the bottom, the dialog panel contains text "This is a dialog using 9-slice. Corn..." which is truncated. The text overflows the visible area and is clipped rather than wrapping or being fully contained.
+**Detail:** In the "Interactive Elements" row at the bottom, the dialog panel contains text "This is a dialog using 9-slice. Corners s..." which is truncated. The text overflows the visible area and is clipped rather than wrapping or being fully contained.
 **Suggested fix:** Either increase the dialog panel width to fit the full text, enable text wrapping within the container, or ensure text ellipsis is applied cleanly.
 
 
 ### parcel_corps_settings: 1. Settings panel content clipped at bottom edge of viewport
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** The settings panel on the left extends to the very bottom of the viewport. The "Icon Legend" section is cramped against the bottom, and a teal element is partially visible below the legend, clipped by the screen boundary. The panel does not provide enough space to fully render all its content.
+**Detail:** The settings panel on the left extends to the very bottom of the viewport. The "Icon Legend" section is cramped against the bottom, and a teal element is partially visible below the legend, clipped by the screen boundary. The panel does not provide enough vertical space to fully render all its content within the 720p viewport.
 **Suggested fix:** Add bottom padding to the settings panel, or make the settings list scrollable so the legend and any elements below it are fully visible without clipping at the viewport edge.
 
 
 ### parcel_corps_settings: 2. Objective panel text runs flush against right screen edge
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** In the upper-right area, the objective/quest panel text "[X] SIGN UP A BUSINESS TO YOUR APP" and "[ ] Lv0 SIGN UP 4 BUSINESSES TO YOUR APP" extends to the very edge of the viewport. The text runs flush against the right screen boundary with no margin.
+**Detail:** In the upper-right area, the objective/quest panel text "[X] SIGN UP A BUSINESS TO YOUR APP" and "[ ] Lv0 SIGN UP 4 BUSINESSES TO YOUR APP" extends to the very edge of the viewport. The text runs flush against the right screen boundary with no margin, and the "Lv0" badge appears to slightly overflow its container bounds.
 **Suggested fix:** Constrain the objective panel to a fixed max-width with right margin, or enable text wrapping/truncation so content does not extend beyond the safe area.
 
 
@@ -286,7 +293,7 @@
 **Suggested fix:** Either increase the top padding of the brewing panel to accommodate the full bottle graphic, reduce the bottle size, or move the bottle graphic downward within the panel so the stopper does not cross the container boundary.
 
 
-### radio_buttons: 1. Focus rectangle on "Apple" option overflows its radio group container
+### radio_buttons: 2. Focus rectangle on "Apple" option overflows its radio group container
 **Type:** overflow
 **Screenshot:** idle_720p.png
 **Detail:** In the "Favorite Fruit" radio group (left column), the "Apple" option has a large white focus/selection rectangle that extends to the full width of the panel and pushes against or past the container's left and right inner edges. The focus outline is visually much wider than the other radio button rows (Orange, Watermelon), creating an inconsistent appearance and potentially overflowing the container's inner padding bounds.
@@ -310,39 +317,32 @@
 ### scroll_click_bug: 1. Bottom button clipped by scroll container boundary
 **Type:** overflow
 **Screenshot:** idle_720p.png, scroll_click_before.png
-**Detail:** In the initial/non-scrolled view, "Button 6" at the bottom of the scroll container is partially cut off by the container's bottom edge. Only the top portion of the button is visible — roughly the upper third — with the rest clipped by the container's boundary. The scroll container's height does not evenly accommodate the visible buttons, leaving the last one partially overflowing.
+**Detail:** In the initial/non-scrolled view, "Button 6" at the bottom of the scroll container is partially cut off by the container's bottom edge. Only the top portion of the button is visible -- roughly the upper third -- with the rest clipped by the container's boundary. The scroll container's height does not evenly accommodate the visible buttons, leaving the last one partially overflowing.
 **Suggested fix:** Adjust the scroll container height to either fully show or fully hide the last button at the boundary. Alternatively, add a visible scrollbar or scroll indicator to communicate that additional content exists below the visible area.
 
 
-### scroll_click_bug: 2. Bottom buttons clipped after scrolling
+### scroll_click_bug: 2. Top and bottom buttons clipped after scrolling
 **Type:** overflow
 **Screenshot:** scroll_click_after_click.png, scroll_click_after_scroll.png
-**Detail:** After scrolling down, "Button 10" at the bottom of the list is similarly clipped by the scroll container's bottom edge. The button is partially visible with its lower portion cut off, confirming the container height creates a consistent partial-button cutoff regardless of scroll position.
-**Suggested fix:** Size the scroll container so that buttons are either fully visible or fully hidden at the boundary. Consider snapping the scroll position to show complete buttons.
+**Detail:** After scrolling down, "Button 4" at the top of the visible area is partially clipped by the container's top edge, and "Button 10" at the bottom is similarly clipped. Both the topmost and bottommost visible buttons are partially rendered, confirming the container height creates a consistent partial-button cutoff regardless of scroll position.
+**Suggested fix:** Size the scroll container so that buttons are either fully visible or fully hidden at the boundary. Consider implementing scroll snapping to align to complete button boundaries.
 
 
-### scroll_click_bug: 3. Top button clipped after scrolling
-**Type:** overflow
-**Screenshot:** scroll_click_after_click.png, scroll_click_after_scroll.png
-**Detail:** After scrolling down, "Button 4" at the top of the visible area is partially clipped by the container's top edge. The top portion of the button is cut off, mirroring the bottom clipping issue. Both the topmost and bottommost visible buttons are partially rendered after scrolling.
-**Suggested fix:** Apply the same container height adjustment as the bottom clipping fix to ensure consistent full-button visibility, or add overflow clipping with a visual fade indicator at both the top and bottom edges to signal truncated content.
-
-
-### scroll_view: 1. Vertical scroll container clips bottom item at an awkward position
+### scroll_view: 1. Vertical scroll container clips bottom item at container border
 **Type:** overflow
 **Screenshot:** idle_720p.png, scroll_view_before_scroll.png, scroll_view_after_scroll.png
-**Detail:** The last visible item in the vertical scroll list (e.g., "Item 5" in the initial state, "Item 11" after scrolling) is clipped at the container's bottom border. Roughly half of the item row is visible, with the text cut off mid-row. The rounded bottom corners of the container cut into the item's rectangular background, creating a jagged visual. This is consistent across scroll positions except when scrolled to the bottom (where Item 20 fits cleanly).
+**Detail:** The last visible item in the vertical scroll list (e.g., "Item 5" in the initial state, "Item 11" after scrolling) is clipped at the container's bottom border. Roughly half of the item row is visible, with the text cut off mid-row. The container's rounded bottom corners cut into the item's rectangular background, creating a jagged visual. When scrolled to the bottom (Item 20), all items fit cleanly, confirming this is a clipping issue at intermediate scroll positions.
 **Suggested fix:** Add bottom padding inside the scroll container, or snap the viewport height to a multiple of item height plus spacing so items are either fully visible or barely peek in to invite scrolling.
 
 
-### self_align: 1. "FlexStart (left)" element overflows the container's left edge
+### self_align: 1. "FlexStart (left)" element overflows the container's left edge and rounded corner
 **Type:** overflow
 **Screenshot:** idle_720p.png
 **Detail:** The green "FlexStart (left)" button extends beyond the left border of the rounded-corner demonstration container. The button's left edge sits outside the container's border line, and its top-left corner visually bleeds past the container's rounded corner, breaking the containment boundary.
 **Suggested fix:** Add left padding inside the container or constrain the child element so it respects the container's border and border-radius. The element should be fully contained within the parent's visible bounds.
 
 
-### self_align: 2. "FlexEnd (right)" element overflows the container's right edge
+### self_align: 2. "FlexEnd (right)" element overflows the container's right edge and rounded corner
 **Type:** overflow
 **Screenshot:** idle_720p.png
 **Detail:** The orange-brown "FlexEnd (right)" button extends beyond the right border of the rounded-corner container. The button's right edge sits outside the container border, and its bottom-right corner bleeds past the container's rounded corner.
@@ -380,8 +380,8 @@
 ### stepper_showcase: 1. Card description text overflows right edge of the viewport
 **Type:** overflow
 **Screenshot:** idle_720p.png, stepper_initial.png, stepper_card_back_to_rogue.png, stepper_card_healer.png, stepper_card_mage.png, stepper_card_rogue.png, stepper_final.png, stepper_resolution_advanced.png, stepper_resolution_advanced_twice.png, stepper_resolution_back.png
-**Detail:** In the Card Selector panel, the Warrior card's description text "Heavy armor, melee attacks, high defense." is clipped at the right edge of the viewport. The word "high" is partially cut off, with only the "h" visible before the text disappears beyond the screen boundary. This is consistent across all 10 screenshots since the card is always visible.
-**Suggested fix:** Constrain the Card Selector panel and its child card so they fit within the viewport. Either reduce the panel width, add a right margin, or enable text wrapping so the description stays within the visible area.
+**Detail:** In the Card Selector panel, the Warrior card's description text "Heavy armor, melee attacks, high defense." extends past the right edge of the card and panel. The text ", high defense." portion overflows beyond the card's right boundary, rendering outside the card's visible area. This is consistent across all 10 screenshots since the card is always visible.
+**Suggested fix:** Constrain the card's text content so it wraps within the card bounds. Either reduce the card text font size, enable text wrapping, or increase the card width so the full description fits within the visible area.
 
 
 ### stepper_showcase: 2. "HealerWarriorMage" stepper text lacks spacing between options
@@ -391,7 +391,7 @@
 **Suggested fix:** Display only the currently selected option name (e.g., "Warrior") in the stepper rather than concatenating all available options. Alternatively, add separators or spacing between the names.
 
 
-### text: 1. Body text truncated with ellipsis indicating horizontal overflow
+### text: 2. Body text truncated with ellipsis indicating horizontal overflow
 **Type:** overflow
 **Screenshot:** idle_720p.png
 **Detail:** In the left column under "Text Size Hierarchy," the body text reads "Body text for readable content that flows natu..." — it is cut off with an ellipsis. The text content exceeds the available container width and is being truncated. Since this is a typography showcase screen intended to demonstrate readable body text, the truncation defeats the purpose of the demonstration.
@@ -403,20 +403,6 @@
 **Screenshot:** idle_720p.png, focus_and_type.png, keyboard_input_test.png
 **Detail:** The bottom status bar containing instructional text ("Enter your details above" / "Username: a" / "Submitted! User: , Email:") and the "Tab / Enter" hint extends to the very bottom of the viewport. The OK/Cancel/Apply buttons sit flush against the bottom edge with no visible margin below them. This is consistent across all three screenshots and the bottom portion appears clipped.
 **Suggested fix:** Add bottom margin or padding below the action buttons row so they don't sit flush against the viewport edge. Reduce content height above or move the status bar up to fit comfortably within the 720p frame.
-
-
-### text_overflow: 1. Bottom-right explanatory text extends close to viewport edge
-**Type:** overflow
-**Screenshot:** idle_720p.png
-**Detail:** The text at the bottom-right reading "Minimum touch target size is 44px. Smaller containers trigger overflow warnings." extends very close to the right edge of the viewport with minimal right margin. On narrower displays or with slight layout shifts, this text could be clipped.
-**Suggested fix:** Constrain this text element's width to stay within the viewport bounds with adequate margin, or enable text wrapping so it flows to a second line instead of stretching to the edge.
-
-
-### text_overflow: 2. Red-bordered containers show intentional overflow for demo purposes
-**Type:** overflow
-**Screenshot:** idle_720p.png
-**Detail:** In the "Problem: Text Too Large" section, several containers display text overflowing their bounds (e.g., "This is way too..." with red corner indicators, "Height is too small!" in a height-constrained container, and "..." in a tiny 44x44 box). These are intentional demonstrations of overflow behavior with debug mode indicators enabled. The screen title confirms "Debug mode is ON — red corners appear when text is too large for its container."
-**Suggested fix:** No fix needed — these are intentional overflow demonstrations serving as educational examples of the debug system.
 
 
 ### text_shadow: 1. Title "Text Drop Shadow" clipped at top of viewport
@@ -431,6 +417,13 @@
 **Screenshot:** idle_720p.png
 **Detail:** The green "Tip: Use 2-6px for readable text, 6-10px for decorative titles and headers" bar at the bottom of the screen extends to the very bottom of the viewport. The bottom border/padding of the tip container appears cut off with no margin below it, making it look clipped rather than self-contained.
 **Suggested fix:** Add bottom margin or reduce overall content height so the tip bar and its bottom padding are fully visible within the 720p viewport.
+
+
+### text_stroke: 2. "invisible" and "visible!" labels clipped below comparison box
+**Type:** overflow
+**Screenshot:** idle_720p.png
+**Detail:** At the bottom-left of the screen, the labels "invisible" and "visible!" that describe the white stroke comparison examples appear partially cut off or extremely close to the bottom edge of the content area. These labels sit below the white/light-gray comparison box and are barely legible.
+**Suggested fix:** Add bottom margin to the comparison section or increase the overall content area height so these labels have adequate clearance from the viewport bottom.
 
 
 ### themes: 1. Active theme label "Ocean Navy" truncated with orphaned parenthesis
@@ -454,7 +447,7 @@
 **Suggested fix:** Constrain child element widths within the content panel so they respect the container's inner bounds and rounded corners. Add right padding or set a max-width on the content panel.
 
 
-## Container Bounds Issues (47)
+## Container Bounds Issues (48)
 
 ### advanced_modals: 3. Modal backdrop does not cover the top edge of the viewport
 **Type:** container_bounds
@@ -477,18 +470,18 @@
 **Suggested fix:** Vertically center all elements in the Styles row. Consider adding a subtle border to the Surface card so its bounds are distinguishable from the background.
 
 
-### casual_settings: 3. Asymmetric left/right padding in main container
-**Type:** container_bounds
-**Screenshot:** idle_720p.png
-**Detail:** The left side of the settings container has noticeably more internal padding than the right side. The Audio section starts well-inset from the left edge, but the right-column buttons (Credits, Support, Terms and Privacy) and the OK/Cancel/Apply buttons extend closer to the right border with less margin.
-**Suggested fix:** Ensure consistent horizontal padding on both sides of the container.
-
-
-### casual_settings: 4. "Terms and Privacy" button breaks two-column grid symmetry
+### casual_settings: 3. "Terms and Privacy" button breaks two-column grid symmetry
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
 **Detail:** The Menu section uses a two-column layout (Notifications/Credits, Language/Support), but "Terms and Privacy" sits alone in the right column with no counterpart on the left, creating a visual gap and asymmetric bottom row.
 **Suggested fix:** Center "Terms and Privacy" across both columns if it is the only item in the last row, or span it full-width.
+
+
+### casual_settings: 4. Asymmetric left/right padding in main container
+**Type:** container_bounds
+**Screenshot:** idle_720p.png
+**Detail:** The left side of the settings container has noticeably more internal padding than the right side. The Audio section starts well-inset from the left edge, but the right-column buttons (Credits, Support, Terms and Privacy) and the OK/Cancel/Apply buttons extend closer to the right border with less margin.
+**Suggested fix:** Ensure consistent horizontal padding on both sides of the container.
 
 
 ### checkboxes: 2. Status text sits outside main container
@@ -496,13 +489,6 @@
 **Screenshot:** idle_720p.png, custom_commands_test.png
 **Detail:** The "Group selected: 2 of 4" and "MinMax selected: 1 of 3" text at the bottom of the screen sits outside and below the main content container boundary, floating independently in the background area.
 **Suggested fix:** Extend the main container to include the status text, or add a dedicated footer row within the container for selection status information.
-
-
-### checkboxes: 3. Unchecked rows lack consistent indicator space
-**Type:** container_bounds
-**Screenshot:** idle_720p.png, custom_commands_test.png
-**Detail:** The "Secondary" and "Box Only" checkbox rows fill their full width with background color, leaving no visible reserved space for a checkmark indicator on the right side. Checked rows like "Primary" and "Accent" show "V" marks, but unchecked rows don't reserve consistent space for the indicator area.
-**Suggested fix:** Reserve consistent right-side space for the checkmark indicator in all labeled checkbox rows, regardless of checked/unchecked state.
 
 
 ### circular_progress: 3. Left container clips against left screen edge
@@ -547,67 +533,67 @@
 **Suggested fix:** Normalize the vertical gap between all three grid background panels and apply consistent panel heights throughout the column.
 
 
-### dropdowns: 2. Bottom status bar text may be clipped at narrow widths
+### dropdowns: 2. Bottom status bar text may be clipped at narrower viewports
 **Type:** container_bounds
 **Screenshot:** dropdown_after_arrow_select.png, idle_720p.png
-**Detail:** The bottom summary bar ("Basic=Alpha, Pet=Bird, Month=January, Indicator=Option A, Disabled=Frozen, Styled=Ruby") is a single long line. While it fits in the current 720p resolution, the text is approaching the container's horizontal edges, and at slightly narrower viewports it could overflow.
-**Suggested fix:** Add text wrapping or horizontal scrolling to the summary bar, or reduce font size to ensure it stays within bounds at all supported resolutions.
+**Detail:** The bottom summary bar ("Basic=Alpha, Pet=Bird, Month=January, Indicator=Option A, Disabled=Frozen, Styled=Ruby") is a single long line that approaches the horizontal edges of its container. At 720p it fits, but the margins are tight.
+**Suggested fix:** Add text wrapping or horizontal scrolling to the summary bar to ensure it stays within bounds at all supported resolutions.
 
 
-### empire_tycoon: 3. Right-side decorative elements clipped at screen edge
+### empire_tycoon: 4. Right-side decorative elements clipped at viewport edge
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** On the far right side of the screen, there appear to be decorative elements (what looks like a parasol/umbrella icon) that are partially cut off at the right edge of the viewport. The top-right area also shows items that appear clipped.
-**Suggested fix:** Ensure decorative elements either fit fully within the viewport or are intentionally designed to bleed off-screen. If they should be visible, adjust their positioning or the viewport width.
+**Detail:** On the far right side of the screen, decorative elements (parasol/umbrella icons) are partially cut off at the right edge of the viewport. The top-right area also shows items that appear clipped.
+**Suggested fix:** Ensure decorative elements either fit fully within the viewport or are intentionally designed to bleed off-screen. If they should be fully visible, adjust their positioning.
 
 
-### empire_tycoon: 4. Chat log text in bottom-left lacks contained boundary
+### example_borders: 3. Row label text left-aligned too tightly against card grid
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** The "GlobalChat" and "DevTeam" message lines at the bottom left sit in what appears to be a semi-transparent container, but the container's left edge appears to extend nearly to the screen edge with minimal padding. The container boundary is not well-defined compared to other UI panels.
-**Suggested fix:** Add a clearer bounded container with consistent padding for the chat log area, matching the visual style of other panels on the screen.
+**Detail:** The row section labels ("Width & Color", "Corners & Shadows", "Themed Styles", "Interactive", "Per-Side") are positioned to the left of the card grid. "Corners & Shadows" wraps to two lines due to limited horizontal space. This left-label layout causes cards to start further right, contributing to the right-edge truncation.
+**Suggested fix:** Place row labels above their respective rows instead of to the left, or allocate more horizontal space for the label column so it doesn't compress the card grid area.
 
 
-### example_borders: 3. Row label text ("Width & Color", "Corners & Shadows") left-aligned outside card grid
+### fighter_menu: 2. Secondary tab labels visually compressed on the right
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** The row section labels on the left side ("Width & Color", "Corners & Shadows", "Themed Styles", "Interactive", "Per-Side") are positioned to the left of the card grid. "Corners & Shadows" wraps to two lines due to limited horizontal space. This left-label layout causes the cards to start further right, contributing to the right-edge truncation issues.
-**Suggested fix:** Consider placing row labels above their respective rows instead of to the left, or allocate more horizontal space for the label column so it doesn't compress the card grid area.
+**Detail:** The secondary tab bar ("System Options", "Game Options", "Display Options", "Sound & Language", "Network Options", "Button Settings") shows the rightmost tabs with darker/grayed styling and they appear visually compressed with insufficient spacing between labels.
+**Suggested fix:** Reduce the number of visible tabs and add horizontal scrolling, or decrease tab label font size to ensure all tabs fit with adequate padding.
 
 
-### fighter_menu: 2. Right panel extends beyond viewport boundary
+### fighter_menu: 3. Center content area has excessive unused vertical space
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** The entire right-side panel containing "System Options" with its icon, title, and description appears to extend past the right edge of the screen. The panel's right border is not visible, suggesting it is clipped by the viewport.
-**Suggested fix:** Constrain the right panel's width or adjust its horizontal position so it fits fully within the 720p viewport. Ensure the panel's right border and padding are visible.
+**Detail:** The center content area ("Offline Mode" with character preview and "Select Character") has significant empty space below the content. The panel extends much further down than its content requires.
+**Suggested fix:** Consider sizing the content panel to fit its content more tightly, or vertically center the character preview within the available space.
 
 
-### fighter_menu: 3. Tab row items "Sound & Language", "Network Options", "Button Settings" appear visually compressed
-**Type:** container_bounds
-**Screenshot:** idle_720p.png
-**Detail:** The secondary tab bar below the main navigation ("System Options", "Game Options", "Display Options", "Sound & Language", "Network Options", "Button Settings") shows the rightmost tabs with darker/grayed styling that appears compressed. The tab labels may be running into each other with insufficient spacing.
-**Suggested fix:** Either reduce the number of visible tabs and add horizontal scrolling, or decrease tab label font size to ensure all tabs fit with adequate padding.
-
-
-### file_tree: 2. File list can potentially overflow container without scrollbar indication
+### file_tree: 2. File list lacks visible scroll indicator when content exceeds container
 **Type:** container_bounds
 **Screenshot:** file_tree_item_activated.png, file_tree_navigated.png
-**Detail:** When the "Fonts/" directory is expanded, the file list grows significantly (showing many .ttf and .otf files). The list appears to extend to the very bottom of the container with the last visible entries close to the status bar. There is no visible scrollbar or scroll indicator to show that more content may exist below the visible area.
-**Suggested fix:** Add a visible scrollbar or scroll indicator when the file list exceeds the container height, so users know there is more content to scroll through.
+**Detail:** When the "Fonts/" directory is expanded, the file list grows significantly (many .ttf and .otf files). The list extends to the very bottom of the container with no visible scrollbar or scroll indicator to show that more content may exist below.
+**Suggested fix:** Add a visible scrollbar or scroll indicator when the file list exceeds the container height.
 
 
-### file_tree: 3. Highlight selection bar extends full width without padding
+### file_tree: 3. Selection highlight bar extends full width without inset padding
 **Type:** container_bounds
 **Screenshot:** file_tree_item_activated.png, file_tree_navigated.png, file_tree_final.png
-**Detail:** The blue selection highlight bar extends to the full width of the container, reaching the left and right edges. While functional, this causes the highlight to touch the container borders directly with no inset padding, which looks slightly unpolished compared to the text content which has left padding.
-**Suggested fix:** Inset the selection highlight by a few pixels on the left and right so it doesn't touch the container borders, or ensure it matches the text's horizontal padding.
+**Detail:** The blue selection highlight bar extends to the full width of the container, touching both left and right edges with no inset. The text content has left padding but the highlight does not match this padding.
+**Suggested fix:** Inset the selection highlight by a few pixels on left and right so it doesn't touch the container borders, matching the text's horizontal padding.
 
 
-### flex_alignment: 2. "Gap" tab label near right edge of tab bar
+### flex_alignment: 2. "Gap" tab label at right edge of tab bar
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** The tab bar at the top ("All", "Vertical", "Horizontal", "Cross-Axis", "Self Align", "Gap") has the rightmost "Gap" tab positioned at the very edge of the viewport. While the text is still readable, it has minimal right padding and sits flush against the screen boundary.
-**Suggested fix:** Add right padding or margin to the tab bar container, or allow horizontal scrolling for the tab bar so edge tabs have proper spacing.
+**Detail:** The tab bar at the top ("All", "Vertical", "Horizontal", "Cross-Axis", "Self Align", "Gap") has the rightmost "Gap" tab positioned at the very edge of the viewport with minimal right padding, sitting flush against the screen boundary.
+**Suggested fix:** Add right padding or margin to the tab bar container so edge tabs have proper spacing from the viewport boundary.
+
+
+### horizontal_drag: 2. Large empty space below Medium Priority lane
+**Type:** container_bounds
+**Screenshot:** idle_720p.png, horizontal_drag_initial.png
+**Detail:** The bottom half of the screen is entirely empty dark space below the "Medium Priority (3)" lane. The two priority lanes only occupy roughly the top 45% of the viewport, leaving a large unused region. The outer container appears to fill the full viewport height without distributing space to the lane sections.
+**Suggested fix:** Either size the outer container to fit its content (auto-height), or distribute the vertical space more evenly among the priority lanes so they expand to fill the available viewport area.
 
 
 ### hstack_showcase: 2. "Churn" card extends to screen edge with no right margin
@@ -624,11 +610,18 @@
 **Suggested fix:** If intentional, consider adding a subtle container or grouping visual to anchor these buttons. If unintentional, move them inside the main content panel boundary or into a dedicated sidebar container that aligns with the overall layout structure.
 
 
-### meters_gauges: 3. Animated progress spinner positioned outside its section container
+### kirby_options: 3. "Data..." button truncated at right edge of text input
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** In the "Animated Progress" section, a small circular spinner/indicator element is positioned to the right of and below the progress bar. It sits in empty space rather than being aligned within the progress bar container or at a meaningful position relative to the bar's fill.
-**Suggested fix:** Either anchor the spinner indicator to the end of the progress bar fill, or position it centered within the section container so it reads as intentionally placed.
+**Detail:** In the lower portion of the screen, the text input area ("Enter a new name and customize your controls.") has a "Data..." button at its far right edge that appears cramped against the container boundary. The button label is truncated with an ellipsis, suggesting insufficient horizontal space allocation for the button.
+**Suggested fix:** Allocate more width for the Data button or reduce the width of the adjacent text input field to ensure the button label is fully visible without truncation.
+
+
+### meters_gauges: 3. Outer container corners clipped by viewport on left and right edges
+**Type:** container_bounds
+**Screenshot:** idle_720p.png
+**Detail:** The main rounded container for the entire "Meters & Gauges" screen extends slightly beyond the left and right edges of the viewport at 720p. The rounded corners on the left and right sides are partially cut off by the screen edge, particularly visible in the lower half where the container's curved edges are clipped.
+**Suggested fix:** Add horizontal margin or reduce the container's max-width so the full rounded corners are visible within the 720p viewport.
 
 
 ### mini_motorways_settings: 3. Tab bar text sizes are inconsistent and cramped
@@ -648,36 +641,43 @@
 ### pagination: 2. Pagination button rows not aligned to header bar width
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** Each section header bar (e.g., "Basic Pagination", "Difficulty Selector", "Option Selector") spans nearly the full width of the main container, but the button rows beneath them only extend about halfway across, leaving a large empty space to the right. This creates a visual imbalance between the full-width headers and the left-hugging button groups.
+**Detail:** Each section header bar ("Basic Pagination", "Difficulty Selector", "Option Selector") spans nearly the full width of the main container, but the button rows beneath them only extend about halfway across, leaving a large empty space to the right. This creates a visual imbalance between the full-width headers and the left-hugging button groups.
 **Suggested fix:** If the buttons are intentionally left-aligned, this is acceptable. Otherwise, consider centering the button rows beneath their headers or giving the button group a container that visually connects it to the header width.
 
 
 ### potion_crafting: 2. Tab content does not update when "Inventory" tab is selected
 **Type:** container_bounds
 **Screenshot:** potion_crafting_tab_clicked.png
-**Detail:** When the "Inventory" tab is visually highlighted/selected, the content below still shows the Recipes list, brewing area, and ingredients grid — identical to the Recipes tab view. The tab container's content region does not reflect the expected tab switch.
+**Detail:** When the "Inventory" tab is visually highlighted/selected, the content below still shows the Recipes list, brewing area, and ingredients grid -- identical to the Recipes tab view. The tab container's content region does not reflect the expected tab switch.
 **Suggested fix:** Ensure each tab (Recipes, Inventory, Journal) maps to distinct content panels, or display a placeholder to indicate the tab was switched if content is not yet implemented.
 
 
 ### potion_crafting: 3. Ingredient grid columns have slight width imbalance
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** In the "Ingredients" panel on the right, the two-column grid has a minor width discrepancy — the right column (Fire Root x3, Honey Dew x8, Star Dust x1) appears to have slightly more horizontal space than the left column (Moonpetal x5, Sea Salt x12, Shadow Moss x2).
+**Detail:** In the "Ingredients" panel on the right, the two-column grid has a minor width discrepancy -- the right column (Fire Root x3, Honey Dew x8, Star Dust x1) appears to have slightly more horizontal space than the left column (Moonpetal x5, Sea Salt x12, Shadow Moss x2).
 **Suggested fix:** Set both columns to equal width using a uniform grid or flex layout with equal column sizing.
 
 
-### powerwash_settings: 3. Help panel positioned with large gap from settings panel
+### powerwash_settings: 2. Category tabs wrap across two lines
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
-**Detail:** The "Help: Anti-Aliasing" panel on the right side is positioned with a significant horizontal gap from the main settings panel on the left. The two panels don't appear visually connected, leaving a large empty area in the center-right of the screen. This makes the help text feel disconnected from the setting it describes.
-**Suggested fix:** Move the help panel closer to the settings panel, or add a visual connector element (line, background fill) to make the relationship between the selected setting and its help text clearer.
+**Detail:** The bottom category tabs (GENERAL, GAMEPLAY, VIDEO, AUDIO, CONTROLS) do not all fit on a single line. "CONTROLS" wraps to a second line beneath the other tabs, creating an uneven layout where the action buttons (Close, Reset, Select) share the same vertical space as the wrapped "CONTROLS" label.
+**Suggested fix:** Either widen the tab container to accommodate all five category labels on a single row, reduce the tab label font size, or use abbreviated labels to prevent wrapping.
 
 
-### radio_buttons: 2. Red debug/wireframe borders visible on all three radio group containers
+### radio_buttons: 1. Red debug/wireframe borders visible on all three radio group containers
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
 **Detail:** All three radio group containers ("Favorite Fruit", "Size", "Color") display thin red/pink/magenta border outlines that appear to be debug wireframe borders rather than intentional design. These borders are visible around each card container and create a double-border effect with the outer rounded container.
 **Suggested fix:** Remove the debug border rendering. If these are intentional borders, they should match the design system's border color rather than using a bright red/pink diagnostic color.
+
+
+### scroll_click_bug: 3. Button 8 renders without background fill (visual gap in list)
+**Type:** container_bounds
+**Screenshot:** scroll_click_after_scroll.png, scroll_click_after_click.png
+**Detail:** In the scrolled state, "Button 8" appears without a blue background fill, rendering as a white/transparent row among the other blue buttons. This creates a visual gap in the otherwise uniform button list. It is unclear whether this is a styling bug or an intentional "selected/clicked" state, but it breaks the visual consistency of the button list layout.
+**Suggested fix:** If this is unintentional, ensure all buttons in the list render with the same background fill. If "Button 8" represents a different state (e.g., clicked/selected), apply a distinct but still-filled style rather than removing the background entirely.
 
 
 ### scroll_view: 2. Status text and scrollbar sit outside container borders
@@ -722,7 +722,7 @@
 **Suggested fix:** Either size the content panel to fit its content (auto-height) and vertically center the tab assembly, or stretch the content panel to fill more of the available viewport height.
 
 
-### text: 2. Bottom content sits flush with container edge
+### text: 3. Bottom content sits flush with container edge
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
 **Detail:** The last line of text ("Elegant typography creates visual hierarchy and guides the reader's eye") sits very close to the bottom edge of the rounded container. There is noticeably less bottom padding than top padding, and the text nearly touches the rounded corner curve at the bottom of the panel. The bottom content has inadequate clearance from the container boundary.
@@ -743,18 +743,18 @@
 **Suggested fix:** Left-align the labels to match the input field positioning, or consistently center both labels and inputs within a form column.
 
 
-### text_stroke: 2. Title has minimal top margin
+### text_shadow: 5. Tip bar at the bottom is flush with viewport edges
+**Type:** container_bounds
+**Screenshot:** idle_720p.png
+**Detail:** The light-colored tip bar ("Tip: Use small offsets (1-4px) for subtle depth, larger offsets (6-10px) for bold effects") extends to the left and right edges of the viewport with no margin, and its bottom edge is flush with the viewport bottom. The bar appears to lack rounded corners and may be partially cut off at the bottom.
+**Suggested fix:** Add margin around the tip bar so it doesn't sit flush against the viewport edges, or ensure it has proper bottom padding and rounded corners if it is intended to be a contained element.
+
+
+### text_stroke: 3. Title has minimal top margin
 **Type:** container_bounds
 **Screenshot:** idle_720p.png
 **Detail:** The main heading "Text Stroke / Outline" sits close to the top of the viewport with minimal top padding. While not clipped, the title's thick stroke effect has very little breathing room above it and could be cropped on displays with slight overscan.
 **Suggested fix:** Add top padding or margin to the main container to give the title adequate spacing from the viewport edge.
-
-
-### text_stroke: 3. Left and right content columns lack consistent vertical alignment
-**Type:** container_bounds
-**Screenshot:** idle_720p.png
-**Detail:** The left column's first example ("NO STROKE / WITH STROKE") starts higher than the right column's first entry ("Outline Thickness: STROKE" at 2px). The two columns don't share a consistent top alignment or baseline grid. The left column also extends lower (WHITE comparison box + "invisible" / "visible!" labels) than the right column's last entry (10px - heavy).
-**Suggested fix:** Align the starting vertical positions of both columns and ensure they share a consistent vertical rhythm or at least a common top edge.
 
 
 ### themes: 2. Color swatch labels truncated to single letters
@@ -785,7 +785,7 @@
 **Suggested fix:** Add horizontal margin or padding to the outermost container so the label bars do not touch the screen edges, ensuring consistent outer spacing.
 
 
-## Overlap Issues (30)
+## Overlap Issues (31)
 
 ### advanced_modals: 2. Dropdown menu items overlap with controls behind modal
 **Type:** overlap
@@ -811,7 +811,7 @@
 ### circular_progress: 2. Floating "88%" label and truncated text overlap between sections
 **Type:** overlap
 **Screenshot:** idle_720p.png
-**Detail:** Between the top row container and the "Size Variations" section, a "88%" label and truncated text (appears to read "in" — likely truncation of "Thin") float in the gap between the two rows. These elements don't clearly belong to either container section and overlap the boundary area.
+**Detail:** Between the top row container and the "Size Variations" section, a "88%" label and truncated text (appears to read "in" -- likely truncation of "Thin") float in the gap between the two rows. These elements don't clearly belong to either container section and overlap the boundary area.
 **Suggested fix:** Ensure percentage labels and variant names are positioned within their respective container panels rather than floating in the inter-container gap.
 
 
@@ -836,24 +836,24 @@
 **Suggested fix:** Investigate whether this is an unintended child element or rendering artifact and remove it if it is not part of the design.
 
 
-### empire_tycoon: 1. Left sidebar icons overlap with navigation labels
+### empire_tycoon: 1. Left sidebar icons overlap with adjacent navigation items
 **Type:** overlap
 **Screenshot:** idle_720p.png
-**Detail:** In the left sidebar, the category icons (Rides, Food, Upgrades, Finance) have icon artwork that visually overlaps or bleeds into adjacent rows. Specifically, the "Food" row icon overlaps downward into the "Upgrades" area, and the icons in general appear to stack tightly with insufficient spacing between them. The "Rides" icon above "Food" also shows a similar tight overlap.
-**Suggested fix:** Increase vertical padding or margin between sidebar navigation items to give each icon adequate space, or reduce the icon size so they fit cleanly within their row bounds.
+**Detail:** In the left sidebar, the category icons (Rides, Food, Upgrades, Finance) have icon artwork that visually overlaps or bleeds into adjacent rows. The "Food" row icon overlaps downward into the "Upgrades" area, and the "Rides" icon above "Food" shows similar tight overlap. The icons appear to stack on top of each other rather than being cleanly contained within each nav button's bounds.
+**Suggested fix:** Increase vertical padding/margin between sidebar navigation items to give each icon adequate space, or reduce icon sizes so they fit cleanly within their individual row bounds.
 
 
-### empire_tycoon: 2. Notification badge overlaps sidebar item boundary
+### empire_tycoon: 3. Notification badge overlaps sidebar item boundary
 **Type:** overlap
 **Screenshot:** idle_720p.png
 **Detail:** The red notification badge (exclamation mark) on the "Upgrades" sidebar item extends beyond the top-right corner of the sidebar card boundary, partially overlapping the area outside the card.
-**Suggested fix:** This may be intentional badge behavior, but if badges should stay within the card boundary, adjust the badge position inward or add overflow-visible only for the badge element.
+**Suggested fix:** This may be intentional badge behavior. If badges should stay within the card boundary, adjust the badge position inward or add overflow-visible only for the badge element.
 
 
 ### layout_bug_repros: 3. "Controller Cu..." label text truncated and overlapping stepper controls
 **Type:** overlap
 **Screenshot:** idle_720p.png
-**Detail:** In the controller customization area, the label "Controller Cu..." is clipped/truncated, and fragments of text ("ntiv") appear between the "<" stepper button and the "Default" value text, creating a visual collision where label text, stepper arrows, and value text overlap in a crowded region.
+**Detail:** In the controller customization area near bug repro #5, the label "Controller Cu..." is clipped/truncated, and fragments of text ("ntiv") appear between the "<" stepper button and the "Default" value text, creating a visual collision where label text, stepper arrows, and value text overlap in a crowded region.
 **Suggested fix:** Widen the label container or allow it to ellipsize cleanly so the full controller label text is legible and does not collide with the adjacent stepper controls.
 
 
@@ -883,22 +883,22 @@
 ### neon_strike: 1. Ability icons overlap each other vertically in left sidebar
 **Type:** overlap
 **Screenshot:** idle_720p.png
-**Detail:** The left-side ability panel contains four ability icons stacked vertically (UAV, Recon, Shield, Strike). The icons and their labels are spaced tightly enough that adjacent items overlap — the "Recon" label crowds into the bottom of the "UAV" container, and "Shield" overlaps with "Recon". The asterisk markers to the left of each ability also appear crowded together.
+**Detail:** The left-side ability panel contains four ability icons stacked vertically (UAV, Recon, Shield, Strike). The icons and their labels are spaced tightly enough that adjacent items overlap -- the "Recon" label crowds into the bottom of the "UAV" container, and "Shield" overlaps with "Recon". The asterisk markers to the left of each ability also appear crowded together.
 **Suggested fix:** Increase the vertical spacing (gap or margin) between ability icon containers in the left sidebar so each icon and its label have clear separation from neighboring items.
 
 
-### neon_strike: 2. Kill feed container sits too close to compass widget
-**Type:** overlap
-**Screenshot:** idle_720p.png
-**Detail:** The kill feed notification area (showing elimination messages) is positioned directly below the compass (N/S/E/W) widget at the top center. The top edge of the kill feed container sits very close to the compass "S" label, creating tight coupling between two distinct HUD elements with insufficient separation.
-**Suggested fix:** Add vertical margin between the compass widget and the kill feed container to create clear visual separation between these independent HUD elements.
-
-
-### neon_strike: 3. Ammo counter text overlaps with health bar area
+### neon_strike: 2. Ammo counter text overlaps with health bar area
 **Type:** overlap
 **Screenshot:** idle_720p.png
 **Detail:** The ammo counter "35/210" text at the bottom-center of the screen crowds into the health bar container ("80 HEALTH" with the blue bar). The large ammo text extends into the left side of the health bar region, creating a visual collision between these two HUD elements.
 **Suggested fix:** Add horizontal margin or padding between the ammo counter and the health bar container, or reposition the ammo counter further to the left so it doesn't intrude into the health bar's bounding area.
+
+
+### neon_strike: 3. Kill feed container sits too close to compass widget
+**Type:** overlap
+**Screenshot:** idle_720p.png
+**Detail:** The kill feed notification area (showing elimination messages) is positioned directly below the compass (N/S/E/W) widget at the top center. The top edge of the kill feed container sits very close to the compass "S" label, creating tight coupling between two distinct HUD elements with insufficient separation.
+**Suggested fix:** Add vertical margin between the compass widget and the kill feed container to create clear visual separation between these independent HUD elements.
 
 
 ### nine_slice_borders: 1. "Double Width" and "Double Ornate" border panels overlap each other
@@ -950,6 +950,13 @@
 **Suggested fix:** Remove the focus rectangle on the Resolution stepper's left arrow to match the visual appearance of the other stepper rows, or apply the focus style consistently across all stepper rows when focused.
 
 
+### text: 1. "ULTRA SPACED" text overlaps with the line below it
+**Type:** overlap
+**Screenshot:** idle_720p.png
+**Detail:** At the bottom-left of the content area, the "ULTRA SPACED" text and the line below it ("Elegant typography creates visual hierarchy and guides the reader's eye") overlap vertically. The baseline of "ULTRA SPACED" collides with the top of the next line of text, making both lines partially unreadable at their junction point. The wide letter-spacing of "ULTRA SPACED" may be causing it to extend further than expected and crowd the following line.
+**Suggested fix:** Increase the vertical spacing (margin-bottom or line-height) on the "ULTRA SPACED" element to provide sufficient clearance before the following text line.
+
+
 ### text_shadow: 2. "COLORED" text shadow bleeds into description text below
 **Type:** overlap
 **Screenshot:** idle_720p.png
@@ -999,7 +1006,7 @@
 **Suggested fix:** Ensure both section header bars share the same vertical baseline. Add a small gap between the sub-labels and the top edge of the card containers below them.
 
 
-## Corners Issues (11)
+## Corners Issues (10)
 
 ### animation_basic: 1. Header bar extends beyond container's rounded corners
 **Type:** corners
@@ -1036,14 +1043,14 @@
 **Suggested fix:** If the bracket extensions are by design (decorative flourishes), ensure they don't clip against neighboring elements or the viewport edge. If they should be contained, clip the brackets and accent bars to the panel's bounding box.
 
 
-### pagination: 1. Left arrow button has inconsistent styling/border compared to page buttons
+### pagination: 1. Left arrow button has inconsistent container styling in Basic Pagination row
 **Type:** corners
 **Screenshot:** idle_720p.png
-**Detail:** In the "Basic Pagination" row, the left arrow (`<`) button has a distinct light gray/white border and different background styling compared to all other pagination buttons (Page 1-5 and the right arrow). The other two pagination groups (Difficulty Selector, Option Selector) have their left arrow buttons styled consistently with the teal fill, but the first group's left arrow appears with a lighter, outlined style. This looks like a focus ring or default-state rendering issue where the button's container corners and fill do not match its siblings.
+**Detail:** In the "Basic Pagination" row, the left arrow (`<`) button has a distinct light gray/white border and different background styling compared to all other pagination buttons (Page 1-5 and the right arrow `>`). The other two pagination groups (Difficulty Selector, Option Selector) have their left arrow buttons styled consistently with the teal fill, but the first group's left arrow appears with a lighter, outlined style. This looks like a focus ring or default-state rendering issue where the button's container corners and fill do not match its siblings.
 **Suggested fix:** Ensure the left arrow button in the Basic Pagination row uses the same container style (background fill, border radius, border color) as the right arrow button and page buttons. If this is a focus indicator, the focus ring should overlay consistently without changing the button's base appearance.
 
 
-### powerwash_settings: 2. Settings panel left border clips the label column
+### powerwash_settings: 3. Settings panel left border clips the label column
 **Type:** corners
 **Screenshot:** idle_720p.png
 **Detail:** The outer rounded-corner border of the settings panel passes very close to the left edge of the first label column. The "Screen Resolution" text appears to touch or nearly touch the left border of the container, with no visible inner padding on the left side.
@@ -1062,13 +1069,6 @@
 **Screenshot:** idle_720p.png
 **Detail:** The tab bar strip across the top has sharp rectangular corners on the "Profile" tab (top-left) and "Settings" tab (top-right), while the white content panel below uses large rounded corners. This creates a visual disconnect — the tab bar and content panel appear as two separate elements rather than a unified tab container. The sharp top-left corner of the first tab is particularly noticeable against the rounded content below.
 **Suggested fix:** Apply matching border-radius to the top-left corner of the first tab and the top-right corner of the last tab so the tab bar and content panel form a cohesive rounded shape.
-
-
-### text_shadow: 5. Tip bar at the bottom is flush with viewport edges
-**Type:** corners
-**Screenshot:** idle_720p.png
-**Detail:** The light-colored tip bar ("Tip: Use small offsets (1-4px) for subtle depth, larger offsets (6-10px) for bold effects") extends to the left and right edges of the viewport with no margin, and its bottom edge is flush with the viewport bottom. The bar appears to lack rounded corners and may be partially cut off at the bottom.
-**Suggested fix:** Add margin around the tip bar so it doesn't sit flush against the viewport edges, or ensure it has proper bottom padding and rounded corners if it is intended to be a contained element.
 
 
 ### themes: 3. Outer container corners clip near header bar

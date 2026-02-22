@@ -19,7 +19,7 @@
 ### 3. "Controller Cu..." label text truncated and overlapping stepper controls
 **Type:** overlap
 **Screenshot:** idle_720p.png
-**Detail:** In the controller customization area, the label "Controller Cu..." is clipped/truncated, and fragments of text ("ntiv") appear between the "<" stepper button and the "Default" value text, creating a visual collision where label text, stepper arrows, and value text overlap in a crowded region.
+**Detail:** In the controller customization area near bug repro #5, the label "Controller Cu..." is clipped/truncated, and fragments of text ("ntiv") appear between the "<" stepper button and the "Default" value text, creating a visual collision where label text, stepper arrows, and value text overlap in a crowded region.
 **Suggested fix:** Widen the label container or allow it to ellipsize cleanly so the full controller label text is legible and does not collide with the adjacent stepper controls.
 
 ### 4. Z-order overlap between RED and BLUE elements (Bug Repro #4)

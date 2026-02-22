@@ -200,7 +200,7 @@ struct VStackShowcase : ScreenSystem<UIContext<InputAction>> {
     // -- RIGHT: Sidebar + content --
     auto right = vstack(context, mk(bot_section.ent(), 1),
                         ComponentConfig{}.with_size(
-                            ComponentSize{percent(0.44f), percent(1.0f)}));
+                            ComponentSize{percent(0.42f), percent(1.0f)}));
 
     div(context, mk(right.ent(), 0),
         ComponentConfig{}

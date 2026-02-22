@@ -109,10 +109,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(close_row.ent()),
                ComponentConfig{}
                    .with_label("X")
-                   .with_size(ComponentSize{pixels(46), pixels(46)})
+                   .with_size(ComponentSize{pixels(40), pixels(40)})
                    .with_custom_background(close_red)
-                   .with_border(afterhours::Color{190, 55, 65, 255}, 4.0f)
-                   .with_font("Gaegu-Bold", pixels(28.0f))
+                   .with_border(afterhours::Color{190, 55, 65, 255}, 3.0f)
+                   .with_font("Gaegu-Bold", pixels(24.0f))
                    .with_custom_text_color(white)
                    .with_alignment(TextAlignment::Center)
                    .with_rounded_corners(RoundedCorners())

@@ -8,12 +8,12 @@
 **Type:** overflow
 **Screenshot:** idle_720p.png
 **Detail:** On the far right side of the screen, a "62%" text and "Thick ring" label appear outside the bounded container area that holds the first three indicators (Basic, Animated, Thick Ring). These elements float in open space to the right of the container with no enclosing panel, appearing to be an overflowing fourth item that escaped the top-row container's right boundary.
-**Suggested fix:** Expand the top-row container to include all items, or remove the duplicate label if it is unintended overflow.
+**Suggested fix:** Expand the top-row container to include all items, or wrap the overflow into the next row. If this is a duplicate label, remove it.
 
 ### 2. Floating "88%" label and truncated text overlap between sections
 **Type:** overlap
 **Screenshot:** idle_720p.png
-**Detail:** Between the top row container and the "Size Variations" section, a "88%" label and truncated text (appears to read "in" — likely truncation of "Thin") float in the gap between the two rows. These elements don't clearly belong to either container section and overlap the boundary area.
+**Detail:** Between the top row container and the "Size Variations" section, a "88%" label and truncated text (appears to read "in" -- likely truncation of "Thin") float in the gap between the two rows. These elements don't clearly belong to either container section and overlap the boundary area.
 **Suggested fix:** Ensure percentage labels and variant names are positioned within their respective container panels rather than floating in the inter-container gap.
 
 ### 3. Left container clips against left screen edge

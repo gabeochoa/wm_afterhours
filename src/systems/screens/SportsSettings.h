@@ -333,8 +333,8 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float hdr_area_h = 45.f / sh; // section header region
     float bottom_h = 45.f / sh;   // bottom prompt bar
     float content_h = 1.0f - tab_area_h - hdr_area_h - bottom_h;
-    float pad_l = 50.f / sw;
-    float pad_r = 20.f / sw;
+    float pad_l = 70.f / sw;
+    float pad_r = 30.f / sw;
     // Settings panel: ~50% when help visible, full width otherwise
     float settings_w_pct =
         show_help_panel ? (620.f / sw) : (1.0f - pad_l - pad_r);

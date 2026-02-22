@@ -29,7 +29,7 @@
 **Suggested fix:** Increase row height in the shadow offset examples panel to accommodate larger shadow offsets, or clip shadows to prevent bleed between rows.
 
 ### 5. Tip bar at the bottom is flush with viewport edges
-**Type:** corners
+**Type:** container_bounds
 **Screenshot:** idle_720p.png
 **Detail:** The light-colored tip bar ("Tip: Use small offsets (1-4px) for subtle depth, larger offsets (6-10px) for bold effects") extends to the left and right edges of the viewport with no margin, and its bottom edge is flush with the viewport bottom. The bar appears to lack rounded corners and may be partially cut off at the bottom.
 **Suggested fix:** Add margin around the tip bar so it doesn't sit flush against the viewport edges, or ensure it has proper bottom padding and rounded corners if it is intended to be a contained element.

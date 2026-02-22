@@ -4,4 +4,4 @@
 
 ## No Issues Found
 
-The screen passes layout QA. All containers (header bar, button row, "Total clicks" pill, footer bar) are properly sized and positioned. The three interactive buttons ("Click!", "Press!", "Tap!") are evenly spaced and centered within the content area. Rounded corners on buttons and containers are clean with no content bleed. No overflow or unintentional overlap is observed. The outer rounded container corners are clean against the dark background.
+The screen passes layout QA. All containers (header bar, button row, "Total clicks" pill, footer bar) are properly sized and positioned within the viewport. The three interactive buttons ("Click!", "Press!", "Tap!") are evenly spaced and centered with no overlap. Rounded corners on buttons and the outer container are clean with no content bleeding. Text is fully contained within its respective elements. The footer status bar sits correctly at the bottom without clipping.

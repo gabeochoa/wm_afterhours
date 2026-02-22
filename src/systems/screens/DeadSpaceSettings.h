@@ -35,11 +35,11 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> main_settings = {
       "Controls",
       "Gameplay",
-      "Display and Graphics",
+      "Display & Graphics",
       "Audio",
-      "Language and Subtitles",
+      "Language & Subs",
       "Accessibility",
-      "Policies and Licenses",
+      "Policies & Licenses",
       "Credits",
   };
 

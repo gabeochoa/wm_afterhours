@@ -162,7 +162,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     std::vector<std::string> settings_tabs = {"Audio", "General", "Info"};
     tab_container(context, mk(panel.ent()), settings_tabs, active_tab,
                   ComponentConfig{}
-                      .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                      .with_size(ComponentSize{percent(0.96f), pixels(36)})
+                      .with_self_align(SelfAlign::Center)
                       .with_margin(Margin{.top = pixels(8)}));
 
     // ── Content area ──

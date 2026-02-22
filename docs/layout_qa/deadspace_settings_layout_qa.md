@@ -7,8 +7,8 @@
 ### 1. Tab labels truncated in settings tab bar
 **Type:** overflow
 **Screenshot:** idle_720p.png
-**Detail:** Several tab labels in the horizontal tab bar are truncated: "Display and Graphic" (missing 's'), "Language and Subti" (missing "tles"), and "Policies and Licens" (missing "ing"). The tab bar does not provide enough horizontal space per tab to display the full text of longer labels.
-**Suggested fix:** Use abbreviated labels that fit fully (e.g., "Display", "Language", "Policies"), reduce the tab label font size, implement horizontal scrolling for the tab bar, or widen the tab bar to accommodate full labels.
+**Detail:** The horizontal tab bar spanning "Controls, Gameplay, Display & Graphics, Audio, Language & Subs, Accessibility, Policies & Licenses, Credits" extends to the very right edge of the viewport. While the tab labels appear to display fully at the current font size, they are tightly packed with minimal inter-tab spacing, leaving no right-side margin before the screen edge.
+**Suggested fix:** Add right padding to the tab bar container, or make the tab bar horizontally scrollable. Alternatively, reduce tab label font size or spacing to ensure all tabs fit with adequate margin.
 
 ### 2. "Resume Game" focus border clips at top edge
 **Type:** corners

@@ -240,7 +240,7 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_label("Elegant typography creates visual hierarchy and "
                         "guides the reader's eye")
             .with_size(ComponentSize{pixels(panel_w - 100), pixels(30)})
-            .with_absolute_position(panel_x + 50.0f, panel_y + panel_h - 45.0f)
+            .with_absolute_position(panel_x + 50.0f, panel_y + panel_h - 55.0f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
             .with_custom_text_color(muted_text)
             .with_alignment(TextAlignment::Center));

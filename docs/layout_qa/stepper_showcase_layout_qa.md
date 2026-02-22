@@ -7,8 +7,8 @@
 ### 1. Card description text overflows right edge of the viewport
 **Type:** overflow
 **Screenshot:** idle_720p.png, stepper_initial.png, stepper_card_back_to_rogue.png, stepper_card_healer.png, stepper_card_mage.png, stepper_card_rogue.png, stepper_final.png, stepper_resolution_advanced.png, stepper_resolution_advanced_twice.png, stepper_resolution_back.png
-**Detail:** In the Card Selector panel, the Warrior card's description text "Heavy armor, melee attacks, high defense." is clipped at the right edge of the viewport. The word "high" is partially cut off, with only the "h" visible before the text disappears beyond the screen boundary. This is consistent across all 10 screenshots since the card is always visible.
-**Suggested fix:** Constrain the Card Selector panel and its child card so they fit within the viewport. Either reduce the panel width, add a right margin, or enable text wrapping so the description stays within the visible area.
+**Detail:** In the Card Selector panel, the Warrior card's description text "Heavy armor, melee attacks, high defense." extends past the right edge of the card and panel. The text ", high defense." portion overflows beyond the card's right boundary, rendering outside the card's visible area. This is consistent across all 10 screenshots since the card is always visible.
+**Suggested fix:** Constrain the card's text content so it wraps within the card bounds. Either reduce the card text font size, enable text wrapping, or increase the card width so the full description fits within the visible area.
 
 ### 2. "HealerWarriorMage" stepper text lacks spacing between options
 **Type:** overflow

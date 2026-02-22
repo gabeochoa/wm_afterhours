@@ -104,7 +104,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(header.ent(), 1),
         ComponentConfig{}
             .with_label("Active: " + get_theme_name(current_theme))
-            .with_size(ComponentSize{pixels(260), pixels(38)})
+            .with_size(ComponentSize{pixels(300), pixels(38)})
             .with_background(Theme::Usage::Accent)
             .with_auto_text_color(true)
             .with_font_size(pixels(19.0f))

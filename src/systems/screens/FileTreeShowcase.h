@@ -281,7 +281,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(root.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
+            .with_size(ComponentSize{percent(1.0f), pixels(28)})
             .with_label(status_text)
             .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
             .with_custom_text_color(theme.font_muted)
@@ -290,6 +290,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{40, 40, 40, 255})
             .with_rounded_corners(RoundedCorners().top_sharp())
             .with_roundness(0.1f)
+            .with_text_overflow(TextOverflow::Ellipsis)
             .with_debug_name("status_bar"));
   }
 };

@@ -563,7 +563,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(format_gold(total) + " G")
             .with_size(ComponentSize{pixels(120), pixels(28)})
-            .with_absolute_position(detail_x + detail_w - 135.0f, sep_y + 10.0f)
+            .with_absolute_position(detail_x + detail_w - 145.0f, sep_y + 10.0f)
             .with_font("Gaegu-Bold", h720(24.0f))
             .with_custom_text_color(can_afford_total ? accent_gold : accent_red)
             .with_alignment(TextAlignment::Right));

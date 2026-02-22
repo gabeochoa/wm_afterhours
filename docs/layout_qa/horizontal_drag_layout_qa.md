@@ -9,3 +9,9 @@
 **Screenshot:** horizontal_drag_initial.png, horizontal_drag_after_first_move.png, horizontal_drag_after_second_move.png, horizontal_drag_final.png, horizontal_drag_reorder.png, idle_720p.png
 **Detail:** In the "High Priority (2)" lane, a tag (appears to be labeled "Rea..." — likely "Reassign" or similar) is partially visible at the far right edge of the container, clipped by the lane boundary. Only the first few characters ("Rea") and the left portion of the tag are visible. The tag extends beyond the right edge of the High Priority container in all six screenshots, indicating a persistent overflow issue where the lane does not have enough horizontal space to display all its tags.
 **Suggested fix:** Either enable horizontal scrolling within the priority lane so all tags are accessible, or implement wrapping so tags flow to a second row when they exceed the lane width. Alternatively, ensure the lane container is wide enough to accommodate all tags, or truncate tag text with ellipsis while keeping tags fully within bounds.
+
+### 2. Large empty space below Medium Priority lane
+**Type:** container_bounds
+**Screenshot:** idle_720p.png, horizontal_drag_initial.png
+**Detail:** The bottom half of the screen is entirely empty dark space below the "Medium Priority (3)" lane. The two priority lanes only occupy roughly the top 45% of the viewport, leaving a large unused region. The outer container appears to fill the full viewport height without distributing space to the lane sections.
+**Suggested fix:** Either size the outer container to fit its content (auto-height), or distribute the vertical space more evenly among the priority lanes so they expand to fill the available viewport area.

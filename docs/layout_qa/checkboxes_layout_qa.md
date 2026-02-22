@@ -15,9 +15,3 @@
 **Screenshot:** idle_720p.png, custom_commands_test.png
 **Detail:** The "Group selected: 2 of 4" and "MinMax selected: 1 of 3" text at the bottom of the screen sits outside and below the main content container boundary, floating independently in the background area.
 **Suggested fix:** Extend the main container to include the status text, or add a dedicated footer row within the container for selection status information.
-
-### 3. Unchecked rows lack consistent indicator space
-**Type:** container_bounds
-**Screenshot:** idle_720p.png, custom_commands_test.png
-**Detail:** The "Secondary" and "Box Only" checkbox rows fill their full width with background color, leaving no visible reserved space for a checkmark indicator on the right side. Checked rows like "Primary" and "Accent" show "V" marks, but unchecked rows don't reserve consistent space for the indicator area.
-**Suggested fix:** Reserve consistent right-side space for the checkmark indicator in all labeled checkbox rows, regardless of checked/unchecked state.

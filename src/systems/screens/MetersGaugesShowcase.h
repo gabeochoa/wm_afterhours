@@ -53,7 +53,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
     auto root = vstack(
         context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.95f), screen_pct(0.95f)})
+            .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.92f)})
             .with_self_align(SelfAlign::Center)
             .with_background(Theme::Usage::Background)
             .with_padding(Spacing::sm)
@@ -244,7 +244,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
 
     circular_progress(context, mk(anim_row.ent(), 1), anim_progress,
                       ComponentConfig{}
-                          .with_size(ComponentSize{pixels(70), pixels(70)})
+                          .with_size(ComponentSize{pixels(60), pixels(60)})
                           .with_background(Theme::Usage::Primary)
                           .with_border(track_color, pixels(7.0f))
                           .with_margin(Spacing::sm)
