@@ -1,0 +1,127 @@
+# Modal Centering Verification
+# Validates that modals appear centered on screen, not at top-left (0,0).
+# The fix changed modal positioning from setting computed_rel (which AutoLayout
+# overwrites) to setting absolute_pos_x/y (which AutoLayout respects).
+#
+# Key test: clicking at (50,50) should be OUTSIDE a centered modal and
+# trigger backdrop dismiss. If the modal were stuck at (0,0), clicking
+# at (50,50) would land INSIDE the modal content.
+
+goto_screen advanced_modals
+wait 0.5
+expect_text "Advanced Modals"
+
+# =========================================================================
+# Test 1: Login modal - backdrop click at top-left corner dismisses
+# =========================================================================
+# On a 1280x720 screen, a centered 400px wide modal starts at x=440.
+# Clicking at (50,50) is far outside the modal bounds if centered.
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Login"
+expect_text "Username"
+screenshot centering_login_open
+
+# Click at top-left corner - should be outside centered modal
+click 50 50
+wait 0.5
+
+# Modal should have been dismissed (click was outside)
+expect_text "Advanced Modals"
+expect_text "Open a modal above to get started"
+screenshot centering_login_dismissed
+
+# =========================================================================
+# Test 2: Wizard modal - backdrop click at top-left corner dismisses
+# =========================================================================
+focus_ui btn_wizard
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Setup Wizard"
+expect_text "Step 1 of 3"
+screenshot centering_wizard_open
+
+click 50 50
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot centering_wizard_dismissed
+
+# =========================================================================
+# Test 3: Settings modal - backdrop click at top-left corner dismisses
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Settings"
+expect_text "Volume"
+screenshot centering_settings_open
+
+click 50 50
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot centering_settings_dismissed
+
+# =========================================================================
+# Test 4: Feedback modal - backdrop click at top-left corner dismisses
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Submit Feedback"
+expect_text "Subject"
+screenshot centering_feedback_open
+
+click 50 50
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot centering_feedback_dismissed
+
+# =========================================================================
+# Test 5: Click at screen center should land INSIDE modal (no dismiss)
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Login"
+
+# Click at exact screen center (640, 360) - should be inside modal
+click 640 360
+wait 0.3
+
+# Modal should still be open since we clicked inside it
+expect_text "Login"
+expect_text "Username"
+screenshot centering_click_center_still_open
+
+# Close via escape
+key ESCAPE
+wait 0.3
+expect_text "Advanced Modals"
+
+# =========================================================================
+# Test 6: Click at bottom-right corner should dismiss (outside modal)
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Login"
+
+click 1230 670
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot centering_bottomright_dismissed
