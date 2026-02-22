@@ -338,7 +338,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(m.ent(), 1),
           ComponentConfig{}
               .with_label(step_label)
-              .with_size(ComponentSize{percent(1.0f), pixels(24)})
+              .with_size(ComponentSize{percent(1.0f), pixels(40)})
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_alignment(TextAlignment::Left)
