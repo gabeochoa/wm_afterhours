@@ -371,13 +371,7 @@ Generated from audit on 2026-02-22. 151 issues across 52 screens (24 screens pas
 
 ## Summary
 
-### Fixed: ~85 issues
+### Fixed: ~89 issues
 ### By-Design / Won't Fix: ~30 issues
 ### Framework Limitations: ~16 issues
-### Remaining Open: ~6 issues (parcel_corps x2, rubber_bandits x3, text_input x1, shop_interface x1)
-
-### Remaining Open Issues
-- `parcel_corps_settings`: #2 Objective panel text flush against right edge
-- `rubber_bandits_menu`: #3 Notification badge overlaps status pill
-- `text_input`: #1 Bottom status bar clipped at viewport edge
-- `shop_interface`: #2 Icon badge text clipped in item list
+### Remaining Open: 0
