@@ -21,6 +21,7 @@ enum class InputAction {
   TextDelete,
   TextHome,
   TextEnd,
+  TextSelectAll,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -106,6 +107,13 @@ inline auto get_mapping() {
 
   mapping[to_int(InputAction::TextEnd)] = {
       raylib::KEY_END,
+  };
+
+  // Mapped to bare KEY_A; the text_input handler gates on CTRL/Cmd being held.
+  // Character input (get_char_pressed) must be processed before ctx.pressed()
+  // consumes this action, so do not reorder text_input's input handling.
+  mapping[to_int(InputAction::TextSelectAll)] = {
+      raylib::KEY_A,
   };
 
   return mapping;

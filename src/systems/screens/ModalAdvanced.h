@@ -60,11 +60,16 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
   static constexpr int MODAL_FEEDBACK = 203;
   static constexpr int CL = 1001; // Content layer
 
+  // Inset from 100% to leave room for focus ring (~10px total: 4px offset + 3px ring + 3px outline)
+  static constexpr float FOCUS_SAFE_WIDTH = 0.92f;
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
+                                              pixels(16.0f));
 
     auto root =
         div(context, mk(entity, 0),
@@ -219,7 +224,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       text_input(context, mk(m.ent(), 1), login_username,
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Primary)
                      .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                      .with_roundness(0.1f)
@@ -240,7 +245,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       text_input(context, mk(m.ent(), 3), login_password,
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Primary)
                      .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                      .with_roundness(0.1f)
@@ -253,7 +258,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       toggle_switch(context, mk(m.ent(), 4), login_remember,
                     ComponentConfig{}
                         .with_label("Remember me")
-                        .with_size(ComponentSize{pixels(340), pixels(36)})
+                        .with_size(ComponentSize{pixels(300), pixels(36)})
                         .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)
@@ -355,7 +360,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
         text_input(context, mk(m.ent(), 3), wizard_name,
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                       .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                        .with_roundness(0.1f)
@@ -375,7 +380,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
         text_input(context, mk(m.ent(), 5), wizard_email,
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                       .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                        .with_background(Theme::Usage::Primary)
                        .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                        .with_roundness(0.1f)
@@ -400,7 +405,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         radio_group(context, mk(m.ent(), 3), theme_options,
                     wizard_theme_idx,
                     ComponentConfig{}
-                        .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                         .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)
@@ -410,7 +415,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
             context, mk(m.ent(), 4), wizard_notifications,
             ComponentConfig{}
                 .with_label("Enable notifications")
-                .with_size(ComponentSize{pixels(380), pixels(40)})
+                .with_size(ComponentSize{pixels(340), pixels(40)})
                 .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_render_layer(CL)
@@ -524,7 +529,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       slider(context, mk(m.ent(), 1), settings_volume,
              ComponentConfig{}
-                 .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                 .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
                  .with_background(Theme::Usage::Primary)
                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
                  .with_render_layer(CL)
@@ -546,7 +551,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                                                      "French", "German"};
       dropdown(context, mk(m.ent(), 3), languages, settings_lang_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                   .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_margin(Margin{.bottom = DefaultSpacing::small()})
                    .with_render_layer(CL)
@@ -556,7 +561,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       toggle_switch(context, mk(m.ent(), 4), settings_dark_mode,
                     ComponentConfig{}
                         .with_label("Dark Mode")
-                        .with_size(ComponentSize{pixels(380), pixels(40)})
+                        .with_size(ComponentSize{pixels(340), pixels(40)})
                         .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                         .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                         .with_render_layer(CL)
@@ -565,7 +570,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       toggle_switch(context, mk(m.ent(), 5), settings_notifs,
                     ComponentConfig{}
                         .with_label("Notifications")
-                        .with_size(ComponentSize{pixels(380), pixels(40)})
+                        .with_size(ComponentSize{pixels(340), pixels(40)})
                         .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)
@@ -658,7 +663,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       text_input(context, mk(m.ent(), 1), feedback_subject,
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Primary)
                      .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                      .with_roundness(0.1f)
@@ -682,7 +687,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       dropdown(context, mk(m.ent(), 3), categories,
                feedback_category_idx,
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                   .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_margin(Margin{.bottom = DefaultSpacing::small()})
                    .with_render_layer(CL)
@@ -701,7 +706,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       slider(context, mk(m.ent(), 5), feedback_severity,
              ComponentConfig{}
-                 .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                 .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                  .with_background(Theme::Usage::Primary)
                  .with_margin(Margin{.bottom = DefaultSpacing::small()})
                  .with_render_layer(CL)
@@ -721,7 +726,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
 
       text_area(context, mk(m.ent(), 7), feedback_message,
                 ComponentConfig{}
-                    .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                    .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(100)})
                     .with_background(Theme::Usage::Primary)
                     .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
                     .with_roundness(0.08f)
