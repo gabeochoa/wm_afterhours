@@ -60,10 +60,10 @@ make -j8
 # Run E2E tests
 if [[ -n "$SCRIPT_PATH" ]]; then
     echo "Running E2E script: $SCRIPT_PATH"
-    ./build/ui_tester --test-script "$SCRIPT_PATH" --timeout "$TIMEOUT" -w "$WIDTH" -h "$HEIGHT"
+    ./output/ui_tester.exe --test-script "$SCRIPT_PATH" --timeout "$TIMEOUT" -w "$WIDTH" -h "$HEIGHT"
 elif [[ "$RUN_ALL" == true ]]; then
     echo "Running all E2E scripts in $E2E_SCRIPTS_DIR"
-    ./build/ui_tester --test-script-dir "$E2E_SCRIPTS_DIR" --timeout "$TIMEOUT" -w "$WIDTH" -h "$HEIGHT"
+    ./output/ui_tester.exe --test-script-dir "$E2E_SCRIPTS_DIR" --timeout "$TIMEOUT" -w "$WIDTH" -h "$HEIGHT"
 else
     echo "Usage: $0 --script <path> | --all [--timeout <frames>] [-w <width>] [-h <height>]"
     echo ""

@@ -1,0 +1,93 @@
+# Advanced Modal Test
+# Opens each of the 4 advanced modals and takes screenshots
+
+# Navigate to the advanced modals screen
+goto_screen advanced_modals
+wait 0.5
+
+# Validate initial screen
+expect_text "Advanced Modals"
+expect_text "Open a modal above to get started"
+screenshot adv_modals_initial
+
+# =========================================================================
+# Test 1: Login Form modal
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+
+# Login modal should be visible
+expect_text "Login"
+expect_text "Username"
+expect_text "Password"
+
+screenshot adv_modals_login_open
+
+# Close it
+key ESCAPE
+wait 0.3
+
+# =========================================================================
+# Test 2: Multi-Step Wizard modal
+# =========================================================================
+focus_ui btn_wizard
+wait 0.2
+key ENTER
+wait 0.5
+
+# Wizard should show step 1
+expect_text "Setup Wizard"
+expect_text "Step 1 of 3"
+expect_text "Name"
+expect_text "Email"
+
+screenshot adv_modals_wizard_step1
+
+# Close it
+key ESCAPE
+wait 0.3
+
+# =========================================================================
+# Test 3: Settings Panel modal
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+
+# Settings modal should be visible
+expect_text "Settings"
+expect_text "Volume"
+expect_text "Language"
+
+screenshot adv_modals_settings_open
+
+# Close it
+key ESCAPE
+wait 0.3
+
+# =========================================================================
+# Test 4: Feedback Form modal
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+
+# Feedback modal should be visible
+expect_text "Submit Feedback"
+expect_text "Subject"
+expect_text "Category"
+expect_text "Message"
+
+screenshot adv_modals_feedback_open
+
+# Close it
+key ESCAPE
+wait 0.3
+
+# Back to main screen
+expect_text "Advanced Modals"
+screenshot adv_modals_final

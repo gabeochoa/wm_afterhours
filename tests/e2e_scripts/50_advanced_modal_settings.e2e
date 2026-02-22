@@ -1,0 +1,152 @@
+# Advanced Modal Test: Settings Panel
+# Tests slider, dropdown, toggle switches, reset, cancel, and apply
+
+goto_screen advanced_modals
+wait 0.5
+expect_text "Advanced Modals"
+
+# =========================================================================
+# Test 1: Open settings modal and verify contents
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Settings"
+expect_text "Volume"
+expect_text "Language"
+screenshot settings_open
+
+# =========================================================================
+# Test 2: Adjust volume slider with arrow keys
+# =========================================================================
+focus_ui settings_volume_slider
+wait 0.2
+
+# Press RIGHT several times to increase volume
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.3
+screenshot settings_volume_adjusted
+
+# =========================================================================
+# Test 3: Interact with language dropdown
+# =========================================================================
+focus_ui settings_lang_dropdown
+wait 0.2
+key ENTER
+wait 0.3
+
+# Dropdown should open showing options
+screenshot settings_dropdown_open
+
+# Select Spanish (second option - press DOWN then ENTER)
+key DOWN
+wait 0.2
+key ENTER
+wait 0.3
+screenshot settings_language_changed
+
+# =========================================================================
+# Test 4: Toggle dark mode off
+# =========================================================================
+focus_ui settings_dark_toggle
+wait 0.2
+key ENTER
+wait 0.3
+screenshot settings_dark_toggled
+
+# =========================================================================
+# Test 5: Toggle notifications off
+# =========================================================================
+focus_ui settings_notif_toggle
+wait 0.2
+key ENTER
+wait 0.3
+screenshot settings_notif_toggled
+
+# =========================================================================
+# Test 6: Reset button restores saved values
+# =========================================================================
+focus_ui settings_reset_btn
+wait 0.2
+key ENTER
+wait 0.3
+screenshot settings_after_reset
+
+# =========================================================================
+# Test 7: Cancel button closes without saving
+# =========================================================================
+# Make a change first
+focus_ui settings_dark_toggle
+wait 0.2
+key ENTER
+wait 0.3
+
+# Now cancel
+focus_ui settings_cancel_btn
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should be back on main screen
+expect_text "Advanced Modals"
+screenshot settings_cancelled
+
+# =========================================================================
+# Test 8: Apply button saves and closes
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Settings"
+
+# Click Apply
+focus_ui settings_apply_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+# Should show status
+expect_text "Settings applied"
+screenshot settings_applied
+
+# =========================================================================
+# Test 9: Escape key closes settings
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Settings"
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot settings_escape_close
+
+# =========================================================================
+# Test 10: Backdrop click closes settings
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Settings"
+
+click 50 50
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot settings_backdrop_dismiss
+

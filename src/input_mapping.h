@@ -81,7 +81,7 @@ inline auto get_mapping() {
   };
 
   mapping[to_int(InputAction::PauseButton)] = {
-      raylib::KEY_ESCAPE, raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
+      raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
   mapping[to_int(InputAction::ToggleUIDebug)] = {
       raylib::KEY_GRAVE,
