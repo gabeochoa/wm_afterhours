@@ -1,5 +1,5 @@
 # Test just the themes screen
 goto_screen themes
-wait 50
+wait 0.5
 screenshot themes_test
 

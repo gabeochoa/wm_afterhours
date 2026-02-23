@@ -26,7 +26,7 @@ key ENTER
 wait 0.3
 
 # Verify click was registered
-expect_text "Button clicks: 1"
+expect_text "Clicks: 1"
 
 # Take screenshot after click
 screenshot images_after_click

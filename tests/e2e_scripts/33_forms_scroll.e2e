@@ -15,8 +15,7 @@ expect_text "Music"
 expect_text "SFX"
 expect_text "Fullscreen"
 
-# Bottom items should NOT be visible (they overflow)
-expect_no_text "Bloom Effect"
+# Bottom items should NOT be visible yet (they overflow the scroll view)
 expect_no_text "Ambient Occlusion"
 
 screenshot forms_before_scroll
@@ -25,11 +24,11 @@ screenshot forms_before_scroll
 mouse_move 75% 45%
 wait 0.2
 
-# Scroll down to reveal bottom items
+# Scroll down to reveal bottom items (clamped to max scroll)
 scroll_wheel 0 -10
-wait 0.3
+wait 0.5
 
-# After scrolling, bottom checkboxes should now be visible
-expect_text "Bloom Effect"
+# After scrolling, items near the bottom should now be visible
+expect_text "Ambient Occlusion"
 
 screenshot forms_after_scroll

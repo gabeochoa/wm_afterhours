@@ -819,15 +819,19 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::testing::test_input::reset_all();
     afterhours::testing::VisibleTextRegistry::instance().clear();
 
-    // Reset UI focus state
+    // Reset UI focus state (also clears input_gates)
     auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
         afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
     }
 
-    // Note: avoid deleting UI entities mid-frame; load_screen already
-    // marks old UI as not rendered when switching screens.
+    // Clear modal stack so stale modals don't block input in subsequent tests
+    auto *modal_root = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::modal::ModalRoot>();
+    if (modal_root) {
+      modal_root->modal_stack.clear();
+    }
   };
 
   // Register E2E command handlers
@@ -1057,6 +1061,12 @@ void reset_e2e_state() {
   if (auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
           afterhours::ui::UIContext<InputAction>>()) {
     ui_context->reset();
+  }
+
+  // Clear modal stack so stale modals don't block input
+  if (auto *modal_root = afterhours::EntityHelper::get_singleton_cmp<
+          afterhours::modal::ModalRoot>()) {
+    modal_root->modal_stack.clear();
   }
 
   // Clear text registry and input queues
