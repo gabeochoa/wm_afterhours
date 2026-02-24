@@ -4,8 +4,8 @@
 goto_screen text_input
 wait 0.5
 
-# Verify initial status
-expect_text "Enter your details above"
+# Verify we're on the screen
+expect_text "Edit Profile"
 
 # Focus the username input field by debug_name
 focus_element Username_input

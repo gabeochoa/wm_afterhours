@@ -6,18 +6,17 @@ goto_screen text_input
 wait 0.5
 
 # Verify we're on the text input screen
-expect_text "Text Input Demo"
-expect_text "Enter your details above"
+expect_text "Edit Profile"
 
-# Focus the submit button directly
-focus_element submit_btn
+# Focus the save button directly
+focus_element btn_save
 wait 0.2
 
 # Press Enter to submit
 key ENTER
 wait 0.3
 
-# Should show submitted message (empty form)
-expect_text "Submitted!"
+# Should show saved message (empty form)
+expect_text "Saved:"
 
 screenshot keyboard_input_test

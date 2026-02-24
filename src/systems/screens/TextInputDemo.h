@@ -11,261 +11,241 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
-  // Text input values with placeholder text
   std::string username = "";
   std::string email = "";
   std::string password = "";
-  std::string search_query = "Type to search...";
-  std::string notes = "Type something here...";
+  std::string search_query = "";
+  std::string bio = "";
 
-  // Password visibility toggle
   bool show_password = false;
-
-  // Status message
-  std::string status_message = "Enter your details above";
+  std::string status_message = "";
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Apply a clean theme
-    auto theme = afterhours::ui::theme_presets::neon_dark();
+    auto theme = afterhours::ui::theme_presets::midnight();
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
-    // Main container - centered on screen
+    auto accent_dim = afterhours::colors::darken(theme.accent, 0.6f);
+    auto surface_light = afterhours::colors::lighten(theme.surface, 1.5f);
+
+    // Full-screen centered layout
     auto root = div(
         context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.98f)})
-            .with_self_align(SelfAlign::Center)
+            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_background(Theme::Usage::Background)
-            .with_roundness(0.08f)
-            .with_padding(Spacing::sm) // Smaller padding for more content space
-            .with_debug_name("text_input_demo_bg"));
+            .with_justify_content(JustifyContent::Center)
+            .with_align_items(AlignItems::Center)
+            .with_debug_name("text_input_root"));
 
-    // Content container - use percent for proper sizing
-    auto main_container =
-        vstack(context, mk(root.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                   .with_no_wrap() // Prevent children from wrapping
-                   .with_debug_name("text_input_main"));
-
-    // Title
-    div(context, mk(main_container.ent(), 0),
+    // Card container
+    auto card = vstack(
+        context, mk(root.ent(), 0),
         ComponentConfig{}
-            .with_label("Text Input Demo")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f)));
+            .with_size(ComponentSize{pixels(480), pixels(640)})
+            .with_custom_background(surface_light)
+            .with_rounded_corners(RoundedCorners().all_round())
+            .with_roundness(0.06f)
+            .with_padding(Padding{.top = pixels(0), .bottom = pixels(16),
+                                  .left = pixels(0), .right = pixels(0)})
+            .with_no_wrap()
+            .with_debug_name("card"));
 
-    // Form container - uses flex_grow to fill available space, leaving room for
-    // status and instructions at the bottom of main_container
-    auto form_container = vstack(
-        context, mk(main_container.ent(), 1),
+    // Header bar with accent gradient
+    auto header = div(
+        context, mk(card.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.95f), expand()})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::xs)
+            .with_size(ComponentSize{percent(1.0f), pixels(56)})
+            .with_custom_background(theme.primary)
+            .with_rounded_corners(
+                RoundedCorners().top_left(ROUND).top_right(ROUND))
+            .with_roundness(0.06f)
+            .with_padding(Padding{.left = pixels(24), .right = pixels(24)})
             .with_justify_content(JustifyContent::FlexStart)
-            .with_align_items(AlignItems::FlexStart) // Align children left
-            .with_self_align(SelfAlign::Center) // Center the form container
-            .with_no_wrap()                     // Prevent flex wrapping
-            .with_debug_name("form_container"));
+            .with_align_items(AlignItems::Center)
+            .with_debug_name("header"));
 
-    // Helper to create labeled text input with stacked layout (label above
-    // input)
-    auto make_input_field =
-        [&](int idx, const std::string &label_text, std::string &value,
-            Theme::Usage bg, std::optional<char> mask = std::nullopt) -> bool {
-      // Label above the input - prominent font for clear field identification
-      div(context, mk(form_container.ent(), idx * 2),
+    div(context, mk(header.ent(), 0),
+        ComponentConfig{}
+            .with_label("Edit Profile")
+            .with_size(ComponentSize{pixels(200), pixels(32)})
+            .with_background(Theme::Usage::None)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
+            .with_skip_tabbing(true));
+
+    // Form body with padding
+    auto body = vstack(
+        context, mk(card.ent(), 1),
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), expand()})
+            .with_padding(Padding{.top = pixels(20), .bottom = pixels(8),
+                                  .left = pixels(28), .right = pixels(28)})
+            .with_no_wrap()
+            .with_justify_content(JustifyContent::FlexStart)
+            .with_debug_name("body"));
+
+    auto make_field = [&](int idx, const std::string &label_text,
+                          std::string &value,
+                          std::optional<char> mask = std::nullopt) -> bool {
+      div(context, mk(body.ent(), idx * 2),
           ComponentConfig{}
-              .with_label(label_text + ":")
-              .with_size(ComponentSize{pixels(396), pixels(28)})
+              .with_label(label_text)
+              .with_size(ComponentSize{percent(1.0f), pixels(22)})
               .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_skip_tabbing(true)
-              .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-              .with_debug_name(label_text + "_label"));
+              .with_margin(Margin{.top = pixels(idx == 0 ? 0 : 12),
+                                  .bottom = pixels(4)}));
 
-      // Text input without internal label
-      // Note: with_rounded_corners and with_roundness ensure the focus ring
-      // matches the rounded input field
-      auto input_config =
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(396), pixels(38)})
-              .with_background(bg)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-              .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-              .with_rounded_corners(RoundedCorners().all_round())
-              .with_roundness(0.15f)
-              .with_debug_name(label_text + "_input");
+      auto cfg = ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                     .with_custom_background(
+                         afterhours::colors::darken(theme.surface, 0.5f))
+                     .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                     .with_rounded_corners(RoundedCorners().all_round())
+                     .with_roundness(0.12f)
+                     .with_debug_name(label_text + "_input");
 
-      if (mask) {
-        input_config.with_mask_char(*mask);
-      }
+      if (mask) cfg.with_mask_char(*mask);
 
-      return text_input(context, mk(form_container.ent(), idx * 2 + 1), value,
-                        input_config);
+      return text_input(context, mk(body.ent(), idx * 2 + 1), value, cfg);
     };
 
-    // Username input
-    if (make_input_field(0, "Username", username, Theme::Usage::Primary)) {
+    if (make_field(0, "Username", username)) {
       status_message = "Username: " + username;
     }
 
-    // Email input
-    if (make_input_field(1, "Email", email, Theme::Usage::Accent)) {
+    if (make_field(1, "Email", email)) {
       status_message = "Email: " + email;
     }
 
-    // Password input with masking and show/hide toggle
-    // Password label
-    div(context, mk(form_container.ent(), 4),
+    // Password with toggle
+    div(context, mk(body.ent(), 4),
         ComponentConfig{}
-            .with_label("Password:")
-            .with_size(ComponentSize{pixels(396), pixels(28)})
+            .with_label("Password")
+            .with_size(ComponentSize{percent(1.0f), pixels(22)})
             .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
             .with_skip_tabbing(true)
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
+            .with_margin(Margin{.top = pixels(12), .bottom = pixels(4)}));
 
-    // Password row container (input + toggle button)
-    auto password_row =
-        hstack(context, mk(form_container.ent(), 5),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(396), pixels(38)})
-                   .with_justify_content(JustifyContent::SpaceBetween)
-                   .with_align_items(AlignItems::Center)
-                   .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                   .with_debug_name("password_row"));
-
-    // Password text input (narrower to make room for toggle)
-    auto password_config =
+    auto pw_row = hstack(
+        context, mk(body.ent(), 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(310), pixels(38)})
-            .with_background(Theme::Usage::Secondary)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-            .with_rounded_corners(RoundedCorners().all_round())
-            .with_roundness(0.15f)
-            .with_debug_name("password_input");
+            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_debug_name("pw_row"));
 
-    // Apply mask only when not showing password
-    if (!show_password) {
-      password_config.with_mask_char('*');
-    }
+    auto pw_cfg = ComponentConfig{}
+                      .with_size(ComponentSize{expand(), pixels(40)})
+                      .with_custom_background(
+                          afterhours::colors::darken(theme.surface, 0.5f))
+                      .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                      .with_rounded_corners(
+                          RoundedCorners().top_left(ROUND).bottom_left(ROUND))
+                      .with_roundness(0.12f)
+                      .with_debug_name("Password_input");
 
-    if (text_input(context, mk(password_row.ent(), 0), password,
-                   password_config)) {
+    if (!show_password) pw_cfg.with_mask_char('*');
+
+    if (text_input(context, mk(pw_row.ent(), 0), password, pw_cfg)) {
       status_message = "Password changed";
     }
 
-    // Show/Hide toggle button
-    if (button(context, mk(password_row.ent(), 1),
+    if (button(context, mk(pw_row.ent(), 1),
                ComponentConfig{}
                    .with_label(show_password ? "Hide" : "Show")
-                   .with_size(ComponentSize{pixels(76), pixels(38)})
-                   .with_background(Theme::Usage::Accent)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-                   .with_rounded_corners(RoundedCorners().all_round())
-                   .with_roundness(0.15f)
-                   .with_debug_name("password_toggle"))) {
+                   .with_size(ComponentSize{pixels(60), pixels(40)})
+                   .with_custom_background(accent_dim)
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+                   .with_rounded_corners(
+                       RoundedCorners().top_right(ROUND).bottom_right(ROUND))
+                   .with_roundness(0.12f)
+                   .with_debug_name("pw_toggle"))) {
       show_password = !show_password;
-      status_message = show_password ? "Password visible" : "Password hidden";
     }
 
-    // Separator - indices 0-5 used by 3 label/input pairs above
-    separator(context, mk(form_container.ent(), 6),
-              SeparatorOrientation::Horizontal);
+    // Bio / notes
+    if (make_field(3, "Bio", bio)) {
+      status_message = "Bio: " + bio;
+    }
 
-    // Search input (no label)
-    div(context, mk(form_container.ent(), 7),
+    // Search
+    if (make_field(4, "Search", search_query)) {
+      status_message = "Search: " + search_query;
+    }
+
+    // Status bar
+    if (!status_message.empty()) {
+      div(context, mk(body.ent(), 10),
+          ComponentConfig{}
+              .with_label(status_message)
+              .with_size(ComponentSize{percent(1.0f), pixels(24)})
+              .with_custom_background(
+                  afterhours::colors::darken(theme.surface, 0.3f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+              .with_rounded_corners(RoundedCorners().all_round())
+              .with_roundness(0.08f)
+              .with_margin(Margin{.top = pixels(12)})
+              .with_padding(Padding{.left = pixels(10)})
+              .with_skip_tabbing(true)
+              .with_debug_name("status_bar"));
+    }
+
+    // Footer buttons
+    auto footer = hstack(
+        context, mk(card.ent(), 2),
         ComponentConfig{}
-            .with_label("Search (no label version):")
-            .with_size(ComponentSize{pixels(396), pixels(28)})
-            .with_skip_tabbing(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
-            .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_justify_content(JustifyContent::FlexEnd)
+            .with_align_items(AlignItems::Center)
+            .with_padding(Padding{.right = pixels(28)})
+            .with_debug_name("footer"));
 
-    // Search input - no label so field uses full width
-    if (text_input(context, mk(form_container.ent(), 8), search_query,
-                   ComponentConfig{}
-                       .with_size(ComponentSize{pixels(396), pixels(38)})
-                       .with_background(Theme::Usage::Primary)
-                       .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                       .with_rounded_corners(RoundedCorners().all_round())
-                       .with_roundness(0.15f)
-                       .with_debug_name("search_input"))) {
-      status_message = "Searching for: " + search_query;
-    }
-
-    // Submit button
-    if (button(context, mk(form_container.ent(), 9),
+    if (button(context, mk(footer.ent(), 0),
                ComponentConfig{}
-                   .with_label("Submit")
-                   .with_size(ComponentSize{pixels(200), pixels(44)})
-                   .with_background(Theme::Usage::Accent)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
-                   .with_margin(Margin{.top = DefaultSpacing::tiny()})
-                   .with_debug_name("submit_btn"))) {
-      status_message = "Submitted! User: " + username + ", Email: " + email;
+                   .with_label("Cancel")
+                   .with_size(ComponentSize{pixels(80), pixels(36)})
+                   .with_custom_background(surface_light)
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+                   .with_rounded_corners(RoundedCorners().all_round())
+                   .with_roundness(0.10f)
+                   .with_margin(Margin{.right = pixels(8)})
+                   .with_debug_name("btn_cancel"))) {
+      username = "";
+      email = "";
+      password = "";
+      bio = "";
+      search_query = "";
+      status_message = "";
     }
 
-    // Status display - compact margin to fit within container
-    div(context, mk(main_container.ent(), 2),
-        ComponentConfig{}
-            .with_label(status_message)
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f)));
+    if (button(context, mk(footer.ent(), 1),
+               ComponentConfig{}
+                   .with_label("Save")
+                   .with_size(ComponentSize{pixels(80), pixels(36)})
+                   .with_background(Theme::Usage::Primary)
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+                   .with_rounded_corners(RoundedCorners().all_round())
+                   .with_roundness(0.10f)
+                   .with_debug_name("btn_save"))) {
+      status_message = "Saved: " + username + " / " + email;
+    }
 
-    // Instructions - brief contextual navigation hint
-    div(context, mk(main_container.ent(), 3),
+    // Keyboard hints
+    div(context, mk(card.ent(), 3),
         ComponentConfig{}
-            .with_label("Tab / Enter")
+            .with_label("Tab to navigate  |  Ctrl+A select all  |  "
+                         "Ctrl+C/V/X clipboard")
             .with_size(ComponentSize{percent(1.0f), pixels(20)})
             .with_custom_background(
-                afterhours::colors::darken(theme.surface, 0.8f))
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_skip_tabbing(true));
-
-    // ========== FOOTER: OK / Cancel / Apply ==========
-    auto footer =
-        hstack(context, mk(main_container.ent(), 4),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
-                   .with_justify_content(JustifyContent::FlexEnd)
-                   .with_align_items(AlignItems::Center)
-                   .with_padding(Padding{.right = DefaultSpacing::medium()})
-                   .with_background(Theme::Usage::None)
-                   .with_debug_name("dialog_footer"));
-
-    button(context, mk(footer.ent(), 0),
-           ComponentConfig{}
-               .with_label("OK")
-               .with_size(ComponentSize{pixels(80), pixels(30)})
-               .with_background(Theme::Usage::Primary)
-               .with_margin(Margin{.right = DefaultSpacing::small()})
-               .with_debug_name("btn_ok"));
-
-    button(context, mk(footer.ent(), 1),
-           ComponentConfig{}
-               .with_label("Cancel")
-               .with_size(ComponentSize{pixels(80), pixels(30)})
-               .with_background(Theme::Usage::Surface)
-               .with_margin(Margin{.right = DefaultSpacing::small()})
-               .with_debug_name("btn_cancel"));
-
-    button(context, mk(footer.ent(), 2),
-           ComponentConfig{}
-               .with_label("Apply")
-               .with_size(ComponentSize{pixels(80), pixels(30)})
-               .with_background(Theme::Usage::Surface)
-               .with_debug_name("btn_apply"));
+                afterhours::colors::darken(theme.surface, 0.7f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(11.0f))
+            .with_padding(Padding{.left = pixels(12)})
+            .with_skip_tabbing(true)
+            .with_rounded_corners(
+                RoundedCorners().bottom_left(ROUND).bottom_right(ROUND))
+            .with_roundness(0.06f));
   }
 };
 
