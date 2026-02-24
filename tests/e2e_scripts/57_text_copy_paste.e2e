@@ -1,0 +1,32 @@
+# Text Copy & Paste (Ctrl+C / Ctrl+V)
+# Tests copying selected text and pasting into another field.
+
+goto_screen text_input
+wait 0.5
+
+# Type into username
+focus_ui Username_input
+wait 0.2
+type "copyme"
+wait 0.3
+expect_input_text Username_input "copyme"
+
+# Select all and copy
+key CTRL+A
+wait 0.2
+expect_input_selection Username_input 0 6
+key CTRL+C
+wait 0.2
+
+# Move to email field and paste
+focus_ui Email_input
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Email_input "copyme"
+expect_text "Email: copyme"
+
+# Original username should be unchanged (copy, not cut)
+expect_input_text Username_input "copyme"
+
+screenshot text_copy_paste

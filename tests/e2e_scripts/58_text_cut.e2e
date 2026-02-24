@@ -1,0 +1,33 @@
+# Text Cut (Ctrl+X)
+# Tests that Ctrl+X removes selected text and puts it on clipboard.
+
+goto_screen text_input
+wait 0.5
+
+# Type into username
+focus_ui Username_input
+wait 0.2
+type "cutme"
+wait 0.3
+expect_input_text Username_input "cutme"
+
+# Select all and cut
+key CTRL+A
+wait 0.2
+expect_input_selection Username_input 0 5
+key CTRL+X
+wait 0.3
+
+# Username field should be empty after cut
+expect_input_text Username_input ""
+expect_input_selection Username_input 0 0
+
+# Paste into email to prove clipboard has the text
+focus_ui Email_input
+wait 0.2
+key CTRL+V
+wait 0.3
+expect_input_text Email_input "cutme"
+expect_text "Email: cutme"
+
+screenshot text_cut_paste
