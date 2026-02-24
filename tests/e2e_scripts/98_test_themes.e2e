@@ -1,5 +1,7 @@
 # Test just the themes screen
 goto_screen themes
 wait 0.5
+expect_text "Theme Switcher"
+expect_text "Select Theme"
 screenshot themes_test
 

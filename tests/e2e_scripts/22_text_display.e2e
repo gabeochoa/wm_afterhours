@@ -9,7 +9,9 @@ wait 0.5
 validate_screen text
 
 # Verify we're on the correct screen
-expect_text "Text"
+expect_text "Typography Showcase"
+expect_text "Text Size Hierarchy"
+expect_text "Display Text"
 
 screenshot text_display
 

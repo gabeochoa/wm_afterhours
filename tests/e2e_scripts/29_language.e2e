@@ -9,7 +9,9 @@ wait 0.5
 validate_screen language_demo
 
 # Verify we're on the correct screen
-expect_text "Language"
+expect_text "Language Demo"
+expect_text "All Languages"
+expect_text "Active: ENGLISH"
 
 screenshot language_display
 

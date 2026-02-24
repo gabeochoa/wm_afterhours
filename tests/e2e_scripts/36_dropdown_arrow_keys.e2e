@@ -8,6 +8,9 @@
 goto_screen dropdowns
 wait 1.0
 
+# Verify screen loaded
+expect_text "Dropdown Showcase"
+
 # Tab to the first dropdown's trigger button
 key TAB
 wait 0.3

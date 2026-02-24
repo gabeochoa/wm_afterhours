@@ -9,7 +9,9 @@ wait 0.5
 validate_screen self_align
 
 # Verify we're on the correct screen
-expect_text "Align"
+expect_text "SelfAlign Feature Demo"
+expect_text "Override parent alignment for individual elements"
+expect_text "FlexStart (left)"
 
 screenshot self_align_display
 

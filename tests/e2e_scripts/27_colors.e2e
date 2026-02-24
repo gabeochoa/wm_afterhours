@@ -9,7 +9,9 @@ wait 0.5
 validate_screen colors
 
 # Verify we're on the correct screen
-expect_text "Color"
+expect_text "Theme Color Swatches"
+expect_text "Theme Colors"
+expect_text "Primary"
 
 screenshot colors_display
 

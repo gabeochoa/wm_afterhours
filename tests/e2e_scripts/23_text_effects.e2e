@@ -9,7 +9,9 @@ wait 0.5
 validate_screen text_shadow
 
 # Verify we're on the correct screen
-expect_text "Shadow"
+expect_text "Text Drop Shadow"
+expect_text "NO SHADOW"
+expect_text "WITH SHADOW"
 
 screenshot text_shadow_display
 

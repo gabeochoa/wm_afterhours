@@ -9,7 +9,9 @@ wait 0.5
 validate_screen themes
 
 # Verify we're on the correct screen
-expect_text "Theme"
+expect_text "Theme Switcher"
+expect_text "Select Theme"
+expect_text "Component Preview"
 
 # Try switching theme
 key TAB

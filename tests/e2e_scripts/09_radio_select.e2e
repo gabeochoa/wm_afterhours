@@ -8,6 +8,10 @@ wait 0.5
 # Validate initial screen against baseline
 validate_screen radio_buttons
 
+# Verify screen loaded
+expect_text "Radio Button Groups"
+expect_text "Favorite Fruit"
+
 # Tab to first radio option
 key TAB
 wait 0.2

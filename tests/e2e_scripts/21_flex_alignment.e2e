@@ -9,7 +9,10 @@ wait 0.5
 validate_screen flex_alignment
 
 # Verify we're on the correct screen
-expect_text "Flex"
+expect_text "Flexbox Alignment Demo"
+expect_text "Vertical"
+expect_text "Horizontal"
+expect_text "Self Align"
 
 screenshot flex_alignment_display
 

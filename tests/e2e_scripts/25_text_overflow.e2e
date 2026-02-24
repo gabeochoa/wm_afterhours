@@ -9,7 +9,8 @@ wait 0.5
 validate_screen text_overflow
 
 # Verify we're on the correct screen
-expect_text "Overflow"
+expect_text "Text Overflow Debug Demo"
+expect_text "Good: Text Fits Container"
 
 screenshot text_overflow_display
 
