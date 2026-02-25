@@ -1,0 +1,37 @@
+# Feature: Click places cursor at precise character position
+# Per HTML spec: clicking within text should position the caret at the
+# nearest character boundary.
+#
+# Currently NOT implemented - click focuses the field but cursor stays
+# at the end. This test MUST FAIL until click-to-position is added.
+#
+# Uses expect_input_selection with start==end to assert cursor position.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "ABCDEFGHIJ"
+wait 0.3
+
+# Cursor should be at end (position 10)
+expect_input_selection Username_input 10 10
+
+# Click near the start of the text to move cursor there.
+# Field is approximately at x=350..670, y=107..143
+# Character 'A' starts around x=365 (after left padding)
+click 370 120
+wait 0.3
+
+# Cursor should now be near position 0-1, NOT still at 10
+# Assert cursor moved to near position 1 (after 'A')
+# We verify by typing and checking where the char appears
+type "X"
+wait 0.2
+
+# If click-to-position works: "AXBCDEFGHIJ" (X inserted near start)
+# If it doesn't work: "ABCDEFGHIJX" (X appended at end)
+# This assertion will FAIL if click doesn't reposition cursor
+expect_input_text Username_input "AXBCDEFGHIJ"
+screenshot click_pos_01_inserted_near_start

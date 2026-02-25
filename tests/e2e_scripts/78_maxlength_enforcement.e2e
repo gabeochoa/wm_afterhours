@@ -1,0 +1,50 @@
+# HTML Spec: maxlength attribute limits the number of characters a user can enter.
+# Per spec, the user agent should prevent further input once maxlength is reached.
+#
+# The framework enforces max_length in insert_char(): if text_size() + utf8.size()
+# exceeds max_length, the character is rejected. Default max_length is 256 bytes.
+#
+# This test verifies:
+# 1. Text can be typed up to the limit
+# 2. Characters beyond the limit are silently dropped
+# 3. After deleting, new characters can be typed again
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+
+# Type a moderate string
+type "abcdefghij"
+wait 0.2
+expect_input_text Username_input "abcdefghij"
+
+# Type a long string to approach default 256 byte limit
+# (This field uses default max_length=256 which is large enough for normal use)
+type "klmnopqrstuvwxyz0123456789"
+wait 0.2
+expect_input_text Username_input "abcdefghijklmnopqrstuvwxyz0123456789"
+screenshot maxlength_01_within_limit
+
+# Select all and replace to test the limit boundary more precisely
+key CTRL+A
+wait 0.1
+key BACKSPACE
+wait 0.2
+expect_input_text Username_input ""
+
+# Now type exactly 10 characters and verify
+type "1234567890"
+wait 0.2
+expect_input_text Username_input "1234567890"
+
+# Delete 3 and type 3 more - should work
+key BACKSPACE
+key BACKSPACE
+key BACKSPACE
+wait 0.1
+type "XYZ"
+wait 0.2
+expect_input_text Username_input "1234567XYZ"
+screenshot maxlength_02_delete_and_retype

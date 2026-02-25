@@ -1,0 +1,53 @@
+# Feature: Tab and Shift+Tab to navigate between text input fields
+# Expected: Tab moves focus to the next input field.
+# Shift+Tab moves focus to the previous input field.
+
+goto_screen text_input
+wait 0.5
+
+# Focus the first field (Username)
+focus_ui Username_input
+wait 0.2
+expect_focused Username_input
+screenshot tab_nav_01_username_focused
+
+# Tab to next field (Email)
+tab
+wait 0.2
+expect_focused Email_input
+screenshot tab_nav_02_email_focused
+
+# Tab to next field (Password)
+tab
+wait 0.2
+expect_focused Password_input
+screenshot tab_nav_03_password_focused
+
+# Tab to next field (Bio)
+tab
+wait 0.2
+expect_focused Bio_input
+screenshot tab_nav_04_bio_focused
+
+# Tab to next field (Search)
+tab
+wait 0.2
+expect_focused Search_input
+screenshot tab_nav_05_search_focused
+
+# Shift+Tab back to Bio
+shift_tab
+wait 0.2
+expect_focused Bio_input
+screenshot tab_nav_06_bio_via_shift_tab
+
+# Shift+Tab back to Password
+shift_tab
+wait 0.2
+expect_focused Password_input
+screenshot tab_nav_07_password_via_shift_tab
+
+# Type in the focused field to verify it's actually receiving input
+type "secret"
+wait 0.2
+screenshot tab_nav_08_typed_in_password

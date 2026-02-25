@@ -1,0 +1,28 @@
+# Feature: Triple-click to select entire line/all text
+# Per standard text editing: triple-click selects the entire line.
+# For single-line text inputs, this means selecting all text.
+#
+# Currently NOT implemented - no triple-click detection exists.
+# Double-click word selection also doesn't exist yet.
+# This test MUST FAIL until triple-click is added.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World Test"
+wait 0.3
+
+# Triple-click in the field (three rapid clicks at same position)
+# Field center is approximately x=450, y=120
+click 450 120
+wait 0.05
+click 450 120
+wait 0.05
+click 450 120
+wait 0.3
+
+# All text should be selected (0..15)
+expect_input_selection Username_input 0 15
+screenshot triple_click_01_all_selected

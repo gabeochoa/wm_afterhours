@@ -1,0 +1,56 @@
+# HTML Spec: Shift+Click should extend selection to clicked position
+# Per standard text editing: clicking with Shift held extends the current
+# selection from the anchor to the new click position.
+#
+# Currently NOT implemented - click always places cursor and clears selection.
+# This test MUST FAIL until Shift+Click is added.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World Test"
+wait 0.3
+
+# Place cursor at the start
+key HOME
+wait 0.2
+
+# Verify cursor is at position 0
+expect_input_selection Username_input 0 0
+
+# Now simulate Shift+Click in the middle of the text.
+# We hold Shift down, click, then release.
+# The click should extend selection from 0 to the clicked char position.
+# Field is approximately at x=350..670, y=107..143
+# Clicking at ~x=430 should land around position 6 ("Hello W|orld")
+key SHIFT+END
+wait 0.1
+key HOME
+wait 0.1
+
+# Use mouse_down with shift held to test shift+click
+# First set shift down, then click
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+wait 0.1
+# We have "Hello" selected (0..5)
+expect_input_selection Username_input 0 5
+
+# Now the real test: click at position 10 with shift held.
+# This should extend selection to 0..10, NOT collapse to 10..10.
+# Since we can't do shift+click in e2e yet, we simulate by clicking
+# and checking if selection is preserved. It won't be - proving the
+# feature is missing.
+click 460 120
+wait 0.3
+
+# After a regular click, selection should be GONE (cursor placed at click pos).
+# But the DESIRED behavior with Shift held is selection 0..~10.
+# Assert the desired behavior - this WILL FAIL because shift+click doesn't work.
+expect_input_selection Username_input 0 10
+screenshot shift_click_01_desired_selection

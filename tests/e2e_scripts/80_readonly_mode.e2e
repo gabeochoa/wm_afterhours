@@ -1,0 +1,32 @@
+# HTML Spec: readonly attribute
+# Per spec: readonly fields can be focused and selected but NOT edited.
+#
+# Currently NOT implemented - no readonly flag exists in text_input state.
+# This test MUST FAIL to document the missing feature.
+#
+# Strategy: We type text, then try to detect if a "readonly" property
+# can prevent edits. Since there's no readonly mode, we assert the
+# existence of InputActions that would support it. We use the "action"
+# command to trigger a non-existent action, which will fail.
+#
+# When readonly is implemented, replace this with a proper screen test.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "readonly test"
+wait 0.2
+expect_input_text Username_input "readonly test"
+
+# Try to trigger a "TextSetReadonly" action - should fail because it
+# doesn't exist in InputAction enum yet
+action TextSetReadonly
+wait 0.2
+
+# After setting readonly, typing should be blocked
+type "extra"
+wait 0.2
+expect_input_text Username_input "readonly test"
+screenshot readonly_01_blocked

@@ -1,0 +1,42 @@
+# Feature: on_change callback fires when text changes
+# Expected: The status bar at the bottom of TextInputDemo should update
+# to show the current value when text is typed (currently the on_change
+# callback is defined in HasTextInputListener but never invoked).
+#
+# The TextInputDemo already displays "Username: <value>" in a status bar
+# via direct text binding, so we can verify the text updates are reflected.
+# The real test is whether on_change is called - which requires the
+# component code to invoke it.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+
+# Type and verify the status bar reflects the change
+type "testuser"
+wait 0.3
+screenshot on_change_01_typed
+
+# The status bar should show "Username: testuser"
+expect_text "Username: testuser"
+
+# Delete some characters and verify update
+key BACKSPACE
+key BACKSPACE
+key BACKSPACE
+key BACKSPACE
+wait 0.2
+screenshot on_change_02_deleted
+
+expect_text "Username: test"
+
+# Select all and replace
+key CTRL+A
+wait 0.1
+type "newvalue"
+wait 0.2
+screenshot on_change_03_replaced
+
+expect_text "Username: newvalue"

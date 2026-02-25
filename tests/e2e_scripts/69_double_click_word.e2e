@@ -1,0 +1,28 @@
+# Feature: Double-click to select a word
+# Expected: Double-clicking on a word should select the entire word.
+# Word boundaries are spaces and punctuation.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.3
+screenshot dbl_click_01_before
+
+# Double-click on "Hello" (roughly x=390, y=120)
+double_click 390 120
+wait 0.3
+screenshot dbl_click_02_hello_selected
+
+# Verify "Hello" is selected (positions 0-5 in bytes)
+expect_input_selection Username_input 0 5
+
+# Double-click on "World" (roughly x=450, y=120)
+double_click 450 120
+wait 0.3
+screenshot dbl_click_03_world_selected
+
+# Verify "World" is selected (positions 6-11 in bytes)
+expect_input_selection Username_input 6 11

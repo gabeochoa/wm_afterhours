@@ -1,0 +1,50 @@
+# HTML Spec: Blur (focus loss) behavior
+# Per spec: When a text input loses focus, the change event fires.
+# Clicking outside or on another field should transfer/remove focus.
+#
+# This test verifies that clicking on empty space removes focus so
+# typed characters don't go into any field.
+#
+# Currently NOT fully implemented - clicking empty space may not blur.
+# This test MUST FAIL until proper blur-on-click-outside is added.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "focused text"
+wait 0.2
+expect_input_text Username_input "focused text"
+
+# Focus transfers to Email - verify by typing there
+focus_ui Email_input
+wait 0.3
+type "email@test"
+wait 0.2
+expect_input_text Email_input "email@test"
+screenshot blur_01_focus_transferred
+
+# Username text should be unchanged
+expect_input_text Username_input "focused text"
+
+# Click on empty space (far from any field) to blur everything
+# This should unfocus all fields
+click 50 600
+wait 0.3
+screenshot blur_02_clicked_empty_space
+
+# Type characters - they should go NOWHERE since no field is focused
+type "orphan"
+wait 0.3
+
+# Both fields should be unchanged
+expect_input_text Username_input "focused text"
+expect_input_text Email_input "email@test"
+
+# The real test: type more and verify it STILL doesn't go into any field
+type "more orphan text"
+wait 0.2
+expect_input_text Username_input "focused text"
+expect_input_text Email_input "email@test"
+screenshot blur_03_no_field_accepts_input

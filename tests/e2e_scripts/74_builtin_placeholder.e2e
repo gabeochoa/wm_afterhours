@@ -1,0 +1,37 @@
+# Feature: Built-in placeholder text support on text_input
+# Expected: text_input should support a placeholder string in its config
+# that renders automatically when the field is empty, without requiring
+# each screen to manually create overlay divs.
+#
+# Currently placeholders are manually added as child divs in each screen.
+# This test documents the expected behavior once built-in support is added.
+
+goto_screen text_input
+wait 0.5
+
+# Empty fields should show placeholder text
+screenshot placeholder_01_all_empty
+
+# Verify placeholder text is visible for empty fields
+expect_text "Enter username"
+expect_text "user@example.com"
+expect_text "Enter password"
+expect_text "Tell us about yourself"
+expect_text "Type to search..."
+
+# Focus username and type - placeholder should disappear
+focus_ui Username_input
+wait 0.2
+type "john"
+wait 0.2
+screenshot placeholder_02_username_filled
+
+# Clear the field - placeholder should reappear
+key CTRL+A
+wait 0.1
+key BACKSPACE
+wait 0.2
+screenshot placeholder_03_username_cleared
+
+# Placeholder should be visible again
+expect_text "Enter username"

@@ -1,0 +1,77 @@
+# HTML Spec: Text inputs should support Undo/Redo
+# Standard shortcuts:
+#   Windows/Linux: Ctrl+Z (undo), Ctrl+Y or Ctrl+Shift+Z (redo)
+#   macOS: Cmd+Z (undo), Cmd+Shift+Z (redo)
+#
+# Currently NOT implemented - no undo history exists in the text_input state.
+# This test documents the expected behavior.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+
+# Type some text
+type "Hello"
+wait 0.2
+expect_input_text Username_input "Hello"
+
+# Type more
+type " World"
+wait 0.2
+expect_input_text Username_input "Hello World"
+
+# Undo last action (Windows/Linux: Ctrl+Z)
+key CTRL+Z
+wait 0.3
+screenshot undo_01_after_undo
+# Should revert to "Hello" (undo the " World" insertion)
+expect_input_text Username_input "Hello"
+
+# Undo again - should revert to empty
+key CTRL+Z
+wait 0.3
+expect_input_text Username_input ""
+
+# Redo (Windows/Linux: Ctrl+Shift+Z)
+key CTRL+SHIFT+Z
+wait 0.3
+screenshot undo_02_after_redo
+# Should restore "Hello"
+expect_input_text Username_input "Hello"
+
+# Redo again
+key CTRL+SHIFT+Z
+wait 0.3
+expect_input_text Username_input "Hello World"
+
+# Alternative redo shortcut (Windows/Linux: Ctrl+Y)
+key CTRL+Z
+wait 0.2
+key CTRL+Y
+wait 0.3
+expect_input_text Username_input "Hello World"
+
+# macOS shortcuts: Cmd+Z (undo), Cmd+Shift+Z (redo)
+# CMD is mapped to CTRL in parse_key_combo, so these test the same path
+key CMD+Z
+wait 0.3
+screenshot undo_03_mac_undo
+expect_input_text Username_input "Hello"
+
+key CMD+SHIFT+Z
+wait 0.3
+expect_input_text Username_input "Hello World"
+
+# Undo after delete should restore deleted text
+key BACKSPACE
+key BACKSPACE
+key BACKSPACE
+wait 0.2
+expect_input_text Username_input "Hello Wo"
+
+key CTRL+Z
+wait 0.3
+screenshot undo_04_undo_delete
+expect_input_text Username_input "Hello World"

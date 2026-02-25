@@ -1,0 +1,53 @@
+# Feature: Shift+Home and Shift+End to select to line boundaries
+# Per HTML spec / standard text editing: Shift+Home selects from cursor
+# to line start. Shift+End selects from cursor to line end.
+#
+# Currently NOT implemented - Home/End always collapse selection.
+# TextHome and TextEnd in component.h unconditionally call clear_selection().
+# This test MUST FAIL until Shift+Home/End selection is added.
+#
+# Requires new InputActions: TextSelectHome, TextSelectEnd
+# Mapped to: Shift+Home, Shift+End (all platforms)
+#            Cmd+Shift+Left, Cmd+Shift+Right (macOS)
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.3
+
+# Move cursor to middle (after "Hello")
+key HOME
+wait 0.1
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+wait 0.2
+
+# Cursor should be at position 5
+expect_input_selection Username_input 5 5
+
+# Shift+End should select from 5 to 11 (" World")
+key SHIFT+END
+wait 0.2
+expect_input_selection Username_input 5 11
+screenshot shift_home_end_01_shift_end
+
+# Now Shift+Home should select from cursor back to 0
+# First collapse selection and reposition
+key END
+wait 0.1
+key LEFT
+key LEFT
+key LEFT
+wait 0.1
+# Cursor at position 8
+
+key SHIFT+HOME
+wait 0.2
+expect_input_selection Username_input 0 8
+screenshot shift_home_end_02_shift_home

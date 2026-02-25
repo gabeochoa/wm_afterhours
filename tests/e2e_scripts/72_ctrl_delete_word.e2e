@@ -1,0 +1,64 @@
+# Feature: Word-level deletion
+# Expected: Delete an entire word at a time.
+#
+# Platform shortcuts:
+#   Windows/Linux: Ctrl+Backspace (backward) / Ctrl+Delete (forward)
+#   macOS:         Option+Backspace (backward) / Option+Delete (forward)
+#
+# Both should be mapped in InputAction (e.g., TextDeleteWordBack).
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "one two three four"
+wait 0.3
+
+# --- Windows/Linux: Ctrl+Backspace / Ctrl+Delete ---
+
+# Cursor at end. Ctrl+Backspace should delete "four"
+key CTRL+BACKSPACE
+wait 0.2
+screenshot ctrl_del_01_ctrl_bksp_four
+expect_input_text Username_input "one two three "
+
+# Another Ctrl+Backspace should delete "three "
+key CTRL+BACKSPACE
+wait 0.2
+screenshot ctrl_del_02_ctrl_bksp_three
+expect_input_text Username_input "one two "
+
+# Go to start for Ctrl+Delete test
+key HOME
+wait 0.2
+
+# Ctrl+Delete should delete "one" forward
+key CTRL+DELETE
+wait 0.2
+screenshot ctrl_del_03_ctrl_del_one
+expect_input_text Username_input " two "
+
+# --- macOS: Option+Backspace / Option+Delete ---
+
+# Clear and retype
+key CTRL+A
+wait 0.1
+type "one two three four"
+wait 0.3
+
+# Alt+Backspace should delete "four" (macOS Option+Backspace)
+key ALT+BACKSPACE
+wait 0.2
+screenshot ctrl_del_04_opt_bksp_four
+expect_input_text Username_input "one two three "
+
+# Go to start
+key HOME
+wait 0.2
+
+# Alt+Delete should delete "one" forward (macOS Option+Delete)
+key ALT+DELETE
+wait 0.2
+screenshot ctrl_del_05_opt_del_one
+expect_input_text Username_input " two three "
