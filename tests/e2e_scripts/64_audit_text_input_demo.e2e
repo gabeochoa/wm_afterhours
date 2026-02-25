@@ -1,0 +1,94 @@
+# Comprehensive TextInputDemo audit screenshots
+
+goto_screen text_input
+wait 0.5
+
+# 1. Empty form with first field focused (default state)
+screenshot audit_demo_01_empty_focused
+
+# 2. Type into username
+type "gabeochoa"
+wait 0.3
+screenshot audit_demo_02_username_typing
+
+# 3. Select all username text
+key CTRL+A
+wait 0.2
+screenshot audit_demo_03_username_select_all
+
+# 4. Partial selection on username
+key RIGHT
+wait 0.1
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+wait 0.2
+screenshot audit_demo_04_username_partial_select
+
+# 5. Cursor at middle of text (no selection)
+key RIGHT
+wait 0.1
+key LEFT
+key LEFT
+key LEFT
+wait 0.2
+screenshot audit_demo_05_username_cursor_middle
+
+# 6. Move to email field
+focus_ui Email_input
+wait 0.2
+type "gabe@example.com"
+wait 0.3
+screenshot audit_demo_06_email_filled
+
+# 7. Email with select all
+key CTRL+A
+wait 0.2
+screenshot audit_demo_07_email_select_all
+
+# 8. Fill password
+focus_ui Password_input
+wait 0.2
+type "mypassword123"
+wait 0.3
+screenshot audit_demo_08_password_filled
+
+# 9. Password with select all (masked)
+key CTRL+A
+wait 0.2
+screenshot audit_demo_09_password_select_all
+
+# 10. Fill bio
+focus_ui Bio_input
+wait 0.2
+type "Game developer and UI enthusiast"
+wait 0.3
+screenshot audit_demo_10_bio_filled
+
+# 11. Bio select all
+key CTRL+A
+wait 0.2
+screenshot audit_demo_11_bio_select_all
+
+# 12. Fill search
+focus_ui Search_input
+wait 0.2
+type "widgets"
+wait 0.3
+screenshot audit_demo_12_search_filled
+
+# 13. All fields filled overview (focus on search with cursor)
+screenshot audit_demo_13_all_filled_overview
+
+# 14. Go back to username and show cursor at start
+focus_ui Username_input
+wait 0.2
+key HOME
+wait 0.2
+screenshot audit_demo_14_cursor_at_start
+
+# 15. Cursor at end
+key END
+wait 0.2
+screenshot audit_demo_15_cursor_at_end

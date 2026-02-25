@@ -1,0 +1,66 @@
+# Verify selection highlight doesn't shift/resize as letters are added one at a time.
+# Selects from the end of "Hello World" leftward, one letter per step,
+# taking a screenshot after each Shift+Left so we can compare that the
+# highlight only grows by exactly one character width each time.
+
+goto_screen text_input
+wait 0.5
+
+# Type text into username field
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.3
+
+# Cursor is at position 11 (end of "Hello World")
+# Select one letter at a time going left, screenshot each step.
+
+# Select "d"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_01_select_d
+
+# Select "ld"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_02_select_ld
+
+# Select "rld"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_03_select_rld
+
+# Select "orld"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_04_select_orld
+
+# Select "World"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_05_select_World
+
+# Select " World"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_06_select_space_World
+
+# Select "o World"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_07_select_o_World
+
+# Select "lo World"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_08_select_lo_World
+
+# Select "llo World"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_09_select_llo_World
+
+# Select "ello World"
+key SHIFT+LEFT
+wait 0.15
+screenshot sel_stable_10_select_ello_World

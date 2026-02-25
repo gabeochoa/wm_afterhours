@@ -1,0 +1,146 @@
+# Comprehensive TextInputSizes audit screenshots
+
+goto_screen text_input_sizes
+wait 0.5
+
+# 1. Empty form
+screenshot audit_sizes_01_empty
+
+# 2-8. Type into each field and screenshot showing cursor
+focus_ui input_24px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_02_24px_cursor
+
+focus_ui input_32px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_03_32px_cursor
+
+focus_ui input_40px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_04_40px_cursor
+
+focus_ui input_48px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_05_48px_cursor
+
+focus_ui input_60px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_06_60px_cursor
+
+focus_ui input_80px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_07_80px_cursor
+
+focus_ui input_100px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot audit_sizes_08_100px_cursor
+
+# 9. All filled overview
+screenshot audit_sizes_09_all_filled
+
+# 10-16. Select all in each field
+focus_ui input_24px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_10_24px_select_all
+
+focus_ui input_32px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_11_32px_select_all
+
+focus_ui input_40px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_12_40px_select_all
+
+focus_ui input_48px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_13_48px_select_all
+
+focus_ui input_60px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_14_60px_select_all
+
+focus_ui input_80px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_15_80px_select_all
+
+focus_ui input_100px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_sizes_16_100px_select_all
+
+# 17-19. Partial selections at different sizes
+focus_ui input_32px
+wait 0.2
+key END
+wait 0.1
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+wait 0.2
+screenshot audit_sizes_17_32px_partial_select
+
+focus_ui input_60px
+wait 0.2
+key END
+wait 0.1
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+wait 0.2
+screenshot audit_sizes_18_60px_partial_select
+
+focus_ui input_100px
+wait 0.2
+key END
+wait 0.1
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+wait 0.2
+screenshot audit_sizes_19_100px_partial_select
+
+# 20. Cursor in middle of text at smallest size
+focus_ui input_24px
+wait 0.2
+key HOME
+wait 0.1
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+wait 0.2
+screenshot audit_sizes_20_24px_cursor_middle

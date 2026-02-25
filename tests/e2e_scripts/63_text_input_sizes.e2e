@@ -1,0 +1,69 @@
+# Verify text input cursor/selection scales with field height
+
+goto_screen text_input_sizes
+wait 0.5
+screenshot sizes_01_empty
+
+# Type into the smallest field
+focus_ui input_24px
+wait 0.2
+type "hello"
+wait 0.2
+screenshot sizes_02_small_typed
+
+# Type into a medium field
+focus_ui input_48px
+wait 0.2
+type "hello world"
+wait 0.2
+screenshot sizes_03_medium_typed
+
+# Type into the largest field
+focus_ui input_100px
+wait 0.2
+type "Big text"
+wait 0.2
+screenshot sizes_04_large_typed
+
+# Select all in medium field to show selection scaling
+focus_ui input_48px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot sizes_05_medium_selected
+
+# Select all in large field
+focus_ui input_100px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot sizes_06_large_selected
+
+# Fill all fields and show the range
+focus_ui input_24px
+wait 0.1
+key CTRL+A
+wait 0.1
+focus_ui input_32px
+wait 0.1
+type "sample"
+wait 0.1
+focus_ui input_40px
+wait 0.1
+type "sample"
+wait 0.1
+focus_ui input_60px
+wait 0.1
+type "sample"
+wait 0.1
+focus_ui input_80px
+wait 0.1
+type "sample"
+wait 0.1
+
+# Select all in smallest to show contrast
+focus_ui input_24px
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot sizes_07_all_filled_small_selected

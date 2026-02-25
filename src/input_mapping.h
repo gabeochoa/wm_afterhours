@@ -22,6 +22,11 @@ enum class InputAction {
   TextHome,
   TextEnd,
   TextSelectAll,
+  TextSelectLeft,
+  TextSelectRight,
+  TextCopy,
+  TextCut,
+  TextPaste,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -109,11 +114,34 @@ inline auto get_mapping() {
       raylib::KEY_END,
   };
 
-  // Mapped to bare KEY_A; the text_input handler gates on CTRL/Cmd being held.
-  // Character input (get_char_pressed) must be processed before ctx.pressed()
-  // consumes this action, so do not reorder text_input's input handling.
+  using KC = afterhours::input::KeyChord;
+
   mapping[to_int(InputAction::TextSelectAll)] = {
-      raylib::KEY_A,
+      KC{raylib::KEY_A, KC::MOD_CTRL},
+      KC{raylib::KEY_A, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextSelectLeft)] = {
+      KC{raylib::KEY_LEFT, KC::MOD_SHIFT},
+  };
+
+  mapping[to_int(InputAction::TextSelectRight)] = {
+      KC{raylib::KEY_RIGHT, KC::MOD_SHIFT},
+  };
+
+  mapping[to_int(InputAction::TextCopy)] = {
+      KC{raylib::KEY_C, KC::MOD_CTRL},
+      KC{raylib::KEY_C, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextCut)] = {
+      KC{raylib::KEY_X, KC::MOD_CTRL},
+      KC{raylib::KEY_X, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextPaste)] = {
+      KC{raylib::KEY_V, KC::MOD_CTRL},
+      KC{raylib::KEY_V, KC::MOD_SUPER},
   };
 
   return mapping;
