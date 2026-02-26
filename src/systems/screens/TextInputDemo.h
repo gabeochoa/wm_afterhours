@@ -16,6 +16,8 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
   std::string password = "";
   std::string search_query = "";
   std::string bio = "";
+  std::string readonly_text = "readonly text here";
+  std::string disabled_text = "disabled text here";
 
   bool show_password = false;
   std::string status_message = "";
@@ -208,6 +210,54 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     // Search
     if (make_field(4, "Search", "Type to search...", search_query)) {
       status_message = "Search: " + search_query;
+    }
+
+    // Readonly field
+    {
+      div(context, mk(body.ent(), 15),
+          ComponentConfig{}
+              .with_label("Readonly Field")
+              .with_size(ComponentSize{percent(1.0f), pixels(18)})
+              .with_background(Theme::Usage::None)
+              .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
+              .with_alignment(TextAlignment::Left)
+              .with_skip_tabbing(true)
+              .with_margin(Margin{.top = pixels(12), .bottom = pixels(4)}));
+
+      text_input(context, mk(body.ent(), 16), readonly_text,
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_custom_background(field_bg)
+                     .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
+                     .with_rounded_corners(RoundedCorners().all_round())
+                     .with_roundness(0.10f)
+                     .with_border(field_border, 1.0f)
+                     .with_readonly()
+                     .with_debug_name("Readonly_input"));
+    }
+
+    // Disabled field
+    {
+      div(context, mk(body.ent(), 17),
+          ComponentConfig{}
+              .with_label("Disabled Field")
+              .with_size(ComponentSize{percent(1.0f), pixels(18)})
+              .with_background(Theme::Usage::None)
+              .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
+              .with_alignment(TextAlignment::Left)
+              .with_skip_tabbing(true)
+              .with_margin(Margin{.top = pixels(12), .bottom = pixels(4)}));
+
+      text_input(context, mk(body.ent(), 18), disabled_text,
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_custom_background(field_bg)
+                     .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
+                     .with_rounded_corners(RoundedCorners().all_round())
+                     .with_roundness(0.10f)
+                     .with_border(field_border, 1.0f)
+                     .with_disabled(true)
+                     .with_debug_name("Disabled_input"));
     }
 
     if (!status_message.empty()) {

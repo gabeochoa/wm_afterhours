@@ -1,28 +1,28 @@
-# HTML Spec: disabled attribute
-# Per spec: disabled fields cannot be focused, are removed from tab order,
-# and cannot be edited.
-#
-# Currently NOT implemented - no disabled flag exists in text_input state.
-# This test MUST FAIL to document the missing feature.
-#
-# Strategy: We try to trigger a non-existent "TextSetDisabled" action.
-# When disabled mode is implemented, replace this with a proper screen test.
+# Feature: Disabled text input
+# Per HTML spec: disabled fields cannot be focused and cannot be edited.
+# The Disabled_input field on the text_input screen has pre-filled text
+# and config.disabled = true.
 
 goto_screen text_input
 wait 0.5
 
+# Verify the disabled field has its initial text
+expect_input_text Disabled_input "disabled text here"
+
+# Focus a normal field first, then try to focus the disabled one
 focus_ui Username_input
 wait 0.2
 type "test"
 wait 0.2
 expect_input_text Username_input "test"
 
-# Try to trigger a "TextSetDisabled" action - fails because it doesn't exist
-action TextSetDisabled
+# Now try to focus the disabled field - should NOT gain focus
+focus_ui Disabled_input
+wait 0.2
+type "extra"
 wait 0.2
 
-# After disabling, the field should not accept input
-type "blocked"
-wait 0.2
-expect_input_text Username_input "test"
+# Disabled field should NOT have changed
+expect_input_text Disabled_input "disabled text here"
+
 screenshot disabled_01_blocked

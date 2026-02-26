@@ -27,6 +27,12 @@ enum class InputAction {
   TextCopy,
   TextCut,
   TextPaste,
+  TextWordLeft,
+  TextWordRight,
+  TextDeleteWordBack,
+  TextDeleteWordForward,
+  TextUndo,
+  TextRedo,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -142,6 +148,40 @@ inline auto get_mapping() {
   mapping[to_int(InputAction::TextPaste)] = {
       KC{raylib::KEY_V, KC::MOD_CTRL},
       KC{raylib::KEY_V, KC::MOD_SUPER},
+  };
+
+  // Word-level navigation (Ctrl on Win/Linux, Alt on Mac)
+  mapping[to_int(InputAction::TextWordLeft)] = {
+      KC{raylib::KEY_LEFT, KC::MOD_CTRL},
+      KC{raylib::KEY_LEFT, KC::MOD_ALT},
+  };
+
+  mapping[to_int(InputAction::TextWordRight)] = {
+      KC{raylib::KEY_RIGHT, KC::MOD_CTRL},
+      KC{raylib::KEY_RIGHT, KC::MOD_ALT},
+  };
+
+  // Word-level deletion
+  mapping[to_int(InputAction::TextDeleteWordBack)] = {
+      KC{raylib::KEY_BACKSPACE, KC::MOD_CTRL},
+      KC{raylib::KEY_BACKSPACE, KC::MOD_ALT},
+  };
+
+  mapping[to_int(InputAction::TextDeleteWordForward)] = {
+      KC{raylib::KEY_DELETE, KC::MOD_CTRL},
+      KC{raylib::KEY_DELETE, KC::MOD_ALT},
+  };
+
+  // Undo/Redo
+  mapping[to_int(InputAction::TextUndo)] = {
+      KC{raylib::KEY_Z, KC::MOD_CTRL},
+      KC{raylib::KEY_Z, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextRedo)] = {
+      KC{raylib::KEY_Z, KC::MOD_CTRL | KC::MOD_SHIFT},
+      KC{raylib::KEY_Z, KC::MOD_SUPER | KC::MOD_SHIFT},
+      KC{raylib::KEY_Y, KC::MOD_CTRL},
   };
 
   return mapping;
