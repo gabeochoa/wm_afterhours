@@ -565,18 +565,24 @@ int run_all_tests_headless() {
     // UI pre-update
     afterhours::ui::register_before_ui_updates<InputAction>(systems);
 
-    // Find matching screen for the test name (same logic as run_test)
+    // Find matching screen for the test name (longest match to avoid
+    // e.g. "text" matching before "text_input")
     bool screen_found = false;
+    std::string best_match;
     for (const auto &screen_name :
          ExampleScreenRegistry::get().get_screen_names()) {
       if (test_name.find(screen_name + "_") == 0 || test_name == screen_name) {
-        auto screen = ExampleScreenRegistry::get().create_screen(screen_name);
-        if (screen) {
-          g_current_screen = screen.get();
-          systems.register_update_system(std::move(screen));
-          screen_found = true;
-          break;
+        if (screen_name.size() > best_match.size()) {
+          best_match = screen_name;
         }
+      }
+    }
+    if (!best_match.empty()) {
+      auto screen = ExampleScreenRegistry::get().create_screen(best_match);
+      if (screen) {
+        g_current_screen = screen.get();
+        systems.register_update_system(std::move(screen));
+        screen_found = true;
       }
     }
 

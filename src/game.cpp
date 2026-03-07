@@ -330,18 +330,24 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
 
     // Register the test UI so buttons exist when processed
     // Check if test name starts with a registered screen name
+    // Use longest match to avoid "text" matching before "text_input"
     bool screen_found = false;
+    std::string best_match;
     for (const auto &screen_name :
          ExampleScreenRegistry::get().get_screen_names()) {
       if (test_name.find(screen_name + "_") == 0 || test_name == screen_name) {
-        auto screen = ExampleScreenRegistry::get().create_screen(screen_name);
-        if (screen) {
-          // Set as current screen so ScreenSystem runs
-          g_current_screen = screen.get();
-          systems.register_update_system(std::move(screen));
-          screen_found = true;
-          break;
+        if (screen_name.size() > best_match.size()) {
+          best_match = screen_name;
         }
+      }
+    }
+    if (!best_match.empty()) {
+      auto screen = ExampleScreenRegistry::get().create_screen(best_match);
+      if (screen) {
+        // Set as current screen so ScreenSystem runs
+        g_current_screen = screen.get();
+        systems.register_update_system(std::move(screen));
+        screen_found = true;
       }
     }
 
