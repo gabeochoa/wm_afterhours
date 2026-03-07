@@ -18,6 +18,7 @@ struct E2EConfig {
   std::function<void(const std::string &)> screenshot_callback;
   std::function<void()> reset_callback;
   std::function<std::string(const std::string &)> property_getter;
+  ui_commands::HandleDumpUICommand::DumpFn dump_callback;
 };
 
 /// Register all E2E systems in the correct order
@@ -39,6 +40,10 @@ inline void register_e2e_systems(SystemManager &sm,
   // Phase 2: Screenshot handler (needs callback)
   sm.register_update_system(
       std::make_unique<HandleScreenshotCommand>(config.screenshot_callback));
+
+  // Phase 2: Dump UI handler (needs callback)
+  sm.register_update_system(
+      std::make_unique<ui_commands::HandleDumpUICommand>(config.dump_callback));
 
   // Phase 3: Reset handler (needs callback)
   sm.register_update_system(
