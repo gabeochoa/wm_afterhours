@@ -117,14 +117,14 @@ bool validate_screen_against_baseline(const std::string &screen_name) {
   log_info("[validate_screen] {} diff: {:.4f}%", screen_name, diff_pct);
 
   if (diff_pct > 1.0f) {
-    log_error("[validate_screen] FAILED: {} differs by {:.4f}% (threshold: 1%)",
-              screen_name, diff_pct);
+    log_warn("[validate_screen] FAILED: {} differs by {:.4f}% (threshold: 1%)",
+             screen_name, diff_pct);
     // Keep the temp file for debugging
     std::string fail_path = "/tmp/validate_FAILED_" + screen_name + ".png";
     std::filesystem::copy_file(
         temp_path, fail_path,
         std::filesystem::copy_options::overwrite_existing);
-    log_error("Failed screenshot saved to: {}", fail_path);
+    log_warn("Failed screenshot saved to: {}", fail_path);
     return false;
   }
 
