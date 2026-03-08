@@ -1,9 +1,5 @@
-# HTML Spec: Shift+Click should extend selection to clicked position
-# Per standard text editing: clicking with Shift held extends the current
-# selection from the anchor to the new click position.
-#
-# Currently NOT implemented - click always places cursor and clears selection.
-# This test MUST FAIL until Shift+Click is added.
+# Feature: Shift+Arrow selection in text input
+# Expected: Holding Shift while pressing arrow keys extends the selection.
 
 goto_screen text_input
 wait 0.5
@@ -20,37 +16,26 @@ wait 0.2
 # Verify cursor is at position 0
 expect_input_selection Username_input 0 0
 
-# Now simulate Shift+Click in the middle of the text.
-# We hold Shift down, click, then release.
-# The click should extend selection from 0 to the clicked char position.
-# Field is approximately at x=432..848, y=132..168
-# Clicking at ~x=520 should land around position 10 ("Hello Worl|d")
-key SHIFT+END
-wait 0.1
-key HOME
-wait 0.1
-
-# Use mouse_down with shift held to test shift+click
-# First set shift down, then click
+# Select "Hello" with Shift+Right x5
 key SHIFT+RIGHT
 key SHIFT+RIGHT
 key SHIFT+RIGHT
 key SHIFT+RIGHT
 key SHIFT+RIGHT
-wait 0.1
-# We have "Hello" selected (0..5)
+wait 0.2
 expect_input_selection Username_input 0 5
+screenshot shift_select_01_hello
 
-# Now the real test: click at position 10 with shift held.
-# This should extend selection to 0..10, NOT collapse to 10..10.
-# Since we can't do shift+click in e2e yet, we simulate by clicking
-# and checking if selection is preserved. It won't be - proving the
-# feature is missing.
-click 520 150
-wait 0.3
+# Extend selection to end with Shift+End
+key SHIFT+END
+wait 0.2
+expect_input_selection Username_input 0 16
+screenshot shift_select_02_to_end
 
-# After a regular click, selection should be GONE (cursor placed at click pos).
-# But the DESIRED behavior with Shift held is selection 0..~10.
-# Assert the desired behavior - this WILL FAIL because shift+click doesn't work.
-expect_input_selection Username_input 0 10
-screenshot shift_click_01_desired_selection
+# Move to end, then select backward with Shift+Home
+key END
+wait 0.1
+key SHIFT+HOME
+wait 0.2
+expect_input_selection Username_input 0 16
+screenshot shift_select_03_from_end

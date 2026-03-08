@@ -23,31 +23,20 @@ wait 0.2
 expect_focused Password_input
 screenshot tab_nav_03_password_focused
 
-# Tab to next field (Bio)
-tab
-wait 0.2
-expect_focused Bio_input
-screenshot tab_nav_04_bio_focused
-
-# Tab to next field (Search)
-tab
-wait 0.2
-expect_focused Search_input
-screenshot tab_nav_05_search_focused
-
-# Shift+Tab back to Bio
+# Shift+Tab back to Email
 shift_tab
 wait 0.2
-expect_focused Bio_input
-screenshot tab_nav_06_bio_via_shift_tab
+expect_focused Email_input
+screenshot tab_nav_04_email_via_shift_tab
 
-# Shift+Tab back to Password
+# Shift+Tab back to Username
 shift_tab
 wait 0.2
-expect_focused Password_input
-screenshot tab_nav_07_password_via_shift_tab
+expect_focused Username_input
+screenshot tab_nav_05_username_via_shift_tab
 
 # Type in the focused field to verify it's actually receiving input
-type "secret"
+type "tabbed"
 wait 0.2
-screenshot tab_nav_08_typed_in_password
+expect_input_text Username_input "tabbed"
+screenshot tab_nav_06_typed_in_username

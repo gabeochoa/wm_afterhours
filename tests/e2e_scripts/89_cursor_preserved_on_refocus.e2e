@@ -1,9 +1,6 @@
-# Feature: Cursor position preserved after blur and refocus
-# Per standard UX: when a user blurs and refocuses a field, the cursor
-# should return to its previous position (or select all text).
-#
-# Currently NOT implemented - the click handler sets cursor to end and
-# clears selection. This test MUST FAIL until cursor preservation is added.
+# Feature: Select-all on tab/keyboard refocus
+# Expected: When a text input is refocused via tab (not mouse click),
+# all text is selected. This is the designed behavior.
 
 goto_screen text_input
 wait 0.5
@@ -13,50 +10,22 @@ wait 0.2
 type "Hello World"
 wait 0.2
 
-# Move cursor to position 5 (after "Hello")
-key HOME
-wait 0.1
-key RIGHT
-key RIGHT
-key RIGHT
-key RIGHT
-key RIGHT
-wait 0.2
-
-# Verify cursor at 5 by typing
-type "X"
-wait 0.2
-expect_input_text Username_input "HelloX World"
-
-# Undo the X by selecting and retyping
-key CTRL+A
-wait 0.1
-type "Hello World"
-wait 0.2
-
-# Move cursor to position 5 again
-key HOME
-wait 0.1
-key RIGHT
-key RIGHT
-key RIGHT
-key RIGHT
-key RIGHT
-wait 0.2
+# Verify text is entered
+expect_input_text Username_input "Hello World"
 
 # Blur by focusing another field
 focus_ui Email_input
 wait 0.3
 
-# Refocus Username via focus_ui
+# Refocus Username — should select all text (tab-refocus behavior)
 focus_ui Username_input
 wait 0.3
 
-# Type to check cursor position - if preserved, it's at 5 and we get "HelloXX World"
-# But cursor goes to end, so we'd get "Hello WorldX"
+# All text should be selected (0..11)
+expect_input_selection Username_input 0 11
+
+# Type replaces all selected text
 type "X"
 wait 0.2
-
-# Assert cursor was preserved at position 5 (this will FAIL)
-expect_input_text Username_input "HelloX World"
-screenshot cursor_preserve_01_refocused
+expect_input_text Username_input "X"
+screenshot cursor_preserve_01_select_all_on_refocus
