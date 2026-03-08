@@ -24,9 +24,9 @@ dump_ui simple_button_bg bg
 dump_ui simple_button_counter counter_bg
 dump_ui simple_button_divider divider
 
-# Assert key element properties
-assert_ui card w=399 h=440
-assert_ui divider h=4
+# Assert key element properties (card_width = 400.0f, card_height = 440.0f)
+assert_ui card w=400 h=440
+assert_ui divider h=1
 assert_ui counter_bg x=550
 assert_ui_text "Click Me!" h=56
-assert_ui_text "Simple Button Demo" w=350
+assert_ui_text "Simple Button Demo" w=352

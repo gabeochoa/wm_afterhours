@@ -19,9 +19,9 @@ wait 0.3
 expect_input_selection Username_input 10 10
 
 # Click near the start of the text to move cursor there.
-# Field is approximately at x=350..670, y=107..143
-# Character 'A' starts around x=365 (after left padding)
-click 370 120
+# Field is approximately at x=432..848, y=132..168
+# Character 'A' starts around x=440 (after left padding)
+click 448 150
 wait 0.3
 
 # Cursor should now be near position 0-1, NOT still at 10

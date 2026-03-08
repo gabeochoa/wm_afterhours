@@ -14,5 +14,15 @@ expect_text "Vertical"
 expect_text "Horizontal"
 expect_text "Self Align"
 
+# Layout assertions based on source code math (1280x720 screen)
+# Root: screen_pct(1.0) x screen_pct(0.95) = 1280 x 684
+assert_ui root w=1280 h=684
+
+# Title: percent(1.0) x pixels(40)
+assert_ui_text "Flexbox Alignment Demo" h=40
+
+# Tab row: percent(1.0) x pixels(44) — contains the category tab selector
+# Note: the category_tabs component inside is pixels(40)
+
 screenshot flex_alignment_display
 

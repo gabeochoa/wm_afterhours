@@ -11,16 +11,16 @@ type "Hello World"
 wait 0.3
 screenshot dbl_click_01_before
 
-# Double-click on "Hello" (roughly x=390, y=120)
-double_click 390 120
+# Double-click on "Hello" (roughly x=460, y=150)
+double_click 460 150
 wait 0.3
 screenshot dbl_click_02_hello_selected
 
 # Verify "Hello" is selected (positions 0-5 in bytes)
 expect_input_selection Username_input 0 5
 
-# Double-click on "World" (roughly x=450, y=120)
-double_click 450 120
+# Double-click on "World" (roughly x=504, y=150)
+double_click 504 150
 wait 0.3
 screenshot dbl_click_03_world_selected
 

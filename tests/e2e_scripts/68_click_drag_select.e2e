@@ -12,9 +12,9 @@ wait 0.3
 screenshot drag_select_01_before
 
 # Drag from the start of "Hello" to end of "Hello" (select "Hello")
-# Field is approximately x=350..670, y=107..143
-# Start of text ~x=370, end of "Hello" ~x=420
-drag 370 120 420 120
+# Field is approximately x=432..848, y=132..168
+# Start of text ~x=440, end of "Hello" ~x=480
+drag 440 150 480 150
 wait 0.3
 screenshot drag_select_02_dragged_hello
 

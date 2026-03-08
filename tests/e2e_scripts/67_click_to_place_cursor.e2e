@@ -14,9 +14,9 @@ wait 0.3
 screenshot click_cursor_01_at_end
 
 # Click roughly in the middle of "Hello World" (around the space)
-# The field is at approximately x=350..670, y=107..143 on the text_input screen
-# Middle of text would be around x=420
-click 420 120
+# The field is at approximately x=432..848, y=132..168 on the text_input screen
+# Middle of text would be around x=480
+click 480 150
 wait 0.3
 screenshot click_cursor_02_clicked_middle
 

@@ -7,6 +7,35 @@ wait 0.5
 expect_text "Button Gallery"
 expect_text "Total clicks across all buttons: 0"
 
+# Layout assertions based on source code math (1280x720 screen)
+# Root container: screen_pct(0.90) = 0.9*1280 x 0.9*720 = 1152x648
+assert_ui buttons_bg w=1152 h=648
+
+# Row heights (all specified in pixels())
+assert_ui row1_states h=80
+assert_ui row2_sizes h=90
+assert_ui row3_group h=100
+assert_ui row4_custom h=80
+
+# Button dimensions (all specified in pixels())
+assert_ui btn_normal w=120 h=45
+assert_ui btn_accent w=120 h=45
+assert_ui btn_secondary w=120 h=45
+assert_ui btn_small w=90 h=45
+assert_ui btn_medium w=120 h=45
+assert_ui btn_large w=180 h=60
+assert_ui btn_coral w=120 h=45
+assert_ui btn_teal w=120 h=45
+
+# Group buttons: pixels(90) x pixels(45)
+assert_ui btn_group_0 w=90 h=45
+assert_ui btn_group_1 w=90 h=45
+assert_ui btn_group_2 w=90 h=45
+assert_ui btn_group_3 w=90 h=45
+
+# Title: percent(1.0) x pixels(70)
+assert_ui_text "Button Gallery" h=70
+
 # Click the Normal button
 focus_ui btn_normal
 wait 0.2

@@ -23,8 +23,8 @@ expect_input_selection Username_input 0 0
 # Now simulate Shift+Click in the middle of the text.
 # We hold Shift down, click, then release.
 # The click should extend selection from 0 to the clicked char position.
-# Field is approximately at x=350..670, y=107..143
-# Clicking at ~x=430 should land around position 6 ("Hello W|orld")
+# Field is approximately at x=432..848, y=132..168
+# Clicking at ~x=520 should land around position 10 ("Hello Worl|d")
 key SHIFT+END
 wait 0.1
 key HOME
@@ -46,7 +46,7 @@ expect_input_selection Username_input 0 5
 # Since we can't do shift+click in e2e yet, we simulate by clicking
 # and checking if selection is preserved. It won't be - proving the
 # feature is missing.
-click 460 120
+click 520 150
 wait 0.3
 
 # After a regular click, selection should be GONE (cursor placed at click pos).

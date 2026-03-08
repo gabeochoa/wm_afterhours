@@ -15,12 +15,12 @@ type "Hello World Test"
 wait 0.3
 
 # Triple-click in the field (three rapid clicks at same position)
-# Field center is approximately x=450, y=120
-click 450 120
+# Field center is approximately x=640, y=150
+click 500 150
 wait 0.05
-click 450 120
+click 500 150
 wait 0.05
-click 450 120
+click 500 150
 wait 0.3
 
 # All text should be selected (0..15)
