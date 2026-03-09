@@ -242,7 +242,11 @@ run: output
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
-.PHONY: update-baselines validate-screenshots ci run-all-tests
+.PHONY: update-baselines validate-screenshots ci run-all-tests test
+
+# Run E2E test scripts
+test: $(MAIN_EXE)
+	./$(MAIN_EXE) --test-script-dir tests/e2e_scripts
 
 # Screenshot generation (cleans old screenshots then generates new ones at 720p)
 screenshots: $(MAIN_EXE)
