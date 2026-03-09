@@ -102,7 +102,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto inner =
         hstack(context, mk(container.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
+                   .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
                    .with_custom_background(afterhours::Color{35, 45, 65, 255})
                    .with_padding(Spacing::xs)
                    .with_margin(Margin{.top = pixels(4)})
@@ -152,7 +152,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto container =
         hstack(context, mk(outer.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+                   .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
                    .with_custom_background(afterhours::Color{50, 60, 80, 255})
                    .with_padding(Padding{.top = pixels(6),
                                          .left = pixels(8),
@@ -163,7 +163,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name(label + "_container"));
 
     // Three boxes of different heights using percent of container
-    const float heights[] = {0.65f, 0.40f, 0.50f};
+    const float heights[] = {0.50f, 0.30f, 0.40f};
     for (int i = 0; i < 3; i++) {
       vstack(context, mk(container.ent(), i),
              ComponentConfig{}
@@ -314,7 +314,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       auto jv_row =
           hstack(context, mk(left_col.ent(), 1),
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), percent(0.45f)})
+                     .with_size(ComponentSize{percent(1.0f), percent(0.40f)})
                      .with_custom_background(afterhours::Color{38, 46, 65, 255})
                      .with_padding(Spacing::xs)
                      .with_margin(Margin{.bottom = pixels(8)})
@@ -343,7 +343,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       auto ai_row =
           hstack(context, mk(left_col.ent(), 3),
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), percent(0.40f)})
+                     .with_size(ComponentSize{percent(1.0f), percent(0.35f)})
                      .with_custom_background(afterhours::Color{38, 46, 65, 255})
                      .with_padding(Spacing::xs));
 
@@ -377,7 +377,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       auto jh_row =
           hstack(context, mk(right_col.ent(), 1),
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), percent(0.35f)})
+                     .with_size(ComponentSize{percent(1.0f), percent(0.30f)})
                      .with_custom_background(afterhours::Color{38, 46, 65, 255})
                      .with_padding(Spacing::xs)
                      .with_margin(Margin{.bottom = pixels(8)})
@@ -406,7 +406,7 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       auto sa_row =
           hstack(context, mk(right_col.ent(), 3),
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
+                     .with_size(ComponentSize{percent(1.0f), percent(0.42f)})
                      .with_custom_background(afterhours::Color{38, 46, 65, 255})
                      .with_padding(Spacing::xs));
 

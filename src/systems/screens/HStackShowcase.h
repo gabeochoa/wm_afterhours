@@ -39,6 +39,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
                                          .left = pixels(16),
                                          .bottom = pixels(8),
                                          .right = pixels(16)})
+                   .with_roundness(0.06f)
                    .with_debug_name("root"));
 
     // Title
