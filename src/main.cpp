@@ -113,6 +113,8 @@ int main(int argc, char *argv[]) {
                  "instead of comparing\n";
     std::cout << "  --headless                   Run E2E tests without a "
                  "window (for CI)\n";
+    std::cout << "  --quiet                      Minimal stdout during E2E "
+                 "(pass/fail summary only)\n";
     std::cout << "  --time-scale <float>         Time multiplier for headless "
                  "mode (default: 1.0, e.g., 10.0 = 10x faster)\n";
     std::cout << "  --capture-interval <int>     Auto-capture screenshot every "
@@ -313,7 +315,9 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    std::cout << "Running E2E tests...\n";
+    if (!e2e_args.quiet) {
+      std::cout << "Running E2E tests...\n";
+    }
 
     int result = run_e2e_tests(e2e_args, runner);
 
