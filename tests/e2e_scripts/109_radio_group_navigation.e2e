@@ -1,0 +1,12 @@
+# Migrated from coroutine radio group tests (tab + enter selection)
+
+goto_screen radio_buttons
+wait 0.5
+
+expect_text "Selected: Fruit=Orange, Size=Small, Color=Blue"
+
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "Selected: Fruit=Apple, Size=Small, Color=Blue"

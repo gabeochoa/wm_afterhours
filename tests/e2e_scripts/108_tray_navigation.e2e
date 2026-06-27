@@ -1,0 +1,18 @@
+# Migrated from coroutine tray tests (horizontal navigation + enter)
+
+goto_screen tray
+wait 0.5
+
+expect_text "H-Alpha"
+expect_text "V-Alpha"
+
+key TAB
+wait 0.2
+key RIGHT
+wait 0.2
+key RIGHT
+wait 0.2
+
+key ENTER
+wait 0.3
+expect_text "H-Gamma (1)"

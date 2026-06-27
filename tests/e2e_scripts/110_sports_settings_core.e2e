@@ -1,0 +1,34 @@
+# Migrated from coroutine sports_settings tests (tabs + arrow value change)
+
+goto_screen sports_settings
+wait 0.5
+
+expect_text "Window mode"
+expect_text "Borderless window"
+
+click_button "GAMEPLAY"
+wait 0.3
+expect_text "Difficulty"
+
+click_button "AUDIO"
+wait 0.3
+expect_text "Master Volume"
+
+click_button "VIDEO"
+wait 0.3
+
+click_button "Window mode"
+wait 0.2
+expect_focused Window mode
+
+key RIGHT
+wait 0.3
+expect_text "Windowed"
+
+key RIGHT
+wait 0.3
+expect_text "Fullscreen"
+
+key LEFT
+wait 0.3
+expect_text "Windowed"
