@@ -19,6 +19,8 @@
 #define AFTER_HOURS_LOG_LEVEL LogLevel::LOG_INFO
 #endif
 
+#include "log_runtime.h"
+
 // TODO allow people to specify their own colors
 
 #ifdef AFTER_HOURS_LOG_WITH_COLOR
@@ -39,7 +41,7 @@ inline const std::string_view level_to_string(LogLevel level) {
 
 inline void vlog(LogLevel level, const char *file, int line,
                  fmt::string_view format, fmt::format_args args) {
-  if (level < AFTER_HOURS_LOG_LEVEL)
+  if (level < effective_log_level())
     return;
   auto file_info =
       fmt::format("{}: {}: {}: ", file, line, level_to_string(level));
