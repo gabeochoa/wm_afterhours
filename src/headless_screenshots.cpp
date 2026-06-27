@@ -7,6 +7,9 @@
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
 #include "systems/RenderSystemHelpers.h"
+#include "systems/RenderRenderTexture.h"
+#include "systems/RenderScreenHUD.h"
+#include "systems/UpdateRenderTexture.h"
 #include "systems/SetupSimpleButtonTest.h"
 #include "systems/SetupTabbingTest.h"
 #include "systems/TestSystem.h"
@@ -319,6 +322,20 @@ create_screen_systems(const std::string &screen_name) {
   return systems;
 }
 
+// Full present pipeline so was_rendered_to_screen is set (needed for layout summary).
+void register_present_systems(afterhours::SystemManager &systems) {
+  systems.register_update_system(std::make_unique<UpdateRenderTexture>());
+  systems.register_render_system(
+      std::make_unique<BeginPostProcessingRender>());
+  systems.register_render_system(std::make_unique<RenderRenderTexture>());
+  systems.register_render_system(std::make_unique<RenderScreenHUD>());
+  systems.register_render_system(std::make_unique<EndDrawing>());
+}
+
+void tick_and_render(afterhours::SystemManager &systems, float dt) {
+  systems.run(dt);
+}
+
 } // namespace
 
 // Capture all screens at a single resolution
@@ -519,6 +536,7 @@ int run_layout_summary(const std::string &screen_name, int width, int height,
 
   reset_screen_state(ui_entity_id);
   afterhours::SystemManager systems = create_screen_systems(screen_name);
+  register_present_systems(systems);
   if (!g_current_screen) {
     raylib::UnloadFont(uiFont);
     raylib::UnloadRenderTexture(screenRT);
@@ -528,15 +546,7 @@ int run_layout_summary(const std::string &screen_name, int width, int height,
 
   const int passes = std::max(2, frame_count);
   for (int pass = 0; pass < passes; ++pass) {
-    {
-      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
-      systems.tick_all(entities, 0.016f);
-    }
-    {
-      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
-      systems.render(entities, 0.016f);
-    }
-    afterhours::EntityHelper::cleanup();
+    tick_and_render(systems, 0.016f);
   }
 
   bool ok = false;
@@ -629,7 +639,8 @@ int run_all_tests_headless() {
   int failed = 0;
   std::vector<std::string> failures;
 
-  log_info("[HeadlessTests] Running {} tests", total);
+  log_info("[HeadlessTests] Running {} tests (UI coroutine tests migrated to E2E; see tests/e2e_scripts/102_*.e2e)",
+           total);
 
   // 3. Run each test
   for (const auto &[test_name, test_func] : registry.tests) {

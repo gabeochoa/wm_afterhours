@@ -11,10 +11,10 @@ namespace layout_summary {
 
 bool write(std::ostream &out) {
   using afterhours::testing::ui_commands::get_screen_rect;
+  using afterhours::testing::ui_commands::ui_query;
 
   for (afterhours::Entity &entity :
-       afterhours::EntityQuery()
-           .whereHasComponent<afterhours::ui::UIComponent>()
+       ui_query()
            .whereHasComponent<afterhours::ui::UIComponentDebug>()
            .gen()) {
     afterhours::ui::UIComponent &cmp = entity.get<afterhours::ui::UIComponent>();
