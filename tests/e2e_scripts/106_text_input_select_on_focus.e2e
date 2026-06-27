@@ -1,0 +1,30 @@
+# Migrated from coroutine TEST(text_input_select_on_focus)
+
+goto_screen text_input
+wait 0.5
+
+focus_element Username_input
+wait 0.2
+type "hello"
+wait 0.3
+expect_text "Username: hello"
+
+# Tab through fields and back to Username (select-all-on-focus)
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+
+focus_element Username_input
+wait 0.3
+type "world"
+wait 0.3
+expect_text "Username: world"
