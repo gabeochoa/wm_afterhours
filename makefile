@@ -288,8 +288,8 @@ validate-screenshots: $(MAIN_EXE)
 run-all-tests: $(MAIN_EXE)
 	./$(MAIN_EXE) --run-all-tests
 
-# CI target: build + validate + run tests
-ci: $(MAIN_EXE) validate-screenshots run-all-tests
+# CI target: build + validate + run tests + E2E
+ci: $(MAIN_EXE) validate-screenshots run-all-tests test
 	@echo "CI passed."
 
 # Code counting
