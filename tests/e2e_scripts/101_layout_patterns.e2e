@@ -1,8 +1,9 @@
 # Layout patterns — minimal assert_ui-only test for agent workflow
-# Visual check: screenshot saves to /tmp/e2e_screenshot_layout_patterns.png
 
 goto_screen layout_patterns
 wait 0.5
+
+validate_screen layout_patterns
 
 # Row: 416px fits three 120px boxes + 12px gaps + 16px padding per side
 assert_ui pattern_row w=416 h=100
