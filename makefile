@@ -242,7 +242,7 @@ run: output
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
-.PHONY: update-baselines validate-screenshots ci run-all-tests test test-visible
+.PHONY: update-baselines validate-screenshots ci run-all-tests test test-visible test-layout
 
 # Run E2E test scripts headlessly with minimal output (agent/CI default)
 test: $(MAIN_EXE)
@@ -284,12 +284,25 @@ validate-screenshots: $(MAIN_EXE)
 	@echo "Comparing against baselines..."
 	python3 scripts/compare_baselines.py $(BASELINE_DIR) $(VALIDATE_DIR)
 
-# Run all coroutine-based tests headlessly
+# Run all coroutine-based tests headlessly (FontConfig unit tests only; UI tests migrated to E2E)
 run-all-tests: $(MAIN_EXE)
 	./$(MAIN_EXE) --run-all-tests
 
-# CI target: build + validate + run tests + E2E
-ci: $(MAIN_EXE) validate-screenshots run-all-tests test
+# Catch2 autolayout tests (zero GPU, vendor/afterhours)
+UI_LAYOUT_DIR := vendor/afterhours/example/ui/ui_layout
+UI_LAYOUT_EXE := $(UI_LAYOUT_DIR)/ui_layout.exe
+
+test-layout: $(UI_LAYOUT_EXE)
+	./$(UI_LAYOUT_EXE) "row flex gap between children"
+	./$(UI_LAYOUT_EXE) "top padding"
+	./$(UI_LAYOUT_EXE) "default test"
+	./$(UI_LAYOUT_EXE) "root test"
+
+$(UI_LAYOUT_EXE): $(UI_LAYOUT_DIR)/main.cpp
+	$(MAKE) -C $(UI_LAYOUT_DIR) ui_layout.exe
+
+# CI target: build + validate + run tests + E2E + layout math
+ci: $(MAIN_EXE) validate-screenshots run-all-tests test-layout test
 	@echo "CI passed."
 
 # Code counting
