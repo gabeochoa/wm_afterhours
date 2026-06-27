@@ -242,10 +242,14 @@ run: output
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots
-.PHONY: update-baselines validate-screenshots ci run-all-tests test
+.PHONY: update-baselines validate-screenshots ci run-all-tests test test-visible
 
-# Run E2E test scripts
+# Run E2E test scripts headlessly with minimal output (agent/CI default)
 test: $(MAIN_EXE)
+	./$(MAIN_EXE) --test-script-dir tests/e2e_scripts --headless --quiet
+
+# Run E2E tests in a visible window (debug only)
+test-visible: $(MAIN_EXE)
 	./$(MAIN_EXE) --test-script-dir tests/e2e_scripts
 
 # Screenshot generation (cleans old screenshots then generates new ones at 720p)
