@@ -1,5 +1,8 @@
 # UI Testing Framework Documentation
 
+> **Deprecated for new work.** Use [AGENTS_UI.md](AGENTS_UI.md) and E2E scripts (`make test`) instead.
+> Coroutine tests and snapshot capture in this doc are legacy; migrated tests live in `tests/e2e_scripts/102_*.e2e`–`107_*.e2e`.
+
 This document describes how to use the UI testing framework for the afterhours UI library.
 
 ## Overview
