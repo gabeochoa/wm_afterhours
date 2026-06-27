@@ -3,6 +3,7 @@
 #include "components.h"
 #include "input_mapping.h"
 #include "log.h"
+#include "log/log_runtime.h"
 #include "preload.h"
 #include "render_backend.h"
 #include "settings.h"
@@ -684,6 +685,10 @@ int run_e2e_tests(const e2e::E2EArgs &args,
              "saved as new baselines");
   }
 
+  if (args.quiet) {
+    set_runtime_log_level(LogLevel::LOG_NOTHING);
+  }
+
   // Enable test mode for both test_input systems
   test_input::test_mode = true;
   afterhours::testing::test_input::detail::test_mode = true;
@@ -804,7 +809,9 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         ExampleScreenRegistry::get().get_screen_description(new_screen_name);
     ScreenHUDState::current_index = index;
 
-    std::cout << "[E2E] Loaded screen: " << new_screen_name << std::endl;
+    if (!args.quiet) {
+      std::cout << "[E2E] Loaded screen: " << new_screen_name << std::endl;
+    }
   };
 
   {
@@ -1067,7 +1074,22 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::testing::test_input::reset_frame();
   }
 
-  runner.print_results();
+  if (args.quiet) {
+    reset_runtime_log_level();
+    if (runner.has_failed()) {
+      set_runtime_log_level(LogLevel::LOG_WARN);
+      std::cout << "E2E FAILED\n";
+      runner.print_results();
+      reset_runtime_log_level();
+    } else {
+      const int total = args.script_path.empty()
+                            ? e2e::count_e2e_scripts(args.script_dir)
+                            : 1;
+      std::cout << "E2E passed " << total << "/" << total << "\n";
+    }
+  } else {
+    runner.print_results();
+  }
   Settings::get().write_save_file();
 
   return runner.has_failed() ? 1 : 0;
