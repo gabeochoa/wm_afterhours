@@ -108,19 +108,19 @@ Snapshots are stored in the `test_snapshots/` directory:
 ### List Available Tests
 
 ```bash
-./output/break_ross.exe --list-tests
+./output/ui_tester.exe --list-tests
 ```
 
 ### Run a Specific Test
 
 ```bash
-./output/break_ross.exe --run-test test_name
+./output/ui_tester.exe --run-test test_name
 ```
 
 ### Run Test in Slow Mode (Visible)
 
 ```bash
-./output/break_ross.exe --run-test test_name --slow-test
+./output/ui_tester.exe --run-test test_name --slow-test
 ```
 
 Slow mode adds delays so you can see the test execution.
@@ -132,17 +132,17 @@ Example screens demonstrate UI patterns and can be launched with command-line fl
 ### List Available Screens
 
 ```bash
-./output/break_ross.exe --list-screens
+./output/ui_tester.exe --list-screens
 ```
 
 ### Launch an Example Screen
 
 ```bash
-./output/break_ross.exe --simple_button
-./output/break_ross.exe --tabbing
-./output/break_ross.exe --layout
-./output/break_ross.exe --colors
-./output/break_ross.exe --text
+./output/ui_tester.exe --simple_button
+./output/ui_tester.exe --tabbing
+./output/ui_tester.exe --layout
+./output/ui_tester.exe --colors
+./output/ui_tester.exe --text
 ```
 
 ## Adding New Example Screens

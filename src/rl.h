@@ -55,7 +55,11 @@ typedef raylib::Vector4 vec4;
 using raylib::Rectangle;
 
 #include <afterhours/src/plugins/autolayout.h>
+#include <afterhours/src/plugins/clipboard.h>
 #include <afterhours/src/plugins/ui.h>
+
+using afterhours::ui::Spacing;
+using afterhours::ui::imm::DefaultSpacing;
 
 #ifdef __clang__
 #pragma clang diagnostic pop

@@ -1,0 +1,45 @@
+# Drag and Drop Test
+# Tests dragging a card from "To Do" to "Done" column
+# Coordinates use screen percentages so the test is resolution-independent
+
+# Navigate to drag & drop screen
+goto_screen drag_drop
+wait 0.5
+
+# Verify initial state - column headers show counts
+expect_text "To Do (3)"
+expect_text "In Progress (3)"
+expect_text "Done (2)"
+
+# Verify card text is present
+expect_text "Fix login bug"
+expect_text "Setup CI"
+
+# Drag "Fix login bug" (3rd card in To Do column) to Done column
+# To Do column center ~22.7%, 3rd card center ~54.6%
+# Done column center ~77.3%, drop between existing cards ~40%
+#
+# Split into manual steps so we can assert the overlay is visible mid-drag.
+# During a drag the original card is hidden (should_hide=true), so the only
+# source of its label text is the floating overlay entity.
+mouse_down 22.7% 54.6%
+wait 0.3
+mouse_move 50% 50%
+wait 0.3
+# The original card is hidden; only the overlay should show this text.
+# If the overlay is broken, this will fail.
+expect_text "Fix login bug"
+# Complete the drag
+mouse_move 77.3% 40%
+wait 0.1
+mouse_up
+wait 0.5
+
+# Verify the card moved: To Do should have 2, Done should have 3
+expect_text "To Do (2)"
+expect_text "Done (3)"
+
+# The moved card should still be visible
+expect_text "Fix login bug"
+
+screenshot drag_drop_after_move

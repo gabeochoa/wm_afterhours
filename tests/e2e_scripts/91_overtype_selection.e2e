@@ -1,0 +1,53 @@
+# Feature: Typing while text is selected replaces the selection
+# Per HTML spec: when text is selected and the user types, the selected
+# text is replaced by the typed character.
+#
+# This IS implemented. This test verifies it works correctly for various
+# selection sizes and methods. Should PASS.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.2
+
+# Select all and replace with single char
+key CTRL+A
+wait 0.2
+type "X"
+wait 0.2
+expect_input_text Username_input "X"
+screenshot overtype_01_replace_all
+
+# Type more, select partial via Shift+Left, replace
+type "ABCDEF"
+wait 0.2
+# Text is now "XABCDEF"
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+wait 0.2
+# Selected "DEF" (positions 4..7)
+type "Z"
+wait 0.2
+# "DEF" replaced by "Z" -> "XABCZ"
+expect_input_text Username_input "XABCZ"
+screenshot overtype_02_replace_partial
+
+# Select all and replace with multiple chars
+key CTRL+A
+wait 0.1
+type "New Text"
+wait 0.2
+expect_input_text Username_input "New Text"
+screenshot overtype_03_replace_with_string
+
+# Backspace with selection deletes selection (not single char)
+key CTRL+A
+wait 0.1
+key BACKSPACE
+wait 0.2
+expect_input_text Username_input ""
+screenshot overtype_04_backspace_selection

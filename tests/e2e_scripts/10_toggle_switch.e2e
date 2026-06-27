@@ -1,0 +1,54 @@
+# Toggle Switch Test
+# Tests toggle switch component rendering and toggling
+
+# Navigate to the toggle switches screen
+goto_screen toggle_switches
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen toggle_switches
+
+# Verify we're on the correct screen
+expect_text "Settings"
+
+# Layout assertions based on source code math (1280x720 screen)
+# Root: screen_pct(1.0) = 1280x720
+assert_ui toggle_bg w=1280 h=720
+
+# Card: screen_pct(0.5) x screen_pct(0.96) = 640 x 691.2 → grid snaps to 692
+assert_ui toggle_card w=640 h=692
+
+# Title: percent(1.0) x pixels(44)
+assert_ui_text "Settings" h=44
+
+# Section headers: percent(1.0) x pixels(32)
+assert_ui_text "General" h=32
+assert_ui_text "Preferences" h=32
+assert_ui_text "Disabled" h=32
+
+# Toggle rows: percent(1.0) x pixels(42)
+assert_ui_text "Notifications" h=42
+assert_ui_text "Sound Effects" h=42
+assert_ui_text "Vibration" h=42
+
+# Checkbox rows: percent(1.0) x pixels(42)
+assert_ui_text "Dark Mode" h=42
+assert_ui_text "Auto-Save" h=42
+assert_ui_text "Cloud Sync" h=42
+
+# Disabled toggle: pixels(42)
+assert_ui_text "Locked Setting (ON)" h=42
+assert_ui_text "Unavailable Option (OFF)" h=42
+
+# Separators: percent(1.0) x pixels(1)
+# (no debug names to assert on for separators)
+
+# Tab to first toggle and activate
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take screenshot after toggle
+screenshot toggle_after_switch
+

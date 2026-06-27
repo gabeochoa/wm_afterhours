@@ -1,0 +1,22 @@
+# Pagination Test
+# Tests pagination component rendering and navigation
+
+# Navigate to the pagination screen
+goto_screen pagination
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen pagination
+
+# Verify we're on the correct screen
+expect_text "Pagination Component Showcase"
+
+# Tab to navigation and interact
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take screenshot after navigation
+screenshot pagination_after_nav
+

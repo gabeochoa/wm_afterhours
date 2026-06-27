@@ -1,0 +1,82 @@
+# File Tree Showcase Test
+# Tests toolbar buttons (Home, Up, Refresh) and basic tree interaction.
+
+# Navigate to the file tree screen
+goto_screen file_tree
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "File Tree"
+expect_text "Home"
+expect_text "Up"
+expect_text "Refresh"
+expect_text "No selection"
+
+screenshot file_tree_initial
+
+# =========================================================================
+# Test 1: Click Home button
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot file_tree_after_home
+
+# =========================================================================
+# Test 2: Click Up button to navigate to parent directory
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot file_tree_after_up
+
+# =========================================================================
+# Test 3: Click Refresh button
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot file_tree_after_refresh
+
+# =========================================================================
+# Test 4: Tab into the tree view and navigate
+# =========================================================================
+# Tab past toolbar into tree
+key TAB
+wait 0.2
+
+# Navigate within tree using arrow keys
+key DOWN
+wait 0.2
+key DOWN
+wait 0.2
+key DOWN
+wait 0.2
+
+screenshot file_tree_navigated
+
+# =========================================================================
+# Test 5: Select/expand with Enter
+# =========================================================================
+key ENTER
+wait 0.5
+
+screenshot file_tree_item_activated
+
+# =========================================================================
+# Test 6: Verify toolbar remains functional
+# =========================================================================
+expect_text "File Tree"
+expect_text "Home"
+expect_text "Up"
+expect_text "Refresh"
+
+screenshot file_tree_final

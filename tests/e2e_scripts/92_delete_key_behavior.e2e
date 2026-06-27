@@ -1,0 +1,54 @@
+# Feature: Delete key behavior (forward delete)
+# Per HTML spec: Delete key removes the character AFTER the cursor.
+# With selection: deletes the selected text.
+#
+# This IS implemented. This test verifies correct behavior. Should PASS.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "ABCDE"
+wait 0.2
+
+# Move cursor to start
+key HOME
+wait 0.2
+
+# Delete should remove 'A' (forward delete)
+key DELETE
+wait 0.2
+expect_input_text Username_input "BCDE"
+
+# Delete again removes 'B'
+key DELETE
+wait 0.2
+expect_input_text Username_input "CDE"
+
+# Move to end - Delete should do nothing (nothing after cursor)
+key END
+wait 0.2
+key DELETE
+wait 0.2
+expect_input_text Username_input "CDE"
+screenshot delete_key_01_forward_delete
+
+# Select "CD" and delete
+key HOME
+wait 0.1
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+wait 0.2
+key DELETE
+wait 0.2
+expect_input_text Username_input "E"
+screenshot delete_key_02_delete_selection
+
+# Delete the last char
+key HOME
+wait 0.1
+key DELETE
+wait 0.2
+expect_input_text Username_input ""
+screenshot delete_key_03_empty

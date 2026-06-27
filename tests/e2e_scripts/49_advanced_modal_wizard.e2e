@@ -1,0 +1,142 @@
+# Advanced Modal Test: Multi-Step Wizard
+# Tests step navigation, text input, radio group, toggle, and completion
+
+goto_screen advanced_modals
+wait 0.5
+expect_text "Advanced Modals"
+
+# =========================================================================
+# Test 1: Open wizard and verify step 1
+# =========================================================================
+focus_ui btn_wizard
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Setup Wizard"
+expect_text "Step 1 of 3"
+expect_text "Name"
+expect_text "Email"
+screenshot wizard_step1_open
+
+# =========================================================================
+# Test 2: Type name and email on step 1
+# =========================================================================
+focus_ui wizard_name_input
+wait 0.2
+type "John Doe"
+wait 0.3
+expect_text "John Doe"
+
+focus_ui wizard_email_input
+wait 0.2
+type "john@example.com"
+wait 0.3
+expect_text "john@example.com"
+screenshot wizard_step1_filled
+
+# =========================================================================
+# Test 3: Navigate to step 2
+# =========================================================================
+focus_ui wizard_next_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Step 2 of 3"
+expect_text "Theme"
+expect_text "Enable notifications"
+screenshot wizard_step2
+
+# =========================================================================
+# Test 4: Interact with radio group (select Dark theme)
+# =========================================================================
+# Tab to the radio group and select the second option (Dark)
+focus_ui wizard_theme_radio
+wait 0.2
+key RIGHT
+wait 0.3
+screenshot wizard_step2_dark_selected
+
+# =========================================================================
+# Test 5: Toggle notifications off
+# =========================================================================
+focus_ui wizard_notif_toggle
+wait 0.2
+key ENTER
+wait 0.3
+screenshot wizard_step2_notif_toggled
+
+# =========================================================================
+# Test 6: Navigate to step 3 (summary)
+# =========================================================================
+focus_ui wizard_next_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Step 3 of 3"
+expect_text "Review your settings:"
+expect_text "John Doe"
+expect_text "john@example.com"
+screenshot wizard_step3_summary
+
+# =========================================================================
+# Test 7: Go back to step 2 and return to step 3
+# =========================================================================
+focus_ui wizard_back_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Step 2 of 3"
+screenshot wizard_back_to_step2
+
+focus_ui wizard_next_btn
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Step 3 of 3"
+
+# =========================================================================
+# Test 8: Finish the wizard
+# =========================================================================
+focus_ui wizard_finish_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+# Wizard should close and show completion status
+expect_text "Wizard complete: John Doe"
+screenshot wizard_complete
+
+# =========================================================================
+# Test 9: Escape key closes wizard
+# =========================================================================
+focus_ui btn_wizard
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Setup Wizard"
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot wizard_escape_close
+
+# =========================================================================
+# Test 10: Backdrop click closes wizard
+# =========================================================================
+focus_ui btn_wizard
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Setup Wizard"
+
+click 50 50
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot wizard_backdrop_dismiss
+

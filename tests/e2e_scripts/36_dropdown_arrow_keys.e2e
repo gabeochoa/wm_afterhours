@@ -1,0 +1,48 @@
+# Dropdown Arrow Key Navigation Test
+# Tests that arrow keys navigate between options in an open dropdown
+# and Enter selects the highlighted option
+#
+# Uses raw key commands since UI-aware commands (click_ui, click_text)
+# require was_rendered_to_screen which isn't set in headless e2e mode.
+
+goto_screen dropdowns
+wait 1.0
+
+# Verify screen loaded
+expect_text "Dropdown Showcase"
+
+# Tab to the first dropdown's trigger button
+key TAB
+wait 0.3
+
+# Open the dropdown by pressing Enter
+key ENTER
+wait 0.5
+
+# Screenshot with dropdown open
+screenshot dropdown_open_initial
+
+# Arrow down once to move from Alpha (index 0) to Beta (index 1)
+key DOWN
+wait 0.3
+
+# Screenshot showing highlight moved to Beta
+screenshot dropdown_arrow_down_once
+
+# Arrow down again to move to Gamma (index 2)
+key DOWN
+wait 0.3
+
+# Screenshot showing highlight on Gamma
+screenshot dropdown_arrow_down_twice
+
+# Arrow up to go back to Beta (index 1)
+key UP
+wait 0.3
+
+# Select Beta by pressing Enter
+key ENTER
+wait 0.5
+
+# Take final screenshot showing Beta selected (trigger should show "Beta v")
+screenshot dropdown_after_arrow_select

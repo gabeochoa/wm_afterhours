@@ -1,0 +1,36 @@
+# Feature: Cursor positioning within text
+# Expected: HOME/END/arrows allow precise cursor placement within text,
+# and typed characters insert at the cursor position.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.3
+
+# Cursor is at end (position 11)
+expect_input_selection Username_input 11 11
+
+# Move cursor to the middle using HOME + 5 RIGHT arrows
+key HOME
+wait 0.1
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+wait 0.2
+
+# Cursor should be at position 5 (between "Hello" and " World")
+expect_input_selection Username_input 5 5
+screenshot click_cursor_01_at_middle
+
+# Type a character — it should appear at position 5
+type "X"
+wait 0.2
+screenshot click_cursor_02_typed_at_middle
+
+# Verify the text has X inserted in the middle
+expect_input_text Username_input "HelloX World"

@@ -1,0 +1,48 @@
+# Layout Test
+# Tests layout system rendering
+
+# Navigate to the layout screen
+goto_screen layout
+wait 0.5
+
+# Validate screen against baseline
+validate_screen layout
+
+# Verify we're on the correct screen
+expect_text "Layout"
+
+# Layout assertions based on source code math (1280x720 screen)
+# Main: screen_pct(0.88) x screen_pct(0.90) = 1126.4 x 648 → grid snaps to 1128
+assert_ui layout_main w=1128 h=648
+
+# Row container: percent(0.95) x pixels(120)
+assert_ui row_container h=120
+
+# Panels: pixels(180) x pixels(80)
+assert_ui_text "Left Panel" w=180 h=80
+assert_ui_text "Center Panel" w=180 h=80
+assert_ui_text "Right Panel" w=180 h=80
+
+# Column demo container: percent(0.95) x pixels(220)
+assert_ui col_demo_container h=220
+
+# Stacked items: percent(0.95) x pixels(40)
+assert_ui_text "Stacked Item 1" h=40
+assert_ui_text "Stacked Item 2" h=40
+assert_ui_text "Stacked Item 3" h=40
+
+# Description panel: percent(0.95) x pixels(44)
+assert_ui description_panel h=44
+
+# Title: percent(0.95) x pixels(48)
+assert_ui_text "Layout System Demo" h=48
+
+# Section separators: percent(0.9) x pixels(1)
+assert_ui section_separator_1 h=1
+assert_ui section_separator_2 h=1
+
+# Footer: percent(0.95) x pixels(36)
+assert_ui_text "Using Sage Natural theme with responsive layouts" h=36
+
+screenshot layout_display
+

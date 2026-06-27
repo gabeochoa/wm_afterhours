@@ -1,0 +1,41 @@
+# Feature: Shift+Arrow selection in text input
+# Expected: Holding Shift while pressing arrow keys extends the selection.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World Test"
+wait 0.3
+
+# Place cursor at the start
+key HOME
+wait 0.2
+
+# Verify cursor is at position 0
+expect_input_selection Username_input 0 0
+
+# Select "Hello" with Shift+Right x5
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+wait 0.2
+expect_input_selection Username_input 0 5
+screenshot shift_select_01_hello
+
+# Extend selection to end with Shift+End
+key SHIFT+END
+wait 0.2
+expect_input_selection Username_input 0 16
+screenshot shift_select_02_to_end
+
+# Move to end, then select backward with Shift+Home
+key END
+wait 0.1
+key SHIFT+HOME
+wait 0.2
+expect_input_selection Username_input 0 16
+screenshot shift_select_03_from_end

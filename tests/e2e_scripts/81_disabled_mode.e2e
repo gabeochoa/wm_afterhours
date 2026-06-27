@@ -1,0 +1,28 @@
+# Feature: Disabled text input
+# Per HTML spec: disabled fields cannot be focused and cannot be edited.
+# The Disabled_input field on the text_input screen has pre-filled text
+# and config.disabled = true.
+
+goto_screen text_input
+wait 0.5
+
+# Verify the disabled field has its initial text
+expect_input_text Disabled_input "disabled text here"
+
+# Focus a normal field first, then try to focus the disabled one
+focus_ui Username_input
+wait 0.2
+type "test"
+wait 0.2
+expect_input_text Username_input "test"
+
+# Now try to focus the disabled field - should NOT gain focus
+focus_ui Disabled_input
+wait 0.2
+type "extra"
+wait 0.2
+
+# Disabled field should NOT have changed
+expect_input_text Disabled_input "disabled text here"
+
+screenshot disabled_01_blocked

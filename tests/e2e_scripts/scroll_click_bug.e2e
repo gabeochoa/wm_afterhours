@@ -1,0 +1,28 @@
+# Scroll Click Bug Repro
+# Verifies clicking scrolled buttons hits the correct one
+goto_screen scroll_click_bug
+wait 0.5
+
+# Verify initial state - first buttons visible
+expect_text "Button 0"
+expect_text "Button 1"
+
+screenshot scroll_click_before
+
+# Move mouse into scroll area and scroll down
+mouse_move 50% 50%
+wait 0.2
+scroll_wheel 0 -10
+wait 0.5
+
+# After scrolling, later buttons should be visible
+expect_text "Button 10"
+
+screenshot scroll_click_after_scroll
+
+# Click the visible button area
+click 50% 50%
+wait 0.3
+
+# The status should show the button we visually clicked, not one offset by scroll amount
+screenshot scroll_click_after_click

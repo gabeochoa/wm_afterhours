@@ -1,0 +1,31 @@
+# Feature: Select-all on tab/keyboard refocus
+# Expected: When a text input is refocused via tab (not mouse click),
+# all text is selected. This is the designed behavior.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.2
+
+# Verify text is entered
+expect_input_text Username_input "Hello World"
+
+# Blur by focusing another field
+focus_ui Email_input
+wait 0.3
+
+# Refocus Username — should select all text (tab-refocus behavior)
+focus_ui Username_input
+wait 0.3
+
+# All text should be selected (0..11)
+expect_input_selection Username_input 0 11
+
+# Type replaces all selected text
+type "X"
+wait 0.2
+expect_input_text Username_input "X"
+screenshot cursor_preserve_01_select_all_on_refocus

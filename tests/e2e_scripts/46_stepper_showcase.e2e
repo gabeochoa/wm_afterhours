@@ -1,0 +1,142 @@
+# Stepper Showcase Test
+# Tests stepper navigation with tab+enter on < and > buttons
+# and verifies the card selector updates the displayed card.
+
+# Navigate to the stepper showcase screen
+goto_screen stepper_showcase
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "Stepper Showcase"
+expect_text "Stepper Variants"
+expect_text "Card Selector"
+
+# Left column: stepper labels
+expect_text "Resolution"
+expect_text "Quality"
+expect_text "Language"
+expect_text "Difficulty"
+expect_text "Framerate"
+
+# Right column: card display (default is Warrior at index 0)
+# Note: card content may not appear in expect_text due to visible text limits
+
+screenshot stepper_initial
+
+# =========================================================================
+# Test 1: Click the Resolution > button to advance
+# =========================================================================
+# Tab to Resolution < button, then > button
+key TAB
+wait 0.2
+# Should be on Resolution < button, skip to >
+key TAB
+wait 0.2
+# Click > to advance Resolution
+key ENTER
+wait 0.3
+
+screenshot stepper_resolution_advanced
+
+# =========================================================================
+# Test 2: Click Resolution > again
+# =========================================================================
+key ENTER
+wait 0.3
+
+screenshot stepper_resolution_advanced_twice
+
+# =========================================================================
+# Test 3: Go back with Resolution < button
+# =========================================================================
+key SHIFT+TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot stepper_resolution_back
+
+# =========================================================================
+# Test 4: Navigate to Card Selector and change cards
+# =========================================================================
+# Reset navigation from the start
+goto_screen stepper_showcase
+wait 0.5
+
+# Tab through all the stepper buttons to reach the Card Selector
+# Each stepper has 2 tab stops (< and >)
+# Resolution < > = 2, Quality < > = 2, Language < > = 2,
+# Difficulty < > = 2, Framerate < > = 2 = 10 tabs
+# Then Card Selector < > = 2 more tabs
+# Tab to Card Selector > button (skip past all 5 steppers)
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+# Now on Card Selector < button, advance to >
+key TAB
+wait 0.1
+key TAB
+wait 0.1
+# Click > to advance from Warrior to Mage
+key ENTER
+wait 0.3
+
+screenshot stepper_card_mage
+
+# =========================================================================
+# Test 5: Advance card to Rogue
+# =========================================================================
+key ENTER
+wait 0.3
+
+screenshot stepper_card_rogue
+
+# =========================================================================
+# Test 6: Advance card to Healer
+# =========================================================================
+key ENTER
+wait 0.3
+
+screenshot stepper_card_healer
+
+# =========================================================================
+# Test 7: Go back on card selector
+# =========================================================================
+key SHIFT+TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should go back to Rogue
+screenshot stepper_card_back_to_rogue
+
+# =========================================================================
+# Test 8: Verify all stepper labels remain visible
+# =========================================================================
+expect_text "Resolution"
+expect_text "Quality"
+expect_text "Language"
+expect_text "Difficulty"
+expect_text "Framerate"
+expect_text "Card Selector"
+
+screenshot stepper_final

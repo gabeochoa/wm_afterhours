@@ -1,0 +1,29 @@
+# Basic Navigation Test
+# Tests screen navigation using keyboard
+
+# Start with accessibility screen (first alphabetically)
+goto_screen accessibility
+wait 0.3
+
+# Navigate to next screen using PageDown
+key PAGEDOWN
+wait 0.3
+
+# Navigate to previous screen using PageUp
+key PAGEUP
+wait 0.3
+
+# Navigate using period/comma keys
+key PERIOD
+wait 0.3
+
+key COMMA
+wait 0.3
+
+# Go to a specific screen
+goto_screen buttons
+wait 0.3
+
+expect_text "Button Gallery"
+
+screenshot basic_navigation_test

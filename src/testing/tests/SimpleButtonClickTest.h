@@ -6,17 +6,22 @@
 TEST(simple_button_click) {
   co_await TestApp::wait_for_frames(5);
 
-  TestApp::expect_ui_exists("Click Me");
+  // The simple_button screen uses "Click Me!" (with exclamation mark)
+  TestApp::expect_ui_exists("Click Me!");
 
-  TestApp::click_button("Click Me");
-
+  // Click 1: press button, wait a frame for active to be set, then release
+  TestApp::click_button("Click Me!");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
   co_await TestApp::wait_for_frames(2);
 
-  TestApp::expect_ui_exists("Clicks: 1");
+  TestApp::expect_ui_exists("1 click!");
 
-  TestApp::click_button("Click Me");
-
+  // Click 2: same pattern
+  TestApp::click_button("Click Me!");
+  co_await TestApp::wait_for_frames(1);
+  TestApp::release_mouse_button();
   co_await TestApp::wait_for_frames(2);
 
-  TestApp::expect_ui_exists("Clicks: 2");
+  TestApp::expect_ui_exists("2 clicks!");
 }

@@ -1,0 +1,31 @@
+# Feature: Readonly text input
+# Per HTML spec: readonly fields can be focused and selected but NOT edited.
+# The Readonly_input field on the text_input screen has pre-filled text
+# and config.text_readonly = true.
+
+goto_screen text_input
+wait 0.5
+
+# Verify the readonly field has its initial text
+expect_input_text Readonly_input "readonly text here"
+
+# Focus the readonly field and try to type
+focus_ui Readonly_input
+wait 0.2
+type "extra"
+wait 0.2
+
+# Text should NOT change - readonly blocks edits
+expect_input_text Readonly_input "readonly text here"
+
+# Try backspace - should also be blocked
+key BACKSPACE
+wait 0.2
+expect_input_text Readonly_input "readonly text here"
+
+# Try paste (Ctrl+V) - should be blocked
+key CTRL+V
+wait 0.2
+expect_input_text Readonly_input "readonly text here"
+
+screenshot readonly_01_blocked

@@ -1,0 +1,35 @@
+# Feature: macOS line navigation with Cmd+Left/Right
+# Expected: Cmd+Left jumps to line start (same as Home).
+#           Cmd+Right jumps to line end (same as End).
+#           These are the standard Mac shortcuts since Mac keyboards
+#           don't have Home/End keys.
+#
+# The e2e system maps CMD+ to ctrl (since Cmd=Ctrl for most shortcuts),
+# but for line navigation, Cmd should map to the Super key.
+# The input mapping should bind TextHome to both KEY_HOME and
+# KC{KEY_LEFT, MOD_SUPER}, and TextEnd to both KEY_END and
+# KC{KEY_RIGHT, MOD_SUPER}.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.3
+
+# Home key should go to start (works on all platforms)
+key HOME
+wait 0.2
+type "X"
+wait 0.2
+expect_input_text Username_input "XHello World"
+screenshot mac_nav_01_home_key
+
+# End key should go to end
+key END
+wait 0.2
+type "Y"
+wait 0.2
+expect_input_text Username_input "XHello WorldY"
+screenshot mac_nav_02_end_key

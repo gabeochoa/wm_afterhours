@@ -1,0 +1,57 @@
+# Capture TextInputDemo in various states for design audit
+
+goto_screen text_input
+wait 0.5
+screenshot audit_01_empty_form
+
+# Fill username field
+focus_ui Username_input
+wait 0.2
+type "gabeochoa"
+wait 0.3
+screenshot audit_02_username_filled
+
+# Fill email field
+focus_ui Email_input
+wait 0.2
+type "gabe@example.com"
+wait 0.3
+screenshot audit_03_email_filled
+
+# Fill password field
+focus_ui Password_input
+wait 0.2
+type "secretpass"
+wait 0.3
+screenshot audit_04_password_filled
+
+# Fill bio and search
+focus_ui Bio_input
+wait 0.2
+type "Game developer"
+wait 0.2
+focus_ui Search_input
+wait 0.2
+type "widgets"
+wait 0.3
+screenshot audit_05_all_fields_filled
+
+# Show selection highlight on username
+focus_ui Username_input
+wait 0.2
+key CTRL+A
+wait 0.2
+screenshot audit_06_select_all_username
+
+# Show partial selection
+key RIGHT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.2
+screenshot audit_07_partial_selection

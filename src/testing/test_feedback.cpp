@@ -4,7 +4,8 @@ namespace test_feedback {
 
 std::deque<Toast> toasts;
 
-void show_toast(const std::string& message, const std::string& color, float duration) {
+void show_toast(const std::string &message, const std::string &color,
+                float duration) {
   toasts.push_back({message, duration, 0.0f, color});
   if (toasts.size() > 5) {
     toasts.pop_front();

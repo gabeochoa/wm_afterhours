@@ -4,6 +4,8 @@
 
 enum class InputAction {
   None,
+  WidgetUp,
+  WidgetDown,
   WidgetRight,
   WidgetLeft,
   WidgetNext,
@@ -14,6 +16,23 @@ enum class InputAction {
   PauseButton,
   ToggleUIDebug,
   ToggleUILayoutDebug,
+  // Text editing actions
+  TextBackspace,
+  TextDelete,
+  TextHome,
+  TextEnd,
+  TextSelectAll,
+  TextSelectLeft,
+  TextSelectRight,
+  TextCopy,
+  TextCut,
+  TextPaste,
+  TextWordLeft,
+  TextWordRight,
+  TextDeleteWordBack,
+  TextDeleteWordForward,
+  TextUndo,
+  TextRedo,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -31,6 +50,16 @@ using afterhours::input;
 inline auto get_mapping() {
   std::map<int, input::ValidInputs> mapping;
 
+  mapping[to_int(InputAction::WidgetUp)] = {
+      raylib::KEY_UP,
+      raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
+  };
+
+  mapping[to_int(InputAction::WidgetDown)] = {
+      raylib::KEY_DOWN,
+      raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
+  };
+
   mapping[to_int(InputAction::WidgetLeft)] = {
       raylib::KEY_LEFT,
       raylib::GAMEPAD_BUTTON_LEFT_FACE_LEFT,
@@ -43,13 +72,11 @@ inline auto get_mapping() {
 
   mapping[to_int(InputAction::WidgetBack)] = {
       raylib::GAMEPAD_BUTTON_LEFT_FACE_UP,
-      raylib::KEY_UP,
   };
 
   mapping[to_int(InputAction::WidgetNext)] = {
       raylib::KEY_TAB,
       raylib::GAMEPAD_BUTTON_LEFT_FACE_DOWN,
-      raylib::KEY_DOWN,
   };
 
   mapping[to_int(InputAction::WidgetPress)] = {
@@ -66,7 +93,7 @@ inline auto get_mapping() {
   };
 
   mapping[to_int(InputAction::PauseButton)] = {
-      raylib::KEY_ESCAPE, raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
+      raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT};
 
   mapping[to_int(InputAction::ToggleUIDebug)] = {
       raylib::KEY_GRAVE,
@@ -74,6 +101,87 @@ inline auto get_mapping() {
 
   mapping[to_int(InputAction::ToggleUILayoutDebug)] = {
       raylib::KEY_EQUAL,
+  };
+
+  // Text editing
+  mapping[to_int(InputAction::TextBackspace)] = {
+      raylib::KEY_BACKSPACE,
+  };
+
+  mapping[to_int(InputAction::TextDelete)] = {
+      raylib::KEY_DELETE,
+  };
+
+  mapping[to_int(InputAction::TextHome)] = {
+      raylib::KEY_HOME,
+  };
+
+  mapping[to_int(InputAction::TextEnd)] = {
+      raylib::KEY_END,
+  };
+
+  using KC = afterhours::input::KeyChord;
+
+  mapping[to_int(InputAction::TextSelectAll)] = {
+      KC{raylib::KEY_A, KC::MOD_CTRL},
+      KC{raylib::KEY_A, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextSelectLeft)] = {
+      KC{raylib::KEY_LEFT, KC::MOD_SHIFT},
+  };
+
+  mapping[to_int(InputAction::TextSelectRight)] = {
+      KC{raylib::KEY_RIGHT, KC::MOD_SHIFT},
+  };
+
+  mapping[to_int(InputAction::TextCopy)] = {
+      KC{raylib::KEY_C, KC::MOD_CTRL},
+      KC{raylib::KEY_C, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextCut)] = {
+      KC{raylib::KEY_X, KC::MOD_CTRL},
+      KC{raylib::KEY_X, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextPaste)] = {
+      KC{raylib::KEY_V, KC::MOD_CTRL},
+      KC{raylib::KEY_V, KC::MOD_SUPER},
+  };
+
+  // Word-level navigation (Ctrl on Win/Linux, Alt on Mac)
+  mapping[to_int(InputAction::TextWordLeft)] = {
+      KC{raylib::KEY_LEFT, KC::MOD_CTRL},
+      KC{raylib::KEY_LEFT, KC::MOD_ALT},
+  };
+
+  mapping[to_int(InputAction::TextWordRight)] = {
+      KC{raylib::KEY_RIGHT, KC::MOD_CTRL},
+      KC{raylib::KEY_RIGHT, KC::MOD_ALT},
+  };
+
+  // Word-level deletion
+  mapping[to_int(InputAction::TextDeleteWordBack)] = {
+      KC{raylib::KEY_BACKSPACE, KC::MOD_CTRL},
+      KC{raylib::KEY_BACKSPACE, KC::MOD_ALT},
+  };
+
+  mapping[to_int(InputAction::TextDeleteWordForward)] = {
+      KC{raylib::KEY_DELETE, KC::MOD_CTRL},
+      KC{raylib::KEY_DELETE, KC::MOD_ALT},
+  };
+
+  // Undo/Redo
+  mapping[to_int(InputAction::TextUndo)] = {
+      KC{raylib::KEY_Z, KC::MOD_CTRL},
+      KC{raylib::KEY_Z, KC::MOD_SUPER},
+  };
+
+  mapping[to_int(InputAction::TextRedo)] = {
+      KC{raylib::KEY_Z, KC::MOD_CTRL | KC::MOD_SHIFT},
+      KC{raylib::KEY_Z, KC::MOD_SUPER | KC::MOD_SHIFT},
+      KC{raylib::KEY_Y, KC::MOD_CTRL},
   };
 
   return mapping;

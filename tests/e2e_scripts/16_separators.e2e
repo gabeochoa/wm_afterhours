@@ -1,0 +1,51 @@
+# Separators Test
+# Tests separator component rendering
+
+# Navigate to the separators screen
+goto_screen separators
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen separators
+
+# Verify we're on the correct screen
+expect_text "Separator"
+
+# Layout assertions based on source code math (1280x720 screen)
+# Cards use absolute positioning with explicit pixel calculations:
+# col_width=520, card_height=500, col_gap=40
+# total_width = 520*2 + 40 = 1080
+# start_x = (1280 - 1080) / 2 = 100
+# right_x = 100 + 520 + 40 = 660
+
+# Left card: pixels(520) x pixels(500) at (100, 100)
+assert_ui left_card_bg w=520 h=500 x=100 y=100
+
+# Right card: pixels(520) x pixels(500) at (660, 100)
+assert_ui right_card_bg w=520 h=500 x=660 y=100
+
+# Nav bar: item_width = 520 - 32*2 = 456, nav_height = 64
+assert_ui nav_bg w=456 h=64
+
+# Nav items: pixels(90) x pixels(64)
+assert_ui nav_Home w=90 h=64
+assert_ui nav_Settings w=90 h=64
+assert_ui nav_Profile w=90 h=64
+assert_ui nav_Help w=90 h=64
+
+# Vertical separators: pixels(3) x pixels(40)
+assert_ui vsep_0 w=3 h=40
+assert_ui vsep_1 w=3 h=40
+assert_ui vsep_2 w=3 h=40
+
+# Color bars: item_width - 110 = 456 - 110 = 346, h=4
+assert_ui colorbar_Blue w=346 h=4
+assert_ui colorbar_Green w=346 h=4
+assert_ui colorbar_Purple w=346 h=4
+assert_ui colorbar_Orange w=346 h=4
+
+# Title: pixels(1280) x pixels(50) at (0, 20)
+assert_ui_text "Separator Widget Demo" w=1280 h=50
+
+screenshot separators_display
+

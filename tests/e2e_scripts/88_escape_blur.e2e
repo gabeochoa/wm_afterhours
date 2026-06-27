@@ -1,0 +1,28 @@
+# Feature: Escape key to unfocus/blur text input
+# Per standard UX: pressing Escape while a text field is focused should
+# blur the field (remove focus).
+#
+# Currently NOT implemented - Escape triggers MenuBack but does not blur
+# text input fields. This test MUST FAIL until escape-to-blur is added.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "test"
+wait 0.2
+expect_input_text Username_input "test"
+
+# Press Escape - should blur the field
+key ESCAPE
+wait 0.3
+
+# Type more - should NOT go into the field since it should be blurred
+type "extra"
+wait 0.3
+
+# If Escape blurred: text stays "test" (extra went nowhere)
+# If Escape didn't blur: text becomes "testextra"
+expect_input_text Username_input "test"
+screenshot escape_blur_01_after_escape

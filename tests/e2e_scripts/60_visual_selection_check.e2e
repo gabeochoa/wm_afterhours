@@ -1,0 +1,39 @@
+# Visual validation of text selection highlight and cursor position
+# Takes screenshots at key moments to verify rendering
+
+goto_screen text_input
+wait 0.5
+
+# Type text into username field
+focus_ui Username_input
+wait 0.2
+type "Hello World"
+wait 0.3
+screenshot selection_01_typed_text
+
+# Select "World" with Shift+Left x5
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.2
+expect_input_selection Username_input 6 11
+screenshot selection_02_word_selected
+
+# Select all with Ctrl+A
+key CTRL+A
+wait 0.2
+expect_input_selection Username_input 0 11
+screenshot selection_03_select_all
+
+# Move cursor to middle and take screenshot showing cursor position
+key RIGHT
+wait 0.2
+type "Test"
+wait 0.3
+screenshot selection_04_cursor_after_type

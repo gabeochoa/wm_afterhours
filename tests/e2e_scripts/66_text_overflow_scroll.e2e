@@ -1,0 +1,48 @@
+# Feature: Horizontal scrolling when text exceeds field width
+# Expected: When text is longer than the field, the view should scroll
+# so the cursor always stays visible. Currently text just overflows.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+
+# Type a short string first - should fit comfortably
+type "Hello"
+wait 0.2
+screenshot overflow_01_short_text
+
+# Type enough to fill the field
+type " World this is a test"
+wait 0.2
+screenshot overflow_02_medium_text
+
+# Type a very long string that definitely overflows
+type " and here is even more text that should cause the field to scroll horizontally"
+wait 0.2
+screenshot overflow_03_long_text_end
+
+# Move cursor to the start - text should scroll to show the beginning
+key HOME
+wait 0.2
+screenshot overflow_04_long_text_home
+
+# Move cursor to middle - should show the middle portion
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+key RIGHT
+wait 0.2
+screenshot overflow_05_long_text_middle
+
+# Select all on overflowed text
+key CTRL+A
+wait 0.2
+screenshot overflow_06_long_text_select_all

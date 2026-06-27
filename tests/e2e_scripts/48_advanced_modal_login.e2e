@@ -1,0 +1,149 @@
+# Advanced Modal Test: Login Form
+# Tests text input, toggle switch, validation, button clicks, and dismiss methods
+
+goto_screen advanced_modals
+wait 0.5
+expect_text "Advanced Modals"
+expect_text "Open a modal above to get started"
+
+# =========================================================================
+# Test 1: Open login modal and verify contents
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+
+# Verify modal is open with all expected elements
+expect_text "Login"
+expect_text "Username"
+expect_text "Password"
+expect_text "Remember me"
+screenshot login_modal_open
+
+# =========================================================================
+# Test 2: Type into username field
+# =========================================================================
+focus_ui login_username_input
+wait 0.2
+type "testuser"
+wait 0.3
+
+# Verify typed text appears
+expect_text "testuser"
+screenshot login_username_typed
+
+# =========================================================================
+# Test 3: Type into password field (masked)
+# =========================================================================
+focus_ui login_password_input
+wait 0.2
+type "secret123"
+wait 0.3
+
+# Password is masked so we should see asterisks, not the plaintext
+screenshot login_password_typed
+
+# =========================================================================
+# Test 4: Toggle the remember me switch
+# =========================================================================
+focus_ui login_remember_toggle
+wait 0.2
+key ENTER
+wait 0.3
+screenshot login_remember_toggled
+
+# =========================================================================
+# Test 5: Click Login button (should succeed with filled fields)
+# =========================================================================
+focus_ui login_submit_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+# Modal should close and status should show logged in user
+expect_text "Logged in as: testuser"
+screenshot login_success
+
+# =========================================================================
+# Test 6: Test validation - try to login with empty fields
+# =========================================================================
+# Re-open the login modal (fields reset on new open in practice,
+# but state persists in this immediate mode system)
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Login"
+
+# Clear the username field and try to submit
+focus_ui login_username_input
+wait 0.2
+key CTRL+A
+wait 0.1
+key BACKSPACE
+wait 0.2
+
+# Clear the password field too
+focus_ui login_password_input
+wait 0.2
+key CTRL+A
+wait 0.1
+key BACKSPACE
+wait 0.2
+
+# Click Login with empty fields
+focus_ui login_submit_btn
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should show error message
+expect_text "Username and password are required"
+screenshot login_validation_error
+
+# =========================================================================
+# Test 7: Cancel button closes modal
+# =========================================================================
+focus_ui login_cancel_btn
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should be back to main screen
+expect_text "Advanced Modals"
+screenshot login_cancelled
+
+# =========================================================================
+# Test 8: Escape key closes modal
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Login"
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot login_escape_close
+
+# =========================================================================
+# Test 9: Click off modal (backdrop) to dismiss
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Login"
+
+# Click in the corner - outside the modal bounds
+click 50 50
+wait 0.5
+
+# Modal should be closed
+expect_text "Advanced Modals"
+screenshot login_backdrop_dismiss
+

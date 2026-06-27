@@ -1,0 +1,135 @@
+# Shop Interface Test
+# Tests buy/sell tabs, item selection, and cart interaction
+# on the RPG general store screen.
+
+# Navigate to the shop interface screen
+goto_screen shop_interface
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "General Store"
+expect_text "Welcome, adventurer!"
+expect_text "G 3,750"
+
+# Buy tab should be selected by default
+expect_text "Buy"
+expect_text "Sell"
+
+# Column headers
+expect_text "Item"
+expect_text "Type"
+expect_text "Stock"
+expect_text "Price"
+
+# Items should be listed
+expect_text "Iron Sword"
+expect_text "Health Potion"
+expect_text "Mana Potion"
+expect_text "Leather Armor"
+expect_text "Fire Scroll"
+expect_text "Torch"
+expect_text "Antidote"
+
+# Default selected item is Health Potion (index 1)
+# Detail panel should show Health Potion info
+expect_text "Restores 50 HP instantly."
+expect_text "Consumable"
+expect_text "Add to Cart"
+
+# Cart should have pre-populated items
+expect_text "Cart (5 items)"
+expect_text "Purchase"
+
+# Bottom status
+expect_text "A: Select"
+
+screenshot shop_initial
+
+# =========================================================================
+# Test 1: Select a different item
+# =========================================================================
+# Tab to the first item row button and press Enter to select Iron Sword
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Detail panel should update
+screenshot shop_item_selected
+
+# =========================================================================
+# Test 2: Tab switching between Buy and Sell
+# =========================================================================
+# Reset the screen to get clean tab state
+goto_screen shop_interface
+wait 0.5
+
+# The Buy/Sell tabs are the first interactive elements
+# Tab to the Sell tab and click it
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot shop_sell_tab
+
+# Switch back to Buy tab
+goto_screen shop_interface
+wait 0.5
+
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot shop_buy_tab
+
+# =========================================================================
+# Test 3: Verify cart details
+# =========================================================================
+goto_screen shop_interface
+wait 0.5
+
+# Cart items from initial state
+expect_text "Health Potion  x3"
+expect_text "Torch  x2"
+expect_text "Total:"
+expect_text "Remaining:"
+
+screenshot shop_cart_details
+
+# =========================================================================
+# Test 4: Navigate through item list
+# =========================================================================
+# Tab through multiple items to exercise selection
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot shop_navigated_item
+
+# =========================================================================
+# Test 5: Verify stock indicators
+# =========================================================================
+# Items with low stock should show "Low" indicator
+expect_text "3 Low"
+expect_text "2 Low"
+
+screenshot shop_final

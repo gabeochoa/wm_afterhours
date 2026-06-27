@@ -1,0 +1,50 @@
+# Text Selection Delete (Backspace deletes selection)
+# Tests that backspace removes the entire selection, not just one character.
+# Also tests that arrow keys collapse selection without deleting.
+
+goto_screen text_input
+wait 0.5
+
+# Type into username
+focus_ui Username_input
+wait 0.2
+type "abcdef"
+wait 0.3
+expect_input_text Username_input "abcdef"
+
+# Select last 3 characters with Shift+Left x3
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.2
+
+# Verify selection covers "def" (bytes 3-6)
+expect_input_selection Username_input 3 6
+
+# Backspace should delete all 3 selected characters at once
+key BACKSPACE
+wait 0.3
+expect_input_text Username_input "abc"
+expect_input_selection Username_input 3 3
+
+# Now test arrow collapse: type more, select, then arrow to collapse
+type "xyz"
+wait 0.2
+expect_input_text Username_input "abcxyz"
+
+# Select "xy" with Shift+Left x2
+key SHIFT+LEFT
+wait 0.1
+key SHIFT+LEFT
+wait 0.2
+expect_input_selection Username_input 4 6
+
+# Right arrow collapses selection to end without deleting
+key RIGHT
+wait 0.2
+expect_input_text Username_input "abcxyz"
+expect_input_selection Username_input 6 6
+
+screenshot text_selection_delete

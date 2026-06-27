@@ -1,0 +1,102 @@
+# Horizontal Drag & Drop Test
+# Tests dragging tags between priority lanes and verifying
+# that item counts update correctly.
+
+# Navigate to the horizontal drag screen
+goto_screen horizontal_drag
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "Horizontal Drag & Drop"
+expect_text "Drag tags between priority lanes"
+
+# Priority lane headers with counts
+expect_text "High Priority (2)"
+expect_text "Medium Priority (3)"
+expect_text "Low Priority (2)"
+
+# High priority tags
+expect_text "Security patch"
+expect_text "Data loss fix"
+
+# Medium priority tags
+expect_text "Refactor auth"
+expect_text "Update deps"
+expect_text "Add logging"
+
+# Low priority tags (may be truncated at small resolutions)
+expect_text "Readme typo"
+
+screenshot horizontal_drag_initial
+
+# =========================================================================
+# Test 1: Drag a tag from High Priority to Medium Priority
+# =========================================================================
+# "Security patch" is in the High Priority row
+# High Priority row is roughly at y ~30% of screen
+# Medium Priority row is roughly at y ~52% of screen
+# "Security patch" tag is the first tag in the High row, roughly at x ~15%
+
+# Press down on the Security patch tag
+mouse_down 15% 35%
+wait 0.3
+
+# Drag to the Medium Priority row
+mouse_move 15% 55%
+wait 0.3
+
+# Drop it
+mouse_up
+wait 0.5
+
+# Verify counts updated
+screenshot horizontal_drag_after_first_move
+
+# =========================================================================
+# Test 2: Drag a tag from Low Priority to High Priority
+# =========================================================================
+# "Readme typo" is in the Low Priority row
+# Low Priority row is roughly at y ~72% of screen
+# High Priority row is roughly at y ~30% of screen
+
+mouse_down 15% 75%
+wait 0.3
+
+mouse_move 15% 35%
+wait 0.3
+
+mouse_up
+wait 0.5
+
+screenshot horizontal_drag_after_second_move
+
+# =========================================================================
+# Test 3: Drag within the same row (reorder)
+# =========================================================================
+# Drag "Update deps" (second tag in Medium) to the start of Medium row
+# Medium row tags start around x ~15%, second tag around x ~30%
+mouse_down 35% 55%
+wait 0.3
+
+mouse_move 10% 55%
+wait 0.3
+
+mouse_up
+wait 0.5
+
+screenshot horizontal_drag_reorder
+
+# =========================================================================
+# Test 4: Verify all tags are still present after moves
+# =========================================================================
+# All 7 tags should still exist somewhere (some may be truncated)
+expect_text "Security patch"
+expect_text "Data loss fix"
+expect_text "Refactor auth"
+expect_text "Update deps"
+expect_text "Add logging"
+expect_text "Readme typo"
+
+screenshot horizontal_drag_final

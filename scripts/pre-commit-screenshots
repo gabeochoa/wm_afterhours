@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+# Pre-commit hook: validates screenshots against baselines when source changes.
+#
+# Install:
+#   cp scripts/pre-commit-screenshots .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# Or append to existing hook:
+#   echo 'scripts/pre-commit-screenshots' >> .git/hooks/pre-commit
+
+# Only run if C++/header files changed (skip doc-only commits)
+CHANGED_SRC=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(cpp|h|hpp)$' || true)
+if [ -z "$CHANGED_SRC" ]; then
+  echo "[screenshots] No source changes, skipping validation."
+  exit 0
+fi
+
+# Check if baselines exist
+if [ ! -d "screenshot-baselines/screens" ] || [ -z "$(ls screenshot-baselines/screens/*.png 2>/dev/null)" ]; then
+  echo "[screenshots] No baselines found, skipping validation."
+  echo "  Run 'make update-baselines' to generate baselines."
+  exit 0
+fi
+
+echo "[screenshots] Source files changed, validating screenshots..."
+
+# Build if needed
+if ! make -q output/ui_tester.exe 2>/dev/null; then
+  echo "[screenshots] Building..."
+  make all 2>&1 | tail -3
+fi
+
+# Run headless validation
+if ! make validate-screenshots 2>&1 | tail -5; then
+  echo ""
+  echo "=========================================="
+  echo "  Screenshot validation FAILED!"
+  echo "=========================================="
+  echo ""
+  echo "  Screenshots have drifted from baselines."
+  echo ""
+  echo "  If this is intentional, update baselines:"
+  echo "    make update-baselines"
+  echo "    git add screenshot-baselines/"
+  echo ""
+  echo "  Then commit again."
+  echo ""
+  exit 1
+fi
+
+echo "[screenshots] All screenshots match baselines."

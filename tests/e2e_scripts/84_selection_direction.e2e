@@ -1,0 +1,67 @@
+# HTML Spec: selectionDirection property
+# Per spec: selectionDirection returns "forward", "backward", or "none"
+# indicating the direction in which selection was performed.
+#
+# - "forward": selection was made left-to-right (anchor < cursor)
+# - "backward": selection was made right-to-left (anchor > cursor)
+# - "none": no direction (e.g., select-all or programmatic)
+#
+# The current implementation tracks selection_anchor and cursor_position
+# separately, which implicitly encodes direction:
+#   forward:  anchor < cursor_position
+#   backward: anchor > cursor_position
+#
+# selection_start() returns min(anchor, cursor)
+# selection_end() returns max(anchor, cursor)
+#
+# This test verifies that the selection model correctly handles both
+# forward and backward selections.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "ABCDEFGHIJ"
+wait 0.2
+
+# Forward selection: Shift+Right from position 2
+key HOME
+wait 0.1
+key RIGHT
+key RIGHT
+wait 0.1
+
+# Select forward: positions 2..5 ("CDEF")
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+key SHIFT+RIGHT
+wait 0.2
+expect_input_selection Username_input 2 6
+screenshot seldir_01_forward_selection
+
+# Clear selection, go to end
+key END
+wait 0.1
+
+# Backward selection: Shift+Left from end
+key SHIFT+LEFT
+key SHIFT+LEFT
+key SHIFT+LEFT
+wait 0.2
+# Selection from 7..10 (anchor=10, cursor=7, so start=7 end=10)
+expect_input_selection Username_input 7 10
+screenshot seldir_02_backward_selection
+
+# Select all - direction is "none" conceptually (anchor=0, cursor=10)
+key CTRL+A
+wait 0.2
+expect_input_selection Username_input 0 10
+screenshot seldir_03_select_all
+
+# Verify typing replaces selection regardless of direction
+type "X"
+wait 0.2
+expect_input_text Username_input "X"
+screenshot seldir_04_replaced_selection

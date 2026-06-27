@@ -1,0 +1,78 @@
+# Feature: Undo/Redo for text input
+# Shortcuts: Ctrl+Z (undo), Ctrl+Shift+Z or Ctrl+Y (redo)
+#
+# NOTE: Current implementation is per-character undo. Each typed character
+# creates one snapshot, so undo goes back one character at a time.
+
+reset_test_state
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+
+# Clear any stale text (focus_ui selects all, then backspace deletes)
+key BACKSPACE
+wait 0.2
+
+# Ensure field is empty
+expect_input_text Username_input ""
+
+# Type "abc"
+type "abc"
+wait 0.2
+expect_input_text Username_input "abc"
+
+# Undo one character -> "ab"
+key CTRL+Z
+wait 0.3
+expect_input_text Username_input "ab"
+
+# Undo another -> "a"
+key CTRL+Z
+wait 0.3
+expect_input_text Username_input "a"
+
+# Undo to empty
+key CTRL+Z
+wait 0.3
+expect_input_text Username_input ""
+screenshot undo_01_fully_undone
+
+# Redo -> "a"
+key CTRL+SHIFT+Z
+wait 0.3
+expect_input_text Username_input "a"
+
+# Redo -> "ab"
+key CTRL+SHIFT+Z
+wait 0.3
+expect_input_text Username_input "ab"
+
+# Redo -> "abc"
+key CTRL+SHIFT+Z
+wait 0.3
+expect_input_text Username_input "abc"
+screenshot undo_02_fully_redone
+
+# Redo past end should be no-op
+key CTRL+SHIFT+Z
+wait 0.3
+expect_input_text Username_input "abc"
+
+# Ctrl+Y redo variant: undo first, then redo with Ctrl+Y
+key CTRL+Z
+wait 0.2
+expect_input_text Username_input "ab"
+key CTRL+Y
+wait 0.3
+expect_input_text Username_input "abc"
+
+# Undo after delete should restore deleted text
+key BACKSPACE
+wait 0.2
+expect_input_text Username_input "ab"
+key CTRL+Z
+wait 0.3
+expect_input_text Username_input "abc"
+screenshot undo_03_undo_delete

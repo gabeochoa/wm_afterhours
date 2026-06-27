@@ -1,0 +1,64 @@
+# Checkbox Toggle Test
+# Tests checkbox component rendering and interaction
+
+# Navigate to the checkboxes screen
+goto_screen checkboxes
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen checkboxes
+
+# Verify we're on the correct screen
+expect_text "Checkbox Components"
+
+# Layout assertions based on source code math (1280x720 screen)
+# Root: screen_pct(1.0) = 1280x720
+assert_ui bg w=1280 h=720
+
+# Card: screen_pct(0.85) x screen_pct(0.88) = 1088 x 633.6 → grid snaps to 632
+assert_ui card w=1088 h=632
+
+# Title: h720(60) = 60px
+assert_ui_text "Checkbox Components" h=60
+
+# Checkbox items: h720(44) = 44px
+assert_ui_text "Primary" h=44
+assert_ui_text "Secondary" h=44
+assert_ui_text "Accent" h=44
+
+# Section headers: HEADER_HEIGHT = h720(40) = 40px
+assert_ui_text "Box Only" h=40
+assert_ui_text "Disabled" h=40
+
+# Box-only checkboxes: h720(32) = screen_pct(32/720)
+# Width = screen_pct(0.0444) * 1280 = 56.89 → grid snaps to 56
+# Height = screen_pct(0.0444) * 720 = 32
+assert_ui nl_option_1 w=56 h=32
+assert_ui nl_option_2 w=56 h=32
+assert_ui nl_option_3 w=56 h=32
+assert_ui nl_option_4 w=56 h=32
+
+# Disabled checkboxes: h720(44) = 44px
+assert_ui_text "Disabled ON" h=44
+assert_ui_text "Disabled OFF" h=44
+
+# Multi-select checkboxes: h720(44) = 44px
+assert_ui opt_a h=44
+assert_ui opt_b h=44
+assert_ui opt_c h=44
+assert_ui opt_d h=44
+
+# Min/Max checkboxes: h720(44) = 44px
+assert_ui ch_1 h=44
+assert_ui ch_2 h=44
+assert_ui ch_3 h=44
+
+# Tab to first interactive checkbox and toggle
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Take a screenshot after toggle
+screenshot checkboxes_after_toggle
+

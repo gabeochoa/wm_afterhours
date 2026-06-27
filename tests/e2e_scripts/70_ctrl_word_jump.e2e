@@ -1,0 +1,85 @@
+# Feature: Word-level cursor movement
+# Expected: Jump cursor to previous/next word boundary.
+#
+# Platform shortcuts:
+#   Windows/Linux: Ctrl+Left / Ctrl+Right
+#   macOS:         Option+Left / Option+Right
+#
+# Both should be mapped in InputAction (e.g., TextWordLeft, TextWordRight).
+# The e2e system injects LEFT_CONTROL for CTRL+ and LEFT_ALT for ALT+.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "one two three four"
+wait 0.3
+
+# --- Windows/Linux: Ctrl+Arrow ---
+
+# Cursor is at end (after "four")
+screenshot word_jump_01_at_end
+
+# Ctrl+Left should jump to start of "four"
+key CTRL+LEFT
+wait 0.2
+screenshot word_jump_02_ctrl_start_four
+
+# Ctrl+Left should jump to start of "three"
+key CTRL+LEFT
+wait 0.2
+screenshot word_jump_03_ctrl_start_three
+
+# Ctrl+Left should jump to start of "two"
+key CTRL+LEFT
+wait 0.2
+screenshot word_jump_04_ctrl_start_two
+
+# Ctrl+Left should jump to start of "one"
+key CTRL+LEFT
+wait 0.2
+screenshot word_jump_05_ctrl_start_one
+
+# Ctrl+Right should jump to end of "one"
+key CTRL+RIGHT
+wait 0.2
+screenshot word_jump_06_ctrl_end_one
+
+# Ctrl+Right should jump to end of "two"
+key CTRL+RIGHT
+wait 0.2
+screenshot word_jump_07_ctrl_end_two
+
+# Type to verify cursor is between "two" and " three"
+type "X"
+wait 0.2
+expect_input_text Username_input "one twoX three four"
+screenshot word_jump_08_ctrl_verify
+
+# --- macOS: Option+Arrow (Alt in e2e system) ---
+
+# Clear and retype
+key CTRL+A
+wait 0.1
+type "one two three four"
+wait 0.3
+
+# Alt+Left should jump to start of "four" (macOS Option+Left)
+key ALT+LEFT
+wait 0.2
+screenshot word_jump_09_opt_start_four
+
+# Alt+Left again to start of "three"
+key ALT+LEFT
+wait 0.2
+
+# Alt+Right should jump to end of "three"
+key ALT+RIGHT
+wait 0.2
+
+# Type to verify position
+type "X"
+wait 0.2
+expect_input_text Username_input "one two threeX four"
+screenshot word_jump_10_opt_verify

@@ -1,0 +1,38 @@
+# Feature: Blur behavior — focus transfer between fields
+# Expected: When focus moves to another field, the previous field
+# retains its text and stops receiving input.
+
+goto_screen text_input
+wait 0.5
+
+# Type in Username
+focus_ui Username_input
+wait 0.2
+type "focused text"
+wait 0.2
+expect_input_text Username_input "focused text"
+
+# Transfer focus to Email — Username keeps its text
+focus_ui Email_input
+wait 0.3
+type "email@test"
+wait 0.2
+expect_input_text Email_input "email@test"
+screenshot blur_01_focus_transferred
+
+# Username text should be unchanged
+expect_input_text Username_input "focused text"
+
+# Blur via Escape key
+key ESCAPE
+wait 0.3
+screenshot blur_02_after_escape
+
+# Type characters — they should go nowhere since no field is focused
+type "orphan"
+wait 0.3
+
+# Both fields should be unchanged
+expect_input_text Username_input "focused text"
+expect_input_text Email_input "email@test"
+screenshot blur_03_no_field_accepts_input

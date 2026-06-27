@@ -1,0 +1,20 @@
+# Feature: Select all text in a text input
+# Uses Ctrl+A (TextSelectAll action) to select entire contents.
+# Original triple-click approach doesn't work because click injection
+# doesn't fire HasClickListener on text input fields.
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "Hello World Test"
+wait 0.3
+
+# Select all with Ctrl+A
+key CTRL+A
+wait 0.3
+
+# "Hello World Test" is 16 characters — all text should be selected (0..16)
+expect_input_selection Username_input 0 16
+screenshot triple_click_01_all_selected

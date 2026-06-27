@@ -1,0 +1,45 @@
+# Cards Display Test
+# Tests card component rendering
+
+# Navigate to the cards screen
+goto_screen cards
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen cards
+
+# Verify we're on the correct screen
+expect_text "Card"
+
+# Layout assertions based on source code math (1280x720 screen)
+# Root: screen_pct(0.90) = 0.9*1280 x 0.9*720 = 1152 x 648
+assert_ui cards_bg w=1152 h=648
+
+# Row heights
+assert_ui row1_cards h=150
+assert_ui row2_nested h=165
+
+# Title: percent(0.95) x pixels(50)
+assert_ui_text "Cards & Panels Gallery" h=50
+
+# Card items: pixels(140) x pixels(100)
+assert_ui_text "Surface" w=140 h=100
+assert_ui_text "Sharp" w=140 h=100
+assert_ui_text "Custom" w=140 h=100
+
+# Inner cards: percent(0.30) x pixels(55)
+assert_ui_text "Item 1" h=55
+assert_ui_text "Item 2" h=55
+assert_ui_text "Item 3" h=55
+
+# Nested container: percent(0.33) x pixels(130)
+assert_ui nested_container h=130
+
+# Info panel: percent(0.33) x pixels(130)
+assert_ui info_panel h=130
+
+# Row 3: percent(0.95) x pixels(70)
+assert_ui row3_themes h=70
+
+screenshot cards_display
+

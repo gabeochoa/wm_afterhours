@@ -1,0 +1,54 @@
+# Radio Button Selection Test
+# Tests radio button group component rendering and selection
+
+# Navigate to the radio buttons screen
+goto_screen radio_buttons
+wait 0.5
+
+# Validate initial screen against baseline
+validate_screen radio_buttons
+
+# Verify screen loaded
+expect_text "Radio Button Groups"
+expect_text "Favorite Fruit"
+
+# Layout assertions based on source code math (1280x720 screen)
+# Root: screen_pct(0.92) x screen_pct(0.88) = 1177.6 x 633.6 → grid snaps to 1176 x 632
+assert_ui radio_bg w=1176 h=632
+
+# Columns: percent(1.0) of content's content area (content h=404, padding=28.8)
+# Column height = 1.0 * (404 - 28.8) = 375.2 → grid snaps to 376
+assert_ui col1 h=376
+assert_ui col2 h=376
+assert_ui col3 h=376
+
+# Title: percent(1.0) x pixels(60)
+assert_ui_text "Radio Button Groups" h=60
+
+# Column headers: percent(1.0) x pixels(44)
+assert_ui_text "Favorite Fruit" h=44
+assert_ui_text "Size" h=44
+assert_ui_text "Color" h=44
+
+# Status bar: pixels(44) (fruit_idx=1=Orange, size_idx=0=Small, color_idx=2=Blue)
+assert_ui_text "Selected: Fruit=Orange, Size=Small, Color=Blue" h=44
+
+# Tab to first radio option
+key TAB
+wait 0.2
+
+# Select first option (should already be selected or will select)
+key ENTER
+wait 0.2
+
+# Tab to next option
+key TAB
+wait 0.2
+
+# Select the new option
+key ENTER
+wait 0.3
+
+# Take screenshot after selection
+screenshot radio_after_select
+

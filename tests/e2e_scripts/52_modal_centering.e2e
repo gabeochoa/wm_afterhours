@@ -1,0 +1,80 @@
+# Modal Centering Verification
+# Validates that modals appear correctly and can be opened/closed.
+# Takes screenshots for visual centering verification.
+
+goto_screen advanced_modals
+wait 0.5
+expect_text "Advanced Modals"
+
+# =========================================================================
+# Test 1: Login modal
+# =========================================================================
+focus_ui btn_login
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Login"
+expect_text "Username"
+screenshot centering_login_open
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+expect_text "Open a modal above to get started"
+screenshot centering_login_dismissed
+
+# =========================================================================
+# Test 2: Wizard modal
+# =========================================================================
+focus_ui btn_wizard
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Setup Wizard"
+expect_text "Step 1 of 3"
+screenshot centering_wizard_open
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot centering_wizard_dismissed
+
+# =========================================================================
+# Test 3: Settings modal
+# =========================================================================
+focus_ui btn_settings
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Settings"
+expect_text "Volume"
+screenshot centering_settings_open
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot centering_settings_dismissed
+
+# =========================================================================
+# Test 4: Feedback modal
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Submit Feedback"
+expect_text "Subject"
+screenshot centering_feedback_open
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot centering_feedback_dismissed

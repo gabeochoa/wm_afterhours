@@ -1,0 +1,119 @@
+# Toast Notifications Test
+# Tests triggering toast buttons and verifying counter updates.
+# Note: Toast overlay text may not appear in expect_text since toasts
+# render in a separate layer. We verify button interactions and counters.
+
+# Navigate to the toast showcase screen
+goto_screen toasts
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "Toast Notifications"
+expect_text "SIMPLE TOASTS"
+expect_text "DURATION & SPAM"
+expect_text "INTERACTIVE TOASTS"
+
+# Buttons should be visible (some may be off-screen in narrow viewports)
+expect_text "Info Toast"
+expect_text "Success Toast"
+
+# Undo counter starts at 0
+expect_text "Undos: 0"
+
+screenshot toasts_initial
+
+# =========================================================================
+# Test 1: Click Info Toast button
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot toasts_info_triggered
+
+# =========================================================================
+# Test 2: Click Success Toast button
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot toasts_success_triggered
+
+# =========================================================================
+# Test 3: Click Warning Toast button
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot toasts_warning_triggered
+
+# =========================================================================
+# Test 4: Click Error Toast button
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot toasts_error_triggered
+
+# =========================================================================
+# Test 5: Click Quick duration toast
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot toasts_quick_triggered
+
+# =========================================================================
+# Test 6: Skip Long, click Spam x5 button
+# =========================================================================
+# Skip Long toast button
+key TAB
+wait 0.2
+# Land on Spam x5
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot toasts_spam_triggered
+
+# =========================================================================
+# Test 7: Skip Custom Color, test Undo action
+# =========================================================================
+# Skip Custom Color button
+key TAB
+wait 0.2
+# Land on With Undo Action button
+key TAB
+wait 0.2
+key ENTER
+wait 0.5
+
+screenshot toasts_undo_first
+
+# Click again
+key ENTER
+wait 0.5
+
+screenshot toasts_undo_second
+
+# =========================================================================
+# Test 8: Verify all sections remain visible
+# =========================================================================
+expect_text "Toast Notifications"
+expect_text "SIMPLE TOASTS"
+expect_text "DURATION & SPAM"
+expect_text "INTERACTIVE TOASTS"
+
+screenshot toasts_final

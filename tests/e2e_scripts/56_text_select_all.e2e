@@ -1,0 +1,31 @@
+# Text Select All (Ctrl+A)
+# Tests that Ctrl+A selects all text and typing replaces it.
+
+goto_screen text_input
+wait 0.5
+
+# Type text into username
+focus_ui Username_input
+wait 0.2
+type "oldtext"
+wait 0.3
+expect_input_text Username_input "oldtext"
+
+# Select all — should select range 0 to 7
+key CTRL+A
+wait 0.2
+expect_input_selection Username_input 0 7
+
+# Typing replaces entire selection
+type "new"
+wait 0.3
+expect_input_text Username_input "new"
+expect_text "Username: new"
+
+# Selection collapsed after typing
+expect_input_selection Username_input 3 3
+
+# Old text should be gone
+expect_no_text "oldtext"
+
+screenshot text_select_all

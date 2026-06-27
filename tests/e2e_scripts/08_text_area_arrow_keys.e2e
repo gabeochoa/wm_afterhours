@@ -1,0 +1,59 @@
+# Text Area Arrow Key Navigation Test
+# Tests multiline editing with arrow key navigation in the AIM Chat Demo
+
+# Navigate to the AIM Chat screen
+goto_screen aim_chat
+wait 0.5
+
+# Focus the message input text area
+focus_element message_input
+wait 0.3
+
+# Type first line: "hello"
+type "hello"
+wait 0.2
+
+# Press Enter to create new line
+key ENTER
+wait 0.2
+
+# Type second line: "how"
+type "how"
+wait 0.2
+
+# Press Enter to create new line
+key ENTER
+wait 0.2
+
+# Type third line: "are you"
+type "are you"
+wait 0.3
+
+# Now navigate up with arrow keys to get back to "hello"
+# We're currently at end of "are you" (line 3)
+# Press UP once to go to "how" (line 2)
+key UP
+wait 0.2
+
+# Press UP again to go to "hello" (line 1)
+key UP
+wait 0.2
+
+# Press END to go to end of "hello" line
+key END
+wait 0.2
+
+# Type " world" after "hello"
+type " world"
+wait 0.3
+
+# Verify the text contains "hello world" (first line now has "hello world")
+expect_text "hello world"
+
+# Verify other lines are still intact
+expect_text "how"
+expect_text "are you"
+
+# Take a screenshot for visual verification
+screenshot text_area_arrow_keys
+

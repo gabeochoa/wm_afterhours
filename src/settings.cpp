@@ -150,8 +150,10 @@ bool Settings::load_save_file(int width, int height) {
   this->data->resolution.height = height;
 
   std::vector<std::filesystem::path> settings_places = {
-      std::filesystem::current_path() / "settings.json",
-      files::get_save_path() / "settings.json"};
+      std::filesystem::current_path() / "settings.json"};
+  if (files::get_provider() != nullptr) {
+    settings_places.push_back(files::get_save_path() / "settings.json");
+  }
 
   size_t file_loc = 0;
   std::ifstream ifs;
@@ -190,13 +192,20 @@ bool Settings::load_save_file(int width, int height) {
 }
 
 void Settings::write_save_file() {
-  std::ofstream ofs(data->loaded_from);
+  // If no settings file was loaded, use default path
+  std::string save_path = data->loaded_from;
+  if (save_path.empty()) {
+    save_path = "settings.json";
+  }
+
+  std::ofstream ofs(save_path);
   if (!ofs.good()) {
     std::cerr << "write_json_config_file error: Couldn't open file "
                  "for writing: "
-              << data->loaded_from << std::endl;
+              << save_path << std::endl;
     return;
   }
+  data->loaded_from = save_path;
 
   log_info("Saving to {}", data->loaded_from);
 

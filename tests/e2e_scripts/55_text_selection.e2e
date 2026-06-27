@@ -1,0 +1,33 @@
+# Text Selection via Shift+Arrow
+# Tests that Shift+Left/Right creates and extends a text selection,
+# and that typing replaces the selection.
+
+goto_screen text_input
+wait 0.5
+
+# Type some text into the username field
+focus_ui Username_input
+wait 0.2
+type "hello"
+wait 0.3
+expect_input_text Username_input "hello"
+
+# Select last 2 characters with Shift+Left x2
+key SHIFT+LEFT
+wait 0.2
+key SHIFT+LEFT
+wait 0.2
+
+# Verify selection covers byte range 3-5 ("lo")
+expect_input_selection Username_input 3 5
+
+# Type replacement — "lo" should become "p"
+type "p"
+wait 0.3
+expect_input_text Username_input "help"
+expect_text "Username: help"
+
+# Selection should be collapsed after typing
+expect_input_selection Username_input 4 4
+
+screenshot text_selection_replace

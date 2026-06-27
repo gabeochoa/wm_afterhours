@@ -1,0 +1,142 @@
+# Advanced Modal Test: Feedback Form
+# Tests text input, dropdown, slider, text area, validation, and submission
+
+goto_screen advanced_modals
+wait 0.5
+expect_text "Advanced Modals"
+
+# =========================================================================
+# Test 1: Open feedback modal and verify contents
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+
+expect_text "Submit Feedback"
+expect_text "Subject"
+expect_text "Category"
+expect_text "Severity"
+expect_text "Message"
+screenshot feedback_open
+
+# =========================================================================
+# Test 2: Try to submit with empty fields (validation)
+# =========================================================================
+focus_ui feedback_submit_btn
+wait 0.2
+key ENTER
+wait 0.3
+
+# Should show validation error
+expect_text "Subject and message are required"
+screenshot feedback_validation_error
+
+# =========================================================================
+# Test 3: Type subject
+# =========================================================================
+focus_ui feedback_subject_input
+wait 0.2
+type "Bug Report"
+wait 0.3
+expect_text "Bug Report"
+screenshot feedback_subject_typed
+
+# =========================================================================
+# Test 4: Change category dropdown
+# =========================================================================
+focus_ui feedback_cat_dropdown
+wait 0.2
+key ENTER
+wait 0.3
+
+# Select Feature (second option)
+key DOWN
+wait 0.2
+key ENTER
+wait 0.3
+screenshot feedback_category_changed
+
+# =========================================================================
+# Test 5: Adjust severity slider
+# =========================================================================
+focus_ui feedback_severity_slider
+wait 0.2
+
+# Increase severity with arrow keys
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.1
+key RIGHT
+wait 0.3
+screenshot feedback_severity_adjusted
+
+# =========================================================================
+# Test 6: Type message in text area
+# =========================================================================
+focus_ui feedback_message_input
+wait 0.2
+type "Found a layout issue with the modal overflow."
+wait 0.3
+screenshot feedback_message_typed
+
+# =========================================================================
+# Test 7: Submit with all fields filled
+# =========================================================================
+focus_ui feedback_submit_btn
+wait 0.2
+key ENTER
+wait 0.5
+
+# Should close and show success status
+expect_text "Feedback sent"
+screenshot feedback_submitted
+
+# =========================================================================
+# Test 8: Cancel button closes modal
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Submit Feedback"
+
+focus_ui feedback_cancel_btn
+wait 0.2
+key ENTER
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot feedback_cancelled
+
+# =========================================================================
+# Test 9: Escape key closes modal
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Submit Feedback"
+
+key ESCAPE
+wait 0.3
+
+expect_text "Advanced Modals"
+screenshot feedback_escape_close
+
+# =========================================================================
+# Test 10: Backdrop click closes modal
+# =========================================================================
+focus_ui btn_feedback
+wait 0.2
+key ENTER
+wait 0.5
+expect_text "Submit Feedback"
+
+click 50 50
+wait 0.5
+
+expect_text "Advanced Modals"
+screenshot feedback_backdrop_dismiss
+

@@ -1,0 +1,112 @@
+# Nested Clip Container Regression Tests
+# Verifies that clip containers (HasClipChildren, HasScrollView) nested
+# inside scroll views are properly clipped by the parent's scissor.
+#
+# 4 panels at ~12.5%, 37.5%, 62.5%, 87.5% x positions:
+#   Panel 1 (12%): Control — normal rows, no clip
+#   Panel 2 (37%): Rows with Overflow::Hidden (HasClipChildren)
+#   Panel 3 (62%): Overflow::Hidden wrapper around rows (nested clip)
+#   Panel 4 (87%): Scroll view inside scroll view
+
+goto_screen scroll_clip_bug
+wait 0.5
+
+# Verify screen loaded
+expect_text "Nested Clip Container Regression Tests"
+expect_text "1: Control"
+expect_text "2: ClipChild rows"
+expect_text "3: Nested wrapper"
+expect_text "4: Scroll in scroll"
+
+# Verify initial rows visible in all panels
+expect_text "Ctrl 1"
+expect_text "Clip 1"
+expect_text "Nest 1"
+expect_text "Inner 1"
+
+# Bottom rows should NOT be visible
+expect_no_text "Ctrl 20"
+expect_no_text "Clip 20"
+expect_no_text "Nest 20"
+expect_no_text "Inner 20"
+
+screenshot scroll_clip_initial
+
+# ── Panel 1: Scroll control column ──
+mouse_move 12% 55%
+wait 0.2
+scroll_wheel 0 -25
+wait 0.5
+
+expect_no_text "Ctrl 1"
+expect_text "Ctrl 15"
+
+screenshot scroll_clip_p1_scrolled
+
+# ── Panel 2: Scroll HasClipChildren rows ──
+mouse_move 37% 55%
+wait 0.2
+scroll_wheel 0 -25
+wait 0.5
+
+expect_no_text "Clip 1"
+expect_no_text "Clip 2"
+expect_text "Clip 15"
+
+screenshot scroll_clip_p2_scrolled
+
+# ── Panel 3: Scroll nested wrapper ──
+mouse_move 62% 55%
+wait 0.2
+scroll_wheel 0 -25
+wait 0.5
+
+expect_no_text "Nest 1"
+expect_no_text "Nest 2"
+expect_text "Nest 15"
+
+screenshot scroll_clip_p3_scrolled
+
+# ── Panel 4: Scroll outer (scroll-in-scroll) ──
+mouse_move 87% 55%
+wait 0.2
+scroll_wheel 0 -15
+wait 0.5
+
+screenshot scroll_clip_p4_outer_scrolled
+
+# Now scroll inner
+scroll_wheel 0 -20
+wait 0.5
+
+expect_text "Inner 15"
+
+screenshot scroll_clip_p4_inner_scrolled
+
+# ── Reset all panels ──
+mouse_move 12% 55%
+wait 0.1
+scroll_wheel 0 30
+wait 0.3
+
+mouse_move 37% 55%
+wait 0.1
+scroll_wheel 0 30
+wait 0.3
+
+mouse_move 62% 55%
+wait 0.1
+scroll_wheel 0 30
+wait 0.3
+
+mouse_move 87% 55%
+wait 0.1
+scroll_wheel 0 30
+wait 0.5
+
+expect_text "Ctrl 1"
+expect_text "Clip 1"
+expect_text "Nest 1"
+expect_text "Inner 1"
+
+screenshot scroll_clip_reset

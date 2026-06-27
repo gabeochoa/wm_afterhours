@@ -1,8 +1,8 @@
 #pragma once
 
+#include <deque>
 #include <string>
 #include <vector>
-#include <deque>
 
 namespace test_feedback {
 
@@ -15,7 +15,8 @@ struct Toast {
 
 extern std::deque<Toast> toasts;
 
-void show_toast(const std::string& message, const std::string& color = "info", float duration = 2.0f);
+void show_toast(const std::string &message, const std::string &color = "info",
+                float duration = 2.0f);
 void update_toasts(float dt);
 
 } // namespace test_feedback

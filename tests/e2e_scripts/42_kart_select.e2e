@@ -1,0 +1,107 @@
+# Kart Select Screen Test
+# Tests character grid selection, kart selection, and action buttons
+# on the racing game character/kart selection screen.
+
+# Navigate to the kart select screen
+goto_screen kart_select
+wait 0.5
+
+# =========================================================================
+# Verify initial state
+# =========================================================================
+expect_text "SELECT YOUR RACER"
+expect_text "Grand Prix - Mushroom Cup"
+expect_text "P1"
+
+# Character names should be visible in the grid
+expect_text "Turbo"
+expect_text "Blaze"
+expect_text "Drift"
+expect_text "Tank"
+expect_text "Zippy"
+expect_text "Rumble"
+expect_text "Flash"
+expect_text "Pebble"
+
+# Default selected character is Drift (index 2)
+# The preview panel should show Drift's stats
+expect_text "SPD 6/10"
+expect_text "ACC 6/10"
+expect_text "HND 9/10"
+expect_text "WGT 4/10"
+
+# Kart options
+expect_text "VEHICLE"
+expect_text "Standard"
+expect_text "Speedster"
+expect_text "Off-Road"
+expect_text "Classic"
+
+# Bottom bar should show current selection
+expect_text "Drift  +  Standard"
+
+# Action buttons
+expect_text "< Back"
+expect_text "READY!"
+
+screenshot kart_select_initial
+
+# =========================================================================
+# Test 1: Select a character via Tab + Enter
+# =========================================================================
+# Tab to the first focusable character button and select it
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+# Stats and bottom bar should update for whatever character was selected
+screenshot kart_select_character_changed
+
+# =========================================================================
+# Test 2: Continue tabbing through characters
+# =========================================================================
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot kart_select_second_character
+
+# =========================================================================
+# Test 3: Tab through to kart buttons and select one
+# =========================================================================
+# Keep tabbing to reach the kart section
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key TAB
+wait 0.2
+key ENTER
+wait 0.3
+
+screenshot kart_select_kart_changed
+
+# =========================================================================
+# Test 4: Verify all UI sections remain visible
+# =========================================================================
+expect_text "SELECT YOUR RACER"
+expect_text "VEHICLE"
+expect_text "< Back"
+expect_text "READY!"
+expect_text "A: Select"
+
+screenshot kart_select_final

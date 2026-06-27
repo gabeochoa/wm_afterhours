@@ -1,0 +1,72 @@
+# Feature: Word-level selection
+# Expected: Extend selection by one word at a time.
+#
+# Platform shortcuts:
+#   Windows/Linux: Ctrl+Shift+Left / Ctrl+Shift+Right
+#   macOS:         Option+Shift+Left / Option+Shift+Right
+#
+# Both should be mapped in InputAction (e.g., TextWordSelectLeft).
+
+goto_screen text_input
+wait 0.5
+
+focus_ui Username_input
+wait 0.2
+type "alpha beta gamma"
+wait 0.3
+
+# --- Windows/Linux: Ctrl+Shift+Arrow ---
+
+# Cursor is at end. Ctrl+Shift+Left should select "gamma"
+key CTRL+SHIFT+LEFT
+wait 0.2
+screenshot word_sel_01_ctrl_gamma
+
+# Another should extend to "beta gamma"
+key CTRL+SHIFT+LEFT
+wait 0.2
+screenshot word_sel_02_ctrl_beta_gamma
+
+# Another should select all: "alpha beta gamma"
+key CTRL+SHIFT+LEFT
+wait 0.2
+screenshot word_sel_03_ctrl_all
+
+# Move to start and select forward with Ctrl+Shift+Right
+key HOME
+wait 0.2
+
+# Ctrl+Shift+Right should select "alpha"
+key CTRL+SHIFT+RIGHT
+wait 0.2
+screenshot word_sel_04_ctrl_alpha_fwd
+
+# Extend to "alpha beta"
+key CTRL+SHIFT+RIGHT
+wait 0.2
+screenshot word_sel_05_ctrl_alpha_beta_fwd
+
+# --- macOS: Option+Shift+Arrow ---
+
+# Clear and retype
+key CTRL+A
+wait 0.1
+type "alpha beta gamma"
+wait 0.3
+
+# Alt+Shift+Left should select "gamma" (macOS Option+Shift+Left)
+key ALT+SHIFT+LEFT
+wait 0.2
+screenshot word_sel_06_opt_gamma
+
+# Extend to "beta gamma"
+key ALT+SHIFT+LEFT
+wait 0.2
+screenshot word_sel_07_opt_beta_gamma
+
+# Go to start, select forward with Alt+Shift+Right
+key HOME
+wait 0.2
+key ALT+SHIFT+RIGHT
+wait 0.2
+screenshot word_sel_08_opt_alpha_fwd

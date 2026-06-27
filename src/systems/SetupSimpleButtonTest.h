@@ -9,9 +9,8 @@ using namespace afterhours::ui::imm;
 struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
   int button_click_count = 0;
 
-  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context,
-                     float) override {
-    log_info("SetupSimpleButtonTest running");
+  void for_each_with(afterhours::Entity &entity,
+                     UIContext<InputAction> &context, float) override {
     int screen_width = Settings::get().get_screen_width();
     int screen_height = Settings::get().get_screen_height();
 
@@ -24,10 +23,11 @@ struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
         context, mk(entity, 0),
         ComponentConfig{}
             .with_label("Click Me")
-            .with_size(ComponentSize{pixels(button_width), pixels(button_height)})
+            .with_size(
+                ComponentSize{pixels(button_width), pixels(button_height)})
             .with_absolute_position()
             .with_translate(button_x, button_y)
-            .with_custom_color(afterhours::Color{100, 100, 200, 255})
+            .with_custom_background(afterhours::Color{100, 100, 200, 255})
             .with_font(UIComponent::DEFAULT_FONT, 24.0f)
             .with_debug_name("test_button"));
 
@@ -43,10 +43,11 @@ struct SetupSimpleButtonTest : afterhours::System<UIContext<InputAction>> {
     div(context, mk(entity, 1),
         ComponentConfig{}
             .with_label(counter_text)
-            .with_size(ComponentSize{pixels(button_width), pixels(counter_height)})
+            .with_size(
+                ComponentSize{pixels(button_width), pixels(counter_height)})
             .with_absolute_position()
             .with_translate(button_x, counter_y)
-            .with_custom_color(afterhours::Color{50, 50, 50, 200})
+            .with_custom_background(afterhours::Color{50, 50, 50, 200})
             .with_font(UIComponent::DEFAULT_FONT, 20.0f)
             .with_debug_name("click_counter"));
   }

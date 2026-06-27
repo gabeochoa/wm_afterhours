@@ -1,40 +1,50 @@
-**/x64/Debug/*
-**/x64/.vs/*
-*.dSYM
-.cache/
+# macOS
 .DS_Store
-**/.vs
-game.obj
-WinPharmaSea/**/
-pharmasea/WinPharmaSea/**/
-pharmasea.exe
-.obsidian/
-release/*
+*.dSYM
+
+# Build output
+output/
+build/
 *.o
 *.d
-cppcheck_err
+*.exe
+a.out
+*.trace
+src/screen_includes.gen
+
+# IDE/Editor
+.cache/
+.claude/commands/
+.claude/plugins/
+.claude/skills/
+.cursor/commands/
+.cursor/plugins/
+.cursor/settings.local.json
+.cursor/skills/
+.vscode/
+.vs/
+**/.vs
+**/x64/Debug/*
+**/x64/.vs/*
+
+# Profiling
+*.spall
 *.gcno
 *.gcov
-!/lib*.dylib
-a.out
-release*
+*.collapsed
 recording.trace/
-output/
-.vscode/
-# until they are used in the project, hiding the kennynl folder
-art_storage/*
-*.exe
-build/*
-.xmake/*
-settings.json
-.watchman*
-TODO.md 
-resources/sounds/possibles/*
-tools/dependency_graph
-
-# Profiling data files
-*.spall
-
-# ClangBuildAnalyzer output files
 build-analysis.html
 build-analysis.txt
+
+# Test artifacts
+tests/screenshots/
+test-failures/
+
+# Other
+.obsidian/
+.xmake/*
+.watchman*
+.venv/*
+
+# Note: vendor/afterhours should be a git submodule, not ignored
+wm_afterhours/
