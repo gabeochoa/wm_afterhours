@@ -3,6 +3,7 @@
 #include "../game.h"
 #include "../render_backend.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/window_manager.h>
 
 struct UpdateRenderTexture : afterhours::System<> {
@@ -16,10 +17,18 @@ struct UpdateRenderTexture : afterhours::System<> {
             afterhours::window_manager::ProvidesCurrentResolution>();
     if (pcr && pcr->current_resolution != resolution) {
       resolution = pcr->current_resolution;
-      raylib::UnloadRenderTexture(mainRT);
-      mainRT = raylib::LoadRenderTexture(resolution.width, resolution.height);
-      raylib::UnloadRenderTexture(screenRT);
-      screenRT = raylib::LoadRenderTexture(resolution.width, resolution.height);
+      if (afterhours::graphics::is_headless()) {
+        // mainRT is owned by the graphics backend in headless mode
+        raylib::UnloadRenderTexture(screenRT);
+        screenRT = raylib::LoadRenderTexture(resolution.width,
+                                             resolution.height);
+      } else {
+        raylib::UnloadRenderTexture(mainRT);
+        mainRT = raylib::LoadRenderTexture(resolution.width, resolution.height);
+        raylib::UnloadRenderTexture(screenRT);
+        screenRT = raylib::LoadRenderTexture(resolution.width,
+                                             resolution.height);
+      }
     }
   }
 };
