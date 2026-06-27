@@ -8,7 +8,8 @@ Headless CLI + E2E only. **Do not use MCP** (`--mcp`, `layout_test.py`, `screens
 make                          # build ui_tester
 make test                     # all E2E scripts, headless + quiet
 make test-visible             # E2E with visible window (debug)
-make run-all-tests            # coroutine tests, headless
+make run-all-tests            # FontConfig coroutine tests only (UI → E2E)
+make test-layout              # Catch2 autolayout (zero GPU)
 make validate-screenshots     # PNG regression vs baselines
 make ci                       # build + validate + coroutine + E2E
 ```
