@@ -31,3 +31,8 @@ int run_all_tests_headless();
 // screen. max_tabs controls how many tab presses per screen. Outputs to
 // g_headless_output_dir/focus_test/{screen}/tab_{n}.png
 void run_focus_ring_test(const std::string &screen_filter, int max_tabs);
+
+// Render one screen headlessly and print/write a flat layout summary.
+// output_path: file path, or "-" / empty for stdout. Returns 0 on success.
+int run_layout_summary(const std::string &screen_name, int width, int height,
+                       int frame_count, const std::string &output_path);

@@ -13,6 +13,7 @@
 #include "testing/test_app.h"
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
+#include "testing/layout_summary.h"
 #include <afterhours/src/graphics.h>
 
 #include <afterhours/src/plugins/e2e_testing/test_input.h>
@@ -23,6 +24,7 @@
 #include <afterhours/src/plugins/ui/ui_collection.h>
 #include <afterhours/src/plugins/ui/validation_systems.h>
 #include <filesystem>
+#include <iostream>
 
 // Globals defined in game.cpp
 extern raylib::RenderTexture2D mainRT;
@@ -474,6 +476,100 @@ void run_headless_screenshots() {
     run_headless_screenshots_at(res.width, res.height, res.label);
   }
   log_info("[Headless] All resolutions complete");
+}
+
+int run_layout_summary(const std::string &screen_name, int width, int height,
+                       int frame_count, const std::string &output_path) {
+  if (!ExampleScreenRegistry::get().has_screen(screen_name)) {
+    std::cerr << "Unknown screen: " << screen_name << "\n";
+    return 1;
+  }
+
+  afterhours::graphics::Config cfg;
+  cfg.display = afterhours::graphics::DisplayMode::Headless;
+  cfg.width = width;
+  cfg.height = height;
+  cfg.title = "Layout Summary";
+  cfg.target_fps = 60;
+
+  if (!afterhours::graphics::init(cfg)) {
+    std::cerr << "Failed to initialize headless graphics backend\n";
+    return 1;
+  }
+
+  Settings::get().update_resolution(
+      afterhours::window_manager::Resolution{.width = width, .height = height});
+
+  afterhours::files::init("Prime Pressure", "resources");
+
+  mainRT = afterhours::graphics::get_render_texture();
+  screenRT = raylib::LoadRenderTexture(width, height);
+  uiFont = load_font_headless(
+      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+          .string()
+          .c_str());
+
+  configure_validation();
+  setup_ecs_singletons(width, height);
+
+  int ui_entity_id = afterhours::EntityHelper::get_singleton<
+                         afterhours::ui::UIContext<InputAction>>()
+                         .get()
+                         .id;
+
+  reset_screen_state(ui_entity_id);
+  afterhours::SystemManager systems = create_screen_systems(screen_name);
+  if (!g_current_screen) {
+    raylib::UnloadFont(uiFont);
+    raylib::UnloadRenderTexture(screenRT);
+    afterhours::graphics::shutdown();
+    return 1;
+  }
+
+  const int passes = std::max(2, frame_count);
+  for (int pass = 0; pass < passes; ++pass) {
+    {
+      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+      systems.tick_all(entities, 0.016f);
+    }
+    {
+      auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+      systems.render(entities, 0.016f);
+    }
+    afterhours::EntityHelper::cleanup();
+  }
+
+  bool ok = false;
+  if (output_path.empty() || output_path == "-") {
+    ok = layout_summary::write(std::cout);
+  } else {
+    ok = layout_summary::write_to_file(output_path);
+  }
+
+  g_current_screen = nullptr;
+
+  for (const auto &e : afterhours::EntityHelper::get_entities()) {
+    if (!e)
+      continue;
+    e->cleanup = true;
+  }
+  afterhours::EntityHelper::cleanup();
+
+  {
+    auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
+    for (const auto &e : ui_coll.get_entities()) {
+      if (!e)
+        continue;
+      e->cleanup = true;
+    }
+    ui_coll.cleanup();
+  }
+
+  raylib::UnloadFont(uiFont);
+  raylib::UnloadRenderTexture(screenRT);
+  afterhours::graphics::shutdown();
+
+  return ok ? 0 : 1;
 }
 
 // ---------------------------------------------------------------------------

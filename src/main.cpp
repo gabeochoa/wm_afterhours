@@ -119,6 +119,12 @@ int main(int argc, char *argv[]) {
                  "mode (default: 1.0, e.g., 10.0 = 10x faster)\n";
     std::cout << "  --capture-interval <int>     Auto-capture screenshot every "
                  "N frames (0 = disabled)\n";
+    std::cout << "  --layout-summary <screen>    Print flat named-element "
+                 "bounds for one screen (headless)\n";
+    std::cout << "  --layout-output <path>       Write layout summary to file "
+                 "(default: stdout)\n";
+    std::cout << "  --frames <int>               Layout/render passes "
+                 "(default: 2)\n";
     std::cout << "\nFocus Ring Testing:\n";
     std::cout << "  --focus-test [screen]        Tab through screens capturing "
                  "focus ring screenshots\n";
@@ -165,6 +171,26 @@ int main(int argc, char *argv[]) {
   if (cmdl["--list-screens"]) {
     ExampleScreenRegistry::get().list_screens();
     return 0;
+  }
+
+  // Flat layout summary for one screen (headless, stdout by default)
+  {
+    std::string layout_screen;
+    if (cmdl({"--layout-summary"}) >> layout_screen) {
+      g_headless_mode = true;
+      int width = 1280;
+      int height = 720;
+      int frames = 2;
+      cmdl({"-w", "--width"}, 1280) >> width;
+      cmdl({"-h", "--height"}, 720) >> height;
+      cmdl({"--frames"}, 2) >> frames;
+
+      std::string layout_output = "-";
+      cmdl({"--layout-output"}) >> layout_output;
+
+      return run_layout_summary(layout_screen, width, height, frames,
+                                layout_output);
+    }
   }
 
   // Headless screenshots mode
