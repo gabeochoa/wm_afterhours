@@ -1,0 +1,12 @@
+# Migrated from coroutine TEST(simple_button_click)
+
+goto_screen simple_button
+wait 0.5
+
+click_button "Click Me!"
+wait 0.3
+expect_text "1 click!"
+
+click_button "Click Me!"
+wait 0.3
+expect_text "2 clicks!"

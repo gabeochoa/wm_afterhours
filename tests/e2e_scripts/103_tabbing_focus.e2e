@@ -1,0 +1,19 @@
+# Migrated from coroutine TEST(tabbing)
+
+goto_screen tabbing
+wait 0.5
+
+expect_text "OPTION A"
+expect_focused tab_button_0
+
+key TAB
+wait 0.2
+expect_focused tab_button_1
+
+key TAB
+wait 0.2
+expect_focused tab_button_2
+
+key ENTER
+wait 0.3
+expect_text "OPTION C (1)"
