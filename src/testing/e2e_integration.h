@@ -7,6 +7,8 @@
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
 #include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 
+#include <filesystem>
+
 namespace e2e {
 
 using namespace afterhours;
@@ -99,6 +101,7 @@ struct E2EArgs {
   bool update_baselines =
       false;                // Update baseline screenshots instead of comparing
   bool headless = false;    // Use headless graphics backend (no window)
+  bool quiet = false;       // Minimal stdout (for agent/CI loops)
   float time_scale = 1.0f;  // Time multiplier (1.0 = normal, 10.0 = 10x faster)
   int capture_interval = 0; // Auto-capture every N frames (0 = disabled)
 };
@@ -127,6 +130,8 @@ inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
       args.update_baselines = true;
     } else if (arg == "--headless") {
       args.headless = true;
+    } else if (arg == "--quiet") {
+      args.quiet = true;
     } else if (arg == "--time-scale" && i + 1 < argc) {
       args.time_scale = std::stof(argv[++i]);
     } else if (arg == "--capture-interval" && i + 1 < argc) {
@@ -135,6 +140,19 @@ inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
   }
 
   return args;
+}
+
+inline int count_e2e_scripts(const std::string &dir) {
+  if (dir.empty() || !std::filesystem::is_directory(dir)) {
+    return 0;
+  }
+  int count = 0;
+  for (const auto &entry : std::filesystem::directory_iterator(dir)) {
+    if (entry.path().extension() == ".e2e") {
+      ++count;
+    }
+  }
+  return count;
 }
 
 } // namespace e2e
