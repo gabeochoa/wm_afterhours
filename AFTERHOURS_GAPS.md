@@ -40,3 +40,58 @@ Each entry should include:
 - **Workaround**: None needed if focus rings render correctly. Needs manual verification with keyboard tabbing.
 - **Ideal fix**: If focus rings don't render on checkbox/toggle, the rendering pipeline should treat them the same as buttons for focus ring drawing.
 
+---
+
+## Session 2026-07-18 — visual audit of all 79 example screens
+
+Found via adversarial screenshot review of `make screenshots`. Several were
+root-caused and fixed directly in `vendor/afterhours` on branch
+`ui-layout-fixes` (pushed to origin). Listed here so upstream maintainers can
+review / adopt. **These are real library bugs, not just demo-code issues.**
+
+### 4. Render-command sort tiebreaks on recycled entity id (SEVERE) — FIXED (branch `fix-render-command-sort`)
+
+- **Issue**: In `RenderImm` and `RenderBatched` (`src/plugins/ui/rendering.h`), render commands were sorted by `(layer, entity.id)`. Entity IDs are **recycled** across screens/frames, so within a layer the id order is not the document (parent-before-child) order. An opaque-background ancestor that receives a *higher* recycled id than its own children sorts after them and **paints over its own children**, hiding titles, labels, first-row controls, and whole sections.
+- **Symptom**: Manifested as three seemingly-unrelated bugs — the `modals` screen rendering as scattered widgets with no dialog; radio/toggle/stepper groups missing the first item's control; and screenshot output changing across rebuilds (because recycled-id order shifts with allocation order). All the same bug.
+- **Root cause**: `render_cmds` is already queued in correct document pre-order; the id tiebreak destroyed that order within a layer.
+- **Fix**: Stable-sort by `layer` only (`std::ranges::stable_sort` / stable bubble sort on Win32), preserving queue order within a layer. Explicit `render_layer` still governs true z-order (dropdowns, modals, focus rings), so overlays are unaffected.
+- **Impact**: This is the single highest-value fix — it affected 76 of 79 screens. Strongly recommend upstreaming.
+
+### 5. `progress_bar` fill/label compound percent sizing against the track — FIXED (branch `ui-layout-fixes`)
+
+- **Issue**: In `progress_bar` (`src/plugins/ui/imm_components.h`), the fill and label are children of the track and absolutely positioned, but were sized with `config.size` (the *track's* size relative to *its* parent). A percent size therefore resolved against the track and **compounded** the fraction: a `percent(0.7)` height became 0.7 × 0.7 of the meter, and the fill width became `0.75 × value` instead of `value`. Result: fill is shorter/narrower than the track and visually offset from it.
+- **Affected**: any `progress_bar` sized with percent dimensions (e.g. `MetersGaugesShowcase` inline meters).
+- **Fix**: Size the fill as `percent(normalized) × percent(1.0)` and the label as `percent(1.0) × percent(1.0)` so both track the actual track box. Pixel-sized bars are unaffected.
+- **Ideal fix**: (adopted) child overlays of a widget should size relative to the widget box, never re-apply the widget's own outer size.
+
+### 6. `slider` handle position wrong on percent-sized tracks — FIXED (branch `ui-layout-fixes`)
+
+- **Issue**: In `slider` (`src/plugins/ui/imm_components.h`), the handle's left offset was `owned_value * 0.75 * track_val`. The handle is a child of the track, so for a Percent/ScreenPercent track a percent margin already resolves against the track width — multiplying by `track_val` again double-applied the fraction and pinned the knob near the start (an 80% slider showed the handle at ~30%).
+- **Affected**: `setting_row_showcase`, `forms`, `themes`, any percent-width slider.
+- **Fix**: Only multiply by `track_val` for Pixels dims (where the fraction must be converted to pixels); for percent dims use the raw fraction. Same root cause family as #5.
+- **Note**: The handle range still uses a `0.75` compression factor so the knob's center never quite reaches the value position at 100%. Not fixed (cosmetic); upstream may want to revisit the handle-width/position model.
+
+### 7. `stepper` with `num_visible > 1` renders labels with no separation — FIXED (branch `ui-layout-fixes`)
+
+- **Issue**: A multi-visible stepper (prev/current/next) put its labels in a `children()`-sized container with `JustifyContent::SpaceAround`. Because the container shrinks to content, SpaceAround has no free space to distribute, so the labels butt together ("Healer"+"Warrior"+"Mage" → "HealerWarriorMage").
+- **Affected**: `StepperShowcase` card selector.
+- **Fix**: Add a gap (12px) and `no_wrap` when `num_visible > 1`; `num_visible == 1` keeps a 0px gap so single-value steppers are byte-identical.
+
+### 8. `tab_container` forces equal 1/N tab widths → long labels ellipsize (OPEN)
+
+- **Issue**: `tab_container` gives every tab `percent(1/N)` width. When some labels are longer than an equal slice, they ellipsize even if the bar has room and shorter tabs have slack (e.g. "GENERAL"/"GAMEPLAY" truncate next to "VIDEO"/"AUDIO").
+- **Affected**: `powerwash_settings`, `sports_settings`, `mini_motorways_settings`, `flight_options`, `kirby_options`.
+- **Workaround (per-screen)**: fill the bar width (`percent(1.0)`) and, for crowded bars, reduce tab font + `no_wrap`. Done in the affected screens on `ui-layout-fixes`.
+- **Ideal fix**: `tab_container` should size each tab to at least its content width (content-fit, or `max(1/N, text_width)` with the remainder distributed), rather than a hard equal split that truncates.
+
+### 9. No word-wrap for static labels (FEATURE GAP)
+
+- **Issue**: `with_word_wrap()` exists only for text-area (input) components. Static `div`/label text renders on a single line and clips or overflows its box; there is no way to wrap a long label to multiple lines.
+- **Affected**: `nine_slice_borders` dialog, `example_borders` card labels, `stepper_showcase`/`fighter_menu` descriptions — all worked around by shortening text or shrinking font.
+- **Ideal fix**: support word-wrap on any labeled component sized with a bounded width + `children()`/fixed height, wrapping to N lines. This would remove a whole class of per-screen "shorten the text" workarounds.
+
+### 10. Batch/headless renderer omits `systems.run()` ordering (TOOLING, not library)
+
+- **Issue**: `src/headless_screenshots.cpp` drove each screen with a manual `tick_all()` + `render()` split and only 2 passes, instead of `systems.run()`. Combined with #4 (recycled ids), this made screenshot baselines non-deterministic across rebuilds. Documented here only because it interacts with the render-order bug; the real fix was #4. If upstream ships a headless capture helper, it should use `systems.run()` and settle to convergence.
+
+
