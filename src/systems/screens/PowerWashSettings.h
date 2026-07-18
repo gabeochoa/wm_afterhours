@@ -351,7 +351,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ── Tab bar ──
     tab_container(context, mk(root.ent()), tabs, active_tab,
                   ComponentConfig{}
-                      .with_size(ComponentSize{pixels(540), pixels(44)})
+                      .with_size(ComponentSize{percent(1.0f), pixels(44)})
                       .with_margin(Margin{.top = pixels(15)}));
 
     // ── Bottom button prompts ──

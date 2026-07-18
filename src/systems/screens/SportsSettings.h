@@ -371,7 +371,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     tab_container(
         context, mk(tab_area.ent(), 0), tabs, active_tab,
-        ComponentConfig{}.with_size(ComponentSize{pixels(520), pixels(35)}));
+        ComponentConfig{}.with_size(ComponentSize{percent(1.0f), pixels(35)}));
 
     // ═══════════════════════════════════════════════════════════════
     // SECTION HEADER

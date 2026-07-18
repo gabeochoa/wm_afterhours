@@ -101,11 +101,15 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_text_color(text_dark));
 
     // ── Tab bar ──
+    // 7 categories in one row: slightly smaller font + no-wrap so the longest
+    // label ("Cross-Save") fits without truncating.
     tab_container(
         context, mk(root.ent()), categories, active_tab,
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(660), pixels(48)})
-            .with_margin(Margin{.top = pixels(10), .left = pixels(145)}));
+            .with_size(ComponentSize{percent(1.0f), pixels(48)})
+            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
+            .with_no_wrap()
+            .with_margin(Margin{.top = pixels(10)}));
 
     // ── Content area ──
     auto content =
