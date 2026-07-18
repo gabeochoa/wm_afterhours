@@ -70,7 +70,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     Theme theme;
     theme.font = text_dark;
     theme.darkfont = text_white;
-    theme.font_muted = text_muted;
+    theme.font_muted = afterhours::Color{225, 215, 195, 255};
     theme.background = bg_green;
     theme.surface = panel_cream;
     theme.primary = header_coral;
