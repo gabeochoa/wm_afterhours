@@ -181,6 +181,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_rounded_corners(RoundedCorners().all_sharp())
                      .with_align_items(AlignItems::Center)
                      .with_justify_content(JustifyContent::Center)
+                     .with_gap(pixels(8.0f))
                      .with_padding(Spacing::sm)
                      .with_margin(Margin{.top = pixels(12.0f)})
                      .with_debug_name("bracket_panel_3"))
