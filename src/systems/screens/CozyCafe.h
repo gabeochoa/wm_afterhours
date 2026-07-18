@@ -341,15 +341,19 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       auto &c = waiting_customers[i];
       float row_y = cust_y + (float)i * 90.0f;
 
-      // Name - Order (18.0f minimum font)
+      // Name - Order (own line, full width so it never collides with the
+      // patience row below it)
       div(context, mk(entity, 210 + static_cast<int>(i) * 10),
           ComponentConfig{}
               .with_label(c.name + " - " + c.order)
-              .with_size(ComponentSize{pixels(180), pixels(36)})
+              .with_size(ComponentSize{pixels(right_panel_w - 40), pixels(30)})
               .with_absolute_position(right_panel_x + 20.0f, row_y)
               .with_font("Gaegu-Bold", h720(24.0f))
               .with_custom_text_color(dark_text)
               .with_debug_name("cust_" + std::to_string(i)));
+
+      // Patience row sits BELOW the name
+      float prow_y = row_y + 34.0f;
 
       // Patience label with warning text for low patience
       bool low_patience = c.progress < 0.35f;
@@ -358,7 +362,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(patience_text)
               .with_size(ComponentSize{pixels(110), pixels(22)})
-              .with_absolute_position(right_panel_x + 190.0f, row_y + 6.0f)
+              .with_absolute_position(right_panel_x + 20.0f, prow_y + 6.0f)
               .with_font("Gaegu-Bold", h720(14.0f))
               .with_custom_text_color(low_patience ? badge_red
                                                    : theme.font_muted));
@@ -367,7 +371,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 211 + static_cast<int>(i) * 10),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(84), pixels(30)})
-              .with_absolute_position(right_panel_x + 290.0f, row_y + 3.0f)
+              .with_absolute_position(right_panel_x + 150.0f, prow_y + 3.0f)
               .with_custom_background(brown_header)
               .with_rounded_corners(RoundedCorners())
               .with_roundness(0.4f)
@@ -378,7 +382,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 212 + static_cast<int>(i) * 10),
             ComponentConfig{}
                 .with_size(ComponentSize{pxf(76 * c.progress), pixels(24)})
-                .with_absolute_position(right_panel_x + 274.0f, row_y + 6.0f)
+                .with_absolute_position(right_panel_x + 134.0f, prow_y + 6.0f)
                 .with_custom_background(afterhours::Color{175, 200, 165, 255})
                 .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.4f)
@@ -392,7 +396,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label(std::to_string(prog_val) + "%")
                 .with_size(ComponentSize{pixels(54), pixels(24)})
-                .with_absolute_position(right_panel_x + 285.0f, row_y + 6.0f)
+                .with_absolute_position(right_panel_x + 145.0f, prow_y + 6.0f)
                 .with_font("Gaegu-Bold", h720(15.0f))
                 .with_custom_text_color(cream_surface)
                 .with_alignment(TextAlignment::Center)
@@ -405,7 +409,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
           ComponentConfig{}
               .with_label(std::to_string(c.wait_time) + "m")
               .with_size(ComponentSize{pixels(52), pixels(32)})
-              .with_absolute_position(right_panel_x + 365.0f, row_y + 2.0f)
+              .with_absolute_position(right_panel_x + 245.0f, prow_y + 2.0f)
               .with_custom_background(time_bg)
               .with_custom_text_color(cream_surface)
               .with_rounded_corners(RoundedCorners())
