@@ -49,6 +49,17 @@ root-caused and fixed directly in `vendor/afterhours` on branch
 `ui-layout-fixes` (pushed to origin). Listed here so upstream maintainers can
 review / adopt. **These are real library bugs, not just demo-code issues.**
 
+**Repro tests**: `vendor/afterhours/examples/gaps_repro_test.cpp` contains
+minimal, runnable reproductions for #4–#8 (and regression coverage for #11,
+#12). Each test asserts the *correct* behavior, so it fails on a pristine
+(buggy) tree and passes once fixed. Build & run:
+```
+cd vendor/afterhours
+clang++ -std=c++23 -I.. -Ivendor examples/gaps_repro_test.cpp -o /tmp/gaps_repro_test
+/tmp/gaps_repro_test
+```
+
+
 ### 4. Render-command sort tiebreaks on recycled entity id (SEVERE) — FIXED (branch `fix-render-command-sort`)
 
 - **Issue**: In `RenderImm` and `RenderBatched` (`src/plugins/ui/rendering.h`), render commands were sorted by `(layer, entity.id)`. Entity IDs are **recycled** across screens/frames, so within a layer the id order is not the document (parent-before-child) order. An opaque-background ancestor that receives a *higher* recycled id than its own children sorts after them and **paints over its own children**, hiding titles, labels, first-row controls, and whole sections.
@@ -93,5 +104,20 @@ review / adopt. **These are real library bugs, not just demo-code issues.**
 ### 10. Batch/headless renderer omits `systems.run()` ordering (TOOLING, not library)
 
 - **Issue**: `src/headless_screenshots.cpp` drove each screen with a manual `tick_all()` + `render()` split and only 2 passes, instead of `systems.run()`. Combined with #4 (recycled ids), this made screenshot baselines non-deterministic across rebuilds. Documented here only because it interacts with the render-order bug; the real fix was #4. If upstream ships a headless capture helper, it should use `systems.run()` and settle to convergence.
+
+### 11. `progress_bar` track compounds percent size against the bar entity — FIXED (branch `ui-layout-fixes`)
+
+- **Issue**: Discovered while writing the repro test for #5. `progress_bar` creates its `progress_track` as a child of the `progress_bar` entity, but sized the track with `config.size` — the same size the entity already has. A percent size therefore compounds: a `progress_bar` sized `percent(0.7)` tall gets a track that is `0.7 * 0.7` = 49% of the parent, not 70%. (This is distinct from #5, which was the fill/label compounding against the track.)
+- **Affected**: any `progress_bar` sized with percent dimensions.
+- **Fix**: the track now fills the entity with `percent(1.0) x percent(1.0)`; the fill/label (see #5) then fill the track. Pixel-sized bars unaffected.
+- **Repro**: `gaps_repro_test.cpp::progress_bar_fill_fills_track_height_percent` (asserts `track.height == 70` and `fill.height == track.height`).
+
+### 12. `Dim::Children` sizing ignores `flex_gap` — FIXED (branch `ui-layout-fixes`)
+
+- **Issue**: Discovered while writing the repro test for #7. A container sized with `children()` sums its children's sizes but did **not** add the `flex_gap`. So a `children()`-sized flex container with a gap is too narrow — the gap pushes the children apart and they overflow/overlap the parent. This is why the stepper (#7) label separation didn't "take" from the gap alone.
+- **Affected**: any `children()`-sized container that also sets a gap (e.g. `stepper` multi-visible label row).
+- **Fix**: `_sum_children_axis_for_child_exp` in `autolayout.h` now adds `gap * (visible_children - 1)` on the main axis.
+- **Repro**: `gaps_repro_test.cpp::stepper_multi_visible_labels_separated` (asserts the label container is wider than the sum of its labels).
+
 
 
