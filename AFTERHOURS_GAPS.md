@@ -49,14 +49,20 @@ root-caused and fixed directly in `vendor/afterhours` on branch
 `ui-layout-fixes` (pushed to origin). Listed here so upstream maintainers can
 review / adopt. **These are real library bugs, not just demo-code issues.**
 
-**Repro tests**: `vendor/afterhours/examples/gaps_repro_test.cpp` contains
-minimal, runnable reproductions for #4–#8 (and regression coverage for #11,
-#12). Each test asserts the *correct* behavior, so it fails on a pristine
-(buggy) tree and passes once fixed. Build & run:
+**Regression tests**: added as normal, permanent `examples/*_test.cpp` suites
+(same harness as `autolayout_test.cpp`; imm widgets use the shared
+`examples/ui_test_harness.h`). Each asserts the *correct* behavior, so it fails
+on a pristine (buggy) tree and passes once fixed:
+- `examples/render_order_test.cpp` — #4 render-command ordering
+- `examples/progress_bar_test.cpp` — #5, #11 progress_bar sizing
+- `examples/slider_test.cpp` — #6 slider handle position
+- `examples/stepper_test.cpp` — #7 multi-visible label separation
+- `examples/tab_container_test.cpp` — #8 content-fit tab widths
+- `examples/autolayout_test.cpp` (`gap_children_sizing_*`) — #12 children()+gap
+
+Build & run any suite (from `vendor/afterhours`):
 ```
-cd vendor/afterhours
-clang++ -std=c++23 -I.. -Ivendor examples/gaps_repro_test.cpp -o /tmp/gaps_repro_test
-/tmp/gaps_repro_test
+clang++ -std=c++23 -I.. -Ivendor examples/progress_bar_test.cpp -o /tmp/t && /tmp/t
 ```
 
 
@@ -110,14 +116,14 @@ clang++ -std=c++23 -I.. -Ivendor examples/gaps_repro_test.cpp -o /tmp/gaps_repro
 - **Issue**: Discovered while writing the repro test for #5. `progress_bar` creates its `progress_track` as a child of the `progress_bar` entity, but sized the track with `config.size` — the same size the entity already has. A percent size therefore compounds: a `progress_bar` sized `percent(0.7)` tall gets a track that is `0.7 * 0.7` = 49% of the parent, not 70%. (This is distinct from #5, which was the fill/label compounding against the track.)
 - **Affected**: any `progress_bar` sized with percent dimensions.
 - **Fix**: the track now fills the entity with `percent(1.0) x percent(1.0)`; the fill/label (see #5) then fill the track. Pixel-sized bars unaffected.
-- **Repro**: `gaps_repro_test.cpp::progress_bar_fill_fills_track_height_percent` (asserts `track.height == 70` and `fill.height == track.height`).
+- **Repro**: `progress_bar_test.cpp::progress_bar_percent_sizing_fills_track` (asserts `track.height == 70` and `fill.height == track.height`).
 
 ### 12. `Dim::Children` sizing ignores `flex_gap` — FIXED (branch `ui-layout-fixes`)
 
 - **Issue**: Discovered while writing the repro test for #7. A container sized with `children()` sums its children's sizes but did **not** add the `flex_gap`. So a `children()`-sized flex container with a gap is too narrow — the gap pushes the children apart and they overflow/overlap the parent. This is why the stepper (#7) label separation didn't "take" from the gap alone.
 - **Affected**: any `children()`-sized container that also sets a gap (e.g. `stepper` multi-visible label row).
 - **Fix**: `_sum_children_axis_for_child_exp` in `autolayout.h` now adds `gap * (visible_children - 1)` on the main axis.
-- **Repro**: `gaps_repro_test.cpp::stepper_multi_visible_labels_separated` (asserts the label container is wider than the sum of its labels).
+- **Repro**: `stepper_test.cpp::stepper_multi_visible_labels_separated` (asserts the label container is wider than the sum of its labels).
 
 
 
