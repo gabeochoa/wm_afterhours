@@ -251,7 +251,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
         tree_view(context, tree_pair, cached_roots, view_config,
                   ComponentConfig{}
                       .with_size(ComponentSize{percent(1.0f), expand()})
-                      .with_custom_background(theme.background)
+                      .with_custom_background(theme.surface)
                       .with_debug_name("file_tree"));
 
     // Invalidate children cache when a directory is expanded/collapsed

@@ -214,6 +214,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.35f), percent(1.0f)})
                    .with_custom_background(panel_bg)
                    .with_padding(Spacing::sm)
+                   .with_no_wrap()
                    .with_margin(Margin{.left = pixels(4)})
                    .with_debug_name("patterns"));
 

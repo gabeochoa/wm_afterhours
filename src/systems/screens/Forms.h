@@ -197,6 +197,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.9f))
                    .with_padding(Spacing::sm)
+                   .with_no_wrap()
                    .with_overflow(Overflow::Scroll, Axis::Y));
 
     // Checkboxes section header - font_size_md for section headers
