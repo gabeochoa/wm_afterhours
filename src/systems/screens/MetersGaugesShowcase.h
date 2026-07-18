@@ -136,7 +136,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
       // Progress bar with rounded corners and visible track
       progress_bar(context, mk(meter.ent(), 1), meters[m].value,
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.75f), percent(0.7f)})
+                       .with_size(ComponentSize{percent(0.75f), pixels(28)})
                        .with_custom_background(meters[m].color)
                        .with_background(Theme::Usage::Custom)
                        .with_font(FONT, pixels(14.0f))
@@ -341,7 +341,16 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(FONT, pixels(16.0f))
             .with_skip_tabbing(true));
 
-    slider(context, mk(row5.ent(), 1), control_value,
+    // Slider in a left-aligned row (mirrors the animated-progress row) so the
+    // 70%-wide slider anchors at the left instead of drifting off the right.
+    auto slider_row =
+        hstack(context, mk(row5.ent(), 1),
+               ComponentConfig{}
+                   .with_size(ComponentSize{percent(1.0f), percent(0.6f)})
+                   .with_background(Theme::Usage::Surface)
+                   .with_align_items(AlignItems::Center));
+
+    slider(context, mk(slider_row.ent(), 0), control_value,
            ComponentConfig{}
                .with_label("Value")
                .with_size(ComponentSize{percent(0.7f), pixels(36)})
