@@ -312,8 +312,8 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_label(
                   fmt::format("{}%", static_cast<int>(gauges[g].value * 100)))
               .with_size(ComponentSize{percent(0.8f), percent(0.18f)})
-              .with_background(Theme::Usage::Surface)
-              .with_auto_text_color(true)
+              .with_custom_text_color(theme.font)
+              .with_alignment(TextAlignment::Center)
               .with_font(FONT, pixels(16.0f))
               .with_skip_tabbing(true)
               .with_debug_name(fmt::format("{}_label", gauges[g].name)));
