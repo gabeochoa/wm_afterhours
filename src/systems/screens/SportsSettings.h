@@ -491,7 +491,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label(setting.label)
-                     .with_size(ComponentSize{pixels(175), percent(1.0f)})
+                     .with_size(ComponentSize{pixels(210), percent(1.0f)})
                      .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(label_color)
                      .with_text_overflow(TextOverflow::Ellipsis)
@@ -526,7 +526,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(row.ent(), 3),
           ComponentConfig{}
               .with_label(display_value)
-              .with_size(ComponentSize{pixels(240), percent(1.0f)})
+              .with_size(ComponentSize{pixels(205), percent(1.0f)})
               .with_font("EqProRounded", pixels(16.0f))
               .with_custom_text_color(value_color)
               .with_alignment(TextAlignment::Center)
