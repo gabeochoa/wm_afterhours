@@ -262,11 +262,14 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Manual tab buttons to avoid expand() height issues in absolute
-    // positioning
+    // positioning. Stacked VERTICALLY in the left menu column: six long
+    // category labels ("Sound & Language", etc.) don't fit in a horizontal row
+    // without overrunning the character panel, and a vertical nav matches the
+    // left-column layout.
     {
-      float tab_total_w = menu_item_w + 400.0f;
-      float tab_item_w = tab_total_w / static_cast<float>(option_labels.size());
+      float tab_w = menu_item_w;
       float tab_h = 44.0f;
+      float tab_gap = 6.0f;
       for (size_t i = 0; i < option_labels.size(); i++) {
         bool is_active = (i == active_tab);
         afterhours::Color tab_bg_color =
@@ -280,29 +283,27 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                 ? context.theme.accent
                 : afterhours::colors::darken(context.theme.background, 0.80f);
         float underline_h = is_active ? 4.0f : 1.0f;
+        float row_y = menu_y + static_cast<float>(i) * (tab_h + tab_gap);
 
         if (button(context, mk(entity, 100 + static_cast<int>(i)),
                    ComponentConfig{}
                        .with_label(option_labels[i])
                        .with_size(ComponentSize{
-                           pixels(static_cast<int>(tab_item_w)),
+                           pixels(static_cast<int>(tab_w)),
                            pixels(static_cast<int>(tab_h - underline_h))})
-                       .with_absolute_position(
-                           menu_x + static_cast<float>(i) * tab_item_w, menu_y)
+                       .with_absolute_position(menu_x, row_y)
                        .with_custom_background(tab_bg_color)
                        .with_custom_text_color(tab_text_color)
-                       .with_font("EqProRounded", h720(14.0f))
+                       .with_font("EqProRounded", h720(16.0f))
                        .with_alignment(TextAlignment::Center))) {
           active_tab = i;
         }
-        // Underline
+        // Active-tab left accent bar (vertical indicator).
         div(context, mk(entity, 110 + static_cast<int>(i)),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(static_cast<int>(tab_item_w)),
-                                         pixels(static_cast<int>(underline_h))})
-                .with_absolute_position(menu_x +
-                                            static_cast<float>(i) * tab_item_w,
-                                        menu_y + tab_h - underline_h)
+                .with_size(ComponentSize{pixels(static_cast<int>(underline_h)),
+                                         pixels(static_cast<int>(tab_h - 4))})
+                .with_absolute_position(menu_x, row_y + 2.0f)
                 .with_custom_background(underline_color));
       }
     }
