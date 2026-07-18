@@ -199,7 +199,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(sample_white)
             .with_border(afterhours::Color{80, 80, 80, 255}, 2.0f)
             .with_hard_shadow(5.0f, 5.0f, afterhours::Color{0, 0, 0, 120})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
 
@@ -212,7 +212,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{100, 100, 100, 255}, 1.0f)
             .with_rounded_corners(RoundedCorners())
             .with_soft_shadow(4.0f, 6.0f, 14.0f, afterhours::Color{0, 0, 0, 80})
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
 
@@ -302,7 +302,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{0, 0, 0, 0})
             .with_border(text_light, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
             .with_custom_text_color(text_light)
             .with_alignment(TextAlignment::Center));
 
@@ -420,7 +420,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x, row5_y)
             .with_custom_background(sample_white)
             .with_border_top(accent_blue, pixels(3.0f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
 
@@ -431,7 +431,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x + ps_box + gap, row5_y)
             .with_custom_background(sample_white)
             .with_border_bottom(accent_cyan, pixels(3.0f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
 
@@ -443,7 +443,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(sample_white)
             .with_border_left(accent_orange, pixels(3.0f))
             .with_border_right(accent_orange, pixels(3.0f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
 
@@ -457,7 +457,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border_right(accent_cyan, pixels(2.0f))
             .with_border_bottom(accent_orange, pixels(3.0f))
             .with_border_left(text_light, pixels(2.0f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
 
@@ -469,7 +469,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(sample_white)
             .with_border_bottom(afterhours::Color{200, 60, 60, 255},
                                 pixels(4.0f))
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
   }
