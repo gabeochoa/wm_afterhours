@@ -76,7 +76,13 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()}));
 
-    raylib::Rectangle full_src{0, 0, 128, 128};
+    // Source rect must match each texture's real size — sampling a larger
+    // region than the texture (these icons are 100x100, not 128x128) reads past
+    // the edge and shows adjacent/garbage pixels as bleed.
+    auto tex_src = [](const raylib::Texture2D &t) {
+      return raylib::Rectangle{0, 0, static_cast<float>(t.width),
+                               static_cast<float>(t.height)};
+    };
 
     // Row 1: sprite() demo
     auto row1 = hstack(context, mk(main_container.ent(), 1),
@@ -107,7 +113,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_margin(Spacing::xs)
                      .with_debug_name("sprite_wrapper_" + std::to_string(idx)));
 
-      sprite(context, mk(sprite_wrapper.ent(), 0), tex, full_src,
+      sprite(context, mk(sprite_wrapper.ent(), 0), tex, tex_src(tex),
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(56), pixels(56)})
                  .with_debug_name("sprite_icon_" + std::to_string(idx)));
@@ -159,7 +165,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_margin(Spacing::xs)
                      .with_debug_name("btn_wrapper_" + std::to_string(idx)));
 
-      if (image_button(context, mk(btn_wrapper.ent(), 0), tex, full_src,
+      if (image_button(context, mk(btn_wrapper.ent(), 0), tex, tex_src(tex),
                        ComponentConfig{}
                            .with_size(ComponentSize{pixels(64), pixels(64)})
                            .with_background(bg_usage)
@@ -224,7 +230,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_margin(Spacing::xs)
                    .with_debug_name("image_container"));
 
-    sprite(context, mk(img_container.ent(), 0), gear_tex, full_src,
+    sprite(context, mk(img_container.ent(), 0), gear_tex, tex_src(gear_tex),
            ComponentConfig{}
                .with_size(ComponentSize{pixels(48), pixels(48)})
                .with_debug_name("container_gear"));
@@ -281,7 +287,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                      .with_align_items(AlignItems::Center)
                      .with_debug_name("icon_wrapper_" + std::to_string(idx)));
 
-      sprite(context, mk(icon_wrapper.ent(), 0), tex, full_src,
+      sprite(context, mk(icon_wrapper.ent(), 0), tex, tex_src(tex),
              ComponentConfig{}
                  .with_size(ComponentSize{pixels(56), pixels(56)})
                  .with_debug_name("icon_" + std::to_string(idx)));
