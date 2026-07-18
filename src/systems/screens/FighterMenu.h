@@ -107,12 +107,14 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     std::string description;
   };
   std::vector<MenuOption> menu_options = {
-      {"F1", "System Options", "Vibration, save data, autosave."},
-      {"F2", "Game Options", "Difficulty and match settings."},
-      {"F3", "Display Options", "Resolution and visual effects."},
-      {"F4", "Sound & Language", "Audio levels and language."},
-      {"F5", "Network Options", "Online play and connection."},
-      {"F6", "Button Settings", "Remap controls and key bindings."},
+      {"F1", "System Options",
+       "Configure vibration, save data, and autosave settings."},
+      {"F2", "Game Options", "Adjust gameplay difficulty and match settings."},
+      {"F3", "Display Options", "Modify screen resolution and visual effects."},
+      {"F4", "Sound & Language", "Set audio levels and language preferences."},
+      {"F5", "Network Options",
+       "Configure online play and connection settings."},
+      {"F6", "Button Settings", "Remap controller layout and key bindings."},
   };
 
   void for_each_with(afterhours::Entity &entity,
@@ -446,6 +448,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pxf(card_w - 60), pixels(90)})
             .with_absolute_position(card_x + 35.0f, card_y + 250.0f)
             .with_font("EqProRounded", h720(15.0f))
+            .with_text_overflow(TextOverflow::Wrap)
             .with_custom_text_color(afterhours::Color{50, 50, 55, 255}));
 
     // ========== BOTTOM BUTTON PROMPTS ==========

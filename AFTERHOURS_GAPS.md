@@ -58,6 +58,7 @@ on a pristine (buggy) tree and passes once fixed:
 - `examples/slider_test.cpp` — #6 slider handle position
 - `examples/stepper_test.cpp` — #7 multi-visible label separation
 - `examples/tab_container_test.cpp` — #8 content-fit tab widths
+- `examples/text_wrap_test.cpp` — #9 static-label word-wrap
 - `examples/autolayout_test.cpp` (`gap_children_sizing_*`) — #12 children()+gap
 
 Build & run any suite (from `vendor/afterhours`):
@@ -101,11 +102,14 @@ clang++ -std=c++23 -I.. -Ivendor examples/progress_bar_test.cpp -o /tmp/t && /tm
 - **Fix**: Tabs now use `expand()` width (even distribution — identical look for short labels) with a per-tab `min_width` of `Dim::Text` (the tab's own measured label), so a tab never shrinks below its content. Also added `Dim::Text` support to `resolve_constraint()` in `autolayout.h` so min/max-by-text works generally.
 - **Remaining**: very crowded bars (many long labels summing past the bar width — e.g. flight_options' 9 tabs at the default font) still need a smaller font at the call site; content-fit only removes truncation when the labels *can* fit.
 
-### 9. No word-wrap for static labels (FEATURE GAP)
+### 9. No word-wrap for static labels (FEATURE GAP) — ADDED (branch `ui-layout-fixes`)
 
-- **Issue**: `with_word_wrap()` exists only for text-area (input) components. Static `div`/label text renders on a single line and clips or overflows its box; there is no way to wrap a long label to multiple lines.
-- **Affected**: `nine_slice_borders` dialog, `example_borders` card labels, `stepper_showcase`/`fighter_menu` descriptions — all worked around by shortening text or shrinking font.
-- **Ideal fix**: support word-wrap on any labeled component sized with a bounded width + `children()`/fixed height, wrapping to N lines. This would remove a whole class of per-screen "shorten the text" workarounds.
+- **Issue**: `with_word_wrap()` existed only for text-area (input) components. Static `div`/label text rendered on a single line and clipped or overflowed its box; there was no way to wrap a long label to multiple lines.
+- **Affected**: `nine_slice_borders` dialog, `example_borders` card labels, `stepper_showcase`/`fighter_menu` descriptions — previously worked around by shortening text or shrinking font.
+- **Fix**: added `TextOverflow::Wrap`. When a label uses it and has an explicit font size, both render paths (`RenderImm` and `RenderBatched`) greedily wrap the text to lines that fit the box width and stack them vertically-centered. Opt-in (default stays `Clip`), so no existing screen changes. Shared helper `detail::wrap_text_to_width()` keeps the two paths in sync.
+- **Usage**: `.with_text_overflow(TextOverflow::Wrap)` on a label with `.with_font(..., size)` and a bounded width + enough height for the lines.
+- **Repro/coverage**: `examples/text_wrap_test.cpp`. Demonstrated live on `fighter_menu` (card descriptions now wrap instead of clipping).
+- **Remaining**: a single word wider than the box is placed on its own line (no hard character break); wrap requires an explicit font size (auto-fit + wrap is ambiguous).
 
 ### 10. Batch/headless renderer omits `systems.run()` ordering (TOOLING, not library)
 
