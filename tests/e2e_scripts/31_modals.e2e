@@ -24,6 +24,12 @@ wait 0.5
 expect_text "Basic Modal"
 expect_text "This is a simple modal dialog"
 
+# Modal must be CENTERED on the 1280x720 screen (400x200 dialog).
+# Regression guard: it previously rendered at the top-left (0,0) because the
+# centered position was poked into computed_rel and then overwritten by the
+# autolayout pass. Fixed by using with_absolute_position(x, y) in modal.h.
+assert_ui modal x=440 y=260 w=400 h=200
+
 # Take screenshot of open modal
 screenshot modals_basic_open
 
