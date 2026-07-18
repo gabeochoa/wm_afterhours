@@ -94,8 +94,9 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(text_cyan));
 
     // ── Tab bar ──
-    // 9 categories in one row: use a smaller font and no-wrap so long labels
-    // ("FLIGHT SYS", "FLT STICK") fit without truncating or wrapping.
+    // 9 categories in one row: smaller font + no-wrap so all labels fit on one
+    // row (content-fit tab sizing alone can't help when the summed label width
+    // at the default font exceeds the bar).
     tab_container(context, mk(root.ent()), categories, active_tab,
                   ComponentConfig{}
                       .with_size(ComponentSize{percent(1.0f), pixels(32)})

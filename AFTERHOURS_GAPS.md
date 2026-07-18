@@ -77,12 +77,12 @@ review / adopt. **These are real library bugs, not just demo-code issues.**
 - **Affected**: `StepperShowcase` card selector.
 - **Fix**: Add a gap (12px) and `no_wrap` when `num_visible > 1`; `num_visible == 1` keeps a 0px gap so single-value steppers are byte-identical.
 
-### 8. `tab_container` forces equal 1/N tab widths → long labels ellipsize (OPEN)
+### 8. `tab_container` forces equal 1/N tab widths → long labels ellipsize — FIXED (branch `ui-layout-fixes`)
 
-- **Issue**: `tab_container` gives every tab `percent(1/N)` width. When some labels are longer than an equal slice, they ellipsize even if the bar has room and shorter tabs have slack (e.g. "GENERAL"/"GAMEPLAY" truncate next to "VIDEO"/"AUDIO").
+- **Issue**: `tab_container` gave every tab `percent(1/N)` width. When some labels are longer than an equal slice, they ellipsize even if the bar has room and shorter tabs have slack (e.g. "GENERAL"/"GAMEPLAY" truncate next to "VIDEO"/"AUDIO").
 - **Affected**: `powerwash_settings`, `sports_settings`, `mini_motorways_settings`, `flight_options`, `kirby_options`.
-- **Workaround (per-screen)**: fill the bar width (`percent(1.0)`) and, for crowded bars, reduce tab font + `no_wrap`. Done in the affected screens on `ui-layout-fixes`.
-- **Ideal fix**: `tab_container` should size each tab to at least its content width (content-fit, or `max(1/N, text_width)` with the remainder distributed), rather than a hard equal split that truncates.
+- **Fix**: Tabs now use `expand()` width (even distribution — identical look for short labels) with a per-tab `min_width` of `Dim::Text` (the tab's own measured label), so a tab never shrinks below its content. Also added `Dim::Text` support to `resolve_constraint()` in `autolayout.h` so min/max-by-text works generally.
+- **Remaining**: very crowded bars (many long labels summing past the bar width — e.g. flight_options' 9 tabs at the default font) still need a smaller font at the call site; content-fit only removes truncation when the labels *can* fit.
 
 ### 9. No word-wrap for static labels (FEATURE GAP)
 
