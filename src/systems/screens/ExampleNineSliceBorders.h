@@ -300,7 +300,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(start_x, row4_y)
             .with_nine_slice_border(double_panel_000,
                                     32) // Double needs larger slice
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
@@ -310,7 +310,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position(start_x + box_width + gap + 20.0f, row4_y)
             .with_nine_slice_border(double_panel_010, 32)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Center));
 
@@ -397,11 +397,10 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 86),
         ComponentConfig{}
-            .with_label("This is a dialog using 9-slice. "
-                        "Corners stay crisp!")
+            .with_label("9-slice dialog: corners stay crisp!")
             .with_size(ComponentSize{pixels(270), pixels(70)})
             .with_absolute_position(start_x + 215, row5_y + 15)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(text_dark)
             .with_alignment(TextAlignment::Left));
 
