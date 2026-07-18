@@ -174,7 +174,8 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                         ComponentConfig{}
                             .with_size(ComponentSize{pixels(55), pixels(140)})
                             .with_no_wrap()
-                            .with_margin(Margin{.top = pixels(30)})
+                            .with_margin(Margin{.top = pixels(30),
+                                                .right = pixels(14)})
                             .with_debug_name("tools"));
 
     std::vector<std::tuple<std::string, afterhours::Color>> tool_icons = {
