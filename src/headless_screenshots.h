@@ -17,6 +17,9 @@ struct HeadlessResolution {
 // Resolutions to capture (set by main.cpp, empty = default 720p only)
 extern std::vector<HeadlessResolution> g_headless_resolutions;
 
+// If non-empty, only this screen is captured (set by main.cpp via --screen).
+extern std::string g_headless_screen_filter;
+
 // Run headless screenshot generation for all registered screens
 // at each resolution in g_headless_resolutions.
 // Outputs PNG files to g_headless_output_dir as {screen}_{label}.png

@@ -40,6 +40,7 @@ int g_saved_stdout_fd = -1; // Used by MCP to write JSON to original stdout
 
 bool g_headless_mode = false;
 std::string g_headless_output_dir = "output/";
+std::string g_headless_screen_filter;
 
 int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
@@ -92,6 +93,8 @@ int main(int argc, char *argv[]) {
                  "(default: output/)\n";
     std::cout << "  --resolution <res,...>        Resolutions for headless "
                  "screenshots (default: 720p)\n";
+    std::cout << "  --screen <name>              Capture only this screen "
+                 "(default: all)\n";
     std::cout << "                               Examples: "
                  "--resolution=480p,720p,1080p\n";
     std::cout << "                               Named: 480p (854x480), 720p "
@@ -216,6 +219,9 @@ int main(int argc, char *argv[]) {
       output_dir = image_output_override;
     }
     g_headless_output_dir = output_dir;
+
+    // Optional single-screen filter
+    cmdl({"--screen"}) >> g_headless_screen_filter;
 
     // Parse --resolution flag (comma-separated list of named or WxH values)
     std::string resolution_str;

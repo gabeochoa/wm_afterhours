@@ -382,6 +382,16 @@ void run_headless_screenshots_at(int width, int height,
   std::vector<std::string> screen_names =
       ExampleScreenRegistry::get().get_screen_names();
 
+  // Optional single-screen filter (--screen <name>)
+  if (!g_headless_screen_filter.empty()) {
+    if (ExampleScreenRegistry::get().has_screen(g_headless_screen_filter)) {
+      screen_names = {g_headless_screen_filter};
+    } else {
+      log_error("[Headless] Screen not found: {}", g_headless_screen_filter);
+      screen_names.clear();
+    }
+  }
+
   if (screen_names.empty()) {
     log_error("[Headless] No screens available");
     raylib::UnloadRenderTexture(screenRT);
