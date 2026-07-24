@@ -76,7 +76,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 2),
         ComponentConfig{}
             .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | "
-                        "Row 3: Themed | Row 4: Interactive | Row 5: Per-Side")
+                        "Row 3: Themed | Row 4: Interactive | Row 5: Per-Side "
+                        "| Row 6: Dotted")
             .with_size(ComponentSize{pixels(content_width), pixels(22)})
             .with_absolute_position(start_x, 56.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -400,8 +401,10 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Row 5: Per-side borders (new feature demo)
+    // ps_box sized so rows 5+6 both fit within 720p (row 6's bottom edge —
+    // the dotted underline — must stay on-screen).
     float row5_y = row4_y + row4_height;
-    float ps_box = 80.0f;
+    float ps_box = 70.0f;
 
     div(context, mk(entity, 59),
         ComponentConfig{}
@@ -469,6 +472,77 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(sample_white)
             .with_border_bottom(afterhours::Color{200, 60, 60, 255},
                                 pixels(4.0f))
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    // Row 6: Dotted borders (new BorderStyle::Dotted feature demo)
+    float row6_y = row5_y + ps_box + gap;
+
+    div(context, mk(entity, 69),
+        ComponentConfig{}
+            .with_label("Dotted")
+            .with_size(ComponentSize{pixels(row_label_width), pixels(ps_box)})
+            .with_absolute_position(row_label_x, row6_y)
+            .with_font(UIComponent::DEFAULT_FONT,
+                       h720(section_header_font_size))
+            .with_custom_text_color(text_muted)
+            .with_alignment(TextAlignment::Right));
+
+    div(context, mk(entity, 70),
+        ComponentConfig{}
+            .with_label("Thin")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x, row6_y)
+            .with_custom_background(sample_white)
+            .with_border(afterhours::Color{80, 80, 80, 255}, 1.0f,
+                         BorderStyle::Dotted)
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 71),
+        ComponentConfig{}
+            .with_label("Medium")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + ps_box + gap, row6_y)
+            .with_custom_background(sample_white)
+            .with_border(afterhours::Color{50, 50, 50, 255}, 3.0f,
+                         BorderStyle::Dotted)
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 72),
+        ComponentConfig{}
+            .with_label("Thick")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + 2 * (ps_box + gap), row6_y)
+            .with_custom_background(sample_white)
+            .with_border(afterhours::Color{30, 30, 30, 255}, 6.0f,
+                         BorderStyle::Dotted)
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 73),
+        ComponentConfig{}
+            .with_label("Orange")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + 3 * (ps_box + gap), row6_y)
+            .with_custom_background(sample_white)
+            .with_border(accent_orange, 3.0f, BorderStyle::Dotted)
+            .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
+            .with_custom_text_color(bg_deep)
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(entity, 74),
+        ComponentConfig{}
+            .with_label("Underline")
+            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_absolute_position(start_x + 4 * (ps_box + gap), row6_y)
+            .with_custom_background(sample_white)
+            .with_border_bottom(accent_blue, pixels(4.0f), BorderStyle::Dotted)
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
             .with_custom_text_color(bg_deep)
             .with_alignment(TextAlignment::Center));
