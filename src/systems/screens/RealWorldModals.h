@@ -24,6 +24,9 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
   bool show_delete = false;
   bool show_palette = false;
   bool show_tos = false;
+  bool show_drawer = false;
+  bool show_sheet = false;
+  bool show_cookie = false;
 
   std::string delete_confirm = "";
   std::string palette_query = "";
@@ -32,6 +35,9 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
   static constexpr int MODAL_DELETE = 300;
   static constexpr int MODAL_PALETTE = 301;
   static constexpr int MODAL_TOS = 302;
+  static constexpr int MODAL_DRAWER = 303;
+  static constexpr int MODAL_SHEET = 304;
+  static constexpr int MODAL_COOKIE = 305;
   static constexpr int CL = 1001; // content layer (above the modal panel)
   static constexpr float FOCUS_SAFE_WIDTH = 0.92f;
 
@@ -111,7 +117,40 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       show_tos = true;
     }
 
-    div(context, mk(main.ent(), 2),
+    auto triggers2 = hstack(context, mk(main.ent(), 2),
+                            ComponentConfig{}
+                                .with_size(ComponentSize{percent(1.0f), pixels(52)})
+                                .with_justify_content(JustifyContent::Center)
+                                .with_align_items(AlignItems::Center)
+                                .with_no_wrap()
+                                .with_margin(Margin{.top = DefaultSpacing::small()})
+                                .with_debug_name("rw_triggers2"));
+
+    if (button(context, mk(triggers2.ent(), 0),
+               ComponentConfig{}
+                   .with_label("Side Drawer")
+                   .with_size(ComponentSize{pixels(180), pixels(44)})
+                   .with_margin(Margin{.right = DefaultSpacing::small()})
+                   .with_debug_name("btn_drawer"))) {
+      show_drawer = true;
+    }
+    if (button(context, mk(triggers2.ent(), 1),
+               ComponentConfig{}
+                   .with_label("Bottom Sheet")
+                   .with_size(ComponentSize{pixels(200), pixels(44)})
+                   .with_margin(Margin{.right = DefaultSpacing::small()})
+                   .with_debug_name("btn_sheet"))) {
+      show_sheet = true;
+    }
+    if (button(context, mk(triggers2.ent(), 2),
+               ComponentConfig{}
+                   .with_label("Cookie Banner")
+                   .with_size(ComponentSize{pixels(200), pixels(44)})
+                   .with_debug_name("btn_cookie"))) {
+      show_cookie = true;
+    }
+
+    div(context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_label(status.empty() ? "No action yet" : status)
             .with_size(ComponentSize{percent(1.0f), pixels(28)})
@@ -292,6 +331,111 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
                      .with_render_layer(CL))) {
         status = "Terms declined.";
         show_tos = false;
+      }
+    }
+
+    // ===================================================================
+    // 4. Side drawer (right edge, full height)
+    // ===================================================================
+    if (auto m = afterhours::modal(
+            context, mk(entity, MODAL_DRAWER), show_drawer,
+            afterhours::ModalConfig{}
+                .with_size(pixels(320), screen_pct(1.0f))
+                .with_title("Menu")
+                .with_anchor(afterhours::ModalAnchor::Right)
+                .with_closed_by(afterhours::ClosedBy::Any))) {
+      static constexpr std::array<const char *, 5> items = {
+          "Dashboard", "Projects", "Team", "Billing", "Settings"};
+      int idx = 0;
+      for (const char *it : items) {
+        if (button(context, mk(m.ent(), idx++),
+                   ComponentConfig{}
+                       .with_label(it)
+                       .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                       .with_alignment(TextAlignment::Left)
+                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
+                       .with_render_layer(CL))) {
+          status = std::string("Opened: ") + it;
+          show_drawer = false;
+        }
+      }
+    }
+
+    // ===================================================================
+    // 5. Bottom sheet (bottom edge, full width)
+    // ===================================================================
+    if (auto m = afterhours::modal(
+            context, mk(entity, MODAL_SHEET), show_sheet,
+            afterhours::ModalConfig{}
+                .with_size(percent(1.0f), pixels(240))
+                .with_title("Share")
+                .with_anchor(afterhours::ModalAnchor::Bottom)
+                .with_closed_by(afterhours::ClosedBy::Any))) {
+      auto row = hstack(context, mk(m.ent(), 0),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                            .with_justify_content(JustifyContent::SpaceAround)
+                            .with_align_items(AlignItems::Center)
+                            .with_no_wrap()
+                            .with_render_layer(CL));
+      static constexpr std::array<const char *, 4> actions = {
+          "Copy Link", "Email", "Message", "More"};
+      int idx = 0;
+      for (const char *a : actions) {
+        if (button(context, mk(row.ent(), idx++),
+                   ComponentConfig{}
+                       .with_label(a)
+                       .with_size(ComponentSize{pixels(160), pixels(64)})
+                       .with_render_layer(CL))) {
+          status = std::string("Shared via ") + a;
+          show_sheet = false;
+        }
+      }
+    }
+
+    // ===================================================================
+    // 6. Cookie consent banner (bottom edge, short strip)
+    // ===================================================================
+    if (auto m = afterhours::modal(
+            context, mk(entity, MODAL_COOKIE), show_cookie,
+            afterhours::ModalConfig{}
+                .with_size(percent(1.0f), pixels(120))
+                .with_anchor(afterhours::ModalAnchor::Bottom)
+                .with_show_close_button(false)
+                .with_backdrop_color({0, 0, 0, 60})
+                .with_closed_by(afterhours::ClosedBy::CloseRequest))) {
+      auto row = hstack(context, mk(m.ent(), 0),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
+                            .with_justify_content(JustifyContent::SpaceBetween)
+                            .with_align_items(AlignItems::Center)
+                            .with_no_wrap()
+                            .with_render_layer(CL));
+      div(context, mk(row.ent(), 0),
+          ComponentConfig{}
+              .with_label("We use cookies to improve your experience.")
+              .with_size(ComponentSize{percent(0.6f), pixels(40)})
+              .with_auto_text_color(true)
+              .with_text_overflow(TextOverflow::Wrap)
+              .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+              .with_render_layer(CL));
+      if (button(context, mk(row.ent(), 1),
+                 ComponentConfig{}
+                     .with_label("Reject")
+                     .with_size(ComponentSize{pixels(140), pixels(40)})
+                     .with_margin(Margin{.right = DefaultSpacing::small()})
+                     .with_render_layer(CL))) {
+        status = "Cookies rejected.";
+        show_cookie = false;
+      }
+      if (button(context, mk(row.ent(), 2),
+                 ComponentConfig{}
+                     .with_label("Accept")
+                     .with_size(ComponentSize{pixels(140), pixels(40)})
+                     .with_background(Theme::Usage::Primary)
+                     .with_render_layer(CL))) {
+        status = "Cookies accepted.";
+        show_cookie = false;
       }
     }
   }
