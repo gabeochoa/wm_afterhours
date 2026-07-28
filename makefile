@@ -5,8 +5,8 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
     CXX := clang++
     EXT := .exe
-    RAYLIB_FLAGS := $(shell pkg-config --cflags raylib)
-    RAYLIB_LIB := $(shell pkg-config --libs raylib)
+    RAYLIB_FLAGS := $(shell pkg-config --cflags raylib 2>/dev/null || echo -I/opt/homebrew/include)
+    RAYLIB_LIB := $(shell pkg-config --libs raylib 2>/dev/null || echo -L/opt/homebrew/lib -lraylib)
     MACOS_FLAGS := -DBACKWARD
     FRAMEWORKS := -framework CoreFoundation -framework OpenGL
 else ifeq ($(OS),Windows_NT)
@@ -27,6 +27,10 @@ endif
 
 # C++ standard
 CXXSTD := -std=c++23
+
+# fmt 8.0.1 uses consteval format-string checks that Apple clang 21 rejects as
+# non-constant; downgrade them to constexpr so the vendored fmt compiles.
+FMT_FLAGS := -DFMT_CONSTEVAL=constexpr
 
 # Base compiler flags
 CXXFLAGS_BASE := -g \
@@ -109,6 +113,7 @@ endif
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
     $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(E2E_CXXFLAGS) \
     $(RAYLIB_BACKEND_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS) \
+    $(FMT_FLAGS) \
     -fno-temp-file
 
 # Include directories (use -isystem for vendor to suppress their warnings)
