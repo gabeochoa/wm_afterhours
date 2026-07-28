@@ -362,7 +362,7 @@ struct SportsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{percent(1.0f), screen_pct(tab_area_h)})
             .with_padding(Padding{.top = pixels(15),
-                                  .left = pixels(70),
+                                  .left = pixels(50),
                                   .bottom = {},
                                   .right = {}})
             .with_align_items(AlignItems::FlexEnd)
