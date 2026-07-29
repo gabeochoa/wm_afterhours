@@ -20,6 +20,7 @@
 #include <afterhours/src/graphics.h>
 
 #include <afterhours/src/plugins/e2e_testing/test_input.h>
+#include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/toast.h>
@@ -336,6 +337,107 @@ void tick_and_render(afterhours::SystemManager &systems, float dt) {
   systems.run(dt);
 }
 
+// Walk the settled UI tree directly and return human-readable layout problems.
+// We do this here (rather than via the ECS validation systems) because those
+// validators filter the main entity collection, while the UI widgets live in
+// the UI collection — so they don't fire in the batch screenshot path. This
+// reuses the same UI-collection walk that layout_summary uses (proven headless).
+//
+// Catches the two real bug classes from the layout audit, while suppressing the
+// two big false-positive sources (scroll/clip containers and freely-positioned
+// absolute elements):
+//   1. off-screen  — a non-clipped element's rect leaves the viewport.
+//   2. child escapes parent — a non-absolute child spills past a non-clipping
+//      parent on the bottom/right (the "content taller/wider than a fixed-size
+//      container" bug); left/top escapes are usually deliberate negative offsets.
+std::vector<std::string> collect_layout_problems(int vw, int vh) {
+  using afterhours::testing::ui_commands::get_screen_rect;
+  using afterhours::testing::ui_commands::ui_query;
+  constexpr float VIEWPORT_TOL = 2.0f;
+  // Ignore hairline escapes (edge-flush controls, borders, rounding); only flag
+  // escapes big enough to read as a real overflow.
+  constexpr float ESCAPE_TOL = 8.0f;
+  std::vector<std::string> problems;
+
+  auto name_of = [](afterhours::Entity &e) -> std::string {
+    if (e.has<afterhours::ui::UIComponentDebug>()) {
+      auto n = e.get<afterhours::ui::UIComponentDebug>().name();
+      if (!n.empty())
+        return n;
+    }
+    if (e.has<afterhours::ui::HasLabel>()) {
+      const auto &l = e.get<afterhours::ui::HasLabel>().label;
+      if (!l.empty())
+        return "\"" + l + "\"";
+    }
+    return "entity_" + std::to_string(e.id);
+  };
+
+  // True if this element sits inside a Scroll/Hidden container, which clips its
+  // children on purpose — an off-bounds rect there is expected, not a bug.
+  auto has_clip_ancestor = [](afterhours::Entity &e) -> bool {
+    afterhours::EntityID pid = e.get<afterhours::ui::UIComponent>().parent;
+    while (pid != (afterhours::EntityID)-1) {
+      afterhours::OptEntity opt =
+          afterhours::ui::UICollectionHolder::getEntityForID(pid);
+      if (!opt.valid())
+        break;
+      afterhours::Entity &p = opt.asE();
+      if (p.has<afterhours::ui::HasClipChildren>())
+        return true;
+      if (!p.has<afterhours::ui::UIComponent>())
+        break;
+      pid = p.get<afterhours::ui::UIComponent>().parent;
+    }
+    return false;
+  };
+
+  for (afterhours::Entity &parent :
+       ui_query().whereHasComponent<afterhours::ui::UIComponent>().gen()) {
+    auto &pc = parent.get<afterhours::ui::UIComponent>();
+    if (!pc.was_rendered_to_screen || pc.should_hide)
+      continue;
+    auto pr = get_screen_rect(parent);
+    if (pr.width < 1.f || pr.height < 1.f)
+      continue;
+
+    // 1. Off-screen: the parent itself leaves the viewport (and isn't clipped).
+    if (!parent.has<afterhours::ui::HasClipChildren>() &&
+        !has_clip_ancestor(parent)) {
+      bool off = pr.x < -VIEWPORT_TOL || pr.y < -VIEWPORT_TOL ||
+                 pr.x + pr.width > vw + VIEWPORT_TOL ||
+                 pr.y + pr.height > vh + VIEWPORT_TOL;
+      if (off)
+        problems.push_back(name_of(parent) + " (off-screen)");
+    }
+
+    // 2. Child escapes parent — skip parents that clip on purpose.
+    if (parent.has<afterhours::ui::HasClipChildren>())
+      continue;
+
+    for (afterhours::EntityID cid : pc.children) {
+      afterhours::OptEntity opt =
+          afterhours::ui::UICollectionHolder::getEntityForID(cid);
+      if (!opt.valid())
+        continue;
+      afterhours::Entity &child = opt.asE();
+      if (!child.has<afterhours::ui::UIComponent>())
+        continue;
+      auto &cc = child.get<afterhours::ui::UIComponent>();
+      if (!cc.was_rendered_to_screen || cc.should_hide || cc.absolute)
+        continue; // absolute children are positioned freely by design
+      auto cr = get_screen_rect(child);
+      if (cr.width < 1.f || cr.height < 1.f)
+        continue;
+      bool escapes = cr.x + cr.width > pr.x + pr.width + ESCAPE_TOL ||
+                     cr.y + cr.height > pr.y + pr.height + ESCAPE_TOL;
+      if (escapes)
+        problems.push_back(name_of(child) + " escapes " + name_of(parent));
+    }
+  }
+  return problems;
+}
+
 } // namespace
 
 // Capture all screens at a single resolution
@@ -413,6 +515,8 @@ void run_headless_screenshots_at(int width, int height,
                          .id;
 
   // 9. Iterate all screens and capture screenshots
+  int total_violations = 0;
+  int screens_with_violations = 0;
   for (const std::string &screen_name : screen_names) {
     // Reset state between screens
     reset_screen_state(ui_entity_id);
@@ -451,6 +555,25 @@ void run_headless_screenshots_at(int width, int height,
     // Ensure GPU operations complete and flush render batch
     raylib::rlDrawRenderBatchActive();
 
+    // Surface layout problems for this screen so `make screenshots` warns the
+    // dev instead of requiring a manual screenshot audit. Concise per-screen
+    // roll-up; caps the list so output stays scannable across all screens.
+    {
+      auto problems = collect_layout_problems(width, height);
+      if (!problems.empty()) {
+        std::string joined;
+        const size_t cap = 6;
+        for (size_t i = 0; i < problems.size() && i < cap; i++)
+          joined += (joined.empty() ? "" : "; ") + problems[i];
+        if (problems.size() > cap)
+          joined += "; +" + std::to_string(problems.size() - cap) + " more";
+        log_warn("[Headless][validate] {}: {} issue(s): {}", screen_name,
+                 problems.size(), joined);
+        total_violations += static_cast<int>(problems.size());
+        screens_with_violations++;
+      }
+    }
+
     // Capture screenshot: {screen}_{label}.png
     std::string filename = screen_name + "_" + label + ".png";
     std::filesystem::path output_path =
@@ -485,6 +608,16 @@ void run_headless_screenshots_at(int width, int height,
   // Note: mainRT is owned by the graphics backend, do not unload it manually
   raylib::UnloadRenderTexture(screenRT);
   afterhours::graphics::shutdown();
+
+  if (total_violations > 0) {
+    log_warn("[Headless][{}] {} layout violation(s) across {} screen(s) — see "
+             "[validate] lines above (child-overflow / off-screen / contrast / "
+             "font-size). Fix by letting containers size to content "
+             "(children()) or trimming content to fit.",
+             label, total_violations, screens_with_violations);
+  } else {
+    log_info("[Headless][{}] No layout violations detected", label);
+  }
 
   log_info("[Headless][{}] Completed - rendered {} screens", label,
            screen_names.size());
