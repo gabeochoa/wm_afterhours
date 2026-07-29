@@ -1,7 +1,7 @@
 #pragma once
 
 // DEPRECATED: Use E2E scripts (make test) and validate_screen instead.
-// See AGENTS_UI.md. Kept for legacy coroutine tests that still reference it.
+// See docs/AGENTS_UI.md. Kept for legacy coroutine tests that still reference it.
 
 #include "../rl.h"
 #include <optional>
