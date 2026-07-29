@@ -79,10 +79,13 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true)
             .with_margin(Margin{.bottom = pixels(12)}));
 
+    // Height fits the fields (children()) rather than a hardcoded pixels(400)
+    // that was smaller than the 7 fields (~478px) — the overflow used to spill
+    // into the footer. See docs/LAYOUT_AUDIT.md.
     auto body = vstack(
         context, mk(card.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(400)})
+            .with_size(ComponentSize{percent(1.0f), children()})
             .with_no_wrap()
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("body"));

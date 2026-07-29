@@ -184,7 +184,11 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     float row_x = screen_x + 8.0f;
     float row_start_y = status_y + 85.0f;
     float row_w = screen_inner_w - 16.0f;
-    float row_h = 44.0f; // Minimum 44px for touch targets
+    // 40px rows (was 44): with 10 rows + sections the 44px stack pushed the
+    // OK/Cancel/Apply footer to y~709 — off the 680px phone frame AND the 720px
+    // screen. 40px pulls the footer bottom to ~697, inside both. Chevrons below
+    // match this height. See docs/LAYOUT_AUDIT.md.
+    float row_h = 40.0f;
     float row_gap = 2.0f;
 
     // Language selector row (purple globe icon)
@@ -696,7 +700,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         context, mk(entity, id),
         ComponentConfig{}
             .with_label(symbol)
-            .with_size(ComponentSize{pixels(44), pixels(44)})
+            .with_size(ComponentSize{pixels(44), pixels(40)}) // match row_h
             .with_absolute_position(x, y)
             .with_font_size(h720(22.0f))
             .with_custom_text_color(text_muted)
