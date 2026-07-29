@@ -136,7 +136,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     auto content =
         hstack(context, mk(main_container.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(0.60f)})
+                   .with_size(ComponentSize{percent(1.0f), percent(0.66f)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_justify_content(JustifyContent::Center)

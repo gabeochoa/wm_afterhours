@@ -42,7 +42,9 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     auto content = vstack(context, mk(root.ent(), 0),
                           ComponentConfig{}
                               .with_size({percent(1.0f), percent(1.0f)})
-                              .with_padding(Spacing::lg)
+                              // sm (was lg=57.6px): lg top-padding + big separator
+                              // margins pushed the last section past y=720.
+                              .with_padding(Spacing::sm)
                               .with_debug_name("root"));
 
     // Title section - row with title text and badge
@@ -88,7 +90,7 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section1 = vstack(context, mk(content.ent()),
                            ComponentConfig{}
                                .with_size({percent(1.0f), children()})
-                               .with_padding(Spacing::sm));
+                               .with_padding(Spacing::xs));
 
     div(context, mk(section1.ent()),
         ComponentConfig{}
@@ -158,15 +160,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.9f), pixels(1)})
             .with_custom_background(afterhours::Color{255, 255, 255, 40})
             .with_self_align(SelfAlign::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                .bottom = DefaultSpacing::tiny()})
             .with_debug_name("section_separator_1"));
 
     // Section 2: Mid-tone colors (edge cases)
     auto section2 = vstack(context, mk(content.ent()),
                            ComponentConfig{}
                                .with_size({percent(1.0f), children()})
-                               .with_padding(Spacing::sm));
+                               .with_padding(Spacing::xs));
 
     div(context, mk(section2.ent()),
         ComponentConfig{}
@@ -209,15 +211,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.9f), pixels(1)})
             .with_custom_background(afterhours::Color{255, 255, 255, 40})
             .with_self_align(SelfAlign::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                .bottom = DefaultSpacing::tiny()})
             .with_debug_name("section_separator_2"));
 
     // Section 3: How to disable auto text color
     auto section3 = vstack(context, mk(content.ent()),
                            ComponentConfig{}
                                .with_size({percent(1.0f), children()})
-                               .with_padding(Spacing::sm));
+                               .with_padding(Spacing::xs));
 
     div(context, mk(section3.ent()),
         ComponentConfig{}
@@ -269,15 +271,15 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{percent(0.9f), pixels(1)})
             .with_custom_background(afterhours::Color{255, 255, 255, 40})
             .with_self_align(SelfAlign::Center)
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small()})
+            .with_margin(Margin{.top = DefaultSpacing::tiny(),
+                                .bottom = DefaultSpacing::tiny()})
             .with_debug_name("section_separator_3"));
 
     // Section 4: Theme colors with auto contrast
     auto section4 = vstack(context, mk(content.ent()),
                            ComponentConfig{}
                                .with_size({percent(1.0f), children()})
-                               .with_padding(Spacing::sm));
+                               .with_padding(Spacing::xs));
 
     div(context, mk(section4.ent()),
         ComponentConfig{}
