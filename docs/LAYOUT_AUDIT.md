@@ -114,6 +114,30 @@ collection directly via `ui_query()` — the same mechanism `layout_summary` use
 validators into the UI-collection context would be the afterhours-side follow-up, but is not
 needed for the warning to work.
 
+### Fixes applied — 2026-07-28 (warning: 69 issues/12 screens → 15/2)
+All root causes were our screens declaring fixed-size containers smaller than their content, or
+misusing a dim unit — none were afterhours bugs. Fixed + verified (warning-clean + visual):
+- **text_input** — `body` `pixels(400)` → `children()`.
+- **parcel_corps_settings** — 44px rows/chevrons → 40px so the footer fits the phone frame.
+- **cards** — `nested_container`/`info_panel` `pixels(130)` → `children()`.
+- **hstack_showcase** — cards row `pixels(56)` → `expand()`.
+- **circular_progress** — cards `h720(170)` (wrong axis) → `w1280(250)`.
+- **meters_gauges** — anim ring 60→44px + left-only margin; gauge rings 90→72px.
+- **language_demo** — footer 55→70px (content 425→410) to hold two 16px lines.
+- **deadspace_settings** — panel width `screen_w-290` → `-330` (was running off-screen).
+- **auto_text_color** — trimmed root/section padding + separator margins so all 5 sections fit.
+- **forms** — two-column content `percent(0.60)` → `0.66` (left column no longer clips).
+- **flex_alignment** — demo `container` `percent(0.85/0.70)` → `expand()` (fills space after title).
+
+**Remaining (2 screens, 15 issues) — known/acceptable, not fixed:**
+- **cozy_cafe** (4) — cosmetic bleed from the vendored `decorative_frame` (its inner fill layers
+  keep full size but translate inward, spilling 4–14px off the right/bottom where nothing shows).
+  Real fix is in `vendor/afterhours/imm_components.h` (subtract translate from fill size); skipped
+  as invisible.
+- **flex_alignment** (11) — the container-overflow bug is fixed; residual flags are dense-demo box
+  cramping (26px boxes in narrow demo columns) + the 6-tab `tab_container` widget. Low-value demo
+  noise; left as-is.
+
 ### Still open (unchanged, not layout)
 - **Batch renderer state leak** — investigation done, root cause identified (batch path in
   `create_screen_systems()` omits a system the real game loop runs), fix NOT applied. Blocks
