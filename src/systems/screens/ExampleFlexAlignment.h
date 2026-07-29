@@ -49,7 +49,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto container =
         vstack(context, mk(outer.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(0.85f)})
+                   // expand() (was percent(0.85)): the outer also holds a 28px
+                   // title, so 0.85 + title overflowed the outer. expand fills
+                   // the space left after the title.
+                   .with_size(ComponentSize{percent(1.0f), expand()})
                    .with_custom_background(afterhours::Color{50, 60, 80, 255})
                    .with_padding(Spacing::xs)
                    .with_margin(Margin{.top = pixels(4)})
@@ -152,7 +155,9 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
     auto container =
         hstack(context, mk(outer.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(0.70f)})
+                   // expand() (was percent(0.70)): fills space after the 28px
+                   // title instead of overflowing the outer.
+                   .with_size(ComponentSize{percent(1.0f), expand()})
                    .with_custom_background(afterhours::Color{50, 60, 80, 255})
                    .with_padding(Padding{.top = pixels(6),
                                          .left = pixels(8),
