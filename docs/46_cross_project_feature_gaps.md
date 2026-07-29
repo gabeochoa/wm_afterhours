@@ -2,6 +2,15 @@
 
 Analysis of four projects using afterhours to identify missing UI features, ergonomics improvements, and new primitives that would benefit all of them.
 
+## Status
+- **#5 Confirmation Dialog — DONE.** It already existed as `modal::confirm` (plus
+  `modal::info`, `modal::fyi`); those were overhauled for looks (wrapping message,
+  right-aligned action row, visible neutral buttons, no overlap/escape) and two
+  presets were added: **`modal::confirm_danger`** (destructive, Error-red action) and
+  **`modal::prompt`** (text-input dialog). See `vendor/afterhours/src/plugins/modal.h`,
+  the `Dialog*Showcase` screens (headless-validated), and `tests/dialog_test.cpp`.
+- Remaining proposals below are still open, in the priority order in the matrix.
+
 ---
 
 ## Project Summaries
