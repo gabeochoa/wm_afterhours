@@ -272,7 +272,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
 
     auto cards = hstack(context, mk(patterns.ent(), 3),
                         ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.0f), pixels(56)})
+                            .with_size(ComponentSize{percent(1.0f), expand()})
                             .with_justify_content(JustifyContent::SpaceAround)
                             .with_align_items(AlignItems::Center)
                             .with_margin(Margin{.top = pixels(4)})

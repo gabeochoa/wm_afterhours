@@ -204,7 +204,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         hstack(context, mk(main.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(425)})
+                   .with_size(ComponentSize{percent(1.0f), pixels(410)})
                    .with_no_wrap()
                    .with_debug_name("content"));
 
@@ -314,7 +314,8 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer =
         vstack(context, mk(main.ent(), 2),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(55)})
+                   // 70 (was 55) to hold two 16px lines; content trimmed to 410
+                   .with_size(ComponentSize{percent(1.0f), pixels(70)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::xs));
 

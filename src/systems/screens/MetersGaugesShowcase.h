@@ -244,10 +244,12 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
 
     circular_progress(context, mk(anim_row.ent(), 1), anim_progress,
                       ComponentConfig{}
-                          .with_size(ComponentSize{pixels(60), pixels(60)})
+                          // 44 (was 60) so it fits the ~47px anim_row; left-only
+                          // margin keeps the gap without eating row height.
+                          .with_size(ComponentSize{pixels(44), pixels(44)})
                           .with_background(Theme::Usage::Primary)
                           .with_border(track_color, pixels(7.0f))
-                          .with_margin(Spacing::sm)
+                          .with_margin(Margin{.left = DefaultSpacing::small()})
                           .with_debug_name("mg_anim_circle"));
 
     // =================================================================
@@ -302,7 +304,8 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
       circular_progress(
           context, mk(gauge_col.ent(), 0), gauges[g].value,
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(90), pixels(90)})
+              // 72 (was 90) so ring + % label fit the ~104px gauge_col
+              .with_size(ComponentSize{pixels(72), pixels(72)})
               .with_custom_background(gauges[g].color)
               .with_border(track_color, pixels(8.0f))
               .with_debug_name(fmt::format("{}_ring", gauges[g].name)));

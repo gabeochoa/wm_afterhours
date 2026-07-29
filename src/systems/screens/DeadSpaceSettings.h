@@ -162,7 +162,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_skip_tabbing(true));
 
     // ── MAIN PANEL ──
-    float panel_w = static_cast<float>(screen_w) - 290.0f;
+    // -330 (was -290): sidebar(240)+gaps+padding(30 each side) need 330 of the
+    // width budget; -290 made the panel 40px too wide, running off the right and
+    // dragging its tabs/content off-screen. See docs/LAYOUT_AUDIT.md.
+    float panel_w = static_cast<float>(screen_w) - 330.0f;
     auto panel =
         vstack(context, mk(main_area.ent()),
                ComponentConfig{}

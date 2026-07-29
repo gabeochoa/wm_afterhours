@@ -107,7 +107,9 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
       auto card = vstack(
           context, mk(parent, base_id),
           ComponentConfig{}
-              .with_size(ComponentSize{h720(170.0f), children()})
+              // width must use w1280, not h720 (which resolved to 302px vs
+              // screen width → cards wrapped + shrank, overflowing labels ~10px)
+              .with_size(ComponentSize{w1280(250.0f), children()})
               .with_custom_background(card_dark)
               .with_soft_shadow(4.0f, 8.0f, 20.0f,
                                 afterhours::Color{0, 0, 0, 80})

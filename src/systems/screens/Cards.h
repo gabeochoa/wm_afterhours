@@ -163,7 +163,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto nested_container =
         vstack(context, mk(row2.ent(), 0),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.33f), pixels(130)})
+                   .with_size(ComponentSize{percent(0.33f), children()})
                    .with_background(Theme::Usage::Surface)
                    .with_border(
                        afterhours::colors::darken(context.theme.surface, 0.75f),
@@ -199,7 +199,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto info_panel =
         vstack(context, mk(row2.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.33f), pixels(130)})
+                   .with_size(ComponentSize{percent(0.33f), children()})
                    .with_custom_background(
                        afterhours::colors::opacity_pct(theme.primary, 0.3f))
                    .with_padding(Spacing::sm)
