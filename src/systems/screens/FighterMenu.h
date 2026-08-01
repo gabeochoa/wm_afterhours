@@ -267,7 +267,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     // without overrunning the character panel, and a vertical nav matches the
     // left-column layout.
     {
-      float tab_w = menu_item_w;
       float tab_h = 44.0f;
       float tab_gap = 6.0f;
       for (size_t i = 0; i < option_labels.size(); i++) {
@@ -289,7 +288,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                    ComponentConfig{}
                        .with_label(option_labels[i])
                        .with_size(ComponentSize{
-                           pixels(static_cast<int>(tab_w)),
+                           pixels(static_cast<int>(menu_item_w)),
                            pixels(static_cast<int>(tab_h - underline_h))})
                        .with_absolute_position(menu_x, row_y)
                        .with_custom_background(tab_bg_color)
