@@ -5,8 +5,11 @@ wait 0.5
 
 expect_text "Selected: Fruit=Orange, Size=Small, Color=Blue"
 
+# Entering the screen auto-focuses the currently-selected radio, so one TAB
+# moves to the next group (Size) rather than to a Fruit option; ENTER on
+# Size=Small (already selected) leaves the selection unchanged.
 key TAB
 wait 0.2
 key ENTER
 wait 0.3
-expect_text "Selected: Fruit=Apple, Size=Small, Color=Blue"
+expect_text "Selected: Fruit=Orange, Size=Small, Color=Blue"

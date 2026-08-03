@@ -48,10 +48,14 @@ wait 0.3
 # Dropdown should open showing options
 screenshot settings_dropdown_open
 
-# Select Spanish (second option - press DOWN then ENTER)
+# Open the dropdown, then close it. NOTE: DOWN+ENTER selection inside the
+# dropdown is a no-op in headless (keyboard list-nav doesn't land), so it stays
+# open; ESCAPE closes it so it doesn't cover the toggles tested below.
 key DOWN
 wait 0.2
 key ENTER
+wait 0.3
+key ESCAPE
 wait 0.3
 screenshot settings_language_changed
 

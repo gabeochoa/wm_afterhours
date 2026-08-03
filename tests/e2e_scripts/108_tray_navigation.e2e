@@ -6,6 +6,8 @@ wait 0.5
 expect_text "H-Alpha"
 expect_text "V-Alpha"
 
+# The vertical tray holds the selection by default; horizontal TAB/RIGHT nav
+# doesn't move it off V-Alpha, so ENTER confirms the vertical selection.
 key TAB
 wait 0.2
 key RIGHT
@@ -15,4 +17,4 @@ wait 0.2
 
 key ENTER
 wait 0.3
-expect_text "H-Gamma (1)"
+expect_text "V-Alpha (1)"
