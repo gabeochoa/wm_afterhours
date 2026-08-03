@@ -14,12 +14,15 @@ using namespace afterhours::ui::imm;
 // the edge-flip that both share. The two bottom triggers are the interesting
 // ones -- there is no room below them, so their menus open upward.
 struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
-  // Open by default: the interesting state is the open menu, and a screenshot
-  // baseline cannot click.
-  bool file_open = true;
-  bool edit_open = true;
+  // One menu open by default, because a screenshot baseline cannot click and
+  // an open menu is the state worth capturing. Only one: menus dismiss on
+  // focus loss, so opening a second closes the first, and defaulting several
+  // open would bake a frame into the baseline that no interactive run reaches.
+  // Bottom is the one to show -- it is the menu that flips.
+  bool file_open = false;
+  bool edit_open = false;
   bool bottom_open = true;
-  bool corner_open = true;
+  bool corner_open = false;
   std::string status = "click a menu";
 
   static std::vector<MenuItem> file_items() {
