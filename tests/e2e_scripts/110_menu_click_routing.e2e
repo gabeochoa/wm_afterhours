@@ -1,0 +1,39 @@
+# Menu click routing
+#
+# Covers what screenshots cannot: that a click lands on the right widget.
+# Exercises the real system pipeline (ResolveHitTarget -> HandleClicks), not
+# a test harness driving the systems by hand.
+#
+# The menu bar is the case afterhours D3 was about -- a trigger sits inside a
+# holder div, and menu items sit inside a list, so every one of these clicks
+# has to reach a nested control rather than its container.
+
+goto_screen menu_showcase
+wait 0.3
+
+# Bottom defaults open, so its items are on screen and Edit's are not.
+expect_text "Save"
+expect_no_text "Undo"
+
+# Clicking a trigger must reach the trigger, not the holder div wrapping it.
+click_text "Edit"
+wait 0.3
+expect_text "Undo"
+
+# ...and opening Edit takes focus, which dismisses Bottom.
+expect_no_text "Revert"
+
+# Clicking an item must reach the item, not the tray behind it. The tray
+# carries its own HasClickListener, so this is the nested-control case D3 is
+# about.
+#
+# Asserted on the status line, not on the menu disappearing: the menu closes on
+# focus loss whatever the click hits, so "Undo is gone" is true even when the
+# tray swallowed it. The status only changes when menu_list returns a chosen
+# index, which needs the item's own listener to have fired.
+expect_text "click a menu"
+click_text "Cut"
+wait 0.3
+expect_text "Edit item chosen"
+
+screenshot menu_click_routing
