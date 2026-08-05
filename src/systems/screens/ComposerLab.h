@@ -137,8 +137,10 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     for (const char *k :
          {"keys (any field)", "Alt/Ctrl <- ->    by word",
           "Alt/Ctrl Bksp/Del  erase word", "Home / End        visual row ends",
-          "Up / Down         visual row", "wheel             scroll (panel 4)",
-          "", "no selection, clipboard or", "click-to-position yet"}) {
+          "Up / Down         visual row", "Shift + any move  extend selection",
+          "Cmd/Ctrl A C X V  all/copy/cut/paste", "Cmd/Ctrl Z        undo",
+          "wheel             scroll (panel 4)", "",
+          "mouse: click to place, drag to", "select, 2x word, 3x row"}) {
       div(context, mk(entity, id++),
           ComponentConfig{}
               .with_size(ComponentSize{pixels(280), pixels(22)})
