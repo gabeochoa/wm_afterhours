@@ -24,7 +24,8 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
                       "watch this paragraph wrap onto more rows.";
   std::string nowrap = "wrapping is off on this one so this long line just "
                        "runs on and gets clipped at the edge";
-  std::string clipped = "one\ntwo\nthree\nfour\nfive\nsix\nseven\neight";
+  std::string clipped = "one\ntwo\nthree\nfour\nfive\nsix\nseven\neight\n"
+                        "nine\nten\neleven\ntwelve";
 
   int sends = 0;
 
@@ -104,9 +105,10 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
                   .with_word_wrap(false)
                   .with_debug_name("cl_nowrap"));
 
-    // 4. More rows than fit. They must stop at the bottom edge rather than
-    //    painting over the readout below.
-    caption(474.f, "4. eight lines in a three-line box - must clip, not spill");
+    // 4. More rows than fit: they clip at the bottom edge, and the wheel
+    //    scrolls through them. Hover this one and scroll.
+    caption(474.f, "4. twelve lines in a three-line box - clips, and the "
+                   "wheel scrolls it");
     text_area(context, mk(entity, 400), clipped,
               ComponentConfig{}
                   .with_size(ComponentSize{pixels(W), pixels(70)})
@@ -130,6 +132,26 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name(fmt::format("cl_say_{}", id)));
       ry += 22.f;
     };
+    // The keys the widget answers to, so the screen documents its own controls.
+    ry = 300.f;
+    for (const char *k :
+         {"keys (any field)", "Alt/Ctrl <- ->    by word",
+          "Alt/Ctrl Bksp/Del  erase word", "Home / End        visual row ends",
+          "Up / Down         visual row", "wheel             scroll (panel 4)",
+          "", "no selection, clipboard or", "click-to-position yet"}) {
+      div(context, mk(entity, id++),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(280), pixels(22)})
+              .with_absolute_position(520.f, ry)
+              .with_label(k)
+              .with_alignment(TextAlignment::Left)
+              .with_custom_text_color(muted)
+              .with_font(UIComponent::DEFAULT_FONT, pixels(13.f))
+              .with_debug_name(fmt::format("cl_key_{}", id)));
+      ry += 22.f;
+    }
+
+    ry = 94.f; // state readout sits above the key list, beside panel 1
     if (sent.ent().has<afterhours::text_input::HasTextAreaState>()) {
       const auto &s =
           sent.ent().get<afterhours::text_input::HasTextAreaState>();
