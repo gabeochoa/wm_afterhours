@@ -75,6 +75,15 @@ inline std::vector<FontDef> get_all_fonts() {
       {"BlackOpsOne", "BlackOpsOne-Regular.ttf"},
       {"Atkinson", "AtkinsonHyperlegible-Regular.ttf"},
 
+      // A real same-family weight pair, which nothing else bundled here is:
+      // the only other true bold is Gaegu-Bold, and that IS the default face.
+      // The "@bold" suffix is the convention FontManager::resolve_weighted
+      // looks for, so a TextSpan asking for Bold resolves to the second entry
+      // and falls back to the first when it is absent.
+      // Oldschool PC Font Pack, CC BY-SA 4.0 -- see OLDSCHOOL_PC_FONTS_*.txt.
+      {"DGOne", "Px437_DG_One.ttf"},
+      {"DGOne@bold", "Px437_DG_One_bold.ttf"},
+
       // CJK fonts with special codepoint loading
       {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints},
       {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,
