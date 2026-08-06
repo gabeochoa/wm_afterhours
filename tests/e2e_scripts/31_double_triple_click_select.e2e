@@ -1,0 +1,69 @@
+# Double click selects a word, triple click selects the line.
+#
+# Covers BOTH widgets: the single-line text_input and the multiline text_area.
+# Two separate bugs made this not work, and neither surfaced as an error:
+#   - both widgets keep their state on the OUTER entity while the click
+#     listener hangs off the inner field, so the callback returned immediately
+#   - text_area's drag listener fires on the press as well as on movement, so
+#     the drag right after a double click collapsed the word it had selected
+#
+# Deliberately POSITION-INDEPENDENT. Where a given pixel lands in the text
+# depends on the font and on the window size, and the suite resizes the window
+# -- an earlier version of this asserted a fixed offset, passed standalone and
+# failed in the suite for that reason alone. So: double click a field holding a
+# single word (any point is inside it), and triple click for the whole line
+# (any point selects all of it). The exact mid-word offsets are pinned by the
+# unit tests in text_area_test.cpp, where measurement is deterministic.
+
+# ---------------------------------------------------------------------------
+# Single line
+# ---------------------------------------------------------------------------
+goto_screen text_input
+wait 0.5
+
+# Clear first: earlier scripts in the suite leave text in this field.
+focus_ui Username_input
+wait 0.2
+select_all
+wait 0.2
+key BACKSPACE
+wait 0.2
+expect_input_text Username_input ""
+
+# Double click takes the whole word under the pointer, not one character.
+type "alphabetagamma"
+wait 0.3
+key END
+wait 0.2
+expect_selected_text Username_input ""
+double_click_ui Username_input
+wait 0.5
+expect_selected_text Username_input "alphabetagamma"
+
+# Triple click takes the whole line, spaces and all.
+select_all
+wait 0.2
+key BACKSPACE
+wait 0.2
+type "alpha beta gamma"
+wait 0.3
+key END
+wait 0.2
+expect_selected_text Username_input ""
+triple_click_ui Username_input
+wait 0.6
+expect_selected_text Username_input "alpha beta gamma"
+
+# ---------------------------------------------------------------------------
+# Multiline -- the same two gestures on text_area
+# ---------------------------------------------------------------------------
+goto_screen composer_lab
+wait 0.5
+
+# Panel 3 has wrapping off, so it is one known row and a triple click there
+# selects exactly that row.
+triple_click_ui cl_nowrap
+wait 0.6
+expect_selected_text cl_nowrap "wrapping is off on this one so this long line just runs on and gets clipped at the edge"
+
+screenshot triple_click_multiline

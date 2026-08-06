@@ -1,5 +1,9 @@
 # Text Area Arrow Key Navigation Test
 # Tests multiline editing with arrow key navigation in the AIM Chat Demo
+#
+# The composer is submit_on_enter, so plain Enter SENDS the message and clears
+# the box. Shift+Enter is what inserts a newline -- use it to build the
+# multi-line text this test navigates around.
 
 # Navigate to the AIM Chat screen
 goto_screen aim_chat
@@ -13,16 +17,16 @@ wait 0.3
 type "hello"
 wait 0.2
 
-# Press Enter to create new line
-key ENTER
+# Shift+Enter to create new line
+key SHIFT+ENTER
 wait 0.2
 
 # Type second line: "how"
 type "how"
 wait 0.2
 
-# Press Enter to create new line
-key ENTER
+# Shift+Enter to create new line
+key SHIFT+ENTER
 wait 0.2
 
 # Type third line: "are you"

@@ -1,23 +1,37 @@
 # Detect OS
 UNAME_S := $(shell uname -s)
 
+# Drop a target if its recipe dies or is interrupted. Without this a killed
+# compile leaves a 0-byte .o behind that every later build happily links,
+# failing with "file is empty" until you find and delete it by hand.
+.DELETE_ON_ERROR:
+
+# Build in parallel by default. 17 translation units compiled serially was
+# several minutes of every `make test`; the tests themselves are ~3.
+NPROC := $(shell sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
+MAKEFLAGS += -j$(NPROC)
+
+# ccache when it is available -- switching branches or touching one vendored
+# header otherwise rebuilds everything from scratch.
+CCACHE := $(shell command -v ccache 2>/dev/null)
+
 # Compiler settings
 ifeq ($(UNAME_S),Darwin)
-    CXX := clang++
+    CXX := $(CCACHE) clang++
     EXT := .exe
     RAYLIB_FLAGS := $(shell pkg-config --cflags raylib 2>/dev/null || echo -I/opt/homebrew/include)
     RAYLIB_LIB := $(shell pkg-config --libs raylib 2>/dev/null || echo -L/opt/homebrew/lib -lraylib)
     MACOS_FLAGS := -DBACKWARD
     FRAMEWORKS := -framework CoreFoundation -framework OpenGL
 else ifeq ($(OS),Windows_NT)
-    CXX := g++
+    CXX := $(CCACHE) g++
     EXT := .exe
     RAYLIB_FLAGS := -IF:/RayLib/include
     RAYLIB_LIB := F:/RayLib/lib/raylib.dll
     MACOS_FLAGS :=
     FRAMEWORKS :=
 else
-    CXX := clang++
+    CXX := $(CCACHE) clang++
     EXT :=
     RAYLIB_FLAGS := $(shell pkg-config --cflags raylib)
     RAYLIB_LIB := $(shell pkg-config --libs raylib)
@@ -250,8 +264,11 @@ run: output
 .PHONY: update-baselines validate-screenshots ci run-all-tests test test-visible test-layout
 
 # Run E2E test scripts headlessly with minimal output (agent/CI default)
+# --time-scale 4: the suite spends ~289s of its runtime in scripted `wait`s.
+# Headless has no vsync, so scaling the frame delta burns them in a quarter of
+# the frames. 8x saves little more and leaves the UI fewer frames to settle.
 test: $(MAIN_EXE)
-	./$(MAIN_EXE) --test-script-dir tests/e2e_scripts --headless --quiet
+	./$(MAIN_EXE) --test-script-dir tests/e2e_scripts --headless --quiet --time-scale 4
 
 # Run E2E tests in a visible window (debug only)
 test-visible: $(MAIN_EXE)
