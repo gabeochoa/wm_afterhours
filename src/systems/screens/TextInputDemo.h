@@ -108,6 +108,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(36)})
                      .with_custom_background(field_bg)
                      .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
+                     .with_placeholder(placeholder)
                      .with_rounded_corners(RoundedCorners().all_round())
                      .with_roundness(0.10f)
                      .with_border(field_border, 1.0f)
@@ -115,25 +116,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
 
       if (mask) cfg.with_mask_char(*mask);
 
-      auto result =
-          text_input(context, mk(body.ent(), idx * 3 + 1), value, cfg);
-
-      if (value.empty()) {
-        div(context, mk(result.ent(), 10),
-            ComponentConfig{}
-                .with_label(placeholder)
-                .with_size(ComponentSize{percent(1.0f), pixels(15)})
-                .with_background(Theme::Usage::None)
-                .with_custom_text_color(afterhours::Color{105, 112, 138, 200})
-                .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
-                .with_alignment(TextAlignment::Left)
-                .with_absolute_position(14.f, 5.f)
-                .with_skip_tabbing(true)
-                .with_render_layer(5)
-                .with_debug_name(label_text + "_placeholder"));
-      }
-
-      return result;
+      return text_input(context, mk(body.ent(), idx * 3 + 1), value, cfg);
     };
 
     if (make_field(0, "Username", "Enter username", username)) {
@@ -168,6 +151,7 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
                       .with_size(ComponentSize{expand(), pixels(36)})
                       .with_background(Theme::Usage::None)
                       .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
+                      .with_placeholder("Enter password")
                       .with_debug_name("Password_input");
 
     if (!show_password) pw_cfg.with_mask_char('*');
@@ -175,21 +159,6 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto pw_result = text_input(context, mk(pw_row.ent(), 0), password, pw_cfg);
     if (pw_result) {
       status_message = "Password changed";
-    }
-
-    if (password.empty()) {
-      div(context, mk(pw_result.ent(), 10),
-          ComponentConfig{}
-              .with_label("Enter password")
-              .with_size(ComponentSize{percent(1.0f), pixels(15)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(afterhours::Color{105, 112, 138, 200})
-              .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
-              .with_alignment(TextAlignment::Left)
-              .with_absolute_position(14.f, 5.f)
-              .with_skip_tabbing(true)
-              .with_render_layer(5)
-              .with_debug_name("Password_placeholder"));
     }
 
     if (button(context, mk(pw_row.ent(), 1),

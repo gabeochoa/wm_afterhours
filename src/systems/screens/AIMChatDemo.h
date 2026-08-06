@@ -18,6 +18,26 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
   std::string buddy_name = "SmarterChild";
   std::string my_name = "coolkid2001";
 
+  // Append the composed message to the history and clear the box. Shared by the
+  // Send button and Enter-to-send (text_area's on_submit). Clearing the bound
+  // string isn't enough: text_area keeps its own storage and writes it back
+  // over message_input every frame, so reset that too.
+  void send_message(afterhours::Entity &composer_ent) {
+    while (!message_input.empty() &&
+           std::isspace(static_cast<unsigned char>(message_input.back())))
+      message_input.pop_back();
+    if (message_input.empty())
+      return;
+    chat_history.push_back({my_name, message_input});
+    message_input.clear();
+    auto &st =
+        composer_ent.get<afterhours::text_input::HasTextAreaState>();
+    st.storage.clear();
+    st.cursor_position = 0;
+    st.clear_selection();
+    st.rebuild_line_index();
+  }
+
   // Confirmation dialog states
   bool show_warn_confirm = false;
   bool show_block_confirm = false;
@@ -272,11 +292,13 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
       bool is_me = (sender == my_name);
       std::string formatted = sender + ": " + msg;
 
-      // Visual hierarchy: bold sender names via color intensity
+      // Height comes from Dim::Text so a long message wraps to as many lines as
+      // it needs instead of clipping in a fixed 28px row.
       div(context, mk(chat_area.ent(), msg_idx++),
           ComponentConfig{}
               .with_label(formatted)
-              .with_size(ComponentSize{percent(1.0f), pixels(28)})
+              .with_size(ComponentSize{percent(1.0f), Size{Dim::Text, 0.f, 1.f}})
+              .with_text_overflow(TextOverflow::Wrap)
               .with_custom_text_color(is_me ? AIMColors::my_text()
                                             : AIMColors::buddy_text())
               .with_alignment(TextAlignment::Left)
@@ -360,18 +382,25 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
             .disable_rounded_corners()
             .with_debug_name("input_container"));
 
-    if (afterhours::text_input::text_area(
-            context, mk(input_container.ent(), 0), message_input,
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.0f), pixels(INPUT_HEIGHT)})
-                .with_custom_background(AIMColors::input_bg())
-                .with_custom_text_color(AIMColors::my_text())
-                .with_line_height(pixels(INPUT_LINE_HEIGHT))
-                .with_max_lines(INPUT_LINES)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                .disable_rounded_corners()
-                .with_debug_name("message_input"))) {
-    }
+    auto composer = afterhours::text_input::text_area(
+        context, mk(input_container.ent(), 0), message_input,
+        ComponentConfig{}
+            .with_size(ComponentSize{percent(1.0f), pixels(INPUT_HEIGHT)})
+            .with_custom_background(AIMColors::input_bg())
+            .with_custom_text_color(AIMColors::my_text())
+            .with_line_height(pixels(INPUT_LINE_HEIGHT))
+            .with_max_lines(INPUT_LINES)
+            .with_submit_on_enter()
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+            .disable_rounded_corners()
+            .with_debug_name("message_input"));
+    // Enter sends (Shift+Enter still inserts a newline); without an on_submit
+    // listener submit_on_enter would silently do nothing.
+    composer.ent()
+        .addComponentIfMissing<afterhours::text_input::HasTextInputListener>();
+    composer.ent()
+        .get<afterhours::text_input::HasTextInputListener>()
+        .on_submit = [this](afterhours::Entity &e) { send_message(e); };
 
     // Placeholder text - render in wrapper, positioned absolutely over the
     // input Since text_area forces a background, we render placeholder on
@@ -435,17 +464,19 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     }
 
     // Send button
-    button(context, mk(button_bar.ent(), 2),
-           ComponentConfig{}
-               .with_label("Send")
-               .with_size(ComponentSize{pixels(UIConfig::BUTTON_WIDTH),
-                                        pixels(UIConfig::BUTTON_HEIGHT)})
-               .with_custom_background(AIMColors::button_face())
-               .with_custom_text_color(AIMColors::text_default())
-               .with_border(AIMColors::button_shadow(), 2.0f)
-               .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-               .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
-               .disable_rounded_corners());
+    if (button(context, mk(button_bar.ent(), 2),
+               ComponentConfig{}
+                   .with_label("Send")
+                   .with_size(ComponentSize{pixels(UIConfig::BUTTON_WIDTH),
+                                            pixels(UIConfig::BUTTON_HEIGHT)})
+                   .with_custom_background(AIMColors::button_face())
+                   .with_custom_text_color(AIMColors::text_default())
+                   .with_border(AIMColors::button_shadow(), 2.0f)
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+                   .with_margin(Margin{.left = pixels(UIConfig::BUTTON_SPACING)})
+                   .disable_rounded_corners())) {
+      send_message(composer.ent());
+    }
 
     // Status bar
     div(context, mk(window.ent(), 8),

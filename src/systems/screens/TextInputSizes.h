@@ -110,28 +110,13 @@ struct TextInputSizes : ScreenSystem<UIContext<InputAction>> {
 
       auto cfg = ComponentConfig{}
                      .with_size(ComponentSize{expand(), pixels(h)})
+                     .with_placeholder("Type here...")
                      .with_rounded_corners(RoundedCorners().all_round())
                      .with_roundness(0.10f)
                      .with_border(field_border, 1.0f)
                      .with_debug_name(std::string("input_") + specs[i].label);
 
-      auto result =
-          text_input(context, mk(row.ent(), 1), values[i], cfg);
-
-      if (values[i].empty()) {
-        div(context, mk(result.ent(), 10),
-            ComponentConfig{}
-                .with_label("Type here...")
-                .with_size(ComponentSize{percent(1.0f), pixels(h * 0.5f)})
-                .with_background(Theme::Usage::None)
-                .with_custom_text_color(afterhours::Color{105, 112, 138, 200})
-                .with_font(UIComponent::DEFAULT_FONT, pixels(h * 0.35f))
-                .with_alignment(TextAlignment::Left)
-                .with_absolute_position(h * 0.35f, h * 0.15f)
-                .with_skip_tabbing(true)
-                .with_render_layer(5)
-                .with_debug_name(std::string("ph_") + specs[i].label));
-      }
+      text_input(context, mk(row.ent(), 1), values[i], cfg);
     }
   }
 };
