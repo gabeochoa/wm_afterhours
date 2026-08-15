@@ -31,8 +31,10 @@
      pixels are the same coordinate space and the overlay lines up. */
   .stage { position:relative; transform-origin:top left; }
   .stage img { display:block; width:100%; height:100%; }
-  .node { position:absolute; border:1px solid rgba(120,170,255,.30); overflow:hidden;
-          font-size:10px; color:#cfe0ff; }
+  /* outline, not border: a border is in the box model, so a 1px debug stroke
+     would inset every nesting level and silently manufacture the diffs. */
+  .node { position:absolute; outline:1px solid rgba(120,170,255,.30); outline-offset:-1px;
+          overflow:hidden; font-size:10px; color:#cfe0ff; }
   .lbl { position:absolute; inset:0; display:flex; align-items:center;
          justify-content:center; padding:0 2px; white-space:nowrap; overflow:hidden; }
   /* Where CSS put a box vs where afterhours put it. */
@@ -62,82 +64,12 @@
 </div>
 <div id="diffs"></div>
 
+<script src="mock.js"></script>
 <script>
 const qs = new URLSearchParams(location.search);
 let screens = [], cur = 0, tree = null;
 
 const $ = id => document.getElementById(id);
-
-// ---------------------------------------------------------------------------
-// intent -> CSS. Anything not expressible is left unset so the browser's own
-// default applies; forcing a guess here would manufacture diffs.
-// ---------------------------------------------------------------------------
-const JUSTIFY = { FlexStart:'flex-start', FlexEnd:'flex-end', Center:'center',
-                  SpaceBetween:'space-between', SpaceAround:'space-around' };
-const ALIGN   = { FlexStart:'flex-start', FlexEnd:'flex-end', Center:'center',
-                  Stretch:'stretch' };
-
-// vw/vh here are the captured viewport, not the browser window.
-function applySize(el, size, axis, vw, vh) {
-  const prop = axis === 'x' ? 'width' : 'height';
-  const v = size.value;
-  switch (size.dim) {
-    case 'Pixels':        el.style[prop] = v + 'px'; break;
-    case 'Percent':       el.style[prop] = (v * 100) + '%'; break;
-    case 'ScreenPercent': el.style[prop] = (v * (axis === 'x' ? vw : vh)) + 'px'; break;
-    case 'Children':      el.style[prop] = 'fit-content'; break;
-    // Expand is flex-grow, but only along the parent's main axis; the caller
-    // fixes up the cross axis once it knows the direction.
-    case 'Expand':        el.style['flex-grow'] = v; break;
-    case 'Text':          el.style[prop] = 'fit-content'; break;
-  }
-}
-
-function buildNode(n, vw, vh, parentDir, showLabels) {
-  const el = document.createElement('div');
-  el.className = 'node';
-  el.dataset.id = n.id;
-  el.dataset.name = n.name || '';
-
-  const row = n.flex_direction === 'Row';
-  el.style.display = 'flex';
-  el.style.flexDirection = row ? 'row' : 'column';
-  el.style.justifyContent = JUSTIFY[n.justify_content] || 'flex-start';
-  el.style.alignItems = ALIGN[n.align_items] || 'flex-start';
-  el.style.flexWrap = n.flex_wrap === 'NoWrap' ? 'nowrap' : 'wrap';
-  if (n.gap) el.style.gap = n.gap + 'px';
-
-  const p = n.padding, m = n.margin;
-  el.style.padding = `${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`;
-  el.style.margin  = `${m.top}px ${m.right}px ${m.bottom}px ${m.left}px`;
-
-  applySize(el, n.desired.x, 'x', vw, vh);
-  applySize(el, n.desired.y, 'y', vw, vh);
-
-  // flex-grow only grows the main axis. An Expand on the cross axis means
-  // "fill the parent" there, which is stretch, not grow.
-  if (n.desired.x.dim === 'Expand' && parentDir === 'column') el.style.alignSelf = 'stretch';
-  if (n.desired.y.dim === 'Expand' && parentDir === 'row')    el.style.alignSelf = 'stretch';
-  if (n.self_align && n.self_align !== 'Auto')
-    el.style.alignSelf = ALIGN[n.self_align] || 'auto';
-
-  if (n.absolute) {
-    el.style.position = 'absolute';
-    el.style.left = n.relative_pos.x + 'px';
-    el.style.top  = n.relative_pos.y + 'px';
-  } else {
-    el.style.position = 'relative';
-  }
-
-  if (showLabels && n.label) {
-    const s = document.createElement('span');
-    s.className = 'lbl';
-    s.textContent = n.label;
-    el.appendChild(s);
-  }
-  for (const c of n.children) el.appendChild(buildNode(c, vw, vh, row ? 'row' : 'column', showLabels));
-  return el;
-}
 
 // ---------------------------------------------------------------------------
 // render
@@ -155,11 +87,7 @@ async function load(name) {
   }
 
   shot.innerHTML = `<img src="shots/${tree.screenshot}" alt="">`;
-  mock.innerHTML = '';
-  const root = buildNode(tree.tree[0], vw, vh, 'column', $('labels').checked);
-  root.style.position = 'absolute';
-  root.style.left = '0'; root.style.top = '0';
-  mock.appendChild(root);
+  mountMock(mock, tree, $('labels').checked);
 
   fitPanes(vw, vh);
   report(vw, vh);
@@ -179,39 +107,10 @@ function fitPanes(vw, vh) {
   }
 }
 
-// Walk the dump and the DOM in lockstep, comparing afterhours' rect to the one
-// CSS produced for the same node.
-function collectDiffs(vw, vh) {
-  const stage = $('mock').getBoundingClientRect();
-  const scale = (stage.width / vw) || 1;
-  const out = [];
-
-  const walk = (n, el) => {
-    if (!el) return;
-    const b = el.getBoundingClientRect();
-    const css = { x:(b.left - stage.left)/scale, y:(b.top - stage.top)/scale,
-                  width:b.width/scale, height:b.height/scale };
-    out.push({
-      name: n.name || `#${n.id}`,
-      ah: n.rect, css,
-      dx: css.x - n.rect.x, dy: css.y - n.rect.y,
-      dw: css.width - n.rect.width, dh: css.height - n.rect.height,
-      desired: `${n.desired.x.dim}/${n.desired.y.dim}`,
-      dir: n.flex_direction, justify: n.justify_content,
-      absolute: n.absolute,
-    });
-    const kids = [...el.children].filter(c => c.classList.contains('node'));
-    n.children.forEach((c, i) => walk(c, kids[i]));
-  };
-  walk(tree.tree[0], $('mock').firstElementChild);
-  return out;
-}
-
 function report(vw, vh) {
   const tol = +$('tol').value;
-  const diffs = collectDiffs(vw, vh);
-  const bad = diffs.filter(d => Math.max(Math.abs(d.dx), Math.abs(d.dy),
-                                         Math.abs(d.dw), Math.abs(d.dh)) > tol);
+  const diffs = collectDiffs($('mock'), tree);
+  const bad = diffs.filter(d => worseThan(d, tol));
 
   // overlay
   document.querySelectorAll('.truth').forEach(e => e.remove());

@@ -1,0 +1,135 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>afterhours mock sheet</title>
+<!--
+  sheet.html?page=N&per=8&tol=2&scale=0.55
+
+  Static contact sheet: every screen as raylib-vs-CSS side by side, ranked by
+  how many nodes the two solvers disagree about. index.html is the interactive
+  one; this exists to be screenshotted, so it has no controls and no scrolling
+  state. ./mocks/sheets.sh drives it.
+-->
+<style>
+  :root { color-scheme: dark; --bg:#12151c; --fg:#e7ecf3; --dim:#8f9bb0; --bad:#ff5c68; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; }
+  h1 { font-size:14px; margin:0; padding:10px 14px; border-bottom:1px solid #262c38; }
+  .row { border-bottom:1px solid #222834; padding:8px 14px 14px; }
+  .row.hide { display:none; }
+  .cap { display:flex; gap:12px; align-items:baseline; padding:2px 0 6px; }
+  .cap b { font-size:14px; }
+  .cap .n { color:var(--dim); }
+  .cap .n.bad { color:var(--bad); }
+  .pair { display:flex; gap:12px; }
+  .pane { border:1px solid #262c38; border-radius:5px; overflow:hidden; }
+  .pane h2 { margin:0; padding:3px 8px; font-size:10px; letter-spacing:.09em;
+             text-transform:uppercase; color:var(--dim); background:#171b24; }
+  .stage { position:relative; transform-origin:top left; }
+  .stage img { display:block; width:100%; height:100%; }
+  /* outline, not border: a border is in the box model, so a 1px debug stroke
+     would inset every nesting level and silently manufacture the diffs. */
+  .node { position:absolute; outline:1px solid rgba(120,170,255,.30); outline-offset:-1px;
+          overflow:hidden; font-size:10px; color:#cfe0ff; }
+  .lbl { position:absolute; inset:0; display:flex; align-items:center;
+         justify-content:center; padding:0 2px; white-space:nowrap; overflow:hidden; }
+  .truth { position:absolute; border:1px dashed rgba(255,92,104,.85); pointer-events:none; }
+</style>
+<h1 id="hd">loading…</h1>
+<div id="rows"></div>
+<script src="mock.js"></script>
+<script>
+const qs = new URLSearchParams(location.search);
+const TOL   = +(qs.get('tol')   ?? 2);
+const PER   = +(qs.get('per')   ?? 8);
+const PAGE  = +(qs.get('page')  ?? 0);
+const SCALE = +(qs.get('scale') ?? 0.55);
+const ONLYBAD = qs.get('only') === 'bad'; // drop the screens the two agree on
+
+const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
+
+// Every screen gets built and measured -- the ranking needs all of them -- then
+// all but this page's slice are hidden. Cheaper than loading the set twice.
+(async () => {
+  const screens = await (await fetch('screens.json')).json();
+  const rows = document.getElementById('rows');
+  const built = [];
+
+  for (const name of screens) {
+    const res = await fetch(`trees/${name}.json`);
+    if (!res.ok) continue;
+    const tree = await res.json();
+    const vw = tree.viewport.width, vh = tree.viewport.height;
+
+    const row = el('div', 'row');
+    const cap = el('div', 'cap');
+    row.appendChild(cap);
+
+    const pair = el('div', 'pair');
+    const stages = ['raylib (c++)', 'css flexbox from intent'].map(t => {
+      const pane = el('div', 'pane');
+      const h = el('h2'); h.textContent = t; pane.appendChild(h);
+      const st = el('div', 'stage');
+      st.style.width = vw + 'px'; st.style.height = vh + 'px';
+      st.style.transform = `scale(${SCALE})`;
+      pane.style.width  = (vw * SCALE) + 'px';
+      pane.style.height = (vh * SCALE + 20) + 'px';
+      pane.appendChild(st);
+      pair.appendChild(pane);
+      return st;
+    });
+    row.appendChild(pair);
+    rows.appendChild(row);
+
+    stages[0].innerHTML = `<img src="shots/${tree.screenshot}" alt="">`;
+    mountMock(stages[1], tree, true);
+
+    const diffs = collectDiffs(stages[1], tree);
+    const bad = diffs.filter(d => worseThan(d, TOL));
+    for (const d of diffs) {
+      const t = el('div', 'truth');
+      t.style.left = d.ah.x + 'px';   t.style.top = d.ah.y + 'px';
+      t.style.width = d.ah.width + 'px'; t.style.height = d.ah.height + 'px';
+      stages[1].appendChild(t);
+    }
+
+    const worst = bad.slice().sort((a, b) =>
+      Math.max(Math.abs(b.dx),Math.abs(b.dy),Math.abs(b.dw),Math.abs(b.dh)) -
+      Math.max(Math.abs(a.dx),Math.abs(a.dy),Math.abs(a.dw),Math.abs(a.dh)))[0];
+    cap.innerHTML =
+      `<b>${name}</b><span class="${bad.length ? 'n bad' : 'n'}">` +
+      `${bad.length}/${diffs.length} nodes differ &gt;${TOL}px</span>` +
+      (worst ? `<span class="n">worst: ${worst.name} ` +
+               `Δx${worst.dx.toFixed(0)} Δy${worst.dy.toFixed(0)} ` +
+               `Δw${worst.dw.toFixed(0)} Δh${worst.dh.toFixed(0)}</span>` : '');
+
+    built.push({ name, row, bad: bad.length, total: diffs.length,
+                 nodes: bad.map(d => ({ n: d.name, dx: +d.dx.toFixed(1), dy: +d.dy.toFixed(1),
+                                        dw: +d.dw.toFixed(1), dh: +d.dh.toFixed(1),
+                                        want: d.desired, dir: d.dir, j: d.justify,
+                                        abs: d.absolute, scroll: d.underScroll,
+                                        text: d.underText })) });
+  }
+
+  built.sort((a, b) => b.bad - a.bad || a.name.localeCompare(b.name));
+  built.forEach(b => rows.appendChild(b.row));
+
+  const shown = ONLYBAD ? built.filter(b => b.bad) : built;
+  const slice = shown.slice(PAGE * PER, PAGE * PER + PER);
+  const keep = new Set(slice.map(b => b.row));
+  built.forEach(b => { if (!keep.has(b.row)) b.row.classList.add('hide'); });
+
+  const pages = Math.ceil(shown.length / PER);
+  document.getElementById('hd').textContent =
+    `afterhours mock sheet ${PAGE + 1}/${pages} — ranked by nodes where CSS and ` +
+    `afterhours disagree by >${TOL}px (dashed red = afterhours' rect)`;
+
+  // sheets.sh reads this out of the DOM with --dump-dom.
+  const dump = document.createElement('pre');
+  dump.id = 'raw'; dump.hidden = true;
+  dump.textContent = JSON.stringify(built.map(b =>
+    ({ name: b.name, bad: b.bad, total: b.total, nodes: b.nodes })));
+  document.body.appendChild(dump);
+  window.__ready = true;
+})();
+</script>

@@ -53,3 +53,6 @@ wm_afterhours/
 mocks/shots/
 mocks/trees/
 mocks/screens.json
+
+# Generated review artifacts from the mock tool.
+mocks/sheets/
