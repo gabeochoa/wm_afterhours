@@ -1,0 +1,62 @@
+# Feature: draggable dividers resize a split pane (D30)
+# Expected: pressing on a divider and moving converts the pointer's travel into
+# a new ratio, in layout space, and the pane resizes to match.
+#
+# Coordinates are absolute because the dividers are 4px wide and a percentage
+# would not reliably land on one. The lab draws a 1180x560 box at (48, 84):
+#   vertical divider   x = 48 + 0.28 * 1180 = 378 .. 382
+#   horizontal divider y = 84 + 0.62 * 560  = 431 .. 435
+
+goto_screen split_pane_lab
+wait 0.5
+
+expect_text "sidebar 28%"
+expect_text "preview 62%"
+expect_text "sidebar"
+expect_text "preview"
+expect_text "details"
+screenshot split_pane_initial
+
+# =========================================================================
+# Drag the vertical divider right by a tenth of the container (118 / 1180)
+# =========================================================================
+mouse_down 380 300
+wait 0.2
+mouse_move 498 300
+wait 0.3
+mouse_up
+wait 0.3
+
+expect_text "sidebar 38%"
+expect_text "preview 62%"
+screenshot split_pane_wider_sidebar
+
+# =========================================================================
+# Drag the horizontal divider down by a tenth of its container (56 / 560).
+# It sits inside the region the first drag just resized, so this also checks
+# the nested pane still tracks after its parent moved.
+# =========================================================================
+mouse_down 800 433
+wait 0.2
+mouse_move 800 489
+wait 0.3
+mouse_up
+wait 0.3
+
+expect_text "sidebar 38%"
+expect_text "preview 72%"
+screenshot split_pane_shorter_preview
+
+# =========================================================================
+# Dragging back the other way shrinks it again -- the delta is signed, not a
+# jump to the pointer, so releasing and re-grabbing off centre does not snap.
+# =========================================================================
+mouse_down 498 300
+wait 0.2
+mouse_move 380 300
+wait 0.3
+mouse_up
+wait 0.3
+
+expect_text "sidebar 28%"
+screenshot split_pane_back_to_start

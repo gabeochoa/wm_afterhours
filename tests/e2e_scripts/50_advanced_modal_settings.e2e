@@ -48,14 +48,14 @@ wait 0.3
 # Dropdown should open showing options
 screenshot settings_dropdown_open
 
-# Open the dropdown, then close it. NOTE: DOWN+ENTER selection inside the
-# dropdown is a no-op in headless (keyboard list-nav doesn't land), so it stays
-# open; ESCAPE closes it so it doesn't cover the toggles tested below.
+# Pick the next language. This used to need a trailing ESCAPE: keyboard
+# list-nav inside a Column tray did not land, so DOWN+ENTER was a no-op and the
+# dropdown stayed open over the toggles below. afterhours D36 gave tray()
+# ConsumesDirectionalInput, so ENTER now selects and closes -- and the ESCAPE
+# that used to dismiss the dropdown would dismiss the whole settings modal.
 key DOWN
 wait 0.2
 key ENTER
-wait 0.3
-key ESCAPE
 wait 0.3
 screenshot settings_language_changed
 
