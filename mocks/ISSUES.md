@@ -9,23 +9,24 @@ than expected: **5 of the 7 automated checks were wrong on first run** and their
 findings evaporated once the checker accounted for what the layout was actually
 asked to do. Those are recorded in "Ruled out" so nobody re-files them.
 
-| # | issue | screens | nodes |
-|---|-------|--------:|------:|
-| 1 | Children that do not fit are silently overflowed | 6 | 20 |
-| 2 | Padding applied inconsistently to a container vs its children | 1 | 28 |
-| 3 | `expand()` resolving to 0 on a separator | 1 | 1 |
-| 4 | 8 screenshot baselines are stale (not a library bug) | 8 | — |
+| # | issue | screens | nodes | status |
+|---|-------|--------:|------:|---|
+| 1 | Children that do not fit are silently overflowed | 6 | 21 | open |
+| 2 | Scroll-view children positioned one margin off | 1 | 27 | **fixed** |
+| 3 | `expand()` resolving to 0 on the cross axis | 1 | 1 | **fixed** |
+| 4 | Screenshot baselines were stale (not a library bug) | 19 | — | **fixed** |
 
 ---
 
-## 1. Children that do not fit are silently overflowed — 6 screens
+## 1. Children that do not fit are silently overflowed — 6 screens, 21 nodes
 
 **Screens:** `powerwash_settings` (9), `flex_alignment` (5), `layout` (3),
-`deadspace_settings` (1), `meters_gauges` (1), `rubber_bandits_menu` (1)
+`deadspace_settings` (1), `meters_gauges` (1), `rubber_bandits_menu` (1),
+`forms` (1)
 
 When a container's resolved size is smaller than its children need, afterhours
 lays the children out at their full size anyway and lets them hang outside the
-parent box. It does not shrink them, does not wrap them, and does not warn.
+parent box. It does not shrink them and does not wrap them.
 
 Two representative cases:
 
@@ -36,78 +37,78 @@ Two representative cases:
   bottom — 28.8px of padding around a `Pixels(32)` child, so 60.8px of content
   in a 44px box.
 
-**Why it is worth researching rather than dismissing as caller error.** It is
-caller error in each individual case, and probably the right fix for most of
-these screens is to change the screen. But three separate mechanisms that
-should have caught it did nothing:
+**This is caller error in every one of these cases**, and the right fix is to
+change the screens. The library question is only whether it should be *visible*
+at authoring time, and there the picture is narrower than it first looked:
 
-- `Size::strictness` exists and is `1.0` on these children. If strictness is
-  meant to gate shrinking, a strict child overflowing its parent is the case it
-  exists to describe, and nothing consults it here.
-- `flex_wrap` defaults to `Wrap`, and CSS flexbox would have wrapped
-  `flex_alignment`'s three 26px chips inside their 49.8px content box. It does
-  not wrap.
-- `collect_layout_problems` (wm-side) already detects this shape and reports it
-  for `flex_alignment` — but only that one, so its coverage does not match.
+- `Size::strictness` is `1.0` on all of these children, and `strictness == 1`
+  means "do not shrink me". `compute_error` honours that: it only redistributes
+  among children with `strictness < 1`. Working as designed.
+- `flex_wrap` is **NoWrap** on 3860 of the 3863 nodes in the sweep, because
+  NoWrap is the default (`UIComponent` and `ComponentConfig` both start there),
+  not `Wrap`. The `layout_types.h` comment claimed the opposite; corrected.
+- What is left is that the overflow warning does not fire. Its tolerance is
+  `sx + child_margin + 4px`, and `powerwash_settings` overflows by 8px with a
+  20px margin, so the margin allowance swallows it. That allowance was added
+  deliberately (a `percent(1)` child plus margin overflows by exactly its
+  margin under the content-box model, which the caller cannot act on), so
+  tightening it needs a way to tell that idiom apart from real overflow rather
+  than just a smaller number.
 
-Decide which of shrink / wrap / warn is intended, then make it happen in one
-place. Until then this failure is invisible at authoring time.
+Not urgent, and not a solver bug. Left open as a diagnostics question.
 
-## 2. Padding applied inconsistently to a container vs its children — 1 screen, 28 nodes
+## 2. Scroll-view children positioned one margin off — FIXED
 
-**Screen:** `forms`
+**Screen:** `forms` (27 of its 28 flagged nodes; the 28th is issue 1).
 
-In `forms`, a child is positioned *up and to the left of its own parent's
-origin* — outside the box on two sides at once, while comfortably fitting
-inside it by size.
+`computed_rel` is the *pre-margin* origin — `UIComponent::rect()` adds
+`margin_left/top` back on. The scroll-view repositioning pass added the margin
+itself as well, so every margined direct child of a scroll view got its box
+placed one margin down and right of the widgets inside it. In `forms` that drew
+each checkbox row as a visible staircase: the row's fill offset from its own
+label and checkmark, and the rows spilling past the panel's right edge.
 
-```
-grandparent (unnamed Column)  x=653.4  padding left=25.6 top=14.4
-  checkbox_row                x=704.6  = 653.4 + 25.6 + 25.6   <- 2x the padding
-    "checkbox label"          x=691.8  = 653.4 + 12.8          <- 0.5x the padding
-```
+The reason it survived this long is that the pass existed **twice**, once in
+`systems.h` (tick, for hit-testing) and once in `rendering.h` (render), and the
+copies had drifted: only one knew about `gap`, only one propagated the shift to
+grandchildren, and whichever ran last silently won. Fixing one copy alone made
+things worse, not better — the surviving copy's delta then dragged the children
+off in the other direction.
 
-The child sits at exactly `-12.8, -7.2` from `checkbox_row`, which is precisely
-**half the grandparent's padding, negated** — while `checkbox_row` itself is
-offset by **twice** that padding. One padding value, applied at two different
-scales one level apart.
+Fixed by deleting the render-side copy and keeping one
+`detail::reposition_scroll_view_children` in `systems.h` that both call, with
+the margin double-count removed. Verified against `forms_720p.png` (staircase
+gone) and `scroll_click_bug_720p.png` (rows no longer double-offset).
 
-Only one screen, but 28 nodes and a clean arithmetic signature, so it is likely
-a single bug in how padding is folded into relative position. Worth doing early
-despite the screen count: it is the most likely of these to be a genuine solver
-defect rather than a screen over-specifying itself.
-
-## 3. `expand()` resolving to 0 — 1 screen
+## 3. `expand()` resolving to 0 on the cross axis — FIXED
 
 **Screen:** `deadspace_settings`, node `sep_sidebar`, `x=Expand(1) -> 0px`.
 
-A separator asking to expand got no width. This is the same *family* as the
-absolute-subtree collapse fixed in afterhours `48f808d` (expand is only ever
-resolved inside `solve_violations`, so anything that skips that pass collapses),
-but `sep_sidebar` is not under an absolutely-positioned parent, so that fix does
-not explain it. Some other path is skipping the expand pass. Small and isolated,
-but the shared root cause makes it cheap to look at alongside anything else in
-`solve_violations`.
+Both axes went through `tax_refund`, which resolves expand as *a share of the
+leftover space*. That is right on the main axis, where children stack, and
+wrong on the cross axis, where they overlap: `sep_sidebar`'s `percent(1)`
+siblings had already claimed the sidebar's full 240px, so the leftover was 0
+and the separator got nothing.
 
-## 4. Eight screenshot baselines are stale — 8 screens
+Cross-axis `expand()` now means stretch — the whole content box minus the
+child's own margins — which is what `align-self: stretch` does in CSS. The
+separator under "PAUSE MENU" renders again. Regression test:
+`cross_axis_expand_stretches` in `tests/autolayout_test.cpp`.
 
-Not a library bug, listed so it stops reading as one. `make validate-screenshots`
-fails on `auto_text_color` (19.3%), `parcel_corps_settings` (2.2%), `forms`
-(2.0%), `flex_alignment` (1.8%), `hstack_showcase` (1.4%), `circular_progress`
-(1.3%), `cards` (1.2%), `islands_trains_settings` (1.0%).
+## 4. Screenshot baselines were stale — FIXED
 
-These reproduce with **identical percentages at the old submodule pointer**
-(`9594e20`), so they predate the afterhours bump and the split-pane work. Spot
-checking `auto_text_color`, the *current* render is the correct one — the
-baseline has content clipped off the right edge and its entire fourth section
-missing. The baselines were captured before a layout fix and never refreshed.
+Not a library bug, listed because it read as one. `make validate-screenshots`
+was failing on 8 screens and 11 more had no baseline at all.
 
-11 screens have no baseline at all (`composer_lab`, `split_pane_lab`, the six
-`dialog_*`, `hover_lab`, `multiline_text_lab`, `styled_text_lab`,
-`text_input_lab`).
+The 8 reproduced with **identical percentages at the old submodule pointer**
+(`9594e20`), so they predated the afterhours bump and the split-pane work. Spot
+checking `auto_text_color`, the *current* render was the correct one — the
+baseline had content clipped off the right edge and its entire fourth section
+missing. Refreshed in its own commit after per-screen visual review, then
+refreshed again for the four screens issues 2 and 3 changed
+(`forms`, `deadspace_settings`, `scroll_click_bug`, `scroll_view`).
 
-`make update-baselines` resolves both, but it should be a deliberate commit of
-its own — it would also bake in whatever issues 1–3 currently produce.
+Now 92 passed, 0 failed, 0 missing.
 
 ---
 
