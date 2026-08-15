@@ -41,6 +41,7 @@ int g_saved_stdout_fd = -1; // Used by MCP to write JSON to original stdout
 bool g_headless_mode = false;
 std::string g_headless_output_dir = "output/";
 std::string g_headless_screen_filter;
+std::string g_headless_ui_json_dir;
 
 int main(int argc, char *argv[]) {
   argh::parser cmdl(argc, argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
@@ -222,6 +223,10 @@ int main(int argc, char *argv[]) {
 
     // Optional single-screen filter
     cmdl({"--screen"}) >> g_headless_screen_filter;
+
+    // Also dump each screen's UI tree (geometry + layout intent) as JSON.
+    // Shares the screenshot loop so the dump and the PNG are the same frame.
+    cmdl({"--dump-ui-json"}) >> g_headless_ui_json_dir;
 
     // Parse --resolution flag (comma-separated list of named or WxH values)
     std::string resolution_str;

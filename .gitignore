@@ -48,3 +48,8 @@ test-failures/
 
 # Note: vendor/afterhours should be a git submodule, not ignored
 wm_afterhours/
+
+# Screen mock tool (generated: screenshots, UI dumps, manifest)
+mocks/shots/
+mocks/trees/
+mocks/screens.json

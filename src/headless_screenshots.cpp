@@ -17,6 +17,8 @@
 #include "testing/test_input.h"
 #include "testing/test_macros.h"
 #include "testing/layout_summary.h"
+#include "testing/ui_tree_dump.h"
+#include <fstream>
 #include <afterhours/src/graphics.h>
 
 #include <afterhours/src/plugins/e2e_testing/test_input.h>
@@ -39,6 +41,9 @@ extern afterhours::SystemBase *g_current_screen;
 // Globals defined in main.cpp (declared in headless_screenshots.h)
 // bool g_headless_mode and std::string g_headless_output_dir
 std::vector<HeadlessResolution> g_headless_resolutions;
+
+// Empty unless --dump-ui-json was passed.
+extern std::string g_headless_ui_json_dir;
 
 namespace {
 
@@ -581,6 +586,27 @@ void run_headless_screenshots_at(int width, int height,
     afterhours::graphics::capture_frame(output_path);
 
     log_info("[Headless][{}] Saved: {}", label, output_path.string());
+
+    // Same frame as the PNG above, deliberately: the mock tool diffs the two
+    // against each other, so a dump taken a tick later would report drift that
+    // is not there.
+    if (!g_headless_ui_json_dir.empty()) {
+      std::filesystem::path json_dir(g_headless_ui_json_dir);
+      std::filesystem::create_directories(json_dir);
+      std::filesystem::path json_path =
+          json_dir / (screen_name + "_" + label + ".json");
+      std::ofstream out(json_path);
+      if (out) {
+        nlohmann::json doc = ui_tree_dump::build_all();
+        doc["screen"] = screen_name;
+        doc["viewport"] = {{"width", width}, {"height", height}};
+        doc["screenshot"] = filename;
+        out << doc.dump(2);
+      } else {
+        log_warn("[Headless][{}] Could not write {}", label,
+                 json_path.string());
+      }
+    }
   }
 
   // 10. Cleanup

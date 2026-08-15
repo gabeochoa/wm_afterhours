@@ -311,8 +311,9 @@ run-all-tests: $(MAIN_EXE)
 	./$(MAIN_EXE) --run-all-tests
 
 # Catch2 autolayout tests (zero GPU, vendor/afterhours)
-UI_LAYOUT_DIR := vendor/afterhours/example/ui/ui_layout
-UI_LAYOUT_EXE := $(UI_LAYOUT_DIR)/ui_layout.exe
+UI_LAYOUT_DIR := vendor/afterhours/examples/catalog/ui/ui_layout
+# catalog/common.mk puts every example binary in afterhours' own output/.
+UI_LAYOUT_EXE := vendor/afterhours/output/ui_layout.exe
 
 test-layout: $(UI_LAYOUT_EXE)
 	./$(UI_LAYOUT_EXE) "row flex gap between children"
@@ -321,7 +322,7 @@ test-layout: $(UI_LAYOUT_EXE)
 	./$(UI_LAYOUT_EXE) "root test"
 
 $(UI_LAYOUT_EXE): $(UI_LAYOUT_DIR)/main.cpp
-	$(MAKE) -C $(UI_LAYOUT_DIR) ui_layout.exe
+	$(MAKE) -C $(UI_LAYOUT_DIR)
 
 # CI target: build + validate + run tests + E2E + layout math
 ci: $(MAIN_EXE) validate-screenshots run-all-tests test-layout test

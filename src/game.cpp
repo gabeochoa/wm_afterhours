@@ -8,6 +8,7 @@
 #include "render_backend.h"
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
+#include "testing/ui_tree_dump.h"
 #include "systems/RenderRenderTexture.h"
 #include "systems/RenderScreenHUD.h"
 #include "systems/RenderSystemHelpers.h"
@@ -68,87 +69,8 @@ extern int g_saved_stdout_fd;
 
 namespace {
 
-// Build JSON representation of UI component tree
-nlohmann::json build_ui_tree_json(afterhours::Entity &entity,
-                                  afterhours::ui::UIComponent &cmp) {
-  nlohmann::json node;
-  node["id"] = cmp.id;
-
-  if (entity.has<afterhours::ui::UIComponentDebug>()) {
-    node["name"] = entity.get<afterhours::ui::UIComponentDebug>().name();
-  }
-
-  node["rect"] = {{"x", cmp.rect().x},
-                  {"y", cmp.rect().y},
-                  {"width", cmp.rect().width},
-                  {"height", cmp.rect().height}};
-
-  node["computed"] = {{"width", cmp.computed[afterhours::ui::Axis::X]},
-                      {"height", cmp.computed[afterhours::ui::Axis::Y]}};
-
-  node["relative_pos"] = {{"x", cmp.computed_rel[afterhours::ui::Axis::X]},
-                          {"y", cmp.computed_rel[afterhours::ui::Axis::Y]}};
-
-  node["padding"] = {
-      {"left", cmp.computed_padd[afterhours::ui::Axis::left]},
-      {"top", cmp.computed_padd[afterhours::ui::Axis::top]},
-      {"right", cmp.computed_padd[afterhours::ui::Axis::right]},
-      {"bottom", cmp.computed_padd[afterhours::ui::Axis::bottom]}};
-
-  node["margin"] = {
-      {"left", cmp.computed_margin[afterhours::ui::Axis::left]},
-      {"top", cmp.computed_margin[afterhours::ui::Axis::top]},
-      {"right", cmp.computed_margin[afterhours::ui::Axis::right]},
-      {"bottom", cmp.computed_margin[afterhours::ui::Axis::bottom]}};
-
-  node["absolute"] = cmp.absolute;
-  node["visible"] = cmp.was_rendered_to_screen;
-
-  // Interactivity flags
-  node["clickable"] = entity.has<afterhours::ui::HasClickListener>();
-  node["draggable"] = entity.has<afterhours::ui::HasDragListener>();
-  node["focusable"] = !entity.has<afterhours::ui::SkipWhenTabbing>();
-
-  // Label text (if present)
-  if (entity.has<afterhours::ui::HasLabel>()) {
-    node["label"] = entity.get<afterhours::ui::HasLabel>().label;
-  }
-
-  // Add children recursively
-  nlohmann::json children_arr = nlohmann::json::array();
-  for (afterhours::EntityID child_id : cmp.children) {
-    try {
-      auto &child_ent = afterhours::ui::AutoLayout::to_ent_static(child_id);
-      auto &child_cmp = afterhours::ui::AutoLayout::to_cmp_static(child_id);
-      children_arr.push_back(build_ui_tree_json(child_ent, child_cmp));
-    } catch (...) {
-      // Skip invalid children
-    }
-  }
-  node["children"] = children_arr;
-
-  return node;
-}
-
 std::string dump_ui_tree() {
-  nlohmann::json result;
-  result["tree"] = nlohmann::json::array();
-
-  // Find all root UI components (those with AutoLayoutRoot)
-  auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
-  ui_coll.merge_entity_arrays();
-  auto roots = afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
-                   .whereHasComponent<afterhours::ui::AutoLayoutRoot>()
-                   .whereHasComponent<afterhours::ui::UIComponent>()
-                   .gen();
-
-  for (auto &entity_ref : roots) {
-    afterhours::Entity &entity = entity_ref.get();
-    auto &cmp = entity.get<afterhours::ui::UIComponent>();
-    result["tree"].push_back(build_ui_tree_json(entity, cmp));
-  }
-
-  return result.dump(2); // Pretty print with 2-space indent
+  return ui_tree_dump::build_all().dump(2);
 }
 
 std::vector<uint8_t> capture_screenshot_png() {

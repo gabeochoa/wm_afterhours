@@ -1,0 +1,269 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>afterhours screen mocks</title>
+<!--
+  index.html?screen=<name>
+
+  Left pane is the real raylib screenshot. Right pane is the same UI tree laid
+  out again by CSS flexbox, from the INTENT afterhours was given (desired sizes,
+  flex direction, justify/align, gap, padding) rather than from the rects it
+  computed. Two independent solvers on one input; where they disagree is a
+  question for the layout engine.
+
+  Keys match the app: . / PageDown next, , / PageUp previous.
+-->
+<style>
+  :root { color-scheme: dark; --bg:#12151c; --fg:#e7ecf3; --dim:#8f9bb0; --bad:#ff5c68; --ok:#3ddc84; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; }
+  header { display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+           padding:8px 12px; border-bottom:1px solid #262c38; position:sticky; top:0;
+           background:var(--bg); z-index:10; }
+  select,button { background:#1c212c; color:var(--fg); border:1px solid #333b4a;
+                  border-radius:5px; padding:4px 8px; font:inherit; }
+  button:hover { background:#252b38; cursor:pointer; }
+  .panes { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; }
+  .pane { border:1px solid #262c38; border-radius:6px; overflow:hidden; }
+  .pane h2 { margin:0; padding:5px 9px; font-size:11px; letter-spacing:.09em;
+             text-transform:uppercase; color:var(--dim); background:#171b24; font-weight:600; }
+  /* The stage is exactly the captured viewport, so screenshot pixels and mock
+     pixels are the same coordinate space and the overlay lines up. */
+  .stage { position:relative; transform-origin:top left; }
+  .stage img { display:block; width:100%; height:100%; }
+  .node { position:absolute; border:1px solid rgba(120,170,255,.30); overflow:hidden;
+          font-size:10px; color:#cfe0ff; }
+  .lbl { position:absolute; inset:0; display:flex; align-items:center;
+         justify-content:center; padding:0 2px; white-space:nowrap; overflow:hidden; }
+  /* Where CSS put a box vs where afterhours put it. */
+  .truth { position:absolute; border:1px dashed rgba(255,92,104,.85); pointer-events:none; }
+  #diffs { padding:0 12px 24px; }
+  table { border-collapse:collapse; width:100%; font-size:12px; }
+  th,td { text-align:left; padding:3px 8px; border-bottom:1px solid #222834; }
+  th { color:var(--dim); font-weight:600; }
+  .n { text-align:right; font-variant-numeric:tabular-nums; }
+  .warn { color:var(--bad); }
+  .muted { color:var(--dim); }
+</style>
+
+<header>
+  <button id="prev">◀ ,</button>
+  <select id="pick"></select>
+  <button id="next">. ▶</button>
+  <label><input type="checkbox" id="overlay" checked> overlay afterhours rects</label>
+  <label><input type="checkbox" id="labels" checked> labels</label>
+  <label>tolerance <input type="number" id="tol" value="2" min="0" max="50" style="width:52px"></label>
+  <span id="status" class="muted"></span>
+</header>
+
+<div class="panes">
+  <div class="pane"><h2>raylib screenshot</h2><div class="stage" id="shot"></div></div>
+  <div class="pane"><h2>css flexbox from intent</h2><div class="stage" id="mock"></div></div>
+</div>
+<div id="diffs"></div>
+
+<script>
+const qs = new URLSearchParams(location.search);
+let screens = [], cur = 0, tree = null;
+
+const $ = id => document.getElementById(id);
+
+// ---------------------------------------------------------------------------
+// intent -> CSS. Anything not expressible is left unset so the browser's own
+// default applies; forcing a guess here would manufacture diffs.
+// ---------------------------------------------------------------------------
+const JUSTIFY = { FlexStart:'flex-start', FlexEnd:'flex-end', Center:'center',
+                  SpaceBetween:'space-between', SpaceAround:'space-around' };
+const ALIGN   = { FlexStart:'flex-start', FlexEnd:'flex-end', Center:'center',
+                  Stretch:'stretch' };
+
+// vw/vh here are the captured viewport, not the browser window.
+function applySize(el, size, axis, vw, vh) {
+  const prop = axis === 'x' ? 'width' : 'height';
+  const v = size.value;
+  switch (size.dim) {
+    case 'Pixels':        el.style[prop] = v + 'px'; break;
+    case 'Percent':       el.style[prop] = (v * 100) + '%'; break;
+    case 'ScreenPercent': el.style[prop] = (v * (axis === 'x' ? vw : vh)) + 'px'; break;
+    case 'Children':      el.style[prop] = 'fit-content'; break;
+    // Expand is flex-grow, but only along the parent's main axis; the caller
+    // fixes up the cross axis once it knows the direction.
+    case 'Expand':        el.style['flex-grow'] = v; break;
+    case 'Text':          el.style[prop] = 'fit-content'; break;
+  }
+}
+
+function buildNode(n, vw, vh, parentDir, showLabels) {
+  const el = document.createElement('div');
+  el.className = 'node';
+  el.dataset.id = n.id;
+  el.dataset.name = n.name || '';
+
+  const row = n.flex_direction === 'Row';
+  el.style.display = 'flex';
+  el.style.flexDirection = row ? 'row' : 'column';
+  el.style.justifyContent = JUSTIFY[n.justify_content] || 'flex-start';
+  el.style.alignItems = ALIGN[n.align_items] || 'flex-start';
+  el.style.flexWrap = n.flex_wrap === 'NoWrap' ? 'nowrap' : 'wrap';
+  if (n.gap) el.style.gap = n.gap + 'px';
+
+  const p = n.padding, m = n.margin;
+  el.style.padding = `${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`;
+  el.style.margin  = `${m.top}px ${m.right}px ${m.bottom}px ${m.left}px`;
+
+  applySize(el, n.desired.x, 'x', vw, vh);
+  applySize(el, n.desired.y, 'y', vw, vh);
+
+  // flex-grow only grows the main axis. An Expand on the cross axis means
+  // "fill the parent" there, which is stretch, not grow.
+  if (n.desired.x.dim === 'Expand' && parentDir === 'column') el.style.alignSelf = 'stretch';
+  if (n.desired.y.dim === 'Expand' && parentDir === 'row')    el.style.alignSelf = 'stretch';
+  if (n.self_align && n.self_align !== 'Auto')
+    el.style.alignSelf = ALIGN[n.self_align] || 'auto';
+
+  if (n.absolute) {
+    el.style.position = 'absolute';
+    el.style.left = n.relative_pos.x + 'px';
+    el.style.top  = n.relative_pos.y + 'px';
+  } else {
+    el.style.position = 'relative';
+  }
+
+  if (showLabels && n.label) {
+    const s = document.createElement('span');
+    s.className = 'lbl';
+    s.textContent = n.label;
+    el.appendChild(s);
+  }
+  for (const c of n.children) el.appendChild(buildNode(c, vw, vh, row ? 'row' : 'column', showLabels));
+  return el;
+}
+
+// ---------------------------------------------------------------------------
+// render
+// ---------------------------------------------------------------------------
+async function load(name) {
+  const res = await fetch(`trees/${name}.json`);
+  if (!res.ok) { $('status').textContent = `no dump for ${name}`; return; }
+  tree = await res.json();
+
+  const vw = tree.viewport.width, vh = tree.viewport.height;
+  const shot = $('shot'), mock = $('mock');
+  for (const st of [shot, mock]) {
+    st.style.width = vw + 'px';
+    st.style.height = vh + 'px';
+  }
+
+  shot.innerHTML = `<img src="shots/${tree.screenshot}" alt="">`;
+  mock.innerHTML = '';
+  const root = buildNode(tree.tree[0], vw, vh, 'column', $('labels').checked);
+  root.style.position = 'absolute';
+  root.style.left = '0'; root.style.top = '0';
+  mock.appendChild(root);
+
+  fitPanes(vw, vh);
+  report(vw, vh);
+  $('status').textContent = `${name} — ${vw}×${vh}`;
+  history.replaceState(null, '', `?screen=${encodeURIComponent(name)}`);
+  $('pick').value = name;
+}
+
+// Scale both stages down to whatever column width is available, equally, so
+// the two panes stay pixel-comparable.
+function fitPanes(vw, vh) {
+  const avail = $('shot').parentElement.clientWidth;
+  const s = Math.min(1, avail / vw);
+  for (const st of [$('shot'), $('mock')]) {
+    st.style.transform = `scale(${s})`;
+    st.parentElement.style.height = (vh * s) + 'px';
+  }
+}
+
+// Walk the dump and the DOM in lockstep, comparing afterhours' rect to the one
+// CSS produced for the same node.
+function collectDiffs(vw, vh) {
+  const stage = $('mock').getBoundingClientRect();
+  const scale = (stage.width / vw) || 1;
+  const out = [];
+
+  const walk = (n, el) => {
+    if (!el) return;
+    const b = el.getBoundingClientRect();
+    const css = { x:(b.left - stage.left)/scale, y:(b.top - stage.top)/scale,
+                  width:b.width/scale, height:b.height/scale };
+    out.push({
+      name: n.name || `#${n.id}`,
+      ah: n.rect, css,
+      dx: css.x - n.rect.x, dy: css.y - n.rect.y,
+      dw: css.width - n.rect.width, dh: css.height - n.rect.height,
+      desired: `${n.desired.x.dim}/${n.desired.y.dim}`,
+      dir: n.flex_direction, justify: n.justify_content,
+      absolute: n.absolute,
+    });
+    const kids = [...el.children].filter(c => c.classList.contains('node'));
+    n.children.forEach((c, i) => walk(c, kids[i]));
+  };
+  walk(tree.tree[0], $('mock').firstElementChild);
+  return out;
+}
+
+function report(vw, vh) {
+  const tol = +$('tol').value;
+  const diffs = collectDiffs(vw, vh);
+  const bad = diffs.filter(d => Math.max(Math.abs(d.dx), Math.abs(d.dy),
+                                         Math.abs(d.dw), Math.abs(d.dh)) > tol);
+
+  // overlay
+  document.querySelectorAll('.truth').forEach(e => e.remove());
+  if ($('overlay').checked) {
+    for (const d of diffs) {
+      const t = document.createElement('div');
+      t.className = 'truth';
+      t.style.left = d.ah.x + 'px';  t.style.top = d.ah.y + 'px';
+      t.style.width = d.ah.width + 'px'; t.style.height = d.ah.height + 'px';
+      $('mock').appendChild(t);
+    }
+  }
+
+  const rows = bad.slice(0, 200).map(d => `<tr>
+      <td>${d.name}</td><td class="muted">${d.desired}</td>
+      <td class="muted">${d.dir}/${d.justify}</td>
+      <td class="n ${Math.abs(d.dx)>tol?'warn':''}">${d.dx.toFixed(1)}</td>
+      <td class="n ${Math.abs(d.dy)>tol?'warn':''}">${d.dy.toFixed(1)}</td>
+      <td class="n ${Math.abs(d.dw)>tol?'warn':''}">${d.dw.toFixed(1)}</td>
+      <td class="n ${Math.abs(d.dh)>tol?'warn':''}">${d.dh.toFixed(1)}</td>
+    </tr>`).join('');
+
+  $('diffs').innerHTML = `
+    <p>${bad.length} of ${diffs.length} nodes differ by more than ${tol}px
+       <span class="muted">(css minus afterhours; dashed red = afterhours)</span></p>
+    <table><tr><th>node</th><th>desired</th><th>layout</th>
+      <th class="n">Δx</th><th class="n">Δy</th><th class="n">Δw</th><th class="n">Δh</th></tr>
+      ${rows}</table>`;
+}
+
+// ---------------------------------------------------------------------------
+// nav — same keys as the app
+// ---------------------------------------------------------------------------
+const go = i => { cur = (i + screens.length) % screens.length; load(screens[cur]); };
+
+addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === '.' || e.key === 'PageDown') { e.preventDefault(); go(cur + 1); }
+  if (e.key === ',' || e.key === 'PageUp')   { e.preventDefault(); go(cur - 1); }
+});
+$('next').onclick = () => go(cur + 1);
+$('prev').onclick = () => go(cur - 1);
+$('pick').onchange = e => go(screens.indexOf(e.target.value));
+for (const id of ['overlay','labels','tol']) $(id).onchange = () => load(screens[cur]);
+addEventListener('resize', () => tree && (fitPanes(tree.viewport.width, tree.viewport.height),
+                                          report(tree.viewport.width, tree.viewport.height)));
+
+(async () => {
+  screens = await (await fetch('screens.json')).json();
+  $('pick').innerHTML = screens.map(s => `<option>${s}</option>`).join('');
+  const want = qs.get('screen');
+  const i = want ? screens.findIndex(s => s === want || s.startsWith(want + '_')) : 0;
+  go(i < 0 ? 0 : i);
+})();
+</script>
