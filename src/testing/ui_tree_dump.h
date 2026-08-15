@@ -86,6 +86,21 @@ inline nlohmann::json build(afterhours::Entity &entity,
   node["clips"] = entity.has<HasClipChildren>();
   node["scrolls"] = entity.has<HasScrollView>();
 
+  // Corner rounding, so the mock's CSS pane looks like the render rather than
+  // reporting a difference that is only skin. Matches rendering.h: no
+  // HasRoundedCorners means no rounding at all, whatever the theme says.
+  if (entity.has<HasRoundedCorners>()) {
+    const HasRoundedCorners &rc = entity.get<HasRoundedCorners>();
+    node["roundness"] = rc.roundness;
+    // bitset order is imm::CornerPosition: TL, TR, BL, BR.
+    node["corners"] = nlohmann::json::array(
+        {bool(rc.rounded_corners[0]), bool(rc.rounded_corners[1]),
+         bool(rc.rounded_corners[2]), bool(rc.rounded_corners[3])});
+  }
+
+  // Only a node with a fill actually shows its corners on screen.
+  node["paints"] = entity.has<afterhours::HasColor>();
+
   node["clickable"] = entity.has<HasClickListener>();
   node["draggable"] = entity.has<HasDragListener>();
   node["focusable"] = !entity.has<SkipWhenTabbing>();

@@ -53,6 +53,16 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect) {
   if (n.self_align && n.self_align !== 'Auto')
     el.style.alignSelf = ALIGN[n.self_align] || 'auto';
 
+  // raylib roundness is a fraction of the short side, halved; CSS wants px.
+  if (n.roundness && n.corners) {
+    const r = n.roundness * Math.min(n.rect.width, n.rect.height) / 2;
+    const [tl, tr, bl, br] = n.corners;
+    el.style.borderRadius =
+      `${tl ? r : 0}px ${tr ? r : 0}px ${br ? r : 0}px ${bl ? r : 0}px`;
+  }
+
+  if (n.paints) el.style.background = 'rgba(120,170,255,.07)';
+
   if (n.absolute) {
     // Replayed, not re-solved: an absolute position is a coordinate the caller
     // handed in, so there is no second opinion for CSS to have. Offset against
@@ -94,8 +104,15 @@ function collectDiffs(stageEl, tree) {
   const scale = (stage.width / tree.viewport.width) || 1;
   const out = [];
 
-  const walk = (n, el, underScroll, underText) => {
+  // pdx/pdy: the parent's own offset. A child that differs by exactly what its
+  // parent already differs by has not found anything new -- it is being carried.
+  const walk = (n, el, underScroll, underText, pdx, pdy) => {
     if (!el) return;
+    // Self-inclusive, unlike underScroll: a shrink-to-fit label IS the node
+    // whose width came from font metrics, and it is always a leaf.
+    const sizedToText = (d) => d === 'Text' || d === 'Children';
+    const texty = underText || ((n.label || '') !== '' &&
+                  (sizedToText(n.desired.x.dim) || sizedToText(n.desired.y.dim)));
     const b = el.getBoundingClientRect();
     const css = { x:(b.left - stage.left)/scale, y:(b.top - stage.top)/scale,
                   width:b.width/scale, height:b.height/scale };
@@ -110,14 +127,14 @@ function collectDiffs(stageEl, tree) {
       // Why CSS is allowed to disagree here, if it is:
       //   scroll  - the mock has no clipping, so it shows content afterhours hid
       //   text    - browser font metrics are not raylib's, so Text/Children drift
-      underScroll, underText,
+      underScroll, underText: texty, pdx, pdy,
     });
     const scrolls = underScroll || n.clips || n.scrolls;
-    const texty = underText || n.desired.x.dim === 'Text' || n.desired.y.dim === 'Text';
     const kids = [...el.children].filter(c => c.classList.contains('node'));
-    n.children.forEach((c, i) => walk(c, kids[i], scrolls, texty));
+    n.children.forEach((c, i) => walk(c, kids[i], scrolls, texty,
+                                      css.x - n.rect.x, css.y - n.rect.y));
   };
-  walk(tree.tree[0], stageEl.firstElementChild, false, false);
+  walk(tree.tree[0], stageEl.firstElementChild, false, false, 0, 0);
   return out;
 }
 

@@ -108,7 +108,8 @@ const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.cla
                                         dw: +d.dw.toFixed(1), dh: +d.dh.toFixed(1),
                                         want: d.desired, dir: d.dir, j: d.justify,
                                         abs: d.absolute, scroll: d.underScroll,
-                                        text: d.underText })) });
+                                        text: d.underText,
+                                        pdx: +d.pdx.toFixed(1), pdy: +d.pdy.toFixed(1) })) });
   }
 
   built.sort((a, b) => b.bad - a.bad || a.name.localeCompare(b.name));
