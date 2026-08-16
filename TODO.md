@@ -60,7 +60,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **9 done or won't-fix**
+**2 other-repo** (17, 18), **1 new** (20), **2 unknown** (13, 14, 15), **9 done or won't-fix**
 (5, 6, 9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
@@ -351,6 +351,21 @@ Verified by corrupting `themes.png` and re-running: one file rewritten, the
 other 23 kept, and the drift printed for each (`checkboxes` 0.53%, `forms`
 0.33%, `toggle_switches` 0.32% — the pre-existing drift that used to get
 committed unnoticed).
+
+### 20. A real `warn_once()` — **afterhours**
+Five warn-once sites now, each hand-rolling its own guard: a
+`mutable std::set<EntityID>` (`context.h`, `is_right_click`), a
+`mutable std::set<std::string>` (`ui_core_components.h`, font-weight
+fallback), a `static std::set<float>` (`component_config.h`,
+`with_roundness`), and two bools on `UIComponent`
+(`warned_expand_collapse`, `warned_wrap_needs_font_size`).
+
+Same idea five times, three different containers, and the bools cost a byte on
+every component whether it ever warns or not. Wants one helper —
+`warn_once(key, fmt, ...)` — so a new diagnostic is one line and nobody picks a
+sixth way to do it.
+
+Worth doing before the silent-failure audit, since that adds more of them.
 
 ---
 
