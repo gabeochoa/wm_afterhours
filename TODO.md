@@ -17,7 +17,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 
 | # | issue | afterhours | wm | other |
 |---|---|:--:|:--:|:--:|
-| 1 | `with_font_weight` is a no-op | font variants + text path | | |
+| 1 | Font weights fall back silently | explicit family registration + warn | register variants | |
 | 2 | Alpha blending on sokol | sokol blend mode | | verify from floatinghotel |
 | 3 | No scrollbar for `HasScrollView` | render + hit-test | | |
 | 4 | Overflow is silent | warning tolerance | over-specified screens | |
@@ -48,16 +48,31 @@ origins to 164, and the remaining unknowns are now much more likely to be real.
 
 ## afterhours (library)
 
-### 1. `with_font_weight` is a visual no-op — HIGH — **afterhours**
-All five weights render pixel-identically on `font_weight_720p`. The API landed
-but the capability did not: the loaded font has no weight variants, so nothing
-selects one. floatinghotel asked for this (semi-bold diff headers) and would
-reasonably think it works.
+### 1. Font weights fall back silently — **afterhours** (API), wm (content)
+**Earlier entry here was wrong** and is corrected: I filed this as "the API
+landed but the capability did not" and said the text path needed variant
+selection. It already has it. `FontManager::resolve_weighted`
+(`ui_core_components.h:420`) maps `(base, weight)` to a registered
+`"<base>@bold"` and the render path calls it in four places.
 
-Needs font files per weight plus variant selection in the text path, or the
-builder should warn that the weight was ignored. **Do not close floatinghotel's
-"No Font Weight Support" on the strength of the API existing.**
+All five weights render identically on `font_weight_720p` because that screen
+uses the default font, and wm only registers one variant in the whole app
+(`DGOne@bold`, `font_config.h:85`). Nothing is broken — the fallback is doing
+what it says.
 
+The real defect is the *shape of the contract*, and it is the same one
+`is_right_click` had:
+
+- The requirement is a **string naming convention** (`"Inter@bold"`) that
+  appears nowhere in `with_font_weight`'s signature or docs. A caller has no
+  way to discover it.
+- `resolve_weighted` falls back to the base font **silently**. You ask for
+  SemiBold, you get Regular, and nothing says why. floatinghotel filed "No
+  Font Weight Support" — they almost certainly hit exactly this.
+
+Worth fixing as an API question, not a font question: declare a family's
+weights explicitly rather than string-encoding them, and warn once when a
+requested weight falls back. See the design note below.
 ### 2. Alpha blending — verify on sokol — **afterhours** (sokol backend)
 The one gap filed independently by two projects (floatinghotel, hanabi #15):
 low-alpha `with_custom_background` reported to render opaque. It does **not**
