@@ -86,6 +86,11 @@ void save_screenshot_to(const std::string &path) {
   raylib::UnloadImage(image);
 }
 
+// One threshold, used both to fail a run and to decide what --update-baselines
+// is allowed to rewrite. They have to agree or the refresh reintroduces exactly
+// what the check just let through.
+static constexpr float DIFF_THRESHOLD_PCT = 1.0f;
+
 bool validate_screen_against_baseline(const std::string &screen_name) {
   std::string baseline_dir = "baseline_screenshots";
   std::string baseline_path = baseline_dir + "/" + screen_name + ".png";
@@ -94,19 +99,33 @@ bool validate_screen_against_baseline(const std::string &screen_name) {
   // Take screenshot of current state
   save_screenshot_to(temp_path);
 
-  // In update-baselines mode, copy to baseline and pass
+  const bool have_baseline = std::filesystem::exists(baseline_path);
+
+  // Rewriting every baseline hides drift. A capture that passes is not
+  // necessarily pixel-identical -- it is within the 1% threshold -- so an
+  // unconditional overwrite quietly commits whatever has crept in since, on
+  // screens the current change never touched. Refresh only what is missing or
+  // actually failing, and say which.
   if (g_update_baselines) {
-    // Ensure baseline directory exists
     std::filesystem::create_directories(baseline_dir);
+    const float drift =
+        have_baseline ? calculate_image_diff_percentage(baseline_path, temp_path)
+                      : 100.f;
+    if (have_baseline && drift <= DIFF_THRESHOLD_PCT) {
+      log_info("[validate_screen] Kept baseline: {} (within threshold at "
+               "{:.4f}%)",
+               screen_name, drift);
+      return true;
+    }
     std::filesystem::copy_file(
         temp_path, baseline_path,
         std::filesystem::copy_options::overwrite_existing);
-    log_info("[validate_screen] Updated baseline: {}", baseline_path);
+    log_info("[validate_screen] {} baseline: {} ({:.4f}%)",
+             have_baseline ? "Updated" : "Created", baseline_path, drift);
     return true;
   }
 
-  // Check if baseline exists
-  if (!std::filesystem::exists(baseline_path)) {
+  if (!have_baseline) {
     log_warn("[validate_screen] Baseline not found: {}", baseline_path);
     log_warn("Run with --update-baselines to create it");
     return false;
@@ -116,9 +135,9 @@ bool validate_screen_against_baseline(const std::string &screen_name) {
   float diff_pct = calculate_image_diff_percentage(baseline_path, temp_path);
   log_info("[validate_screen] {} diff: {:.4f}%", screen_name, diff_pct);
 
-  if (diff_pct > 1.0f) {
-    log_warn("[validate_screen] FAILED: {} differs by {:.4f}% (threshold: 1%)",
-             screen_name, diff_pct);
+  if (diff_pct > DIFF_THRESHOLD_PCT) {
+    log_warn("[validate_screen] FAILED: {} differs by {:.4f}% (threshold: {}%)",
+             screen_name, diff_pct, DIFF_THRESHOLD_PCT);
     // Keep the temp file for debugging
     std::string fail_path = "/tmp/validate_FAILED_" + screen_name + ".png";
     std::filesystem::copy_file(

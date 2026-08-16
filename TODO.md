@@ -37,8 +37,8 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **4 done or won't-fix**
-(10, 11, 12, 16), **1 new** (19).
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **5 done or won't-fix**
+(10, 11, 12, 16, 19).
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
 Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
@@ -277,7 +277,7 @@ the only lead.
   Correct (a caller-supplied coordinate has no second opinion) but it means the
   mock cannot catch a bug in absolute placement. Unchanged, by design.
 
-### 19. `--update-baselines` rewrites every e2e capture, not the failing ones — **wm**
+### 19. `--update-baselines` rewrites every e2e capture — DONE
 `baseline_screenshots/` (24 PNGs, used by the `validate_screen` e2e command) is
 separate from `screenshot-baselines/screens/` and is refreshed by running the
 e2e suite with `--update-baselines`. That flag rewrites **every** capture
@@ -290,9 +290,16 @@ re-applying it failed exactly **one** script — so 13 of the 14 were pre-existi
 sub-threshold drift being silently baked in. They pass because the threshold is
 1%, but they were never pixel-identical.
 
-Wants `--update-baselines` to write only captures that actually failed, and to
-say which. Until then, refresh e2e baselines by reverting everything the run
-touched except the screens you can attribute.
+Fixed: `--update-baselines` now rewrites only captures that are missing or
+actually over the threshold, and logs `Kept baseline: <name> (within threshold
+at N%)` for the rest so the drift is visible instead of silently absorbed. The
+failing threshold and the refresh threshold are now one constant, since they
+have to agree or a refresh reintroduces exactly what the check let through.
+
+Verified by corrupting `themes.png` and re-running: one file rewritten, the
+other 23 kept, and the drift printed for each (`checkboxes` 0.53%, `forms`
+0.33%, `toggle_switches` 0.32% — the pre-existing drift that used to get
+committed unnoticed).
 
 ---
 
