@@ -1,0 +1,25 @@
+# The disable_animations / enable_animations commands reach
+# animation::set_instant.
+#
+# Only asserts the instant direction. "Is it still mid-flight?" depends on how
+# many frames the runner happened to burn before the check, which is a race --
+# the easing behaviour itself is covered deterministically by
+# afterhours/tests/animation_test.cpp.
+
+goto_screen animation_basic
+wait 0.3
+
+disable_animations
+
+# Restart puts every track back to its start value. With instant on they must
+# be at their final values on the very next frame, not 1.6s later.
+click 640 644
+wait 0.1
+expect_text "opacity: 100%"
+expect_text "scale: 100%"
+expect_text "x offset: 0px"
+
+screenshot anim_instant
+
+# Leave the suite as we found it -- instant is global state.
+enable_animations

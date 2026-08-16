@@ -1,0 +1,15 @@
+# expect_text_i matches regardless of case; expect_text still does not.
+#
+# The buttons screen renders "Button Gallery" -- asserting the lowercase
+# spelling is exactly the failure kart hit, where the string in the source and
+# the string on screen differ only in styling.
+
+goto_screen buttons
+wait 0.3
+
+expect_text "Button Gallery"
+expect_text_i "button gallery"
+expect_text_i "BUTTON GALLERY"
+
+# Substring, same as expect_text.
+expect_text_i "utton gall"

@@ -415,6 +415,27 @@ This is expensive: it cost real time twice this session — once chasing
 again here. Worth fixing before the next debugging session pays for it a third
 time.
 
+### 23. e2e gap requests — DONE (three of four; the fourth was stale)
+cartographer and kart's "shared e2e command pack" is mostly already upstream —
+21 commands, and their `click_btn`/`expect_label` are `click`/`expect_text`.
+
+Landed in afterhours `14bb1be`: `expect_text_i`, `animation::set_instant` +
+`clear_all` with `disable_animations`/`enable_animations` over them, and a
+clearer unknown-command error naming the registration-order rule (which is what
+cartographer actually hit — it is loud, just baffling).
+
+**Still open from the plan: the CLI surface.** `E2EArgs` + `parse_e2e_args`
+lives only in wm; ten of its twelve flags drive something afterhours owns
+(`runner.set_timeout`, `graphics::Config::time_scale`,
+`capture_every_n_frames`, ...) and belong upstream. The two that do not —
+`--update-baselines` and kart's `--screenshot-dir` — stay down, because the
+`screenshot` command takes an app-supplied callback and afterhours has no
+opinion on where files land. Not started; it touches every consumer's `main()`.
+
+**Also found:** adding an e2e command needs the handler *and* an entry in
+`runner.h`'s per-command parse chain. Miss the second and args arrive empty
+with no diagnostic.
+
 ---
 
 ## Other repos (not ours to land)
@@ -471,7 +492,11 @@ item with the API to migrate to.
 
 ## What's next
 
-1. **Silent-failure audit** — now that `warn_once` exists, sweep the library
+1. ~~Silent-failure audit~~ — done, item 21.
+2. **Item 7 remainder** — sync scroll views, scroll anchoring, headless
+   affordances, Margin/Padding single-side helpers. The e2e parts are done
+   (item 23).
+3. **Silent-failure audit** — now that `warn_once` exists, sweep the library
    for the other places that quietly do nothing. Three "missing features" this
    week were really silent fallbacks.
 2. **Item 7's e2e command pack** — upstream wm's `disable_animations`,
