@@ -1,0 +1,35 @@
+# Right-click opens a context menu at the cursor.
+# Proves the whole path: secondary button -> MousePointerState.right_* ->
+# UIContext::is_right_click -> context_menu anchored at mouse.pos.
+
+goto_screen context_menu_lab
+wait 0.5
+
+# The screen opens with the centre menu already up, so a baseline has something
+# to capture. Dismiss it with a left click on empty space first, otherwise the
+# assertion below cannot tell a fresh open from the default one.
+click 900 300
+wait 0.3
+expect_text "right-click either row"
+
+# Right-click the target row. hot_id has to be resolved from the PREVIOUS
+# frame, so move onto the row and let a frame pass before clicking.
+mouse_move 200 118
+wait 0.2
+right_click 200 118
+wait 0.3
+
+# The status line reports where the menu was anchored -- that it moved to the
+# cursor is the point, not just that something opened.
+expect_text "opened at 200,118"
+expect_text "Stage file"
+expect_text "Copy path"
+
+screenshot right_click_menu_open
+
+# A second right-click somewhere else on the row re-anchors it.
+mouse_move 320 108
+wait 0.2
+right_click 320 108
+wait 0.3
+expect_text "opened at 320,108"

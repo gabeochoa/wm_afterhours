@@ -21,7 +21,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 2 | Alpha blending on sokol | sokol blend mode | | verify from floatinghotel |
 | 3 | No scrollbar for `HasScrollView` | render + hit-test | | |
 | 4 | Overflow is silent | warning tolerance | over-specified screens | |
-| 5 | No right-click | button on the click path | `context_menu_lab` after | |
+| 5 | ~~No right-click~~ **done** | `176ea8f` | `context_menu_lab`, e2e 94 | |
 | 6 | `context_menu` clips shortcuts | reserve the column | | |
 | 7 | Never-implemented gap requests | most of them | e2e pack upstreams **from** wm | |
 | 8 | Slider knob, tab bars, hard wrap | all three | | |
@@ -37,8 +37,8 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **7 done or won't-fix**
-(9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **8 done or won't-fix**
+(5, 9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
 Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
@@ -87,16 +87,22 @@ deliberate (a `percent(1)` child plus margin overflows by exactly its margin and
 the caller cannot act on it), so tightening it needs a way to tell that idiom
 apart from real overflow — not a smaller constant.
 
-### 5. No right-click trigger for `context_menu` — HIGH — **afterhours**, then wm
+### 5. No right-click trigger for `context_menu` — DONE
 There is no secondary-click support anywhere in afterhours: `MOUSE_BUTTON_RIGHT`
 does not appear in the source, and `HasClickListener` has a single `down` with
 no button field. So `context_menu()` exists but cannot be opened the one way
 users expect — `context_menu_lab` has to drive it from ordinary buttons.
 
-Wants a button on the click path (`HasClickListener` gaining which button, or a
-`HasRightClickListener`) plumbed through `ResolveHitTarget`/`HandleClicks`, and
-then `context_menu` opening at `ctx.mouse.pos` on a right-click within the
-target. Update `context_menu_lab` to use it once it exists.
+Fixed in afterhours `176ea8f`. `MousePointerState` tracks the secondary button
+and `UIContext::is_right_click(id)` answers "a secondary click finished over
+this element or something inside it"; pair it with `mouse.pos` for the anchor.
+`right_click x y` joins `click` in the e2e vocabulary, and
+`94_right_click_context_menu.e2e` drives the whole path. `context_menu_lab` now
+uses real right-clicks instead of stand-in buttons.
+
+Caveat worth knowing: the target must be hit-testable for `hot` to land on it,
+which today means carrying a click or drag listener. Fine for rows and buttons,
+not for a bare panel.
 
 ### 6. `context_menu` clips the shortcut column — **afterhours**
 `context_menu_lab`: "Cmd+C" loses a glyph at the panel's right edge. The
