@@ -1,0 +1,36 @@
+# Trackpad pinch, driven by the injector.
+#
+# The gesture itself needs hardware, so this covers everything below it: the
+# `pinch` command -> injector -> get_pinch_delta() -> the app's zoom. The native
+# monitor is the only untested link, and it feeds the same accumulator.
+
+goto_screen pinch_zoom_lab
+wait 0.4
+expect_text "zoom 1.00x"
+
+# +25% twice compounds to 1.5625, not 1.5 -- a delta multiplies.
+pinch 0.25
+wait 0.2
+expect_text "zoom 1.25x"
+
+pinch 0.25
+wait 0.2
+expect_text "zoom 1.56x"
+
+# Pinching in.
+pinch -0.5
+wait 0.2
+expect_text "zoom 0.78x"
+
+# The delta is per-frame: it must not keep applying once the gesture stops.
+wait 0.5
+expect_text "zoom 0.78x"
+
+# Clamped at the bottom rather than running away.
+pinch -0.9
+wait 0.2
+pinch -0.9
+wait 0.2
+expect_text "zoom 0.25x"
+
+screenshot pinch_zoomed
