@@ -22,7 +22,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 3 | No scrollbar for `HasScrollView` | render + hit-test | | |
 | 4 | Overflow is silent | warning tolerance | over-specified screens | |
 | 5 | ~~No right-click~~ **done** | `176ea8f` | `context_menu_lab`, e2e 94 | |
-| 6 | `context_menu` clips shortcuts | reserve the column | | |
+| 6 | ~~`context_menu` clips shortcuts~~ **done** | `c87b9d7` | | |
 | 7 | Never-implemented gap requests | most of them | e2e pack upstreams **from** wm | |
 | 8 | Slider knob, tab bars, hard wrap | all three | | |
 | 9 | ~~Corner radiuses~~ **done** | `d265f0e` | `48db688`, 51 baselines | |
@@ -37,8 +37,8 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **8 done or won't-fix**
-(5, 9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **9 done or won't-fix**
+(5, 6, 9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
 Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
@@ -104,9 +104,11 @@ Caveat worth knowing: the target must be hit-testable for `hot` to land on it,
 which today means carrying a click or drag listener. Fine for rows and buttons,
 not for a bare panel.
 
-### 6. `context_menu` clips the shortcut column — **afterhours**
-`context_menu_lab`: "Cmd+C" loses a glyph at the panel's right edge. The
-shortcut is right-aligned to the panel without reserving room for itself.
+### 6. `context_menu` clips the shortcut column — DONE
+Fixed in afterhours `c87b9d7`. The shortcut is right-aligned, so its box's
+right edge is where the last glyph lands, and the box ran out to `width` — the
+final character was clipped in half. The gutter already reserved a pad for
+this; it was being spent on width instead of on an inset.
 
 ### 7. Never-implemented requests from the gap docs — **afterhours** (one is wm→afterhours)
 No upstream implementation at all, so a wm screen cannot be written until the
