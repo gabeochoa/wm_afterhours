@@ -43,7 +43,7 @@ struct VirtualListLab : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(1180), pixels(24)})
             .with_absolute_position(48.f, 50.f)
             .with_label("scroll to page through all 10000; entity count stays "
-                        "flat (no scrollbar is rendered - afterhours gap)")
+                        "flat, and the bar spans the whole list")
             .with_alignment(TextAlignment::Left)
             .with_custom_text_color(muted)
             .with_font_size(13.f)

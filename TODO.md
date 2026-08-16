@@ -42,7 +42,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 |---|---|:--:|:--:|:--:|
 | 1 | Font weights fall back silently | explicit family registration + warn | register variants | |
 | 2 | Alpha blending on sokol | sokol blend mode | | verify from floatinghotel |
-| 3 | No scrollbar for `HasScrollView` | render + hit-test | | |
+| 3 | ~~No scrollbar~~ **indicator done** | `RenderScrollbars` | 6 baselines | |
 | 4 | Overflow is silent | warning tolerance | over-specified screens | |
 | 5 | ~~No right-click~~ **done** | `176ea8f` | `context_menu_lab`, e2e 94 | |
 | 6 | ~~`context_menu` clips shortcuts~~ **done** | `c87b9d7` | | |
@@ -107,9 +107,21 @@ Both reporters are sokol. `RL_BLEND_ALPHA` is set only in
 `backends/raylib/headless.h:52`; no blend mode is set in the sokol path. Run
 `alpha_blend_repro` from floatinghotel before calling it fixed or broken.
 
-### 3. `HasScrollView` renders no scrollbar — MEDIUM — **afterhours**
-hanabi #26. Visible on `virtual_list_lab`: 10k rows scroll fine with no
-indicator of position or extent. Every consumer hand-rolls one or does without.
+### 3. `HasScrollView` renders no scrollbar — DONE (indicator; drag is follow-up)
+hanabi #26. Done: `RenderScrollbars` draws a track and thumb for any
+overflowing scroll view, on either axis.
+
+A separate render pass rather than a branch inside each renderer — the two
+order their output differently (`RenderBatched` sorts by layer, `RenderImm`
+paints in tree order) and the bar has to land on top of its content, so one
+pass after both is the only way to avoid two implementations that drift. The
+geometry is a pure function, `scrollbar_geometry` in `components.h`, so it is
+unit-tested without a renderer and both paths cannot disagree about where the
+bar is.
+
+**Still open: dragging the thumb.** Today it reports position without setting
+it. That needs hit-testing against a drawn rect that is not an entity, so it is
+its own piece of work.
 
 ### 4. Children that do not fit are silently overflowed — **both**
 `mocks/ISSUES.md` issue 1. 21 nodes across `powerwash_settings` (9),
@@ -423,16 +435,14 @@ item with the API to migrate to.
 
 ## What's next
 
-1. **Item 3** — a scrollbar for `HasScrollView`. The biggest real capability
-   gap that needs no assets and no other machine. `virtual_list_lab` scrolls
-   10k rows with no position indicator at all.
-2. **Silent-failure audit** — now that `warn_once` exists, sweep the library
+1. **Silent-failure audit** — now that `warn_once` exists, sweep the library
    for the other places that quietly do nothing. Three "missing features" this
    week were really silent fallbacks.
-3. **Item 7's e2e command pack** — upstream wm's `disable_animations`,
+2. **Item 7's e2e command pack** — upstream wm's `disable_animations`,
    `--screenshot-dir`, `--e2e-speed`, case-insensitive `expect_text`.
    Mechanical; wm has all four already and cartographer and kart both asked.
-4. **Items 13, 14, 15** — the last 40 real sweep candidates, thin and
+3. **Items 13, 14, 15**
+4. **Scrollbar dragging** — the half of item 3 left undone. — the last 40 real sweep candidates, thin and
    individual now.
 
 Blocked on you: **item 1** (which weight-variant font files to ship) and
