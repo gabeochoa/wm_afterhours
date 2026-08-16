@@ -28,7 +28,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 9 | Corner radiuses | theme default + precedence | call sites + baselines | |
 | 10 | ~~Family A~~ **resolved** | | was the mock: strictness + padding | |
 | 11 | Family B (font metrics) | | won't-fix, documented | |
-| 12 | ~~Family C~~ **root-caused** | cross-axis align bails when free space is negative | | |
+| 12 | ~~Family C~~ **done** | fixed, `17b982c` | 9 baselines | |
 | 13 | Family D (heights) | likely for `file_tree`/`forms` | text metrics for `multiline_text_lab` | |
 | 14 | Family E (diagonal offset) | **unknown** | border theory disproved | |
 | 15 | Outliers, `islands_trains` 80 | **likely** | | |
@@ -37,8 +37,8 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **3 done or won't-fix**
-(10, 11, 16).
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **4 done or won't-fix**
+(10, 11, 12, 16), **1 new** (19).
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
 Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
@@ -200,8 +200,8 @@ each on `layout_bug_repros` (-186) and the `dialog_*` screens. Survives the
 fixes above, as expected — nothing about `strictness` or padding changes what a
 browser thinks a string is wide.
 
-### 12. Family C — cross-axis align is skipped when the child overflows — **afterhours**
-**Root cause found and verified.** `compute_relative_positions` wraps the whole
+### 12. Family C — cross-axis align is skipped when the child overflows — DONE
+Fixed in afterhours `17b982c`. **Root cause was verified before changing anything.** `compute_relative_positions` wraps the whole
 align block in `if (cross_remaining > 0.f)`
 (`vendor/afterhours/src/plugins/autolayout.h:1428`), so when a child is *larger*
 than the parent's cross-axis content box, `align_items: Center` silently
@@ -219,10 +219,10 @@ All three parents are `Row` with `align_items: Center`. Also explains
 `layout_patterns` (3), `button_variants` (2), `cards` (1) and part of
 `meters_gauges` — about **27 origins across 7 screens**.
 
-Smallest fix: let Center and FlexEnd use a negative `cross_remaining` instead of
-bailing. Center then yields `cross_remaining / 2` (symmetric overflow, matching
-CSS) and FlexEnd the full negative. FlexStart and Stretch are unaffected. Expect
-it to move ~7 baselines.
+Fixed by letting Center and FlexEnd use a negative `cross_remaining` instead of
+bailing — one line, `> 0.f` to `!= 0.f`, since both already compute correctly
+from a negative remainder. Moved 9 screenshot baselines. Regression tests
+`align_items_center_row_child_overflows_cross_axis` and the FlexEnd twin.
 
 **Not** covered by this: `deadspace_settings` (9 origins, dy+9). Its parent
 `sidebar` is a `Column` with `align_items: FlexStart` and **+281px** of free
@@ -276,6 +276,23 @@ the only lead.
 - Absolute nodes are replayed from afterhours' own answer rather than re-solved.
   Correct (a caller-supplied coordinate has no second opinion) but it means the
   mock cannot catch a bug in absolute placement. Unchanged, by design.
+
+### 19. `--update-baselines` rewrites every e2e capture, not the failing ones — **wm**
+`baseline_screenshots/` (24 PNGs, used by the `validate_screen` e2e command) is
+separate from `screenshot-baselines/screens/` and is refreshed by running the
+e2e suite with `--update-baselines`. That flag rewrites **every** capture
+regardless of whether it was failing.
+
+Found the hard way on item 12: the run rewrote 14 of the 24, including
+`checkboxes` (6.9% different) and `themes` (4.6%) whose clean renders had not
+moved at all. Stashing the fix and rebuilding showed pre-change was 100/100, and
+re-applying it failed exactly **one** script — so 13 of the 14 were pre-existing
+sub-threshold drift being silently baked in. They pass because the threshold is
+1%, but they were never pixel-identical.
+
+Wants `--update-baselines` to write only captures that actually failed, and to
+say which. Until then, refresh e2e baselines by reverting everything the run
+touched except the screens you can attribute.
 
 ---
 
