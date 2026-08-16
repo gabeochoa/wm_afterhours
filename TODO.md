@@ -396,6 +396,25 @@ The pattern holds — the silent failures that mattered were the three already
 fixed (font weight, wrap-without-size, `is_right_click`). Not worth a second
 pass unless a new report points at one.
 
+### 22. e2e failures are blamed on the wrong script — **wm/afterhours**
+A failing assertion in script N is charged to a script that runs later, so the
+suite fails pointing at innocent files.
+
+Reproduce: put `expect_text "row 00400"` (a string that is not there) in
+`95_scrollbar_drag.e2e` and run the suite. It fails — reporting
+`98_test_themes` and `99_check_all_screens`, never 95. Run 95 alone with
+`--test-filter` and it reports **PASS** despite logging the timeout.
+
+Cause looks like ordering in `runner.h` around line 582: the finalize reads
+`get_command_error_count()` at script end, but `E2ECommandCleanupSystem`
+increments it later, so the error lands in the next script's window. Filtering
+to one script leaves nowhere for it to land at all, hence the false PASS.
+
+This is expensive: it cost real time twice this session — once chasing
+`98`/`99` failures that were actually a stuck mouse button from script 94, and
+again here. Worth fixing before the next debugging session pays for it a third
+time.
+
 ---
 
 ## Other repos (not ours to land)

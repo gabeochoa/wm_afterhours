@@ -1,0 +1,26 @@
+# Dragging the scrollbar thumb scrolls the view.
+#
+# Drags well past the bottom of the track so the offset clamps to the end --
+# asserting the last row is stable, where asserting some row part-way down
+# would break the moment the thumb's minimum size changes.
+
+goto_screen virtual_list_lab
+wait 0.5
+expect_text "row 00000"
+
+# The bar is the right edge of the list; grab the thumb at the top.
+mouse_move 1225 100
+wait 0.2
+mouse_down 1225 100
+wait 0.2
+mouse_move 1225 700
+wait 0.3
+mouse_up 1225 700
+wait 0.3
+
+expect_text "row 09999"
+screenshot scrollbar_dragged
+
+# Releasing over the content must not have clicked it, and the view stays put.
+wait 0.3
+expect_text "row 09999"
