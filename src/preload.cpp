@@ -1,5 +1,7 @@
 #include "preload.h"
 
+#include <afterhours/src/gestures_macos.h>
+
 #include <cstdarg>
 #include <cstdio>
 #include <iostream>
@@ -66,6 +68,10 @@ Preload &Preload::init(const char *title) {
   raylib::SetTraceLogLevel(raylib::LOG_ERROR);
 
   raylib::InitWindow(width, height, title);
+
+  // The pinch monitor is app-wide, but installing it before there is an app to
+  // monitor is pointless -- do it once the window exists.
+  afterhours::gestures::install_pinch_monitor();
   raylib::SetWindowSize(width, height);
   raylib::SetWindowState(raylib::FLAG_WINDOW_RESIZABLE);
 

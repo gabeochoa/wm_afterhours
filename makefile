@@ -21,8 +21,10 @@ ifeq ($(UNAME_S),Darwin)
     EXT := .exe
     RAYLIB_FLAGS := $(shell pkg-config --cflags raylib 2>/dev/null || echo -I/opt/homebrew/include)
     RAYLIB_LIB := $(shell pkg-config --libs raylib 2>/dev/null || echo -L/opt/homebrew/lib -lraylib)
-    MACOS_FLAGS := -DBACKWARD
-    FRAMEWORKS := -framework CoreFoundation -framework OpenGL
+    # -fblocks + AppKit: afterhours reads trackpad pinch through a local
+    # NSEvent monitor, whose handler is an Objective-C block.
+    MACOS_FLAGS := -DBACKWARD -DAFTER_HOURS_ENABLE_MACOS_GESTURES -fblocks
+    FRAMEWORKS := -framework CoreFoundation -framework OpenGL -framework AppKit
 else ifeq ($(OS),Windows_NT)
     CXX := $(CCACHE) g++
     EXT := .exe
