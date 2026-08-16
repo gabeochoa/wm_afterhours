@@ -60,7 +60,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **1 new** (20), **2 unknown** (13, 14, 15), **9 done or won't-fix**
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **9 done or won't-fix**
 (5, 6, 9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
@@ -352,7 +352,7 @@ other 23 kept, and the drift printed for each (`checkboxes` 0.53%, `forms`
 0.33%, `toggle_switches` 0.32% — the pre-existing drift that used to get
 committed unnoticed).
 
-### 20. A real `warn_once()` — **afterhours**
+### 20. A real `warn_once()` — DONE
 Five warn-once sites now, each hand-rolling its own guard: a
 `mutable std::set<EntityID>` (`context.h`, `is_right_click`), a
 `mutable std::set<std::string>` (`ui_core_components.h`, font-weight
@@ -360,12 +360,12 @@ fallback), a `static std::set<float>` (`component_config.h`,
 `with_roundness`), and two bools on `UIComponent`
 (`warned_expand_collapse`, `warned_wrap_needs_font_size`).
 
-Same idea five times, three different containers, and the bools cost a byte on
-every component whether it ever warns or not. Wants one helper —
-`warn_once(key, fmt, ...)` — so a new diagnostic is one line and nobody picks a
-sixth way to do it.
-
-Worth doing before the silent-failure audit, since that adds more of them.
+Replaced by one `warn_once(key, fmt, ...)` in `logging.h`. It sits outside the
+logging mode blocks so it expands to whichever `log_warn` is in scope — including
+the one a test substitutes via `AFTER_HOURS_REPLACE_LOGGING`. Each call site gets
+its own gate (keyed on the address of a `static` local unique to the expansion),
+so the same key at two sites cannot silence one of them. All five sites
+converted; both `UIComponent` bools deleted.
 
 ---
 
@@ -423,11 +423,20 @@ item with the API to migrate to.
 
 ## What's next
 
-2. **Item 15** — `islands_trains_settings`, 47 origins and by far the largest
-   single screen left.
-3. **Item 9** — corner radiuses, in its own commit.
-4. **Items 1 and 5** — font weight and right-click: missing capability rather
-   than open questions, so they need no triage first.
+1. **Item 3** — a scrollbar for `HasScrollView`. The biggest real capability
+   gap that needs no assets and no other machine. `virtual_list_lab` scrolls
+   10k rows with no position indicator at all.
+2. **Silent-failure audit** — now that `warn_once` exists, sweep the library
+   for the other places that quietly do nothing. Three "missing features" this
+   week were really silent fallbacks.
+3. **Item 7's e2e command pack** — upstream wm's `disable_animations`,
+   `--screenshot-dir`, `--e2e-speed`, case-insensitive `expect_text`.
+   Mechanical; wm has all four already and cartographer and kart both asked.
+4. **Items 13, 14, 15** — the last 40 real sweep candidates, thin and
+   individual now.
+
+Blocked on you: **item 1** (which weight-variant font files to ship) and
+**item 2** (someone to run `alpha_blend_repro` from floatinghotel).
 
 Current sweep state: **18 screens / 84 origins**, of which 44 are text-metric
 (a known mock limitation) and **40 are real candidates**. Started at 44 screens
