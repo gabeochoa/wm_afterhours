@@ -9,9 +9,47 @@ Numbers here came from `./mocks/build.sh --no-serve && ./mocks/analyze.py` and
 
 ---
 
+## Where each fix lands
+
+"Both" means the two halves are separable and want separate commits. "Unknown"
+means the sweep found a disagreement but nobody has decided yet whether
+afterhours is wrong or the screen is — that decision IS the work.
+
+| # | issue | afterhours | wm | other |
+|---|---|:--:|:--:|:--:|
+| 1 | `with_font_weight` is a no-op | font variants + text path | | |
+| 2 | Alpha blending on sokol | sokol blend mode | | verify from floatinghotel |
+| 3 | No scrollbar for `HasScrollView` | render + hit-test | | |
+| 4 | Overflow is silent | warning tolerance | over-specified screens | |
+| 5 | No right-click | button on the click path | `context_menu_lab` after | |
+| 6 | `context_menu` clips shortcuts | reserve the column | | |
+| 7 | Never-implemented gap requests | most of them | e2e pack upstreams **from** wm | |
+| 8 | Slider knob, tab bars, hard wrap | all three | | |
+| 9 | Corner radiuses | theme default + precedence | call sites + baselines | |
+| 10 | Family A (115 origins) | *maybe, after* | model `strictness` in the mock | |
+| 11 | Family B (font metrics) | | won't-fix, documented | |
+| 12 | Family C (vertical drift) | **likely** | | |
+| 13 | Family D (heights) | likely for `file_tree`/`forms` | text metrics for `multiline_text_lab` | |
+| 14 | Family E (diagonal offset) | *maybe, after* | put border width in the dump | |
+| 15 | Outliers, `islands_trains` 80 | **likely** | | |
+| 16 | Mock limitations | | `mocks/`, `ui_tree_dump.h` | |
+| 17 | Five `with_roundness(px)` sites | | | floatinghotel |
+| 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
+
+Counts: **5 afterhours-only** (1, 2, 3, 6, 8), **2 wm-only** (11, 16),
+**4 both** (4, 5, 7, 9), **2 other-repo** (17, 18), **5 unknown until triaged**
+(10, 12, 13, 14, 15).
+
+Every unknown is a sweep finding, and each one needs a wm-side mock change
+*before* it can be assigned to anybody — which is why item 10 leads the ordering
+at the bottom. Expect most of the 5 to resolve to afterhours or to won't-fix
+once `strictness` is modelled.
+
+---
+
 ## afterhours (library)
 
-### 1. `with_font_weight` is a visual no-op — HIGH
+### 1. `with_font_weight` is a visual no-op — HIGH — **afterhours**
 All five weights render pixel-identically on `font_weight_720p`. The API landed
 but the capability did not: the loaded font has no weight variants, so nothing
 selects one. floatinghotel asked for this (semi-bold diff headers) and would
@@ -21,7 +59,7 @@ Needs font files per weight plus variant selection in the text path, or the
 builder should warn that the weight was ignored. **Do not close floatinghotel's
 "No Font Weight Support" on the strength of the API existing.**
 
-### 2. Alpha blending — verify on sokol
+### 2. Alpha blending — verify on sokol — **afterhours** (sokol backend)
 The one gap filed independently by two projects (floatinghotel, hanabi #15):
 low-alpha `with_custom_background` reported to render opaque. It does **not**
 reproduce on raylib — `alpha_blend_repro_720p` steps cleanly from 32 to 255 with
@@ -32,11 +70,11 @@ Both reporters are sokol. `RL_BLEND_ALPHA` is set only in
 `backends/raylib/headless.h:52`; no blend mode is set in the sokol path. Run
 `alpha_blend_repro` from floatinghotel before calling it fixed or broken.
 
-### 3. `HasScrollView` renders no scrollbar — MEDIUM
+### 3. `HasScrollView` renders no scrollbar — MEDIUM — **afterhours**
 hanabi #26. Visible on `virtual_list_lab`: 10k rows scroll fine with no
 indicator of position or extent. Every consumer hand-rolls one or does without.
 
-### 4. Children that do not fit are silently overflowed — 6 screens
+### 4. Children that do not fit are silently overflowed — **both**
 `mocks/ISSUES.md` issue 1. 21 nodes across `powerwash_settings` (9),
 `flex_alignment` (5), `layout` (3), `deadspace_settings`, `meters_gauges`,
 `rubber_bandits_menu`, `forms`.
@@ -50,7 +88,7 @@ deliberate (a `percent(1)` child plus margin overflows by exactly its margin and
 the caller cannot act on it), so tightening it needs a way to tell that idiom
 apart from real overflow — not a smaller constant.
 
-### 5. No right-click trigger for `context_menu` — HIGH
+### 5. No right-click trigger for `context_menu` — HIGH — **afterhours**, then wm
 There is no secondary-click support anywhere in afterhours: `MOUSE_BUTTON_RIGHT`
 does not appear in the source, and `HasClickListener` has a single `down` with
 no button field. So `context_menu()` exists but cannot be opened the one way
@@ -61,11 +99,11 @@ Wants a button on the click path (`HasClickListener` gaining which button, or a
 then `context_menu` opening at `ctx.mouse.pos` on a right-click within the
 target. Update `context_menu_lab` to use it once it exists.
 
-### 6. `context_menu` clips the shortcut column
+### 6. `context_menu` clips the shortcut column — **afterhours**
 `context_menu_lab`: "Cmd+C" loses a glyph at the panel's right edge. The
 shortcut is right-aligned to the panel without reserving room for itself.
 
-### 7. Never-implemented requests from the gap docs
+### 7. Never-implemented requests from the gap docs — **afterhours** (one is wm→afterhours)
 No upstream implementation at all, so a wm screen cannot be written until the
 feature exists:
 
@@ -84,7 +122,7 @@ feature exists:
 - `Margin`/`Padding` single-side helpers, e.g. `Margin::left(pixels(10))`
   (cartographer).
 
-### 8. Long-standing, low priority
+### 8. Long-standing, low priority — **afterhours**
 From `docs/AFTERHOURS_GAPS.md`, unchanged: slider handle 0.75 compression;
 crowded tab bars still need a smaller font at the call site; word-wrap has no
 hard character break.
@@ -93,7 +131,7 @@ hard character break.
 
 ## wm_afterhours
 
-### 9. Corner radiuses — make them consistent
+### 9. Corner radiuses — make them consistent — **both**
 Decided, not yet done. Today `Theme::roundness = 0.5f` scales with the widget,
 so the same theme value is ~8px on a row and 180px on a full-height panel; the
 mock sheets show the big containers as blobs. `with_corner_radius(px)` now
@@ -133,7 +171,7 @@ Nobody has been through these. Each is either an afterhours bug or a screen
 over-specifying itself, and the families below are a guess at the grouping, not
 a verdict.
 
-### 10. Family A — fixed-width children in a row that does not fit
+### 10. Family A — fixed-width children in a row that does not fit — **wm (mock)** first
 **Suspected mock-side. Resolve this first: it is the single biggest group and
 until it is settled none of these can be filed.**
 
@@ -157,7 +195,7 @@ these do — same row template repeated, children trading a few px.
 Fix: map `strictness` onto `flex-shrink`/`flex-grow` in `mocks/mock.js`, re-run,
 and see what survives.
 
-### 11. Family B — shrink-to-fit around a label
+### 11. Family B — shrink-to-fit around a label — **wm (mock)**, won't-fix
 **Mock-side, expected.** `Children`-sized boxes take their width from text, and
 browser font metrics are not raylib's. Listed so they are not re-filed.
 
@@ -166,7 +204,7 @@ browser font metrics are not raylib's. Listed so they are not re-filed.
 `layout_bug_repros` (-186), `horizontal_drag` (-141), `setting_row_showcase`
 (-52 on 2 of its 18). 44 of the 383 carry the text flag.
 
-### 12. Family C — small vertical drift, no size change
+### 12. Family C — small vertical drift, no size change — **unknown**, likely afterhours
 **Unexplained. Most likely to be real.** One element sits a few px off and
 everything after it follows; the origin count is small because the fallout is
 discounted.
@@ -181,7 +219,7 @@ discounted.
 | `layout_patterns` | 3 | x3 (0,-6,0,0) |
 | `button_variants` | 2 | x2 (0,-3,0,0) |
 
-### 13. Family D — height disagreements
+### 13. Family D — height disagreements — **unknown**, mixed
 - `multiline_text_lab` — `Pixels/Text`, dh -54 and -72. The only `Dim::Text`
   users in the whole sweep, and the biggest height gaps. Wrapped line count
   differs, so this is text metrics again, but far larger than Family B.
@@ -191,13 +229,13 @@ discounted.
 - `forms` — x3 `Percent/Percent` (0,-1,0,-13).
 - `drag_drop` — x4 `Percent/Percent` (0,0,0,-3).
 
-### 14. Family E — uniform diagonal offset
+### 14. Family E — uniform diagonal offset — **wm (dump)** first
 `decorative_frame` (2,2) and (8,8); `cozy_cafe` (4,4) and (14,14). dx equals dy
 exactly, which smells like a border or frame inset the mock does not model —
 these screens use the bevel/nine-slice borders. Check whether border width is
 in the dump at all.
 
-### 15. Single-screen outliers
+### 15. Single-screen outliers — **unknown**
 - **`islands_trains_settings` — 80 origins, the largest single screen.** raylib
   renders a 430px centred modal; the CSS re-solve spreads it far wider (Δx up to
   361 on the buttons). One of the two is wrong about `align_items: Center` on a
@@ -209,7 +247,7 @@ in the dump at all.
 - `cards`, `kirby_options`, `vstack_showcase`, `hstack_showcase` — 1-2 nodes
   each, sub-5px. Noise-adjacent; check last.
 
-### 16. Known mock limitations to fix before the next sweep
+### 16. Known mock limitations to fix before the next sweep — **wm (mock)**
 - No `strictness` → see item 10.
 - No clipping, so 206 nodes under scroll/clip cannot be compared at all.
 - Absolute nodes are replayed from afterhours' own answer rather than
@@ -221,7 +259,7 @@ in the dump at all.
 
 ## Other repos (not ours to land)
 
-### 17. floatinghotel: five `with_roundness(px)` sites render as pills
+### 17. floatinghotel: five `with_roundness(px)` sites render as pills — **floatinghotel**
 `src/ui/diff_renderer.h:614`, `src/ecs/main_content_system.h:815`,
 `src/ecs/sidebar_system.h:700`, `:706`, `:781` pass `4.0f` / `2.0f` into a 0..1
 fraction. Both backends clamp the computed radius to half the short side, so on
@@ -229,7 +267,7 @@ a 28px row `4.0f` is a 14px radius — a full pill, not 4px corners.
 `with_corner_radius(4.f)` is the fix. **Owner will do this on their next bump**;
 the new warn will point at each one.
 
-### 18. Reconcile the five gap docs — they list shipped work as blockers
+### 18. Reconcile the five gap docs — they list shipped work as blockers — **other repos**
 `floatinghotel/docs/afterhours-gaps.md` (last touched Aug 1) lists six "Missing
 Primitives", all with app-local workarounds. Every one now exists upstream —
 `menu.h` and `overlay.h` were added Aug 3, two days later:
