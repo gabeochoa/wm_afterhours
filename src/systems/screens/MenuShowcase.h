@@ -10,9 +10,9 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Anchored menus: dropdown_menu under a trigger, context_menu at a point, and
-// the edge-flip that both share. The two bottom triggers are the interesting
-// ones -- there is no room below them, so their menus open upward.
+// dropdown_menu under a trigger, and the edge flip. The two bottom triggers are
+// the interesting ones -- there is no room below them, so their menus open
+// upward. context_menu and popover have their own screens.
 struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
   // One menu open by default, because a screenshot baseline cannot click and
   // an open menu is the state worth capturing. Only one: menus dismiss on
