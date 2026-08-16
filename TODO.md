@@ -1,5 +1,28 @@
 # TODO
 
+## The short version
+
+Fixed in afterhours: scroll views misplaced margined children; sideways
+`expand()` gave 0px; centering was skipped when a thing was bigger than its
+box; added `with_corner_radius(px)`; added right-click; menu shortcuts were
+cut in half.
+
+Fixed here: corners set to 10px so big panels stop looking like blobs;
+`--update-baselines` no longer overwrites test images that were fine; 6 new
+screens; the comparison tool had 5 bugs of its own.
+
+**Worth remembering:** three "missing features" already existed and just failed
+silently, so people assumed they were missing. Font weights work but need a
+font named `"Inter@bold"` and nothing tells you that. Making the library speak
+up when it quietly does nothing is probably worth more than the next feature.
+
+**Biggest things left:** scrollbars, and moving the test helpers into
+afterhours — cartographer, kart, hanabi and wm each built the same ones.
+
+The rest of this file is the detail.
+
+---
+
 Open work from the 2026-08-15 session: the mock-tool layout sweep, the roundness
 API, and the cross-project gap-doc audit. Grouped by where the fix lands, since
 that decides who can do it.
