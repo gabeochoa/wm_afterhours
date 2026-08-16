@@ -18,9 +18,10 @@ function applySize(el, size, axis, vw, vh) {
     case 'Percent':       el.style[prop] = (v * 100) + '%'; break;
     case 'ScreenPercent': el.style[prop] = (v * (axis === 'x' ? vw : vh)) + 'px'; break;
     case 'Children':      el.style[prop] = 'fit-content'; break;
-    // Expand is flex-grow, but only along the parent's main axis; the caller
-    // fixes up the cross axis once it knows the direction.
-    case 'Expand':        el.style['flex-grow'] = v; break;
+    // Expand is handled by the caller, which knows the parent's direction:
+    // flex-grow only grows the MAIN axis, so setting it here for a cross-axis
+    // Expand silently grew the wrong dimension.
+    case 'Expand':        break;
     case 'Text':          el.style[prop] = 'fit-content'; break;
   }
 }
@@ -97,6 +98,8 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands)
 
   // flex-grow only grows the main axis. An Expand on the cross axis means
   // "fill the parent" there, which is stretch, not grow.
+  const mainSize = parentDir === 'row' ? n.desired.x : n.desired.y;
+  if (mainSize.dim === 'Expand') el.style.flexGrow = mainSize.value;
   if (n.desired.x.dim === 'Expand' && parentDir === 'column') el.style.alignSelf = 'stretch';
   if (n.desired.y.dim === 'Expand' && parentDir === 'row')    el.style.alignSelf = 'stretch';
   if (n.self_align && n.self_align !== 'Auto')

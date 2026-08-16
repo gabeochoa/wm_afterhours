@@ -350,17 +350,20 @@ item with the API to migrate to.
 
 ## What's next
 
-1. **Item 12** — the cross-axis align bail. Root-caused and verified against
-   three screens, so it is ready to write; ~27 origins across 7 screens.
 2. **Item 15** — `islands_trains_settings`, 47 origins and by far the largest
    single screen left.
 3. **Item 9** — corner radiuses, in its own commit.
 4. **Items 1 and 5** — font weight and right-click: missing capability rather
    than open questions, so they need no triage first.
 
-Current sweep state: **26 screens / 198 nodes / 164 origins** (was 44 / 718 /
-383). Per-screen counts are in the family tables above; regenerate with
-`./mocks/build.sh --no-serve && ./mocks/sheets.sh`.
+Current sweep state: **18 screens / 84 origins**, of which 44 are text-metric
+(a known mock limitation) and **40 are real candidates**. Started at 44 screens
+/ 383 origins. Regenerate with `./mocks/build.sh --no-serve && ./mocks/sheets.sh`.
+
+Cleared since: the cross-axis align fix (item 12, -31 across 7 screens), the
+over-padding rule extended to ScreenPercent (`islands_trains_settings` 47 -> 7),
+and cross-axis Expand no longer setting flex-grow in the mock
+(`deadspace_settings` 9 -> 0).
 
 A subagent triage pass on items 12-15 produced only hypotheses and reversed
 itself on two of them (it asserted the Family E border theory at high
