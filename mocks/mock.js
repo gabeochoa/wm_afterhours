@@ -25,7 +25,34 @@ function applySize(el, size, axis, vw, vh) {
   }
 }
 
-function buildNode(n, vw, vh, parentDir, showLabels, parentRect) {
+// strictness has no single CSS spelling, so it needs both halves:
+//   strictness 1 = "do not resize me"     -> flex-shrink: 0
+//   strictness 0 = "resize me freely"     -> flex-shrink: 1, and tax_refund
+//                                            also GROWS these to fill slack
+// CSS defaults flex-shrink to 1 and afterhours defaults strictness to 1, so
+// leaving this unset had the mock shrinking every overflowing row that
+// afterhours deliberately let overflow.
+//
+// `siblingExpands` is the parent's answer for this axis: tax_refund hands all
+// the slack to Expand children and returns, so a loose sibling gets nothing
+// when an Expand is present. CSS would have split it between them.
+function applyStrictness(el, n, parentDir, siblingExpands) {
+  const size = parentDir === 'row' ? n.desired.x : n.desired.y;
+  if (size.dim === 'Expand')
+    return; // already flex-grow; shrink is irrelevant to it here
+  const strictness = Math.min(1, Math.max(0, size.strictness));
+  el.style.flexShrink = 1 - strictness;
+  if (strictness === 0 && !siblingExpands)
+    el.style.flexGrow = 1;
+}
+
+// True when any in-flow child of `n` uses Expand along `n`'s main axis.
+function hasExpandingChild(n, row) {
+  const axis = row ? 'x' : 'y';
+  return n.children.some((c) => !c.absolute && c.desired[axis].dim === 'Expand');
+}
+
+function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands) {
   const el = document.createElement('div');
   el.className = 'node';
   el.dataset.id = n.id;
@@ -39,12 +66,29 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect) {
   el.style.flexWrap = n.flex_wrap === 'NoWrap' ? 'nowrap' : 'wrap';
   if (n.gap) el.style.gap = n.gap + 'px';
 
-  const p = n.padding, m = n.margin;
+  // afterhours clamps the CONTENT area to zero when padding exceeds the box
+  // (fmaxf(0, computed - padd)) and keeps the box at its stated size. CSS
+  // border-box instead floors the box at the padding, so pixels(40) with 25.6px
+  // of side padding comes out 51.2 wide. Drop the padding in that case: the
+  // content area is zero either way, and the box size is what is being compared.
+  const p = { ...n.padding }, m = n.margin;
+  if (n.desired.x.dim === 'Pixels' && p.left + p.right >= n.desired.x.value)
+    p.left = p.right = 0;
+  if (n.desired.y.dim === 'Pixels' && p.top + p.bottom >= n.desired.y.value)
+    p.top = p.bottom = 0;
   el.style.padding = `${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`;
   el.style.margin  = `${m.top}px ${m.right}px ${m.bottom}px ${m.left}px`;
 
   applySize(el, n.desired.x, 'x', vw, vh);
   applySize(el, n.desired.y, 'y', vw, vh);
+  applyStrictness(el, n, parentDir, siblingExpands);
+
+  // A flex item's automatic minimum size is its CONTENT size, so CSS refuses to
+  // make a 40px box 40px wide once a label does not fit in it. afterhours has no
+  // such floor -- pixels(40) is 40 and the text is clipped -- so the floor has
+  // to go or every labelled fixed-size element reads as a disagreement.
+  el.style.minWidth = '0';
+  el.style.minHeight = '0';
 
   // flex-grow only grows the main axis. An Expand on the cross axis means
   // "fill the parent" there, which is stretch, not grow.
@@ -81,8 +125,10 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect) {
     s.textContent = n.label;
     el.appendChild(s);
   }
+  const childrenExpand = hasExpandingChild(n, row);
   for (const c of n.children)
-    el.appendChild(buildNode(c, vw, vh, row ? 'row' : 'column', showLabels, n.rect));
+    el.appendChild(buildNode(c, vw, vh, row ? 'row' : 'column', showLabels,
+                             n.rect, childrenExpand));
   return el;
 }
 
@@ -90,7 +136,7 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect) {
 function mountMock(stage, tree, showLabels) {
   stage.innerHTML = '';
   const root = buildNode(tree.tree[0], tree.viewport.width, tree.viewport.height,
-                         'column', showLabels, { x: 0, y: 0 });
+                         'column', showLabels, { x: 0, y: 0 }, false);
   root.style.position = 'absolute';
   root.style.left = '0'; root.style.top = '0';
   stage.appendChild(root);

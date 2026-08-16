@@ -26,24 +26,23 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 7 | Never-implemented gap requests | most of them | e2e pack upstreams **from** wm | |
 | 8 | Slider knob, tab bars, hard wrap | all three | | |
 | 9 | Corner radiuses | theme default + precedence | call sites + baselines | |
-| 10 | Family A (115 origins) | *maybe, after* | model `strictness` in the mock | |
+| 10 | ~~Family A~~ **resolved** | | was the mock: strictness + padding | |
 | 11 | Family B (font metrics) | | won't-fix, documented | |
 | 12 | Family C (vertical drift) | **likely** | | |
 | 13 | Family D (heights) | likely for `file_tree`/`forms` | text metrics for `multiline_text_lab` | |
-| 14 | Family E (diagonal offset) | *maybe, after* | put border width in the dump | |
+| 14 | Family E (diagonal offset) | **unknown** | border theory disproved | |
 | 15 | Outliers, `islands_trains` 80 | **likely** | | |
-| 16 | Mock limitations | | `mocks/`, `ui_tree_dump.h` | |
+| 16 | ~~Mock limitations~~ **done** | | `mocks/mock.js` | |
 | 17 | Five `with_roundness(px)` sites | | | floatinghotel |
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
-Counts: **5 afterhours-only** (1, 2, 3, 6, 8), **2 wm-only** (11, 16),
-**4 both** (4, 5, 7, 9), **2 other-repo** (17, 18), **5 unknown until triaged**
-(10, 12, 13, 14, 15).
+Counts: **5 afterhours-only** (1, 2, 3, 6, 8), **4 both** (4, 5, 7, 9),
+**2 other-repo** (17, 18), **3 unknown** (12, 13, 14, 15 minus what resolved),
+**3 done or won't-fix** (10, 11, 16).
 
-Every unknown is a sweep finding, and each one needs a wm-side mock change
-*before* it can be assigned to anybody — which is why item 10 leads the ordering
-at the bottom. Expect most of the 5 to resolve to afterhours or to won't-fix
-once `strictness` is modelled.
+The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
+Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
+origins to 164, and the remaining unknowns are now much more likely to be real.
 
 ---
 
@@ -162,62 +161,62 @@ and zeroes `theme.roundness` globally.
 `mocks/sheets/all_disagreements.png` (44 screens) plus `sheet01..16.png`.
 Dashed red is afterhours' rect over the CSS pane.
 
-718 nodes differ. 206 sit under a scroll/clip container, where the mock has
-nothing to compare against because it does not clip. Of the rest, **383
-originate a difference** — the others merely moved with a parent that already
-had. Deltas below are `(dx, dy, dw, dh)` in px, CSS minus afterhours.
+**Updated after the wm-side mock fixes (item 16, done).** Three modelling gaps
+were doing most of the talking; closing them took the sweep from 44 screens /
+718 nodes / 383 origins down to **26 screens / 198 nodes / 164 origins**, and
+the nodes excluded for sitting under a scroll/clip container from 206 to 3.
 
-Nobody has been through these. Each is either an afterhours bug or a screen
-over-specifying itself, and the families below are a guess at the grouping, not
-a verdict.
+Deltas below are `(dx, dy, dw, dh)` in px, CSS minus afterhours. Counts in the
+family tables are POST-fix unless marked.
 
-### 10. Family A — fixed-width children in a row that does not fit — **wm (mock)** first
-**Suspected mock-side. Resolve this first: it is the single biggest group and
-until it is settled none of these can be filed.**
+### 10. Family A — fixed-width children in a row that does not fit — RESOLVED, mock-side
+Was 115 origins (`sports_settings` 62, `powerwash_settings` 36, `flex_alignment`
+15, `adaptive_scaling` 4, plus singles). **Now zero.** Two mock bugs, both fixed
+in `mocks/mock.js`:
 
-The mock **ignores `strictness` entirely**. CSS flex items default to
-`flex-shrink: 1` so the browser shrinks an overflowing row; afterhours honours
-`strictness = 1` and refuses. Separately `tax_refund` *grows* `strictness = 0`
-children, which has no CSS equivalent either. Both would show up exactly as
-these do — same row template repeated, children trading a few px.
+- `strictness` was not modelled at all. CSS defaults `flex-shrink: 1` while
+  afterhours defaults `strictness = 1` and refuses to shrink, so the mock was
+  shrinking every overflowing row that afterhours deliberately let overflow.
+  Now `flex-shrink: 1 - strictness`, plus `flex-grow: 1` for `strictness == 0`
+  (which `tax_refund` grows) — suppressed when a sibling uses `Expand`, because
+  `tax_refund` hands Expand all the slack and returns.
+- **Padding larger than the box.** afterhours clamps the *content* area to zero
+  (`fmaxf(0, computed - padd)`) and keeps the box at its stated size; CSS
+  border-box instead floors the box at the padding. `sports_settings`' stepper
+  arrows are `pixels(40)` with 25.6px of side padding, so CSS made them 51.2 and
+  every sibling shifted. The mock now drops padding that exceeds a `Pixels` box.
 
-| screen | origins | shape |
-|---|--:|---|
-| `sports_settings` | 62 | x12 `Pixels/Percent` (0,0,-5,0), x12 `Pixels/Pixels` (-6,0,11,0) |
-| `powerwash_settings` | 36 | x9 (0,0,-9,0), x9 (-9,0,7,0) |
-| `stepper_showcase` | 32 | x6 `Pixels/Percent` (0,0,27,0), x6 (-27,0,27,0) |
-| `flex_alignment` | 15 | x5 (0,0,-9,0), x5 (-19,0,-9,0) |
-| `adaptive_scaling` | 4 | (0,0,15,0) / (15,0,0,0) |
-| `rubber_bandits_menu` | 3 | `Expand/Pixels` (0,0,-27,0) |
-| `angry_birds_settings` | 2 | `Expand/Pixels` (0,0,-7,0) |
-| `casual_settings` | 1 | (-11,0,11,0) |
-
-Fix: map `strictness` onto `flex-shrink`/`flex-grow` in `mocks/mock.js`, re-run,
-and see what survives.
+Worth noting as an afterhours *design* question rather than a bug: padding
+exceeding the element is accepted silently and yields a zero-width content area.
+That is over-specification in the screens — `pixels(40)` with 51.2px of padding
+is not meaningful — and nothing warns.
 
 ### 11. Family B — shrink-to-fit around a label — **wm (mock)**, won't-fix
 **Mock-side, expected.** `Children`-sized boxes take their width from text, and
 browser font metrics are not raylib's. Listed so they are not re-filed.
 
-`dialog_fyi` (-136), `dialog_confirm` (-125), `dialog_info` (-123),
-`dialog_danger` (-106), `dialog_prompt` (-97) — all one node, `Children/Percent`;
-`layout_bug_repros` (-186), `horizontal_drag` (-141), `setting_row_showcase`
-(-52 on 2 of its 18). 44 of the 383 carry the text flag.
+`horizontal_drag` (7), `setting_row_showcase` (some of its 11), and one node
+each on `layout_bug_repros` (-186) and the `dialog_*` screens. Survives the
+fixes above, as expected — nothing about `strictness` or padding changes what a
+browser thinks a string is wide.
 
 ### 12. Family C — small vertical drift, no size change — **unknown**, likely afterhours
 **Unexplained. Most likely to be real.** One element sits a few px off and
 everything after it follows; the origin count is small because the fallout is
 discounted.
 
+Untouched by the mock fixes, which raises rather than lowers the suspicion.
+
 | screen | origins | shape |
 |---|--:|---|
 | `images` | 10 | x8 (0,-4,0,0) |
 | `deadspace_settings` | 9 | x8 `Percent/Pixels` (0,9,0,0) |
 | `buttons` | 8 | x7 (0,-4,0,0) |
-| `toggle_switches` | 12 | (0,-3,0,-2), (0,-5,0,-2) |
 | `layout` | 6 | x3 (0,-9,0,0), x3 (0,-8,0,0) |
 | `layout_patterns` | 3 | x3 (0,-6,0,0) |
-| `button_variants` | 2 | x2 (0,-3,0,0) |
+
+`toggle_switches` (12) and `button_variants` (2) dropped out entirely with the
+padding fix, so this family is smaller than first counted.
 
 ### 13. Family D — height disagreements — **unknown**, mixed
 - `multiline_text_lab` — `Pixels/Text`, dh -54 and -72. The only `Dim::Text`
@@ -229,11 +228,16 @@ discounted.
 - `forms` — x3 `Percent/Percent` (0,-1,0,-13).
 - `drag_drop` — x4 `Percent/Percent` (0,0,0,-3).
 
-### 14. Family E — uniform diagonal offset — **wm (dump)** first
+### 14. Family E — uniform diagonal offset — **unknown**
 `decorative_frame` (2,2) and (8,8); `cozy_cafe` (4,4) and (14,14). dx equals dy
-exactly, which smells like a border or frame inset the mock does not model —
-these screens use the bevel/nine-slice borders. Check whether border width is
-in the dump at all.
+exactly.
+
+**The border hypothesis is wrong.** `HasBorder` exists
+(`components.h:398`) but `autolayout.h` never reads it — a border is drawn
+inside the rect and does not inset the content box. So adding border width to
+the dump would not help, and putting a CSS `border` on these nodes would
+actively break them under border-box. Cause still unknown; the equal dx/dy is
+the only lead.
 
 ### 15. Single-screen outliers — **unknown**
 - **`islands_trains_settings` — 80 origins, the largest single screen.** raylib
@@ -247,13 +251,20 @@ in the dump at all.
 - `cards`, `kirby_options`, `vstack_showcase`, `hstack_showcase` — 1-2 nodes
   each, sub-5px. Noise-adjacent; check last.
 
-### 16. Known mock limitations to fix before the next sweep — **wm (mock)**
-- No `strictness` → see item 10.
-- No clipping, so 206 nodes under scroll/clip cannot be compared at all.
-- Absolute nodes are replayed from afterhours' own answer rather than
-  re-solved — correct (a caller-supplied coordinate has no second opinion) but
-  it means the mock cannot catch a bug in absolute placement.
-- Border width is not in the dump — see item 14.
+### 16. Known mock limitations — DONE
+- ~~No `strictness`~~ — modelled, see item 10.
+- ~~Padding exceeding the box~~ — modelled, see item 10.
+- ~~No content-size floor~~ — `min-width/height: 0` on every node, since a flex
+  item's automatic minimum is its content size and afterhours has no equivalent.
+  No measurable effect on its own, but it is correct and stops a labelled
+  fixed-size box reading as a disagreement later.
+- ~~206 nodes unreachable under scroll/clip~~ — **down to 3** (`aim_chat`). They
+  were never really a clipping problem; the cascade from the three bugs above
+  was reaching into scroll subtrees.
+- Border width in the dump — **not needed**, see item 14.
+- Absolute nodes are replayed from afterhours' own answer rather than re-solved.
+  Correct (a caller-supplied coordinate has no second opinion) but it means the
+  mock cannot catch a bug in absolute placement. Unchanged, by design.
 
 ---
 
@@ -311,10 +322,10 @@ item with the API to migrate to.
 
 ## What's next
 
-1. **Item 10** — map `strictness` in `mocks/mock.js`. 115 of the 383 origins are
-   in Family A and none of them can be judged until this is done.
-2. **Item 9** — corner radiuses, in its own commit.
-3. **Item 15** — `islands_trains_settings`, the 80-origin outlier Family A does
-   not explain.
-4. **Items 1 and 5** — font weight and right-click, the two HIGHs that are
-   plainly missing capability rather than open questions.
+1. **Item 15** — `islands_trains_settings`, now 47 origins and by far the
+   largest single screen left.
+2. **Item 12** — Family C, the vertical drift. Untouched by the mock fixes,
+   which makes it the best candidate for a real afterhours bug.
+3. **Item 9** — corner radiuses, in its own commit.
+4. **Items 1 and 5** — font weight and right-click: missing capability rather
+   than open questions, so they need no triage first.
