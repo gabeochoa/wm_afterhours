@@ -68,13 +68,18 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands)
 
   // afterhours clamps the CONTENT area to zero when padding exceeds the box
   // (fmaxf(0, computed - padd)) and keeps the box at its stated size. CSS
-  // border-box instead floors the box at the padding, so pixels(40) with 25.6px
+  // border-box instead floors the box at the padding, so a 10px box with 25.6px
   // of side padding comes out 51.2 wide. Drop the padding in that case: the
   // content area is zero either way, and the box size is what is being compared.
   const p = { ...n.padding }, m = n.margin;
-  if (n.desired.x.dim === 'Pixels' && p.left + p.right >= n.desired.x.value)
+  const stated = (size, screen) =>
+    size.dim === 'Pixels' ? size.value
+      : size.dim === 'ScreenPercent' ? size.value * screen
+      : null; // Percent needs the parent's resolved size; not worth it yet
+  const statedX = stated(n.desired.x, vw), statedY = stated(n.desired.y, vh);
+  if (statedX !== null && p.left + p.right >= statedX)
     p.left = p.right = 0;
-  if (n.desired.y.dim === 'Pixels' && p.top + p.bottom >= n.desired.y.value)
+  if (statedY !== null && p.top + p.bottom >= statedY)
     p.top = p.bottom = 0;
   el.style.padding = `${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`;
   el.style.margin  = `${m.top}px ${m.right}px ${m.bottom}px ${m.left}px`;
