@@ -379,6 +379,23 @@ its own gate (keyed on the address of a `static` local unique to the expansion),
 so the same key at two sites cannot silence one of them. All five sites
 converted; both `UIComponent` bools deleted.
 
+### 21. Silent-failure audit — first pass done, little left
+Swept for places the library quietly does nothing. Far less than expected,
+because the three found this week were already fixed. Recording what was
+checked so the sweep is not repeated:
+
+| candidate | verdict |
+|---|---|
+| `resolve_constraint` ignores `Children`/`Expand` as a min/max | Real, but **nobody downstream writes it** — zero uses across all 20 projects. A diagnostic for a mistake no one makes. |
+| `mk()` id collisions (cartographer's top frustration) | **Not silent.** A same-frame collision throws `bad_optional_access` and `mk()` already logs file/line/function plus the fix first. Verified: a deliberate collision aborts with exit 134. Their complaint is about the message being confusing, not absent — worth rewording, not re-plumbing. |
+| `theme.ui_scale` ignored in Proportional mode | Real, but a mixed app legitimately has Proportional widgets while ui_scale is set, so a warning would fire on correct setups. |
+| `dropdown`/`stepper` with empty options render nothing | Ambiguous — an empty list is legitimate mid-load. Left alone. |
+| `with_roundness(0)` vs `disable_rounded_corners()` | Checked: roundness 0 does produce square corners at draw time. Not a trap. |
+
+The pattern holds — the silent failures that mattered were the three already
+fixed (font weight, wrap-without-size, `is_right_click`). Not worth a second
+pass unless a new report points at one.
+
 ---
 
 ## Other repos (not ours to land)
