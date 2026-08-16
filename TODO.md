@@ -28,7 +28,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 9 | Corner radiuses | theme default + precedence | call sites + baselines | |
 | 10 | ~~Family A~~ **resolved** | | was the mock: strictness + padding | |
 | 11 | Family B (font metrics) | | won't-fix, documented | |
-| 12 | Family C (vertical drift) | **likely** | | |
+| 12 | ~~Family C~~ **root-caused** | cross-axis align bails when free space is negative | | |
 | 13 | Family D (heights) | likely for `file_tree`/`forms` | text metrics for `multiline_text_lab` | |
 | 14 | Family E (diagonal offset) | **unknown** | border theory disproved | |
 | 15 | Outliers, `islands_trains` 80 | **likely** | | |
@@ -36,9 +36,9 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 17 | Five `with_roundness(px)` sites | | | floatinghotel |
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
-Counts: **5 afterhours-only** (1, 2, 3, 6, 8), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **3 unknown** (12, 13, 14, 15 minus what resolved),
-**3 done or won't-fix** (10, 11, 16).
+Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **3 done or won't-fix**
+(10, 11, 16).
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
 Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
@@ -200,23 +200,34 @@ each on `layout_bug_repros` (-186) and the `dialog_*` screens. Survives the
 fixes above, as expected — nothing about `strictness` or padding changes what a
 browser thinks a string is wide.
 
-### 12. Family C — small vertical drift, no size change — **unknown**, likely afterhours
-**Unexplained. Most likely to be real.** One element sits a few px off and
-everything after it follows; the origin count is small because the fallout is
-discounted.
+### 12. Family C — cross-axis align is skipped when the child overflows — **afterhours**
+**Root cause found and verified.** `compute_relative_positions` wraps the whole
+align block in `if (cross_remaining > 0.f)`
+(`vendor/afterhours/src/plugins/autolayout.h:1428`), so when a child is *larger*
+than the parent's cross-axis content box, `align_items: Center` silently
+degrades to FlexStart. CSS centers regardless, overflowing symmetrically.
 
-Untouched by the mock fixes, which raises rather than lowers the suspicion.
+Arithmetic, checked on three screens:
 
-| screen | origins | shape |
-|---|--:|---|
-| `images` | 10 | x8 (0,-4,0,0) |
-| `deadspace_settings` | 9 | x8 `Percent/Pixels` (0,9,0,0) |
-| `buttons` | 8 | x7 (0,-4,0,0) |
-| `layout` | 6 | x3 (0,-9,0,0), x3 (0,-8,0,0) |
-| `layout_patterns` | 3 | x3 (0,-6,0,0) |
+| screen | parent | content | child+margin | free | predicted dy | observed |
+|---|---|--:|--:|--:|--:|--:|
+| `images` | `row1_sprites` | 95.6 | 104.4 | -8.8 | -4.4 | **-4.4** x8 |
+| `buttons` | `row1_states` | 51.2 | 59.4 | -8.2 | -4.1 | **-4** x7 |
+| `layout` | `row_container` | 91.2 | 108.8 | -17.6 | -8.8 | **-9/-8** x3 |
 
-`toggle_switches` (12) and `button_variants` (2) dropped out entirely with the
-padding fix, so this family is smaller than first counted.
+All three parents are `Row` with `align_items: Center`. Also explains
+`layout_patterns` (3), `button_variants` (2), `cards` (1) and part of
+`meters_gauges` — about **27 origins across 7 screens**.
+
+Smallest fix: let Center and FlexEnd use a negative `cross_remaining` instead of
+bailing. Center then yields `cross_remaining / 2` (symmetric overflow, matching
+CSS) and FlexEnd the full negative. FlexStart and Stretch are unaffected. Expect
+it to move ~7 baselines.
+
+**Not** covered by this: `deadspace_settings` (9 origins, dy+9). Its parent
+`sidebar` is a `Column` with `align_items: FlexStart` and **+281px** of free
+space, so it is main-axis stacking, not cross-axis align. Still unexplained —
+track it separately.
 
 ### 13. Family D — height disagreements — **unknown**, mixed
 - `multiline_text_lab` — `Pixels/Text`, dh -54 and -72. The only `Dim::Text`
@@ -322,10 +333,19 @@ item with the API to migrate to.
 
 ## What's next
 
-1. **Item 15** — `islands_trains_settings`, now 47 origins and by far the
-   largest single screen left.
-2. **Item 12** — Family C, the vertical drift. Untouched by the mock fixes,
-   which makes it the best candidate for a real afterhours bug.
+1. **Item 12** — the cross-axis align bail. Root-caused and verified against
+   three screens, so it is ready to write; ~27 origins across 7 screens.
+2. **Item 15** — `islands_trains_settings`, 47 origins and by far the largest
+   single screen left.
 3. **Item 9** — corner radiuses, in its own commit.
 4. **Items 1 and 5** — font weight and right-click: missing capability rather
    than open questions, so they need no triage first.
+
+Current sweep state: **26 screens / 198 nodes / 164 origins** (was 44 / 718 /
+383). Per-screen counts are in the family tables above; regenerate with
+`./mocks/build.sh --no-serve && ./mocks/sheets.sh`.
+
+A subagent triage pass on items 12-15 produced only hypotheses and reversed
+itself on two of them (it asserted the Family E border theory at high
+confidence after it had already been disproved). Nothing from it is recorded
+here that was not independently verified.
