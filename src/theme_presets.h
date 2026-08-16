@@ -28,6 +28,13 @@ inline void add_default_language_fonts(Theme &theme) {
   };
 }
 
+// Corner radius in pixels rather than afterhours' roundness fraction. The
+// fraction is a share of each widget's short side, so one value is ~8px on a
+// row and 180px on a full-height panel -- which is why the big containers read
+// as blobs. 10px is the median radius those panels resolve to today, so most
+// widgets barely move and only the outliers get fixed.
+constexpr float THEME_CORNER_RADIUS = 10.f;
+
 // Cozy Kraft - Warm, paper-like aesthetic for cozy/casual games
 // Matches "Blossom Cafe" inspiration image
 inline Theme cozy_kraft() {
@@ -64,7 +71,8 @@ inline Theme neon_dark() {
       .font = {230, 250, 255, 255},       // cool white
       .darkfont = {10, 15, 20, 255},      // near black
       .font_muted = {140, 160, 180, 255}, // cool gray (4.8:1)
-  });
+  })
+                .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
   return t;
 }
@@ -81,7 +89,8 @@ inline Theme ocean_navy() {
       .font = {255, 255, 255, 255},       // white
       .darkfont = {15, 30, 55, 255},      // deep navy
       .font_muted = {160, 175, 200, 255}, // light blue-gray
-  });
+  })
+                .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
   return t;
 }
@@ -98,7 +107,8 @@ inline Theme midnight() {
       .font = {255, 255, 255, 255},       // white
       .darkfont = {0, 0, 0, 255},         // pure black
       .font_muted = {140, 140, 140, 255}, // lighter gray (5.3:1)
-  });
+  })
+                .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
   return t;
 }
@@ -116,7 +126,8 @@ inline Theme sage_natural() {
       .font = {40, 50, 60, 255},          // darker charcoal (6.5:1)
       .darkfont = {212, 229, 210, 255},   // sage green
       .font_muted = {80, 90, 100, 255},   // darker gray (4.5:1)
-  });
+  })
+                .with_corner_radius(THEME_CORNER_RADIUS);
   add_default_language_fonts(t);
   return t;
 }
