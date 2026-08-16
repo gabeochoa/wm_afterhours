@@ -25,7 +25,7 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 6 | `context_menu` clips shortcuts | reserve the column | | |
 | 7 | Never-implemented gap requests | most of them | e2e pack upstreams **from** wm | |
 | 8 | Slider knob, tab bars, hard wrap | all three | | |
-| 9 | Corner radiuses | theme default + precedence | call sites + baselines | |
+| 9 | ~~Corner radiuses~~ **done** | `d265f0e` | `48db688`, 51 baselines | |
 | 10 | ~~Family A~~ **resolved** | | was the mock: strictness + padding | |
 | 11 | Family B (font metrics) | | won't-fix, documented | |
 | 12 | ~~Family C~~ **done** | fixed, `17b982c` | 9 baselines | |
@@ -37,8 +37,8 @@ afterhours is wrong or the screen is — that decision IS the work.
 | 18 | Gap docs list shipped work | | | 5 docs, 4 repos |
 
 Counts: **6 afterhours-only** (1, 2, 3, 6, 8, 12), **4 both** (4, 5, 7, 9),
-**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **5 done or won't-fix**
-(10, 11, 12, 16, 19).
+**2 other-repo** (17, 18), **2 unknown** (13, 14, 15), **7 done or won't-fix**
+(9, 10, 11, 12, 16, 19), plus 15 folded into the sweep numbers.
 
 The two wm-only items are closed: 16 is done and 11 is a documented won't-fix.
 Doing 16 also resolved item 10 outright and shrank 12 — the sweep went from 383
@@ -130,19 +130,24 @@ hard character break.
 
 ## wm_afterhours
 
-### 9. Corner radiuses — make them consistent — **both**
-Decided, not yet done. Today `Theme::roundness = 0.5f` scales with the widget,
+### 9. Corner radiuses — make them consistent — DONE
+afterhours `d265f0e` (precedence) + wm `48db688` (10px in the presets). Today `Theme::roundness = 0.5f` scales with the widget,
 so the same theme value is ~8px on a row and 180px on a full-height panel; the
 mock sheets show the big containers as blobs. `with_corner_radius(px)` now
 exists, so the work is:
 
-1. Give `Theme` an absolute default radius and let it win where the caller did
-   not ask for a fraction. **Precedence has to be explicit-px > explicit-
-   roundness > theme-px > theme-roundness** — right now `component_init.h:119`
-   fills both from the theme unconditionally and `resolve_roundness` prefers px,
-   so a theme px would silently beat a caller's explicit `with_roundness`.
-2. Sweep wm's own `with_roundness` call sites to px where they meant px.
-3. Re-baseline. This is why it is its own commit: it repaints every screen.
+1. ~~Precedence~~ — fixed in afterhours. Order is caller px > caller roundness
+   > theme px > theme roundness, and the two theme-level spellings now clear
+   each other.
+2. ~~A pixel default~~ — set to 10px in wm's four presets, **not** in
+   afterhours. A default `Theme::corner_radius` would win over downstream code
+   that assigns `theme.roundness` directly (wordproc zeroes it for square
+   corners), so the value belongs in each app's presets.
+3. ~~Re-baseline~~ — 51 of 98 screens repainted.
+
+Still open, low priority: wm has ~350 per-call `with_roundness` sites, many of
+which meant px. They are unaffected by the theme change (a caller fraction
+wins) and can be converted opportunistically.
 
 Pick the default off the current spread — 1329 painted nodes already resolve to
 <4px, 1118 to 4-12px, and only 88 exceed 80px (`tray_bg`, `toggle_bg`,
