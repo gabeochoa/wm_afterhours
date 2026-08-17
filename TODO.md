@@ -166,18 +166,21 @@ feature exists:
 
 - **Synchronized scroll views** (floatinghotel: side-by-side diff)
 - **Scroll anchoring / preserve-position-on-prepend** (hanabi #30)
-- **Shared e2e command pack** — cartographer wants `click_btn`/`expect_label`
-  without re-implementing; kart wants `disable_animations`, `--screenshot-dir`,
-  `--e2e-speed`, case-insensitive `expect_text`. **wm already has all of these
-  locally** and is the natural place to upstream them from.
+- ~~**Shared e2e command pack**~~ — DONE except the CLI surface. The 21
+  commands were already upstream; `click_btn`/`expect_label` are `click`/
+  `expect_text` renamed. Added `expect_text_i`, `disable_animations`. Still
+  open: `afterhours::e2e::Args` + `parse_args` for the 10 library-owned flags.
 - **Headless affordances** (kart, four separate workarounds): resolution returns
   (0,0), `GetFontDefault()` invalid, `bad_variant_access` on shutdown,
   `SINGLETON_FWD` fails in class scope.
-- **Text metrics / measure+wrap API** — hanabi calls it "the #1 papercut".
-- **Animation instant-mode / clear-all** (kart), per-item stagger, exit
-  animations (hanabi AN-8..AN-12).
-- `Margin`/`Padding` single-side helpers, e.g. `Margin::left(pixels(10))`
-  (cartographer).
+- ~~**Text metrics / measure+wrap API**~~ — DONE, `ui::measure_text_wrapped`.
+- ~~**Animation instant-mode / clear-all**~~ — DONE, `animation::set_instant` /
+  `clear_all`. Still open: per-item stagger, exit animations (hanabi AN-8..AN-12).
+- ~~`Margin`/`Padding` single-side helpers~~ — already existed as
+  `Margin::Left(pixels(10))` (afterhours `390b5b7`, Feb 2026); lowercase `left`
+  is impossible, it collides with the field. The real bug found while checking:
+  `Margin` and `Padding` declared their fields in *different orders*, so a
+  positional `{a,b,c,d}` silently meant different things. Fixed.
 
 ### 8. Long-standing, low priority — **afterhours**
 From `docs/AFTERHOURS_GAPS.md`, unchanged: slider handle 0.75 compression;
