@@ -399,7 +399,23 @@ The pattern holds — the silent failures that mattered were the three already
 fixed (font weight, wrap-without-size, `is_right_click`). Not worth a second
 pass unless a new report points at one.
 
-### 22. e2e failures are blamed on the wrong script — **wm/afterhours**
+### 22. e2e failures are blamed on the wrong script — **DONE**
+Two causes, both fixed. `reset_test_state` doubled as the batch loader's script
+separator, so `79_undo_redo.e2e` using it mid-script shifted every later
+result by one — that is the whole "blamed on a later script" symptom. The
+separator is now an internal `__end_of_script`. Separately, the last command
+of a script was finalized in the tick it was dispatched, which is why a
+single-script run exited 0 while logging the timeout.
+
+Found on the way: `src/log/log_macros.h` put `assert(false)` *outside* the
+`if` in `log_error`, so `if (cond) log_error(...)` crashed unconditionally.
+All four macros are `do/while(0)` now.
+
+Regression test: `tests/e2e_scripts/fail_script_attribution.e2e` uses the
+`fail_` prefix convention, so it goes red whether the error is lost or lands
+on the wrong script. Verified by reintroducing the bug.
+
+<details><summary>original report</summary>
 A failing assertion in script N is charged to a script that runs later, so the
 suite fails pointing at innocent files.
 
@@ -417,6 +433,7 @@ This is expensive: it cost real time twice this session — once chasing
 `98`/`99` failures that were actually a stuck mouse button from script 94, and
 again here. Worth fixing before the next debugging session pays for it a third
 time.
+</details>
 
 ### 23. e2e gap requests — DONE (three of four; the fourth was stale)
 cartographer and kart's "shared e2e command pack" is mostly already upstream —

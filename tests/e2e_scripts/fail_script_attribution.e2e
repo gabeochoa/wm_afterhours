@@ -1,0 +1,21 @@
+# Regression: an error must be charged to the script that caused it.
+#
+# The `fail_` prefix means the runner expects exactly this script to fail, so
+# it goes red both ways: if the error is misattributed this script reports a
+# false pass, and whichever script it leaked into goes red instead.
+#
+# Two things used to break that. A script's own `reset_test_state` doubled as
+# the runner's internal script separator, so it ended the script early and
+# shifted every later result by one. And the last command was finalized in the
+# same tick it was dispatched, before it had run.
+
+goto_screen virtual_list_lab
+wait 0.3
+
+# The separator case: this must reset input state without ending the script.
+reset_test_state
+wait 0.2
+
+# The last-command case: this is the final command, and its failure still
+# has to land here.
+expect_text "deliberately absent, this script is meant to fail"

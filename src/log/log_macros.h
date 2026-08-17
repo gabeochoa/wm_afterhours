@@ -1,23 +1,22 @@
 #pragma once
 
-#define log_trace(...)                                                         \
-  if (static_cast<int>(LogLevel::LOG_TRACE) >=                                 \
-      static_cast<int>(AFTER_HOURS_LOG_LEVEL))                                 \
-  log_me(LogLevel::LOG_TRACE, __FILE__, __LINE__, __VA_ARGS__)
+// Each wrapped in do/while so they are a single statement. Without it
+// `if (x) log_error(...);` put the assert outside the if and crashed
+// unconditionally, and the others silently swallowed a trailing `else`.
+#define AFTER_HOURS_LOG_AT(level, ...)                                         \
+  do {                                                                         \
+    if (static_cast<int>(level) >= static_cast<int>(AFTER_HOURS_LOG_LEVEL))    \
+      log_me(level, __FILE__, __LINE__, __VA_ARGS__);                          \
+  } while (0)
 
-#define log_info(...)                                                          \
-  if (static_cast<int>(LogLevel::LOG_INFO) >=                                  \
-      static_cast<int>(AFTER_HOURS_LOG_LEVEL))                                 \
-  log_me(LogLevel::LOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
-#define log_warn(...)                                                          \
-  if (static_cast<int>(LogLevel::LOG_WARN) >=                                  \
-      static_cast<int>(AFTER_HOURS_LOG_LEVEL))                                 \
-  log_me(LogLevel::LOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
+#define log_trace(...) AFTER_HOURS_LOG_AT(LogLevel::LOG_TRACE, __VA_ARGS__)
+#define log_info(...) AFTER_HOURS_LOG_AT(LogLevel::LOG_INFO, __VA_ARGS__)
+#define log_warn(...) AFTER_HOURS_LOG_AT(LogLevel::LOG_WARN, __VA_ARGS__)
 #define log_error(...)                                                         \
-  if (static_cast<int>(LogLevel::LOG_ERROR) >=                                 \
-      static_cast<int>(AFTER_HOURS_LOG_LEVEL))                                 \
-    log_me(LogLevel::LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__);              \
-  assert(false)
+  do {                                                                         \
+    AFTER_HOURS_LOG_AT(LogLevel::LOG_ERROR, __VA_ARGS__);                      \
+    assert(false);                                                             \
+  } while (0)
 
 #define log_clean(level, ...)                                                  \
   if (static_cast<int>(level) >= static_cast<int>(AFTER_HOURS_LOG_LEVEL))      \
