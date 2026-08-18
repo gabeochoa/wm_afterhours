@@ -170,9 +170,14 @@ feature exists:
   commands were already upstream; `click_btn`/`expect_label` are `click`/
   `expect_text` renamed. Added `expect_text_i`, `disable_animations`. Still
   open: `afterhours::e2e::Args` + `parse_args` for the 10 library-owned flags.
-- **Headless affordances** (kart, four separate workarounds): resolution returns
-  (0,0), `GetFontDefault()` invalid, `bad_variant_access` on shutdown,
-  `SINGLETON_FWD` fails in class scope.
+- ~~**Headless affordances**~~ — DONE. Resolution falls back to
+  `window_manager::headless_resolution` instead of (0,0); `measure_text`
+  estimates instead of returning {0,0} for an atlas-less font;
+  `afterhours::shutdown()` orders entity teardown before the backend;
+  `SINGLETON_CLASS_FWD` already existed (`e9c662b`) and is now signposted.
+  Verified by `tests/headless_fallback_test.cpp`, which never calls
+  InitWindow — wm's `--headless` builds a real GL context, so it cannot
+  reproduce any of these.
 - ~~**Text metrics / measure+wrap API**~~ — DONE, `ui::measure_text_wrapped`.
 - ~~**Animation instant-mode / clear-all**~~ — DONE, `animation::set_instant` /
   `clear_all`. Still open: per-item stagger, exit animations (hanabi AN-8..AN-12).
