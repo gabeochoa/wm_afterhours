@@ -503,6 +503,26 @@ the name does not resolve or the view does not scroll.
 
 First users: `95_scrollbar_drag.e2e`, `97a_sync_scroll.e2e`.
 
+### 28. Fold `SyncScrollViews` into `HandleScrollInput`'s pass — **afterhours**
+Low priority; filed because it was asked about, not because it is measurable.
+
+`SyncScrollViews` iterates `HasScrollView` a second time each frame, over a set
+that is ≤5 entities on the busiest wm screen (14 across all 100), with
+`if (sync_group == 0) return;` as its first line. `HandleScrollInput` already
+walks the same set, so the collect could hoist into it and the apply into its
+`after()` — one fewer system, no extra pass.
+
+Not done because that system early-returns on `!was_rendered_to_screen`,
+`should_hide`, and the `auto_overflow` no-overflow case. The collect has to sit
+*above* all three or members silently stop syncing in those states, and the
+symptom would be a green test with a broken pane.
+
+**Rejected alternatives**, so nobody re-proposes them: caching the group→member
+index across frames (the UI is immediate-mode — `mk()` rebuilds the tree every
+frame, so cached component references dangle), and running the apply at a lower
+tick rate (scroll is latency-critical; a throttled apply shears the panes apart
+mid-drag).
+
 ### 26. `RefComponent` to match `RefEntity` — **afterhours**
 `entity.h:300` has `RefEntity = std::reference_wrapper<Entity>` and a
 `RefEntities` vector alias, but there is no component-level equivalent. A
