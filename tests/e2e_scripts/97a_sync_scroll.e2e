@@ -1,0 +1,49 @@
+# HasScrollView::sync_group -- scrolling one view moves the rest of its group.
+#
+# Driven by the scrollbar, not the wheel: synthetic scroll_wheel is a no-op
+# headless (docs/47_silent_traps.md), so a wheel version passes without ever
+# scrolling. The readouts print live scroll_offset values, so these assert on
+# component state rather than on panes that merely look aligned.
+#
+# The y and x verdicts are worded differently on purpose -- a shared "in sync"
+# would let the x readout satisfy a y assertion, which it did in an earlier
+# draft that passed with the whole feature disabled.
+
+goto_screen sync_scroll_lab
+wait 0.4
+expect_text "y-in-sync"
+expect_text "x-in-sync"
+expect_text "short-following"
+
+# --- group 1: vertical, three panes, different heights -------------------
+# Drag the FIRST pane's scrollbar; the other two must follow.
+mouse_move 384 125
+wait 0.2
+mouse_down 384 125
+wait 0.2
+mouse_move 384 400
+wait 0.3
+mouse_up 384 400
+wait 0.4
+
+expect_no_text "y: before 0"
+expect_text "y-in-sync"
+# 24 rows against 120: it follows, then stops at its own end. "short-stuck"
+# would mean it never moved, i.e. the sync never reached it.
+expect_text "short-clamped"
+
+# --- group 2: horizontal, header tracks the table ------------------------
+# The table's horizontal bar runs along its bottom edge.
+mouse_move 300 650
+wait 0.2
+mouse_down 300 650
+wait 0.2
+mouse_move 700 650
+wait 0.3
+mouse_up 700 650
+wait 0.4
+
+expect_no_text "x: header 0"
+expect_text "x-in-sync"
+
+screenshot sync_scroll

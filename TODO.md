@@ -164,7 +164,7 @@ this; it was being spent on width instead of on an inset.
 No upstream implementation at all, so a wm screen cannot be written until the
 feature exists:
 
-- **Synchronized scroll views** (floatinghotel: side-by-side diff)
+- ~~**Synchronized scroll views**~~ — DONE, see item 25.
 - **Scroll anchoring / preserve-position-on-prepend** (hanabi #30)
 - ~~**Shared e2e command pack**~~ — DONE except the CLI surface. The 21
   commands were already upstream; `click_btn`/`expect_label` are `click`/
@@ -460,6 +460,74 @@ opinion on where files land. Not started; it touches every consumer's `main()`.
 **Also found:** adding an e2e command needs the handler *and* an entry in
 `runner.h`'s per-command parse chain. Miss the second and args arrive empty
 with no diagnostic.
+
+### 24. Synthetic `scroll_wheel` is a no-op headless — **afterhours**
+Every wheel-driven e2e assertion in the suite is currently meaningless, and it
+fails green. `12_scroll_view.e2e:25` already carries a note saying its own
+scroll assertions "reflect the actual unscrolled state"; the first draft of
+`97a_sync_scroll.e2e` passed identically with the feature under test disabled.
+
+The plumbing looks right on inspection — `input_injector::set_mouse_wheel()`
+stores it, and `input_system.h`'s `get_mouse_wheel_move_v()` reads
+`consume_wheel()` under `test_mode` — so something between the two eats the
+value. Note `consume_wheel()` does not clear, and `reset_frame()` does; that is
+the same shape as the pinch double-delivery bug, so suspect frame ordering
+first.
+
+Workaround in the meantime: drive scrolling through the scrollbar thumb, which
+does work headless (`95_scrollbar_drag.e2e`, `97a_sync_scroll.e2e`).
+
+### 27. e2e command to grab the scroll handle — **afterhours**
+Scrolling in a test means hand-computing the thumb's pixel position:
+
+```
+mouse_move 384 125
+mouse_down 384 125
+mouse_move 384 400
+mouse_up 384 400
+```
+
+384 is the pane's right edge minus half the bar thickness, and 125 is "near the
+top of the track" — both derived by hand from `scrollbar_geometry()` and both
+silently wrong the moment the pane moves or `scrollbar_thickness` changes. A
+miss does not fail; it scrolls nothing and the assertions afterwards pass or
+fail for the wrong reason.
+
+This is not a nicety, because **the wheel is a no-op headless (item 24)**, so
+dragging the bar is currently the only way to scroll in a test at all.
+
+Want something like `scroll_to <debug_name> <percent>` that resolves the view
+by name, asks `scrollbar_geometry()` where the thumb is, and drives the drag —
+or writes the offset directly and skips the pointer entirely. Fails loudly if
+the name does not resolve or the view does not scroll.
+
+First users: `95_scrollbar_drag.e2e`, `97a_sync_scroll.e2e`.
+
+### 26. `RefComponent` to match `RefEntity` — **afterhours**
+`entity.h:300` has `RefEntity = std::reference_wrapper<Entity>` and a
+`RefEntities` vector alias, but there is no component-level equivalent. A
+system that collects during `for_each_with` and acts in `after()` — the pattern
+forced by `EntityQuery` not seeing UI entities (`docs/47_silent_traps.md`) —
+has to spell `std::vector<std::reference_wrapper<HasScrollView>>` by hand, or
+reach for raw pointers.
+
+```cpp
+template <typename T> using RefComponent = std::reference_wrapper<T>;
+template <typename T> using RefComponents = std::vector<RefComponent<T>>;
+```
+
+Then `SyncScrollViews::members` is `RefComponents<HasScrollView>`. Trivial, but
+it is the difference between the collect-then-apply pattern looking idiomatic
+and looking like a workaround. First user is `SyncScrollViews` in
+`plugins/ui/systems.h`.
+
+### 25. Synchronized scroll views — DONE
+`HasScrollView::sync_group`; non-zero ids scroll together, only on the axes
+each member has enabled. Screen `sync_scroll_lab`, e2e `97a_sync_scroll.e2e`.
+
+Two traps found building it, both written up in `docs/47_silent_traps.md`:
+`EntityQuery` returns nothing for UI entities from inside a system, and the
+wheel no-op above.
 
 ---
 
