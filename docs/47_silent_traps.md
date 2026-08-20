@@ -101,6 +101,37 @@ wm's per-script `reset_fn` now restores the run's starting resolution. Note it
 has to write the `ProvidesCurrentResolution` singleton, not just call
 `set_window_size`, which is a no-op headless.
 
+## 6. A wait that renders nothing
+
+`expect_text`/`expect_no_text` read `VisibleTextRegistry`, and only a **render**
+refills it (`ClearVisibity`/the render pass clears it first). An app is free to
+run several `tick()`s per rendered frame — floatinghotel's `e2e_tick_loop` runs
+up to 200 — so `wait_frames 5` can burn its whole budget without one render.
+The assertion after it then reads the frame the *preceding* click was made on.
+
+Worse, waiting longer does not help: more ticks, still no render.
+
+`expect_no_text` now waits on `VisibleTextRegistry::generation()` rather than a
+frame count, so it always sees one render after itself. That is the floor, not
+a cure: if your loop batches ticks, render between them, or the script is
+asserting against a frame it never asked for.
+
+## 7. Solver rules that should not apply inside a scroll view
+
+`solve_violations` shrinks children that overflow the main axis. For a scroll
+view that is exactly backwards — overflow is the content. It had no exemption,
+so a 55-row list in a 220px viewport got every row squashed to 4px.
+
+It stayed hidden because it only bites non-strict sizes (`h720`, `percent`);
+strict `pixels()` children are left alone, and wm's rows are strict. It only
+became reachable at all once `48f808d` made the solver recurse into
+absolutely-positioned subtrees — floatinghotel builds every panel absolute, so
+its whole UI had been skipping the solver.
+
+**Lesson:** when a rule is "make the children fit", ask which containers mean
+the opposite. Positioning already had the `!is_scroll_view` guard in three
+places; sizing had none.
+
 ---
 
 ## How to not get caught
