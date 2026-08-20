@@ -45,27 +45,61 @@ trips an assert.
 
 ---
 
-## 2. Synthetic `scroll_wheel` does nothing in headless e2e
+## 2. Synthetic `scroll_wheel` did nothing in headless e2e — FIXED
 
-**Symptom:** an e2e script does `mouse_move` then `scroll_wheel`, asserts on the
-scrolled state, and passes — including when the feature under test is disabled.
+**Cause:** the reader ran before the writer. wm registers
+`register_after_ui_updates` (which contains `HandleScrollInput`) *before*
+`register_builtin_handlers` (which contains `HandleScrollWheelCommand`), so the
+wheel was read, then set, then wiped by `reset_frame()` — never observed.
 
-**Cause:** unknown; the injector plumbing reads correct on inspection
-(`input_injector::set_mouse_wheel` is consulted by
-`input_system.h: get_mouse_wheel_move_v()` under `test_mode`). Something
-between the two eats the value.
+The injector's own comment asserted the opposite ("the wheel's consumer is a UI
+system that always runs after the command that sets it"), which is why the
+wheel never got the one-frame survival that pinch has.
 
-**Where it bit:** `12_scroll_view.e2e:25` already carries a note that its own
-scroll assertions are vacuous for this reason. The first version of
-`97a_sync_scroll.e2e` used the wheel and passed identically with the sync
-deliberately turned off.
+**Fix:** the wheel now survives one `reset_frame`, like pinch. It is *not*
+drained on read, because raylib's `GetMouseWheelMove()` returns the same value
+for every call within a frame and the injector has to match. Pinch is the
+opposite — drained on read, because `gestures::consume_pinch_delta()` drains.
 
-**What to do instead:** drive scrolling through the scrollbar
-(`mouse_down` / `mouse_move` / `mouse_up` on the thumb), which does work
-headless — see `95_scrollbar_drag.e2e` and `97a_sync_scroll.e2e`.
+**Lesson:** a comment asserting system order is a claim about registration in
+every downstream app, and this one was never checked.
 
-**Still open.** Worth fixing: every wheel-driven assertion in the suite is
-currently meaningless, and the failure mode is a green test.
+## 3. `expect_no_text` passed unconditionally
+
+**Symptom:** asserting the absence of text plainly on screen still passed. 18
+assertions across 6 scripts were vacuous.
+
+**Two causes, both needed:**
+
+1. `expect_no_text` was missing from `runner.h`'s per-command parse chain, so
+   it fell to the generic branch, which splits on whitespace and keeps the
+   quotes. `cmd.args[0]` was literally `"Synchronized`. This is the second time
+   that parse chain has silently eaten a command's arguments (`expect_text_i`
+   was the first).
+2. It concluded "absent" against an empty registry. Handlers run before the
+   render that fills it, so absence was trivially true. It now retries until
+   something has rendered.
+
+## 4. The visible-text registry ignored clip rects
+
+`register_text_if_visible` tested only against the screen viewport, so text
+scrolled out of a pane still counted as visible. That made `expect_no_text`
+unable to express "scrolled away" *and* gave `expect_text` false positives for
+clipped content — `95_scrollbar_drag.e2e` asserted a row that was rendered
+below its pane's clip rect and had never been on screen.
+
+It now intersects with `detail::compute_intersected_clip_rect`, the same helper
+the render scissor and hit-testing use.
+
+## 5. A script that resizes and does not resize back
+
+`35_responsive_audit.e2e` ends at `resize 1920 1080`. Every later script ran at
+1080p, where more content fits — so what is "visible" silently changed for the
+rest of the run. Invisible until `expect_no_text` started working.
+
+wm's per-script `reset_fn` now restores the run's starting resolution. Note it
+has to write the `ProvidesCurrentResolution` singleton, not just call
+`set_window_size`, which is a no-op headless.
 
 ---
 

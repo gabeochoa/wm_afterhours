@@ -748,11 +748,27 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
 
+  // The size every script starts at. A script that resizes and does not
+  // resize back otherwise hands its last size to every script after it, which
+  // changes what fits on screen and so what counts as visible.
+  const auto base_rez = afterhours::window_manager::fetch_current_resolution();
+
   // Reset callback for per-script cleanup
-  auto reset_fn = []() {
+  auto reset_fn = [base_rez]() {
     // Clear input + visible text
     afterhours::testing::test_input::reset_all();
     afterhours::testing::VisibleTextRegistry::instance().clear();
+
+    // Mirror what the `resize` command writes, since set_window_size alone is
+    // a no-op headless and the singleton is what layout actually reads.
+    auto *pcr = afterhours::EntityHelper::get_singleton_cmp<
+        afterhours::window_manager::ProvidesCurrentResolution>();
+    if (pcr) {
+      pcr->current_resolution = base_rez;
+      pcr->should_refetch = false;
+    }
+    afterhours::window_manager::set_window_size(base_rez.width,
+                                                base_rez.height);
 
     // Reset UI focus state (also clears input_gates)
     auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<

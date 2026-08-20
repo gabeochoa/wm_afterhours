@@ -461,7 +461,33 @@ opinion on where files land. Not started; it touches every consumer's `main()`.
 `runner.h`'s per-command parse chain. Miss the second and args arrive empty
 with no diagnostic.
 
-### 24. Synthetic `scroll_wheel` is a no-op headless — **afterhours**
+### 29. Virtual list renders ~20 rows below its clip at max scroll — **afterhours**
+At the end of `virtual_list_lab`, the bottom visible row is 09979 while rows up
+to 09999 are rendered below the pane's clip rect. Clamping stops short of
+putting the true last row on screen, so the end of a virtual list is
+unreachable.
+
+Masked until now: `95_scrollbar_drag.e2e` asserted `row 09999` and passed only
+because the visible-text registry ignored clipping. It now asserts 09979 with a
+pointer here.
+
+### 24. Synthetic `scroll_wheel` is a no-op headless — DONE
+The reader ran before the writer: wm registers `register_after_ui_updates`
+(HandleScrollInput) before `register_builtin_handlers`
+(HandleScrollWheelCommand), so the wheel was read, then set, then wiped. The
+injector's comment claimed the opposite ordering, which is why it never got the
+one-frame survival pinch has.
+
+Wheel now survives one reset and is not drained on read (matching raylib);
+pinch is now drained on read (matching the hardware accessor), which also
+closes the double-delivery puzzle/ reported.
+
+Knock-on fixes, all previously-vacuous assertions: `expect_no_text` was missing
+from `runner.h`'s parse chain *and* concluded absence against an empty
+registry; the visible-text registry ignored clip rects. Written up in
+`docs/47_silent_traps.md`.
+
+<details><summary>original report</summary>
 Every wheel-driven e2e assertion in the suite is currently meaningless, and it
 fails green. `12_scroll_view.e2e:25` already carries a note saying its own
 scroll assertions "reflect the actual unscrolled state"; the first draft of
@@ -476,6 +502,7 @@ first.
 
 Workaround in the meantime: drive scrolling through the scrollbar thumb, which
 does work headless (`95_scrollbar_drag.e2e`, `97a_sync_scroll.e2e`).
+</details>
 
 ### 27. e2e command to grab the scroll handle — **afterhours**
 Scrolling in a test means hand-computing the thumb's pixel position:

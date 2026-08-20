@@ -22,25 +22,22 @@ expect_no_text "Item 20"
 screenshot scroll_view_before_scroll
 
 # --- Test vertical scrolling ---
-# NOTE: synthetic scroll_wheel injection is a no-op in headless (the wheel event
-# doesn't reach the scroll container), so the list stays at the top. The
-# assertions below reflect the actual unscrolled state.
 mouse_move 25% 55%
 wait 0.2
 
 scroll_wheel 0 -15
 wait 0.3
 
-# List did not scroll: later items still not rendered, top items still visible.
-expect_no_text "Item 15"
+# Scrolled down: a later item has come into view. (Not asserting Item 1 is
+# gone -- the status line says "Item 1 of 20" and would match.)
+expect_text "Item 15"
 
 screenshot scroll_view_after_scroll
 
 scroll_wheel 0 -30
 wait 0.3
 
-expect_no_text "Item 20"
-expect_text "Item 1"
+expect_text "Item 20"
 
 screenshot scroll_view_scrolled_to_bottom
 

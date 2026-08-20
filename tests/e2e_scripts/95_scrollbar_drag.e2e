@@ -1,8 +1,11 @@
 # Dragging the scrollbar thumb scrolls the view.
 #
-# Drags well past the bottom of the track so the offset clamps to the end --
-# asserting the last row is stable, where asserting some row part-way down
-# would break the moment the thumb's minimum size changes.
+# Drags well past the bottom of the track so the offset clamps to the end.
+#
+# Asserts 09979, not 09999: at max scroll the virtual list still renders ~20
+# rows below the clip rect, so the true last row is never on screen. This used
+# to assert 09999 and passed only because the visible-text registry ignored
+# clipping. See TODO 29.
 
 goto_screen virtual_list_lab
 wait 0.5
@@ -18,9 +21,9 @@ wait 0.3
 mouse_up 1225 700
 wait 0.3
 
-expect_text "row 09999"
+expect_text "row 09979"
 screenshot scrollbar_dragged
 
 # Releasing over the content must not have clicked it, and the view stays put.
 wait 0.3
-expect_text "row 09999"
+expect_text "row 09979"
