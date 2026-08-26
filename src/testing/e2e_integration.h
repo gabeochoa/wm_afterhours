@@ -36,16 +36,13 @@ inline void register_e2e_systems(SystemManager &sm,
   // Phase 1: Built-in command handlers
   register_builtin_handlers(sm);
 
-  // Phase 2: UI command handlers (tab, enter, arrow, focus_ui, click_ui, etc.)
-  ui_commands::register_ui_commands<InputAction>(sm);
+  // Phase 2: UI command handlers (tab, enter, arrow, focus_ui, click_ui,
+  // dump_ui, etc.)
+  ui_commands::register_ui_commands<InputAction>(sm, config.dump_callback);
 
   // Phase 2: Screenshot handler (needs callback)
   sm.register_update_system(
       std::make_unique<HandleScreenshotCommand>(config.screenshot_callback));
-
-  // Phase 2: Dump UI handler (needs callback)
-  sm.register_update_system(
-      std::make_unique<ui_commands::HandleDumpUICommand>(config.dump_callback));
 
   // Phase 3: Reset handler (needs callback)
   sm.register_update_system(

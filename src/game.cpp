@@ -787,7 +787,13 @@ int run_e2e_tests(const e2e::E2EArgs &args,
 
   // Register E2E command handlers
   afterhours::testing::register_builtin_handlers(systems);
-  afterhours::testing::ui_commands::register_ui_commands<InputAction>(systems);
+  afterhours::testing::ui_commands::register_ui_commands<InputAction>(
+      systems, [](const std::string &name, const std::string &xml) {
+        std::string path = "/tmp/e2e_dump_" + name + ".xml";
+        std::ofstream out(path);
+        out << xml;
+        log_info("[E2E] UI dump written: {}", path);
+      });
   systems.register_update_system(
       std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
           reset_fn));
@@ -921,16 +927,6 @@ int run_e2e_tests(const e2e::E2EArgs &args,
             std::string path = "/tmp/e2e_screenshot_" + name + ".png";
             screenshot_validation::save_screenshot_to(path);
             log_info("[E2E] Screenshot saved: {}", path);
-          }));
-
-  // Register dump_ui command
-  systems.register_update_system(
-      std::make_unique<afterhours::testing::ui_commands::HandleDumpUICommand>(
-          [](const std::string &name, const std::string &xml) {
-            std::string path = "/tmp/e2e_dump_" + name + ".xml";
-            std::ofstream out(path);
-            out << xml;
-            log_info("[E2E] UI dump written: {}", path);
           }));
 
   // Register validate_screen command for visual regression testing
