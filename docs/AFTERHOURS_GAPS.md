@@ -12,6 +12,17 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ## Known limitations (open, low priority)
 
+- **tab order is allocation order, not tree order** — `process_tabbing` moves
+  focus by setting it to `ROOT` and letting the next entity the iteration
+  reaches grab it, so Tab follows the entity collection's storage order rather
+  than the widget tree. Two widgets side by side tab in whatever order they
+  were allocated, which is build order today and need not stay that way; there
+  is no tab index and no way for a caller to state the order it wants.
+  Order-preserving `cleanup()` (`58e1613`) stops widget retirement from
+  reshuffling it, which **hides this rather than fixing it** — the order is
+  stable now, but it is still the wrong order to be deriving from. A real fix
+  sorts focusables by tree position, with an explicit override.
+
 - **slider handle 0.75 compression** — the knob's center never quite reaches the
   value position at 100% (cosmetic). `imm_components.h` `slider`. Revisit the
   handle width/position model only if it becomes visible.
