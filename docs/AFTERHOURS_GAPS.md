@@ -23,6 +23,24 @@ See also: `docs/vendor_ui_sizing_issues.md`
   stable now, but it is still the wrong order to be deriving from. A real fix
   sorts focusables by tree position, with an explicit override.
 
+- **a virtualized list still builds a real div for the rows above the fold** —
+  `virtual_list` folds the rows *below* the window straight into
+  `content_size` via `HasScrollView::unbuilt_content_size`, but the rows above
+  it are a `vlist_skipped_above` div of the right height. It cannot be folded
+  the same way because the scroll offset is applied when drawing rather than
+  when laying out: with nothing in front of it the first built row lays out at
+  the top of the content and is then drawn off screen. Folding it needs
+  children offset during the layout pass. One div, so the cost is negligible;
+  it is the asymmetry that will confuse the next reader.
+
+- **`virtual_list` requires a uniform row height** — finding the window and
+  the height of the skipped rows is `offset / row_height`, which is why it is
+  cheap. Variable heights need a prefix sum over every item to answer either
+  question, which is O(n) per frame and gives back exactly what the
+  virtualization was for. Doing it properly means a cumulative-height table
+  cached on the component and invalidated when an item resizes. Until then a
+  list of mixed-height rows has to pick a single pitch or not virtualize.
+
 - **slider handle 0.75 compression** — the knob's center never quite reaches the
   value position at 100% (cosmetic). `imm_components.h` `slider`. Revisit the
   handle width/position model only if it becomes visible.
