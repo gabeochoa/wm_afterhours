@@ -156,10 +156,7 @@ struct TestApp {
         afterhours::EntityQuery(
             ui_coll,
             afterhours::EntityQuery<>::QueryOptions{.force_merge = true})
-            .whereHasComponent<afterhours::ui::HasLabel>()
-            .whereLambda([&label](const afterhours::Entity &e) {
-              return e.get<afterhours::ui::HasLabel>().label == label;
-            })
+            .whereFieldHasValue(&afterhours::ui::HasLabel::label, label)
             .gen_first();
     return opt.has_value() ? &opt.asE() : nullptr;
   }
@@ -172,10 +169,7 @@ struct TestApp {
     return afterhours::EntityQuery(
                ui_coll,
                afterhours::EntityQuery<>::QueryOptions{.force_merge = true})
-        .whereHasComponent<afterhours::ui::HasLabel>()
-        .whereLambda([&label](const afterhours::Entity &e) {
-          return e.get<afterhours::ui::HasLabel>().label == label;
-        })
+        .whereFieldHasValue(&afterhours::ui::HasLabel::label, label)
         .gen_first_handle();
   }
 

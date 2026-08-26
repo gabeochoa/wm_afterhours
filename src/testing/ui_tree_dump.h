@@ -135,8 +135,8 @@ inline nlohmann::json build_all() {
   auto &ui_coll = afterhours::ui::UICollectionHolder::get().collection;
   ui_coll.merge_entity_arrays();
   auto roots = afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
-                   .whereHasComponent<afterhours::ui::AutoLayoutRoot>()
-                   .whereHasComponent<afterhours::ui::UIComponent>()
+                   .whereHasComponent<afterhours::ui::AutoLayoutRoot,
+                                      afterhours::ui::UIComponent>()
                    .gen();
 
   for (auto &entity_ref : roots) {

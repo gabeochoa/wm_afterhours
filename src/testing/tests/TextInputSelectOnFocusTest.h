@@ -19,11 +19,10 @@ find_text_input_by_debug_name(const std::string &name_substr) {
           ui_coll,
           afterhours::EntityQuery<>::QueryOptions{.force_merge = true})
           .whereHasComponent<afterhours::text_input::HasTextInputState>()
-          .whereHasComponent<afterhours::ui::UIComponentDebug>()
-          .whereLambda([&name_substr](const afterhours::Entity &e) {
-            return e.get<afterhours::ui::UIComponentDebug>().name_value.find(
-                       name_substr) != std::string::npos;
-          })
+          .whereComponentAndLambda<afterhours::ui::UIComponentDebug>(
+              [&name_substr](const afterhours::ui::UIComponentDebug &d) {
+                return d.name_value.find(name_substr) != std::string::npos;
+              })
           .gen_first();
   if (opt.has_value())
     return &opt.asE();

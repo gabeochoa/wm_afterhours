@@ -858,11 +858,10 @@ int run_e2e_tests(const e2e::E2EArgs &args,
       ui_coll.merge_entity_arrays();
       auto opt =
           afterhours::EntityQuery(ui_coll, {.ignore_temp_warning = true})
-              .whereHasComponent<afterhours::ui::UIComponentDebug>()
-              .whereLambda([&](const afterhours::Entity &e) {
-                return e.get<afterhours::ui::UIComponentDebug>().name() ==
-                       target_name;
-              })
+              .whereComponentAndLambda<afterhours::ui::UIComponentDebug>(
+                  [&](const afterhours::ui::UIComponentDebug &d) {
+                    return d.name() == target_name;
+                  })
               .gen_first();
 
       if (!opt) {
