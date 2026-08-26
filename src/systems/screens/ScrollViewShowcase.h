@@ -114,7 +114,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       auto &sv = vert_scroll.ent().get<HasScrollView>();
       sv.invert_scroll = invert_scroll;
 
-      float max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
+      float max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_or_zero().y);
       int scroll_pct =
           max_scroll > 0.0f
               ? static_cast<int>((sv.scroll_offset.y / max_scroll) * 100.0f)
@@ -179,7 +179,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       auto &sv = horiz_scroll.ent().get<HasScrollView>();
       sv.invert_scroll = invert_scroll;
 
-      float max_scroll = std::max(0.0f, sv.content_size.x - sv.viewport_size.x);
+      float max_scroll = std::max(0.0f, sv.content_size.x - sv.viewport_or_zero().x);
       int scroll_pct =
           max_scroll > 0.0f
               ? static_cast<int>((sv.scroll_offset.x / max_scroll) * 100.0f)
@@ -201,7 +201,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
       // Horizontal scroll indicator
       float track_width = 150.0f;
       float thumb_ratio =
-          sv.viewport_size.x / std::max(sv.content_size.x, sv.viewport_size.x);
+          sv.viewport_or_zero().x / std::max(sv.content_size.x, sv.viewport_or_zero().x);
       float thumb_width = std::max(20.0f, track_width * thumb_ratio);
       float scroll_ratio =
           max_scroll > 0.0f ? sv.scroll_offset.x / max_scroll : 0.0f;

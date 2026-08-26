@@ -282,7 +282,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     float chat_scroll_ratio = 0.0f;
     if (chat_area.ent().has<HasScrollView>()) {
       auto &sv = chat_area.ent().get<HasScrollView>();
-      chat_max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_size.y);
+      chat_max_scroll = std::max(0.0f, sv.content_size.y - sv.viewport_or_zero().y);
       chat_scroll_ratio =
           chat_max_scroll > 0.0f ? sv.scroll_offset.y / chat_max_scroll : 0.0f;
     }
