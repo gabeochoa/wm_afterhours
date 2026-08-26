@@ -240,6 +240,11 @@ Preload &Preload::make_singleton() {
         .set_theme_color(ui::Theme::Usage::Secondary, raylib::YELLOW)
         .set_theme_color(ui::Theme::Usage::Accent, raylib::GREEN);
 
+    // These screens were laid out against the 5px the renderer used to reserve
+    // inside every label, so they ask for it back rather than each growing its
+    // own padding. A new screen should prefer real padding.
+    ui::imm::ThemeDefaults::get().theme.text_inset = {5.f, 5.f};
+
     ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
   }
   return *this;
