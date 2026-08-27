@@ -1,0 +1,21 @@
+# add_index / whereIndexed over a parent link held in a component field.
+#
+# Asserts the two spellings agree before it asserts anything about cost: an
+# index that is fast and wrong is worse than the scan it replaced.
+
+goto_screen entity_index_lab
+wait 0.5
+
+# Both spellings find the same 24 ports.
+expect_text "scan found 24"
+expect_text "indexed touches 24"
+
+# Every node resolves its own ports, in slot order.
+expect_text "node 0 -> 4 ports [0, 1, 2, 3]"
+expect_text "node 5 -> 4 ports [0, 1, 2, 3]"
+
+# The graph is built once, not per frame. If build_graph ran every frame this
+# count would climb and the screen would say something else.
+expect_text "1030-entity collection"
+
+screenshot entity_index_lab
