@@ -6,6 +6,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/measure_config.h>
+#include <afterhours/src/plugins/ui/text_input/text_input.h>
 #include <afterhours/src/polyline.h>
 
 using namespace afterhours::ui;
@@ -17,6 +18,7 @@ using namespace afterhours::ui::imm;
 struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
   float marquee = 0.f;
   bool hide_the_middle = false;
+  std::string field = "focus me, all selected";
   int press_count = 0;
   int release_count = 0;
 
@@ -77,6 +79,9 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(1.f), percent(0.5f)})
                         .with_no_wrap()
+                        // Logs why this row wrapped or did not, which is the
+                        // only way to see a NoWrap decision from outside.
+                        .with_debug_wrap(r == 1)
                         .with_debug_name(fmt::format("cg_row_{}", r)));
     };
 
@@ -128,7 +133,10 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(96), pixels(64)})
               .with_custom_background(afterhours::Color{160, 110, 70, 255})
               .with_corner_radius(20.f)
-              .with_segments(3));
+              .with_segments(3)
+              // Opted out of grid snapping, so this one keeps its exact
+              // position where its neighbours are rounded to the grid.
+              .with_skip_grid_snap(true));
     }
 
     // --- min/max width and height ------------------------------------
@@ -290,7 +298,20 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(afterhours::Color{170, 230, 180, 255})
               .with_font_size(pixels(14.f))
               .with_corner_radius(6.f)
+              .with_margin(Margin{.bottom = pixels(6)})
               .with_debug_name("cg_measure"));
+
+      // select_on_focus selects the whole value when focus lands, so typing
+      // replaces rather than appends. consumes_directional_input keeps the
+      // arrow keys in the field instead of letting them move focus.
+      text_input(context, mk(p.ent(), 4), field,
+                 ComponentConfig{}
+                     .with_size(ComponentSize{percent(1.f), pixels(34)})
+                     .with_font_size(pixels(14.f))
+                     .with_select_on_focus(true)
+                     .with_consumes_directional_input(true)
+                     .with_corner_radius(6.f)
+                     .with_debug_name("cg_field"));
     }
   }
 };
