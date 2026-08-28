@@ -106,11 +106,16 @@ raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
     return font;
   }
 
+  // The same ranges the windowed loader uses, or headless renders ASCII while
+  // the real window renders arrows and chevrons, and a screenshot test can
+  // never see the difference.
+  std::vector<int> cps = afterhours::default_codepoints();
   font.baseSize = fontSize;
-  font.glyphCount = 95;
+  font.glyphCount = static_cast<int>(cps.size());
   font.glyphPadding = 1;
-  font.glyphs = raylib::LoadFontData(fontData, dataSize, fontSize, nullptr, 95,
-                                     raylib::FONT_DEFAULT);
+  font.glyphs =
+      raylib::LoadFontData(fontData, dataSize, fontSize, cps.data(),
+                           static_cast<int>(cps.size()), raylib::FONT_DEFAULT);
 
   if (!font.glyphs) {
     log_error("Failed to load font glyphs: {}", filename);
