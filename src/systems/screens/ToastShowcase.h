@@ -104,7 +104,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(button_row.ent(), 1),
                ComponentConfig{}
                    .with_label("Success Toast")
-                   .with_size(ComponentSize{pixels(160), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
@@ -186,7 +186,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(second_row.ent(), 0),
                ComponentConfig{}
                    .with_label("Quick (displays 1s)")
-                   .with_size(ComponentSize{pixels(184), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
@@ -199,7 +199,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(second_row.ent(), 1),
                ComponentConfig{}
                    .with_label("Long (displays 10s)")
-                   .with_size(ComponentSize{pixels(192), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
@@ -215,7 +215,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(second_row.ent(), 2),
                ComponentConfig{}
                    .with_label("Spam x5 (!)")
-                   .with_size(ComponentSize{pixels(136), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_custom_background(spamWarningBg)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
@@ -232,7 +232,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(second_row.ent(), 3),
                ComponentConfig{}
                    .with_label("Custom Color")
-                   .with_size(ComponentSize{pixels(160), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_custom_background(coral)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
@@ -281,7 +281,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(third_row.ent(), 0),
                ComponentConfig{}
                    .with_label("With Undo Action")
-                   .with_size(ComponentSize{pixels(184), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_background(Theme::Usage::Secondary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
