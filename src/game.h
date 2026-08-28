@@ -4,8 +4,9 @@
 #include "rl.h"
 
 // Forward declarations
+namespace afterhours { namespace testing { struct E2EArgs; } }
 namespace e2e {
-struct E2EArgs;
+using E2EArgs = afterhours::testing::E2EArgs;
 }
 namespace afterhours::testing {
 class E2ERunner;

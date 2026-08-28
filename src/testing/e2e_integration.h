@@ -5,6 +5,7 @@
 #include "e2e_commands.h"
 
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
+#include <afterhours/src/plugins/e2e_testing/harness.h>
 #include <afterhours/src/plugins/e2e_testing/ui_commands.h>
 
 #include <filesystem>
@@ -76,80 +77,12 @@ inline void configure_runner(E2ERunner &runner, const E2EConfig &config) {
 ///     e2e::run_e2e_tests(argc, argv, config);
 ///     return 0;
 ///   }
-inline bool should_run_e2e(int argc, char *argv[]) {
-  for (int i = 1; i < argc; ++i) {
-    std::string arg = argv[i];
-    if (arg == "--e2e" || arg == "--test-mode" || arg == "--test-script" ||
-        arg == "--test-script-dir") {
-      return true;
-    }
-  }
-  return false;
-}
-
-/// Parse E2E-related command line arguments
-struct E2EArgs {
-  bool enabled = false;
-  std::string script_path;
-  std::string script_dir;
-  float timeout_seconds = 30.0f; // Default 30 second timeout
-  bool slow_mode = false;        // Run tests slowly for visibility
-  float slow_delay = 0.5f;       // Delay between commands in slow mode
-  bool update_baselines =
-      false;                // Update baseline screenshots instead of comparing
-  bool headless = false;    // Use headless graphics backend (no window)
-  bool quiet = false;       // Minimal stdout (for agent/CI loops)
-  float time_scale = 1.0f;  // Time multiplier (1.0 = normal, 10.0 = 10x faster)
-  int capture_interval = 0; // Auto-capture every N frames (0 = disabled)
-};
-
-inline E2EArgs parse_e2e_args(int argc, char *argv[]) {
-  E2EArgs args;
-
-  for (int i = 1; i < argc; ++i) {
-    std::string arg = argv[i];
-    if (arg == "--e2e" || arg == "--test-mode") {
-      args.enabled = true;
-    } else if (arg == "--test-script" && i + 1 < argc) {
-      args.script_path = argv[++i];
-      args.enabled = true;
-    } else if (arg == "--test-script-dir" && i + 1 < argc) {
-      args.script_dir = argv[++i];
-      args.enabled = true;
-    } else if (arg == "--timeout" && i + 1 < argc) {
-      args.timeout_seconds = std::stof(argv[++i]);
-    } else if (arg == "--slow") {
-      args.slow_mode = true;
-    } else if (arg == "--slow-delay" && i + 1 < argc) {
-      args.slow_delay = std::stof(argv[++i]);
-      args.slow_mode = true;
-    } else if (arg == "--update-baselines") {
-      args.update_baselines = true;
-    } else if (arg == "--headless") {
-      args.headless = true;
-    } else if (arg == "--quiet") {
-      args.quiet = true;
-    } else if (arg == "--time-scale" && i + 1 < argc) {
-      args.time_scale = std::stof(argv[++i]);
-    } else if (arg == "--capture-interval" && i + 1 < argc) {
-      args.capture_interval = std::stoi(argv[++i]);
-    }
-  }
-
-  return args;
-}
-
-inline int count_e2e_scripts(const std::string &dir) {
-  if (dir.empty() || !std::filesystem::is_directory(dir)) {
-    return 0;
-  }
-  int count = 0;
-  for (const auto &entry : std::filesystem::directory_iterator(dir)) {
-    if (entry.path().extension() == ".e2e") {
-      ++count;
-    }
-  }
-  return count;
-}
+// Arg parsing, screenshot paths and script counting live upstream now, so
+// every project gets the same flags. Re-exported here so wm's call sites and
+// any other consumer keep spelling them e2e::.
+using afterhours::testing::count_e2e_scripts;
+using afterhours::testing::parse_e2e_args;
+using afterhours::testing::screenshot_path;
+using afterhours::testing::should_run_e2e;
 
 } // namespace e2e
