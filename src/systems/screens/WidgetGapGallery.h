@@ -108,6 +108,9 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
     auto grp = button_group(context, mk(left.ent(), 1), tools,
                             ComponentConfig{}
                                 .with_size(ComponentSize{expand(), pixels(44)})
+                                // Without this the group inherits the Column
+                                // default and stacks its four buttons in 44px.
+                                .with_flex_direction(FlexDirection::Row)
                                 .with_font_size(pixels(17.f))
                                 .with_debug_name("wg_group"));
     if (grp)
