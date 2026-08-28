@@ -30,7 +30,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::lg) // Padding on root, not child
+                .with_padding(Spacing::xl) // Padding on root, not child
                 .with_debug_name("buttons_bg"));
 
     // Content container - no padding since root has it

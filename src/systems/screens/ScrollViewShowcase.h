@@ -36,7 +36,7 @@ struct ScrollViewShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Background)
             .with_border(theme.font_muted, 1.0f)
             .with_roundness(0.04f)
-            .with_padding(Spacing::lg)
+            .with_padding(Spacing::xl)
             .with_justify_content(JustifyContent::Center)
             .with_debug_name("scroll_bg"));
 

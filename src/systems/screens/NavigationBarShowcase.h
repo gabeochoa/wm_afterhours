@@ -42,7 +42,7 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
         vstack(context, mk(root.ent(), 0),
                ComponentConfig{}
                    .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                   .with_padding(Spacing::lg)
+                   .with_padding(Spacing::xl)
                    .with_justify_content(JustifyContent::Center)
                    .with_no_wrap()
                    .with_debug_name("navbar_main"));

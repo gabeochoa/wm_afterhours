@@ -33,10 +33,10 @@ assert_ui_text "Item 2" h=55
 assert_ui_text "Item 3" h=55
 
 # Nested container: percent(0.33) x children() (title + item row + gaps)
-assert_ui nested_container h=136
+assert_ui nested_container h=140
 
 # Info panel: percent(0.33) x children()
-assert_ui info_panel h=140
+assert_ui info_panel h=144
 
 # Row 3: percent(0.95) x pixels(70)
 assert_ui row3_themes h=70

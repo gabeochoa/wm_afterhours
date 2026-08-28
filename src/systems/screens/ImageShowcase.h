@@ -54,7 +54,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::xl)
                 .with_debug_name("image_bg"));
 
     // Content container

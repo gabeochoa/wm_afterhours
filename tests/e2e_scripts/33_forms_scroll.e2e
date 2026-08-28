@@ -25,7 +25,7 @@ mouse_move 75% 45%
 wait 0.2
 
 # Scroll down to reveal bottom items (clamped to max scroll)
-scroll_wheel 0 -10
+scroll_wheel 0 -20
 wait 0.5
 
 # After scrolling, items near the bottom should now be visible

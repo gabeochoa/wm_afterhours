@@ -183,7 +183,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{percent(0.9f), pixels(220)})
                    .with_custom_background(card.color)
-                   .with_padding(Spacing::lg)
+                   .with_padding(Spacing::xl)
                    .with_roundness(0.10f)
                    .with_debug_name("card"));
 

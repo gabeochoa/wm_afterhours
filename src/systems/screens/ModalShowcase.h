@@ -52,7 +52,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_background(Theme::Usage::Background)
                 .with_roundness(0.08f)
                 .with_self_align(SelfAlign::Center)
-                .with_padding(Spacing::lg)
+                .with_padding(Spacing::xl)
                 .with_debug_name("modal_bg"));
 
     auto main_container =
