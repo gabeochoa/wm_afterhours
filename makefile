@@ -113,9 +113,6 @@ endif
 # Raylib graphics backend (enabled by default when using raylib)
 RAYLIB_BACKEND_CXXFLAGS := -DAFTER_HOURS_USE_RAYLIB
 
-# Accessibility enforcement (warn and clamp small font sizes)
-ACCESSIBILITY_CXXFLAGS := -DAFTERHOURS_ENFORCE_MIN_FONT_SIZE
-
 # Debug text overflow (show red indicators when text can't fit in containers)
 # Enabled by default, disable with DEBUG_TEXT_OVERFLOW=0
 DEBUG_TEXT_OVERFLOW ?= 1
@@ -128,7 +125,7 @@ endif
 # Combine all CXXFLAGS
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
     $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(E2E_CXXFLAGS) \
-    $(RAYLIB_BACKEND_CXXFLAGS) $(ACCESSIBILITY_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS) \
+    $(RAYLIB_BACKEND_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS) \
     $(FMT_FLAGS) \
     -fno-temp-file
 
