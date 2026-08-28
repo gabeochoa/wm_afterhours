@@ -1,0 +1,20 @@
+# 26 dropdowns. Ask a question and check the right faces go down.
+
+goto_screen guess_who_lab
+wait 0.5
+expect_text "24 standing"
+
+# Default question is "wears glasses -> yes". Twelve of the twenty four do.
+click_ui gw_ask
+wait 0.4
+expect_text "12 standing"
+expect_text "Q1: wears glasses"
+
+# Asking the same thing again changes nothing, since the board already agrees.
+click_ui gw_ask
+wait 0.4
+expect_text "12 standing"
+
+click_ui gw_reset
+wait 0.4
+expect_text "24 standing"

@@ -1,0 +1,28 @@
+# 256 buttons. Flag one, reveal another, and check the board agrees.
+
+goto_screen minesweeper_lab
+wait 0.5
+expect_text "MINES 40"
+expect_text "OPEN 0"
+
+# Right click flags, which is the gesture that could only be aimed at a
+# coordinate before right_click_ui existed.
+right_click_ui ms_0_0
+wait 0.3
+expect_text "MINES 39"
+
+# Flagging is a toggle.
+right_click_ui ms_0_0
+wait 0.3
+expect_text "MINES 40"
+
+# A reveal on an empty cell floods, so the open count jumps well past one.
+click_ui ms_15_0
+wait 0.4
+expect_no_text "OPEN 0"
+
+# Reset puts the board back rather than reshuffling it.
+click_ui ms_reset
+wait 0.4
+expect_text "OPEN 0"
+expect_text "MINES 40"
