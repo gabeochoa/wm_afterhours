@@ -1,0 +1,25 @@
+# ComponentConfig options that had no caller.
+
+goto_screen config_gap_gallery
+wait 0.5
+expect_text "measure_config says"
+
+# with_hidden takes the row out and puts it back.
+expect_text "row 2 clipped"
+click_ui cg_hide
+wait 0.4
+expect_no_text "row 2 clipped"
+click_ui cg_hide
+wait 0.4
+expect_text "row 2 clipped"
+
+# Press and Release activation are different modes, and both count.
+click_ui cg_press
+wait 0.3
+expect_text "on Press: 1"
+click_ui cg_release
+wait 0.3
+expect_text "on Release: 1"
+
+# on_draw_fg draws the marquee with lines, which capture records.
+expect_drawn line min_count=4

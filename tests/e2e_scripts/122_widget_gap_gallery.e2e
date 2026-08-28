@@ -1,0 +1,26 @@
+# The widgets that shipped with no caller: button_group, pagination, spacer,
+# image, icon_row.
+
+goto_screen widget_gap_gallery
+wait 0.5
+expect_text "no tool picked yet"
+expect_text "page 1 of 5"
+
+# button_group reports which of its buttons fired.
+click_text "Rotate"
+wait 0.4
+expect_text "picked: Rotate"
+
+# pagination steps the bound index. Driven by the next arrow rather than the
+# numbered button: click_text matches a label substring, and the number is on
+# an inner div as well as the button.
+click_text ">"
+wait 0.4
+expect_text "page 2 of 5"
+click_text ">"
+wait 0.4
+expect_text "page 3 of 5"
+
+# spacer is a real element between head and tail, so the row has all three.
+expect_text "head"
+expect_text "tail"
