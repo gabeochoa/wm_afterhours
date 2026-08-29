@@ -274,7 +274,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== RIGHT: Voice Indicator ==========
     div(context, mk(entity, 130),
         ComponentConfig{}
-            .with_label("@ * Alpha_Six: Under fire!")
+            .with_label("Alpha_Six: Under fire!")
             .with_size(ComponentSize{pixels(250), pixels(26)})
             .with_absolute_position((float)screen_w - 270.0f, 195.0f)
             .with_font("EqProRounded", h720(21.0f))
@@ -343,7 +343,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 143 + static_cast<int>(i) * 4),
             ComponentConfig{}
                 .with_label(label)
-                .with_size(ComponentSize{pxf(ks_icon_size), pixels(16)})
+                .with_size(ComponentSize{pxf(ks_icon_size), pixels(22)})
                 .with_absolute_position(margin_edge + 20.0f,
                                         row_y + ks_icon_size + 2.0f)
                 .with_font("EqProRounded", font_medium)
@@ -362,7 +362,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     // Map location label
     div(context, mk(entity, 210),
         ComponentConfig{}
-            .with_label("7B Pop <192>")
+            .with_label("Sector 7B")
             .with_720p_size(minimap_width, minimap_label_height)
             .with_absolute_position(margin_edge, map_label_y)
             .with_font("EqProRounded", font_large)
@@ -414,7 +414,7 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 260),
         ComponentConfig{}
             .with_label("^")
-            .with_size(ComponentSize{pixels(16), pixels(16)})
+            .with_size(ComponentSize{pixels(24), pixels(24)})
             .with_absolute_position(player_map_x, player_map_y)
             .with_font("EqProRounded", font_large)
             .with_custom_text_color(text_tan)
@@ -480,7 +480,8 @@ struct NeonStrikeScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(std::to_string(ammo_clip) + "/" +
                         std::to_string(ammo_reserve))
-            .with_size(ComponentSize{pixels(140), pixels(55)})
+            // "35/210" at font_xlarge measured wider than 140.
+            .with_size(ComponentSize{pixels(172), pixels(60)})
             .with_absolute_position(ammo_x, ammo_y)
             .with_font("EqProRounded", font_xlarge)
             .with_custom_text_color(text_tan));
