@@ -196,6 +196,26 @@ an animation for its final value.
 
 ---
 
+## Glyphs the bundled fonts do not have
+
+Not library bugs so much as a trap the library walks into. Several components
+use an ASCII letter as a stand-in for a symbol and expect the symbol font to
+remap it. wm points `__symbol` at `Gaegu-Bold.ttf`, an ordinary handwriting
+face, so the letter is what gets drawn.
+
+- `ComponentConfig::DEFAULT_CHECKBOX_CHECKED` is `"V"`, so every unconfigured
+  checkbox shows a floating capital V. Callers can override with
+  `with_checkbox_indicators`, and the wm screens now pass `"[x]"` / `"[ ]"`,
+  which reads as a checkbox in any font.
+- `toggle_switch` hardcodes `"|"` and `"O"` on its track, with no override.
+- Some faces draw `>` as a closing paren, so `"->"` renders `"-)"`. Two screens
+  had that in copy; both now avoid the arrow.
+- Non-ASCII punctuation draws as `?`. Em dashes and middots in labels have all
+  been replaced; they are fine in comments.
+
+**Wanted:** either a symbol font that actually maps these, or components that
+draw their indicators rather than spelling them.
+
 ## Worked around, no library change wanted
 
 Nothing yet.

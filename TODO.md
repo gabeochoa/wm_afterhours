@@ -785,3 +785,46 @@ calls this session, and a fourth suspicion (that clicking a checkbox label
 would strand keyboard focus) died to two probe scripts. Contrast claims should
 carry a computed ratio: the transparent-centre border labels went 1.29:1 ->
 15.37:1, and that number is the whole argument.
+
+## Polish pass results, 2026-08-29
+
+Screens with layout warnings went 38 -> 28, and the total from 300+ to 112.
+What is left is mostly deliberate: `flex_alignment`'s 40 come from the hidden
+tab content, `text_overflow` exists to overflow, `config_gap_gallery` has a
+clipped row on purpose. `decorators`, `nine_slice_borders`, `parcel_corps` and
+`cards` still have a few real ones.
+
+Reworked: the five dialogs (shared mock-app backdrop), checkboxes, dropdowns,
+buttons, button_variants, context_menu_lab, deadspace_settings,
+decorative_frame, entity_index_lab, popover_lab, file_tree, minesweeper_lab,
+flex_alignment, powerwash_settings, animation_spring, animation_declarative,
+composer_lab, drag_drop, cozy_cafe, media_library, secure_tunnel,
+offsite_backup, layout_bug_repros, casual_settings, decorators, layout,
+layout_patterns, toggle_switches, neon_strike, cards, forms, guess_who_lab,
+mini_motorways_settings.
+
+### Things worth remembering
+
+- **Both baseline comparers scored the wrong thing.** Total colour energy over
+  a theoretical maximum, so 1% needed roughly a hundredth of the frame to flip
+  black to white. Now the share of pixels differing by more than 8. This is why
+  broken renders kept passing.
+- **The renderer already logs every clipped text and layout overflow.** Render
+  one screen and count `LOG_WARN`. That scan found more real defects than
+  reading screenshots did, and it caught a regression I introduced.
+- **Most defects were arithmetic, not design.** A container a few pixels short
+  of children it already had: 80px boxes in a 68px row, a 26px face in a 34px
+  box once `text_inset` takes 5px a side, a last child pushed out by its own
+  top margin.
+- **`mk(parent)` with no index reuses one id per call site.** Build rows in a
+  loop with it and they all collapse onto one entity.
+- **Headless renders about two frames.** Anything easing from zero is captured
+  mid-flight. Seed animated state at its resting value.
+- **`git add` is case-insensitive on this filesystem but git is not.** Staging
+  `DeadspaceSettings.h` against a tracked `DeadSpaceSettings.h` silently commits
+  nothing. Third time this has bitten in this repo.
+- **`layout` renders two different ways run to run** in the e2e path while
+  being stable in the full-render path. Unexplained; treat that baseline as
+  suspect.
+- **Screenshot review by subagent mostly did not work.** Four spawned, one
+  delivered. The one that did was worth it and its findings were accurate.
