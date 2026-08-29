@@ -7,6 +7,8 @@
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/modal.h>
 
+#include "DialogBackdrop.h"
+
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
@@ -20,13 +22,8 @@ struct DialogConfirmShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = afterhours::ui::theme_presets::neon_dark();
     context.scaling_mode = ScalingMode::Adaptive;
 
-    // Base content so the modal backdrop dim is visible over something.
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_label("Settings")
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_background(Theme::Usage::Background)
-            .with_debug_name("dialog_bg"));
+    // A real app to dim, not one word at x=0. See DialogBackdrop.h.
+    dialog_backdrop::draw(context, entity, 100, "Harbour Studio", "Display");
 
     afterhours::modal::confirm(
         context, mk(entity, 1), open, "Apply changes?",

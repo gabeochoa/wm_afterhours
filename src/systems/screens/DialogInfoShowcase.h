@@ -7,6 +7,8 @@
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/modal.h>
 
+#include "DialogBackdrop.h"
+
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
@@ -19,12 +21,8 @@ struct DialogInfoShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = afterhours::ui::theme_presets::neon_dark();
     context.scaling_mode = ScalingMode::Adaptive;
 
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_label("Multiplayer")
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_background(Theme::Usage::Background)
-            .with_debug_name("dialog_bg"));
+    // A real app to dim, not one word at x=0. See DialogBackdrop.h.
+    dialog_backdrop::draw(context, entity, 100, "Harbour Studio", "Multiplayer");
 
     afterhours::modal::info(
         context, mk(entity, 1), open, "Connection lost",

@@ -30,6 +30,22 @@ spaces them far enough apart to hide it. That is a cover, not a fix.
 
 **Wanted:** the advance to be the child's full outer height/width.
 
+### `percent(1.0)` plus a margin overflows by the margin
+
+`modal.h:701` sizes the prompt's text input `percent(1.0f)` and then gives it
+`Margin{.left = medium, .right = medium}`. The percent resolves against the
+full parent width and the margins are added on top, so the field starts after
+its left margin and its right edge lands past the parent's.
+
+Measured on `dialog_prompt`: modal spans x=430..910, field spans x=456..909.
+26px of padding on the left, 1px on the right, which reads as the field having
+fallen out of the dialog.
+
+This is the same shape as the `toggle_switch` padding bug, so it is probably
+one rule: percent sizing should resolve against the content box, after margins.
+
+**No workaround applied:** the caller cannot configure the field.
+
 ### Containers do not lay out flow children added by the caller
 
 Two components hit this. A flow child added to a `decorative_frame` renders
