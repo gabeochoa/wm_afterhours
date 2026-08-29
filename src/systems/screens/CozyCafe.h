@@ -176,27 +176,20 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     float star_x = 600.0f;
     float star_sz = 28.0f;
     float star_gap = 32.0f;
+    // Text stars, not sprites: resources/images/star_filled.png is a nearly
+    // blank placeholder, so the hero stat rendered as five empty grey boxes.
     for (int i = 0; i < 5; i++) {
-      bool is_filled = (i < 4);
-      auto &star_tex = is_filled ? star_filled_tex : star_empty_tex;
-      if (star_tex.id != 0) {
-        afterhours::texture_manager::Rectangle src{0, 0, (float)star_tex.width,
-                                                   (float)star_tex.height};
-        sprite(
-            context, mk(entity, 33 + i), star_tex, src,
-            ComponentConfig{}
-                .with_720p_size(star_sz, star_sz)
-                .with_absolute_position(star_x + (float)i * star_gap, 20.0f));
-      } else {
-        div(context, mk(entity, 33 + i),
-            ComponentConfig{}
-                .with_720p_size(star_sz, star_sz)
-                .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
-                .with_custom_background(is_filled ? star_gold
-                                                  : star_empty_color)
-                .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.3f));
-      }
+      const bool is_filled = (i < 4);
+      div(context, mk(entity, 33 + i),
+          ComponentConfig{}
+              .with_label("*")
+              .with_720p_size(star_sz, star_sz)
+              .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
+              .with_alignment(TextAlignment::Center)
+              .with_font(UIComponent::DEFAULT_FONT, pixels(30.0f))
+              .with_custom_text_color(is_filled ? star_gold
+                                                : star_empty_color)
+              .with_debug_name(fmt::format("cc_star_{}", i)));
     }
 
     // Numeric rating display "4/5" for clarity
