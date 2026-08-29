@@ -10,70 +10,25 @@ Format: what the library does, why it is wrong, and what wm did instead.
 
 ## Open
 
-### Column and Row packing overlaps children under FlexStart/End/Center
+### WITHDRAWN: Column and Row packing overlaps children
 
-`flex_alignment` puts three fixed-height boxes in a `vstack` with
-`justify_content` set. Under `FlexStart`, `FlexEnd` and `Center` they draw on
-top of each other, each advancing by noticeably less than its own height.
-`SpaceBetween` and `SpaceAround` look correct, because the spacing they insert
-is larger than the shortfall and hides it.
+I recorded this as a library bug. It is not one, and the evidence was in the
+warning I had already captured:
 
-Measured with `pixels(30)` children as well as `percent(0.22)`, so it is the
-packing, not percent resolution. The same overlap appears in the Row direction
-on the cross-axis demo.
+    'Start_2' in parent 'Start_inner' - NoWrap set but would overflow
+    (child_size=26.0, offset=52.0, container=43.6)
 
-This one is worth taking seriously: it is not an exotic component, it is a
-stack with a justify set, and any screen doing that has been quietly overlapping.
+Children at 0, 26 and 52 with a size of 26 means the advance equals the child
+exactly. Packing is correct.
 
-**Workaround in wm:** an explicit `with_gap()` on each demo container, which
-spaces them far enough apart to hide it. That is a cover, not a fix.
+What actually happened on `flex_alignment` is that the container was 43.6px for
+78px of content, so `NoWrap` stacked the children past its edge, and because
+they are rounded rectangles sitting flush against each other the row read as
+one scalloped blob rather than three boxes. Undersized container plus zero gap,
+not a layout bug.
 
-**Wanted:** the advance to be the child's full outer height/width.
-
-### `modal::fyi` styles its tertiary and its dismiss identically
-
-`modal.h:641` and `:647` both pass `DialogButton::Neutral`, so a three-button
-dialog renders two visually identical grey buttons. On `dialog_fyi` those were
-"Don't Save" and "Cancel": one throws the user's work away, the other does
-nothing, and nothing on screen distinguishes them.
-
-**Workaround in wm:** the labels now carry the difference ("Discard changes" /
-"Keep editing"), which helps but does not fix it. A destructive tertiary should
-not look like a dismiss.
-
-**Wanted:** a distinct style for the tertiary, or let the caller pass one.
-
-### `context_menu` ignores border and roundness, and dims backwards
-
-Passing `.with_border(...)` and `.with_roundness(...)` in the config has no
-effect: the menu still draws as a square, edgeless slab. On a dark screen that
-reads as painted onto the background rather than floating above it, which is
-the one thing a menu needs to communicate.
-
-Separately its disabled row is drawn *lighter* than its enabled rows, so
-"Discard changes" looks hovered while the live items look inert. Disabled
-should be dimmer, not brighter.
-
-The separator is also a full-width 12px slab rather than a hairline, so it
-reads as a broken row.
-
-**No workaround applied:** all three are inside the component.
-
-### `percent(1.0)` plus a margin overflows by the margin
-
-`modal.h:701` sizes the prompt's text input `percent(1.0f)` and then gives it
-`Margin{.left = medium, .right = medium}`. The percent resolves against the
-full parent width and the margins are added on top, so the field starts after
-its left margin and its right edge lands past the parent's.
-
-Measured on `dialog_prompt`: modal spans x=430..910, field spans x=456..909.
-26px of padding on the left, 1px on the right, which reads as the field having
-fallen out of the dialog.
-
-This is the same shape as the `toggle_switch` padding bug, so it is probably
-one rule: percent sizing should resolve against the content box, after margins.
-
-**No workaround applied:** the caller cannot configure the field.
+The `with_gap()` calls in that screen are still the right fix for how it looks,
+but they are a design choice, not a workaround.
 
 ### Containers do not lay out flow children added by the caller
 
