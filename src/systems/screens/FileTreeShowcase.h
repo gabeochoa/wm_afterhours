@@ -21,9 +21,79 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
   std::string current_root;
   std::vector<TreeNode<FileEntry>> cached_roots;
   bool needs_refresh = true;
+  // Off by default: scanning the real cwd made this screen's baseline change
+  // whenever anything appeared in the repo root, including our own build dirs.
+  bool use_real_fs = false;
+  bool seeded_expansion = false;
 
-  FileTreeShowcase() {
-    current_root = std::filesystem::current_path().string();
+  static constexpr const char *SYNTHETIC_ROOT = "~/projects/harbour";
+
+  FileTreeShowcase() { current_root = SYNTHETIC_ROOT; }
+
+  static TreeNode<FileEntry> make_dir(const std::string &parent,
+                                      const std::string &name,
+                                      std::vector<TreeNode<FileEntry>> kids) {
+    TreeNode<FileEntry> n;
+    n.data.name = name;
+    n.data.path = parent + "/" + name;
+    n.data.is_directory = true;
+    n.is_leaf = false;
+    n.children = std::move(kids);
+    return n;
+  }
+
+  static TreeNode<FileEntry> make_file(const std::string &parent,
+                                       const std::string &name,
+                                       uintmax_t size) {
+    TreeNode<FileEntry> n;
+    n.data.name = name;
+    n.data.path = parent + "/" + name;
+    n.data.is_directory = false;
+    n.data.file_size = size;
+    n.is_leaf = true;
+    return n;
+  }
+
+  // A believable project, fixed so the baseline is stable.
+  static std::vector<TreeNode<FileEntry>> synthetic_tree() {
+    const std::string r = SYNTHETIC_ROOT;
+    const std::string src = r + "/src";
+    const std::string assets = r + "/assets";
+    return {
+        make_dir(r, "src",
+                 {
+                     make_dir(src, "engine",
+                              {
+                                  make_file(src + "/engine", "renderer.cpp",
+                                            48213),
+                                  make_file(src + "/engine", "renderer.h", 6122),
+                                  make_file(src + "/engine", "scheduler.cpp",
+                                            21504),
+                              }),
+                     make_dir(src, "ui",
+                              {
+                                  make_file(src + "/ui", "layout.cpp", 73940),
+                                  make_file(src + "/ui", "theme.cpp", 12880),
+                              }),
+                     make_file(src, "main.cpp", 3271),
+                 }),
+        make_dir(r, "assets",
+                 {
+                     make_dir(assets, "fonts",
+                              {
+                                  make_file(assets + "/fonts", "Archivo.ttf",
+                                            184320),
+                              }),
+                     make_file(assets, "atlas.png", 2411724),
+                 }),
+        make_dir(r, "tests",
+                 {
+                     make_file(r + "/tests", "layout_test.cpp", 15890),
+                     make_file(r + "/tests", "theme_test.cpp", 8044),
+                 }),
+        make_file(r, "README.md", 4180),
+        make_file(r, "makefile", 2965),
+    };
   }
 
   std::vector<TreeNode<FileEntry>> scan_directory(const std::string &dir_path) {
@@ -69,6 +139,10 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 
   void lazy_load_children(TreeNode<FileEntry> &node, HasTreeViewState &state) {
+    // The synthetic tree ships its children already, and scanning a made-up
+    // path would only empty them.
+    if (!use_real_fs)
+      return;
     if (!node.data.is_directory)
       return;
     if (!state.is_expanded(node.data.path))
@@ -196,9 +270,27 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_label("Refresh")
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                    .with_background(Theme::Usage::Secondary)
+                   .with_margin(Margin{.right = pixels(4)})
                    .with_debug_name("refresh_btn"))) {
       cached_roots.clear();
       needs_refresh = true;
+    }
+
+    // Swaps the sample tree for whatever is actually on disk.
+    if (button(context, mk(toolbar.ent(), 3),
+               ComponentConfig{}
+                   .with_size(ComponentSize{pixels(110), pixels(26)})
+                   .with_label(use_real_fs ? "Real files" : "Sample tree")
+                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                   .with_background(use_real_fs ? Theme::Usage::Primary
+                                                : Theme::Usage::Secondary)
+                   .with_debug_name("source_btn"))) {
+      use_real_fs = !use_real_fs;
+      current_root = use_real_fs ? std::filesystem::current_path().string()
+                                 : SYNTHETIC_ROOT;
+      cached_roots.clear();
+      needs_refresh = true;
+      seeded_expansion = false;
     }
 
     // Current path label
@@ -215,7 +307,8 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Load directory contents
     if (needs_refresh) {
-      cached_roots = scan_directory(current_root);
+      cached_roots = use_real_fs ? scan_directory(current_root)
+                                 : synthetic_tree();
       needs_refresh = false;
     }
 
@@ -234,10 +327,19 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     TreeViewConfig<FileEntry> view_config;
     view_config.indent_width = 20.0f;
     view_config.row_height = 24.0f;
-    view_config.get_label = [](const FileEntry &entry) -> std::string {
+    // tree_view's indent padding does not move the label, so depth is spelled
+    // into the string. See docs/POLISH_PASS_AFTERHOURS_GAPS.md.
+    const size_t root_len = current_root.size();
+    view_config.get_label = [root_len](const FileEntry &entry) -> std::string {
+      int depth = -1;
+      for (size_t i = root_len; i < entry.path.size(); i++)
+        if (entry.path[i] == '/')
+          depth++;
+      std::string pad(static_cast<size_t>(std::max(0, depth)) * 2, ' ');
       if (entry.is_directory)
-        return entry.name + "/";
-      return entry.name;
+        return pad + entry.name + "/";
+      // Size on the row: a file browser that shows only names is a list.
+      return pad + entry.name + "   " + format_size(entry.file_size);
     };
     view_config.get_id = [](const FileEntry &entry) -> std::string {
       return entry.path;
@@ -253,6 +355,24 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                       .with_size(ComponentSize{percent(1.0f), expand()})
                       .with_custom_background(theme.surface)
                       .with_debug_name("file_tree"));
+
+    // Open the sample tree once, so the screen shows nesting rather than five
+    // collapsed rows in an empty panel.
+    if (!seeded_expansion && !use_real_fs &&
+        tree_entity.has<HasTreeViewState>()) {
+      seeded_expansion = true;
+      auto &tv_state = tree_entity.get<HasTreeViewState>();
+      const std::function<void(const std::vector<TreeNode<FileEntry>> &)> open =
+          [&](const std::vector<TreeNode<FileEntry>> &nodes) {
+            for (const auto &n : nodes) {
+              if (!n.data.is_directory)
+                continue;
+              tv_state.expanded_nodes.insert(n.data.path);
+              open(n.children);
+            }
+          };
+      open(cached_roots);
+    }
 
     // Invalidate children cache when a directory is expanded/collapsed
     if (tree_result) {
