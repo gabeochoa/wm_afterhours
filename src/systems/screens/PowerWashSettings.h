@@ -26,6 +26,8 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color dropdown_border{75, 120, 175, 255};
   afterhours::Color tab_selected{65, 105, 165, 255};
   afterhours::Color highlight_blue{85, 145, 215, 255};
+  // Nav labels sit on highlight_blue; text_muted gave 1.71:1 against it.
+  afterhours::Color text_on_blue{15, 20, 30, 255};
 
   std::vector<std::string> tabs = {"GENERAL", "GAMEPLAY", "VIDEO", "AUDIO",
                                    "CONTROLS"};
@@ -181,7 +183,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     for (size_t i = 0; i < current_settings.size(); i++) {
       bool is_selected = (i == selected_row);
-      afterhours::Color label_color = is_selected ? text_white : text_muted;
+      afterhours::Color label_color = is_selected ? text_white : text_on_blue;
       afterhours::Color dd_bg = is_selected ? dropdown_bg : panel_blue;
       afterhours::Color dd_border =
           is_selected ? dropdown_border : panel_border;
@@ -200,6 +202,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_label(current_settings[i].label)
                      .with_size(ComponentSize{pixels(170), pixels(36)})
                      .with_font("EqProRounded", pixels(16.0f))
+                     .with_custom_background(is_selected ? tab_selected
+                                                         : highlight_blue)
+                     .with_auto_text_color(false)
                      .with_custom_text_color(label_color))) {
         selected_row = i;
       }
