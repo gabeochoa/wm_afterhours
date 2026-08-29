@@ -104,13 +104,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                       .with_no_wrap()
                       .with_margin(Margin{.top = pixels(-5)}));
 
-    // ── Decorative line ──
-    div(context, mk(root.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(80), pixels(2)})
-            .with_custom_background(highlight_line)
-            .with_margin(Margin{.top = pixels(10)})
-            .with_debug_name("line_top"));
+    // A decorative rule used to sit here and read as a second, broken underline.
 
     // ── Content area: connector + sub-options ──
     std::string sub_header = categories[active_tab] + " SETTINGS";
@@ -137,11 +131,14 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       bool is_selected = (i == selected_option);
       bool is_vibration = (i == 3);
       bool is_disabled = is_vibration && vibration_unavailable;
+      // Only the selected row is filled. Every row used to take the primary
+      // blue while the unselected ones kept text_muted, which was picked
+      // against the page background: 1.02:1, text the colour of its own fill.
       afterhours::Color opt_color;
       if (is_disabled) {
         opt_color = disabled_color;
       } else {
-        opt_color = is_selected ? text_bright : text_muted;
+        opt_color = is_selected ? theme.darkfont : text_muted;
       }
 
       std::string label = suboptions[i];
@@ -154,6 +151,9 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_label(label)
                      .with_size(ComponentSize{pixels(300), pixels(32)})
                      .with_font("EqProRounded", pixels(20.0f))
+                     .with_custom_background(is_selected ? highlight_line
+                                                         : bg_dark)
+                     .with_auto_text_color(false)
                      .with_custom_text_color(opt_color)
                      .with_disabled(is_disabled)
                      .with_opacity(is_disabled ? 0.5f : 1.0f)
@@ -210,7 +210,8 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
                .with_custom_background(highlight_line)
                .with_border(text_muted, 1.0f)
                .with_font("EqProRounded", pixels(18.0f))
-               .with_custom_text_color(text_bright)
+               // Dark on the blue fill: text_bright gives 2.37:1 against it.
+               .with_custom_text_color(theme.darkfont)
                .with_alignment(TextAlignment::Center)
                .with_debug_name("btn_ok"));
 
