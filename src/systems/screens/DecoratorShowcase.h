@@ -342,6 +342,8 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
               .with_font_size(pixels(11.0f))
               .with_custom_text_color(theme.font)
               .with_alignment(TextAlignment::Left)
+              // One line at 11px ran past x=1280 and was cut mid-sentence.
+              .with_text_overflow(TextOverflow::Wrap)
               .with_padding(Spacing::sm));
     }
 
