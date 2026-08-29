@@ -99,8 +99,10 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(
                 "Expected: red fits inside cyan | Bug: red overflows right")
-            .with_size(ComponentSize{pixels(500), pixels(16)})
-            .with_absolute_position(sec1_x + 320.f, sec1_y + 50.f)
+            // Under its own box, like every other repro. Beside it, the
+            // caption ran to x=840 and the right column clipped it at 700.
+            .with_size(ComponentSize{pixels(660), pixels(16)})
+            .with_absolute_position(sec1_x, sec1_y + 98.f)
             .with_font(UIComponent::DEFAULT_FONT, h720(12.0f))
             .with_custom_text_color(muted_text)
             .with_alignment(TextAlignment::Left));
