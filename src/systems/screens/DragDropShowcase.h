@@ -62,7 +62,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_border(afterhours::Color{75, 78, 90, 255}, 1.0f)
             .with_label(card.title)
             .with_custom_text_color(afterhours::Color{235, 235, 240, 255})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(34.0f))
+            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
             .with_skip_tabbing(true)
             .with_debug_name("card_" + card.title));
   }
@@ -107,6 +107,9 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{percent(1.0f), children()})
                    .with_draggable_children()
+                   // Without this the cards share an edge and each column
+                   // reads as one slab rather than a stack of draggables.
+                   .with_gap(pixels(10.0f))
                    .with_debug_name("cards_" + title));
 
     // Register entity ID -> column mapping for event dispatch
@@ -209,7 +212,7 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(title_bar.ent(), 0),
         ComponentConfig{}
-            .with_label("Drag & Drop Demo")
+            .with_label("Sprint Board")
             .with_size(ComponentSize{percent(1.0f), pixels(48)})
             .with_custom_text_color(theme.font)
             .with_font(UIComponent::DEFAULT_FONT, pixels(48.0f))

@@ -30,6 +30,19 @@ spaces them far enough apart to hide it. That is a cover, not a fix.
 
 **Wanted:** the advance to be the child's full outer height/width.
 
+### `modal::fyi` styles its tertiary and its dismiss identically
+
+`modal.h:641` and `:647` both pass `DialogButton::Neutral`, so a three-button
+dialog renders two visually identical grey buttons. On `dialog_fyi` those were
+"Don't Save" and "Cancel": one throws the user's work away, the other does
+nothing, and nothing on screen distinguishes them.
+
+**Workaround in wm:** the labels now carry the difference ("Discard changes" /
+"Keep editing"), which helps but does not fix it. A destructive tertiary should
+not look like a dismiss.
+
+**Wanted:** a distinct style for the tertiary, or let the caller pass one.
+
 ### `context_menu` ignores border and roundness, and dims backwards
 
 Passing `.with_border(...)` and `.with_roundness(...)` in the config has no

@@ -27,7 +27,11 @@ struct DialogFyiShowcase : ScreenSystem<UIContext<InputAction>> {
     afterhours::modal::fyi(context, mk(entity, 1), open, "Unsaved changes",
                            "You have unsaved changes to this document. What "
                            "would you like to do?",
-                           "Save", "Cancel", "Don't Save");
+                           // fyi() styles its tertiary and its dismiss the
+                           // same, so the words have to carry the difference:
+                           // "Don't Save" and "Cancel" were two identical grey
+                           // buttons, one of which threw work away.
+                           "Save", "Keep editing", "Discard changes");
   }
 };
 
