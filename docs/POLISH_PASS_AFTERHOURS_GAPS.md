@@ -10,6 +10,41 @@ Format: what the library does, why it is wrong, and what wm did instead.
 
 ## Open
 
+### Column and Row packing overlaps children under FlexStart/End/Center
+
+`flex_alignment` puts three fixed-height boxes in a `vstack` with
+`justify_content` set. Under `FlexStart`, `FlexEnd` and `Center` they draw on
+top of each other, each advancing by noticeably less than its own height.
+`SpaceBetween` and `SpaceAround` look correct, because the spacing they insert
+is larger than the shortfall and hides it.
+
+Measured with `pixels(30)` children as well as `percent(0.22)`, so it is the
+packing, not percent resolution. The same overlap appears in the Row direction
+on the cross-axis demo.
+
+This one is worth taking seriously: it is not an exotic component, it is a
+stack with a justify set, and any screen doing that has been quietly overlapping.
+
+**Workaround in wm:** an explicit `with_gap()` on each demo container, which
+spaces them far enough apart to hide it. That is a cover, not a fix.
+
+**Wanted:** the advance to be the child's full outer height/width.
+
+### Containers do not lay out flow children added by the caller
+
+Two components hit this. A flow child added to a `decorative_frame` renders
+*below* the frame rather than inside it, and the three children of a `popover`
+all drew on top of each other instead of stacking.
+
+Both have absolutely-positioned internals of their own, which appears to be
+what breaks ordinary flow layout for anything the caller adds.
+
+**Workaround in wm:** `popover_lab` wraps its contents in an explicit `vstack`,
+which lays out correctly. `decorative_frame` could not be worked around that
+way, so that screen switched to absolute positioning throughout.
+
+**Wanted:** a documented content slot, or flow children that lay out normally.
+
 ### `tree_view` indentation does nothing
 
 `tree_view.h:67-79` computes `indent_px = depth * indent_width` and applies it
