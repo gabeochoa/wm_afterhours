@@ -266,9 +266,9 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
       TextAlignment align;
     };
     ColHeader headers[] = {
-        {"Item", 101, col_name_x, 120, TextAlignment::None},
-        {"Type", 102, col_cat_x, 80, TextAlignment::None},
-        {"Stock", 103, col_stock_x, 50, TextAlignment::None},
+        {"Item", 101, col_name_x, 120, TextAlignment::Left},
+        {"Type", 102, col_cat_x, 80, TextAlignment::Left},
+        {"Stock", 103, col_stock_x, 75, TextAlignment::Right},
         {"Price", 104, col_price_x, 70, TextAlignment::Right},
     };
     for (auto &hdr : headers) {
@@ -346,7 +346,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(38), pixels(38)})
               .with_absolute_position(col_icon_x, ry + 5.0f)
               .with_custom_background(item.icon_color)
-              .with_font("EqProRounded", h720(22.0f))
+              .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_rounded_corners(RoundedCorners())
@@ -361,6 +361,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(col_name_x, ry + 10.0f)
               .with_font("EqProRounded", h720(18.0f))
               .with_custom_text_color(is_sel ? accent_gold : white)
+              .with_alignment(TextAlignment::Left)
               .with_debug_name("name_" + std::to_string(i)));
 
       // Category
@@ -370,6 +371,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(90), pixels(24)})
               .with_absolute_position(col_cat_x, ry + 12.0f)
               .with_custom_text_color(muted)
+              .with_alignment(TextAlignment::Left)
               .with_debug_name("cat_" + std::to_string(i)));
 
       // Stock
@@ -381,7 +383,7 @@ struct ShopInterfaceScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(col_stock_x, ry + 12.0f)
               .with_font("EqProRounded", h720(16.0f))
               .with_custom_text_color(item.stock <= 3 ? accent_red : white)
-              .with_alignment(TextAlignment::Center)
+              .with_alignment(TextAlignment::Right)
               .with_debug_name("stock_" + std::to_string(i)));
 
       // Price

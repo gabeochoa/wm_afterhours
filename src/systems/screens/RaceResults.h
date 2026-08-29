@@ -183,7 +183,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
     ColHeader headers[] = {
         {"#", 201, 40, col_pos_x, TextAlignment::Left},
         {"RACER", 202, 120, col_name_x, TextAlignment::Left},
-        {"TIME", 203, 120, col_time_x, TextAlignment::Left},
+        {"TIME", 203, 140, col_time_x, TextAlignment::Right},
         {"PTS", 204, 60, col_pts_x, TextAlignment::Right},
     };
     for (auto &ch : headers) {
@@ -242,6 +242,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(44), pixels(32)})
               .with_absolute_position(col_pos_x, ry + 6.0f)
               .with_font("Fredoka", h720(22.0f))
+              .with_alignment(TextAlignment::Left)
               .with_custom_text_color(position_color(r.position)));
 
       // Name — add "> " prefix for player row as secondary indicator
@@ -252,6 +253,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(200), pixels(32)})
               .with_absolute_position(col_name_x, ry + 6.0f)
               .with_font("EqProRounded", h720(r.is_player ? 22.0f : 20.0f))
+              .with_alignment(TextAlignment::Left)
               .with_custom_text_color(r.is_player ? gold : white));
 
       // Time
@@ -261,6 +263,7 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_size(ComponentSize{pixels(140), pixels(28)})
               .with_absolute_position(col_time_x, ry + 8.0f)
               .with_font("EqProRounded", h720(18.0f))
+              .with_alignment(TextAlignment::Right)
               .with_custom_text_color(white));
 
       // Points
