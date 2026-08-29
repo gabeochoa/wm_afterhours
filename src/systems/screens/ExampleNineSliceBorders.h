@@ -295,7 +295,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Double-width border
     div(context, mk(entity, 65),
         ComponentConfig{}
-            .with_label("Double Width")
+            .with_label("Double")
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position(start_x, row4_y)
             .with_nine_slice_border(double_panel_000,
@@ -306,7 +306,7 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 66),
         ComponentConfig{}
-            .with_label("Double Ornate")
+            .with_label("Ornate")
             .with_size(ComponentSize{pixels(box_width), pixels(box_height)})
             .with_absolute_position(start_x + box_width + gap + 20.0f, row4_y)
             .with_nine_slice_border(double_panel_010, 32)
