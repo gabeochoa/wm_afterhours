@@ -26,3 +26,12 @@ wait 0.3
 # Take screenshot after slider adjustment
 screenshot forms_after_slider
 
+
+# The script was named for a slider it never asserted. Drag the track and check
+# the value moved, on the screen whose slider reads the returned changed flag.
+goto_screen setting_row_showcase
+wait 0.5
+expect_text "80%"
+drag_to 40% 70.1% 49% 70.1%
+wait 0.5
+expect_no_text "80%"
