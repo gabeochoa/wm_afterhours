@@ -27,6 +27,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
   float master_volume = 0.8f;
   float music_volume = 0.65f;
 
+  // One colour: the green/blue/red headers marked no semantic difference.
+  afterhours::Color section_header{150, 165, 190, 255};
+
   // Helper to build a slider row with percentage value label
   void slider_row_with_pct(UIContext<InputAction> &context,
                            EntityParent ep_pair, const char *label_text,
@@ -129,8 +132,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("TOGGLES")
             .with_size(ComponentSize{pixels(140), pixels(28)})
-            .with_custom_text_color(afterhours::Color{120, 190, 150, 255})
+            .with_custom_text_color(section_header)
             .with_font_size(pixels(18.0f))
+            .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Toggle rows - use full API with icons for clear visual context
@@ -142,7 +146,7 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
     // Spacer
     div(context, mk(content.ent(), 4),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(8)})
+            .with_size(ComponentSize{percent(1.0f), pixels(24)})
             .with_debug_name("spacer1"));
 
     // Stepper section label - tinted to match stepper blue
@@ -150,8 +154,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("OPTIONS")
             .with_size(ComponentSize{pixels(140), pixels(28)})
-            .with_custom_text_color(afterhours::Color{110, 170, 220, 255})
+            .with_custom_text_color(section_header)
             .with_font_size(pixels(18.0f))
+            .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Stepper rows
@@ -162,15 +167,16 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Spacer
     div(context, mk(content.ent(), 8),
-        ComponentConfig{}.with_size(ComponentSize{percent(1.0f), pixels(8)}));
+        ComponentConfig{}.with_size(ComponentSize{percent(1.0f), pixels(24)}));
 
     // Slider section label - tinted warm to match volume/slider theme
     div(context, mk(content.ent(), 9),
         ComponentConfig{}
             .with_label("VOLUME")
             .with_size(ComponentSize{pixels(140), pixels(28)})
-            .with_custom_text_color(afterhours::Color{220, 140, 120, 255})
+            .with_custom_text_color(section_header)
             .with_font_size(pixels(18.0f))
+            .with_alignment(TextAlignment::Left)
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()}));
 
     // Slider rows - custom rows with percentage value labels
