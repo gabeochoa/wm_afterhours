@@ -1,0 +1,30 @@
+# Offsite Backup App
+# Covers setting_row_slider, setting_row_dropdown and setting_row_display,
+# which had no caller anywhere before this screen.
+
+goto_screen offsite_backup
+wait 0.5
+
+expect_text "Backing up to offsite storage"
+
+# The ring seeds at its resting value rather than easing up from zero, so the
+# byte readout is stable on the first frame.
+expect_text "493 of 787 GB uploaded"
+expect_text "2 of 5 folders complete"
+
+# Per-folder bars: the two finished folders say so, the rest show a percentage.
+expect_text "done"
+expect_text "71%"
+expect_text "8%"
+
+# The three setting_row variants that had no caller.
+expect_text "Run backup"
+expect_text "Bandwidth cap"
+expect_text "Last completed"
+
+# Rescan drops every bar to zero so the easing is visible.
+click_text "Rescan"
+wait 0.2
+expect_text "PER FOLDER"
+
+screenshot offsite_backup_after_rescan
