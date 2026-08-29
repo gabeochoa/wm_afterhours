@@ -30,6 +30,47 @@ not a layout bug.
 The `with_gap()` calls in that screen are still the right fix for how it looks,
 but they are a design choice, not a workaround.
 
+### FIXED: composites dropped the caller's border and roundness
+
+`apply_inheritable_from` copied colour, font and alignment but not
+`roundness`, `corner_radius` or `border_config`, so a border set on a
+`context_menu` never reached the panel. Measured on `context_menu_lab`: no
+border pixel on any of the four edges. Fixed in afterhours `aad267f`.
+
+Two things fell out of it, both worth knowing:
+
+- Adding the fields means every *child* inherits them too, which sprayed a
+  1px border onto every menu row and turned the 8px separator into a solid
+  slab. A composite now needs `without_border()` on its internals. CSS does
+  not inherit border or radius for exactly this reason.
+- Even on the panel alone, only the bottom edge rendered. A container's
+  border is drawn inside its own rect (`rendering.h:1551`) and **layout does
+  not inset children by the border width**, so any child at `percent(1.0)`
+  paints over three of the four edges. `menu_list` works around it with
+  padding equal to its own border width.
+
+**Wanted:** border width subtracted from the content box during layout, so
+the workaround is unnecessary. This is likely the same root as the focus-ring
+"only two edges render" entry below.
+
+### FIXED: a disabled menu row read as a gap, not a row
+
+Measured on `context_menu_lab`: the disabled row came out `(23,31,42)`
+against a panel surface of `(28,34,48)` -- 5/255, invisible. Since enabled
+rows paint opaque Primary over the whole panel, surface is only ever visible
+in the separator band, so a disabled row was pixel-indistinguishable from a
+fat separator.
+
+Cause is `Theme::disabled_variant` (`theme.h:367`) applying two dimming
+operations at once: it mixes 70% toward the background *and* drops alpha to
+`disabled_opacity`. Nothing survives both.
+
+Fixed menu-locally in `aad267f` with an opaque underlay behind disabled rows.
+The shared cause is untouched, so every other disabled control in the library
+still nearly vanishes rather than dimming.
+
+**Wanted:** `disabled_variant` picking one dimming operation, not both.
+
 ### Containers do not lay out flow children added by the caller
 
 Two components hit this. A flow child added to a `decorative_frame` renders
@@ -111,6 +152,21 @@ Draw order does not explain it (background `rendering.h:1521`, ring `:1613`),
 so the cause is still unknown.
 
 **Wanted:** a ring that draws outside the widget bounds on all four edges.
+
+Update: the border work above found the same shape elsewhere -- a container's
+edge is drawn inside its own rect and children are not inset, so children
+paint over it. Worth checking whether the ring's missing edges are the same
+cause before hunting further.
+
+### The baseline threshold hides half-percent regressions
+
+`compare_baselines.py` defaults to 1.0%. A full-width dialog button changing
+colour is ~0.4%, so four screens had drifted from intended changes made days
+earlier and the suite stayed green the whole time. Found only by rendering
+unmodified HEAD and diffing it against its own baselines.
+
+**Wanted:** a much lower default, or a per-screen tolerance that has to be
+opted into with a reason.
 
 ### `text_input` inherits the current screen's theme
 
