@@ -41,7 +41,9 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     auto caption = [&](float y, const std::string &text) {
       div(context, mk(entity, id++),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(720), pixels(24)})
+              // 456, not 720: at 720 these ran to x=768 and collided with the
+              // key list that starts at 520.
+              .with_size(ComponentSize{pixels(456), pixels(24)})
               .with_absolute_position(48.f, y)
               .with_label(text)
               .with_alignment(TextAlignment::Left)
@@ -107,7 +109,7 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
 
     // 4. More rows than fit: they clip at the bottom edge, and the wheel
     //    scrolls through them. Hover this one and scroll.
-    caption(474.f, "4. twelve lines in a three-line box - clips, and the "
+    caption(474.f, "4. twelve lines in a three-line box, clipped, "
                    "wheel scrolls it");
     text_area(context, mk(entity, 400), clipped,
               ComponentConfig{}
@@ -158,15 +160,40 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
       const auto &s =
           sent.ent().get<afterhours::text_input::HasTextAreaState>();
       const auto &cache = s.layout_cache;
+      // Label and value as two columns: padding the label with spaces left
+      // the values ragged, because the face is proportional.
       say("composer state");
-      say(fmt::format("rows:      {}", cache.line_count()));
-      say(fmt::format("cursor:    {}", s.cursor_position));
-      say(fmt::format("row/col:   {}/{}",
-                      cache.line_at_offset(s.cursor_position),
-                      cache.column_at_offset(s.cursor_position)));
-      say(fmt::format("focused:   {}", s.is_focused ? "yes" : "no"));
-      say(fmt::format("scroll_y:  {:.1f}", s.scroll_offset_y));
-      say(fmt::format("widest:    {:.0f}px", cache.max_width()));
+      const std::pair<const char *, std::string> STATE[6] = {
+          {"rows", fmt::format("{}", cache.line_count())},
+          {"cursor", fmt::format("{}", s.cursor_position)},
+          {"row/col", fmt::format("{}/{}",
+                                  cache.line_at_offset(s.cursor_position),
+                                  cache.column_at_offset(s.cursor_position))},
+          {"focused", s.is_focused ? "yes" : "no"},
+          {"scroll y", fmt::format("{:.1f}", s.scroll_offset_y)},
+          {"widest", fmt::format("{:.0f}px", cache.max_width())},
+      };
+      for (const auto &kv : STATE) {
+        div(context, mk(entity, id++),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(150), pixels(22)})
+                .with_absolute_position(520.f, ry)
+                .with_label(kv.first)
+                .with_alignment(TextAlignment::Left)
+                .with_custom_text_color(muted)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(13.f))
+                .with_debug_name(fmt::format("cl_k_{}", id)));
+        div(context, mk(entity, id++),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(120), pixels(22)})
+                .with_absolute_position(672.f, ry)
+                .with_label(kv.second)
+                .with_alignment(TextAlignment::Right)
+                .with_custom_text_color(white)
+                .with_font(UIComponent::DEFAULT_FONT, pixels(13.f))
+                .with_debug_name(fmt::format("cl_v_{}", id)));
+        ry += 22.f;
+      }
     }
   }
 };
