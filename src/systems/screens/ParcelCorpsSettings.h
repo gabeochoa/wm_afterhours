@@ -652,7 +652,9 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label(label)
             .with_size(ComponentSize{pixels(label_w), pxf(h)})
-            .with_absolute_position(x + 42.0f, y + 12.0f)
+            // y + 12 with a full row-height box put the text 12px below the
+            // row's centre, so every label overlapped the row beneath it.
+            .with_absolute_position(x + 42.0f, y)
             .with_font_size(h720(18.0f))
             .with_custom_text_color(text_white)
             .with_debug_name(name));
@@ -732,8 +734,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(languages[language_idx])
-            .with_size(ComponentSize{pixels(115), pxf(h)})
-            .with_absolute_position(x + w - 145.0f, y + 12.0f)
+            .with_size(ComponentSize{pixels(102), pxf(h)})
+            .with_absolute_position(x + w - 146.0f, y)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center));
@@ -781,7 +783,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     render_row_label(context, entity, base_id + 2, x, y, h, 100, label,
                      "selector_label_" + std::to_string(base_id));
 
-    if (render_chevron(context, entity, base_id + 3, x + w - 130.0f, y, "<",
+    if (render_chevron(context, entity, base_id + 3, x + w - 150.0f, y, "<",
                        "selector_left_" + std::to_string(base_id))) {
       option_idx = (option_idx == 0) ? options.size() - 1 : option_idx - 1;
     }
@@ -789,8 +791,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 4),
         ComponentConfig{}
             .with_label(options[option_idx])
-            .with_size(ComponentSize{pixels(50), pxf(h)})
-            .with_absolute_position(x + w - 85.0f, y + 9.0f)
+            .with_size(ComponentSize{pixels(62), pxf(h)})
+            .with_absolute_position(x + w - 106.0f, y)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_white)
             .with_alignment(TextAlignment::Center)
@@ -824,8 +826,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, base_id + 3),
         ComponentConfig{}
             .with_label(value)
-            .with_size(ComponentSize{pixels(85), pxf(h)})
-            .with_absolute_position(x + w - 92.0f, y + 12.0f)
+            .with_size(ComponentSize{pixels(120), pxf(h)})
+            .with_absolute_position(x + w - 127.0f, y)
             .with_font_size(h720(16.0f))
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Right)
