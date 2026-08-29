@@ -656,6 +656,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             // row's centre, so every label overlapped the row beneath it.
             .with_absolute_position(x + 42.0f, y)
             .with_font_size(h720(18.0f))
+            // Unset alignment centres, which gave ten rows ten left edges.
+            .with_alignment(TextAlignment::Left)
             .with_custom_text_color(text_white)
             .with_debug_name(name));
   }

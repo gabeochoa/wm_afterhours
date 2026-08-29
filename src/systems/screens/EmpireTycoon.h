@@ -441,17 +441,14 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
             .with_alignment(TextAlignment::Center));
 
-    // Resources value - current/max display
-    int res_current = static_cast<int>(resources_pct * 1000);
-    int res_max = 1000;
+    // Resources value, reading like the Happiness one beside it. The
+    // current/max form needed 130px in the 60px the pill has left of its bar.
     int res_pct_val = static_cast<int>(resources_pct * 100);
     div(context, mk(entity, 89),
         ComponentConfig{}
-            .with_label(std::to_string(res_current) + "/" +
-                        std::to_string(res_max) + " (" +
-                        std::to_string(res_pct_val) + "%)")
-            .with_size(ComponentSize{pixels(130), pixels(30)})
-            .with_absolute_position((float)screen_w - 140.0f,
+            .with_label(std::to_string(res_pct_val) + "%")
+            .with_size(ComponentSize{pixels(56), pixels(30)})
+            .with_absolute_position((float)screen_w - 120.0f,
                                     meter_base_y + 44.0f + 5.0f)
             .with_custom_text_color(panel_blue)
             .with_alignment(TextAlignment::Right));
@@ -560,10 +557,12 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     // ========== MAIN PANEL ==========
     // Panel should not overlap with sidebar tabs - start after tab area
     float panel_x = nav_x + tab_width + 30.0f; // Start after tabs with margin
-    float panel_y = 200.0f;
+    // 200 cut the second meter card off 4px in; the right-hand stack needs
+    // down to 236. Bottom edge stays put, so the button row does not move.
+    float panel_y = 244.0f;
     float panel_w =
         (float)screen_w - panel_x - 30.0f; // Fill remaining width with margin
-    float panel_h = 440.0f;
+    float panel_h = 396.0f;
 
     // Main panel background - bigger with thicker border to match inspiration
     div(context, mk(entity, 200),
