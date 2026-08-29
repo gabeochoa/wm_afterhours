@@ -7,15 +7,22 @@ goto_screen entity_index_lab
 wait 0.5
 
 # Both spellings find the same 24 ports.
-expect_text "scan found 24"
-expect_text "indexed touches 24"
-
-# Every node resolves its own ports, in slot order.
-expect_text "node 0 -> 4 ports [0, 1, 2, 3]"
-expect_text "node 5 -> 4 ports [0, 1, 2, 3]"
+expect_text "Both spellings return 24"
+expect_text "and 24 by index"
 
 # The graph is built once, not per frame. If build_graph ran every frame this
 # count would climb and the screen would say something else.
-expect_text "1030-entity collection"
+expect_text "in a collection of 1030"
+
+# The indexed lookup drives the port table, so the first device's ports are on
+# screen and named.
+expect_text "Mixer A"
+expect_text "Input L"
+expect_text "Return"
+
+# Picking another device re-runs the indexed lookup and swaps the table.
+click_ui ei_dev_2
+wait 0.5
+expect_text "Tape Deck"
 
 screenshot entity_index_lab

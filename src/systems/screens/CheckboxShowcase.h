@@ -30,7 +30,9 @@ inline ComponentConfig CheckboxConfig(const std::string &label,
       .with_label(label)
       .with_size(ComponentSize{percent(1.0f), h720(44)})
       .with_background(bg)
-      .with_checkbox_indicators("V", " ")
+      // "V" is the library default and the symbol font here has no checkmark
+      // glyph, so it drew a literal capital V in the middle of every row.
+      .with_checkbox_indicators("[x]", "[ ]")
       .with_font(UIComponent::DEFAULT_FONT, font_size);
 }
 
@@ -154,7 +156,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     primitive::toggle_button(
         context, mk(no_label_row.ent(), 0),
         ComponentConfig{}
-            .with_label(no_label_1 ? "V" : " ")
+            .with_label(no_label_1 ? "x" : " ")
             .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::SYMBOL_FONT, box_font)
@@ -165,7 +167,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     primitive::toggle_button(
         context, mk(no_label_row.ent(), 1),
         ComponentConfig{}
-            .with_label(no_label_2 ? "V" : " ")
+            .with_label(no_label_2 ? "x" : " ")
             .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Secondary)
             .with_font(UIComponent::SYMBOL_FONT, box_font)
@@ -176,7 +178,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     primitive::toggle_button(
         context, mk(no_label_row.ent(), 2),
         ComponentConfig{}
-            .with_label(no_label_3 ? "V" : " ")
+            .with_label(no_label_3 ? "x" : " ")
             .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Accent)
             .with_font(UIComponent::SYMBOL_FONT, box_font)
@@ -187,7 +189,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
     primitive::toggle_button(
         context, mk(no_label_row.ent(), 3),
         ComponentConfig{}
-            .with_label(no_label_4 ? "V" : " ")
+            .with_label(no_label_4 ? "x" : " ")
             .with_size(ComponentSize{box_size, box_size})
             .with_background(Theme::Usage::Primary)
             .with_font(UIComponent::SYMBOL_FONT, box_font)
@@ -214,7 +216,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(disabled_bg)
                  .with_auto_text_color(true)
                  .with_disabled(true)
-                 .with_checkbox_indicators("V", " ")
+                 .with_checkbox_indicators("[x]", "[ ]")
                  .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT));
 
     checkbox(context, mk(left_col.ent(), 8), disabled_unchecked,
@@ -224,7 +226,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_background(disabled_bg)
                  .with_auto_text_color(true)
                  .with_disabled(true)
-                 .with_checkbox_indicators("V", " ")
+                 .with_checkbox_indicators("[x]", "[ ]")
                  .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT));
 
     // ========== RIGHT COLUMN ==========
@@ -319,7 +321,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(dis_1 ? disabled_secondary_bg
                                               : theme.secondary)
                 .with_auto_text_color(true)
-                .with_checkbox_indicators("V", " ")
+                .with_checkbox_indicators("[x]", "[ ]")
                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
                 .with_disabled(dis_1)
                 .with_debug_name("ch_1"))) {
@@ -337,7 +339,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(dis_2 ? disabled_secondary_bg
                                               : theme.secondary)
                 .with_auto_text_color(true)
-                .with_checkbox_indicators("V", " ")
+                .with_checkbox_indicators("[x]", "[ ]")
                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
                 .with_disabled(dis_2)
                 .with_debug_name("ch_2"))) {
@@ -355,7 +357,7 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(dis_3 ? disabled_secondary_bg
                                               : theme.secondary)
                 .with_auto_text_color(true)
-                .with_checkbox_indicators("V", " ")
+                .with_checkbox_indicators("[x]", "[ ]")
                 .with_font(UIComponent::DEFAULT_FONT, CHECKBOX_FONT)
                 .with_disabled(dis_3)
                 .with_debug_name("ch_3"))) {
@@ -365,11 +367,12 @@ struct CheckboxShowcase : ScreenSystem<UIContext<InputAction>> {
         min_max_group.reset(2);
     }
 
-    // Status bar
+    // Reads as a status line rather than a debug counter, but keeps the counts
+    // the e2e script asserts on.
     std::string status =
-        "Group selected: " + std::to_string(options_group.count()) + " of 4";
-    status += "   MinMax selected: " + std::to_string(min_max_group.count()) +
-              " of 3";
+        std::to_string(options_group.count()) + " of 4 options selected";
+    status += "      " + std::to_string(min_max_group.count()) +
+              " of 3 choices selected";
 
     div(context, mk(card.ent(), 2),
         ComponentConfig{}
