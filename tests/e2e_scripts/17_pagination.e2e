@@ -20,3 +20,10 @@ wait 0.3
 # Take screenshot after navigation
 screenshot pagination_after_nav
 
+
+# The script was named for pagination it never asserted. The page buttons
+# discarded their click result, so clicking a page number did nothing.
+expect_text "Selected: Page 1"
+click_ui pag1_btn_2
+wait 0.5
+expect_text "Selected: Page 3"

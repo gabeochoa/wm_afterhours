@@ -112,17 +112,21 @@ struct PaginationShowcase : ScreenSystem<UIContext<InputAction>> {
     // Page buttons with gaps
     for (size_t i = 0; i < pages.size(); i++) {
       bool selected = (i == page_idx);
-      button(
-          context, mk(entity, 101 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(pages[i])
-              .with_size(ComponentSize{pixels(btn_width), pixels(btn_height)})
-              .with_absolute_position(pag1_x, current_y)
-              .with_background(selected ? Theme::Usage::Accent
-                                        : Theme::Usage::Primary)
-              .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-              .with_debug_name("pag1_btn_" + std::to_string(i)));
+      // The result was discarded, so clicking a page number did nothing.
+      if (button(
+              context, mk(entity, 101 + static_cast<int>(i)),
+              ComponentConfig{}
+                  .with_label(pages[i])
+                  .with_size(
+                      ComponentSize{pixels(btn_width), pixels(btn_height)})
+                  .with_absolute_position(pag1_x, current_y)
+                  .with_background(selected ? Theme::Usage::Accent
+                                            : Theme::Usage::Primary)
+                  .with_auto_text_color(true)
+                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+                  .with_debug_name("pag1_btn_" + std::to_string(i)))) {
+        page_idx = i;
+      }
       pag1_x += btn_width + btn_gap;
     }
 
