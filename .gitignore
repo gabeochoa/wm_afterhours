@@ -60,3 +60,6 @@ mocks/screens.json
 
 # Generated review artifacts from the mock tool.
 mocks/sheets/
+
+# Per-agent build dirs.
+obj-*/
