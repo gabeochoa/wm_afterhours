@@ -17,6 +17,7 @@ inline ComponentConfig CardConfig(const std::string &label,
       .with_label(label)
       .with_size(ComponentSize{pixels(140), pixels(100)})
       .with_background(bg)
+      .with_border(afterhours::Color{150, 130, 115, 255}, 1.0f)
       .with_padding(Spacing::md)
       .with_margin(Spacing::sm)
       .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
@@ -31,6 +32,7 @@ inline ComponentConfig InnerCardConfig(const std::string &label,
       .with_size(ComponentSize{percent(0.30f), pixels(55)})
       .with_background(bg)
       .with_auto_text_color(true)
+      .with_margin(Margin{.right = DefaultSpacing::tiny()})
       .with_padding(Spacing::xs)
       .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
       .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
@@ -55,6 +57,9 @@ inline ComponentConfig SwatchConfig(const std::string &label,
       .with_label(label)
       .with_size(ComponentSize{percent(0.13f), pixels(44)})
       .with_background(bg)
+      // Surface and Background match the card they sit on, so without an
+      // outline those two swatches are just their own labels floating.
+      .with_border(afterhours::Color{150, 130, 115, 255}, 1.0f)
       .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
       .with_margin(Spacing::xs)
       .with_skip_tabbing(true);
