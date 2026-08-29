@@ -381,9 +381,13 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       if (c.progress > 0.0f) {
         div(context, mk(entity, 212 + static_cast<int>(i) * 10),
             ComponentConfig{}
-                .with_size(ComponentSize{pxf(76 * c.progress), pixels(24)})
-                .with_absolute_position(right_panel_x + 134.0f, prow_y + 6.0f)
-                .with_custom_background(afterhours::Color{175, 200, 165, 255})
+                .with_size(ComponentSize{pxf(78 * c.progress), pixels(24)})
+                // Was x+134 against a track at x+150: the fill hung 16px out
+                // the left of its own bar.
+                .with_absolute_position(right_panel_x + 153.0f, prow_y + 6.0f)
+                // Matched to the track's own 4.9:1 so the value reads the same
+                // on both sides of the fill edge it straddles.
+                .with_custom_background(afterhours::Color{85, 120, 80, 255})
                 .with_rounded_corners(RoundedCorners())
                 .with_roundness(0.4f)
                 .with_debug_name("prog_fill_" + std::to_string(i)));
@@ -395,8 +399,8 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(entity, 214 + static_cast<int>(i) * 10),
             ComponentConfig{}
                 .with_label(std::to_string(prog_val) + "%")
-                .with_size(ComponentSize{pixels(54), pixels(24)})
-                .with_absolute_position(right_panel_x + 145.0f, prow_y + 6.0f)
+                .with_size(ComponentSize{pixels(84), pixels(24)})
+                .with_absolute_position(right_panel_x + 150.0f, prow_y + 6.0f)
                 .with_font("Gaegu-Bold", h720(15.0f))
                 .with_custom_text_color(cream_surface)
                 .with_alignment(TextAlignment::Center)
