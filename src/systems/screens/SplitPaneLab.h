@@ -51,9 +51,8 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(13.f)
             .with_debug_name("sp_readout"));
 
-    // Clamped here rather than in the widget: a 5%-wide sidebar is this
-    // screen's idea of useless, not the library's.
-    sidebar_ratio = std::clamp(sidebar_ratio, 0.15f, 0.55f);
+    // The limits go to the widget so it pins mid drag; clamping after the call
+    // let the bar overshoot and snap back on alternate frames.
     auto [sidebar, vbar, content] = hsplit_pane(
         context, mk(entity, 2), sidebar_ratio,
         ComponentConfig{}
@@ -61,7 +60,8 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(48.f, 84.f)
             .with_custom_background(panel_c)
             .with_roundness(0.f)
-            .with_debug_name("sp_outer"));
+            .with_debug_name("sp_outer"),
+        0.15f, 0.55f);
     // restyle carries colour but not roundness -- roundness only lands
     // alongside an explicit corner set, so it is not worth passing here.
     vbar.restyle(context, ComponentConfig{}.with_custom_background(bar));
@@ -75,10 +75,9 @@ struct SplitPaneLab : ScreenSystem<UIContext<InputAction>> {
             .with_transparent_bg()
             .with_debug_name("sp_sidebar_label"));
 
-    preview_ratio = std::clamp(preview_ratio, 0.2f, 0.85f);
     auto [preview, hbar, details] =
         vsplit_pane(context, mk(content.ent(), 0), preview_ratio,
-                    ComponentConfig{}.with_debug_name("sp_inner"));
+                    ComponentConfig{}.with_debug_name("sp_inner"), 0.2f, 0.85f);
     hbar.restyle(context, ComponentConfig{}.with_custom_background(bar));
 
     preview.restyle(context, ComponentConfig{}.with_custom_background(panel_b));
