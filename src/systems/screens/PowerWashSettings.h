@@ -218,7 +218,9 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_font("EqProRounded", pixels(18.0f))
                      .with_custom_text_color(arrow_col)
                      .with_alignment(TextAlignment::Center)
-                     .with_margin(Margin{.left = pixels(20)}))) {
+                     // 170 + 10 + 44 + 170 + 44 = 438 in a 440 row. At 20 the
+                     // right arrow ran 8px past the edge on all 18 rows.
+                     .with_margin(Margin{.left = pixels(10)}))) {
         selected_row = i;
         auto &setting = current_settings[i];
         setting.option_idx = (setting.option_idx == 0)
