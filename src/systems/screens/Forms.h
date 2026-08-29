@@ -239,8 +239,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     bool disabled_value = true;
     checkbox(context, mk(right_col.ent(), 13), disabled_value,
              CheckboxConfig("Disabled")
-                 .with_disabled(true)
-                 .with_opacity(0.5f));
+                 .with_disabled(true));
 
     // Language dropdown - font_size_sm for dropdown values
     dropdown(context, mk(right_col.ent(), 14), languages, language_index,

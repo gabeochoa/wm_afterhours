@@ -150,7 +150,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
       click_counts[2]++;
     }
     button(context, mk(row1.ent(), 4),
-           ButtonConfig("Disabled").with_disabled(true).with_opacity(0.5f));
+           ButtonConfig("Disabled").with_disabled(true));
 
     // --- Row 2: Outline variant ---
     auto row2 = hstack(context, mk(root.ent(), 2),
@@ -173,7 +173,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     }
     button(context, mk(row2.ent(), 4),
            ButtonConfig("Disabled", ButtonVariant::Outline)
-               .with_disabled(true).with_opacity(0.5f));
+               .with_disabled(true));
 
     // --- Row 3: Ghost variant ---
     auto row3 = hstack(context, mk(root.ent(), 3),
@@ -196,7 +196,7 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
     }
     button(context, mk(row3.ent(), 4),
            ButtonConfig("Disabled", ButtonVariant::Ghost)
-               .with_disabled(true).with_opacity(0.5f));
+               .with_disabled(true));
 
     // --- Row 4: Size variants ---
     auto row4 = hstack(context, mk(root.ent(), 4),

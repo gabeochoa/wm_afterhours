@@ -171,13 +171,12 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                       .with_rounded_corners(RoundedCorners())
                       .with_roundness(0.06f)
-                      .with_disabled(true)
-                      .with_opacity(0.45f));
+                      .with_disabled(true));
 
     // Disabled circle checkbox (OFF state, non-interactive)
     make_checkbox_circle_row(
         13, "Unavailable Option (OFF)", disabled_off,
-        ComponentConfig{}.with_disabled(true).with_opacity(0.45f));
+        ComponentConfig{}.with_disabled(true));
 
     // Status bar removed — toggle states are already visually clear from
     // the toggle controls themselves. The bar was being pushed outside

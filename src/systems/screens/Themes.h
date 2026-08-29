@@ -236,8 +236,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                .with_background(Theme::Usage::Primary)
                .with_auto_text_color(true)
                .with_font_size(pixels(18.0f))
-               .with_disabled(true)
-               .with_opacity(0.5f));
+               .with_disabled(true));
 
     // Slider
     slider(context, mk(preview_panel.ent(), 2), slider_value,
