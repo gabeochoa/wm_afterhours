@@ -147,7 +147,11 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     auto row2 = hstack(context, mk(main_container.ent(), 2),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(165)})
-                           .with_background(Theme::Usage::None)
+                           // Surface like rows 1 and 3: with None, this row's
+                           // "Nested:" chip floated on the page background
+                           // while its sibling chips sat inside a card.
+                           .with_background(Theme::Usage::Surface)
+                           .with_roundness(0.04f)
                            .with_padding(Spacing::xs)
                            .with_align_items(AlignItems::Center)
                            .with_no_wrap()
