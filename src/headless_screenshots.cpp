@@ -1,4 +1,5 @@
 #include "headless_screenshots.h"
+#include "preload.h"
 
 #include "font_config.h"
 #include "game.h"
@@ -204,6 +205,10 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   afterhours::Entity &input_entity =
       afterhours::EntityHelper::createPermanentEntity();
   afterhours::input::add_singleton_components(input_entity, get_mapping());
+
+  // Same defaults the app runs with, or the baselines are captured against a
+  // theme no user ever sees.
+  apply_ui_styling_defaults();
 }
 
 // Reset state between screens

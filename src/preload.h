@@ -18,3 +18,8 @@ struct Preload {
   Preload &init(const char *title);
   Preload &make_singleton();
 };
+
+// Theme and styling the whole app assumes. Headless capture builds its own
+// singletons rather than going through Preload, so it has to call this too or
+// the baselines are rendered with different defaults than the app runs.
+void apply_ui_styling_defaults();

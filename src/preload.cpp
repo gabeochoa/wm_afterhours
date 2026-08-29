@@ -174,6 +174,33 @@ raylib::Font load_font_headless_with_codepoints(const char *filename,
 
 } // namespace
 
+void apply_ui_styling_defaults() {
+  ui::imm::ThemeDefaults::get()
+      .set_theme_color(ui::Theme::Usage::Primary, colors::UI_GREEN)
+      .set_theme_color(ui::Theme::Usage::Error, colors::UI_RED)
+      .set_theme_color(ui::Theme::Usage::Font, colors::UI_WHITE)
+      .set_theme_color(ui::Theme::Usage::DarkFont,
+                       afterhours::Color{30, 30, 30, 255})
+      .set_theme_color(ui::Theme::Usage::Background, colors::UI_BLACK)
+      .set_theme_color(ui::Theme::Usage::Surface,
+                       afterhours::Color{40, 40, 50, 255})
+      .set_theme_color(ui::Theme::Usage::Secondary, raylib::YELLOW)
+      .set_theme_color(ui::Theme::Usage::Accent, raylib::GREEN);
+
+  // These screens were laid out against the 5px the renderer used to reserve
+  // inside every label, so they ask for it back rather than each growing its
+  // own padding. A new screen should prefer real padding.
+  ui::imm::ThemeDefaults::get().theme.text_inset = {5.f, 5.f};
+
+  // Without this every screen that does not name a font warns once per text
+  // element. base() is what ComponentConfig already defaults to, so this sets
+  // the name without changing any size.
+  ui::imm::UIStylingDefaults::get().set_default_font(
+      ui::UIComponent::DEFAULT_FONT, ui::imm::TypographyScale::base());
+
+  ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
+}
+
 Preload &Preload::make_singleton() {
   auto &sophie = EntityHelper::createEntity();
   {
@@ -229,28 +256,7 @@ Preload &Preload::make_singleton() {
       }
     }
 
-    ui::imm::ThemeDefaults::get()
-        .set_theme_color(ui::Theme::Usage::Primary, colors::UI_GREEN)
-        .set_theme_color(ui::Theme::Usage::Error, colors::UI_RED)
-        .set_theme_color(ui::Theme::Usage::Font, colors::UI_WHITE)
-        .set_theme_color(
-            ui::Theme::Usage::DarkFont,
-            afterhours::Color{30, 30, 30,
-                              255}) // Dark text for light backgrounds
-        .set_theme_color(ui::Theme::Usage::Background, colors::UI_BLACK)
-        .set_theme_color(
-            ui::Theme::Usage::Surface,
-            afterhours::Color{40, 40, 50,
-                              255}) // Slightly lighter than background
-        .set_theme_color(ui::Theme::Usage::Secondary, raylib::YELLOW)
-        .set_theme_color(ui::Theme::Usage::Accent, raylib::GREEN);
-
-    // These screens were laid out against the 5px the renderer used to reserve
-    // inside every label, so they ask for it back rather than each growing its
-    // own padding. A new screen should prefer real padding.
-    ui::imm::ThemeDefaults::get().theme.text_inset = {5.f, 5.f};
-
-    ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
+    apply_ui_styling_defaults();
   }
   return *this;
 }
