@@ -64,6 +64,31 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     phase = Phase::Playing;
     flags_left = kMines;
     laid_out = true;
+
+    // Open one safe empty cell and flag two mines. A board of 256 identical
+    // blanks shows none of the count colours the screen exists to demonstrate.
+    // It has to be a zero-neighbour non-mine, or the seed loses the game
+    // before anyone has clicked anything.
+    for (int r = 0; r < kSize; r++) {
+      bool done = false;
+      for (int c = 0; c < kSize; c++)
+        if (!mine[r][c] && neighbours[r][c] == 0) {
+          reveal(r, c);
+          done = true;
+          break;
+        }
+      if (done)
+        break;
+    }
+
+    int flagged_count = 0;
+    for (int r = 0; r < kSize && flagged_count < 2; r++)
+      for (int c = 0; c < kSize && flagged_count < 2; c++)
+        if (mine[r][c] && !revealed[r][c]) {
+          flagged[r][c] = true;
+          flags_left--;
+          flagged_count++;
+        }
   }
 
   // Iterative rather than recursive: a board of empties would otherwise
@@ -250,7 +275,9 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
             button(context, mk(row.ent(), c),
                    ComponentConfig{}
                        .with_label(face)
-                       .with_size(ComponentSize{pixels(36), pixels(35)})
+                       // 35+1 margin x 16 = 576, inside the row's 579.6. At 36
+                       // the sixteenth column overflowed on every row.
+                       .with_size(ComponentSize{pixels(35), pixels(35)})
                        .with_custom_background(bg)
                        .with_custom_text_color(fg)
                        .with_font_size(pixels(20.f))
