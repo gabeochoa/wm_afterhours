@@ -33,8 +33,19 @@ DEFAULT_THRESHOLD = 1.0
 DEFAULT_FAILURES_DIR = "test-failures"
 
 
+# Ignores encoder rounding; renders are deterministic, so real changes clear it.
+CHANNEL_TOLERANCE = 8
+
+
 def compare_images_pil(baseline: Path, current: Path) -> float:
-    """Compare two PNGs using PIL. Returns difference percentage."""
+    """Percentage of pixels that visibly differ between two PNGs.
+
+    Not mean colour energy over the theoretical maximum, which is what this
+    used to return: dividing by "every pixel differs by 255 on all three
+    channels" meant reaching 1% took roughly a hundredth of the frame flipping
+    black to white. A screen that grew two buttons and a line of body text
+    moved 2.4% of its pixels and still scored 0.6%, so it passed.
+    """
     img1 = Image.open(baseline).convert("RGB")
     img2 = Image.open(current).convert("RGB")
 
@@ -42,10 +53,9 @@ def compare_images_pil(baseline: Path, current: Path) -> float:
         return 100.0
 
     diff = ImageChops.difference(img1, img2)
-    diff_pixels = list(diff.getdata())
-    total_diff = sum(sum(p) for p in diff_pixels)
-    max_diff = len(diff_pixels) * 255 * 3
-    return (total_diff / max_diff) * 100
+    pixels = list(diff.getdata())
+    changed = sum(1 for p in pixels if max(p) > CHANNEL_TOLERANCE)
+    return (changed / len(pixels)) * 100
 
 
 def compare_images_hash(baseline: Path, current: Path) -> float:

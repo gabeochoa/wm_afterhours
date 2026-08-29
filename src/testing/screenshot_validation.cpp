@@ -4,6 +4,7 @@
 #include "../rl.h"
 
 #include <afterhours/src/graphics.h>
+#include <algorithm>
 #include <cmath>
 #include <filesystem>
 
@@ -46,16 +47,23 @@ float calculate_image_diff_percentage(const std::string &path1,
   raylib::Color *pixels2 = raylib::LoadImageColors(img2);
 
   int total_pixels = img1.width * img1.height;
-  long long total_diff = 0;
-  long long max_diff = static_cast<long long>(total_pixels) * 255 * 3;
+  long long changed = 0;
 
+  // Share of pixels that visibly changed, not total colour energy over the
+  // theoretical maximum. The old metric divided by every pixel differing by
+  // 255 on all three channels, so reaching 1% took roughly a hundredth of the
+  // frame flipping black to white. A screen that grew two buttons and a line
+  // of text moved 2.4% of its pixels and still scored under threshold.
   for (int i = 0; i < total_pixels; i++) {
-    total_diff += std::abs(static_cast<int>(pixels1[i].r) -
-                           static_cast<int>(pixels2[i].r));
-    total_diff += std::abs(static_cast<int>(pixels1[i].g) -
-                           static_cast<int>(pixels2[i].g));
-    total_diff += std::abs(static_cast<int>(pixels1[i].b) -
-                           static_cast<int>(pixels2[i].b));
+    const int dr = std::abs(static_cast<int>(pixels1[i].r) -
+                            static_cast<int>(pixels2[i].r));
+    const int dg = std::abs(static_cast<int>(pixels1[i].g) -
+                            static_cast<int>(pixels2[i].g));
+    const int db = std::abs(static_cast<int>(pixels1[i].b) -
+                            static_cast<int>(pixels2[i].b));
+    // Renders are deterministic, so this only forgives encoder rounding.
+    if (std::max({dr, dg, db}) > 8)
+      changed++;
   }
 
   raylib::UnloadImageColors(pixels1);
@@ -63,7 +71,7 @@ float calculate_image_diff_percentage(const std::string &path1,
   raylib::UnloadImage(img1);
   raylib::UnloadImage(img2);
 
-  return (static_cast<float>(total_diff) / static_cast<float>(max_diff)) *
+  return (static_cast<float>(changed) / static_cast<float>(total_pixels)) *
          100.0f;
 }
 
