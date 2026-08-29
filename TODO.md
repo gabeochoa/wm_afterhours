@@ -662,3 +662,126 @@ A subagent triage pass on items 12-15 produced only hypotheses and reversed
 itself on two of them (it asserted the Family E border theory at high
 confidence after it had already been disproved). Nothing from it is recorded
 here that was not independently verified.
+
+---
+
+# 2026-08-29 session — the showcase quality pass
+
+Filed by Gabe as rapid-fire TODOs while agents worked in parallel, plus what
+the work turned up. Status here is what was *measured*, not what was claimed:
+several agent reports of "fixed" and "not broken" were re-checked by hand and
+three of my own regression calls did not survive measurement.
+
+## Done and verified
+
+| Item | Commit |
+|---|---|
+| checkboxes screen can't interact | `26fb22f` |
+| sliders on setting row don't work | `9b5e11a` |
+| pagination page buttons don't work | `c2ee76c` |
+| split pane bounces at its bounds | `fe456b1` |
+| panel styles filled background doesn't show the 9-slice | `5252d8d` |
+| double width / double ornate panels wrong | `fde8fd8` |
+| example borders unreadable and overlapping | `bef62e6`, `fd75bc3` |
+| sidebar to click between screens | `b6713ce` |
+| `drag_to` never dragged (no script used it, so nobody noticed) | `50ff29a` |
+| composite widgets dropped the caller's custom colours | `04eb4cc` |
+| toggle_switch drew its pill outside its own rect | `70cd11c` |
+
+## Partly done
+
+- **decorative frames** — geometry fixed (`b2e6ef9`), still a sparse screen
+  with a dead bottom third. Three 130px frames in a 1280x720 canvas.
+- **modals look better** — dialog titles only (`5bbc08a`). The broader visual
+  work has not started.
+- **app mockups** — backup, chat, media grid and VPN landed. Both new ones
+  still print debug readouts ("18 of the 24 entries have no widgets at all
+  right now", "toggle=off link=Not connected dialing=0.00s"), which cuts
+  against the "make them feel real" ask.
+- **screen ordering** — the navigator groups by category, so no renaming is
+  needed. But six near-duplicate category strings hold ~10 screens:
+  `Components` (3) vs `Component Galleries` (34), plus singleton `Widgets`,
+  `Text`, `Text Editing`, `Bug Reports`. Ten one-word edits, zero pixels moved.
+
+## Reported not broken — needs your eyes, not more agent time
+
+An agent drove each of these with injected input and found them responsive:
+scroll-in-scroll (inner thumb measured 239px against 242 expected), context
+menu lab, composer lab, real-world modals / side drawer / bottom sheet.
+
+Either headless does not reproduce what you saw, or the injector passes where a
+human cannot. That second possibility is the harness gap below, so do not treat
+these as closed until you have clicked them yourself.
+
+## Diagnosed, not fixed
+
+**Focus rings on `self_align`.** `UIComponent::focus_rect()` insets by its
+offset, so the ring draws *inside* the element, which matches "too small".
+Measured: only the left edge (20px of 48) and the bottom (156px of 184) render,
+in colour (193,195,196), and only on the 1px falling outside the button. No top
+or right. Draw order says the ring should be on top (background at
+`rendering.h:1521`, ring at `:1613`), so the obvious covered-by-fill theory does
+not hold and the real cause is still open.
+
+## Not started
+
+Popover lab opens its commit options by default and is ugly. Anchored menus
+render text outside their bounds. The layout bug repros screen needs a lot of
+work. Config options has contrast and overlap problems. Mini motorways toggles
+are ugly. Checkboxes are ugly, separate from the click fix. Horizontal drag
+enlarges and clips its label when picked up, and wants a ghosting toggle to
+feel nice. Game screens should be interactive enough to tell a real control
+from a painted one. More screens in the shape of hover_lab. Add juice / jazz
+them up. Guess who. File tree wants the synthetic-vs-root toggle (decided, not
+built). Entity index lab should be reframed as a real UI demo. drag_drop wants
+consolidating with its sibling. Theme swatches / podcast UI. Language demo
+wants a resize screen with icons repositioning per language, and a thicker
+Japanese font.
+
+## Infrastructure problems found this session
+
+These are the reason bugs survived a green suite, so they rank above most of
+the list above.
+
+1. **Assert-free e2e scripts.** An agent counted 23 that perform a click, key
+   or drag and then assert nothing, ending at a screenshot. That is why three
+   genuinely dead widgets sat behind a green 113/113, and the list included
+   exactly the widgets reported broken. A crude re-count by last-line flagged
+   far more, so the real number needs a careful pass rather than a heuristic.
+2. **The 1% baseline threshold hides small-widget geometry bugs.** The toggle
+   overflow fixed in `70cd11c` moved ~0.16% of the frame, so validate passed
+   with the broken render sitting in the committed baseline.
+3. **`src/screen_includes.gen` is shared.** One agent's `make SCREEN=X`
+   rewrites it, so the next agent's full build silently renders one screen. It
+   cost the borders agent three build cycles and produced a screenshot set of 1.
+   Wants a per-`OUTPUT_DIR` path.
+4. **`file_tree` renders the live working directory**, so every agent's
+   `output-*` dir changes that screen. Passing on tolerance today, will drift.
+5. **The navigator's interaction has no coverage.** It is registered only in
+   `run_screen_demo`, which needs a display and exits rc=1 headless, so click
+   and scroll are compile-verified and reasoned, never exercised. This is the
+   same shape as problem 1.
+6. **Headless renders very few frames** (2 at dt=0.016), so time-based easing
+   can never settle before capture. Seed animated state at its resting value
+   and put motion behind interaction.
+
+## Library rough edges worked around, not fixed
+
+- `text_input` inherits the *current screen's* theme, so persistent chrome over
+  themed content changes colour per screen. The navigator pins explicit colours.
+- Swapping screens from a click handler is a use-after-free: `load_screen`
+  frees the system `ScreenCyclerSystem` is still iterating. The navigator
+  records the index and drains it after `systems.run`.
+- `gen_first_enforce` (`entity_query.h:485-491`) logs an error on empty and
+  then still returns `values[0]` on the empty vector.
+- `toggle_switch` sizes its label from `parent_width - track_w`; the padding
+  fix landed but the underlying "compute width by hand to dodge `expand()`
+  resolution" workaround is still there.
+
+## Method note
+
+Measure, do not eyeball. Upscaled NEAREST crops produced three wrong regression
+calls this session, and a fourth suspicion (that clicking a checkbox label
+would strand keyboard focus) died to two probe scripts. Contrast claims should
+carry a computed ratio: the transparent-centre border labels went 1.29:1 ->
+15.37:1, and that number is the whole argument.
