@@ -12,6 +12,10 @@ a.out
 *.trace
 src/screen_includes.gen
 
+# Per-agent build dirs. Several agents build in parallel into their own
+# OUTPUT_DIR so they do not clobber each other's objects.
+output-*/
+
 # IDE/Editor
 .cache/
 .claude/commands/
