@@ -54,6 +54,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
   size_t answer_idx = 0;
   size_t note_idx[kCount]{};
   bool down[kCount]{};
+  bool seeded = false;
   int asked = 0;
   std::string last_question = "Pick a trait, answer yes or no, then Ask.";
 
@@ -81,7 +82,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
       if (matches(face(i), attribute_idx) != want)
         down[i] = true;
     asked++;
-    last_question = fmt::format("Q{}: {} -> {}. {} left standing.", asked,
+    last_question = fmt::format("Q{}: {}, answered {}. {} left standing.", asked,
                                 attributes[attribute_idx],
                                 answers[answer_idx], standing());
   }
@@ -97,6 +98,14 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    // Ask once up front. With every card standing the board is 24 identical
+    // tiles and the eliminated styling, which is the whole mechanic, never
+    // appears.
+    if (!seeded) {
+      seeded = true;
+      ask();
+    }
+
     auto theme = afterhours::ui::theme_presets::neon_dark();
     theme.roundness = 0.14f;
     context.theme = theme;
