@@ -23,6 +23,9 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     int mins;
     int art;   // index into ART
     int stars; // 1..5
+    // Kept under ~44 chars: the detail pane draws it on one 360px line.
+    const char *blurb;
+    const char *credit;
   };
 
   static constexpr int COLS = 3;
@@ -49,30 +52,54 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
   static constexpr Rect BADGE_LOCK{300, 500, 100, 100};
 
   static constexpr Item ITEMS[24] = {
-      {"Harbour Lights", "Feature", 2019, 118, 0, 4},
-      {"The Long Ascent", "Feature", 2021, 141, 0, 5},
-      {"Salt and Iron", "Series", 2020, 46, 3, 3},
-      {"Cold Orbit", "Feature", 2018, 96, 4, 4},
-      {"Field Recordings", "Album", 2022, 52, 1, 5},
-      {"Nine Winters", "Series", 2017, 51, 3, 2},
-      {"Paper Kingdoms", "Feature", 2023, 107, 0, 4},
-      {"Static Bloom", "Album", 2021, 38, 1, 3},
-      {"The Quiet Wire", "Series", 2022, 44, 3, 5},
-      {"Ledger of Hours", "Feature", 2016, 133, 4, 3},
-      {"Brass Season", "Album", 2020, 61, 1, 4},
-      {"Understory", "Series", 2024, 39, 3, 4},
-      {"Ember Coast", "Feature", 2015, 89, 0, 2},
-      {"Signal Garden", "Album", 2023, 47, 1, 5},
-      {"Tin Almanac", "Series", 2019, 55, 3, 3},
-      {"Northbound", "Feature", 2022, 124, 4, 5},
-      {"Glass Meridian", "Feature", 2020, 101, 0, 3},
-      {"Low Tide Choir", "Album", 2018, 44, 1, 4},
-      {"The Fifth Room", "Series", 2021, 48, 3, 4},
-      {"Ash and Amber", "Feature", 2024, 112, 2, 5},
-      {"Quarry Songs", "Album", 2017, 57, 1, 2},
-      {"Every Lit Window", "Series", 2023, 42, 5, 4},
-      {"Meridian Fault", "Feature", 2019, 95, 4, 3},
-      {"Slow Cartography", "Album", 2025, 63, 1, 5},
+      {"Harbour Lights", "Feature", 2019, 118, 0, 4,
+       "A lighthouse keeper counts the ships home.", "dir. Ana Weir"},
+      {"The Long Ascent", "Feature", 2021, 141, 0, 5,
+       "Two climbers, one rope, and a closing season.", "dir. Piet Oskarsson"},
+      {"Salt and Iron", "Series", 2020, 46, 3, 3,
+       "A shipyard town votes on its own closure.", "6 episodes"},
+      {"Cold Orbit", "Feature", 2018, 96, 4, 4,
+       "The relay station stops answering.", "dir. Mira Halvorsen"},
+      {"Field Recordings", "Album", 2022, 52, 1, 5,
+       "Tape loops gathered across four winters.", "The Quiet Hours"},
+      {"Nine Winters", "Series", 2017, 51, 3, 2,
+       "A family ledger, read one year at a time.", "9 episodes"},
+      {"Paper Kingdoms", "Feature", 2023, 107, 0, 4,
+       "A mapmaker invents a country and sells it.", "dir. Owen Cassidy"},
+      {"Static Bloom", "Album", 2021, 38, 1, 3,
+       "Guitar through a broken spring reverb.", "Lantern Field"},
+      {"The Quiet Wire", "Series", 2022, 44, 3, 5,
+       "A switchboard operator hears too much.", "8 episodes"},
+      {"Ledger of Hours", "Feature", 2016, 133, 4, 3,
+       "One clerk, forty years, the same desk.", "dir. Tomas Rey"},
+      {"Brass Season", "Album", 2020, 61, 1, 4,
+       "A marching band recorded in an empty pool.", "Northsound Nine"},
+      {"Understory", "Series", 2024, 39, 3, 4,
+       "What grows back after the loggers leave.", "5 episodes"},
+      {"Ember Coast", "Feature", 2015, 89, 0, 2,
+       "A wildfire season told from the water.", "dir. Lise Marchand"},
+      {"Signal Garden", "Album", 2023, 47, 1, 5,
+       "Modular synths tuned to birdsong.", "Ivy Constant"},
+      {"Tin Almanac", "Series", 2019, 55, 3, 3,
+       "Twelve months in a hardware shop.", "12 episodes"},
+      {"Northbound", "Feature", 2022, 124, 4, 5,
+       "A night train, a stolen case, no plan.", "dir. Ruth Okonkwo"},
+      {"Glass Meridian", "Feature", 2020, 101, 0, 3,
+       "The greenhouse outlives everyone in it.", "dir. Sander Vos"},
+      {"Low Tide Choir", "Album", 2018, 44, 1, 4,
+       "Voices recorded on the flats at dawn.", "Harbourmouth"},
+      {"The Fifth Room", "Series", 2021, 48, 3, 4,
+       "Four doors are mapped. The fifth is not.", "7 episodes"},
+      {"Ash and Amber", "Feature", 2024, 112, 2, 5,
+       "A glassblower and the fire she keeps.", "dir. Nadia Ferro"},
+      {"Quarry Songs", "Album", 2017, 57, 1, 2,
+       "Percussion cut from stone and echo.", "Deepcut Ensemble"},
+      {"Every Lit Window", "Series", 2023, 42, 5, 4,
+       "One building, one night, thirty stories.", "10 episodes"},
+      {"Meridian Fault", "Feature", 2019, 95, 4, 3,
+       "The survey crew disagrees about the line.", "dir. Cole Adeyemi"},
+      {"Slow Cartography", "Album", 2025, 63, 1, 5,
+       "Ambient pieces named after old roads.", "Fen and Ridge"},
   };
 
   bool loaded = false;
@@ -111,6 +138,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     const auto ink = afterhours::Color{234, 238, 246, 255};
     const auto muted = afterhours::Color{160, 170, 192, 255};
     const auto panel = afterhours::Color{30, 34, 46, 255};
+    const auto accent = afterhours::Color{120, 190, 255, 255};
     const auto tile_bg = afterhours::Color{40, 45, 60, 255};
     const auto tile_pick = afterhours::Color{62, 82, 118, 255};
 
@@ -305,16 +333,49 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 9),
         ComponentConfig{}
-            .with_label(hovered >= 0 ? "showing the tile under the cursor"
-                                     : "showing the selected tile")
+            .with_label(d.blurb)
             .with_size(ComponentSize{pixels(360), pixels(26)})
-            .with_absolute_position(848.f, GRID_Y + 320.f)
+            .with_absolute_position(848.f, GRID_Y + 318.f)
             .with_alignment(TextAlignment::Left)
             .with_font_size(16.f)
-            .with_custom_text_color(muted)
-            .with_debug_name("ml_detail_src"));
+            .with_custom_text_color(ink)
+            .with_debug_name("ml_detail_blurb"));
 
-    // ---- readout ----------------------------------------------------------
+    div(context, mk(entity, 12),
+        ComponentConfig{}
+            .with_label(d.credit)
+            .with_size(ComponentSize{pixels(360), pixels(24)})
+            .with_absolute_position(848.f, GRID_Y + 346.f)
+            .with_alignment(TextAlignment::Left)
+            .with_font_size(15.f)
+            .with_custom_text_color(muted)
+            .with_debug_name("ml_detail_credit"));
+
+    // Fills the pane's lower third, which was empty, and gives the detail
+    // view the primary action a real library screen would have.
+    button(context, mk(entity, 13),
+           ComponentConfig{}
+               .with_label("Play")
+               .with_size(ComponentSize{pixels(174), pixels(42)})
+               .with_absolute_position(848.f, GRID_Y + 396.f)
+               .with_custom_background(accent)
+               .with_custom_text_color(afterhours::Color{18, 20, 28, 255})
+               .with_roundness(0.3f)
+               .with_font_size(17.f)
+               .with_debug_name("ml_play"));
+
+    button(context, mk(entity, 14),
+           ComponentConfig{}
+               .with_label("Add to list")
+               .with_size(ComponentSize{pixels(174), pixels(42)})
+               .with_absolute_position(1034.f, GRID_Y + 396.f)
+               .with_custom_background(tile_bg)
+               .with_custom_text_color(ink)
+               .with_roundness(0.3f)
+               .with_font_size(17.f)
+               .with_debug_name("ml_queue"));
+
+    // ---- status bar --------------------------------------------------------
     int built = 0;
     for (int s = 0; s < PER_PAGE; s++)
       if (first + s < 24)
@@ -322,30 +383,14 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label(fmt::format(
-                "page {} of {}   items {}-{} of 24   tiles built {}   "
-                "hovered {}   selected {}",
-                page + 1, page_labels.size(), first + 1, first + built, built,
-                hovered < 0 ? std::string("none")
-                            : std::string(ITEMS[hovered].title),
-                ITEMS[selected].title))
+            .with_label(fmt::format("Showing {}-{} of 24", first + 1,
+                                    first + built))
             .with_size(ComponentSize{pixels(1180), pixels(26)})
-            .with_absolute_position(GRID_X, 612.f)
+            .with_absolute_position(GRID_X, 618.f)
             .with_alignment(TextAlignment::Left)
             .with_font_size(16.f)
             .with_custom_text_color(muted)
             .with_debug_name("ml_readout"));
-
-    div(context, mk(entity, 11),
-        ComponentConfig{}
-            .with_label("18 of the 24 entries have no widgets at all right now; "
-                        "page through to build them")
-            .with_size(ComponentSize{pixels(1180), pixels(26)})
-            .with_absolute_position(GRID_X, 642.f)
-            .with_alignment(TextAlignment::Left)
-            .with_font_size(16.f)
-            .with_custom_text_color(muted)
-            .with_debug_name("ml_hint"));
   }
 };
 

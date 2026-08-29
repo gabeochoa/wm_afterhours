@@ -260,7 +260,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 400),
         ComponentConfig{}
             .with_label(
-                "[NOT A BUG] 4: Z-order — entity creation order = render order")
+                "[NOT A BUG] 4: Z-order: entity creation order = render order")
             .with_size(ComponentSize{pixels(700), pixels(18)})
             .with_absolute_position(sec4_x, sec4_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -403,7 +403,7 @@ struct LayoutBugRepros : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 700),
         ComponentConfig{}
             .with_label(
-                "[NOT A BUG] 7: toggle_switch vertical space — fits correctly")
+                "[NOT A BUG] 7: toggle_switch vertical space: fits correctly")
             .with_size(ComponentSize{pixels(500), pixels(18)})
             .with_absolute_position(sec7_x, sec7_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))

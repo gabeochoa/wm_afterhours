@@ -295,37 +295,18 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                  .with_debug_name(fmt::format("tn_act_{}", i)));
     }
 
-    // Live readout, so the claims above are checkable rather than asserted.
-    const int hovered = [&] {
-      for (int i = 0; i < 6; i++)
-        if (row_id[i] >= 0 && context.was_hot(row_id[i]))
-          return i;
-      return -1;
-    }();
-
+    // Reads as a real client's status line rather than a variable dump.
     div(context, mk(entity, 10),
         ComponentConfig{}
-            .with_label(fmt::format(
-                "toggle={}  link={}  dialing={:.2f}s  exit={}  hovered={}",
-                wants_up ? "on" : "off", state_word(link), dialing_for,
-                SERVERS[server_idx].tag,
-                hovered < 0 ? "none" : SERVERS[hovered].tag))
+            // Pipe, not a middot: the font has no glyph for it and draws "?".
+            .with_label(fmt::format("{}  |  exit node {}", state_word(link),
+                                    SERVERS[server_idx].place))
             .with_size(ComponentSize{pixels(592), pixels(26)})
-            .with_absolute_position(624.f, 578.f)
+            .with_absolute_position(624.f, 588.f)
             .with_alignment(TextAlignment::Left)
             .with_font_size(16.f)
             .with_custom_text_color(muted)
             .with_debug_name("tn_readout"));
-
-    div(context, mk(entity, 11),
-        ComponentConfig{}
-            .with_label("flip Connect to watch every colour on the left follow it")
-            .with_size(ComponentSize{pixels(592), pixels(26)})
-            .with_absolute_position(624.f, 608.f)
-            .with_alignment(TextAlignment::Left)
-            .with_font_size(16.f)
-            .with_custom_text_color(muted)
-            .with_debug_name("tn_hint"));
   }
 };
 
