@@ -18,6 +18,9 @@ inline ComponentConfig CheckboxConfig(const std::string &label) {
       .with_size(ComponentSize{percent(0.92f), pixels(34)})
       .with_background(Theme::Usage::Primary)
       .with_font_size(14.0f)
+      // The library default is "V", which this font draws as a literal
+      // capital V floating in the row.
+      .with_checkbox_indicators("[x]", "[ ]")
       .with_margin(Spacing::xs);
 }
 
@@ -114,7 +117,9 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         vstack(context, mk(root.ent(), 0),
                ComponentConfig{}
                    .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                   .with_padding(Spacing::sm)
+                   // Any vertical padding here pushes the clipboard row out.
+                   .with_padding(Padding{.left = DefaultSpacing::small(),
+                                         .right = DefaultSpacing::small()})
                    .with_no_wrap()
                    .with_debug_name("forms_main"));
 
@@ -149,7 +154,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.9f))
-                   .with_padding(Spacing::sm)
+                   // Same: level_progress needed 340 in a 323.6 content box.
+                   .with_padding(Spacing::xs)
                    .with_debug_name("left_column"));
 
     // Sliders section header - font_size_md for section headers
@@ -293,10 +299,8 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{percent(1.0f), pixels(44)})
                    .with_justify_content(JustifyContent::SpaceAround)
-                   .with_margin(Margin{.top = DefaultSpacing::tiny(),
-                                       .bottom = pixels(0),
-                                       .left = pixels(0),
-                                       .right = pixels(0)})
+                   // No top margin: the row holds 44px buttons and was the
+                   // last child, so the margin was what pushed it out.
                    .with_debug_name("clipboard_row"));
 
     // Copy button - copies current status to clipboard

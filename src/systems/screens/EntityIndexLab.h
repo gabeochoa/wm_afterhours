@@ -115,8 +115,8 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(1184), pixels(34)})
-            .with_absolute_position(48.f, 26.f)
+            .with_size(ComponentSize{pixels(1184), pixels(42)})
+            .with_absolute_position(48.f, 22.f)
             .with_label("Patch Bay")
             .with_alignment(TextAlignment::Left)
             .with_font_size(pixels(26.f))
@@ -125,8 +125,8 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(1184), pixels(24)})
-            .with_absolute_position(48.f, 62.f)
+            .with_size(ComponentSize{pixels(1184), pixels(30)})
+            .with_absolute_position(48.f, 60.f)
             .with_label("Pick a device. Its ports come back through a secondary "
                         "index, not a scan of the collection.")
             .with_alignment(TextAlignment::Left)
@@ -145,7 +145,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 3),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(328), pixels(24)})
+            .with_size(ComponentSize{pixels(328), pixels(30)})
             .with_absolute_position(64.f, 116.f)
             .with_label("DEVICES")
             .with_alignment(TextAlignment::Left)
@@ -199,7 +199,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 5),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(760), pixels(30)})
+            .with_size(ComponentSize{pixels(760), pixels(36)})
             .with_absolute_position(456.f, 116.f)
             .with_label(DEVICE[selected_node])
             .with_alignment(TextAlignment::Left)
@@ -212,7 +212,7 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
     for (int c = 0; c < 3; c++) {
       div(context, mk(entity, 20 + c),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(300), pixels(22)})
+              .with_size(ComponentSize{pixels(300), pixels(28)})
               .with_absolute_position(col_x[c], 156.f)
               .with_label(cols[c])
               .with_alignment(TextAlignment::Left)
@@ -301,8 +301,8 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 70),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(1184), pixels(24)})
-            .with_absolute_position(48.f, 622.f)
+            .with_size(ComponentSize{pixels(1184), pixels(28)})
+            .with_absolute_position(48.f, 620.f)
             .with_label(fmt::format(
                 "Listing all {} ports touches {} entities by scan and {} by "
                 "index, in a collection of {}.",
@@ -315,8 +315,8 @@ struct EntityIndexLab : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(entity, 71),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(1184), pixels(22)})
-            .with_absolute_position(48.f, 648.f)
+            .with_size(ComponentSize{pixels(1184), pixels(28)})
+            .with_absolute_position(48.f, 650.f)
             .with_label(fmt::format(
                 "Both spellings return {}, which is the only reason the "
                 "cheaper one is worth using.",
