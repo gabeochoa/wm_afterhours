@@ -84,6 +84,15 @@ inline std::vector<FontDef> get_all_fonts() {
       {"DGOne", "Px437_DG_One.ttf"},
       {"DGOne@bold", "Px437_DG_One_bold.ttf"},
 
+      // The only bundled family with more than two weights, so it is the one
+      // that can actually show what with_font_weight does. OFL, see
+      // ARCHIVO_NARROW_OFL.txt. No Light face ships, so FontWeight::Light
+      // falls back to Regular and warns, which is the documented behaviour.
+      {"Archivo", "ArchivoNarrow-Regular.ttf"},
+      {"Archivo@medium", "ArchivoNarrow-Medium.ttf"},
+      {"Archivo@semibold", "ArchivoNarrow-SemiBold.ttf"},
+      {"Archivo@bold", "ArchivoNarrow-Bold.ttf"},
+
       // CJK fonts with special codepoint loading
       {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints},
       {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,

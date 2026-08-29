@@ -25,8 +25,11 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
       const char *name;
       afterhours::colors::FontWeight weight;
     };
+    // Archivo Narrow ships no Light face, so Light resolves to Regular and
+    // warns. Said out loud here, or the row reads as the feature not working.
     const Row rows[] = {
-        {"Light 300", afterhours::colors::FontWeight::Light},
+        {"Light 300 (no face, falls back)",
+         afterhours::colors::FontWeight::Light},
         {"Regular 400", afterhours::colors::FontWeight::Regular},
         {"Medium 500", afterhours::colors::FontWeight::Medium},
         {"SemiBold 600", afterhours::colors::FontWeight::SemiBold},
@@ -37,7 +40,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(1180), pixels(30)})
             .with_absolute_position(48.f, 24.f)
-            .with_label("Font Weight - same string at every weight")
+            .with_label("Font Weight - Archivo Narrow, one string per weight")
             .with_alignment(TextAlignment::Left)
             .with_custom_text_color(white)
             .with_debug_name("fw_title"));
@@ -47,7 +50,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
     for (const Row &r : rows) {
       div(context, mk(entity, idx++),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(190), pixels(44)})
+              .with_size(ComponentSize{pixels(230), pixels(44)})
               .with_absolute_position(48.f, y)
               .with_label(r.name)
               .with_alignment(TextAlignment::Left)
@@ -57,12 +60,12 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(entity, idx++),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(940), pixels(44)})
-              .with_absolute_position(248.f, y)
+              .with_size(ComponentSize{pixels(900), pixels(44)})
+              .with_absolute_position(288.f, y)
               .with_label("Sphinx of black quartz, judge my vow 0123")
               .with_alignment(TextAlignment::Left)
               .with_custom_text_color(white)
-              .with_font_size(22.f)
+              .with_font("Archivo", pixels(22.f))
               .with_font_weight(r.weight)
               .with_debug_name(fmt::format("fw_sample_{}", r.name)));
       y += 52.f;
@@ -83,7 +86,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("theme.h")
             .with_alignment(TextAlignment::Left)
             .with_custom_text_color(white)
-            .with_font_size(18.f)
+            .with_font("Archivo", pixels(18.f))
             .with_font_weight(afterhours::colors::FontWeight::SemiBold)
             .with_transparent_bg()
             .with_debug_name("fw_mixed_bold"));
@@ -93,7 +96,7 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_label("src/ui  -  regular weight, same baseline")
             .with_alignment(TextAlignment::Left)
             .with_custom_text_color(muted)
-            .with_font_size(18.f)
+            .with_font("Archivo", pixels(18.f))
             .with_transparent_bg()
             .with_debug_name("fw_mixed_regular"));
   }
