@@ -84,7 +84,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // ═══════════════════════════════════════════════════════════════
     auto panel = vstack(context, mk(root.ent()),
                         ComponentConfig{}
-                            .with_720p_size(680, 420)
+                            .with_720p_size(680, 452)
                             .with_custom_background(panel_cream)
                             .with_border(panel_orange, 8.0f)
                             .with_rounded_corners(RoundedCorners())
@@ -126,7 +126,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto top_sections =
         hstack(context, mk(panel.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                   .with_size(ComponentSize{percent(1.0f), pixels(118)})
                    .with_align_items(AlignItems::FlexStart)
                    .with_justify_content(JustifyContent::SpaceBetween)
                    .with_no_wrap()
@@ -152,7 +152,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto toggle_row =
         hstack(context, mk(audio_sec.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(65)})
+                   .with_size(ComponentSize{percent(1.0f), pixels(86)})
                    .with_align_items(AlignItems::FlexStart)
                    .with_no_wrap()
                    .with_margin(Margin{.top = pixels(4)})
@@ -175,7 +175,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto toggle_col = vstack(
           context, mk(toggle_row.ent(), ti),
           ComponentConfig{}
-              .with_size(ComponentSize{pixels(95), percent(1.0f)})
+              .with_size(ComponentSize{pixels(112), percent(1.0f)})
               .with_align_items(AlignItems::Center)
               .with_no_wrap()
               .with_debug_name(std::string("toggle_") + toggles[ti].label));
@@ -218,11 +218,13 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(toggle_col.ent(), 2),
           ComponentConfig{}
               .with_label(display)
-              .with_size(ComponentSize{pixels(90), pixels(20)})
+              .with_size(ComponentSize{pixels(108), pixels(20)})
               .with_font("EqProRounded", pixels(14.0f))
               .with_custom_text_color(text_dark)
               .with_alignment(TextAlignment::Center)
-              .with_margin(Margin{.top = pixels(-20)}));
+              // The -20 pulled the caption up out of its own column, which is
+              // what the layout overflow warnings were about.
+              .with_margin(Margin{.top = pixels(4)}));
     }
 
     // ── Data section (right side of top) ──
@@ -400,8 +402,11 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer_right =
         hstack(context, mk(footer.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(215), pixels(42)})
+                   // 3 x 65 plus two 12px gaps. At 215 the buttons sat 2-4px
+                   // apart while everything else on the screen uses 14-20.
+                   .with_size(ComponentSize{pixels(219), pixels(42)})
                    .with_align_items(AlignItems::Center)
+                   .with_gap(pixels(12.0f))
                    .with_no_wrap());
 
     auto make_footer_btn = [&](int id, const char *label, afterhours::Color bg,
