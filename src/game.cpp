@@ -14,6 +14,7 @@
 #include "systems/RenderScreenHUD.h"
 #include "systems/RenderSystemHelpers.h"
 #include "systems/RenderTestFeedback.h"
+#include "systems/ScreenNavigator.h"
 #include "systems/SetupSimpleButtonTest.h"
 #include "systems/SetupTabbingTest.h"
 #include "systems/TestSystem.h"
@@ -525,6 +526,10 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 #endif
   };
 
+  auto navigator_system = std::make_unique<ScreenNavigator>();
+  ScreenNavigator *navigator = navigator_system.get();
+  navigator->build_rows(screen_names);
+
   {
     afterhours::ui::register_before_ui_updates<InputAction>(systems);
 
@@ -535,6 +540,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
       return;
     }
     systems.register_update_system(std::move(cycler_system));
+    // After the screen, so the sidebar builds over whatever it drew.
+    systems.register_update_system(std::move(navigator_system));
 
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
@@ -572,9 +579,22 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
           static_cast<int>(screen_names.size()));
       load_screen(current_screen_index);
     }
+    // Backtick, out of the way of the filter box and of widget tabbing.
+    if (raylib::IsKeyPressed(raylib::KEY_GRAVE)) {
+      navigator->visible = !navigator->visible;
+    }
+    navigator->current_index = current_screen_index;
 
     float dt = raylib::GetFrameTime();
     systems.run(dt);
+
+    // Drained here rather than in the click handler: load_screen frees the
+    // system the cycler is still pointing at.
+    if (navigator->pending_pick >= 0) {
+      current_screen_index = navigator->pending_pick;
+      navigator->pending_pick = -1;
+      load_screen(current_screen_index);
+    }
 
 #ifdef AFTER_HOURS_ENABLE_MCP
     if (g_mcp_mode) {

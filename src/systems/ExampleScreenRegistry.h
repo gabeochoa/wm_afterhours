@@ -61,6 +61,14 @@ struct ExampleScreenRegistry {
     return it->second.description;
   }
 
+  std::string get_screen_category(const std::string &flag_name) const {
+    auto it = screens.find(flag_name);
+    if (it == screens.end()) {
+      return "";
+    }
+    return it->second.category;
+  }
+
   void list_screens() const {
     // Group screens by category
     std::map<std::string, std::vector<const ExampleScreen *>> by_category;
