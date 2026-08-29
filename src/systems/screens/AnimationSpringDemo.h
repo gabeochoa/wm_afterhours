@@ -22,7 +22,10 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
 
   // Animation state
   float time_elapsed = 0.0f;
-  float trigger_time = 0.0f;
+  // Four seconds in the past, so every spring is already settled on the first
+  // frame. Headless renders about two frames, which is nowhere near enough for
+  // a spring that starts at zero, and the boxes captured as invisible.
+  float trigger_time = -4.0f;
   int bounce_count = 0;
 
   // Spring physics parameters
@@ -92,11 +95,6 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float dt) override {
     time_elapsed += dt;
-
-    // Auto-trigger on first frame
-    if (trigger_time == 0.0f) {
-      trigger_time = time_elapsed;
-    }
 
     float anim_t = time_elapsed - trigger_time;
 
