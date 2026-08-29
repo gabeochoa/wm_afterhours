@@ -63,6 +63,9 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float dt) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     theme.roundness = 0.10f;
+    // toggle_switch paints its ON track with the accent, and ocean_navy's is a
+    // gold that read as a warning next to this screen's blues.
+    theme.accent = afterhours::Color{95, 165, 235, 255};
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
@@ -253,16 +256,16 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
               .with_debug_name(fmt::format("bk_sec_{}", id)));
     };
 
+    // No icons: the single letters read as placeholder avatars, and only some
+    // rows had one, so the labels started at two different x positions.
     section(0, "SCHEDULE", true);
     setting_row_dropdown(context, mk(right.ent(), 1), "Run backup",
-                         schedule_idx, schedules, "T", busy_col);
+                         schedule_idx, schedules);
     setting_row_dropdown(context, mk(right.ent(), 2), "Keep versions",
-                         retention_idx, retentions, "V",
-                         afterhours::Color{150, 130, 220, 255});
+                         retention_idx, retentions);
 
     section(3, "TRANSFER", false);
-    setting_row_slider(context, mk(right.ent(), 4), "Bandwidth cap", bandwidth,
-                       "B", done_col);
+    setting_row_slider(context, mk(right.ent(), 4), "Bandwidth cap", bandwidth);
     setting_row_toggle(context, mk(right.ent(), 5), "Pause on battery",
                        pause_on_battery);
     setting_row_toggle(context, mk(right.ent(), 6), "Include externals",
@@ -270,9 +273,9 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
 
     section(7, "ACCOUNT", false);
     setting_row_display(context, mk(right.ent(), 8), "Last completed",
-                        "2 hours ago", "C", done_col);
-    setting_row_display(context, mk(right.ent(), 9), "Plan", "787 GB of 2 TB",
-                        "P", afterhours::Color{225, 165, 45, 255});
+                        "2 hours ago");
+    setting_row_display(context, mk(right.ent(), 9), "Plan",
+                        "787 GB of 2 TB");
 
     // Bandwidth is the one continuous setting, so it gets the live readout.
     div(context, mk(right.ent(), 10),

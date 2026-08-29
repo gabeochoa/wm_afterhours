@@ -33,6 +33,22 @@ leading spaces, computed from the path. Because `tree_view` builds the row as
 **Wanted:** row padding that actually offsets the label, so callers do not have
 to encode layout in their strings.
 
+### `toggle_switch` draws literal `|` and `O` glyphs on its track
+
+`imm_components.h:1313` and `:1326` put a `"|"` label on the left of the track
+and an `"O"` on the right, so a pill toggle always has a stray character beside
+its knob. At small sizes the `O` reads as a zero.
+
+This is every toggle in the showcase, and it is a good part of why the toggles
+were called ugly. Screens that look better here, like `parcel_corps_settings`,
+avoid it by hand-rolling their own pill instead of using the component.
+
+**No workaround applied:** `setting_row_toggle` calls `toggle_switch`
+internally, so a caller cannot suppress them.
+
+**Wanted:** the glyphs off by default, or a config flag. A plain track with a
+knob is the conventional look.
+
 ### `toggle_switch` computes its label width by hand
 
 `imm_components.h`, `toggle_switch`. The label is sized
