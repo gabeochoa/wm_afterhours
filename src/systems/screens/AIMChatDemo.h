@@ -307,6 +307,31 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_skip_tabbing(true));
     }
 
+    // A pasted log line: scrolls sideways inside a thread that scrolls down.
+    // Nothing else in wm nests one scroll view inside another, so this is the
+    // first caller of that combination.
+    auto pasted =
+        div(context, mk(chat_area.ent(), msg_idx++),
+            ComponentConfig{}
+                .with_size(ComponentSize{percent(1.0f), pixels(30)})
+                .with_custom_background(afterhours::Color{245, 245, 235, 255})
+                .with_overflow(Overflow::Scroll, Axis::X)
+                .with_margin(Margin{.bottom = pixels(4)})
+                .disable_rounded_corners()
+                .with_debug_name("pasted_log"));
+
+    div(context, mk(pasted.ent(), 0),
+        ComponentConfig{}
+            .with_label("14:02:11 GET /index.html 200 | 14:02:12 GET "
+                        "/style.css 200 | 14:02:14 POST /api/send 500")
+            .with_size(ComponentSize{pixels(900), pixels(24)})
+            .with_alignment(TextAlignment::Left)
+            .with_custom_text_color(AIMColors::text_default())
+            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+            .with_no_wrap()
+            .with_skip_tabbing(true)
+            .with_debug_name("pasted_log_line"));
+
     // Scroll bar track (vertical indicator for chat area)
     constexpr float SCROLL_TRACK_HEIGHT = 240.0f;
     constexpr float SCROLL_TRACK_WIDTH = 12.0f;
