@@ -73,7 +73,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     // Content area - two rows of three columns
     auto row1 = hstack(context, mk(main.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(200)})
+                           .with_size(ComponentSize{percent(1.0f), pixels(196)})
                            .with_justify_content(JustifyContent::SpaceAround)
                            .with_debug_name("row1"));
 
@@ -84,7 +84,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
-                   .with_border(theme.accent, 1.5f)
+                   .with_border(afterhours::colors::lighten(theme.surface, 0.25f), 1.0f)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.08f)
                    .with_debug_name("col_basic"));
@@ -106,6 +106,17 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_debug_name("basic_dropdown"));
 
+    div(context, mk(col1.ent(), 2),
+        ComponentConfig{}
+            .with_label("Plain select, one column of options.")
+            .with_size(ComponentSize{percent(1.0f), pixels(38)})
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_skip_tabbing(true));
+
     // === Column 2: Dropdown with label ===
     auto col2 =
         vstack(context, mk(row1.ent(), 1),
@@ -113,7 +124,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
-                   .with_border(theme.accent, 1.5f)
+                   .with_border(afterhours::colors::lighten(theme.surface, 0.25f), 1.0f)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.08f)
                    .with_debug_name("col_labeled"));
@@ -136,6 +147,17 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                  .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
                  .with_debug_name("labeled_dropdown"));
 
+    div(context, mk(col2.ent(), 2),
+        ComponentConfig{}
+            .with_label("A label and the control share one row.")
+            .with_size(ComponentSize{percent(1.0f), pixels(38)})
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_skip_tabbing(true));
+
     // === Column 3: Many options ===
     auto col3 =
         vstack(context, mk(row1.ent(), 2),
@@ -143,7 +165,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
-                   .with_border(theme.accent, 1.5f)
+                   .with_border(afterhours::colors::lighten(theme.surface, 0.25f), 1.0f)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.08f)
                    .with_debug_name("col_many"));
@@ -165,10 +187,21 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_debug_name("many_dropdown"));
 
+    div(context, mk(col3.ent(), 2),
+        ComponentConfig{}
+            .with_label("Twelve options, so the list scrolls.")
+            .with_size(ComponentSize{percent(1.0f), pixels(38)})
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_skip_tabbing(true));
+
     // Second row
     auto row2 = hstack(context, mk(main.ent(), 2),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(200)})
+                           .with_size(ComponentSize{percent(1.0f), pixels(196)})
                            .with_justify_content(JustifyContent::SpaceAround)
                            .with_margin(Margin{.top = DefaultSpacing::medium()})
                            .with_debug_name("row2"));
@@ -180,7 +213,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
-                   .with_border(theme.accent, 1.5f)
+                   .with_border(afterhours::colors::lighten(theme.surface, 0.25f), 1.0f)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.08f)
                    .with_debug_name("col_indicators"));
@@ -203,6 +236,17 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_debug_name("indicator_dropdown"));
 
+    div(context, mk(col4.ent(), 2),
+        ComponentConfig{}
+            .with_label("Caller supplies the open/closed marker.")
+            .with_size(ComponentSize{percent(1.0f), pixels(38)})
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_skip_tabbing(true));
+
     // === Column 5: Disabled ===
     auto col5 =
         vstack(context, mk(row2.ent(), 1),
@@ -210,7 +254,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
-                   .with_border(theme.accent, 1.5f)
+                   .with_border(afterhours::colors::lighten(theme.surface, 0.25f), 1.0f)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.08f)
                    .with_debug_name("col_disabled"));
@@ -233,6 +277,17 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_debug_name("disabled_dropdown"));
 
+    div(context, mk(col5.ent(), 2),
+        ComponentConfig{}
+            .with_label("Not focusable and does not open.")
+            .with_size(ComponentSize{percent(1.0f), pixels(38)})
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_skip_tabbing(true));
+
     // === Column 6: Styled ===
     auto col6 =
         vstack(context, mk(row2.ent(), 2),
@@ -240,7 +295,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(0.30f), percent(1.0f)})
                    .with_custom_background(
                        afterhours::colors::darken(theme.surface, 0.95f))
-                   .with_border(theme.accent, 1.5f)
+                   .with_border(afterhours::colors::lighten(theme.surface, 0.25f), 1.0f)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.08f)
                    .with_debug_name("col_styled"));
@@ -265,12 +320,23 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_debug_name("styled_dropdown"));
 
+    div(context, mk(col6.ent(), 2),
+        ComponentConfig{}
+            .with_label("Custom border, fill and corner radius.")
+            .with_size(ComponentSize{percent(1.0f), pixels(38)})
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
+            .with_custom_text_color(theme.font_muted)
+            .with_margin(Margin{.top = DefaultSpacing::tiny()})
+            .with_text_overflow(TextOverflow::Wrap)
+            .with_skip_tabbing(true));
+
     // Status bar
-    std::string status = fmt::format(
-        "Basic={}, Pet={}, Month={}, Indicator={}, Disabled={}, Styled={}",
-        basic_options[basic_idx], labeled_options[labeled_idx],
-        many_options[many_idx], indicator_options[custom_indicator_idx],
-        disabled_options[disabled_idx], styled_options[styled_idx]);
+    // A sentence, not a variable dump.
+    std::string status =
+        fmt::format("{} selected, {} for the pet, {} as the month",
+                    basic_options[basic_idx], labeled_options[labeled_idx],
+                    many_options[many_idx]);
 
     div(context, mk(main.ent(), 3),
         ComponentConfig{}

@@ -339,8 +339,12 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     for (int i = 0; i < 12; i++) {
       total_clicks += click_counts[i];
     }
+    // Phrased as UI copy; "Total clicks across all buttons: 0" read as a
+    // debug tally left in the chrome.
     std::string counter_text =
-        "Total clicks across all buttons: " + std::to_string(total_clicks);
+        total_clicks == 0
+            ? std::string("Try any button above")
+            : std::to_string(total_clicks) + " pressed so far";
 
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}

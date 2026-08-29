@@ -260,8 +260,8 @@ struct ButtonVariantsShowcase : ScreenSystem<UIContext<InputAction>> {
       total += click_counts[i];
 
     div(context, mk(root.ent(), 6),
-        StatusBarConfig("Total clicks across all variants: " +
-                        std::to_string(total))
+        StatusBarConfig(total == 0 ? std::string("Try any variant above")
+                                   : std::to_string(total) + " pressed so far")
             .with_custom_background(
                 afterhours::colors::lighten(context.theme.background, 0.08f)));
   }
