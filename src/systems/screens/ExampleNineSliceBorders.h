@@ -203,6 +203,9 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
     constexpr float border_label_font_size = 20.0f;
     for (int i = 0; i < 5; i++) {
       float x = start_x + i * (box_width + gap);
+      // A transparent centre shows the light fill, so light text vanishes there.
+      const bool transparent_centre = row2[i].texture == &trans_border_000 ||
+                                      row2[i].texture == &trans_border_010;
       div(context, mk(entity, 30 + i),
           ComponentConfig{}
               .with_label(row2[i].label)
@@ -210,7 +213,8 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
               .with_absolute_position(x, row2_y)
               .with_nine_slice_border(*row2[i].texture, row2[i].slice_size)
               .with_font(UIComponent::DEFAULT_FONT, border_label_font_size)
-              .with_custom_text_color(text_light)
+              .with_custom_text_color(transparent_centre ? text_dark
+                                                         : text_light)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("border_" + std::to_string(i)));
     }
