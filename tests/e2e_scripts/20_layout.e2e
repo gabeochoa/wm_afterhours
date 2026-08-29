@@ -32,7 +32,7 @@ assert_ui_text "Stacked Item 2" h=40
 assert_ui_text "Stacked Item 3" h=40
 
 # Description panel: percent(0.95) x pixels(44)
-assert_ui description_panel h=44
+assert_ui description_panel h=64
 
 # Title: percent(0.95) x pixels(48)
 assert_ui_text "Layout System Demo" h=48

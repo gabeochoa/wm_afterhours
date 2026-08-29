@@ -5,7 +5,7 @@ goto_screen buttons
 wait 0.5
 
 expect_text "Button Gallery"
-expect_text "Total clicks across all buttons: 0"
+expect_text "Try any button above"
 
 # Layout assertions based on source code math (1280x720 screen)
 # Root container: screen_pct(0.90) = 0.9*1280 x 0.9*720 = 1152x648
@@ -42,7 +42,7 @@ wait 0.2
 key ENTER
 wait 0.3
 
-expect_text "Total clicks across all buttons: 1"
+expect_text "1 pressed so far"
 
 # Click Accent button
 focus_ui btn_accent
@@ -50,7 +50,7 @@ wait 0.2
 key ENTER
 wait 0.3
 
-expect_text "Total clicks across all buttons: 2"
+expect_text "2 pressed so far"
 
 # Click Secondary button
 focus_ui btn_secondary
@@ -58,6 +58,6 @@ wait 0.2
 key ENTER
 wait 0.3
 
-expect_text "Total clicks across all buttons: 3"
+expect_text "3 pressed so far"
 
 screenshot button_click_test

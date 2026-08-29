@@ -14,22 +14,22 @@ expect_text "right-click either row"
 
 # Right-click the target row. hot_id has to be resolved from the PREVIOUS
 # frame, so move onto the row and let a frame pass before clicking.
-mouse_move 200 118
+mouse_move 200 474
 wait 0.2
-right_click 200 118
+right_click 200 474
 wait 0.3
 
 # The status line reports where the menu was anchored -- that it moved to the
 # cursor is the point, not just that something opened.
-expect_text "opened at 200,118"
+expect_text "opened at 200,474"
 expect_text "Stage file"
 expect_text "Copy path"
 
 screenshot right_click_menu_open
 
 # A second right-click somewhere else on the row re-anchors it.
-mouse_move 320 108
+mouse_move 320 470
 wait 0.2
-right_click 320 108
+right_click 320 470
 wait 0.3
-expect_text "opened at 320,108"
+expect_text "opened at 320,470"

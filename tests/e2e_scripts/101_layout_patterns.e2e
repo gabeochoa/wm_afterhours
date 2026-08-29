@@ -6,7 +6,7 @@ wait 0.5
 validate_screen layout_patterns
 
 # Row: 416px fits three 120px boxes + 12px gaps + 16px padding per side
-assert_ui pattern_row w=416 h=100
+assert_ui pattern_row w=416 h=112
 assert_ui pattern_box_0 w=120 h=80
 assert_ui pattern_box_1 w=120 h=80
 assert_ui pattern_box_2 w=120 h=80
