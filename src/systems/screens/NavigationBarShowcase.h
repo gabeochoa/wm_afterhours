@@ -52,8 +52,9 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Navigation Bar Component Showcase")
             .with_size(ComponentSize{percent(1.0f), pixels(56)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
+            .with_background(Theme::Usage::None)
+            .with_auto_text_color(false)
+            .with_custom_text_color(context.theme.font)
             .with_padding(Spacing::sm)
             .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -63,11 +64,14 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 1),
         ComponentConfig{}
             .with_label("Settings Categories")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
+            // Same blue fill and height as the controls made every row look
+            // equally clickable; the header also ran 136px wider than them.
+            .with_size(ComponentSize{percent(0.85f), pixels(30)})
+            .with_background(Theme::Usage::None)
+            .with_auto_text_color(false)
+            .with_custom_text_color(context.theme.font_muted)
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
@@ -82,11 +86,14 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_label("Game Mode Selector")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
+            // Same blue fill and height as the controls made every row look
+            // equally clickable; the header also ran 136px wider than them.
+            .with_size(ComponentSize{percent(0.85f), pixels(30)})
+            .with_background(Theme::Usage::None)
+            .with_auto_text_color(false)
+            .with_custom_text_color(context.theme.font_muted)
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
@@ -100,11 +107,14 @@ struct NavigationBarShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 7),
         ComponentConfig{}
             .with_label("Level Selector (6 options)")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
+            // Same blue fill and height as the controls made every row look
+            // equally clickable; the header also ran 136px wider than them.
+            .with_size(ComponentSize{percent(0.85f), pixels(30)})
+            .with_background(Theme::Usage::None)
+            .with_auto_text_color(false)
+            .with_custom_text_color(context.theme.font_muted)
+            .with_alignment(TextAlignment::Left)
+            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
             .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
             .with_skip_tabbing(true));
 
