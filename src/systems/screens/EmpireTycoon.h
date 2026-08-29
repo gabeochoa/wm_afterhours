@@ -93,6 +93,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color panel_blue_light{175, 215, 250, 255};
   afterhours::Color border_blue{85, 155, 205, 255};
   afterhours::Color white{255, 255, 255, 255};
+  // The old outlines were mid-blues, near the sky, so the letters had no edge.
+  afterhours::Color logo_outline{25, 60, 105, 255};
   afterhours::Color dark_text{55, 75, 105, 255};
   afterhours::Color muted_text{100, 130, 170, 255};
   afterhours::Color btn_yellow{255, 200, 75, 255};
@@ -204,9 +206,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
          28.0f,
          15.0f,
          64.0f,
-         5.0f,
+         3.0f,
          white,
-         border_blue,
+         logo_outline,
          {45, 90, 140, 180},
          {35, 70, 115, 150}},
         {"INCORPORATED",
@@ -216,9 +218,9 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
          28.0f,
          90.0f,
          42.0f,
-         4.0f,
-         {100, 185, 240, 255},
-         {45, 115, 175, 255},
+         2.5f,
+         white,
+         logo_outline,
          {35, 75, 125, 180},
          {25, 55, 95, 150}},
     };
@@ -782,7 +784,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
     float icon_offset = (icon_size - icon_img_size) / 2.0f;
     float icon_btn_y =
         (float)screen_h - 110.0f; // Move icons up to leave room for labels
-    float icon_spacing = 85.0f;   // Reduced from 90 to fit within screen bounds
+    // 85 put the label boxes edge to edge, and "Leaderboard" is wider than one.
+    float icon_spacing = 105.0f;
 
     for (size_t i = 0; i < icon_data.size(); i++) {
       float ix = icon_x + (float)i * icon_spacing;
@@ -825,8 +828,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 510 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(85), pixels(24)})
-              .with_absolute_position(ix - 14.0f, icon_btn_y + icon_size + 5.0f)
+              .with_size(ComponentSize{pixels(100), pixels(24)})
+              .with_absolute_position(ix - 22.0f, icon_btn_y + icon_size + 5.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("icon_label_" + std::to_string(i)));
