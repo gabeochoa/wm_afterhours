@@ -57,6 +57,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                    .with_padding(Spacing::xs)
                    .with_margin(Margin{.top = pixels(4)})
                    .with_justify_content(jc)
+                   // FlexStart/End/Center packed the children with an advance
+                   // shorter than their height, so they drew over each other.
+                   // Between/Around were fine because their own spacing hid it.
+                   .with_gap(pixels(10.0f))
                    .with_debug_name(label + "_container"));
 
     // 3 boxes - sized to fit within container
@@ -64,7 +68,9 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
       hstack(context, mk(container.ent(), i),
              ComponentConfig{}
                  .with_label(std::to_string(i + 1))
-                 .with_size(ComponentSize{percent(0.85f), percent(0.22f)})
+                 // Pixels, not percent: three percent-height children in a
+                 // Column drew on top of each other under FlexStart/End/Center.
+                 .with_size(ComponentSize{percent(0.85f), pixels(30)})
                  .with_custom_background(afterhours::Color{0, 110, 140, 255})
                  .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                  .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
@@ -110,6 +116,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                    .with_padding(Spacing::xs)
                    .with_margin(Margin{.top = pixels(4)})
                    .with_justify_content(jc)
+                   // Same packing overlap as the column demo above.
+                   .with_gap(pixels(6.0f))
                    .with_debug_name(label + "_inner"));
 
     // Three boxes
@@ -165,6 +173,8 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                                          .right = pixels(8)})
                    .with_margin(Margin{.top = pixels(4)})
                    .with_align_items(ai)
+                   // Same packing overlap as the justify demos.
+                   .with_gap(pixels(8.0f))
                    .with_debug_name(label + "_container"));
 
     // Three boxes of different heights using percent of container
