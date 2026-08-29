@@ -115,9 +115,11 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         vstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(745), pixels(350)})
+                   // 465px of left margin left the whole first third of the
+                   // screen empty and floated the rows in the right two thirds.
+                   .with_size(ComponentSize{pixels(1160), pixels(350)})
                    .with_no_wrap()
-                   .with_margin(Margin{.top = pixels(8), .left = pixels(465)})
+                   .with_margin(Margin{.top = pixels(8), .left = pixels(60)})
                    .with_debug_name("content"));
 
     if (active_tab == 0) {
@@ -134,15 +136,26 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_no_wrap()
                 .with_margin(Margin{.top = i > 0 ? pixels(25) : Size{}}));
 
-        std::string label_with_state =
-            toggles[i].label + (is_on ? "  ON" : "  OFF");
+        // Label left, state in its own column, toggle right. Glued together
+        // in one expand() div the pair floated in the middle of the row with
+        // ~500px of dead space on either side.
         div(context, mk(toggle_row.ent(), 0),
             ComponentConfig{}
-                .with_label(label_with_state)
+                .with_label(toggles[i].label)
                 .with_size(ComponentSize{expand(), pixels(40)})
+                .with_alignment(TextAlignment::Left)
                 .with_font("EqProRounded", pixels(20.0f))
                 .with_custom_text_color(text_dark)
                 .with_text_overflow(TextOverflow::Ellipsis));
+
+        div(context, mk(toggle_row.ent(), 3),
+            ComponentConfig{}
+                .with_label(is_on ? "ON" : "OFF")
+                .with_size(ComponentSize{pixels(70), pixels(40)})
+                .with_alignment(TextAlignment::Right)
+                .with_font("EqProRounded", pixels(18.0f))
+                .with_custom_text_color(text_dark)
+                .with_margin(Margin{.right = pixels(16)}));
 
         // Toggle track (clickable button)
         if (button(context, mk(toggle_row.ent(), 1),
@@ -287,7 +300,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Tutorial button
     button(context, mk(bottom.ent()),
            ComponentConfig{}
-               .with_label("Tutorial  ->")
+               .with_label("Tutorial")
                .with_size(ComponentSize{pixels(170), pixels(56)})
                .with_custom_background(btn_teal)
                .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
