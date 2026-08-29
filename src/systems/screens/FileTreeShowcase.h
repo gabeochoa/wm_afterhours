@@ -316,6 +316,25 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     // Get state from the tree_view entity if it exists
     auto tree_pair = mk(root.ent(), 3);
     auto [tree_entity, tree_parent] = deref(tree_pair);
+
+    // Open the sample tree before tree_view runs, not after: headless captures
+    // only a couple of frames, so seeding afterwards showed a collapsed tree.
+    tree_entity.addComponentIfMissing<HasTreeViewState>();
+    if (!seeded_expansion && !use_real_fs) {
+      seeded_expansion = true;
+      auto &seed = tree_entity.get<HasTreeViewState>();
+      const std::function<void(const std::vector<TreeNode<FileEntry>> &)> open =
+          [&](const std::vector<TreeNode<FileEntry>> &nodes) {
+            for (const auto &n : nodes) {
+              if (!n.data.is_directory)
+                continue;
+              seed.expanded_nodes.insert(n.data.path);
+              open(n.children);
+            }
+          };
+      open(cached_roots);
+    }
+
     if (tree_entity.has<HasTreeViewState>()) {
       auto &tv_state = tree_entity.get<HasTreeViewState>();
       for (auto &node : cached_roots) {
@@ -355,24 +374,6 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                       .with_size(ComponentSize{percent(1.0f), expand()})
                       .with_custom_background(theme.surface)
                       .with_debug_name("file_tree"));
-
-    // Open the sample tree once, so the screen shows nesting rather than five
-    // collapsed rows in an empty panel.
-    if (!seeded_expansion && !use_real_fs &&
-        tree_entity.has<HasTreeViewState>()) {
-      seeded_expansion = true;
-      auto &tv_state = tree_entity.get<HasTreeViewState>();
-      const std::function<void(const std::vector<TreeNode<FileEntry>> &)> open =
-          [&](const std::vector<TreeNode<FileEntry>> &nodes) {
-            for (const auto &n : nodes) {
-              if (!n.data.is_directory)
-                continue;
-              tv_state.expanded_nodes.insert(n.data.path);
-              open(n.children);
-            }
-          };
-      open(cached_roots);
-    }
 
     // Invalidate children cache when a directory is expanded/collapsed
     if (tree_result) {
