@@ -35,11 +35,11 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> main_settings = {
       "Controls",
       "Gameplay",
-      "Display & Graphics",
+      "Graphics",
       "Audio",
-      "Language & Subs",
+      "Language",
       "Accessibility",
-      "Policies & Licenses",
+      "Legal",
       "Credits",
   };
 
@@ -105,7 +105,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto sidebar =
         vstack(context, mk(main_area.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(240), pixels(300)})
+                   .with_size(ComponentSize{pixels(240), pixels(360)})
                    .with_no_wrap()
                    .with_padding(Padding{.top = pixels(10)})
                    .with_debug_name("sidebar"));
@@ -169,7 +169,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto panel =
         vstack(context, mk(main_area.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(panel_w), pixels(230)})
+                   .with_size(ComponentSize{pixels(panel_w), pixels(500)})
                    .with_custom_background(panel_dark)
                    .with_border(panel_border, 2.0f)
                    .with_no_wrap()
@@ -218,14 +218,64 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto tab_content = vstack(
         context, mk(panel.ent()),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(90)})
+            // 90px fitted the placeholder sentence and nothing else; the five
+            // real rows need room or they fall out of the panel.
+            .with_size(ComponentSize{percent(1.0f), pixels(340)})
             .with_no_wrap()
             .with_padding(Padding{
                 .top = pixels(16), .left = pixels(25), .right = pixels(25)})
             .with_debug_name("tab_content"));
 
     std::string tab_title = main_settings[active_tab];
-    std::string tab_desc = tab_title + " options will be displayed here.";
+
+    // Real rows per tab. "<Tab> options will be displayed here." was literal
+    // placeholder copy sitting on screen, with the panel's bottom half empty.
+    struct TabRow {
+      const char *label;
+      const char *value;
+    };
+    static const std::vector<std::vector<TabRow>> TAB_ROWS = {
+        {{"Aim sensitivity", "6"},
+         {"Aim assist", "On"},
+         {"Vibration", "On"},
+         {"Hold to sprint", "Off"},
+         {"Melee on click", "Off"}},
+        {{"Difficulty", "Hard"},
+         {"Auto save", "Every 5 min"},
+         {"Objective marker", "On"},
+         {"Hints", "Contextual"},
+         {"Permadeath", "Off"}},
+        {{"Brightness", "62"},
+         {"Field of view", "85"},
+         {"Motion blur", "Off"},
+         {"Film grain", "Low"},
+         {"Chromatic aberration", "Off"}},
+        {{"Master volume", "80"},
+         {"Effects", "75"},
+         {"Music", "40"},
+         {"Dialogue", "90"},
+         {"Dynamic range", "Night"}},
+        {{"Voice language", "English"},
+         {"Text language", "English"},
+         {"Subtitles", "On"},
+         {"Subtitle size", "Large"},
+         {"Speaker names", "On"}},
+        {{"High contrast", "Off"},
+         {"Colourblind mode", "Deuteranopia"},
+         {"Screen shake", "Reduced"},
+         {"Hold prompts", "Toggle"},
+         {"Text to speech", "Off"}},
+        {{"Privacy policy", "View"},
+         {"Terms of service", "View"},
+         {"Open source notices", "View"},
+         {"Data collection", "Minimal"},
+         {"Region", "EU"}},
+        {{"Studio", "Harbour"},
+         {"Engine", "afterhours"},
+         {"Build", "2.4.1"},
+         {"Released", "2026"},
+         {"Special thanks", "View"}},
+    };
 
     div(context, mk(tab_content.ent()),
         ComponentConfig{}
@@ -234,13 +284,33 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(pixels(22.0f))
             .with_custom_text_color(teal_bright));
 
-    div(context, mk(tab_content.ent()),
-        ComponentConfig{}
-            .with_label(tab_desc)
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
-            .with_font_size(pixels(17.0f))
-            .with_custom_text_color(text_muted)
-            .with_margin(Margin{.top = pixels(5)}));
+    const auto &rows = TAB_ROWS[(size_t)active_tab % TAB_ROWS.size()];
+    for (size_t r = 0; r < rows.size(); r++) {
+      // Explicit index: mk() with no index reuses one id per call site, so in
+      // a loop every row landed on the same entity and only one survived.
+      auto rrow = hstack(context, mk(tab_content.ent(), 10 + (int)r),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{percent(1.0f),
+                                                      pixels(44)})
+                             .with_align_items(AlignItems::Center)
+                             .with_no_wrap()
+                             .with_margin(Margin{.top = pixels(6)})
+                             .with_debug_name(fmt::format("ds_row_{}", r)));
+      div(context, mk(rrow.ent(), 0),
+          ComponentConfig{}
+              .with_label(rows[r].label)
+              .with_size(ComponentSize{percent(0.62f), pixels(44)})
+              .with_alignment(TextAlignment::Left)
+              .with_font_size(pixels(17.0f))
+              .with_custom_text_color(text_muted));
+      div(context, mk(rrow.ent(), 1),
+          ComponentConfig{}
+              .with_label(rows[r].value)
+              .with_size(ComponentSize{percent(0.36f), pixels(44)})
+              .with_alignment(TextAlignment::Right)
+              .with_font_size(pixels(17.0f))
+              .with_custom_text_color(teal_bright));
+    }
 
     // Footer: OK / Cancel / Apply (inside panel)
     auto footer =
