@@ -62,3 +62,13 @@ wait 0.3
 # Take a screenshot after toggle
 screenshot checkboxes_after_toggle
 
+
+# The script was named for a toggle it never asserted. Clicking the label half
+# of the row has to toggle too, not just the indicator square.
+expect_text "Group selected: 2 of 4"
+click_ui opt_b
+wait 0.5
+expect_text "Group selected: 3 of 4"
+click_ui opt_b
+wait 0.5
+expect_text "Group selected: 2 of 4"
