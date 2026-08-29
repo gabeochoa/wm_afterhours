@@ -404,7 +404,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    // 3 x 65 plus two 12px gaps. At 215 the buttons sat 2-4px
                    // apart while everything else on the screen uses 14-20.
-                   .with_size(ComponentSize{pixels(219), pixels(42)})
+                   .with_size(ComponentSize{pixels(232), pixels(42)})
                    .with_align_items(AlignItems::Center)
                    .with_gap(pixels(12.0f))
                    .with_no_wrap());
