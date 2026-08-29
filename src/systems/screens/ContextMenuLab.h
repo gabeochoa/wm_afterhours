@@ -20,7 +20,8 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
   bool corner_open = false;
   // Where the last right-click landed. The menu anchors here, so it opens
   // under the cursor rather than at some fixed spot.
-  Vector2Type mid_at{384.f, 245.f};
+  // Just inside the first row, so the menu reads as having come from it.
+  Vector2Type mid_at{176.f, 150.f};
   std::string status = "right-click either row";
 
   static std::vector<MenuItem> file_items() {
@@ -61,13 +62,56 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
             .with_font_size(13.f)
             .with_debug_name("cm_status"));
 
-    // A right-click target. hot_id only lands on something hit-testable, so
-    // the row is a button -- which is also the real shape of this feature:
-    // right-clicking a file row, a commit, a branch.
+    // A file list, because right-clicking a row is the real shape of this
+    // feature and a screen with one lone button showed none of it.
+    static constexpr const char *FILES[6] = {
+        "src/renderer.cpp", "src/renderer.h",  "src/scheduler.cpp",
+        "assets/atlas.png", "tests/layout.cpp", "README.md"};
+    static constexpr const char *STATE[6] = {"modified", "staged", "modified",
+                                             "untracked", "staged", ""};
+
+    div(context, mk(entity, 20),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(520), pixels(340)})
+            .with_absolute_position(48.f, 92.f)
+            .with_custom_background(afterhours::Color{26, 31, 44, 255})
+            .with_roundness(0.05f)
+            .with_debug_name("cm_filepanel"));
+
+    for (int f = 0; f < 6; f++) {
+      const float ry = 104.f + (float)f * 52.f;
+      auto row = button(context, mk(entity, 21 + f),
+                        ComponentConfig{}
+                            .with_size(ComponentSize{pixels(492), pixels(44)})
+                            .with_absolute_position(62.f, ry)
+                            .with_label(FILES[f])
+                            .with_alignment(TextAlignment::Left)
+                            .with_font_size(16.f)
+                            .with_custom_background(
+                                afterhours::Color{34, 40, 56, 255})
+                            .with_roundness(0.16f)
+                            .with_debug_name(fmt::format("cm_file_{}", f)));
+      if (context.is_right_click(row.ent().id)) {
+        mid_at = context.mouse.pos;
+        mid_open = true;
+        status = fmt::format("menu opened on {}", FILES[f]);
+      }
+      if (STATE[f][0] != '\0')
+        div(context, mk(entity, 30 + f),
+            ComponentConfig{}
+                .with_size(ComponentSize{pixels(140), pixels(44)})
+                .with_absolute_position(400.f, ry)
+                .with_label(STATE[f])
+                .with_alignment(TextAlignment::Right)
+                .with_font_size(14.f)
+                .with_custom_text_color(muted)
+                .with_debug_name(fmt::format("cm_state_{}", f)));
+    }
+
     auto target = button(context, mk(entity, 2),
                          ComponentConfig{}
                              .with_size(ComponentSize{pixels(420), pixels(44)})
-                             .with_absolute_position(48.f, 96.f)
+                             .with_absolute_position(48.f, 452.f)
                              .with_label("right-click me")
                              .with_debug_name("cm_target"));
     if (context.is_right_click(target.ent().id)) {
@@ -94,6 +138,12 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
                               ComponentConfig{}
                                   .with_size(ComponentSize{pixels(230),
                                                            pixels(32)})
+                                  // A floating panel needs an edge, or it
+                                  // reads as painted onto the background.
+                                  .with_border(afterhours::Color{92, 104, 132,
+                                                                 255},
+                                               1.0f)
+                                  .with_roundness(0.14f)
                                   .with_debug_name("cm_mid"));
     if (picked != kNoMenuSelection)
       status = fmt::format("centre menu chose #{}", picked);
@@ -105,9 +155,40 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
                           corner_open,
                           ComponentConfig{}
                               .with_size(ComponentSize{pixels(230), pixels(32)})
+                              .with_border(afterhours::Color{92, 104, 132, 255},
+                                           1.0f)
+                              .with_roundness(0.14f)
                               .with_debug_name("cm_corner"));
     if (picked != kNoMenuSelection)
       status = fmt::format("corner menu chose #{}", picked);
+
+    div(context, mk(entity, 40),
+        ComponentConfig{}
+            .with_size(ComponentSize{pixels(600), pixels(340)})
+            .with_absolute_position(632.f, 92.f)
+            .with_custom_background(afterhours::Color{26, 31, 44, 255})
+            .with_roundness(0.05f)
+            .with_debug_name("cm_notes"));
+
+    static constexpr const char *NOTES[6] = {
+        "How this differs from a menu bar",
+        "A context menu opens at a point, not under a widget,",
+        "so it follows the cursor rather than an anchor rect.",
+        "It reuses popover's placement, which is why the one",
+        "near the bottom edge flips up instead of running off.",
+        "Right-click any row on the left to move it.",
+    };
+    for (int n = 0; n < 6; n++) {
+      div(context, mk(entity, 41 + n),
+          ComponentConfig{}
+              .with_size(ComponentSize{pixels(566), pixels(30)})
+              .with_absolute_position(650.f, 112.f + (float)n * 34.f)
+              .with_label(NOTES[n])
+              .with_alignment(TextAlignment::Left)
+              .with_font_size(n == 0 ? 17.f : 14.f)
+              .with_custom_text_color(n == 0 ? white : muted)
+              .with_debug_name(fmt::format("cm_note_{}", n)));
+    }
 
     div(context, mk(entity, 6),
         ComponentConfig{}
