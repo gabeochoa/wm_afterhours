@@ -30,6 +30,22 @@ spaces them far enough apart to hide it. That is a cover, not a fix.
 
 **Wanted:** the advance to be the child's full outer height/width.
 
+### `context_menu` ignores border and roundness, and dims backwards
+
+Passing `.with_border(...)` and `.with_roundness(...)` in the config has no
+effect: the menu still draws as a square, edgeless slab. On a dark screen that
+reads as painted onto the background rather than floating above it, which is
+the one thing a menu needs to communicate.
+
+Separately its disabled row is drawn *lighter* than its enabled rows, so
+"Discard changes" looks hovered while the live items look inert. Disabled
+should be dimmer, not brighter.
+
+The separator is also a full-width 12px slab rather than a hairline, so it
+reads as a broken row.
+
+**No workaround applied:** all three are inside the component.
+
 ### `percent(1.0)` plus a margin overflows by the margin
 
 `modal.h:701` sizes the prompt's text input `percent(1.0f)` and then gives it
