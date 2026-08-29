@@ -163,7 +163,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto desc_panel =
         hstack(context, mk(main_container.ent(), 3),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.95f), pixels(44)})
+                   .with_size(ComponentSize{percent(0.95f), pixels(64)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_justify_content(JustifyContent::SpaceAround)

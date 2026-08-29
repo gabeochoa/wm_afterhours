@@ -48,8 +48,11 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                        afterhours::colors::lighten(theme.background, 0.08f))
                    .with_rounded_corners(RoundedCorners())
                    .with_roundness(0.04f)
-                   .with_padding(Padding{.top = DefaultSpacing::small(),
-                                         .bottom = DefaultSpacing::small(),
+                   // Tiny vertical padding: the card is already 0.96 of the
+                   // screen, so the last row's 19px overflow has to come out
+                   // of the padding rather than the height.
+                   .with_padding(Padding{.top = DefaultSpacing::tiny(),
+                                         .bottom = DefaultSpacing::tiny(),
                                          .left = DefaultSpacing::large(),
                                          .right = DefaultSpacing::large()})
                    .with_no_wrap()
@@ -102,6 +105,9 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
                        .with_custom_background(
                            afterhours::colors::lighten(theme.surface, 0.06f))
                        .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
+                       // The library default is "V", which this font draws as
+                       // a literal capital V floating in the row.
+                       .with_checkbox_indicators("[x]", "[ ]")
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                        .with_rounded_corners(RoundedCorners().all_round())
                        .with_disabled(extra.disabled)

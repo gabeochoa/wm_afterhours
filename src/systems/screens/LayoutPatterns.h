@@ -29,7 +29,7 @@ struct LayoutPatterns : ScreenSystem<UIContext<InputAction>> {
     // 416 inner width fits three 120px boxes + 12px gaps + 16px padding/side.
     auto row = hstack(context, mk(root.ent(), 1),
                       ComponentConfig{}
-                          .with_size(ComponentSize{pixels(416), pixels(100)})
+                          .with_size(ComponentSize{pixels(416), pixels(112)})
                           .with_custom_background(afterhours::Color{50, 60, 80, 255})
                           .with_padding(Padding::all(pixels(16)))
                           .with_gap(pixels(12))
