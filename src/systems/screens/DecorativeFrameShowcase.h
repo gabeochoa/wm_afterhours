@@ -55,8 +55,9 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // Layout configuration parameters
-    constexpr float frame_row_height_pct =
-        0.38f; // Compact height to reduce gap before info section
+    // Sized to the frame plus its two caption lines, so the row does not
+    // reserve empty space below them.
+    constexpr float frame_row_height_pct = 0.28f;
     constexpr float frame_row_width_pct = 0.95f;
     constexpr float frame_row_top_margin = 16.0f;
 
@@ -202,7 +203,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center));
 
     // ========== INFO SECTION ==========
-    constexpr float info_section_height_pct = 0.20f; // Height of info section
+    constexpr float info_section_height_pct = 0.14f;
     constexpr float info_section_width_pct = 0.90f;  // Width of info section
     constexpr float info_section_margin_top_px =
         8.0f; // Reduced gap before info section
@@ -221,7 +222,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
 
     div(context, mk(info_section.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(0.95f), percent(0.35f)})
+            .with_size(ComponentSize{percent(0.95f), percent(0.45f)})
             .with_label("Usage Tips")
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font)

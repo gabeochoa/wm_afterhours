@@ -75,9 +75,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // Legend - explanation of border types
     div(context, mk(entity, 2),
         ComponentConfig{}
-            .with_label("Row 1: Width & Colors | Row 2: Corners & Shadows | "
-                        "Row 3: Themed | Row 4: Interactive | Row 5: Per-Side "
-                        "| Row 6: Dotted")
+            .with_label("Width & Colors | Corners & Shadows | Themed | "
+                        "Interactive | Per-Side | Dotted")
             .with_size(ComponentSize{pixels(content_width), pixels(22)})
             .with_absolute_position(start_x, 56.0f)
             .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
@@ -320,7 +319,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
 
     // Interactive button with border
     float row4_y = row3_y + box_size + gap;
-    float row4_height = 100.0f;
+    float row4_height = 115.0f;
 
     // Row 4 label
     div(context, mk(entity, 49),
@@ -404,7 +403,9 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     // ps_box sized so rows 5+6 both fit within 720p (row 6's bottom edge —
     // the dotted underline — must stay on-screen).
     float row5_y = row4_y + row4_height;
-    float ps_box = 70.0f;
+    float ps_box = 64.0f;
+    // rows 5 and 6 hold 5 boxes, not 6, so they get the extra width
+    float ps_w = (content_width - 4.0f * gap) / 5.0f;
 
     div(context, mk(entity, 59),
         ComponentConfig{}
@@ -419,7 +420,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 60),
         ComponentConfig{}
             .with_label("Top Only")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
             .with_absolute_position(start_x, row5_y)
             .with_custom_background(sample_white)
             .with_border_top(accent_blue, pixels(3.0f))
@@ -430,8 +431,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 61),
         ComponentConfig{}
             .with_label("Bottom Only")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + ps_box + gap, row5_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + ps_w + gap, row5_y)
             .with_custom_background(sample_white)
             .with_border_bottom(accent_cyan, pixels(3.0f))
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
@@ -441,8 +442,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 62),
         ComponentConfig{}
             .with_label("Left+Right")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + 2 * (ps_box + gap), row5_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + 2 * (ps_w + gap), row5_y)
             .with_custom_background(sample_white)
             .with_border_left(accent_orange, pixels(3.0f))
             .with_border_right(accent_orange, pixels(3.0f))
@@ -453,8 +454,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 63),
         ComponentConfig{}
             .with_label("Mixed")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + 3 * (ps_box + gap), row5_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + 3 * (ps_w + gap), row5_y)
             .with_custom_background(sample_white)
             .with_border_top(accent_blue, pixels(3.0f))
             .with_border_right(accent_cyan, pixels(2.0f))
@@ -467,8 +468,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 64),
         ComponentConfig{}
             .with_label("Underline")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + 4 * (ps_box + gap), row5_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + 4 * (ps_w + gap), row5_y)
             .with_custom_background(sample_white)
             .with_border_bottom(afterhours::Color{200, 60, 60, 255},
                                 pixels(4.0f))
@@ -492,7 +493,7 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 70),
         ComponentConfig{}
             .with_label("Thin")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
             .with_absolute_position(start_x, row6_y)
             .with_custom_background(sample_white)
             .with_border(afterhours::Color{80, 80, 80, 255}, 1.0f,
@@ -504,8 +505,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 71),
         ComponentConfig{}
             .with_label("Medium")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + ps_box + gap, row6_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + ps_w + gap, row6_y)
             .with_custom_background(sample_white)
             .with_border(afterhours::Color{50, 50, 50, 255}, 3.0f,
                          BorderStyle::Dotted)
@@ -516,8 +517,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 72),
         ComponentConfig{}
             .with_label("Thick")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + 2 * (ps_box + gap), row6_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + 2 * (ps_w + gap), row6_y)
             .with_custom_background(sample_white)
             .with_border(afterhours::Color{30, 30, 30, 255}, 6.0f,
                          BorderStyle::Dotted)
@@ -528,8 +529,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 73),
         ComponentConfig{}
             .with_label("Orange")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + 3 * (ps_box + gap), row6_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + 3 * (ps_w + gap), row6_y)
             .with_custom_background(sample_white)
             .with_border(accent_orange, 3.0f, BorderStyle::Dotted)
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
@@ -539,8 +540,8 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 74),
         ComponentConfig{}
             .with_label("Underline")
-            .with_size(ComponentSize{pixels(ps_box), pixels(ps_box)})
-            .with_absolute_position(start_x + 4 * (ps_box + gap), row6_y)
+            .with_size(ComponentSize{pixels(ps_w), pixels(ps_box)})
+            .with_absolute_position(start_x + 4 * (ps_w + gap), row6_y)
             .with_custom_background(sample_white)
             .with_border_bottom(accent_blue, pixels(4.0f), BorderStyle::Dotted)
             .with_font(UIComponent::DEFAULT_FONT, h720(13.0f))
