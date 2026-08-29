@@ -365,7 +365,7 @@ struct MetersGaugesShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(meters_gauges, "Widgets",
+REGISTER_EXAMPLE_SCREEN(meters_gauges, "Component Galleries",
                         "Meters & gauges: inline meters, stacked bars, "
                         "circular progress, animated values",
                         MetersGaugesShowcase)

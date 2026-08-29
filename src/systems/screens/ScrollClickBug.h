@@ -91,5 +91,5 @@ struct ScrollClickBug : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(scroll_click_bug, "Bug Reports",
+REGISTER_EXAMPLE_SCREEN(scroll_click_bug, "Tools",
                         "Scroll offset click test", ScrollClickBug)

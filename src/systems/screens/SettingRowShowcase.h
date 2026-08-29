@@ -196,6 +196,6 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(setting_row_showcase, "Components",
+REGISTER_EXAMPLE_SCREEN(setting_row_showcase, "Component Galleries",
                         "Setting Row - labeled controls for settings screens",
                         SettingRowShowcase)

@@ -102,6 +102,6 @@ struct FontWeightShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(font_weight, "Text",
+REGISTER_EXAMPLE_SCREEN(font_weight, "Component Galleries",
                         "Every FontWeight, plus mixed weights on one row",
                         FontWeightShowcase)

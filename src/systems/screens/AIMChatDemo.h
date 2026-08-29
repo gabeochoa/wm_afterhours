@@ -534,6 +534,6 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(aim_chat, "Text Editing",
+REGISTER_EXAMPLE_SCREEN(aim_chat, "App Mockups",
                         "AIM-style chat demo with multi-line text input",
                         AIMChatDemo)

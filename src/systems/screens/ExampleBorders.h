@@ -550,5 +550,5 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(example_borders, "Components", "Border styling options",
+REGISTER_EXAMPLE_SCREEN(example_borders, "Component Galleries", "Border styling options",
                         ExampleBordersScreen)

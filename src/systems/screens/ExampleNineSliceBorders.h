@@ -450,6 +450,6 @@ struct ExampleNineSliceBordersScreen : ScreenSystem<UIContext<InputAction>> {
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(nine_slice_borders, "Components",
+REGISTER_EXAMPLE_SCREEN(nine_slice_borders, "Component Galleries",
                         "9-slice border textures",
                         ExampleNineSliceBordersScreen)
