@@ -827,8 +827,8 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, 510 + static_cast<int>(i)),
           ComponentConfig{}
               .with_label(label)
-              .with_size(ComponentSize{pixels(100), pixels(24)})
-              .with_absolute_position(ix - 22.0f, icon_btn_y + icon_size + 5.0f)
+              .with_size(ComponentSize{pixels(118), pixels(24)})
+              .with_absolute_position(ix - 31.0f, icon_btn_y + icon_size + 5.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("icon_label_" + std::to_string(i)));

@@ -186,7 +186,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_720p_size(star_sz, star_sz)
               .with_absolute_position(star_x + (float)i * star_gap, 20.0f)
               .with_alignment(TextAlignment::Center)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(30.0f))
+              .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
               .with_custom_text_color(is_filled ? star_gold
                                                 : star_empty_color)
               .with_debug_name(fmt::format("cc_star_{}", i)));
@@ -618,7 +618,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(entity, btn.base_id + 3),
           ComponentConfig{}
               .with_label(btn.label)
-              .with_size(ComponentSize{pxf(icon_size + 16), pixels(22)})
+              .with_size(ComponentSize{pxf(icon_size + 44), pixels(22)})
               .with_absolute_position(bx - 8.0f, icon_y + icon_size + 4.0f)
               .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center));

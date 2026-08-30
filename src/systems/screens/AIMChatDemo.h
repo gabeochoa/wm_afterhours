@@ -171,6 +171,8 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_background(AIMColors::button_face())
               .with_custom_text_color(AIMColors::text_default())
               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+              // A 24px window button cannot spare 5px a side for the inset.
+              .with_text_inset(0.f, 0.f)
               .with_margin(Margin{.left = pixels(2)})
               .disable_rounded_corners()
               .with_skip_tabbing(true));
@@ -190,7 +192,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(menu_bar.ent(), i),
           ComponentConfig{}
               .with_label(menus[i])
-              .with_size(ComponentSize{pixels(55), pixels(22)})
+              .with_size(ComponentSize{pixels(68), pixels(22)})
               .with_custom_text_color(AIMColors::text_default())
               .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
               .with_padding(Padding{.left = pixels(6)})

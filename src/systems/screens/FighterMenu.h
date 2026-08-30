@@ -527,7 +527,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(entity, 432),
         ComponentConfig{}
             .with_label(": Change Entry")
-            .with_size(ComponentSize{pixels(130), pixels(36)})
+            .with_size(ComponentSize{pixels(164), pixels(36)})
             .with_absolute_position(
                 prompt_x + hint_spacing * 3 + btn_size * 2 + 8.0f, prompt_y)
             .with_font("EqProRounded", h720(L.prompt_font_size))
