@@ -113,6 +113,11 @@ endif
 # Raylib graphics backend (enabled by default when using raylib)
 RAYLIB_BACKEND_CXXFLAGS := -DAFTER_HOURS_USE_RAYLIB
 
+# The library clamps every font up to 16, so a screen asking for a 12px
+# caption got 16px drawn into a box measured for 12 and then warned that its
+# own text overflowed. 12 is the floor the validator already enforces.
+MIN_FONT_SIZE_CXXFLAGS := -DAFTERHOURS_MIN_FONT_SIZE=12.0f
+
 # Debug text overflow (show red indicators when text can't fit in containers)
 # Enabled by default, disable with DEBUG_TEXT_OVERFLOW=0
 DEBUG_TEXT_OVERFLOW ?= 1
@@ -126,6 +131,7 @@ endif
 CXXFLAGS := $(CXXSTD) $(CXXFLAGS_BASE) $(CXXFLAGS_SUPPRESS) $(CXXFLAGS_TIME_TRACE) \
     $(MACOS_FLAGS) $(COVERAGE_CXXFLAGS) $(MCP_CXXFLAGS) $(E2E_CXXFLAGS) \
     $(RAYLIB_BACKEND_CXXFLAGS) $(DEBUG_TEXT_OVERFLOW_CXXFLAGS) $(RAYLIB_FLAGS) \
+    $(MIN_FONT_SIZE_CXXFLAGS) \
     $(FMT_FLAGS) \
     -fno-temp-file
 
