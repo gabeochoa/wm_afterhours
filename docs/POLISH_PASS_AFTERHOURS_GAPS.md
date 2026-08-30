@@ -71,6 +71,47 @@ still nearly vanishes rather than dimming.
 
 **Wanted:** `disabled_variant` picking one dimming operation, not both.
 
+### Every font is clamped up to 16, silently
+
+`rendering.h:404` is `font_size = std::max(explicit_font_size, MIN_FONT_SIZE)`
+with `MIN_FONT_SIZE = 16`. A screen asking for a 12px caption gets 16px drawn
+into a box that layout measured for 12, and then the renderer warns that the
+text overflows a container the caller sized correctly.
+
+Two costs. The showcase had no working small-text tier at all -- every caption
+rendered at body size. And it was the single largest source of overflow
+warnings: dropping the floor took the count from 99 to 65.
+
+**Worked around in wm:** built with `-DAFTERHOURS_MIN_FONT_SIZE=12.0f`, which
+is the floor the validation config already enforces.
+
+**Wanted:** the floor to default to something that is not larger than sizes the
+library's own `TypographyScale` hands out, or an auto-downscale rather than a
+silent clamp plus a warning.
+
+### The nine-slice text inset is applied twice
+
+`component_init.h:104` sets `text_inset` to the slice size so the label clears
+the frame art. `rendering.h:2225` (and `:1649` on the immediate path) has
+already inset the text rect by that same slice. So the slice is subtracted
+twice: a 70px box with a 16px slice keeps 6px for a 15px font.
+
+**Worked around in wm:** `ExampleNineSliceBorders` passes an explicit
+`with_text_inset(0, 0)`, which is honoured because the default is guarded on
+`!config.text_inset.has_value()`. Every label on that screen got legible again.
+
+**Wanted:** pick one of the two subtractions.
+
+### `progress_bar` trips the library's own fill_parent lint
+
+`imm_components.h:2185` and `:2197` build `progress_fill` and `progress_label`
+as `percent(1.0)` plus `with_absolute_position()`, which is exactly the pattern
+`component_init.h:692` warns about. Four showcase screens log it and no caller
+can suppress it, because both elements are internal.
+
+**Wanted:** either the overlay pattern exempted from the lint, or the component
+sized some other way.
+
 ### Containers do not lay out flow children added by the caller
 
 Two components hit this. A flow child added to a `decorative_frame` renders
@@ -167,6 +208,18 @@ unmodified HEAD and diffing it against its own baselines.
 
 **Wanted:** a much lower default, or a per-screen tolerance that has to be
 opted into with a reason.
+
+### Headless capture did not run the app's own init
+
+`headless_screenshots.cpp` built its own singletons and never called what
+`Preload::make_singleton` does, so the committed baselines were rendered
+without the app's theme colours, text inset, default font or grid snapping.
+56 of 108 screens changed the moment the two were made to share a setup
+function, and grid snapping alone accounted for every one of them.
+
+Fixed in wm by extracting `apply_ui_styling_defaults()`. Worth knowing because
+it means any baseline captured before that commit was never evidence of what
+the app actually drew.
 
 ### `text_input` inherits the current screen's theme
 
