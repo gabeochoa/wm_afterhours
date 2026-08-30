@@ -69,8 +69,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
                                                         pixels(150)})
                                .with_custom_background(panel)
                                .with_debug_name("pv_panel"))) {
-      // A vstack inside: the popover does not lay its own flow children out in
-      // a column, so caption, checkbox and button drew on top of each other.
+      // A vstack inside, for the padding: the panel itself has none.
       auto body = vstack(context, mk(pop.ent(), 0),
                          ComponentConfig{}
                              .with_size(ComponentSize{percent(1.f),

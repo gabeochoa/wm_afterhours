@@ -25,8 +25,6 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 
-    // Absolute positions throughout: the frame's own layers are absolutely
-    // placed, and a flow child of one lands outside it rather than inside.
     div(context, mk(entity, 0),
         ComponentConfig{}
             .with_size(ComponentSize{pixels(1280), pixels(720)})
@@ -96,46 +94,56 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
       const Variant &v = variants[i];
       const float fx = start_x + static_cast<float>(i) * (FRAME_W + GAP);
 
-      decorative_frame(context, mk(entity, 10 + i),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{pixels(FRAME_W),
-                                                    pixels(FRAME_H)})
-                           .with_absolute_position(fx, FRAME_Y)
-                           .with_custom_background(v.fill)
-                           .with_border(v.border, pixels(v.border_px))
-                           .with_debug_name(fmt::format("frame_{}", i)),
-                       v.style);
+      auto frame =
+          decorative_frame(context, mk(entity, 10 + i),
+                           ComponentConfig{}
+                               .with_size(ComponentSize{pixels(FRAME_W),
+                                                        pixels(FRAME_H)})
+                               .with_absolute_position(fx, FRAME_Y)
+                               .with_custom_background(v.fill)
+                               .with_border(v.border, pixels(v.border_px))
+                               .with_debug_name(fmt::format("frame_{}", i)),
+                           v.style);
 
-      // Inset past the frame band so the card never sits on the border art.
+      // The card is a flow child of the frame, so the only geometry named here
+      // is the inset past the frame band. Everything else the frame knows.
       const float pad = v.border_px * 3.f + 10.f;
-      const float text_x = fx + pad;
-      const float text_w = FRAME_W - 2.f * pad;
+      auto card = vstack(context, mk(frame.ent(), 0),
+                         ComponentConfig{}
+                             .with_size(ComponentSize{percent(1.f),
+                                                      percent(1.f)})
+                             .with_padding(Padding{.top = pixels(78.f),
+                                                   .left = pixels(pad),
+                                                   .right = pixels(pad)})
+                             .with_transparent_bg()
+                             .with_debug_name(fmt::format("card_{}", i)));
 
-      div(context, mk(entity, 20 + i),
+      div(context, mk(card.ent(), 0),
           ComponentConfig{}
               .with_label(v.heading)
-              .with_size(ComponentSize{pixels(text_w), pixels(32)})
-              .with_absolute_position(text_x, FRAME_Y + 78.f)
+              .with_size(ComponentSize{percent(1.f), pixels(32)})
               .with_font(UIComponent::DEFAULT_FONT, pixels(21.0f))
               .with_custom_text_color(v.ink)
+              .with_transparent_bg()
               .with_alignment(TextAlignment::Center));
 
-      div(context, mk(entity, 30 + i),
+      div(context, mk(card.ent(), 1),
           ComponentConfig{}
               .with_label(v.line_a)
-              .with_size(ComponentSize{pixels(text_w), pixels(24)})
-              .with_absolute_position(text_x, FRAME_Y + 122.f)
+              .with_size(ComponentSize{percent(1.f), pixels(24)})
+              .with_margin(Margin{.top = pixels(12.f)})
               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_custom_text_color(v.ink)
+              .with_transparent_bg()
               .with_alignment(TextAlignment::Center));
 
-      div(context, mk(entity, 40 + i),
+      div(context, mk(card.ent(), 2),
           ComponentConfig{}
               .with_label(v.line_b)
-              .with_size(ComponentSize{pixels(text_w), pixels(24)})
-              .with_absolute_position(text_x, FRAME_Y + 148.f)
+              .with_size(ComponentSize{percent(1.f), pixels(24)})
               .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
               .with_custom_text_color(v.ink)
+              .with_transparent_bg()
               .with_alignment(TextAlignment::Center));
 
       div(context, mk(entity, 50 + i),

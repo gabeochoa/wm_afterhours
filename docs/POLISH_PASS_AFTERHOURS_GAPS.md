@@ -112,20 +112,35 @@ can suppress it, because both elements are internal.
 **Wanted:** either the overlay pattern exempted from the lint, or the component
 sized some other way.
 
-### Containers do not lay out flow children added by the caller
+### FIXED: containers did not lay out flow children added by the caller
 
-Two components hit this. A flow child added to a `decorative_frame` renders
-*below* the frame rather than inside it, and the three children of a `popover`
-all drew on top of each other instead of stacking.
+Filed as one bug across two components. It was one bug in one of them, and the
+shared explanation ("both have absolutely-positioned internals, which appears
+to be what breaks flow layout") was a guess that turned out to be wrong.
 
-Both have absolutely-positioned internals of their own, which appears to be
-what breaks ordinary flow layout for anything the caller adds.
+**`popover` no longer reproduces.** Removing the `vstack` workaround from
+`popover_lab` and parenting the caption and four buttons straight to the panel
+lays them out correctly: y = 132, 160, 196, 232, 268. Some later change fixed
+it. The `vstack` stays in that screen because it supplies the panel padding,
+not because it is a workaround; the comment saying otherwise is gone.
 
-**Workaround in wm:** `popover_lab` wraps its contents in an explicit `vstack`,
-which lays out correctly. `decorative_frame` could not be worked around that
-way, so that screen switched to absolute positioning throughout.
+**`decorative_frame` did reproduce**, and the cause was mundane rather than
+anything to do with absolute internals. All three styles built layer 0 as a
+*flow* child sized to the whole frame, then layers 1-6 as absolute. A caller's
+flow child was laid out after a sibling that had already consumed the entire
+main axis, so it landed just past the bottom edge:
 
-**Wanted:** a documented content slot, or flow children that lay out normally.
+    frame_0      y=150  h=268
+    frame_outer  y=150  h=268   <- flow, full size
+    probe_0      y=418          <- 150 + 268
+
+Layout said so at the time and nobody read it:
+`Layout wrap: 'probe_0' in parent 'frame_0' - offset=268.0, container=268.0`.
+
+Fixed in `e98cdc3`: layer 0 is absolute like the other five. Frame rendering is
+byte-identical (108/108 baselines), it just stops eating the flow.
+`DecorativeFrameShowcase` now parents its card to the frame instead of
+recomputing the frame's geometry onto absolutely-positioned siblings.
 
 ### `tree_view` indentation does nothing
 
@@ -181,23 +196,31 @@ is the real bug. Any composite that lays out by hand will hit it again.
 **Wanted:** `expand()` that resolves against an absolutely-positioned parent's
 resolved size.
 
-### Focus rings draw inside the element, and only two edges
+### FIXED: focus rings rendered under the widget, so only two edges showed
 
-`UIComponent::focus_rect()` insets by its offset, so the ring lands inside the
-widget rather than around it, which reads as "too small". Measured on
-`self_align`: only the left edge (20px of 48) and the bottom (156px of 184)
-render, colour (193,195,196), and only on the 1px falling outside the button.
+Measured on `self_align`: only the left edge (20px of 48) and the bottom
+(156px of 184) rendered, and only on the 1px falling outside the button.
 No top or right edge at all.
 
-Draw order does not explain it (background `rendering.h:1521`, ring `:1613`),
-so the cause is still unknown.
+It was draw order after all. The first pass here checked `RenderImm`
+(background `rendering.h:1521`, ring `:1613`, correctly ordered) and concluded
+draw order was innocent, without checking that wm registers
+`register_batched_render_systems` on all 7 call sites and never runs
+`RenderImm`. In `RenderBatched` the ring was emitted *before* the fill and
+relied on `layer + 199/+200` to sort above it -- but
+`RenderCommandBuffer::sort()` is never called, so insertion order is paint
+order and the ring went under the widget. Only the slivers rounding outward
+past the fill escaped.
 
-**Wanted:** a ring that draws outside the widget bounds on all four edges.
+Fixed in `2581244` by emitting after fill and border, matching `RenderImm`.
+352 changed pixels on focus became 4200. See the dead-`sort()` entry below.
 
-Update: the border work above found the same shape elsewhere -- a container's
-edge is drawn inside its own rect and children are not inset, so children
-paint over it. Worth checking whether the ring's missing edges are the same
-cause before hunting further.
+**Lesson for the next one of these:** confirm which render path the app
+actually runs before reasoning about draw order. The two diverge.
+
+**Still wanted:** `focus_rect()` insets by its offset, so the ring lands
+inside the widget rather than around it. A negative `focus_ring_offset`
+outsets it, but the default of `+4.0f` reads as "too small".
 
 ### The non-ASCII warning never asks the font
 
