@@ -89,7 +89,10 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{percent(0.18f), percent(1.0f)})
                    .with_custom_background(afterhours::Color{50, 60, 80, 255})
-                   .with_padding(Spacing::xs)
+                   // Explicit 4, not Spacing::xs: xs scales to ~14 a side and
+                   // these columns are only 100px wide, so it left 43px of
+                   // content for 90px of boxes.
+                   .with_padding(Padding::all(pixels(4)))
                    .with_margin(Margin{.top = pixels(2),
                                        .bottom = pixels(2),
                                        .left = pixels(3),
@@ -113,22 +116,23 @@ struct ExampleFlexAlignment : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    .with_size(ComponentSize{percent(1.0f), percent(0.50f)})
                    .with_custom_background(afterhours::Color{35, 45, 65, 255})
-                   .with_padding(Spacing::xs)
+                   .with_padding(Padding::all(pixels(4)))
                    .with_margin(Margin{.top = pixels(4)})
                    .with_justify_content(jc)
                    // Same packing overlap as the column demo above.
-                   .with_gap(pixels(6.0f))
+                   .with_gap(pixels(2.0f))
                    .with_debug_name(label + "_inner"));
 
-    // Three boxes
+    // 3*20 + 2*2 = 64 of the ~84 the inner has. The leftover 20 is the point:
+    // with the boxes filling the row exactly, all five demos looked the same.
     for (int i = 0; i < 3; i++) {
       vstack(context, mk(inner.ent(), i),
              ComponentConfig{}
                  .with_label(std::to_string(i + 1))
-                 .with_size(ComponentSize{pixels(26), percent(0.70f)})
+                 .with_size(ComponentSize{pixels(20), percent(0.70f)})
                  .with_custom_background(afterhours::Color{180, 50, 80, 255})
                  .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-                 .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
+                 .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
                  .with_debug_name(label + "_" + std::to_string(i)));
     }
   }
