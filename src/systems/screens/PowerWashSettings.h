@@ -109,7 +109,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.08f;
     theme.segments = 6;
     // Assigning a whole theme drops the app default from preload.
-    theme.text_inset = {5.f, 5.f};
+    theme.text_inset = {5.f, 0.f};
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
 

@@ -122,7 +122,9 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{expand(), pixels(50)})
                 .with_background(Theme::Usage::Primary)
-                .with_padding(Spacing::sm)
+                // Spacing::sm scales to ~15 a side, leaving 20 of the 50 for
+                // a 24px title.
+                .with_padding(Padding::all(pixels(6)))
                 .with_debug_name("title_container"));
 
     // Title text - use expand() to fill title_container after it's resolved

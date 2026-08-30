@@ -118,7 +118,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(button_row.ent(), 2),
                ComponentConfig{}
                    .with_label("Warning Toast")
-                   .with_size(ComponentSize{pixels(168), pixels(56)})
+                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
                    .with_custom_background(warningBg)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))

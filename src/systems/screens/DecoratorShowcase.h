@@ -197,7 +197,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(panel.ent(), 1),
           ComponentConfig{}
-              .with_size(ComponentSize{children(), children()})
+              .with_size(ComponentSize{children(), pixels(20.0f)})
               .with_label("ONLINE")
               .with_font_size(pixels(13.0f))
               .with_custom_text_color(green));
@@ -285,7 +285,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
 
       div(context, mk(panel.ent(), 0),
           ComponentConfig{}
-              .with_size(ComponentSize{children(), children()})
+              .with_size(ComponentSize{children(), pixels(20.0f)})
               .with_label("SECTOR 7-G")
               .with_font_size(pixels(13.0f))
               .with_custom_text_color(amber));

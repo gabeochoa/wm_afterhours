@@ -40,7 +40,7 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     context.theme = afterhours::ui::theme_presets::neon_dark();
     // Assigning a whole theme drops the app default from preload.
-    context.theme.text_inset = {5.f, 5.f};
+    context.theme.text_inset = {5.f, 0.f};
 
     const auto white = afterhours::Color{255, 255, 255, 255};
     const auto muted = afterhours::Color{150, 160, 185, 255};

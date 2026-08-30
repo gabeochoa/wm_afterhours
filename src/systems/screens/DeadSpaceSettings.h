@@ -382,7 +382,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(prompt_col.ent()),
         ComponentConfig{}
             .with_label("SELECT")
-            .with_size(ComponentSize{pixels(70), pixels(22)})
+            .with_size(ComponentSize{pixels(88), pixels(26)})
             .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white));
 
@@ -411,7 +411,7 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(prompt_bar.ent()),
         ComponentConfig{}
             .with_label("SELECT")
-            .with_size(ComponentSize{pixels(60), pixels(25)})
+            .with_size(ComponentSize{pixels(88), pixels(26)})
             .with_font_size(pixels(19.0f))
             .with_custom_text_color(text_white)
             .with_margin(Margin{.left = pixels(5)}));
