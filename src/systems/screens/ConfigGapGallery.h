@@ -146,7 +146,10 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
         const float pct = 0.25f + 0.3f * (float)i;
         div(context, mk(p.ent(), 1 + i),
             ComponentConfig{}
-                .with_label(fmt::format("{:.0f}% clamped 90..200", pct * 100.f))
+                // Just the percent: the panel header already says what the
+                // clamp is, and at 25% the box clamps to 90px which the long
+                // label never fit.
+                .with_label(fmt::format("{:.0f}%", pct * 100.f))
                 .with_size(ComponentSize{percent(pct), pixels(34)})
                 .with_min_width(pixels(90))
                 .with_max_width(pixels(200))
@@ -226,7 +229,7 @@ struct ConfigGapGallery : ScreenSystem<UIContext<InputAction>> {
       auto p = make_panel(row1, 1, "text_color, text_inset, wrap");
       div(context, mk(p.ent(), 1),
           ComponentConfig{}
-              .with_label("with_text_color paints the label from a theme slot")
+              .with_label("with_text_color paints from a theme slot")
               .with_size(ComponentSize{percent(1.f), pixels(52)})
               .with_custom_background(afterhours::Color{40, 46, 62, 255})
               .with_text_color(Theme::Usage::Accent)

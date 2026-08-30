@@ -99,8 +99,12 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     // at the default font exceeds the bar).
     tab_container(context, mk(root.ent()), categories, active_tab,
                   ComponentConfig{}
-                      .with_size(ComponentSize{percent(1.0f), pixels(32)})
-                      .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
+                      // 0.99: grid snapping rounds each of the nine tabs up,
+                      // and at full width they summed to 1105 against 1104.
+                      .with_size(ComponentSize{percent(0.99f), pixels(32)})
+                      // 14, not 15: at 15 the nine content-fit tabs summed
+                      // to 1105 against a 1104 bar.
+                      .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
                       .with_no_wrap()
                       .with_margin(Margin{.top = pixels(-5)}));
 
