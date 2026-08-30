@@ -339,6 +339,42 @@ face, so the letter is what gets drawn.
 **Wanted:** either a symbol font that actually maps these, or components that
 draw their indicators rather than spelling them.
 
+## ThemeDefaults and UIStylingDefaults are process globals with no scoping
+
+Both are singletons that any screen can write and none restores. Layout reads
+`ThemeDefaults::get().theme.text_inset` and `ui_scale` directly
+(`systems.h:430-434`), not the caller's `context.theme` -- and the dataflow is
+one-way: `context.theme = theme_defaults.get_theme()` every frame
+(`systems.h:249`), so a screen assigning `context.theme` never feeds back, while
+a screen calling `ThemeDefaults::get().set_theme(...)` changes the process
+until something changes it again.
+
+The effect measured in wm: **32 of 108 screens rendered differently depending on
+which screens had rendered before them.** `AutoTextColorShowcase` calls
+`set_theme(ocean_navy())` behind a once-per-process static; `ocean_navy()`
+carries the compile-time default `text_inset` of 0 rather than wm's `{5, 0}`, so
+every screen after it laid out with a different inset than it would alone. Same
+string, same font, same size measured identically (39.5px both ways) -- the
+divergence was entirely downstream of measurement.
+
+This also made `30_themes` pass only inside the full e2e suite and fail on its
+own, and it is the real cause of the "casual_settings and layout render
+nondeterministically" note: not nondeterminism, order dependence.
+
+**Fixed in wm** by snapshotting both globals at startup and restoring them
+before each screen builds (`restore_ui_styling_defaults()`, called from all four
+screen-load paths). Re-applying was not enough: `apply_ui_styling_defaults()`
+only patches individual colours onto the current theme and cannot undo a
+whole-theme `set_theme()`. After the fix all 108 screens render identically
+alone and in sweep, all 113 e2e scripts pass both ways, and the layout/overflow
+warning count dropped 34 -> 16.
+
+**Wanted:** either per-screen scoping for these defaults, or layout reading the
+active context's theme rather than the global. A caller currently cannot tell
+that assigning `context.theme` does not affect its own layout.
+
+---
+
 ## RenderCommandBuffer::sort() is dead code
 
 `sort()` (`render_primitives.h:457`) is never called from anywhere.

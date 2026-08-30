@@ -203,6 +203,39 @@ void apply_ui_styling_defaults() {
   ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
 }
 
+void restore_ui_styling_defaults() {
+  // Snapshot, not re-apply: apply_ui_styling_defaults only patches colours onto
+  // whatever theme is current, so it cannot undo a screen's whole-theme
+  // set_theme(). The first call here is what defines "pristine".
+  static const ui::Theme pristine_theme = [] {
+    apply_ui_styling_defaults();
+    return ui::imm::ThemeDefaults::get().theme;
+  }();
+  struct Snapshot {
+    std::map<ui::imm::ComponentType, ui::imm::ComponentConfig> configs;
+    std::string font_name;
+    ui::Size font_size;
+    bool grid_snapping;
+    ui::ScalingMode scaling_mode;
+    ui::ValidationConfig validation;
+  };
+  static const Snapshot pristine = [] {
+    auto &sd = ui::imm::UIStylingDefaults::get();
+    return Snapshot{sd.component_configs, sd.default_font_name,
+                    sd.default_font_size, sd.enable_grid_snapping,
+                    sd.scaling_mode, sd.validation};
+  }();
+
+  ui::imm::ThemeDefaults::get().theme = pristine_theme;
+  auto &sd = ui::imm::UIStylingDefaults::get();
+  sd.component_configs = pristine.configs;
+  sd.default_font_name = pristine.font_name;
+  sd.default_font_size = pristine.font_size;
+  sd.enable_grid_snapping = pristine.grid_snapping;
+  sd.scaling_mode = pristine.scaling_mode;
+  sd.validation = pristine.validation;
+}
+
 Preload &Preload::make_singleton() {
   auto &sophie = EntityHelper::createEntity();
   {

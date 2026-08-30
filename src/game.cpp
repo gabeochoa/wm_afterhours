@@ -479,6 +479,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
         afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
+      restore_ui_styling_defaults();
     }
 
     // Mark all UI entities as not rendered to prevent input handling
@@ -717,6 +718,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
+      restore_ui_styling_defaults();
     }
 
     for (const auto &e : afterhours::EntityHelper::get_entities()) {
@@ -796,6 +798,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
+      restore_ui_styling_defaults();
     }
 
     // Clear modal stack so stale modals don't block input in subsequent tests
@@ -1053,6 +1056,7 @@ void reset_e2e_state() {
   if (auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
           afterhours::ui::UIContext<InputAction>>()) {
     ui_context->reset();
+    restore_ui_styling_defaults();
   }
 
   // Clear modal stack so stale modals don't block input

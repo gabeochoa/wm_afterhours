@@ -217,6 +217,9 @@ void reset_screen_state(int ui_entity_id) {
   // previous screen don't cause lookup failures in mk().
   afterhours::ui::imm::clear_existing_ui_elements();
 
+  // Screens write these process globals and never put them back.
+  restore_ui_styling_defaults();
+
   // Reset UI context
   auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
       afterhours::ui::UIContext<InputAction>>();
