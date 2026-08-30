@@ -199,6 +199,42 @@ edge is drawn inside its own rect and children are not inset, so children
 paint over it. Worth checking whether the ring's missing edges are the same
 cause before hunting further.
 
+### The non-ASCII warning never asks the font
+
+`backends/raylib/font_helper.h:73` warns on the first byte >= 0x80 in any
+string, without consulting the `raylib::Font` it was just handed. `language_demo`
+loads NotoSansKR and Sazanami and draws its Korean and Japanese samples with
+them, and still gets warned twice. The function has everything it needs to
+check -- `GetGlyphIndex` on the decoded codepoint -- so the warning could be
+accurate instead of advisory.
+
+### `with_wrap()` is flex wrap, not text wrap
+
+`with_wrap()` sets `flex_wrap`, which does nothing for a label. Text wrapping
+is `with_text_overflow(TextOverflow::Wrap)`. Cost an hour here: adding
+`with_wrap()` to an overflowing label changes nothing and gives no hint why.
+
+**Wanted:** a name that does not read as the text one, or a warning when a
+label-only element sets flex wrap.
+
+### `expand()` resolves 2px taller than the space left for it
+
+On `deadspace_settings`, a root holding `main_area` (`expand()`) plus a
+70px prompt bar put the bar at 652+70 = 722 on a 720 screen. Shrinking the bar
+to 66 moved it to 656 -- `expand()` simply absorbed the difference and kept
+the overflow at exactly 2px. Only an explicit fraction on `main_area` fixed it.
+
+Possibly the same rounding as the nine-tab `tab_container` case, where each
+content-fit tab rounded up and the row summed to 1105 against a 1104 parent.
+
+### `children()` can measure short of the children
+
+`text_input`'s `body` is `children()` tall and resolved 12px shorter than the
+fields inside it, so the last field escaped. Trimming the field margins shrank
+`body` by the same amount, so it never converged -- the only fix was an
+explicit height. Same shape as the `decorators` badges, where a
+`children()`-sized box came out 12px tall for a 13px font.
+
 ### The baseline threshold hides half-percent regressions
 
 `compare_baselines.py` defaults to 1.0%. A full-width dialog button changing
