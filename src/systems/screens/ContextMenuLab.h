@@ -138,6 +138,9 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
                               ComponentConfig{}
                                   .with_size(ComponentSize{pixels(230),
                                                            pixels(32)})
+                                  // The shortcut gutter is sized from the row
+                                  // height, which under-measures at 20px.
+                                  .with_font_size(pixels(16.f))
                                   // A floating panel needs an edge, or it
                                   // reads as painted onto the background.
                                   .with_border(afterhours::Color{92, 104, 132,
@@ -155,6 +158,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
                           corner_open,
                           ComponentConfig{}
                               .with_size(ComponentSize{pixels(230), pixels(32)})
+                              .with_font_size(pixels(16.f))
                               .with_border(afterhours::Color{92, 104, 132, 255},
                                            1.0f)
                               .with_roundness(0.14f)

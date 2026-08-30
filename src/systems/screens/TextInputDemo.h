@@ -85,7 +85,10 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     auto body = vstack(
         context, mk(card.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), children()})
+            // Explicit, not children(): children() measured 12px short of
+            // the fields it holds, and trimming their margins shrank it by
+            // the same amount so it never caught up.
+            .with_size(ComponentSize{percent(1.0f), pixels(500)})
             .with_no_wrap()
             .with_justify_content(JustifyContent::FlexStart)
             .with_debug_name("body"));
@@ -101,7 +104,8 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
               .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
-              .with_margin(Margin{.top = pixels(idx == 0 ? 0 : 12),
+              // 8, not 12: at 12 the last field ran 12px past the body.
+              .with_margin(Margin{.top = pixels(idx == 0 ? 0 : 8),
                                   .bottom = pixels(4)}));
 
       auto cfg = ComponentConfig{}

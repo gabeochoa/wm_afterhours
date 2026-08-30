@@ -92,7 +92,10 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto main_area =
         hstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), expand()})
+                   // screen_pct, not expand(): expand resolved 2px taller
+                   // than the space the prompt bar left, so the bar ran off
+                   // the bottom no matter what height it asked for.
+                   .with_size(ComponentSize{percent(1.0f), screen_pct(0.90f)})
                    .with_no_wrap()
                    .with_padding(Padding{.top = pixels(90),
                                          .left = pixels(30),
@@ -365,7 +368,9 @@ struct DeadSpaceSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto prompt_area =
         hstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(70)})
+                   // 66, not 70: the bar started at 652 and ran 2px off the
+                   // bottom of a 720 screen.
+                   .with_size(ComponentSize{percent(1.0f), pixels(66)})
                    .with_justify_content(JustifyContent::Center)
                    .with_align_items(AlignItems::FlexStart)
                    .with_no_wrap()

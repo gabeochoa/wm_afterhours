@@ -130,7 +130,9 @@ struct ExampleText : ScreenSystem<UIContext<InputAction>> {
             .with_absolute_position(left_col, content_y + left_spacing * 2.7f)
             .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
             .with_custom_text_color(muted_text)
-            .with_text_overflow(TextOverflow::Ellipsis));
+            // Wrap, not Ellipsis: it is a body-copy sample, and one truncated
+            // line is not what the screen is demonstrating.
+            .with_text_overflow(TextOverflow::Wrap));
 
     div(context, mk(entity, 15),
         ComponentConfig{}

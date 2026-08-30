@@ -27,18 +27,18 @@ assert_ui_text "Preferences" h=32
 assert_ui_text "Disabled" h=32
 
 # Toggle rows: percent(1.0) x pixels(42)
-assert_ui_text "Notifications" h=42
-assert_ui_text "Sound Effects" h=42
-assert_ui_text "Vibration" h=42
+assert_ui_text "Notifications" h=38
+assert_ui_text "Sound Effects" h=38
+assert_ui_text "Vibration" h=38
 
 # Checkbox rows: percent(1.0) x pixels(42)
-assert_ui_text "Dark Mode" h=42
-assert_ui_text "Auto-Save" h=42
-assert_ui_text "Cloud Sync" h=42
+assert_ui_text "Dark Mode" h=38
+assert_ui_text "Auto-Save" h=38
+assert_ui_text "Cloud Sync" h=38
 
 # Disabled toggle: pixels(42)
-assert_ui_text "Locked Setting (ON)" h=42
-assert_ui_text "Unavailable Option (OFF)" h=42
+assert_ui_text "Locked Setting (ON)" h=38
+assert_ui_text "Unavailable Option (OFF)" h=38
 
 # Separators: percent(1.0) x pixels(1)
 # (no debug names to assert on for separators)

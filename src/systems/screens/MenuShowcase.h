@@ -66,12 +66,14 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
     if (dropdown_menu(context, mk(entity, 1), "File", file_items(), file_open,
                       ComponentConfig{}
                           .with_size(ComponentSize{pixels(150), pixels(32)})
+                          .with_font_size(pixels(16.f))
                           .with_absolute_position(24.f, 64.f)) >= 0)
       status = "File item chosen";
 
     if (dropdown_menu(context, mk(entity, 2), "Edit", edit_items(), edit_open,
                       ComponentConfig{}
                           .with_size(ComponentSize{pixels(150), pixels(32)})
+                          .with_font_size(pixels(16.f))
                           .with_absolute_position(190.f, 64.f)) >= 0)
       status = "Edit item chosen";
 
@@ -80,6 +82,7 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
                       bottom_open,
                       ComponentConfig{}
                           .with_size(ComponentSize{pixels(150), pixels(32)})
+                          .with_font_size(pixels(16.f))
                           .with_absolute_position(24.f, sh - 60.f)) >= 0)
       status = "Bottom item chosen";
 
@@ -88,6 +91,7 @@ struct MenuShowcase : ScreenSystem<UIContext<InputAction>> {
                       corner_open,
                       ComponentConfig{}
                           .with_size(ComponentSize{pixels(150), pixels(32)})
+                          .with_font_size(pixels(16.f))
                           .with_absolute_position(sw - 170.f, sh - 60.f)) >= 0)
       status = "Corner item chosen";
 

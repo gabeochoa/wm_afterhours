@@ -217,7 +217,8 @@ struct MultiLineTextLab : ScreenSystem<UIContext<InputAction>> {
     // Where the UI thinks the pointer is, versus where the handle is. If these
     // disagree the problem is coordinate mapping, not the drag wiring.
     const auto mp = afterhours::input::get_mouse_position();
-    caption(BOX_X, BOX_Y + 176.f,
+    // +168, not +176: at 176 the 28px caption ended at 724 on a 720 screen.
+    caption(BOX_X, BOX_Y + 168.f,
             fmt::format("mouse ({:.0f},{:.0f})   handle ({:.0f},{:.0f} {}x{})"
                         "   hot={} held={} drags={}",
                         mp.x, mp.y, BOX_X + box_w - HANDLE,

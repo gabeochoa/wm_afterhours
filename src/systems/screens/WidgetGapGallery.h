@@ -99,7 +99,9 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::md)
                            .with_corner_radius(10.f)
-                           .with_margin(Margin{.right = DefaultSpacing::small()})
+                           // small() scales to 28, and two 0.49 columns plus
+                           // 28 came to 1124 in a 1116 row.
+                           .with_margin(Margin{.right = pixels(16)})
                            .with_no_wrap()
                            .with_debug_name("wg_left"));
 
