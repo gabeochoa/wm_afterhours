@@ -189,8 +189,10 @@ void apply_ui_styling_defaults() {
 
   // These screens were laid out against the 5px the renderer used to reserve
   // inside every label, so they ask for it back rather than each growing its
-  // own padding. A new screen should prefer real padding.
-  ui::imm::ThemeDefaults::get().theme.text_inset = {5.f, 5.f};
+  // own padding. A new screen should prefer real padding. Zero on y: a single
+  // line is centred anyway, so the 5 only ever shrank the fit budget and made
+  // short boxes report overflow.
+  ui::imm::ThemeDefaults::get().theme.text_inset = {5.f, 0.f};
 
   // Without this every screen that does not name a font warns once per text
   // element. base() is what ComponentConfig already defaults to, so this sets
