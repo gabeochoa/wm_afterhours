@@ -396,15 +396,40 @@ they bracket and scramble text-vs-fill order for every widget.
 
 ---
 
-## sokol_blend_test fails once it can compile
+## The Metal backend cannot be re-initialised
 
-The sokol backend did not compile (missing `warn_once.h`, fixed in `bc6522b`),
-which hid the fact that `sokol_blend_test` has a real failing check:
-`logical left half is green across the 2x image`. 18/19 pass. Verified
-independent of the focus ring change by reverting that change and re-running.
+`graphics::shutdown()` followed by `graphics::init()` in the same process hands
+back a render target that silently never receives any draw. Readback is uniform
+magenta `(255, 0, 255, 255)`.
 
-**Wanted:** someone with a Metal machine to look at HiDPI blending. Filed
-rather than fixed because wm is raylib-only and cannot exercise it.
+Nothing reports an error. Probed immediately before the failing draw, the second
+session is byte-identical to a working one: `sg_isvalid() == 1`, image state
+VALID, same pool ids (`img=65539`, `sgl_ctx=65538`), `sgl_error().any == 0`. The
+capture path is not caching stale Metal state either -- it queries
+`sg_mtl_device()` and `sg_mtl_command_queue()` fresh on every call.
+
+Isolated by bisecting the conditions:
+
+| condition | result |
+|---|---|
+| the block as the process's only `init()` | passes, correct pixels |
+| same block after `shutdown()` + `init()` | uniform magenta |
+| same, `hidpi = false` | uniform magenta (so not hidpi) |
+| same, two frames before capture | uniform magenta (so not first-frame) |
+
+This surfaced as `sokol_blend_test` failing `logical left half is green across
+the 2x image`, which pointed at HiDPI and the logical-vs-physical projection.
+Both are innocent: that block passes in a fresh process. The failure lands on
+whichever assertion happens to run after the re-init.
+
+**Worked around**, not fixed: the D19 hidpi assertions moved to
+`tests/sokol_hidpi_test.cpp`, which owns its process and calls `init()` once.
+Both binaries pass. The re-init bug itself is untouched.
+
+**Wanted:** either re-init made to work, or `init()` after `shutdown()` made to
+fail loudly instead of returning a target that renders nothing. Left for
+floatinghotel, which is the sokol/Metal consumer; wm is raylib-only and cannot
+exercise a fix.
 
 ---
 
