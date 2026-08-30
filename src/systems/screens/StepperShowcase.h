@@ -200,7 +200,9 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(card_container.ent()),
         ComponentConfig{}
             .with_label(card.description)
-            .with_size(ComponentSize{percent(1.0f), children()})
+            // Wrap: 40 characters at 15px never fit the 196px card on one line.
+            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+            .with_text_overflow(TextOverflow::Wrap)
             .with_custom_text_color(afterhours::Color{230, 230, 230, 255})
             .with_font_size(pixels(15.0f))
             .with_alignment(TextAlignment::Center)

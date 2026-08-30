@@ -29,11 +29,14 @@ inline ComponentConfig InnerCardConfig(const std::string &label,
                                        Theme::Usage bg) {
   return ComponentConfig{}
       .with_label(label)
-      .with_size(ComponentSize{percent(0.30f), pixels(55)})
+      // 0.28 and a small explicit pad: percent sizes the box but the padding
+      // is added on top, so three 0.30 cards plus Spacing::xs ran 14px past
+      // the row.
+      .with_size(ComponentSize{percent(0.28f), pixels(55)})
       .with_background(bg)
       .with_auto_text_color(true)
       .with_margin(Margin{.right = DefaultSpacing::tiny()})
-      .with_padding(Spacing::xs)
+      .with_padding(Padding::all(pixels(4)))
       .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
       .with_roundness(0.06f) // Slightly smaller than parent (0.08f)
       .with_skip_tabbing(true);
@@ -223,6 +226,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_label("Uses opacity for a translucent effect.")
             .with_size(ComponentSize{percent(0.95f), pixels(80)})
+            .with_text_overflow(TextOverflow::Wrap)
             .with_background(Theme::Usage::None)
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
             .with_custom_text_color(theme.font)

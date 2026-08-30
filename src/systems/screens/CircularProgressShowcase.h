@@ -142,8 +142,9 @@ struct CircularProgressShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(card.ent(), 2),
           ComponentConfig{}
               .with_label(pct_label)
-              .with_size(ComponentSize{percent(1.0f), h720(24.0f)})
-              .with_margin(Margin{.top = h720(15.0f)})
+              // 32, not 24: value_font is 26 and the box was shorter than it.
+              .with_size(ComponentSize{percent(1.0f), h720(32.0f)})
+              .with_margin(Margin{.top = h720(11.0f)})
               .with_font("Gaegu-Bold", value_font)
               .with_custom_text_color(accent)
               .with_alignment(TextAlignment::Center));

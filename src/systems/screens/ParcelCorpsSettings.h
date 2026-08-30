@@ -390,7 +390,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         {251, "[X]", 14.0f, 252, "SIGN UP A BUSINESS TO YOUR APP",
          40.0f, 280},
         {253, "[ ]", 48.0f, 255, "SIGN UP 4 BUSINESSES TO YOUR APP",
-         78.0f, 240},
+         78.0f, 280},
     };
     for (auto &q : quests) {
       div(context, mk(entity, q.check_id),
@@ -723,7 +723,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     render_row_bg(context, entity, base_id, x, y, w, h, "lang_row");
     render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_purple,
                 "@", "lang_icon");
-    render_row_label(context, entity, base_id + 2, x, y, h, 90, "Language",
+    render_row_label(context, entity, base_id + 2, x, y, h, 150, "Language",
                      "lang_label");
 
     if (render_chevron(context, entity, base_id + 3, x + w - 190.0f, y, "<",
@@ -767,7 +767,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
                   icon_symbol, "toggle_icon_" + std::to_string(base_id));
     }
-    render_row_label(context, entity, base_id + 2, x, y, h, 140, label,
+    render_row_label(context, entity, base_id + 2, x, y, h, 150, label,
                      "toggle_label_" + std::to_string(base_id));
     render_toggle(context, entity, base_id + 3, x, y, w, value);
   }
@@ -782,7 +782,8 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   "selector_row_" + std::to_string(base_id));
     render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
                 "*", "selector_icon_" + std::to_string(base_id));
-    render_row_label(context, entity, base_id + 2, x, y, h, 100, label,
+    // 150, not 100: "Texture Quality" at 18px needs about 130.
+    render_row_label(context, entity, base_id + 2, x, y, h, 150, label,
                      "selector_label_" + std::to_string(base_id));
 
     if (render_chevron(context, entity, base_id + 3, x + w - 150.0f, y, "<",
@@ -822,7 +823,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
                   "*", "display_icon_" + std::to_string(base_id));
     }
-    render_row_label(context, entity, base_id + 2, x, y, h, 130, label,
+    render_row_label(context, entity, base_id + 2, x, y, h, 150, label,
                      "display_label_" + std::to_string(base_id));
 
     div(context, mk(entity, base_id + 3),
@@ -844,7 +845,7 @@ struct ParcelCorpsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   "volume_row_" + std::to_string(base_id));
     render_icon(context, entity, base_id + 1, x + 8.0f, y + 8.0f, icon_color,
                 "*", "volume_icon_" + std::to_string(base_id));
-    render_row_label(context, entity, base_id + 2, x, y, h, 110, label,
+    render_row_label(context, entity, base_id + 2, x, y, h, 150, label,
                      "volume_label_" + std::to_string(base_id));
 
     float slider_w = 130.0f, slider_x = x + w - slider_w - 10.0f;

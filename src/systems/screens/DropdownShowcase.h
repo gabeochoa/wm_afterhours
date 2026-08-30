@@ -140,8 +140,9 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
 
     dropdown(context, mk(col2.ent(), 1), labeled_options, labeled_idx,
              ComponentConfig{}
-                 .with_size(
-                     ComponentSize{pixels(dropdown_w + 80), pixels(dropdown_h)})
+                 // Fill the column: the fixed 280 was 9px wider than the
+                 // 271 the column actually resolves to.
+                 .with_size(ComponentSize{percent(1.0f), pixels(dropdown_h)})
                  .with_label("Pet")
                  .with_margin(Margin{.top = DefaultSpacing::small()})
                  .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))

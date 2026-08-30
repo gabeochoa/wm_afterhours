@@ -83,7 +83,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
       toggle_switch(context, mk(card.ent(), idx), val,
                     ComponentConfig{}
                         .with_label(lbl)
-                        .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                        .with_size(ComponentSize{percent(1.0f), pixels(38)})
                         .with_custom_background(
                             afterhours::colors::lighten(theme.surface, 0.06f))
                         .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
@@ -101,7 +101,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
           checkbox(context, mk(card.ent(), idx), val,
                    ComponentConfig{}
                        .with_label(lbl)
-                       .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                       .with_size(ComponentSize{percent(1.0f), pixels(38)})
                        .with_custom_background(
                            afterhours::colors::lighten(theme.surface, 0.06f))
                        .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
@@ -168,7 +168,7 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
     toggle_switch(context, mk(card.ent(), 12), disabled_on,
                   ComponentConfig{}
                       .with_label("Locked Setting (ON)")
-                      .with_size(ComponentSize{percent(1.0f), pixels(42)})
+                      .with_size(ComponentSize{percent(1.0f), pixels(38)})
                       .with_custom_background(
                           afterhours::colors::lighten(theme.surface, 0.06f))
                       .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))

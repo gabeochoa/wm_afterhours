@@ -179,7 +179,7 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(bar.ent(), 6),
                ComponentConfig{}
                    .with_label("Reset")
-                   .with_size(ComponentSize{pixels(96), pixels(40)})
+                   .with_size(ComponentSize{pixels(86), pixels(40)})
                    .with_click_activation(ClickActivationMode::Release)
                    .with_corner_radius(8.f)
                    .with_debug_name("gw_reset"))) {

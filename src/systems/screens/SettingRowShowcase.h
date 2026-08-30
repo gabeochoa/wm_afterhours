@@ -167,7 +167,9 @@ struct SettingRowShowcase : ScreenSystem<UIContext<InputAction>> {
 
     // Spacer
     div(context, mk(content.ent(), 8),
-        ComponentConfig{}.with_size(ComponentSize{percent(1.0f), pixels(24)}));
+        // 8, not 24: the last slider row ran 14px past the column and the
+        // spacer is the only slack in it.
+        ComponentConfig{}.with_size(ComponentSize{percent(1.0f), pixels(8)}));
 
     // Slider section label - tinted warm to match volume/slider theme
     div(context, mk(content.ent(), 9),
