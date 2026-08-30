@@ -316,6 +316,39 @@ face, so the letter is what gets drawn.
 **Wanted:** either a symbol font that actually maps these, or components that
 draw their indicators rather than spelling them.
 
+## RenderCommandBuffer::sort() is dead code
+
+`sort()` (`render_primitives.h:457`) is never called from anywhere.
+`BatchedRenderer::render` walks `buffer.commands()` in insertion order and
+reads `cmd.layer` only for capture attribution. So every `layer` argument
+passed to a `buffer.add_*` inside the batched collectors is decorative:
+insertion order is paint order.
+
+The focus ring shipped broken on exactly this assumption for the whole life of
+the batched path. It was emitted at `layer + 199/+200` before the background
+fill, and therefore drawn under it (fixed in `2581244` by moving the emission).
+Nothing else currently depends on the layer argument, but the next person to
+reach for it will hit the same wall.
+
+**Wanted:** either wire `sort()` up or delete it and stop passing `layer` to
+the buffer. Wiring it up is not free: it tiebreaks on primitive *type* within a
+layer, which would reorder `ScissorStart`/`ScissorEnd` away from the geometry
+they bracket and scramble text-vs-fill order for every widget.
+
+---
+
+## sokol_blend_test fails once it can compile
+
+The sokol backend did not compile (missing `warn_once.h`, fixed in `bc6522b`),
+which hid the fact that `sokol_blend_test` has a real failing check:
+`logical left half is green across the 2x image`. 18/19 pass. Verified
+independent of the focus ring change by reverting that change and re-running.
+
+**Wanted:** someone with a Metal machine to look at HiDPI blending. Filed
+rather than fixed because wm is raylib-only and cannot exercise it.
+
+---
+
 ## Worked around, no library change wanted
 
 Nothing yet.
