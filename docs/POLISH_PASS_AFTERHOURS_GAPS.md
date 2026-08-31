@@ -8,6 +8,35 @@ Format: what the library does, why it is wrong, and what wm did instead.
 
 ---
 
+## Decisions (2026-08-30)
+
+Gabe reviewed every open entry and picked a direction for each. None are
+implemented yet; this is the agreed plan, not a changelog.
+
+| # | Gap | Decision |
+|---|-----|----------|
+| 1 | Theme/styling globals | Layout reads the **context**, not the global. Expose a **setter**, not raw `context.theme =` assignment. `ThemeDefaults` becomes the seed only. |
+| 2 | `RenderCommandBuffer::sort()` dead | Keep insertion order as the default; add an **opt-in setting** to sort by layer, and fix the type tiebreak first so scissor pairs are not reordered. |
+| 3 | `MIN_FONT_SIZE` clamp | Stop clamping. Add a **configurable warn floor** on the context/theme so an app sets its own (e.g. 16 at 720p) and gets warned rather than silently resized. |
+| 4 | `with_wrap()` naming | **Delete it.** `with_flex_wrap(FlexWrap)` already exists; `with_wrap()` is a redundant shorthand. One caller in wm. |
+| 5 | `gen_first_enforce` | **Add an explicit crash.** afterhours' own `log_error` is a non-crashing `fprintf` (and a no-op in the lean path), and wm's `assert(false)` is stripped under `NDEBUG`, so the empty-vector return is reachable. |
+| 6 | Nine-slice inset twice | **Drop the renderer inset** (`rendering.h:2225`, `:1649`). Keep the `component_init` default so it stays visible in the config and overridable. |
+| 7 | `progress_bar` trips its own lint | **Follow our own rules**: resize the component so it does not use the pattern. No internal exemption. |
+| 8 | Non-ASCII glyph warning | **Ask the font.** Decode UTF-8 and `GetGlyphIndex` per codepoint. |
+| 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
+| 10 | Baseline threshold 1.0% | **Near-zero default (~0.05%)**, per-screen opt-in overrides in the manifest. |
+| 11 | `tree_view` indentation | **Make row padding offset the label.** wm drops the leading-space hack. |
+| 12 | `expand()` 2px | **Investigate and fix.** Minimal repro: `pixels(100)` + `expand()` in a padded 200px parent; suspect padding not subtracted. |
+| 13 | `children()` measures short | **Investigate and fix**, likely with #12: suspect child margins omitted from the sum. |
+| 14 | `toggle_switch` label width | **Let layout size it**; delete the hand-computed width. |
+| 15 | `toggle_switch` `\|`/`O` glyphs | **Draw the indicators, do not spell them.** Same root cause as the checkbox `V`. |
+| 16 | `text_input` ambient theme | **Theme-scope for any subtree** (`with_theme` on a config), not a text_input special case. Pairs with #1. |
+| 17 | Headless animation frames | **Add a settle pass** that snaps animations to their target before capture, instead of guessing a frame count. |
+| 18 | Metal re-init | **Fail loudly on a second `init()`** until someone root-causes it on a Metal consumer. |
+| 19 | Stale entries | Close both: headless-init is superseded by #1; the glyph section becomes a font-assets note. |
+
+---
+
 ## Open
 
 ### WITHDRAWN: Column and Row packing overlaps children
