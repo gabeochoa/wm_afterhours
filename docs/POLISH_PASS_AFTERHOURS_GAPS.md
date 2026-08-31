@@ -10,8 +10,8 @@ Format: what the library does, why it is wrong, and what wm did instead.
 
 ## Decisions (2026-08-30)
 
-Gabe reviewed every open entry and picked a direction for each. None are
-implemented yet; this is the agreed plan, not a changelog.
+Gabe reviewed every open entry and picked a direction for each. Rows marked
+FIXED are done; the rest is the agreed plan, not a changelog.
 
 | # | Gap | Decision |
 |---|-----|----------|
@@ -26,8 +26,8 @@ implemented yet; this is the agreed plan, not a changelog.
 | 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
 | 10 | Baseline threshold 1.0% | **Near-zero default (~0.05%)**, per-screen opt-in overrides in the manifest. |
 | 11 | `tree_view` indentation | **Make row padding offset the label.** wm drops the leading-space hack. |
-| 12 | `expand()` 2px | **Investigate and fix.** Minimal repro: `pixels(100)` + `expand()` in a padded 200px parent; suspect padding not subtracted. |
-| 13 | `children()` measures short | **Investigate and fix**, likely with #12: suspect child margins omitted from the sum. |
+| 12 | `expand()` 2px | **FIXED.** Not padding: grid snapping rounded to nearest, so `expand()` rounded up past the space. Snaps down now. |
+| 13 | `children()` measures short | **FIXED**, same cause as #12. Snaps up now, so it always contains its children. |
 | 14 | `toggle_switch` label width | **Let layout size it**; delete the hand-computed width. |
 | 15 | `toggle_switch` `\|`/`O` glyphs | **Draw the indicators, do not spell them.** Same root cause as the checkbox `V`. |
 | 16 | `text_input` ambient theme | **Theme-scope for any subtree** (`with_theme` on a config), not a text_input special case. Pairs with #1. |
@@ -269,7 +269,26 @@ is `with_text_overflow(TextOverflow::Wrap)`. Cost an hour here: adding
 **Wanted:** a name that does not read as the text one, or a warning when a
 label-only element sets flex wrap.
 
-### `expand()` resolves 2px taller than the space left for it
+### FIXED: expand() overflowed and children() under-contained, both from grid snapping
+
+Filed as two separate layout bugs with unknown mechanisms. They are one bug.
+
+`snap_to_8pt_grid` (`autolayout.h`) rounds to **nearest** and runs on every
+non-`Pixels` dimension *after* it was computed to exactly fill or exactly
+contain. So a computed 98 rounds up to 100 and overflows its parent by 2, and a
+content sum of 105 rounds down to 104 so the box is shorter than the child it
+exists to hold. Snapping is cosmetic alignment; it must not break containment.
+
+Fixed by giving the snap a direction: `Dim::Expand` may only round **down**,
+`Dim::Children` only **up**, everything else still rounds to nearest. Repro and
+regression coverage in `tests/sizing_repro_test.cpp`, which also needed
+`layout_only(grid_snap, resolution)` on the harness -- neither bug reproduces
+with snapping off, which is why they stayed unexplained.
+
+Note the old entry text below was wrong about the cause (it guessed padding);
+kept for the symptom description only.
+
+### (original symptom) expand() resolves 2px taller than the space left for it
 
 On `deadspace_settings`, a root holding `main_area` (`expand()`) plus a
 70px prompt bar put the bar at 652+70 = 722 on a 720 screen. Shrinking the bar
