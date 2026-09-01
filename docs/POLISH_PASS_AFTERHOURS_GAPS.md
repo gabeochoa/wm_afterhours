@@ -20,20 +20,20 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | 3 | `MIN_FONT_SIZE` clamp | Stop clamping. Add a **configurable warn floor** on the context/theme so an app sets its own (e.g. 16 at 720p) and gets warned rather than silently resized. |
 | 4 | `with_wrap()` naming | **Delete it.** `with_flex_wrap(FlexWrap)` already exists; `with_wrap()` is a redundant shorthand. One caller in wm. |
 | 5 | `gen_first_enforce` | **Add an explicit crash.** afterhours' own `log_error` is a non-crashing `fprintf` (and a no-op in the lean path), and wm's `assert(false)` is stripped under `NDEBUG`, so the empty-vector return is reachable. |
-| 6 | Nine-slice inset twice | **Drop the renderer inset** (`rendering.h:2225`, `:1649`). Keep the `component_init` default so it stays visible in the config and overridable. |
+| 6 | Nine-slice inset twice | **FIXED.** Renderer inset dropped; wm's 19 `with_text_inset(0, 0)` opt-outs deleted, baselines byte-identical. |
 | 7 | `progress_bar` trips its own lint | **Follow our own rules**: resize the component so it does not use the pattern. No internal exemption. |
-| 8 | Non-ASCII glyph warning | **Ask the font.** Decode UTF-8 and `GetGlyphIndex` per codepoint. |
+| 8 | Non-ASCII glyph warning | **FIXED**, and `font_has_glyph` was broken too (`GetGlyphIndex` falls back to `?`, not 0, so it said yes to everything). Found a real missing fullwidth glyph in wm's Korean copy. |
 | 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
 | 10 | Baseline threshold 1.0% | **Near-zero default (~0.05%)**, per-screen opt-in overrides in the manifest. |
 | 11 | `tree_view` indentation | **Make row padding offset the label.** wm drops the leading-space hack. |
 | 12 | `expand()` 2px | **FIXED.** Not padding: grid snapping rounded to nearest, so `expand()` rounded up past the space. Snaps down now. |
 | 13 | `children()` measures short | **FIXED**, same cause as #12. Snaps up now, so it always contains its children. |
-| 14 | `toggle_switch` label width | **Let layout size it**; delete the hand-computed width. |
-| 15 | `toggle_switch` `\|`/`O` glyphs | **Draw the indicators, do not spell them.** Same root cause as the checkbox `V`. |
+| 14 | `toggle_switch` label width | **FIXED.** The hand math existed to dodge the #12 expand() bug; with that fixed, `expand()` gives byte-identical output. |
+| 15 | `toggle_switch` `\|`/`O` glyphs | **ALREADY FIXED** in `0ea239f`. The indicators are `std::optional` and opt-in; nothing hardcodes a glyph. Entry was stale. |
 | 16 | `text_input` ambient theme | **Theme-scope for any subtree** (`with_theme` on a config), not a text_input special case. Pairs with #1. |
 | 17 | Headless animation frames | **Add a settle pass** that snaps animations to their target before capture, instead of guessing a frame count. |
 | 18 | Metal re-init | **Fail loudly on a second `init()`** until someone root-causes it on a Metal consumer. |
-| 19 | Stale entries | Close both: headless-init is superseded by #1; the glyph section becomes a font-assets note. |
+| 19 | Stale entries | **DONE.** headless-init superseded by #1; glyph section is now a font-assets note; #15 was already fixed. |
 
 ---
 
@@ -316,7 +316,13 @@ unmodified HEAD and diffing it against its own baselines.
 **Wanted:** a much lower default, or a per-screen tolerance that has to be
 opted into with a reason.
 
-### Headless capture did not run the app's own init
+### FIXED: headless capture did not run the app's own init
+
+Superseded by the ThemeDefaults/UIStylingDefaults globals entry, which is the
+general form of this: the fix is no longer "call the app's init from capture"
+but "restore the styling globals before every screen".
+
+(original)
 
 `headless_screenshots.cpp` built its own singletons and never called what
 `Preload::make_singleton` does, so the committed baselines were rendered
@@ -367,7 +373,7 @@ an animation for its final value.
 
 ---
 
-## Glyphs the bundled fonts do not have
+## Font assets (not library gaps)
 
 Not library bugs so much as a trap the library walks into. Several components
 use an ASCII letter as a stand-in for a symbol and expect the symbol font to
