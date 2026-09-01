@@ -27,6 +27,11 @@ inline std::vector<int> get_korean_codepoints() {
   // Hangul Syllables (0xAC00-0xD7AF) - most common Korean characters
   auto syllables = generate_codepoint_range(0xAC00, 0xD7AF);
   codepoints.insert(codepoints.end(), syllables.begin(), syllables.end());
+  // Fullwidth forms (0xFF01-0xFF60). CJK copy uses fullwidth punctuation, and
+  // without these a fullwidth ! or ? silently draws raylib's '?' fallback --
+  // which is how the Korean string shipped looking almost right.
+  auto fullwidth = generate_codepoint_range(0xFF01, 0xFF60);
+  codepoints.insert(codepoints.end(), fullwidth.begin(), fullwidth.end());
   return codepoints;
 }
 
@@ -45,6 +50,9 @@ inline std::vector<int> get_japanese_codepoints() {
   // Common CJK Unified Ideographs subset (0x4E00-0x9FFF) - full range
   auto kanji = generate_codepoint_range(0x4E00, 0x9FFF);
   codepoints.insert(codepoints.end(), kanji.begin(), kanji.end());
+  // Fullwidth forms; see the Korean builder.
+  auto fullwidth = generate_codepoint_range(0xFF01, 0xFF60);
+  codepoints.insert(codepoints.end(), fullwidth.begin(), fullwidth.end());
   return codepoints;
 }
 
