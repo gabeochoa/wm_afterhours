@@ -15,7 +15,7 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 
 | # | Gap | Decision |
 |---|-----|----------|
-| 1 | Theme/styling globals | Layout reads the **context**, not the global. Expose a **setter**, not raw `context.theme =` assignment. `ThemeDefaults` becomes the seed only. |
+| 1 | Theme/styling globals | **PARTLY DONE.** `ThemeDefaults` split into `app_default` (persists) + `theme` (reset each frame), and `UIContext::set_theme` added. Making raw `context.theme` assignment reach layout is blocked -- see the font-resolution entry below. |
 | 2 | `RenderCommandBuffer::sort()` dead | Keep insertion order as the default; add an **opt-in setting** to sort by layer, and fix the type tiebreak first so scissor pairs are not reordered. |
 | 3 | `MIN_FONT_SIZE` clamp | Stop clamping. Add a **configurable warn floor** on the context/theme so an app sets its own (e.g. 16 at 720p) and gets warned rather than silently resized. |
 | 4 | `with_wrap()` naming | **Delete it.** `with_flex_wrap(FlexWrap)` already exists; `with_wrap()` is a redundant shorthand. One caller in wm. |
@@ -420,6 +420,31 @@ warning count dropped 34 -> 16.
 **Wanted:** either per-screen scoping for these defaults, or layout reading the
 active context's theme rather than the global. A caller currently cannot tell
 that assigning `context.theme` does not affect its own layout.
+
+---
+
+## Layout and rendering resolve fonts differently
+
+Blocks the rest of gap #1. Layout measures a label with the font the element
+names (`with_font(DEFAULT_FONT, pixels(28))`); rendering resolves the font
+through the *theme's* `language_fonts` map. While the theme reaching layout and
+the theme reaching rendering were different objects, the two happened to agree.
+
+Publishing the context's theme to `ThemeDefaults` before layout -- the obvious
+way to make `context.theme = t` affect sizing -- makes them disagree for any
+screen whose theme sets `language_fonts`. On `toasts` the buttons are
+`Dim::Text` sized and ask for `DEFAULT_FONT`, so layout measures that while
+rendering draws `"Gaegu-Bold"` (a different FontManager key for the same file),
+and four labels overflow boxes that were measured correctly for the font the
+caller asked for.
+
+So it is not that the screens were wrong and the change exposed it: the change
+introduces the mismatch. Reverted the publish step; kept the `app_default` split
+and the setter, which fix the leak without touching font resolution.
+
+**Wanted:** one font-resolution path. Either an explicit `with_font` wins over
+the theme's language font in both places, or both consult the language map.
+Until then a theme cannot safely drive layout.
 
 ---
 

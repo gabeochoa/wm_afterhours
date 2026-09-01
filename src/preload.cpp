@@ -226,7 +226,10 @@ void restore_ui_styling_defaults() {
                     sd.scaling_mode, sd.validation};
   }();
 
+  // Both slots: begin_frame restores `theme` from `app_default` every frame,
+  // so writing only the former would be undone before anything drew.
   ui::imm::ThemeDefaults::get().theme = pristine_theme;
+  ui::imm::ThemeDefaults::get().app_default = pristine_theme;
   auto &sd = ui::imm::UIStylingDefaults::get();
   sd.component_configs = pristine.configs;
   sd.default_font_name = pristine.font_name;
