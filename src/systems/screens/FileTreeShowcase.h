@@ -346,19 +346,11 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     TreeViewConfig<FileEntry> view_config;
     view_config.indent_width = 20.0f;
     view_config.row_height = 24.0f;
-    // tree_view's indent padding does not move the label, so depth is spelled
-    // into the string. See docs/POLISH_PASS_AFTERHOURS_GAPS.md.
-    const size_t root_len = current_root.size();
-    view_config.get_label = [root_len](const FileEntry &entry) -> std::string {
-      int depth = -1;
-      for (size_t i = root_len; i < entry.path.size(); i++)
-        if (entry.path[i] == '/')
-          depth++;
-      std::string pad(static_cast<size_t>(std::max(0, depth)) * 2, ' ');
+    view_config.get_label = [](const FileEntry &entry) -> std::string {
       if (entry.is_directory)
-        return pad + entry.name + "/";
+        return entry.name + "/";
       // Size on the row: a file browser that shows only names is a list.
-      return pad + entry.name + "   " + format_size(entry.file_size);
+      return entry.name + "   " + format_size(entry.file_size);
     };
     view_config.get_id = [](const FileEntry &entry) -> std::string {
       return entry.path;

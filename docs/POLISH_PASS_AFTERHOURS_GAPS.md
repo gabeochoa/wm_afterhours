@@ -25,7 +25,7 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | 8 | Non-ASCII glyph warning | **FIXED**, and `font_has_glyph` was broken too (`GetGlyphIndex` falls back to `?`, not 0, so it said yes to everything). Found a real missing fullwidth glyph in wm's Korean copy. |
 | 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
 | 10 | Baseline threshold 1.0% | **Near-zero default (~0.05%)**, per-screen opt-in overrides in the manifest. |
-| 11 | `tree_view` indentation | **Make row padding offset the label.** wm drops the leading-space hack. |
+| 11 | `tree_view` indentation | **FIXED** by moving the row's label into a child, so the existing padding indents it. The general fix (padding insets an element's own label) was tried and reverted: 16 -> 72 warnings, because `Dim::Text` sizes to the label without reserving padding, so every hugging label overflows by construction. |
 | 12 | `expand()` 2px | **FIXED.** Not padding: grid snapping rounded to nearest, so `expand()` rounded up past the space. Snaps down now. |
 | 13 | `children()` measures short | **FIXED**, same cause as #12. Snaps up now, so it always contains its children. |
 | 14 | `toggle_switch` label width | **FIXED.** The hand math existed to dodge the #12 expand() bug; with that fixed, `expand()` gives byte-identical output. |
@@ -171,7 +171,23 @@ byte-identical (108/108 baselines), it just stops eating the flow.
 `DecorativeFrameShowcase` now parents its card to the frame instead of
 recomputing the frame's geometry onto absolutely-positioned siblings.
 
-### `tree_view` indentation does nothing
+### FIXED: tree_view indentation did nothing
+
+The row set `Padding::Left(indent_px)` and put the label on the same element.
+Padding offsets an element's *children*, not its own label, so every depth
+rendered flush left and `FileTreeShowcase` spelled depth into the string as
+leading spaces. Fixed by making the label a child of the row, which the
+padding already indents. wm's hack is gone.
+
+**Tried and reverted:** the general form -- an element's padding insets its own
+label -- fixes this and reads like CSS, but it took wm from 16 to 72 layout
+warnings across 11 screens. A `Dim::Text` element sizes itself to its label
+without reserving room for padding, so once rendering subtracts the padding
+every hugging label overflows by construction. Doing it properly means teaching
+`Dim::Text` sizing about padding first; that is a much larger change and is not
+filed as blocked so much as not attempted.
+
+(original)
 
 `tree_view.h:67-79` computes `indent_px = depth * indent_width` and applies it
 as `Padding::Left(pixels(indent_px))` on the row button. It has no effect on
