@@ -29,7 +29,13 @@ except ImportError:
 
 DEFAULT_BASELINE_DIR = "screenshot-baselines/screens"
 DEFAULT_CURRENT_DIR = "/tmp/screenshot-validate"
-DEFAULT_THRESHOLD = 1.0
+# 0.05% of 1280x720 is ~460 pixels, so this still tolerates a few stray
+# antialiased edges but not a moved label. It was 1.0%, which is ~9200 pixels:
+# a full-width button changing colour is only ~0.4%, so real regressions passed
+# silently and 76 of 108 screens had drifted without anyone being told.
+# Renders are deterministic run-to-run, so a screen that needs more than this
+# should say so by name in manifest.json rather than raising the default.
+DEFAULT_THRESHOLD = 0.05
 DEFAULT_FAILURES_DIR = "test-failures"
 
 

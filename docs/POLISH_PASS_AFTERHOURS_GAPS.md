@@ -24,7 +24,7 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | 7 | `progress_bar` trips its own lint | **MOSTLY FIXED.** The label is a flow child now, not absolute, so the always-on warning is gone (4 -> 1 across wm). The residual is `progress_fill` at exactly 100%, where `percent(normalized)` reaches 1.0; see the entry. |
 | 8 | Non-ASCII glyph warning | **FIXED**, and `font_has_glyph` was broken too (`GetGlyphIndex` falls back to `?`, not 0, so it said yes to everything). Found a real missing fullwidth glyph in wm's Korean copy. |
 | 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
-| 10 | Baseline threshold 1.0% | **Near-zero default (~0.05%)**, per-screen opt-in overrides in the manifest. |
+| 10 | Baseline threshold 1.0% | **FIXED**, both suites. 1.0% -> 0.05%. It was hiding real drift: 76 of 108 screen baselines and 12 e2e baselines had crept sub-threshold during this session's library work. |
 | 11 | `tree_view` indentation | **FIXED** by moving the row's label into a child, so the existing padding indents it. The general fix (padding insets an element's own label) was tried and reverted: 16 -> 72 warnings, because `Dim::Text` sizes to the label without reserving padding, so every hugging label overflows by construction. |
 | 12 | `expand()` 2px | **FIXED.** Not padding: grid snapping rounded to nearest, so `expand()` rounded up past the space. Snaps down now. |
 | 13 | `children()` measures short | **FIXED**, same cause as #12. Snaps up now, so it always contains its children. |
@@ -341,7 +341,24 @@ fields inside it, so the last field escaped. Trimming the field margins shrank
 explicit height. Same shape as the `decorators` badges, where a
 `children()`-sized box came out 12px tall for a 13px font.
 
-### The baseline threshold hides half-percent regressions
+### FIXED: the baseline threshold hid half-percent regressions
+
+Both thresholds are 0.05% now (`compare_baselines.py` and
+`screenshot_validation.cpp`), down from 1.0%. On 1280x720 that is ~460 pixels
+rather than ~9200.
+
+The scale of what it was hiding, measured before changing it: **76 of the 108
+screen baselines and 12 of the e2e baselines had drifted** during this
+session's library work, every one of them under 1% and therefore reported as
+passing. Each individual change had been verified as "108/108 passed", which
+turned out to mean only "nothing moved more than 9200 pixels".
+
+All baselines were refreshed and are now byte-exact, and re-running the suites
+twice produces no diff at all, so the tighter bound does not flap. A screen
+that genuinely needs slack should be named in the manifest rather than the
+default being raised again.
+
+(original)
 
 `compare_baselines.py` defaults to 1.0%. A full-width dialog button changing
 colour is ~0.4%, so four screens had drifted from intended changes made days

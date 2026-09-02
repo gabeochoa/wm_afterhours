@@ -97,7 +97,12 @@ void save_screenshot_to(const std::string &path) {
 // One threshold, used both to fail a run and to decide what --update-baselines
 // is allowed to rewrite. They have to agree or the refresh reintroduces exactly
 // what the check just let through.
-static constexpr float DIFF_THRESHOLD_PCT = 1.0f;
+// 0.05% of 1280x720 is ~460 pixels: enough for a few antialiased edges, not
+// enough to hide a moved label. At the old 1.0% (~9200 px) a full-width button
+// changing colour scored ~0.4% and passed, and the screen baselines had 76 of
+// 108 quietly drifted before anyone measured. Renders are deterministic
+// run-to-run, so a screen needing more slack should be named, not tolerated.
+static constexpr float DIFF_THRESHOLD_PCT = 0.05f;
 
 bool validate_screen_against_baseline(const std::string &screen_name) {
   std::string baseline_dir = "baseline_screenshots";
