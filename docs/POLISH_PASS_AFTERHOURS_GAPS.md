@@ -21,7 +21,7 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | 4 | `with_wrap()` naming | **Delete it.** `with_flex_wrap(FlexWrap)` already exists; `with_wrap()` is a redundant shorthand. One caller in wm. |
 | 5 | `gen_first_enforce` | **Add an explicit crash.** afterhours' own `log_error` is a non-crashing `fprintf` (and a no-op in the lean path), and wm's `assert(false)` is stripped under `NDEBUG`, so the empty-vector return is reachable. |
 | 6 | Nine-slice inset twice | **FIXED.** Renderer inset dropped; wm's 19 `with_text_inset(0, 0)` opt-outs deleted, baselines byte-identical. |
-| 7 | `progress_bar` trips its own lint | **Follow our own rules**: resize the component so it does not use the pattern. No internal exemption. |
+| 7 | `progress_bar` trips its own lint | **MOSTLY FIXED.** The label is a flow child now, not absolute, so the always-on warning is gone (4 -> 1 across wm). The residual is `progress_fill` at exactly 100%, where `percent(normalized)` reaches 1.0; see the entry. |
 | 8 | Non-ASCII glyph warning | **FIXED**, and `font_has_glyph` was broken too (`GetGlyphIndex` falls back to `?`, not 0, so it said yes to everything). Found a real missing fullwidth glyph in wm's Korean copy. |
 | 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
 | 10 | Baseline threshold 1.0% | **Near-zero default (~0.05%)**, per-screen opt-in overrides in the manifest. |
@@ -131,7 +131,26 @@ twice: a 70px box with a 16px slice keeps 6px for a 15px font.
 
 **Wanted:** pick one of the two subtractions.
 
-### `progress_bar` trips the library's own fill_parent lint
+### MOSTLY FIXED: progress_bar tripped the library's own fill_parent lint
+
+`progress_label` was `percent(1,1)` plus `with_absolute_position()`, which is
+exactly the pattern `component_init.h:690` warns about, and it fired for every
+caller. It did not need to be absolute: it is the track's only flow child, so
+it covers the track either way, and `render_layer` already puts it above the
+fill. wm went from 4 of these to 1, with byte-identical baselines.
+
+**Residual:** `progress_fill` is `percent(normalized)` wide, so it only trips
+the lint at exactly 100%. Removing that would mean sizing the fill in pixels
+off the track's computed width, which costs a frame of invisibility on first
+build (the trade `decorative_frame` already makes for its corner accents). That
+is a worse component in exchange for a quiet lint, so it is left alone.
+
+The alternative worth considering is making the lint precise: its message is
+"may not reference the expected parent", but it does not actually check whether
+the parent is explicitly sized, which is the condition that makes the pattern
+dangerous.
+
+(original)
 
 `imm_components.h:2185` and `:2197` build `progress_fill` and `progress_label`
 as `percent(1.0)` plus `with_absolute_position()`, which is exactly the pattern
