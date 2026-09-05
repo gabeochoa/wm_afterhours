@@ -491,6 +491,10 @@ void run_headless_screenshots_at(int width, int height,
           .c_str());
 
   // 5. Configure UI validation
+  // Two tick+render passes are not enough for a time-based animation to
+  // arrive, so a captured screen showed whatever value it happened to reach.
+  // The library already has the knob for exactly this case.
+  afterhours::animation::set_instant(true);
   configure_validation();
 
   // 6. Get all screen names
@@ -703,6 +707,10 @@ int run_layout_summary(const std::string &screen_name, int width, int height,
           .string()
           .c_str());
 
+  // Two tick+render passes are not enough for a time-based animation to
+  // arrive, so a captured screen showed whatever value it happened to reach.
+  // The library already has the knob for exactly this case.
+  afterhours::animation::set_instant(true);
   configure_validation();
   setup_ecs_singletons(width, height);
 
@@ -794,6 +802,10 @@ int run_all_tests_headless() {
           .string()
           .c_str());
 
+  // Two tick+render passes are not enough for a time-based animation to
+  // arrive, so a captured screen showed whatever value it happened to reach.
+  // The library already has the knob for exactly this case.
+  afterhours::animation::set_instant(true);
   configure_validation();
   setup_ecs_singletons(WIDTH, HEIGHT);
 
@@ -1007,6 +1019,10 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
           .string()
           .c_str());
 
+  // Two tick+render passes are not enough for a time-based animation to
+  // arrive, so a captured screen showed whatever value it happened to reach.
+  // The library already has the knob for exactly this case.
+  afterhours::animation::set_instant(true);
   configure_validation();
   setup_ecs_singletons(WIDTH, HEIGHT);
 

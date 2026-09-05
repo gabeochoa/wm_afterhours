@@ -31,7 +31,7 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | 14 | `toggle_switch` label width | **FIXED.** The hand math existed to dodge the #12 expand() bug; with that fixed, `expand()` gives byte-identical output. |
 | 15 | `toggle_switch` `\|`/`O` glyphs | **ALREADY FIXED** in `0ea239f`. The indicators are `std::optional` and opt-in; nothing hardcodes a glyph. Entry was stale. |
 | 16 | `text_input` ambient theme | **Theme-scope for any subtree** (`with_theme` on a config), not a text_input special case. Pairs with #1. |
-| 17 | Headless animation frames | **Add a settle pass** that snaps animations to their target before capture, instead of guessing a frame count. |
+| 17 | Headless animation frames | **FIXED.** The knob already existed (`animation::set_instant`) but the UI's declarative animations ran on a second integrator that ignored it, and wm never called it. Both now honour it. |
 | 18 | Metal re-init | **Fail loudly on a second `init()`** until someone root-causes it on a Metal consumer. |
 | 19 | Stale entries | **DONE.** headless-init superseded by #1; glyph section is now a font-assets note; #15 was already fixed. |
 
@@ -410,7 +410,31 @@ anyway.
 
 **Wanted:** return the optional/throw rather than reading element 0.
 
-### Headless renders too few frames for time-based animation
+### FIXED: headless rendered too few frames for time-based animation
+
+Two things were wrong, and the first hid the second.
+
+`animation::set_instant` already existed, and its comment names this exact
+caller: *"e2e wants screenshots of the settled state"*. wm simply never called
+it. But calling it changed nothing, because the UI's declarative animations
+(`with_animation(Anim::on_appear()...)`) run through a **second** integrator in
+`plugins/ui/animation_config.h` -- `spring()` and `ease()` -- which knew nothing
+about the flag. Two animation systems, one knob.
+
+Both honour it now, and wm sets it on all four headless capture entry points.
+`AnimationDeclarativeDemo` dropped its workaround and animates from 0.3/0.0
+again; captured settled, it is a full-size vivid tile instead of the muted
+95%-scale one the old baseline had frozen mid-flight.
+
+**Still hand-rolled:** `AnimationSpringDemo` integrates its own spring physics
+from a `trigger_time` float rather than using either system, so it keeps its
+"four seconds in the past" seed. Not reachable by the flag.
+
+**Not applied to e2e.** The e2e runner does not set the flag: some scripts step
+frames deliberately, and 113/113 pass without it. Worth revisiting if an e2e
+screenshot ever catches an animation mid-flight.
+
+(original)
 
 Capture runs ~2 frames at dt=0.016, so any easing that starts at zero is caught
 mid-transition and can never settle.

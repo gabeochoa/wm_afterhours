@@ -142,13 +142,10 @@ struct AnimationDeclarativeDemo : ScreenSystem<UIContext<InputAction>> {
             .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
             .with_rounded_corners(RoundedCorners())
             .with_roundness(0.15f)
-            // Starts near its resting size rather than at 0.3 and invisible:
-            // headless renders about two frames, so from 0.3/0.0 the tile was
-            // captured as a dark half-size speck that read as a broken widget.
             .with_animation(
-                Anim::on_appear().scale(0.85f, 1.0f).spring(10.0f, 6.0f))
+                Anim::on_appear().scale(0.3f, 1.0f).spring(10.0f, 6.0f))
             .with_animation(
-                Anim::on_appear().opacity(0.55f, 1.0f).ease_out(0.2f)));
+                Anim::on_appear().opacity(0.0f, 1.0f).ease_out(0.2f)));
 
     // Second row - different animation types (all buttons for hover tracking)
     float row2_y = button_y + button_size + 60.0f;
