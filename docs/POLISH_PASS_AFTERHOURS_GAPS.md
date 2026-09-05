@@ -21,7 +21,7 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | 4 | `with_wrap()` naming | **Delete it.** `with_flex_wrap(FlexWrap)` already exists; `with_wrap()` is a redundant shorthand. One caller in wm. |
 | 5 | `gen_first_enforce` | **Add an explicit crash.** afterhours' own `log_error` is a non-crashing `fprintf` (and a no-op in the lean path), and wm's `assert(false)` is stripped under `NDEBUG`, so the empty-vector return is reachable. |
 | 6 | Nine-slice inset twice | **FIXED.** Renderer inset dropped; wm's 19 `with_text_inset(0, 0)` opt-outs deleted, baselines byte-identical. |
-| 7 | `progress_bar` trips its own lint | **MOSTLY FIXED.** The label is a flow child now, not absolute, so the always-on warning is gone (4 -> 1 across wm). The residual is `progress_fill` at exactly 100%, where `percent(normalized)` reaches 1.0; see the entry. |
+| 7 | `progress_bar` trips its own lint | **FIXED.** The label is a flow child now, not absolute, so the always-on warning is gone (4 -> 1 across wm). At 100% the bar now draws one box instead of two. |
 | 8 | Non-ASCII glyph warning | **FIXED**, and `font_has_glyph` was broken too (`GetGlyphIndex` falls back to `?`, not 0, so it said yes to everything). Found a real missing fullwidth glyph in wm's Korean copy. |
 | 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
 | 10 | Baseline threshold 1.0% | **FIXED**, both suites. 1.0% -> 0.05%. It was hiding real drift: 76 of 108 screen baselines and 12 e2e baselines had crept sub-threshold during this session's library work. |
@@ -139,16 +139,14 @@ caller. It did not need to be absolute: it is the track's only flow child, so
 it covers the track either way, and `render_layer` already puts it above the
 fill. wm went from 4 of these to 1, with byte-identical baselines.
 
-**Residual:** `progress_fill` is `percent(normalized)` wide, so it only trips
-the lint at exactly 100%. Removing that would mean sizing the fill in pixels
-off the track's computed width, which costs a frame of invisibility on first
-build (the trade `decorative_frame` already makes for its corner accents). That
-is a worse component in exchange for a quiet lint, so it is left alone.
+**The 100% case**, which I had left as a residual and Gabe pointed at directly:
+at full the fill covers the track exactly, so the component was drawing two
+identical boxes. Colour the track and skip the fill. That removes the overdraw
+and the last lint warning together, and needs no computed-size dependency.
 
-The alternative worth considering is making the lint precise: its message is
-"may not reference the expected parent", but it does not actually check whether
-the parent is explicitly sized, which is the condition that makes the pattern
-dangerous.
+Still true and worth doing separately: the lint's message is "may not reference
+the expected parent" but it never checks whether the parent is explicitly
+sized, which is the condition that makes the pattern dangerous.
 
 (original)
 
@@ -422,6 +420,26 @@ behind interaction.
 
 **Wanted:** either a "settle" pass before capture, or a documented way to ask
 an animation for its final value.
+
+---
+
+## TODO: audit components for draw-call short circuits
+
+`progress_bar` was drawing a full-width fill on top of a track it exactly
+covered -- two identical boxes for every completed bar. Nothing was wrong with
+the output, so nothing flagged it.
+
+Worth a pass over every composite for the same shape: a layer that is fully
+occluded by the one above it, an overlay that matches its parent exactly, a
+decorative element drawn at zero size or zero alpha. Candidates by structure:
+`decorative_frame` (six layers, several fully covered at some settings),
+`toggle_switch` (track plus knob plus two optional indicators), `menu_list`
+(row fill under row background), `circular_progress`, and any component that
+emits a child sized `percent(1.0)` over an opaque parent.
+
+**Wanted:** the cheap version is an assertion-free audit; the durable version is
+a debug counter for draw calls per component so a regression shows up as a
+number rather than needing someone to notice.
 
 ---
 
