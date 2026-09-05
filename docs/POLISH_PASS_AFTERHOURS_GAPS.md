@@ -447,6 +447,27 @@ an animation for its final value.
 
 ---
 
+## resolve_to_pixels returns an h720() font size as a raw fraction
+
+`h720(20)` as a font size resolves to **0.028px** -- the 20/720 fraction handed
+back unscaled -- in the batched path's Adaptive branch
+(`rendering.h`, `resolve_to_pixels(cmp.font_size, ...)`). Two dialog screens do
+this today.
+
+Nobody noticed because `font_size = std::max(explicit_font_size, MIN_FONT_SIZE)`
+turned 0.028 into 16 and drew something reasonable. The clamp has been hiding a
+unit bug, not just enforcing a floor.
+
+This is what blocks the rest of gap #3. Removing the clamp is the agreed
+direction and is a two-line change, but until the resolution is fixed it turns
+that text invisible rather than merely small. The warning added for #3 makes it
+visible in the meantime: it reports `text asks for 0.027777778px`.
+
+**Wanted:** font sizes resolved through the same units as everything else, then
+the clamp restricted to auto-fit where it belongs.
+
+---
+
 ## TODO: audit components for draw-call short circuits
 
 `progress_bar` was drawing a full-width fill on top of a track it exactly

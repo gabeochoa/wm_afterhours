@@ -200,6 +200,13 @@ void apply_ui_styling_defaults() {
   ui::imm::UIStylingDefaults::get().set_default_font(
       ui::UIComponent::DEFAULT_FONT, ui::imm::TypographyScale::base());
 
+  // Warn rather than resize. The library's own floor still clamps auto-fit,
+  // where it stops text shrinking to nothing; an explicitly requested size is
+  // a decision and is now honoured exactly, so this is how we hear about one
+  // that is too small to read.
+  ui::imm::ThemeDefaults::get().theme.min_font_size_warn_720p = 16.f;
+  ui::imm::ThemeDefaults::get().app_default.min_font_size_warn_720p = 16.f;
+
   ui::imm::UIStylingDefaults::get().set_grid_snapping(true);
 }
 
