@@ -32,9 +32,10 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
   bool visible = true;
   int current_index = 0;
 
-  // Swapping the screen system while the manager is mid-iteration frees the
-  // object the cycler still points at, so the pick is drained by the caller.
-  int pending_pick = -1;
+  // Set by the app: what to do when a row is picked. Invoked through
+  // UIContext::defer, because swapping the screen system while the manager is
+  // mid-iteration frees the object the cycler still points at.
+  std::function<void(int)> on_pick;
 
   void build_rows(const std::vector<std::string> &names) {
     auto &reg = ExampleScreenRegistry::get();
@@ -185,7 +186,11 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
                 .with_custom_text_color(row_col);
           }
           if (button(context, mk(row, 1), cfg)) {
-            pending_pick = r.screen_index;
+            if (on_pick) {
+              auto cb = on_pick;
+              const int idx = r.screen_index;
+              context.defer([cb, idx]() { cb(idx); });
+            }
           }
         },
         ComponentConfig{}

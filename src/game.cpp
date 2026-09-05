@@ -530,6 +530,10 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   auto navigator_system = std::make_unique<ScreenNavigator>();
   ScreenNavigator *navigator = navigator_system.get();
   navigator->build_rows(screen_names);
+  navigator->on_pick = [&](int index) {
+    current_screen_index = index;
+    load_screen(current_screen_index);
+  };
 
   {
     afterhours::ui::register_before_ui_updates<InputAction>(systems);
@@ -588,14 +592,6 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     float dt = raylib::GetFrameTime();
     systems.run(dt);
-
-    // Drained here rather than in the click handler: load_screen frees the
-    // system the cycler is still pointing at.
-    if (navigator->pending_pick >= 0) {
-      current_screen_index = navigator->pending_pick;
-      navigator->pending_pick = -1;
-      load_screen(current_screen_index);
-    }
 
 #ifdef AFTER_HOURS_ENABLE_MCP
     if (g_mcp_mode) {
