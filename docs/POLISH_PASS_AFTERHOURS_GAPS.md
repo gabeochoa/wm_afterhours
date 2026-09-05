@@ -16,21 +16,21 @@ FIXED are done; the rest is the agreed plan, not a changelog.
 | # | Gap | Decision |
 |---|-----|----------|
 | 1 | Theme/styling globals | **PARTLY DONE.** `ThemeDefaults` split into `app_default` (persists) + `theme` (reset each frame), and `UIContext::set_theme` added. Making raw `context.theme` assignment reach layout is blocked -- see the font-resolution entry below. |
-| 2 | `RenderCommandBuffer::sort()` dead | Keep insertion order as the default; add an **opt-in setting** to sort by layer, and fix the type tiebreak first so scissor pairs are not reordered. |
+| 2 | `RenderCommandBuffer::sort()` dead | **FIXED.** Tiebreak on primitive type removed, so scissors keep their position; sorting is behind `UIStylingDefaults::sort_draws_by_layer`, off by default. Covered by `draw_sort_test`. |
 | 3 | `MIN_FONT_SIZE` clamp | Stop clamping. Add a **configurable warn floor** on the context/theme so an app sets its own (e.g. 16 at 720p) and gets warned rather than silently resized. |
 | 4 | `with_wrap()` naming | **Delete it.** `with_flex_wrap(FlexWrap)` already exists; `with_wrap()` is a redundant shorthand. One caller in wm. |
 | 5 | `gen_first_enforce` | **Add an explicit crash.** afterhours' own `log_error` is a non-crashing `fprintf` (and a no-op in the lean path), and wm's `assert(false)` is stripped under `NDEBUG`, so the empty-vector return is reachable. |
 | 6 | Nine-slice inset twice | **FIXED.** Renderer inset dropped; wm's 19 `with_text_inset(0, 0)` opt-outs deleted, baselines byte-identical. |
 | 7 | `progress_bar` trips its own lint | **FIXED.** The label is a flow child now, not absolute, so the always-on warning is gone (4 -> 1 across wm). At 100% the bar now draws one box instead of two. |
 | 8 | Non-ASCII glyph warning | **FIXED**, and `font_has_glyph` was broken too (`GetGlyphIndex` falls back to `?`, not 0, so it said yes to everything). Found a real missing fullwidth glyph in wm's Korean copy. |
-| 9 | Screen swap from click handler | **Defer teardown to end of frame** so a callback can safely request a swap. wm deletes its pending-index drain. |
+| 9 | Screen swap from click handler | **FIXED.** `UIContext::defer` runs work at the top of the next frame. wm's `pending_pick` field and drain block are gone. |
 | 10 | Baseline threshold 1.0% | **FIXED**, both suites. 1.0% -> 0.05%. It was hiding real drift: 76 of 108 screen baselines and 12 e2e baselines had crept sub-threshold during this session's library work. |
 | 11 | `tree_view` indentation | **FIXED** by moving the row's label into a child, so the existing padding indents it. The general fix (padding insets an element's own label) was tried and reverted: 16 -> 72 warnings, because `Dim::Text` sizes to the label without reserving padding, so every hugging label overflows by construction. |
 | 12 | `expand()` 2px | **FIXED.** Not padding: grid snapping rounded to nearest, so `expand()` rounded up past the space. Snaps down now. |
 | 13 | `children()` measures short | **FIXED**, same cause as #12. Snaps up now, so it always contains its children. |
 | 14 | `toggle_switch` label width | **FIXED.** The hand math existed to dodge the #12 expand() bug; with that fixed, `expand()` gives byte-identical output. |
 | 15 | `toggle_switch` `\|`/`O` glyphs | **ALREADY FIXED** in `0ea239f`. The indicators are `std::optional` and opt-in; nothing hardcodes a glyph. Entry was stale. |
-| 16 | `text_input` ambient theme | **Theme-scope for any subtree** (`with_theme` on a config), not a text_input special case. Pairs with #1. |
+| 16 | `text_input` ambient theme | **FIXED** as `ThemeScope`, an RAII guard rather than a config field: children are built by their own calls after the parent's config is gone, so the theme has to be live for a scope. |
 | 17 | Headless animation frames | **FIXED.** The knob already existed (`animation::set_instant`) but the UI's declarative animations ran on a second integrator that ignored it, and wm never called it. Both now honour it. |
 | 18 | Metal re-init | **Fail loudly on a second `init()`** until someone root-causes it on a Metal consumer. |
 | 19 | Stale entries | **DONE.** headless-init superseded by #1; glyph section is now a font-assets note; #15 was already fixed. |
