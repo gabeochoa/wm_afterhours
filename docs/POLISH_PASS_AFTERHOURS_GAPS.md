@@ -503,6 +503,48 @@ changed it.
 
 ---
 
+## Three more cross-project reports that do not reproduce
+
+Checked against current afterhours with tests, not by reading.
+
+**floatinghotel: div backgrounds render opaque.** Fixed. This is the D1 sokol
+bug word for word: `sgl_defaults()` loaded a pipeline with blending off, so
+every alpha byte was discarded. Blending is on, and `sokol_blend_test` case 4
+asserts exactly their complaint, that a translucent div background is not
+filled opaque. 13/13.
+
+**kart: checkbox internal layout overflow.** Does not reproduce. A 240x32
+checkbox with a label gives two 120x32 children in a 240x32 row, fitting
+exactly. Covered in `sizing_repro_test`. kart already notes they stopped using
+`imm::checkbox`, so their report may predate a fix.
+
+**floatinghotel: row flex broken with expand() children.** Withdrawn, see its
+own entry above.
+
+The pattern across this survey: most of what the other repos have filed is
+already fixed, and their pins are what is stale. Worth checking a report
+against current afterhours before working it.
+
+---
+
+## Cartographer's e2e handlers, and what the library already does
+
+Their report is that command handlers must be registered per `SystemManager`,
+and a missed one makes the command silently do nothing.
+
+The library already ships `register_unknown_handler`, whose message names this
+exact cause: a custom handler registered after the builtins, or a command
+defined but not registered. So the diagnostic exists; it just has to be
+registered in each manager, which is the same per-manager burden the report is
+about.
+
+**Wanted:** a command registry that is not per-SystemManager, so registration
+happens once. That is a design change to the e2e plugin, filed rather than
+attempted. Their second ask, mouse delta through the action mapping system, is
+the same shape: a real gap needing a design, not a fix.
+
+---
+
 ## imm::slider overflows on paper and is corrected by the shrink pass
 
 kart-afterhours reports `slider_text` and `slider_background` each overflowing
@@ -616,8 +658,6 @@ predates the fixes. Still live, verified against current afterhours:
 |---|---|
 | hanabi #326 | virtualization assumes uniform row heights |
 | kart | `GetFontDefault()` returns an invalid font headless |
-| kart | checkbox internal layout overflow |
-| floatinghotel | div backgrounds render opaque, no alpha blend for overlays |
 | cartographer | e2e command handlers must be registered per SystemManager, and a missed one fails silently |
 | cartographer | mouse delta cannot go through the action mapping system |
 
