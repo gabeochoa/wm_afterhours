@@ -657,7 +657,6 @@ predates the fixes. Still live, verified against current afterhours:
 
 | source | gap |
 |---|---|
-| hanabi #326 | virtualization assumes uniform row heights |
 | kart | `GetFontDefault()` returns an invalid font headless |
 | cartographer | e2e command handlers must be registered per SystemManager, and a missed one fails silently |
 | cartographer | mouse delta cannot go through the action mapping system |
