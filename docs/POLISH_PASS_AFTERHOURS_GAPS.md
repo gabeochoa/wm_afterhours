@@ -667,6 +667,27 @@ own triage index. Anyone working upstream should start from
 
 ---
 
+## FIXED: text editing was opted into by enumerator name, silently
+
+Twelve features, `if constexpr (enum_contains<InputAction>("TextWordLeft"))`
+and friends, all through `text_input/component.h`. An `InputAction` that does
+not carry the name compiles the feature out: no error, no warning, nothing to
+grep. hanabi lost word editing for the life of the project and reported it as
+"alt-backspace never landed".
+
+The library already validated five widget action names this way and warned
+about them. The twelve text ones were never checked. They are now, reported
+together at init and naming exactly which features stopped existing.
+
+They stay optional rather than becoming errors, because an app with no text
+input should not be lectured twelve times.
+
+wm's enum is complete, so the warning is silent here. That means it was
+unexercised, so `text_action_names_test` pins both directions: `DefaultAction`
+carries all twelve, and a widgets-only enum is detected as missing all twelve.
+
+---
+
 ## DONE: audited composites for draws nobody can see
 
 `overdraw_audit_test` renders progress_bar (full and half), toggle_switch,
