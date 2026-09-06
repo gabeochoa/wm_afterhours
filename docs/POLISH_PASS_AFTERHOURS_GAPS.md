@@ -482,6 +482,35 @@ warning added for #3 is how a too-small request gets reported. Repro: remove
 
 ---
 
+## imm::slider overflows on paper and is corrected by the shrink pass
+
+kart-afterhours reports `slider_text` and `slider_background` each overflowing
+`slider`, 462 occurrences per run. The arithmetic is exactly as they describe:
+with a label, `slider_text` asks for `0.5 * config.size.x` and
+`slider_background` for `0.95 *` the same width, both in a `FlexDirection::Row`,
+so the children ask for 1.45x the parent.
+
+What the report does not say, and what an attempted fix showed, is that
+`solve_violations` then shrinks both proportionally. The label lands at ~34.5%
+and the track at ~65.5%, which is what every wm baseline encodes and what the
+sliders look like. wm logs no slider overflow at all.
+
+Giving the track the other half (`scale_x(0.5f)` when not compact) removes the
+paper overflow and **makes it look worse**: the track shrinks to half the row
+with a gap after it, because 0.5/0.5 is not the 34.5/65.5 the shrink pass was
+producing. Reverted.
+
+So this is warning noise plus arithmetic nobody chose, rather than a visual
+defect. Any real fix has to pick the split deliberately and rebaseline every
+slider, instead of making the numbers sum to 1.0 and accepting whatever falls
+out.
+
+**Also true and separate:** `inherit_from` forwards no colour, border or
+`on_draw_*`, so the track and handle are stuck on Theme Secondary/Primary and
+cannot be styled by the caller at all.
+
+---
+
 ## FIXED: apply_overrides dropped half of ComponentConfig
 
 43 of 86 members were never merged, so any element with a registered styling
@@ -562,7 +591,7 @@ predates the fixes. Still live, verified against current afterhours:
 | hanabi #210 | the sampler pool runs out at 64 before the texture pool does, and `load_texture` does not check it |
 | hanabi #326 | virtualization assumes uniform row heights |
 | kart | `GetFontDefault()` returns an invalid font headless |
-| kart | checkbox internal layout overflow; `imm::slider` with a label overflows its parent |
+| kart | checkbox internal layout overflow |
 | floatinghotel | div backgrounds render opaque, no alpha blend for overlays |
 | floatinghotel | row flex layout broken with `expand()` children |
 | cartographer | e2e command handlers must be registered per SystemManager, and a missed one fails silently |
