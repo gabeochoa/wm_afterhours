@@ -505,9 +505,14 @@ defect. Any real fix has to pick the split deliberately and rebaseline every
 slider, instead of making the numbers sum to 1.0 and accepting whatever falls
 out.
 
-**Also true and separate:** `inherit_from` forwards no colour, border or
-`on_draw_*`, so the track and handle are stuck on Theme Secondary/Primary and
-cannot be styled by the caller at all.
+**Fixed since:** the track, handle and label called `with_color_usage`
+unconditionally, which sets the usage and leaves `custom_color` populated and
+unread, so an inherited colour was accepted and ignored. They fill in the theme
+usage only when the caller gave no colour. `inherit_from` forwarding no colour
+or border was the other half of that report and is already fixed.
+
+`on_draw_bg`/`on_draw_fg` are still not inherited, and should not be: a
+composite would run the caller's callback once per internal part.
 
 ---
 
