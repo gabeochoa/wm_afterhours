@@ -447,24 +447,38 @@ an animation for its final value.
 
 ---
 
-## resolve_to_pixels returns an h720() font size as a raw fraction
+## FIXED: text_input resolved its font size through the wrong units
 
-`h720(20)` as a font size resolves to **0.028px** -- the 20/720 fraction handed
-back unscaled -- in the batched path's Adaptive branch
-(`rendering.h`, `resolve_to_pixels(cmp.font_size, ...)`). Two dialog screens do
-this today.
+`text_input` took `field_cmp.font_size.value` and re-wrapped it in `pixels()`,
+throwing the Dim away. An `h720()` font size carries the 20/720 fraction, so it
+resolved to **0.028px**.
 
-Nobody noticed because `font_size = std::max(explicit_font_size, MIN_FONT_SIZE)`
-turned 0.028 into 16 and drew something reasonable. The clamp has been hiding a
-unit bug, not just enforcing a floor.
+`MIN_FONT_SIZE` hid the drawn text, but the caret and selection geometry are
+computed from the unclamped value, so a selection collapsed to a blob over the
+first letter and the caret sat in the wrong place. Visible on `text_input_lab`
+and `dialog_prompt` the whole time.
 
-This is what blocks the rest of gap #3. Removing the clamp is the agreed
-direction and is a two-line change, but until the resolution is fixed it turns
-that text invisible rather than merely small. The warning added for #3 makes it
-visible in the meantime: it reports `text asks for 0.027777778px`.
+`resolve_to_pixels` itself was fine; the caller stripped the units.
 
-**Wanted:** font sizes resolved through the same units as everything else, then
-the clamp restricted to auto-fit where it belongs.
+---
+
+## Removing the MIN_FONT_SIZE clamp still breaks a screen
+
+This is what is left of gap #3, and the text_input fix above was only the first
+of its blockers.
+
+With the clamp removed, `sync_scroll_lab` loses every row label in all three
+panes. The screen asks for `with_font_size(11.f)` and `(12.f)` -- plain
+`pixels()`, nothing degenerate -- and a trace over every label under 8px on that
+screen finds **none**. So the labels are not being drawn tiny; they are not
+being drawn. Cause not identified.
+
+Four other screens shift by 0.06-0.25% and look fine.
+
+**Wanted:** find out why. Until then the clamp stays, and the readability
+warning added for #3 is how a too-small request gets reported. Repro: remove
+`std::max(explicit_font_size, MIN_FONT_SIZE)` in `rendering.h` and render
+`sync_scroll_lab`.
 
 ---
 
@@ -508,7 +522,17 @@ face, so the letter is what gets drawn.
 **Wanted:** either a symbol font that actually maps these, or components that
 draw their indicators rather than spelling them.
 
-## ThemeDefaults and UIStylingDefaults are process globals with no scoping
+## FIXED: ThemeDefaults and UIStylingDefaults were process globals with no scoping
+
+`ThemeDefaults` now separates `app_default` (persists) from `theme` (reset each
+frame), `UIContext::set_theme` writes both the context and the frame slot, and
+`PublishContextTheme` pushes the frame's theme to layout before it runs. A
+per-screen theme applies to sizing as well as colour, and dies with the frame.
+`ThemeScope` does the same for a subtree.
+
+`UIStylingDefaults` is still a plain global; wm restores it per screen.
+
+(original)
 
 Both are singletons that any screen can write and none restores. Layout reads
 `ThemeDefaults::get().theme.text_inset` and `ui_scale` directly
@@ -544,7 +568,23 @@ that assigning `context.theme` does not affect its own layout.
 
 ---
 
-## Layout and rendering resolve fonts differently
+## WITHDRAWN: layout and rendering resolve fonts differently
+
+I filed this as the blocker for #1 and repeated it several times. It is wrong.
+`Theme::get_font_config` has no callers outside `theme.h`, so the language map
+is never consulted by rendering and the two paths do not disagree about fonts.
+
+What actually broke `toasts` when the theme was published to layout: the
+screen's own theme carries `text_inset = 0` where the app's is `{5, 0}`, so its
+`Dim::Text` buttons measured 8-12px narrower -- and `Dim::Text` was snapping to
+*nearest*, landing below the string it was measured from. The third case of the
+grid-snapping bug, not a font bug. Fixed in `73ae84a`, after which #1 landed
+with no extra warnings.
+
+Recorded because the wrong diagnosis survived three retellings before anyone
+measured it.
+
+(original)
 
 Blocks the rest of gap #1. Layout measures a label with the font the element
 names (`with_font(DEFAULT_FONT, pixels(28))`); rendering resolves the font
@@ -569,7 +609,18 @@ Until then a theme cannot safely drive layout.
 
 ---
 
-## RenderCommandBuffer::sort() is dead code
+## FIXED: RenderCommandBuffer::sort() was dead code
+
+Never called, so every `layer` the batched collectors passed to the buffer was
+decorative -- which is how the focus ring shipped invisible. It also tiebroke on
+primitive type, which would have moved a scissor off what it clips the moment
+anyone called it.
+
+Sorts by layer only and stably now, behind
+`UIStylingDefaults::sort_draws_by_layer`, off by default. `draw_sort_test`
+covers ordering, stability within a layer, and the scissor case.
+
+(original)
 
 `sort()` (`render_primitives.h:457`) is never called from anywhere.
 `BatchedRenderer::render` walks `buffer.commands()` in insertion order and
