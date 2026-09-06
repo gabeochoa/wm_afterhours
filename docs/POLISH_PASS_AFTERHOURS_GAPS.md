@@ -482,6 +482,32 @@ warning added for #3 is how a too-small request gets reported. Repro: remove
 
 ---
 
+## FIXED: apply_overrides dropped half of ComponentConfig
+
+43 of 86 members were never merged, so any element with a registered styling
+default silently lost half its configuration. kart-afterhours reported ten of
+them, found because an opacity-and-translate slide-in did nothing on styled
+buttons; enumerating every member against the merge found the other 33.
+
+Safe to fix because almost nobody registers a default: of the twenty repos that
+vendor afterhours, four call `set_component_config`, cartographer's two are
+empty `ComponentConfig{}`, and the rest set only size, padding, colour and
+background, all of which were already forwarded. wm registers none, which is
+why the first ten-field fix produced zero baseline diff.
+
+**The list is still the defect.** A `static_assert` on `sizeof` now fires when
+the struct grows, verified by adding a field and watching it break the build.
+That is a reminder, not a fix: a set-flag per field, written by the `with_*`
+setters, would make the merge a loop over flags and an omission impossible.
+Filed as the TODO above the assert.
+
+Two other kart reports checked and already fixed upstream: `with_opacity`
+painting a dark box (`ad0390a`, scales alpha instead of replacing it) and
+`disable_rounded_corners` giving a rounded focus ring (fixed here, it was live
+on four wm screens).
+
+---
+
 ## Size loses its units at the boundary, in at least three places
 
 Three separate bugs, one shape: a `Size` gets reduced to `.value` and handed to
@@ -535,9 +561,6 @@ predates the fixes. Still live, verified against current afterhours:
 |---|---|
 | hanabi #210 | the sampler pool runs out at 64 before the texture pool does, and `load_texture` does not check it |
 | hanabi #326 | virtualization assumes uniform row heights |
-| kart | `with_opacity()` paints a dark rectangle over a transparent element |
-| kart | `disable_rounded_corners()` still gives a rounded focus ring |
-| kart | `UIStylingDefaults::apply_overrides` silently drops most visual fields |
 | kart | `GetFontDefault()` returns an invalid font headless |
 | kart | checkbox internal layout overflow; `imm::slider` with a label overflows its parent |
 | floatinghotel | div backgrounds render opaque, no alpha blend for overlays |
