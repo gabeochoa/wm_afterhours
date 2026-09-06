@@ -668,23 +668,27 @@ own triage index. Anyone working upstream should start from
 
 ---
 
-## TODO: audit components for draw-call short circuits
+## DONE: audited composites for draws nobody can see
 
-`progress_bar` was drawing a full-width fill on top of a track it exactly
-covered -- two identical boxes for every completed bar. Nothing was wrong with
-the output, so nothing flagged it.
+`overdraw_audit_test` renders progress_bar (full and half), toggle_switch,
+checkbox, slider and button, and reports any draw whose rect is fully contained
+by a later opaque draw on the same or a higher layer. All six are clean now
+that the progress bar is fixed.
 
-Worth a pass over every composite for the same shape: a layer that is fully
-occluded by the one above it, an overlay that matches its parent exactly, a
-decorative element drawn at zero size or zero alpha. Candidates by structure:
-`decorative_frame` (six layers, several fully covered at some settings),
-`toggle_switch` (track plus knob plus two optional indicators), `menu_list`
-(row fill under row background), `circular_progress`, and any component that
-emits a child sized `percent(1.0)` over an opaque parent.
+It reports rather than asserting a count, deliberately: a border under a fill
+is occluded on purpose, so a number would either be wrong or need constant
+updating. The list is the value.
 
-**Wanted:** the cheap version is an assertion-free audit; the durable version is
-a debug counter for draw calls per component so a regression shows up as a
-number rather than needing someone to notice.
+**It found a different bug on its way.** The audit died on `checkbox` with
+`map::at: key not found`, because `FontManager::get_active_font` warned that a
+font was missing and then called `fonts.at()` anyway, and `get_font` did the
+`.at()` with no check at all. A wrong font name took the app down instead of
+drawing in the wrong face. Same shape as `gen_first_enforce`: log the problem,
+then do the thing that fails. Both fall back now.
+
+**Not covered:** the per-component draw-call counter that would catch a
+regression as a number. Composites built from `div` rather than a named
+component are also not enumerated here.
 
 ---
 
