@@ -482,6 +482,27 @@ warning added for #3 is how a too-small request gets reported. Repro: remove
 
 ---
 
+## WITHDRAWN: row flex broken with expand() children
+
+floatinghotel reports that in a Row, an `expand()` child takes the full parent
+width instead of what fixed siblings leave, so `[status(16px) | filename]`
+pushes the status letter onto its own line. It does not reproduce.
+
+`sizing_repro_test` covers both shapes they name. A plain div Row gives the
+expander 184 of 200 with a 16px sibling. Their exact case, a `button` with Row
+children, gives 148, and 148 is correct: the button has 36px of padding and
+`expand()` fills the content box, not the border box. I asserted 184 there
+first and was wrong for the same reason they may have been.
+
+In neither case does the fixed sibling wrap. The test asserts that directly
+rather than a width, since the width depends on padding nobody should have to
+recompute.
+
+Their doc predates the grid-snapping fix, which is the likeliest thing to have
+changed it.
+
+---
+
 ## imm::slider overflows on paper and is corrected by the shrink pass
 
 kart-afterhours reports `slider_text` and `slider_background` each overflowing
@@ -597,7 +618,6 @@ predates the fixes. Still live, verified against current afterhours:
 | kart | `GetFontDefault()` returns an invalid font headless |
 | kart | checkbox internal layout overflow |
 | floatinghotel | div backgrounds render opaque, no alpha blend for overlays |
-| floatinghotel | row flex layout broken with `expand()` children |
 | cartographer | e2e command handlers must be registered per SystemManager, and a missed one fails silently |
 | cartographer | mouse delta cannot go through the action mapping system |
 
