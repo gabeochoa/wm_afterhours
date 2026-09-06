@@ -51,75 +51,18 @@ namespace {
 // Helper function to load fonts in headless mode
 // raylib's LoadFont/LoadFontEx fail to create textures in headless mode,
 // but manually creating the atlas and texture works
+// The library's loaders build the atlas by hand when there is no GL context,
+// so these just keep the names this file already uses.
 raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
-  raylib::Font font = {0};
-
-  int dataSize = 0;
-  unsigned char *fontData = raylib::LoadFileData(filename, &dataSize);
-  if (!fontData || dataSize <= 0) {
-    log_error("Failed to load font file: {}", filename);
-    return font;
-  }
-
-  font.baseSize = fontSize;
-  font.glyphCount = 95;
-  font.glyphPadding = 1;
-  font.glyphs = raylib::LoadFontData(fontData, dataSize, fontSize, nullptr, 95,
-                                     raylib::FONT_DEFAULT);
-
-  if (!font.glyphs) {
-    log_error("Failed to load font glyphs: {}", filename);
-    raylib::UnloadFileData(fontData);
-    return font;
-  }
-
-  raylib::Image atlas = raylib::GenImageFontAtlas(
-      font.glyphs, &font.recs, font.glyphCount, fontSize, 1, 0);
-  font.texture = raylib::LoadTextureFromImage(atlas);
-  raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_BILINEAR);
-
-  raylib::UnloadImage(atlas);
-  raylib::UnloadFileData(fontData);
-
-  return font;
+  return afterhours::load_font_from_file(filename, fontSize);
 }
 
-// Load font with specific codepoints for CJK support
 raylib::Font load_font_headless_with_codepoints(const char *filename,
                                                 const int *codepoints,
                                                 int codepointCount,
                                                 int fontSize = 32) {
-  raylib::Font font = {0};
-
-  int dataSize = 0;
-  unsigned char *fontData = raylib::LoadFileData(filename, &dataSize);
-  if (!fontData || dataSize <= 0) {
-    log_error("Failed to load font file: {}", filename);
-    return font;
-  }
-
-  font.baseSize = fontSize;
-  font.glyphCount = codepointCount;
-  font.glyphPadding = 1;
-  font.glyphs = raylib::LoadFontData(fontData, dataSize, fontSize,
-                                     const_cast<int *>(codepoints),
-                                     codepointCount, raylib::FONT_DEFAULT);
-
-  if (!font.glyphs) {
-    log_error("Failed to load font glyphs with codepoints: {}", filename);
-    raylib::UnloadFileData(fontData);
-    return font;
-  }
-
-  raylib::Image atlas = raylib::GenImageFontAtlas(
-      font.glyphs, &font.recs, font.glyphCount, fontSize, 1, 0);
-  font.texture = raylib::LoadTextureFromImage(atlas);
-  raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_BILINEAR);
-
-  raylib::UnloadImage(atlas);
-  raylib::UnloadFileData(fontData);
-
-  return font;
+  return afterhours::load_font_from_file_with_codepoints(
+      filename, const_cast<int *>(codepoints), codepointCount, fontSize);
 }
 
 // Load all fonts using the shared font configuration

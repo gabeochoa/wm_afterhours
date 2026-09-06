@@ -96,82 +96,6 @@ namespace {
 // Helper function to load fonts in headless mode
 // raylib's LoadFont/LoadFontEx fail to create textures in headless mode,
 // but manually creating the atlas and texture works
-raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
-  raylib::Font font = {0};
-
-  int dataSize = 0;
-  unsigned char *fontData = raylib::LoadFileData(filename, &dataSize);
-  if (!fontData || dataSize <= 0) {
-    log_error("Failed to load font file: {}", filename);
-    return font;
-  }
-
-  // The same ranges the windowed loader uses, or headless renders ASCII while
-  // the real window renders arrows and chevrons, and a screenshot test can
-  // never see the difference.
-  std::vector<int> cps = afterhours::default_codepoints();
-  font.baseSize = fontSize;
-  font.glyphCount = static_cast<int>(cps.size());
-  font.glyphPadding = 1;
-  font.glyphs =
-      raylib::LoadFontData(fontData, dataSize, fontSize, cps.data(),
-                           static_cast<int>(cps.size()), raylib::FONT_DEFAULT);
-
-  if (!font.glyphs) {
-    log_error("Failed to load font glyphs: {}", filename);
-    raylib::UnloadFileData(fontData);
-    return font;
-  }
-
-  raylib::Image atlas = raylib::GenImageFontAtlas(
-      font.glyphs, &font.recs, font.glyphCount, fontSize, 1, 0);
-  font.texture = raylib::LoadTextureFromImage(atlas);
-  raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_BILINEAR);
-
-  raylib::UnloadImage(atlas);
-  raylib::UnloadFileData(fontData);
-
-  return font;
-}
-
-// Load font with specific codepoints for CJK support in headless mode
-raylib::Font load_font_headless_with_codepoints(const char *filename,
-                                                const int *codepoints,
-                                                int codepointCount,
-                                                int fontSize = 32) {
-  raylib::Font font = {0};
-
-  int dataSize = 0;
-  unsigned char *fontData = raylib::LoadFileData(filename, &dataSize);
-  if (!fontData || dataSize <= 0) {
-    log_error("Failed to load font file: {}", filename);
-    return font;
-  }
-
-  font.baseSize = fontSize;
-  font.glyphCount = codepointCount;
-  font.glyphPadding = 1;
-  font.glyphs = raylib::LoadFontData(fontData, dataSize, fontSize,
-                                     const_cast<int *>(codepoints),
-                                     codepointCount, raylib::FONT_DEFAULT);
-
-  if (!font.glyphs) {
-    log_error("Failed to load font glyphs with codepoints: {}", filename);
-    raylib::UnloadFileData(fontData);
-    return font;
-  }
-
-  raylib::Image atlas = raylib::GenImageFontAtlas(
-      font.glyphs, &font.recs, font.glyphCount, fontSize, 1, 0);
-  font.texture = raylib::LoadTextureFromImage(atlas);
-  raylib::SetTextureFilter(font.texture, raylib::TEXTURE_FILTER_BILINEAR);
-
-  raylib::UnloadImage(atlas);
-  raylib::UnloadFileData(fontData);
-
-  return font;
-}
-
 } // namespace
 
 void apply_ui_styling_defaults() {
@@ -254,47 +178,21 @@ Preload &Preload::make_singleton() {
         200);
     ui::init_ui_plugin<InputAction>();
 
-    // Load all fonts using the shared font configuration
-    // In headless mode, use special font loading that works without a window
     auto &font_mgr = *EntityHelper::get_singleton_cmp<ui::FontManager>();
-    bool is_headless = afterhours::graphics::is_headless();
 
     for (const auto &font_def : font_config::get_all_fonts()) {
       std::string path =
           files::get_resource_path("fonts", font_def.filename).string();
 
-      if (is_headless) {
-        // Headless mode: use manual font loading that creates textures properly
-        if (font_def.needs_codepoints && font_def.get_codepoints) {
-          auto codepoints = font_def.get_codepoints();
-          raylib::Font font = load_font_headless_with_codepoints(
-              path.c_str(), codepoints.data(),
-              static_cast<int>(codepoints.size()));
-          if (font.glyphCount > 0) {
-            font_mgr.load_font(font_def.name, font);
-          } else {
-            log_warn("[Preload] Failed to load CJK font in headless: {}",
-                     font_def.name);
-          }
-        } else {
-          raylib::Font font = load_font_headless(path.c_str());
-          if (font.glyphCount > 0) {
-            font_mgr.load_font(font_def.name, font);
-          } else {
-            log_warn("[Preload] Failed to load font in headless: {}",
-                     font_def.name);
-          }
-        }
+      // One path: the library's loader builds the atlas by hand when there
+      // is no GL context to make a texture in.
+      if (font_def.needs_codepoints && font_def.get_codepoints) {
+        auto codepoints = font_def.get_codepoints();
+        font_mgr.load_font_with_codepoints(
+            font_def.name, path.c_str(), codepoints.data(),
+            static_cast<int>(codepoints.size()));
       } else {
-        // Normal windowed mode: use standard raylib font loading
-        if (font_def.needs_codepoints && font_def.get_codepoints) {
-          auto codepoints = font_def.get_codepoints();
-          font_mgr.load_font_with_codepoints(
-              font_def.name, path.c_str(), codepoints.data(),
-              static_cast<int>(codepoints.size()));
-        } else {
-          font_mgr.load_font(font_def.name, path.c_str());
-        }
+        font_mgr.load_font(font_def.name, path.c_str());
       }
     }
 
