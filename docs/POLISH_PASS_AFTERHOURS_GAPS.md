@@ -588,7 +588,6 @@ predates the fixes. Still live, verified against current afterhours:
 
 | source | gap |
 |---|---|
-| hanabi #210 | the sampler pool runs out at 64 before the texture pool does, and `load_texture` does not check it |
 | hanabi #326 | virtualization assumes uniform row heights |
 | kart | `GetFontDefault()` returns an invalid font headless |
 | kart | checkbox internal layout overflow |
