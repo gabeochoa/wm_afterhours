@@ -32,9 +32,7 @@ struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
   bool visible = true;
   int current_index = 0;
 
-  // Set by the app: what to do when a row is picked. Invoked through
-  // UIContext::defer, because swapping the screen system while the manager is
-  // mid-iteration frees the object the cycler still points at.
+  // Deferred: swapping mid-iteration frees what the cycler still points at.
   std::function<void(int)> on_pick;
 
   void build_rows(const std::vector<std::string> &names) {
