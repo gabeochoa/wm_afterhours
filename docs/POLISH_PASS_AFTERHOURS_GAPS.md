@@ -462,23 +462,24 @@ and `dialog_prompt` the whole time.
 
 ---
 
-## Removing the MIN_FONT_SIZE clamp still breaks a screen
+## FIXED: the MIN_FONT_SIZE clamp, and what it was hiding
 
-This is what is left of gap #3, and the text_input fix above was only the first
-of its blockers.
+The clamp on explicit font sizes is gone, which is the rest of gap #3.
 
-With the clamp removed, `sync_scroll_lab` loses every row label in all three
-panes. The screen asks for `with_font_size(11.f)` and `(12.f)` -- plain
-`pixels()`, nothing degenerate -- and a trace over every label under 8px on that
-screen finds **none**. So the labels are not being drawn tiny; they are not
-being drawn. Cause not identified.
+It could not be removed before because `sync_scroll_lab` lost every row label.
+The cause was two guards, `rendering.h:796` and `:2263`, that skipped the draw
+when `result.rect.height < MIN_FONT_SIZE`, under a comment reading "Don't
+attempt to render if font size is effectively zero". The floor is not zero. Any
+text below it was silently not drawn, and the clamp was the only thing keeping
+that from happening.
 
-Four other screens shift by 0.06-0.25% and look fine.
+Worse, the guard tests the *positioned height*, not the font size, so it fired
+even with the clamp in place: `sync_scroll_lab` has been shipping with every row
+label and its entire group-2 table invisible, and the committed baseline
+recorded that as correct.
 
-**Wanted:** find out why. Until then the clamp stays, and the readability
-warning added for #3 is how a too-small request gets reported. Repro: remove
-`std::max(explicit_font_size, MIN_FONT_SIZE)` in `rendering.h` and render
-`sync_scroll_lab`.
+Both guards test for effectively zero now. Four screens changed, all gaining
+text or rendering it at the size actually requested.
 
 ---
 
