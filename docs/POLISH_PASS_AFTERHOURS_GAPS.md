@@ -482,6 +482,75 @@ warning added for #3 is how a too-small request gets reported. Repro: remove
 
 ---
 
+## Size loses its units at the boundary, in at least three places
+
+Three separate bugs, one shape: a `Size` gets reduced to `.value` and handed to
+something expecting pixels. `Dim::ScreenPercent` stores a *fraction*, so
+`h720(20)` is `0.0278`, and the result is a silently tiny number rather than an
+error.
+
+- `text_input` font size: re-wrapped `.value` in `pixels()`. Resolved to
+  0.028px, which `MIN_FONT_SIZE` hid for the drawn text while the caret and
+  selection stayed wrong. Fixed in `b3c94ba`.
+- `with_gap`: three call sites passed `.value` to a float overload. A
+  `h720(10)` gap became 0.014px, so the caller saw no gap. Reported by
+  kart-afterhours, fixed.
+- `translate_x`: see below, blocked on the axis question.
+
+**Wanted:** the float overloads of `resolve_pixels` are the trap. Anything
+holding a `Size` should pass the `Size`. Worth auditing every `.value` that
+feeds a pixel computation.
+
+---
+
+## ScreenPercent does not know which axis it is relative to
+
+`h720(px)` and `w1280(px)` both return `Dim::ScreenPercent` and differ only in
+what they divided by, so at resolve time they are indistinguishable and the
+caller has to supply the matching screen dimension. `layout_types.h:175` says so
+outright: "given a screen dimension (height for h720, width for w1280)".
+
+`component_init.h:462` resolves **both** translate axes against `screen_height`.
+For `h720()` that is right. For `w1280(100)` on x it yields 56px at 1280x720,
+and `screen_pct(0.5)` on x yields 360 instead of 640.
+
+Reported by kart-afterhours as "`with_absolute_position()` resolves x against
+the screen height". Confirmed, but the one-line fix (pass width for x) just
+inverts which spelling is broken, because the type cannot say what it meant.
+
+**Wanted:** an axis on `ScreenPercent`, set at construction, so `h720` is
+Y-relative and `w1280` is X-relative and neither depends on the call site
+passing the right dimension. That is a change to `Size`, so it is filed rather
+than attempted.
+
+---
+
+## Gaps other projects filed that are still open here
+
+Surveyed the ten gap docs across the twenty repos that vendor afterhours.
+Most of hanabi's ranked top ten is already fixed upstream; its pin (`428047e`)
+predates the fixes. Still live, verified against current afterhours:
+
+| source | gap |
+|---|---|
+| hanabi #210 | the sampler pool runs out at 64 before the texture pool does, and `load_texture` does not check it |
+| hanabi #326 | virtualization assumes uniform row heights |
+| kart | `with_opacity()` paints a dark rectangle over a transparent element |
+| kart | `disable_rounded_corners()` still gives a rounded focus ring |
+| kart | `UIStylingDefaults::apply_overrides` silently drops most visual fields |
+| kart | `GetFontDefault()` returns an invalid font headless |
+| kart | checkbox internal layout overflow; `imm::slider` with a label overflows its parent |
+| floatinghotel | div backgrounds render opaque, no alpha blend for overlays |
+| floatinghotel | row flex layout broken with `expand()` children |
+| cartographer | e2e command handlers must be registered per SystemManager, and a missed one fails silently |
+| cartographer | mouse delta cannot go through the action mapping system |
+
+hanabi's `afterhours_gaps.md` is 14,792 lines and 251 numbered entries, with its
+own triage index. Anyone working upstream should start from
+`hanabi/afterhours_gaps_index.md` section 1 rather than this file.
+
+---
+
 ## TODO: audit components for draw-call short circuits
 
 `progress_bar` was drawing a full-width fill on top of a track it exactly
