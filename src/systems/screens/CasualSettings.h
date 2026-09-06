@@ -325,7 +325,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto left_col =
         vstack(context, mk(menu_row.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(285), percent(1.0f)})
+                   // w1280, not pixels: the buttons inside are
+                   // with_720p_size, so a fixed column let them grow past it
+                   // at any scale above 1.
+                   .with_size(ComponentSize{w1280(285), percent(1.0f)})
                    .with_no_wrap()
                    .with_debug_name("menu_left"));
 
@@ -336,7 +339,10 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto right_col =
         vstack(context, mk(menu_row.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(285), percent(1.0f)})
+                   // w1280, not pixels: the buttons inside are
+                   // with_720p_size, so a fixed column let them grow past it
+                   // at any scale above 1.
+                   .with_size(ComponentSize{w1280(285), percent(1.0f)})
                    .with_no_wrap()
                    .with_debug_name("menu_right"));
 
@@ -421,8 +427,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                  .with_custom_text_color(white)
                  .with_alignment(TextAlignment::Center)
                  .with_rounded_corners(RoundedCorners())
-                 .with_roundness(0.4f)
-                 .with_margin(Margin{.left = pixels(5)}));
+                 .with_roundness(0.4f));
     };
 
     make_footer_btn(3, "OK", btn_green, btn_green_dark);

@@ -667,6 +667,41 @@ own triage index. Anyone working upstream should start from
 
 ---
 
+## FIXED: nothing asked whether a widget was inside its parent
+
+`assert_no_overflow` measured every element against the **viewport**, so a row
+overflowing a panel in the middle of the screen passed it. hanabi reported that
+on "many buttons are going outside the bounds" it named 1 of 55.
+
+`assert_within_parents` adds the content-box comparison. Under a new name
+rather than inside `assert_no_overflow` as hanabi asked: that command means the
+viewport in every script in every project that calls it, and wm's own
+responsive audit says so in its header. Quietly changing what an assertion
+asserts is worse than a second name.
+
+It skips a scrolling or clipping parent, an absolutely positioned child, and
+the root, since overflow is the point in all three, and uses a looser tolerance
+than the viewport check because the content box is rect minus padding and each
+term rounds separately above 1x scale.
+
+**It immediately found real bugs in wm**, both mixed-unit:
+- `casual_settings`' footer group was sized for three buttons plus two gaps,
+  while each button also carried a 5px left margin, so the row was 234 wide in
+  a 232 box.
+- Its menu columns were `pixels(285)` holding `with_720p_size` buttons. At
+  1920x1080 the buttons grew to 420 and the column stayed 285, so five buttons
+  hung 135px outside it, on screen the whole time.
+
+Both fixed, covered by `36_parent_containment` at 720p and 1080p.
+
+**Not fixed, and the reason this is opt-in:** the other settings screens have
+the same shape. `powerwash_settings`' `main_panel` is 570 tall in a 380 content
+box at 1080p. Mixing `with_720p_size` children with fixed-pixel parents comes
+apart at any scale above 1, and wm has that in several places. That is a
+focused responsive pass, not a gap fix, and the assertion is ready for it.
+
+---
+
 ## FIXED: text editing was opted into by enumerator name, silently
 
 Twelve features, `if constexpr (enum_contains<InputAction>("TextWordLeft"))`
