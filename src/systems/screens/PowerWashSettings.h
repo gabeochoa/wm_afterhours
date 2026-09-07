@@ -157,7 +157,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         hstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(380)})
+                   .with_size(ComponentSize{percent(1.0f), h720(380)})
                    .with_align_items(AlignItems::FlexStart)
                    .with_no_wrap()
                    .with_margin(Margin{.top = pixels(5)})
