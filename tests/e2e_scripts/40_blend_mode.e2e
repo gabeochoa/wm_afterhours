@@ -1,0 +1,23 @@
+# blend::Mode, blend_scope, and the transition counter.
+#
+# Blend state used to sit outside the wrapper, so reaching it meant naming
+# raylib:: directly, which forfeits sokol and hides the state change from the
+# library. Hidden, a redundant transition cannot be skipped: puzzle paid
+# 2.372ms of BeginBlendMode and 1.452ms of EndBlendMode to issue 0.005ms of
+# blits.
+#
+# The count in the title is deterministic and decomposes: 6 for the swatches
+# (Alpha costs nothing, it is already active), 16 for the row that wraps each
+# blit, 2 for the row that hoists one scope round all eight. That 16-vs-2 is
+# the entire gap.
+
+goto_screen blend_mode_lab
+wait 0.6
+validate_screen blend_mode_lab
+assert_within_parents
+
+resize 1920 1080
+wait 0.3
+assert_within_parents
+resize 1280 720
+wait 0.3
