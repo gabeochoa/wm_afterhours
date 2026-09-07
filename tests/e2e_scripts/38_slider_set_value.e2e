@@ -1,0 +1,21 @@
+# set_slider used to be `(void)value;` and a click on the centre, so it set 0.5
+# whatever it was asked for and every assertion after it passed by accident.
+#
+# 0.5 would still pass against the old code, so these deliberately do not use
+# it: 0.25 and 0.9 both fail unless the value is actually honoured.
+
+goto_screen forms
+wait 0.5
+
+set_slider volume_slider 0.25
+wait 0.2
+expect_slider volume_slider 0.25 0.05
+
+set_slider volume_slider 0.9
+wait 0.2
+expect_slider volume_slider 0.9 0.05
+
+# Ends clamp rather than running past.
+set_slider brightness_slider 0.0
+wait 0.2
+expect_slider brightness_slider 0.0 0.05
