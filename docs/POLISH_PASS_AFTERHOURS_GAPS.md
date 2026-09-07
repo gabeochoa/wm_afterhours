@@ -667,6 +667,33 @@ own triage index. Anyone working upstream should start from
 
 ---
 
+## CHECKED: the progress bar was the only composite drawing a hidden box
+
+The 100% progress bar painted a full-width fill over a track it covered
+exactly, and nothing caught it because the pixels were right. The obvious
+question is how many other composites do that, so the audit went from six
+widgets to 22: every composite that stacks boxes, plus the edge states, since
+100% was the state that had the bug.
+
+**Answer: none of them.** All 22 clean, including 0% and 100% progress, both
+circular ends, both checkbox and toggle states, and slider at 0, mid and 1.
+The 0% bar already skips its fill rather than emitting a zero-width one.
+
+The first run said otherwise, and it was worth more than the clean one:
+
+- **39 "zero area" reports, all text.** The capture backend records text as a
+  zero-width rect because it has no font to measure with
+  (`backends/none/drawing_helpers.h:54`). A placeholder, read as a measurement.
+- **3 radio_group "fully hidden" reports.** A filled circle under a
+  `rectangle_rounded_lines` of the identical rect. The occlusion check tested
+  alpha and called any opaque draw a filler, but an outline paints its border
+  and leaves the middle alone. It hides nothing.
+
+Both are now excluded by name in the detector, so the audit reports what it can
+actually see rather than what it can merely list.
+
+---
+
 ## FIXED: a capped box wrapped against the width it was not going to keep
 
 hanabi #136 asked for `fit_content(max)`: hug the text, cap at a maximum, wrap
