@@ -215,14 +215,14 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
 
     auto brow = hstack(context, mk(right.ent(), 5),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), pixels(52)})
+                           .with_size(ComponentSize{percent(1.f), h720(52)})
                            .with_no_wrap()
                            .with_debug_name("wg_iconbtns"));
 
     button(context, mk(brow.ent(), 0),
            ComponentConfig{}
                .with_label("Save")
-               .with_size(ComponentSize{pixels(150), pixels(46)})
+               .with_720p_size(150, 46)
                .with_icon(gear, whole(gear))
                .with_icon_position(IconPosition::Left)
                .with_corner_radius(8.f)
@@ -232,7 +232,7 @@ struct WidgetGapGallery : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(brow.ent(), 1),
            ComponentConfig{}
                .with_label("Next")
-               .with_size(ComponentSize{pixels(150), pixels(46)})
+               .with_720p_size(150, 46)
                .with_icon(star, whole(star))
                .with_icon_position(IconPosition::Right)
                .with_corner_radius(8.f)
