@@ -208,3 +208,12 @@ assert_within_parents
 resize 1920 1080
 wait 0.2
 assert_within_parents
+
+goto_screen scrollbar_style_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents

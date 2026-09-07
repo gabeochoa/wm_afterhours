@@ -1,0 +1,17 @@
+# The scrollbar colour knobs on HasScrollView. wordproc could set thickness and
+# nothing else, so a bar could not be made to match its panel.
+#
+# Four panes: default, a theme usage, explicit colours, and a thick bar with a
+# transparent track. Containment at both sizes, since a bar is positioned from
+# the view's rect and that is where the resolution bugs lived.
+
+goto_screen scrollbar_style_lab
+wait 0.5
+assert_within_parents
+validate_screen scrollbar_style_lab
+
+resize 1920 1080
+wait 0.3
+assert_within_parents
+resize 1280 720
+wait 0.3
