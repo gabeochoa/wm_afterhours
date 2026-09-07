@@ -62,7 +62,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main.ent(), 0),
         ComponentConfig{}
             .with_label("Dropdown Showcase")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), h720(50)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -342,7 +342,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_custom_background(
                 afterhours::colors::lighten(context.theme.background, 0.08f))
             .with_auto_text_color(true)

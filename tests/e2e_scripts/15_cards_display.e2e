@@ -16,11 +16,13 @@ expect_text "Card"
 assert_ui cards_bg w=1152 h=648
 
 # Row heights
-assert_ui row1_cards h=150
-assert_ui row2_nested h=165
+# 152, not 150: same reason as 02, h720(150) snaps up to the grid.
+assert_ui row1_cards h=152
+# 164, not 165: h720(165) snaps down to the 4px grid.
+assert_ui row2_nested h=164
 
 # Title: percent(0.95) x pixels(50)
-assert_ui_text "Cards & Panels Gallery" h=50
+assert_ui_text "Cards & Panels Gallery" h=52
 
 # Card items: pixels(140) x pixels(100)
 assert_ui_text "Surface" w=140 h=100
@@ -39,7 +41,7 @@ assert_ui nested_container h=140
 assert_ui info_panel h=144
 
 # Row 3: percent(0.95) x pixels(70)
-assert_ui row3_themes h=70
+assert_ui row3_themes h=72
 
 screenshot cards_display
 

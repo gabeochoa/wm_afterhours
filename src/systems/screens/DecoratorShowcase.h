@@ -175,7 +175,7 @@ struct DecoratorShowcase : ScreenSystem<UIContext<InputAction>> {
       auto panel =
           hstack(context, mk(col1.ent(), 3),
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(0.88f), pixels(55.0f)})
+                     .with_size(ComponentSize{percent(0.88f), h720(55.0)})
                      .with_custom_background(C{12, 22, 16, 255})
                      .with_border(C{30, 55, 35, 255}, 1.0f)
                      .with_rounded_corners(RoundedCorners().all_sharp())

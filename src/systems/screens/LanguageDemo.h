@@ -317,7 +317,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
         vstack(context, mk(main.ent(), 2),
                ComponentConfig{}
                    // 70 (was 55) to hold two 16px lines; content trimmed to 410
-                   .with_size(ComponentSize{percent(1.0f), pixels(70)})
+                   .with_size(ComponentSize{percent(1.0f), h720(70)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::xs));
 

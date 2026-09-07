@@ -46,7 +46,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Button Gallery")
-            .with_size(ComponentSize{percent(1.0f), pixels(70)})
+            .with_size(ComponentSize{percent(1.0f), h720(70)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -59,7 +59,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 1: Basic button states
     auto row1 = hstack(context, mk(main_container.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -141,7 +141,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 2: Different sizes - AlignItems::Center vertically centers buttons
     auto row2 = hstack(context, mk(main_container.ent(), 2),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                           .with_size(ComponentSize{percent(1.0f), h720(90)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -163,7 +163,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     if (button(context, mk(row2.ent(), 1),
                ComponentConfig{}
                    .with_label("Small")
-                   .with_size(ComponentSize{pixels(90), pixels(45)})
+                   .with_size(ComponentSize{pixels(90), h720(45)})
                    .with_background(Theme::Usage::Primary)
                    .with_auto_text_color(true)
                    .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
@@ -205,7 +205,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 3: Button group - need more height to accommodate the group
     auto row3 = hstack(context, mk(main_container.ent(), 3),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                           .with_size(ComponentSize{percent(1.0f), h720(100)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -264,7 +264,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 4: Custom styled buttons
     auto row4 = hstack(context, mk(main_container.ent(), 4),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -349,7 +349,7 @@ struct ButtonsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 5),
         ComponentConfig{}
             .with_label(counter_text)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.background, 0.08f))
             .with_auto_text_color(true)

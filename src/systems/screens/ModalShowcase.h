@@ -67,7 +67,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Modal Dialogs")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), h720(50)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -82,7 +82,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     auto row1 = hstack(context, mk(main_container.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -126,7 +126,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     auto row2 = hstack(context, mk(main_container.ent(), 2),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -185,7 +185,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     auto row3 = hstack(context, mk(main_container.ent(), 3),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -218,7 +218,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     // =========================================================================
     auto row4 = hstack(context, mk(main_container.ent(), 4),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::sm)
                            .with_align_items(AlignItems::Center)
@@ -249,7 +249,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(row4.ent(), 2),
         ComponentConfig{}
             .with_label("Clicks: " + std::to_string(background_click_count))
-            .with_size(ComponentSize{pixels(120), pixels(40)})
+            .with_size(ComponentSize{pixels(120), h720(40)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.background, 0.15f))
             .with_auto_text_color(true)
@@ -283,7 +283,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                         " | FYI: " + fyi_result_str +
                         " | OK:" + std::to_string(confirm_count) +
                         " X:" + std::to_string(cancel_count))
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.background, 0.08f))
             .with_auto_text_color(true)
@@ -307,7 +307,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(m.ent(), 0),
           ComponentConfig{}
               .with_label("This is a simple modal dialog.")
-              .with_size(ComponentSize{percent(1.0f), pixels(60)})
+              .with_size(ComponentSize{percent(1.0f), h720(60)})
               .with_auto_text_color(true)
               .with_padding(Spacing::md)
               .with_render_layer(MODAL_CONTENT_LAYER));

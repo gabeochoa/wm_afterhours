@@ -43,7 +43,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Toast Notifications")
-            .with_size(ComponentSize{percent(1.0f), pixels(60)})
+            .with_size(ComponentSize{percent(1.0f), h720(60)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::md)
@@ -60,7 +60,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section1 =
         vstack(context, mk(main_container.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(140)})
+                   .with_size(ComponentSize{percent(1.0f), h720(140)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.1f)
@@ -70,7 +70,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section1.ent(), 0),
         ComponentConfig{}
             .with_label("SIMPLE TOASTS")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -146,7 +146,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section2 =
         vstack(context, mk(main_container.ent(), 2),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(140)})
+                   .with_size(ComponentSize{percent(1.0f), h720(140)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.1f)
@@ -160,7 +160,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section2.ent(), 0),
         ComponentConfig{}
             .with_label("DURATION & SPAM")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -247,7 +247,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     auto section3 =
         vstack(context, mk(main_container.ent(), 3),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(140)})
+                   .with_size(ComponentSize{percent(1.0f), h720(140)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_roundness(0.1f)
@@ -261,7 +261,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(section3.ent(), 0),
         ComponentConfig{}
             .with_label("INTERACTIVE TOASTS")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)

@@ -93,7 +93,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main.ent(), 0),
         ComponentConfig{}
             .with_label("Advanced Modals")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
+            .with_size(ComponentSize{percent(1.0f), h720(50)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -103,7 +103,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     auto grid_top = hstack(
         context, mk(main.ent(), 1),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(80)})
+            .with_size(ComponentSize{percent(1.0f), h720(80)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_align_items(AlignItems::Center)
@@ -142,7 +142,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     auto grid_bot = hstack(
         context, mk(main.ent(), 2),
         ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(80)})
+            .with_size(ComponentSize{percent(1.0f), h720(80)})
             .with_background(Theme::Usage::Surface)
             .with_padding(Spacing::sm)
             .with_align_items(AlignItems::Center)
@@ -191,7 +191,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main.ent(), 3),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
+            .with_size(ComponentSize{percent(1.0f), h720(40)})
             .with_custom_background(
                 afterhours::colors::lighten(theme.background, 0.08f))
             .with_auto_text_color(true)
@@ -442,7 +442,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(m.ent(), 3),
             ComponentConfig{}
                 .with_label(summary)
-                .with_size(ComponentSize{percent(1.0f), pixels(100)})
+                .with_size(ComponentSize{percent(1.0f), h720(100)})
                 .with_custom_background(
                     afterhours::colors::lighten(theme.surface, 0.05f))
                 .with_auto_text_color(true)

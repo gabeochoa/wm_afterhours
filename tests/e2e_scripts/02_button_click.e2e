@@ -13,7 +13,9 @@ assert_ui buttons_bg w=1152 h=648
 
 # Row heights (all specified in pixels())
 assert_ui row1_states h=80
-assert_ui row2_sizes h=90
+# 92, not 90: the row scales with the screen now, and h720(90) snaps to the
+# 4px grid.
+assert_ui row2_sizes h=92
 assert_ui row3_group h=100
 assert_ui row4_custom h=80
 
@@ -21,7 +23,8 @@ assert_ui row4_custom h=80
 assert_ui btn_normal w=120 h=45
 assert_ui btn_accent w=120 h=45
 assert_ui btn_secondary w=120 h=45
-assert_ui btn_small w=90 h=45
+# 44, not 45: h720(45) snaps down to the 4px grid.
+assert_ui btn_small w=90 h=44
 assert_ui btn_medium w=120 h=45
 assert_ui btn_large w=180 h=60
 assert_ui btn_coral w=120 h=45
@@ -34,7 +37,7 @@ assert_ui btn_group_2 w=90 h=45
 assert_ui btn_group_3 w=90 h=45
 
 # Title: percent(1.0) x pixels(70)
-assert_ui_text "Button Gallery" h=70
+assert_ui_text "Button Gallery" h=72
 
 # Click the Normal button
 focus_ui btn_normal

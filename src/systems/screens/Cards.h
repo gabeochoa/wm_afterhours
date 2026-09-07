@@ -15,7 +15,7 @@ inline ComponentConfig CardConfig(const std::string &label,
                                   Theme::Usage bg = Theme::Usage::Surface) {
   return ComponentConfig{}
       .with_label(label)
-      .with_size(ComponentSize{pixels(140), pixels(100)})
+      .with_size(ComponentSize{pixels(140), h720(100)})
       .with_background(bg)
       .with_border(afterhours::Color{150, 130, 115, 255}, 1.0f)
       .with_padding(Spacing::md)
@@ -45,7 +45,7 @@ inline ComponentConfig InnerCardConfig(const std::string &label,
 inline ComponentConfig PanelTitleConfig(const std::string &label) {
   return ComponentConfig{}
       .with_label(label)
-      .with_size(ComponentSize{percent(0.95f), pixels(32)})
+      .with_size(ComponentSize{percent(0.95f), h720(32)})
       .with_background(Theme::Usage::Surface)
       .with_auto_text_color(true)
       .with_padding(Spacing::xs)
@@ -105,7 +105,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Cards & Panels Gallery")
-            .with_size(ComponentSize{percent(0.95f), pixels(50)})
+            .with_size(ComponentSize{percent(0.95f), h720(50)})
             .with_background(Theme::Usage::Primary)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -114,7 +114,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 1: Basic cards - all simple like theme swatches
     auto row1 = hstack(context, mk(main_container.ent(), 1),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(150)})
+                           .with_size(ComponentSize{percent(1.0f), h720(150)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::xs)
                            .with_align_items(AlignItems::Center)
@@ -149,7 +149,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 2: Nested cards
     auto row2 = hstack(context, mk(main_container.ent(), 2),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(165)})
+                           .with_size(ComponentSize{percent(1.0f), h720(165)})
                            // Surface like rows 1 and 3: with None, this row's
                            // "Nested:" chip floated on the page background
                            // while its sibling chips sat inside a card.
@@ -235,7 +235,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
     // Row 3: Theme comparison
     auto row3 = hstack(context, mk(main_container.ent(), 3),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.95f), pixels(70)})
+                           .with_size(ComponentSize{percent(0.95f), h720(70)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::xs)
                            .with_align_items(AlignItems::Center)

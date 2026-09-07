@@ -35,7 +35,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 0),
         ComponentConfig{}
             .with_label("Layout System Demo")
-            .with_size(ComponentSize{percent(0.95f), pixels(48)})
+            .with_size(ComponentSize{percent(0.95f), h720(48)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::sm)
@@ -46,7 +46,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto row_container =
         hstack(context, mk(main_container.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.95f), pixels(120)})
+                   .with_size(ComponentSize{percent(0.95f), h720(120)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_justify_content(JustifyContent::Center)
@@ -57,7 +57,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row_container.ent(), 0),
            ComponentConfig{}
                .with_label("Left Panel")
-               .with_size(ComponentSize{pixels(180), pixels(80)})
+               .with_size(ComponentSize{pixels(180), h720(80)})
                .with_background(Theme::Usage::Primary)
                .with_auto_text_color(true)
                .with_padding(Spacing::sm)
@@ -67,7 +67,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row_container.ent(), 1),
            ComponentConfig{}
                .with_label("Center Panel")
-               .with_size(ComponentSize{pixels(180), pixels(80)})
+               .with_size(ComponentSize{pixels(180), h720(80)})
                .with_background(Theme::Usage::Secondary)
                .with_auto_text_color(true)
                .with_padding(Spacing::sm)
@@ -77,7 +77,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     button(context, mk(row_container.ent(), 2),
            ComponentConfig{}
                .with_label("Right Panel")
-               .with_size(ComponentSize{pixels(180), pixels(80)})
+               .with_size(ComponentSize{pixels(180), h720(80)})
                .with_background(Theme::Usage::Accent)
                .with_auto_text_color(true)
                .with_padding(Spacing::sm)
@@ -99,7 +99,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto col_container =
         hstack(context, mk(main_container.ent(), 2),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.95f), pixels(220)})
+                   .with_size(ComponentSize{percent(0.95f), h720(220)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::md)
                    .with_justify_content(JustifyContent::Center)
@@ -163,7 +163,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     auto desc_panel =
         hstack(context, mk(main_container.ent(), 3),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.95f), pixels(64)})
+                   .with_size(ComponentSize{percent(0.95f), h720(64)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_justify_content(JustifyContent::SpaceAround)
@@ -178,7 +178,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(desc_panel.ent(), 0),
         ComponentConfig{}
             .with_label("Column: stacks vertically")
-            .with_size(ComponentSize{percent(0.30f), pixels(32)})
+            .with_size(ComponentSize{percent(0.30f), h720(32)})
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
@@ -187,7 +187,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(desc_panel.ent(), 1),
         ComponentConfig{}
             .with_label("Row: arranges horizontally")
-            .with_size(ComponentSize{percent(0.30f), pixels(32)})
+            .with_size(ComponentSize{percent(0.30f), h720(32)})
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
@@ -196,7 +196,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(desc_panel.ent(), 2),
         ComponentConfig{}
             .with_label("Margins control spacing")
-            .with_size(ComponentSize{percent(0.30f), pixels(32)})
+            .with_size(ComponentSize{percent(0.30f), h720(32)})
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)
             .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
@@ -206,7 +206,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(main_container.ent(), 4),
         ComponentConfig{}
             .with_label("Using Sage Natural theme with responsive layouts")
-            .with_size(ComponentSize{percent(0.95f), pixels(36)})
+            .with_size(ComponentSize{percent(0.95f), h720(36)})
             .with_background(Theme::Usage::Surface)
             .with_auto_text_color(true)
             .with_padding(Spacing::xs)

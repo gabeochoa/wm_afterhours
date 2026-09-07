@@ -232,7 +232,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
 
     auto board = vstack(context, mk(root.ent(), 1),
                         ComponentConfig{}
-                            .with_size(ComponentSize{pixels(608), pixels(608)})
+                            .with_size(ComponentSize{pixels(608), h720(608)})
                             .with_custom_background(open_bg)
                             .with_padding(Spacing::xs)
                             .with_align_items(AlignItems::Center)
