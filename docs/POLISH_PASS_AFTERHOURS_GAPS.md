@@ -694,6 +694,47 @@ actually see rather than what it can merely list.
 
 ---
 
+## Survey: what the other 19 projects are still asking for
+
+Checked every gap doc across the projects that vendor afterhours, against
+current `main` rather than against the pin each project is stuck on. Only
+floatinghotel is within one commit; the rest range from a few weeks to badly
+stale, so most of what they report was fixed long ago.
+
+**Already in, reported as missing** -- wordproc had 15 requests, 9 of which
+exist now: icons on buttons, hover callbacks, dropdowns, focus rings,
+animation, custom draw callbacks (`on_draw_bg`/`on_draw_fg`), popup shadows,
+rich text runs, context menus. Plus `right_click` as an e2e command, which
+they filed as #14. break-ross's ten API asks are all in. kart's extraction RFC
+wanted filesystem, i18n, `Transform` and `CollisionConfig` upstreamed; all four
+are there. cartographer's `get_input_collector()` TODO is done.
+
+**Fixed here:** validation reported a violation every frame for every failing
+element, so cartographer turned the log off rather than read it. Now once per
+element per category.
+
+**Still open, worth doing:**
+
+| from | ask |
+|---|---|
+| wordproc | tooltip component |
+| wordproc | access-key underlines (per-character text decoration) |
+| wordproc | scrollbar colour and style (only `show_scrollbar` and `scrollbar_thickness` exist) |
+| wordproc | table / grid layout |
+| cartographer | mouse delta through the action mapping, so sensitivity and rebinding go through one system |
+| cartographer | e2e command handlers registered per SystemManager; miss one and commands silently do nothing |
+| cartographer | `synthetic_press_delay` is a documented-nowhere 1-frame delay that makes tests fragile |
+| cartographer | no lint for custom colours bypassing the theme |
+| MyNameChef | EntityQuery caching; overlaps the index plan puzzle asked for |
+| kart | `HasLabels`, `CanWrapAround`, `TeamID`, `ManagesAvailableColors` -- arguably game-specific, low value |
+
+**The pins are the real problem.** Nine of these reports are already answered
+upstream, and every project that bumps will find that out the hard way. Worth a
+pass to move the pins and delete the resolved docs, which is cheaper than
+answering the same gap a third time.
+
+---
+
 ## OPEN: 41 screens size themselves from a resolution that stopped being true
 
 64 text clippings across 17 screens at 1080p, and 5 at 720p that are all
