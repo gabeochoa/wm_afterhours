@@ -694,6 +694,40 @@ actually see rather than what it can merely list.
 
 ---
 
+## Grid snapping: three fixes that measured worse than the bug
+
+Every inconsistency below is real, and every attempt to remove one cost ~40 of
+108 baselines while the equivalent caller-side fix cost 1. Recorded so the next
+person does not spend the afternoon rediscovering it. **Measure the baseline
+count before believing a snapping change is an improvement.**
+
+| tried | why it looked right | what it cost |
+|---|---|---|
+| stop snapping the position accumulator | the comment beside it already claims it does not | 45 baselines, closed 4px of a 6px gap |
+| snap `Dim::Percent` down | a share of the parent should not round past it, same as `Expand` | 42 baselines, fixed 1 screen a 1-line change also fixed |
+| skip position snapping for `Dim::Pixels` | sizes already skip it, so positions disagree with sizes | 40 baselines, and `virtual_list_lab` went to **43% drift** |
+
+That last one is the instructive one. Rows declared `pixels(36)` skip size
+snapping, because an explicit pixel size means that number, but the running
+offset is snapped anyway, and 36 is not a multiple of the 8px unit at 1440p, so
+every row rounds up and the eighth lands 28px low. Making the accumulator
+consistent fixes the arithmetic exactly and turns a 10,000-row list from evenly
+spaced into alternating 24 and 28, which reads as banding.
+
+**Even spacing is what snapping the accumulator buys, and it is worth more than
+honouring each size exactly.** The inconsistency is load-bearing.
+
+The caller-side fix is to size on the grid: `h720(36)` is 36 at 720p and 72 at
+1440p, both multiples of their unit, and drifts at neither.
+
+**Where that still is not enough.** `h720` snaps to nearest, so at 1366x768 a
+4% larger screen makes a 36px row 40px, an 11% jump. Nine of them plus a footer
+no longer fit a panel that grew 2%. powerwash still fails there. An `expand()`
+spacer makes any drift fatal regardless of headroom, since it fills the parent
+exactly and then the drift pushes the next sibling out.
+
+---
+
 ## FIXED: parents measured children at a size the children did not draw
 
 A child snaps its own size later in the layout pass, so a parent that reads
