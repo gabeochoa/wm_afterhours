@@ -694,6 +694,39 @@ actually see rather than what it can merely list.
 
 ---
 
+## OPEN: 41 screens size themselves from a resolution that stopped being true
+
+64 text clippings across 17 screens at 1080p, and 5 at 720p that are all
+deliberate overflow demos. So the whole set is resolution-dependent.
+
+**Not the container-by-container fix it looked like.** Those screens read
+`Settings::get().get_screen_width()`, which returns the *configured*
+resolution. The e2e `resize` command, and a user dragging the window, update
+`ProvidesCurrentResolution` -- the singleton layout actually uses -- and never
+touch Settings. Fonts are written `h720(24)`, so they follow the live number
+and grow. Boxes are written `pixels(320)` off the stale one and do not. At
+1080p empire_tycoon renders "Happiness" as "Happines", "Resources" as
+"Resource", and runs Shop / Settings / Leaderboard off the right edge.
+
+**Tried and reverted:** making the two getters return the live resolution when
+the singleton has one. It is a five-line change, it is semantically right, and
+it took containment from 1 failing screen to 12. Those screens have more baked
+into 720p than their width: absolute positions, hardcoded offsets, panel sizes.
+Fixing the number they read just moves where they break.
+
+Six of the worst are absolute-positioned canvas mockups -- empire_tycoon,
+layout_bug_repros, cozy_cafe, fighter_menu, example_borders, kart_select --
+with 21 to 41 hardcoded positions each. Scaling one is a port of its whole
+coordinate system, not a container tweak. A scale-factor transform on
+empire_tycoon (77 sites) was written and reverted with the Settings change,
+since it does nothing while the width it multiplies is frozen at 1280.
+
+**Wanted:** the two are a package. Settings answering for the live window, and
+each canvas screen scaling positions and sizes by the same factor its fonts
+already use. Worth doing per screen, with the containment sweep as the check.
+
+---
+
 ## Grid snapping: three fixes that measured worse than the bug
 
 Every inconsistency below is real, and every attempt to remove one cost ~40 of
