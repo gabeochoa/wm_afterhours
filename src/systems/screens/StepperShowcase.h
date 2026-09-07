@@ -181,7 +181,7 @@ struct StepperShowcase : ScreenSystem<UIContext<InputAction>> {
     auto card_container =
         vstack(context, mk(right_col.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.9f), pixels(220)})
+                   .with_size(ComponentSize{percent(0.9f), h720(220)})
                    .with_custom_background(card.color)
                    .with_padding(Spacing::xl)
                    .with_roundness(0.10f)

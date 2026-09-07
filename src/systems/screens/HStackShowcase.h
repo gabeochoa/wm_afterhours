@@ -296,7 +296,11 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     auto row4 = hstack(context, mk(root.ent(), 4),
                        ComponentConfig{}
                            .with_size(ComponentSize{percent(1.0f), pixels(120)})
-                           .with_justify_content(JustifyContent::SpaceBetween)
+                           // expand() + gap rather than percent children under
+                           // SpaceBetween: that splits the slack into
+                           // fractional gaps which each snap, and the drift
+                           // added up to 34px over six cards.
+                           .with_gap(w1280(40))
                            .with_align_items(AlignItems::Center)
                            .with_margin(Margin{.top = pixels(6)})
                            .with_debug_name("dashboard"));
@@ -308,10 +312,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(row4.ent(), i),
           ComponentConfig{}
               .with_label(dash_l[i])
-              // 6 x 0.13 leaves 22% for SpaceBetween to spread, but each child
-              // snaps up and the gaps round too, which put the last one 16px
-              // past the row. 0.12 pays for the rounding.
-              .with_size(ComponentSize{percent(0.12f), percent(0.80f)})
+                            .with_size(ComponentSize{expand(), percent(0.80f)})
               .with_custom_background(dash_c[i])
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))

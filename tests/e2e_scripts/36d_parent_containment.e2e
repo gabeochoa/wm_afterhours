@@ -1,0 +1,210 @@
+# Every element inside its own parent, at both sizes. Part 4 of 4.
+#
+# assert_no_overflow asks whether an element is on screen, which a row
+# overflowing a panel mid-screen passes. This asks the question the name does.
+#
+# Both sizes on purpose: nearly everything found here held at exactly 720p and
+# came apart above it, usually a fixed-pixel box whose padding scales with the
+# screen until the padding is larger than the box.
+#
+# Split four ways because 91 screens in one script runs past the 30s timeout.
+# composer_lab is left out: its third field is a deliberate "wrapping is off on
+# this one" demo, so the overflow there is the point.
+
+goto_screen setting_row_showcase
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen shop_interface
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen simple_button
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen split_pane_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen sports_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen stepper_showcase
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen sync_scroll_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen tab_container
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen tabbing
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen text
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen text_input
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen text_input_sizes
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen text_overflow
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen text_shadow
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen text_stroke
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen themes
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen toasts
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen toggle_switches
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen tray
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen virtual_list_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen vstack_showcase
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen widget_gap_gallery
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents

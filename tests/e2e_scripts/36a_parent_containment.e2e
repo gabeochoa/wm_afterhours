@@ -1,0 +1,219 @@
+# Every element inside its own parent, at both sizes. Part 1 of 4.
+#
+# assert_no_overflow asks whether an element is on screen, which a row
+# overflowing a panel mid-screen passes. This asks the question the name does.
+#
+# Both sizes on purpose: nearly everything found here held at exactly 720p and
+# came apart above it, usually a fixed-pixel box whose padding scales with the
+# screen until the padding is larger than the box.
+#
+# Split four ways because 91 screens in one script runs past the 30s timeout.
+# composer_lab is left out: its third field is a deliberate "wrapping is off on
+# this one" demo, so the overflow there is the point.
+
+goto_screen absolute_positioning
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen accessibility
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen adaptive_scaling
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen advanced_modals
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen aim_chat
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen angry_birds_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen animation_basic
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen animation_declarative
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen animation_interactive
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen animation_looping
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen animation_spring
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen auto_text_color
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen bevel_borders
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen button_variants
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen buttons
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen cards
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen casual_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen checkboxes
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen circular_progress
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen colors
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen config_gap_gallery
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen context_menu_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen cozy_cafe
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents

@@ -202,7 +202,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Row 3: Image with background demo
     auto row3 = hstack(context, mk(main_container.ent(), 3),
                        ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(80)})
+                           .with_size(ComponentSize{percent(1.0f), h720(80)})
                            .with_background(Theme::Usage::Surface)
                            .with_padding(Spacing::xs)
                            .with_align_items(AlignItems::Center)
@@ -221,7 +221,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     auto img_container =
         hstack(context, mk(row3.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(200), pixels(56)})
+                   .with_size(ComponentSize{w1280(200), h720(56)})
                    .with_background(Theme::Usage::Secondary)
                    .with_rounded_corners(RoundedCorners().all_round())
                    .with_roundness(0.1f)

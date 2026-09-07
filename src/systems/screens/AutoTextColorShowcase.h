@@ -54,7 +54,12 @@ struct AutoTextColorShowcase : ScreenSystem<UIContext<InputAction>> {
                                 .with_justify_content(JustifyContent::Center)
                                 .with_align_items(AlignItems::Center)
                                 .with_no_wrap()
-                                .with_margin(Spacing::xs)
+                                // Vertical only: percent(1.0) is the whole
+                                // content box and does not subtract a
+                                // horizontal margin.
+                                .with_margin(Margin{
+                                    .top = spacing_to_size(Spacing::xs),
+                                    .bottom = spacing_to_size(Spacing::xs)})
                                 .with_debug_name("title_row"));
 
     // Main title text - large and prominent

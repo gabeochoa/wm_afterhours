@@ -1,0 +1,219 @@
+# Every element inside its own parent, at both sizes. Part 3 of 4.
+#
+# assert_no_overflow asks whether an element is on screen, which a row
+# overflowing a panel mid-screen passes. This asks the question the name does.
+#
+# Both sizes on purpose: nearly everything found here held at exactly 720p and
+# came apart above it, usually a fixed-pixel box whose padding scales with the
+# screen until the padding is larger than the box.
+#
+# Split four ways because 91 screens in one script runs past the 30s timeout.
+# composer_lab is left out: its third field is a deliberate "wrapping is off on
+# this one" demo, so the overflow there is the point.
+
+goto_screen layout_patterns
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen menu_showcase
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen meters_gauges
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen minesweeper_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen mini_motorways_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen modals
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen navigation_bar_demo
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen neon_strike
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen nine_slice_borders
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen offsite_backup
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen pagination
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen parcel_corps_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen pinch_zoom_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen potion_crafting
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen powerwash_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen race_results
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen radio_buttons
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen rubber_bandits_menu
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen scroll_click_bug
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen scroll_clip_bug
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen scroll_view
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen self_align
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen separators
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents

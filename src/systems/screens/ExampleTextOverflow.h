@@ -405,6 +405,7 @@ struct ExampleTextOverflow : ScreenSystem<UIContext<InputAction>> {
             .with_size(ComponentSize{pixels(card_width), pixels(44)})
             .with_absolute_position(right_col_x, card_y)
             .with_font(UIComponent::DEFAULT_FONT, h720(15.0f))
+            .with_text_overflow(TextOverflow::Wrap)
             .with_custom_text_color(text_muted)
             .with_alignment(TextAlignment::Left));
   }

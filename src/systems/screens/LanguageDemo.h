@@ -206,7 +206,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto content =
         hstack(context, mk(main.ent(), 1),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(410)})
+                   .with_size(ComponentSize{percent(1.0f), h720(410)})
                    .with_no_wrap()
                    .with_debug_name("content"));
 

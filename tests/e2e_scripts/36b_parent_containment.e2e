@@ -1,0 +1,219 @@
+# Every element inside its own parent, at both sizes. Part 2 of 4.
+#
+# assert_no_overflow asks whether an element is on screen, which a row
+# overflowing a panel mid-screen passes. This asks the question the name does.
+#
+# Both sizes on purpose: nearly everything found here held at exactly 720p and
+# came apart above it, usually a fixed-pixel box whose padding scales with the
+# screen until the padding is larger than the box.
+#
+# Split four ways because 91 screens in one script runs past the 30s timeout.
+# composer_lab is left out: its third field is a deliberate "wrapping is off on
+# this one" demo, so the overflow there is the point.
+
+goto_screen deadspace_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen decorative_frame
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen decorators
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen drag_drop
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen dropdowns
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen empire_tycoon
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen entity_index_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen example_borders
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen fighter_menu
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen file_tree
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen flex_alignment
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen flight_options
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen forms
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen guess_who_lab
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen horizontal_drag
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen hstack_showcase
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen images
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen islands_trains_settings
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen kart_select
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen kirby_options
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen language_demo
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen layout
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
+
+goto_screen layout_bug_repros
+wait 0.3
+resize 1280 720
+wait 0.2
+assert_within_parents
+resize 1920 1080
+wait 0.2
+assert_within_parents
