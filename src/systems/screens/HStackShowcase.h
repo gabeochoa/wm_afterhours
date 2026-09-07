@@ -308,7 +308,10 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(row4.ent(), i),
           ComponentConfig{}
               .with_label(dash_l[i])
-              .with_size(ComponentSize{percent(0.13f), percent(0.80f)})
+              // 6 x 0.13 leaves 22% for SpaceBetween to spread, but each child
+              // snaps up and the gaps round too, which put the last one 16px
+              // past the row. 0.12 pays for the rounding.
+              .with_size(ComponentSize{percent(0.12f), percent(0.80f)})
               .with_custom_background(dash_c[i])
               .with_auto_text_color(true)
               .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))

@@ -124,7 +124,7 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
     auto selector_panel =
         vstack(context, mk(content.ent(), 0),
                ComponentConfig{}
-                   .with_size(ComponentSize{pixels(200), percent(1.0f)})
+                   .with_size(ComponentSize{w1280(200), percent(1.0f)})
                    .with_background(Theme::Usage::Surface)
                    .with_padding(Spacing::sm)
                    .with_margin(Margin{.right = DefaultSpacing::small()})
@@ -157,7 +157,11 @@ struct ThemesScreen : ScreenSystem<UIContext<InputAction>> {
                                         : Theme::Usage::Secondary)
               .with_auto_text_color(true)
               .with_font_size(selected ? pixels(19.0f) : pixels(17.0f))
-              .with_margin(Spacing::xs)
+              // Vertical only: percent() is a share of the content box and
+              // does not subtract a horizontal margin, so the two together
+              // ran the button past the column.
+              .with_margin(Margin{.top = spacing_to_size(Spacing::xs),
+                                  .bottom = spacing_to_size(Spacing::xs)})
               .with_debug_name("theme_btn_" + std::to_string(btn_idx));
 
       if (selected) {
