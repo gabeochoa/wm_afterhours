@@ -667,6 +667,31 @@ own triage index. Anyone working upstream should start from
 
 ---
 
+## FIXED: a capped box wrapped against the width it was not going to keep
+
+hanabi #136 asked for `fit_content(max)`: hug the text, cap at a maximum, wrap
+past it. That is a chat bubble, and they reported nothing in the library sized
+a box to its own text.
+
+Three quarters of it already existed. `Dim::Text` hugs, `with_max_width` caps,
+`TextOverflow::Wrap` wraps, and combining them gets the width right: a short
+label sizes to 17px, a long one stops at the 200px cap.
+
+The height did not follow. Both bubbles came out one line tall, because
+wrapping measured against `computed[Axis::X]` and `apply_size_constraints`
+runs *after* text sizing. So the long label wrapped against its own unclamped
+700px, found it fit on one line, and got a one-line height on a box that was
+then cut to 200. The text spilled out the bottom.
+
+The fix reads `max_size[Axis::X]` at measure time and wraps against the width
+the box will actually end up with. The long bubble now measures 80px, five
+lines. No new sizing mode: `fit_content(max)` is those three calls.
+
+**wm sees no pixel change** -- no screen combines all three -- so this is
+covered by `sizing_repro_test` rather than a baseline.
+
+---
+
 ## FIXED: two measure functions answered different questions
 
 On sokol, `measure_text` returned `bounds[2]-bounds[0]`, the box around the
