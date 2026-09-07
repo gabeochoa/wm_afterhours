@@ -117,7 +117,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                ComponentConfig{}
                    // 465px of left margin left the whole first third of the
                    // screen empty and floated the rows in the right two thirds.
-                   .with_size(ComponentSize{pixels(1160), pixels(350)})
+                   .with_size(ComponentSize{pixels(1150), pixels(350)})
                    .with_no_wrap()
                    .with_margin(Margin{.top = pixels(8), .left = pixels(60)})
                    .with_debug_name("content"));

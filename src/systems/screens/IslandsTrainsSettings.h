@@ -106,7 +106,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto close_row =
         hstack(context, mk(root.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(50)})
+                   .with_size(ComponentSize{percent(1.0f), h720(50)})
                    .with_justify_content(JustifyContent::FlexEnd)
                    .with_no_wrap()
                    .with_padding(Padding{.right = pixels(25)})
@@ -344,7 +344,7 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     // Segments
     auto segs = hstack(context, mk(row.ent(), 3),
                        ComponentConfig{}
-                           .with_size(ComponentSize{pixels(130), pixels(15)})
+                           .with_size(ComponentSize{children(), h720(15)})
                            .with_no_wrap()
                            .with_align_items(AlignItems::Center));
 
@@ -353,11 +353,11 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       afterhours::Color seg_color = is_filled ? slider_teal : slider_empty;
       if (button(context, mk(segs.ent(), si),
                  ComponentConfig{}
-                     .with_720p_size(10, 15)
+                     .with_720p_size(8, 15)
                      .with_custom_background(seg_color)
                      .with_rounded_corners(RoundedCorners())
                      .with_roundness(0.2f)
-                     .with_margin(si > 0 ? Margin{.left = pixels(2)} : Margin{})
+                     .with_margin(si > 0 ? Margin{.left = w1280(4)} : Margin{})
                      .with_skip_tabbing(true))) {
         value = si + 1;
       }

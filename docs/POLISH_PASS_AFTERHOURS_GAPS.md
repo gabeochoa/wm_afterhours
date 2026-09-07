@@ -694,6 +694,57 @@ actually see rather than what it can merely list.
 
 ---
 
+## FIXED: parents measured children at a size the children did not draw
+
+A child snaps its own size later in the layout pass, so a parent that reads
+`child.computed` gets the number from before the snap. Both the sizing and the
+placement did.
+
+Found from the other end: at 1080p the deadspace tab strip put its last tab
+outside the row. Eight `expand()` tabs drawn 114 wide, placed 120 apart, so
+the strip measured 954 in a 948 row. It only shows above 720p, where the grid
+unit (which scales with screen height) is bigger than the rounding that hides
+it.
+
+The same read in `_sum_children_axis_for_child_exp` made a `Dim::Children`
+strip 120 wide around ten segments that drew 156.
+
+Both now go through `snapped_extent`, which asks for the size the child will
+end up with.
+
+**Two things I tried and backed out**, because the screenshots disagreed with
+the reasoning:
+
+- *Dropping the remainder distribution.* Handing expand children whole grid
+  units can make two equal-weight siblings differ by one unit, which looked
+  like the wrong trade until `guess_who_lab` went from 2.8% to **19.5%**
+  drift: without it the slack piles up at the end, an eight-card grid comes up
+  47px short and the gaps between cards collapse. A row that is not a whole
+  number of units cannot be filled by equal grid-aligned children. Take the
+  one-unit difference.
+- *Not snapping the position accumulator.* It matches what the comment there
+  already claims, and it closed 4px of the residual. It also moved **45 of 108
+  baselines**, against 1 for the targeted fix. Not worth it for 4px.
+
+**The residual is arithmetic, not a bug.** A 2px margin has no representation
+on a 4px grid, so snapped positions still run a little past the sum. The wm
+side fixed that by scaling the margin (`w1280(4)`), which lands on the grid at
+every resolution because the grid unit scales the same way.
+
+---
+
+## FIXED: the containment check called every wrapped label a violation
+
+`assert_within_parents` measured the whole label on one line and failed it if
+it exceeded the container. That is what wrapping is for, so every wrapping
+element was a false positive: fighter_menu's card description wraps onto two
+lines, fits, and was reported as needing 364px in a 250px box.
+
+Ellipsis was already skipped. Wrap now gets the check that actually applies to
+it -- the longest single word, which really cannot fit -- rather than a skip.
+
+---
+
 ## FIXED: a capped box wrapped against the width it was not going to keep
 
 hanabi #136 asked for `fit_content(max)`: hug the text, cap at a maximum, wrap

@@ -2,9 +2,9 @@
 # element is on screen, not whether it is inside its own parent. A row
 # overflowing a panel mid-screen passes that and fails this.
 #
-# Only screens known to hold at both sizes. The rest of the settings screens
-# mix with_720p_size children with fixed-pixel parents and come apart above 1x
-# scale; see docs/POLISH_PASS_AFTERHOURS_GAPS.md.
+# The settings screens used to mix with_720p_size children with fixed-pixel
+# parents, which agree at exactly 720p and nowhere else. They are checked at
+# both sizes now that their parents scale too.
 
 goto_screen casual_settings
 wait 0.5
@@ -16,6 +16,78 @@ wait 0.3
 assert_within_parents
 
 goto_screen simple_button
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen powerwash_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen deadspace_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen islands_trains_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen fighter_menu
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen sports_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen mini_motorways_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen angry_birds_settings
+wait 0.5
+resize 1280 720
+wait 0.3
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+
+goto_screen parcel_corps_settings
 wait 0.5
 resize 1280 720
 wait 0.3
