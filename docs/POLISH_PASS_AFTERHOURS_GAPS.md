@@ -667,6 +667,33 @@ own triage index. Anyone working upstream should start from
 
 ---
 
+## FIXED: two measure functions answered different questions
+
+On sokol, `measure_text` returned `bounds[2]-bounds[0]`, the box around the
+painted pixels, while `measure_text_internal` beside it returned the advance.
+Both are called "measure text". Layout and the shared `TextMeasureCache` went
+through the ink one.
+
+Ink is narrower than the pen travel by a side bearing each side, so a box sized
+to its own text clips it, a trailing space measures as nothing, and summing
+runs to wrap a line drops the interior bearings and comes up short. Typesetting
+is done in advances; ink is for cropping a glyph.
+
+hanabi #137, and the reason they could not adopt the cache the library ships
+for exactly their case: switching to it moved every chat bubble 2px.
+
+**Raylib differs for an unrelated reason.** There `measure_text_internal` is
+`raylib::MeasureText`, which takes no font argument and measures the default
+face whatever font the text will be drawn in. Its only caller is the debug
+autolayout overlay's hover hitbox, which does draw in the default font, so it
+is not wrong there, only misleadingly named.
+
+**wm cannot see this change.** It is raylib, so all 108 baselines are unchanged.
+floatinghotel and hanabi will shift about 2px and need a rebaseline where
+someone can look at the result.
+
+---
+
 ## FIXED: nothing asked whether a widget was inside its parent
 
 `assert_no_overflow` measured every element against the **viewport**, so a row
