@@ -192,7 +192,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       auto row =
           hstack(context, mk(main_panel.ent(), static_cast<int>(i)),
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                     .with_size(ComponentSize{percent(1.0f), h720(36)})
                      .with_align_items(AlignItems::Center)
                      .with_no_wrap()
                      .with_margin(Margin{.top = i > 0 ? pixels(0) : Size{}}));
@@ -262,7 +262,7 @@ struct PowerWashSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto footer =
         hstack(context, mk(main_panel.ent()),
                ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
+                   .with_size(ComponentSize{percent(1.0f), h720(36)})
                    .with_justify_content(JustifyContent::FlexEnd)
                    .with_align_items(AlignItems::Center)
                    .with_no_wrap()
