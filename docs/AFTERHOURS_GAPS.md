@@ -10,6 +10,70 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ---
 
+## Open, asked for by other projects
+
+Collected from every gap doc across the 19 projects that vendor afterhours,
+checked against current `main` rather than the pin each is stuck on. Nine of
+wordproc's fifteen, all ten of break-ross's, four of kart's and one of
+cartographer's turned out to be already in; these are what is left.
+
+### Components
+
+- **tooltip** (wordproc) — nothing in the library. Every consumer that wants
+  hover text builds a popover by hand and positions it themselves.
+
+- **table / grid layout** (wordproc) — no `table()` or `grid()`. Column
+  alignment across rows is done today by giving every cell the same fixed
+  width, which is what the resolution work above keeps finding broken.
+
+- **access-key underlines** (wordproc) — per-character decoration, so `&File`
+  can underline the F. Needs the renderer to decorate one glyph in a run, which
+  the run machinery from the wrap work could carry. Filed as accessibility.
+
+- **scrollbar colour and style** (wordproc) — `show_scrollbar` and
+  `scrollbar_thickness` exist and nothing else, so a scrollbar cannot be made
+  to match a theme.
+
+### Input
+
+- **mouse delta through the action mapping** (cartographer) — `GetMouseDelta()`
+  for camera look cannot go through actions, since it is a continuous 2D delta
+  rather than a button or an axis with a direction. So mouse sensitivity and
+  rebinding live outside the system every other input goes through.
+
+- **`synthetic_press_delay` is undocumented and load-bearing** (cartographer) —
+  a 1-frame delay in `consume_press` before an injected key registers. Tests
+  need a `wait` between `key_down` and anything depending on it, and nothing
+  says so.
+
+### E2E
+
+- **command handlers are registered per SystemManager** (cartographer) — with
+  several managers (game, pause, transition) each needs `HandlePressKeyCommand`
+  and friends registered by hand. Miss one and commands silently do nothing
+  while that manager is active. A global registry, or propagation, would end a
+  class of bug rather than a bug.
+
+### Diagnostics
+
+- **no lint for custom colours bypassing the theme** (cartographer) — theme
+  usage is easy to skip by accident and nothing catches it in shared UI.
+
+### Core
+
+- **EntityQuery has no index** (MyNameChef, puzzle) — every terminal is a
+  linear scan. puzzle hit the quadratic case on a five-node graph and
+  hand-wrote an index; their point was not speed but that an indexed
+  relationship "cannot be half-written in the first place", after a node-delete
+  sweep reaped ports and wires and forgot knobs and sliders. There is a written
+  plan for this.
+
+- **kart's remaining component extractions** — `HasLabels`, `CanWrapAround`,
+  `TeamID`, `ManagesAvailableColors`. Arguably game-specific; listed for
+  completeness, not recommended.
+
+---
+
 ## Known limitations (open, low priority)
 
 - **tab order is allocation order, not tree order** — `process_tabbing` moves
