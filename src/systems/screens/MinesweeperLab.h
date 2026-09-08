@@ -5,6 +5,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/grid.h>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -230,8 +231,24 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
       reset();
     }
 
-    auto board = vstack(context, mk(root.ent(), 1),
-                        ComponentConfig{}
+    // Explicit 35px tracks with a 1px gap, not equal tracks. 35+1 is a stride
+    // of 36, which lands on the 4px snap grid; a sub-unit gap between snapped
+    // cells rounds away entirely and the board renders as one slab. That is
+    // also why the old hand-tuned code could not use 36.
+    std::vector<Size> tracks(kSize, pixels(35));
+    auto board = grid(context, mk(root.ent(), 1),
+                      GridConfig{}
+                          .with_rows(kSize)
+                          .with_cols(kSize)
+                          .with_col_widths(tracks)
+                          // 36 tall holding 35 tall cells: the 1px of row
+                          // showing through is the horizontal line. A gap
+                          // between rows would be snapped away instead, since
+                          // 1px has nowhere to sit on a 4px grid, and the
+                          // board would render as one slab.
+                          .with_row_height(pixels(36))
+                          .with_gap(pixels(1)),
+                      ComponentConfig{}
                             .with_size(ComponentSize{pixels(608), h720(608)})
                             .with_custom_background(open_bg)
                             .with_padding(Spacing::xs)
@@ -242,11 +259,10 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
                             .with_debug_name("ms_board"));
 
     for (int r = 0; r < kSize; r++) {
-      auto row = hstack(context, mk(board.ent(), r),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), pixels(37)})
-                            .with_no_wrap()
-                            .with_debug_name(fmt::format("ms_row_{}", r)));
+      afterhours::OptEntity row_opt = grid_row(board, r);
+      if (!row_opt.valid())
+        continue;
+      afterhours::Entity &row_ent = row_opt.asE();
 
       for (int c = 0; c < kSize; c++) {
         const bool open = revealed[r][c];
@@ -272,17 +288,15 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
         }
 
         auto cell =
-            button(context, mk(row.ent(), c),
+            button(context, mk(row_ent, c),
                    ComponentConfig{}
                        .with_label(face)
-                       // 35+1 margin x 16 = 576, inside the row's 579.6. At 36
-                       // the sixteenth column overflowed on every row.
-                       .with_size(ComponentSize{pixels(35), pixels(35)})
+                       .with_size(ComponentSize{
+                           grid_track(board, c).x_axis, pixels(35)})
                        .with_custom_background(bg)
                        .with_custom_text_color(fg)
                        .with_font_size(pixels(20.f))
                        .with_corner_radius(4.f)
-                       .with_margin(Margin{.right = pixels(1)})
                        .with_click_activation(ClickActivationMode::Release)
                        .with_skip_tabbing(true)
                        .with_debug_name(fmt::format("ms_{}_{}", r, c)));
