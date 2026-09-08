@@ -1,0 +1,22 @@
+# with_tooltip. Nothing in the library offered hover text, so consumers
+# hand-rolled a popover and positioned it themselves.
+#
+# Hovering the "instant" button (delay 0) is the deterministic case, so that is
+# what gets baselined. The corner buttons exercise the flip: placement goes
+# through the same overlay::place a dropdown uses.
+
+goto_screen tooltip_lab
+wait 0.4
+
+# Nothing showing until something is hovered.
+validate_screen tooltip_lab_idle
+
+mouse_move 582 553
+wait 0.5
+validate_screen tooltip_lab_shown
+
+# Moving to a different element restarts the wait rather than inheriting it,
+# so this must not still be showing the previous tip.
+mouse_move 640 300
+wait 0.2
+assert_within_parents
