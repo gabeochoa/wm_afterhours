@@ -6,6 +6,7 @@
 #include "../../ui_workarounds/GradientBackground.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/grid.h>
 #include <afterhours/src/plugins/files.h>
 
 using namespace afterhours::ui;
@@ -166,116 +167,72 @@ struct RaceResultsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
             .with_debug_name("table_panel"));
 
-    // Column headers
-    float col_pos_x = table_x + 15.0f;
-    float col_name_x = table_x + 65.0f;
-    float col_time_x = table_x + table_w - 240.0f;
-    float col_pts_x = table_x + table_w - 80.0f;
-    float header_y = table_y + 10.0f;
+    // The table as an actual grid. It used to be four hand-computed column
+    // positions (col_pos_x .. col_pts_x) with every cell absolutely placed,
+    // and the header widths had already drifted from the body's: 40/120/140/60
+    // against 44/200/140/60. Declaring the tracks once makes that impossible.
+    auto table = grid(
+        context, mk(entity, 201),
+        GridConfig{}
+            .with_rows(1 + static_cast<int>(results.size()))
+            .with_cols(4)
+            .with_col_widths({pxf(55.f), pxf(table_w - 295.f), pxf(140.f),
+                              pxf(70.f)})
+            .with_row_height(h720(44)),
+        ComponentConfig{}
+            .with_720p_size(table_w - 20, table_h - 30)
+            .with_absolute_position(table_x + 10.0f, table_y + 10.0f)
+            .with_debug_name("results_table"));
 
     struct ColHeader {
       const char *label;
-      int id;
-      int w;
-      float x;
       TextAlignment align;
     };
-    ColHeader headers[] = {
-        {"#", 201, 40, col_pos_x, TextAlignment::Left},
-        {"RACER", 202, 120, col_name_x, TextAlignment::Left},
-        {"TIME", 203, 140, col_time_x, TextAlignment::Right},
-        {"PTS", 204, 60, col_pts_x, TextAlignment::Right},
+    static const ColHeader headers[] = {
+        {"#", TextAlignment::Left},
+        {"RACER", TextAlignment::Left},
+        {"TIME", TextAlignment::Right},
+        {"PTS", TextAlignment::Right},
     };
-    for (auto &ch : headers) {
-      div(context, mk(entity, ch.id),
-          ComponentConfig{}
-              .with_label(ch.label)
-              .with_size(ComponentSize{pixels(ch.w), pixels(24)})
-              .with_absolute_position(ch.x, header_y)
-              .with_custom_text_color(muted)
-              .with_alignment(ch.align));
-    }
-
-    // Separator
-    div(context, mk(entity, 205),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(table_w - 30), pixels(1)})
-            .with_absolute_position(table_x + 15.0f, header_y + 28.0f)
-            .with_custom_background(border_blue));
-
-    // Results rows
-    float row_start_y = header_y + 38.0f;
-    float row_h = 50.0f;
+    for (int c = 0; c < 4; c++)
+      grid_cell(context, table, 0, c,
+                ComponentConfig{}
+                    .with_label(headers[c].label)
+                    .with_alignment(headers[c].align)
+                    .with_custom_text_color(muted)
+                    .with_background(Theme::Usage::None)
+                    .with_debug_name(fmt::format("rr_head_{}", c)));
 
     for (size_t i = 0; i < results.size(); i++) {
       auto &r = results[i];
-      float ry = row_start_y + (float)i * row_h;
+      const int row = 1 + static_cast<int>(i);
+      const auto row_bg =
+          r.is_player ? player_highlight
+                      : (i % 2 == 0 ? afterhours::Color{30, 35, 55, 255}
+                                    : afterhours::Color{0, 0, 0, 0});
 
-      // Alternating row background for even-indexed non-player rows
-      if (i % 2 == 0 && !r.is_player) {
-        div(context, mk(entity, 260 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_720p_size(table_w - 20, row_h - 4)
-                .with_absolute_position(table_x + 10.0f, ry - 2.0f)
-                .with_custom_background(afterhours::Color{30, 35, 55, 255})
-                .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.1f));
-      }
+      const auto cell = [&](int c, const std::string &text,
+                            TextAlignment align, afterhours::Color text_color,
+                            float font_px) {
+        grid_cell(context, table, row, c,
+                  ComponentConfig{}
+                      .with_label(text)
+                      .with_alignment(align)
+                      .with_font("EqProRounded", h720(font_px))
+                      .with_custom_text_color(text_color)
+                      .with_custom_background(row_bg)
+                      .with_debug_name(fmt::format("rr_{}_{}", row, c)));
+      };
 
-      // Row highlight for player
-      if (r.is_player) {
-        div(context, mk(entity, 210 + static_cast<int>(i) * 5),
-            ComponentConfig{}
-                .with_size(ComponentSize{pxf(table_w - 20), pxf(row_h - 4)})
-                .with_absolute_position(table_x + 10.0f, ry - 2.0f)
-                .with_custom_background(player_highlight)
-                .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.15f)
-                .with_debug_name("player_row"));
-      }
-
-      // Position number
-      div(context, mk(entity, 211 + static_cast<int>(i) * 5),
-          ComponentConfig{}
-              .with_label(std::to_string(r.position) +
-                          position_suffix(r.position))
-              .with_size(ComponentSize{pixels(44), pixels(32)})
-              .with_absolute_position(col_pos_x, ry + 6.0f)
-              .with_font("Fredoka", h720(22.0f))
-              .with_alignment(TextAlignment::Left)
-              .with_custom_text_color(position_color(r.position)));
-
-      // Name — add "> " prefix for player row as secondary indicator
-      std::string display_name = r.is_player ? "> " + r.name : r.name;
-      div(context, mk(entity, 212 + static_cast<int>(i) * 5),
-          ComponentConfig{}
-              .with_label(display_name)
-              .with_size(ComponentSize{pixels(200), pixels(32)})
-              .with_absolute_position(col_name_x, ry + 6.0f)
-              .with_font("EqProRounded", h720(r.is_player ? 22.0f : 20.0f))
-              .with_alignment(TextAlignment::Left)
-              .with_custom_text_color(r.is_player ? gold : white));
-
-      // Time
-      div(context, mk(entity, 213 + static_cast<int>(i) * 5),
-          ComponentConfig{}
-              .with_label(r.time)
-              .with_size(ComponentSize{pixels(140), pixels(28)})
-              .with_absolute_position(col_time_x, ry + 8.0f)
-              .with_font("EqProRounded", h720(18.0f))
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(white));
-
-      // Points
-      div(context, mk(entity, 214 + static_cast<int>(i) * 5),
-          ComponentConfig{}
-              .with_label("+" + std::to_string(r.points))
-              .with_size(ComponentSize{pixels(60), pixels(28)})
-              .with_absolute_position(col_pts_x, ry + 8.0f)
-              .with_font("EqProRounded", h720(20.0f))
-              .with_custom_text_color(accent_green)
-              .with_alignment(TextAlignment::Right));
+      cell(0, std::to_string(r.position) + position_suffix(r.position),
+           TextAlignment::Left, position_color(r.position), 20.f);
+      cell(1, r.is_player ? "> " + r.name : r.name, TextAlignment::Left,
+           r.is_player ? gold : white, r.is_player ? 20.f : 18.f);
+      cell(2, r.time, TextAlignment::Right, white, 17.f);
+      cell(3, "+" + std::to_string(r.points), TextAlignment::Right,
+           accent_green, 18.f);
     }
+
 
     // ========== RIGHT: CUP STANDINGS ==========
     float cup_x = table_x + table_w + 20.0f;
