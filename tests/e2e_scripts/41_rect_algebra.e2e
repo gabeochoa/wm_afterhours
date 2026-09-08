@@ -1,0 +1,17 @@
+# rect::cut_*, pad, expand and align_*. puzzle carried a 224-line geometry
+# header with 613 uses because the library had only intersect_rects.
+#
+# Left panel is a WM tiling a screen, which is cut_left and cut_right and
+# nothing else. Right is the repro from the report: header strip, inset the
+# rest, centre a box in it.
+
+goto_screen rect_algebra_lab
+wait 0.5
+validate_screen rect_algebra_lab
+assert_within_parents
+
+resize 1920 1080
+wait 0.3
+assert_within_parents
+resize 1280 720
+wait 0.3
