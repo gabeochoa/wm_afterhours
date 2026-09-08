@@ -1,0 +1,23 @@
+# grid() and grid_cell(). Flex gets you a row or a column; it does not line a
+# column up across rows, so consumers hand every cell a fixed width, which is
+# the pattern the resolution sweeps kept finding broken. wordproc draws its
+# tables with ~100 lines of raw raylib for this.
+#
+# The top table's text is deliberately ragged: cells sized to content would
+# stagger, and these do not.
+
+goto_screen grid_lab
+wait 0.5
+validate_screen grid_lab
+assert_within_parents
+
+# Columns line up whatever the row: same left edge, top row to bottom.
+# 32, not 30: h720(30) snaps up to the 4px grid.
+assert_ui gl_a_0_1 h=32
+assert_ui gl_a_2_1 h=32
+
+resize 1920 1080
+wait 0.3
+assert_within_parents
+resize 1280 720
+wait 0.3
