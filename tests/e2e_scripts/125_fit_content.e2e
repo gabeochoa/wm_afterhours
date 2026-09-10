@@ -1,0 +1,26 @@
+# with_fit_content(): a box as wide as its own text, capped. Every consumer
+# that wanted a chat bubble measured the string in app code instead, because
+# the four settings it needs are easy to get three of -- miss the font size
+# and the width still caps, so it looks right until a long message runs off.
+
+goto_screen fit_content_lab
+wait 0.5
+validate_screen fit_content_lab
+assert_within_parents
+
+# "hi" is 12px, nowhere near the 380 cap: the box is sized by its content, not
+# by the number in the config.
+assert_ui fc_wide_msg_1 w=12
+
+# The same long message under two caps stops at each one and wraps the rest.
+# If fit_content stopped wrapping, these would both run past their cap.
+assert_ui fc_wide_msg_4 w=380
+assert_ui fc_narrow_msg_4 w=200
+
+# Nothing escapes its row at another resolution.
+resize 1920 1080
+wait 0.3
+assert_within_parents
+resize 1280 720
+wait 0.3
+assert_within_parents
