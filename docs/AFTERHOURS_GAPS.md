@@ -10,6 +10,33 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ---
 
+## Blocking another project's bump
+
+Two regressions from this repo's own work stop floatinghotel bumping past
+`0c67090`. Both were diagnosed there with a verified fix; wm cannot see either
+because it is raylib and its baselines happen not to land on the bad case.
+
+- **sokol backend does not compile since `b3f8cef`** — `backend.h`'s
+  `MetalPlatformAPI::get_mouse_position` calls `window_manager::window_to_content`,
+  but `window_manager.h` includes `graphics.h` (and so `backend.h`) before it
+  declares that struct. Every sokol/Metal build fails; wm is raylib so upstream
+  never sees it. The fix is what the raylib branch already does: leave the
+  backend at the DPI divide and apply the letterbox in `input_system.h`'s Metal
+  branch, which can see `window_manager`.
+
+- **flex solver budgets raw child sizes while placement uses snapped ones**
+  (since `7a56f60`) — placement reads `snapped_extent`, but `_total_child`,
+  `_max_child` (`autolayout.h` ~1040) and the justify-content pass (~1412) still
+  sum `child.computed`. A row of eight `w1280()` buttons each round up a pixel,
+  so an `expand()` spacer is handed pre-snap slack and the last button lands
+  15px past its row. Same cause as the `FlexEnd` row starting 11px too far
+  right. floatinghotel measured 0 → 25 overflow warnings against `0c67090`, back
+  to 0 with the three sites summing `snapped_extent`. A regression test is
+  written and sitting in their doc, ready for `sizing_repro_test.cpp`.
+
+This is the parent-measures-child-before-child-snaps root cause again, in the
+one pass that was missed.
+
 ## Open, asked for by other projects
 
 Collected from every gap doc across the 19 projects that vendor afterhours,
@@ -19,20 +46,9 @@ cartographer's turned out to be already in; these are what is left.
 
 ### Components
 
-- **tooltip** (wordproc) — nothing in the library. Every consumer that wants
-  hover text builds a popover by hand and positions it themselves.
-
-- **table / grid layout** (wordproc) — no `table()` or `grid()`. Column
-  alignment across rows is done today by giving every cell the same fixed
-  width, which is what the resolution work above keeps finding broken.
-
 - **access-key underlines** (wordproc) — per-character decoration, so `&File`
   can underline the F. Needs the renderer to decorate one glyph in a run, which
   the run machinery from the wrap work could carry. Filed as accessibility.
-
-- **scrollbar colour and style** (wordproc) — `show_scrollbar` and
-  `scrollbar_thickness` exist and nothing else, so a scrollbar cannot be made
-  to match a theme.
 
 ### Input
 
@@ -53,6 +69,23 @@ cartographer's turned out to be already in; these are what is left.
   and friends registered by hand. Miss one and commands silently do nothing
   while that manager is active. A global registry, or propagation, would end a
   class of bug rather than a bug.
+
+### Harness
+
+- **`--headless` is parsed but unreachable** (endless-dance-chaos) — the flag
+  is read and a working `RaylibHeadless` backend exists, but `RunConfig` has no
+  `display` field and `run()` calls `init_window()` unconditionally. So the flag
+  silently does nothing and every run opens a window. They measured the headless
+  path at 11.7x and had to work around it with their own `--no-render`. The fix
+  is an additive `DisplayMode display` on `RunConfig`.
+
+- **no fixed timestep** (endless-dance-chaos) — the sim is framerate-dependent,
+  so a bot playtest is not reproducible run to run. They added ~8 lines in their
+  own `main.cpp`; every consumer wanting a deterministic harness will.
+
+- **`wait` resolution is quantised by the substep batch**
+  (endless-dance-chaos, minor) — documented there, no workaround needed beyond
+  keeping `sim_steps` small.
 
 ### Diagnostics
 
@@ -124,6 +157,14 @@ afterhours gap — tracked in `docs/LAYOUT_AUDIT.md`.
 
 ## Resolved & upstreamed (merged into afterhours main, pinned `e348efb`)
 
+- **tooltip** — `plugins/ui/tooltip.h`, with `TooltipLab` and a baseline
+- **table / grid layout** — `plugins/ui/grid.h`; `RaceResults` and
+  `MinesweeperLab` converted to it, plus `GridLab`
+- **scrollbar colour and style** — track/thumb usages and explicit colour
+  overrides on `HasScrollView`, with `ScrollbarStyleLab`
+- **singleton-only systems skip the entity scan** — a system whose components
+  are all registered singletons resolves through the singleton map instead of
+  walking every entity (puzzle profiled that scan at 37% of a frame)
 - tab_container tab strip bounds under `with_absolute_position`
 - **render-command sort recycled-id tiebreak** (SEVERE — fixed 76/79 screens;
   root cause behind the modals breakage, first-child-missing-control, and
