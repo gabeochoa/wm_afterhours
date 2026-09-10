@@ -61,7 +61,10 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
                        .with_row_height(h720(30))
                        .with_cell_border(BorderWeight::Thin, line),
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.f), h720(90)})
+                       // children(), not h720(90): three h720(30) rows each
+                       // snap up to 32, so a hand-totalled 90 is 6 short and
+                       // the rows get squeezed under their own row_height.
+                       .with_size(ComponentSize{percent(1.f), children()})
                        .with_debug_name("gl_t1"));
     for (int r = 0; r < 3; r++)
       for (int c = 0; c < 4; c++)
@@ -91,7 +94,8 @@ struct GridLab : ScreenSystem<UIContext<InputAction>> {
                        .with_row_height(h720(30))
                        .with_cell_border(BorderWeight::Medium, line),
                    ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.f), h720(120)})
+                       // Same as gl_t1: four snapped rows need 128, not 120.
+                       .with_size(ComponentSize{percent(1.f), children()})
                        .with_debug_name("gl_t2"));
 
     // Row 0: a gutter cell then one header across the remaining three.
