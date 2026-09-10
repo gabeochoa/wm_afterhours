@@ -10,65 +10,15 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ---
 
-## Blocking another project's bump
-
-Two regressions from this repo's own work stop floatinghotel bumping past
-`0c67090`. Both were diagnosed there with a verified fix; wm cannot see either
-because it is raylib and its baselines happen not to land on the bad case.
-
-- **sokol backend does not compile since `b3f8cef`** — `backend.h`'s
-  `MetalPlatformAPI::get_mouse_position` calls `window_manager::window_to_content`,
-  but `window_manager.h` includes `graphics.h` (and so `backend.h`) before it
-  declares that struct. Every sokol/Metal build fails; wm is raylib so upstream
-  never sees it. The fix is what the raylib branch already does: leave the
-  backend at the DPI divide and apply the letterbox in `input_system.h`'s Metal
-  branch, which can see `window_manager`.
-
-- **flex solver budgets raw child sizes while placement uses snapped ones**
-  (since `7a56f60`) — placement reads `snapped_extent`, but `_total_child`,
-  `_max_child` (`autolayout.h` ~1040) and the justify-content pass (~1412) still
-  sum `child.computed`. A row of eight `w1280()` buttons each round up a pixel,
-  so an `expand()` spacer is handed pre-snap slack and the last button lands
-  15px past its row. Same cause as the `FlexEnd` row starting 11px too far
-  right. floatinghotel measured 0 → 25 overflow warnings against `0c67090`, back
-  to 0 with the three sites summing `snapped_extent`. A regression test is
-  written and sitting in their doc, ready for `sizing_repro_test.cpp`.
-
-This is the parent-measures-child-before-child-snaps root cause again, in the
-one pass that was missed.
-
 ## Open, asked for by other projects
 
 ### From hanabi's triage
 
 hanabi keeps a 14,000-line gap file and an index that ranks the top ten by pain
 per line of upstream change. Checked against current `main`, not their pin
-(`428047e`), which is well behind: six of their ten are already in, including
-the one they rank first. These are what is left.
-
-- **the label origin is an unnamed 5px literal** (hanabi #85, and six entries
-  under it) — `rendering.h:747` positions every label at `margin_px{5.f, 5.f}`,
-  and padding on a label-only element is silently ignored: they built at
-  `pixels(12)` and `pixels(40)` and got byte-identical frames. A text child and
-  a drawn child of the same parent land on different columns, so the app carries
-  two constants for the one number. It is in device pixels, so labels slide as
-  `ui_scale` rises. They do not want the padding honoured -- that would move nine
-  live labels -- they want the constant named, a `text_origin_for(entity)` to
-  align against, and the ignored padding to warn once instead of saying nothing.
-  Cost them a day and a whole region.
-
-- **text editing is opted into by enumerator name** (hanabi #255) — eleven
-  `magic_enum::enum_contains<InputAction>("TextWordLeft")` sites in
-  `text_input/component.h`. Word motion, word delete, undo, redo, cut, copy,
-  paste and select-extend all compile out to nothing if the consumer's enum
-  happens not to carry a name nobody wrote down. No error, no warning, nothing
-  to grep. hanabi went without word editing for its whole life -- "alt-backspace
-  never landed" was a name that was never typed. A startup warning naming each
-  action that resolved to nothing would close it.
-
-- **nothing sizes a box to its own text** (hanabi #136) — no
-  `ComponentSize{fit_content(max), ...}`, so the chat-bubble layout costs a wrap
-  plus a measure in app code every frame.
+(`428047e`), which is well behind: six of their ten were already in, including
+the one they rank first, and three more have landed since. These two are what
+is left, and both need a decision rather than a patch.
 
 - **the two measure functions disagree** (hanabi #137) — `measure_text_internal`
   returns the pen advance, `measure_text` the ink bounding box, a consistent 2px
@@ -120,20 +70,10 @@ cartographer's turned out to be already in; these are what is left.
 
 ### Harness
 
-- **`--headless` is parsed but unreachable** (endless-dance-chaos) — the flag
-  is read and a working `RaylibHeadless` backend exists, but `RunConfig` has no
-  `display` field and `run()` calls `init_window()` unconditionally. So the flag
-  silently does nothing and every run opens a window. They measured the headless
-  path at 11.7x and had to work around it with their own `--no-render`. The fix
-  is an additive `DisplayMode display` on `RunConfig`.
-
-- **no fixed timestep** (endless-dance-chaos) — the sim is framerate-dependent,
-  so a bot playtest is not reproducible run to run. They added ~8 lines in their
-  own `main.cpp`; every consumer wanting a deterministic harness will.
-
 - **`wait` resolution is quantised by the substep batch**
-  (endless-dance-chaos, minor) — documented there, no workaround needed beyond
-  keeping `sim_steps` small.
+  (endless-dance-chaos, minor) — a `wait` cannot land inside a batch of
+  substeps, so its resolution is the batch. They rated it low and documented it
+  on their side; keeping `sim_steps` small is the whole workaround.
 
 ### Diagnostics
 
@@ -217,6 +157,35 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
   assertion they asked for: `assert_no_overflow` measured against the viewport
 - **measure without building** (#224) — `plugins/ui/measure_config.h`
 - **diagnostics** (#192/#161/#113) — landed in `2caf525`
+
+- **`--headless` was parsed and then dropped** (endless-dance-chaos) —
+  `RunConfig::display` plus `E2EArgs::display_mode()`, and raylib's `run()`
+  skips window setup and teardown when headless. `Config::display` already
+  existed and `raylib_init` already honoured it, so backend selection worked
+  all along -- the `run()` path was the whole gap, which is why the flag looked
+  wired up. Worth 11.7x to them. Sokol is untouched: it has no headless backend
+  to select.
+- **no fixed timestep** (endless-dance-chaos) — `RunConfig::fixed_dt` and
+  `sim_steps`, with `frame_steps()` returning the schedule. The consumer still
+  writes the loop, because `RunConfig::frame` takes no dt and calling it N
+  times would render N times rather than simulate N times. `time_scale`
+  deliberately does not stretch a fixed step; doing so would silently put back
+  the frame-rate dependence the fixed step exists to remove.
+- **`synthetic_press_delay` was undocumented and load-bearing** (cartographer)
+  — an injected press is not readable on the frame it was injected, which
+  matches a real keyboard but read as a broken feature twice. Documented at the
+  field and at `set_key_down`, with the timing pinned by test.
+- **text editing opted into by enumerator name** (hanabi #255) —
+  `has_editing_action<InputAction>()` to static_assert on, and a run-once
+  warning naming whatever resolved to nothing.
+- **the label origin was an unnamed 5px literal** (hanabi #85) — `kTextInset`
+  and `text_inset_for()`. Padding on a label with no children still does
+  nothing -- measured, `pixels(12)` and `pixels(40)` give the same 75px box --
+  but it now says so once per run instead of never.
+- **nothing sized a box to its own text** (hanabi #136) —
+  `with_fit_content(max_w, font_size)`. `Dim::Text` and `max_width` already did
+  most of it; the gap was that it takes four settings that must agree and three
+  of four caps the width while silently not wrapping.
 
 - **the two floatinghotel blockers** — the sokol include-order break and the
   flex solver budgeting raw child sizes. Both fixed, with a third snapping site
