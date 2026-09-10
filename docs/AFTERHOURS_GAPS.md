@@ -39,6 +39,54 @@ one pass that was missed.
 
 ## Open, asked for by other projects
 
+### From hanabi's triage
+
+hanabi keeps a 14,000-line gap file and an index that ranks the top ten by pain
+per line of upstream change. Checked against current `main`, not their pin
+(`428047e`), which is well behind: six of their ten are already in, including
+the one they rank first. These are what is left.
+
+- **the label origin is an unnamed 5px literal** (hanabi #85, and six entries
+  under it) — `rendering.h:747` positions every label at `margin_px{5.f, 5.f}`,
+  and padding on a label-only element is silently ignored: they built at
+  `pixels(12)` and `pixels(40)` and got byte-identical frames. A text child and
+  a drawn child of the same parent land on different columns, so the app carries
+  two constants for the one number. It is in device pixels, so labels slide as
+  `ui_scale` rises. They do not want the padding honoured -- that would move nine
+  live labels -- they want the constant named, a `text_origin_for(entity)` to
+  align against, and the ignored padding to warn once instead of saying nothing.
+  Cost them a day and a whole region.
+
+- **text editing is opted into by enumerator name** (hanabi #255) — eleven
+  `magic_enum::enum_contains<InputAction>("TextWordLeft")` sites in
+  `text_input/component.h`. Word motion, word delete, undo, redo, cut, copy,
+  paste and select-extend all compile out to nothing if the consumer's enum
+  happens not to carry a name nobody wrote down. No error, no warning, nothing
+  to grep. hanabi went without word editing for its whole life -- "alt-backspace
+  never landed" was a name that was never typed. A startup warning naming each
+  action that resolved to nothing would close it.
+
+- **nothing sizes a box to its own text** (hanabi #136) — no
+  `ComponentSize{fit_content(max), ...}`, so the chat-bubble layout costs a wrap
+  plus a measure in app code every frame.
+
+- **the two measure functions disagree** (hanabi #137) — `measure_text_internal`
+  returns the pen advance, `measure_text` the ink bounding box, a consistent 2px
+  apart on the same string. The shared `TextMeasureCache` goes through the
+  latter, so the app that most needs the cache cannot adopt it without moving
+  every bubble 2px. Their measurement is on sokol; the raylib path has the same
+  `MeasureText` / `MeasureTextEx` split and was not checked here.
+
+- **the focus ring is painted at rest** (hanabi #83, and five under it) — a ring
+  sits on whatever was focusable first, so the app opens with a box around a row
+  nobody touched, in every screenshot their harness has taken. There is no
+  `:focus-visible` and `FocusSource` cannot build one because it resets to `Grab`
+  every frame, so it answers "who claimed focus this frame" rather than "how did
+  this come to be focused". The ring is also three outlines, and the two you did
+  not ask for take their colour from the ring's own luminance instead of the
+  backdrop -- a requested 1px hairline measures as a 3px white-blue-white band.
+
+
 Collected from every gap doc across the 19 projects that vendor afterhours,
 checked against current `main` rather than the pin each is stuck on. Nine of
 wordproc's fifteen, all ten of break-ross's, four of kart's and one of
@@ -157,6 +205,23 @@ afterhours gap — tracked in `docs/LAYOUT_AUDIT.md`.
 
 ## Resolved & upstreamed (merged into afterhours main, pinned `e348efb`)
 
+Six of hanabi's top ten are already in and they do not know it -- their pin is
+`428047e`. Worth telling them rather than waiting for the next bump:
+
+- **font atlas exhaustion** (their #1, #351/#350/#352/#353) —
+  `fonsSetErrorCallback` is registered and `FONS_ATLAS_FULL` is reported. Their
+  fifty-line `src/util/atlas_guard.h` can go.
+- **widget retirement** (#115) — the frame stamp and end-of-frame sweep landed
+- **GPU pool sizes** (#210) — `AFTERHOURS_SG_{PIPELINE,IMAGE,SAMPLER,BUFFER}_POOL_SIZE`
+- **parent containment** (#275) — `assert_within_parents`, which is the
+  assertion they asked for: `assert_no_overflow` measured against the viewport
+- **measure without building** (#224) — `plugins/ui/measure_config.h`
+- **diagnostics** (#192/#161/#113) — landed in `2caf525`
+
+- **the two floatinghotel blockers** — the sokol include-order break and the
+  flex solver budgeting raw child sizes. Both fixed, with a third snapping site
+  they had not found; `sokol_include_order_test` compiles `window_manager.h`
+  under `SOKOL_METAL`, which nothing did before.
 - **tooltip** — `plugins/ui/tooltip.h`, with `TooltipLab` and a baseline
 - **table / grid layout** — `plugins/ui/grid.h`; `RaceResults` and
   `MinesweeperLab` converted to it, plus `GridLab`
