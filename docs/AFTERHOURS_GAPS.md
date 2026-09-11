@@ -37,14 +37,14 @@ after it. What is left:
   targets return garbage from `getBytes`; it needs a blit to a Shared texture
   and `waitUntilCompleted`. Nothing says so.
 
-- **no card preset** — `with_border`/`with_border_bottom` exist but every card
-  respecifies background, border, radius and padding.
-
-- **absolute children need a manual `with_render_layer`** to stack correctly,
-  which is easy to forget.
-
-- **nothing discourages raw `h720(px)` over the `FontSize` tiers**, so
-  typography drifts across a codebase.
+- **absolute children need a manual `with_render_layer`** to stack correctly.
+  Tried defaulting `with_absolute_position()` to layer 1, on the reasoning that
+  CSS paints absolute above in-flow. **Reverted**: `file_tree` went 65.8% and
+  `islands_trains_settings` 25.2%, because absolute is used for full-screen
+  underlays as well as overlays, and the underlay covered everything. Nothing
+  in the config says which is meant, so the fix needs a way to state intent --
+  an `above`/`below` on the call, or a separate overlay concept -- not a
+  blanket default.
 
 ### From hanabi's triage
 
@@ -220,6 +220,10 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
   `with_fit_content(max_w, font_size)`. `Dim::Text` and `max_width` already did
   most of it; the gap was that it takes four settings that must agree and three
   of four caps the width while silently not wrapping.
+
+- **card preset** — `with_card(pad)`: Surface, rounded corners, padding.
+- **font sizes off the type scale** — `ValidationConfig::enforce_font_size_tiers`,
+  opt-in.
 
 - **the two floatinghotel blockers** — the sokol include-order break and the
   flex solver budgeting raw child sizes. Both fixed, with a third snapping site
