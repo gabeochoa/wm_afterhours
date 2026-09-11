@@ -12,6 +12,40 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ## Open, asked for by other projects
 
+### From floatinghotel's footguns list
+
+Their July list, rechecked against `main`. Most of it has since landed --
+label word-wrap, `Dim::Text` as a measured-width unit, `with_corner_radius`,
+row-flex `expand()`, index-based tick iteration (their heap-use-after-free),
+and the button-inside-a-clickable-row hit priority, which now has a test named
+after it. What is left:
+
+- **no first-class headless for sokol/Metal** — they built their own with
+  `MTLCreateSystemDefaultDevice` and an offscreen texture, but `sapp_*` calls
+  are scattered through the draw and measure paths and assume a live
+  sokol_app, so it needed a `metal_detail` shim to feed headless values. One
+  swappable seam for platform queries instead of direct `sapp_*` would do it.
+  Related: `RunConfig::display` now exists but only raylib can honour it.
+
+- **mouse-wheel injection is consume-once** — the e2e `scroll_wheel` sets a
+  wheel that `get_mouse_wheel_move_v()` consumes on first read, so whichever
+  system reads first wins and it is cleared per frame. The real app reads a
+  live re-readable wheel, so headless diverges from real and driving a
+  specific scroll view is unreliable.
+
+- **offscreen readback needs manual GPU sync** — non-MSAA Private Metal render
+  targets return garbage from `getBytes`; it needs a blit to a Shared texture
+  and `waitUntilCompleted`. Nothing says so.
+
+- **no card preset** — `with_border`/`with_border_bottom` exist but every card
+  respecifies background, border, radius and padding.
+
+- **absolute children need a manual `with_render_layer`** to stack correctly,
+  which is easy to forget.
+
+- **nothing discourages raw `h720(px)` over the `FontSize` tiers**, so
+  typography drifts across a codebase.
+
 ### From hanabi's triage
 
 hanabi keeps a 14,000-line gap file and an index that ranks the top ten by pain
