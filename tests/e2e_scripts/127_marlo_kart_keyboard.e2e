@@ -1,0 +1,93 @@
+# The same Grand Prix with the mouse never touched: arrows move a cursor,
+# Enter confirms, Esc backs out. 126 covers the pointer path.
+
+goto_screen marlo_kart
+wait 0.5
+expect_text "MARLO KART"
+
+# All three class chips are always on screen, so the only honest proof that
+# Left moved the selection is the class the next screen reports. Two Lefts
+# from the 150cc default is 50cc, which also shows the wrap direction.
+key LEFT
+wait 0.2
+key LEFT
+wait 0.2
+key ENTER
+wait 0.4
+expect_text "SELECT DRIVER"
+expect_text "50cc  -  Grand Prix"
+expect_text "Marlo + Standard"
+
+# Three Rights along the top row lands on Bruno.
+key RIGHT
+wait 0.2
+key RIGHT
+wait 0.2
+key RIGHT
+wait 0.2
+expect_text "Bruno + Standard"
+
+# Down keeps the column, so it drops to Ozzy on the second row.
+key DOWN
+wait 0.2
+expect_text "Ozzy + Standard"
+
+# Down again leaves the driver grid for the vehicle row, still column three.
+key DOWN
+wait 0.2
+expect_text "Ozzy + Bruiser"
+key LEFT
+wait 0.2
+expect_text "Ozzy + Rally"
+screenshot marlo_kart_keyboard_select
+
+# Up hands the cursor back to the driver grid, keeping the column, so Left
+# and Right steer drivers again and the kart choice stays put.
+key UP
+wait 0.2
+expect_text "Tessa + Rally"
+key RIGHT
+wait 0.2
+expect_text "Ozzy + Rally"
+
+key ENTER
+wait 0.4
+expect_text "SELECT CUP"
+expect_text "Ozzy  -  Rally"
+
+# Both cup names appear twice on this screen, once in a card and once in the
+# side panel, so the cursor move is only provable once the race names it.
+key DOWN
+wait 0.2
+key RIGHT
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "Ember Ridge  -  Delta Cup"
+expect_text "LAP 1/3"
+
+wait 3.0
+
+# Enter latches the drift, Enter again cashes the mini-turbo in.
+key ENTER
+wait 1.5
+expect_text "RELEASE"
+key ENTER
+wait 0.3
+expect_text "DRIFT"
+
+# Esc pauses over a live race and Enter resumes it.
+key ESCAPE
+wait 0.4
+expect_text "PAUSED"
+expect_text "RESTART RACE"
+screenshot marlo_kart_keyboard_pause
+key ENTER
+wait 0.3
+expect_no_text "PAUSED"
+
+key ESCAPE
+wait 0.4
+click_ui mk_quit
+wait 0.4
+expect_text "MARLO KART"

@@ -1,0 +1,126 @@
+# A whole Grand Prix driven through the UI: title, driver, cup, a race that
+# runs to a real finish, results, and the podium.
+
+goto_screen marlo_kart
+wait 0.5
+
+expect_text "MARLO KART"
+expect_text "AFTERHOURS GRAND PRIX"
+expect_text "150cc"
+screenshot marlo_kart_title
+
+click_ui mk_engine_1
+wait 0.2
+click_ui mk_start
+wait 0.4
+
+expect_text "SELECT DRIVER"
+expect_text "100cc  -  Grand Prix"
+expect_text "Marlo"
+expect_text "Bruno"
+expect_text "Ozzy"
+expect_text "Standard"
+expect_text "Bruiser"
+expect_text "SPEED"
+expect_text "WEIGHT"
+screenshot marlo_kart_driver
+
+click_ui mk_driver_3
+wait 0.2
+click_ui mk_kart_1
+wait 0.2
+screenshot marlo_kart_driver_picked
+
+click_ui mk_driver_next
+wait 0.4
+
+expect_text "SELECT CUP"
+expect_text "Bruno  -  Speedster"
+expect_text "Acorn Cup"
+expect_text "Bolt Cup"
+expect_text "Comet Cup"
+expect_text "Delta Cup"
+expect_text "Sunset Loop"
+expect_text "Rainbow Rift"
+screenshot marlo_kart_cup
+
+click_ui mk_cup_2
+wait 0.2
+expect_text "Glacier Pass"
+screenshot marlo_kart_cup_picked
+
+click_ui mk_cup_start
+wait 0.2
+
+# The lights hold the grid, so the clock has not started yet.
+expect_text "LAP 1/3"
+expect_text "Glacier Pass  -  Comet Cup"
+expect_text "COINS 0"
+screenshot marlo_kart_countdown
+
+# Lights out. Coins only accrue once the karts are moving, so this both
+# proves the sim is running and that the HUD is wired to it.
+wait 3.0
+expect_no_text "COINS 0"
+
+# Drift is a latch: arm it, bank charge through the corner, release for the
+# mini-turbo. The tier in the label is the charge the release will cash in.
+click_ui mk_drift
+wait 1.6
+expect_text "RELEASE"
+click_ui mk_drift
+wait 0.4
+expect_text "DRIFT"
+screenshot marlo_kart_racing
+
+# Pause is an overlay sitting over a live race.
+click_ui mk_pause
+wait 0.4
+expect_text "PAUSED"
+expect_text "RESTART RACE"
+screenshot marlo_kart_paused
+click_ui mk_resume
+wait 0.3
+expect_no_text "PAUSED"
+
+# Three laps at 100cc, then every kart has to cross the line.
+wait 22.0
+
+expect_text "RACE RESULTS"
+expect_text "Comet Cup STANDINGS"
+expect_text "NEXT RACE"
+screenshot marlo_kart_results
+
+# Races 2 through 4, so the cup standings actually accumulate and the last
+# results screen offers the trophy instead of another race.
+click_ui mk_results_next
+wait 0.5
+expect_text "Neon Docks  -  Comet Cup"
+expect_text "LAP 1/3"
+wait 26.0
+expect_text "RACE RESULTS"
+
+click_ui mk_results_next
+wait 0.5
+expect_text "Quarry Spiral  -  Comet Cup"
+wait 26.0
+expect_text "RACE RESULTS"
+
+click_ui mk_results_next
+wait 0.5
+expect_text "Tidal Flats  -  Comet Cup"
+wait 26.0
+expect_text "RACE RESULTS"
+expect_text "VIEW TROPHY"
+expect_no_text "NEXT RACE"
+
+click_ui mk_results_next
+wait 0.5
+expect_text "TROPHY CEREMONY"
+expect_text "Comet Cup"
+expect_text "BACK TO TITLE"
+screenshot marlo_kart_trophy
+
+click_ui mk_trophy_done
+wait 0.4
+expect_text "MARLO KART"
