@@ -13,7 +13,7 @@ Each library change has its own afterhours commit and a wm adoption commit.
 | UP-01 Audio gains | Complete, afterhours `1fce0d9` |
 | UP-02 Settings saves | Complete, afterhours `325caee` |
 | UP-03 Scoped test clipboard | Complete, afterhours `b81173b`; 15/15 checks including both text widgets |
-| UP-04 Native dialogs, portable API, macOS first | Pending |
+| UP-04 Native dialogs, portable API, macOS first | Complete, afterhours `544ea06`; queue and real macOS cancellation tests pass |
 | UP-05 Complete binding persistence | Pending |
 | UP-06 Automatic binding prompts with device override | Pending |
 | UP-09 Filesystem watcher, portable API, macOS first | Pending |
