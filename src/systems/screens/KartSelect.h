@@ -2,423 +2,486 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <string>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_character = 2;
-  size_t selected_kart = 0;
-
   struct Character {
     std::string name;
-    std::string label; // fallback icon text
     float speed;
-    float accel;
+    float acceleration;
     float handling;
     float weight;
   };
 
-  std::vector<Character> characters = {
-      {"Turbo", "T", 0.9f, 0.5f, 0.4f, 0.7f},
-      {"Blaze", "B", 0.7f, 0.8f, 0.6f, 0.5f},
-      {"Drift", "D", 0.6f, 0.6f, 0.9f, 0.4f},
-      {"Tank", "K", 0.4f, 0.3f, 0.5f, 1.0f},
-      {"Zippy", "Z", 0.8f, 0.9f, 0.7f, 0.3f},
-      {"Rumble", "R", 0.5f, 0.4f, 0.7f, 0.9f},
-      {"Flash", "F", 1.0f, 0.6f, 0.3f, 0.6f},
-      {"Pebble", "P", 0.3f, 0.7f, 1.0f, 0.5f},
-  };
+  size_t selected_character = 2;
+  size_t selected_kart = 0;
+  bool ready = false;
+  bool loaded = false;
+  std::string status;
+  raylib::Texture2D portraits_texture{};
+  raylib::Texture2D karts_texture{};
+  raylib::Texture2D big_karts_texture{};
 
-  std::vector<std::string> kart_names = {"Standard", "Speedster", "Off-Road",
-                                         "Classic"};
+  const std::array<Character, 8> characters{{
+      {"Turbo", .9f, .5f, .4f, .7f},
+      {"Blaze", .7f, .8f, .6f, .5f},
+      {"Drift", .6f, .6f, .9f, .4f},
+      {"Tank", .4f, .3f, .5f, 1.f},
+      {"Zippy", .8f, .9f, .7f, .3f},
+      {"Rumble", .5f, .4f, .7f, .9f},
+      {"Flash", 1.f, .6f, .3f, .6f},
+      {"Pebble", .3f, .7f, 1.f, .5f},
+  }};
+  const std::array<std::string, 4> kart_names{"Standard", "Speedster",
+                                               "Off-Road", "Classic"};
 
-  // Vibrant racing colors
-  afterhours::Color bg_blue{25, 35, 65, 255};
-  afterhours::Color panel_blue{35, 55, 95, 255};
-  afterhours::Color panel_light{55, 80, 130, 255};
-  afterhours::Color border_blue{70, 100, 160, 255};
-  afterhours::Color accent_yellow{255, 210, 50, 255};
-  afterhours::Color accent_orange{255, 150, 50, 255};
-  afterhours::Color accent_red{220, 60, 60, 255};
-  afterhours::Color accent_green{80, 200, 100, 255};
-  afterhours::Color white{255, 255, 255, 255};
-  afterhours::Color dark_text{20, 25, 40, 255};
-  afterhours::Color muted_text{140, 155, 185, 255};
-  afterhours::Color grid_cell_bg{45, 65, 110, 255};
-  afterhours::Color grid_cell_selected{255, 210, 50, 255};
+  const afterhours::Color deep_blue{6, 71, 125, 255};
+  const afterhours::Color bright_blue{58, 179, 230, 255};
+  const afterhours::Color navy{22, 71, 117, 255};
+  const afterhours::Color white{255, 255, 255, 255};
+  const afterhours::Color yellow{255, 221, 54, 255};
+  const afterhours::Color cyan_line{140, 224, 255, 255};
 
-  // Character portrait colors (unique per character)
-  afterhours::Color portrait_colors[8] = {
-      {220, 60, 60, 255},   // red
-      {255, 140, 40, 255},  // orange
-      {60, 180, 220, 255},  // cyan
-      {100, 100, 120, 255}, // gray
-      {255, 220, 60, 255},  // yellow
-      {140, 80, 180, 255},  // purple
-      {60, 200, 120, 255},  // green
-      {180, 140, 100, 255}, // tan
-  };
+  ComponentConfig box(float scale, float x, float y, float width,
+                      float height) const {
+    return ComponentConfig{}
+        .with_size({pixels(width * scale), pixels(height * scale)})
+        .with_absolute_position(pixels(x * scale), pixels(y * scale))
+        .with_background(Theme::Usage::None);
+  }
+
+  static void draw_skew_plate(RectangleType r, float offset,
+                              afterhours::Color color) {
+    Vector2Type a{r.x + offset, r.y};
+    Vector2Type b{r.x + r.width, r.y};
+    Vector2Type c{r.x + r.width - offset, r.y + r.height};
+    Vector2Type d{r.x, r.y + r.height};
+    afterhours::draw_triangle(a, d, b, color);
+    afterhours::draw_triangle(b, d, c, color);
+  }
+
+  static void draw_background(RectangleType r, float scale) {
+    afterhours::draw_rectangle_gradient_h(
+        {r.x, r.y, r.width, 654.f * scale},
+        afterhours::Color{5, 69, 123, 255},
+        afterhours::Color{54, 174, 224, 255});
+    for (int row = 0; row < 26; ++row)
+      for (int col = 0; col < 50; ++col)
+        if ((row + col) % 2 == 0)
+          afterhours::draw_rectangle(
+              {r.x + static_cast<float>(col) * 26.f * scale,
+               r.y + static_cast<float>(row) * 26.f * scale,
+               26.f * scale, 26.f * scale},
+              afterhours::Color{255, 255, 255, 7});
+
+    afterhours::draw_rectangle(
+        {r.x, r.y, 730.f * scale, 84.f * scale},
+        afterhours::Color{244, 247, 249, 255});
+    afterhours::draw_triangle(
+        {r.x + 730.f * scale, r.y},
+        {r.x + 730.f * scale, r.y + 84.f * scale},
+        {r.x + 759.f * scale, r.y}, afterhours::Color{244, 247, 249, 255});
+    afterhours::draw_rectangle(
+        {r.x, r.y + 84.f * scale, 1280.f * scale, 4.f * scale},
+        afterhours::Color{140, 224, 255, 255});
+
+    afterhours::draw_rectangle(
+        {r.x, r.y + 654.f * scale, 1280.f * scale, 66.f * scale},
+        afterhours::Color{244, 246, 247, 255});
+    afterhours::draw_rectangle(
+        {r.x, r.y + 654.f * scale, 1280.f * scale, 4.f * scale},
+        afterhours::Color{192, 237, 255, 255});
+  }
+
+  static void draw_driver_card(RectangleType r, bool selected, float scale) {
+    if (selected) {
+      afterhours::draw_rectangle_rounded(
+          {r.x - 2.f * scale, r.y - 2.f * scale, r.width + 4.f * scale,
+           r.height + 4.f * scale},
+          .04f, 8, afterhours::Color{255, 255, 255, 255},
+          RoundedCorners().all_round());
+      afterhours::draw_rectangle_gradient_h(
+          r, afterhours::Color{255, 255, 255, 255},
+          afterhours::Color{255, 244, 180, 255});
+      afterhours::draw_rectangle_rounded_lines_ex(
+          r, .04f, 8, 5.f * scale, afterhours::Color{255, 213, 42, 255});
+      return;
+    }
+    afterhours::draw_rectangle_gradient_h(
+        r, afterhours::Color{159, 216, 238, 255},
+        afterhours::Color{108, 162, 203, 255});
+    afterhours::draw_rectangle_rounded_lines_ex(
+        r, .04f, 8, 3.f * scale, afterhours::Color{218, 246, 255, 255});
+  }
+
+  static void draw_vehicle_card(RectangleType r, bool selected, float scale) {
+    afterhours::draw_rectangle(
+        r, selected ? afterhours::Color{255, 221, 54, 255}
+                    : afterhours::Color{228, 244, 250, 255});
+    afterhours::draw_rectangle_rounded_lines_ex(
+        r, .03f, 6, 2.f * scale,
+        selected ? afterhours::Color{255, 244, 172, 255}
+                 : afterhours::Color{255, 255, 255, 255});
+  }
+
+  static void draw_stat_bar(RectangleType r, float value, float scale) {
+    afterhours::draw_rectangle(r, afterhours::Color{0, 44, 75, 255});
+    afterhours::draw_rectangle(
+        {r.x, r.y, r.width * std::clamp(value, 0.f, 1.f), r.height},
+        afterhours::Color{255, 214, 56, 255});
+    for (float x = 25.f; x < 326.f; x += 28.f) {
+      const bool filled = x < 326.f * value;
+      afterhours::draw_rectangle(
+          {r.x + x * scale, r.y, 3.f * scale, r.height},
+          filled ? afterhours::Color{255, 237, 143, 255}
+                 : afterhours::Color{99, 147, 180, 255});
+    }
+  }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(20.0f));
+    const float scale =
+        context.screen_height > 0.f ? context.screen_height / 720.f : 1.f;
     Theme theme;
     theme.font = white;
-    theme.darkfont = dark_text;
-    theme.font_muted = muted_text;
-    theme.background = bg_blue;
-    theme.surface = panel_blue;
-    theme.primary = border_blue;
-    theme.secondary = panel_light;
-    theme.accent = accent_yellow;
-    theme.error = accent_red;
-    theme.roundness = 0.12f;
-    theme.segments = 8;
-    context.theme = theme;
+    theme.darkfont = navy;
+    theme.background = deep_blue;
+    theme.surface = deep_blue;
+    theme.primary = yellow;
+    theme.secondary = bright_blue;
+    theme.accent = yellow;
+    theme.roundness = 0.f;
+    theme.segments = 16;
+    context.set_theme(theme);
+    context.scaling_mode = ScalingMode::Adaptive;
+    UIStylingDefaults::get().set_default_font("ArchivoMockBold", pixels(20.f));
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    if (!loaded) {
+      loaded = true;
+      portraits_texture = raylib::LoadTexture(
+          afterhours::files::get_resource_path(
+              "images", "kart_select/portraits.png")
+              .string()
+              .c_str());
+      karts_texture = raylib::LoadTexture(
+          afterhours::files::get_resource_path("images",
+                                                "kart_select/karts.png")
+              .string()
+              .c_str());
+      big_karts_texture = raylib::LoadTexture(
+          afterhours::files::get_resource_path(
+              "images", "kart_select/big_karts.png")
+              .string()
+              .c_str());
+      raylib::SetTextureFilter(portraits_texture,
+                               raylib::TEXTURE_FILTER_BILINEAR);
+      raylib::SetTextureFilter(karts_texture, raylib::TEXTURE_FILTER_BILINEAR);
+      raylib::SetTextureFilter(big_karts_texture,
+                               raylib::TEXTURE_FILTER_BILINEAR);
+    }
 
-    // ========== FULL BACKGROUND ==========
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_blue)
-            .with_debug_name("bg"));
+    if (context.pressed(InputAction::WidgetRight)) {
+      selected_character = (selected_character + 1) % characters.size();
+      ready = false;
+      status = "Selected " + characters[selected_character].name;
+    }
+    if (context.pressed(InputAction::WidgetLeft)) {
+      selected_character =
+          (selected_character + characters.size() - 1) % characters.size();
+      ready = false;
+      status = "Selected " + characters[selected_character].name;
+    }
+    if (context.pressed(InputAction::WidgetDown)) {
+      selected_kart = (selected_kart + 1) % kart_names.size();
+      ready = false;
+      status = "Selected " + kart_names[selected_kart];
+    }
+    if (context.pressed(InputAction::WidgetUp)) {
+      selected_kart =
+          (selected_kart + kart_names.size() - 1) % kart_names.size();
+      ready = false;
+      status = "Selected " + kart_names[selected_kart];
+    }
 
-    // ========== HEADER ==========
-    // Title
-    div(context, mk(entity, 5),
-        ComponentConfig{}
-            .with_label("SELECT YOUR RACER")
-            .with_size(ComponentSize{pixels(450), pixels(55)})
-            .with_absolute_position(30.0f, 15.0f)
-            .with_font("Fredoka", h720(38.0f))
-            .with_custom_text_color(accent_yellow)
-            .with_text_stroke(afterhours::Color{180, 130, 0, 255}, 3.0f));
+    auto root =
+        div(context, mk(entity, 0),
+            box(scale, 0.f, 0.f, 1280.f, 720.f)
+                .with_on_draw_bg([scale](RectangleType r) {
+                  draw_background(r, scale);
+                })
+                .with_debug_name("kart_root"));
 
-    // Race mode indicator
-    div(context, mk(entity, 6),
-        ComponentConfig{}
-            .with_label("Grand Prix - Mushroom Cup")
-            .with_size(ComponentSize{pixels(280), pixels(30)})
-            .with_absolute_position((float)screen_w - 310.0f, 20.0f)
-            .with_font("EqProRounded", h720(18.0f))
-            .with_custom_text_color(muted_text)
-            .with_alignment(TextAlignment::Right));
+    auto text = [&](int id, const std::string &label, float x, float y,
+                    float width, float height, float size,
+                    afterhours::Color color,
+                    TextAlignment alignment = TextAlignment::Left,
+                    const std::string &font = "ArchivoMockBold") {
+      return div(context, mk(root.ent(), id),
+                 box(scale, x, y, width, height)
+                     .with_label(label)
+                     .with_font(font, pixels(size * scale))
+                     .with_custom_text_color(color)
+                     .with_alignment(alignment)
+                     .with_text_inset(0.f, 0.f));
+    };
 
-    // Player indicator
-    div(context, mk(entity, 7),
-        ComponentConfig{}
+    text(1, "SELECT YOUR RACER", 44.f, 10.f, 430.f, 68.f, 46.f, navy,
+         TextAlignment::Left);
+    text(2, "Grand Prix · Mushroom Cup", 900.f, 17.f, 268.f, 52.f, 25.f,
+         white, TextAlignment::Right);
+    div(context, mk(root.ent(), 3),
+        box(scale, 1191.f, 20.f, 47.f, 45.f)
             .with_label("P1")
-            .with_size(ComponentSize{pixels(50), pixels(32)})
-            .with_absolute_position((float)screen_w - 60.0f, 18.0f)
-            .with_custom_background(accent_yellow)
-            .with_custom_text_color(dark_text)
+            .with_font("ArchivoMockBold", pixels(26.f * scale))
+            .with_custom_background(afterhours::Color{255, 228, 65, 255})
+            .with_custom_text_color(afterhours::Color{38, 60, 85, 255})
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f));
+            .with_text_inset(0.f, 0.f)
+            .with_rounded_corners(RoundedCorners().all_sharp())
+            .with_debug_name("kart_player"));
 
-    // ========== LEFT: CHARACTER GRID ==========
-    float grid_x = 30.0f;
-    float grid_y = 75.0f;
-    float cell_size = 80.0f;
-    float cell_gap = 8.0f;
-    int cols = 4;
+    auto portrait = [&](int id, size_t index, float x, float y) {
+      const float source_x = static_cast<float>(index % 4) * 230.f;
+      const float source_y = static_cast<float>(index / 4) * 250.f;
+      sprite(context, mk(root.ent(), id), portraits_texture,
+             {source_x, source_y, 230.f, 250.f},
+             box(scale, x, y, 115.f, 125.f).with_ignore_pointer_events());
+    };
+    auto kart_thumb = [&](int id, size_t index, float x, float y) {
+      const float source_x = static_cast<float>(index % 4) * 240.f;
+      const float source_y = static_cast<float>(index / 4) * 150.f;
+      sprite(context, mk(root.ent(), id), karts_texture,
+             {source_x, source_y, 240.f, 150.f},
+             box(scale, x, y, 120.f, 75.f).with_ignore_pointer_events());
+    };
 
-    // Grid panel background
-    float grid_panel_w =
-        (float)cols * (cell_size + cell_gap) + cell_gap + 20.0f;
-    float grid_panel_h = (float)screen_h - grid_y - 110.0f;
-
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_720p_size(grid_panel_w, grid_panel_h)
-            .with_absolute_position(grid_x, grid_y)
-            .with_custom_background(panel_blue)
-            .with_border(border_blue, 3.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
-            .with_debug_name("grid_panel"));
-
-    // Character grid cells
-    for (size_t i = 0; i < characters.size(); i++) {
-      int row = static_cast<int>(i) / cols;
-      int col = static_cast<int>(i) % cols;
-      float cx =
-          grid_x + 10.0f + cell_gap + (float)col * (cell_size + cell_gap);
-      float cy =
-          grid_y + 10.0f + cell_gap + (float)row * (cell_size + cell_gap);
-
-      bool is_selected = (i == selected_character);
-      afterhours::Color cell_bg =
-          is_selected ? grid_cell_selected : grid_cell_bg;
-      afterhours::Color cell_border =
-          is_selected ? accent_orange : afterhours::Color{60, 80, 130, 255};
-      float border_w = is_selected ? 4.0f : 2.0f;
-
-      if (button(context, mk(entity, 20 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_720p_size(cell_size, cell_size)
-                     .with_absolute_position(cx, cy)
-                     .with_custom_background(cell_bg)
-                     .with_border(cell_border, border_w)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.15f))) {
+    for (size_t i = 0; i < characters.size(); ++i) {
+      const float x = 40.f + static_cast<float>(i % 4) * 148.f;
+      const float base_y = 117.f + static_cast<float>(i / 4) * 164.f;
+      const bool selected = selected_character == i;
+      const float y = base_y - (selected ? 2.f : 0.f);
+      auto card =
+          button(context, mk(root.ent(), 20 + static_cast<int>(i)),
+                 box(scale, x, y, 139.f, 155.f)
+                     .with_click_activation(ClickActivationMode::Release)
+                     .with_on_draw_bg([selected, scale](RectangleType r) {
+                       draw_driver_card(r, selected, scale);
+                     })
+                     .with_debug_name("kart_driver_" + std::to_string(i)));
+      portrait(40 + static_cast<int>(i), i, x + 12.f, y);
+      div(context, mk(root.ent(), 60 + static_cast<int>(i)),
+          box(scale, x + 3.f, y + 128.f, 133.f, 24.f)
+              .with_custom_background(afterhours::Color{217, 242, 250, 238})
+              .with_rounded_corners(RoundedCorners().all_sharp())
+              .with_corner_radius(0.f)
+              .with_ignore_pointer_events());
+      text(80 + static_cast<int>(i), characters[i].name, x + 3.f, y + 127.f,
+           133.f, 26.f, 20.f, navy, TextAlignment::Center);
+      if (selected)
+        div(context, mk(root.ent(), 100 + static_cast<int>(i)),
+            box(scale, x - 3.f, y - 9.f, 30.f, 31.f)
+                .with_label("P1")
+                .with_font("ArchivoMockBold", pixels(19.f * scale))
+                .with_custom_background(afterhours::Color{255, 213, 42, 255})
+                .with_border(white, 2.f * scale)
+                .with_custom_text_color(afterhours::Color{54, 71, 81, 255})
+                .with_alignment(TextAlignment::Center)
+                .with_text_inset(0.f, 0.f)
+                .with_ignore_pointer_events()
+                .with_debug_name("kart_selected_badge"));
+      if (card) {
         selected_character = i;
+        ready = false;
+        status = selected ? "" : "Selected " + characters[i].name;
       }
-
-      // Character portrait circle
-      float portrait_size = 52.0f;
-      float portrait_offset = (cell_size - portrait_size) / 2.0f;
-      div(context, mk(entity, 30 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(characters[i].label)
-              .with_size(ComponentSize{pxf(portrait_size), pxf(portrait_size)})
-              .with_absolute_position(cx + portrait_offset,
-                                      cy + portrait_offset - 6.0f)
-              .with_custom_background(portrait_colors[i])
-              .with_font("Fredoka", h720(28.0f))
-              .with_custom_text_color(white)
-              .with_alignment(TextAlignment::Center)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f));
-
-      // Character name below portrait
-      afterhours::Color name_color = is_selected ? dark_text : white;
-      div(context, mk(entity, 40 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(characters[i].name)
-              .with_size(ComponentSize{pxf(cell_size), pixels(22)})
-              .with_absolute_position(cx, cy + cell_size - 22.0f)
-              .with_font("EqProRounded", h720(16.0f))
-              .with_custom_text_color(name_color)
-              .with_alignment(TextAlignment::Center));
     }
 
-    // ========== CENTER: CHARACTER PREVIEW ==========
-    float preview_x = grid_x + grid_panel_w + 24.0f;
-    float preview_y = grid_y;
-    float preview_w = 280.0f;
-    float preview_h = grid_panel_h;
-
-    // Preview panel
-    div(context, mk(entity, 100),
-        ComponentConfig{}
-            .with_720p_size(preview_w, preview_h)
-            .with_absolute_position(preview_x, preview_y)
-            .with_custom_background(panel_blue)
-            .with_border(border_blue, 3.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
-            .with_debug_name("preview_panel"));
-
-    // Large character portrait
-    auto &sel = characters[selected_character];
-    float big_portrait = 110.0f;
-    div(context, mk(entity, 101),
-        ComponentConfig{}
-            .with_label(sel.label)
-            .with_720p_size(big_portrait, big_portrait)
-            .with_absolute_position(preview_x +
-                                        (preview_w - big_portrait) / 2.0f,
-                                    preview_y + 15.0f)
-            .with_custom_background(portrait_colors[selected_character])
-            .with_border(accent_yellow, 4.0f)
-            .with_font("Fredoka", h720(56.0f))
-            .with_custom_text_color(white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                              afterhours::Color{0, 0, 0, 60}));
-
-    // Character name
-    div(context, mk(entity, 102),
-        ComponentConfig{}
-            .with_label(sel.name)
-            .with_size(ComponentSize{pxf(preview_w - 20), pixels(36)})
-            .with_absolute_position(preview_x + 10.0f,
-                                    preview_y + big_portrait + 25.0f)
-            .with_font("Fredoka", h720(28.0f))
-            .with_custom_text_color(accent_yellow)
-            .with_alignment(TextAlignment::Center));
-
-    // ========== STAT BARS ==========
-    struct StatDef {
-      std::string label;
-      float value;
-      afterhours::Color color;
-    };
-    std::vector<StatDef> stats = {
-        {"SPD", sel.speed, accent_red},
-        {"ACC", sel.accel, accent_orange},
-        {"HND", sel.handling, accent_green},
-        {"WGT", sel.weight, {100, 140, 220, 255}},
-    };
-
-    float stat_y = preview_y + big_portrait + 58.0f;
-    float stat_bar_w = 140.0f;
-
-    for (size_t i = 0; i < stats.size(); i++) {
-      float sy = stat_y + (float)i * 28.0f;
-
-      // Label with numeric value for accessibility
-      int stat_val = static_cast<int>(stats[i].value * 10.0f);
-      std::string stat_label =
-          stats[i].label + " " + std::to_string(stat_val) + "/10";
-      div(context, mk(entity, 110 + static_cast<int>(i) * 3),
-          ComponentConfig{}
-              .with_label(stat_label)
-              .with_size(ComponentSize{pixels(100), pixels(22)})
-              .with_absolute_position(preview_x + 15.0f, sy)
-              .with_font("EqProRounded", h720(14.0f))
-              .with_custom_text_color(white));
-
-      // Bar background
-      div(context, mk(entity, 111 + static_cast<int>(i) * 3),
-          ComponentConfig{}
-              .with_size(ComponentSize{pxf(stat_bar_w), pixels(16)})
-              .with_absolute_position(preview_x + 100.0f, sy + 3.0f)
-              .with_custom_background(afterhours::Color{25, 35, 60, 255})
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f));
-
-      // Bar fill
-      div(context, mk(entity, 112 + static_cast<int>(i) * 3),
-          ComponentConfig{}
-              .with_size(
-                  ComponentSize{pxf(stat_bar_w * stats[i].value), pixels(16)})
-              .with_absolute_position(preview_x + 100.0f, sy + 3.0f)
-              .with_custom_background(stats[i].color)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f));
-    }
-
-    // ========== RIGHT: KART SELECTION ==========
-    float kart_x = preview_x + preview_w + 24.0f;
-    float kart_y = grid_y;
-    float kart_w = (float)screen_w - kart_x - 30.0f;
-    float kart_h = grid_panel_h;
-
-    // Kart panel
-    div(context, mk(entity, 200),
-        ComponentConfig{}
-            .with_720p_size(kart_w, kart_h)
-            .with_absolute_position(kart_x, kart_y)
-            .with_custom_background(panel_blue)
-            .with_border(border_blue, 3.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 4.0f, 12.0f, afterhours::Color{0, 0, 0, 80})
-            .with_debug_name("kart_panel"));
-
-    // Kart header
-    div(context, mk(entity, 201),
-        ComponentConfig{}
-            .with_label("VEHICLE")
-            .with_size(ComponentSize{pxf(kart_w - 20), pixels(30)})
-            .with_absolute_position(kart_x + 10.0f, kart_y + 10.0f)
-            .with_custom_text_color(accent_yellow)
-            .with_alignment(TextAlignment::Center));
-
-    // Kart options
-    for (size_t i = 0; i < kart_names.size(); i++) {
-      float ky = kart_y + 50.0f + (float)i * 44.0f;
-      bool is_sel = (i == selected_kart);
-
-      afterhours::Color kart_bg =
-          is_sel ? accent_yellow : afterhours::Color{40, 60, 105, 255};
-      afterhours::Color kart_text = is_sel ? dark_text : white;
-
-      if (button(context, mk(entity, 210 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(kart_names[i])
-                     .with_size(ComponentSize{pxf(kart_w - 40), pixels(38)})
-                     .with_absolute_position(kart_x + 20.0f, ky)
-                     .with_custom_background(kart_bg)
-                     .with_custom_text_color(kart_text)
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.3f))) {
+    text(120, "CHOOSE YOUR VEHICLE", 40.f, 451.f, 360.f, 35.f, 20.f, white);
+    for (size_t i = 0; i < kart_names.size(); ++i) {
+      const float x = 40.f + static_cast<float>(i) * 148.f;
+      const bool selected = selected_kart == i;
+      auto card =
+          button(context, mk(root.ent(), 130 + static_cast<int>(i)),
+                 box(scale, x, 489.f, 139.f, 110.f)
+                     .with_click_activation(ClickActivationMode::Release)
+                     .with_on_draw_bg([selected, scale](RectangleType r) {
+                       draw_vehicle_card(r, selected, scale);
+                     })
+                     .with_debug_name("kart_vehicle_" + std::to_string(i)));
+      kart_thumb(140 + static_cast<int>(i), i, x + 10.f, 491.f);
+      text(150 + static_cast<int>(i), kart_names[i], x + 3.f, 572.f, 133.f,
+           25.f, 18.f, navy, TextAlignment::Center);
+      if (card) {
         selected_kart = i;
+        ready = false;
+        status = selected ? "" : "Selected " + kart_names[i];
       }
     }
 
-    // ========== BOTTOM: ACTION BAR ==========
-    float bottom_y = (float)screen_h - 90.0f;
+    div(context, mk(root.ent(), 170),
+        box(scale, 648.f, 366.f, 592.f, 72.f)
+            .with_on_draw_bg([scale](RectangleType r) {
+              const float cx = r.x + r.width * .5f;
+              afterhours::draw_ellipse(
+                  static_cast<int>(cx),
+                  static_cast<int>(r.y + 52.f * scale), 276.f * scale,
+                  28.f * scale, afterhours::Color{22, 95, 142, 255});
+              afterhours::draw_ellipse(
+                  static_cast<int>(cx),
+                  static_cast<int>(r.y + 42.f * scale), 276.f * scale,
+                  28.f * scale, afterhours::Color{107, 172, 205, 255});
+              afterhours::draw_ellipse(
+                  static_cast<int>(cx),
+                  static_cast<int>(r.y + 28.f * scale), 276.f * scale,
+                  28.f * scale, afterhours::Color{234, 250, 255, 255});
+            })
+            .with_ignore_pointer_events()
+            .with_debug_name("kart_platform"));
 
-    // Bottom bar background
-    div(context, mk(entity, 300),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w - 60), pixels(70)})
-            .with_absolute_position(30.0f, bottom_y)
-            .with_custom_background(panel_blue)
-            .with_border(border_blue, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("bottom_bar"));
+    const float big_source_x =
+        static_cast<float>(selected_character % 4) * 1184.f;
+    const float big_source_y =
+        static_cast<float>(selected_character / 4) * 582.f;
+    sprite(context, mk(root.ent(), 171), big_karts_texture,
+           {big_source_x, big_source_y, 1184.f, 582.f},
+           box(scale, 648.f, 116.f, 592.f, 291.f)
+               .with_ignore_pointer_events()
+               .with_debug_name("kart_preview"));
+    text(172, characters[selected_character].name, 648.f, 423.f, 592.f, 58.f,
+         49.f, white, TextAlignment::Center, "FredokaMockBold");
 
-    // Back button
-    button(context, mk(entity, 310),
-           ComponentConfig{}
-               .with_label("< Back")
-               .with_size(ComponentSize{pixels(120), pixels(50)})
-               .with_absolute_position(50.0f, bottom_y + 10.0f)
-               .with_custom_background(afterhours::Color{60, 80, 130, 255})
-               .with_border(border_blue, 2.0f)
-               .with_font("EqProRounded", h720(22.0f))
-               .with_custom_text_color(white)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.3f));
+    div(context, mk(root.ent(), 180),
+        box(scale, 710.f, 489.f, 468.f, 148.f)
+            .with_custom_background(afterhours::Color{0, 57, 101, 166})
+            .with_on_draw_fg([scale](RectangleType r) {
+              afterhours::draw_rectangle(
+                  {r.x, r.y, r.width, 2.f * scale},
+                  afterhours::Color{116, 195, 238, 255});
+              afterhours::draw_rectangle(
+                  {r.x, r.y + r.height - 2.f * scale, r.width, 2.f * scale},
+                  afterhours::Color{116, 195, 238, 255});
+            })
+            .with_debug_name("kart_stats"));
 
-    // Selected info
-    div(context, mk(entity, 320),
-        ComponentConfig{}
-            .with_label(sel.name + "  +  " + kart_names[selected_kart])
-            .with_size(ComponentSize{pixels(400), pixels(36)})
-            .with_absolute_position((float)screen_w / 2.0f - 200.0f,
-                                    bottom_y + 17.0f)
-            .with_font("EqProRounded", h720(24.0f))
-            .with_custom_text_color(white)
-            .with_alignment(TextAlignment::Center));
+    const auto &selected = characters[selected_character];
+    const std::array<std::string, 4> stat_names{"Speed", "Acceleration",
+                                                 "Handling", "Weight"};
+    const std::array<float, 4> stat_values{
+        selected.speed, selected.acceleration, selected.handling,
+        selected.weight};
+    for (size_t i = 0; i < stat_names.size(); ++i) {
+      const float y = 501.f + static_cast<float>(i) * 31.f;
+      text(190 + static_cast<int>(i), stat_names[i], 734.f, y, 92.f, 27.f,
+           20.f, white);
+      div(context, mk(root.ent(), 200 + static_cast<int>(i)),
+          box(scale, 828.f, y + 9.f, 326.f, 12.f)
+              .with_on_draw_bg([value = stat_values[i],
+                                scale](RectangleType r) {
+                draw_stat_bar(r, value, scale);
+              })
+              .with_debug_name("kart_stat_" + std::to_string(i)));
+    }
 
-    // Ready button
-    button(
-        context, mk(entity, 330),
-        ComponentConfig{}
-            .with_label("READY!")
-            .with_size(ComponentSize{pixels(160), pixels(50)})
-            .with_absolute_position((float)screen_w - 210.0f, bottom_y + 10.0f)
-            .with_custom_background(accent_green)
-            .with_border(afterhours::Color{50, 160, 70, 255}, 3.0f)
-            .with_font("Fredoka", h720(28.0f))
-            .with_custom_text_color(white)
+    auto back =
+        button(context, mk(root.ent(), 230),
+               box(scale, 37.f, 666.f, 99.f, 47.f)
+                   .with_on_draw_bg(
+                       [scale, arrow_color = afterhours::Color{255, 255, 255,
+                                                               255}](
+                           RectangleType r) {
+                     draw_skew_plate(r, 7.f * scale,
+                                     afterhours::Color{19, 104, 157, 255});
+                     const float x = r.x + 25.f * scale;
+                     const float cy = r.y + r.height * .5f;
+                     afterhours::draw_line_ex(
+                         {x + 6.f * scale, cy - 7.f * scale}, {x, cy},
+                         2.5f * scale, arrow_color);
+                     afterhours::draw_line_ex(
+                         {x, cy}, {x + 6.f * scale, cy + 7.f * scale},
+                         2.5f * scale, arrow_color);
+                       })
+                   .with_debug_name("kart_back"));
+    text(231, "Back", 69.f, 666.f, 58.f, 47.f, 25.f, white,
+         TextAlignment::Center);
+    if (back) {
+      ready = false;
+      status = "Back selected";
+    }
+
+    text(232, "Arrows to choose", 158.f, 671.f, 110.f, 40.f, 18.f,
+         afterhours::Color{57, 101, 123, 255});
+    div(context, mk(root.ent(), 233),
+        box(scale, 271.f, 678.f, 18.f, 18.f)
+            .with_label("A")
+            .with_font("ArchivoMockBold", pixels(14.f * scale))
+            .with_custom_text_color(afterhours::Color{57, 101, 123, 255})
             .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.4f)
-            .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                              afterhours::Color{0, 0, 0, 60}));
+            .with_text_inset(0.f, 0.f)
+            .with_on_draw_bg([scale](RectangleType r) {
+              afterhours::draw_circle_lines(
+                  static_cast<int>(r.x + r.width * .5f),
+                  static_cast<int>(r.y + r.height * .5f), 8.f * scale,
+                  afterhours::Color{57, 101, 123, 255});
+            }));
+    text(234, "Confirm", 293.f, 671.f, 52.f, 40.f, 18.f,
+         afterhours::Color{57, 101, 123, 255});
+    div(context, mk(root.ent(), 235),
+        box(scale, 350.f, 678.f, 18.f, 18.f)
+            .with_label("B")
+            .with_font("ArchivoMockBold", pixels(14.f * scale))
+            .with_custom_text_color(afterhours::Color{57, 101, 123, 255})
+            .with_alignment(TextAlignment::Center)
+            .with_text_inset(0.f, 0.f)
+            .with_on_draw_bg([scale](RectangleType r) {
+              afterhours::draw_circle_lines(
+                  static_cast<int>(r.x + r.width * .5f),
+                  static_cast<int>(r.y + r.height * .5f), 8.f * scale,
+                  afterhours::Color{57, 101, 123, 255});
+            }));
+    text(236, "Back", 372.f, 671.f, 45.f, 40.f, 18.f,
+         afterhours::Color{57, 101, 123, 255});
 
-    // ========== BOTTOM PROMPTS ==========
-    float prompt_y = (float)screen_h - 42.0f;
-    div(context, mk(entity, 340),
-        ComponentConfig{}
-            .with_label("A: Select   B: Back   L/R: Switch Kart")
-            .with_size(ComponentSize{pixels(400), pixels(22)})
-            .with_absolute_position((float)screen_w / 2.0f - 200.0f, prompt_y)
-            .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(muted_text)
-            .with_alignment(TextAlignment::Center));
+    auto ready_button =
+        button(context, mk(root.ent(), 240),
+               box(scale, 1080.f, 662.f, 163.f, 56.f)
+                   .with_on_draw_bg([scale](RectangleType r) {
+                     draw_skew_plate(r, 7.f * scale,
+                                     afterhours::Color{255, 224, 59, 255});
+                     afterhours::draw_rectangle(
+                         {r.x, r.y + r.height - 3.f * scale, r.width,
+                          3.f * scale},
+                         afterhours::Color{205, 158, 9, 255});
+                     const afterhours::Color arrow{30, 63, 84, 255};
+                     const float x = r.x + 145.f * scale;
+                     const float cy = r.y + r.height * .5f;
+                     afterhours::draw_line_ex(
+                         {x - 6.f * scale, cy - 7.f * scale}, {x, cy},
+                         2.5f * scale, arrow);
+                     afterhours::draw_line_ex(
+                         {x, cy}, {x - 6.f * scale, cy + 7.f * scale},
+                         2.5f * scale, arrow);
+                   })
+                   .with_debug_name("kart_ready"));
+    text(241, ready ? "RACING!" : "READY!", 1096.f, 662.f, 120.f, 56.f,
+         29.f, afterhours::Color{30, 63, 84, 255}, TextAlignment::Center);
+    if (ready_button) {
+      ready = true;
+      status = "Ready to race: " + characters[selected_character].name +
+               " + " + kart_names[selected_kart];
+    }
+
+    if (!status.empty())
+      text(250, status, 435.f, 672.f, 610.f, 36.f, 17.f,
+           afterhours::Color{57, 101, 123, 255}, TextAlignment::Center);
   }
 };
 

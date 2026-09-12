@@ -108,6 +108,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | powerwash_settings / tablet and actions | Generic panel geometry, clipped help/keycaps and status-only close/reset differed from the mock. | wm | Matched tablet, tabs and setting rows; native values, initial-value reset and real close/reopen/Escape. Fresh captures and E2E 143 pass. |
 | powerwash_settings / fine styling | Status and gear icons are approximate; help wraps differently; background wall/pool shapes and tablet shadow are simplified. | wm | Open cosmetic differences. Both resolutions remain readable and contained. |
 
+| kart_select / racer selection | Generic cards, missing preview art and misplaced controls differed from the mock. | wm | Isolated eight-racer portrait/kart atlases, native labels and stats, checker header, platform and keyboard/pointer selection. E2E 42/147 pass. |
+| kart_select / fine styling and scope | Display type lacks italic slant, labels have different weight/spacing and preview shadows are flatter. Ready reports the chosen driver/vehicle in this standalone demo. | wm | Open cosmetic differences and demo scope; all art is present and both resolutions independently reviewed. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
