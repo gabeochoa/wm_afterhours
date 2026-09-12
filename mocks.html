@@ -16,6 +16,7 @@
 .gallery-workspace{flex:1;min-height:150px;display:flex;justify-content:center;align-items:center;padding:24px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#292b32,#141518 80%)}.gallery-frame{position:relative;flex:none;overflow:hidden;box-shadow:0 12px 55px #0007;outline:1px solid #ffffff10}.gallery-stage{width:1280px;height:720px;transform-origin:0 0;position:absolute;left:0;top:0;background:#111;overflow:hidden;color:#222;font:18px/1.35 Atkinson,Arial,sans-serif}.design{width:1280px;height:720px;position:relative;overflow:hidden}.gallery-image{display:block;width:1280px;height:720px;object-fit:contain;background:#0c0d0f}.gallery-footer{min-height:36px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 22px;color:#91939e;font-size:11px;border-top:1px solid #303139;background:#1b1c20}.gallery-footer a{color:#b2b4bf;text-decoration:none}.gallery-footer a:hover{text-decoration:underline}.gallery-status{position:fixed;left:50%;bottom:54px;transform:translateX(-50%);background:#f5f5f7;color:#23242a;padding:10px 18px;border-radius:7px;box-shadow:0 3px 20px #0005;pointer-events:none;opacity:0;transition:opacity .12s}.gallery-status.visible{opacity:1}.gallery-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:850px){.gallery-bar{gap:8px;padding:9px 12px}.gallery-brand{width:100%;font-size:12px}.gallery-picker{margin-left:0;flex:1}.gallery-bar select{width:clamp(140px,36vw,258px)}.gallery-views button{padding:0 8px}.gallery-workspace{padding:12px}.gallery-footer{padding:7px 12px}.gallery-footer .gallery-help{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.gallery-compare-options{display:none;align-items:center;gap:8px}.gallery-compare-options.visible{display:flex}.gallery-compare-options select{width:110px}.gallery-compare-options input{width:120px;accent-color:#9ac1ff}.comparison-layer{position:absolute;inset:0;pointer-events:none}.comparison-divider{position:absolute;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 0 1px #0006;transform:translateX(-50%);pointer-events:none;z-index:3}.comparison-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;display:grid;place-items:center;border-radius:50%;border:2px solid #fff;background:#20252fe6;color:#fff;font:25px system-ui;box-shadow:0 2px 12px #0006}.comparison-label{position:absolute;top:16px;background:#171b24df;color:#fff;padding:6px 12px;border:1px solid #ffffff66;border-radius:4px;font:15px system-ui;pointer-events:none;z-index:4}.comparison-label.left{left:16px}.comparison-label.right{right:16px}.gallery-stage.comparing{cursor:ew-resize;touch-action:none}.gallery-stage.comparing>.design{pointer-events:none}
 </style>
 <style id="screen-style"></style>
 </head>
@@ -32,6 +33,13 @@
     <button data-view="mock" aria-pressed="true">Mock</button>
     <button data-view="original" aria-pressed="false">Original</button>
     <button data-view="current" aria-pressed="false">Current</button>
+    <button data-view="compare" aria-pressed="false">Compare</button>
+  </div>
+  <div class="gallery-compare-options" id="compare-options">
+    <label for="compare-target">Original vs</label>
+    <select id="compare-target"><option value="mock">Mock</option><option value="current">Current C++</option></select>
+    <label for="compare-position" class="gallery-sr-only">Original image reveal percentage</label>
+    <input id="compare-position" type="range" min="0" max="100" value="50" aria-valuetext="50% original, 50% mock">
   </div>
 </header>
 <main class="gallery-workspace" id="workspace" aria-label="Screen preview"><div class="gallery-frame" id="frame"><div class="gallery-stage" id="stage"></div></div></main>
@@ -275,30 +283,54 @@ for(const [label,isApp] of [['Game screens',false],['App screens',true]]){
  picker.append(group);
 }
 let active=null,view='mock',dispose=null,statusTimer;
+const compareTarget=document.getElementById('compare-target'),comparePosition=document.getElementById('compare-position');
 function fit(){const style=getComputedStyle(workspace);const width=workspace.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);const height=workspace.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom);const scale=Math.max(.05,Math.min(width/1280,height/720));frame.style.width=`${1280*scale}px`;frame.style.height=`${720*scale}px`;stage.style.transform=`scale(${scale})`}
 function notify(message){const status=document.getElementById('status');status.textContent=message;status.classList.add('visible');clearTimeout(statusTimer);statusTimer=setTimeout(()=>status.classList.remove('visible'),1800)}
 function show(id,requestedView='mock',updateURL=true){
  const screen=screens.find(s=>s.id===id)||screens.find(s=>s.id==='marlo_kart')||screens[0];
  if(typeof dispose==='function')dispose();dispose=null;
- active=screen;view=requestedView==='original'&&!screen.reference?'mock':requestedView;
- if(!['mock','original','current'].includes(view))view='mock';
+ active=screen;view=['original','compare'].includes(requestedView)&&!screen.reference?'mock':requestedView;
+ if(!['mock','original','current','compare'].includes(view))view='mock';
+ const comparing=view==='compare', contentView=comparing?compareTarget.value:view;
+ stage.classList.toggle('comparing',comparing);
+ document.getElementById('compare-options').classList.toggle('visible',comparing);
  picker.value=screen.id;
- document.getElementById('screen-style').textContent=view==='mock'?screen.css:'';
+ document.getElementById('screen-style').textContent=contentView==='mock'?screen.css:'';
  stage.replaceChildren();
- if(view==='mock'){stage.innerHTML=screen.html;if(screen.mount)dispose=screen.mount(stage.firstElementChild)}
- else{const image=document.createElement('img');image.className='gallery-image';image.src=view==='original'?screen.reference:(window.mockAssets?.[screen.id]||`screenshot-baselines/screens/${screen.id}_720p.png`);image.alt=`${view==='original'?'Original reference':'Current afterhours screen'}: ${screen.title}`;stage.append(image)}
- for(const button of document.querySelectorAll('[data-view]')){button.setAttribute('aria-pressed',String(button.dataset.view===view));button.disabled=button.dataset.view==='original'&&!screen.reference;button.title=button.disabled?'No original screenshot is stored for this screen':''}
+ if(contentView==='mock'){stage.innerHTML=screen.html;if(screen.mount)dispose=screen.mount(stage.firstElementChild)}
+ else{const image=document.createElement('img');image.className='gallery-image';image.src=contentView==='original'?screen.reference:(window.mockAssets?.[screen.id]||`screenshot-baselines/screens/${screen.id}_720p.png`);image.alt=`${view==='original'?'Original reference':'Current afterhours screen'}: ${screen.title}`;stage.append(image)}
+ if(comparing){
+   const original=document.createElement('img');original.className='gallery-image comparison-layer';original.src=screen.reference;original.alt=`Original reference: ${screen.title}`;stage.append(original);
+   const divider=document.createElement('div');divider.className='comparison-divider';divider.innerHTML='<span class="comparison-handle" aria-hidden="true">‹ ›</span>';stage.append(divider);
+   for(const [side,label] of [['left','Original'],['right',compareTarget.value==='mock'?'Mock':'Current C++']]){const tag=document.createElement('span');tag.className=`comparison-label ${side}`;tag.textContent=label;stage.append(tag)}
+   updateComparison();
+ }
+ for(const button of document.querySelectorAll('[data-view]')){button.setAttribute('aria-pressed',String(button.dataset.view===view));button.disabled=['original','compare'].includes(button.dataset.view)&&!screen.reference;button.title=button.disabled?'No original screenshot is stored for this screen':''}
  document.getElementById('screen-count').textContent=`${screens.indexOf(screen)+1} / ${screens.length}`;
- const detail=document.getElementById('screen-detail');detail.replaceChildren();const source=document.createElement('a');if(!window.mockAssets)source.href=`src/systems/screens/${screen.source}`;source.textContent=screen.source;detail.append(source,document.createTextNode(` · ${view==='original'?'Original reference':view==='current'?'Committed screenshot':screen.reference?'Reference-based mock':'Product / genre study'}`));
+ const detail=document.getElementById('screen-detail');detail.replaceChildren();const source=document.createElement('a');if(!window.mockAssets)source.href=`src/systems/screens/${screen.source}`;source.textContent=screen.source;detail.append(source,document.createTextNode(` · ${view==='compare'?'Drag the divider to compare with the original reference':view==='original'?'Original reference':view==='current'?'Committed screenshot':screen.reference?'Reference-based mock':'Product / genre study'}`));
  document.title=`${screen.title} · afterhours mocks`;
  if(updateURL)history.replaceState(null,'',`#screen=${encodeURIComponent(screen.id)}&view=${view}`);
  fit();
 }
+function updateComparison(){
+ const percent=Number(comparePosition.value);
+ const layer=stage.querySelector('.comparison-layer'),divider=stage.querySelector('.comparison-divider');
+ if(layer)layer.style.clipPath=`inset(0 ${100-percent}% 0 0)`;
+ if(divider)divider.style.left=`${percent}%`;
+ comparePosition.setAttribute('aria-valuetext',`${percent}% original, ${100-percent}% ${compareTarget.value==='mock'?'mock':'current C++'}`);
+}
+comparePosition.addEventListener('input',updateComparison);
+compareTarget.addEventListener('change',()=>show(active.id,'compare'));
+function dragComparison(event){const r=stage.getBoundingClientRect();comparePosition.value=Math.round(Math.max(0,Math.min(100,(event.clientX-r.left)/r.width*100)));updateComparison()}
+stage.addEventListener('pointerdown',event=>{if(view!=='compare')return;event.preventDefault();stage.setPointerCapture(event.pointerId);dragComparison(event)});
+stage.addEventListener('pointermove',event=>{if(view==='compare'&&stage.hasPointerCapture(event.pointerId))dragComparison(event)});
+stage.addEventListener('pointerup',event=>{if(stage.hasPointerCapture(event.pointerId))stage.releasePointerCapture(event.pointerId)});
 function move(delta){show(screens[(screens.indexOf(active)+delta+screens.length)%screens.length].id,view)}
 picker.addEventListener('change',()=>show(picker.value,view));
 document.getElementById('previous').addEventListener('click',()=>move(-1));document.getElementById('next').addEventListener('click',()=>move(1));
 document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>show(active.id,button.dataset.view)));
 stage.addEventListener('click',event=>{
+ if(view==='compare')return;
  const button=event.target.closest('button');if(!button||button.disabled)return;
  if(button.hasAttribute('data-tab')||button.hasAttribute('data-choice')){const attribute=button.hasAttribute('data-tab')?'data-tab':'data-choice';for(const sibling of button.parentElement.querySelectorAll(`:scope > [${attribute}]`)){sibling.classList.toggle('active',sibling===button);sibling.setAttribute('aria-pressed',String(sibling===button))}}
  if(button.hasAttribute('data-toggle')){const on=button.getAttribute('aria-pressed')!=='true';button.setAttribute('aria-pressed',String(on));button.classList.toggle('active',on)}
@@ -306,7 +338,7 @@ stage.addEventListener('click',event=>{
 });
 stage.addEventListener('input',event=>{if(event.target.type!=='range')return;const input=event.target;const output=input.parentElement.querySelector('output');if(output)output.value=input.value+(output.dataset.suffix||'')});
 document.addEventListener('keydown',event=>{if(event.target.closest('input,select,textarea,[contenteditable]'))return;if(event.key==='['){event.preventDefault();move(-1)}else if(event.key===']'){event.preventDefault();move(1)}});
-function restore(){const params=new URLSearchParams(location.hash.slice(1)||location.search.slice(1));show(params.get('screen')||'marlo_kart',params.get('view')||'mock',false)}
+function restore(){const params=new URLSearchParams(location.hash.slice(1)||location.search.slice(1));show(params.get('screen')||screens.find(screen=>screen.reference).id,params.get('view')||'compare',false)}
 addEventListener('hashchange',restore);new ResizeObserver(fit).observe(workspace);restore();
 </script>
 </body>

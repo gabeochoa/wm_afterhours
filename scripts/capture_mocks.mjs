@@ -80,6 +80,16 @@ try {
         const loaded = await evaluate(`(async()=>{show(${JSON.stringify(screen.id)},'${view}');const image=document.querySelector('.gallery-image');if(!image.complete)await new Promise(r=>{image.onload=r;image.onerror=r});return image.naturalWidth>0})()`);
         if (!loaded) failures.push(`${screen.id}: ${view} image failed`);
       }
+      if (screen.hasReference) {
+        for (const target of ['mock', 'current']) {
+          const loaded = await evaluate(`(async()=>{document.getElementById('compare-target').value='${target}';show(${JSON.stringify(screen.id)},'compare');const images=[...document.querySelectorAll('.gallery-image')];await Promise.all(images.map(image=>image.complete?Promise.resolve():new Promise(r=>{image.onload=r;image.onerror=r})));return images.every(image=>image.naturalWidth>0)})()`);
+          if (!loaded) failures.push(`${screen.id}: comparison ${target} failed`);
+          for (const position of [0, 25, 50, 75, 100]) {
+            const actual = await evaluate(`(()=>{const range=document.getElementById('compare-position');range.value='${position}';range.dispatchEvent(new Event('input'));return {clip:document.querySelector('.comparison-layer').style.clipPath,position:document.querySelector('.comparison-divider').style.left}})()`);
+            if (actual.clip !== `inset(0px ${100-position}% 0px 0px)` || actual.position !== `${position}%`) failures.push(`${screen.id}: comparison position ${position}`);
+          }
+        }
+      }
     }
   }
   await fs.writeFile(path.join(values.output, 'screens.json'), JSON.stringify(screens, null, 2) + '\n');
