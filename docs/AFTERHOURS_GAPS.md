@@ -41,6 +41,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | fighter_menu / rendering and navigation | Missing lobby, invisible slanted triangles, blurred display type and letter substitutes for icons weakened the fighter layout. | wm | Fixed triangle winding and background layering, added isolated lobby/icons and a 96px display font. Live tabs and option descriptions; E2E 131 passes pointer, Enter/arrows and 1080 resize. Fresh images independently reviewed. |
 | fighter_menu / fine styling | Title/hologram lack the mock's rotation and perspective; serif weight is thinner; lobby and panel shading are approximate. | wm | Open cosmetic gaps. No clipping or interaction blocker found in the final 720p/1080p review. |
 
+
+| flight_options / layout and settings | Generic options layout and shallow interactions did not match the flight-system mock. | wm | Matched the airspace grid, selection geometry, nine categories and setting editors. Apply/cancel retains or discards values; keyboard and pointer coverage in E2E 134. |
+| flight_options / fine styling | Native lettering is thinner and lacks the browser glow; keycap labels are smaller. Vibration is explicitly marked unavailable. | wm | Open cosmetic differences and a stated hardware limitation; final 720p/1080p review found no clipping or interaction blocker. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

@@ -55,7 +55,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | fighter_menu | Updated; perspective/type gaps recorded | E2E 131 passed; pointer/keyboard option selection and resize; final 720p/1080p independent review. |
 | deadspace_settings | Pending | |
 | empire_tycoon | Pending | |
-| flight_options | Pending | |
+| flight_options | Updated; typography gaps recorded | E2E 134 passed: nine categories, live values, apply/cancel, Tab/Enter/arrows, close/reopen and resize; 720p/1080p independently reviewed. |
 | shop_interface | Pending | |
 | islands_trains_settings | Pending | |
 | kirby_options | Pending | |

@@ -1,0 +1,174 @@
+goto_screen flight_options
+wait 0.5
+expect_text "OPTIONS"
+expect_text "FLIGHT SYSTEM"
+expect_text "Control Type"
+expect_text "Vibration (Unavailable)"
+expect_text "Select the in-flight system."
+assert_ui flight_root x=0 y=0 w=1280 h=720
+assert_ui flight_category_0 x=153 y=143 w=165 h=27
+assert_ui flight_option_0 x=333 y=226 w=230 h=17
+assert_no_overflow
+assert_within_parents
+screenshot flight_options_initial
+
+# Tab and Enter use the live category buttons.
+focus_ui flight_category_0
+key TAB
+wait 0.2
+expect_focused flight_category_1
+key ENTER
+wait 0.2
+expect_text "Controller Preset"
+click_ui flight_option_0
+wait 0.2
+expect_text "Type A"
+key RIGHT
+wait 0.2
+expect_text "Type B"
+click_ui flight_apply
+wait 0.2
+expect_text "Settings applied"
+key RIGHT
+wait 0.2
+expect_text "Type C"
+click_ui flight_cancel
+wait 0.2
+expect_text "Unapplied changes discarded"
+click_ui flight_option_0
+wait 0.2
+expect_text "Type B"
+key ESCAPE
+wait 0.2
+
+# Every category has its own native setting rows.
+click_ui flight_category_2
+wait 0.2
+expect_text "Keyboard Bindings"
+click_ui flight_option_0
+wait 0.2
+click_ui flight_next
+wait 0.2
+expect_text "Arrow keys"
+key ESCAPE
+wait 0.2
+click_ui flight_option_1
+wait 0.2
+expect_text "Keyboard bindings restored to WASD"
+key RIGHT
+wait 0.2
+expect_text "WASD"
+key ESCAPE
+wait 0.2
+click_ui flight_category_3
+wait 0.2
+expect_text "Sensitivity"
+click_ui flight_option_0
+wait 0.2
+expect_text "Medium"
+click_ui flight_next
+wait 0.2
+expect_text "High"
+key ESCAPE
+wait 0.2
+click_ui flight_category_4
+wait 0.2
+expect_text "Axis Assignment"
+expect_text "Dead Zone"
+click_ui flight_category_5
+wait 0.2
+expect_text "HUD Display"
+expect_text "Brightness"
+click_ui flight_category_6
+wait 0.2
+expect_text "Resolution"
+expect_text "Texture Quality"
+click_ui flight_option_1
+wait 0.2
+expect_text "High"
+click_ui flight_previous
+wait 0.2
+expect_text "Medium"
+screenshot flight_options_graphics
+key ESCAPE
+wait 0.2
+click_ui flight_category_7
+wait 0.2
+expect_text "Master Volume"
+click_ui flight_option_0
+wait 0.2
+expect_text "100%"
+key LEFT
+wait 0.2
+expect_text "75%"
+key ESCAPE
+wait 0.2
+click_ui flight_category_8
+wait 0.2
+expect_text "Voice Language"
+click_ui flight_option_1
+wait 0.2
+expect_text "English"
+click_ui flight_next
+wait 0.2
+expect_text "Spanish"
+click_ui flight_ok
+wait 0.2
+expect_text "OPTIONS CLOSED"
+expect_text "Settings applied"
+click_ui flight_reopen
+wait 0.2
+click_ui flight_option_1
+wait 0.2
+expect_text "Spanish"
+
+# Editor Escape returns to the list; list Escape discards only pending changes.
+click_ui flight_next
+wait 0.2
+expect_text "French"
+key ESCAPE
+wait 0.2
+key ESCAPE
+wait 0.2
+expect_text "OPTIONS CLOSED"
+key ESCAPE
+wait 0.2
+click_ui flight_option_1
+wait 0.2
+expect_text "Spanish"
+key ESCAPE
+wait 0.2
+click_ui flight_category_0
+wait 0.2
+key DOWN
+wait 0.2
+expect_text "Controller Preset"
+key UP
+wait 0.2
+expect_text "Control Type"
+key RIGHT
+wait 0.2
+expect_text "Standard"
+key RIGHT
+wait 0.2
+expect_text "Expert"
+key DOWN
+wait 0.2
+expect_text "Choose how the high-G turn command is activated."
+key DOWN
+wait 0.2
+expect_text "Reduce damage from collisions with terrain and aircraft."
+key DOWN
+wait 0.2
+expect_text "Choose between standard or expert control schemes."
+expect_text "Expert"
+key ESCAPE
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui flight_root x=0 y=0 w=1920 h=1080
+assert_ui flight_category_0 x=230 y=215 w=248 h=41
+assert_ui flight_option_0 x=500 y=339 w=345 h=26
+assert_no_overflow
+assert_within_parents
+screenshot flight_options_1080p
