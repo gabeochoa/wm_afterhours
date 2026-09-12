@@ -33,6 +33,7 @@ enum class InputAction {
   TextDeleteWordForward,
   TextUndo,
   TextRedo,
+  ToggleProfiler,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -183,6 +184,8 @@ inline auto get_mapping() {
       KC{raylib::KEY_Z, KC::MOD_SUPER | KC::MOD_SHIFT},
       KC{raylib::KEY_Y, KC::MOD_CTRL},
   };
+
+  mapping[to_int(InputAction::ToggleProfiler)] = {raylib::KEY_F3};
 
   return mapping;
 }

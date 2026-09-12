@@ -1,0 +1,87 @@
+goto_screen chart_lab
+resize 1280 720
+wait 0.3
+key F3
+wait 0.3
+expect_text "Live profiler / chart_lab"
+expect_text "Recording stopped"
+expect_text "Hide (F3)"
+assert_ui wm_profiler_panel w=1120 h=640
+expect_text "Refresh: every frame"
+click_ui wm_profiler_refresh
+wait 0.3
+expect_text "Refresh: 120 Hz"
+expect_no_text "Refresh: every frame"
+click_ui wm_profiler_refresh
+wait 0.3
+expect_text "Refresh: 60 Hz"
+expect_no_text "Refresh: 120 Hz"
+click_ui wm_profiler_refresh
+wait 0.3
+expect_text "Refresh: 30 Hz"
+expect_no_text "Refresh: 60 Hz"
+click_ui wm_profiler_refresh
+wait 0.3
+expect_text "Refresh: every frame"
+expect_no_text "Refresh: 30 Hz"
+click_ui profiler_record
+wait 0.5
+expect_text "Recording across screens"
+expect_text "Stop recording"
+click_ui chart_live
+wait 0.2
+expect_text "Start live"
+expect_no_text "Pause live"
+click_ui profiler_pause
+wait 0.2
+expect_text "Resume view"
+click_ui profiler_pause
+expect_text "Recent avg (ms)"
+expect_text "Overall avg (ms)"
+expect_no_text "Total ms"
+expect_text "Sort: recent"
+click_ui profiler_sort
+wait 0.2
+expect_text "Sort: overall"
+screenshot live_profiler
+key F3
+wait 0.2
+expect_no_text "Live profiler / chart_lab"
+click_ui chart_live
+wait 0.3
+expect_text "Pause live"
+click_ui wm_profiler_open
+wait 0.3
+expect_text "Recording across screens"
+key GRAVE
+wait 0.3
+expect_text "Screens / search and browse"
+expect_no_text "Live profiler / chart_lab"
+key ESCAPE
+wait 0.3
+expect_text "Live profiler / chart_lab"
+resize 1920 1080
+wait 0.3
+assert_ui wm_profiler_panel w=1120 h=720
+assert_within_parents
+screenshot live_profiler_1080
+key ESCAPE
+wait 0.2
+expect_no_text "Live profiler / chart_lab"
+key F3
+wait 0.2
+expect_text "Recording across screens"
+click_ui wm_profiler_hide
+wait 0.2
+expect_no_text "Live profiler / chart_lab"
+goto_screen forms
+wait 0.3
+key F3
+wait 0.3
+expect_text "Live profiler / forms"
+expect_text "Recording across screens"
+click_ui profiler_record
+wait 0.2
+expect_text "Recording stopped"
+key F3
+resize 1280 720

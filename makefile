@@ -174,6 +174,16 @@ MAIN_OBJS += $(OBJ_DIR)/main/vendor_afterhours_files.o
 # Dependency files
 MAIN_DEPS := $(MAIN_OBJS:.o=.d)
 
+PROFILING_CONFIG := $(OBJ_DIR)/.profiling-config
+
+.PHONY: force-profiling-config
+$(PROFILING_CONFIG): force-profiling-config | $(OBJ_DIR)/main
+	@printf '%s\n' '$(ENABLE_PROFILING)' > $@.tmp
+	@cmp -s $@.tmp $@ || mv $@.tmp $@
+	@rm -f $@.tmp
+
+$(MAIN_OBJS): $(PROFILING_CONFIG)
+
 # Output executable
 MAIN_EXE := $(OUTPUT_DIR)/ui_tester$(EXT)
 
@@ -258,8 +268,10 @@ output: $(MAIN_EXE)
 sign: $(MAIN_EXE)
 	$(sign_cmd) $(MAIN_EXE)
 
+RUN_ARGS ?= $(if $(filter 1,$(ENABLE_PROFILING)),--profile,)
+
 run: output
-	./$(MAIN_EXE)
+	nice -n 10 ./$(MAIN_EXE) $(RUN_ARGS)
 
 # Utility targets
 .PHONY: all clean clean-all deps output sign run count countall cppcheck profile screenshots

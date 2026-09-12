@@ -15,6 +15,7 @@
 #include "systems/RenderSystemHelpers.h"
 #include "systems/RenderTestFeedback.h"
 #include "systems/ScreenNavigator.h"
+#include "systems/ProfilerOverlay.h"
 #include <afterhours/src/plugins/profiling.h>
 #include "systems/SetupSimpleButtonTest.h"
 #include "systems/SetupTabbingTest.h"
@@ -391,7 +392,8 @@ struct ScreenCyclerSystem : afterhours::System<> {
   }
 };
 
-void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
+void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
+                     bool profile) {
   configure_validation();
 
   mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
@@ -524,10 +526,14 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 #endif
   };
 
+  auto profiler_system = std::make_unique<ProfilerOverlay>(profile);
+  ProfilerOverlay *profiler = profiler_system.get();
   auto navigator_system = std::make_unique<ScreenNavigator>();
   ScreenNavigator *navigator = navigator_system.get();
   navigator->build_rows(screen_names);
+  profiler->navigation_open = [navigator] { return navigator->visible; };
   navigator->show_launcher = true;
+  profiler->show_launcher = true;
   cycler_ptr->navigation_open = [navigator] { return navigator->visible; };
   navigator->on_pick = [&](int index) {
     current_screen_index = index;
@@ -546,6 +552,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     systems.register_update_system(std::move(cycler_system));
     // After the screen, so the sidebar builds over whatever it drew.
     systems.register_update_system(std::move(navigator_system));
+    systems.register_update_system(std::move(profiler_system));
 
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
@@ -566,7 +573,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     }
 #endif
 
-    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE) && !navigator->visible) {
+    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE) && !navigator->visible && !profiler->visible) {
       running = false;
     }
 
@@ -617,7 +624,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 }
 
 int run_e2e_tests(const e2e::E2EArgs &args,
-                  afterhours::testing::E2ERunner &runner) {
+                  afterhours::testing::E2ERunner &runner, bool profile) {
   configure_validation();
 
   // Set global update-baselines flag
@@ -757,9 +764,12 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     }
   };
 
+  auto profiler_system = std::make_unique<ProfilerOverlay>(profile);
+  ProfilerOverlay *profiler = profiler_system.get();
   auto navigator_system = std::make_unique<ScreenNavigator>();
   ScreenNavigator *navigator = navigator_system.get();
   navigator->build_rows(screen_names);
+  profiler->navigation_open = [navigator] { return navigator->visible; };
   cycler_ptr->navigation_open = [navigator] { return navigator->visible; };
   navigator->on_pick = [&](int index) {
     current_screen_index = index;
@@ -776,6 +786,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     }
     systems.register_update_system(std::move(cycler_system));
     systems.register_update_system(std::move(navigator_system));
+    systems.register_update_system(std::move(profiler_system));
 
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
@@ -786,10 +797,16 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   const auto base_rez = afterhours::window_manager::fetch_current_resolution();
 
   // Reset callback for per-script cleanup
-  auto reset_fn = [base_rez, navigator]() {
+  auto reset_fn = [base_rez, navigator, profiler, profile]() {
+    profiler->visible = false;
+    profiler->show_launcher = profile;
+    profiler->state = {};
+    profiler->browser_was_open = false;
+    profiler->refresh_rate_index = 0;
     navigator->visible = false;
     afterhours::profiling::default_collector().stop();
     afterhours::profiling::default_collector().reset();
+    if (profile) afterhours::profiling::default_collector().start();
     // Clear input + visible text
     afterhours::testing::test_input::reset_all();
     afterhours::testing::VisibleTextRegistry::instance().clear();

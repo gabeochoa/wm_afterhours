@@ -15,7 +15,8 @@ class E2ERunner;
 void game();
 void run_test(const std::string &test_name, bool slow_mode = false,
               bool hold_on_end = false);
-void run_screen_demo(const std::string &screen_name, bool hold_on_end = false);
+void run_screen_demo(const std::string &screen_name, bool hold_on_end = false,
+                     bool profile = false);
 int run_e2e_tests(const e2e::E2EArgs &args,
-                  afterhours::testing::E2ERunner &runner);
+                  afterhours::testing::E2ERunner &runner, bool profile = false);
 void reset_e2e_state();
