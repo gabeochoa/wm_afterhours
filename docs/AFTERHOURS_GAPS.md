@@ -36,6 +36,8 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | cozy_cafe / layout | Mis-sized panels, substitute icons, faint borders and clipped footer/music labels differed from the cafe mock. | wm | Matched panel geometry, isolated flower/star/tool artwork, scaled outlines and improved type. Fresh 720p/1080p captures; independent reviews. |
 | cozy_cafe / service and selection | Serving incremented counters without removing orders; selected specials lacked a visible state. | wm | Serve consumes the next order and disables when empty, promotion uses the selected special, visible selection outline and live music control. E2E 129 checks pointer, Tab/Enter, depleted queue and resize. |
 | cozy_cafe / fine styling | Paper lacks the mock's grain, radial glow, inset arcs and corner fold; native text outlines are stronger and title slightly wider; customer separators use hyphens. | wm | Open cosmetic differences. Correctness, overflow and parent containment checks pass. |
+| casual_settings / layout and dialogs | Generic colors, substitute icons and inert information actions differed from the mobile mock. | wm | Shared decorative board/icons, matched geometry, high-resolution rounded type, language apply/cancel, campaign save/load, credits, support FAQ, terms and about views. E2E 130 passes at both resolutions, including dialog containment and keyboard use. |
+| casual_settings / fine styling | Faint lives/currency pills are simplified to a currency label; native label outlines differ slightly. | wm | Open cosmetic differences. Fresh 720p/1080p captures independently reviewed; text-overflow warnings resolved. |
 
 ---
 

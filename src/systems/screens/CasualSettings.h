@@ -2,531 +2,252 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/modal.h>
+#include <array>
+#include <string>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
-  bool music_on = true;
-  bool sound_on = true;
-  bool vibrate_on = false;
-  bool show_about = false;
+  enum class Dialog { About, Language, Credits, Support, Terms, Progress };
+  struct Progress { int level; int coins; };
+  bool music_on = true, sound_on = true, vibrate_on = false;
+  bool notifications_on = false, settings_open = true, dialog_open = false;
+  bool focus_dialog = false;
+  Dialog dialog = Dialog::About;
+  size_t language = 0, pending_language = 0;
+  int help_topic = 0;
+  Progress progress{12, 1000}, saved_progress{8, 650};
+  std::string status;
+  std::array<raylib::Texture2D, 11> art{};
+  bool loaded = false;
+  static constexpr std::array<const char *, 3> languages{"English", "Spanish", "French"};
+  const afterhours::Color cream{255, 248, 230, 255};
+  const afterhours::Color brown{137, 85, 62, 255};
+  const afterhours::Color muted{163, 104, 77, 255};
 
-  // Colors matching Angry Birds inspiration - bright, playful mobile aesthetic
-  afterhours::Color bg_green{85, 165, 95, 255};
-  afterhours::Color panel_orange{245, 165, 100, 255};
-  afterhours::Color panel_cream{255, 245, 225, 255};
-  afterhours::Color btn_green{120, 200, 65, 255};
-  afterhours::Color btn_green_dark{95, 165, 50, 255};
-  afterhours::Color btn_blue{85, 175, 220, 255};
-  afterhours::Color btn_blue_dark{65, 145, 185, 255};
-  afterhours::Color close_red{230, 75, 85, 255};
-  afterhours::Color text_dark{55, 45, 40, 255};
-  afterhours::Color text_muted{90, 75, 60, 255};
-  afterhours::Color white{255, 255, 255, 255};
+  void load() {
+    if (loaded) return;
+    constexpr std::array<const char *, 11> names{
+        "forest", "board", "pill_blue", "music_on", "music_off",
+        "sound_on", "sound_off", "vibration_on", "vibration_off", "close", "wifi"};
+    for (size_t i = 0; i < names.size(); ++i) {
+      art[i] = raylib::LoadTexture(afterhours::files::get_resource_path(
+          "images", std::string("mobile_settings/") + names[i] + ".png").string().c_str());
+      raylib::SetTextureFilter(art[i], raylib::TEXTURE_FILTER_BILINEAR);
+    }
+    loaded = true;
+  }
+
+  void open(Dialog next) {
+    dialog = next;
+    dialog_open = true;
+    focus_dialog = true;
+    pending_language = language;
+    help_topic = 0;
+    status.clear();
+  }
+
+  static void paint(raylib::Texture2D texture, RectangleType r) {
+    raylib::DrawTexturePro(texture,
+        {0, 0, static_cast<float>(texture.width), static_cast<float>(texture.height)},
+        r, {0, 0}, 0, raylib::WHITE);
+  }
+
+  ComponentConfig box(float scale, float x, float y, float w, float h) const {
+    return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
+        .with_absolute_position(x * scale, y * scale).with_corner_radius(0)
+        .with_background(Theme::Usage::None);
+  }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("Gaegu-Bold", pixels(18.0f));
+    load();
+    const float scale = context.screen_height / 720.f;
     Theme theme;
-    theme.font = text_dark;
-    theme.darkfont = white;
-    theme.font_muted = text_muted;
-    theme.background = bg_green;
-    theme.surface = panel_cream;
-    theme.primary = panel_orange;
-    theme.secondary = btn_blue;
-    theme.accent = btn_green;
-    theme.error = close_red;
-    theme.roundness = 0.18f;
-    theme.segments = 16;
-    context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
+    theme.font = brown;
+    theme.darkfont = cream;
+    theme.font_muted = muted;
+    theme.background = {46, 102, 76, 255};
+    theme.surface = {250, 222, 178, 255};
+    theme.primary = {34, 161, 215, 255};
+    theme.accent = {75, 213, 6, 255};
+    theme.corner_radius = 18;
+    theme.roundness = 0;
+    context.set_theme(theme);
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", h720(23));
 
-    // Toggle constants
-    constexpr float cs_track_w = 60.0f, cs_track_h = 32.0f;
-    constexpr float cs_knob_pad = 4.0f;
-    constexpr float cs_knob_sz = cs_track_h - cs_knob_pad * 2.0f; // 24px
-    constexpr float cs_knob_travel =
-        cs_track_w - cs_knob_sz - cs_knob_pad * 2.0f;
+    if (!dialog_open && context.pressed(InputAction::MenuBack))
+      settings_open = !settings_open;
 
-    // ═══════════════════════════════════════════════════════════════
-    // ROOT - full screen, center content
-    // ═══════════════════════════════════════════════════════════════
-    auto root =
-        vstack(context, mk(entity),
-               ComponentConfig{}
-                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                   .with_custom_background(bg_green)
-                   .with_align_items(AlignItems::Center)
-                   .with_justify_content(JustifyContent::Center)
-                   .with_no_wrap()
-                   .with_debug_name("casual_root"));
-
-    // ═══════════════════════════════════════════════════════════════
-    // TITLE
-    // ═══════════════════════════════════════════════════════════════
-    div(context, mk(root.ent()),
-        ComponentConfig{}
-            .with_label("Settings")
-            .with_size(ComponentSize{pixels(200), pixels(45)})
-            .with_font("Gaegu-Bold", pixels(38.0f))
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.bottom = pixels(8)}));
-
-    // ═══════════════════════════════════════════════════════════════
-    // PANEL (orange border via border prop, cream interior)
-    // ═══════════════════════════════════════════════════════════════
-    auto panel = vstack(context, mk(root.ent()),
-                        ComponentConfig{}
-                            .with_720p_size(680, 452)
-                            .with_custom_background(panel_cream)
-                            .with_border(panel_orange, 8.0f)
-                            .with_rounded_corners(RoundedCorners())
-                            .with_corner_radius(12.f)
-                            .with_padding(Padding{.top = pixels(8),
-                                                  .left = pixels(40),
-                                                  .bottom = pixels(12),
-                                                  .right = pixels(40)})
-                            .with_no_wrap()
-                            .with_debug_name("panel"));
-
-    // ── Close button row (right-aligned) ──
-    auto close_row =
-        hstack(context, mk(panel.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.96f), pixels(42)})
-                   .with_justify_content(JustifyContent::FlexEnd)
-                   .with_align_items(AlignItems::FlexStart)
-                   .with_self_align(SelfAlign::Center)
-                   .with_no_wrap()
-                   .with_debug_name("close_row"));
-
-    if (button(context, mk(close_row.ent()),
-               ComponentConfig{}
-                   .with_label("X")
-                   .with_size(ComponentSize{pixels(40), pixels(40)})
-                   .with_custom_background(close_red)
-                   .with_border(afterhours::Color{190, 55, 65, 255}, 3.0f)
-                   .with_font("Gaegu-Bold", pixels(24.0f))
-                   .with_custom_text_color(white)
-                   .with_alignment(TextAlignment::Center)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(1.0f)
-                   .with_debug_name("close_btn"))) {
-      // Close action
-    }
-
-    // ── Top sections: Audio (left) + Data (right) ──
-    auto top_sections =
-        hstack(context, mk(panel.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(118)})
-                   .with_align_items(AlignItems::FlexStart)
-                   .with_justify_content(JustifyContent::SpaceBetween)
-                   .with_no_wrap()
-                   .with_debug_name("top_sections"));
-
-    // ── Audio section ──
-    auto audio_sec =
-        vstack(context, mk(top_sections.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(340), percent(1.0f)})
-                   .with_no_wrap()
-                   .with_debug_name("audio_sec"));
-
-    div(context, mk(audio_sec.ent()),
-        ComponentConfig{}
-            .with_label("Audio")
-            .with_size(ComponentSize{pixels(80), pixels(22)})
-            .with_font("Gaegu-Bold", pixels(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("section_header_audio"));
-
-    // Toggle row
-    auto toggle_row =
-        hstack(context, mk(audio_sec.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(86)})
-                   .with_align_items(AlignItems::FlexStart)
-                   .with_no_wrap()
-                   .with_margin(Margin{.top = pixels(4)})
-                   .with_debug_name("toggle_row"));
-
-    struct ToggleInfo {
-      const char *label;
-      bool *state;
+    auto root = div(context, mk(entity, 0),
+        box(scale, 0, 0, 1280, 720).with_debug_name("casual_root")
+        .with_on_draw_bg([texture = art[0]](RectangleType r) { paint(texture, r); }));
+    auto label = [&](afterhours::Entity &parent, int id, float x, float y,
+                     float w, float h, const std::string &text, float size,
+                     afterhours::Color color, const std::string &name = "", bool shadow = false) {
+      return div(context, mk(parent, id), box(scale, x, y, w, h).with_label(text)
+          .with_font("FredokaMockBold", h720(size * 1.25f))
+          .with_custom_text_color(color).with_alignment(TextAlignment::Center)
+          .with_text_shadow(shadow ? brown : afterhours::Color{0, 0, 0, 0},
+                            0, 1.5f * scale)
+          .with_text_stroke(shadow ? brown : afterhours::Color{0, 0, 0, 0},
+                            shadow ? scale : 0.f)
+          .with_ignore_pointer_events().with_debug_name(name));
     };
-    ToggleInfo toggles[] = {
-        {"Music", &music_on}, {"Sound", &sound_on}, {"Vibrate", &vibrate_on}};
+    auto action = [&](afterhours::Entity &parent, int id, const std::string &text,
+                      float x, float y, float w, float h, const std::string &name,
+                      float size = 29.f, int texture_index = 2) {
+      const auto texture = art[static_cast<size_t>(texture_index)];
+      const float base_w = texture_index == 2 ? 400.f : texture_index == 9 ? 74.f : 119.f;
+      const float base_h = texture_index == 2 ? 77.f : texture_index == 9 ? 74.f : 82.f;
+      const float image_w = texture.width / 2.f, image_h = texture.height / 2.f;
+      return button(context, mk(parent, id), box(scale, x, y, w, h)
+          .with_label(text).with_font("FredokaMockBold", h720(size * 1.25f))
+          .with_custom_text_color(cream).with_alignment(TextAlignment::Center)
+          .with_text_inset(4 * scale, 2 * scale).with_corner_radius(35 * scale)
+          .with_text_shadow({67, 128, 144, 255}, 0, 1.5f * scale)
+          .with_click_activation(ClickActivationMode::Release)
+          .with_on_draw_bg([texture, base_w, base_h, image_w, image_h](RectangleType r) {
+            const float sx = r.width / base_w, sy = r.height / base_h;
+            paint(texture, {r.x - 8 * sx, r.y - 8 * sy, image_w * sx, image_h * sy});
+          }).with_debug_name(name));
+    };
 
-    for (int ti = 0; ti < 3; ti++) {
-      bool is_on = *toggles[ti].state;
-      afterhours::Color cs_track_off{185, 175, 165, 255};
-      afterhours::Color track_col = is_on ? btn_green : cs_track_off;
-      afterhours::Color track_border_col =
-          is_on ? btn_green_dark : afterhours::Color{165, 155, 145, 255};
-
-      auto toggle_col = vstack(
-          context, mk(toggle_row.ent(), ti),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(112), percent(1.0f)})
-              .with_align_items(AlignItems::Center)
-              .with_no_wrap()
-              .with_debug_name(std::string("toggle_") + toggles[ti].label));
-
-      // Track button (clickable, styled as the track)
-      if (button(context, mk(toggle_col.ent(), 0),
-                 ComponentConfig{}
-                     .with_size(
-                         ComponentSize{pixels(cs_track_w), pixels(cs_track_h)})
-                     .with_custom_background(track_col)
-                     .with_border(track_border_col, 2.0f)
-                     .with_rounded_corners(RoundedCorners().all_round())
-                     .with_roundness(0.5f)
-                     .with_soft_shadow(1.0f, 2.0f, 4.0f,
-                                       afterhours::Color{0, 0, 0, 35})
-                     .with_debug_name(std::string("toggle_track_") +
-                                      toggles[ti].label))) {
-        *toggles[ti].state = !*toggles[ti].state;
+    label(root.ent(), 1, 825, 37, 230, 53, "Unlimited lives", 24, cream);
+    label(root.ent(), 2, 1075, 37, 180, 53,
+          std::to_string(progress.coins) + " coins", 24, cream, "casual_coins");
+    if (settings_open) {
+      div(context, mk(root.ent(), 3), box(scale, 0, 0, 1280, 720)
+          .with_custom_background({6, 22, 12, 194}).with_ignore_pointer_events());
+      auto board = div(context, mk(root.ent(), 4), box(scale, 170, 46, 940, 627)
+          .with_debug_name("casual_board")
+          .with_on_draw_bg([texture = art[1], scale](RectangleType r) {
+            paint(texture, {r.x - scale, r.y - scale, 942 * scale, 640 * scale});
+          }));
+      label(board.ent(), 1, 0, 18, 940, 80, "SETTINGS", 57.5f, cream, "casual_title", true);
+      const std::array<bool *, 3> values{&music_on, &sound_on, &vibrate_on};
+      constexpr std::array<const char *, 3> names{"Music", "Sound", "Vibration"};
+      constexpr std::array<const char *, 3> ids{"casual_music", "casual_sound", "casual_vibration"};
+      for (size_t i = 0; i < values.size(); ++i) {
+        if (action(board.ent(), 10 + static_cast<int>(i), "", 61 + 138.f * i,
+                   134, 119, 82, ids[i], 20, 3 + static_cast<int>(i) * 2 + (*values[i] ? 0 : 1))) {
+          *values[i] = !*values[i];
+          status = std::string(names[i]) + (*values[i] ? " on" : " off");
+        }
       }
-
-      // Knob (overlaps track using negative margin to shift up)
-      float knob_x_offset = is_on ? cs_knob_travel + cs_knob_pad : cs_knob_pad;
-      div(context, mk(toggle_col.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(cs_knob_sz), pixels(cs_knob_sz)})
-              .with_custom_background(white)
-              .with_border(afterhours::Color{0, 0, 0, 40}, 1.0f)
-              .with_rounded_corners(RoundedCorners().all_round())
-              .with_roundness(1.0f)
-              .with_skip_tabbing(true)
-              .with_translate(pixels(knob_x_offset - (cs_track_w / 2.0f) +
-                                     (cs_knob_sz / 2.0f)),
-                              pixels(-(cs_track_h - cs_knob_pad)))
-              .with_debug_name(std::string("toggle_knob_") +
-                               toggles[ti].label));
-
-      // Label below
-      std::string display =
-          std::string(toggles[ti].label) + (is_on ? ": ON" : ": OFF");
-      div(context, mk(toggle_col.ent(), 2),
-          ComponentConfig{}
-              .with_label(display)
-              .with_size(ComponentSize{pixels(108), pixels(20)})
-              .with_font("EqProRounded", pixels(14.0f))
-              .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center)
-              // The -20 pulled the caption up out of its own column, which is
-              // what the layout overflow warnings were about.
-              .with_margin(Margin{.top = pixels(4)}));
-    }
-
-    // ── Data section (right side of top) ──
-    auto data_sec =
-        vstack(context, mk(top_sections.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(260), percent(1.0f)})
-                   .with_no_wrap()
-                   .with_debug_name("data_sec"));
-
-    div(context, mk(data_sec.ent()),
-        ComponentConfig{}
-            .with_label("Data")
-            .with_size(ComponentSize{pixels(80), pixels(22)})
-            .with_font("Gaegu-Bold", pixels(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_debug_name("section_header_data"));
-
-    auto data_btns =
-        hstack(context, mk(data_sec.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(55)})
-                   .with_align_items(AlignItems::Center)
-                   .with_no_wrap()
-                   .with_margin(Margin{.top = pixels(4)})
-                   .with_debug_name("data_btns"));
-
-    button(context, mk(data_btns.ent()),
-           ComponentConfig{}
-               .with_label("Save/Load Progress")
-               .with_size(ComponentSize{pixels(200), pixels(50)})
-               .with_custom_background(white)
-               .with_border(afterhours::Color{200, 195, 185, 255}, 3.0f)
-               .with_custom_text_color(text_dark)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_margin(Margin{.right = pixels(10)}));
-
-    div(context, mk(data_btns.ent()),
-        ComponentConfig{}
-            .with_label("Sync")
-            .with_size(ComponentSize{pixels(50), pixels(50)})
-            .with_custom_background(btn_green)
-            .with_custom_text_color(text_dark)
-            .with_font("Gaegu-Bold", pixels(14.0f))
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f));
-
-    // ═══════════════════════════════════════════════════════════════
-    // SEPARATOR + MENU SECTION
-    // ═══════════════════════════════════════════════════════════════
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
-            .with_custom_background(afterhours::Color{55, 45, 40, 40})
-            .with_margin(Margin{.top = pixels(6), .bottom = pixels(4)})
-            .with_debug_name("sep_toggles"));
-
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("Menu")
-            .with_size(ComponentSize{pixels(80), pixels(20)})
-            .with_font("Gaegu-Bold", pixels(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_margin(Margin{.bottom = pixels(6)})
-            .with_debug_name("section_header_menu"));
-
-    // ── Menu buttons: two columns ──
-    auto menu_row =
-        hstack(context, mk(panel.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(165)})
-                   .with_justify_content(JustifyContent::SpaceBetween)
-                   .with_align_items(AlignItems::FlexStart)
-                   .with_no_wrap()
-                   .with_debug_name("menu_row"));
-
-    auto make_menu_btn = [&](auto parent, int id, const char *label) {
-      button(context, mk(parent.ent(), id),
-             ComponentConfig{}
-                 .with_label(label)
-                 .with_720p_size(280, 45)
-                 .with_custom_background(btn_blue)
-                 .with_border(btn_blue_dark, 4.0f)
-                 .with_font("Gaegu-Bold", pixels(22.0f))
-                 .with_custom_text_color(white)
-                 .with_alignment(TextAlignment::Center)
-                 .with_rounded_corners(RoundedCorners())
-                 .with_roundness(0.5f)
-                 .with_soft_shadow(1.0f, 2.0f, 5.0f,
-                                   afterhours::Color{0, 0, 0, 30})
-                 .with_margin(Margin{.bottom = pixels(8)}));
-    };
-
-    // Left column
-    auto left_col =
-        vstack(context, mk(menu_row.ent()),
-               ComponentConfig{}
-                   // w1280, not pixels: the buttons inside are
-                   // with_720p_size, so a fixed column let them grow past it
-                   // at any scale above 1.
-                   .with_size(ComponentSize{w1280(285), percent(1.0f)})
-                   .with_no_wrap()
-                   .with_debug_name("menu_left"));
-
-    make_menu_btn(left_col, 0, "Notifications: OFF");
-    make_menu_btn(left_col, 1, "Language");
-
-    // Right column
-    auto right_col =
-        vstack(context, mk(menu_row.ent()),
-               ComponentConfig{}
-                   // w1280, not pixels: the buttons inside are
-                   // with_720p_size, so a fixed column let them grow past it
-                   // at any scale above 1.
-                   .with_size(ComponentSize{w1280(285), percent(1.0f)})
-                   .with_no_wrap()
-                   .with_debug_name("menu_right"));
-
-    make_menu_btn(right_col, 0, "Credits");
-    make_menu_btn(right_col, 1, "Support");
-    make_menu_btn(right_col, 2, "Terms & Privacy");
-
-    // ═══════════════════════════════════════════════════════════════
-    // FOOTER SEPARATOR + BUTTONS
-    // ═══════════════════════════════════════════════════════════════
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
-            .with_custom_background(afterhours::Color{55, 45, 40, 40})
-            .with_margin(Margin{.bottom = pixels(8)})
-            .with_debug_name("sep_footer"));
-
-    auto footer =
-        hstack(context, mk(panel.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(42)})
-                   .with_align_items(AlignItems::Center)
-                   .with_justify_content(JustifyContent::SpaceBetween)
-                   .with_no_wrap()
-                   .with_debug_name("footer"));
-
-    // Left group: About + Version
-    auto footer_left =
-        hstack(context, mk(footer.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(246), pixels(42)})
-                   .with_align_items(AlignItems::Center)
-                   .with_no_wrap());
-
-    // About button
-    if (button(context, mk(footer_left.ent()),
-               ComponentConfig{}
-                   .with_label("About")
-                   .with_size(ComponentSize{pixels(100), pixels(38)})
-                   .with_custom_background(btn_blue)
-                   .with_border(btn_blue_dark, 3.0f)
-                   .with_font("Gaegu-Bold", pixels(20.0f))
-                   .with_custom_text_color(white)
-                   .with_alignment(TextAlignment::Center)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.5f)
-                   .with_soft_shadow(1.0f, 2.0f, 5.0f,
-                                     afterhours::Color{0, 0, 0, 30})
-                   .with_debug_name("about_btn"))) {
-      show_about = !show_about;
-    }
-
-    // Version
-    div(context, mk(footer_left.ent()),
-        ComponentConfig{}
-            .with_label("Version 1.11.0")
-            .with_size(ComponentSize{pixels(130), pixels(22)})
-            .with_font("Gaegu-Bold", pixels(17.0f))
-            .with_custom_text_color(text_muted)
-            .with_margin(Margin{.left = pixels(8)}));
-
-    // Right group: OK/Cancel/Apply
-    auto footer_right =
-        hstack(context, mk(footer.ent()),
-               ComponentConfig{}
-                   // 3 x 65 plus two 12px gaps. At 215 the buttons sat 2-4px
-                   // apart while everything else on the screen uses 14-20.
-                   .with_size(ComponentSize{pixels(232), pixels(42)})
-                   .with_align_items(AlignItems::Center)
-                   .with_gap(pixels(12.0f))
-                   .with_no_wrap());
-
-    auto make_footer_btn = [&](int id, const char *label, afterhours::Color bg,
-                               afterhours::Color border) {
-      button(context, mk(footer_right.ent(), id),
-             ComponentConfig{}
-                 .with_label(label)
-                 .with_size(ComponentSize{pixels(65), pixels(36)})
-                 .with_custom_background(bg)
-                 .with_border(border, 3.0f)
-                 .with_font("Gaegu-Bold", pixels(20.0f))
-                 .with_custom_text_color(white)
-                 .with_alignment(TextAlignment::Center)
-                 .with_rounded_corners(RoundedCorners())
-                 .with_roundness(0.4f));
-    };
-
-    make_footer_btn(3, "OK", btn_green, btn_green_dark);
-    make_footer_btn(4, "Cancel", btn_blue, btn_blue_dark);
-    make_footer_btn(5, "Apply", btn_blue, btn_blue_dark);
-
-    // ═══════════════════════════════════════════════════════════════
-    // ABOUT OVERLAY (modal-style, still uses absolute positioning)
-    // ═══════════════════════════════════════════════════════════════
-    if (show_about) {
-      int screen_w = Settings::get().get_screen_width();
-      int screen_h = Settings::get().get_screen_height();
-      float about_w = 380.0f;
-      float about_h = 180.0f;
-      float about_x = (float)screen_w / 2.0f - about_w / 2.0f;
-      float about_y = (float)screen_h / 2.0f - about_h / 2.0f;
-
-      // Orange border
-      div(context, mk(entity),
-          ComponentConfig{}
-              .with_720p_size(about_w + 12, about_h + 12)
-              .with_absolute_position(about_x - 6.0f, about_y - 6.0f)
-              .with_custom_background(panel_orange)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.12f)
-              .with_debug_name("about_border"));
-
-      // Cream inner
-      auto about_panel = vstack(context, mk(entity),
-                                ComponentConfig{}
-                                    .with_720p_size(about_w, about_h)
-                                    .with_absolute_position(about_x, about_y)
-                                    .with_custom_background(panel_cream)
-                                    .with_rounded_corners(RoundedCorners())
-                                    .with_roundness(0.1f)
-                                    .with_padding(Padding{.top = pixels(12),
-                                                          .left = pixels(20),
-                                                          .bottom = pixels(12),
-                                                          .right = pixels(20)})
-                                    .with_no_wrap()
-                                    .with_debug_name("about_inner"));
-
-      div(context, mk(about_panel.ent()),
-          ComponentConfig{}
-              .with_label("About")
-              .with_size(ComponentSize{percent(1.0f), pixels(30)})
-              .with_font("Gaegu-Bold", pixels(24.0f))
-              .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center));
-
-      div(context, mk(about_panel.ent()),
-          ComponentConfig{}
-              .with_label("Build: 15555-1-114203-20-10200-01")
-              .with_size(ComponentSize{percent(1.0f), pixels(22)})
-              .with_font("Gaegu-Bold", pixels(16.0f))
-              .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = pixels(6)}));
-
-      div(context, mk(about_panel.ent()),
-          ComponentConfig{}
-              .with_label("Version: 1.11.0.12346")
-              .with_size(ComponentSize{percent(1.0f), pixels(22)})
-              .with_font("Gaegu-Bold", pixels(16.0f))
-              .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = pixels(2)}));
-
-      div(context, mk(about_panel.ent()),
-          ComponentConfig{}
-              .with_label("Player ID: 281676956389")
-              .with_size(ComponentSize{percent(1.0f), pixels(22)})
-              .with_font("Gaegu-Bold", pixels(16.0f))
-              .with_custom_text_color(text_muted)
-              .with_margin(Margin{.top = pixels(2)}));
-
-      auto about_footer =
-          hstack(context, mk(about_panel.ent()),
-                 ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(38)})
-                     .with_justify_content(JustifyContent::Center)
-                     .with_align_items(AlignItems::Center)
-                     .with_margin(Margin{.top = pixels(6)}));
-
-      if (button(context, mk(about_footer.ent()),
-                 ComponentConfig{}
-                     .with_label("Close")
-                     .with_size(ComponentSize{pixels(100), pixels(36)})
-                     .with_custom_background(btn_green)
-                     .with_border(btn_green_dark, 3.0f)
-                     .with_custom_text_color(text_dark)
-                     .with_alignment(TextAlignment::Center)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.5f)
-                     .with_debug_name("about_close"))) {
-        show_about = false;
+      if (action(board.ent(), 20, "", 484, 137, 396, 77,
+                 "casual_progress", 29)) open(Dialog::Progress);
+      label(board.ent(), 40, 500, 138, 280, 40, "SAVE/LOAD", 29, cream);
+      label(board.ent(), 42, 500, 168, 280, 40, "PROGRESS", 29, cream);
+      div(context, mk(board.ent(), 41), box(scale, 742, 142, 67, 75)
+          .with_ignore_pointer_events().with_on_draw_bg([texture = art[10]](RectangleType r) { paint(texture, r); }));
+      if (action(board.ent(), 21, notifications_on ? "NOTIFICATIONS: ON" : "NOTIFICATIONS: OFF",
+                 61, 243, 396, 77, "casual_notifications", 24)) {
+        notifications_on = !notifications_on;
+        status = notifications_on ? "Notifications enabled" : "Notifications disabled";
       }
+      if (action(board.ent(), 22, "CREDITS", 484, 243, 396, 77, "casual_credits")) open(Dialog::Credits);
+      if (action(board.ent(), 23, "LANGUAGE", 61, 346, 396, 77, "casual_language")) open(Dialog::Language);
+      if (action(board.ent(), 24, "SUPPORT", 484, 346, 396, 77, "casual_support")) open(Dialog::Support);
+      if (action(board.ent(), 25, "TERMS AND PRIVACY", 484, 449, 396, 77,
+                 "casual_terms", 27)) open(Dialog::Terms);
+      if (button(context, mk(board.ent(), 26), box(scale, 61, 443, 396, 94)
+          .with_click_activation(ClickActivationMode::Release)
+          .with_debug_name("casual_about"))) open(Dialog::About);
+      label(board.ent(), 43, 61, 446, 396, 25, "15555-1-114203-20-10200-01", 16.5f, muted);
+      label(board.ent(), 44, 61, 471, 396, 25, "Version 1.11.0.12346", 16.5f, muted);
+      label(board.ent(), 45, 61, 496, 396, 25, "Player ID: 281676956389", 16.5f, muted);
+      if (!status.empty()) label(board.ent(), 30, 70, 566, 800, 30, status, 17, brown, "casual_status");
+      if (action(root.ent(), 50, "", 1047, 106, 74, 74, "casual_close", 20, 9))
+        settings_open = false;
+      div(context, mk(root.ent(), 51), box(scale, 210, 698, 860, 4)
+          .with_custom_background({255, 255, 255, 160}).with_ignore_pointer_events());
+    } else {
+      label(root.ent(), 60, 340, 230, 600, 70, "Ready for another adventure?", 36, cream);
+      label(root.ent(), 61, 340, 315, 600, 50,
+            "Level " + std::to_string(progress.level) + "  /  " + std::to_string(progress.coins) + " coins",
+            28, cream, "casual_progress_summary");
+      if (action(root.ent(), 62, "SETTINGS", 440, 414, 400, 77, "casual_reopen"))
+        settings_open = true;
+    }
+
+    constexpr std::array<const char *, 6> titles{
+        "About", "Language", "Credits", "Support", "Terms and privacy", "Save / load progress"};
+    auto modal = afterhours::modal(context, mk(entity, 500), dialog_open,
+        afterhours::ModalConfig{}.with_size(h720(650), h720(440))
+            .with_show_close_button(false).with_closed_by(afterhours::ClosedBy::CloseRequest));
+    if (!modal) return;
+    modal.cmp().set_desired_padding(pixels(0), Axis::X)
+        .set_desired_padding(pixels(0), Axis::Y);
+    auto &panel = modal.ent();
+    label(panel, 10, 25, 17, 600, 55, titles[static_cast<size_t>(dialog)], 30, brown, "casual_dialog_title");
+    auto body = [&](int id, const std::string &text, float y, float height) {
+      div(context, mk(panel, id), box(scale, 34, y, 582, height).with_label(text)
+          .with_font("Fredoka", h720(23)).with_custom_text_color(brown)
+          .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Center)
+          .with_ignore_pointer_events().with_debug_name("casual_dialog_body_" + std::to_string(id)));
+    };
+    auto modal_action = [&](int id, const std::string &text, float x, float y,
+                            float w, const std::string &name) {
+      auto result = action(panel, id, text, x, y, w, 52, name, 20);
+      if (focus_dialog) { context.set_focus(result.ent().id); focus_dialog = false; }
+      return static_cast<bool>(result);
+    };
+    if (dialog == Dialog::Language) {
+      body(11, "Choose your preferred language.", 81, 40);
+      for (size_t i = 0; i < languages.size(); ++i)
+        if (modal_action(20 + static_cast<int>(i), std::string(pending_language == i ? "> " : "") + languages[i],
+                         35 + i * 198.f, 144, 185, "casual_language_" + std::to_string(i)))
+          pending_language = i;
+      body(12, std::string("Selected: ") + languages[pending_language], 218, 40);
+      if (modal_action(30, "APPLY", 335, 348, 280, "casual_language_apply")) {
+        language = pending_language;
+        status = std::string("Language: ") + languages[language];
+        dialog_open = false;
+      }
+      if (modal_action(31, "CANCEL", 35, 348, 280, "casual_dialog_close")) dialog_open = false;
+    } else if (dialog == Dialog::Progress) {
+      body(11, "Current progress: level " + std::to_string(progress.level) + " / " +
+                   std::to_string(progress.coins) + " coins\nSaved progress: level " +
+                   std::to_string(saved_progress.level) + " / " + std::to_string(saved_progress.coins) + " coins",
+           83, 100);
+      if (modal_action(20, "SAVE PROGRESS", 35, 204, 280, "casual_save")) {
+        saved_progress = progress;
+        status = "Progress saved: level " + std::to_string(progress.level);
+      }
+      if (modal_action(21, "LOAD PROGRESS", 335, 204, 280, "casual_load")) {
+        progress = saved_progress;
+        status = "Progress loaded: level " + std::to_string(progress.level);
+      }
+      body(12, status, 273, 36);
+      if (modal_action(31, "DONE", 185, 348, 280, "casual_dialog_close")) dialog_open = false;
+    } else if (dialog == Dialog::Support) {
+      constexpr std::array<const char *, 3> help{
+          "How can we help? Choose a topic below.",
+          "Audio: open Settings and choose the music or speaker button. Green means on; gray means off.",
+          "Progress: Save Progress stores your current level and coins. Load Progress restores the last saved slot."};
+      body(11, help[static_cast<size_t>(help_topic)], 83, 132);
+      if (modal_action(20, "AUDIO HELP", 35, 234, 280, "casual_help_audio")) help_topic = 1;
+      if (modal_action(21, "SAVE HELP", 335, 234, 280, "casual_help_save")) help_topic = 2;
+      if (modal_action(31, "CLOSE", 185, 348, 280, "casual_dialog_close")) dialog_open = false;
+    } else {
+      const std::string content = dialog == Dialog::About
+          ? "Build: 15555-1-114203-20-10200-01\nVersion: 1.11.0.12346\nPlayer ID: 281676956389\nLanguage: " + std::string(languages[language])
+          : dialog == Dialog::Credits
+          ? "Made with afterhours\nInterface and artwork: wm_afterhours\nFredoka typeface: The Fredoka Project Authors\nThank you for playing!"
+          : "Your privacy\nYour preferences and progress stay on this device. No account, advertising or cloud sync is used.\nUse Save / Load Progress to manage your saved game.";
+      body(11, content, 86, 225);
+      if (modal_action(31, "CLOSE", 185, 348, 280, "casual_dialog_close")) dialog_open = false;
     }
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(casual_settings, "Game Mockups",
-                        "Casual mobile settings (Angry Birds style)",
+                        "Casual mobile settings with local progress and preferences",
                         CasualSettingsScreen)
