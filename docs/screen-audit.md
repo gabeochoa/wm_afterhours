@@ -74,3 +74,10 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | media_library | Updated; minor styling gaps recorded | E2E 150 passed: 24-item paging, search/filter/sort, collections/watchlist, grid/list, local player pause/seek and resize; 720p/1080p and list/player states reviewed. |
 | offsite_backup | Updated; styling gaps recorded | E2E 60_offsite_backup and 151 passed: seeded totals, rescan, pause, backup settings, local actions and resize; final 720p/1080p reviewed. |
 | secure_tunnel | Updated; styling gaps recorded | E2E 152 passed: typed city/country search, no-results, server choice, delayed connect/disconnect, protocol, diagnostics and resize; 720p/1080p reviewed. |
+
+## Final verification
+
+- `nice -n 10 make -j2 test`: 152/152 scripts passed, including the existing expected-failure test.
+- `nice -n 10 make -j2 validate-screenshots`: 116/116 baselines passed. The six deliberate corner-radius warnings in the animation/border demos are unchanged.
+- Pixelcloud revision 5: all 26 mock canvases and embedded comparison images checked outside the repository; pointer dragging and arrow-key adjustment passed. The downloaded revision matches the verified HTML byte for byte.
+- The afterhours working tree and pin remain unchanged. All commits are local.
