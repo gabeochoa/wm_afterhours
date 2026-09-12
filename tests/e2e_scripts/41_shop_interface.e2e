@@ -2,7 +2,6 @@
 # Tests buy/sell tabs, item selection, and cart interaction
 # on the RPG general store screen.
 
-# Navigate to the shop interface screen
 goto_screen shop_interface
 wait 0.5
 
@@ -11,17 +10,15 @@ wait 0.5
 # =========================================================================
 expect_text "General Store"
 expect_text "Welcome, adventurer!"
-expect_text "G 3,750"
+expect_text "3,750"
 
-# Buy tab should be selected by default
+# Buy/Sell tabs and current table headers
 expect_text "Buy"
 expect_text "Sell"
-
-# Column headers
-expect_text "Item"
-expect_text "Type"
-expect_text "Stock"
-expect_text "Price"
+expect_text "ITEM"
+expect_text "TYPE"
+expect_text "STOCK"
+expect_text "PRICE"
 
 # Items should be listed
 expect_text "Iron Sword"
@@ -33,103 +30,71 @@ expect_text "Torch"
 expect_text "Antidote"
 
 # Default selected item is Health Potion (index 1)
-# Detail panel should show Health Potion info
 expect_text "Restores 50 HP instantly."
 expect_text "Consumable"
-expect_text "Add to Cart"
+expect_text "+ Add to cart"
 
-# Cart should have pre-populated items
-expect_text "Cart (5 items)"
-expect_text "Purchase"
+# Basket starts with pre-populated items
+expect_text "Your basket"
+expect_text "5 items"
+expect_text "Purchase goods"
 
 # Bottom status
-expect_text "A: Select"
+expect_text "A Select   X Add to cart   Y Remove"
 
 screenshot shop_initial
 
 # =========================================================================
 # Test 1: Select a different item
 # =========================================================================
-# Tab to the first item row button and press Enter to select Iron Sword
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key ENTER
+click_ui shop_item_0
 wait 0.3
-
-# Detail panel should update
+expect_text "A sturdy blade for beginners."
 screenshot shop_item_selected
 
 # =========================================================================
 # Test 2: Tab switching between Buy and Sell
 # =========================================================================
-# Reset the screen to get clean tab state
-goto_screen shop_interface
-wait 0.5
-
-# The Buy/Sell tabs are the first interactive elements
-# Tab to the Sell tab and click it
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key ENTER
+click_ui shop_tab_1
 wait 0.3
-
+expect_text "Fair prices for spare gear"
 screenshot shop_sell_tab
 
-# Switch back to Buy tab
-goto_screen shop_interface
-wait 0.5
-
-key TAB
-wait 0.2
-key ENTER
+click_ui shop_tab_0
 wait 0.3
-
+expect_text "Goods for the road ahead"
 screenshot shop_buy_tab
 
 # =========================================================================
 # Test 3: Verify cart details
 # =========================================================================
-goto_screen shop_interface
-wait 0.5
-
-# Cart items from initial state
-expect_text "Health Potion  x3"
-expect_text "Torch  x2"
-expect_text "Total:"
-expect_text "Remaining:"
+expect_text "Health Potion"
+expect_text "x 3"
+expect_text "Torch"
+expect_text "x 2"
+expect_text "Total"
+expect_text "Gold remaining: 3,570 G"
 
 screenshot shop_cart_details
 
 # =========================================================================
-# Test 4: Navigate through item list
+# Test 4: Navigate through item list and add to basket
 # =========================================================================
-# Tab through multiple items to exercise selection
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key ENTER
+click_ui shop_item_4
 wait 0.3
+expect_text "Fire Scroll"
+expect_text "Casts Fireball. Deals 25 damage."
+click_ui shop_add_cart
+wait 0.3
+expect_text "Added Fire Scroll"
+expect_text "6 items"
+expect_text "500 G"
 
 screenshot shop_navigated_item
 
 # =========================================================================
 # Test 5: Verify stock indicators
 # =========================================================================
-# Items with low stock should show "Low" indicator
-expect_text "3 Low"
-expect_text "2 Low"
+expect_text "2 left"
 
 screenshot shop_final
