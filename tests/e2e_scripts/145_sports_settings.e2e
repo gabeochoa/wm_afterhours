@@ -1,0 +1,82 @@
+# Sports settings mock parity smoke test.
+
+goto_screen sports_settings
+wait 0.5
+
+expect_text "GRAPHICS"
+expect_text "Window mode"
+expect_text "Borderless window"
+expect_text "Resolution"
+expect_text "2,560x1,440"
+expect_text "Max FPS"
+expect_text "Anti-Aliasing method"
+expect_text "TSR"
+expect_text "Default value: 120"
+
+assert_ui sports_root x=0 y=0 w=1280 h=720
+assert_ui sports_tabs x=0 y=0 w=1280 h=50
+assert_ui sports_settings x=34 y=128 w=572 h=510
+assert_ui sports_row_4 x=34 y=317 w=559 h=39
+assert_ui sports_value_6 x=315 y=403 w=170 h=24
+assert_ui sports_scroll x=600 y=124 w=6 h=498
+assert_ui sports_help x=684 y=92 w=530 h=230
+assert_ui sports_footer x=0 y=673 w=1280 h=47
+
+assert_ui_text "120" x=280 y=324 w=44 h=29
+assert_ui_text "2.2" x=280 y=364 w=44 h=29
+assert_ui_text "60" x=280 y=484 w=44 h=29
+assert_ui_text "1" x=280 y=524 w=44 h=29
+click_ui sports_row_4
+key RIGHT
+wait 0.2
+assert_ui_text "132" x=280 y=324 w=44 h=29
+click_ui sports_reset
+wait 0.2
+assert_ui_text "120" x=280 y=324 w=44 h=29
+assert_no_overflow
+assert_within_parents
+click_ui sports_value_6
+wait 0.2
+expect_text "DLSS"
+
+click_ui sports_row_1
+wait 0.2
+expect_text "Resolution"
+
+click_ui sports_tab_2
+wait 0.2
+expect_text "AUDIO"
+expect_text "Master volume"
+
+expect_text "90"
+expect_text "75"
+set_slider sports_slider_2 0.25
+wait 0.2
+expect_text "25"
+click_ui sports_reset
+wait 0.2
+expect_text "Defaults restored"
+expect_text "80"
+expect_text "90"
+set_slider sports_slider_2 0.26
+wait 0.2
+expect_text "26"
+
+click_ui sports_back
+wait 0.2
+expect_text "Settings closed"
+expect_no_text "Master volume"
+click_ui sports_reopen
+wait 0.2
+expect_text "Master volume"
+
+screenshot sports_settings_review
+
+resize 1920 1080
+wait 0.3
+assert_ui sports_root x=0 y=0 w=1920 h=1080
+assert_ui sports_tabs x=0 y=0 w=1920 h=75
+assert_ui sports_settings x=51 y=192 w=858 h=765
+assert_ui sports_row_4 x=51 y=476 w=839 h=59
+assert_ui sports_help x=1026 y=138 w=795 h=345
+assert_ui sports_footer x=0 y=1010 w=1920 h=71

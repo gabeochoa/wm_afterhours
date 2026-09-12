@@ -66,7 +66,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | parcel_corps_settings | Updated; styling gaps recorded | E2E 142 passed: language, toggles, MSAA/texture values, native slider drag and paced keyboard changes, resize; 720p/1080p independently reviewed. |
 | powerwash_settings | Pending | |
 | race_results | Updated; styling gaps recorded | E2E 144 passed: selection, pointer/keyboard action feedback and resize; final 720p/1080p footer, portraits and table edges independently reviewed. |
-| sports_settings | Pending | |
+| sports_settings | Updated; styling gaps recorded | E2E 145 passed: domain values, keyboard and slider edits, tab changes, true defaults, close/reopen and resize; independent review confirms knob/value agreement. |
 | rubber_bandits_menu | Updated; styling gaps recorded | E2E 146 passed: menu and character selection, keyboard, supporter feedback, all four long-name states and both resolutions; independent final visual review. |
 | kart_select | Pending | |
 | guess_who_lab | Pending | |

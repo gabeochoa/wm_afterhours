@@ -99,6 +99,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | race_results / results layout | Tiny text, invisible header triangles, rounded rows and missing footer contrast weakened the results mock. | wm | Matched skewed row fills/backing, readable standings, corrected triangle winding, isolated shared racing scenery/portraits and restored light footer. |
 | race_results / fine styling and scope | Native type lacks italic slant and some headers are smaller; result action buttons report navigation choices in this standalone screen. | wm | Open cosmetic differences and demo navigation scope. E2E 144 covers selection/action feedback and resize. |
 
+| sports_settings / graphics settings | Labels displayed raw slider percentages instead of FPS/gamma; controls reused cached values across tabs and Back only changed a status. | wm | Domain value formatting, per-tab slider identity, internal state synchronization after external edits/reset, real close/reopen and initial-value reset. Exact scene artwork and native controls match the layout. |
+| sports_settings / fine styling | Text weight, selected-row shading and tiny bumper keycap glyphs differ; scrollbar lacks diagonal stripes. | wm | Open cosmetic differences. E2E 145 and independent audio/default captures confirm values and knob positions agree. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

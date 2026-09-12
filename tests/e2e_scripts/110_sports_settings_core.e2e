@@ -1,4 +1,4 @@
-# Migrated from coroutine sports_settings tests (tabs + arrow value change)
+# Migrated from coroutine sports_settings tests (tabs + value change)
 
 goto_screen sports_settings
 wait 0.5
@@ -6,19 +6,24 @@ wait 0.5
 expect_text "Window mode"
 expect_text "Borderless window"
 
-click_button "GAMEPLAY"
+click_ui sports_tab_0
 wait 0.3
 expect_text "Difficulty"
 
-click_button "AUDIO"
+click_ui sports_tab_2
 wait 0.3
-expect_text "Master Volume"
+expect_text "Master volume"
 
-click_button "VIDEO"
+click_ui sports_tab_1
 wait 0.3
-# The VIDEO tab shows the Window mode setting row.
 expect_text "Window mode"
 
-# Note: keyboard focus + arrow-key value cycling on a setting row is a no-op in
-# headless (clicking a non-tab row doesn't take focus), so the RIGHT/LEFT value
-# changes below are not exercised here.
+click_ui sports_row_4
+key RIGHT
+wait 0.2
+expect_text "132"
+
+click_ui sports_reset
+wait 0.2
+expect_text "Defaults restored"
+expect_text "120"
