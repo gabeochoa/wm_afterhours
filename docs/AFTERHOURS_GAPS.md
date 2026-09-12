@@ -89,6 +89,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | rubber_bandits_menu / layout and roster | Logo font, promo overflow, squared selection and invisible bolt differed from the mock. | wm | Correct isolated logo/cast, rounded selection, bounded promo text, native bolt and live character/menu state. All four names checked for overflow. |
 | rubber_bandits_menu / fine styling | Promo border/inset, character-label weight and small footer details differ slightly. Supporter action is local demo feedback. | wm | Open cosmetic differences; final 720p/1080p images and long-name state reviewed. |
 
+
+| secure_tunnel / client and connection | Dark state-matrix demo lacked the mock map/sidebar and location search. | wm | Native client layout, isolated map art with live markers, typed search and filtered rows, selected-server details and protocol selection. Existing Off/Dialing/Up transition preserved; E2E 152 passes. |
+| secure_tunnel / fine styling and scope | Condensed type, flag/icon drawings, rail spacing and shadows differ; shield artwork is approximate. Protocol, diagnostics and account actions are local simulations. | wm | Open cosmetic and demo-scope differences. The screen states network simulation; no real tunnel is created. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

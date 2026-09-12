@@ -1,0 +1,97 @@
+# Secure Tunnel mock parity smoke test.
+
+goto_screen secure_tunnel
+wait 0.6
+
+expect_text "Secure Tunnel"
+expect_text "Not connected"
+expect_text "Your connection"
+expect_text "is unprotected."
+expect_text "Quick connect"
+expect_text "Fastest available server - Lisbon"
+expect_text "Search locations"
+expect_text "ALL LOCATIONS"
+expect_text "Reykjavik"
+expect_text "Lisbon"
+expect_text "Montreal"
+expect_text "Fortaleza"
+expect_text "Wellington"
+expect_text "Cape Town"
+expect_text "WireGuard"
+expect_text "Privacy, wherever you go."
+expect_text "Not hidden"
+expect_text "No route"
+expect_text "Network simulation only"
+
+assert_ui tn_root x=0 y=0 w=1280 h=720
+assert_ui tn_rail x=0 y=0 w=70 h=720
+assert_ui tn_sidebar x=70 y=0 w=352 h=720
+assert_ui tn_map x=422 y=0 w=858 h=648
+assert_ui tn_bottom x=422 y=648 w=858 h=72
+assert_ui tn_connect x=93 y=157 w=306 h=44
+assert_ui tn_search x=93 y=236 w=306 h=36
+assert_ui tn_server_1 x=93 y=351 w=306 h=46
+assert_ui tn_protocol x=285 y=603 w=105 h=32
+assert_ui tn_world_map x=437 y=141 w=825 h=390
+assert_ui tn_location_card x=722 y=290 w=221 h=63
+assert_ui tn_connection_card x=599 y=506 w=505 h=103
+
+click_ui tn_server_2
+wait 0.2
+expect_text "Selected server - Montreal"
+expect_text "Canada - ca-02 - 41 ms"
+
+focus_element tn_search
+type "lis"
+wait 0.3
+expect_text "Lisbon"
+expect_text "1"
+key BACKSPACE
+key BACKSPACE
+key BACKSPACE
+wait 0.2
+type "zzz"
+wait 0.3
+expect_text "No locations found"
+key BACKSPACE
+key BACKSPACE
+key BACKSPACE
+wait 0.2
+
+click_ui tn_protocol
+wait 0.2
+expect_text "OpenVPN"
+
+click_ui tn_connect
+wait 0.4
+expect_text "Negotiating"
+expect_text "Connecting..."
+wait 1.2
+expect_text "Tunnel up"
+expect_text "Disconnect"
+expect_text "185.23.18.42"
+expect_text "Montreal - ca-02"
+
+click_ui tn_connect
+wait 0.2
+expect_text "Not connected"
+expect_text "Disconnected locally"
+
+click_ui tn_diagnostics
+wait 0.2
+expect_text "Diagnostics opened - simulated network only"
+
+screenshot secure_tunnel_review
+
+resize 1920 1080
+wait 0.3
+assert_ui tn_root x=0 y=0 w=1920 h=1080
+assert_ui tn_rail x=0 y=0 w=105 h=1080
+assert_ui tn_sidebar x=105 y=0 w=528 h=1080
+assert_ui tn_map x=633 y=0 w=1287 h=972
+assert_ui tn_bottom x=633 y=972 w=1287 h=108
+assert_ui tn_connect x=140 y=236 w=459 h=66
+assert_ui tn_search x=140 y=354 w=459 h=54
+assert_ui tn_server_1 x=140 y=527 w=459 h=69
+assert_ui tn_world_map x=656 y=212 w=1238 h=585
+assert_ui tn_connection_card x=899 y=759 w=758 h=155
