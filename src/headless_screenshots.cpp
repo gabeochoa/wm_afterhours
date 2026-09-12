@@ -376,7 +376,10 @@ std::vector<std::string> collect_layout_problems(int vw, int vh) {
       const auto &rc = parent.get<afterhours::ui::HasRoundedCorners>();
       const float radius =
           rc.roundness * 0.5f * std::min(pr.width, pr.height);
-      if (!rc.radius_px.has_value() && rc.get().any() && radius > 24.f)
+      // roundness 1.0 says circle, which is meant to scale. Mirrors the
+      // library's ValidateCornerRadiusScale.
+      if (!rc.radius_px.has_value() && rc.get().any() && rc.roundness < 0.95f &&
+          radius > 24.f)
         problems.push_back(fmt::format("{} has a {:.0f}px corner radius",
                                        name_of(parent), radius));
     }

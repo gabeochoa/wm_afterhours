@@ -60,7 +60,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_background(Theme::Usage::Background)
-                .with_roundness(0.08f)
+                .with_corner_radius(12.f)
                 .with_self_align(SelfAlign::Center)
                 .with_padding(Spacing::xl)
                 .with_debug_name("rw_modal_bg"));

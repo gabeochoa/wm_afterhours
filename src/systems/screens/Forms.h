@@ -109,7 +109,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{screen_pct(0.78f), screen_pct(0.86f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
-                .with_roundness(0.08f)
+                .with_corner_radius(12.f)
                 .with_debug_name("forms_bg"));
 
     // Content container with padding

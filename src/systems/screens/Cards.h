@@ -88,7 +88,7 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
                 .with_self_align(SelfAlign::Center)
                 .with_background(Theme::Usage::Background)
-                .with_roundness(0.08f)
+                .with_corner_radius(12.f)
                 .with_padding(Spacing::sm) // Padding on root
                 .with_debug_name("cards_bg"));
 
@@ -99,7 +99,8 @@ struct CardsGallery : ScreenSystem<UIContext<InputAction>> {
                    .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
                    .with_justify_content(JustifyContent::SpaceBetween)
                    .with_no_wrap()
-                   .with_debug_name("cards_main"));
+                   .with_corner_radius(0.f)
+            .with_debug_name("cards_main"));
 
     // Title - larger font for better visibility
     div(context, mk(main_container.ent(), 0),

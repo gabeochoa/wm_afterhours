@@ -27,7 +27,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::Background)
             .with_padding(Spacing::sm)
             .with_justify_content(JustifyContent::Center)
-            .with_roundness(0.08f)
+            .with_corner_radius(12.f)
             .with_no_wrap()
             .with_debug_name("layout_main"));
 

@@ -30,6 +30,7 @@ struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
             .with_custom_background(bg_light)
+            .with_corner_radius(0.f)
             .with_debug_name("bg"));
 
     // Page title with prominent shadow

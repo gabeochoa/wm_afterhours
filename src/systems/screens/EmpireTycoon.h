@@ -572,7 +572,7 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(panel_blue)
             .with_border(border_blue, 6.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
+            .with_corner_radius(12.f)
             .with_debug_name("main_panel"));
 
     // Production & Projects sections - shared structure

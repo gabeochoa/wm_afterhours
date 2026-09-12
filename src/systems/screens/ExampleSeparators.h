@@ -40,6 +40,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
             .with_custom_background(bg_slate)
+            .with_corner_radius(0.f)
             .with_debug_name("bg"));
 
     // Title

@@ -227,7 +227,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(brown_border, 3.0f)
             .with_soft_shadow(4.0f, 6.0f, 18.0f, afterhours::Color{0, 0, 0, 65})
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.12f)
+            .with_corner_radius(12.f)
             .with_debug_name("specials_panel"));
 
     // Brown header
@@ -313,7 +313,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             .with_border(sage_header, 4.0f)
             .with_soft_shadow(4.0f, 6.0f, 18.0f, afterhours::Color{0, 0, 0, 65})
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.12f)
+            .with_corner_radius(12.f)
             .with_debug_name("customers_panel"));
 
     // Sage header

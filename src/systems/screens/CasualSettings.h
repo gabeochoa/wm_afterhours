@@ -88,7 +88,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                             .with_custom_background(panel_cream)
                             .with_border(panel_orange, 8.0f)
                             .with_rounded_corners(RoundedCorners())
-                            .with_roundness(0.12f)
+                            .with_corner_radius(12.f)
                             .with_padding(Padding{.top = pixels(8),
                                                   .left = pixels(40),
                                                   .bottom = pixels(12),

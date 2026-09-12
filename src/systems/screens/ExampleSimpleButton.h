@@ -48,6 +48,7 @@ struct ExampleSimpleButton : ScreenSystem<UIContext<InputAction>> {
             .with_size(
                 ComponentSize{pixels(screen_width), pixels(screen_height)})
             .with_custom_background(bg_warm)
+            .with_corner_radius(0.f)
             .with_debug_name("bg"));
 
     // Decorative confetti dots (subtle background interest)

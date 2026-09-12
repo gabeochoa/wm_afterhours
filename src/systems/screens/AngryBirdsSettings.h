@@ -108,7 +108,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(panel_cream)
             .with_border(header_dark, cfg_panel_border_width)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(cfg_panel_roundness)
+            .with_corner_radius(12.f)
             .with_soft_shadow(4.0f, 5.0f, 12.0f,
                               afterhours::Color{0, 0, 0,
                                                 static_cast<unsigned char>(
