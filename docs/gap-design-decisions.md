@@ -2,8 +2,9 @@
 
 Started 2026-09-12. The user requested a design discussion before implementation
 so the remaining approved gaps can be worked through without repeated questions.
-This document separates accepted decisions from recommendations awaiting answers.
-No implementation started during this discussion.
+All five design questions below are settled. No implementation started during
+this discussion. Future question-tool options should be numbered, as requested
+by the user.
 
 Source inventory: [AFTERHOURS_GAPS.md](AFTERHOURS_GAPS.md#user-decisions).
 
@@ -24,17 +25,18 @@ Implementation readiness does not establish that a fix has passed verification.
 Recheck source revisions and callers before editing. Existing gap entries specify
 the necessary failure cases and runtime checks.
 
-## Decisions to discuss
+## Accepted design decisions
 
-Pending rows are proposals. Accepted rows record the user's answers.
+These rows record the user's answers. The implementation notes below supply
+defaults and verification requirements for working through the approved gaps.
 
-| Decision | Affected work | Recommendation / choice to settle | Status |
+| Decision | Affected work | Decision | Status |
 |---|---|---|---|
 | D-01 Platform coverage | UP-04 dialogs; UP-09 file watching | Implement macOS first behind one platform-independent public API. Callers use the same types, calls and result handling everywhere, without platform conditionals. Other backends initially return the shared unsupported result. | Accepted |
 | D-02 Chart scope | UP-12 | Build the charts needed by the profiling UI first and exercise them in the wm test screen. Keep the broader chart set and additional interactions as TODOs; they do not block the profiling UI. | Accepted |
 | D-03 Profiling experience | UP-11 | Support continuous bounded recording independently of panel visibility, code controls and a compile-time switch to remove the profiler. Measure overhead before claiming it is suitable to leave on. | Accepted |
 | D-04 Input prompts | UP-06 | Automatically switch on deliberate keyboard/gamepad input, ignore stick noise and incidental pointer motion, and allow callers to pin a device. | Accepted |
-| D-05 Screen discovery | wm TODO | Choose searchable categories/tree versus a flat searchable list. Preserve comma/period cycling without duplicate destinations and keep the active screen visible. | Asked; awaiting answer |
+| D-05 Screen discovery | wm TODO | Use a searchable tree with collapsible categories, keyboard navigation and a clearly marked current screen. Preserve comma/period cycling without duplicate destinations. | Accepted |
 
 ### D-01: One public API, macOS implementation first
 
@@ -103,6 +105,36 @@ devices may supply input.
 Use current bindings, including remaps and modifiers, when formatting hints.
 Verify deliberate device changes, noisy idle input, the pinned override and
 returning to automatic selection. Controller artwork remains caller-owned.
+
+### D-05: Searchable screen tree
+
+The user chose option 1: a searchable tree with collapsible categories, such as
+imitation screens, widgets and diagnostics. Include keyboard navigation and
+clearly mark the current screen. Show each intended destination once; give
+intentional variants distinct names. Comma/period cycling must not repeat a
+destination because it has multiple registrations or aliases.
+
+Implementation direction: choose category names from the actual screen
+inventory. Search should find screens across categories, including collapsed
+ones, and show enough category context to distinguish results. Keep navigation
+in the tree and activation of a screen distinct so keyboard browsing does not
+reload screens at every focus change. Reuse existing screen-switch scheduling
+outside ECS iteration.
+
+Verify pointer and keyboard search, expand/collapse, direct activation, the
+active-screen marker, no-match results and clearing search. Cycle through the
+full inventory in both directions and check that only intentional wraparound
+revisits a destination. This is wm work; it does not request a new library tree
+widget unless existing support proves insufficient.
+
+## Implementation handoff
+
+The five decisions above and the established correctness requirements are
+sufficient to begin the approved work. Resolve routine implementation choices
+from source and validation rather than reopening these product questions.
+Charts needed by UP-11 come before the broader UP-12 TODOs. Keep changes in
+reviewable local commits and retain separate commits for individual screen
+updates. Nothing is pushed as part of this work.
 
 ## Work outside this decision batch
 

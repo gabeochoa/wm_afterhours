@@ -13,9 +13,10 @@
 
 - [ ] Improve screen switching and discovery. Investigate the duplicate screens
   reported when cycling with `,` and `.`; show each intended screen once and
-  give intentional variants distinct names. Explore a tree or grouped picker
-  so screens are easier to find and open directly. Keep keyboard navigation
-  and make the current screen clear. The picker structure is not yet decided.
+  give intentional variants distinct names. Build a searchable tree with
+  collapsible categories, keyboard navigation and a clearly marked current
+  screen. Search across collapsed categories and preserve category context.
+  The user selected this structure; see `docs/gap-design-decisions.md`, D-05.
 
 ## Performance follow-ups — 2026-09-12
 
