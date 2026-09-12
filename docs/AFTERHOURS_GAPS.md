@@ -116,12 +116,21 @@ cartographer's turned out to be already in; these are what is left.
 
 ### Core
 
-- **EntityQuery has no index** (MyNameChef, puzzle) — every terminal is a
-  linear scan. puzzle hit the quadratic case on a five-node graph and
-  hand-wrote an index; their point was not speed but that an indexed
-  relationship "cannot be half-written in the first place", after a node-delete
-  sweep reaped ports and wires and forgot knobs and sliders. There is a written
-  plan for this.
+- **relationship integrity has no index** (puzzle) — they hand-wrote one after
+  a node-delete sweep reaped ports and wires and forgot knobs and sliders.
+  Their point was explicitly not speed: an indexed relationship "cannot be
+  half-written in the first place". This is a data-model change, not a query
+  optimisation, and the two were filed here as one bullet for a while. There is
+  **no** written plan -- an earlier one was overwritten. Wants a planning pass
+  against puzzle's actual code before any implementation.
+
+- **EntityQuery allocation and sorting** (MyNameChef) — mostly already done and
+  their doc predates it: `run_query` has a `stop_on_first` path that allocates
+  nothing, reserves upfront, and sorts only when `orderby` is set with more
+  than one result. Their remaining items are the smaller ones -- consolidating
+  the tag query methods, and the `permanant_ids` typo, which is fixed. They
+  also ask to remove the `OptEntity` wrapper, which is the opposite of the
+  direction this repo went.
 
 - **kart's remaining component extractions** — `HasLabels`, `CanWrapAround`,
   `TeamID`, `ManagesAvailableColors`. Arguably game-specific; listed for
@@ -221,6 +230,10 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
   most of it; the gap was that it takes four settings that must agree and three
   of four caps the width while silently not wrapping.
 
+- **an ordered `gen_first` sorted the whole list** (MyNameChef) — it scanned
+  and then `std::sort`ed to return one entity. Takes the minimum now, except
+  where a stateful mod like `take()` sits after the orderby and needs the real
+  order.
 - **card preset** — `with_card(pad)`: Surface, rounded corners, padding.
 - **font sizes off the type scale** — `ValidationConfig::enforce_font_size_tiers`,
   opt-in.
