@@ -252,12 +252,12 @@ are not accepted decisions.
 | UP-01 Audio gains | Approved | Master scales music/effects while preserving their relative preferences. |
 | UP-02 Settings saves | Approved | Preserve the previous file on failure and report failures accurately. |
 | UP-03 Test clipboard | Approved | Isolate both app and built-in widget clipboard operations. |
-| UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. |
+| UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. macOS first behind one portable public API; unsupported backends use the common result contract. |
 | UP-05 Binding persistence | Approved | Save/load complete bindings, including modifiers and axes. |
 | UP-06 Binding prompts | Approved | Current binding labels and keyboard/controller prompts. |
 | UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
-| UP-09 Filesystem watcher | Approved | Upstream the existing watcher. Wordproc is a possible second consumer, not a confirmed one. |
+| UP-09 Filesystem watcher | Approved | Upstream the existing watcher, macOS first behind one portable public API with an explicit unsupported result elsewhere. Wordproc is a possible second consumer, not a confirmed one. |
 | UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
 | UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. |
 | UP-12 Chart set and test screen | Approved, expanded | Replace the small sparkline proposal with a chart set and an interactive wm test screen. |

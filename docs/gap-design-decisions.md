@@ -26,15 +26,28 @@ the necessary failure cases and runtime checks.
 
 ## Decisions to discuss
 
-Each row remains pending until the user answers. Recommendations are proposals.
+Pending rows are proposals. Accepted rows record the user's answers.
 
 | Decision | Affected work | Recommendation / choice to settle | Status |
 |---|---|---|---|
-| D-01 Platform coverage | UP-04 dialogs; UP-09 file watching | Reuse macOS implementations first and explicitly report unsupported platforms. Alternatively require Windows/Linux implementations in the first release, or choose different coverage for each feature. | Asked; awaiting answer |
-| D-02 Chart scope | UP-12 | Choose the initial chart types and useful interactions. Proposed foundation is line, area, bar, scatter and sparkline, with hover values, live data and a wm test screen. Decide whether other types or pan/zoom are needed initially. | Pending |
+| D-01 Platform coverage | UP-04 dialogs; UP-09 file watching | Implement macOS first behind one platform-independent public API. Callers use the same types, calls and result handling everywhere, without platform conditionals. Other backends initially return the shared unsupported result. | Accepted |
+| D-02 Chart scope | UP-12 | Choose the initial chart types and useful interactions. Proposed foundation is line, area, bar, scatter and sparkline, with hover values, live data and a wm test screen. Decide whether other types or pan/zoom are needed initially. | Asked; awaiting answer |
 | D-03 Profiling experience | UP-11 | Choose default presentation and collection behavior: an opt-in overlay with an embeddable panel, collection only while enabled, bounded history, pause/reset and custom counters. Confirm whether background recording or export is needed initially. | Pending |
 | D-04 Input prompts | UP-06 | Choose automatic switching behavior. Proposed default switches on deliberate keyboard/gamepad input, ignores stick noise and incidental pointer motion, and allows callers to pin a device. | Pending |
 | D-05 Screen discovery | wm TODO | Choose searchable categories/tree versus a flat searchable list. Preserve comma/period cycling without duplicate destinations and keep the active screen visible. | Pending |
+
+### D-01: One public API, macOS implementation first
+
+The user chose macOS first and required that library users should not need to
+know which platform implementation they are calling. Keep platform headers,
+native handles and backend selection inside the library. Public requests,
+owned results, lifecycle and completion rules must be the same on every
+platform. Adding Windows or Linux support must not require caller changes.
+
+Before a backend exists, return the common unsupported outcome through that
+same API. Do not pretend success or report cancellation. This keeps error
+handling portable without claiming identical availability. Test responses must
+also work through the common API on unsupported hosts.
 
 ## Work outside this decision batch
 
