@@ -254,7 +254,7 @@ are not accepted decisions.
 | UP-03 Test clipboard | Approved | Isolate both app and built-in widget clipboard operations. |
 | UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. macOS first behind one portable public API; unsupported backends use the common result contract. |
 | UP-05 Binding persistence | Approved | Save/load complete bindings, including modifiers and axes. |
-| UP-06 Binding prompts | Approved | Current binding labels and keyboard/controller prompts. |
+| UP-06 Binding prompts | Approved | Current binding labels; automatically switch keyboard/controller prompts on deliberate input, ignore drift/incidental mouse movement, and let apps pin a device. |
 | UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
 | UP-09 Filesystem watcher | Approved | Upstream the existing watcher, macOS first behind one portable public API with an explicit unsupported result elsewhere. Wordproc is a possible second consumer, not a confirmed one. |
@@ -400,6 +400,11 @@ The remaining request is a small typed binding formatter and optional
 last-meaningful-device preference. Preserve full modifiers and axis direction,
 return an explicit unbound result, and let apps choose text or artwork.
 Controller icon packs and game-specific wording stay out of the library.
+
+The user chose automatic hint switching on deliberate input, with an app
+override to pin the device. Ignore stick drift and incidental mouse movement.
+Pinning hint presentation must not disable input from other devices. See D-04
+in [gap-design-decisions.md](gap-design-decisions.md).
 
 Validate Ctrl+Shift and Super chords, signed axes, layer/remap changes and
 switching between keyboard and gamepad prompts. Sub-deadzone noise must not

@@ -33,8 +33,8 @@ Pending rows are proposals. Accepted rows record the user's answers.
 | D-01 Platform coverage | UP-04 dialogs; UP-09 file watching | Implement macOS first behind one platform-independent public API. Callers use the same types, calls and result handling everywhere, without platform conditionals. Other backends initially return the shared unsupported result. | Accepted |
 | D-02 Chart scope | UP-12 | Build the charts needed by the profiling UI first and exercise them in the wm test screen. Keep the broader chart set and additional interactions as TODOs; they do not block the profiling UI. | Accepted |
 | D-03 Profiling experience | UP-11 | Support continuous bounded recording independently of panel visibility, code controls and a compile-time switch to remove the profiler. Measure overhead before claiming it is suitable to leave on. | Accepted |
-| D-04 Input prompts | UP-06 | Choose automatic switching behavior. Proposed default switches on deliberate keyboard/gamepad input, ignores stick noise and incidental pointer motion, and allows callers to pin a device. | Asked; awaiting answer |
-| D-05 Screen discovery | wm TODO | Choose searchable categories/tree versus a flat searchable list. Preserve comma/period cycling without duplicate destinations and keep the active screen visible. | Pending |
+| D-04 Input prompts | UP-06 | Automatically switch on deliberate keyboard/gamepad input, ignore stick noise and incidental pointer motion, and allow callers to pin a device. | Accepted |
+| D-05 Screen discovery | wm TODO | Choose searchable categories/tree versus a flat searchable list. Preserve comma/period cycling without duplicate destinations and keep the active screen visible. | Asked; awaiting answer |
 
 ### D-01: One public API, macOS implementation first
 
@@ -91,6 +91,18 @@ check sustained recording for memory growth. Use `nice -n 10` consistently.
 No numeric overhead budget has been agreed and no overhead claim is measured
 yet. If recording materially distorts the workload, optimize or reduce sampling
 before recommending that consumers leave it on.
+
+### D-04: Automatic input hints with an app override
+
+The user accepted automatic keyboard/controller hint switching. Use deliberate
+input to update device preference; stick drift and incidental mouse movement
+must not switch the hints. Allow applications to pin a device instead of using
+automatic selection. This preference controls prompt presentation, not which
+devices may supply input.
+
+Use current bindings, including remaps and modifiers, when formatting hints.
+Verify deliberate device changes, noisy idle input, the pinned override and
+returning to automatic selection. Controller artwork remains caller-owned.
 
 ## Work outside this decision batch
 
