@@ -62,7 +62,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | marlo_kart | Pending | |
 | minesweeper_lab | Updated; font/bevel gaps recorded | E2E 120 and 139 passed: game play, reset/help, minimize/maximize/close/restore, Start menu and resize; fresh 720p/1080p captures. |
 | mini_motorways_settings | Updated; minor styling gaps recorded | E2E 140 passed: seven tabs, settings cycles, audio sliders, language, local connection, credits/tutorial, back and resize; 720p/1080p independently reviewed. |
-| neon_strike | Pending | |
+| neon_strike | Updated; minor styling gaps recorded | E2E 141 passed: reload reserve transfer, repeated reload, pointer/Enter/number-key abilities, equipment and resize; two independent visual reviews. |
 | parcel_corps_settings | Pending | |
 | powerwash_settings | Pending | |
 | race_results | Pending | |

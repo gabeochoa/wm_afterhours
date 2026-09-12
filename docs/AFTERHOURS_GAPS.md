@@ -64,6 +64,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | mini_motorways_settings / layout and categories | Typography, detached controls and road bend artifacts missed the map-like settings mock. | wm | Native grid/road geometry, scaled controls and real per-tab content; ring-based bend eliminates draw-segment artifacts. |
 | mini_motorways_settings / fine styling | Font tracking, symbol edges and exact tutorial/version text dimensions differ slightly. | wm | Open cosmetic differences; E2E 140 covers pointer, keyboard, values and containment at both resolutions. |
 
+| neon_strike / HUD and actions | Generic HUD placement, missing artwork and inert controls differed from the mock. | wm | Matched map/compass/equipment geometry with isolated text-free art and native high-resolution labels. Reload transfers reserve ammunition; abilities and equipment have visible selection. |
+| neon_strike / fine styling | Ammo uses one font size instead of mixed sizes; objective chevrons and subtle background glow differ. | wm | Open cosmetic differences. E2E 141 and final 720p/1080p reviews pass. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

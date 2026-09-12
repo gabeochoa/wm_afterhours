@@ -1,0 +1,44 @@
+goto_screen neon_strike
+wait 0.5
+assert_ui neon_root w=1280 h=720
+assert_ui neon_reload x=266 y=570 w=140 h=44
+expect_text "35/210"
+expect_text "80 HEALTH"
+expect_text "45% ARMOR"
+assert_no_overflow
+assert_within_parents
+click_ui neon_reload
+wait 0.2
+expect_text "40/205"
+expect_text "Weapon reloaded"
+click_ui neon_reload
+wait 0.2
+expect_text "40/205"
+expect_text "Magazine full"
+click_ui neon_ability_1
+wait 0.2
+expect_text "Recon selected"
+focus_ui neon_ability_0
+key ENTER
+wait 0.2
+expect_text "UAV selected"
+key 4
+wait 0.2
+expect_text "Strike selected"
+click_ui neon_melee
+wait 0.2
+expect_text "Melee selected"
+focus_ui neon_grenade
+key ENTER
+wait 0.2
+expect_text "Grenade selected"
+screenshot neon_strike_selected
+resize 1920 1080
+wait 0.3
+assert_ui neon_root w=1920 h=1080
+assert_ui neon_reload x=399 y=855 w=210 h=66
+assert_no_overflow
+assert_within_parents
+key R
+wait 0.2
+expect_text "Magazine full"
