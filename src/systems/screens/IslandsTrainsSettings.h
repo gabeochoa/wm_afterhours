@@ -2,11 +2,12 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
-#include "../../ui_workarounds/GradientBackground.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include <afterhours/src/plugins/files.h>
+#include <algorithm>
+#include <array>
+#include <string>
+#include <vector>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -14,367 +15,404 @@ using namespace afterhours::ui::imm;
 struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   int display_mode = 0;
   int resolution = 1;
-  int cam_pan_speed = 7;
-  int cam_rotate_speed = 8;
-  int effects_volume = 9;
-  int music_volume = 10;
+  int cam_pan_speed = 5;
+  int cam_rotate_speed = 5;
+  int effects_volume = 5;
+  int music_volume = 5;
+  enum class View { Settings, Keyboard, Tutorial, Closed };
+  View view = View::Settings;
+  int tutorial_step = 0, camera_offset = 0;
+  bool track_placed = false, train_running = false;
+  float train_progress = 0;
 
-  // Colors matching Islands & Trains inspiration - warm olive/sage aesthetic
-  afterhours::Color bg_olive_dark{110, 125, 100, 255};
-  afterhours::Color bg_olive_mid{150, 162, 135, 255};
-  afterhours::Color bg_olive_light{170, 180, 155, 255};
+  const afterhours::Color bg{137, 150, 130, 255};
+  const afterhours::Color bg_dark{104, 119, 110, 255};
+  const afterhours::Color paper{249, 245, 208, 255};
+  const afterhours::Color row{218, 225, 200, 255};
+  const afterhours::Color text{137, 135, 108, 255};
+  const afterhours::Color heading{169, 211, 198, 255};
+  const afterhours::Color filled{185, 217, 203, 255};
+  const afterhours::Color empty{205, 194, 164, 255};
 
-  afterhours::Color panel_cream{252, 252, 245, 255};
-  afterhours::Color row_cream{235, 240, 228, 255};
-  afterhours::Color text_dark{70, 80, 75, 255};
-  afterhours::Color text_muted{145, 155, 145, 255};
-  afterhours::Color header_olive{95, 135, 115, 255};
-  afterhours::Color slider_teal{90, 155, 140, 255};
-  afterhours::Color slider_empty{205, 175, 170, 255};
-  afterhours::Color btn_cream{225, 232, 218, 255};
-  afterhours::Color close_bg{245, 245, 238, 255};
-  afterhours::Color close_border{200, 200, 190, 255};
-  afterhours::Color arrow_color{145, 155, 145, 255};
+  std::array<std::string, 3> modes = {"Borderless", "Windowed", "Fullscreen"};
+  std::array<std::string, 3> resolutions = {"1920x1080", "2560x1440", "3840x2160"};
 
-  std::vector<std::string> modes = {"Borderless", "Windowed", "Fullscreen"};
-  std::vector<std::string> resolutions = {"1920x1080", "2560x1440",
-                                          "3840x2160"};
+  ComponentConfig box(float scale, float x, float y, float w, float h) const {
+    return ComponentConfig{}
+        .with_size({pixels(w * scale), pixels(h * scale)})
+        .with_absolute_position(x * scale, y * scale)
+        .with_background(Theme::Usage::None);
+  }
 
-  void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("EqProRounded", pixels(15.0f));
-    Theme theme;
-    theme.font = text_dark;
-    theme.darkfont = panel_cream;
-    theme.font_muted = text_muted;
-    theme.background = bg_olive_mid;
-    theme.surface = panel_cream;
-    theme.primary = header_olive;
-    theme.secondary = slider_teal;
-    theme.accent = slider_teal;
-    theme.error = afterhours::Color{180, 100, 100, 255};
-    theme.roundness = 0.12f;
-    theme.segments = 8;
-    context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
+  static void draw_background(RectangleType r) {
+    afterhours::draw_rectangle(r, afterhours::Color{137, 150, 130, 255});
+    afterhours::draw_circle(static_cast<int>(r.x + r.width * .5f),
+                            static_cast<int>(r.y + r.height * .5f),
+                            r.width * .55f, afterhours::Color{188, 190, 145, 62});
+    afterhours::draw_rectangle_gradient_v(
+        r, afterhours::Color{100, 114, 106, 95}, afterhours::Color{96, 109, 102, 120});
+  }
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-    float sw = static_cast<float>(screen_w);
-    float sh = static_cast<float>(screen_h);
+  static void draw_paper(RectangleType r) {
+    const afterhours::Color fill{249, 245, 208, 255};
+    afterhours::draw_rectangle({r.x + 7.f, r.y, r.width - 14.f, r.height}, fill);
+    afterhours::draw_triangle({r.x + 7.f, r.y}, {r.x + 1.f, r.y + 118.f},
+                              {r.x + 7.f, r.y + 236.f}, fill);
+    afterhours::draw_triangle({r.x + 7.f, r.y + 236.f}, {r.x, r.y + 470.f},
+                              {r.x + 8.f, r.y + 672.f}, fill);
+    afterhours::draw_triangle({r.x + r.width - 7.f, r.y},
+                              {r.x + r.width - 1.f, r.y + 54.f},
+                              {r.x + r.width - 7.f, r.y + 122.f}, fill);
+    afterhours::draw_triangle({r.x + r.width - 8.f, r.y + 122.f},
+                              {r.x + r.width, r.y + 376.f},
+                              {r.x + r.width - 8.f, r.y + 664.f}, fill);
+    afterhours::draw_rectangle({r.x + 4.f, r.y + r.height - 56.f,
+                                r.width - 8.f, 56.f}, fill);
+  }
 
-    // ========== VIGNETTE BACKGROUND (decorative, remains absolute) ==========
-    div(context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_absolute_position()
-            .with_custom_background(bg_olive_mid)
-            .with_debug_name("bg_base"));
+  static void draw_close_shape(RectangleType r) {
+    afterhours::draw_poly({r.x + r.width * .5f, r.y + r.height * .5f}, 12,
+                          r.width * .48f, 15.f,
+                          afterhours::Color{245, 242, 205, 255});
+  }
 
-    ui_workarounds::vertical_gradient(context, entity, 1, 0.0f, 0.0f, sw,
-                                      sh * 0.3f, bg_olive_dark, bg_olive_mid,
-                                      8);
-    ui_workarounds::vertical_gradient(context, entity, 10, 0.0f, sh * 0.7f, sw,
-                                      sh * 0.3f, bg_olive_mid, bg_olive_dark,
-                                      8);
-    ui_workarounds::horizontal_gradient(
-        context, entity, 20, 0.0f, 0.0f, sw * 0.2f, sh,
-        afterhours::Color{bg_olive_dark.r, bg_olive_dark.g, bg_olive_dark.b,
-                          200},
-        afterhours::Color{bg_olive_mid.r, bg_olive_mid.g, bg_olive_mid.b, 0},
-        6);
-    ui_workarounds::horizontal_gradient(
-        context, entity, 30, sw * 0.8f, 0.0f, sw * 0.2f, sh,
-        afterhours::Color{bg_olive_mid.r, bg_olive_mid.g, bg_olive_mid.b, 0},
-        afterhours::Color{bg_olive_dark.r, bg_olive_dark.g, bg_olive_dark.b,
-                          200},
-        6);
+  void reset_defaults() {
+    display_mode = 0;
+    resolution = 1;
+    cam_pan_speed = 5;
+    cam_rotate_speed = 5;
+    effects_volume = 5;
+    music_volume = 5;
+    view = View::Settings;
+  }
 
-    // ═══════════════════════════════════════════════════════════════
-    // MAIN LAYOUT (overlaid on gradient background)
-    // ═══════════════════════════════════════════════════════════════
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_padding(Padding{.top = pixels(35), .bottom = pixels(30)})
-            .with_debug_name("it_root"));
+  void cycle_value(int &value, int delta, int count) {
+    value = (value + delta + count) % count;
+  }
 
-    // Close button (top-right, using translate to position)
-    auto close_row =
-        hstack(context, mk(root.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), h720(50)})
-                   .with_justify_content(JustifyContent::FlexEnd)
-                   .with_no_wrap()
-                   .with_padding(Padding{.right = pixels(25)})
-                   .with_debug_name("close_row"));
+  void render_section(UIContext<InputAction> &context, afterhours::Entity &parent,
+                      float scale, int id, const std::string &label, float y) {
+    div(context, mk(parent, id),
+        box(scale, 456, y, 160, 22)
+            .with_label(label)
+            .with_font("Gaegu-Bold", h720(20.f))
+            .with_letter_spacing(-1.f * scale)
+            .with_custom_text_color(heading)
+            .with_alignment(TextAlignment::Left));
+  }
 
-    button(context, mk(close_row.ent()),
-           ComponentConfig{}
-               .with_label("X")
-               .with_720p_size(50, 50)
-               .with_custom_background(close_bg)
-               .with_border(close_border, 2.0f)
-               .with_font("EqProRounded", pixels(28.0f))
-               .with_custom_text_color(afterhours::Color{130, 140, 130, 255})
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(1.0f));
-
-    // Panel
-    auto panel = vstack(context, mk(root.ent()),
-                        ComponentConfig{}
-                            .with_720p_size(430, 530)
-                            .with_custom_background(panel_cream)
-                            .with_rounded_corners(RoundedCorners())
-                            .with_roundness(0.03f)
-                            .with_soft_shadow(4.0f, 6.0f, 20.0f,
-                                              afterhours::Color{50, 60, 50, 30})
-                            .with_padding(Padding{.top = pixels(18),
-                                                  .left = pixels(15),
-                                                  .bottom = pixels(15),
-                                                  .right = pixels(15)})
-                            .with_no_wrap()
-                            .with_margin(Margin{.top = pixels(-50)})
-                            .with_debug_name("panel"));
-
-    // Title
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("SETTINGS")
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_font("EqProRounded", pixels(30.0f))
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center));
-
-    // ── DISPLAY section ──
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("DISPLAY")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
-            .with_font("EqProRounded", pixels(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = pixels(8)}));
-
-    render_selector_row(context, panel.ent(), 10, "Mode", display_mode,
-                        static_cast<int>(modes.size()), true);
-    render_selector_row(context, panel.ent(), 11, "Resolution", resolution,
-                        static_cast<int>(resolutions.size()), false);
-
-    // ── CONTROLS section ──
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("CONTROLS")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
-            .with_font("EqProRounded", pixels(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = pixels(8)}));
-
-    render_slider_row(context, panel.ent(), 20, "Cam panning speed",
-                      cam_pan_speed, 10);
-    render_slider_row(context, panel.ent(), 21, "Cam rotating Speed",
-                      cam_rotate_speed, 10);
-
-    button(context, mk(panel.ent()),
-           ComponentConfig{}
-               .with_label("KEYBOARD")
-               .with_720p_size(400, 38)
-               .with_custom_background(btn_cream)
-               .with_custom_text_color(text_muted)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_margin(Margin{.top = pixels(5)}));
-
-    // ── AUDIO section ──
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("AUDIO")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
-            .with_font("EqProRounded", pixels(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = pixels(8)}));
-
-    render_slider_row(context, panel.ent(), 30, "Effects Volume",
-                      effects_volume, 10);
-    render_slider_row(context, panel.ent(), 31, "Music Volume", music_volume,
-                      10);
-
-    // ── TUTORIAL section ──
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("TUTORIAL")
-            .with_size(ComponentSize{pixels(120), pixels(20)})
-            .with_font("EqProRounded", pixels(14.0f))
-            .with_custom_text_color(header_olive)
-            .with_margin(Margin{.top = pixels(8)}));
-
-    button(context, mk(panel.ent()),
-           ComponentConfig{}
-               .with_label("PLAY TUTORIAL")
-               .with_720p_size(400, 38)
-               .with_custom_background(btn_cream)
-               .with_custom_text_color(text_muted)
-               .with_alignment(TextAlignment::Center)
-               .with_rounded_corners(RoundedCorners())
-               .with_roundness(0.5f)
-               .with_margin(Margin{.top = pixels(2)}));
-
-    // ── RESET TO DEFAULTS ──
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("RESET TO DEFAULTS")
-            .with_size(ComponentSize{pixels(250), pixels(36)})
-            .with_font("EqProRounded", pixels(16.0f))
-            .with_custom_text_color(text_muted)
+  void render_cycle_row(UIContext<InputAction> &context, afterhours::Entity &parent,
+                        float scale, int id, const std::string &label,
+                        int &value, const std::array<std::string, 3> &values,
+                        float y, const std::string &debug_base) {
+    div(context, mk(parent, id),
+        box(scale, 456, y, 367, 26)
+            .with_custom_background(row)
+            .with_corner_radius(6.f * scale)
+            .with_debug_name(debug_base + "_row"));
+    div(context, mk(parent, id + 1),
+        box(scale, 473, y + 2, 160, 22)
+            .with_label(label)
+            .with_font("Gaegu-Bold", h720(22.f))
+            .with_letter_spacing(-.5f * scale)
+            .with_custom_text_color(text)
+            .with_alignment(TextAlignment::Left));
+    if (button(context, mk(parent, id + 2),
+               box(scale, 645, y, 24, 26)
+                   .with_label("<")
+                   .with_font("Archivo@bold", h720(22.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name(debug_base + "_prev"))) {
+      cycle_value(value, -1, static_cast<int>(values.size()));
+    }
+    div(context, mk(parent, id + 3),
+        box(scale, 684, y + 2, 105, 22)
+            .with_label(values[static_cast<size_t>(value)])
+            .with_font("Gaegu-Bold", h720(21.f))
+            .with_letter_spacing(-.5f * scale)
+            .with_custom_text_color(text)
             .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = pixels(10)}));
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // Helper: selector row (label + < value >) as layout children
-  // ═══════════════════════════════════════════════════════════════
-  void render_selector_row(UIContext<InputAction> &context,
-                           afterhours::Entity &parent, int id,
-                           const std::string &label, int &value_idx,
-                           int max_options, bool is_mode) {
-    auto row = hstack(
-        context, mk(parent, id),
-        ComponentConfig{}
-            .with_720p_size(400, 38)
-            .with_custom_background(row_cream)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.55f)
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_padding(Padding{.left = pixels(16), .right = pixels(8)})
-            .with_margin(Margin{.top = pixels(5)}));
-
-    div(context, mk(row.ent(), 0),
-        ComponentConfig{}
-            .with_label(label)
-            .with_size(ComponentSize{pixels(160), pixels(30)})
-            .with_custom_text_color(text_dark));
-
-    // Spacer
-    div(context, mk(row.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{expand(), pixels(1)})
-            .with_skip_tabbing(true));
-
-    if (button(context, mk(row.ent(), 2),
-               ComponentConfig{}
-                   .with_label("<")
-                   .with_size(ComponentSize{pixels(28), pixels(30)})
-                   .with_font("EqProRounded", pixels(17.0f))
-                   .with_custom_text_color(arrow_color)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center))) {
-      value_idx = (value_idx == 0) ? max_options - 1 : value_idx - 1;
-    }
-
-    std::string display_value =
-        is_mode ? modes[static_cast<size_t>(value_idx)]
-                : resolutions[static_cast<size_t>(value_idx)];
-
-    div(context, mk(row.ent(), 3),
-        ComponentConfig{}
-            .with_label(display_value)
-            .with_size(ComponentSize{pixels(110), pixels(30)})
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center));
-
-    if (button(context, mk(row.ent(), 4),
-               ComponentConfig{}
+            .with_debug_name(debug_base + "_value"));
+    if (button(context, mk(parent, id + 4),
+               box(scale, 794, y, 24, 26)
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(28), pixels(30)})
-                   .with_font("EqProRounded", pixels(17.0f))
-                   .with_custom_text_color(arrow_color)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center))) {
-      value_idx = (value_idx + 1) % max_options;
+                   .with_font("Archivo@bold", h720(22.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name(debug_base + "_next"))) {
+      cycle_value(value, 1, static_cast<int>(values.size()));
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // Helper: slider row (label + < segments >) as layout children
-  // ═══════════════════════════════════════════════════════════════
-  void render_slider_row(UIContext<InputAction> &context,
-                         afterhours::Entity &parent, int id,
-                         const std::string &label, int &value, int max_val) {
-    auto row = hstack(
-        context, mk(parent, id),
-        ComponentConfig{}
-            .with_720p_size(400, 38)
-            .with_custom_background(row_cream)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.55f)
-            .with_align_items(AlignItems::Center)
-            .with_no_wrap()
-            .with_padding(Padding{.left = pixels(16), .right = pixels(8)})
-            .with_margin(Margin{.top = pixels(5)}));
-
-    div(context, mk(row.ent(), 0),
-        ComponentConfig{}
+  void render_step_row(UIContext<InputAction> &context, afterhours::Entity &parent,
+                       float scale, int id, const std::string &label, int &value,
+                       float y, const std::string &debug_base) {
+    div(context, mk(parent, id),
+        box(scale, 456, y, 367, 26)
+            .with_custom_background(row)
+            .with_corner_radius(6.f * scale)
+            .with_debug_name(debug_base + "_row"));
+    div(context, mk(parent, id + 1),
+        box(scale, 473, y + 1, 218, 24)
             .with_label(label)
-            .with_size(ComponentSize{pixels(175), pixels(30)})
-            .with_custom_text_color(text_dark));
-
-    // Spacer
-    div(context, mk(row.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{expand(), pixels(1)})
-            .with_skip_tabbing(true));
-
-    if (button(context, mk(row.ent(), 2),
-               ComponentConfig{}
+            .with_font("Gaegu-Bold", h720(22.f))
+            .with_letter_spacing(-.5f * scale)
+            .with_custom_text_color(text)
+            .with_alignment(TextAlignment::Left));
+    if (button(context, mk(parent, id + 2),
+               box(scale, 662, y, 22, 26)
                    .with_label("<")
-                   .with_size(ComponentSize{pixels(28), pixels(30)})
-                   .with_font("EqProRounded", pixels(17.0f))
-                   .with_custom_text_color(arrow_color)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center))) {
-      if (value > 0)
-        value--;
+                   .with_font("Archivo@bold", h720(22.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name(debug_base + "_prev"))) {
+      value = std::max(0, value - 1);
     }
-
-    // Segments
-    auto segs = hstack(context, mk(row.ent(), 3),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{children(), h720(15)})
-                           .with_no_wrap()
-                           .with_align_items(AlignItems::Center));
-
-    for (int si = 0; si < max_val; si++) {
-      bool is_filled = (si < value);
-      afterhours::Color seg_color = is_filled ? slider_teal : slider_empty;
-      if (button(context, mk(segs.ent(), si),
-                 ComponentConfig{}
-                     .with_720p_size(8, 15)
-                     .with_custom_background(seg_color)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.2f)
-                     .with_margin(si > 0 ? Margin{.left = w1280(4)} : Margin{})
-                     .with_skip_tabbing(true))) {
-        value = si + 1;
+    for (int i = 0; i < 10; ++i) {
+      const bool on = i < value;
+      if (button(context, mk(parent, id + 10 + i),
+                 box(scale, 686 + static_cast<float>(i) * 11.f, y + 7, 7, 14)
+                     .with_label("")
+                     .with_custom_background(on ? filled : empty)
+                     .with_corner_radius(1.f * scale)
+                     .with_debug_name(debug_base + "_segment_" + std::to_string(i + 1)))) {
+        value = i + 1;
       }
     }
-
-    if (button(context, mk(row.ent(), 4),
-               ComponentConfig{}
+    if (button(context, mk(parent, id + 22),
+               box(scale, 796, y, 22, 26)
                    .with_label(">")
-                   .with_size(ComponentSize{pixels(28), pixels(30)})
-                   .with_font("EqProRounded", pixels(17.0f))
-                   .with_custom_text_color(arrow_color)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Center))) {
-      if (value < max_val)
-        value++;
+                   .with_font("Archivo@bold", h720(22.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name(debug_base + "_next"))) {
+      value = std::min(10, value + 1);
     }
   }
+
+  void for_each_with(afterhours::Entity &entity,
+                     UIContext<InputAction> &context, float dt) override {
+    const float screen_w = context.screen_width > 0.f
+                               ? context.screen_width
+                               : static_cast<float>(Settings::get().get_screen_width());
+    const float screen_h = context.screen_height > 0.f
+                               ? context.screen_height
+                               : static_cast<float>(Settings::get().get_screen_height());
+    const float scale = std::min(screen_w / 1280.f, screen_h / 720.f);
+
+    Theme theme;
+    theme.font = text;
+    theme.darkfont = paper;
+    theme.font_muted = text;
+    theme.background = bg;
+    theme.surface = paper;
+    theme.primary = row;
+    theme.secondary = heading;
+    theme.accent = filled;
+    theme.roundness = .12f;
+    theme.segments = 8;
+    context.set_theme(theme);
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_default_font("Gaegu-Bold", h720(21.f));
+
+    auto root = div(context, mk(entity, 0),
+                    box(scale, 0, 0, 1280, 720)
+                        .with_on_draw_bg([](RectangleType r) { draw_background(r); })
+                        .with_debug_name("it_root"));
+
+    if (context.pressed(InputAction::MenuBack))
+      view = view == View::Settings ? View::Closed : View::Settings;
+    if (view == View::Closed) {
+      detail_label(context, root.ent(), scale, 500, "Settings closed", 560, 308, 240, 40, 30);
+      if (detail_button(context, root.ent(), scale, 501, "REOPEN SETTINGS", 500, 370, 280, 43, "it_reopen"))
+        view = View::Settings;
+      return;
+    }
+
+    div(context, mk(root.ent(), 1),
+        box(scale, 416, 0, 447, 720)
+            .with_on_draw_bg([](RectangleType r) { draw_paper(r); })
+            .with_debug_name("it_paper"));
+
+    if (button(context, mk(root.ent(), 2),
+               box(scale, 1212, 12, 47, 48)
+                   .with_label("X")
+                   .with_on_draw_bg([](RectangleType r) { draw_close_shape(r); })
+                   .with_font("Archivo@bold", h720(44.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name("it_close"))) {
+      view = View::Closed;
+    }
+
+    if (view == View::Keyboard || view == View::Tutorial) {
+      render_detail(context, root.ent(), scale, dt);
+      return;
+    }
+
+    div(context, mk(root.ent(), 10),
+        box(scale, 592, 26, 130, 35)
+            .with_label("SETTINGS")
+            .with_font("Gaegu-Bold", h720(29.f))
+            .with_letter_spacing(-1.f * scale)
+            .with_custom_text_color(text)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("it_title"));
+
+    render_section(context, root.ent(), scale, 20, "DISPLAY", 89);
+    render_cycle_row(context, root.ent(), scale, 30, "Mode", display_mode, modes,
+                     115, "it_mode");
+    render_cycle_row(context, root.ent(), scale, 40, "Resolution", resolution,
+                     resolutions, 149, "it_resolution");
+
+    render_section(context, root.ent(), scale, 60, "CONTROLS", 198);
+    render_step_row(context, root.ent(), scale, 70, "Cam panning speed",
+                    cam_pan_speed, 223, "it_pan");
+    render_step_row(context, root.ent(), scale, 100, "Cam rotating Speed",
+                    cam_rotate_speed, 257, "it_rotate");
+    if (button(context, mk(root.ent(), 130),
+               box(scale, 456, 289, 367, 26)
+                   .with_label("KEYBOARD")
+                   .with_custom_background(row)
+                   .with_corner_radius(5.f * scale)
+                   .with_font("Gaegu-Bold", h720(21.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name("it_keyboard"))) {
+      view = View::Keyboard;
+    }
+
+    render_section(context, root.ent(), scale, 140, "AUDIO", 344);
+    render_step_row(context, root.ent(), scale, 150, "Effects Volume",
+                    effects_volume, 370, "it_effects");
+    render_step_row(context, root.ent(), scale, 180, "Music Volume", music_volume,
+                    404, "it_music");
+
+    render_section(context, root.ent(), scale, 210, "TUTORIAL", 455);
+    if (button(context, mk(root.ent(), 220),
+               box(scale, 456, 475, 367, 26)
+                   .with_label("PLAY TUTORIAL")
+                   .with_custom_background(row)
+                   .with_corner_radius(5.f * scale)
+                   .with_font("Gaegu-Bold", h720(21.f))
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name("it_play_tutorial"))) {
+      view = View::Tutorial;
+      tutorial_step = 0; camera_offset = 0; track_placed = false;
+      train_running = false; train_progress = 0;
+    }
+
+    if (button(context, mk(root.ent(), 230),
+               box(scale, 520, 690, 240, 25)
+                   .with_label("RESET TO DEFAULTS")
+                   .with_font("Gaegu-Bold", h720(22.f))
+                   .with_letter_spacing(-1.f * scale)
+                   .with_custom_text_color(text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_debug_name("it_reset"))) {
+      reset_defaults();
+    }
+
+
+  }
+
+  void detail_label(UIContext<InputAction> &c, afterhours::Entity &p, float scale,
+                    int id, const std::string &label, float x, float y,
+                    float w, float h, float size) {
+    div(c, mk(p, id), box(scale, x, y, w, h).with_label(label)
+        .with_font("GaeguMock", h720(size)).with_custom_text_color(text)
+        .with_alignment(TextAlignment::Center).with_text_overflow(TextOverflow::Wrap)
+        .with_ignore_pointer_events());
+  }
+
+  ElementResult detail_button(UIContext<InputAction> &c, afterhours::Entity &p,
+                               float scale, int id, const std::string &label,
+                               float x, float y, float w, float h,
+                               const std::string &name, bool disabled = false) {
+    return button(c, mk(p, id), box(scale, x, y, w, h).with_label(label)
+        .with_font("GaeguMock", h720(24)).with_custom_text_color(text)
+        .with_custom_background(row).with_corner_radius(5 * scale)
+        .with_alignment(TextAlignment::Center).with_disabled(disabled)
+        .with_click_activation(ClickActivationMode::Release).with_debug_name(name));
+  }
+
+  void render_detail(UIContext<InputAction> &c, afterhours::Entity &p, float scale, float dt) {
+    detail_label(c, p, scale, 510, view == View::Keyboard ? "KEYBOARD" : "LOCAL TUTORIAL",
+                 456, 28, 367, 43, 31);
+    if (detail_button(c, p, scale, 511, "BACK TO SETTINGS", 490, 653, 300, 42, "it_detail_back")) {
+      view = View::Settings; return;
+    }
+    if (view == View::Keyboard) {
+      detail_label(c, p, scale, 512, "Keyboard controls for this mock", 456, 96, 367, 54, 23);
+      const std::array<std::pair<const char *, const char *>, 5> bindings{{
+          {"Choose a control", "Tab / Shift+Tab"}, {"Activate a control", "Enter"},
+          {"Pan in the tutorial", "Left / Right"}, {"Next tutorial step", "Enter"},
+          {"Back to settings", "Esc"}}};
+      for (int i = 0; i < 5; ++i) {
+        const float y = 170 + i * 63;
+        div(c, mk(p, 520 + i), box(scale, 456, y, 367, 52).with_custom_background(row).with_corner_radius(5 * scale));
+        detail_label(c, p, scale, 530 + i, bindings[i].first, 469, y + 2, 342, 25, 22);
+        detail_label(c, p, scale, 540 + i, bindings[i].second, 469, y + 26, 342, 24, 21);
+      }
+      if (detail_button(c, p, scale, 550, "TRY THE TUTORIAL", 490, 538, 300, 43, "it_keyboard_practice")) {
+        view = View::Tutorial; tutorial_step = 0; camera_offset = 0;
+        track_placed = false; train_running = false; train_progress = 0;
+      }
+      return;
+    }
+    if (tutorial_step == 0) {
+      if (c.pressed_or_repeat(InputAction::WidgetLeft)) camera_offset = std::max(-2, camera_offset - 1);
+      if (c.pressed_or_repeat(InputAction::WidgetRight)) camera_offset = std::min(2, camera_offset + 1);
+    }
+    if (train_running) {
+      train_progress = std::min(1.f, train_progress + std::min(dt, .1f) * .4f);
+      if (train_progress >= 1) train_running = false;
+    }
+    const bool complete = tutorial_step == 0 ? camera_offset != 0 : tutorial_step == 1 ? track_placed : train_progress >= 1;
+    const std::array<const char *, 3> titles{"1. Move the camera", "2. Lay the track", "3. Send a train"};
+    const std::array<const char *, 3> instructions{
+        "Use Left / Right or the buttons to pan the island.",
+        "Place a track to connect the two stations.",
+        "Start the train and watch it reach the second station."};
+    detail_label(c, p, scale, 560, titles[tutorial_step], 456, 105, 367, 41, 27);
+    detail_label(c, p, scale, 561, instructions[tutorial_step], 456, 153, 367, 77, 23);
+    div(c, mk(p, 562), box(scale, 456, 251, 367, 180).with_custom_background(row)
+        .with_corner_radius(10 * scale).with_ignore_pointer_events().with_debug_name("it_practice_scene")
+        .with_on_draw_fg([offset = camera_offset, track = track_placed, progress = train_progress](RectangleType r) {
+          const float s = r.width / 367;
+          const float shift = offset * 12 * s;
+          const float left = r.x + 67 * s + shift, right = r.x + 287 * s + shift, y = r.y + 91 * s;
+          afterhours::draw_circle(static_cast<int>(r.x + r.width / 2 + shift), static_cast<int>(y), 76 * s, {185, 211, 170, 255});
+          if (track) {
+            afterhours::draw_line_ex({left, y - 4 * s}, {right, y - 4 * s}, 3 * s, {137, 135, 108, 255});
+            afterhours::draw_line_ex({left, y + 4 * s}, {right, y + 4 * s}, 3 * s, {137, 135, 108, 255});
+            for (int i = 0; i < 12; ++i) {
+              const float x = left + (right - left) * i / 11;
+              afterhours::draw_line_ex({x, y - 8 * s}, {x, y + 8 * s}, 3 * s, {137, 135, 108, 255});
+            }
+          }
+          for (float x : {left, right}) {
+            afterhours::draw_rectangle({x - 15 * s, y - 32 * s, 30 * s, 26 * s}, {249, 245, 208, 255});
+            afterhours::draw_triangle({x - 20 * s, y - 32 * s}, {x + 20 * s, y - 32 * s}, {x, y - 47 * s}, {137, 135, 108, 255});
+          }
+          if (track) afterhours::draw_rectangle({left + (right - left) * progress - 11 * s, y - 10 * s, 22 * s, 16 * s}, {100, 151, 151, 255});
+        }));
+    if (tutorial_step == 0) {
+      if (detail_button(c, p, scale, 563, "PAN LEFT", 470, 451, 163, 41, "it_tutorial_left")) camera_offset = std::max(-2, camera_offset - 1);
+      if (detail_button(c, p, scale, 564, "PAN RIGHT", 647, 451, 163, 41, "it_tutorial_right")) camera_offset = std::min(2, camera_offset + 1);
+    } else if (tutorial_step == 1) {
+      if (detail_button(c, p, scale, 565, track_placed ? "TRACK CONNECTED" : "PLACE TRACK", 490, 451, 300, 41, "it_tutorial_track", track_placed)) track_placed = true;
+    } else if (detail_button(c, p, scale, 566, train_running ? "TRAIN MOVING" : train_progress >= 1 ? "TRAIN ARRIVED" : "START TRAIN",
+                            490, 451, 300, 41, "it_tutorial_train", train_running || train_progress >= 1)) train_running = true;
+    detail_label(c, p, scale, 567, complete ? "Step complete!" : "Try the action above to continue.", 456, 511, 367, 39, 23);
+    if (detail_button(c, p, scale, 568, tutorial_step == 2 ? "FINISH TUTORIAL" : "NEXT STEP", 490, 572, 300, 41, "it_tutorial_next", !complete) ||
+        (complete && c.pressed(InputAction::WidgetPress))) {
+      if (tutorial_step == 2) view = View::Settings; else ++tutorial_step;
+    }
+  }
+
 };
 
 REGISTER_EXAMPLE_SCREEN(islands_trains_settings, "Game Mockups",

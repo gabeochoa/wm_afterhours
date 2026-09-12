@@ -76,6 +76,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | aim_chat / modal hit testing | The nested pasted-log scrollbar intercepted Clear unsent draft in the Edit dialog, leaving the dialog open and blocking minimize. | wm workaround; deeper ownership unresolved | Disable both underlying scroll axes while a modal is open; restore on close. Reproduced before fix; E2E 149 now clears the draft and minimizes/restores correctly. No afterhours edit. |
 | aim_chat / fine styling and scope | Fonts are lighter; some toolbar/taskbar icons are text substitutes; italic/underline report format availability instead of formatting text. Buddy List is a fixed-size utility window. | wm | Open visual/formatting limitations. Chat maximize works; messaging is explicitly a local demo. |
 
+| islands_trains_settings / layout and actions | Centered paper/row proportions differed and Keyboard/Tutorial had no visible effect; Close only displayed a status. | wm | Matched paper/controls and added bindings help, local pan/place/run tutorial, real close/reopen with preserved preferences. E2E 136 covers these flows. |
+| islands_trains_settings / fine styling | Typography and close glyph are lighter; paper/background contours and gradient are approximate. | wm | Open cosmetic differences; all controls and tutorial views remain contained at both resolutions. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

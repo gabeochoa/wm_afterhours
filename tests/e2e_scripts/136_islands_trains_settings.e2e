@@ -1,0 +1,130 @@
+# Settings values, keyboard help, guided local tutorial, and close/reopen.
+
+goto_screen islands_trains_settings
+wait 1
+
+expect_text "SETTINGS"
+expect_text "DISPLAY"
+expect_text "Mode"
+expect_text "Borderless"
+expect_text "Resolution"
+expect_text "2560x1440"
+expect_text "Cam panning speed"
+expect_text "Cam rotating Speed"
+expect_text "PLAY TUTORIAL"
+expect_text "RESET TO DEFAULTS"
+
+assert_ui it_root x=0 y=0 w=1280 h=720
+assert_ui it_paper x=416 y=0 w=447 h=720
+assert_ui it_close x=1212 y=12 w=47 h=48
+assert_ui it_mode_row x=456 y=115 w=367 h=26
+assert_ui it_resolution_row x=456 y=149 w=367 h=26
+assert_ui it_pan_row x=456 y=223 w=367 h=26
+assert_ui it_music_row x=456 y=404 w=367 h=26
+assert_ui it_reset x=520 y=690 w=240 h=25
+
+click_ui it_mode_next
+wait 0.2
+expect_text "Windowed"
+
+click_ui it_resolution_next
+wait 0.2
+expect_text "3840x2160"
+
+click_ui it_pan_segment_8
+click_ui it_music_prev
+wait 0.2
+
+click_ui it_reset
+wait 0.2
+expect_text "Borderless"
+expect_text "2560x1440"
+
+click_ui it_mode_next
+click_ui it_keyboard
+wait 0.2
+expect_text "KEYBOARD"
+expect_text "Tab / Shift+Tab"
+expect_text "Left / Right"
+expect_no_text "DISPLAY"
+assert_within_parents
+assert_no_overflow
+screenshot islands_trains_keyboard
+key ESCAPE
+wait 0.2
+expect_text "Windowed"
+click_ui it_play_tutorial
+wait 0.2
+expect_text "1. Move the camera"
+click_ui it_tutorial_next
+wait 0.2
+expect_text "1. Move the camera"
+key RIGHT
+wait 0.2
+expect_text "Step complete!"
+key ENTER
+wait 0.2
+expect_text "2. Lay the track"
+click_ui it_tutorial_track
+wait 0.2
+expect_text "TRACK CONNECTED"
+click_ui it_tutorial_next
+wait 0.2
+expect_text "3. Send a train"
+click_ui it_tutorial_train
+wait 0.3
+expect_text "TRAIN MOVING"
+assert_within_parents
+assert_no_overflow
+screenshot islands_trains_tutorial
+wait 3
+expect_text "TRAIN ARRIVED"
+click_ui it_tutorial_next
+wait 0.2
+expect_text "SETTINGS"
+expect_text "Windowed"
+click_ui it_keyboard
+wait 0.2
+focus_ui it_keyboard_practice
+key ENTER
+wait 0.2
+expect_text "1. Move the camera"
+click_ui it_detail_back
+wait 0.2
+expect_text "SETTINGS"
+click_ui it_close
+wait 0.2
+expect_text "Settings closed"
+expect_no_text "DISPLAY"
+expect_no_text "PLAY TUTORIAL"
+click_ui it_reopen
+wait 0.2
+expect_text "Windowed"
+key ESCAPE
+wait 0.2
+expect_text "Settings closed"
+key ESCAPE
+wait 0.2
+expect_text "SETTINGS"
+
+screenshot islands_trains_settings_review
+
+resize 1920 1080
+wait 0.3
+assert_ui it_root x=0 y=0 w=1920 h=1080
+assert_ui it_paper x=624 y=0 w=671 h=1080
+assert_ui it_close x=1818 y=18 w=71 h=72
+assert_ui it_mode_row x=684 y=173 w=551 h=39
+assert_ui it_reset x=780 y=1035 w=360 h=38
+click_ui it_keyboard
+wait 0.2
+assert_within_parents
+assert_no_overflow
+click_ui it_keyboard_practice
+wait 0.2
+assert_ui it_practice_scene x=684 y=377 w=551 h=270
+assert_within_parents
+assert_no_overflow
+key ESCAPE
+wait 0.2
+expect_text "Windowed"

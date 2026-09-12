@@ -57,7 +57,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | empire_tycoon | Updated; shading/type gaps recorded | E2E 133 passed: tabs, production boosts, priority/new project, tool feedback and resize; fresh 720p/1080p images independently reviewed. |
 | flight_options | Updated; typography gaps recorded | E2E 134 passed: nine categories, live values, apply/cancel, Tab/Enter/arrows, close/reopen and resize; 720p/1080p independently reviewed. |
 | shop_interface | Pending | |
-| islands_trains_settings | Pending | |
+| islands_trains_settings | Updated; minor styling gaps recorded | E2E 136 passed: settings cycles/segments/reset, keyboard help, three-step tutorial, close/reopen, Escape and resize; 720p/1080p and interaction views reviewed. |
 | kirby_options | Updated; minor art/type gaps recorded | E2E 137 passed: profile editing, live preferences, tabs, confirmation/reset, Tab/Enter and resize; 720p/1080p independently reviewed. |
 | marlo_kart | Updated; minor typography gaps recorded | Existing Grand Prix E2E 126/127 and new 138 passed: all six phases, pointer/keyboard, countdown pause and resize; race/maps/results/trophy independently reviewed. |
 | minesweeper_lab | Updated; font/bevel gaps recorded | E2E 120 and 139 passed: game play, reset/help, minimize/maximize/close/restore, Start menu and resize; fresh 720p/1080p captures. |
