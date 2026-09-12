@@ -53,6 +53,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | kirby_options / notebook and preferences | Plain panels and decorative-only options missed the notebook composition and useful interactions. | wm | Isolated paper, tab and icon artwork with native labels; editable name, per-category preferences, favorite mode, tab views and confirmed profile reset. E2E 137 covers pointer, Tab/Enter and resize. |
 | kirby_options / fine styling | Native type spacing/weight and pencil artwork differ slightly; bumper hints use purple rather than dark keycaps. Online view is explicitly local. | wm | Open cosmetic differences and stated simulation scope. Final 720p/1080p images independently reviewed. |
 
+
+| minesweeper_lab / desktop and game | Generic chrome, unreadable counters and overlapping taskbar text missed the classic desktop mock. | wm | Native desktop/window/taskbar, high-resolution font aliases, separate labels for icon buttons, real game reset and window state controls. Existing play test 120 and new 139 pass. |
+| minesweeper_lab / fine styling | Counter glyphs are heavier, bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open cosmetic differences; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

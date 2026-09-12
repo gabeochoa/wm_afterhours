@@ -5,27 +5,26 @@
 
 goto_screen minesweeper_lab
 wait 0.5
-expect_text "MINES 38"
-expect_text "OPEN 6"
+expect_text "038"
 
 # Right click flags, which is the gesture that could only be aimed at a
 # coordinate before right_click_ui existed. ms_5_0 is hidden in the seed.
 right_click_ui ms_5_0
 wait 0.3
-expect_text "MINES 37"
+expect_text "037"
 
 # Flagging is a toggle.
 right_click_ui ms_5_0
 wait 0.3
-expect_text "MINES 38"
+expect_text "038"
 
-# A reveal on an empty cell floods, so the open count jumps well past the seed.
+# A reveal on an empty cell floods and reports the resulting open count.
 click_ui ms_15_0
 wait 0.4
-expect_no_text "OPEN 6"
+expect_text "squares open."
 
 # Reset puts the board back rather than reshuffling it, seed included.
 click_ui ms_reset
 wait 0.4
-expect_text "OPEN 6"
-expect_text "MINES 38"
+expect_text "Left click to reveal. Right click to mark a mine."
+expect_text "038"

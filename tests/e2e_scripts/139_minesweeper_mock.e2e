@@ -1,0 +1,85 @@
+# Classic Minesweeper shell, board play, and window controls.
+
+goto_screen minesweeper_lab
+wait 0.5
+click_ui ms_reset
+wait 0.2
+
+expect_text "Minesweeper"
+expect_text "Game"
+expect_text "Help"
+expect_text "038"
+expect_text "Left click to reveal. Right click to mark a mine."
+assert_ui ms_root x=0 y=0 w=1280 h=720
+assert_ui ms_window x=406 y=23 w=468 h=629
+assert_ui ms_titlebar x=412 y=29 w=456 h=28
+assert_ui ms_score x=427 y=101 w=426 h=68
+assert_ui ms_board x=427 y=181 w=422 h=422
+assert_ui ms_0_0 x=430 y=184 w=26 h=26
+assert_ui ms_taskbar x=0 y=681 w=1280 h=39
+assert_no_overflow
+screenshot minesweeper_mock_default
+
+# Right-click flags a covered square and toggles cleanly.
+right_click_ui ms_5_0
+wait 0.2
+expect_text "037"
+expect_text "Flag placed."
+right_click_ui ms_5_0
+wait 0.2
+expect_text "038"
+expect_text "Flag removed."
+
+# The smiley is a keyboard-operable reset.
+click_ui ms_15_0
+wait 0.2
+expect_text "squares open."
+focus_ui ms_reset
+key ENTER
+wait 0.2
+expect_text "038"
+expect_text "Left click to reveal. Right click to mark a mine."
+
+# Help supplies actual instructions.
+focus_ui ms_help
+key ENTER
+wait 0.2
+expect_text "Reveal a square. Right-click to flag. Clear every safe square."
+
+# Window chrome changes real window state.
+click_ui ms_maximize
+wait 0.2
+assert_ui ms_window x=0 y=0 w=1280 h=681
+expect_text "Window maximized."
+click_ui ms_maximize
+wait 0.2
+assert_ui ms_window x=406 y=23 w=468 h=629
+click_ui ms_minimize
+wait 0.2
+expect_no_text "038"
+click_ui ms_task
+wait 0.2
+expect_text "038"
+click_ui ms_close
+wait 0.2
+expect_no_text "038"
+click_ui ms_task
+wait 0.2
+expect_text "038"
+
+# Start opens a keyboard-operable launcher.
+click_ui ms_start
+wait 0.2
+expect_text "New Minesweeper"
+focus_ui ms_start_game
+key ENTER
+wait 0.2
+expect_text "038"
+
+resize 1920 1080
+wait 0.3
+assert_ui ms_window x=609 y=35 w=702 h=944
+assert_ui ms_board x=641 y=272 w=633 h=633
+assert_ui ms_taskbar x=0 y=1022 w=1920 h=59
+assert_no_overflow
+assert_within_parents

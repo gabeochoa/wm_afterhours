@@ -60,7 +60,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | islands_trains_settings | Pending | |
 | kirby_options | Updated; minor art/type gaps recorded | E2E 137 passed: profile editing, live preferences, tabs, confirmation/reset, Tab/Enter and resize; 720p/1080p independently reviewed. |
 | marlo_kart | Pending | |
-| minesweeper_lab | Pending | |
+| minesweeper_lab | Updated; font/bevel gaps recorded | E2E 120 and 139 passed: game play, reset/help, minimize/maximize/close/restore, Start menu and resize; fresh 720p/1080p captures. |
 | mini_motorways_settings | Pending | |
 | neon_strike | Pending | |
 | parcel_corps_settings | Pending | |

@@ -85,6 +85,8 @@ inline std::vector<FontDef> get_all_fonts() {
       {"FredokaMockBold", "Fredoka-MockBold.ttf", false, nullptr, 96},
       {"BlackOpsOne", "BlackOpsOne-Regular.ttf"},
       {"Atkinson", "AtkinsonHyperlegible-Regular.ttf"},
+      {"AtkinsonMock", "AtkinsonHyperlegible-Regular.ttf", false, nullptr,
+       96},
 
       // A real same-family weight pair, which nothing else bundled here is:
       // the only other true bold is Gaegu-Bold, and that IS the default face.
@@ -94,6 +96,7 @@ inline std::vector<FontDef> get_all_fonts() {
       // Oldschool PC Font Pack, CC BY-SA 4.0 -- see OLDSCHOOL_PC_FONTS_*.txt.
       {"DGOne", "Px437_DG_One.ttf"},
       {"DGOne@bold", "Px437_DG_One_bold.ttf"},
+      {"DGOneMock", "Px437_DG_One.ttf", false, nullptr, 96},
 
       // The only bundled family with more than two weights, so it is the one
       // that can actually show what with_font_weight does. OFL, see

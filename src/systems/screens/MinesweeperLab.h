@@ -2,17 +2,16 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
-#include <afterhours/src/plugins/ui/grid.h>
+#include <algorithm>
+#include <string>
+#include <utility>
+#include <vector>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// 256 buttons in one screen, every one of them hit-testable and individually
-// styled, which is the point: a widget count a real game reaches rather than a
-// gallery's dozen.
 struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
   static constexpr int kSize = 16;
   static constexpr int kMines = 40;
@@ -24,14 +23,131 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
   bool revealed[kSize][kSize]{};
   bool flagged[kSize][kSize]{};
   bool laid_out = false;
+  bool window_open = true;
+  bool minimized = false;
+  bool maximized = false;
+  bool start_menu_open = false;
   Phase phase = Phase::Playing;
   int flags_left = kMines;
+  float elapsed_seconds = 0.f;
+  std::string status_message =
+      "Left click to reveal. Right click to mark a mine.";
 
-  // A fixed sequence, not a random one: the screenshot baseline has to be the
-  // same board every run.
+  const afterhours::Color desktop_teal{0, 128, 128, 255};
+  const afterhours::Color win_gray{192, 192, 192, 255};
+  const afterhours::Color win_light{255, 255, 255, 255};
+  const afterhours::Color win_mid{128, 128, 128, 255};
+  const afterhours::Color win_dark{51, 51, 51, 255};
+  const afterhours::Color title_blue{0, 0, 128, 255};
+  const afterhours::Color black{0, 0, 0, 255};
+
+  ComponentConfig box(float scale, float x, float y, float width,
+                      float height) const {
+    return ComponentConfig{}
+        .with_size(ComponentSize{pixels(width * scale), pixels(height * scale)})
+        .with_absolute_position(pixels(x * scale), pixels(y * scale))
+        .with_background(Theme::Usage::None);
+  }
+
+  static void draw_bevel(RectangleType r, afterhours::Color fill, bool raised,
+                         float thickness) {
+    const auto top_left = raised ? afterhours::Color{255, 255, 255, 255}
+                                 : afterhours::Color{128, 128, 128, 255};
+    const auto bottom_right = raised ? afterhours::Color{65, 65, 65, 255}
+                                     : afterhours::Color{255, 255, 255, 255};
+    afterhours::draw_rectangle(r, fill);
+    afterhours::draw_rectangle({r.x, r.y, r.width, thickness}, top_left);
+    afterhours::draw_rectangle({r.x, r.y, thickness, r.height}, top_left);
+    afterhours::draw_rectangle(
+        {r.x, r.y + r.height - thickness, r.width, thickness}, bottom_right);
+    afterhours::draw_rectangle(
+        {r.x + r.width - thickness, r.y, thickness, r.height}, bottom_right);
+  }
+
+  static void draw_bomb(RectangleType r, afterhours::Color color) {
+    const float s = std::min(r.width, r.height) / 24.f;
+    const float cx = r.x + r.width * 0.5f;
+    const float cy = r.y + r.height * 0.55f;
+    for (int i = 0; i < 4; ++i) {
+      const float dx = i % 2 == 0 ? 1.f : 0.f;
+      const float dy = i % 2 == 0 ? 0.f : 1.f;
+      afterhours::draw_line_ex({cx - dx * 10.f * s, cy - dy * 10.f * s},
+                               {cx + dx * 10.f * s, cy + dy * 10.f * s},
+                               2.f * s, color);
+    }
+    afterhours::draw_line_ex({cx - 7.f * s, cy - 7.f * s},
+                             {cx + 7.f * s, cy + 7.f * s}, 2.f * s, color);
+    afterhours::draw_line_ex({cx + 7.f * s, cy - 7.f * s},
+                             {cx - 7.f * s, cy + 7.f * s}, 2.f * s, color);
+    afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy), 7.f * s,
+                            color);
+    afterhours::draw_rectangle(
+        {cx - 4.f * s, cy - 4.f * s, 4.f * s, 4.f * s},
+        afterhours::Color{255, 255, 255, 255});
+  }
+
+  static void draw_flag(RectangleType r, float scale) {
+    const float cx = r.x + r.width * 0.5f;
+    const float top = r.y + 5.f * scale;
+    afterhours::draw_line_ex({cx, top}, {cx, r.y + 20.f * scale}, 2.f * scale,
+                             afterhours::Color{0, 0, 0, 255});
+    afterhours::draw_triangle({cx, top}, {cx - 9.f * scale, top + 5.f * scale},
+                              {cx, top + 10.f * scale},
+                              afterhours::Color{220, 0, 0, 255});
+    afterhours::draw_line_ex({cx - 7.f * scale, r.y + 21.f * scale},
+                             {cx + 7.f * scale, r.y + 21.f * scale},
+                             2.f * scale, afterhours::Color{0, 0, 0, 255});
+  }
+
+  static void draw_smiley(RectangleType r) {
+    const float s = std::min(r.width, r.height) / 44.f;
+    const float cx = r.x + r.width * 0.5f;
+    const float cy = r.y + r.height * 0.5f;
+    afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy),
+                            13.f * s, afterhours::Color{255, 255, 0, 255});
+    afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(cy),
+                                  13.f * s, afterhours::Color{0, 0, 0, 255});
+    afterhours::draw_rectangle({cx - 6.f * s, cy - 5.f * s, 2.f * s, 5.f * s},
+                               afterhours::Color{0, 0, 0, 255});
+    afterhours::draw_rectangle({cx + 4.f * s, cy - 5.f * s, 2.f * s, 5.f * s},
+                               afterhours::Color{0, 0, 0, 255});
+    afterhours::draw_line_ex({cx - 7.f * s, cy + 3.f * s}, {cx, cy + 8.f * s},
+                             2.f * s, afterhours::Color{0, 0, 0, 255});
+    afterhours::draw_line_ex({cx, cy + 8.f * s}, {cx + 7.f * s, cy + 3.f * s},
+                             2.f * s, afterhours::Color{0, 0, 0, 255});
+  }
+
+  static void draw_monitor(RectangleType r) {
+    const float s = r.width / 48.f;
+    draw_bevel({r.x + 3.f * s, r.y, 36.f * s, 30.f * s},
+               afterhours::Color{192, 192, 192, 255}, true, 2.f * s);
+    afterhours::draw_rectangle(
+        {r.x + 7.f * s, r.y + 4.f * s, 28.f * s, 20.f * s},
+        afterhours::Color{0, 0, 128, 255});
+    afterhours::draw_rectangle(
+        {r.x + 16.f * s, r.y + 30.f * s, 13.f * s, 6.f * s},
+        afterhours::Color{192, 192, 192, 255});
+    afterhours::draw_rectangle(
+        {r.x + 9.f * s, r.y + 37.f * s, 33.f * s, 5.f * s},
+        afterhours::Color{192, 192, 192, 255});
+  }
+
+  static void draw_windows_mark(RectangleType r) {
+    const float s = std::min(r.width, r.height) / 16.f;
+    const float x = r.x + (r.width - 13.f * s) * 0.5f;
+    const float y = r.y + (r.height - 13.f * s) * 0.5f;
+    const afterhours::Color dark{0, 96, 96, 255};
+    const afterhours::Color bright{0, 160, 128, 255};
+    afterhours::draw_rectangle({x, y, 6.f * s, 6.f * s}, bright);
+    afterhours::draw_rectangle({x + 7.f * s, y, 6.f * s, 6.f * s}, dark);
+    afterhours::draw_rectangle({x, y + 7.f * s, 6.f * s, 6.f * s}, dark);
+    afterhours::draw_rectangle(
+        {x + 7.f * s, y + 7.f * s, 6.f * s, 6.f * s}, bright);
+  }
+
   void reset() {
-    for (int r = 0; r < kSize; r++)
-      for (int c = 0; c < kSize; c++) {
+    for (int r = 0; r < kSize; ++r)
+      for (int c = 0; c < kSize; ++c) {
         mine[r][c] = false;
         neighbours[r][c] = 0;
         revealed[r][c] = false;
@@ -42,64 +158,61 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     int placed = 0;
     while (placed < kMines) {
       state = state * 1664525u + 1013904223u;
-      const int r = (int)((state >> 16) % kSize);
+      const int r = static_cast<int>((state >> 16) % kSize);
       state = state * 1664525u + 1013904223u;
-      const int c = (int)((state >> 16) % kSize);
+      const int c = static_cast<int>((state >> 16) % kSize);
       if (mine[r][c])
         continue;
       mine[r][c] = true;
-      placed++;
+      ++placed;
     }
 
-    for (int r = 0; r < kSize; r++)
-      for (int c = 0; c < kSize; c++)
-        for (int dr = -1; dr <= 1; dr++)
-          for (int dc = -1; dc <= 1; dc++) {
-            const int nr = r + dr, nc = c + dc;
-            if (nr < 0 || nc < 0 || nr >= kSize || nc >= kSize)
-              continue;
-            if (mine[nr][nc])
-              neighbours[r][c]++;
+    for (int r = 0; r < kSize; ++r)
+      for (int c = 0; c < kSize; ++c)
+        for (int dr = -1; dr <= 1; ++dr)
+          for (int dc = -1; dc <= 1; ++dc) {
+            const int nr = r + dr;
+            const int nc = c + dc;
+            if (nr >= 0 && nc >= 0 && nr < kSize && nc < kSize && mine[nr][nc])
+              ++neighbours[r][c];
           }
 
     phase = Phase::Playing;
     flags_left = kMines;
+    elapsed_seconds = 0.f;
     laid_out = true;
 
-    // Open one safe empty cell and flag two mines. A board of 256 identical
-    // blanks shows none of the count colours the screen exists to demonstrate.
-    // It has to be a zero-neighbour non-mine, or the seed loses the game
-    // before anyone has clicked anything.
-    for (int r = 0; r < kSize; r++) {
+    for (int r = 0; r < kSize; ++r) {
       bool done = false;
-      for (int c = 0; c < kSize; c++)
+      for (int c = 0; c < kSize; ++c) {
         if (!mine[r][c] && neighbours[r][c] == 0) {
           reveal(r, c);
           done = true;
           break;
         }
+      }
       if (done)
         break;
     }
 
     int flagged_count = 0;
-    for (int r = 0; r < kSize && flagged_count < 2; r++)
-      for (int c = 0; c < kSize && flagged_count < 2; c++)
+    for (int r = 0; r < kSize && flagged_count < 2; ++r)
+      for (int c = 0; c < kSize && flagged_count < 2; ++c)
         if (mine[r][c] && !revealed[r][c]) {
           flagged[r][c] = true;
-          flags_left--;
-          flagged_count++;
+          --flags_left;
+          ++flagged_count;
         }
+    status_message = "Left click to reveal. Right click to mark a mine.";
   }
 
-  // Iterative rather than recursive: a board of empties would otherwise
-  // recurse 256 deep for a single click.
   void reveal(int row, int col) {
     if (revealed[row][col] || flagged[row][col])
       return;
     if (mine[row][col]) {
       revealed[row][col] = true;
       phase = Phase::Lost;
+      status_message = "BOOM! Click the smiley face for a new game.";
       return;
     }
 
@@ -114,208 +227,412 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
       revealed[r][c] = true;
       if (neighbours[r][c] != 0)
         continue;
-      for (int dr = -1; dr <= 1; dr++)
-        for (int dc = -1; dc <= 1; dc++)
-          if (dr || dc)
+      for (int dr = -1; dr <= 1; ++dr)
+        for (int dc = -1; dc <= 1; ++dc)
+          if (dr != 0 || dc != 0)
             stack.push_back({r + dr, c + dc});
     }
     check_win();
+    if (phase == Phase::Playing)
+      status_message = fmt::format("{} squares open.", revealed_count());
   }
 
   void check_win() {
-    for (int r = 0; r < kSize; r++)
-      for (int c = 0; c < kSize; c++)
+    for (int r = 0; r < kSize; ++r)
+      for (int c = 0; c < kSize; ++c)
         if (!mine[r][c] && !revealed[r][c])
           return;
     phase = Phase::Won;
+    status_message = "You win! Every safe square is clear.";
   }
 
   int revealed_count() const {
-    int n = 0;
-    for (int r = 0; r < kSize; r++)
-      for (int c = 0; c < kSize; c++)
-        n += revealed[r][c] ? 1 : 0;
-    return n;
+    int count = 0;
+    for (int r = 0; r < kSize; ++r)
+      for (int c = 0; c < kSize; ++c)
+        count += revealed[r][c] ? 1 : 0;
+    return count;
   }
 
   static afterhours::Color count_color(int n) {
     switch (n) {
-    case 1: return afterhours::Color{110, 180, 255, 255};
-    case 2: return afterhours::Color{110, 220, 140, 255};
-    case 3: return afterhours::Color{255, 140, 140, 255};
-    case 4: return afterhours::Color{180, 150, 255, 255};
-    case 5: return afterhours::Color{240, 180, 100, 255};
-    case 6: return afterhours::Color{110, 220, 220, 255};
-    case 7: return afterhours::Color{230, 230, 230, 255};
-    default: return afterhours::Color{255, 120, 200, 255};
+    case 1:
+      return {0, 0, 255, 255};
+    case 2:
+      return {0, 128, 0, 255};
+    case 3:
+      return {255, 0, 0, 255};
+    case 4:
+      return {0, 0, 128, 255};
+    case 5:
+      return {128, 0, 0, 255};
+    case 6:
+      return {0, 128, 128, 255};
+    case 7:
+      return {0, 0, 0, 255};
+    default:
+      return {128, 128, 128, 255};
     }
   }
 
   void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
+                     UIContext<InputAction> &context, float dt) override {
     if (!laid_out)
       reset();
+    if (phase == Phase::Playing && window_open && !minimized)
+      elapsed_seconds = std::min(999.f, elapsed_seconds + dt);
 
-    auto theme = afterhours::ui::theme_presets::neon_dark();
-    theme.roundness = 0.18f;
-    context.theme = theme;
+    Theme theme;
+    theme.font = black;
+    theme.darkfont = win_light;
+    theme.background = win_gray;
+    theme.surface = win_gray;
+    theme.primary = win_gray;
+    theme.secondary = win_gray;
+    theme.accent = title_blue;
+    theme.roundness = 0.f;
+    theme.segments = 4;
+    context.set_theme(theme);
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
-                                              pixels(20.0f));
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(16.f));
 
-    const afterhours::Color hidden_bg{62, 68, 88, 255};
-    const afterhours::Color open_bg{30, 33, 44, 255};
-    const afterhours::Color boom_bg{170, 55, 60, 255};
-    const afterhours::Color flag_bg{90, 78, 46, 255};
+    const float scale =
+        context.screen_height > 0.f ? context.screen_height / 720.f : 1.f;
+    auto root =
+        div(context, mk(entity, 0),
+            box(scale, 0.f, 0.f, 1280.f, 720.f)
+                .with_on_draw_bg([color = desktop_teal](RectangleType r) {
+                  afterhours::draw_rectangle(r, color);
+                })
+                .with_debug_name("ms_root"));
 
-    auto root = vstack(context, mk(entity),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{screen_pct(0.98f),
-                                                    screen_pct(0.98f)})
-                           .with_self_align(SelfAlign::Center)
-                           .with_background(Theme::Usage::Background)
-                           .with_align_items(AlignItems::Center)
-                           .with_padding(Spacing::sm)
-                           .with_no_wrap()
-                           .with_debug_name("ms_root"));
+    div(context, mk(root.ent(), 1),
+        box(scale, 51.f, 26.f, 48.f, 44.f)
+            .with_on_draw_bg([](RectangleType r) { draw_monitor(r); })
+            .with_debug_name("ms_desktop_icon"));
+    div(context, mk(root.ent(), 2),
+        box(scale, 24.f, 75.f, 95.f, 18.f)
+            .with_label("My Computer")
+            .with_font("AtkinsonMock", pixels(16.f * scale))
+            .with_custom_text_color(win_light)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("ms_desktop_label"));
 
-    const char *status = phase == Phase::Lost  ? "BOOM. Reset to try again."
-                         : phase == Phase::Won ? "Swept it. Every cell clear."
-                                               : "Left click reveals, right click flags.";
+    const float window_x = maximized ? 0.f : 406.f;
+    const float window_y = maximized ? 0.f : 23.f;
+    const float window_w = maximized ? 1280.f : 468.f;
+    const float window_h = maximized ? 681.f : 629.f;
 
-    auto header = hstack(context, mk(root.ent(), 0),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(1.f), pixels(46)})
-                             .with_align_items(AlignItems::Center)
-                             .with_no_wrap()
-                             .with_debug_name("ms_header"));
+    if (window_open && !minimized) {
+      auto window =
+          div(context, mk(root.ent(), 10),
+              box(scale, window_x, window_y, window_w, window_h)
+                  .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                    draw_bevel(r, color, true, 2.f * scale);
+                  })
+                  .with_debug_name("ms_window"));
 
-    div(context, mk(header.ent(), 0),
-        ComponentConfig{}
-            .with_label(fmt::format("MINES {}", flags_left))
-            .with_size(ComponentSize{pixels(150), pixels(38)})
-            .with_custom_background(afterhours::Color{40, 44, 58, 255})
-            .with_custom_text_color(afterhours::Color{255, 180, 120, 255})
-            .with_font_size(pixels(20.f))
-            .with_corner_radius(8.f)
-            .with_debug_name("ms_mines"));
+      div(context, mk(window.ent(), 0),
+          box(scale, 6.f, 6.f, window_w - 12.f, 28.f)
+              .with_on_draw_bg([color = title_blue](RectangleType r) {
+                afterhours::draw_rectangle(r, color);
+              })
+              .with_debug_name("ms_titlebar"));
+      div(context, mk(window.ent(), 1),
+          box(scale, 8.f, 9.f, 21.f, 21.f)
+              .with_on_draw_bg([scale](RectangleType r) {
+                draw_bevel(r, afterhours::Color{192, 192, 192, 255}, true,
+                           1.f * scale);
+                draw_bomb(r, afterhours::Color{0, 0, 0, 255});
+              })
+              .with_debug_name("ms_title_icon"));
+      div(context, mk(window.ent(), 2),
+          box(scale, 32.f, 7.f, window_w - 120.f, 26.f)
+              .with_label("Minesweeper")
+              .with_font("ArchivoMockBold", pixels(18.f * scale))
+              .with_custom_text_color(win_light)
+              .with_alignment(TextAlignment::Left)
+              .with_debug_name("ms_title"));
 
-    div(context, mk(header.ent(), 1),
-        ComponentConfig{}
-            .with_label(status)
-            .with_size(ComponentSize{expand(), pixels(38)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(afterhours::Color{205, 212, 230, 255})
-            .with_font_size(pixels(19.f))
-            .with_debug_name("ms_status"));
+      auto title_button = [&](int id, const std::string &label, float x,
+                              const std::string &name) {
+        return button(
+            context, mk(window.ent(), id),
+            box(scale, x, 9.f, 22.f, 22.f)
+                .with_label(label)
+                .with_font("ArchivoMockBold", pixels(16.f * scale))
+                .with_custom_text_color(black)
+                .with_alignment(TextAlignment::Center)
+                .with_click_activation(ClickActivationMode::Release)
+                .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                  draw_bevel(r, color, true, 2.f * scale);
+                })
+                .with_debug_name(name));
+      };
 
-    div(context, mk(header.ent(), 2),
-        ComponentConfig{}
-            .with_label(fmt::format("OPEN {}", revealed_count()))
-            .with_size(ComponentSize{pixels(140), pixels(38)})
-            .with_custom_background(afterhours::Color{40, 44, 58, 255})
-            .with_custom_text_color(afterhours::Color{150, 220, 170, 255})
-            .with_font_size(pixels(20.f))
-            .with_corner_radius(8.f)
-            .with_debug_name("ms_open"));
+      if (title_button(3, "_", window_w - 79.f, "ms_minimize"))
+        minimized = true;
+      if (title_button(4, "□", window_w - 55.f, "ms_maximize")) {
+        maximized = !maximized;
+        status_message = maximized ? "Window maximized." : "Window restored.";
+      }
+      if (title_button(5, "×", window_w - 31.f, "ms_close")) {
+        window_open = false;
+        minimized = false;
+      }
 
-    // Release activation, so a press that slides off a cell does not fire it.
-    // On a 256 target grid that is the difference between playable and not.
-    if (button(context, mk(header.ent(), 3),
-               ComponentConfig{}
-                   .with_label("Reset")
-                   .with_size(ComponentSize{pixels(110), pixels(38)})
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_corner_radius(8.f)
-                   .with_debug_name("ms_reset"))) {
-      reset();
-    }
+      if (button(context, mk(window.ent(), 6),
+                 box(scale, 8.f, 36.f, 54.f, 24.f)
+                     .with_label("Game")
+                     .with_font("AtkinsonMock", pixels(19.f * scale))
+                     .with_custom_text_color(black)
+                     .with_alignment(TextAlignment::Center)
+                     .with_click_activation(ClickActivationMode::Release)
+                     .with_debug_name("ms_game_menu"))) {
+        reset();
+      }
+      if (button(context, mk(window.ent(), 7),
+                 box(scale, 68.f, 36.f, 45.f, 24.f)
+                     .with_label("Help")
+                     .with_font("AtkinsonMock", pixels(19.f * scale))
+                     .with_custom_text_color(black)
+                     .with_alignment(TextAlignment::Center)
+                     .with_click_activation(ClickActivationMode::Release)
+                     .with_debug_name("ms_help"))) {
+        status_message =
+            "Reveal a square. Right-click to flag. Clear every safe square.";
+      }
 
-    // Explicit 35px tracks with a 1px gap, not equal tracks. 35+1 is a stride
-    // of 36, which lands on the 4px snap grid; a sub-unit gap between snapped
-    // cells rounds away entirely and the board renders as one slab. That is
-    // also why the old hand-tuned code could not use 36.
-    std::vector<Size> tracks(kSize, pixels(35));
-    auto board = grid(context, mk(root.ent(), 1),
-                      GridConfig{}
-                          .with_rows(kSize)
-                          .with_cols(kSize)
-                          .with_col_widths(tracks)
-                          // 36 tall holding 35 tall cells: the 1px of row
-                          // showing through is the horizontal line. A gap
-                          // between rows would be snapped away instead, since
-                          // 1px has nowhere to sit on a 4px grid, and the
-                          // board would render as one slab.
-                          .with_row_height(pixels(36))
-                          .with_gap(pixels(1)),
-                      ComponentConfig{}
-                            .with_size(ComponentSize{pixels(608), h720(608)})
-                            .with_custom_background(open_bg)
-                            .with_padding(Spacing::xs)
-                            .with_align_items(AlignItems::Center)
-                            .with_no_wrap()
-                            .with_corner_radius(10.f)
-                            .with_shadow(ShadowStyle::Soft, 0.f, 6.f)
-                            .with_debug_name("ms_board"));
+      div(context, mk(window.ent(), 8),
+          box(scale, 6.f, 64.f, window_w - 12.f, 531.f)
+              .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                draw_bevel(r, color, true, 3.f * scale);
+              })
+              .with_debug_name("ms_game"));
+      div(context, mk(window.ent(), 9),
+          box(scale, 21.f, 78.f, 426.f, 68.f)
+              .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                draw_bevel(r, color, false, 3.f * scale);
+              })
+              .with_debug_name("ms_score"));
 
-    for (int r = 0; r < kSize; r++) {
-      afterhours::OptEntity row_opt = grid_row(board, r);
-      if (!row_opt.valid())
-        continue;
-      afterhours::Entity &row_ent = row_opt.asE();
+      div(context, mk(window.ent(), 11),
+          box(scale, 32.f, 89.f, 141.f, 45.f)
+              .with_label(fmt::format("{:03d}", flags_left))
+              .with_font("DGOneMock", pixels(42.f * scale))
+              .with_custom_text_color(afterhours::Color{255, 0, 0, 255})
+              .with_custom_background(black)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("ms_mines"));
 
-      for (int c = 0; c < kSize; c++) {
-        const bool open = revealed[r][c];
-        const bool lost_mine = phase == Phase::Lost && mine[r][c];
-        const int n = neighbours[r][c];
+      if (button(
+              context, mk(window.ent(), 12),
+              box(scale, 212.f, 90.f, 44.f, 44.f)
+                  .with_background(Theme::Usage::None)
+                  .with_click_activation(ClickActivationMode::Release)
+                  .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                    draw_bevel(r, color, true, 3.f * scale);
+                  })
+                  .with_on_draw_fg([](RectangleType r) { draw_smiley(r); })
+                  .with_debug_name("ms_reset"))) {
+        reset();
+      }
 
-        std::string face;
-        afterhours::Color fg{230, 235, 245, 255};
-        afterhours::Color bg = hidden_bg;
-        if (lost_mine) {
-          face = "*";
-          bg = boom_bg;
-        } else if (flagged[r][c]) {
-          face = "F";
-          bg = flag_bg;
-          fg = afterhours::Color{255, 210, 120, 255};
-        } else if (open) {
-          bg = open_bg;
-          if (n > 0) {
-            face = std::to_string(n);
-            fg = count_color(n);
+      div(context, mk(window.ent(), 13),
+          box(scale, 295.f, 89.f, 141.f, 45.f)
+              .with_label(
+                  fmt::format("{:03d}", static_cast<int>(elapsed_seconds)))
+              .with_font("DGOneMock", pixels(42.f * scale))
+              .with_custom_text_color(afterhours::Color{255, 0, 0, 255})
+              .with_custom_background(black)
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name("ms_timer"));
+
+      auto board =
+          div(context, mk(window.ent(), 14),
+              box(scale, 21.f, 158.f, 422.f, 422.f)
+                  .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                    draw_bevel(r, color, false, 3.f * scale);
+                  })
+                  .with_debug_name("ms_board"));
+
+      for (int row = 0; row < kSize; ++row) {
+        for (int col = 0; col < kSize; ++col) {
+          const bool open = revealed[row][col];
+          const bool lost_mine = phase == Phase::Lost && mine[row][col];
+          const bool has_flag = flagged[row][col] && !lost_mine;
+          const int nearby = neighbours[row][col];
+          const std::string face = open && !mine[row][col] && nearby > 0
+                                       ? std::to_string(nearby)
+                                       : "";
+
+          auto cell = button(
+              context, mk(board.ent(), row * kSize + col),
+              box(scale, 3.f + static_cast<float>(col) * 26.f,
+                  3.f + static_cast<float>(row) * 26.f, 26.f, 26.f)
+                  .with_label(face)
+                  .with_font("AtkinsonMock", pixels(24.f * scale))
+                  .with_custom_text_color(count_color(nearby))
+                  .with_alignment(TextAlignment::Center)
+                  .with_click_activation(ClickActivationMode::Release)
+                  .with_skip_tabbing(true)
+                  .with_on_draw_bg([open, lost_mine, color = win_gray,
+                                    scale](RectangleType r) {
+                    if (open || lost_mine) {
+                      afterhours::draw_rectangle(
+                          r, lost_mine ? afterhours::Color{255, 0, 0, 255}
+                                       : color);
+                      afterhours::draw_rectangle(
+                          {r.x + r.width - scale, r.y, scale, r.height},
+                          afterhours::Color{128, 128, 128, 255});
+                      afterhours::draw_rectangle(
+                          {r.x, r.y + r.height - scale, r.width, scale},
+                          afterhours::Color{128, 128, 128, 255});
+                    } else {
+                      draw_bevel(r, color, true, 3.f * scale);
+                    }
+                  })
+                  .with_on_draw_fg(
+                      [has_flag, lost_mine, scale](RectangleType r) {
+                        if (has_flag)
+                          draw_flag(r, scale);
+                        if (lost_mine)
+                          draw_bomb(r, afterhours::Color{0, 0, 0, 255});
+                      })
+                  .with_debug_name(fmt::format("ms_{}_{}", row, col)));
+
+          if (phase != Phase::Playing)
+            continue;
+          if (cell)
+            reveal(row, col);
+          if (context.is_right_click(cell.ent().id) && !revealed[row][col]) {
+            if (flagged[row][col]) {
+              flagged[row][col] = false;
+              ++flags_left;
+              status_message = "Flag removed.";
+            } else if (flags_left > 0) {
+              flagged[row][col] = true;
+              --flags_left;
+              status_message = "Flag placed.";
+            }
           }
         }
+      }
 
-        auto cell =
-            button(context, mk(row_ent, c),
-                   ComponentConfig{}
-                       .with_label(face)
-                       .with_size(ComponentSize{
-                           grid_track(board, c).x_axis, pixels(35)})
-                       .with_custom_background(bg)
-                       .with_custom_text_color(fg)
-                       .with_font_size(pixels(20.f))
-                       .with_corner_radius(4.f)
-                       .with_click_activation(ClickActivationMode::Release)
-                       .with_skip_tabbing(true)
-                       .with_debug_name(fmt::format("ms_{}_{}", r, c)));
+      div(context, mk(window.ent(), 15),
+          box(scale, 6.f, 598.f, window_w - 12.f, 25.f)
+              .with_label(status_message)
+              .with_font("AtkinsonMock", pixels(16.f * scale))
+              .with_custom_text_color(black)
+              .with_alignment(TextAlignment::Left)
+              .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                draw_bevel(r, color, false, 1.f * scale);
+              })
+              .with_debug_name("ms_status"));
+    }
 
-        if (phase != Phase::Playing)
-          continue;
+    div(context, mk(root.ent(), 30),
+        box(scale, 0.f, 681.f, 1280.f, 39.f)
+            .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+              draw_bevel(r, color, true, 2.f * scale);
+            })
+            .with_debug_name("ms_taskbar"));
 
-        if (cell)
-          reveal(r, c);
+    auto start_button =
+        button(context, mk(root.ent(), 31),
+               box(scale, 3.f, 687.f, 76.f, 30.f)
+                   .with_click_activation(ClickActivationMode::Release)
+                   .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                     draw_bevel(r, color, true, 2.f * scale);
+                   })
+                   .with_on_draw_fg([scale](RectangleType r) {
+                     draw_windows_mark(
+                         {r.x + 8.f * scale, r.y + 6.f * scale,
+                          18.f * scale, 18.f * scale});
+                   })
+                   .with_debug_name("ms_start"));
+    div(context, mk(root.ent(), 34),
+        box(scale, 34.f, 687.f, 43.f, 30.f)
+            .with_label("Start")
+            .with_font("ArchivoMockBold", pixels(16.f * scale))
+            .with_custom_text_color(black)
+            .with_alignment(TextAlignment::Center)
+            .with_text_inset(0.f, 0.f)
+            .with_ignore_pointer_events());
+    if (start_button) {
+      start_menu_open = !start_menu_open;
+    }
 
-        if (context.is_right_click(cell.ent().id) && !revealed[r][c]) {
-          flagged[r][c] = !flagged[r][c];
-          flags_left += flagged[r][c] ? -1 : 1;
-        }
+    auto task_button =
+        button(context, mk(root.ent(), 32),
+               box(scale, 88.f, 687.f, 190.f, 30.f)
+                   .with_click_activation(ClickActivationMode::Release)
+                   .with_on_draw_bg(
+                       [color = win_gray, scale,
+                        active = window_open && !minimized](RectangleType r) {
+                         draw_bevel(r, color, !active, 2.f * scale);
+                         draw_bomb({r.x + 5.f * scale, r.y + 4.f * scale,
+                                    22.f * scale, 22.f * scale},
+                                   afterhours::Color{0, 0, 0, 255});
+                       })
+                   .with_debug_name("ms_task"));
+    div(context, mk(root.ent(), 35),
+        box(scale, 124.f, 687.f, 150.f, 30.f)
+            .with_label("Minesweeper")
+            .with_font("ArchivoMockBold", pixels(16.f * scale))
+            .with_custom_text_color(black)
+            .with_alignment(TextAlignment::Left)
+            .with_text_inset(0.f, 0.f)
+            .with_ignore_pointer_events());
+    if (task_button) {
+      if (!window_open) {
+        window_open = true;
+        minimized = false;
+        maximized = false;
+        reset();
+      } else {
+        minimized = !minimized;
+      }
+      start_menu_open = false;
+    }
+
+    div(context, mk(root.ent(), 33),
+        box(scale, 1185.f, 687.f, 92.f, 30.f)
+            .with_label("12:00 PM")
+            .with_font("AtkinsonMock", pixels(16.f * scale))
+            .with_custom_text_color(black)
+            .with_alignment(TextAlignment::Center)
+            .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+              draw_bevel(r, color, false, 2.f * scale);
+            })
+            .with_debug_name("ms_clock"));
+
+    if (start_menu_open) {
+      div(context, mk(root.ent(), 40),
+          box(scale, 3.f, 605.f, 210.f, 76.f)
+              .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
+                draw_bevel(r, color, true, 2.f * scale);
+              })
+              .with_debug_name("ms_start_menu"));
+      if (button(context, mk(root.ent(), 41),
+                 box(scale, 11.f, 615.f, 194.f, 52.f)
+                     .with_label(window_open ? "New Minesweeper"
+                                             : "Open Minesweeper")
+                     .with_font("AtkinsonMock", pixels(19.f * scale))
+                     .with_custom_text_color(black)
+                     .with_alignment(TextAlignment::Center)
+                     .with_click_activation(ClickActivationMode::Release)
+                     .with_debug_name("ms_start_game"))) {
+        window_open = true;
+        minimized = false;
+        maximized = false;
+        reset();
+        start_menu_open = false;
       }
     }
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(minesweeper_lab, "Stress Tests",
-                        "256 buttons playing minesweeper, click and right click",
+                        "Classic desktop Minesweeper with 256 live cells",
                         MinesweeperLab)
