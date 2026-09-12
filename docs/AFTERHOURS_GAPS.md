@@ -61,6 +61,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | empire_tycoon / dashboard and state | Hidden park art, substitute icons, misplaced controls and faint borders weakened the tycoon composition. | wm | Isolated park/icons, winding/layering fixes, scaled outlines and dashboard geometry. Live production, cash, projects, gauges and milestone react to actions; E2E 133 passes. |
 | empire_tycoon / fine styling and scope | Logo remains upright; plates/buttons lack target gradients and inset highlights; body text uses a heavier rounded face; gauges and chat tail are simplified. Tool buttons report selection without full destination screens, as in the mock. | wm | Open visual polish and bounded demo navigation. 720p/1080p reviewed; no library changes. |
 
+| mini_motorways_settings / layout and categories | Typography, detached controls and road bend artifacts missed the map-like settings mock. | wm | Native grid/road geometry, scaled controls and real per-tab content; ring-based bend eliminates draw-segment artifacts. |
+| mini_motorways_settings / fine styling | Font tracking, symbol edges and exact tutorial/version text dimensions differ slightly. | wm | Open cosmetic differences; E2E 140 covers pointer, keyboard, values and containment at both resolutions. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
