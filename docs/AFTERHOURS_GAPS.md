@@ -93,6 +93,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | secure_tunnel / client and connection | Dark state-matrix demo lacked the mock map/sidebar and location search. | wm | Native client layout, isolated map art with live markers, typed search and filtered rows, selected-server details and protocol selection. Existing Off/Dialing/Up transition preserved; E2E 152 passes. |
 | secure_tunnel / fine styling and scope | Condensed type, flag/icon drawings, rail spacing and shadows differ; shield artwork is approximate. Protocol, diagnostics and account actions are local simulations. | wm | Open cosmetic and demo-scope differences. The screen states network simulation; no real tunnel is created. |
 
+| parcel_corps_settings / phone settings | Controls extended beyond the phone, selector arrows hid values and volume controls only incremented on clicks. | wm | Contained native controls with visible values; real draggable sliders and predictable keyboard steps. Status moved into free space above audio rows. E2E 142 verifies exact values and drag at both resolutions. |
+| parcel_corps_settings / fine styling | Phone remains upright, rider/street art and icons are simplified, and the objective badge crowds its final line slightly. | wm | Open cosmetic differences. Primary settings are readable and unobstructed; final independent review passes. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

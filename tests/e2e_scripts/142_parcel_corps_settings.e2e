@@ -1,0 +1,87 @@
+# Parcel Corps settings values, native volume sliders, and mock geometry.
+
+goto_screen parcel_corps_settings
+wait 1
+
+expect_text "Settings"
+expect_text "Text Language"
+expect_text "King's English"
+expect_text "Subtitles"
+expect_text "Resolution"
+expect_text "2560 x 1440"
+expect_text "MSAA"
+expect_text "Texture Quality"
+expect_text "Audio Volume"
+expect_text "Music Volume"
+expect_text "EDDCOATES"
+expect_text "009"
+
+assert_ui parcel_root x=0 y=0 w=1280 h=720
+assert_ui parcel_phone x=48 y=49 w=360 h=626
+assert_ui parcel_language_row x=77 y=226 w=312 h=38
+assert_ui parcel_subtitles_row x=77 y=268 w=312 h=38
+assert_ui parcel_resolution_row x=77 y=315 w=312 h=38
+assert_ui parcel_msaa_row x=77 y=391 w=312 h=38
+assert_ui parcel_texture_row x=77 y=429 w=312 h=38
+assert_ui parcel_quest x=479 y=37 w=326 h=94
+assert_ui parcel_chat x=1027 y=6 w=203 h=145
+assert_ui parcel_speed x=1125 y=595 w=105 h=86
+
+click_ui parcel_language_row
+wait 0.2
+expect_text "English US"
+
+click_ui parcel_subtitles_toggle
+wait 0.2
+
+click_ui parcel_msaa_next
+wait 0.2
+expect_text "4x"
+
+click_ui parcel_texture_next
+wait 0.2
+expect_text "Ultra"
+
+assert_ui parcel_audio_slider x=281 y=587 w=105 h=26
+assert_ui parcel_music_slider x=281 y=629 w=105 h=26
+set_slider parcel_audio_slider 0.50
+wait 0.2
+expect_text "Audio Volume: 50%"
+focus_ui parcel_audio_slider
+key RIGHT
+wait 0.2
+expect_text "Audio Volume: 51%"
+key LEFT
+wait 0.2
+expect_text "Audio Volume: 50%"
+drag_to 25% 83.3% 31% 83.3%
+wait 0.3
+expect_text "Audio Volume: 100%"
+set_slider parcel_music_slider 0.25
+wait 0.2
+expect_text "Music Volume: 25%"
+focus_ui parcel_music_slider
+key LEFT
+wait 0.2
+expect_text "Music Volume: 24%"
+
+screenshot parcel_corps_settings_review
+
+resize 1920 1080
+wait 0.3
+assert_ui parcel_root x=0 y=0 w=1920 h=1080
+assert_ui parcel_phone x=72 y=74 w=540 h=939
+assert_ui parcel_language_row x=116 y=339 w=468 h=57
+assert_ui parcel_quest x=719 y=56 w=489 h=141
+assert_ui parcel_chat x=1541 y=9 w=305 h=218
+assert_ui parcel_speed x=1688 y=893 w=158 h=129
+assert_ui parcel_audio_slider x=422 y=881 w=158 h=39
+assert_ui parcel_status x=135 y=824 w=447 h=35
+set_slider parcel_music_slider 0.75
+wait 0.2
+expect_text "Music Volume: 75%"
+focus_ui parcel_music_slider
+key RIGHT
+wait 0.2
+expect_text "Music Volume: 76%"
+screenshot parcel_corps_sliders_1080p
