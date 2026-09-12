@@ -102,6 +102,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | sports_settings / graphics settings | Labels displayed raw slider percentages instead of FPS/gamma; controls reused cached values across tabs and Back only changed a status. | wm | Domain value formatting, per-tab slider identity, internal state synchronization after external edits/reset, real close/reopen and initial-value reset. Exact scene artwork and native controls match the layout. |
 | sports_settings / fine styling | Text weight, selected-row shading and tiny bumper keycap glyphs differ; scrollbar lacks diagonal stripes. | wm | Open cosmetic differences. E2E 145 and independent audio/default captures confirm values and knob positions agree. |
 
+| offsite_backup / backup layout | Small type and overlapping old controls obscured the new backup layout. | wm | Matched desktop/window/panels, removed duplicate rows/switches, separated checkbox labels and completion text. Existing progress/rescan model and local backup controls retained. |
+| offsite_backup / fine styling and scope | Native typography/ring differ, folder icons are faint, and borders/shadows are flatter than the mock. Backup, restore and account actions are local demonstrations. | wm | Open cosmetic differences and demo scope; final labels and controls are readable without overlap. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

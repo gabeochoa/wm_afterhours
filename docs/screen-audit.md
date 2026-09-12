@@ -72,5 +72,5 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | guess_who_lab | Pending | |
 | aim_chat | Updated; icon/type gaps recorded | Existing text-editing E2E 08_text_area_arrow_keys and new 149 passed: buddy drafts/history, Enter/Shift+Enter, menus, warn/block, window controls and resize; 720p/1080p reviewed. |
 | media_library | Updated; minor styling gaps recorded | E2E 150 passed: 24-item paging, search/filter/sort, collections/watchlist, grid/list, local player pause/seek and resize; 720p/1080p and list/player states reviewed. |
-| offsite_backup | Pending | |
+| offsite_backup | Updated; styling gaps recorded | E2E 60_offsite_backup and 151 passed: seeded totals, rescan, pause, backup settings, local actions and resize; final 720p/1080p reviewed. |
 | secure_tunnel | Updated; styling gaps recorded | E2E 152 passed: typed city/country search, no-results, server choice, delayed connect/disconnect, protocol, diagnostics and resize; 720p/1080p reviewed. |
