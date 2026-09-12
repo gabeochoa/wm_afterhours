@@ -1,0 +1,147 @@
+goto_screen kirby_options
+wait 0.5
+expect_text "Options"
+expect_text "Common"
+expect_text "Name"
+expect_text "Controller"
+expect_text "Accessibility"
+assert_ui kirby_root x=0 y=0 w=1280 h=720
+assert_ui kirby_name x=578 y=172 w=426 h=120
+assert_ui kirby_option_0 x=416 y=333 w=251 h=170
+assert_no_overflow
+assert_within_parents
+screenshot kirby_options_initial
+
+# Name editing is native text input, with save and cancel.
+click_ui kirby_name
+wait 0.2
+expect_text "Your name"
+focus_ui kirby_name_input
+key CTRL+A
+type "Aster"
+wait 0.2
+expect_input_text kirby_name_input "Aster"
+click_ui kirby_name_save
+wait 0.2
+expect_text "Name saved: Aster"
+click_ui kirby_customize
+wait 0.2
+focus_ui kirby_name_input
+key CTRL+A
+type "Discard me"
+wait 0.2
+click_ui kirby_name_cancel
+wait 0.2
+expect_text "Aster"
+expect_no_text "Discard me"
+
+# Every Common category has live preference values.
+click_ui kirby_option_0
+wait 0.2
+expect_text "Control style"
+expect_text "Standard"
+focus_ui kirby_value_0
+key ENTER
+wait 0.2
+expect_text "Alternate"
+key TAB
+wait 0.2
+expect_focused kirby_value_1
+key ENTER
+wait 0.2
+expect_text "Rumble: Off"
+screenshot kirby_options_controller
+key ESCAPE
+wait 0.2
+click_ui kirby_option_1
+wait 0.2
+expect_text "Screen brightness"
+click_ui kirby_value_0
+wait 0.2
+expect_text "Screen brightness: 100%"
+key ESCAPE
+wait 0.2
+click_ui kirby_option_2
+wait 0.2
+expect_text "Text size"
+click_ui kirby_value_0
+wait 0.2
+expect_text "Text size: Large"
+click_ui kirby_value_1
+wait 0.2
+expect_text "Color assistance: Deuteranopia"
+key ESCAPE
+wait 0.2
+click_ui kirby_option_3
+wait 0.2
+expect_text "Music volume"
+click_ui kirby_value_0
+wait 0.2
+expect_text "Music volume: 50%"
+key ESCAPE
+wait 0.2
+click_ui kirby_option_4
+wait 0.2
+expect_text "Local play"
+expect_text "No network connection is made."
+click_ui kirby_value_1
+wait 0.2
+expect_text "Player visibility: Private"
+key ESCAPE
+wait 0.2
+
+# Icon tabs and bumper buttons navigate to real views.
+click_ui kirby_tab_3
+wait 0.2
+expect_text "No messages"
+click_ui kirby_next_tab
+wait 0.2
+expect_text "Favorite mode"
+click_ui kirby_favorite
+wait 0.2
+expect_text "Top Ride"
+click_ui kirby_next_tab
+wait 0.2
+expect_text "Common"
+click_ui kirby_option_0
+wait 0.2
+expect_text "Alternate"
+expect_text "Off"
+key ESCAPE
+wait 0.2
+
+# Reset has a confirmation and actually clears saved profile state.
+click_ui kirby_data
+wait 0.2
+expect_text "Rider: Aster"
+expect_text "Races completed: 12"
+click_ui kirby_delete_request
+wait 0.2
+expect_text "Delete this profile's saved data?"
+click_ui kirby_delete_cancel
+wait 0.2
+expect_text "Races completed: 12"
+click_ui kirby_delete_request
+wait 0.2
+click_ui kirby_delete_confirm
+wait 0.2
+expect_text "Rider: Name"
+expect_text "Races completed: 0"
+expect_text "Records: 0"
+expect_text "Data deleted."
+screenshot kirby_options_data_reset
+key ESCAPE
+wait 0.2
+click_ui kirby_option_0
+wait 0.2
+expect_text "Standard"
+key ESCAPE
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui kirby_root x=0 y=0 w=1920 h=1080
+assert_ui kirby_name x=867 y=258 w=639 h=180
+assert_ui kirby_option_0 x=624 y=500 w=377 h=255
+assert_no_overflow
+assert_within_parents
+screenshot kirby_options_1080p

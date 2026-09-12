@@ -58,7 +58,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | flight_options | Updated; typography gaps recorded | E2E 134 passed: nine categories, live values, apply/cancel, Tab/Enter/arrows, close/reopen and resize; 720p/1080p independently reviewed. |
 | shop_interface | Pending | |
 | islands_trains_settings | Pending | |
-| kirby_options | Pending | |
+| kirby_options | Updated; minor art/type gaps recorded | E2E 137 passed: profile editing, live preferences, tabs, confirmation/reset, Tab/Enter and resize; 720p/1080p independently reviewed. |
 | marlo_kart | Pending | |
 | minesweeper_lab | Pending | |
 | mini_motorways_settings | Pending | |

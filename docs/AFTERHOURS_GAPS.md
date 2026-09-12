@@ -49,6 +49,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | deadspace_settings / hologram and controls | Rectangular slabs, invisible corner triangles and inert categories missed the hologram design. | wm | Winding-correct clipped polygons, scan lines, layered menus and live category detail settings; E2E 132 passes pointer/keyboard/back and resize. |
 | deadspace_settings / fine styling | Rows lack the mock's perspective skew and stronger glow; rear panel contrast and keycaps differ. | wm | Open cosmetic differences. Final 720p/1080p captures independently reviewed with no clipping or unreadable selection. |
 
+
+| kirby_options / notebook and preferences | Plain panels and decorative-only options missed the notebook composition and useful interactions. | wm | Isolated paper, tab and icon artwork with native labels; editable name, per-category preferences, favorite mode, tab views and confirmed profile reset. E2E 137 covers pointer, Tab/Enter and resize. |
+| kirby_options / fine styling | Native type spacing/weight and pencil artwork differ slightly; bumper hints use purple rather than dark keycaps. Online view is explicitly local. | wm | Open cosmetic differences and stated simulation scope. Final 720p/1080p images independently reviewed. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

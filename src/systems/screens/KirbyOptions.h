@@ -2,396 +2,278 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/ui/text_input/text_input.h>
+#include <array>
+#include <string>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
-  size_t selected_tab = 5;
-  size_t active_tab = 0;
-  bool show_delete_confirm = false;
-
-  // Colors matching Kirby Air Ride inspiration - bright Nintendo aesthetic
-  afterhours::Color bg_cream{245, 240, 230, 255};
-  afterhours::Color panel_white{255, 255, 255, 255};
-  afterhours::Color tab_purple{105, 75, 165, 255};
-  afterhours::Color tab_purple_dark{85, 55, 135, 255};
-  afterhours::Color btn_yellow{255, 205, 45, 255};
-  afterhours::Color btn_yellow_dark{225, 175, 25, 255};
-  afterhours::Color icon_red{215, 75, 75, 255};
-  afterhours::Color icon_blue{75, 135, 200, 255};
-  afterhours::Color icon_green{95, 175, 95, 255};
-  afterhours::Color icon_purple{145, 95, 185, 255};
-  afterhours::Color text_dark{45, 45, 55, 255};
-  afterhours::Color text_black{0, 0, 0, 255};
-  afterhours::Color text_muted{120, 115, 125, 255};
-  afterhours::Color border_gray{195, 190, 185, 255};
-
-  std::vector<std::tuple<std::string, afterhours::Color>> tabs = {
-      {"WiFi", icon_blue},   {"Control", icon_red}, {"Home", icon_green},
-      {"Mail", icon_purple}, {"Star", btn_yellow},  {"Gear", tab_purple},
+  enum class Detail { None, Name, Controller, Display, Accessibility, Sound,
+                      Online, Data, Messages, Favorites };
+  struct Profile {
+    std::string name = "Name";
+    std::array<size_t, 10> preferences{};
+    int races = 12;
+    int records = 8;
+    size_t favorite = 0;
   };
+  struct Art {
+    const char *name;
+    float x, y, w, h;
+    raylib::Texture2D texture{};
+  };
+  Profile profile;
+  Detail detail = Detail::None;
+  size_t selected_tab = 5;
+  bool confirm_delete = false, loaded = false, focus_name = false;
+  std::string editing_name = "Name", status;
+  std::array<Art, 25> art{{
+      {"desk", 0.f, 0.f, 1280.f, 720.f},
+      {"board", 356.f, 99.f, 879.f, 589.f},
+      {"notebook", 0.f, 113.f, 444.f, 566.f},
+      {"name", 569.f, 163.f, 443.f, 136.f},
+      {"delete", 1066.f, 156.f, 114.f, 107.f},
+      {"options_label", 916.f, 114.f, 203.f, 46.f},
+      {"common_label", 412.f, 315.f, 109.f, 28.f},
+      {"message_line", 410.f, 648.f, 811.f, 72.f},
+      {"option_0", 503.f, 362.f, 81.f, 81.f},
+      {"option_1", 755.f, 353.f, 81.f, 81.f},
+      {"option_2", 1007.f, 344.f, 81.f, 81.f},
+      {"option_3", 527.f, 538.f, 81.f, 81.f},
+      {"option_4", 903.f, 525.f, 81.f, 81.f},
+      {"tab_0_off", 384.f, 58.f, 134.f, 92.f},
+      {"tab_0_on", 380.f, 38.f, 142.f, 123.f},
+      {"tab_1_off", 509.f, 54.f, 134.f, 92.f},
+      {"tab_1_on", 505.f, 33.f, 142.f, 123.f},
+      {"tab_2_off", 634.f, 49.f, 134.f, 92.f},
+      {"tab_2_on", 630.f, 29.f, 142.f, 123.f},
+      {"tab_3_off", 759.f, 45.f, 134.f, 92.f},
+      {"tab_3_on", 755.f, 25.f, 142.f, 123.f},
+      {"tab_4_off", 884.f, 40.f, 134.f, 92.f},
+      {"tab_4_on", 879.f, 20.f, 142.f, 123.f},
+      {"tab_5_off", 1009.f, 36.f, 134.f, 92.f},
+      {"tab_5_on", 1004.f, 16.f, 142.f, 123.f},
+  }};
+  const afterhours::Color ink{69, 64, 67, 255};
+  const afterhours::Color purple{149, 96, 211, 255};
+  const afterhours::Color paper{255, 253, 241, 255};
 
-  std::vector<std::tuple<std::string, std::string, afterhours::Color>> options =
-      {
-          {"Controls", "Controls", icon_green},
-          {"Display", "Display", icon_blue},
-          {"Accessibility", "Accessibility", icon_purple},
-          {"Sound", "Sound", icon_blue},
-          {"Network", "Network", icon_green},
-      };
+  void load() {
+    if (loaded) return;
+    for (auto &asset : art) {
+      asset.texture = raylib::LoadTexture(afterhours::files::get_resource_path(
+          "images", std::string("kirby_options/") + asset.name + ".png").string().c_str());
+      raylib::SetTextureFilter(asset.texture, raylib::TEXTURE_FILTER_BILINEAR);
+    }
+    loaded = true;
+  }
+  void open(Detail next) {
+    detail = next;
+    status.clear();
+    confirm_delete = false;
+    if (next == Detail::Name) { editing_name = profile.name; focus_name = true; }
+  }
+  void choose_tab(size_t i) {
+    selected_tab = i;
+    constexpr std::array<Detail, 6> panels{
+        Detail::Online, Detail::Controller, Detail::None, Detail::Messages,
+        Detail::Favorites, Detail::None};
+    open(panels[i]);
+  }
+  static void paint(raylib::Texture2D texture, RectangleType r) {
+    raylib::DrawTexturePro(texture, {0, 0, static_cast<float>(texture.width),
+        static_cast<float>(texture.height)}, r, {0, 0}, 0, raylib::WHITE);
+  }
+  ComponentConfig box(float scale, float x, float y, float w, float h) const {
+    return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
+        .with_absolute_position(x * scale, y * scale)
+        .with_background(Theme::Usage::None).with_corner_radius(0);
+  }
 
-  void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
-    UIStylingDefaults::get().set_default_font("Gaegu-Bold", pixels(20.0f));
+  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
+    load();
+    const float scale = context.screen_height / 720.f;
     Theme theme;
-    theme.font = text_dark;
-    theme.darkfont = panel_white;
-    theme.font_muted = text_muted;
-    theme.background = bg_cream;
-    theme.surface = panel_white;
-    theme.primary = tab_purple;
-    theme.secondary = icon_blue;
-    theme.accent = btn_yellow;
-    theme.error = icon_red;
-    theme.roundness = 0.15f;
-    theme.segments = 12;
-    context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-
-    // ═══════════════════════════════════════════════════════════════
-    // ROOT
-    // ═══════════════════════════════════════════════════════════════
-    auto root =
-        vstack(context, mk(entity),
-               ComponentConfig{}
-                   .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                   .with_custom_background(bg_cream)
-                   .with_padding(Padding{.top = pixels(25),
-                                         .left = pixels(65),
-                                         .bottom = pixels(20),
-                                         .right = pixels(50)})
-                   .with_no_wrap()
-                   .with_debug_name("kirby_root"));
-
-    // ── Top Tab Bar: L + tab icons + R ──
-    auto tab_bar =
-        hstack(context, mk(root.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(1030), pixels(70)})
-                   .with_align_items(AlignItems::Center)
-                   .with_no_wrap()
-                   .with_margin(Margin{.left = pixels(135)})
-                   .with_debug_name("tab_bar"));
-
-    // L bumper
-    div(context, mk(tab_bar.ent()),
-        ComponentConfig{}
-            .with_label("L")
-            .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_custom_background(tab_purple)
-            .with_border(tab_purple_dark, 2.0f)
-            .with_custom_text_color(panel_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.35f)
-            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
-            .with_margin(Margin{.right = pixels(10)}));
-
-    // Tab icons
-    for (size_t i = 0; i < tabs.size(); i++) {
-      bool is_selected = (i == selected_tab);
-      auto &[icon, color] = tabs[i];
-      afterhours::Color tab_bg = is_selected ? tab_purple : color;
-      float scale = is_selected ? 1.15f : 1.0f;
-      int sz = static_cast<int>(58.0f * scale);
-
-      if (button(context, mk(tab_bar.ent(), 1 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(icon)
-                     .with_size(ComponentSize{pixels(static_cast<float>(sz)),
-                                              pixels(static_cast<float>(sz))})
-                     .with_custom_background(tab_bg)
-                     .with_border(is_selected ? tab_purple_dark
-                                              : afterhours::Color{0, 0, 0, 0},
-                                  is_selected ? 4.0f : 0.0f)
-                     .with_font("Gaegu-Bold", pixels(18.0f * scale))
-                     .with_custom_text_color(text_black)
-                     .with_alignment(TextAlignment::Center)
-                     .with_text_overflow(TextOverflow::Ellipsis)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.25f)
-                     .with_soft_shadow(2.0f, 3.0f, 8.0f,
-                                       afterhours::Color{0, 0, 0, 40})
-                     .with_margin(Margin{.left = pixels(5), .right = pixels(5)})
-                     .with_debug_name("tab_" + std::to_string(i)))) {
-        selected_tab = i;
-      }
+    theme.font = ink;
+    theme.darkfont = {255, 255, 255, 255};
+    theme.background = {231, 213, 183, 255};
+    theme.surface = paper;
+    theme.primary = purple;
+    theme.accent = {255, 237, 79, 255};
+    theme.corner_radius = 0;
+    theme.roundness = 0;
+    context.set_theme(theme);
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", h720(28));
+    if (context.pressed(InputAction::MenuBack)) {
+      if (confirm_delete) confirm_delete = false;
+      else detail = Detail::None;
     }
-
-    // R bumper
-    div(context, mk(tab_bar.ent()),
-        ComponentConfig{}
-            .with_label("R")
-            .with_size(ComponentSize{pixels(36), pixels(36)})
-            .with_custom_background(tab_purple)
-            .with_border(tab_purple_dark, 2.0f)
-            .with_custom_text_color(panel_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.35f)
-            .with_soft_shadow(1.0f, 2.0f, 4.0f, afterhours::Color{0, 0, 0, 30})
-            .with_margin(Margin{.left = pixels(10)}));
-
-    // ── "Options" label ──
-    div(context, mk(root.ent()),
-        ComponentConfig{}
-            .with_label("Options")
-            .with_size(ComponentSize{pixels(100), pixels(28)})
-            .with_custom_background(tab_purple)
-            .with_font("Gaegu-Bold", pixels(19.0f))
-            .with_custom_text_color(panel_white)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(std::bitset<4>(0b0011))
-            .with_roundness(0.4f)
-            .with_translate(pixels(530), pixels(0)));
-
-    // ── Main content area: tools sidebar + panel ──
-    auto body = hstack(context, mk(root.ent()),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), pixels(540)})
-                           .with_align_items(AlignItems::FlexStart)
-                           .with_no_wrap()
-                           .with_margin(Margin{.top = pixels(5)})
-                           .with_debug_name("body"));
-
-    // Tool icons sidebar
-    auto tools = vstack(context, mk(body.ent()),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{pixels(55), pixels(140)})
-                            .with_no_wrap()
-                            .with_margin(Margin{.top = pixels(30),
-                                                .right = pixels(14)})
-                            .with_debug_name("tools"));
-
-    std::vector<std::tuple<std::string, afterhours::Color>> tool_icons = {
-        {"Edit", text_black},
-        {"Erase", text_dark},
+    if (detail == Detail::None) {
+      if (context.pressed(InputAction::WidgetLeft)) choose_tab((selected_tab + 5) % 6);
+      if (context.pressed(InputAction::WidgetRight)) choose_tab((selected_tab + 1) % 6);
+    }
+    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+        .with_debug_name("kirby_root"));
+    auto decoration = [&](size_t i) {
+      const auto &asset = art[i];
+      div(context, mk(root.ent(), 100 + static_cast<int>(i)),
+          box(scale, asset.x, asset.y, asset.w, asset.h).with_ignore_pointer_events()
+          .with_on_draw_bg([texture = asset.texture](RectangleType r) { paint(texture, r); }));
     };
-    for (size_t i = 0; i < tool_icons.size(); i++) {
-      auto &[icon, color] = tool_icons[i];
-      div(context, mk(tools.ent(), static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(icon)
-              .with_size(ComponentSize{pixels(52), pixels(52)})
-              .with_custom_background(panel_white)
-              .with_border(border_gray, 2.0f)
-              .with_font("Gaegu-Bold", pixels(18.0f))
-              .with_custom_text_color(color)
-              .with_alignment(TextAlignment::Center)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.2f)
-              .with_margin(i > 0 ? Margin{.top = pixels(8)} : Margin{})
-              .with_debug_name("tool_" + std::to_string(i)));
+    auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
+                     float size, afterhours::Color color,
+                     const std::string &name = "", const std::string &font = "FredokaMockBold") {
+      return div(context, mk(root.ent(), id), box(scale, x, y, w, h).with_label(text)
+          .with_font(font, h720(size * 1.25f)).with_custom_text_color(color)
+          .with_text_overflow(TextOverflow::Ellipsis)
+          .with_alignment(TextAlignment::Center).with_ignore_pointer_events()
+          .with_debug_name(name));
+    };
+    auto action = [&](int id, const std::string &text, float x, float y, float w, float h,
+                      const std::string &name, bool filled = false, float size = 22) {
+      return button(context, mk(root.ent(), id), box(scale, x, y, w, h).with_label(text)
+          .with_font("FredokaMockBold", h720(size * 1.25f))
+          .with_custom_text_color(filled ? afterhours::Color{255, 255, 255, 255} : ink)
+          .with_custom_background(filled ? purple : afterhours::Color{0, 0, 0, 0})
+          .with_corner_radius(filled ? 5 * scale : 0)
+          .with_alignment(TextAlignment::Center).with_click_activation(ClickActivationMode::Release)
+          .with_debug_name(name));
+    };
+    decoration(0);
+    for (size_t i = 0; i < 6; ++i) decoration(13 + i * 2 + (selected_tab == i ? 1 : 0));
+    decoration(1);
+    decoration(3);
+    decoration(4);
+    decoration(5);
+    decoration(6);
+    decoration(7);
+    decoration(2);
+    for (size_t i = 0; i < 6; ++i) {
+      const auto &a = art[13 + i * 2 + (selected_tab == i ? 1 : 0)];
+      if (action(10 + static_cast<int>(i), "", a.x + 8, a.y + 8,
+                 selected_tab == i ? 126 : 118, selected_tab == i ? 107 : 76,
+                 "kirby_tab_" + std::to_string(i))) choose_tab(i);
     }
-
-    // Main panel
-    auto panel = vstack(
-        context, mk(body.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(1050), percent(1.0f)})
-            .with_custom_background(panel_white)
-            .with_border(border_gray, 3.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.08f)
-            .with_soft_shadow(3.0f, 5.0f, 15.0f, afterhours::Color{0, 0, 0, 35})
-            .with_padding(Padding{.top = pixels(20),
-                                  .left = pixels(25),
-                                  .bottom = pixels(15),
-                                  .right = pixels(25)})
-            .with_no_wrap()
-            .with_debug_name("main_panel"));
-
-    // Name button row
-    auto name_row = hstack(context, mk(panel.ent()),
-                           ComponentConfig{}
-                               .with_size(ComponentSize{children(), pixels(58)})
-                               .with_align_items(AlignItems::Center)
-                               .with_no_wrap()
-                               .with_margin(Margin{.left = pixels(155)})
-                               .with_debug_name("name_row"));
-
-    button(
-        context, mk(name_row.ent()),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(260), pixels(58)})
-            .with_custom_background(btn_yellow)
-            .with_border(btn_yellow_dark, 4.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_soft_shadow(2.0f, 3.0f, 8.0f, afterhours::Color{0, 0, 0, 40})
-            .with_debug_name("name_btn"));
-
-    // Avatar + Name overlaid on button using translate
-    div(context, mk(name_row.ent()),
-        ComponentConfig{}
-            .with_label("@")
-            .with_size(ComponentSize{pixels(42), pixels(42)})
-            .with_custom_background(icon_blue)
-            .with_font("Gaegu-Bold", pixels(24.0f))
-            .with_custom_text_color(text_black)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
-            .with_translate(pixels(-248), pixels(0)));
-
-    div(context, mk(name_row.ent()),
-        ComponentConfig{}
-            .with_label("Name")
-            .with_size(ComponentSize{pixels(120), pixels(40)})
-            .with_font("Gaegu-Bold", pixels(28.0f))
-            .with_custom_text_color(text_dark)
-            .with_translate(pixels(-240), pixels(0)));
-
-    // "Common" label
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label("Common")
-            .with_size(ComponentSize{pixels(100), pixels(28)})
-            .with_custom_text_color(text_dark)
-            .with_margin(Margin{.top = pixels(15)}));
-
-    // Options tabs
-    std::vector<std::string> option_labels;
-    for (auto &[icon, label, color] : options) {
-      option_labels.push_back(label);
-    }
-
-    auto opts_tabs =
-        hstack(context, mk(panel.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(36)})
-                   .with_no_wrap()
-                   .with_margin(Margin{.top = pixels(8)})
-                   .with_debug_name("opts_tabs"));
-
-    for (size_t ti = 0; ti < option_labels.size(); ti++) {
-      bool is_active = (ti == active_tab);
-      afterhours::Color opt_tab_bg =
-          is_active ? tab_purple : afterhours::Color{230, 226, 220, 255};
-      afterhours::Color opt_tab_text = is_active ? panel_white : text_dark;
-
-      if (button(context, mk(opts_tabs.ent(), static_cast<int>(ti)),
-                 ComponentConfig{}
-                     .with_label(option_labels[ti])
-                     .with_size(ComponentSize{expand(1.0f), pixels(36)})
-                     .with_custom_background(opt_tab_bg)
-                     .with_custom_text_color(opt_tab_text)
-                     .with_font("Gaegu-Bold", pixels(16.0f))
-                     .with_alignment(TextAlignment::Center)
-                     .with_border(is_active ? tab_purple_dark : border_gray,
-                                  is_active ? 2.0f : 1.0f)
-                     .with_rounded_corners(std::bitset<4>(0b1100))
-                     .with_roundness(0.2f)
-                     .with_debug_name("opt_tab_" + std::to_string(ti)))) {
-        active_tab = ti;
-      }
-    }
-
-    // Tab content
-    auto &[tab_icon, tab_label, tab_color] = options[active_tab];
-    std::string tab_desc = tab_label + " options will be displayed here.";
-
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label(tab_label)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_font("Gaegu-Bold", pixels(28.0f))
-            .with_custom_text_color(tab_color)
-            .with_margin(Margin{.top = pixels(15)})
-            .with_translate(pixels(15), pixels(0)));
-
-    div(context, mk(panel.ent()),
-        ComponentConfig{}
-            .with_label(tab_desc)
-            .with_size(ComponentSize{percent(1.0f), pixels(30)})
-            .with_font("Gaegu-Bold", pixels(20.0f))
-            .with_custom_text_color(text_muted)
-            .with_margin(Margin{.top = pixels(10)})
-            .with_translate(pixels(15), pixels(0)));
-
-    // Bottom row: delete/data + description
-    auto panel_bottom =
-        hstack(context, mk(panel.ent()),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(50)})
-                   .with_align_items(AlignItems::Center)
-                   .with_no_wrap()
-                   .with_debug_name("panel_bottom"));
-
-    // Description
-    div(context, mk(panel_bottom.ent()),
-        ComponentConfig{}
-            .with_label("Enter a new name and customize your controls.")
-            .with_size(ComponentSize{expand(), pixels(46)})
-            .with_custom_background(afterhours::Color{240, 235, 230, 255})
-            .with_border(border_gray, 1.0f)
-            .with_font("Gaegu-Bold", pixels(26.0f))
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.3f));
-
-    // Data button
-    if (!show_delete_confirm) {
-      if (button(
-              context, mk(panel_bottom.ent()),
-              ComponentConfig{}
-                  .with_label("Data...")
-                  .with_size(ComponentSize{pixels(80), pixels(24)})
-                  .with_custom_background(afterhours::Color{230, 228, 225, 255})
-                  .with_border(afterhours::Color{210, 208, 205, 255}, 1.0f)
-                  .with_font("Gaegu-Bold", pixels(14.0f))
-                  .with_custom_text_color(text_muted)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.25f)
-                  .with_debug_name("data_menu"))) {
-        show_delete_confirm = true;
+    if (action(20, "L", 369, 81, 24, 31, "kirby_previous_tab", true, 20))
+      choose_tab((selected_tab + 5) % 6);
+    if (action(21, "R", 1138, 54, 24, 31, "kirby_next_tab", true, 20))
+      choose_tab((selected_tab + 1) % 6);
+    label(22, "Options", 919, 117, 199, 40, 23, raylib::WHITE, "kirby_title");
+    label(23, profile.name, 690, 201, 236, 64, 38, ink, "kirby_profile_name");
+    label(24, "Delete Data", 1073, 218, 100, 31, 14, ink);
+    label(25, "Common", 414, 316, 106, 28, 18, raylib::WHITE, "", "Atkinson");
+    if (action(26, "", 578, 172, 426, 120, "kirby_name")) open(Detail::Name);
+    if (action(27, "", 1070, 161, 105, 99, "kirby_data")) open(Detail::Data);
+    if (action(28, "", 263, 265, 115, 69, "kirby_customize")) open(Detail::Name);
+    if (detail == Detail::None) {
+      constexpr std::array<const char *, 5> names{"Controller", "Display", "Accessibility", "Sound", "Online"};
+      constexpr std::array<std::array<float, 4>, 5> cells{{
+          {416, 333, 251, 170}, {668, 324, 251, 170}, {920, 315, 252, 170},
+          {423, 516, 376, 121}, {805, 504, 376, 121}}};
+      constexpr std::array<std::array<float, 4>, 5> labels{{
+          {417, 442, 256, 46}, {669, 433, 256, 46}, {920, 424, 258, 46},
+          {577, 554, 157, 48}, {954, 539, 166, 48}}};
+      for (size_t i = 0; i < 5; ++i) {
+        decoration(8 + i);
+        const auto &c = cells[i];
+        const auto &l = labels[i];
+        label(30 + static_cast<int>(i), names[i], l[0], l[1], l[2], l[3], 24.5f, ink);
+        if (action(40 + static_cast<int>(i), "", c[0], c[1], c[2], c[3],
+                   "kirby_option_" + std::to_string(i)))
+          open(static_cast<Detail>(static_cast<int>(Detail::Controller) + i));
       }
     } else {
-      if (button(
-              context, mk(panel_bottom.ent()),
-              ComponentConfig{}
-                  .with_label("Cancel")
-                  .with_size(ComponentSize{pixels(70), pixels(24)})
-                  .with_custom_background(afterhours::Color{210, 208, 205, 255})
-                  .with_border(border_gray, 1.0f)
-                  .with_font("Gaegu-Bold", pixels(14.0f))
-                  .with_custom_text_color(text_dark)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_roundness(0.25f)
-                  .with_margin(Margin{.left = pixels(10)})
-                  .with_debug_name("cancel_delete"))) {
-        show_delete_confirm = false;
+      div(context, mk(root.ent(), 50), box(scale, 417, 311, 772, 343)
+          .with_custom_background(paper).with_border({197, 185, 152, 255}, 2 * scale)
+          .with_debug_name("kirby_detail"));
+      if (action(51, "< Common options", 434, 324, 244, 36, "kirby_detail_back", true, 18))
+        detail = Detail::None;
+      constexpr std::array<const char *, 10> titles{
+          "Common", "Your name", "Controller", "Display", "Accessibility", "Sound",
+          "Online", "Save data", "Messages", "Favorites"};
+      label(52, titles[static_cast<size_t>(detail)], 440, 371, 705, 45, 29, ink, "kirby_detail_title");
+      if (detail == Detail::Name) {
+        label(53, "Name", 443, 436, 150, 47, 23, ink);
+        auto input = text_input(context, mk(root.ent(), 54), editing_name,
+            box(scale, 626, 430, 502, 52).with_font("FredokaMockBold", h720(28))
+                .with_custom_background(raylib::WHITE).with_custom_text_color(ink)
+                .with_border({200, 184, 147, 255}, 2 * scale).with_corner_radius(5 * scale)
+                .with_debug_name("kirby_name_input"));
+        input.ent().get<afterhours::text_input::HasTextInputState>().max_length = 24;
+        if (focus_name) { context.set_focus(input.ent().id); focus_name = false; }
+        label(55, "Choose the name your friends will see.", 447, 503, 695, 38, 20, ink, "", "Atkinson");
+        if (action(56, "SAVE NAME", 812, 581, 306, 46, "kirby_name_save", true)) {
+          profile.name = editing_name.empty() ? "Name" : editing_name;
+          detail = Detail::None;
+          status = "Name saved: " + profile.name;
+        }
+        if (action(57, "CANCEL", 466, 581, 270, 46, "kirby_name_cancel", true)) detail = Detail::None;
+      } else if (detail >= Detail::Controller && detail <= Detail::Online) {
+        constexpr std::array<const char *, 10> row_names{
+            "Control style", "Rumble", "Screen brightness", "Camera distance", "Text size",
+            "Color assistance", "Music volume", "Sound effects", "Connection", "Player visibility"};
+        const std::array<std::array<const char *, 3>, 10> values{{
+            {"Standard", "Alternate", "Southpaw"}, {"On", "Off", "On"},
+            {"75%", "100%", "50%"}, {"Standard", "Near", "Far"},
+            {"Normal", "Large", "Normal"}, {"None", "Deuteranopia", "Protanopia"},
+            {"100%", "50%", "Off"}, {"100%", "50%", "Off"},
+            {"Local play", "Local play", "Local play"}, {"Friends", "Private", "Everyone"}}};
+        const size_t offset = (static_cast<size_t>(detail) - static_cast<size_t>(Detail::Controller)) * 2;
+        for (size_t r = 0; r < 2; ++r) {
+          const size_t index = offset + r;
+          label(53 + static_cast<int>(r), row_names[index], 444, 433 + 75 * r, 325, 49, 22, ink);
+          const std::string value = values[index][profile.preferences[index]];
+          if (index == 8) label(60, value, 820, 433, 325, 49, 22, ink, "kirby_local_connection");
+          else if (action(60 + static_cast<int>(r), value, 820, 433 + 75 * r, 325, 49,
+                          "kirby_value_" + std::to_string(r), true, 22)) {
+            profile.preferences[index] = (profile.preferences[index] + 1) % (index == 1 || index == 4 ? 2 : 3);
+            status = std::string(row_names[index]) + ": " + values[index][profile.preferences[index]];
+          }
+        }
+        if (detail == Detail::Online)
+          label(62, "Local play only. No network connection is made.", 446, 582, 708, 39, 18, ink, "", "Atkinson");
+      } else if (detail == Detail::Data) {
+        if (confirm_delete) {
+          label(53, "Delete this profile's saved data?", 443, 432, 701, 46, 24, ink);
+          label(54, "Your name, records and preferences will be reset.", 443, 483, 701, 45, 20, ink, "", "Atkinson");
+          if (action(55, "DELETE DATA", 809, 575, 321, 47, "kirby_delete_confirm", true)) {
+            profile = Profile{};
+            profile.races = 0;
+            profile.records = 0;
+            confirm_delete = false;
+            status = "Data deleted. Your profile is ready for a new adventure.";
+          }
+          if (action(56, "CANCEL", 462, 575, 295, 47, "kirby_delete_cancel", true)) confirm_delete = false;
+        } else {
+          label(53, "Rider: " + profile.name, 447, 427, 694, 42, 22, ink);
+          label(54, "Races completed: " + std::to_string(profile.races) +
+                    "    Records: " + std::to_string(profile.records), 447, 480, 694, 43, 22, ink, "kirby_saved_data");
+          if (action(55, "RESET SAVED DATA", 663, 572, 353, 47, "kirby_delete_request", true)) confirm_delete = true;
+        }
+      } else if (detail == Detail::Messages) {
+        label(53, "No messages", 449, 436, 694, 44, 25, ink);
+        label(54, "Messages are unavailable while playing locally.", 444, 500, 705, 44, 20, ink, "", "Atkinson");
+      } else if (detail == Detail::Favorites) {
+        constexpr std::array<const char *, 3> modes{"Air Ride", "Top Ride", "City Trial"};
+        label(53, "Favorite mode", 440, 433, 706, 43, 22, ink);
+        if (action(54, modes[profile.favorite], 663, 503, 354, 49, "kirby_favorite", true))
+          profile.favorite = (profile.favorite + 1) % modes.size();
       }
-      button(context, mk(panel_bottom.ent()),
-             ComponentConfig{}
-                 .with_label("Delete")
-                 .with_size(ComponentSize{pixels(70), pixels(24)})
-                 .with_custom_background(afterhours::Color{180, 120, 110, 255})
-                 .with_font("Gaegu-Bold", pixels(14.0f))
-                 .with_custom_text_color(panel_white)
-                 .with_rounded_corners(RoundedCorners())
-                 .with_roundness(0.25f)
-                 .with_margin(Margin{.left = pixels(5)}));
     }
+    div(context, mk(root.ent(), 80), box(scale, 416, 665, 804, 41)
+        .with_label(status.empty() ? "Enter a new name and customize your controls." : status)
+        .with_font("Atkinson", h720(31.25f)).with_custom_text_color(ink)
+        .with_alignment(TextAlignment::Left).with_ignore_pointer_events()
+        .with_debug_name("kirby_message"));
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(kirby_options, "Game Mockups",
-                        "Colorful Nintendo options menu (Kirby style)",
+                        "Kirby style options board with profile and preferences",
                         KirbyOptionsScreen)
