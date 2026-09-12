@@ -26,9 +26,23 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 
 | Screen / state | Finding | Owner | Disposition / evidence |
 |---|---|---|---|
-| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. |
+| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 3 includes a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
+
+| potion_crafting / recipe view | Dark panels, text initials for ingredients, and a rectangular flask did not match the parchment composition. | wm | Replaced with parchment layout, botanical/bottle artwork, scaled geometry and Garamond text; reviewed at 720p and 1080p. |
+| potion_crafting / crafting | Brew ignored clicks; tabs did not change content; recipe row IDs overlapped. | wm | Unique IDs, live stock consumption, shortage handling, recipe-aware ingredient requirements, inventory and journal views. E2E 40 exercises pointer, real Tab traversal, Enter, repeated shortage and resize. |
+| potion_crafting / fine styling | Secondary copy lacks the target's italic face; brew button's inset border is subtler; footer gives keyboard guidance instead of the decorative Close workshop hint. | wm | Open visual polish. No library blocker claimed; gameplay and layout checks pass. |
 
 ---
+
+### Capture runner: multiple resolutions in one process
+
+`--headless-screenshots --screen example_borders --resolution 720p,1080p`
+crashes at the second resolution in `EntityCollection::invalidate_entity_slot_if_any`
+with an out-of-range slot. Reproduced on unchanged `example_borders`, independently
+of the new screen layout. Separate 720p and 1080p invocations work. Owner is not
+established between wm reset sequencing and the library collection lifetime;
+afterhours remains frozen. This is not an implementation of the unrelated
+cascade-delete plan.
 
 ## Open, asked for by other projects
 

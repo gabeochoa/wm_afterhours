@@ -23,8 +23,12 @@ Use `--url` to check the standalone export outside the repository.
 For native captures:
 
 ```
-./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 720p,1080p --image-output output/screen-audit/SCREEN/after/
+./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 720p --image-output output/screen-audit/SCREEN/after/
+./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 1080p --image-output output/screen-audit/SCREEN/after/
 ```
+
+Use separate processes per resolution: combined capture currently crashes on
+collection cleanup, reproduced with unchanged `example_borders`.
 
 Every screen needs fresh native captures, matched interaction states, and
 independent visual reviews. Old native baselines only detect regressions.
@@ -39,7 +43,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 
 | Screen | Status | Verification |
 |---|---|---|
-| potion_crafting | Pending | |
+| potion_crafting | Updated; minor visual gaps recorded | E2E 40 passed including Tab/Enter, stock consumption, shortage, tabs, 1080 resize; fresh 720p/1080p images; two independent reviews. |
 | angry_birds_settings | Pending | |
 | cozy_cafe | Pending | |
 | casual_settings | Pending | |
