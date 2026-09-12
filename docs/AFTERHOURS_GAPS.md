@@ -253,7 +253,7 @@ are not accepted decisions.
 |---|---|---|
 | UP-01 Audio gains | Implemented locally | Master scales music/effects while preserving their relative preferences. afterhours `1fce0d9`; validation below. |
 | UP-02 Settings saves | Implemented locally | afterhours `325caee`; preserve the previous file on failure and report failures accurately. |
-| UP-03 Test clipboard | Approved | Isolate both app and built-in widget clipboard operations. |
+| UP-03 Test clipboard | Implemented locally | Scoped provider isolates app and built-in widget operations; 15/15 clipboard checks pass. |
 | UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. macOS first behind one portable public API; unsupported backends use the common result contract. |
 | UP-05 Binding persistence | Approved | Save/load complete bindings, including modifiers and axes. |
 | UP-06 Binding prompts | Approved | Current binding labels; automatically switch keyboard/controller prompts on deliberate input, ignore drift/incidental mouse movement, and let apps pin a device. |
@@ -272,6 +272,7 @@ are not accepted decisions.
 |---|---|---|
 | UP-01 | afterhours `1fce0d9`, included by wm's submodule pin | Regression failed before the fix with 7/34 checks passing. Afterward all 39 checks pass, including the new master getter. Full afterhours `make -C tests -j2 test` exits 0; no-backend compile check passes. |
 | UP-02 | afterhours `325caee` | JSON/raw failure regression failed before and passes after; atomic-file tests 29/29. Raw-only compilation passes. Bitsery 5.2.4 save/load round-trip passes. |
+| UP-03 | afterhours `b81173b` | Clipboard tests 15/15, including fresh writes, nested scope restoration after exceptions, reset, and single/multiline widget copy/paste. |
 
 All other approved UP items remain unimplemented in this work. Commits are
 local; nothing was pushed. Tests and builds use `nice -n 10`.

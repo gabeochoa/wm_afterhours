@@ -3,7 +3,8 @@
 The user requested all approved gaps, each in its own local commit. No pushes.
 Apply review feedback by rewriting the original relevant commit, preserving
 later changes. Add no code comments; leave existing comments unchanged unless
-they become false. Run work with `nice -n 10`, builds with `-j2`.
+they become false. Prefer early returns. Run work with `nice -n 10`, builds
+with `-j2`.
 
 Each library change has its own afterhours commit and a wm adoption commit.
 
@@ -11,7 +12,7 @@ Each library change has its own afterhours commit and a wm adoption commit.
 |---|---|
 | UP-01 Audio gains | Complete, afterhours `1fce0d9` |
 | UP-02 Settings saves | Complete, afterhours `325caee` |
-| UP-03 Scoped test clipboard | Next |
+| UP-03 Scoped test clipboard | Complete, afterhours `b81173b`; 15/15 checks including both text widgets |
 | UP-04 Native dialogs, portable API, macOS first | Pending |
 | UP-05 Complete binding persistence | Pending |
 | UP-06 Automatic binding prompts with device override | Pending |
