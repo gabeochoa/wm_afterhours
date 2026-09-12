@@ -105,6 +105,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | offsite_backup / backup layout | Small type and overlapping old controls obscured the new backup layout. | wm | Matched desktop/window/panels, removed duplicate rows/switches, separated checkbox labels and completion text. Existing progress/rescan model and local backup controls retained. |
 | offsite_backup / fine styling and scope | Native typography/ring differ, folder icons are faint, and borders/shadows are flatter than the mock. Backup, restore and account actions are local demonstrations. | wm | Open cosmetic differences and demo scope; final labels and controls are readable without overlap. |
 
+| powerwash_settings / tablet and actions | Generic panel geometry, clipped help/keycaps and status-only close/reset differed from the mock. | wm | Matched tablet, tabs and setting rows; native values, initial-value reset and real close/reopen/Escape. Fresh captures and E2E 143 pass. |
+| powerwash_settings / fine styling | Status and gear icons are approximate; help wraps differently; background wall/pool shapes and tablet shadow are simplified. | wm | Open cosmetic differences. Both resolutions remain readable and contained. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

@@ -1,0 +1,79 @@
+# PowerWash settings mock parity smoke test.
+
+goto_screen powerwash_settings
+wait 1
+
+expect_text "SETTINGS"
+expect_text "Screen Resolution"
+expect_text "2560 x 1440"
+expect_text "Window Mode"
+expect_text "Borderless Windowed"
+expect_text "Target Framerate"
+expect_text "Unlimited"
+expect_text "Anti-Aliasing"
+expect_text "2x"
+expect_text "VIDEO"
+
+assert_ui pw_root x=0 y=0 w=1280 h=720
+assert_ui pw_tablet x=56 y=62 w=1168 h=576
+assert_ui pw_header x=63 y=69 w=1154 h=43
+assert_ui pw_row_0 x=75 y=131 w=610 h=37
+assert_ui pw_row_4 x=75 y=315 w=610 h=37
+assert_ui pw_value_4 x=433 y=315 w=252 h=34
+assert_ui pw_scroll x=700 y=117 w=4 h=449
+assert_ui pw_tabs x=64 y=579 w=1152 h=47
+assert_ui pw_tab_2 x=531 y=583 w=198 h=36
+
+click_ui pw_value_4
+wait 0.2
+expect_text "4x"
+
+click_ui pw_row_1
+wait 0.2
+expect_text "Window Mode"
+
+click_ui pw_tab_3
+wait 0.2
+expect_text "AUDIO"
+expect_text "Master Volume"
+expect_text "100%"
+
+click_ui pw_value_0
+wait 0.2
+expect_text "0%"
+
+click_ui pw_footer_reset
+wait 0.2
+expect_text "Defaults restored"
+expect_text "100%"
+
+click_ui pw_footer_close
+wait 0.2
+expect_text "Settings closed"
+expect_text "Reopen settings"
+assert_ui pw_closed_panel x=444 y=274 w=392 h=132
+
+click_ui pw_reopen
+wait 0.2
+expect_text "Settings open"
+expect_text "Master Volume"
+
+key ESCAPE
+wait 0.2
+expect_text "Settings closed"
+
+click_ui pw_reopen
+wait 0.2
+click_ui pw_tab_2
+wait 0.2
+expect_text "Anti-Aliasing"
+
+screenshot powerwash_settings_review
+
+resize 1920 1080
+wait 0.3
+assert_ui pw_root x=0 y=0 w=1920 h=1080
+assert_ui pw_tablet x=84 y=93 w=1752 h=864
+assert_ui pw_row_0 x=113 y=197 w=915 h=56
+assert_ui pw_row_4 x=113 y=473 w=915 h=56
+assert_ui pw_tabs x=96 y=869 w=1728 h=71
