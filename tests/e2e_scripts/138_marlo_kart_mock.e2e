@@ -1,0 +1,71 @@
+# Native mock fidelity plus pausing during the starting lights.
+# 126/127 retain full Grand Prix and keyboard gameplay coverage.
+goto_screen marlo_kart
+wait 0.5
+expect_text "MARLO KART"
+expect_text "START YOUR ENGINES"
+assert_ui mk_title_page x=0 y=0 w=1280 h=720
+assert_ui mk_start x=72 y=485 w=366 h=83
+assert_no_overflow
+assert_within_parents
+screenshot marlo_kart_mock_title
+click_ui mk_start
+wait 0.3
+expect_text "Marlo + Standard"
+assert_ui mk_driver_0 x=40 y=116 w=139 h=155
+assert_ui mk_kart_0 x=40 y=488 w=139 h=110
+assert_no_overflow
+assert_within_parents
+click_ui mk_driver_5
+click_ui mk_kart_2
+wait 0.3
+expect_text "Koda + Rally"
+screenshot marlo_kart_mock_driver
+click_ui mk_driver_next
+wait 0.3
+assert_ui mk_cup_0 x=40 y=115 w=289 h=229
+click_ui mk_cup_1
+wait 0.2
+expect_text "Voltway"
+assert_no_overflow
+assert_within_parents
+screenshot marlo_kart_mock_cup
+click_ui mk_cup_start
+wait 0.2
+key ESCAPE
+wait 0.3
+expect_text "PAUSED"
+expect_text "0:00.000"
+expect_text "RESTART RACE"
+assert_ui mk_pause_sheet x=430 y=195 w=420 h=324
+assert_no_overflow
+assert_within_parents
+wait 3.0
+expect_text "0:00.000"
+screenshot marlo_kart_mock_pause_countdown
+click_ui mk_restart
+wait 0.3
+expect_no_text "PAUSED"
+expect_text "COINS 0"
+expect_text "LAP 1/3"
+wait 3.0
+expect_no_text "COINS 0"
+key ESCAPE
+wait 0.2
+click_ui mk_quit
+wait 0.3
+resize 1920 1080
+wait 0.3
+expect_text "MARLO KART"
+assert_ui mk_title_page x=0 y=0 w=1920 h=1080
+assert_ui mk_start x=108 y=728 w=549 h=125
+assert_no_overflow
+assert_within_parents
+screenshot marlo_kart_mock_1080p
+click_ui mk_start
+wait 0.3
+assert_ui mk_driver_0 x=60 y=174 w=209 h=233
+assert_ui mk_kart_0 x=60 y=732 w=209 h=165
+assert_no_overflow
+assert_within_parents
+screenshot marlo_kart_mock_driver_1080p

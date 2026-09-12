@@ -106,6 +106,7 @@ inline std::vector<FontDef> get_all_fonts() {
       {"Archivo@medium", "ArchivoNarrow-Medium.ttf"},
       {"Archivo@semibold", "ArchivoNarrow-SemiBold.ttf"},
       {"Archivo@bold", "ArchivoNarrow-Bold.ttf"},
+      {"ArchivoMock", "ArchivoNarrow-Regular.ttf", false, nullptr, 96},
       {"ArchivoMockBold", "ArchivoNarrow-Bold.ttf", false, nullptr, 96},
 
       // CJK fonts with special codepoint loading

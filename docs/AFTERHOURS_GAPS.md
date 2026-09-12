@@ -67,6 +67,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | neon_strike / HUD and actions | Generic HUD placement, missing artwork and inert controls differed from the mock. | wm | Matched map/compass/equipment geometry with isolated text-free art and native high-resolution labels. Reload transfers reserve ammunition; abilities and equipment have visible selection. |
 | neon_strike / fine styling | Ammo uses one font size instead of mixed sizes; objective chevrons and subtle background glow differ. | wm | Open cosmetic differences. E2E 141 and final 720p/1080p reviews pass. |
 
+
+| marlo_kart / six-phase presentation | Driver/kart/cup screens and racing presentation did not match the mock; custom roads/maps were accidentally covered by panel fills in the first audit draft. | wm | Isolated driver/kart/trophy art, live text and HUD, perspective road with moving stripes, visible shared-path minimap/cup previews, pause above countdown. Existing fixed-step racing, items, drift, eight racers, four cups and points remain intact. E2E 126/127/138 pass. |
+| marlo_kart / fine styling | Card rounding, label proportions and key hints differ slightly from the mock; native race view follows the real simulation rather than the gallery's phase shortcuts. | wm | Open cosmetic differences; all six phases visually reviewed, including actual cup completion and trophy standings. High-resolution regular font removes enlarged-text blur. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

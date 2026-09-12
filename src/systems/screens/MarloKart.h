@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/ui/grid.h>
 #include <algorithm>
 #include <array>
@@ -476,93 +477,108 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     return fmt::format("{}{}", n, suf[(size_t)std::clamp(n, 0, 8)]);
   }
 
-  afterhours::Color bg{14, 18, 34, 255};
-  afterhours::Color panel{26, 33, 58, 255};
-  afterhours::Color panel_hi{38, 48, 82, 255};
-  afterhours::Color line{62, 78, 128, 255};
-  afterhours::Color ink{240, 245, 255, 255};
-  afterhours::Color ink_dim{160, 174, 210, 255};
-  afterhours::Color gold{252, 206, 70, 255};
-  afterhours::Color go_green{96, 214, 124, 255};
-  afterhours::Color deep{10, 13, 26, 255};
+  const afterhours::Color ink{20, 44, 85, 255};
+  const afterhours::Color white{255, 255, 255, 255};
+  const afterhours::Color gold{255, 210, 41, 255};
+  const afterhours::Color blue{22, 91, 191, 255};
+  const afterhours::Color transparent{0, 0, 0, 0};
+  std::array<raylib::Texture2D, 23> art{};
+  bool art_loaded = false;
+  float scale = 1.f;
 
   void apply_theme(UIContext<InputAction> &context) {
+    scale = context.screen_height / 720.f;
+    if (!art_loaded) {
+      std::array<std::string, 23> names{"menu", "scenery", "header", "footer", "platform"};
+      for (int i = 0; i < kRacers; ++i) {
+        names[5 + i] = "portrait_" + std::to_string(i);
+        names[13 + i] = "kart_" + std::to_string(i);
+      }
+      names[21] = "trophy";
+      names[22] = "celebration";
+      for (size_t i = 0; i < art.size(); ++i) {
+        art[i] = raylib::LoadTexture(afterhours::files::get_resource_path(
+            "images", "marlo_kart/" + names[i] + ".png").string().c_str());
+        raylib::SetTextureFilter(art[i], raylib::TEXTURE_FILTER_BILINEAR);
+      }
+      art_loaded = true;
+    }
     Theme theme;
     theme.font = ink;
-    theme.darkfont = deep;
-    theme.font_muted = ink_dim;
-    theme.background = bg;
-    theme.surface = panel;
-    theme.primary = afterhours::Color{96, 196, 246, 255};
-    theme.secondary = afterhours::Color{30, 38, 66, 255};
+    theme.darkfont = white;
+    theme.background = blue;
+    theme.surface = white;
+    theme.primary = gold;
+    theme.secondary = blue;
     theme.accent = gold;
-    theme.error = afterhours::Color{228, 82, 82, 255};
-    theme.corner_radius = 10.f;
-    theme.roundness = 0.f;
-    theme.segments = 8;
-    context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(19.f));
+    theme.corner_radius = 0;
+    theme.roundness = 0;
+    context.set_theme(theme);
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", h720(25));
   }
 
-  ElementResult page(UIContext<InputAction> &context,
-                     afterhours::Entity &entity, const char *name) {
-    return vstack(context, mk(entity),
-                  ComponentConfig{}
-                      .with_size(ComponentSize{percent(1.f), percent(1.f)})
-                      .with_custom_background(bg)
-                      .with_corner_radius(0.f)
-                      .with_padding(Spacing::md)
-                      .with_gap(h720(12.f))
-                      .with_no_wrap()
-                      .with_debug_name(name));
+  ComponentConfig box(float x, float y, float w, float h) const {
+    return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
+        .with_absolute_position(x * scale, y * scale)
+        .with_background(Theme::Usage::None).with_corner_radius(0);
   }
-
-  ElementResult chip(UIContext<InputAction> &context, afterhours::Entity &par,
-                     int idx, const std::string &text, afterhours::Color fg,
-                     float w, const std::string &dbg) {
-    return div(context, mk(par, idx),
-               ComponentConfig{}
-                   .with_label(text)
-                   .with_size(ComponentSize{h720(w), h720(34.f)})
-                   .with_custom_background(panel_hi)
-                   .with_custom_text_color(fg)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font_size(h720(17.f))
-                   .with_corner_radius(8.f)
-                   .with_debug_name(dbg));
+  static void paint(raylib::Texture2D texture, RectangleType r, float rotation = 0) {
+    const raylib::Vector2 origin{r.width / 2, r.height / 2};
+    r.x += origin.x; r.y += origin.y;
+    raylib::DrawTexturePro(texture, {0, 0, static_cast<float>(texture.width),
+        static_cast<float>(texture.height)}, r, origin, rotation, raylib::WHITE);
   }
-
-  void header(UIContext<InputAction> &context, afterhours::Entity &root,
-              int idx, const std::string &title, const std::string &right) {
-    auto bar = hstack(context, mk(root, idx),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(48.f)})
-                          .with_align_items(AlignItems::Center)
-                          .with_gap(h720(10.f))
-                          .with_no_wrap()
-                          .with_debug_name("mk_header"));
-
-    div(context, mk(bar.ent(), 0),
-        ComponentConfig{}
-            .with_label(title)
-            .with_size(ComponentSize{expand(), h720(44.f)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(gold)
-            .with_font("Fredoka", h720(30.f))
-            .with_debug_name("mk_title"));
-
-    div(context, mk(bar.ent(), 1),
-        ComponentConfig{}
-            .with_label(right)
-            .with_size(ComponentSize{strict_w1280(260.f), h720(34.f)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(ink_dim)
-            .with_alignment(TextAlignment::Right)
-            .with_font_size(h720(17.f))
-            .with_debug_name("mk_header_right"));
+  void image(UIContext<InputAction> &c, afterhours::Entity &p, int id, int asset,
+             float x, float y, float w, float h, float rotation = 0) {
+    div(c, mk(p, id), box(x, y, w, h).with_ignore_pointer_events()
+        .with_on_draw_bg([texture = art[asset], rotation](RectangleType r) { paint(texture, r, rotation); }));
   }
-
+  ElementResult page(UIContext<InputAction> &c, afterhours::Entity &e,
+                     const std::string &name, int background = 0) {
+    auto root = div(c, mk(e), box(0, 0, 1280, 720).with_debug_name(name));
+    image(c, root.ent(), 900, background, 0, 0, 1280, 720);
+    return root;
+  }
+  ElementResult label(UIContext<InputAction> &c, afterhours::Entity &p, int id,
+                     const std::string &text, float x, float y, float w, float h,
+                     float size, afterhours::Color color,
+                     const std::string &name = "", TextAlignment align = TextAlignment::Left,
+                     const std::string &font = "ArchivoMock") {
+    return div(c, mk(p, id), box(x, y, w, h).with_label(text)
+        .with_font(font, h720(size * 1.25f))
+        .with_custom_text_color(color).with_alignment(align)
+        .with_ignore_pointer_events().with_debug_name(name));
+  }
+  ElementResult action(UIContext<InputAction> &c, afterhours::Entity &p, int id,
+                       const std::string &text, float x, float y, float w, float h,
+                       const std::string &name, afterhours::Color fill,
+                       afterhours::Color color, float size = 22, bool disabled = false) {
+    return button(c, mk(p, id), box(x, y, w, h).with_label(text)
+        .with_font("ArchivoMock", h720(size * 1.25f)).with_custom_background(fill)
+        .with_custom_text_color(color).with_alignment(TextAlignment::Center)
+        .with_border(white, 2 * scale).with_corner_radius(0)
+        .with_disabled(disabled).with_click_activation(ClickActivationMode::Release)
+        .with_debug_name(name));
+  }
+  void header(UIContext<InputAction> &c, afterhours::Entity &p,
+              const std::string &title, const std::string &right) {
+    image(c, p, 901, 2, 0, 0, 1280, 88);
+    label(c, p, 902, title, 40, 13, 760, 61, 37, ink, "mk_title", TextAlignment::Left, "ArchivoMockBold");
+    label(c, p, 903, right, 827, 27, 350, 38, 18, ink, "mk_header_right", TextAlignment::Right);
+    label(c, p, 904, "P1", 1195, 26, 45, 39, 21, ink, "", TextAlignment::Center);
+  }
+  void footer(UIContext<InputAction> &c, afterhours::Entity &p, const std::string &help) {
+    image(c, p, 905, 3, 0, 654, 1280, 66);
+    label(c, p, 906, help, 240, 668, 700, 38, 17, ink, "", TextAlignment::Center);
+  }
+  void plate(UIContext<InputAction> &c, afterhours::Entity &p, int id,
+             float x, float y, float w, float h, afterhours::Color fill,
+             afterhours::Color border, float radius = 12) {
+    div(c, mk(p, id), box(x, y, w, h).with_custom_background(fill)
+        .with_border(border, 3 * scale).with_corner_radius(radius * scale)
+        .with_ignore_pointer_events());
+  }
   void advance_race() {
     if (race_in_cup + 1 >= kCupRaces) {
       phase = Phase::Trophy;
@@ -702,599 +718,6 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     }
   }
 
-  void build_title(afterhours::Entity &entity, UIContext<InputAction> &context) {
-    auto root = vstack(
-        context, mk(entity),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), percent(1.f)})
-            .with_background(Theme::Usage::None)
-            .with_corner_radius(0.f)
-            .with_padding(Spacing::md)
-            .with_no_wrap()
-            .with_on_draw_bg([this](RectangleType rr) {
-              afterhours::draw_rectangle_gradient_v(
-                  rr, afterhours::Color{22, 32, 72, 255}, deep);
-              const float cell = rr.height / 16.f;
-              for (int row = 0; (float)row * cell < rr.height; row++)
-                for (int col = 0; (float)col * cell < rr.width; col++)
-                  if ((row + col) % 2 == 0)
-                    afterhours::draw_rectangle(
-                        {rr.x + (float)col * cell, rr.y + (float)row * cell,
-                         cell, cell},
-                        afterhours::Color{255, 255, 255, 6});
-            })
-            .with_debug_name("mk_title_page"));
-
-    div(context, mk(root.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), expand(0.9f)})
-            .with_background(Theme::Usage::None));
-
-    div(context, mk(root.ent(), 1),
-        ComponentConfig{}
-            .with_label("MARLO KART")
-            .with_size(ComponentSize{percent(1.f), h720(84.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_font("BlackOpsOne", h720(74.f))
-            .with_custom_text_color(gold)
-            .with_text_shadow(afterhours::Color{120, 58, 8, 255}, 4.f, 5.f)
-            .with_debug_name("mk_logo"));
-
-    div(context, mk(root.ent(), 2),
-        ComponentConfig{}
-            .with_label("AFTERHOURS GRAND PRIX")
-            .with_size(ComponentSize{percent(1.f), h720(40.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(ink_dim)
-            .with_letter_spacing(3.f)
-            .with_font_size(h720(19.f))
-            .with_debug_name("mk_tagline"));
-
-    auto eng = hstack(context, mk(root.ent(), 3),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(56.f)})
-                          .with_justify_content(JustifyContent::Center)
-                          .with_align_items(AlignItems::Center)
-                          .with_gap(h720(12.f))
-                          .with_no_wrap()
-                          .with_debug_name("mk_engine_row"));
-
-    for (int i = 0; i < 3; i++) {
-      const bool on = i == engine;
-      if (button(context, mk(eng.ent(), i),
-                 ComponentConfig{}
-                     .with_label(kEngineNames[(size_t)i])
-                     .with_size(ComponentSize{h720(120.f), h720(46.f)})
-                     .with_custom_background(on ? gold : panel_hi)
-                     .with_custom_text_color(on ? deep : ink)
-                     .with_alignment(TextAlignment::Center)
-                     .with_font("Fredoka", h720(24.f))
-                     .with_corner_radius(10.f)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name(fmt::format("mk_engine_{}", i)))) {
-        engine = i;
-      }
-    }
-
-    auto cta = hstack(context, mk(root.ent(), 4),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(100.f)})
-                          .with_justify_content(JustifyContent::Center)
-                          .with_align_items(AlignItems::Center)
-                          .with_no_wrap()
-                          .with_debug_name("mk_cta_row"));
-
-    if (button(context, mk(cta.ent(), 0),
-               ComponentConfig{}
-                   .with_label("START")
-                   .with_size(ComponentSize{h720(260.f), h720(64.f)})
-                   .with_custom_background(go_green)
-                   .with_custom_text_color(deep)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font("Fredoka", h720(34.f))
-                   .with_corner_radius(14.f)
-                   .with_shadow(ShadowStyle::Soft, 0.f, 6.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name("mk_start"))) {
-      phase = Phase::Driver;
-    }
-
-    div(context, mk(root.ent(), 5),
-        ComponentConfig{}
-            .with_label("Left and Right pick the class, Enter starts. "
-                        "Four tracks, one trophy.")
-            .with_size(ComponentSize{percent(1.f), h720(26.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(ink_dim)
-            .with_font_size(h720(16.f))
-            .with_debug_name("mk_title_hint"));
-
-    div(context, mk(root.ent(), 6),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), expand(1.f)})
-            .with_background(Theme::Usage::None));
-  }
-
-  void build_driver(afterhours::Entity &entity,
-                    UIContext<InputAction> &context) {
-    auto root = page(context, entity, "mk_driver_page");
-    header(context, root.ent(), 0, "SELECT DRIVER",
-           fmt::format("{}  -  Grand Prix", kEngineNames[(size_t)engine]));
-
-    auto body = hstack(context, mk(root.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), expand()})
-                           .with_gap(h720(12.f))
-                           .with_no_wrap()
-                           .with_debug_name("mk_driver_body"));
-
-    auto left = vstack(context, mk(body.ent(), 0),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{expand(1.7f), percent(1.f)})
-                           .with_gap(h720(10.f))
-                           .with_no_wrap()
-                           .with_debug_name("mk_driver_left"));
-
-    auto grid_panel =
-        grid(context, mk(left.ent(), 0),
-             GridConfig{}
-                 .with_rows(2)
-                 .with_cols(4)
-                 .with_row_height(h720(148.f))
-                 .with_gap(h720(8.f)),
-             ComponentConfig{}
-                 .with_size(ComponentSize{percent(1.f), h720(340.f)})
-                 .with_custom_background(panel)
-                 .with_padding(Spacing::sm)
-                 .with_corner_radius(12.f)
-                 .with_no_wrap()
-                 .with_debug_name("mk_driver_grid"));
-
-    for (int i = 0; i < kRacers; i++) {
-      afterhours::OptEntity row_opt = grid_row(grid_panel, i / 4);
-      if (!row_opt.valid())
-        continue;
-      afterhours::Entity &row = row_opt.asE();
-      const Driver &d = drivers[(size_t)i];
-      const bool on = i == driver_idx;
-      const bool cursor = on && nav_row < 2;
-
-      auto cell =
-          button(context, mk(row, i % 4),
-                 ComponentConfig{}
-                     .with_size(ComponentSize{grid_track(grid_panel, i % 4).x_axis,
-                                              h720(144.f)})
-                     .with_custom_background(cursor ? ink
-                                             : on    ? gold
-                                                     : panel_hi)
-                     .with_border(cursor ? gold
-                                  : on   ? afterhours::Color{255, 240, 180, 255}
-                                         : line,
-                                  cursor ? 5.f : on ? 2.f : 1.f)
-                     .with_corner_radius(10.f)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name(fmt::format("mk_driver_{}", i)));
-      if (cell) {
-        driver_idx = i;
-        nav_row = i / 4;
-      }
-
-      const afterhours::Color dc = d.color;
-      div(context, mk(cell.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.f), expand()})
-              .with_background(Theme::Usage::None)
-              .with_ignore_pointer_events()
-              .with_on_draw_fg([dc](RectangleType rr) {
-                const float rad = std::min(rr.width, rr.height) * 0.34f;
-                const afterhours::Vector2Type c{rr.x + rr.width * 0.5f,
-                                                rr.y + rr.height * 0.46f};
-                afterhours::draw_circle_v(c, rad + 3.f,
-                                          afterhours::Color{0, 0, 0, 70});
-                afterhours::draw_circle_v(c, rad, dc);
-                afterhours::draw_circle_v({c.x, c.y + rad * 0.42f}, rad * 0.5f,
-                                          afterhours::Color{255, 255, 255, 45});
-              })
-              .with_debug_name(fmt::format("mk_driver_face_{}", i)));
-
-      div(context, mk(cell.ent(), 1),
-          ComponentConfig{}
-              .with_label(d.name)
-              .with_size(ComponentSize{percent(1.f), h720(26.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Center)
-              .with_custom_text_color((on || cursor) ? deep : ink)
-              .with_font("Fredoka", h720(19.f))
-              .with_ignore_pointer_events());
-    }
-
-    auto side = vstack(context, mk(body.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{expand(1.f), percent(1.f)})
-                           .with_custom_background(panel)
-                           .with_padding(Spacing::sm)
-                           .with_gap(h720(8.f))
-                           .with_corner_radius(12.f)
-                           .with_no_wrap()
-                           .with_debug_name("mk_driver_side"));
-
-    const Driver &sel = drivers[(size_t)driver_idx];
-    const afterhours::Color sel_col = sel.color;
-    div(context, mk(side.ent(), 9),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), h720(150.f)})
-            .with_background(Theme::Usage::None)
-            .with_on_draw_fg([sel_col](RectangleType rr) {
-              const afterhours::Vector2Type c{rr.x + rr.width * 0.5f,
-                                              rr.y + rr.height * 0.5f};
-              const float rad = std::min(rr.width, rr.height) * 0.44f;
-              afterhours::draw_circle_v(c, rad + 6.f,
-                                        afterhours::Color{252, 206, 70, 90});
-              afterhours::draw_circle_v(c, rad, sel_col);
-              afterhours::draw_circle_v({c.x, c.y + rad * 0.45f}, rad * 0.52f,
-                                        afterhours::Color{255, 255, 255, 45});
-            })
-            .with_debug_name("mk_driver_portrait"));
-
-    div(context, mk(side.ent(), 0),
-        ComponentConfig{}
-            .with_label(sel.name)
-            .with_size(ComponentSize{percent(1.f), h720(38.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(gold)
-            .with_font("Fredoka", h720(28.f))
-            .with_debug_name("mk_driver_name"));
-
-    static constexpr std::array<const char *, 4> stat_names{"SPEED", "ACCEL",
-                                                            "GRIP", "WEIGHT"};
-    for (int i = 0; i < 4; i++) {
-      auto row = hstack(context, mk(side.ent(), 1 + i),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), h720(28.f)})
-                            .with_align_items(AlignItems::Center)
-                            .with_gap(h720(8.f))
-                            .with_no_wrap());
-
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(stat_names[(size_t)i])
-              .with_size(ComponentSize{percent(0.2f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(ink_dim)
-              .with_font_size(h720(15.f)));
-
-      progress_bar(context, mk(row.ent(), 1), stat(i),
-                   ComponentConfig{}
-                       .with_size(ComponentSize{percent(0.66f), h720(18.f)})
-                       .with_corner_radius(9.f)
-                       .with_debug_name(fmt::format("mk_stat_{}", i)),
-                   ProgressBarLabelStyle::None);
-
-      div(context, mk(row.ent(), 2),
-          ComponentConfig{}
-              .with_label(fmt::format("{}", (int)std::lround(stat(i) * 10.f)))
-              .with_size(ComponentSize{percent(0.08f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(ink)
-              .with_font_size(h720(15.f)));
-    }
-
-    div(context, mk(side.ent(), 5),
-        ComponentConfig{}
-            .with_label(fmt::format("{} + {}", sel.name,
-                                    karts[(size_t)kart_idx].name))
-            .with_size(ComponentSize{percent(1.f), expand()})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(ink_dim)
-            .with_font_size(h720(17.f))
-            .with_debug_name("mk_loadout"));
-
-    auto vehicles = vstack(context, mk(left.ent(), 1),
-                           ComponentConfig{}
-                               .with_size(ComponentSize{percent(1.f), expand()})
-                               .with_custom_background(panel)
-                               .with_padding(Spacing::sm)
-                               .with_gap(h720(6.f))
-                               .with_corner_radius(12.f)
-                               .with_no_wrap()
-                               .with_debug_name("mk_vehicles"));
-
-    div(context, mk(vehicles.ent(), 0),
-        ComponentConfig{}
-            .with_label("VEHICLE")
-            .with_size(ComponentSize{percent(1.f), h720(24.f)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(ink_dim)
-            .with_letter_spacing(2.f)
-            .with_font_size(h720(15.f)));
-
-    auto kart_row = hstack(context, mk(vehicles.ent(), 1),
-                           ComponentConfig{}
-                               .with_size(ComponentSize{percent(1.f), expand()})
-                               .with_gap(h720(8.f))
-                               .with_no_wrap()
-                               .with_debug_name("mk_kart_row"));
-
-    for (int i = 0; i < (int)karts.size(); i++) {
-      const bool on = i == kart_idx;
-      const bool cursor = on && nav_row == 2;
-      auto card =
-          button(context, mk(kart_row.ent(), i),
-                 ComponentConfig{}
-                     .with_size(ComponentSize{expand(), percent(1.f)})
-                     .with_custom_background(cursor ? ink
-                                             : on    ? gold
-                                                     : panel_hi)
-                     .with_border(cursor ? gold
-                                  : on   ? afterhours::Color{255, 240, 180, 255}
-                                         : line,
-                                  cursor ? 5.f : on ? 2.f : 1.f)
-                     .with_corner_radius(10.f)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name(fmt::format("mk_kart_{}", i)));
-      if (card) {
-        kart_idx = i;
-        nav_row = 2;
-      }
-
-      const afterhours::Color body_col =
-          on ? afterhours::Color{60, 48, 20, 255} : drivers[(size_t)i].color;
-      div(context, mk(card.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(1.f), expand()})
-              .with_background(Theme::Usage::None)
-              .with_ignore_pointer_events()
-              .with_on_draw_fg([body_col](RectangleType rr) {
-                const float w = rr.width * 0.62f;
-                const float h = rr.height * 0.34f;
-                const float x = rr.x + (rr.width - w) * 0.5f;
-                const float y = rr.y + rr.height * 0.42f;
-                afterhours::draw_rectangle_rounded({x, y, w, h}, 0.45f, 8,
-                                                   body_col);
-                afterhours::draw_rectangle_rounded(
-                    {x + w * 0.22f, y - h * 0.55f, w * 0.5f, h * 0.7f}, 0.4f, 8,
-                    afterhours::Color{230, 238, 250, 200});
-                const afterhours::Color tyre{24, 26, 34, 255};
-                afterhours::draw_circle_v({x + w * 0.2f, y + h}, h * 0.38f,
-                                          tyre);
-                afterhours::draw_circle_v({x + w * 0.8f, y + h}, h * 0.38f,
-                                          tyre);
-              }));
-
-      div(context, mk(card.ent(), 1),
-          ComponentConfig{}
-              .with_label(karts[(size_t)i].name)
-              .with_size(ComponentSize{percent(1.f), h720(26.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Center)
-              .with_custom_text_color((on || cursor) ? deep : ink)
-              .with_font("Fredoka", h720(18.f))
-              .with_ignore_pointer_events());
-    }
-
-    nav_bar(context, root.ent(), 2, "mk_driver_back", Phase::Title, "CONTINUE",
-            "mk_driver_next",
-            "Arrows move the cursor   Enter confirms   Esc goes back",
-            [this]() { phase = Phase::Cup; });
-  }
-
-  template <typename Fn>
-  void nav_bar(UIContext<InputAction> &context, afterhours::Entity &root,
-               int idx, const std::string &back_name, Phase back_to,
-               const std::string &next_label, const std::string &next_name,
-               const std::string &hint, Fn on_next) {
-    auto bar = hstack(context, mk(root, idx),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(54.f)})
-                          .with_align_items(AlignItems::Center)
-                          .with_gap(h720(10.f))
-                          .with_no_wrap()
-                          .with_debug_name("mk_nav"));
-
-    if (button(context, mk(bar.ent(), 0),
-               ComponentConfig{}
-                   .with_label("BACK")
-                   .with_size(ComponentSize{h720(120.f), h720(46.f)})
-                   .with_custom_background(panel_hi)
-                   .with_custom_text_color(ink)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font_size(h720(19.f))
-                   .with_corner_radius(10.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name(back_name))) {
-      phase = back_to;
-    }
-
-    div(context, mk(bar.ent(), 1),
-        ComponentConfig{}
-            .with_label(hint)
-            .with_size(ComponentSize{expand(), h720(28.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(ink_dim)
-            .with_font_size(h720(15.f))
-            .with_debug_name("mk_nav_hint"));
-
-    if (button(context, mk(bar.ent(), 2),
-               ComponentConfig{}
-                   .with_label(next_label)
-                   .with_size(ComponentSize{h720(240.f), h720(46.f)})
-                   .with_custom_background(go_green)
-                   .with_custom_text_color(deep)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font("Fredoka", h720(24.f))
-                   .with_corner_radius(10.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name(next_name))) {
-      on_next();
-    }
-  }
-
-  void build_cup(afterhours::Entity &entity, UIContext<InputAction> &context) {
-    auto root = page(context, entity, "mk_cup_page");
-    header(context, root.ent(), 0, "SELECT CUP",
-           fmt::format("{}  -  {}", drivers[(size_t)driver_idx].name,
-                       karts[(size_t)kart_idx].name));
-
-    auto body = hstack(context, mk(root.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), expand()})
-                           .with_gap(h720(12.f))
-                           .with_no_wrap()
-                           .with_debug_name("mk_cup_body"));
-
-    auto cup_grid = grid(context, mk(body.ent(), 0),
-                         GridConfig{}
-                             .with_rows(2)
-                             .with_cols(2)
-                             .with_row_height(h720(250.f))
-                             .with_gap(h720(10.f)),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{expand(1.4f), percent(1.f)})
-                             .with_custom_background(panel)
-                             .with_padding(Spacing::sm)
-                             .with_corner_radius(12.f)
-                             .with_no_wrap()
-                             .with_debug_name("mk_cup_grid"));
-
-    for (int i = 0; i < (int)cups.size(); i++) {
-      afterhours::OptEntity row_opt = grid_row(cup_grid, i / 2);
-      if (!row_opt.valid())
-        continue;
-      afterhours::Entity &row = row_opt.asE();
-      const Cup &c = cups[(size_t)i];
-      const bool on = i == cup_idx;
-
-      auto card =
-          button(context, mk(row, i % 2),
-                 ComponentConfig{}
-                     .with_size(ComponentSize{grid_track(cup_grid, i % 2).x_axis,
-                                              h720(246.f)})
-                     .with_custom_background(on ? panel_hi : panel)
-                     .with_border(on ? c.color : line, on ? 3.f : 1.f)
-                     .with_corner_radius(12.f)
-                     .with_padding(Spacing::xs)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name(fmt::format("mk_cup_{}", i)));
-      if (card)
-        cup_idx = i;
-
-      const afterhours::Color cc = c.color;
-      auto head = hstack(context, mk(card.ent(), 0),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(1.f), h720(36.f)})
-                             .with_align_items(AlignItems::Center)
-                             .with_gap(h720(8.f))
-                             .with_no_wrap()
-                             .with_ignore_pointer_events());
-
-      div(context, mk(head.ent(), 0),
-          ComponentConfig{}
-              .with_size(ComponentSize{h720(30.f), h720(30.f)})
-              .with_background(Theme::Usage::None)
-              .with_on_draw_fg([cc](RectangleType rr) {
-                const afterhours::Vector2Type ctr{rr.x + rr.width * 0.5f,
-                                                  rr.y + rr.height * 0.5f};
-                const float rad = std::min(rr.width, rr.height) * 0.46f;
-                afterhours::draw_poly(ctr, 6, rad, 0.f, cc);
-              }));
-
-      div(context, mk(head.ent(), 1),
-          ComponentConfig{}
-              .with_label(c.name)
-              .with_size(ComponentSize{expand(), h720(30.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(on ? ink : ink_dim)
-              .with_font("Fredoka", h720(21.f)));
-
-      auto cols = hstack(context, mk(card.ent(), 1),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(1.f), expand()})
-                             .with_gap(h720(6.f))
-                             .with_no_wrap()
-                             .with_ignore_pointer_events());
-
-      auto list = vstack(context, mk(cols.ent(), 0),
-                         ComponentConfig{}
-                             .with_size(ComponentSize{percent(0.58f),
-                                                      percent(1.f)})
-                             .with_gap(h720(2.f))
-                             .with_no_wrap()
-                             .with_ignore_pointer_events());
-
-      for (int t = 0; t < kCupRaces; t++) {
-        div(context, mk(list.ent(), t),
-            ComponentConfig{}
-                .with_label(fmt::format("{}. {}", t + 1, c.tracks[(size_t)t]))
-                .with_size(ComponentSize{percent(1.f), expand()})
-                .with_background(Theme::Usage::None)
-                .with_custom_text_color(on ? ink : ink_dim)
-                .with_font_size(h720(17.f))
-                .with_ignore_pointer_events());
-      }
-
-      div(context, mk(cols.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{percent(0.4f), percent(1.f)})
-              .with_background(Theme::Usage::None)
-              .with_ignore_pointer_events()
-              .with_on_draw_fg([cc, i](RectangleType rr) {
-                draw_track(TrackShape::for_track(i, 0), rr,
-                           afterhours::Color{40, 50, 80, 255}, cc);
-              }));
-    }
-
-    auto side = vstack(context, mk(body.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{expand(1.f), percent(1.f)})
-                           .with_custom_background(panel)
-                           .with_padding(Spacing::sm)
-                           .with_gap(h720(8.f))
-                           .with_corner_radius(12.f)
-                           .with_no_wrap()
-                           .with_debug_name("mk_cup_side"));
-
-    div(context, mk(side.ent(), 0),
-        ComponentConfig{}
-            .with_label("RACE 1 OF 4")
-            .with_size(ComponentSize{percent(1.f), h720(28.f)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(ink_dim)
-            .with_font_size(h720(15.f)));
-
-    div(context, mk(side.ent(), 1),
-        ComponentConfig{}
-            .with_label(cups[(size_t)cup_idx].tracks[0])
-            .with_size(ComponentSize{percent(1.f), h720(40.f)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(gold)
-            .with_font("Fredoka", h720(26.f))
-            .with_debug_name("mk_cup_first_track"));
-
-    div(context, mk(side.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), expand()})
-            .with_custom_background(deep)
-            .with_corner_radius(10.f)
-            .with_on_draw_fg([cup = cup_idx](RectangleType rr) {
-              draw_track(TrackShape::for_track(cup, 0), rr,
-                         afterhours::Color{70, 84, 128, 255},
-                         afterhours::Color{120, 136, 186, 255});
-            })
-            .with_debug_name("mk_cup_map"));
-
-    nav_bar(context, root.ent(), 2, "mk_cup_back", Phase::Driver,
-            "START GRAND PRIX", "mk_cup_start",
-            "Arrows pick a cup   Enter starts the Grand Prix   Esc goes back",
-            [this]() { start_cup(); });
-  }
-
   static void draw_track(const TrackShape &shape, RectangleType rr,
                          afterhours::Color edge, afterhours::Color road) {
     const int steps = 160;
@@ -1317,611 +740,6 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
         afterhours::Color{235, 240, 250, 255});
   }
 
-  void build_race(afterhours::Entity &entity, UIContext<InputAction> &context) {
-    auto root = vstack(context, mk(entity),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), percent(1.f)})
-                           .with_custom_background(bg)
-                           .with_corner_radius(0.f)
-                           .with_no_wrap()
-                           .with_debug_name("mk_race_page"));
-
-    auto content = vstack(context, mk(root.ent(), 0),
-                          ComponentConfig{}
-                              .with_size(ComponentSize{percent(1.f),
-                                                       percent(1.f)})
-                              .with_background(Theme::Usage::None)
-                              .with_padding(Spacing::md)
-                              .with_gap(h720(12.f))
-                              .with_no_wrap()
-                              .with_debug_name("mk_race_content"));
-
-    const Racer &me = racers[0];
-    const auto order = running_order();
-    const int place = position_of(0);
-    const int lap = std::min(kLaps, (int)me.prog + 1);
-
-    auto top = hstack(context, mk(content.ent(), 0),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(64.f)})
-                          .with_align_items(AlignItems::Center)
-                          .with_gap(h720(10.f))
-                          .with_no_wrap()
-                          .with_debug_name("mk_race_top"));
-
-    div(context, mk(top.ent(), 0),
-        ComponentConfig{}
-            .with_label(ordinal(place))
-            .with_size(ComponentSize{strict_w1280(110.f), h720(58.f)})
-            .with_custom_background(place == 1 ? gold : panel_hi)
-            .with_custom_text_color(place == 1 ? deep : ink)
-            .with_alignment(TextAlignment::Center)
-            .with_font("Fredoka", h720(34.f))
-            .with_corner_radius(10.f)
-            .with_debug_name("mk_place"));
-
-    div(context, mk(top.ent(), 1),
-        ComponentConfig{}
-            .with_label(fmt::format("LAP {}/{}", lap, kLaps))
-            .with_size(ComponentSize{strict_w1280(130.f), h720(58.f)})
-            .with_custom_background(panel_hi)
-            .with_custom_text_color(ink)
-            .with_alignment(TextAlignment::Center)
-            .with_font("Fredoka", h720(24.f))
-            .with_corner_radius(10.f)
-            .with_debug_name("mk_lap"));
-
-    div(context, mk(top.ent(), 2),
-        ComponentConfig{}
-            .with_label(fmt::format("{}  -  {}", track_name(),
-                                    cups[(size_t)cup_idx].name))
-            .with_size(ComponentSize{expand(), h720(40.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(ink_dim)
-            .with_font_size(h720(18.f))
-            .with_debug_name("mk_track_name"));
-
-    div(context, mk(top.ent(), 3),
-        ComponentConfig{}
-            .with_label(fmt_time(race_time))
-            .with_size(ComponentSize{strict_w1280(150.f), h720(58.f)})
-            .with_custom_background(panel_hi)
-            .with_custom_text_color(ink)
-            .with_alignment(TextAlignment::Center)
-            .with_font_size(h720(22.f))
-            .with_debug_name("mk_clock"));
-
-    if (button(context, mk(top.ent(), 4),
-               ComponentConfig{}
-                   .with_label("II")
-                   .with_size(ComponentSize{strict_w1280(56.f), h720(46.f)})
-                   .with_custom_background(panel_hi)
-                   .with_custom_text_color(ink)
-                   .with_alignment(TextAlignment::Center)
-                   .with_corner_radius(10.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name("mk_pause"))) {
-      paused = !paused;
-    }
-
-    auto body = hstack(context, mk(content.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), expand()})
-                           .with_gap(h720(12.f))
-                           .with_no_wrap()
-                           .with_debug_name("mk_race_body"));
-
-    auto board = vstack(context, mk(body.ent(), 0),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(0.26f),
-                                                     percent(1.f)})
-                            .with_custom_background(panel)
-                            .with_padding(Spacing::xs)
-                            .with_gap(h720(4.f))
-                            .with_corner_radius(12.f)
-                            .with_no_wrap()
-                            .with_debug_name("mk_board"));
-
-    for (int i = 0; i < kRacers; i++) {
-      const int who = order[(size_t)i];
-      const Racer &r = racers[(size_t)who];
-      const Driver &d = drivers[(size_t)r.driver];
-      const bool mine = who == 0;
-
-      auto row = hstack(context, mk(board.ent(), i),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), h720(32.f)})
-                            .with_custom_background(mine ? panel_hi : panel)
-                            .with_align_items(AlignItems::Center)
-                            .with_gap(h720(6.f))
-                            .with_padding(Padding::all(h720(3.f)))
-                            .with_corner_radius(6.f)
-                            .with_no_wrap()
-                            .with_debug_name(fmt::format("mk_row_{}", i)));
-
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(fmt::format("{}", i + 1))
-              .with_size(ComponentSize{strict_w1280(24.f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Center)
-              .with_custom_text_color(i == 0 ? gold : ink_dim)
-              .with_font_size(h720(16.f)));
-
-      const afterhours::Color dc = d.color;
-      div(context, mk(row.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{strict_w1280(16.f), h720(16.f)})
-              .with_background(Theme::Usage::None)
-              .with_on_draw_fg([dc](RectangleType rr) {
-                afterhours::draw_circle_v(
-                    {rr.x + rr.width * 0.5f, rr.y + rr.height * 0.5f},
-                    std::min(rr.width, rr.height) * 0.5f, dc);
-              }));
-
-      div(context, mk(row.ent(), 2),
-          ComponentConfig{}
-              .with_label(mine ? fmt::format("{} (you)", d.name) : d.name)
-              .with_size(ComponentSize{expand(), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(mine ? ink : ink_dim)
-              .with_font_size(h720(16.f)));
-
-      const Racer &leader = racers[(size_t)order[0]];
-      std::string gap = "LEADER";
-      if (r.finish_time >= 0.f)
-        gap = fmt_time(r.finish_time);
-      else if (i > 0)
-        gap = fmt::format("+{:.1f}s",
-                          (leader.prog - r.prog) / std::max(r.speed, 0.01f));
-
-      div(context, mk(row.ent(), 3),
-          ComponentConfig{}
-              .with_label(gap)
-              .with_size(ComponentSize{strict_w1280(86.f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(ink_dim)
-              .with_font_size(h720(15.f)));
-    }
-
-    div(context, mk(board.ent(), 8),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), expand()})
-            .with_background(Theme::Usage::None));
-
-    static constexpr std::array<const char *, 6> kInfoLabels{
-        "ENGINE", "DRIVER", "KART", "ITEM", "ENTER", "SHIFT"};
-    const std::array<std::string, 6> info{
-        kEngineNames[(size_t)engine], drivers[(size_t)me.driver].name,
-        karts[(size_t)kart_idx].name,  item_name(me.item),
-        "drift",                       "use item"};
-
-    for (int i = 0; i < 6; i++) {
-      auto row = hstack(context, mk(board.ent(), 9 + i),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), h720(26.f)})
-                            .with_align_items(AlignItems::Center)
-                            .with_no_wrap());
-
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(kInfoLabels[(size_t)i])
-              .with_size(ComponentSize{percent(0.5f), h720(22.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(afterhours::Color{112, 126, 164, 255})
-              .with_font_size(h720(14.f)));
-
-      div(context, mk(row.ent(), 1),
-          ComponentConfig{}
-              .with_label(info[(size_t)i])
-              .with_size(ComponentSize{percent(0.5f), h720(22.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(ink_dim)
-              .with_font_size(h720(15.f)));
-    }
-
-    auto mid = vstack(context, mk(body.ent(), 1),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(0.725f),
-                                                   percent(1.f)})
-                          .with_gap(h720(10.f))
-                          .with_no_wrap()
-                          .with_debug_name("mk_race_mid"));
-
-    std::array<std::pair<float, afterhours::Color>, kRacers> dots{};
-    for (int i = 0; i < kRacers; i++)
-      dots[(size_t)i] = {racers[(size_t)i].prog,
-                         drivers[(size_t)racers[(size_t)i].driver].color};
-
-    auto map = vstack(context, mk(mid.ent(), 0),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), expand()})
-                          .with_background(Theme::Usage::None)
-                          .with_justify_content(JustifyContent::Center)
-                          .with_align_items(AlignItems::Center)
-                          .with_no_wrap()
-                          .with_on_draw_bg([this, dots,
-                                            shape = track_shape()](
-                                               RectangleType rr) {
-                            afterhours::draw_rectangle_rounded(rr, 0.06f, 8,
-                                                               deep);
-                            const RectangleType inner{
-                                rr.x + rr.width * 0.05f,
-                                rr.y + rr.height * 0.07f, rr.width * 0.9f,
-                                rr.height * 0.86f};
-                            draw_track(shape, inner,
-                                       afterhours::Color{54, 66, 104, 255},
-                                       afterhours::Color{96, 112, 158, 255});
-                            for (size_t i = 0; i < dots.size(); i++) {
-                              const auto p =
-                                  shape.map(dots[i].first, inner);
-                              afterhours::draw_circle_v(
-                                  p, 9.f, afterhours::Color{0, 0, 0, 140});
-                              afterhours::draw_circle_v(p, 7.f, dots[i].second);
-                            }
-                            const auto me_pt =
-                                shape.map(dots[0].first, inner);
-                            afterhours::draw_circle_lines(
-                                (int)me_pt.x, (int)me_pt.y, 12.f,
-                                afterhours::Color{255, 255, 255, 220});
-                          })
-                          .with_debug_name("mk_minimap"));
-
-    div(context, mk(map.ent(), 0),
-        ComponentConfig{}
-            .with_label(fmt::format("{}", lap))
-            .with_size(ComponentSize{percent(1.f), h720(110.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(afterhours::Color{58, 72, 112, 255})
-            .with_font("BlackOpsOne", h720(96.f))
-            .with_ignore_pointer_events()
-            .with_debug_name("mk_infield_lap"));
-
-    div(context, mk(map.ent(), 1),
-        ComponentConfig{}
-            .with_label(fmt::format("LAP OF {}", kLaps))
-            .with_size(ComponentSize{percent(1.f), h720(28.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(afterhours::Color{52, 64, 100, 255})
-            .with_letter_spacing(4.f)
-            .with_font_size(h720(17.f))
-            .with_ignore_pointer_events());
-
-    auto ctl = hstack(context, mk(mid.ent(), 1),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(116.f)})
-                          .with_custom_background(panel)
-                          .with_align_items(AlignItems::Center)
-                          .with_justify_content(JustifyContent::SpaceBetween)
-                          .with_padding(Spacing::sm)
-                          .with_corner_radius(12.f)
-                          .with_no_wrap()
-                          .with_debug_name("mk_controls"));
-
-    const float top_now = top_speed_for(me);
-    const float ratio =
-        top_now > 0.f ? std::clamp(me.speed / (top_now * 1.4f), 0.f, 1.f) : 0.f;
-
-    circular_progress(context, mk(ctl.ent(), 0), ratio,
-                      ComponentConfig{}
-                          .with_size(ComponentSize{strict_w1280(98.f), h720(98.f)})
-                          .with_label(fmt::format("{}", (int)(me.speed * 340.f)))
-                          .with_custom_background(me.boost > 0.f
-                                                      ? afterhours::Color{252,
-                                                                          150,
-                                                                          70,
-                                                                          255}
-                                                      : go_green)
-                          .with_custom_text_color(ink)
-                          .with_font("Fredoka", h720(22.f))
-                          .with_border(afterhours::Color{52, 64, 104, 255}, 11.f)
-                          .with_debug_name("mk_speedo"));
-
-    auto drift_col =
-        vstack(context, mk(ctl.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{strict_w1280(280.f), h720(98.f)})
-                   .with_gap(h720(8.f))
-                   .with_no_wrap()
-                   .with_debug_name("mk_drift_col"));
-
-    const int tier = drift_charge >= 2.4f   ? 3
-                     : drift_charge >= 1.5f ? 2
-                     : drift_charge >= 0.7f ? 1
-                                            : 0;
-    const std::string drift_label =
-        drifting ? fmt::format("RELEASE  (tier {})", tier) : "DRIFT";
-
-    if (button(context, mk(drift_col.ent(), 0),
-               ComponentConfig{}
-                   .with_label(drift_label)
-                   .with_size(ComponentSize{percent(1.f), h720(62.f)})
-                   .with_custom_background(drifting ? gold : panel_hi)
-                   .with_custom_text_color(drifting ? deep : ink)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font("Fredoka", h720(22.f))
-                   .with_corner_radius(10.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name("mk_drift"))) {
-      if (drifting) {
-        drifting = false;
-        release_drift();
-      } else {
-        drifting = true;
-      }
-    }
-
-    progress_bar(context, mk(drift_col.ent(), 1),
-                 std::clamp(drift_charge / 2.4f, 0.f, 1.f),
-                 ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.f), h720(16.f)})
-                     .with_corner_radius(8.f)
-                     .with_debug_name("mk_charge"),
-                 ProgressBarLabelStyle::None);
-
-    if (button(context, mk(ctl.ent(), 2),
-               ComponentConfig{}
-                   .with_label(item_name(me.item))
-                   .with_size(ComponentSize{strict_w1280(150.f), h720(74.f)})
-                   .with_custom_background(item_color(me.item))
-                   .with_custom_text_color(deep)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font("Fredoka", h720(24.f))
-                   .with_corner_radius(12.f)
-                   .with_disabled(me.item == Item::None)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name("mk_item"))) {
-      use_item(0);
-    }
-
-    div(context, mk(ctl.ent(), 3),
-        ComponentConfig{}
-            .with_label(fmt::format("COINS {}", me.coins))
-            .with_size(ComponentSize{strict_w1280(120.f), h720(48.f)})
-            .with_custom_background(panel_hi)
-            .with_custom_text_color(gold)
-            .with_alignment(TextAlignment::Center)
-            .with_font_size(h720(18.f))
-            .with_corner_radius(10.f)
-            .with_debug_name("mk_coins"));
-
-    if (countdown > 0.f) {
-      const int n = (int)std::ceil(countdown - 0.6f);
-      div(context, mk(root.ent(), 2),
-          ComponentConfig{}
-              .with_label(n <= 0 ? "GO!" : fmt::format("{}", n))
-              .with_size(ComponentSize{screen_pct(1.f), screen_pct(1.f)})
-              .with_absolute_position(0.f, 0.f)
-              .with_custom_background(afterhours::Color{6, 9, 20, 150})
-              .with_custom_text_color(n <= 0 ? go_green : gold)
-              .with_alignment(TextAlignment::Center)
-              .with_font("BlackOpsOne", h720(120.f))
-              .with_corner_radius(0.f)
-              .with_overlay(2)
-              .with_ignore_pointer_events()
-              .with_debug_name("mk_countdown"));
-    } else if (paused) {
-      const float sw = (float)Settings::get().get_screen_width();
-      const float sh = (float)Settings::get().get_screen_height();
-      const float sheet_w = sw * (420.f / 1280.f);
-      const float sheet_h = sh * (270.f / 720.f);
-      auto sheet = vstack(context, mk(root.ent(), 3),
-                          ComponentConfig{}
-                              .with_size(ComponentSize{strict_w1280(420.f),
-                                                       h720(270.f)})
-                              .with_absolute_position((sw - sheet_w) * 0.5f,
-                                                      (sh - sheet_h) * 0.5f)
-                              .with_custom_background(panel)
-                              .with_border(gold, 3.f)
-                              .with_padding(Spacing::md)
-                              .with_gap(h720(10.f))
-                              .with_corner_radius(14.f)
-                              .with_overlay(2)
-                              .with_no_wrap()
-                              .with_debug_name("mk_pause_sheet"));
-
-      div(context, mk(sheet.ent(), 0),
-          ComponentConfig{}
-              .with_label("PAUSED")
-              .with_size(ComponentSize{percent(1.f), h720(44.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Center)
-              .with_custom_text_color(gold)
-              .with_font("Fredoka", h720(32.f)));
-
-      if (button(context, mk(sheet.ent(), 1),
-                 ComponentConfig{}
-                     .with_label("RESUME")
-                     .with_size(ComponentSize{percent(1.f), h720(46.f)})
-                     .with_custom_background(go_green)
-                     .with_custom_text_color(deep)
-                     .with_alignment(TextAlignment::Center)
-                     .with_font_size(h720(20.f))
-                     .with_corner_radius(10.f)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name("mk_resume"))) {
-        paused = false;
-      }
-
-      if (button(context, mk(sheet.ent(), 2),
-                 ComponentConfig{}
-                     .with_label("RESTART RACE")
-                     .with_size(ComponentSize{percent(1.f), h720(46.f)})
-                     .with_custom_background(panel_hi)
-                     .with_custom_text_color(ink)
-                     .with_alignment(TextAlignment::Center)
-                     .with_font_size(h720(20.f))
-                     .with_corner_radius(10.f)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name("mk_restart"))) {
-        start_race();
-      }
-
-      if (button(context, mk(sheet.ent(), 3),
-                 ComponentConfig{}
-                     .with_label("QUIT TO TITLE")
-                     .with_size(ComponentSize{percent(1.f), h720(46.f)})
-                     .with_custom_background(panel_hi)
-                     .with_custom_text_color(ink)
-                     .with_alignment(TextAlignment::Center)
-                     .with_font_size(h720(20.f))
-                     .with_corner_radius(10.f)
-                     .with_click_activation(ClickActivationMode::Release)
-                     .with_debug_name("mk_quit"))) {
-        phase = Phase::Title;
-      }
-    }
-  }
-
-  void build_results(afterhours::Entity &entity,
-                     UIContext<InputAction> &context) {
-    auto root = page(context, entity, "mk_results_page");
-    header(context, root.ent(), 0, "RACE RESULTS",
-           fmt::format("{}  -  race {} of {}", track_name(), race_in_cup + 1,
-                       kCupRaces));
-
-    auto body = hstack(context, mk(root.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), expand()})
-                           .with_gap(h720(12.f))
-                           .with_no_wrap()
-                           .with_debug_name("mk_results_body"));
-
-    auto table = vstack(context, mk(body.ent(), 0),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{expand(1.7f), percent(1.f)})
-                            .with_custom_background(panel)
-                            .with_padding(Spacing::sm)
-                            .with_gap(h720(4.f))
-                            .with_corner_radius(12.f)
-                            .with_no_wrap()
-                            .with_debug_name("mk_results_table"));
-
-    for (int i = 0; i < kRacers; i++) {
-      const int who = last_order[(size_t)i];
-      const Racer &r = racers[(size_t)who];
-      const Driver &d = drivers[(size_t)r.driver];
-      const bool mine = who == 0;
-
-      auto row = hstack(context, mk(table.ent(), i),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), h720(42.f)})
-                            .with_custom_background(mine ? panel_hi : panel)
-                            .with_align_items(AlignItems::Center)
-                            .with_gap(h720(8.f))
-                            .with_padding(Padding::all(h720(4.f)))
-                            .with_corner_radius(8.f)
-                            .with_no_wrap()
-                            .with_debug_name(fmt::format("mk_res_{}", i)));
-
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(ordinal(i + 1))
-              .with_size(ComponentSize{h720(58.f), h720(30.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(i == 0 ? gold : ink_dim)
-              .with_font("Fredoka", h720(20.f)));
-
-      const afterhours::Color dc = d.color;
-      div(context, mk(row.ent(), 1),
-          ComponentConfig{}
-              .with_size(ComponentSize{h720(20.f), h720(20.f)})
-              .with_background(Theme::Usage::None)
-              .with_on_draw_fg([dc](RectangleType rr) {
-                afterhours::draw_circle_v(
-                    {rr.x + rr.width * 0.5f, rr.y + rr.height * 0.5f},
-                    std::min(rr.width, rr.height) * 0.5f, dc);
-              }));
-
-      div(context, mk(row.ent(), 2),
-          ComponentConfig{}
-              .with_label(mine ? fmt::format("{} (you)", d.name) : d.name)
-              .with_size(ComponentSize{expand(), h720(30.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(ink)
-              .with_font_size(h720(19.f)));
-
-      div(context, mk(row.ent(), 3),
-          ComponentConfig{}
-              .with_label(fmt_time(r.finish_time))
-              .with_size(ComponentSize{h720(120.f), h720(30.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(ink_dim)
-              .with_font_size(h720(17.f)));
-
-      div(context, mk(row.ent(), 4),
-          ComponentConfig{}
-              .with_label(fmt::format("+{}", last_points[(size_t)who]))
-              .with_size(ComponentSize{h720(56.f), h720(30.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(gold)
-              .with_font("Fredoka", h720(20.f)));
-    }
-
-    auto side = vstack(context, mk(body.ent(), 1),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{expand(1.f), percent(1.f)})
-                           .with_custom_background(panel)
-                           .with_padding(Spacing::sm)
-                           .with_gap(h720(4.f))
-                           .with_corner_radius(12.f)
-                           .with_no_wrap()
-                           .with_debug_name("mk_standings"));
-
-    div(context, mk(side.ent(), 0),
-        ComponentConfig{}
-            .with_label(fmt::format("{} STANDINGS", cups[(size_t)cup_idx].name))
-            .with_size(ComponentSize{percent(1.f), h720(32.f)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(gold)
-            .with_font("Fredoka", h720(20.f)));
-
-    auto cup_order = standings_order();
-    for (int i = 0; i < kRacers; i++) {
-      const int who = cup_order[(size_t)i];
-      const Driver &d = drivers[(size_t)racers[(size_t)who].driver];
-      auto row = hstack(context, mk(side.ent(), 1 + i),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), h720(30.f)})
-                            .with_custom_background(who == 0 ? panel_hi : panel)
-                            .with_align_items(AlignItems::Center)
-                            .with_gap(h720(6.f))
-                            .with_padding(Padding::all(h720(2.f)))
-                            .with_corner_radius(6.f)
-                            .with_no_wrap());
-
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(d.name)
-              .with_size(ComponentSize{expand(), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(who == 0 ? ink : ink_dim)
-              .with_font_size(h720(17.f)));
-
-      div(context, mk(row.ent(), 1),
-          ComponentConfig{}
-              .with_label(fmt::format("{}", points[(size_t)who]))
-              .with_size(ComponentSize{h720(44.f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(gold)
-              .with_font("Fredoka", h720(19.f)));
-    }
-
-    const bool last = race_in_cup + 1 >= kCupRaces;
-    nav_bar(context, root.ent(), 2, "mk_results_quit", Phase::Title,
-            last ? "VIEW TROPHY" : "NEXT RACE", "mk_results_next",
-            "Enter continues   Esc quits to the title",
-            [this]() { advance_race(); });
-  }
-
   std::array<int, kRacers> standings_order() const {
     std::array<int, kRacers> order{};
     for (int i = 0; i < kRacers; i++)
@@ -1932,153 +750,287 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     return order;
   }
 
-  void build_trophy(afterhours::Entity &entity,
-                    UIContext<InputAction> &context) {
-    auto root = page(context, entity, "mk_trophy_page");
+  void build_title(afterhours::Entity &entity, UIContext<InputAction> &c) {
+    auto root = page(c, entity, "mk_title_page", 1);
+    auto logo = div(c, mk(root.ent(), 0), box(67, 77, 530, 259)
+        .with_styled_label({{"MARLO ", white}, {"KART", gold}})
+        .with_font("FredokaMockBold", h720(132))
+        .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Left)
+        .with_text_stroke(ink, 3 * scale).with_text_shadow(ink, 5 * scale, 7 * scale)
+        .with_ignore_pointer_events().with_debug_name("mk_logo"));
+    logo.ent().addComponentIfMissing<HasUIModifiers>().rotation = -5.f;
+    label(c, root.ent(), 1, "AFTERHOURS GRAND PRIX", 79, 326, 490, 49, 15, white);
+    for (int i = 0; i < 3; ++i)
+      if (action(c, root.ent(), 10 + i, kEngineNames[i], 72 + i * 124, 408, 114, 59,
+                 "mk_engine_" + std::to_string(i), engine == i ? gold : afterhours::Color{28, 92, 117, 255},
+                 engine == i ? ink : white, 22)) engine = i;
+    if (action(c, root.ent(), 20, "START YOUR ENGINES", 72, 485, 366, 83,
+               "mk_start", gold, ink, 36)) phase = Phase::Driver;
+    label(c, root.ent(), 21, "Four tracks. Eight racers. One trophy.", 73, 576, 366, 32, 14, white, "", TextAlignment::Center);
+    label(c, root.ent(), 22, "Arrows: engine class     Enter: start", 73, 632, 500, 32, 12, white);
+    image(c, root.ent(), 23, 13 + driver_idx, 613, 208, 645, 450, -8);
+  }
+
+  void build_driver(afterhours::Entity &entity, UIContext<InputAction> &c) {
+    auto root = page(c, entity, "mk_driver_page");
+    header(c, root.ent(), "SELECT DRIVER", fmt::format("{}  -  Grand Prix", kEngineNames[engine]));
+    for (int i = 0; i < kRacers; ++i) {
+      const float x = 40 + (i % 4) * 148, y = 116 + (i / 4) * 164;
+      const bool selected = driver_idx == i;
+      const bool cursor = selected && nav_row < 2;
+      if (button(c, mk(root.ent(), 10 + i), box(x, y, 139, 155)
+          .with_custom_background(cursor ? white : afterhours::Color{155, 211, 237, 255})
+          .with_border(selected ? gold : afterhours::Color{153, 211, 255, 255}, (selected ? 5 : 2) * scale)
+          .with_corner_radius(4 * scale).with_click_activation(ClickActivationMode::Release)
+          .with_debug_name("mk_driver_" + std::to_string(i)))) {
+        driver_idx = i; nav_row = i / 4;
+      }
+      image(c, root.ent(), 30 + i, 5 + i, x + 12, y + 3, 115, 115);
+      plate(c, root.ent(), 250 + i, x + 4, y + 125, 131, 25, {217, 242, 250, 255}, transparent, 0);
+      label(c, root.ent(), 50 + i, drivers[i].name, x + 6, y + 123, 127, 29,
+            16, ink, "", TextAlignment::Center);
+    }
+    label(c, root.ent(), 70, "CHOOSE YOUR VEHICLE", 40, 449, 590, 33, 16, white);
+    for (int i = 0; i < 4; ++i) {
+      const float x = 40 + i * 148;
+      const bool selected = kart_idx == i;
+      const bool cursor = selected && nav_row == 2;
+      if (button(c, mk(root.ent(), 80 + i), box(x, 488, 139, 110)
+          .with_custom_background(cursor ? white : selected ? gold : afterhours::Color{228, 244, 250, 255})
+          .with_border(selected ? gold : afterhours::Color{153, 211, 255, 255}, (selected ? 5 : 2) * scale)
+          .with_corner_radius(3 * scale).with_click_activation(ClickActivationMode::Release)
+          .with_debug_name("mk_kart_" + std::to_string(i)))) { kart_idx = i; nav_row = 2; }
+      image(c, root.ent(), 90 + i, 13 + i, x + 10, 490, 120, 75);
+      label(c, root.ent(), 100 + i, karts[i].name, x + 4, 563, 131, 32,
+            15, ink, "", TextAlignment::Center);
+    }
+    image(c, root.ent(), 120, 4, 648, 366, 592, 112);
+    image(c, root.ent(), 121, 13 + driver_idx, 729, 112, 430, 300, -8);
+    label(c, root.ent(), 122, fmt::format("{} + {}", drivers[driver_idx].name, karts[kart_idx].name),
+          656, 424, 581, 53, 35, white, "mk_loadout", TextAlignment::Center, "FredokaMockBold");
+    constexpr std::array<const char *, 4> stats{"SPEED", "ACCELERATION", "HANDLING", "WEIGHT"};
+    for (int i = 0; i < 4; ++i) {
+      label(c, root.ent(), 130 + i, stats[i], 680, 487 + i * 34, 173, 29, 17, white);
+      for (int j = 0; j < 10; ++j)
+        div(c, mk(root.ent(), 150 + i * 10 + j), box(864 + j * 31, 494 + i * 34, 26, 16)
+            .with_custom_background(stat(i) * 10 > j ? gold : afterhours::Color{21, 76, 159, 255})
+            .with_corner_radius(3 * scale).with_ignore_pointer_events());
+    }
+    footer(c, root.ent(), "Arrows: choose driver / ride     Enter: confirm");
+    if (action(c, root.ent(), 200, "BACK", 40, 664, 152, 44, "mk_driver_back", white, ink, 20)) phase = Phase::Title;
+    if (action(c, root.ent(), 201, "LET'S RACE!", 1000, 663, 239, 46, "mk_driver_next", gold, ink, 23)) phase = Phase::Cup;
+  }
+
+  void build_cup(afterhours::Entity &entity, UIContext<InputAction> &c) {
+    auto root = page(c, entity, "mk_cup_page");
+    header(c, root.ent(), "SELECT CUP", fmt::format("{}  -  {}", drivers[driver_idx].name, karts[kart_idx].name));
+    for (int i = 0; i < 4; ++i) {
+      const auto &cup = cups[i];
+      const float x = 40 + (i % 2) * 309, y = 115 + (i / 2) * 248;
+      const bool selected = cup_idx == i;
+      if (button(c, mk(root.ent(), 10 + i), box(x, y, 289, 229)
+          .with_custom_background(selected ? afterhours::Color{255, 238, 166, 255} : afterhours::Color{192, 226, 246, 255})
+          .with_corner_radius(15 * scale).with_border(selected ? gold : afterhours::Color{136, 205, 255, 255},
+              (selected ? 5 : 2) * scale).with_click_activation(ClickActivationMode::Release)
+          .with_debug_name("mk_cup_" + std::to_string(i)))) cup_idx = i;
+      image(c, root.ent(), 20 + i, 21, x + 18, y + 7, 66, 66);
+      label(c, root.ent(), 30 + i, cup.name, x + 92, y + 24, 185, 39, 25, ink);
+      for (int j = 0; j < kCupRaces; ++j)
+        label(c, root.ent(), 40 + i * 4 + j, cup.tracks[j], x + 27, y + 80 + j * 33, 244, 30,
+              19, ink);
+    }
+    const auto &cup = cups[cup_idx];
+    label(c, root.ent(), 70, cup.name, 700, 120, 530, 65, 43, white, "mk_cup_preview_title", TextAlignment::Center, "FredokaMockBold");
+    label(c, root.ent(), 71, "4 tracks  /  3 laps each", 706, 188, 520, 36, 22, white, "", TextAlignment::Center);
+    auto map = div(c, mk(root.ent(), 72), box(711, 251, 512, 242)
+        .with_custom_background({116, 185, 82, 255}).with_border(white, 5 * scale)
+        .with_corner_radius(16 * scale).with_ignore_pointer_events()
+        .with_on_draw_fg([shape = TrackShape::for_track(cup_idx, 0)](RectangleType r) {
+          RectangleType path{r.x + r.width * .12f, r.y + r.height * .16f, r.width * .76f, r.height * .68f};
+          draw_track(shape, path, {250, 250, 238, 255}, {78, 83, 104, 255});
+        }).with_debug_name("mk_cup_map"));
+    label(c, root.ent(), 73, cup.tracks[0], 707, 510, 520, 44, 27, white, "mk_preview_track", TextAlignment::Center);
+    label(c, root.ent(), 74, "Every race counts toward the cup!", 707, 556, 520, 37, 20, white, "", TextAlignment::Center);
+    footer(c, root.ent(), "Arrows: choose cup     Enter: start Grand Prix");
+    if (action(c, root.ent(), 200, "BACK", 40, 664, 152, 44, "mk_cup_back", white, ink, 20)) phase = Phase::Driver;
+    if (action(c, root.ent(), 201, "START GRAND PRIX", 969, 663, 270, 46, "mk_cup_start", gold, ink, 21)) start_cup();
+  }
+
+  void build_race(afterhours::Entity &entity, UIContext<InputAction> &c) {
+    auto root = page(c, entity, "mk_race_page", 1);
+    const Racer &me = racers[0];
+    div(c, mk(root.ent(), 1), box(0, 0, 1280, 654).with_ignore_pointer_events()
+        .with_on_draw_fg([progress = me.prog, curve = track_shape().is_corner(me.prog)](RectangleType r) {
+          const float s = r.width / 1280.f;
+          for (float y = 299; y < 654; y += 2) {
+            const float depth = (y - 299) / 355.f;
+            const float bend = curve ? 42.f * std::sin(depth * 3.14159265f) : 0.f;
+            const float center = 836 - depth * 200 + bend;
+            const float half = 18 + depth * depth * 320;
+            const float edge = 3 + depth * 17;
+            const bool stripe = static_cast<int>(depth * 18 - progress * 80) % 2 == 0;
+            auto line = [&](float x, float width, afterhours::Color color) {
+              afterhours::draw_rectangle({r.x + x * s, r.y + y * s, width * s, 2.1f * s}, color);
+            };
+            line(center - half - edge * 2, half * 2 + edge * 4, {212, 207, 166, 255});
+            line(center - half - edge, half * 2 + edge * 2,
+                 stripe ? afterhours::Color{241, 241, 232, 255} : afterhours::Color{207, 72, 65, 255});
+            line(center - half, half * 2, {99, 116, 124, 255});
+            if (stripe) line(center - (1 + depth * 4), 2 + depth * 8, {246, 244, 222, 255});
+          }
+        }).with_debug_name("mk_road"));
+    const auto order = running_order();
+    const int place = position_of(0);
+    const int lap = std::min(kLaps, static_cast<int>(me.prog) + 1);
+    // The scenic camera is a presentation layer; progress and map positions
+    // continue to come from the same fixed-step track simulation.
+    const float turn = track_shape().is_corner(me.prog) ? -9.f : -3.f;
+    for (int i = 7; i >= 1; --i) {
+      const float gap = racers[i].prog - me.prog;
+      if (gap <= 0 || gap >= .55f) continue;
+      const float distance = std::clamp(gap / .55f, 0.f, 1.f);
+      const float bottom = 345 + (1 - distance) * 230;
+      const float depth = (bottom - 299) / 355;
+      const float w = 55 + depth * 190;
+      const float bend = track_shape().is_corner(me.prog) ? 42.f * std::sin(depth * 3.14159265f) : 0.f;
+      const float lane = static_cast<float>(i % 3 - 1) * .48f;
+      const float x = 836 - depth * 200 + bend + lane * (18 + depth * depth * 320) - w / 2;
+      image(c, root.ent(), 20 + i, 13 + racers[i].driver, x, bottom - w * .6977f, w, w * .6977f, turn);
+    }
+    image(c, root.ent(), 30, 13 + driver_idx, 390, 306, 490, 342, turn);
+    if (me.boost > 0)
+      label(c, root.ent(), 31, "MINI TURBO!", 463, 278, 360, 51, 29, gold, "mk_boost", TextAlignment::Center);
+    if (action(c, root.ent(), 40, me.item == Item::None ? "?" : item_name(me.item),
+               35, 32, 104, 98, "mk_item", me.item == Item::None ? ink : item_color(me.item),
+               white, me.item == Item::None ? 54 : 21, paused || me.item == Item::None)) use_item(0);
+    label(c, root.ent(), 41, "SHIFT: ITEM", 34, 133, 170, 34, 16, white);
+    label(c, root.ent(), 42, fmt::format("LAP {}/{}", lap, kLaps), 995, 26, 250, 54, 33, white, "mk_lap", TextAlignment::Right);
+    label(c, root.ent(), 43, fmt_time(race_time), 990, 79, 250, 39, 26, gold, "mk_clock", TextAlignment::Right);
+    for (int i = 0; i < kRacers; ++i) {
+      const int who = order[i];
+      const float y = 177 + i * 33;
+      plate(c, root.ent(), 60 + i, 1057, y, 185, 31,
+            who == 0 ? gold : afterhours::Color{16, 45, 79, 218}, transparent, 5);
+      label(c, root.ent(), 70 + i, fmt::format("{}  {}", i + 1, drivers[racers[who].driver].name),
+            1070, y, 160, 30, 18, who == 0 ? ink : white);
+    }
+    div(c, mk(root.ent(), 90), box(1004, 469, 236, 153)
+        .with_custom_background({255, 255, 255, 230}).with_corner_radius(13 * scale)
+        .with_ignore_pointer_events().with_debug_name("mk_minimap")
+        .with_on_draw_fg([this, shape = track_shape()](RectangleType r) {
+          RectangleType route{r.x + r.width * .13f, r.y + r.height * .13f, r.width * .74f, r.height * .74f};
+          draw_track(shape, route, {32, 57, 92, 255}, {255, 255, 255, 255});
+          for (int i = kRacers - 1; i >= 0; --i) {
+            auto pos = shape.map(racers[i].prog, route);
+            const float radius = (i == 0 ? 6.f : 4.f) * r.height / 153.f;
+            afterhours::draw_circle(static_cast<int>(pos.x), static_cast<int>(pos.y), radius + 1.5f * r.height / 153.f, {255, 255, 255, 255});
+            afterhours::draw_circle(static_cast<int>(pos.x), static_cast<int>(pos.y), radius, drivers[racers[i].driver].color);
+          }
+        }));
+    label(c, root.ent(), 100, ordinal(place), 41, 493, 185, 113, 82, gold, "mk_place", TextAlignment::Left, "FredokaMockBold");
+    label(c, root.ent(), 101, fmt::format("COINS {}", me.coins), 48, 604, 183, 37, 24, gold, "mk_coins");
+    const int tier = drift_charge >= 2.4f ? 3 : drift_charge >= 1.5f ? 2 : drift_charge >= .7f ? 1 : 0;
+    if (action(c, root.ent(), 110, drifting ? fmt::format("RELEASE  {}", tier) : "DRIFT",
+               257, 579, 162, 51, "mk_drift", drifting ? gold : white, ink, 21, paused)) toggle_drift();
+    if (action(c, root.ent(), 111, "PAUSE", 435, 579, 138, 51, "mk_pause", white, ink, 20, paused)) paused = true;
+    label(c, root.ent(), 112, fmt::format("{} km/h", static_cast<int>(me.speed * 340.f)),
+          600, 586, 192, 37, 25, white, "mk_speedo");
+    div(c, mk(root.ent(), 113), box(258, 641, 315, 7).with_custom_background(ink)
+        .with_ignore_pointer_events().with_debug_name("mk_charge")
+        .with_on_draw_fg([charge = std::clamp(drift_charge / 2.4f, 0.f, 1.f)](RectangleType r) {
+          r.width *= charge; afterhours::draw_rectangle(r, {255, 210, 41, 255});
+        }));
+    footer(c, root.ent(), fmt::format("{}  -  {}", track_name(), cups[cup_idx].name));
+    label(c, root.ent(), 114, "ENTER: DRIFT", 32, 671, 208, 30, 16, ink);
+    label(c, root.ent(), 115, fmt::format("RACE {} / 4", race_in_cup + 1), 1060, 671, 183, 30, 18, ink, "", TextAlignment::Right);
+    if (paused) {
+      div(c, mk(root.ent(), 300), box(0, 0, 1280, 720).with_custom_background({7, 31, 67, 168}).with_overlay(2));
+      auto sheet = div(c, mk(root.ent(), 301), box(430, 195, 420, 324)
+          .with_custom_background(white).with_border(gold, 5 * scale)
+          .with_corner_radius(17 * scale).with_overlay(3).with_debug_name("mk_pause_sheet"));
+      label(c, sheet.ent(), 0, "PAUSED", 32, 20, 356, 63, 41, ink, "", TextAlignment::Center);
+      if (action(c, sheet.ent(), 1, "RESUME", 38, 103, 344, 48, "mk_resume", gold, ink)) paused = false;
+      if (action(c, sheet.ent(), 2, "RESTART RACE", 38, 166, 344, 48, "mk_restart", blue, white)) start_race();
+      if (action(c, sheet.ent(), 3, "QUIT TO TITLE", 38, 229, 344, 48, "mk_quit", blue, white)) phase = Phase::Title;
+    } else if (countdown > 0) {
+      const int n = static_cast<int>(std::ceil(countdown - .6f));
+      div(c, mk(root.ent(), 302), box(499, 174, 282, 165)
+          .with_label(n <= 0 ? "GO!" : std::to_string(n)).with_font("FredokaMockBold", h720(120))
+          .with_alignment(TextAlignment::Center).with_custom_text_color(n <= 0 ? white : gold)
+          .with_text_stroke(ink, 4 * scale).with_text_shadow(ink, 3 * scale, 5 * scale)
+          .with_overlay(2).with_ignore_pointer_events().with_debug_name("mk_countdown"));
+    }
+  }
+
+  void build_results(afterhours::Entity &entity, UIContext<InputAction> &c) {
+    auto root = page(c, entity, "mk_results_page");
+    header(c, root.ent(), "RACE RESULTS", fmt::format("{}  /  Race {} of 4", track_name(), race_in_cup + 1));
+    plate(c, root.ent(), 0, 41, 112, 746, 481, white, white, 9);
+    label(c, root.ent(), 1, "POS", 62, 118, 70, 35, 16, blue);
+    label(c, root.ent(), 2, "DRIVER", 180, 118, 250, 35, 16, blue);
+    label(c, root.ent(), 3, "FINISH TIME", 483, 118, 171, 35, 16, blue);
+    label(c, root.ent(), 4, "POINTS", 672, 118, 93, 35, 16, blue);
+    for (int i = 0; i < kRacers; ++i) {
+      const int who = last_order[i];
+      const float y = 153 + i * 54;
+      plate(c, root.ent(), 10 + i, 45, y, 738, 53,
+            who == 0 ? gold : i % 2 ? afterhours::Color{229, 241, 255, 255} : white, transparent, 0);
+      image(c, root.ent(), 20 + i, 5 + racers[who].driver, 133, y + 3, 46, 46);
+      label(c, root.ent(), 30 + i, std::to_string(i + 1), 64, y + 8, 55, 38, 26, ink);
+      label(c, root.ent(), 40 + i, fmt::format("{}{}", drivers[racers[who].driver].name, who == 0 ? "  YOU" : ""),
+            187, y + 9, 285, 36, 23, ink);
+      label(c, root.ent(), 50 + i, fmt_time(racers[who].finish_time), 483, y + 10, 180, 35, 23, ink);
+      label(c, root.ent(), 60 + i, fmt::format("+{}", last_points[who]), 683, y + 10, 75, 35, 23, ink);
+    }
+    plate(c, root.ent(), 80, 815, 112, 423, 481, {16, 73, 159, 255}, {142, 205, 255, 255});
+    label(c, root.ent(), 81, fmt::format("{} STANDINGS", cups[cup_idx].name), 834, 130, 385, 49, 24, white, "mk_standings_heading", TextAlignment::Center);
     const auto order = standings_order();
-    int my_place = kRacers;
-    for (int i = 0; i < kRacers; i++)
-      if (order[(size_t)i] == 0)
-        my_place = i + 1;
-
-    const afterhours::Color medal = my_place == 1   ? gold
-                                    : my_place == 2 ? afterhours::Color{206,
-                                                                        214,
-                                                                        230,
-                                                                        255}
-                                    : my_place == 3 ? afterhours::Color{206,
-                                                                        138,
-                                                                        72, 255}
-                                                    : ink_dim;
-
-    header(context, root.ent(), 0, "TROPHY CEREMONY",
-           cups[(size_t)cup_idx].name);
-
-    div(context, mk(root.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), h720(150.f)})
-            .with_background(Theme::Usage::None)
-            .with_on_draw_fg([medal](RectangleType rr) {
-              const float cx = rr.x + rr.width * 0.5f;
-              const float top = rr.y + rr.height * 0.12f;
-              const float s = rr.height * 0.76f;
-              const float bowl_w = s * 0.62f;
-              const float bowl_h = s * 0.46f;
-
-              const float ring = bowl_h * 0.42f;
-              for (int side = -1; side <= 1; side += 2) {
-                const afterhours::Vector2Type hc{
-                    cx + (float)side * (bowl_w * 0.52f), top + bowl_h * 0.34f};
-                afterhours::draw_circle_v(hc, ring, medal);
-                afterhours::draw_circle_v(hc, ring * 0.55f,
-                                          afterhours::Color{14, 18, 34, 255});
-              }
-
-              afterhours::draw_triangle({cx - bowl_w * 0.5f, top},
-                                        {cx - bowl_w * 0.22f, top + bowl_h},
-                                        {cx + bowl_w * 0.5f, top}, medal);
-              afterhours::draw_triangle({cx - bowl_w * 0.22f, top + bowl_h},
-                                        {cx + bowl_w * 0.22f, top + bowl_h},
-                                        {cx + bowl_w * 0.5f, top}, medal);
-              afterhours::draw_rectangle(
-                  {cx - bowl_w * 0.09f, top + bowl_h, bowl_w * 0.18f,
-                   s * 0.22f},
-                  medal);
-              afterhours::draw_rectangle({cx - bowl_w * 0.34f,
-                                          top + bowl_h + s * 0.22f,
-                                          bowl_w * 0.68f, s * 0.09f},
-                                         medal);
-              afterhours::draw_rectangle({cx - bowl_w * 0.5f,
-                                          top + bowl_h + s * 0.31f, bowl_w,
-                                          s * 0.11f},
-                                         medal);
-            })
-            .with_debug_name("mk_trophy_art"));
-
-    div(context, mk(root.ent(), 2),
-        ComponentConfig{}
-            .with_label(fmt::format("{} PLACE  -  {} POINTS", ordinal(my_place),
-                                    points[0]))
-            .with_size(ComponentSize{percent(1.f), h720(52.f)})
-            .with_background(Theme::Usage::None)
-            .with_alignment(TextAlignment::Center)
-            .with_custom_text_color(medal)
-            .with_font("Fredoka", h720(38.f))
-            .with_debug_name("mk_trophy_place"));
-
-    auto list = vstack(context, mk(root.ent(), 3),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(0.6f), expand()})
-                           .with_self_align(SelfAlign::Center)
-                           .with_custom_background(panel)
-                           .with_padding(Spacing::sm)
-                           .with_gap(h720(4.f))
-                           .with_corner_radius(12.f)
-                           .with_no_wrap()
-                           .with_debug_name("mk_trophy_list"));
-
-    for (int i = 0; i < kRacers; i++) {
-      const int who = order[(size_t)i];
-      const Driver &d = drivers[(size_t)racers[(size_t)who].driver];
-      auto row = hstack(context, mk(list.ent(), i),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), h720(32.f)})
-                            .with_custom_background(who == 0 ? panel_hi : panel)
-                            .with_align_items(AlignItems::Center)
-                            .with_gap(h720(8.f))
-                            .with_padding(Padding::all(h720(3.f)))
-                            .with_corner_radius(6.f)
-                            .with_no_wrap());
-
-      div(context, mk(row.ent(), 0),
-          ComponentConfig{}
-              .with_label(ordinal(i + 1))
-              .with_size(ComponentSize{h720(56.f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(i == 0 ? gold : ink_dim)
-              .with_font_size(h720(17.f)));
-
-      div(context, mk(row.ent(), 1),
-          ComponentConfig{}
-              .with_label(d.name)
-              .with_size(ComponentSize{expand(), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_custom_text_color(ink)
-              .with_font_size(h720(18.f)));
-
-      div(context, mk(row.ent(), 2),
-          ComponentConfig{}
-              .with_label(fmt::format("{}", points[(size_t)who]))
-              .with_size(ComponentSize{h720(48.f), h720(24.f)})
-              .with_background(Theme::Usage::None)
-              .with_alignment(TextAlignment::Right)
-              .with_custom_text_color(gold)
-              .with_font("Fredoka", h720(19.f)));
+    for (int i = 0; i < kRacers; ++i) {
+      const int who = order[i];
+      const float y = 193 + i * 45;
+      label(c, root.ent(), 90 + i, fmt::format("{}. {}", i + 1, drivers[racers[who].driver].name),
+            846, y, 260, 38, 23, who == 0 ? gold : white);
+      label(c, root.ent(), 100 + i, std::to_string(points[who]), 1122, y, 88, 38,
+            25, who == 0 ? gold : white, "", TextAlignment::Right);
     }
+    label(c, root.ent(), 120, "15  /  12  /  10  /  8  /  6  /  4  /  2  /  1", 61, 604, 720, 34, 17, white);
+    footer(c, root.ent(), "Four races. Every point matters.");
+    if (action(c, root.ent(), 200, "QUIT", 40, 664, 152, 44, "mk_results_quit", white, ink, 20)) phase = Phase::Title;
+    if (action(c, root.ent(), 201, race_in_cup + 1 >= kCupRaces ? "VIEW TROPHY" : "NEXT RACE",
+               1000, 663, 239, 46, "mk_results_next", gold, ink, 23)) advance_race();
+  }
 
-    auto cta = hstack(context, mk(root.ent(), 4),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), h720(58.f)})
-                          .with_justify_content(JustifyContent::Center)
-                          .with_align_items(AlignItems::Center)
-                          .with_no_wrap());
-
-    if (button(context, mk(cta.ent(), 0),
-               ComponentConfig{}
-                   .with_label("BACK TO TITLE")
-                   .with_size(ComponentSize{h720(260.f), h720(48.f)})
-                   .with_custom_background(go_green)
-                   .with_custom_text_color(deep)
-                   .with_alignment(TextAlignment::Center)
-                   .with_font("Fredoka", h720(24.f))
-                   .with_corner_radius(10.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_debug_name("mk_trophy_done"))) {
-      phase = Phase::Title;
+  void build_trophy(afterhours::Entity &entity, UIContext<InputAction> &c) {
+    auto root = page(c, entity, "mk_trophy_page", 22);
+    const auto order = standings_order();
+    int my_place = 1;
+    for (int i = 0; i < kRacers; ++i) if (order[i] == 0) my_place = i + 1;
+    header(c, root.ent(), "TROPHY CEREMONY", cups[cup_idx].name);
+    image(c, root.ent(), 0, 21, 530, 102, 220, 220);
+    label(c, root.ent(), 1, my_place == 1 ? "CONGRATULATIONS!" : "CUP COMPLETE!", 232, 327, 816, 73,
+          49, gold, "", TextAlignment::Center, "FredokaMockBold");
+    label(c, root.ent(), 2, fmt::format("{}  /  {} place  /  {} points", cups[cup_idx].name, ordinal(my_place), points[0]),
+          267, 403, 746, 41, 23, white, "mk_trophy_summary", TextAlignment::Center);
+    constexpr std::array<int, 3> podium{1, 0, 2};
+    for (int i = 0; i < 3; ++i) {
+      const int rank = podium[i], who = order[rank];
+      const float x = 411 + i * 158, y = rank == 0 ? 465 : 493;
+      plate(c, root.ent(), 10 + i, x, y, 142, 136,
+            rank == 0 ? gold : afterhours::Color{235, 241, 255, 255}, white, 8);
+      image(c, root.ent(), 20 + i, 5 + racers[who].driver, x + 34, y - 31, 75, 75);
+      label(c, root.ent(), 30 + i, ordinal(rank + 1), x, y + 47, 142, 38, 25, ink, "", TextAlignment::Center);
+      label(c, root.ent(), 40 + i, drivers[racers[who].driver].name, x, y + 88, 142, 34, 21, ink, "", TextAlignment::Center);
     }
+    for (int i = 3; i < kRacers; ++i) {
+      const int who = order[i];
+      label(c, root.ent(), 60 + i, fmt::format("{}. {}  {} pts", i + 1, drivers[racers[who].driver].name, points[who]),
+            52, 451 + (i - 3) * 33, 297, 32, 18, who == 0 ? gold : white);
+    }
+    footer(c, root.ent(), "Thanks for racing!");
+    if (action(c, root.ent(), 100, "BACK TO TITLE", 975, 663, 264, 46, "mk_trophy_done", gold, ink, 23)) phase = Phase::Title;
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(marlo_kart, "Game Mockups",
-                        "Playable kart Grand Prix: title, select, race, podium",
-                        MarloKartScreen)
+                       "Playable kart Grand Prix: title, select, race, podium",
+                       MarloKartScreen)

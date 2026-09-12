@@ -59,7 +59,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | shop_interface | Pending | |
 | islands_trains_settings | Pending | |
 | kirby_options | Updated; minor art/type gaps recorded | E2E 137 passed: profile editing, live preferences, tabs, confirmation/reset, Tab/Enter and resize; 720p/1080p independently reviewed. |
-| marlo_kart | Pending | |
+| marlo_kart | Updated; minor typography gaps recorded | Existing Grand Prix E2E 126/127 and new 138 passed: all six phases, pointer/keyboard, countdown pause and resize; race/maps/results/trophy independently reviewed. |
 | minesweeper_lab | Updated; font/bevel gaps recorded | E2E 120 and 139 passed: game play, reset/help, minimize/maximize/close/restore, Start menu and resize; fresh 720p/1080p captures. |
 | mini_motorways_settings | Updated; minor styling gaps recorded | E2E 140 passed: seven tabs, settings cycles, audio sliders, language, local connection, credits/tutorial, back and resize; 720p/1080p independently reviewed. |
 | neon_strike | Updated; minor styling gaps recorded | E2E 141 passed: reload reserve transfer, repeated reload, pointer/Enter/number-key abilities, equipment and resize; two independent visual reviews. |
