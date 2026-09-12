@@ -1,0 +1,100 @@
+goto_screen media_library
+wait 0.5
+assert_ui ml_bg x=0 y=0 w=1280 h=720
+assert_ui ml_tile_0 x=228 y=215 w=215 h=219
+expect_text "Harbour Lights"
+expect_text "Showing 1-6 of 24"
+assert_within_parents
+assert_no_overflow
+screenshot media_library_mock
+click_ui ml_tile_1
+wait 0.2
+expect_text "Two climbers, one rope, and a closing season."
+click_ui ml_queue
+wait 0.2
+expect_text "In your watchlist"
+click_ui ml_nav_4
+wait 0.2
+expect_text "Showing 1-1 of 1"
+expect_text "The Long Ascent"
+click_ui ml_queue
+wait 0.2
+expect_text "Your watchlist is empty. Add a title with +."
+click_ui ml_nav_0
+wait 0.2
+click_ui ml_page_3
+wait 0.2
+expect_text "Showing 19-24 of 24"
+expect_text "The Fifth Room"
+expect_text "Slow Cartography"
+screenshot media_library_page4
+focus_ui ml_search
+type "Northbound"
+wait 0.3
+expect_text "Showing 1-1 of 1"
+expect_text "A night train, a stolen case, no plan."
+click_ui ml_filter
+wait 0.2
+expect_text "Showing 1-1 of 1"
+click_ui ml_filter
+wait 0.2
+expect_text "No titles match your search and filters."
+click_ui ml_home
+wait 0.2
+focus_ui ml_search
+key CTRL+A
+key BACKSPACE
+wait 0.2
+click_ui ml_view_2
+wait 0.2
+expect_text "Collections"
+click_ui ml_collection_2
+wait 0.3
+expect_text "Field Recordings"
+expect_text "Albums"
+click_ui ml_list
+wait 0.2
+assert_ui ml_tile_0 x=228 y=215 w=682 h=64
+assert_within_parents
+screenshot media_library_list
+click_ui ml_tile_0
+wait 0.2
+click_ui ml_play
+wait 0.2
+expect_text "LOCAL PLAYBACK PREVIEW"
+expect_text "Playing preview"
+click_ui ml_overlay_pause
+wait 0.2
+expect_text "Preview paused"
+click_ui ml_overlay_forward
+wait 0.2
+expect_text "0:10 / 52:00"
+screenshot media_library_player
+click_ui ml_overlay_pause
+wait 1.2
+expect_text "0:11 / 52:00"
+key ESCAPE
+wait 0.2
+expect_no_text "LOCAL PLAYBACK PREVIEW"
+click_ui ml_server
+wait 0.2
+expect_text "No remote server is connected."
+key ESCAPE
+wait 0.2
+click_ui ml_settings
+wait 0.2
+expect_text "Library settings"
+click_ui ml_overlay_layout
+wait 0.2
+expect_text "Grid"
+click_ui ml_overlay_close
+wait 0.2
+click_ui ml_home
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui ml_bg x=0 y=0 w=1920 h=1080
+assert_ui ml_tile_0 x=342 y=323 w=323 h=329
+assert_within_parents
+assert_no_overflow
+screenshot media_library_mock_1080p

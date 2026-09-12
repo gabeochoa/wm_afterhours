@@ -79,6 +79,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | islands_trains_settings / layout and actions | Centered paper/row proportions differed and Keyboard/Tutorial had no visible effect; Close only displayed a status. | wm | Matched paper/controls and added bindings help, local pan/place/run tutorial, real close/reopen with preserved preferences. E2E 136 covers these flows. |
 | islands_trains_settings / fine styling | Typography and close glyph are lighter; paper/background contours and gradient are approximate. | wm | Open cosmetic differences; all controls and tutorial views remain contained at both resolutions. |
 
+| media_library / layout and browsing | Generic grid and card padding displaced posters; tiny thumbnail labels overflowed in list mode. | wm | Matched library/sidebar/detail composition, six isolated poster templates with native titles, real filtering/sorting/paging, list view and per-item watchlist. Removed duplicate tiny list-poster titles; adjacent live titles remain. |
+| media_library / fine styling and playback | Text is lighter and some navigation icons are text substitutes; selected poster border is thinner. Playback is a labeled local preview rather than a media backend. | wm | Open cosmetic differences and explicit demo scope. E2E 150 covers browsing and pause/seek with parent containment. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
