@@ -205,6 +205,274 @@ with `pressed_or_repeat` so keyboard adjustment follows the existing repeat
 schedule. E2E 142 verifies exact single steps in both directions, dragging,
 and resized input. Library input pacing remains open for review.
 
+## Cross-project upstream review, 2026-09-12
+
+Reviewed the 38 other top-level project directories under `~/p` with three
+parallel source reviewers, plus the owned nested `armchair_coach/puzzle` project. Coverage, revisions, exclusions and adoption opportunities
+are recorded in [afterhours-upstream-review.md](afterhours-upstream-review.md).
+This was a source review, not an exhaustive line-by-line or runtime audit.
+No applications were run and no consumer or library code was changed.
+
+Availability was checked against both local library copies: standalone
+`afterhours` at `19d6c97` and wm's newer frozen vendor at `e3f13a7`.
+The former is an ancestor of the latter. A feature present in the newer copy
+is already implemented; publishing and consumer pin updates are separate work.
+These checks do not establish the current state of any remote branch.
+
+The requests below are open for review, not authorization to edit afterhours.
+P1 identifies shared correctness or test-isolation problems; P2 identifies
+reusable capabilities; P3 requires more evidence before extraction. Paths in
+source citations are relative to `~/p`. Library citations refer to wm's vendor
+unless stated otherwise. Line numbers describe the reviewed local snapshots.
+
+| ID | Priority | Request | Evidence class |
+|---|---|---|---|
+| UP-01 | P1 | Independent master/music/effects gain and correct late sound loading | Defect confirmed by source and independent review |
+| UP-02 | P1 | Settings writes preserve the last good file and report failure | Defect confirmed by source and independent review |
+| UP-03 | P1 | Scoped clipboard provider shared by apps and built-in widget tests | Missing test boundary; two consumer implementations |
+| UP-04 | P2 | Optional native open/save/directory dialogs | Repeated platform integration in two apps |
+| UP-05 | P2 | Lossless input-binding encoding and decoding | Repeated persistence; incomplete migration adapter |
+| UP-06 | P2 | Device-aware display of current action bindings | Live consumer formatter; mapping lookup already exists |
+| UP-07 | P2 | Accessible control semantics and announcements | Working browser pattern; native bridge absent in inspected source |
+| UP-08 | P2 | Mutable RGBA textures through a common backend API | Extension of the existing image-wrapper gap |
+| UP-09 | P3 | Optional filesystem watcher with explicit availability | One substantial implementation; confirm another consumer first |
+| UP-10 | P1 | Consistent in-memory render capture format | PNG on raylib, raw RGBA on sokol/Metal under the same API |
+
+### UP-01: Independent audio gains
+
+`pharmasea/src/engine/settings.cpp:110` sets music and effects levels before
+calling `sound_system::set_master_volume`. The shared implementation at
+`src/plugins/sound_system.h:344` overwrites both category levels. The setters
+at `:91` and `:152` replace stored preferences as well as backend gain. For
+example, effects 0.2, music 0.3, then master 0.5 produces 0.5 for both categories,
+rather than effective gains 0.1 and 0.15. Changing a category after muting
+master can also bypass that mute.
+
+`MyNameChef/src/settings.cpp:158`, `kart-afterhours/src/settings.cpp:122` and
+`afterhours-template/src/settings.cpp:150` bypass the helper with raylib master
+volume. `endless-dance-chaos/src/audio.h:198` and `:223` multiply gains locally.
+Those are demand/workaround evidence, not affected calls to the shared helper.
+A related inconsistency exists at `SoundLibrary::load`, line 39: newly loaded
+sounds do not inherit the saved category volume. Music loading already
+reapplies its volume at line 136. Both inspected revisions have these behaviors.
+
+Retain independent master and category preferences, apply their combined effect
+consistently, and apply the current gain to newly loaded sounds. Existing
+libraries and playback requests are sufficient; this does not need a new mixer
+or game cue system. Validate category getters, effective gain after changes in
+either order, mute/unmute, and loading after a volume change using an
+instrumented backend. The source defect is confirmed; no audio runtime test was
+performed in this review.
+
+### UP-02: Atomic settings saves and truthful results
+
+`kart-afterhours/src/settings.cpp:75` uses the shared JSON settings save path.
+In both revisions, `src/plugins/settings.h:178` opens and truncates the final
+file at line 181 before serializing at line 187. A serialization exception
+therefore destroys the previous file even though save returns false. The JSON,
+raw-string and conditionally compiled Bitsery writers also return success
+without checking write/close failure. Raw and Bitsery paths begin at lines 226
+and 201. The Bitsery configuration was not compiled during this review.
+
+Serialize completely before touching the destination, then reuse
+`src/plugins/files.h:133`, `files::write_string_atomic`, and propagate its
+result. Atomic-write support is already implemented; the gap is its integration
+into settings. `pharmasea/src/save_game/save_game.cpp:39` separately implements
+checked temporary-file replacement, while its engine settings and
+`floatinghotel/src/settings.cpp:103` still write settings directly. These
+callers can adopt the existing helper independently.
+
+Validate that a throwing serializer, failed write, or failed rename preserves
+a known good file and returns failure, and that a successful save reloads
+exactly. This requests atomic replacement, not power-loss durability or
+concurrent-writer coordination. Kart also ignores the result and updates
+`last_written_json` at line 76, suppressing retries; that is a separate
+consumer fix and must not be mistaken for an afterhours change.
+
+### UP-03: A scoped clipboard provider for tests
+
+`wordproc/src/util/clipboard.h:11` stores a test clipboard and switches local
+get/set calls to it; `wordproc/src/main.cpp:602` enables it for tests.
+`hanabi/src/util/clipboard.h:11` instead counts writes and still uses the host
+clipboard. Its assertion at `hanabi/src/ecs/e2e_commands.h:238` can accept a
+matching old value without proving a fresh write. Meanwhile
+`hanabi/src/ui/text_select.h:383` and the built-in text widgets call afterhours
+clipboard directly, bypassing app-only replacements.
+
+Both copies of `src/plugins/clipboard.h` call the platform directly, or return
+empty/no-op results without a backend. Place an optional scoped provider under
+the existing get/set/has operations, with a resettable in-memory implementation
+for tests. This must cover calls from `src/plugins/ui/text_input/component.h:574` and
+`src/plugins/ui/text_input/utils.h:547` as well as applications. Restore the prior provider
+on scope exit. A write generation can distinguish a fresh copy from stale text.
+
+Validate paste and copy through built-in single-line and multiline widgets,
+per-test reset, fresh-copy assertions, and restoration of normal behavior.
+Tests using the provider must not write the host clipboard. Editors, chat,
+consoles and game naming fields all benefit. Clipboard content should not be
+dumped as incidental test failure output.
+
+### UP-04: Optional native file dialogs
+
+`wordproc/src/util/file_dialog.mm:26` wraps NSOpenPanel/NSSavePanel;
+`wordproc/src/util/file_dialog.h:8` supplies filters and queued test results.
+`hanabi/src/native_extras.mm:961` independently implements directory selection,
+used at `hanabi/src/ecs/settings_system.h:902`. Wordproc defers these calls
+outside ECS execution at `wordproc/src/main.cpp:403` because a native modal loop can
+reenter frames and live queries. Its fallback also conflates cancellation with
+unsupported platforms by returning an empty string.
+
+Neither inspected library has a native picker. `src/plugins/files.h` supplies
+filesystem operations, and in-app modal widgets do not cover this boundary.
+Provide an optional file/save/directory picker with owned paths, filter/default
+name options, and distinct chosen/cancelled/unsupported/error outcomes. Define
+a safe completion boundary outside ECS iteration and queued responses for E2E.
+Document import/export and format handling stay with the application.
+
+Validate Unicode paths and spaces, cancellation without state changes, explicit
+unsupported outcomes, one-time consumption of queued results, and absence of
+nested ECS execution. Editors, attachment pickers, level tools and export flows
+are beneficiaries. Platform behavior still needs a later runtime prototype.
+
+### UP-05: Lossless input-binding persistence
+
+`pharmasea/src/engine/keymap.cpp:183` and `:222` encode/decode legacy inputs,
+with live loading/saving through `pharmasea/src/preload.cpp:240` and `:769`.
+`supermarket-engine/engine/keycodes.h:198` and `:216` independently persist
+name/key pairs. Pharmasea's newer afterhours adapter at
+`pharmasea/src/input_mapping_persistence.h:14` serializes only the key from a KeyChord,
+drops modifier fields, and branches on only three numeric variant positions.
+It is included by the app, but no active save/load call to this newer adapter
+was found; user-visible corruption through that path is not established.
+
+Both libraries define typed bindings but no persistence codec. The newer
+`src/plugins/input_system.h:857` defines chord modifiers and line 900 includes
+mouse axes in AnyInput. Provide an optional tagged codec owned with these
+binding types, preserving modifiers, explicit no-modifier chords, buttons and
+axis directions. Reject malformed/unknown values instead of producing key zero.
+Keep action/layer naming, file paths and file format integration caller-owned.
+JSON support need not become a mandatory input-plugin dependency.
+
+Validate round-trips for every binding alternative, plain versus explicitly
+modifier-free keys, combined modifiers, signed axes and remapping. Invalid data
+must not partially replace live mappings. This is a reusable migration aid,
+not a claim that input mapping itself is missing.
+
+### UP-06: Binding display and active-device prompts
+
+`cartographer/src/input_action.h:472` tracks the last input device; lines
+507-618 format keys/buttons and inspect mapping internals. The formatter at
+line 614 discards chord modifiers. It feeds live prompts in
+`cartographer/src/map_systems.cpp:1430` and `cartographer/src/gallery_systems.cpp:154`.
+Wordproc's menus at `wordproc/src/ui/menu_setup.h:17` and toolbar at
+`wordproc/src/ecs/toolbar_system.h:199` instead hard-code shortcut text. Its
+`wordproc/src/extracted/action_binding.h` is a draft, not proof of a live shared helper.
+
+`ProvidesLayeredInputMapping::get_bindings` already exists at
+`src/plugins/input_system.h:1248`; cartographer can stop walking maps today.
+The remaining request is a small typed binding formatter and optional
+last-meaningful-device preference. Preserve full modifiers and axis direction,
+return an explicit unbound result, and let apps choose text or artwork.
+Controller icon packs and game-specific wording stay out of the library.
+
+Validate Ctrl+Shift and Super chords, signed axes, layer/remap changes and
+switching between keyboard and gamepad prompts. Sub-deadzone noise must not
+switch prompts. Keep this separate from UP-05 so formatting does not require
+persistence, or vice versa.
+
+### UP-07: Accessible semantics and announcements
+
+`scrubdaddy/src/components/GameCanvas.jsx:29` updates a polite live region when
+the rescued count increases. Lines 47-65 label the canvas and expose that
+region. `scrubdaddy/src/App.jsx:681` gives upgrade controls names, roles,
+keyboard activation and disabled state. The browser supplies the connection to
+assistive technology; this review did not test those controls with a reader.
+
+The inspected afterhours implementations have visual labels, contrast checks
+and minimum hit targets, but no semantic control tree or platform announcement
+bridge. See `src/plugins/ui/ui_core_components.h:483`, `src/plugins/ui/theme.h:391`, and the design-only
+`docs/plans/2026-07-24-accessible-settings-rfc.md`. Access-key underlines alone
+do not provide this capability.
+
+Add opt-in role/name/value/state/action metadata and an announcement queue;
+prove one native platform adapter before expanding platform coverage. Ordinary
+widgets should derive semantics, and custom drawn controls should supply them.
+Keep announcement text and event timing with apps. Validate focus descriptions,
+state changes, one announcement per event, disabled behavior, retired controls,
+and modal/resize behavior with an actual screen reader. This benefits both
+forms and game HUDs; adapter scope remains a design question.
+
+### UP-08: Mutable RGBA textures
+
+This extends the existing image-wrapper gap with local source evidence.
+`last_mile/src/Grid.tsx:1061` switches dense maps to a reused RGBA pixel buffer;
+lines 1104-1108 upload and scale it with nearest filtering.
+`gabeochoa.github.com/sand.html:1066` and `:1082` likewise read/write a pixel
+buffer. These are rendering techniques, not simulation rules to upstream.
+
+Render targets already exist. The newer sokol helper
+`src/backends/sokol/drawing_helpers.h:1431` uploads pixels into an immutable
+image at line 1440; neither library has a common mutable-texture update API.
+Provide backend-neutral RGBA8 creation and full-buffer update with explicit
+size, buffer-length/stride and filtering contracts. Preserve resource identity
+across updates. Subrectangle updates and a general image editor are unnecessary
+for the demonstrated uses.
+
+Validate repeated updates to a nonsquare image, transparency, changed edge
+pixels, orientation, nearest scaling, invalid lengths and cleanup on raylib
+and sokol. Verify visual results before making performance claims; this review
+did not benchmark the web or native paths. This is separate from the texture
+atlas TODO, since dynamic pixels and static sprite packing solve different needs.
+
+### UP-09: Optional filesystem change notifications
+
+`floatinghotel/src/platform/file_watcher.h:40` owns FSEvents and a background
+run loop. Lines 105-140 handle lifecycle races; lines 165-187 preserve rescan
+requirements after dropped events. Its fallback at line 209 silently reports
+no changes. `floatinghotel/src/ecs/file_watcher_system.h:27` watches roots and lines 48-59
+poll events before applying Git-specific refresh policy.
+
+Neither inspected library provides a watcher. An optional watch/replace-roots,
+stop and drain-events API could expose changed paths, rescan-required state,
+and explicit unsupported/error results. Keep Git filtering, debounce and
+refresh decisions in the app. This is a candidate for editors and asset reload,
+but only one substantial consumer was confirmed, so establish a second use
+before choosing a public interface.
+
+Validate multiple roots, create/modify/delete or rescan events, root replacement,
+immediate destruction after start, and no callbacks after stop. A portable
+polling fallback or an explicit unavailable result must replace silent success.
+Concurrent floatinghotel changes were observed; the cited watcher files were
+not among those changing during this review.
+
+### UP-10: Consistent in-memory capture format
+
+Puzzle's export and pixel-sampling code needs raw image bytes, as documented in
+the existing image-wrapper gap below. The shared
+`capture_render_texture_to_memory` operation already exists, but the backends
+return different representations. Raylib encodes PNG at
+`src/backends/raylib/drawing_helpers.h:565`; sokol forwards a byte buffer at
+`src/backends/sokol/drawing_helpers.h:1345`, and its Metal implementation at
+`src/backends/sokol/capture_impl.h:224` returns width × height × 4 raw RGBA
+bytes. This difference is confirmed by direct implementation reads, not a
+runtime reproduction. No affected portable caller was established.
+
+Define a consistent capture result across backends, distinguishing encoded PNG
+from owned raw RGBA pixels with dimensions and orientation. Review existing
+callers before changing either representation. Validate the same nonsquare,
+partly transparent render target on both backends: encoded results decode to
+the expected image, raw results have the expected length and pixel positions,
+and failed readback returns failure. Pixel inspection, export and visual tests
+benefit. Keep this contract correction separate from UP-08's mutable upload API.
+
+### Smaller opportunities, not promoted to required APIs
+
+| Opportunity | Evidence | Why deferred / what would justify extraction |
+|---|---|---|
+| Sparkline helper | `scrubdaddy/src/components/StockSparkline.jsx:1`, used by `scrubdaddy/src/components/StockMarket.jsx:44`; independent chart code in `watching-a-movie-a-day-presentation/templates/reveal/js/charts.js:307` and `:443` | Line drawing already exists. A small values-to-points component could help, but no chart framework is justified. Require correct empty/single/constant series and a second small-chart consumer. |
+| UI activation/navigation feedback | `MyNameChef/src/sound_systems.cpp:18`, `afterhours-template/src/sound_systems.cpp:18`, `kart-afterhours/src/systems/sound_systems.cpp:19` scan listeners to request sounds | Click callbacks and playback already exist; these are closely related copied implementations. Consider a small optional activation/focus callback only if it removes scans and produces exactly one cue for nested controls and keyboard activation. |
+| Remainder-preserving periodic timer | `endless-dance-chaos/src/crowd_systems.cpp:153` and `endless-dance-chaos/src/schedule_systems.cpp:152` retain elapsed overshoot; `src/plugins/timer.h:51` and `:74` reset accumulated time | Timers already exist and cooldown semantics differ. A separate periodic helper could return elapsed ticks/remainder with an explicit catch-up policy; do not change every timer's semantics. |
+
 ## Open, asked for by other projects
 
 ### From floatinghotel's footguns list
@@ -262,9 +530,18 @@ the `height_of` overload.
   `LoadImageFromTexture` and `ImageFlipVertical` exist inside afterhours but
   are not exposed.
   Only the image group is a coherent abstraction; the rest are one-function
-  wrappers in unrelated areas. **Not started**: wm manipulates no images, so it
-  would be unexercised API designed from a grep of a consumer that cannot be
-  built here. Ask puzzle which calls actually block them first.
+  wrappers in unrelated areas. UP-08 above now supplies local consumer evidence
+  from last_mile and sand for mutable RGBA uploads. It narrows one part of this
+  request. A follow-up read of the nested puzzle project confirms native
+  consumers too: `armchair_coach/puzzle/src/gif_export.cpp:108` reads back,
+  flips, resizes and converts frames to RGBA for export;
+  `armchair_coach/puzzle/src/systems/node_feed.cpp:531` reads back and samples
+  pixels; `armchair_coach/puzzle/src/systems/systems_internal.h:445` generates
+  image pixels for a texture. Both libraries already expose
+  `capture_render_texture_to_memory`, but its format differs between raylib
+  and sokol/Metal, as recorded in UP-10. The narrower missing portable operation
+  is owned raw RGBA readback with defined dimensions and orientation. Validate export orientation, alpha, resize and pixel sampling
+  before broadening the CPU image API. GIF encoding and node logic stay local.
   (Blend mode is *not* among them -- `set_blend_mode`/`blend_scope` are wrapped
   in all three backends and raylib's reaches `rlSetBlendMode`.)
 
@@ -275,13 +552,18 @@ the `height_of` overload.
 
 ### Core
 
-- **relationship integrity has no index** (puzzle) — they hand-wrote one after
-  a node-delete sweep reaped ports and wires and forgot knobs and sliders.
-  Their point was explicitly not speed: an indexed relationship "cannot be
-  half-written in the first place". This is a data-model change, not a query
-  optimisation, and the two were filed here as one bullet for a while. There is
-  **no** written plan -- an earlier one was overwritten. Wants a planning pass
-  against puzzle's actual code before any implementation.
+- **relationship integrity depends on enumerating child types** (puzzle).
+  Current `armchair_coach/puzzle/src/systems/canvas_systems.cpp:666` explicitly
+  reaps ports, dropdowns, knobs, sliders and attached wires. The earlier orphan
+  bug is fixed in that source;
+  `armchair_coach/puzzle/src/e2e/e2e_commands.h:1101` provides an orphan assertion. Adding another child type still requires updating the deletion
+  list. Consider a declared ownership relationship that makes cleanup follow
+  that relationship, with separate treatment for non-owning links and cycles.
+  Validate all child types, unrelated-node survival, recycled handles after
+  undo/recreation, and unfinished wires before choosing a library contract.
+  This is a data-model candidate, not evidence that queries need to run faster.
+  The separate cascade-delete plan remains unstarted; this review only updates
+  the evidence and does not authorize or implement that plan.
 
 - **EntityQuery allocation and sorting** (MyNameChef) — mostly already done and
   their doc predates it: `run_query` has a `stop_on_first` path that allocates
