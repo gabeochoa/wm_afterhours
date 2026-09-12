@@ -1,0 +1,65 @@
+# Mock parity audit
+
+The target is `mocks.html`. Published gallery: https://pxl.cl/d8w3j.
+The afterhours pin is frozen at `e3f13a7827e333460d38078fde716e1e4a5a68ef`.
+
+## Captures
+
+`python3 scripts/bundle_mocks.py` produces `output/mocks-standalone.html`
+and a SHA-256 asset manifest. The export embeds comparison images and fonts.
+
+With local Chrome exposing CDP on port 9322:
+
+```
+node scripts/capture_mocks.mjs --comparisons
+```
+
+This captures the mock canvases at 1280×720, without gallery controls or scaling,
+into `output/screen-audit/mock-targets`. Use `--screen` to capture one screen.
+Use `--url` to check the standalone export outside the repository.
+
+For native captures:
+
+```
+./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 720p,1080p --image-output output/screen-audit/SCREEN/after/
+```
+
+Every screen needs fresh native captures, matched interaction states, and
+independent visual reviews. Old native baselines only detect regressions.
+Keep existing gameplay and add meaningful mock interactions. Gallery phase
+shortcuts are review controls, not new game mechanics. Decorative textures
+must not contain interactive controls, changing values, or labels.
+
+## Progress
+
+Screens follow the gallery dropdown order. Findings and their disposition are
+recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
+
+| Screen | Status | Verification |
+|---|---|---|
+| potion_crafting | Pending | |
+| angry_birds_settings | Pending | |
+| cozy_cafe | Pending | |
+| casual_settings | Pending | |
+| fighter_menu | Pending | |
+| deadspace_settings | Pending | |
+| empire_tycoon | Pending | |
+| flight_options | Pending | |
+| shop_interface | Pending | |
+| islands_trains_settings | Pending | |
+| kirby_options | Pending | |
+| marlo_kart | Pending | |
+| minesweeper_lab | Pending | |
+| mini_motorways_settings | Pending | |
+| neon_strike | Pending | |
+| parcel_corps_settings | Pending | |
+| powerwash_settings | Pending | |
+| race_results | Pending | |
+| sports_settings | Pending | |
+| rubber_bandits_menu | Pending | |
+| kart_select | Pending | |
+| guess_who_lab | Pending | |
+| aim_chat | Pending | |
+| media_library | Pending | |
+| offsite_backup | Pending | |
+| secure_tunnel | Pending | |

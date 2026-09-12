@@ -17,6 +17,19 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ---
 
+## Screen mock audit
+
+This section also records wm-owned findings from the 26-screen mock audit.
+It does not classify a visual mismatch as a library defect. Library changes
+and the submodule pin are frozen for this pass; proven upstream blockers
+remain open for user review. Delivery status: `docs/screen-audit.md`.
+
+| Screen / state | Finding | Owner | Disposition / evidence |
+|---|---|---|---|
+| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. |
+
+---
+
 ## Open, asked for by other projects
 
 ### From floatinghotel's footguns list
