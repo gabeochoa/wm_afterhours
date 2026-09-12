@@ -19,12 +19,12 @@ Each library change has its own afterhours commit and a wm adoption commit.
 | UP-09 Filesystem watcher, portable API, macOS first | Complete, afterhours `f4de4d3`; real filesystem lifecycle and overflow checks pass |
 | UP-10 Explicit capture formats | Complete, afterhours `6eea5bd`; raylib/Metal raw and PNG pixel checks pass |
 | UP-11 Default profiling UI and compile-out support | Pending |
-| UP-12 Charts required by profiler, interactive wm test screen | Pending |
+| UP-12 Charts required by profiler, interactive wm test screen | Complete, afterhours `dff9c96`; data checks, wm pointer interactions and visual capture pass |
 | wm searchable screen tree | Pending |
 
 UP-07 and UP-08 remain deferred. Sound-feedback and periodic timers remain
 skipped. The wider chart set remains TODO. Performance investigations and
 older visual gaps retain their separate recorded scope.
 
-A separate subagent is preparing a plugin architecture proposal grounded in
-current consumers. That work is a plan only, not a library migration.
+The plugin architecture proposal is in `docs/plugin-architecture-proposal.md`.
+That work is a plan only, not a library migration.

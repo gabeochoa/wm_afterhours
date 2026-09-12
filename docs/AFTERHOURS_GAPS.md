@@ -854,3 +854,5 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
 Regression tests for these live in the afterhours `tests/` suite: `autolayout_test`,
 `progress_bar_test`, `slider_test`, `stepper_test`, `tab_container_test`,
 `text_wrap_test`, `render_order_test`.
+
+UP-12 implemented in afterhours `dff9c96`: timing line charts, hover/sample selection, empty/constant/nonfinite handling, and the interactive wm `chart_lab`. Broader chart types remain TODO.
