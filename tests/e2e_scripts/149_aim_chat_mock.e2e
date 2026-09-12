@@ -1,0 +1,92 @@
+goto_screen aim_chat
+wait 0.5
+assert_ui aim_desktop x=0 y=0 w=1280 h=720
+assert_ui aim_window x=493 y=90 w=636 h=551
+assert_ui aim_buddy_window x=150 y=58 w=297 h=566
+expect_text "SmarterChild - Instant Message"
+expect_text "hey whats up"
+expect_text "Warning level: 0%"
+assert_within_parents
+screenshot aim_chat_mock
+focus_ui message_input
+type "A local message"
+key ENTER
+wait 0.3
+expect_text "coolkid2001: A local message"
+expect_text "Type a message..."
+click_ui warn_btn
+wait 0.2
+expect_text "Warn SmarterChild?"
+click_ui aim_dialog_cancel
+wait 0.2
+expect_text "Warning level: 0%"
+click_ui warn_btn
+wait 0.2
+click_ui aim_dialog_confirm
+wait 0.2
+expect_text "Warning level: 20%"
+click_ui block_btn
+wait 0.2
+expect_text "Block SmarterChild?"
+click_ui aim_dialog_confirm
+wait 0.2
+expect_text "Unblock this buddy to send messages."
+expect_text "Blocked"
+screenshot aim_chat_blocked
+click_ui block_btn
+wait 0.2
+expect_text "Unblock SmarterChild?"
+click_ui aim_dialog_confirm
+wait 0.2
+focus_ui message_input
+type "Draft for smarter"
+click_ui aim_buddy_1
+wait 0.3
+expect_text "sk8ergirl88 - Instant Message"
+expect_text "Type a message..."
+focus_ui message_input
+type "Hey skater"
+click_ui aim_send
+wait 0.3
+expect_text "coolkid2001: Hey skater"
+click_ui aim_buddy_0
+wait 0.3
+expect_text "Draft for smarter"
+expect_text "coolkid2001: A local message"
+click_ui aim_menu_1
+wait 0.2
+click_ui aim_menu_action_1
+wait 0.2
+expect_text "Type a message..."
+click_ui aim_smiley
+wait 0.2
+expect_text ":-)"
+click_ui aim_send
+wait 0.2
+click_ui aim_chat_minimize
+wait 0.2
+screenshot aim_chat_minimized
+expect_no_text "Warning level: 20%"
+click_ui aim_restore_chat
+wait 0.2
+expect_text "Warning level: 20%"
+click_ui aim_chat_maximize
+wait 0.2
+assert_ui aim_window x=225 y=30 w=1020 h=630
+assert_within_parents
+click_ui aim_chat_maximize
+wait 0.2
+click_ui aim_availability
+wait 0.2
+expect_text "Away - be right back"
+click_ui aim_help
+wait 0.2
+expect_text "AOL Instant Messenger - Help"
+key ESCAPE
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui aim_window x=740 y=135 w=954 h=827
+assert_ui aim_buddy_window x=225 y=87 w=446 h=849
+assert_within_parents
+screenshot aim_chat_mock_1080p

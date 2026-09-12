@@ -70,7 +70,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | rubber_bandits_menu | Pending | |
 | kart_select | Pending | |
 | guess_who_lab | Pending | |
-| aim_chat | Pending | |
+| aim_chat | Updated; icon/type gaps recorded | Existing text-editing E2E 08_text_area_arrow_keys and new 149 passed: buddy drafts/history, Enter/Shift+Enter, menus, warn/block, window controls and resize; 720p/1080p reviewed. |
 | media_library | Pending | |
 | offsite_backup | Pending | |
 | secure_tunnel | Pending | |

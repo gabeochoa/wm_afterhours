@@ -71,6 +71,11 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | marlo_kart / six-phase presentation | Driver/kart/cup screens and racing presentation did not match the mock; custom roads/maps were accidentally covered by panel fills in the first audit draft. | wm | Isolated driver/kart/trophy art, live text and HUD, perspective road with moving stripes, visible shared-path minimap/cup previews, pause above countdown. Existing fixed-step racing, items, drift, eight racers, four cups and points remain intact. E2E 126/127/138 pass. |
 | marlo_kart / fine styling | Card rounding, label proportions and key hints differ slightly from the mock; native race view follows the real simulation rather than the gallery's phase shortcuts. | wm | Open cosmetic differences; all six phases visually reviewed, including actual cup completion and trophy standings. High-resolution regular font removes enlarged-text blur. |
 
+
+| aim_chat / desktop and messaging | Simplified chrome and shared/inert conversation actions did not match the classic messenger mock. | wm | Two native windows, desktop/taskbar, isolated buddy history/drafts, multiline composer, warn/block, menus and window controls. Existing text-editing test and E2E 149 pass. |
+| aim_chat / modal hit testing | The nested pasted-log scrollbar intercepted Clear unsent draft in the Edit dialog, leaving the dialog open and blocking minimize. | wm workaround; deeper ownership unresolved | Disable both underlying scroll axes while a modal is open; restore on close. Reproduced before fix; E2E 149 now clears the draft and minimizes/restores correctly. No afterhours edit. |
+| aim_chat / fine styling and scope | Fonts are lighter; some toolbar/taskbar icons are text substitutes; italic/underline report format availability instead of formatting text. Buddy List is a fixed-size utility window. | wm | Open visual/formatting limitations. Chat maximize works; messaging is explicitly a local demo. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
