@@ -880,3 +880,12 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
 Regression tests for these live in the afterhours `tests/` suite: `autolayout_test`,
 `progress_bar_test`, `slider_test`, `stepper_test`, `tab_container_test`,
 `text_wrap_test`, `render_order_test`.
+
+
+## wm resize findings during profiler integration (September 12, 2026)
+
+- **Resolved in wm: absolute-positioning corner panel at 1080p.** Once wm
+  synchronized its settings resolution on resize, the panel's fixed 96px
+  allowance no longer accommodated its scaled controls. Scale the allowance
+  with the controls. The complete `36a_parent_containment` script passes at
+  720p and 1080p; the 720p baseline is unchanged. No library change is needed.
