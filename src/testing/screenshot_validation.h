@@ -16,7 +16,7 @@ float calculate_image_diff_percentage(const std::string &path1,
                                       const std::string &path2);
 
 // Take a screenshot and save to specified path
-void save_screenshot_to(const std::string &path);
+bool save_screenshot_to(const std::string &path);
 
 // Validate current screen against baseline (returns true if diff <= 1%)
 bool validate_screen_against_baseline(const std::string &screen_name);

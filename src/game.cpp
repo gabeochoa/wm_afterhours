@@ -77,24 +77,9 @@ std::string dump_ui_tree() {
 }
 
 std::vector<uint8_t> capture_screenshot_png() {
-  raylib::Image image = raylib::LoadImageFromTexture(mainRT.texture);
-  if (image.data == nullptr) {
-    return {};
-  }
-  raylib::ImageFlipVertical(&image);
-
-  int file_size = 0;
-  unsigned char *png_data =
-      raylib::ExportImageToMemory(image, ".png", &file_size);
-  raylib::UnloadImage(image);
-
-  if (png_data == nullptr || file_size <= 0) {
-    return {};
-  }
-
-  std::vector<uint8_t> result(png_data, png_data + file_size);
-  raylib::MemFree(png_data);
-  return result;
+  auto capture = afterhours::capture_render_texture_png(mainRT);
+  if (!capture) return {};
+  return std::move(capture->bytes);
 }
 
 void init_mcp() {
@@ -975,7 +960,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
       std::make_unique<afterhours::testing::HandleScreenshotCommand>(
           [](const std::string &name) {
             std::string path = "/tmp/e2e_screenshot_" + name + ".png";
-            screenshot_validation::save_screenshot_to(path);
+            if (!screenshot_validation::save_screenshot_to(path)) return;
             log_info("[E2E] Screenshot saved: {}", path);
           }));
 

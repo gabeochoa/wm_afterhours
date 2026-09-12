@@ -4,6 +4,7 @@
 #include "../rl.h"
 
 #include <afterhours/src/graphics.h>
+#include <afterhours/src/plugins/files.h>
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
@@ -75,23 +76,19 @@ float calculate_image_diff_percentage(const std::string &path1,
          100.0f;
 }
 
-void save_screenshot_to(const std::string &path) {
-  // Try graphics API first (handles GPU sync properly in headless mode)
-  if (afterhours::graphics::capture_frame(path)) {
-    log_info("[screenshot] Captured via graphics API: {}", path);
-    return;
+bool save_screenshot_to(const std::string &path) {
+  const auto capture = afterhours::capture_render_texture_png(mainRT);
+  if (!capture) {
+    log_warn("Failed to capture screenshot: {}", path);
+    return false;
   }
-
-  // Fallback: graphics not initialized, use direct texture capture
-  log_info("[screenshot] Using fallback capture (graphics API unavailable)");
-  raylib::Image image = raylib::LoadImageFromTexture(mainRT.texture);
-  if (image.data == nullptr) {
-    log_error("Failed to capture screenshot");
-    return;
+  const std::string_view bytes(reinterpret_cast<const char *>(capture->bytes.data()),
+                               capture->bytes.size());
+  if (!afterhours::files::write_string_atomic(path, bytes)) {
+    log_warn("Failed to write screenshot: {}", path);
+    return false;
   }
-  raylib::ImageFlipVertical(&image);
-  raylib::ExportImage(image, path.c_str());
-  raylib::UnloadImage(image);
+  return true;
 }
 
 // One threshold, used both to fail a run and to decide what --update-baselines
@@ -110,7 +107,7 @@ bool validate_screen_against_baseline(const std::string &screen_name) {
   std::string temp_path = "/tmp/validate_" + screen_name + ".png";
 
   // Take screenshot of current state
-  save_screenshot_to(temp_path);
+  if (!save_screenshot_to(temp_path)) return false;
 
   const bool have_baseline = std::filesystem::exists(baseline_path);
 
