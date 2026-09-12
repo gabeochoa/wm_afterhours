@@ -261,8 +261,8 @@ are not accepted decisions.
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
 | UP-09 Filesystem watcher | Implemented locally | afterhours `f4de4d3`; macOS FSEvents behind a portable API with bounded events, rescan hints and explicit unsupported result elsewhere. |
 | UP-10 Capture formats | Implemented locally | afterhours `6eea5bd`; explicit raw RGBA and PNG captures, with legacy PNG consistency. |
-| UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. Cheap continuous recording independent of panel visibility, code controls and a compile-time off switch; measure overhead. |
-| UP-12 Chart set and test screen | Approved, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
+| UP-11 Default profiling UI | Implemented locally | Useful defaults with customization; reuse existing profiling hooks. Cheap continuous recording independent of panel visibility, code controls and a compile-time off switch; measure overhead. |
+| UP-12 Chart set and test screen | Implemented, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
 | UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
 | Periodic timer helper | Skip | No shared remainder-preserving timer requested. |
 
@@ -278,9 +278,35 @@ are not accepted decisions.
 | UP-06 | afterhours `bcefe22` | Tests cover full modifiers, axis directions, drift/mouse-motion rejection, held-axis behavior, pinned preference, remapping and layer changes. |
 | UP-09 | afterhours `f4de4d3` | Real filesystem tests cover create/modify/rename/delete, Unicode paths, multiple roots, invalid roots, immediate destruction, restart, stop and bounded-buffer rescan. |
 | UP-10 | afterhours `6eea5bd` | Raylib/Metal nonsquare translucent captures match decoded PNG byte-for-byte. Legacy PNG, failed captures, Metal blend and HiDPI tests pass. |
+| UP-11 | afterhours `5a8e3be` | Bounded recording, runtime controls, independent legacy hooks, compile-out checks and the interactive panel pass. Measurements and limits are in `vendor/afterhours/docs/profiling-measurements.md`. |
+| UP-12 | afterhours `dff9c96` | Chart bounds and sample lookup tests, pointer and keyboard controls, hover inspection, live updates and 720p/1080p wm checks pass. |
 
-All other approved UP items remain unimplemented in this work. Commits are
-local; nothing was pushed. Tests and builds use `nice -n 10`.
+All approved UP items in this batch are implemented locally. UP-07 and UP-08
+remain deferred; the wider chart set remains TODO. Nothing was pushed. Tests
+and builds use `nice -n 10`.
+
+### Grid rounding in content-sized columns
+
+A `children()` column can underestimate its height when grid snapping rounds
+each running row position. With 20px profiler text at 1080p, six 28px table
+rows and a 6px gap produced a 498px content box whose final child ended 16px
+outside it. `compute_relative_positions` rounds the accumulated offsets after
+intrinsic content sizing has already summed the unrounded gaps. The profiler
+uses `expand()` to fill its available panel height, which avoids the overflow.
+The underlying content-sizing discrepancy remains open for a separate layout
+review; no global grid-snapping behavior was changed for this fix.
+
+### E2E focus-state isolation
+
+`UIContext::reset()` retains `has_interacted`, and `focus_element` does not
+count as user interaction. A screenshot can therefore show a focus ring in a
+batch run but omit it when the same script runs alone. This is a test-isolation
+follow-up, not a request to clear interaction history on every screen change.
+
+The wm profiler test now sends Tab before placing focus explicitly. Its
+screenshot matches at 0.0000% both alone and after a keyboard test. A common
+E2E reset contract for interaction history remains open; no library behavior
+was changed for this finding.
 
 ### UP-01: Independent audio gains
 
@@ -854,5 +880,3 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
 Regression tests for these live in the afterhours `tests/` suite: `autolayout_test`,
 `progress_bar_test`, `slider_test`, `stepper_test`, `tab_container_test`,
 `text_wrap_test`, `render_order_test`.
-
-UP-12 implemented in afterhours `dff9c96`: timing line charts, hover/sample selection, empty/constant/nonfinite handling, and the interactive wm `chart_lab`. Broader chart types remain TODO.

@@ -15,6 +15,7 @@
 #include "systems/RenderSystemHelpers.h"
 #include "systems/RenderTestFeedback.h"
 #include "systems/ScreenNavigator.h"
+#include <afterhours/src/plugins/profiling.h>
 #include "systems/SetupSimpleButtonTest.h"
 #include "systems/SetupTabbingTest.h"
 #include "systems/TestSystem.h"
@@ -187,6 +188,9 @@ void game() {
     }
     float dt = raylib::GetFrameTime();
     systems.run(dt);
+#if AFTERHOURS_ENABLE_PROFILING
+    afterhours::profiling::default_collector().end_frame();
+#endif
 
     if (test_system_ptr && test_system_ptr->is_complete()) {
       std::string error = test_system_ptr->get_error();
@@ -316,6 +320,9 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
     }
     float dt = raylib::GetFrameTime();
     systems.run(dt);
+#if AFTERHOURS_ENABLE_PROFILING
+    afterhours::profiling::default_collector().end_frame();
+#endif
 
     if (test_input::slow_test_mode) {
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -592,6 +599,9 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
 
     float dt = raylib::GetFrameTime();
     systems.run(dt);
+#if AFTERHOURS_ENABLE_PROFILING
+    afterhours::profiling::default_collector().end_frame();
+#endif
 
 #ifdef AFTER_HOURS_ENABLE_MCP
     if (g_mcp_mode) {
@@ -774,6 +784,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
 
   // Reset callback for per-script cleanup
   auto reset_fn = [base_rez]() {
+    afterhours::profiling::default_collector().stop();
+    afterhours::profiling::default_collector().reset();
     // Clear input + visible text
     afterhours::testing::test_input::reset_all();
     afterhours::testing::VisibleTextRegistry::instance().clear();
@@ -992,6 +1004,9 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     // The visible text registry accumulates text from render; expect_text
     // checks in the next frame after rendering has populated it
     systems.run(dt);
+#if AFTERHOURS_ENABLE_PROFILING
+    afterhours::profiling::default_collector().end_frame();
+#endif
 
     // Fail fast on first error (single-script mode) or skip to next script
     // (batch mode)

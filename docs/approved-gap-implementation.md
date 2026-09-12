@@ -18,7 +18,7 @@ Each library change has its own afterhours commit and a wm adoption commit.
 | UP-06 Automatic binding prompts with device override | Complete, afterhours `bcefe22`; modifiers, axis direction, device switching, noise, override and remapping checks pass |
 | UP-09 Filesystem watcher, portable API, macOS first | Complete, afterhours `f4de4d3`; real filesystem lifecycle and overflow checks pass |
 | UP-10 Explicit capture formats | Complete, afterhours `6eea5bd`; raylib/Metal raw and PNG pixel checks pass |
-| UP-11 Default profiling UI and compile-out support | Pending |
+| UP-11 Default profiling UI and compile-out support | Complete, afterhours `5a8e3be`; bounded collector, independent hooks, compile-out and real panel checks pass; rendering and recording measurements documented |
 | UP-12 Charts required by profiler, interactive wm test screen | Complete, afterhours `dff9c96`; data checks, wm pointer interactions and visual capture pass |
 | wm searchable screen tree | Pending |
 

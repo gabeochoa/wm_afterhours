@@ -1,0 +1,51 @@
+goto_screen system_profile_lab
+wait 0.5
+expect_text "Profiler"
+expect_text "Recording stopped"
+click_ui profiler_record
+wait 0.6
+expect_text "Recording in background"
+expect_text "Stop recording"
+click_ui spl_load
+wait 0.5
+expect_text "Remove load"
+click_ui profiler_pause
+wait 0.2
+expect_text "Resume view"
+expect_text "Recent avg (ms)"
+expect_text "Overall avg (ms)"
+expect_no_text "Total ms"
+expect_text "Sort: recent"
+click_ui profiler_sort
+wait 0.2
+expect_text "Sort: overall"
+click_ui profiler_pause
+click_ui spl_visibility
+wait 0.4
+expect_text "Recording in background"
+expect_text "Show panel"
+click_ui spl_visibility
+wait 0.4
+expect_text "Stop recording"
+screenshot system_profile_lab
+click_ui profiler_record
+wait 0.2
+expect_text "Recording stopped"
+click_ui profiler_reset
+wait 0.2
+expect_text "No system samples yet"
+resize 1920 1080
+wait 0.3
+assert_ui spl_root w=1920 h=1080
+focus_element profiler_record
+key ENTER
+wait 0.3
+expect_text "Recording in background"
+focus_element profiler_pause
+key ENTER
+wait 0.2
+expect_text "Resume view"
+click_ui profiler_record
+wait 0.2
+expect_text "Recording stopped"
+resize 1280 720

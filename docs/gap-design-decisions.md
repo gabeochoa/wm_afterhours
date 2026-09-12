@@ -129,9 +129,10 @@ widget unless existing support proves insufficient.
 
 ## Implementation handoff
 
-UP-01 is implemented and verified in local afterhours commit `1fce0d9`, pinned
-by wm. See the gap file's implementation status for evidence. Remaining approved
-items are still pending implementation.
+All approved UP items in this batch are implemented locally and pinned by wm.
+See [approved-gap-implementation.md](approved-gap-implementation.md) for the
+commit list and [AFTERHOURS_GAPS.md](AFTERHOURS_GAPS.md#implementation-status)
+for verification. The screen browser is completing its wm verification.
 
 The five decisions above and the established correctness requirements are
 sufficient to begin the approved work. Resolve routine implementation choices

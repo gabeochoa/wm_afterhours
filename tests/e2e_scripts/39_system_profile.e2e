@@ -1,21 +1,19 @@
-# SystemManager's profile hook. Before it, a consumer could time only systems
-# it wrote itself, so puzzle's 518-line profiler measured 149 of theirs and
-# zero of afterhours', and a per-draw regression in the library had to be found
-# by bisect rather than read off a profile.
-#
 # The timings move every run, so nothing here asserts a number: the baseline is
 # the stopped state, and the check is that rows appear at all once started.
 # Every name in them belongs to a system this screen did not write.
 
 goto_screen system_profile_lab
 wait 0.4
+key TAB
+focus_element spl_load
+wait 0.2
 validate_screen system_profile_lab
 
-click_ui spl_toggle
+click_ui profiler_record
 wait 0.8
-assert_ui spl_row_0 h=28
-assert_ui spl_row_1 h=28
+expect_text "Recording in background"
+expect_text "ScreenCyclerSystem / update"
 assert_within_parents
 
-click_ui spl_toggle
+click_ui profiler_record
 wait 0.3
