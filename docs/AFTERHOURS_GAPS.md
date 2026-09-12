@@ -3,7 +3,9 @@
 This file tracks afterhours library limitations and wm-owned implementation
 and visual parity gaps. Each finding identifies its owner where known;
 resolved findings remain as evidence. Library changes and the submodule pin
-are frozen pending user review during this audit.
+were frozen pending user review during the visual audit. Subsequently approved
+cross-project changes are tracked in the implementation status below; this does
+not approve every older library finding.
 
 The cross-project library inventory below was rechecked against `main` on
 2026-09-12. That sweep is
@@ -249,7 +251,7 @@ are not accepted decisions.
 
 | Item | Decision | Scope / condition |
 |---|---|---|
-| UP-01 Audio gains | Approved | Master scales music/effects while preserving their relative preferences. |
+| UP-01 Audio gains | Implemented locally | Master scales music/effects while preserving their relative preferences. afterhours `1fce0d9`; validation below. |
 | UP-02 Settings saves | Approved | Preserve the previous file on failure and report failures accurately. |
 | UP-03 Test clipboard | Approved | Isolate both app and built-in widget clipboard operations. |
 | UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. macOS first behind one portable public API; unsupported backends use the common result contract. |
@@ -264,7 +266,31 @@ are not accepted decisions.
 | UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
 | Periodic timer helper | Skip | No shared remainder-preserving timer requested. |
 
+### Implementation status
+
+| Item | Local change | Validation |
+|---|---|---|
+| UP-01 | afterhours `1fce0d9`, included by wm's submodule pin | Regression failed before the fix with 7/34 checks passing. Afterward all 39 checks pass, including the new master getter. Full afterhours `make -C tests -j2 test` exits 0; no-backend compile check passes. |
+
+All other approved UP items remain unimplemented in this work. Commits are
+local; nothing was pushed. Tests and builds use `nice -n 10`.
+
 ### UP-01: Independent audio gains
+
+Implemented locally in afterhours `1fce0d9`. Master gain is stored independently;
+both category getters retain user preferences, and `get_master_volume()` returns
+the master preference. Both helper setters and direct library volume updates
+apply master times category. Newly loaded sound effects and music inherit that
+combined gain, including a muted master.
+
+`tests/sound_volume_test.cpp` runs real afterhours code against instrumented
+raylib audio functions without opening an audio device. It checks setter order,
+preference retention, mute/unmute, direct category updates and late loading.
+The full library suite passes, as does compilation without an audio backend.
+This verifies backend gain requests, not subjective playback volume. Consumer
+apps that bypass this plugin remain unchanged.
+
+Source evidence from the pre-fix review follows.
 
 `pharmasea/src/engine/settings.cpp:110` sets music and effects levels before
 calling `sound_system::set_master_volume`. The shared implementation at
@@ -287,8 +313,8 @@ consistently, and apply the current gain to newly loaded sounds. Existing
 libraries and playback requests are sufficient; this does not need a new mixer
 or game cue system. Validate category getters, effective gain after changes in
 either order, mute/unmute, and loading after a volume change using an
-instrumented backend. The source defect is confirmed; no audio runtime test was
-performed in this review.
+instrumented backend. The original review was source-only; the implementation
+and regression evidence are recorded above.
 
 ### UP-02: Atomic settings saves and truthful results
 

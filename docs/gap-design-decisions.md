@@ -129,6 +129,10 @@ widget unless existing support proves insufficient.
 
 ## Implementation handoff
 
+UP-01 is implemented and verified in local afterhours commit `1fce0d9`, pinned
+by wm. See the gap file's implementation status for evidence. Remaining approved
+items are still pending implementation.
+
 The five decisions above and the established correctness requirements are
 sufficient to begin the approved work. Resolve routine implementation choices
 from source and validation rather than reopening these product questions.
