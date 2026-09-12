@@ -219,7 +219,8 @@ The former is an ancestor of the latter. A feature present in the newer copy
 is already implemented; publishing and consumer pin updates are separate work.
 These checks do not establish the current state of any remote branch.
 
-The requests below are open for review, not authorization to edit afterhours.
+The source review initially proposed the requests below. The decision table
+records the user's subsequent selections; none are marked implemented here.
 P1 identifies shared correctness or test-isolation problems; P2 identifies
 reusable capabilities; P3 requires more evidence before extraction. Paths in
 source citations are relative to `~/p`. Library citations refer to wm's vendor
@@ -237,6 +238,27 @@ unless stated otherwise. Line numbers describe the reviewed local snapshots.
 | UP-08 | P2 | Mutable RGBA textures through a common backend API | Extension of the existing image-wrapper gap |
 | UP-09 | P3 | Optional filesystem watcher with explicit availability | One substantial implementation; confirm another consumer first |
 | UP-10 | P1 | Consistent in-memory render capture format | PNG on raylib, raw RGBA on sokol/Metal under the same API |
+| UP-11 | P2 | Useful default profiling UI with customization | User-requested addition; collection hooks and a wm demonstration already exist |
+| UP-12 | P2 | Chart set with an interactive wm test screen | User-expanded sparkline proposal; profiling supplies a concrete consumer |
+
+### User decisions
+
+| Item | Decision | Scope / condition |
+|---|---|---|
+| UP-01 Audio gains | Approved | Master scales music/effects while preserving their relative preferences. |
+| UP-02 Settings saves | Approved | Preserve the previous file on failure and report failures accurately. |
+| UP-03 Test clipboard | Approved | Isolate both app and built-in widget clipboard operations. |
+| UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. |
+| UP-05 Binding persistence | Approved | Save/load complete bindings, including modifiers and axes. |
+| UP-06 Binding prompts | Approved | Current binding labels and keyboard/controller prompts. |
+| UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
+| UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
+| UP-09 Filesystem watcher | Approved | Upstream the existing watcher. Wordproc is a possible second consumer, not a confirmed one. |
+| UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
+| UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. |
+| UP-12 Chart set and test screen | Approved, expanded | Replace the small sparkline proposal with a chart set and an interactive wm test screen. |
+| UI sound-feedback hooks | Pending; recommend skip | Click callbacks already exist. A distinct focus-change notification still needs a concrete consumer requirement. |
+| Periodic timer helper | Pending | Not yet asked individually. |
 
 ### UP-01: Independent audio gains
 
@@ -437,7 +459,8 @@ stop and drain-events API could expose changed paths, rescan-required state,
 and explicit unsupported/error results. Keep Git filtering, debounce and
 refresh decisions in the app. This is a candidate for editors and asset reload,
 but only one substantial consumer was confirmed, so establish a second use
-before choosing a public interface.
+before choosing a public interface. The subsequent user decision approves
+upstreaming now, with wordproc as a possible consumer to investigate.
 
 Validate multiple roots, create/modify/delete or rescan events, root replacement,
 immediate destruction after start, and no callbacks after stop. A portable
@@ -465,11 +488,59 @@ the expected image, raw results have the expected length and pixel positions,
 and failed readback returns failure. Pixel inspection, export and visual tests
 benefit. Keep this contract correction separate from UP-08's mutable upload API.
 
-### Smaller opportunities, not promoted to required APIs
+### UP-11: Useful default profiling UI
+
+The user requested a shared profiling UI because consumers build their own.
+Timing infrastructure already exists: `src/core/system.h:518` defines
+`SystemProfileHook`, and `src/plugins/e2e_testing/perf_commands.h:44` supplies
+built-in collection. wm's `src/systems/screens/SystemProfileLab.h:17` has a
+start/stop demonstration and a text table. The missing product is a useful,
+easy-to-enable default panel that apps can customize.
+
+Provide frame-time history, FPS and frame-time percentiles, a sortable list of
+expensive systems, and available process CPU/memory counters. Include pause,
+resume and reset with clear sampling windows and units. Missing counters must
+show as unavailable. The default setup should need no custom data provider for
+metrics already collected by the library. Apps can add named counters with
+units, select sections and history duration, and use their theme in an embedded
+panel or overlay. Reuse the chart set in UP-12.
+
+Keep measurement meanings accurate. The current built-in collector sums elapsed
+wall time across calls and puts call counts in `PerfEntry::entity_count`; its
+dump labels the totals as averages and counts as entities. The default panel
+must distinguish total/mean/per-frame timings and invocation/entity counts.
+Elapsed system time must not be labeled CPU utilization or GPU time. Reuse or
+extract the existing collection path so normal apps do not need to register
+E2E commands merely to show diagnostics. Define how an existing app profiler
+can supply data without silently replacing its hooks.
+
+Validate the panel in wm with a repeatable workload and custom counters. Show
+that an intentionally slower system appears, history stays bounded, pause
+preserves the displayed snapshot, reset has clear behavior, and unavailable
+metrics stay honest. Check keyboard/mouse use and resizing, then measure the
+panel's enabled and disabled overhead. This is requested scope, not a measured
+performance improvement or an implemented feature.
+
+### UP-12: Chart set with an interactive test screen
+
+The user approved the sparkline idea and expanded it to a chart set with a wm
+test screen. Proposed initial coverage is line, area, bar, scatter and sparkline
+charts, with hover values and changing datasets. Share axes, scales, labels,
+legends and theme styling where useful; sparklines can omit the full chart
+chrome. The profiling panel is a concrete consumer for time-series charts.
+
+Keep data ownership and application-specific aggregation with callers. The wm
+test screen should exercise empty, single-value and constant datasets, negative
+values, multiple series, live updates and resizing. Validate finite coordinate
+mapping, clipping, readable labels, hover selection, and keyboard access to
+interactive controls. The user requested the chart set and test screen; the
+initial chart types and interactions are proposed implementation scope.
+
+### Smaller opportunities and their decisions
 
 | Opportunity | Evidence | Why deferred / what would justify extraction |
 |---|---|---|
-| Sparkline helper | `scrubdaddy/src/components/StockSparkline.jsx:1`, used by `scrubdaddy/src/components/StockMarket.jsx:44`; independent chart code in `watching-a-movie-a-day-presentation/templates/reveal/js/charts.js:307` and `:443` | Line drawing already exists. A small values-to-points component could help, but no chart framework is justified. Require correct empty/single/constant series and a second small-chart consumer. |
+| Sparkline helper, expanded to UP-12 | `scrubdaddy/src/components/StockSparkline.jsx:1`, used by `scrubdaddy/src/components/StockMarket.jsx:44`; independent chart code in `watching-a-movie-a-day-presentation/templates/reveal/js/charts.js:307` and `:443` | Originally deferred. The user subsequently requested a chart set and wm test screen; see UP-12. Existing line drawing remains the rendering foundation. |
 | UI activation/navigation feedback | `MyNameChef/src/sound_systems.cpp:18`, `afterhours-template/src/sound_systems.cpp:18`, `kart-afterhours/src/systems/sound_systems.cpp:19` scan listeners to request sounds | Click callbacks and playback already exist; these are closely related copied implementations. Consider a small optional activation/focus callback only if it removes scans and produces exactly one cue for nested controls and keyboard activation. |
 | Remainder-preserving periodic timer | `endless-dance-chaos/src/crowd_systems.cpp:153` and `endless-dance-chaos/src/schedule_systems.cpp:152` retain elapsed overshoot; `src/plugins/timer.h:51` and `:74` reset accumulated time | Timers already exist and cooldown semantics differ. A separate periodic helper could return elapsed ticks/remainder with an explicit catch-up policy; do not change every timer's semantics. |
 

@@ -1,6 +1,6 @@
 # Cross-project afterhours review
 
-Review date: 2026-09-12. Findings are in [AFTERHOURS_GAPS.md](AFTERHOURS_GAPS.md#cross-project-upstream-review-2026-09-12), UP-01 through UP-10. Three smaller opportunities are explicitly deferred there.
+Review date: 2026-09-12. Findings are in [AFTERHOURS_GAPS.md](AFTERHOURS_GAPS.md#cross-project-upstream-review-2026-09-12), UP-01 through UP-10. Three smaller opportunities were initially deferred there. The gap file now also records user decisions, including an expanded chart set and a default profiling UI requested after this source review.
 
 ## Scope and method
 
@@ -83,7 +83,7 @@ These source patterns do not justify new APIs. Adoption can still require consum
 |---|---|---|
 | Current bindings lookup | `cartographer/src/input_action.h:593` walks maps | `ProvidesLayeredInputMapping::get_bindings` already exists; UP-06 covers display/device preference only. |
 | Atomic file replacement | Direct settings writes in floatinghotel and pharmasea | `files::write_string_atomic` exists. UP-02 requests integration into the shared settings plugin and correct caller failure handling. |
-| Profiling hooks | Cartographer, mailboy and armchair system wrappers | Newer `core/system.h` has `SystemProfileHook`; `e2e_testing/perf_commands.h` has built-in profiling. |
+| Profiling hooks | Cartographer, mailboy and armchair system wrappers | Newer `core/system.h` has `SystemProfileHook`; `e2e_testing/perf_commands.h` has built-in profiling. UP-11 requests a default customizable UI over this infrastructure. |
 | Grids, tabs, progress bars, tooltips and toasts | supermarket-react, df, scrubdaddy and last_mile | Existing UI components cover these controls. Do not add duplicate widget implementations. |
 | Render-target readback | Puzzle GIF export and node pixel sampling | `capture_render_texture_to_memory` exists, but raylib returns PNG and sokol/Metal returns RGBA. UP-10 records the contract defect; the image-wrapper gap asks for portable raw RGBA readback. |
 | Render-target caching | `last_mile/src/Grid.tsx:1023` caches its static layer | Existing render-texture operations cover caching; UP-08 is specifically mutable CPU pixel upload. |
