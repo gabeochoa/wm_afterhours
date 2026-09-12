@@ -256,7 +256,7 @@ are not accepted decisions.
 | UP-03 Test clipboard | Implemented locally | Scoped provider isolates app and built-in widget operations; 15/15 clipboard checks pass. |
 | UP-04 Native dialogs | Implemented locally | afterhours `544ea06`; queued open/save/folder dialogs with portable results and test responses, macOS first. |
 | UP-05 Binding persistence | Implemented locally | afterhours `00a6745`; versioned complete binding records without a JSON dependency. |
-| UP-06 Binding prompts | Approved | Current binding labels; automatically switch keyboard/controller prompts on deliberate input, ignore drift/incidental mouse movement, and let apps pin a device. |
+| UP-06 Binding prompts | Implemented locally | afterhours `bcefe22`; current binding labels, automatic device preference, noise filtering and app override. |
 | UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
 | UP-09 Filesystem watcher | Approved | Upstream the existing watcher, macOS first behind one portable public API with an explicit unsupported result elsewhere. Wordproc is a possible second consumer, not a confirmed one. |
@@ -275,6 +275,7 @@ are not accepted decisions.
 | UP-03 | afterhours `b81173b` | Clipboard tests 15/15, including fresh writes, nested scope restoration after exceptions, reset, and single/multiline widget copy/paste. |
 | UP-04 | afterhours `544ea06` | Portable queue checks cover single consumption, Unicode paths, cancellation, errors and reentrant processing. Real macOS open/save/folder cancellation and off-main-thread rejection pass. |
 | UP-05 | afterhours `00a6745` | All binding alternatives, explicit modifiers, malformed records and atomic list decoding pass with no backend and raylib. |
+| UP-06 | afterhours `bcefe22` | Tests cover full modifiers, axis directions, drift/mouse-motion rejection, held-axis behavior, pinned preference, remapping and layer changes. |
 
 All other approved UP items remain unimplemented in this work. Commits are
 local; nothing was pushed. Tests and builds use `nice -n 10`.
