@@ -259,7 +259,7 @@ are not accepted decisions.
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
 | UP-09 Filesystem watcher | Approved | Upstream the existing watcher, macOS first behind one portable public API with an explicit unsupported result elsewhere. Wordproc is a possible second consumer, not a confirmed one. |
 | UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
-| UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. |
+| UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. Cheap continuous recording independent of panel visibility, code controls and a compile-time off switch; measure overhead. |
 | UP-12 Chart set and test screen | Approved, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
 | UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
 | Periodic timer helper | Skip | No shared remainder-preserving timer requested. |
@@ -509,6 +509,16 @@ metrics already collected by the library. Apps can add named counters with
 units, select sections and history duration, and use their theme in an embedded
 panel or overlay. Drive UP-12's initial chart scope from this panel's needs.
 
+The user accepts continuous background recording and requires low overhead,
+code controls and the ability to compile the profiler out. Keep recording
+independent of panel visibility, with bounded history and runtime start/stop.
+Separate pausing a displayed snapshot from stopping collection. Avoid per-sample
+allocation after initialization and avoid UI work while hidden. A compile-time
+off switch must remove this profiler's instrumentation, collection, storage and
+UI, including evaluation of custom sample expressions, while preserving any
+independent consumer profiling hooks. See D-03 in
+[gap-design-decisions.md](gap-design-decisions.md) for implementation checks.
+
 Keep measurement meanings accurate. The current built-in collector sums elapsed
 wall time across calls and puts call counts in `PerfEntry::entity_count`; its
 dump labels the totals as averages and counts as entities. The default panel
@@ -521,9 +531,12 @@ can supply data without silently replacing its hooks.
 Validate the panel in wm with a repeatable workload and custom counters. Show
 that an intentionally slower system appears, history stays bounded, pause
 preserves the displayed snapshot, reset has clear behavior, and unavailable
-metrics stay honest. Check keyboard/mouse use and resizing, then measure the
-panel's enabled and disabled overhead. This is requested scope, not a measured
-performance improvement or an implemented feature.
+metrics stay honest. Check keyboard/mouse use and resizing. Compare compiled-out,
+compiled-in but stopped, background-recording and visible-panel runs of the same
+workload. Report frame-time distribution, CPU, memory and steady-state
+allocations; check sustained recording for memory growth. No numeric overhead
+budget is agreed yet. This is a performance requirement, not a measured claim
+that recording is cheap enough to leave on or an implemented feature.
 
 ### UP-12: Chart set with an interactive test screen
 

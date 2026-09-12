@@ -32,8 +32,8 @@ Pending rows are proposals. Accepted rows record the user's answers.
 |---|---|---|---|
 | D-01 Platform coverage | UP-04 dialogs; UP-09 file watching | Implement macOS first behind one platform-independent public API. Callers use the same types, calls and result handling everywhere, without platform conditionals. Other backends initially return the shared unsupported result. | Accepted |
 | D-02 Chart scope | UP-12 | Build the charts needed by the profiling UI first and exercise them in the wm test screen. Keep the broader chart set and additional interactions as TODOs; they do not block the profiling UI. | Accepted |
-| D-03 Profiling experience | UP-11 | Settle recording behavior when the panel is hidden. Proposed presentation remains an opt-in overlay with an embeddable panel, bounded history, pause/reset and custom counters. | Recording question asked; awaiting answer |
-| D-04 Input prompts | UP-06 | Choose automatic switching behavior. Proposed default switches on deliberate keyboard/gamepad input, ignores stick noise and incidental pointer motion, and allows callers to pin a device. | Pending |
+| D-03 Profiling experience | UP-11 | Support continuous bounded recording independently of panel visibility, code controls and a compile-time switch to remove the profiler. Measure overhead before claiming it is suitable to leave on. | Accepted |
+| D-04 Input prompts | UP-06 | Choose automatic switching behavior. Proposed default switches on deliberate keyboard/gamepad input, ignores stick noise and incidental pointer motion, and allows callers to pin a device. | Asked; awaiting answer |
 | D-05 Screen discovery | wm TODO | Choose searchable categories/tree versus a flat searchable list. Preserve comma/period cycling without duplicate destinations and keep the active screen visible. | Pending |
 
 ### D-01: One public API, macOS implementation first
@@ -63,6 +63,35 @@ follow-up work. Pie/donut, stacked charts, histograms and pan/zoom were offered
 as options, not individually approved requirements. Reassess them when extending
 the chart set. This decision does not defer unrelated approved upstream gaps.
 
+### D-03: Cheap background recording with runtime and build controls
+
+The user wants profiling cheap enough to leave recording, accepts continuous
+recording, and wants control from code and a compile-time switch to remove it
+when unused. Recording must be independent of panel visibility. A profiling
+build can retain bounded recent history while the panel is hidden; callers can
+start and stop collection without changing whether the panel is shown.
+
+Implementation direction: keep collection small, reuse bounded storage, and
+avoid per-sample allocation after initialization. Do not format labels, build
+widgets or sort display tables while the panel is hidden. Sample process
+CPU/memory at a lower cadence than frame/system timings. Pausing the displayed
+snapshot and stopping collection are separate operations with clear labels.
+Retain the planned overlay and embeddable panel with customization.
+
+Provide a compile-time option that removes this profiler's instrumentation,
+collection, storage and UI. Disabled instrumentation must not evaluate custom
+sample expressions or leave timing calls in the frame loop. Preserve existing
+consumer profiling integrations; compiling out the new profiler must not
+silently disable an app's independently installed hook.
+
+Compare the same repeatable workload with the profiler compiled out, compiled
+in but stopped, recording with the panel hidden, and recording with it visible.
+Report frame-time distribution, CPU, memory and steady-state allocations, and
+check sustained recording for memory growth. Use `nice -n 10` consistently.
+No numeric overhead budget has been agreed and no overhead claim is measured
+yet. If recording materially distorts the workload, optimize or reduce sampling
+before recommending that consumers leave it on.
+
 ## Work outside this decision batch
 
 UP-07 screen-reader support and UP-08 mutable RGBA textures remain deferred until
@@ -77,4 +106,4 @@ changes and which can be fixed in wm.
 
 Performance follow-ups start with measurement. Atlas layout, lazy loading and
 memory optimizations should follow evidence rather than a design questionnaire.
-No additional performance requirement has been inferred here.
+The profiler's additional performance requirement is recorded in D-03 above.
