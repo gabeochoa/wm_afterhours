@@ -1,11 +1,12 @@
 # Afterhours Library Gaps & Workarounds
 
-wm_afterhours vendors afterhours (git submodule) **and** maintains it, so gaps
-found during UI work get fixed upstream, merged, and pulled in via a submodule
-pin bump — not worked around in wm source. This file tracks only what's still
-**open**; resolved gaps are listed compactly for the record.
+This file tracks afterhours library limitations and wm-owned implementation
+and visual parity gaps. Each finding identifies its owner where known;
+resolved findings remain as evidence. Library changes and the submodule pin
+are frozen pending user review during this audit.
 
-**Every entry here was rechecked against `main` on 2026-09-12.** That sweep is
+The cross-project library inventory below was rechecked against `main` on
+2026-09-12. That sweep is
 worth repeating before trusting any of it, because the consumer docs these were
 collected from are all months stale: of everything collected this cycle, hanabi
 had 6 of their top 10 already fixed, cartographer's component asks were almost
@@ -24,95 +25,104 @@ It does not classify a visual mismatch as a library defect. Library changes
 and the submodule pin are frozen for this pass; proven upstream blockers
 remain open for user review. Delivery status: `docs/screen-audit.md`.
 
+### Visual acceptance reopened
+
+The user rejected the earlier assessment that the remaining differences were
+only minor or cosmetic. The C++ screens still fall short of the web mocks.
+The earlier reviews established functional progress and readable layouts;
+they did not establish visual parity. All 26 screens retain open visual gaps.
+
+The web mock remains the acceptance target. Typography, composition, depth,
+artwork and control states must be reviewed together. Passing E2E tests proves
+the asserted behavior. Passing screenshot validation proves stability against
+native baselines. Neither proves a match to `mocks.html`.
+
+### Shared visual gaps
+
+These entries collect the implementation shortcuts behind the per-screen
+findings below. They describe missing results in wm, not confirmed missing
+APIs in afterhours. Check the existing library support before assigning an
+upstream change; library changes still require user review.
+
+| ID | Open gap and evidence | Ownership / next work | Closure evidence |
+|---|---|---|---|
+| VP-01 | Typography does not match the browser: font weight, italics, tracking, line height, wrapping and mixed-size text. Fighter, Flight, Race Results and Kart Select have different display lettering; Potion and Shop lack the target italic treatment; Neon uses one ammo font size. | wm must match actual font faces and text metrics. Investigate library support only where a specific text treatment cannot be expressed. Synthetic outlines or a larger atlas alone do not reproduce the intended weight or slant. | Compare headings, body copy, values and hints at 720p/1080p. Match hierarchy, baseline placement, line breaks and emphasis without clipping. |
+| VP-02 | Rotation, skew and perspective were flattened. Fighter's title/hologram and Dead Space's rows lack the target transforms; Parcel's phone and Empire's logo remain upright. These change the composition substantially. | wm implementation gap. Determine whether existing drawing and transform support can reproduce the composition; any missing reusable transform API needs a separate library reproduction. | Match angles, silhouettes and overlap to the mock. Transformed controls must retain correctly placed pointer targets and keyboard navigation. |
+| VP-03 | Gradients, shadows, glow and inset highlights are simplified or absent. Cozy loses radial lighting and paper depth; Empire loses plate/button shading; Dead Space and Flight lose glow; PowerWash, Kart, Offsite and Secure Tunnel have flatter shadows. | wm implementation gap; library capability and rendering cost need investigation. Flat fills are not an accepted substitute for the mock's depth. | Compare light direction, gradient falloff, shadow spread, glow and foreground/background separation in matched captures. |
+| VP-04 | Borders, corner shapes, clipping and layered decoration differ. Cozy lacks inset arcs and its paper fold; Minesweeper has square bevel joins; Marlo cards differ in rounding; Guess Who outlines are heavier; Potion's inset border is faint. | wm owns the visible result. The uniform-border thickness bug is separately proven below; do not assign every shape mismatch to that bug. | Match border thickness, corner silhouettes, inset edges and overlaps at both resolutions. Verify content and shadows clip where the mock clips them. |
+| VP-05 | Artwork, icons and small controls are approximated with simpler shapes or text glyphs. PowerWash status/gear icons, Secure Tunnel flags/shield, AIM and Media toolbar icons, Shop items and Offsite folders differ; mobile currency/lives decoration is missing or simplified. | wm art and rendering work. Use faithful isolated artwork or native vector drawing while keeping labels, values and controls live. | Compare silhouettes, stroke weights, detail, color and scale. No missing or substitute glyphs where the mock has a distinct icon. |
+| VP-06 | Spacing and proportions remain wrong even where the main panels align. Parcel's objective badge crowds text; PowerWash help wraps differently; Guess Who arrows sit too close to labels; Race headers and Flight keycaps are smaller; several screens have different rail, footer or label spacing. | wm layout and text measurement. Absence of overflow is only a minimum correctness check. | Match padding, alignment, line lengths, density and relative sizes to the mock in the same viewport and state. |
+| VP-07 | Decorative backgrounds lost material and scene detail. Cozy lacks grain; Islands has approximate paper/background contours; Parcel's street/rider and PowerWash's wall/pool scene are simplified. These affect the overall resemblance, not just individual widgets. | wm artwork/composition work. Keep decorative textures separate from changing content. | Compare the full canvas as well as control crops. Match texture, scene geometry, contrast and the balance between decoration and controls. |
+| VP-08 | Control-state appearance has not been accepted against the web mock. Sports selected-row shading differs; Media's selected poster border differs; Guess Who dropdown chevrons differ. Existing interaction tests do not establish matching hover, focus, pressed, disabled, expanded or transition visuals across all screens. | wm review and implementation. Audit these states explicitly; record any missing transition or state treatment with a reproduction instead of assuming it matches because the control works. | Capture matching pointer and keyboard states, open menus/dialogs, selection, disabled controls and transitions. Compare appearance and hit areas against the web version while preserving existing behavior. |
+| VP-09 | Visual review used an inadequate acceptance standard. Substantial changes to perspective, type and depth were labeled cosmetic; passing native baselines and E2E checks were used to support overly broad completion claims. | wm audit process. Reopen visual acceptance for all 26 screens and keep functional verification separate from appearance. | Each screen needs direct web-versus-C++ review in matched states and resolutions. Close concrete visual findings only when the result matches or the user accepts a specific deviation. |
+| VP-10 | Browser styling is easy to compose, while the native implementations used repeated custom drawing and approximations. The audit has not established which treatments need better library APIs and which merely need correct wm code. | wm investigation first. For a proposed library gap, record the desired effect, existing API attempted, minimal reproduction and limitation. Existing border/position/slider findings below remain separate proven cases. | Each suspected API gap has evidence and a clear owner. Library availability alone does not close the corresponding visual gap; the screen must render the intended result. |
+
+### Per-screen findings
+
+The following rows preserve implemented fixes and known residual differences.
+References to passing tests or previous reviews are evidence of those checks,
+not visual acceptance. The shared gaps above and these screen-specific visual
+gaps remain open.
+
 | Screen / state | Finding | Owner | Disposition / evidence |
 |---|---|---|---|
 | Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 5 embeds all 26 audited native baselines and opens directly in a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
 | potion_crafting / recipe view | Dark panels, text initials for ingredients, and a rectangular flask did not match the parchment composition. | wm | Replaced with parchment layout, botanical/bottle artwork, scaled geometry and Garamond text; reviewed at 720p and 1080p. |
 | potion_crafting / crafting | Brew ignored clicks; tabs did not change content; recipe row IDs overlapped. | wm | Unique IDs, live stock consumption, shortage handling, recipe-aware ingredient requirements, inventory and journal views. E2E 40 exercises pointer, real Tab traversal, Enter, repeated shortage and resize. |
-| potion_crafting / fine styling | Secondary copy lacks the target's italic face; brew button's inset border is subtler; footer gives keyboard guidance instead of the decorative Close workshop hint. | wm | Open visual polish. No library blocker claimed; gameplay and layout checks pass. |
+| potion_crafting / visual parity | Secondary copy lacks the target's italic face; brew button's inset border is subtler; footer gives keyboard guidance instead of the decorative Close workshop hint. | wm | Open visual parity gap. No library blocker claimed; gameplay and layout checks pass. |
 | angry_birds_settings / layout | Flat board, mismatched icons and uneven button caps did not resemble the mobile settings mock. | wm | Shared label-free forest, board and button artwork, high-resolution Fredoka atlas, and explicit scaled geometry. Fresh 720p/1080p captures reviewed independently. |
 | angry_birds_settings / interactions | Language, help and progress actions lacked useful views. | wm | Real language selection, separate campaign save/load state, credits/support/privacy views, notification/audio settings, apply/cancel, close/reopen and Escape. E2E 128 and responsive/containment regressions pass. |
-| angry_birds_settings / fine styling | Native font outlines are heavier; hint baseline is about 7px higher; faint background currency pill is absent. | wm | Open cosmetic differences; primary layout and control geometry match. |
+| angry_birds_settings / visual parity | Native font outlines are heavier; hint baseline is about 7px higher; faint background currency pill is absent. | wm | Open visual parity gap; primary layout and control geometry match. |
 | cozy_cafe / layout | Mis-sized panels, substitute icons, faint borders and clipped footer/music labels differed from the cafe mock. | wm | Matched panel geometry, isolated flower/star/tool artwork, scaled outlines and improved type. Fresh 720p/1080p captures; independent reviews. |
 | cozy_cafe / service and selection | Serving incremented counters without removing orders; selected specials lacked a visible state. | wm | Serve consumes the next order and disables when empty, promotion uses the selected special, visible selection outline and live music control. E2E 129 checks pointer, Tab/Enter, depleted queue and resize. |
-| cozy_cafe / fine styling | Paper lacks the mock's grain, radial glow, inset arcs and corner fold; native text outlines are stronger and title slightly wider; customer separators use hyphens. | wm | Open cosmetic differences. Correctness, overflow and parent containment checks pass. |
+| cozy_cafe / visual parity | Paper lacks the mock's grain, radial glow, inset arcs and corner fold; native text outlines are stronger and title wider; customer separators use hyphens. | wm | Open visual parity gap. Correctness, overflow and parent containment checks pass. |
 | casual_settings / layout and dialogs | Generic colors, substitute icons and inert information actions differed from the mobile mock. | wm | Shared decorative board/icons, matched geometry, high-resolution rounded type, language apply/cancel, campaign save/load, credits, support FAQ, terms and about views. E2E 130 passes at both resolutions, including dialog containment and keyboard use. |
-| casual_settings / fine styling | Faint lives/currency pills are simplified to a currency label; native label outlines differ slightly. | wm | Open cosmetic differences. Fresh 720p/1080p captures independently reviewed; text-overflow warnings resolved. |
+| casual_settings / visual parity | Faint lives/currency pills are simplified to a currency label; native label outlines differ. | wm | Open visual parity gap. Fresh 720p/1080p captures independently reviewed; text-overflow warnings resolved. |
 | fighter_menu / rendering and navigation | Missing lobby, invisible slanted triangles, blurred display type and letter substitutes for icons weakened the fighter layout. | wm | Fixed triangle winding and background layering, added isolated lobby/icons and a 96px display font. Live tabs and option descriptions; E2E 131 passes pointer, Enter/arrows and 1080 resize. Fresh images independently reviewed. |
-| fighter_menu / fine styling | Title/hologram lack the mock's rotation and perspective; serif weight is thinner; lobby and panel shading are approximate. | wm | Open cosmetic gaps. No clipping or interaction blocker found in the final 720p/1080p review. |
-
-
+| fighter_menu / visual parity | Title/hologram lack the mock's rotation and perspective; serif weight is thinner; lobby and panel shading are approximate. | wm | Open visual parity gap. No clipping or interaction blocker found in the final 720p/1080p review. |
 | flight_options / layout and settings | Generic options layout and shallow interactions did not match the flight-system mock. | wm | Matched the airspace grid, selection geometry, nine categories and setting editors. Apply/cancel retains or discards values; keyboard and pointer coverage in E2E 134. |
-| flight_options / fine styling | Native lettering is thinner and lacks the browser glow; keycap labels are smaller. Vibration is explicitly marked unavailable. | wm | Open cosmetic differences and a stated hardware limitation; final 720p/1080p review found no clipping or interaction blocker. |
-
-
+| flight_options / visual parity | Native lettering is thinner and lacks the browser glow; keycap labels are smaller. Vibration is explicitly marked unavailable. | wm | Open visual parity gap and a stated hardware limitation; final 720p/1080p review found no clipping or interaction blocker. |
 | deadspace_settings / hologram and controls | Rectangular slabs, invisible corner triangles and inert categories missed the hologram design. | wm | Winding-correct clipped polygons, scan lines, layered menus and live category detail settings; E2E 132 passes pointer/keyboard/back and resize. |
-| deadspace_settings / fine styling | Rows lack the mock's perspective skew and stronger glow; rear panel contrast and keycaps differ. | wm | Open cosmetic differences. Final 720p/1080p captures independently reviewed with no clipping or unreadable selection. |
-
-
+| deadspace_settings / visual parity | Rows lack the mock's perspective skew and stronger glow; rear panel contrast and keycaps differ. | wm | Open visual parity gap. Final 720p/1080p captures independently reviewed with no clipping or unreadable selection. |
 | kirby_options / notebook and preferences | Plain panels and decorative-only options missed the notebook composition and useful interactions. | wm | Isolated paper, tab and icon artwork with native labels; editable name, per-category preferences, favorite mode, tab views and confirmed profile reset. E2E 137 covers pointer, Tab/Enter and resize. |
-| kirby_options / fine styling | Native type spacing/weight and pencil artwork differ slightly; bumper hints use purple rather than dark keycaps. Online view is explicitly local. | wm | Open cosmetic differences and stated simulation scope. Final 720p/1080p images independently reviewed. |
-
-
+| kirby_options / visual parity | Native type spacing/weight and pencil artwork differ; bumper hints use purple rather than dark keycaps. Online view is explicitly local. | wm | Open visual parity gap and stated simulation scope. Final 720p/1080p images independently reviewed. |
 | minesweeper_lab / desktop and game | Generic chrome, unreadable counters and overlapping taskbar text missed the classic desktop mock. | wm | Native desktop/window/taskbar, high-resolution font aliases, regular counter face to distinguish zero from eight, separate labels for icon buttons, real game reset and window state controls. Existing play test 120 and new 139 pass. |
-| minesweeper_lab / fine styling | Bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open cosmetic differences; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
-
-
+| minesweeper_lab / visual parity | Bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open visual parity gap; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
 | empire_tycoon / dashboard and state | Hidden park art, substitute icons, misplaced controls and faint borders weakened the tycoon composition. | wm | Isolated park/icons, winding/layering fixes, scaled outlines and dashboard geometry. Live production, cash, projects, gauges and milestone react to actions; E2E 133 passes. |
-| empire_tycoon / fine styling and scope | Logo remains upright; plates/buttons lack target gradients and inset highlights; body text uses a heavier rounded face; gauges and chat tail are simplified. Tool buttons report selection without full destination screens, as in the mock. | wm | Open visual polish and bounded demo navigation. 720p/1080p reviewed; no library changes. |
-
+| empire_tycoon / visual parity and scope | Logo remains upright; plates/buttons lack target gradients and inset highlights; body text uses a heavier rounded face; gauges and chat tail are simplified. Tool buttons report selection without full destination screens, as in the mock. | wm | Open visual parity gap and bounded demo navigation. 720p/1080p reviewed; no library changes. |
 | mini_motorways_settings / layout and categories | Typography, detached controls and road bend artifacts missed the map-like settings mock. | wm | Native grid/road geometry, scaled controls and real per-tab content; ring-based bend eliminates draw-segment artifacts. |
-| mini_motorways_settings / fine styling | Font tracking, symbol edges and exact tutorial/version text dimensions differ slightly. | wm | Open cosmetic differences; E2E 140 covers pointer, keyboard, values and containment at both resolutions. |
-
+| mini_motorways_settings / visual parity | Font tracking, symbol edges and exact tutorial/version text dimensions differ. | wm | Open visual parity gap; E2E 140 covers pointer, keyboard, values and containment at both resolutions. |
 | neon_strike / HUD and actions | Generic HUD placement, missing artwork and inert controls differed from the mock. | wm | Matched map/compass/equipment geometry with isolated text-free art and native high-resolution labels. Reload transfers reserve ammunition; abilities and equipment have visible selection. |
-| neon_strike / fine styling | Ammo uses one font size instead of mixed sizes; objective chevrons and subtle background glow differ. | wm | Open cosmetic differences. E2E 141 and final 720p/1080p reviews pass. |
-
-
+| neon_strike / visual parity | Ammo uses one font size instead of mixed sizes; objective chevrons and subtle background glow differ. | wm | Open visual parity gap. E2E 141 and final 720p/1080p reviews pass. |
 | marlo_kart / six-phase presentation | Driver/kart/cup screens and racing presentation did not match the mock; custom roads/maps were accidentally covered by panel fills in the first audit draft. | wm | Isolated driver/kart/trophy art, live text and HUD, perspective road with moving stripes, visible shared-path minimap/cup previews, pause above countdown. Existing fixed-step racing, items, drift, eight racers, four cups and points remain intact. E2E 126/127/138 pass. |
-| marlo_kart / fine styling | Card rounding, label proportions and key hints differ slightly from the mock; native race view follows the real simulation rather than the gallery's phase shortcuts. | wm | Open cosmetic differences; all six phases visually reviewed, including actual cup completion and trophy standings. High-resolution regular font removes enlarged-text blur. |
-
-
+| marlo_kart / visual parity | Card rounding, label proportions and key hints differ from the mock; native race view follows the real simulation rather than the gallery's phase shortcuts. | wm | Open visual parity gap; all six phases visually reviewed, including actual cup completion and trophy standings. High-resolution regular font removes enlarged-text blur. |
 | aim_chat / desktop and messaging | Simplified chrome and shared/inert conversation actions did not match the classic messenger mock. | wm | Two native windows, desktop/taskbar, isolated buddy history/drafts, multiline composer, warn/block, menus and window controls. Existing text-editing test and E2E 149 pass. |
 | aim_chat / modal hit testing | The nested pasted-log scrollbar intercepted Clear unsent draft in the Edit dialog, leaving the dialog open and blocking minimize. | wm workaround; deeper ownership unresolved | Disable both underlying scroll axes while a modal is open; restore on close. Reproduced before fix; E2E 149 now clears the draft and minimizes/restores correctly. No afterhours edit. |
-| aim_chat / fine styling and scope | Fonts are lighter; some toolbar/taskbar icons are text substitutes; italic/underline report format availability instead of formatting text. Buddy List is a fixed-size utility window. | wm | Open visual/formatting limitations. Chat maximize works; messaging is explicitly a local demo. |
-
+| aim_chat / visual parity and scope | Fonts are lighter; some toolbar/taskbar icons are text substitutes; italic/underline report format availability instead of formatting text. Buddy List is a fixed-size utility window. | wm | Open visual parity and formatting gaps. Chat maximize works; messaging is explicitly a local demo. |
 | islands_trains_settings / layout and actions | Centered paper/row proportions differed and Keyboard/Tutorial had no visible effect; Close only displayed a status. | wm | Matched paper/controls and added bindings help, local pan/place/run tutorial, real close/reopen with preserved preferences. E2E 136 covers these flows. |
-| islands_trains_settings / fine styling | Typography and close glyph are lighter; paper/background contours and gradient are approximate. | wm | Open cosmetic differences; all controls and tutorial views remain contained at both resolutions. |
-
+| islands_trains_settings / visual parity | Typography and close glyph are lighter; paper/background contours and gradient are approximate. | wm | Open visual parity gap; all controls and tutorial views remain contained at both resolutions. |
 | media_library / layout and browsing | Generic grid and card padding displaced posters; tiny thumbnail labels overflowed in list mode. | wm | Matched library/sidebar/detail composition, six isolated poster templates with native titles, real filtering/sorting/paging, list view and per-item watchlist. Removed duplicate tiny list-poster titles; adjacent live titles remain. |
-| media_library / fine styling and playback | Text is lighter and some navigation icons are text substitutes; selected poster border is thinner. Playback is a labeled local preview rather than a media backend. | wm | Open cosmetic differences and explicit demo scope. E2E 150 covers browsing and pause/seek with parent containment. |
-
-
+| media_library / visual parity and playback | Text is lighter and some navigation icons are text substitutes; selected poster border is thinner. Playback is a labeled local preview rather than a media backend. | wm | Open visual parity gap and explicit demo scope. E2E 150 covers browsing and pause/seek with parent containment. |
 | shop_interface / shop and basket | Generic rounded rows, mismatched proportions and invisible flask liquid weakened the store mock. | wm | Square table rows, paper/wood frames, visible liquid, native item art, live basket purchase and gold/stock changes. Keyboard add/remove and real close/reopen verified in E2E 135. |
-| shop_interface / fine styling and scope | Emboldened serif headings are softer/heavier than target; item drawings and italic text remain approximate. Basket previews only its first three distinct items; Sell remains a preview tab. | wm | Open cosmetic and demo-scope gaps. Full basket totals still include every item; primary purchase flow and 720p/1080p containment pass. |
-
+| shop_interface / visual parity and scope | Emboldened serif headings are softer/heavier than target; item drawings and italic text remain approximate. Basket previews only its first three distinct items; Sell remains a preview tab. | wm | Open visual parity and demo-scope gaps. Full basket totals still include every item; primary purchase flow and 720p/1080p containment pass. |
 | rubber_bandits_menu / layout and roster | Logo font, promo overflow, squared selection and invisible bolt differed from the mock. | wm | Correct isolated logo/cast, rounded selection, bounded promo text, native bolt and live character/menu state. All four names checked for overflow. |
-| rubber_bandits_menu / fine styling | Promo border/inset, character-label weight and small footer details differ slightly. Supporter action is local demo feedback. | wm | Open cosmetic differences; final 720p/1080p images and long-name state reviewed. |
-
-
+| rubber_bandits_menu / visual parity | Promo border/inset, character-label weight and small footer details differ. Supporter action is local demo feedback. | wm | Open visual parity gap; final 720p/1080p images and long-name state reviewed. |
 | secure_tunnel / client and connection | Dark state-matrix demo lacked the mock map/sidebar and location search. | wm | Native client layout, isolated map art with live markers, typed search and filtered rows, selected-server details and protocol selection. Existing Off/Dialing/Up transition preserved; E2E 152 passes. |
-| secure_tunnel / fine styling and scope | Condensed type, flag/icon drawings, rail spacing and shadows differ; shield artwork is approximate. Protocol, diagnostics and account actions are local simulations. | wm | Open cosmetic and demo-scope differences. The screen states network simulation; no real tunnel is created. |
-
+| secure_tunnel / visual parity and scope | Condensed type, flag/icon drawings, rail spacing and shadows differ; shield artwork is approximate. Protocol, diagnostics and account actions are local simulations. | wm | Open visual parity and demo-scope gaps. The screen states network simulation; no real tunnel is created. |
 | parcel_corps_settings / phone settings | Controls extended beyond the phone, selector arrows hid values and volume controls only incremented on clicks. | wm | Contained native controls with visible values; real draggable sliders and predictable keyboard steps. Status moved into free space above audio rows. E2E 142 verifies exact values and drag at both resolutions. |
-| parcel_corps_settings / fine styling | Phone remains upright, rider/street art and icons are simplified, and the objective badge crowds its final line slightly. | wm | Open cosmetic differences. Primary settings are readable and unobstructed; final independent review passes. |
-
+| parcel_corps_settings / visual parity | Phone remains upright, rider/street art and icons are simplified, and the objective badge crowds its final line. | wm | Open visual parity gap. Primary settings are readable and unobstructed; previous review checked readability, not visual parity. |
 | race_results / results layout | Tiny text, invisible header triangles, rounded rows and missing footer contrast weakened the results mock. | wm | Matched skewed row fills/backing, readable standings, corrected triangle winding, isolated shared racing scenery/portraits and restored light footer. |
-| race_results / fine styling and scope | Native type lacks italic slant and some headers are smaller; result action buttons report navigation choices in this standalone screen. | wm | Open cosmetic differences and demo navigation scope. E2E 144 covers selection/action feedback and resize. |
-
+| race_results / visual parity and scope | Native type lacks italic slant and some headers are smaller; result action buttons report navigation choices in this standalone screen. | wm | Open visual parity gap and demo navigation scope. E2E 144 covers selection/action feedback and resize. |
 | sports_settings / graphics settings | Labels displayed raw slider percentages instead of FPS/gamma; controls reused cached values across tabs and Back only changed a status. | wm | Domain value formatting, per-tab slider identity, internal state synchronization after external edits/reset, real close/reopen and initial-value reset. Exact scene artwork and native controls match the layout. |
-| sports_settings / fine styling | Text weight, selected-row shading and tiny bumper keycap glyphs differ; scrollbar lacks diagonal stripes. | wm | Open cosmetic differences. E2E 145 and independent audio/default captures confirm values and knob positions agree. |
-
+| sports_settings / visual parity | Text weight, selected-row shading and tiny bumper keycap glyphs differ; scrollbar lacks diagonal stripes. | wm | Open visual parity gap. E2E 145 and independent audio/default captures confirm values and knob positions agree. |
 | offsite_backup / backup layout | Small type and overlapping old controls obscured the new backup layout. | wm | Matched desktop/window/panels, removed duplicate rows/switches, separated checkbox labels and completion text. Existing progress/rescan model and local backup controls retained. |
-| offsite_backup / fine styling and scope | Native typography/ring differ, folder icons are faint, and borders/shadows are flatter than the mock. Backup, restore and account actions are local demonstrations. | wm | Open cosmetic differences and demo scope; final labels and controls are readable without overlap. |
-
+| offsite_backup / visual parity and scope | Native typography/ring differ, folder icons are faint, and borders/shadows are flatter than the mock. Backup, restore and account actions are local demonstrations. | wm | Open visual parity gap and demo scope; final labels and controls are readable without overlap. |
 | powerwash_settings / tablet and actions | Generic panel geometry, clipped help/keycaps and status-only close/reset differed from the mock. | wm | Matched tablet, tabs and setting rows; native values, initial-value reset and real close/reopen/Escape. Fresh captures and E2E 143 pass. |
-| powerwash_settings / fine styling | Status and gear icons are approximate; help wraps differently; background wall/pool shapes and tablet shadow are simplified. | wm | Open cosmetic differences. Both resolutions remain readable and contained. |
-
+| powerwash_settings / visual parity | Status and gear icons are approximate; help wraps differently; background wall/pool shapes and tablet shadow are simplified. | wm | Open visual parity gap. Both resolutions remain readable and contained. |
 | kart_select / racer selection | Generic cards, missing preview art and misplaced controls differed from the mock. | wm | Isolated eight-racer portrait/kart atlases, native labels and stats, checker header, platform and keyboard/pointer selection. E2E 42/147 pass. |
-| kart_select / fine styling and scope | Display type lacks italic slant, labels have different weight/spacing and preview shadows are flatter. Ready reports the chosen driver/vehicle in this standalone demo. | wm | Open cosmetic differences and demo scope; all art is present and both resolutions independently reviewed. |
-
+| kart_select / visual parity and scope | Display type lacks italic slant, labels have different weight/spacing and preview shadows are flatter. Ready reports the chosen driver/vehicle in this standalone demo. | wm | Open visual parity gap and demo scope; all art is present and both resolutions independently reviewed. |
 | guess_who_lab / board and questions | Generic board lacked the mock portraits and complete question/note controls. | wm | Isolated logo and 24-portrait atlas, native cards/labels, two question dropdowns and 24 note dropdowns; filtering, flips and reset work. E2E 121/148 pass without overflow. |
-| guess_who_lab / fine styling | Native typography, title-case names and dropdown chevrons differ; outlines are heavier and reset/ask arrows sit closer to labels. | wm | Open cosmetic differences. All 24 cards and controls remain readable and contained at both resolutions. |
+| guess_who_lab / visual parity | Native typography, title-case names and dropdown chevrons differ; outlines are heavier and reset/ask arrows sit closer to labels. | wm | Open visual parity gap. All 24 cards and controls remain readable and contained at both resolutions. |
 
 ---
 
