@@ -243,6 +243,10 @@ unless stated otherwise. Line numbers describe the reviewed local snapshots.
 
 ### User decisions
 
+Follow-up design choices and implementation readiness are tracked in
+[gap-design-decisions.md](gap-design-decisions.md). Pending recommendations there
+are not accepted decisions.
+
 | Item | Decision | Scope / condition |
 |---|---|---|
 | UP-01 Audio gains | Approved | Master scales music/effects while preserving their relative preferences. |
