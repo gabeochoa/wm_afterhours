@@ -17,7 +17,7 @@ Each library change has its own afterhours commit and a wm adoption commit.
 | UP-05 Complete binding persistence | Complete, afterhours `00a6745`; codec checks pass with no backend and raylib |
 | UP-06 Automatic binding prompts with device override | Complete, afterhours `bcefe22`; modifiers, axis direction, device switching, noise, override and remapping checks pass |
 | UP-09 Filesystem watcher, portable API, macOS first | Complete, afterhours `f4de4d3`; real filesystem lifecycle and overflow checks pass |
-| UP-10 Explicit capture formats | Pending |
+| UP-10 Explicit capture formats | Complete, afterhours `6eea5bd`; raylib/Metal raw and PNG pixel checks pass |
 | UP-11 Default profiling UI and compile-out support | Pending |
 | UP-12 Charts required by profiler, interactive wm test screen | Pending |
 | wm searchable screen tree | Pending |

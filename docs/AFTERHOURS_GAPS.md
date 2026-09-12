@@ -260,7 +260,7 @@ are not accepted decisions.
 | UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
 | UP-09 Filesystem watcher | Implemented locally | afterhours `f4de4d3`; macOS FSEvents behind a portable API with bounded events, rescan hints and explicit unsupported result elsewhere. |
-| UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
+| UP-10 Capture formats | Implemented locally | afterhours `6eea5bd`; explicit raw RGBA and PNG captures, with legacy PNG consistency. |
 | UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. Cheap continuous recording independent of panel visibility, code controls and a compile-time off switch; measure overhead. |
 | UP-12 Chart set and test screen | Approved, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
 | UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
@@ -277,6 +277,7 @@ are not accepted decisions.
 | UP-05 | afterhours `00a6745` | All binding alternatives, explicit modifiers, malformed records and atomic list decoding pass with no backend and raylib. |
 | UP-06 | afterhours `bcefe22` | Tests cover full modifiers, axis directions, drift/mouse-motion rejection, held-axis behavior, pinned preference, remapping and layer changes. |
 | UP-09 | afterhours `f4de4d3` | Real filesystem tests cover create/modify/rename/delete, Unicode paths, multiple roots, invalid roots, immediate destruction, restart, stop and bounded-buffer rescan. |
+| UP-10 | afterhours `6eea5bd` | Raylib/Metal nonsquare translucent captures match decoded PNG byte-for-byte. Legacy PNG, failed captures, Metal blend and HiDPI tests pass. |
 
 All other approved UP items remain unimplemented in this work. Commits are
 local; nothing was pushed. Tests and builds use `nice -n 10`.
