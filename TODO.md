@@ -1,5 +1,13 @@
 # TODO
 
+## Screen navigation follow-up
+
+- [ ] Improve screen switching and discovery. Investigate the duplicate screens
+  reported when cycling with `,` and `.`; show each intended screen once and
+  give intentional variants distinct names. Explore a tree or grouped picker
+  so screens are easier to find and open directly. Keep keyboard navigation
+  and make the current screen clear. The picker structure is not yet decided.
+
 ## Performance follow-ups — 2026-09-12
 
 - [ ] Move screen artwork into texture atlases. Measure texture switches, draw
