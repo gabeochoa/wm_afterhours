@@ -1,6 +1,6 @@
 # Mock parity audit
 
-The target is `mocks.html`. Published gallery: https://pxl.cl/d8w3j.
+The target is `mocks.html`. Published gallery: https://pxl.cl/d8w3j (revision 5).
 The Compare view overlays the source image on the mock or current C++ screenshot.
 Drag the divider, or use the range control with the arrow keys.
 The afterhours pin is frozen at `e3f13a7827e333460d38078fde716e1e4a5a68ef`.
@@ -54,19 +54,19 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | casual_settings | Updated; minor visual gaps recorded | E2E 130 passed including dialog containment, keyboard use, save/load and 1080 resize; independent visual review. |
 | fighter_menu | Updated; perspective/type gaps recorded | E2E 131 passed; pointer/keyboard option selection and resize; final 720p/1080p independent review. |
 | deadspace_settings | Updated; perspective/glow gaps recorded | E2E 132 passed: pointer/keyboard categories, setting changes, back and resize; final 720p/1080p independently reviewed. |
-| empire_tycoon | Updated; shading/type gaps recorded | E2E 133 passed: tabs, production boosts, priority/new project, tool feedback and resize; fresh 720p/1080p images independently reviewed. |
+| empire_tycoon | Updated; shading/type gaps recorded | E2E 133 and full parent-containment sweep 36b passed: tabs, production boosts, priority/new project, tool feedback and resize; fresh 720p/1080p images independently reviewed. |
 | flight_options | Updated; typography gaps recorded | E2E 134 passed: nine categories, live values, apply/cancel, Tab/Enter/arrows, close/reopen and resize; 720p/1080p independently reviewed. |
-| shop_interface | Updated; typography/art gaps recorded | E2E 135 passed: purchase totals/gold/stock, keyboard add/remove, tabs, close/reopen and resize; 720p/1080p independently reviewed. |
+| shop_interface | Updated; typography/art gaps recorded | E2E 41/135 passed: purchase totals/gold/stock, keyboard add/remove, tabs, close/reopen and resize; 720p/1080p independently reviewed. |
 | islands_trains_settings | Updated; minor styling gaps recorded | E2E 136 passed: settings cycles/segments/reset, keyboard help, three-step tutorial, close/reopen, Escape and resize; 720p/1080p and interaction views reviewed. |
 | kirby_options | Updated; minor art/type gaps recorded | E2E 137 passed: profile editing, live preferences, tabs, confirmation/reset, Tab/Enter and resize; 720p/1080p independently reviewed. |
 | marlo_kart | Updated; minor typography gaps recorded | Existing Grand Prix E2E 126/127 and new 138 passed: all six phases, pointer/keyboard, countdown pause and resize; race/maps/results/trophy independently reviewed. |
-| minesweeper_lab | Updated; font/bevel gaps recorded | E2E 120 and 139 passed: game play, reset/help, minimize/maximize/close/restore, Start menu and resize; fresh 720p/1080p captures. |
+| minesweeper_lab | Updated; bevel/spacing gaps recorded | E2E 120 and 139 passed: game play, reset/help, minimize/maximize/close/restore, Start menu and resize; fresh 720p/1080p captures. |
 | mini_motorways_settings | Updated; minor styling gaps recorded | E2E 140 passed: seven tabs, settings cycles, audio sliders, language, local connection, credits/tutorial, back and resize; 720p/1080p independently reviewed. |
 | neon_strike | Updated; minor styling gaps recorded | E2E 141 passed: reload reserve transfer, repeated reload, pointer/Enter/number-key abilities, equipment and resize; two independent visual reviews. |
 | parcel_corps_settings | Updated; styling gaps recorded | E2E 142 passed: language, toggles, MSAA/texture values, native slider drag and paced keyboard changes, resize; 720p/1080p independently reviewed. |
 | powerwash_settings | Updated; styling gaps recorded | E2E 143 passed: six tabs, live settings, initial-value reset, real close/reopen and Escape, keyboard and resize; fresh 720p/1080p independent review with no text overflow. |
 | race_results | Updated; styling gaps recorded | E2E 144 passed: selection, pointer/keyboard action feedback and resize; final 720p/1080p footer, portraits and table edges independently reviewed. |
-| sports_settings | Updated; styling gaps recorded | E2E 145 passed: domain values, keyboard and slider edits, tab changes, true defaults, close/reopen and resize; independent review confirms knob/value agreement. |
+| sports_settings | Updated; styling gaps recorded | E2E 110/145 passed: domain values, keyboard and slider edits, tab changes, true defaults, close/reopen and resize; independent review confirms knob/value agreement. |
 | rubber_bandits_menu | Updated; styling gaps recorded | E2E 146 passed: menu and character selection, keyboard, supporter feedback, all four long-name states and both resolutions; independent final visual review. |
 | kart_select | Updated; styling gaps recorded | Existing E2E 42_kart_select and new 147 passed: driver/vehicle pointer and arrow navigation, preview/stats, ready feedback and resize; 720p/1080p independently reviewed. |
 | guess_who_lab | Updated; styling gaps recorded | Existing play E2E 121 and new 148 passed: question/answer dropdown keyboard use, filtering, card flips, notes/reset and resize; 720p/1080p independently reviewed. |

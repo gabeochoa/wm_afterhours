@@ -170,6 +170,7 @@ void reset_screen_state(int ui_entity_id) {
       afterhours::ui::UIContext<InputAction>>();
   if (ui_context) {
     ui_context->reset();
+    ui_context->has_interacted = false;
   }
 
   // Clean up toast singleton

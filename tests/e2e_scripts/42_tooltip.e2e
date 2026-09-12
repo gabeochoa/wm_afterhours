@@ -8,7 +8,12 @@
 goto_screen tooltip_lab
 wait 0.4
 
-# Nothing showing until something is hovered.
+# The baseline includes keyboard focus on the first button.
+key TAB
+wait 0.1
+focus_ui ttl_btn_0
+wait 0.1
+expect_focused ttl_btn_0
 validate_screen tooltip_lab_idle
 
 mouse_move 582 553

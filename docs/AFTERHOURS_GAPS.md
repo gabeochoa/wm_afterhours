@@ -26,7 +26,7 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 
 | Screen / state | Finding | Owner | Disposition / evidence |
 |---|---|---|---|
-| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 4 opens directly in a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
+| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 5 embeds all 26 audited native baselines and opens directly in a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
 | potion_crafting / recipe view | Dark panels, text initials for ingredients, and a rectangular flask did not match the parchment composition. | wm | Replaced with parchment layout, botanical/bottle artwork, scaled geometry and Garamond text; reviewed at 720p and 1080p. |
 | potion_crafting / crafting | Brew ignored clicks; tabs did not change content; recipe row IDs overlapped. | wm | Unique IDs, live stock consumption, shortage handling, recipe-aware ingredient requirements, inventory and journal views. E2E 40 exercises pointer, real Tab traversal, Enter, repeated shortage and resize. |
 | potion_crafting / fine styling | Secondary copy lacks the target's italic face; brew button's inset border is subtler; footer gives keyboard guidance instead of the decorative Close workshop hint. | wm | Open visual polish. No library blocker claimed; gameplay and layout checks pass. |
@@ -54,8 +54,8 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | kirby_options / fine styling | Native type spacing/weight and pencil artwork differ slightly; bumper hints use purple rather than dark keycaps. Online view is explicitly local. | wm | Open cosmetic differences and stated simulation scope. Final 720p/1080p images independently reviewed. |
 
 
-| minesweeper_lab / desktop and game | Generic chrome, unreadable counters and overlapping taskbar text missed the classic desktop mock. | wm | Native desktop/window/taskbar, high-resolution font aliases, separate labels for icon buttons, real game reset and window state controls. Existing play test 120 and new 139 pass. |
-| minesweeper_lab / fine styling | Counter glyphs are heavier, bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open cosmetic differences; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
+| minesweeper_lab / desktop and game | Generic chrome, unreadable counters and overlapping taskbar text missed the classic desktop mock. | wm | Native desktop/window/taskbar, high-resolution font aliases, regular counter face to distinguish zero from eight, separate labels for icon buttons, real game reset and window state controls. Existing play test 120 and new 139 pass. |
+| minesweeper_lab / fine styling | Bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open cosmetic differences; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
 
 
 | empire_tycoon / dashboard and state | Hidden park art, substitute icons, misplaced controls and faint borders weakened the tycoon composition. | wm | Isolated park/icons, winding/layering fixes, scaled outlines and dashboard geometry. Live production, cash, projects, gauges and milestone react to actions; E2E 133 passes. |
@@ -116,6 +116,35 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 
 ---
 
+
+### Final regression audit
+
+The full suite exposed stale Sports/Shop expectations and an Empire status
+label whose text needed 181px in a 170px box. The legacy tests now exercise
+the approved controls; Empire's box is 190px wide with its visual center
+unchanged. Fresh default captures are byte-identical after that containment
+fix. The Tooltip baseline included a keyboard focus ring inherited from an
+earlier script. Its test now sends Tab and explicitly focuses the first button;
+both existing tooltip baselines match exactly without replacement.
+
+
+### Capture runner: focus state leaked between screens
+
+`UIContext::reset()` leaves `has_interacted` set. A screen that explicitly took
+focus therefore enabled a ring in every later batch capture, while the same
+screen captured alone had no ring. wm's screenshot reset now clears that flag
+once per screen; explicit focus inside a screen still works. This changes 45
+legacy baselines only by removing focus outlines (88,315 pixels total,
+independently reviewed); the other 45 legacy images are identical. No legacy
+screen source or library code changed. The 26 audited screens pass the same
+comparison threshold against their isolated captures; 25 match pixel for pixel.
+
+AIM retains a separate small capture-order difference: the disabled Buddy List
+maximize button has a blue fill in the batch and grey in an isolated capture
+(17×17px region). This is below the screenshot threshold, does not change
+interaction, and remains open for investigation rather than being baselined
+away. The gallery uses the isolated capture.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`
@@ -144,6 +173,27 @@ border and 3px panel borders consequently appeared as faint 1px lines.
 The wm screen draws its outlines with the existing thickness-aware helper.
 A library fix is deferred for user review. This also explains the subtler
 Potion Crafting inset border noted above.
+
+
+### Slider state does not follow external model changes
+
+At the frozen pin, `imm_components.h` initializes `HasSliderState` only when
+creating the slider, then writes its cached value back through the supplied
+reference on subsequent frames. Sports settings reproduced stale knob positions
+after tab switches and Reset, even when the displayed domain values changed.
+wm now uses per-tab slider IDs and synchronizes the cached state when the model
+changes externally. E2E 145 checks reset values and subsequent keyboard/drag
+edits; independent captures confirm labels and knob positions agree. Whether
+this should be a controlled-value API is deferred for library review.
+
+### Slider keyboard steps repeat within one keypress
+
+Parcel Corps reproduced 25 → 23 from one injected Left keypress. The native
+slider listener increments by 0.01 for each callback while the key is held;
+it does not use the UI context's pressed/repeat pacing. wm wraps the listener
+with `pressed_or_repeat` so keyboard adjustment follows the existing repeat
+schedule. E2E 142 verifies exact single steps in both directions, dragging,
+and resized input. Library input pacing remains open for review.
 
 ## Open, asked for by other projects
 
