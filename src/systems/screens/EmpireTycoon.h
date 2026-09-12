@@ -2,836 +2,610 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
-#include "../../ui_workarounds/GradientBackground.h"
-#include "../../ui_workarounds/NotificationBadge.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
   int64_t cash = 1250980;
-  size_t selected_tab = 0; // Navigation tab selection
-
-  // Loaded textures
-  bool textures_loaded = false;
-  raylib::Texture2D coin_tex{};
-  raylib::Texture2D diamond_tex{};
-  raylib::Texture2D star_trophy_tex{};
-  raylib::Texture2D sparkle_tex{};
-  raylib::Texture2D icon_happiness_tex{};
-  raylib::Texture2D icon_resources_tex{};
-  raylib::Texture2D icon_rides_tex{};
-  raylib::Texture2D icon_food_tex{};
-  raylib::Texture2D icon_upgrades_tex{};
-  raylib::Texture2D icon_finance_tex{};
-  raylib::Texture2D icon_shop_tex{};
-  raylib::Texture2D icon_settings_tex{};
-  raylib::Texture2D mascot_tex{};
-  raylib::Texture2D cloud_tex{};
-
-  void load_textures_if_needed() {
-    if (textures_loaded)
-      return;
-    textures_loaded = true;
-
-    std::string images_path =
-        afterhours::files::get_resource_path("images", "").string();
-    auto load = [&](const char *name) {
-      return raylib::LoadTexture((images_path + name).c_str());
-    };
-    coin_tex = load("icon_coin_small.png");
-    diamond_tex = load("icon_diamond.png");
-    star_trophy_tex = load("icon_star_trophy.png");
-    sparkle_tex = load("sparkle.png");
-    icon_happiness_tex = load("icon_happiness.png");
-    icon_resources_tex = load("icon_resources.png");
-    icon_rides_tex = load("icon_rides.png");
-    icon_food_tex = load("icon_food.png");
-    icon_upgrades_tex = load("icon_upgrades.png");
-    icon_finance_tex = load("icon_finance.png");
-    icon_shop_tex = load("icon_shop.png");
-    icon_settings_tex = load("icon_settings.png");
-    mascot_tex = load("mascot_business.png");
-    cloud_tex = load("cloud_white.png");
-  }
+  size_t selected_tab = 0;
   float happiness_pct = 0.85f;
   float resources_pct = 0.60f;
   float milestone_pct = 0.65f;
+  bool texture_loaded = false;
+  bool new_project_started = false;
+  raylib::Texture2D park_texture{};
+  std::array<raylib::Texture2D, 9> icons{};
+  std::string chat_status = "GlobalChat: New area unlocked!";
 
   struct Production {
     std::string name;
     int rate;
   };
 
-  std::vector<Production> production = {
-      {"Toys", 5200},
-      {"Snacks", 3800},
-      {"Gadgets", 3100},
-  };
-
   struct Project {
     std::string name;
     int progress;
-    int rate;
+    std::string note;
   };
 
+  std::vector<Production> production = {
+      {"Toys", 5200}, {"Snacks", 3800}, {"Gadgets", 3100}};
   std::vector<Project> projects = {
-      {"New Rollercoasser", 80, 0},
-      {"Expand", 35, 0},
-      {"Develop Robot Masoot", 10, 3100},
+      {"New Rollercoaster", 80, "Expand the fun"},
+      {"Develop Robot Mascot", 10, "3,100/min"},
   };
 
-  // Colors matching Dream Incorporated exactly
-  afterhours::Color sky_top{125, 175, 220, 255};
-  afterhours::Color sky_bottom{185, 200, 225, 255};
-  afterhours::Color lavender_bg{190, 175, 200, 255}; // Purple tint at bottom
-  afterhours::Color panel_blue{125, 190, 240, 255};
-  afterhours::Color panel_blue_light{175, 215, 250, 255};
-  afterhours::Color border_blue{85, 155, 205, 255};
-  afterhours::Color white{255, 255, 255, 255};
-  // The old outlines were mid-blues, near the sky, so the letters had no edge.
-  afterhours::Color logo_outline{25, 60, 105, 255};
-  afterhours::Color dark_text{55, 75, 105, 255};
-  afterhours::Color muted_text{100, 130, 170, 255};
-  afterhours::Color btn_yellow{255, 200, 75, 255};
-  afterhours::Color btn_yellow_dark{215, 165, 45, 255};
-  afterhours::Color happy_green{110, 195, 115, 255};
+  const afterhours::Color white{255, 253, 244, 255};
+  const afterhours::Color ink{49, 69, 97, 255};
+  const afterhours::Color stroke{48, 72, 103, 255};
+  const afterhours::Color panel_blue{105, 196, 237, 255};
+  const afterhours::Color panel_edge{52, 83, 116, 255};
+  const afterhours::Color card_bg{244, 252, 255, 255};
+  const afterhours::Color yellow{255, 220, 78, 255};
+  const afterhours::Color yellow_dark{244, 166, 46, 255};
+  const afterhours::Color green{118, 179, 211, 255};
 
-  // Tab colors - pastel
-  afterhours::Color tab_blue{195, 225, 255, 255};
-  afterhours::Color tab_green{195, 230, 195, 255};
-  afterhours::Color tab_pink{255, 205, 205, 255};
-  afterhours::Color tab_purple{225, 205, 250, 255};
-  afterhours::Color tab_cream{255, 235, 205, 255};
+  std::array<std::string, 4> tabs = {"Rides", "Food Stalls", "Upgrades",
+                                     "Finance"};
+  std::array<std::string, 3> tools = {"Shop", "Settings", "Leaderboard"};
 
-  std::string format_money(int64_t amt) {
+  void load_texture_if_needed() {
+    if (texture_loaded)
+      return;
+    texture_loaded = true;
+    park_texture = raylib::LoadTexture(
+        afterhours::files::get_resource_path("images", "empire_tycoon/park.png")
+            .string()
+            .c_str());
+    const std::array<const char *, 9> names{
+        "coin_star", "rides",    "food",        "upgrades", "finance",
+        "shop",      "settings", "leaderboard", "arrow"};
+    for (size_t i = 0; i < names.size(); ++i) {
+      icons[i] = raylib::LoadTexture(
+          afterhours::files::get_resource_path(
+              "images", std::string("empire_tycoon/") + names[i] + ".png")
+              .string()
+              .c_str());
+      raylib::SetTextureFilter(icons[i], raylib::TEXTURE_FILTER_BILINEAR);
+    }
+  }
+
+  static void paint(raylib::Texture2D texture, RectangleType r) {
+    if (texture.id == 0)
+      return;
+    raylib::DrawTexturePro(texture,
+                           {0, 0, static_cast<float>(texture.width),
+                            static_cast<float>(texture.height)},
+                           r, {0, 0}, 0, raylib::WHITE);
+  }
+
+  ComponentConfig box(float scale, float x, float y, float w, float h) const {
+    return ComponentConfig{}
+        .with_size({pixels(w * scale), pixels(h * scale)})
+        .with_absolute_position(x * scale, y * scale)
+        .with_background(Theme::Usage::None);
+  }
+
+  std::string format_money(int64_t amt) const {
     std::string s = std::to_string(amt);
     std::string result;
     int count = 0;
-    for (int i = (int)s.length() - 1; i >= 0; i--) {
+    for (int i = static_cast<int>(s.size()) - 1; i >= 0; --i) {
       if (count > 0 && count % 3 == 0)
         result = "," + result;
-      result = s[i] + result;
-      count++;
+      result = s[static_cast<size_t>(i)] + result;
+      ++count;
     }
     return "$" + result;
   }
 
+  static void draw_coin(RectangleType r) {
+    const float cx = r.x + r.width * .5f;
+    const float cy = r.y + r.height * .5f;
+    afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy),
+                            r.width * .48f,
+                            afterhours::Color{171, 116, 44, 255});
+    afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy),
+                            r.width * .41f,
+                            afterhours::Color{255, 206, 86, 255});
+    afterhours::draw_poly({cx, cy - r.height * .03f}, 5, r.width * .25f, -18.f,
+                          afterhours::Color{255, 232, 131, 255});
+  }
+
+  static void draw_gauge(RectangleType r, float pct, afterhours::Color fill) {
+    const float cx = r.x + r.width * .5f;
+    const float cy = r.y + r.height * .93f;
+    const float radius = r.width * .44f;
+    afterhours::draw_circle_sector({cx, cy}, radius, 180.f, 360.f, 48,
+                                   afterhours::Color{190, 228, 245, 190});
+    afterhours::draw_circle_sector({cx, cy}, radius, 180.f, 180.f + 180.f * pct,
+                                   48, fill);
+    afterhours::draw_circle_sector_lines({cx, cy}, radius, 180.f, 360.f, 48,
+                                         afterhours::Color{52, 77, 112, 255});
+    afterhours::draw_circle_sector({cx, cy}, radius * .86f, 180.f, 360.f, 48,
+                                   afterhours::Color{140, 189, 216, 255});
+    float face = radius * .27f;
+    float fy = cy - face;
+    afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(fy), face,
+                            fill);
+    afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(fy),
+                                  face, afterhours::Color{52, 77, 112, 255});
+    afterhours::draw_circle(static_cast<int>(cx - face * .35f),
+                            static_cast<int>(fy - face * .2f), face * .09f,
+                            afterhours::Color{52, 77, 112, 255});
+    afterhours::draw_circle(static_cast<int>(cx + face * .35f),
+                            static_cast<int>(fy - face * .2f), face * .09f,
+                            afterhours::Color{52, 77, 112, 255});
+    afterhours::draw_circle_sector_lines({cx, fy}, face * .55f, 30.f, 150.f, 14,
+                                         afterhours::Color{52, 77, 112, 255});
+    for (int i = 0; i <= 8; ++i) {
+      const float a =
+          (180.f + 180.f * static_cast<float>(i) / 8.f) * 3.14159f / 180.f;
+      const float x1 = cx + std::cos(a) * radius * .82f;
+      const float y1 = cy + std::sin(a) * radius * .82f;
+      const float x2 = cx + std::cos(a) * radius;
+      const float y2 = cy + std::sin(a) * radius;
+      afterhours::draw_line_ex({x1, y1}, {x2, y2}, 2.f,
+                               afterhours::Color{52, 77, 112, 185});
+    }
+  }
+
+  static void outline(RectangleType r, float radius, float thickness,
+                      afterhours::Color color) {
+    afterhours::draw_rectangle_rounded_lines_ex(
+        r, 2.f * radius / std::min(r.width, r.height), 16, thickness, color);
+  }
+
+  static void draw_panel(RectangleType r) {
+    afterhours::draw_rectangle_rounded(r, .23f, 16,
+                                       afterhours::Color{104, 197, 238, 255},
+                                       std::bitset<4>().set());
+    afterhours::draw_rectangle_rounded_lines_ex(
+        r, .23f, 16, 3.f, afterhours::Color{52, 83, 116, 255});
+    afterhours::draw_rectangle_rounded_lines_ex(
+        {r.x + 7.f, r.y + 7.f, r.width - 14.f, r.height - 14.f}, .20f, 16, 3.f,
+        afterhours::Color{200, 245, 255, 220});
+  }
+
+  void speed_up() {
+    cash += 25000;
+    happiness_pct = std::min(1.0f, happiness_pct + 0.02f);
+    resources_pct = std::min(1.0f, resources_pct + 0.04f);
+    milestone_pct = std::min(1.0f, milestone_pct + 0.05f);
+    for (auto &item : production)
+      item.rate += 400;
+    for (auto &project : projects)
+      project.progress = std::min(100, project.progress + 5);
+    chat_status = "GlobalChat: Production boosted!";
+  }
+
+  void prioritize() {
+    if (!projects.empty())
+      projects.front().progress = std::min(100, projects.front().progress + 10);
+    cash = std::max<int64_t>(0, cash - 5000);
+    chat_status = "New Rollercoaster prioritized";
+  }
+
+  void new_project() {
+    if (!new_project_started) {
+      new_project_started = true;
+      projects.back() = {"Sky Garden", 5, "New project started"};
+    } else {
+      projects.back().progress = std::min(100, projects.back().progress + 5);
+    }
+    cash = std::max<int64_t>(0, cash - 12000);
+    chat_status = "New project started";
+  }
+
+  void select_tab(size_t index) {
+    selected_tab = index % tabs.size();
+    chat_status = tabs[selected_tab] + " department selected";
+  }
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    load_textures_if_needed();
+    load_texture_if_needed();
+    const float screen_w =
+        context.screen_width > 0.f
+            ? context.screen_width
+            : static_cast<float>(Settings::get().get_screen_width());
+    const float screen_h =
+        context.screen_height > 0.f
+            ? context.screen_height
+            : static_cast<float>(Settings::get().get_screen_height());
+    const float scale = std::min(screen_w / 1280.f, screen_h / 720.f);
 
-    auto pxf = [](float v) { return pixels(static_cast<int>(v)); };
+    if (context.pressed(InputAction::WidgetDown))
+      select_tab(selected_tab + 1);
+    if (context.pressed(InputAction::WidgetUp))
+      select_tab(selected_tab + tabs.size() - 1);
 
-    UIStylingDefaults::get().set_default_font("EqProRounded", h720(18.0f));
     Theme theme;
-    theme.font = dark_text;
-    theme.darkfont = dark_text;
-    theme.font_muted = muted_text;
-    theme.background = sky_top;
-    theme.surface = white;
+    theme.font = ink;
+    theme.darkfont = white;
+    theme.font_muted = afterhours::Color{82, 115, 135, 255};
+    theme.background = afterhours::Color{185, 226, 242, 255};
+    theme.surface = card_bg;
     theme.primary = panel_blue;
-    theme.secondary = border_blue;
-    theme.accent = btn_yellow;
-    theme.error = afterhours::Color{240, 100, 100, 255};
-    theme.roundness = 0.12f;
-    theme.segments = 10;
-    context.theme = theme;
+    theme.secondary = panel_edge;
+    theme.accent = yellow;
+    theme.roundness = .14f;
+    theme.segments = 14;
+    context.set_theme(theme);
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", h720(21.f));
 
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
+    auto root =
+        div(context, mk(entity, 0),
+            box(scale, 0, 0, 1280, 720)
+                .with_on_draw_bg([texture = park_texture](RectangleType r) {
+                  afterhours::draw_rectangle(
+                      r, afterhours::Color{185, 226, 242, 255});
+                  paint(texture, r);
+                })
+                .with_debug_name("empire_root"));
 
-    // ========== BACKGROUND: Sky gradient with lavender at bottom ==========
-    ui_workarounds::vertical_gradient(
-        context, entity, 1, 0, 0, static_cast<float>(screen_w),
-        static_cast<float>(screen_h) * 0.7f, sky_top, sky_bottom, 10);
-
-    // Lavender/purple bottom section
-    div(context, mk(entity, 5),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pxf(screen_h * 0.35f)})
-            .with_absolute_position(0.0f, static_cast<float>(screen_h) * 0.65f)
-            .with_custom_background(lavender_bg)
-            .with_debug_name("lavender_bg"));
-
-    // Decorative clouds
-    if (cloud_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)cloud_tex.width,
-                                                 (float)cloud_tex.height};
-      struct Cloud {
-        int id;
-        int w;
-        int h;
-        float x;
-        float y;
-        float opacity;
-      };
-      Cloud clouds[] = {
-          {6, 80, 40, (float)screen_w - 130.0f, 15.0f, 0.6f},
-          {7, 60, 30, (float)screen_w - 200.0f, 55.0f, 0.4f},
-      };
-      for (auto &c : clouds) {
-        sprite(context, mk(entity, c.id), cloud_tex, src,
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(c.w), pixels(c.h)})
-                   .with_absolute_position(c.x, c.y)
-                   .with_opacity(c.opacity));
-      }
-    }
-
-    // ========== TITLE: DREAM INCORPORATED (large puffy 3D text) ==========
-    // Using native with_text_stroke() API for efficient outline rendering
-
-    // Title text with shadow: shadow layer (offset +4,+7) then main layer
-    struct TitleWord {
-      const char *text;
-      int id;
-      int w;
-      int h;
-      float x;
-      float y;
-      float font_sz;
-      float stroke_w;
-      afterhours::Color main_color, main_stroke, shadow_color, shadow_stroke;
+    auto icon = [&](int id, size_t index, float x, float y, float w, float h) {
+      const auto texture = icons[index];
+      sprite(context, mk(root.ent(), id), texture,
+             {0, 0, (float)texture.width, (float)texture.height},
+             box(scale, x, y, w, h).with_ignore_pointer_events());
     };
-    TitleWord titles[] = {
-        {"DREAM",
-         10,
-         420,
-         85,
-         28.0f,
-         15.0f,
-         64.0f,
-         3.0f,
-         white,
-         logo_outline,
-         {45, 90, 140, 180},
-         {35, 70, 115, 150}},
-        {"INCORPORATED",
-         12,
-         520,
-         55,
-         28.0f,
-         90.0f,
-         42.0f,
-         2.5f,
-         white,
-         logo_outline,
-         {35, 75, 125, 180},
-         {25, 55, 95, 150}},
-    };
-    for (auto &t : titles) {
-      auto base = ComponentConfig{}
-                      .with_label(t.text)
-                      .with_size(ComponentSize{pixels(t.w), pixels(t.h)})
-                      .with_font("Fredoka", h720(t.font_sz))
-                      .with_alignment(TextAlignment::Left);
-      // Shadow
-      div(context, mk(entity, t.id),
-          ComponentConfig{base}
-              .with_absolute_position(t.x + 4.0f, t.y + 7.0f)
-              .with_custom_text_color(t.shadow_color)
-              .with_text_stroke(t.shadow_stroke, t.stroke_w)
-              .with_debug_name(std::string(t.text) + "_shadow"));
-      // Main
-      div(context, mk(entity, t.id + 1),
-          ComponentConfig{base}
-              .with_absolute_position(t.x, t.y)
-              .with_custom_text_color(t.main_color)
-              .with_text_stroke(t.main_stroke, t.stroke_w)
-              .with_debug_name(std::string(t.text) + "_main"));
-    }
 
-    // ========== TOP RIGHT: Currency ==========
-    // IDs 10-13 are used by title text, start at 50
-    // Increased width to prevent currency text clipping for large amounts
-    float cur_x = (float)screen_w - 340.0f;
+    div(context, mk(root.ent(), 10),
+        box(scale, 88, 23, 330, 105)
+            .with_label("DREAM")
+            .with_font("FredokaMockBold", h720(100.f))
+            .with_custom_text_color(white)
+            .with_text_stroke(stroke, 2.4f)
+            .with_text_shadow(afterhours::Color{101, 185, 229, 255}, 0.f,
+                              7.f * scale)
+            .with_letter_spacing(-3.f * scale)
+            .with_debug_name("empire_title_dream"));
+    div(context, mk(root.ent(), 11),
+        box(scale, 89, 113, 320, 56)
+            .with_label("INCORPORATED")
+            .with_font("FredokaMockBold", h720(49.f))
+            .with_custom_text_color(white)
+            .with_text_stroke(stroke, 1.9f)
+            .with_text_shadow(afterhours::Color{101, 185, 229, 255}, 0.f,
+                              6.f * scale)
+            .with_letter_spacing(-2.f * scale)
+            .with_debug_name("empire_title_incorporated"));
 
-    // Currency pill - wider to fit full amount like $1,250,980
-    div(context, mk(entity, 55),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(320), pixels(60)})
-            .with_absolute_position(cur_x, 15.0f)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 205, 215, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("currency_pill"));
+    div(context, mk(root.ent(), 20),
+        box(scale, 777, 33, 402, 78)
+            .with_custom_background(afterhours::Color{128, 211, 246, 245})
+            .with_border(stroke, 3.f)
+            .with_corner_radius(39.f * scale)
+            .with_on_draw_fg([=, this](RectangleType r) {
+              outline(r, 39.f * scale, 3.f * scale, stroke);
+            })
+            .with_debug_name("empire_cash_pill"));
+    div(context, mk(root.ent(), 21),
+        box(scale, 788, 40, 65, 65)
+            .with_on_draw_fg([](RectangleType r) { draw_coin(r); })
+            .with_ignore_pointer_events()
+            .with_debug_name("empire_coin"));
+    icon(700, 0, 794, 45, 49, 49);
 
-    // Gold coin
-    if (coin_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)coin_tex.width,
-                                                 (float)coin_tex.height};
-      sprite(context, mk(entity, 56), coin_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(44), pixels(44)})
-                 .with_absolute_position(cur_x + 12.0f, 23.0f)
-                 .with_debug_name("coin"));
-    } else {
-      div(context, mk(entity, 56),
-          ComponentConfig{}
-              .with_label("*")
-              .with_size(ComponentSize{pixels(44), pixels(44)})
-              .with_absolute_position(cur_x + 10.0f, 23.0f)
-              .with_custom_background(btn_yellow)
-              .with_border(btn_yellow_dark, 2.0f)
-              .with_font("EqProRounded", h720(24.0f))
-              .with_custom_text_color(white)
-              .with_alignment(TextAlignment::Center)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f));
-    }
-
-    // Hero number style currency display - large 28.0f+ font
-    div(context, mk(entity, 57),
-        ComponentConfig{}
+    div(context, mk(root.ent(), 22),
+        box(scale, 858, 43, 285, 62)
             .with_label(format_money(cash))
-            .with_size(ComponentSize{pixels(250), pixels(50)})
-            .with_absolute_position(cur_x + 62.0f, 20.0f)
-            .with_font("EqProRounded", h720(32.0f))
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Right));
+            .with_font("FredokaMockBold", h720(56.f))
+            .with_custom_text_color(white)
+            .with_text_stroke(stroke, 1.9f)
+            .with_alignment(TextAlignment::Center)
+            .with_letter_spacing(-1.3f * scale)
+            .with_debug_name("empire_cash"));
 
-    // ========== STATUS ICONS ==========
-    float stat_y = 80.0f;
-    float stat_icon_size = 60.0f;
-
-    // Status icons - data-driven
-    struct StatIcon {
-      int base_id;
-      float x;
-      raylib::Texture2D *tex;
-      afterhours::Color bg;
-      afterhours::Color border;
-    };
-    StatIcon stat_icons[] = {
-        {60,
-         (float)screen_w - 210.0f,
-         &icon_happiness_tex,
-         {255, 220, 150, 255},
-         {220, 180, 100, 255}},
-        {62,
-         (float)screen_w - 115.0f,
-         &icon_resources_tex,
-         {180, 210, 245, 255},
-         {140, 175, 215, 255}},
-    };
-    for (auto &si : stat_icons) {
-      div(context, mk(entity, si.base_id),
-          ComponentConfig{}
-              .with_720p_size(stat_icon_size, stat_icon_size)
-              .with_absolute_position(si.x, stat_y)
-              .with_custom_background(si.bg)
-              .with_border(si.border, 3.0f)
-              .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                                afterhours::Color{0, 0, 0, 50})
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f));
-      if (si.tex && si.tex->id != 0) {
-        afterhours::texture_manager::Rectangle src{0, 0, (float)si.tex->width,
-                                                   (float)si.tex->height};
-        sprite(context, mk(entity, si.base_id + 1), *si.tex, src,
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(48), pixels(48)})
-                   .with_absolute_position(si.x + 6.0f, stat_y + 6.0f));
-      }
-    }
-
-    // ========== METERS ==========
-    float meter_base_y = 152.0f;
-    float meter_x = (float)screen_w - 340.0f;
-
-    struct MeterRow {
-      int base_id;
-      float y;
-      const char *icon;
+    struct Gauge {
       const char *label;
-      afterhours::Color icon_bg;
-      float icon_font_sz;
+      const char *icon;
       float pct;
-      afterhours::Color fill_color;
+      afterhours::Color fill;
+      float x;
     };
-    MeterRow meters[] = {
-        {80,
-         meter_base_y,
-         ":)",
-         "Happiness",
-         {255, 210, 130, 255},
-         14.0f,
-         happiness_pct,
-         happy_green},
-        {85,
-         meter_base_y + 44.0f,
-         "*",
-         "Resources",
-         {195, 215, 240, 255},
-         16.0f,
-         resources_pct,
-         panel_blue},
-    };
-    for (auto &m : meters) {
-      // Pill background
-      div(context, mk(entity, m.base_id),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(280), pixels(40)})
-              .with_absolute_position(meter_x, m.y)
-              .with_custom_background(white)
-              .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f));
-      // Icon circle
-      div(context, mk(entity, m.base_id + 1),
-          ComponentConfig{}
-              .with_label(m.icon)
-              .with_size(ComponentSize{pixels(26), pixels(26)})
-              .with_absolute_position(meter_x + 5.0f, m.y + 7.0f)
-              .with_custom_background(m.icon_bg)
-              .with_font("EqProRounded", h720(m.icon_font_sz))
-              .with_custom_text_color(dark_text)
+    std::array<Gauge, 2> gauges = {
+        {{"Happiness", "", happiness_pct, afterhours::Color{164, 217, 110, 255},
+          780.f},
+         {"Resources", "", resources_pct, afterhours::Color{117, 210, 238, 255},
+          1012.f}}};
+    for (size_t i = 0; i < gauges.size(); ++i) {
+      const auto &g = gauges[i];
+      div(context, mk(root.ent(), 30 + static_cast<int>(i) * 10),
+          box(scale, g.x, 135, 143, 62)
+              .with_on_draw_fg([pct = g.pct, fill = g.fill](RectangleType r) {
+                draw_gauge(r, pct, fill);
+              })
+              .with_ignore_pointer_events()
+              .with_debug_name("empire_gauge_" + std::to_string(i)));
+      div(context, mk(root.ent(), 31 + static_cast<int>(i) * 10),
+          box(scale, g.x - 34, 209, 186, 34)
+              .with_label(g.label + std::string(" ") +
+                          std::to_string(static_cast<int>(g.pct * 100.f)) + "%")
+              .with_custom_background(afterhours::Color{184, 241, 255, 230})
+              .with_border(stroke, 2.f)
+              .with_corner_radius(17.f * scale)
+              .with_font("FredokaMockBold", h720(16.f))
+              .with_custom_text_color(white)
+              .with_text_stroke(stroke, 1.f)
               .with_alignment(TextAlignment::Center)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(1.0f));
-      // Label
-      div(context, mk(entity, m.base_id + 2),
-          ComponentConfig{}
-              .with_label(m.label)
-              .with_size(ComponentSize{pixels(90), pixels(22)})
-              .with_absolute_position(meter_x + 38.0f, m.y + 9.0f)
-              .with_custom_text_color(dark_text));
-      // Bar background
-      div(context, mk(entity, m.base_id + 3),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(80), pixels(24)})
-              .with_absolute_position(meter_x + 140.0f, m.y + 8.0f)
-              .with_custom_background(afterhours::Color{225, 230, 235, 255})
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f));
-      // Bar fill
-      div(context, mk(entity, m.base_id + 4),
-          ComponentConfig{}
-              .with_size(ComponentSize{pxf(74 * m.pct), pixels(20)})
-              .with_absolute_position(meter_x + 143.0f, m.y + 10.0f)
-              .with_custom_background(m.fill_color)
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.5f));
+              .with_debug_name("empire_gauge_label_" + std::to_string(i)));
     }
 
-    // Happiness percentage - highlighted pill
-    int happy_val = static_cast<int>(happiness_pct * 100);
-    div(context, mk(entity, 92),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(68), pixels(32)})
-            .with_absolute_position((float)screen_w - 124.0f,
-                                    meter_base_y + 4.0f)
-            .with_custom_background(afterhours::Color{220, 245, 220, 255})
-            .with_border(happy_green, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f));
-    div(context, mk(entity, 88),
-        ComponentConfig{}
-            .with_label(std::to_string(happy_val) + "%")
-            .with_size(ComponentSize{pixels(68), pixels(32)})
-            .with_absolute_position((float)screen_w - 124.0f,
-                                    meter_base_y + 4.0f)
-            .with_font("EqProRounded", h720(26.0f))
-            .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
-            .with_alignment(TextAlignment::Center));
+    div(context, mk(root.ent(), 90),
+        box(scale, 86, 246, 138, 333)
+            .with_custom_background(afterhours::Color{191, 238, 255, 245})
+            .with_border(stroke, 3.f)
+            .with_corner_radius(24.f * scale)
+            .with_on_draw_fg([=, this](RectangleType r) {
+              outline(r, 24.f * scale, 3.f * scale, stroke);
+            })
+            .with_debug_name("empire_tabs_panel"));
 
-    // Resources value, reading like the Happiness one beside it. The
-    // current/max form needed 130px in the 60px the pill has left of its bar.
-    int res_pct_val = static_cast<int>(resources_pct * 100);
-    div(context, mk(entity, 89),
-        ComponentConfig{}
-            .with_label(std::to_string(res_pct_val) + "%")
-            .with_size(ComponentSize{pixels(56), pixels(30)})
-            .with_absolute_position((float)screen_w - 120.0f,
-                                    meter_base_y + 44.0f + 5.0f)
-            .with_custom_text_color(panel_blue)
-            .with_alignment(TextAlignment::Right));
-
-    // ========== LEFT: Navigation Tabs ==========
-    // Center the main content area
-    float content_width = 85.0f; // Use percent of screen width
-    content_width = (float)screen_w * 0.85f;
-    float content_margin = ((float)screen_w - content_width) / 2.0f;
-
-    std::vector<std::tuple<raylib::Texture2D *, std::string, std::string,
-                           afterhours::Color>>
-        tabs = {
-            {&icon_rides_tex, "[R]", "Rides", tab_blue},
-            {&icon_food_tex, "[F]", "Food", tab_green},
-            {&icon_upgrades_tex, "[!]", "Upgrades", tab_pink},
-            {&icon_finance_tex, "[$]", "Finance", tab_cream},
-        };
-
-    float tab_width = 110.0f;  // Wide enough for "Upgrades" label
-    float tab_height = 70.0f;  // Proper touch target size
-    float tab_spacing = 78.0f; // Adjusted spacing
-    // Ensure tabs don't go past left edge - minimum 15px from left
-    float nav_x = std::max(15.0f, content_margin - tab_width - 15.0f);
-    float nav_y = 210.0f;
-    for (size_t i = 0; i < tabs.size(); i++) {
-      float tab_y = nav_y + (float)i * tab_spacing;
-      auto &[tex_ptr, fallback, label, bg_color] = tabs[i];
-
-      // Tab button background - larger with thicker border (minimum 44px)
-      bool tab_selected = (i == selected_tab);
-      // Reduced saturation on button colors
-      afterhours::Color adjusted_bg = bg_color;
-      adjusted_bg.r =
-          static_cast<uint8_t>(std::min(255, (int)adjusted_bg.r + 20));
-      adjusted_bg.g =
-          static_cast<uint8_t>(std::min(255, (int)adjusted_bg.g + 20));
-      adjusted_bg.b =
-          static_cast<uint8_t>(std::min(255, (int)adjusted_bg.b + 20));
-      afterhours::Color border_color =
-          tab_selected ? afterhours::Color{255, 200, 50, 255}
-                       // Gold border when selected
-                       : afterhours::Color{140, 160, 180, 255};
-      float border_width = tab_selected ? 5.0f : 3.0f;
-
-      if (button(context, mk(entity, 100 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_size(ComponentSize{pxf(tab_width), pxf(tab_height)})
-                     .with_absolute_position(nav_x, tab_y)
-                     .with_custom_background(adjusted_bg)
-                     .with_border(border_color, border_width)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.25f)
-                     .with_soft_shadow(3.0f, 5.0f, 12.0f,
-                                       afterhours::Color{0, 0, 0, 50})
-                     .with_debug_name("tab_" + std::to_string(i)))) {
-        selected_tab = i;
+    const std::array<afterhours::Color, 4> tab_colors = {{{114, 201, 237, 255},
+                                                          {161, 216, 91, 255},
+                                                          {233, 151, 194, 255},
+                                                          {255, 195, 85, 255}}};
+    for (size_t i = 0; i < tabs.size(); ++i) {
+      const float y = 259.f + static_cast<float>(i) * 82.f;
+      const bool active = i == selected_tab;
+      if (button(context, mk(root.ent(), 100 + static_cast<int>(i)),
+                 box(scale, 98, y, 112, 68)
+                     .with_label("")
+                     .with_custom_background(tab_colors[i])
+                     .with_border(active ? afterhours::Color{255, 248, 181, 255}
+                                         : afterhours::Color{72, 107, 131, 255},
+                                  active ? 4.f : 2.f)
+                     .with_corner_radius(11.f * scale)
+                     .with_font("FredokaMockBold", h720(18.f))
+                     .with_custom_text_color(white)
+                     .with_text_stroke(stroke, 1.3f)
+                     .with_alignment(TextAlignment::Center)
+                     .with_on_draw_fg([=, this](RectangleType r) {
+                       outline(r, 11.f * scale, 2.f * scale, stroke);
+                     })
+                     .with_debug_name("empire_tab_" + std::to_string(i)))) {
+        select_tab(i);
       }
 
-      // Icon image or fallback text - larger (minimum 44px)
-      // NOTE: Icons are 64x48 but have wrong text labels baked in at bottom
-      // Crop to top 28px to only show the icon graphic, not the wrong text
-      if (tex_ptr && tex_ptr->id != 0) {
-        afterhours::texture_manager::Rectangle src{
-            0, 0, (float)tex_ptr->width,
-            28.0f}; // Only top 28px - hide baked-in text
-        sprite(context, mk(entity, 110 + static_cast<int>(i)), *tex_ptr, src,
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(48), pixels(28)})
-                   .with_absolute_position(nav_x + tab_width / 2.0f - 24.0f,
-                                           tab_y + 8.0f)
-                   .with_debug_name("tab_icon_" + std::to_string(i)));
-      } else {
-        div(context, mk(entity, 110 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_label(fallback)
-                .with_size(ComponentSize{pixels(52), pixels(44)})
-                .with_absolute_position(nav_x + tab_width / 2.0f - 26.0f,
-                                        tab_y + 8.0f)
-                .with_font("EqProRounded", h720(24.0f))
-                .with_custom_text_color(dark_text)
-                .with_alignment(TextAlignment::Center)
-                .with_debug_name("tab_icon_fallback_" + std::to_string(i)));
-      }
-
-      // Tab label - positioned below icon, larger 16.0f font for readability
-      div(context, mk(entity, 120 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(label)
-              .with_size(ComponentSize{pxf(tab_width), pixels(24)})
-              .with_absolute_position(nav_x, tab_y + tab_height - 26.0f)
-              .with_font("EqProRounded", h720(16.0f))
-              .with_custom_text_color(dark_text)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("tab_label_" + std::to_string(i)));
-
-      // Notification badge on "Upgrades" tab
+      icon(710 + static_cast<int>(i), i + 1, 132, y + 7, 42, 38);
+      div(context, mk(root.ent(), 720 + static_cast<int>(i)),
+          box(scale, 98, y + 42, 112, 28)
+              .with_label(tabs[i])
+              .with_font("FredokaMockBold", h720(21.f))
+              .with_custom_text_color(white)
+              .with_text_stroke(stroke, .7f * scale)
+              .with_alignment(TextAlignment::Center));
       if (i == 2) {
-        ui_workarounds::notification_badge(
-            context, entity, 130 + static_cast<int>(i), "!",
-            nav_x + tab_width - 5.0f, tab_y - 5.0f, 24.0f,
-            afterhours::Color{230, 90, 80, 255});
-      }
-    }
-
-    // ========== MAIN PANEL ==========
-    // Panel should not overlap with sidebar tabs - start after tab area
-    float panel_x = nav_x + tab_width + 30.0f; // Start after tabs with margin
-    // 200 cut the second meter card off 4px in; the right-hand stack needs
-    // down to 236. Bottom edge stays put, so the button row does not move.
-    float panel_y = 244.0f;
-    float panel_w =
-        (float)screen_w - panel_x - 30.0f; // Fill remaining width with margin
-    float panel_h = 396.0f;
-
-    // Main panel background - bigger with thicker border to match inspiration
-    div(context, mk(entity, 200),
-        ComponentConfig{}
-            .with_720p_size(panel_w, panel_h)
-            .with_absolute_position(panel_x, panel_y)
-            .with_custom_background(panel_blue)
-            .with_border(border_blue, 6.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(12.f)
-            .with_debug_name("main_panel"));
-
-    // Production & Projects sections - shared structure
-    struct PanelSection {
-      const char *title;
-      int title_id;
-      int title_w;
-      int box_id;
-      int box_w;
-      float offset_x;
-      int item_id_base;
-      int arrow_id_base;
-      int text_w;
-      float arrow_x;
-    };
-    PanelSection sections[] = {
-        {"Production Overview", 210, 250, 211, 340, 30.0f, 220, 230, 280,
-         330.0f},
-        {"Current Projects", 250, 220, 251, 420, 400.0f, 260, 270, 360, 780.0f},
-    };
-    for (auto &sec : sections) {
-      // Section title
-      div(context, mk(entity, sec.title_id),
-          ComponentConfig{}
-              .with_label(sec.title)
-              .with_size(ComponentSize{pixels(sec.title_w), pixels(32)})
-              .with_absolute_position(panel_x + sec.offset_x, panel_y + 20.0f)
-              .with_font("EqProRounded", h720(24.0f))
-              .with_custom_text_color(dark_text));
-      // Content box
-      div(context, mk(entity, sec.box_id),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(sec.box_w), pixels(190)})
-              .with_absolute_position(panel_x + sec.offset_x, panel_y + 60.0f)
-              .with_custom_background(white)
-              .with_border(afterhours::Color{195, 210, 225, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners())
-              .with_overflow(Overflow::Hidden));
-    }
-
-    // Trend indicator legend
-    div(context, mk(entity, 212),
-        ComponentConfig{}
-            .with_label("^ = Trending Up")
-            .with_size(ComponentSize{pixels(170), pixels(32)})
-            .with_absolute_position(panel_x + panel_w - 190.0f, panel_y + 22.0f)
-            .with_font("EqProRounded", h720(18.0f))
-            .with_custom_text_color(afterhours::Color{40, 130, 50, 255})
-            .with_custom_background(afterhours::Color{220, 245, 220, 255})
-            .with_border(happy_green, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_alignment(TextAlignment::Center));
-
-    // Production items
-    for (size_t i = 0; i < production.size(); i++) {
-      float item_y = panel_y + 80.0f + (float)i * 54.0f;
-      div(context, mk(entity, 220 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(production[i].name + ": " +
-                          std::to_string(production[i].rate) + "/min")
-              .with_size(ComponentSize{pixels(280), pixels(36)})
-              .with_absolute_position(panel_x + 50.0f, item_y)
-              .with_custom_text_color(dark_text));
-      div(context, mk(entity, 230 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label("^")
-              .with_size(ComponentSize{pixels(28), pixels(28)})
-              .with_absolute_position(panel_x + 330.0f, item_y + 4.0f)
-              .with_font("EqProRounded", h720(24.0f))
-              .with_custom_text_color(happy_green)
-              .with_alignment(TextAlignment::Center));
-    }
-
-    // Project items
-    for (size_t i = 0; i < projects.size(); i++) {
-      float item_y = panel_y + 80.0f + (float)i * 54.0f;
-      std::string proj_text =
-          projects[i].name + " - " + std::to_string(projects[i].progress) + "%";
-      if (projects[i].rate > 0)
-        proj_text = projects[i].name + " - " +
-                    std::to_string(projects[i].rate) + "/min";
-      div(context, mk(entity, 260 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label(proj_text)
-              .with_size(ComponentSize{pixels(360), pixels(36)})
-              .with_absolute_position(panel_x + 420.0f, item_y)
-              .with_custom_text_color(dark_text));
-      div(context, mk(entity, 270 + static_cast<int>(i)),
-          ComponentConfig{}
-              .with_label("^")
-              .with_size(ComponentSize{pixels(28), pixels(28)})
-              .with_absolute_position(panel_x + 780.0f, item_y + 4.0f)
-              .with_font("EqProRounded", h720(24.0f))
-              .with_custom_text_color(happy_green)
-              .with_alignment(TextAlignment::Center));
-    }
-
-    // ========== ACTION BUTTONS ==========
-    std::vector<std::string> btn_labels = {"Speed Up", "Prioritize",
-                                           "New Project"};
-    float btn_y = panel_y + panel_h - 80.0f;
-    float btn_w = 190.0f;
-    float btn_spacing = 230.0f; // Wider spacing for larger panel
-
-    for (size_t i = 0; i < btn_labels.size(); i++) {
-      button(context, mk(entity, 300 + static_cast<int>(i)),
-             ComponentConfig{}
-                 .with_label(btn_labels[i])
-                 .with_size(ComponentSize{pxf(btn_w), pixels(60)})
-                 .with_absolute_position(
-                     panel_x + 90.0f + (float)i * btn_spacing, btn_y)
-                 // Reduced saturation on yellow buttons
-                 .with_custom_background(afterhours::Color{255, 215, 100, 255})
-                 .with_border(btn_yellow_dark, 4.0f)
-                 .with_font("EqProRounded", h720(22.0f))
-                 .with_custom_text_color(dark_text)
-                 .with_alignment(TextAlignment::Center)
-                 .with_rounded_corners(RoundedCorners())
-                 .with_roundness(0.3f)
-                 .with_soft_shadow(3.0f, 5.0f, 12.0f,
-                                   afterhours::Color{0, 0, 0, 60})
-                 .with_debug_name("btn_" + std::to_string(i)));
-    }
-
-    // ========== BOTTOM: Chat ==========
-    float bottom_y = (float)screen_h - 100.0f;
-
-    div(context, mk(entity, 400),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(480), pixels(80)})
-            .with_absolute_position(22.0f, bottom_y)
-            .with_custom_background(white)
-            .with_border(afterhours::Color{195, 205, 215, 255}, 1.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_debug_name("chat_box"));
-
-    const char *chat_msgs[] = {
-        "GlobalChat: New area unlocked! Explore now.",
-        "DevTeam: Update v2.0 is live - check patch notes!",
-    };
-    for (int i = 0; i < 2; i++) {
-      div(context, mk(entity, 401 + i),
-          ComponentConfig{}
-              .with_label(chat_msgs[i])
-              .with_size(ComponentSize{pixels(460), pixels(24)})
-              .with_absolute_position(32.0f,
-                                      bottom_y + 14.0f + (float)i * 30.0f)
-              .with_font("EqProRounded", h720(16.0f))
-              .with_custom_text_color(dark_text)
-              .with_debug_name("chat" + std::to_string(i + 1)));
-    }
-
-    // ========== BOTTOM: Next Milestone ==========
-    float ms_x = (float)screen_w / 2.0f - 60.0f;
-
-    div(context, mk(entity, 410),
-        ComponentConfig{}
-            .with_label("Next Milestone")
-            .with_size(ComponentSize{pixels(160), pixels(26)})
-            .with_absolute_position(ms_x, (float)screen_h - 90.0f)
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center));
-
-    // Milestone bar with percentage label
-    div(context, mk(entity, 411),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(300), pixels(30)})
-            .with_absolute_position((float)screen_w / 2.0f - 125.0f,
-                                    (float)screen_h - 58.0f)
-            .with_custom_background(white)
-            .with_border(border_blue, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("milestone_bg"));
-
-    div(context, mk(entity, 412),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(288 * milestone_pct), pixels(26)})
-            .with_absolute_position((float)screen_w / 2.0f - 121.0f,
-                                    (float)screen_h - 56.0f)
-            .with_custom_background(btn_yellow)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
-            .with_debug_name("milestone_fill"));
-
-    // Milestone percentage label
-    int ms_val = static_cast<int>(milestone_pct * 100);
-    div(context, mk(entity, 413),
-        ComponentConfig{}
-            .with_label(std::to_string(ms_val) + "%")
-            .with_size(ComponentSize{pixels(60), pixels(24)})
-            .with_absolute_position((float)screen_w / 2.0f - 30.0f,
-                                    (float)screen_h - 55.0f)
-            .with_font("EqProRounded", h720(16.0f))
-            .with_custom_text_color(dark_text)
-            .with_alignment(TextAlignment::Center));
-
-    // ========== BOTTOM RIGHT: Icons ==========
-    std::vector<std::tuple<raylib::Texture2D *, std::string, std::string>>
-        icon_data = {{&icon_shop_tex, "$", "Shop"},
-                     {&icon_settings_tex, "@", "Settings"},
-                     {&star_trophy_tex, "#", "Leaderboard"}};
-    // Positioned to keep "Leaderboard" label within screen bounds
-    float icon_x = (float)screen_w - 320.0f;
-    float icon_size = 56.0f; // Minimum 44px for touch targets
-    float icon_img_size = 36.0f;
-    float icon_offset = (icon_size - icon_img_size) / 2.0f;
-    float icon_btn_y =
-        (float)screen_h - 110.0f; // Move icons up to leave room for labels
-    // 85 put the label boxes edge to edge, and "Leaderboard" is wider than one.
-    float icon_spacing = 105.0f;
-
-    for (size_t i = 0; i < icon_data.size(); i++) {
-      float ix = icon_x + (float)i * icon_spacing;
-      auto &[tex_ptr, fallback, label] = icon_data[i];
-
-      // Button background - reduced saturation
-      button(context, mk(entity, 500 + static_cast<int>(i)),
-             ComponentConfig{}
-                 .with_720p_size(icon_size, icon_size)
-                 .with_absolute_position(ix, icon_btn_y)
-                 .with_custom_background(afterhours::Color{255, 215, 100, 255})
-                 .with_border(btn_yellow_dark, 2.0f)
-                 .with_rounded_corners(RoundedCorners())
-                 .with_roundness(1.0f)
-                 .with_debug_name("icon_btn_" + std::to_string(i)));
-
-      // Icon image or fallback text
-      if (tex_ptr && tex_ptr->id != 0) {
-        afterhours::texture_manager::Rectangle src{0, 0, (float)tex_ptr->width,
-                                                   (float)tex_ptr->height};
-        sprite(context, mk(entity, 520 + static_cast<int>(i)), *tex_ptr, src,
-               ComponentConfig{}
-                   .with_720p_size(icon_img_size, icon_img_size)
-                   .with_absolute_position(ix + icon_offset,
-                                           icon_btn_y + icon_offset)
-                   .with_debug_name("icon_img_" + std::to_string(i)));
-      } else {
-        div(context, mk(entity, 520 + static_cast<int>(i)),
-            ComponentConfig{}
-                .with_label(fallback)
-                .with_720p_size(icon_size, icon_size)
-                .with_absolute_position(ix, icon_btn_y)
-                .with_font("EqProRounded", h720(28.0f))
-                .with_custom_text_color(dark_text)
+        div(context, mk(root.ent(), 130),
+            box(scale, 196, 411, 28, 28)
+                .with_label("!")
+                .with_custom_background(afterhours::Color{242, 108, 105, 255})
+                .with_border(afterhours::Color{118, 62, 64, 255}, 2.f)
+                .with_corner_radius(14.f * scale)
+                .with_font("FredokaMockBold", h720(24.f))
+                .with_custom_text_color(white)
                 .with_alignment(TextAlignment::Center)
-                .with_debug_name("icon_fallback_" + std::to_string(i)));
+                .with_debug_name("empire_upgrade_badge"));
       }
+    }
 
-      // Label below icon - larger and properly positioned (18.0f minimum)
-      div(context, mk(entity, 510 + static_cast<int>(i)),
-          ComponentConfig{}
+    div(context, mk(root.ent(), 200),
+        box(scale, 254, 257, 942, 342)
+            .with_on_draw_bg([](RectangleType r) { draw_panel(r); })
+            .with_debug_name("empire_dashboard"));
+
+    auto heading = [&](int id, float x, const char *label) {
+      div(context, mk(root.ent(), id),
+          box(scale, x, 287, 330, 35)
               .with_label(label)
-              .with_size(ComponentSize{pixels(118), pixels(24)})
-              .with_absolute_position(ix - 31.0f, icon_btn_y + icon_size + 5.0f)
-              .with_custom_text_color(dark_text)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("icon_label_" + std::to_string(i)));
+              .with_font("FredokaMockBold", h720(27.f))
+              .with_custom_text_color(white)
+              .with_text_stroke(stroke, 1.f)
+              .with_alignment(TextAlignment::Center));
+    };
+    heading(210, 294, "Production Overview");
+    heading(211, 820, "Current Projects");
+
+    div(context, mk(root.ent(), 220),
+        box(scale, 282, 330, 430, 170)
+            .with_custom_background(card_bg)
+            .with_border(afterhours::Color{93, 153, 184, 255}, 2.f)
+            .with_corner_radius(16.f * scale)
+            .with_on_draw_fg([=, this](RectangleType r) {
+              outline(r, 16.f * scale, 2.f * scale, panel_edge);
+            })
+            .with_debug_name("empire_production_list"));
+    for (size_t i = 0; i < production.size(); ++i) {
+      const float y = 349.f + static_cast<float>(i) * 43.f;
+      div(context, mk(root.ent(), 221 + static_cast<int>(i) * 3),
+          box(scale, 301, y, 332, 38)
+              .with_label(production[i].name + ": " +
+                          std::to_string(production[i].rate / 1000) + "," +
+                          std::to_string((production[i].rate % 1000) / 100) +
+                          "00/min")
+              .with_font("FredokaMockBold", h720(21.f))
+              .with_custom_text_color(ink)
+              .with_alignment(TextAlignment::Left)
+              .with_debug_name("empire_prod_" + std::to_string(i)));
+      icon(222 + static_cast<int>(i) * 3, 8, 670, y + 3, 21, 24);
+      div(context, mk(root.ent(), 223 + static_cast<int>(i) * 3),
+          box(scale, 301, y + 35, 390, 2)
+              .with_custom_background(afterhours::Color{220, 238, 245, 255}));
+    }
+    div(context, mk(root.ent(), 240),
+        box(scale, 408, 481, 190, 19)
+            .with_label("All systems running smoothly")
+            .with_font("FredokaMockBold", h720(12.f))
+            .with_custom_text_color(afterhours::Color{121, 147, 156, 255})
+            .with_alignment(TextAlignment::Center));
+
+    div(context, mk(root.ent(), 250),
+        box(scale, 738, 330, 430, 170)
+            .with_custom_background(card_bg)
+            .with_border(afterhours::Color{93, 153, 184, 255}, 2.f)
+            .with_corner_radius(16.f * scale)
+            .with_on_draw_fg([=, this](RectangleType r) {
+              outline(r, 16.f * scale, 2.f * scale, panel_edge);
+            })
+            .with_debug_name("empire_project_list"));
+    for (size_t i = 0; i < projects.size(); ++i) {
+      const auto &p = projects[i];
+      const float y = 340.f + static_cast<float>(i) * 78.f;
+      div(context, mk(root.ent(), 260 + static_cast<int>(i) * 6),
+          box(scale, 751, y, 405, 70)
+              .with_border(afterhours::Color{116, 164, 191, 255}, 1.5f)
+              .with_corner_radius(11.f * scale)
+              .with_debug_name("empire_project_" + std::to_string(i)));
+      div(context, mk(root.ent(), 261 + static_cast<int>(i) * 6),
+          box(scale, 760, y + 5, 330, 29)
+              .with_label(p.name)
+              .with_custom_background(afterhours::Color{162, 223, 247, 255})
+              .with_font("FredokaMockBold", h720(19.f))
+              .with_custom_text_color(white)
+              .with_text_stroke(stroke, 1.3f)
+              .with_debug_name("empire_project_title_" + std::to_string(i)));
+      div(context, mk(root.ent(), 800 + static_cast<int>(i)),
+          box(scale, 1090, y + 5, 58, 29)
+              .with_label(std::to_string(p.progress) + "%")
+              .with_font("FredokaMockBold", h720(19.f))
+              .with_custom_text_color(white)
+              .with_text_stroke(stroke, 1.f)
+              .with_alignment(TextAlignment::Right));
+      div(context, mk(root.ent(), 262 + static_cast<int>(i) * 6),
+          box(scale, 760, y + 31, 390, 5)
+              .with_custom_background(afterhours::Color{219, 241, 250, 255}));
+      div(context, mk(root.ent(), 263 + static_cast<int>(i) * 6),
+          box(scale, 760, y + 31,
+              390.f * static_cast<float>(p.progress) / 100.f, 5)
+              .with_custom_background(green)
+              .with_debug_name("empire_project_progress_" + std::to_string(i)));
+      div(context, mk(root.ent(), 264 + static_cast<int>(i) * 6),
+          box(scale, 761, y + 39, 330, 24)
+              .with_label(p.note)
+              .with_font("FredokaMockBold", h720(17.f))
+              .with_custom_text_color(ink)
+              .with_alignment(TextAlignment::Left));
+      icon(265 + static_cast<int>(i) * 6, 8, 1120, y + 40, 21, 24);
+    }
+
+    const std::array<const char *, 3> actions = {
+        {"Speed Up", "Prioritize", "New Project"}};
+    for (size_t i = 0; i < actions.size(); ++i) {
+      const float x = 282.f + static_cast<float>(i) * 304.f;
+      if (button(context, mk(root.ent(), 300 + static_cast<int>(i)),
+                 box(scale, x, 517, 278, 61)
+                     .with_label(actions[i])
+                     .with_custom_background(yellow)
+                     .with_border(afterhours::Color{70, 89, 112, 255}, 3.f)
+                     .with_corner_radius(15.f * scale)
+                     .with_font("FredokaMockBold", h720(29.f))
+                     .with_custom_text_color(white)
+                     .with_text_stroke(stroke, 1.f)
+                     .with_alignment(TextAlignment::Center)
+                     .with_on_draw_fg([=, this](RectangleType r) {
+                       outline(r, 15.f * scale, 3.f * scale, stroke);
+                     })
+                     .with_debug_name("empire_action_" + std::to_string(i)))) {
+        if (i == 0)
+          speed_up();
+        else if (i == 1)
+          prioritize();
+        else
+          new_project();
+      }
+    }
+
+    div(context, mk(root.ent(), 400),
+        box(scale, 91, 616, 250, 75)
+            .with_custom_background(card_bg)
+            .with_border(stroke, 2.f)
+            .with_corner_radius(16.f * scale)
+            .with_on_draw_fg([=, this](RectangleType r) {
+              outline(r, 16.f * scale, 2.f * scale, stroke);
+            })
+            .with_debug_name("empire_chat"));
+    div(context, mk(root.ent(), 401),
+        box(scale, 110, 631, 210, 24)
+            .with_label(chat_status)
+            .with_font("Archivo@bold", h720(17.f))
+            .with_custom_text_color(ink)
+            .with_alignment(TextAlignment::Left)
+            .with_debug_name("empire_chat_status"));
+    div(context, mk(root.ent(), 402),
+        box(scale, 110, 659, 210, 24)
+            .with_label("DevTeam: Update v2.0 is live")
+            .with_font("Archivo@bold", h720(17.f))
+            .with_custom_text_color(ink)
+            .with_alignment(TextAlignment::Left));
+
+    div(context, mk(root.ent(), 410),
+        box(scale, 503, 625, 305, 28)
+            .with_label("Next Milestone")
+            .with_font("FredokaMockBold", h720(25.f))
+            .with_custom_text_color(white)
+            .with_text_stroke(stroke, 1.f)
+            .with_alignment(TextAlignment::Center)
+            .with_debug_name("empire_milestone_title"));
+    div(context, mk(root.ent(), 411),
+        box(scale, 498, 658, 316, 36)
+            .with_custom_background(afterhours::Color{96, 88, 131, 255})
+            .with_border(stroke, 3.f)
+            .with_corner_radius(18.f * scale)
+            .with_on_draw_fg([=, this](RectangleType r) {
+              outline(r, 18.f * scale, 3.f * scale, stroke);
+            })
+            .with_debug_name("empire_milestone_bar"));
+    div(context, mk(root.ent(), 412),
+        box(scale, 506, 665, 300.f * milestone_pct, 22)
+            .with_custom_background(yellow)
+            .with_corner_radius(11.f * scale)
+            .with_debug_name("empire_milestone_fill"));
+    div(context, mk(root.ent(), 413),
+        box(scale, 620, 665, 70, 22)
+            .with_label(
+                std::to_string(static_cast<int>(milestone_pct * 100.f)) + "%")
+            .with_font("FredokaMockBold", h720(15.f))
+            .with_custom_text_color(ink)
+            .with_alignment(TextAlignment::Center));
+
+    for (size_t i = 0; i < tools.size(); ++i) {
+      const float x = 950.f + static_cast<float>(i) * 92.f;
+      if (button(
+              context, mk(root.ent(), 500 + static_cast<int>(i)),
+              box(scale, x, 620, 49, 49)
+                  .with_label("")
+                  .with_custom_background(afterhours::Color{245, 194, 95, 255})
+                  .with_border(stroke, 2.f)
+                  .with_corner_radius(24.5f * scale)
+                  .with_font("FredokaMockBold", h720(26.f))
+                  .with_custom_text_color(white)
+                  .with_text_stroke(stroke, 1.f)
+                  .with_alignment(TextAlignment::Center)
+                  .with_debug_name("empire_tool_" + std::to_string(i)))) {
+        chat_status = tools[i] + " opened";
+      }
+      icon(730 + static_cast<int>(i), i + 5, x + 6, 626, 37, 37);
+
+      div(context, mk(root.ent(), 510 + static_cast<int>(i)),
+          box(scale, x - 20, 676, 90, 24)
+              .with_label(tools[i])
+              .with_font("FredokaMockBold", h720(15.f))
+              .with_custom_text_color(white)
+              .with_text_stroke(stroke, 1.3f)
+              .with_alignment(TextAlignment::Center));
     }
   }
 };

@@ -54,7 +54,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | casual_settings | Updated; minor visual gaps recorded | E2E 130 passed including dialog containment, keyboard use, save/load and 1080 resize; independent visual review. |
 | fighter_menu | Updated; perspective/type gaps recorded | E2E 131 passed; pointer/keyboard option selection and resize; final 720p/1080p independent review. |
 | deadspace_settings | Updated; perspective/glow gaps recorded | E2E 132 passed: pointer/keyboard categories, setting changes, back and resize; final 720p/1080p independently reviewed. |
-| empire_tycoon | Pending | |
+| empire_tycoon | Updated; shading/type gaps recorded | E2E 133 passed: tabs, production boosts, priority/new project, tool feedback and resize; fresh 720p/1080p images independently reviewed. |
 | flight_options | Updated; typography gaps recorded | E2E 134 passed: nine categories, live values, apply/cancel, Tab/Enter/arrows, close/reopen and resize; 720p/1080p independently reviewed. |
 | shop_interface | Pending | |
 | islands_trains_settings | Pending | |

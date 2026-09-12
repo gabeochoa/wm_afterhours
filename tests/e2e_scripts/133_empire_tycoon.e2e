@@ -1,0 +1,64 @@
+# Empire Tycoon mock parity smoke test.
+
+goto_screen empire_tycoon
+wait 0.5
+
+expect_text "DREAM"
+expect_text "INCORPORATED"
+expect_text "$1,250,980"
+expect_text "Production Overview"
+expect_text "Current Projects"
+expect_text "Toys: 5,200/min"
+expect_text "New Rollercoaster"
+expect_text "80%"
+
+assert_ui empire_root x=0 y=0 w=1280 h=720
+assert_ui empire_cash_pill x=777 y=33 w=402
+assert_ui empire_tabs_panel x=86 y=246 w=138
+assert_ui empire_tab_0 x=98 y=259 w=112
+assert_ui empire_dashboard x=254 y=257 w=942
+assert_ui empire_production_list x=282 y=330 w=430
+assert_ui empire_project_list x=738 y=330 w=430
+assert_ui empire_action_0 x=282 y=517 w=278
+
+click_ui empire_tab_2
+wait 0.2
+expect_text "Upgrades department selected"
+
+action WidgetDown
+wait 0.2
+expect_text "Finance department selected"
+
+click_ui empire_action_0
+wait 0.2
+expect_text "$1,275,980"
+expect_text "Toys: 5,600/min"
+expect_text "Production boosted!"
+
+click_ui empire_action_1
+wait 0.2
+expect_text "$1,270,980"
+expect_text "New Rollercoaster"
+expect_text "95%"
+expect_text "New Rollercoaster prioritized"
+
+click_ui empire_action_2
+wait 0.2
+expect_text "$1,258,980"
+expect_text "Sky Garden"
+expect_text "5%"
+expect_text "New project started"
+
+click_ui empire_tool_1
+wait 0.2
+expect_text "Settings opened"
+
+screenshot empire_tycoon_review
+
+resize 1920 1080
+wait 0.3
+assert_ui empire_root x=0 y=0 w=1920 h=1080
+assert_ui empire_cash_pill x=1166 y=50 w=603
+assert_ui empire_tabs_panel x=129 y=369 w=207
+assert_ui empire_dashboard x=381 y=386 w=1413
+assert_ui empire_action_0 x=423 y=776 w=417

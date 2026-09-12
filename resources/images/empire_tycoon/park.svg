@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <filter id="dream-blur"><feGaussianBlur stdDeviation="9"/></filter>
+    <linearGradient id="dream-sky" x2="0" y2="1"><stop stop-color="#7ecaf1"/><stop offset=".55" stop-color="#badfee"/><stop offset="1" stop-color="#a58ead"/></linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#dream-sky)"/>
+  <g filter="url(#dream-blur)" opacity=".7">
+    <g fill="#fffef0"><ellipse cx="71" cy="20" rx="114" ry="37"/><ellipse cx="127" cy="47" rx="75" ry="29"/><ellipse cx="1172" cy="67" rx="127" ry="43"/></g>
+    <path d="M451 540V267h360v273Z" fill="#a39fba"/><path d="M390 278 633 117 867 278Z" fill="#d3b085"/><rect x="542" y="165" width="172" height="376" fill="#cbbbad"/><path d="M516 170 627 45 741 170Z" fill="#d5b568"/><path d="M627 46V16l50 11-50 11" fill="#ead891"/>
+    <path d="M345 489V289h100v200m346 0V298h100v191" fill="#dbbba9"/><path d="m319 298 75-101 75 101m292 4 81-91 79 91" fill="#b28193"/>
+    <path d="M0 534q420-115 757 1t523-32v217H0Z" fill="#b198b3"/><path d="M431 720 563 440h146l150 280Z" fill="#dad3b7"/><path d="M0 472q230-107 449 18m455-36q220-82 376 26" stroke="#c7bd99" stroke-width="32" fill="none"/>
+  </g>
+</svg>

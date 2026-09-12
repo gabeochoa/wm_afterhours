@@ -57,6 +57,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | minesweeper_lab / desktop and game | Generic chrome, unreadable counters and overlapping taskbar text missed the classic desktop mock. | wm | Native desktop/window/taskbar, high-resolution font aliases, separate labels for icon buttons, real game reset and window state controls. Existing play test 120 and new 139 pass. |
 | minesweeper_lab / fine styling | Counter glyphs are heavier, bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open cosmetic differences; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
 
+
+| empire_tycoon / dashboard and state | Hidden park art, substitute icons, misplaced controls and faint borders weakened the tycoon composition. | wm | Isolated park/icons, winding/layering fixes, scaled outlines and dashboard geometry. Live production, cash, projects, gauges and milestone react to actions; E2E 133 passes. |
+| empire_tycoon / fine styling and scope | Logo remains upright; plates/buttons lack target gradients and inset highlights; body text uses a heavier rounded face; gauges and chat tail are simplified. Tool buttons report selection without full destination screens, as in the mock. | wm | Open visual polish and bounded demo navigation. 720p/1080p reviewed; no library changes. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
