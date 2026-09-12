@@ -259,7 +259,7 @@ are not accepted decisions.
 | UP-06 Binding prompts | Implemented locally | afterhours `bcefe22`; current binding labels, automatic device preference, noise filtering and app override. |
 | UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
 | UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
-| UP-09 Filesystem watcher | Approved | Upstream the existing watcher, macOS first behind one portable public API with an explicit unsupported result elsewhere. Wordproc is a possible second consumer, not a confirmed one. |
+| UP-09 Filesystem watcher | Implemented locally | afterhours `f4de4d3`; macOS FSEvents behind a portable API with bounded events, rescan hints and explicit unsupported result elsewhere. |
 | UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
 | UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. Cheap continuous recording independent of panel visibility, code controls and a compile-time off switch; measure overhead. |
 | UP-12 Chart set and test screen | Approved, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
@@ -276,6 +276,7 @@ are not accepted decisions.
 | UP-04 | afterhours `544ea06` | Portable queue checks cover single consumption, Unicode paths, cancellation, errors and reentrant processing. Real macOS open/save/folder cancellation and off-main-thread rejection pass. |
 | UP-05 | afterhours `00a6745` | All binding alternatives, explicit modifiers, malformed records and atomic list decoding pass with no backend and raylib. |
 | UP-06 | afterhours `bcefe22` | Tests cover full modifiers, axis directions, drift/mouse-motion rejection, held-axis behavior, pinned preference, remapping and layer changes. |
+| UP-09 | afterhours `f4de4d3` | Real filesystem tests cover create/modify/rename/delete, Unicode paths, multiple roots, invalid roots, immediate destruction, restart, stop and bounded-buffer rescan. |
 
 All other approved UP items remain unimplemented in this work. Commits are
 local; nothing was pushed. Tests and builds use `nice -n 10`.
