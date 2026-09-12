@@ -96,6 +96,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | parcel_corps_settings / phone settings | Controls extended beyond the phone, selector arrows hid values and volume controls only incremented on clicks. | wm | Contained native controls with visible values; real draggable sliders and predictable keyboard steps. Status moved into free space above audio rows. E2E 142 verifies exact values and drag at both resolutions. |
 | parcel_corps_settings / fine styling | Phone remains upright, rider/street art and icons are simplified, and the objective badge crowds its final line slightly. | wm | Open cosmetic differences. Primary settings are readable and unobstructed; final independent review passes. |
 
+| race_results / results layout | Tiny text, invisible header triangles, rounded rows and missing footer contrast weakened the results mock. | wm | Matched skewed row fills/backing, readable standings, corrected triangle winding, isolated shared racing scenery/portraits and restored light footer. |
+| race_results / fine styling and scope | Native type lacks italic slant and some headers are smaller; result action buttons report navigation choices in this standalone screen. | wm | Open cosmetic differences and demo navigation scope. E2E 144 covers selection/action feedback and resize. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process

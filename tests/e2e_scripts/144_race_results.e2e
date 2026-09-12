@@ -1,0 +1,51 @@
+# Race results mock parity smoke test.
+
+goto_screen race_results
+wait 0.5
+
+expect_text "RACE RESULTS"
+expect_text "Rainbow Circuit"
+expect_text "Race 3/4"
+expect_text "Zippy"
+expect_text "YOU"
+expect_text "2:33.812"
+expect_text "CUP STANDINGS"
+expect_text "0:48.220"
+expect_text "New personal best!"
+
+assert_ui race_root x=0 y=0 w=1280 h=720
+assert_ui race_header x=0 y=0 w=1280 h=84
+assert_ui race_results_panel x=29 y=113 w=772 h=510
+assert_ui race_table_header x=54 y=114 w=747 h=38
+assert_ui race_result_row_1 x=50 y=207 w=746 h=55
+assert_ui race_standings_panel x=816 y=113 w=421 h=504
+assert_ui race_position x=948 y=132 w=188 h=84
+assert_ui race_back x=38 y=665 w=97 h=48
+assert_ui race_next x=1044 y=664 w=200 h=54
+
+click_ui race_result_row_3
+wait 0.2
+expect_text "Drift"
+
+click_ui race_next
+wait 0.2
+expect_text "Next race selected"
+
+click_ui race_back
+wait 0.2
+expect_text "Back"
+
+action WidgetDown
+wait 0.2
+expect_text "Blaze"
+
+screenshot race_results_review
+
+resize 1920 1080
+wait 0.3
+assert_ui race_root x=0 y=0 w=1920 h=1080
+assert_ui race_header x=0 y=0 w=1920 h=126
+assert_ui race_results_panel x=44 y=170 w=1158 h=765
+assert_ui race_result_row_1 x=75 y=311 w=1119 h=83
+assert_ui race_standings_panel x=1224 y=170 w=632 h=756
+assert_ui race_next x=1566 y=996 w=300 h=81

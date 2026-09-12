@@ -65,7 +65,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | neon_strike | Updated; minor styling gaps recorded | E2E 141 passed: reload reserve transfer, repeated reload, pointer/Enter/number-key abilities, equipment and resize; two independent visual reviews. |
 | parcel_corps_settings | Updated; styling gaps recorded | E2E 142 passed: language, toggles, MSAA/texture values, native slider drag and paced keyboard changes, resize; 720p/1080p independently reviewed. |
 | powerwash_settings | Pending | |
-| race_results | Pending | |
+| race_results | Updated; styling gaps recorded | E2E 144 passed: selection, pointer/keyboard action feedback and resize; final 720p/1080p footer, portraits and table edges independently reviewed. |
 | sports_settings | Pending | |
 | rubber_bandits_menu | Updated; styling gaps recorded | E2E 146 passed: menu and character selection, keyboard, supporter feedback, all four long-name states and both resolutions; independent final visual review. |
 | kart_select | Pending | |
