@@ -354,6 +354,11 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
 struct ScreenCyclerSystem : afterhours::System<> {
   afterhours::SystemBase *current_screen = nullptr;
   afterhours::SystemManager *systems_ptr = nullptr;
+  std::function<bool()> navigation_open;
+
+  bool should_run(float) const override {
+    return !navigation_open || !navigation_open();
+  }
 
   virtual void once(const float dt) override {
     if (!current_screen || !systems_ptr) {
@@ -537,6 +542,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
   auto navigator_system = std::make_unique<ScreenNavigator>();
   ScreenNavigator *navigator = navigator_system.get();
   navigator->build_rows(screen_names);
+  navigator->show_launcher = true;
+  cycler_ptr->navigation_open = [navigator] { return navigator->visible; };
   navigator->on_pick = [&](int index) {
     current_screen_index = index;
     load_screen(current_screen_index);
@@ -574,18 +581,18 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     }
 #endif
 
-    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
+    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE) && !navigator->visible) {
       running = false;
     }
 
     // Screen navigation: . or PageDown = next, , or PageUp = previous
-    if (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN) ||
-        raylib::IsKeyPressed(raylib::KEY_PERIOD)) {
+    if (!navigator->visible && (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN) ||
+        raylib::IsKeyPressed(raylib::KEY_PERIOD))) {
       current_screen_index = (current_screen_index + 1) % screen_names.size();
       load_screen(current_screen_index);
     }
-    if (raylib::IsKeyPressed(raylib::KEY_PAGE_UP) ||
-        raylib::IsKeyPressed(raylib::KEY_COMMA)) {
+    if (!navigator->visible && (raylib::IsKeyPressed(raylib::KEY_PAGE_UP) ||
+        raylib::IsKeyPressed(raylib::KEY_COMMA))) {
       current_screen_index = static_cast<int>(
           (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
           static_cast<int>(screen_names.size()));
@@ -593,7 +600,8 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */) {
     }
     // Backtick, out of the way of the filter box and of widget tabbing.
     if (raylib::IsKeyPressed(raylib::KEY_GRAVE)) {
-      navigator->visible = !navigator->visible;
+      if (navigator->visible) navigator->visible = false;
+      else navigator->open();
     }
     navigator->current_index = current_screen_index;
 
@@ -764,6 +772,15 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     }
   };
 
+  auto navigator_system = std::make_unique<ScreenNavigator>();
+  ScreenNavigator *navigator = navigator_system.get();
+  navigator->build_rows(screen_names);
+  cycler_ptr->navigation_open = [navigator] { return navigator->visible; };
+  navigator->on_pick = [&](int index) {
+    current_screen_index = index;
+    load_screen(index);
+  };
+
   {
     afterhours::ui::register_before_ui_updates<InputAction>(systems);
 
@@ -773,6 +790,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
       return 1;
     }
     systems.register_update_system(std::move(cycler_system));
+    systems.register_update_system(std::move(navigator_system));
 
     afterhours::ui::register_after_ui_updates<InputAction>(systems);
   }
@@ -783,7 +801,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   const auto base_rez = afterhours::window_manager::fetch_current_resolution();
 
   // Reset callback for per-script cleanup
-  auto reset_fn = [base_rez]() {
+  auto reset_fn = [base_rez, navigator]() {
+    navigator->visible = false;
     afterhours::profiling::default_collector().stop();
     afterhours::profiling::default_collector().reset();
     // Clear input + visible text
@@ -1003,6 +1022,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     // Note: E2E handlers (update) run first, then rendering populates registry
     // The visible text registry accumulates text from render; expect_text
     // checks in the next frame after rendering has populated it
+    navigator->current_index = current_screen_index;
     systems.run(dt);
 #if AFTERHOURS_ENABLE_PROFILING
     afterhours::profiling::default_collector().end_frame();
@@ -1023,18 +1043,23 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     // Screen navigation via test input (AFTER E2E commands are processed)
     // Check the afterhours input_injector since E2E handlers use that
     namespace ah_input = afterhours::testing::input_injector;
-    if (ah_input::consume_press(afterhours::keys::PAGE_DOWN) ||
-        ah_input::consume_press(afterhours::keys::PERIOD)) {
+    if (!navigator->visible && (ah_input::consume_press(afterhours::keys::PAGE_DOWN) ||
+        ah_input::consume_press(afterhours::keys::PERIOD))) {
       current_screen_index =
           (current_screen_index + 1) % static_cast<int>(screen_names.size());
       load_screen(current_screen_index);
     }
-    if (ah_input::consume_press(afterhours::keys::PAGE_UP) ||
-        ah_input::consume_press(afterhours::keys::COMMA)) {
+    if (!navigator->visible && (ah_input::consume_press(afterhours::keys::PAGE_UP) ||
+        ah_input::consume_press(afterhours::keys::COMMA))) {
       current_screen_index =
           (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
           static_cast<int>(screen_names.size());
       load_screen(current_screen_index);
+    }
+
+    if (ah_input::consume_press(afterhours::keys::GRAVE)) {
+      if (navigator->visible) navigator->visible = false;
+      else navigator->open();
     }
 
     // Reset test input state for next frame

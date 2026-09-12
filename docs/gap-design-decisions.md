@@ -132,7 +132,8 @@ widget unless existing support proves insufficient.
 All approved UP items in this batch are implemented locally and pinned by wm.
 See [approved-gap-implementation.md](approved-gap-implementation.md) for the
 commit list and [AFTERHOURS_GAPS.md](AFTERHOURS_GAPS.md#implementation-status)
-for verification. The screen browser is completing its wm verification.
+for verification. The wm screen browser is implemented and verified; controls
+and coverage are in [screen-navigation.md](screen-navigation.md).
 
 The five decisions above and the established correctness requirements are
 sufficient to begin the approved work. Resolve routine implementation choices

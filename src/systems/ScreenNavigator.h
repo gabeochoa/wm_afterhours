@@ -3,6 +3,7 @@
 #include "../input_mapping.h"
 #include "../settings.h"
 #include "ExampleScreenRegistry.h"
+#include "ScreenTree.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
 #include <algorithm>
@@ -13,187 +14,133 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Sidebar for jumping between the example screens, since , and . are painful
-// at 100+. Registered only by the interactive demo, never by the screenshot or
-// e2e paths, so it cannot reach a baseline.
 struct ScreenNavigator : afterhours::System<UIContext<InputAction>> {
-  struct Row {
-    bool is_header = false;
-    std::string label;
-    int screen_index = -1;
-  };
-
-  static constexpr float WIDTH = 300.f;
-  static constexpr float ROW_H = 26.f;
-
-  std::vector<Row> all_rows;
-  std::vector<int> shown; // indices into all_rows
-  std::string filter;
-  bool visible = true;
+  static constexpr float WIDTH = 430.f;
+  static constexpr float ROW_H = 32.f;
+  ScreenTree tree;
+  bool visible = false;
+  bool show_launcher = false;
+  bool focus_filter = false;
+  bool reveal_cursor = false;
   int current_index = 0;
-
   // Deferred: swapping mid-iteration frees what the cycler still points at.
   std::function<void(int)> on_pick;
 
   void build_rows(const std::vector<std::string> &names) {
-    auto &reg = ExampleScreenRegistry::get();
-    std::vector<std::string> order = {"Game Mockups", "Component Galleries",
-                                      "System Demos", "Tools"};
-    for (const auto &n : names) {
-      std::string c = reg.get_screen_category(n);
-      if (std::find(order.begin(), order.end(), c) == order.end())
-        order.push_back(c);
-    }
-
-    all_rows.clear();
-    for (const auto &cat : order) {
-      bool wrote_header = false;
-      for (size_t i = 0; i < names.size(); i++) {
-        if (reg.get_screen_category(names[i]) != cat)
-          continue;
-        if (!wrote_header) {
-          all_rows.push_back({true, cat.empty() ? "Uncategorised" : cat, -1});
-          wrote_header = true;
-        }
-        all_rows.push_back({false, names[i], static_cast<int>(i)});
-      }
-    }
+    tree.entries.clear();
+    auto &registry = ExampleScreenRegistry::get();
+    for (std::size_t i = 0; i < names.size(); ++i)
+      tree.entries.push_back({names[i], registry.get_screen_category(names[i]),
+                             registry.get_screen_description(names[i]), static_cast<int>(i)});
+    tree.rebuild();
   }
-
-  size_t n_screens() const {
-    size_t n = 0;
-    for (int i : shown)
-      if (!all_rows[static_cast<size_t>(i)].is_header)
-        n++;
-    return n;
+  void open() {
+    visible = focus_filter = reveal_cursor = true;
+    tree.reveal(current_index);
   }
-
-  static std::string lower(std::string s) {
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
-    return s;
+  void activate(UIContext<InputAction> &context, int row) {
+    if (row < 0 || row >= static_cast<int>(tree.rows.size())) return;
+    if (tree.rows[row].header()) { tree.toggle(row); reveal_cursor = true; return; }
+    const auto index = tree.entries[tree.rows[row].entry].screen_index;
+    visible = false;
+    if (!on_pick) return;
+    auto callback = on_pick;
+    context.defer([callback, index] { callback(index); });
   }
-
-  void apply_filter() {
-    shown.clear();
-    const std::string needle = lower(filter);
-    if (needle.empty()) {
-      for (size_t i = 0; i < all_rows.size(); i++)
-        shown.push_back(static_cast<int>(i));
+  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
+    const int layer = 2000;
+    if (!visible) {
+      if (!show_launcher) return;
+      if (button(context, mk(entity, 100), ComponentConfig{}
+          .with_label("Browse screens (`)").with_size({pixels(200), pixels(32)})
+          .with_absolute_position(static_cast<float>(Settings::get().get_screen_width()) - 212, 8)
+          .with_custom_background({22, 25, 32, 255}).with_custom_text_color({220, 228, 240, 255})
+          .with_auto_text_color(false).with_render_layer(layer).with_debug_name("nav_open"))) open();
       return;
     }
-    // Headers only earn a place when something under them survived.
-    for (size_t i = 0; i < all_rows.size(); i++) {
-      if (all_rows[i].is_header)
-        continue;
-      if (lower(all_rows[i].label).find(needle) == std::string::npos)
-        continue;
-      size_t h = i;
-      while (h > 0 && !all_rows[h].is_header)
-        h--;
-      if (all_rows[h].is_header &&
-          (shown.empty() || shown.back() != static_cast<int>(h)))
-        shown.push_back(static_cast<int>(h));
-      shown.push_back(static_cast<int>(i));
-    }
-  }
-
-  void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
-    if (!visible || all_rows.empty())
+    const float height = static_cast<float>(Settings::get().get_screen_height());
+    const float row_height = ROW_H * height / 720.f;
+    div(context, mk(entity, 90), ComponentConfig{}
+        .with_size({screen_pct(1), screen_pct(1)}).with_absolute_position(0, 0)
+        .with_custom_background({13, 16, 22, 255}).with_corner_radius(0)
+        .with_render_layer(layer).with_debug_name("nav_backdrop"));
+    auto panel = vstack(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(WIDTH), pixels(height)})
+        .with_absolute_position(0, 0).with_custom_background({22, 25, 32, 255})
+        .with_corner_radius(0).with_padding(Padding::all(pixels(12)))
+        .with_render_layer(layer).with_no_wrap().with_debug_name("nav_panel"));
+    auto label = [&](int id, const std::string &text, float h) {
+      div(context, mk(panel.ent(), id), ComponentConfig{}
+          .with_label(text).with_size({percent(1), pixels(h)})
+          .with_font_size(17).with_custom_text_color({220, 228, 240, 255})
+          .with_render_layer(layer));
+    };
+    label(0, "Screens / search and browse", 32);
+    if (button(context, mk(entity, 92), ComponentConfig{}
+        .with_label("Close").with_size({pixels(64), pixels(28)})
+        .with_absolute_position(WIDTH - 76, 12).with_font_size(16)
+        .with_custom_background({38, 43, 54, 255}).with_custom_text_color({220, 228, 240, 255})
+        .with_auto_text_color(false).with_render_layer(layer).with_debug_name("nav_close"))) {
+      visible = false;
       return;
-
-    apply_filter();
-
-    const int layer = 2000; // above modals, which sit at 1000
-    const auto panel_bg = afterhours::Color{22, 25, 32, 255};
-    const auto header_col = afterhours::Color{130, 145, 175, 255};
-    const auto row_col = afterhours::Color{210, 218, 232, 255};
-    const auto sel_col = afterhours::Color{15, 18, 24, 255};
-    const auto sel_bg = afterhours::Color{110, 170, 230, 255};
-
-    const float h = static_cast<float>(Settings::get().get_screen_height());
-
-    auto panel = vstack(context, mk(entity, 0),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{pixels(WIDTH), pixels(h)})
-                            .with_absolute_position(0.f, 0.f)
-                            .with_custom_background(panel_bg)
-                            .with_padding(Spacing::sm)
-                            .with_render_layer(layer)
-                            .with_no_wrap()
-                            .with_debug_name("nav_panel"));
-
-    div(context, mk(panel.ent(), 0),
-        ComponentConfig{}
-            .with_label(fmt::format("Screens ({})", n_screens()))
-            .with_size(ComponentSize{percent(1.f), pixels(28)})
-            .with_alignment(TextAlignment::Left)
-            .with_custom_text_color(row_col)
-            .with_render_layer(layer)
-            .with_debug_name("nav_title"));
-
-    text_input(context, mk(panel.ent(), 1), filter,
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.f), pixels(32)})
-                   .with_placeholder("filter")
-                   // Otherwise it takes the current screen's theme and the
-                   // sidebar changes colour every time you switch.
-                   .with_custom_background(afterhours::Color{38, 43, 54, 255})
-                   .with_auto_text_color(false)
-                   .with_custom_text_color(row_col)
-                   .with_render_layer(layer)
-                   .with_debug_name("nav_filter"));
-
-    div(context, mk(panel.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), pixels(8)})
-            .with_render_layer(layer)
-            .with_debug_name("nav_gap"));
-
-    virtual_list(
-        context, mk(panel.ent(), 3), shown.size(), ROW_H,
-        [&](size_t i, afterhours::Entity &row) {
-          const Row &r = all_rows[static_cast<size_t>(shown[i])];
-          if (r.is_header) {
-            div(context, mk(row, 0),
-                ComponentConfig{}
-                    .with_label(r.label)
-                    .with_size(ComponentSize{percent(1.f), pixels(ROW_H)})
-                    .with_alignment(TextAlignment::Left)
-                    .with_custom_text_color(header_col)
-                    .with_font_size(13.f)
-                    .with_render_layer(layer)
-                    .with_skip_tabbing(true));
-            return;
-          }
-          const bool sel = r.screen_index == current_index;
-          auto cfg = ComponentConfig{}
-                         .with_label(r.label)
-                         .with_size(ComponentSize{percent(1.f), pixels(ROW_H)})
-                         .with_alignment(TextAlignment::Left)
-                         .with_font_size(14.f)
-                         .with_render_layer(layer);
-          if (sel) {
-            cfg.with_custom_background(sel_bg)
-                .with_auto_text_color(false)
-                .with_custom_text_color(sel_col);
-          } else {
-            cfg.with_transparent_bg()
-                .with_auto_text_color(false)
-                .with_custom_text_color(row_col);
-          }
-          if (button(context, mk(row, 1), cfg)) {
-            if (on_pick) {
-              auto cb = on_pick;
-              const int idx = r.screen_index;
-              context.defer([cb, idx]() { cb(idx); });
-            }
-          }
-        },
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.f), pixels(h - 100.f)})
-            .with_render_layer(layer)
-            .with_debug_name("nav_list"));
+    }
+    const auto old_query = tree.query;
+    auto filter = text_input(context, mk(panel.ent(), 1), tree.query, ComponentConfig{}
+        .with_size({percent(1), pixels(36)}).with_placeholder("Search names, categories, descriptions")
+        .with_custom_background({38, 43, 54, 255}).with_auto_text_color(false)
+        .with_custom_text_color({220, 228, 240, 255}).with_font_size(16)
+        .with_render_layer(layer).with_debug_name("nav_filter"));
+    if (focus_filter) { context.set_focus(filter.ent().id); focus_filter = false; }
+    if (tree.query != old_query) { tree.cursor = 0; tree.rebuild(); reveal_cursor = true; }
+    label(2, "Arrows browse / Enter opens / Esc closes", 30);
+    if (afterhours::input::is_key_pressed(afterhours::keys::ESCAPE)) { visible = false; return; }
+    bool moved = false;
+    if (afterhours::input::is_key_pressed(afterhours::keys::DOWN)) { tree.move(1); moved = true; }
+    if (afterhours::input::is_key_pressed(afterhours::keys::UP)) { tree.move(-1); moved = true; }
+    if (!context.has_focus(filter.ent().id)) {
+      if (afterhours::input::is_key_pressed(afterhours::keys::LEFT)) { tree.left(); moved = true; }
+      if (afterhours::input::is_key_pressed(afterhours::keys::RIGHT)) { tree.right(); moved = true; }
+    }
+    if (moved) { context.set_focus(panel.ent().id); reveal_cursor = true; }
+    if (afterhours::input::is_key_pressed(afterhours::keys::ENTER)) activate(context, tree.cursor);
+    if (tree.rows.empty()) { label(3, "No matching screens", 40); return; }
+    const auto &selected = tree.rows[tree.cursor];
+    const std::string detail = selected.header() ? selected.label : tree.entries[selected.entry].description;
+    div(context, mk(entity, 91), ComponentConfig{}
+        .with_label(selected.label + "\n\n" + detail + "\n\nEnter opens / current screen marked *")
+        .with_size({pixels(std::max(0.f, static_cast<float>(Settings::get().get_screen_width()) - WIDTH - 48)), pixels(250)})
+        .with_absolute_position(WIDTH + 24, 80).with_font_size(24)
+        .with_custom_text_color({220, 228, 240, 255}).with_render_layer(layer)
+        .with_debug_name("nav_details"));
+    auto list = virtual_list(context, mk(panel.ent(), 4), tree.rows.size(), row_height,
+        [&](std::size_t i, afterhours::Entity &row_entity) {
+          const auto row = tree.rows[i];
+          const bool current = !row.header() && tree.entries[row.entry].screen_index == current_index;
+          const bool cursor = static_cast<int>(i) == tree.cursor;
+          const std::string label = row.header()
+              ? std::string(tree.query.empty() && !tree.expanded.contains(row.label) ? "+ " : "- ") + row.label
+              : std::string(current ? "* " : "    ") + row.label;
+          auto debug_label = row.label;
+          std::replace(debug_label.begin(), debug_label.end(), ' ', '_');
+          auto config = ComponentConfig{}.with_label(label)
+              .with_size({percent(1), pixels(row_height)}).with_alignment(TextAlignment::Left)
+              .with_font_size(16).with_render_layer(layer).with_auto_text_color(false)
+              .with_custom_text_color(cursor ? afterhours::Color{20, 24, 32, 255} : afterhours::Color{220, 228, 240, 255})
+              .with_custom_background(cursor ? afterhours::Color{230, 235, 244, 255} :
+                  current ? afterhours::Color{64, 52, 24, 255} : afterhours::Color{22, 25, 32, 255})
+              .with_debug_name(row.header() ? "nav_category_" + debug_label : "nav_screen_" + debug_label)
+              .with_skip_tabbing(true);
+          if (button(context, mk(row_entity, 0), config))
+            context.defer([this, &context, i] { activate(context, static_cast<int>(i)); });
+        }, ComponentConfig{}.with_size({percent(1), pixels(height - 130)})
+            .with_render_layer(layer).with_debug_name("nav_list"));
+    if (!reveal_cursor || !list.ent().has<HasScrollView>()) return;
+    auto &scroll = list.ent().get<HasScrollView>();
+    const float y = tree.cursor * row_height;
+    const float view = height - 130;
+    if (y < scroll.scroll_target.y) scroll.scroll_target.y = y;
+    if (y + row_height > scroll.scroll_target.y + view) scroll.scroll_target.y = y + row_height - view;
+    scroll.scroll_offset.y = scroll.scroll_target.y;
+    reveal_cursor = false;
   }
 };

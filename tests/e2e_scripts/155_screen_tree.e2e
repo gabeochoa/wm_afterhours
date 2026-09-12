@@ -1,0 +1,77 @@
+goto_screen chart_lab
+wait 0.3
+key GRAVE
+wait 0.3
+expect_text "Screens / search and browse"
+expect_text "+ Game Mockups"
+expect_text "+ Component Galleries"
+expect_text "+ System Demos"
+expect_text "+ Tools"
+expect_no_text "* chart_lab"
+click_ui nav_category_System_Demos
+wait 0.2
+expect_text "* chart_lab"
+click_ui nav_filter
+type "system_profile"
+wait 0.3
+expect_text "system_profile_lab"
+key DOWN
+wait 0.2
+key ENTER
+wait 0.4
+expect_text "Profiler"
+expect_no_text "Screens / search and browse"
+key GRAVE
+wait 0.3
+click_ui nav_filter
+type "zzzz_no_match"
+wait 0.3
+expect_text "No matching screens"
+key ESCAPE
+wait 0.3
+expect_text "Profiler"
+key GRAVE
+wait 0.3
+click_ui nav_filter
+type "chart_lab"
+wait 0.2
+key DOWN
+wait 0.2
+screenshot screen_tree
+key ENTER
+wait 0.3
+expect_text "Charts / frame timings"
+key GRAVE
+wait 0.3
+key UP
+wait 0.2
+key LEFT
+wait 0.2
+key RIGHT
+wait 0.2
+key ESCAPE
+wait 0.3
+expect_text "Charts / frame timings"
+key GRAVE
+wait 0.3
+key UP
+wait 0.2
+key LEFT
+wait 0.2
+click_ui nav_category_System_Demos
+wait 0.2
+click_ui nav_category_System_Demos
+wait 0.2
+click_ui nav_screen_chart_lab
+wait 0.3
+expect_text "Charts / frame timings"
+expect_no_text "Screens / search and browse"
+resize 1920 1080
+wait 0.3
+key GRAVE
+wait 0.3
+expect_text "* chart_lab"
+click_ui nav_close
+wait 0.2
+expect_text "Charts / frame timings"
+resize 1280 720

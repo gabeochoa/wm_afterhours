@@ -20,7 +20,7 @@ Each library change has its own afterhours commit and a wm adoption commit.
 | UP-10 Explicit capture formats | Complete, afterhours `6eea5bd`; raylib/Metal raw and PNG pixel checks pass |
 | UP-11 Default profiling UI and compile-out support | Complete, afterhours `5a8e3be`; bounded collector, independent hooks, compile-out and real panel checks pass; rendering and recording measurements documented |
 | UP-12 Charts required by profiler, interactive wm test screen | Complete, afterhours `dff9c96`; data checks, wm pointer interactions and visual capture pass |
-| wm searchable screen tree | Pending |
+| wm searchable screen tree | Complete; pure model checks, pointer/keyboard E2E, 720p/1080p, current-screen marker and unique runtime cycle pass |
 
 UP-07 and UP-08 remain deferred. Sound-feedback and periodic timers remain
 skipped. The wider chart set remains TODO. Performance investigations and
@@ -28,3 +28,16 @@ older visual gaps retain their separate recorded scope.
 
 The plugin architecture proposal is in `docs/plugin-architecture-proposal.md`.
 That work is a plan only, not a library migration.
+
+Final verification on September 12: the full afterhours suite exited 0, and
+wm screenshot validation passed 117/117. The full wm E2E run passed 154/155;
+its only failure was the profiler's focus-state baseline. After correcting that
+test's setup, it passed alone and in a two-script batch after keyboard input,
+with a 0.0000% screenshot difference in both runs. The other scripts and
+application code did not change after that full run. The complete suite was
+not repeated after the test-only correction.
+
+The screen-tree model checks pass. Runtime cycles in both directions visit
+all 117 registered screens once before wrapping. Profiling-disabled wm syntax
+checks pass; collector and real-renderer benchmark results and limits are in
+`vendor/afterhours/docs/profiling-measurements.md`.

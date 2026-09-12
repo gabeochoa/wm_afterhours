@@ -11,11 +11,12 @@
 
 ## Screen navigation follow-up
 
-- [ ] Improve screen switching and discovery. Investigate the duplicate screens
+- [x] Improve screen switching and discovery. Investigate the duplicate screens
   reported when cycling with `,` and `.`; show each intended screen once and
   give intentional variants distinct names. Build a searchable tree with
   collapsible categories, keyboard navigation and a clearly marked current
   screen. Search across collapsed categories and preserve category context.
+  Implemented and verified; see `docs/screen-navigation.md`.
   The user selected this structure; see `docs/gap-design-decisions.md`, D-05.
 
 ## Performance follow-ups — 2026-09-12

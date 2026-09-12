@@ -37,7 +37,7 @@ struct RenderScreenHUD : afterhours::System<> {
 
     // Build the HUD text
     std::string hud_text = "--screen=" + ScreenHUDState::current_screen_name;
-    std::string nav_text = "< , | . >";
+    std::string nav_text = "< , | . >    ` Browse screens";
 
     // Font sizes
     float font_size = 16.0f;
