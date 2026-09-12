@@ -67,7 +67,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | powerwash_settings | Pending | |
 | race_results | Pending | |
 | sports_settings | Pending | |
-| rubber_bandits_menu | Pending | |
+| rubber_bandits_menu | Updated; styling gaps recorded | E2E 146 passed: menu and character selection, keyboard, supporter feedback, all four long-name states and both resolutions; independent final visual review. |
 | kart_select | Pending | |
 | guess_who_lab | Pending | |
 | aim_chat | Updated; icon/type gaps recorded | Existing text-editing E2E 08_text_area_arrow_keys and new 149 passed: buddy drafts/history, Enter/Shift+Enter, menus, warn/block, window controls and resize; 720p/1080p reviewed. |

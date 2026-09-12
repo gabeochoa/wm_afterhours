@@ -1,0 +1,118 @@
+# Rubber Bandits mock parity and live menu coverage.
+
+goto_screen rubber_bandits_menu
+wait 0.5
+
+expect_text "thia9uers · Online"
+expect_text "20"
+expect_text "OPTIONS"
+expect_text "CONTROLS"
+expect_text "LEADERBOARD"
+expect_text "ARMORY"
+expect_text "PLAY CREDITS"
+expect_text "BACK"
+expect_text "EARL THE BIRD"
+expect_text "FAVOURITE"
+expect_text "Change the game's settings"
+expect_text "1.6.0 / RUBBER BANDITS"
+assert_ui rb_root x=0 y=0 w=1280 h=720
+assert_ui rb_online_bar x=0 y=0 w=1280 h=26
+assert_ui rb_logo x=42 y=71 w=368 h=204
+assert_ui rb_cast x=0 y=0 w=1280 h=720
+assert_ui rb_promo x=952 y=69 w=283 h=104
+assert_ui rb_menu_0 x=57 y=344 w=308 h=38
+assert_ui rb_menu_5 x=57 y=566 w=308 h=38
+assert_ui rb_character_prev x=583 y=645 w=40 h=28
+assert_ui rb_character_next x=822 y=645 w=40 h=28
+assert_ui rb_footer x=0 y=691 w=1280 h=29
+assert_no_overflow
+assert_within_parents
+screenshot rubber_bandits_default
+
+# Pointer and keyboard selection update the contextual footer.
+click_ui rb_menu_1
+wait 0.2
+expect_text "Learn the controls"
+click_ui rb_menu_2
+wait 0.2
+expect_text "See the best bandits"
+focus_ui rb_menu_3
+key ENTER
+wait 0.2
+expect_text "Choose your loadout"
+click_ui rb_menu_4
+wait 0.2
+expect_text "Meet the team"
+click_ui rb_menu_5
+wait 0.2
+expect_text "Return to the main menu"
+key UP
+wait 0.2
+expect_text "Meet the team"
+key DOWN
+wait 0.2
+expect_text "Return to the main menu"
+
+# Character bumpers cycle and wrap through the live roster.
+click_ui rb_character_prev
+wait 0.2
+expect_text "THE OUTLAW"
+assert_no_overflow
+assert_within_parents
+click_ui rb_character_next
+wait 0.2
+expect_text "EARL THE BIRD"
+focus_ui rb_character_next
+key ENTER
+wait 0.2
+expect_text "THE GENTLEMAN"
+assert_no_overflow
+assert_within_parents
+screenshot rubber_bandits_gentleman
+click_ui rb_character_next
+wait 0.2
+expect_text "HOT HEAD"
+assert_no_overflow
+assert_within_parents
+click_ui rb_character_prev
+wait 0.2
+click_ui rb_character_prev
+wait 0.2
+expect_text "EARL THE BIRD"
+
+# The supporter plate is an actual action and does not remove the artwork.
+focus_ui rb_promo
+key ENTER
+wait 0.2
+expect_text "Supporter pack selected"
+expect_text "Get more bandits!"
+click_ui rb_menu_0
+wait 0.2
+expect_text "Change the game's settings"
+
+resize 1920 1080
+wait 0.3
+assert_ui rb_root x=0 y=0 w=1920 h=1080
+assert_ui rb_logo x=63 y=107 w=552 h=306
+assert_ui rb_promo x=1428 y=104 w=425 h=156
+assert_ui rb_menu_0 x=86 y=516 w=462 h=57
+assert_ui rb_character_prev x=875 y=968 w=60 h=42
+assert_ui rb_footer x=0 y=1037 w=1920 h=44
+assert_no_overflow
+assert_within_parents
+click_ui rb_character_next
+wait 0.2
+expect_text "THE GENTLEMAN"
+assert_no_overflow
+assert_within_parents
+screenshot rubber_bandits_gentleman_1080p
+click_ui rb_character_next
+wait 0.2
+expect_text "HOT HEAD"
+assert_no_overflow
+assert_within_parents
+click_ui rb_character_next
+wait 0.2
+expect_text "THE OUTLAW"
+assert_no_overflow
+assert_within_parents

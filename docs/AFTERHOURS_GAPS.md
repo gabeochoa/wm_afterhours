@@ -86,6 +86,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | shop_interface / shop and basket | Generic rounded rows, mismatched proportions and invisible flask liquid weakened the store mock. | wm | Square table rows, paper/wood frames, visible liquid, native item art, live basket purchase and gold/stock changes. Keyboard add/remove and real close/reopen verified in E2E 135. |
 | shop_interface / fine styling and scope | Emboldened serif headings are softer/heavier than target; item drawings and italic text remain approximate. Basket previews only its first three distinct items; Sell remains a preview tab. | wm | Open cosmetic and demo-scope gaps. Full basket totals still include every item; primary purchase flow and 720p/1080p containment pass. |
 
+| rubber_bandits_menu / layout and roster | Logo font, promo overflow, squared selection and invisible bolt differed from the mock. | wm | Correct isolated logo/cast, rounded selection, bounded promo text, native bolt and live character/menu state. All four names checked for overflow. |
+| rubber_bandits_menu / fine styling | Promo border/inset, character-label weight and small footer details differ slightly. Supporter action is local demo feedback. | wm | Open cosmetic differences; final 720p/1080p images and long-name state reviewed. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
