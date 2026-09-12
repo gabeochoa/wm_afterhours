@@ -3,8 +3,15 @@
 wm_afterhours vendors afterhours (git submodule) **and** maintains it, so gaps
 found during UI work get fixed upstream, merged, and pulled in via a submodule
 pin bump — not worked around in wm source. This file tracks only what's still
-**open**; resolved gaps are listed compactly for the record (full detail lives in
-git history and the afterhours PRs).
+**open**; resolved gaps are listed compactly for the record.
+
+**Every entry here was rechecked against `main` on 2026-09-12.** That sweep is
+worth repeating before trusting any of it, because the consumer docs these were
+collected from are all months stale: of everything collected this cycle, hanabi
+had 6 of their top 10 already fixed, cartographer's component asks were almost
+entirely in, floatinghotel's footgun list was half done, and three of their four
+sokol items had landed. The most valuable output of a collection pass is now
+telling the projects what they can delete, not finding new work.
 
 See also: `docs/vendor_ui_sizing_issues.md`
 
@@ -20,23 +27,6 @@ row-flex `expand()`, index-based tick iteration (their heap-use-after-free),
 and the button-inside-a-clickable-row hit priority, which now has a test named
 after it. What is left:
 
-- **no first-class headless for sokol/Metal** — they built their own with
-  `MTLCreateSystemDefaultDevice` and an offscreen texture, but `sapp_*` calls
-  are scattered through the draw and measure paths and assume a live
-  sokol_app, so it needed a `metal_detail` shim to feed headless values. One
-  swappable seam for platform queries instead of direct `sapp_*` would do it.
-  Related: `RunConfig::display` now exists but only raylib can honour it.
-
-- **mouse-wheel injection is consume-once** — the e2e `scroll_wheel` sets a
-  wheel that `get_mouse_wheel_move_v()` consumes on first read, so whichever
-  system reads first wins and it is cleared per frame. The real app reads a
-  live re-readable wheel, so headless diverges from real and driving a
-  specific scroll view is unreliable.
-
-- **offscreen readback needs manual GPU sync** — non-MSAA Private Metal render
-  targets return garbage from `getBytes`; it needs a blit to a Shared texture
-  and `waitUntilCompleted`. Nothing says so.
-
 - **absolute children need a manual `with_render_layer`** to stack correctly.
   Tried defaulting `with_absolute_position()` to layer 1, on the reasoning that
   CSS paints absolute above in-flow. **Reverted**: `file_tree` went 65.8% and
@@ -48,33 +38,13 @@ after it. What is left:
 
 ### From hanabi's triage
 
-hanabi keeps a 14,000-line gap file and an index that ranks the top ten by pain
-per line of upstream change. Checked against current `main`, not their pin
-(`428047e`), which is well behind: six of their ten were already in, including
-the one they rank first, and three more have landed since. These two are what
-is left, and both need a decision rather than a patch.
-
-- **the two measure functions disagree** (hanabi #137) — `measure_text_internal`
-  returns the pen advance, `measure_text` the ink bounding box, a consistent 2px
-  apart on the same string. The shared `TextMeasureCache` goes through the
-  latter, so the app that most needs the cache cannot adopt it without moving
-  every bubble 2px. Their measurement is on sokol; the raylib path has the same
-  `MeasureText` / `MeasureTextEx` split and was not checked here.
-
-- **the focus ring is painted at rest** (hanabi #83, and five under it) — a ring
-  sits on whatever was focusable first, so the app opens with a box around a row
-  nobody touched, in every screenshot their harness has taken. There is no
-  `:focus-visible` and `FocusSource` cannot build one because it resets to `Grab`
-  every frame, so it answers "who claimed focus this frame" rather than "how did
-  this come to be focused". The ring is also three outlines, and the two you did
-  not ask for take their colour from the ring's own luminance instead of the
-  backdrop -- a requested 1px hairline measures as a 3px white-blue-white band.
-
-
-Collected from every gap doc across the 19 projects that vendor afterhours,
-checked against current `main` rather than the pin each is stuck on. Nine of
-wordproc's fifteen, all ten of break-ross's, four of kart's and one of
-cartographer's turned out to be already in; these are what is left.
+hanabi keeps a 14,000-line gap file and an index ranking their top ten by pain
+per line of upstream change. Rechecked against `main`, not their pin
+(`428047e`): **all ten are now closed** -- six were already in when first
+collected, and the rest landed this cycle. Nothing outstanding from that list.
+Worth telling them: they can delete `src/util/atlas_guard.h` (~50 lines) and
+`src/ui/focus_visible.h`, and drop three hand-rolled virtualization windows for
+the `height_of` overload.
 
 ### Components
 
@@ -82,25 +52,16 @@ cartographer's turned out to be already in; these are what is left.
   can underline the F. Needs the renderer to decorate one glyph in a run, which
   the run machinery from the wrap work could carry. Filed as accessibility.
 
-### Input
-
-- **mouse delta through the action mapping** (cartographer) — `GetMouseDelta()`
-  for camera look cannot go through actions, since it is a continuous 2D delta
-  rather than a button or an axis with a direction. So mouse sensitivity and
-  rebinding live outside the system every other input goes through.
-
-- **`synthetic_press_delay` is undocumented and load-bearing** (cartographer) —
-  a 1-frame delay in `consume_press` before an injected key registers. Tests
-  need a `wait` between `key_down` and anything depending on it, and nothing
-  says so.
-
 ### E2E
 
-- **command handlers are registered per SystemManager** (cartographer) — with
-  several managers (game, pause, transition) each needs `HandlePressKeyCommand`
-  and friends registered by hand. Miss one and commands silently do nothing
-  while that manager is active. A global registry, or propagation, would end a
-  class of bug rather than a bug.
+- **command handlers are registered per SystemManager** (cartographer) — each
+  manager needs `register_all_handlers`. Not silent, as their doc says: the
+  runner blocks on an unconsumed command and times out, and the timeout now
+  names what stalled and points at an unregistered pack. The boilerplate
+  remains. Both automatic fixes were costed and rejected -- a registry of live
+  managers needs hand-written move members (`SystemManager` is returned by
+  value, wm builds ~92 a run), and lazy first-tick registration inverts the
+  documented order.
 
 ### Harness
 
@@ -160,14 +121,6 @@ cartographer's turned out to be already in; these are what is left.
   the top of the content and is then drawn off screen. Folding it needs
   children offset during the layout pass. One div, so the cost is negligible;
   it is the asymmetry that will confuse the next reader.
-
-- **`virtual_list` requires a uniform row height** — finding the window and
-  the height of the skipped rows is `offset / row_height`, which is why it is
-  cheap. Variable heights need a prefix sum over every item to answer either
-  question, which is O(n) per frame and gives back exactly what the
-  virtualization was for. Doing it properly means a cumulative-height table
-  cached on the component and invalidated when an item resizes. Until then a
-  list of mixed-height rows has to pick a single pitch or not virtualize.
 
 - **slider handle 0.75 compression** — the knob's center never quite reaches the
   value position at 100% (cosmetic). `imm_components.h` `slider`. Revisit the
@@ -237,6 +190,22 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
 - **card preset** — `with_card(pad)`: Surface, rounded corners, padding.
 - **font sizes off the type scale** — `ValidationConfig::enforce_font_size_tiers`,
   opt-in.
+
+- **sokol headless, wheel injection, GPU sync** (floatinghotel) — all three
+  landed. `g_headless_rt` and the headless branches exist; `consume_wheel()`
+  does not consume (it flags `wheel_read`, every reader in a frame sees the
+  same value, cleared at the next `reset_frame`); `capture_impl.h` does the
+  blit-to-resolve. The wheel one keeps a misleading name, which is likely why
+  their doc still lists it.
+- **virtualization with variable row heights** (hanabi #326/#170/#224) —
+  `virtual_list` has a `height_of(index)` overload that binary-searches a
+  running total. They hand-rolled the same window three times.
+- **mouse delta through the action mapping** (cartographer) — `MouseAxisWithDir`,
+  normalised by `MOUSE_DELTA_SCALE`.
+- **advance vs ink measure** (hanabi #137) — sokol already returned the advance;
+  the raylib odd-one-out, `measure_text_internal`, is deleted.
+- **focus ring painted at rest** (hanabi #83) — off until first interaction.
+  Their hand-rolled `focus_visible.h` can go.
 
 - **the two floatinghotel blockers** — the sokol include-order break and the
   flex solver budgeting raw child sizes. Both fixed, with a third snapping site
