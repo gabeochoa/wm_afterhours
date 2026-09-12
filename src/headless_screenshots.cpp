@@ -105,6 +105,7 @@ void configure_validation() {
   config.enforce_child_containment = true;
   config.enforce_contrast_ratio = true;
   config.enforce_min_font_size = true;
+  config.enforce_corner_radius_scale = true;
   config.safe_area_margin = 16.0f;
   config.min_font_size = 12.0f;
   config.min_contrast_ratio = 4.5f;
@@ -365,6 +366,19 @@ std::vector<std::string> collect_layout_problems(int vw, int vh) {
                  pr.y + pr.height > vh + VIEWPORT_TOL;
       if (off)
         problems.push_back(name_of(parent) + " (off-screen)");
+    }
+
+    // 3. A roundness fraction that scaled into a radius nobody picks on
+    //    purpose. Same check as the library's ValidateCornerRadiusScale,
+    //    repeated here because the ECS validators do not reach the UI
+    //    collection in this path.
+    if (parent.has<afterhours::ui::HasRoundedCorners>()) {
+      const auto &rc = parent.get<afterhours::ui::HasRoundedCorners>();
+      const float radius =
+          rc.roundness * 0.5f * std::min(pr.width, pr.height);
+      if (!rc.radius_px.has_value() && rc.get().any() && radius > 24.f)
+        problems.push_back(fmt::format("{} has a {:.0f}px corner radius",
+                                       name_of(parent), radius));
     }
 
     // 2. Child escapes parent — skip parents that clip on purpose.
