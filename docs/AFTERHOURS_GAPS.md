@@ -257,8 +257,8 @@ unless stated otherwise. Line numbers describe the reviewed local snapshots.
 | UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
 | UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. |
 | UP-12 Chart set and test screen | Approved, expanded | Replace the small sparkline proposal with a chart set and an interactive wm test screen. |
-| UI sound-feedback hooks | Pending; recommend skip | Click callbacks already exist. A distinct focus-change notification still needs a concrete consumer requirement. |
-| Periodic timer helper | Pending | Not yet asked individually. |
+| UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
+| Periodic timer helper | Skip | No shared remainder-preserving timer requested. |
 
 ### UP-01: Independent audio gains
 
