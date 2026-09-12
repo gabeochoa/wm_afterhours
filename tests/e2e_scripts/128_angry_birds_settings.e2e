@@ -1,0 +1,147 @@
+# Angry Birds settings: visual geometry and complete keyboard/pointer flows.
+
+goto_screen angry_birds_settings
+wait 0.5
+
+expect_text "SETTINGS"
+expect_text "A little more music. A little more mayhem."
+expect_text "MUSIC"
+expect_text "SOUND"
+expect_text "VIBRATION"
+assert_ui ab_root w=1280 h=720
+assert_ui ab_board x=170 y=46 w=940 h=628
+assert_ui ab_tab_audio x=231 y=166 w=262 h=55
+assert_ui ab_music x=349 y=300 w=148 h=107
+assert_ui ab_close x=1047 y=106 w=74 h=74
+assert_ui ab_settings_foot x=210 y=698 w=860 h=4
+assert_no_overflow
+screenshot angry_birds_settings_audio
+
+# Tab navigation reaches the next visible control and Enter changes sections.
+focus_ui ab_tab_audio
+expect_focused ab_tab_audio
+key TAB
+wait 0.2
+expect_focused ab_tab_general
+key ENTER
+wait 0.2
+expect_text "SAVE/LOAD PROGRESS"
+expect_text "NOTIFICATIONS: OFF"
+
+# The language action opens a real selection view.
+click_ui ab_language
+wait 0.2
+expect_text "SELECT LANGUAGE"
+expect_text "CURRENT LANGUAGE: ENGLISH"
+focus_ui ab_language_spanish
+key ENTER
+wait 0.2
+expect_text "CURRENT LANGUAGE: ESPAÑOL"
+expect_text "Language set to Spanish"
+assert_no_overflow
+screenshot angry_birds_settings_language
+key ESCAPE
+wait 0.2
+expect_text "SAVE/LOAD PROGRESS"
+
+# Progress has its own state and load restores the saved slot.
+click_ui ab_save_progress
+wait 0.2
+expect_text "CURRENT CAMPAIGN: LEVEL 12 / 30"
+expect_text "SAVED SLOT: LEVEL 9 / 30"
+focus_ui ab_progress_next
+key ENTER
+wait 0.2
+expect_text "CURRENT CAMPAIGN: LEVEL 13 / 30"
+click_ui ab_progress_save
+wait 0.2
+expect_text "SAVED SLOT: LEVEL 13 / 30"
+click_ui ab_progress_next
+wait 0.2
+expect_text "CURRENT CAMPAIGN: LEVEL 14 / 30"
+click_ui ab_progress_load
+wait 0.2
+expect_text "CURRENT CAMPAIGN: LEVEL 13 / 30"
+expect_text "Saved progress loaded"
+assert_no_overflow
+screenshot angry_birds_settings_progress
+key ESCAPE
+wait 0.2
+
+# Notifications remain an independent setting.
+click_ui ab_notifications
+wait 0.2
+expect_text "NOTIFICATIONS: ON"
+expect_text "Notifications enabled"
+screenshot angry_birds_settings_general
+
+# Each information action reveals useful content instead of claiming success.
+click_ui ab_tab_info
+wait 0.2
+expect_text "CREDITS"
+expect_text "SUPPORT"
+expect_text "TERMS & PRIVACY"
+expect_text "Version 1.11.0.12346"
+click_ui ab_credits
+wait 0.2
+expect_text "ROVIO ENTERTAINMENT"
+expect_text "Thank you for playing!"
+click_ui ab_detail_back
+wait 0.2
+click_ui ab_support
+wait 0.2
+expect_text "OFFLINE HELP CENTER"
+expect_text "Player #281-676-956"
+click_ui ab_detail_back
+wait 0.2
+focus_ui ab_terms
+key ENTER
+wait 0.2
+expect_text "Your settings stay on this device."
+assert_no_overflow
+screenshot angry_birds_settings_terms
+key ESCAPE
+wait 0.2
+screenshot angry_birds_settings_info
+
+# Audio controls remain keyboard operable, and Cancel restores saved settings.
+click_ui ab_tab_audio
+wait 0.2
+focus_ui ab_music
+key ENTER
+wait 0.2
+expect_text "Music disabled"
+click_ui ab_cancel
+wait 0.2
+expect_text "Changes restored"
+focus_ui ab_music
+key ENTER
+wait 0.2
+expect_text "Music disabled"
+click_ui ab_music
+wait 0.2
+expect_text "Music enabled"
+
+# Close hides the settings surface; the remaining control reopens it.
+click_ui ab_close
+wait 0.2
+expect_text "SETTINGS CLOSED"
+expect_text "OPEN SETTINGS"
+screenshot angry_birds_settings_closed
+focus_ui ab_reopen
+key ENTER
+wait 0.2
+expect_text "SETTINGS"
+
+# Escape also closes the main surface.
+key ESCAPE
+wait 0.2
+expect_text "SETTINGS CLOSED"
+click_ui ab_reopen
+wait 0.2
+
+resize 1920 1080
+wait 0.3
+assert_ui ab_board x=255 y=69 w=1410 h=942
+assert_no_overflow
+assert_within_parents

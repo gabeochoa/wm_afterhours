@@ -26,11 +26,13 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 
 | Screen / state | Finding | Owner | Disposition / evidence |
 |---|---|---|---|
-| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 3 includes a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
-
+| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 4 opens directly in a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
 | potion_crafting / recipe view | Dark panels, text initials for ingredients, and a rectangular flask did not match the parchment composition. | wm | Replaced with parchment layout, botanical/bottle artwork, scaled geometry and Garamond text; reviewed at 720p and 1080p. |
 | potion_crafting / crafting | Brew ignored clicks; tabs did not change content; recipe row IDs overlapped. | wm | Unique IDs, live stock consumption, shortage handling, recipe-aware ingredient requirements, inventory and journal views. E2E 40 exercises pointer, real Tab traversal, Enter, repeated shortage and resize. |
 | potion_crafting / fine styling | Secondary copy lacks the target's italic face; brew button's inset border is subtler; footer gives keyboard guidance instead of the decorative Close workshop hint. | wm | Open visual polish. No library blocker claimed; gameplay and layout checks pass. |
+| angry_birds_settings / layout | Flat board, mismatched icons and uneven button caps did not resemble the mobile settings mock. | wm | Shared label-free forest, board and button artwork, high-resolution Fredoka atlas, and explicit scaled geometry. Fresh 720p/1080p captures reviewed independently. |
+| angry_birds_settings / interactions | Language, help and progress actions lacked useful views. | wm | Real language selection, separate campaign save/load state, credits/support/privacy views, notification/audio settings, apply/cancel, close/reopen and Escape. E2E 128 and responsive/containment regressions pass. |
+| angry_birds_settings / fine styling | Native font outlines are heavier; hint baseline is about 7px higher; faint background currency pill is absent. | wm | Open cosmetic differences; primary layout and control geometry match. |
 
 ---
 
@@ -43,6 +45,25 @@ of the new screen layout. Separate 720p and 1080p invocations work. Owner is not
 established between wm reset sequencing and the library collection lifetime;
 afterhours remains frozen. This is not an implementation of the unrelated
 cascade-delete plan.
+
+### Absolute horizontal positions resolve against screen height
+
+At the frozen pin, `component_init.h` resolves both `translate_x` and
+`translate_y` using `screen_height`. Passing `w1280(1047)` as an absolute x
+therefore produces 589px at 1280×720 instead of 1047px. The first Angry Birds
+audit draft reproduced the misplaced controls. wm now supplies explicit pixel
+positions scaled from the current UI context. Library behavior remains open
+for review; no vendor changes were made.
+
+### Uniform solid borders ignore requested thickness
+
+`rendering.h`'s uniform-border branch calls `draw_rectangle_rounded_lines`
+without passing `BorderSide::thickness`. The rounded helper renders a 1px
+outline; the sharp helper uses a fixed 3px. Cozy Cafe's requested 4px paper
+border and 3px panel borders consequently appeared as faint 1px lines.
+The wm screen draws its outlines with the existing thickness-aware helper.
+A library fix is deferred for user review. This also explains the subtler
+Potion Crafting inset border noted above.
 
 ## Open, asked for by other projects
 

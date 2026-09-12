@@ -188,11 +188,13 @@ Preload &Preload::make_singleton() {
       // is no GL context to make a texture in.
       if (font_def.needs_codepoints && font_def.get_codepoints) {
         auto codepoints = font_def.get_codepoints();
-        font_mgr.load_font_with_codepoints(
-            font_def.name, path.c_str(), codepoints.data(),
-            static_cast<int>(codepoints.size()));
+        font_mgr.load_font(font_def.name,
+            afterhours::load_font_from_file_with_codepoints(
+                path.c_str(), codepoints.data(),
+                static_cast<int>(codepoints.size()), font_def.raster_size));
       } else {
-        font_mgr.load_font(font_def.name, path.c_str());
+        font_mgr.load_font(font_def.name, afterhours::load_font_from_file(
+            path.c_str(), font_def.raster_size));
       }
     }
 

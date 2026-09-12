@@ -62,6 +62,7 @@ struct FontDef {
   std::string filename; // relative to fonts/ directory
   bool needs_codepoints = false;
   std::function<std::vector<int>()> get_codepoints = nullptr;
+  int raster_size = 32;
 };
 
 // Get all font definitions - this is the single source of truth
@@ -76,10 +77,12 @@ inline std::vector<FontDef> get_all_fonts() {
 
       // Named fonts for screens
       {"Gaegu-Bold", "Gaegu-Bold.ttf"},
+      {"GaeguMock", "Gaegu-Bold.ttf", false, nullptr, 96},
       {"EqProRounded", "eqprorounded-regular.ttf"},
       {"Garamond", "EBGaramond-Regular.ttf"},
       {"NerdSymbols", "SymbolsNerdFont-Regular.ttf"},
       {"Fredoka", "Fredoka-VariableFont_wdth,wght.ttf"},
+      {"FredokaMockBold", "Fredoka-MockBold.ttf", false, nullptr, 96},
       {"BlackOpsOne", "BlackOpsOne-Regular.ttf"},
       {"Atkinson", "AtkinsonHyperlegible-Regular.ttf"},
 

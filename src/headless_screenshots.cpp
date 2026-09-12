@@ -76,7 +76,8 @@ void load_fonts_into_manager(afterhours::ui::FontManager &font_mgr) {
     if (font_def.needs_codepoints && font_def.get_codepoints) {
       auto codepoints = font_def.get_codepoints();
       raylib::Font font = load_font_headless_with_codepoints(
-          path.c_str(), codepoints.data(), static_cast<int>(codepoints.size()));
+          path.c_str(), codepoints.data(), static_cast<int>(codepoints.size()),
+          font_def.raster_size);
       if (font.glyphCount > 0) {
         font_mgr.load_font(font_def.name, font);
         loaded_count++;
@@ -84,7 +85,7 @@ void load_fonts_into_manager(afterhours::ui::FontManager &font_mgr) {
         log_warn("[Headless] Failed to load CJK font: {}", font_def.name);
       }
     } else {
-      raylib::Font font = load_font_headless(path.c_str());
+      raylib::Font font = load_font_headless(path.c_str(), font_def.raster_size);
       if (font.glyphCount > 0) {
         font_mgr.load_font(font_def.name, font);
         loaded_count++;

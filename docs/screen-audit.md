@@ -30,6 +30,9 @@ For native captures:
 Use separate processes per resolution: combined capture currently crashes on
 collection cleanup, reproduced with unchanged `example_borders`.
 
+Before building, run `python3 scripts/check_screen_fonts.py HEADER...` to catch
+font filenames accidentally used as registry aliases.
+
 Every screen needs fresh native captures, matched interaction states, and
 independent visual reviews. Old native baselines only detect regressions.
 Keep existing gameplay and add meaningful mock interactions. Gallery phase
@@ -44,7 +47,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | Screen | Status | Verification |
 |---|---|---|
 | potion_crafting | Updated; minor visual gaps recorded | E2E 40 passed including Tab/Enter, stock consumption, shortage, tabs, 1080 resize; fresh 720p/1080p images; two independent reviews. |
-| angry_birds_settings | Pending | |
+| angry_birds_settings | Updated; minor visual gaps recorded | E2E 128 and responsive/containment checks passed; 720p/1080p and dialog captures; independent visual review. |
 | cozy_cafe | Pending | |
 | casual_settings | Pending | |
 | fighter_menu | Pending | |
