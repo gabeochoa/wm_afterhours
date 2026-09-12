@@ -6,6 +6,7 @@
 
 #include "rl.h"
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/sound_system.h>
 
 using namespace afterhours;
 
@@ -106,13 +107,19 @@ void Settings::update_resolution(afterhours::window_manager::Resolution rez) {
   data->resolution = rez;
 }
 
-void Settings::update_music_volume(float vol) { data->music_volume = vol; }
+void Settings::update_music_volume(float vol) {
+  data->music_volume = vol;
+  sound_system::set_music_volume(data->music_volume);
+}
 
-void Settings::update_sfx_volume(float vol) { data->sfx_volume = vol; }
+void Settings::update_sfx_volume(float vol) {
+  data->sfx_volume = vol;
+  sound_system::set_sound_volume(data->sfx_volume);
+}
 
 void Settings::update_master_volume(float vol) {
-  raylib::SetMasterVolume(vol);
   data->master_volume = vol;
+  sound_system::set_master_volume(data->master_volume);
 }
 
 void match_fullscreen_to_setting(bool fs_enabled) {
