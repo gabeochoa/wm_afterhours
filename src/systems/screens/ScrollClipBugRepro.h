@@ -85,7 +85,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     auto scroll1 = vstack(
         context, mk(entity, 11),
         ComponentConfig{}
-            .with_720p_size(col_w, scroll_h)
+            .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p1_x, scroll_y)
             .with_custom_background(scroll_bg)
             .with_border(border_green, 2.0f)
@@ -122,7 +122,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     auto scroll2 = vstack(
         context, mk(entity, 21),
         ComponentConfig{}
-            .with_720p_size(col_w, scroll_h)
+            .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p2_x, scroll_y)
             .with_custom_background(scroll_bg)
             .with_border(border_red, 2.0f)
@@ -160,7 +160,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     auto scroll3 = vstack(
         context, mk(entity, 31),
         ComponentConfig{}
-            .with_720p_size(col_w, scroll_h)
+            .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p3_x, scroll_y)
             .with_custom_background(scroll_bg)
             .with_border(border_purple, 2.0f)
@@ -206,7 +206,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
     auto outer_scroll = vstack(
         context, mk(entity, 41),
         ComponentConfig{}
-            .with_720p_size(col_w, scroll_h)
+            .with_size(ComponentSize{pixels(col_w), pixels(scroll_h)})
             .with_absolute_position(p4_x, scroll_y)
             .with_custom_background(scroll_bg)
             .with_border(border_teal, 2.0f)

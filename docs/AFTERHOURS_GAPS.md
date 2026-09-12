@@ -889,3 +889,10 @@ Regression tests for these live in the afterhours `tests/` suite: `autolayout_te
   allowance no longer accommodated its scaled controls. Scale the allowance
   with the controls. The complete `36a_parent_containment` script passes at
   720p and 1080p; the 720p baseline is unchanged. No library change is needed.
+
+- **Resolved in wm: nested-scroll viewport dimensions scaled twice.** The demo
+  passed dimensions derived from the live window size into `with_720p_size`.
+  Use `pixels` for those already resolved values. The complete
+  `36c_parent_containment` script passes at 720p and 1080p. The small 720p
+  viewport change was inspected and its screenshot baseline refreshed.
+  No library change is needed.
