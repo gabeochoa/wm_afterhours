@@ -1,0 +1,49 @@
+# Dead Space settings mock parity smoke test.
+
+goto_screen deadspace_settings
+wait 1
+
+expect_text "MORE SETTINGS"
+expect_text "// SETTINGS"
+expect_text "INITIAL SETTINGS"
+expect_text "More Settings"
+expect_text "Gameplay"
+
+assert_ui ds_root x=0 y=0 w=1280 h=720
+assert_ui ds_back_layer x=24 y=237 w=395 h=390
+assert_ui ds_front_header x=286 y=136 w=455 h=44
+assert_ui ds_category_1 x=286 y=235 w=455 h=44
+assert_ui ds_front_footer x=291 y=566 w=455 h=46
+
+click_ui ds_category_3
+wait 0.2
+expect_text "Master volume"
+expect_text "Dynamic range"
+expect_text "80"
+assert_ui ds_detail_panel x=804 y=189 w=365
+assert_ui ds_detail_row_0 x=824 y=295 w=325
+
+click_ui ds_cycle_next_0
+wait 0.2
+expect_text "90"
+
+action WidgetDown
+wait 0.2
+expect_text "Voice language"
+expect_text "Subtitle size"
+
+click_ui ds_cycle_next_1
+wait 0.2
+expect_text "Spanish"
+
+click_ui ds_detail_back
+wait 0.2
+screenshot deadspace_settings_review
+
+resize 1920 1080
+wait 0.3
+assert_ui ds_root x=0 y=0 w=1920 h=1080
+assert_ui ds_back_layer x=36 y=356 w=593 h=585
+assert_ui ds_front_header x=429 y=204 w=683 h=66
+assert_ui ds_category_4 x=429 y=564 w=683 h=66
+assert_ui ds_front_footer x=437 y=849 w=683 h=69

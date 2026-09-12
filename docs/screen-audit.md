@@ -53,7 +53,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | cozy_cafe | Updated; cosmetic gaps recorded | E2E 129 passed, including Tab/Enter, service depletion, music and resize; 720p/1080p reviewed. |
 | casual_settings | Updated; minor visual gaps recorded | E2E 130 passed including dialog containment, keyboard use, save/load and 1080 resize; independent visual review. |
 | fighter_menu | Updated; perspective/type gaps recorded | E2E 131 passed; pointer/keyboard option selection and resize; final 720p/1080p independent review. |
-| deadspace_settings | Pending | |
+| deadspace_settings | Updated; perspective/glow gaps recorded | E2E 132 passed: pointer/keyboard categories, setting changes, back and resize; final 720p/1080p independently reviewed. |
 | empire_tycoon | Pending | |
 | flight_options | Updated; typography gaps recorded | E2E 134 passed: nine categories, live values, apply/cancel, Tab/Enter/arrows, close/reopen and resize; 720p/1080p independently reviewed. |
 | shop_interface | Pending | |

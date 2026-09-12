@@ -45,6 +45,10 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | flight_options / layout and settings | Generic options layout and shallow interactions did not match the flight-system mock. | wm | Matched the airspace grid, selection geometry, nine categories and setting editors. Apply/cancel retains or discards values; keyboard and pointer coverage in E2E 134. |
 | flight_options / fine styling | Native lettering is thinner and lacks the browser glow; keycap labels are smaller. Vibration is explicitly marked unavailable. | wm | Open cosmetic differences and a stated hardware limitation; final 720p/1080p review found no clipping or interaction blocker. |
 
+
+| deadspace_settings / hologram and controls | Rectangular slabs, invisible corner triangles and inert categories missed the hologram design. | wm | Winding-correct clipped polygons, scan lines, layered menus and live category detail settings; E2E 132 passes pointer/keyboard/back and resize. |
+| deadspace_settings / fine styling | Rows lack the mock's perspective skew and stronger glow; rear panel contrast and keycaps differ. | wm | Open cosmetic differences. Final 720p/1080p captures independently reviewed with no clipping or unreadable selection. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
