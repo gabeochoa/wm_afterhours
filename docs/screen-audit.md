@@ -48,7 +48,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 |---|---|---|
 | potion_crafting | Updated; minor visual gaps recorded | E2E 40 passed including Tab/Enter, stock consumption, shortage, tabs, 1080 resize; fresh 720p/1080p images; two independent reviews. |
 | angry_birds_settings | Updated; minor visual gaps recorded | E2E 128 and responsive/containment checks passed; 720p/1080p and dialog captures; independent visual review. |
-| cozy_cafe | Pending | |
+| cozy_cafe | Updated; cosmetic gaps recorded | E2E 129 passed, including Tab/Enter, service depletion, music and resize; 720p/1080p reviewed. |
 | casual_settings | Pending | |
 | fighter_menu | Pending | |
 | deadspace_settings | Pending | |

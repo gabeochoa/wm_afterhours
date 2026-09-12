@@ -33,6 +33,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | angry_birds_settings / layout | Flat board, mismatched icons and uneven button caps did not resemble the mobile settings mock. | wm | Shared label-free forest, board and button artwork, high-resolution Fredoka atlas, and explicit scaled geometry. Fresh 720p/1080p captures reviewed independently. |
 | angry_birds_settings / interactions | Language, help and progress actions lacked useful views. | wm | Real language selection, separate campaign save/load state, credits/support/privacy views, notification/audio settings, apply/cancel, close/reopen and Escape. E2E 128 and responsive/containment regressions pass. |
 | angry_birds_settings / fine styling | Native font outlines are heavier; hint baseline is about 7px higher; faint background currency pill is absent. | wm | Open cosmetic differences; primary layout and control geometry match. |
+| cozy_cafe / layout | Mis-sized panels, substitute icons, faint borders and clipped footer/music labels differed from the cafe mock. | wm | Matched panel geometry, isolated flower/star/tool artwork, scaled outlines and improved type. Fresh 720p/1080p captures; independent reviews. |
+| cozy_cafe / service and selection | Serving incremented counters without removing orders; selected specials lacked a visible state. | wm | Serve consumes the next order and disables when empty, promotion uses the selected special, visible selection outline and live music control. E2E 129 checks pointer, Tab/Enter, depleted queue and resize. |
+| cozy_cafe / fine styling | Paper lacks the mock's grain, radial glow, inset arcs and corner fold; native text outlines are stronger and title slightly wider; customer separators use hyphens. | wm | Open cosmetic differences. Correctness, overflow and parent containment checks pass. |
 
 ---
 

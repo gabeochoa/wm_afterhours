@@ -1,0 +1,70 @@
+# Cozy Cafe mock parity smoke test.
+
+goto_screen cozy_cafe
+wait 0.5
+
+expect_text "Blossom Cafe"
+expect_text "Today's Specials"
+expect_text "Customers"
+expect_text "Gold:  $1347"
+expect_text "Customers Served: 23"
+assert_no_overflow
+assert_within_parents
+
+assert_ui paper_board x=116 y=15 w=1048 h=690
+assert_ui specials_panel x=149 y=125 w=465
+assert_ui specials_inner x=166 y=203 w=429
+assert_ui customers_panel x=644 y=125 w=490
+assert_ui customers_inner x=661 y=203 w=453
+assert_ui chat_box x=152 y=603 w=543
+assert_ui music_slider x=155 y=533 w=378 h=26
+assert_ui serve_next x=709 y=421 w=355
+
+click_ui special_1
+wait 0.2
+focus_ui special_2
+key TAB
+wait 0.2
+expect_focused promote_special
+key ENTER
+wait 0.2
+expect_text "Honey Toast promoted"
+expect_text "Gold:  $1372"
+
+click_ui serve_next
+wait 0.2
+expect_text "Customers Served: 24"
+expect_text "Served Emma's order"
+expect_text "Gold:  $1384"
+
+click_ui serve_next
+wait 0.2
+expect_text "Customers Served: 25"
+expect_text "Served Oliver's order"
+expect_text "Gold:  $1396"
+expect_no_text "Cappuccio"
+expect_no_text "Croissant"
+expect_text "All orders served"
+click_ui serve_next
+wait 0.2
+expect_text "Customers Served: 25"
+
+click_ui tool_Research
+wait 0.2
+expect_text "Research opened"
+
+set_slider music_slider 0.35
+wait 0.3
+expect_text "Music: 35%"
+
+screenshot cozy_cafe_review
+
+resize 1920 1080
+wait 0.3
+assert_ui paper_board x=174 y=23
+assert_ui specials_panel x=224 y=188
+assert_ui customers_panel x=966 y=188
+assert_ui music_slider x=233 y=800
+
+assert_no_overflow
+assert_within_parents
