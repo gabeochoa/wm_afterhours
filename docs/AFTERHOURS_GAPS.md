@@ -38,6 +38,8 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | cozy_cafe / fine styling | Paper lacks the mock's grain, radial glow, inset arcs and corner fold; native text outlines are stronger and title slightly wider; customer separators use hyphens. | wm | Open cosmetic differences. Correctness, overflow and parent containment checks pass. |
 | casual_settings / layout and dialogs | Generic colors, substitute icons and inert information actions differed from the mobile mock. | wm | Shared decorative board/icons, matched geometry, high-resolution rounded type, language apply/cancel, campaign save/load, credits, support FAQ, terms and about views. E2E 130 passes at both resolutions, including dialog containment and keyboard use. |
 | casual_settings / fine styling | Faint lives/currency pills are simplified to a currency label; native label outlines differ slightly. | wm | Open cosmetic differences. Fresh 720p/1080p captures independently reviewed; text-overflow warnings resolved. |
+| fighter_menu / rendering and navigation | Missing lobby, invisible slanted triangles, blurred display type and letter substitutes for icons weakened the fighter layout. | wm | Fixed triangle winding and background layering, added isolated lobby/icons and a 96px display font. Live tabs and option descriptions; E2E 131 passes pointer, Enter/arrows and 1080 resize. Fresh images independently reviewed. |
+| fighter_menu / fine styling | Title/hologram lack the mock's rotation and perspective; serif weight is thinner; lobby and panel shading are approximate. | wm | Open cosmetic gaps. No clipping or interaction blocker found in the final 720p/1080p review. |
 
 ---
 

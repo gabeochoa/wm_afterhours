@@ -1,0 +1,55 @@
+# Fighter menu mock parity smoke test.
+
+goto_screen fighter_menu
+wait 0.5
+
+expect_text "MainMenu"
+expect_text "25000  P$"
+expect_text "Options"
+expect_text "System Options"
+expect_text "Change various settings in the game, such as vibration, save, and autosave functions."
+
+assert_ui fighter_root x=0 y=0 w=1280 h=720
+assert_ui fighter_title x=26 y=7 w=390 h=120
+assert_ui fighter_tabs x=73 y=130 w=1135 h=53
+assert_ui fighter_option_0 x=0 y=256 w=657 h=48
+assert_ui fighter_option_5 x=0 y=546 w=592 h=48
+assert_ui fighter_holo_card x=878 y=196 w=350 h=300
+assert_ui fighter_description x=754 y=458 w=526 h=204
+
+click_ui fighter_option_3
+wait 0.2
+expect_text "SOUND"
+expect_text "Sound & Language"
+expect_text "Set music and sound levels, voices, and language preferences."
+
+click_ui fighter_option_5
+wait 0.2
+expect_text "BUTTONS"
+expect_text "Remap your controller layout and keyboard bindings."
+
+key UP
+wait 0.2
+expect_text "NETWORK"
+expect_text "Configure online play and connection settings."
+
+focus_ui fighter_option_1
+key ENTER
+wait 0.2
+expect_text "GAME"
+key DOWN
+wait 0.2
+expect_text "DISPLAY"
+key DOWN
+wait 0.2
+key DOWN
+wait 0.2
+expect_text "NETWORK"
+screenshot fighter_menu_review
+
+resize 1920 1080
+wait 0.3
+assert_ui fighter_root x=0 y=0 w=1920 h=1080
+assert_ui fighter_option_4 x=0 y=732 w=986 h=72
+assert_ui fighter_holo_card x=1317 y=294 w=525 h=450
+assert_ui fighter_description x=1131 y=687 w=789 h=306

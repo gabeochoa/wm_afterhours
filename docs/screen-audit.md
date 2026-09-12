@@ -7,13 +7,15 @@ The afterhours pin is frozen at `e3f13a7827e333460d38078fde716e1e4a5a68ef`.
 
 ## Captures
 
+Run builds, tests, captures and processing jobs with `nice -n 10`.
+
 `python3 scripts/bundle_mocks.py` produces `output/mocks-standalone.html`
 and a SHA-256 asset manifest. The export embeds comparison images and fonts.
 
 With local Chrome exposing CDP on port 9322:
 
 ```
-node scripts/capture_mocks.mjs --comparisons
+nice -n 10 node scripts/capture_mocks.mjs --comparisons
 ```
 
 This captures the mock canvases at 1280×720, without gallery controls or scaling,
@@ -23,8 +25,8 @@ Use `--url` to check the standalone export outside the repository.
 For native captures:
 
 ```
-./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 720p --image-output output/screen-audit/SCREEN/after/
-./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 1080p --image-output output/screen-audit/SCREEN/after/
+nice -n 10 ./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 720p --image-output output/screen-audit/SCREEN/after/
+nice -n 10 ./output/ui_tester.exe --headless-screenshots --screen SCREEN --resolution 1080p --image-output output/screen-audit/SCREEN/after/
 ```
 
 Use separate processes per resolution: combined capture currently crashes on
@@ -50,7 +52,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | angry_birds_settings | Updated; minor visual gaps recorded | E2E 128 and responsive/containment checks passed; 720p/1080p and dialog captures; independent visual review. |
 | cozy_cafe | Updated; cosmetic gaps recorded | E2E 129 passed, including Tab/Enter, service depletion, music and resize; 720p/1080p reviewed. |
 | casual_settings | Updated; minor visual gaps recorded | E2E 130 passed including dialog containment, keyboard use, save/load and 1080 resize; independent visual review. |
-| fighter_menu | Pending | |
+| fighter_menu | Updated; perspective/type gaps recorded | E2E 131 passed; pointer/keyboard option selection and resize; final 720p/1080p independent review. |
 | deadspace_settings | Pending | |
 | empire_tycoon | Pending | |
 | flight_options | Pending | |
