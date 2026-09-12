@@ -2,16 +2,17 @@
 
 #include "../../external.h"
 #include "../../input_mapping.h"
-#include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/files.h>
+#include <algorithm>
+#include <array>
+#include <string>
+#include <vector>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-// Twenty four dropdowns on one board, plus two driving the question row. A
-// dropdown opens an overlay that has to sit above every sibling drawn after
-// it, so a wall of them is the honest test of that.
 struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
   static constexpr int kCols = 8;
   static constexpr int kRows = 3;
@@ -19,14 +20,13 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
 
   struct Face {
     const char *name;
-    int hair;    // 0 dark, 1 fair, 2 red
-    int eyes;    // 0 brown, 1 blue
+    int hair;
+    int eyes;
     bool glasses;
     bool hat;
   };
 
-  // Fixed, so the board and its baseline are the same every run.
-  static const Face &face(int i) {
+  static const Face &face(int index) {
     static const Face faces[kCount] = {
         {"Ada", 0, 1, true, false},   {"Bram", 1, 0, false, true},
         {"Cleo", 2, 1, false, false}, {"Dov", 0, 0, true, true},
@@ -41,253 +41,395 @@ struct GuessWhoLab : ScreenSystem<UIContext<InputAction>> {
         {"Uma", 2, 1, false, true},   {"Vero", 0, 0, true, false},
         {"Wren", 1, 1, true, false},  {"Yuki", 2, 0, false, true},
     };
-    return faces[i];
+    return faces[index];
   }
 
-  std::vector<std::string> attributes = {"hair is dark", "hair is fair",
-                                         "hair is red", "eyes are blue",
-                                         "wears glasses", "wears a hat"};
-  std::vector<std::string> answers = {"yes", "no"};
-  std::vector<std::string> notes = {"?", "maybe", "no", "THIS ONE"};
+  const std::vector<std::string> attributes{
+      "wear glasses?", "wear a hat?",      "have dark hair?",
+      "have fair hair?", "have red hair?", "have blue eyes?"};
+  const std::vector<std::string> answers{"Yes", "No"};
+  const std::vector<std::string> notes{"Not sure", "Maybe", "No",
+                                       "This one!"};
 
-  size_t attribute_idx = 4;
-  size_t answer_idx = 0;
-  size_t note_idx[kCount]{};
+  size_t attribute_index = 0;
+  size_t answer_index = 0;
+  size_t note_index[kCount]{};
   bool down[kCount]{};
-  bool seeded = false;
   int asked = 0;
-  std::string last_question = "Pick a trait, answer yes or no, then Ask.";
+  bool loaded = false;
+  raylib::Texture2D portrait_texture{};
+  raylib::Texture2D logo_texture{};
+  std::string feedback = "A little question. A big clue.";
 
-  static bool matches(const Face &f, size_t attr) {
-    switch (attr) {
-    case 0: return f.hair == 0;
-    case 1: return f.hair == 1;
-    case 2: return f.hair == 2;
-    case 3: return f.eyes == 1;
-    case 4: return f.glasses;
-    default: return f.hat;
+  ComponentConfig box(float scale, float x, float y, float width,
+                      float height) const {
+    return ComponentConfig{}
+        .with_size({pixels(width * scale), pixels(height * scale)})
+        .with_absolute_position(pixels(x * scale), pixels(y * scale))
+        .with_background(Theme::Usage::None);
+  }
+
+  static bool matches(const Face &candidate, size_t attribute) {
+    switch (attribute) {
+    case 0:
+      return candidate.glasses;
+    case 1:
+      return candidate.hat;
+    case 2:
+      return candidate.hair == 0;
+    case 3:
+      return candidate.hair == 1;
+    case 4:
+      return candidate.hair == 2;
+    default:
+      return candidate.eyes == 1;
     }
   }
 
-  int standing() const {
-    int n = 0;
-    for (int i = 0; i < kCount; i++)
-      n += down[i] ? 0 : 1;
-    return n;
+  int faces_left() const {
+    int count = 0;
+    for (bool eliminated : down)
+      count += eliminated ? 0 : 1;
+    return count;
   }
 
-  void ask() {
-    const bool want = answer_idx == 0;
-    for (int i = 0; i < kCount; i++)
-      if (matches(face(i), attribute_idx) != want)
-        down[i] = true;
-    asked++;
-    last_question = fmt::format("Q{}: {}, answered {}. {} left standing.", asked,
-                                attributes[attribute_idx],
-                                answers[answer_idx], standing());
+  void ask_question() {
+    const bool desired = answer_index == 0;
+    for (int index = 0; index < kCount; ++index)
+      if (matches(face(index), attribute_index) != desired)
+        down[index] = true;
+    ++asked;
+    const int left = faces_left();
+    feedback = fmt::format("Question {}: {}! {} possible {} left.", asked,
+                           answers[answer_index], left,
+                           left == 1 ? "person" : "people");
   }
 
   void reset() {
-    for (int i = 0; i < kCount; i++) {
-      down[i] = false;
-      note_idx[i] = 0;
+    for (int index = 0; index < kCount; ++index) {
+      down[index] = false;
+      note_index[index] = 0;
     }
+    attribute_index = 0;
+    answer_index = 0;
     asked = 0;
-    last_question = "Board reset. Ask again.";
+    feedback = "A little question. A big clue.";
+  }
+
+  static void draw_background(RectangleType r, float scale) {
+    const afterhours::Color edge{167, 210, 235, 255};
+    const afterhours::Color center{211, 237, 251, 255};
+    afterhours::draw_rectangle(r, edge);
+    for (int layer = 72; layer >= 1; --layer) {
+      const float radius = static_cast<float>(layer) / 72.f;
+      const float toward_center = 1.f - radius;
+      const auto blend = [toward_center](unsigned char a, unsigned char b) {
+        return static_cast<unsigned char>(
+            static_cast<float>(a) +
+            (static_cast<float>(b) - static_cast<float>(a)) *
+                toward_center);
+      };
+      afterhours::draw_ellipse(
+          static_cast<int>(r.x + 640.f * scale),
+          static_cast<int>(r.y + 216.f * scale), 760.f * scale * radius,
+          500.f * scale * radius,
+          afterhours::Color{blend(edge.r, center.r),
+                            blend(edge.g, center.g),
+                            blend(edge.b, center.b), 255});
+    }
+  }
+
+  static void draw_board(RectangleType r, float scale) {
+    afterhours::draw_rectangle_rounded(
+        {r.x, r.y + 10.f * scale, r.width, r.height}, .08f, 20,
+        afterhours::Color{8, 73, 120, 255}, RoundedCorners().all_round());
+    afterhours::draw_rectangle_rounded(
+        r, .08f, 20, afterhours::Color{34, 120, 184, 255},
+        RoundedCorners().all_round());
+    afterhours::draw_rectangle_gradient_v(
+        {r.x + 7.f * scale, r.y + 7.f * scale, r.width - 14.f * scale,
+         r.height - 14.f * scale},
+        afterhours::Color{40, 124, 192, 255},
+        afterhours::Color{18, 98, 169, 255});
+    afterhours::draw_rectangle_rounded_lines_ex(
+        r, .08f, 20, 7.f * scale, afterhours::Color{34, 120, 184, 255});
+    afterhours::draw_rectangle(
+        {r.x + 8.f * scale, r.y, r.width - 16.f * scale, 7.f * scale},
+        afterhours::Color{81, 158, 222, 255});
+  }
+
+  static void draw_portrait_panel(RectangleType r, bool eliminated,
+                                  float scale) {
+    if (eliminated) {
+      RectangleType folded{r.x + 3.f * scale, r.y + 60.f * scale,
+                           r.width - 6.f * scale, 39.f * scale};
+      afterhours::draw_rectangle_gradient_v(
+          folded, afterhours::Color{255, 247, 219, 120},
+          afterhours::Color{255, 253, 244, 120});
+      afterhours::draw_rectangle_rounded_lines_ex(
+          folded, .06f, 8, 3.f * scale,
+          afterhours::Color{248, 208, 86, 130});
+      return;
+    }
+    afterhours::draw_rectangle_gradient_v(
+        r, afterhours::Color{255, 247, 219, 255},
+        afterhours::Color{255, 253, 244, 255});
+    afterhours::draw_rectangle_rounded_lines_ex(
+        r, .06f, 8, 4.f * scale, afterhours::Color{248, 208, 86, 255});
+    afterhours::draw_rectangle(
+        {r.x + 4.f * scale, r.y + r.height - 5.f * scale,
+         r.width - 8.f * scale, 5.f * scale},
+        afterhours::Color{229, 172, 34, 255});
   }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Ask once up front. With every card standing the board is 24 identical
-    // tiles and the eliminated styling, which is the whole mechanic, never
-    // appears.
-    if (!seeded) {
-      seeded = true;
-      ask();
-    }
-
-    auto theme = afterhours::ui::theme_presets::neon_dark();
-    theme.roundness = 0.14f;
-    context.theme = theme;
+    const float scale =
+        context.screen_height > 0.f ? context.screen_height / 720.f : 1.f;
+    const afterhours::Color navy{18, 63, 113, 255};
+    const afterhours::Color white{255, 255, 255, 255};
+    Theme theme;
+    theme.font = navy;
+    theme.darkfont = white;
+    theme.font_muted = afterhours::Color{54, 95, 130, 255};
+    theme.background = afterhours::Color{167, 210, 235, 255};
+    theme.surface = afterhours::Color{255, 255, 255, 255};
+    theme.primary = afterhours::Color{236, 75, 70, 255};
+    theme.secondary = afterhours::Color{7, 70, 121, 255};
+    theme.accent = afterhours::Color{248, 208, 86, 255};
+    theme.roundness = .1f;
+    theme.segments = 16;
+    context.set_theme(theme);
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
-                                              pixels(18.0f));
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", pixels(20.f));
 
-    auto root = vstack(context, mk(entity),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{screen_pct(0.97f),
-                                                    screen_pct(0.97f)})
-                           .with_self_align(SelfAlign::Center)
-                           .with_background(Theme::Usage::Background)
-                           .with_padding(Spacing::sm)
-                           .with_no_wrap()
-                           .with_debug_name("gw_root"));
-
-    // ---- question row -------------------------------------------------
-    auto bar = hstack(context, mk(root.ent(), 0),
-                      ComponentConfig{}
-                          .with_size(ComponentSize{percent(1.f), pixels(56)})
-                          .with_align_items(AlignItems::Center)
-                          .with_custom_background(afterhours::Color{34, 38, 52, 255})
-                          .with_padding(Spacing::xs)
-                          .with_corner_radius(10.f)
-                          .with_no_wrap()
-                          .with_debug_name("gw_bar"));
-
-    div(context, mk(bar.ent(), 0),
-        ComponentConfig{}
-            .with_label("Ask:")
-            .with_size(ComponentSize{pixels(56), pixels(40)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(afterhours::Color{200, 210, 230, 255})
-            .with_font_size(pixels(20.f)));
-
-    dropdown(context, mk(bar.ent(), 1), attributes, attribute_idx,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(230), pixels(40)})
-                 .with_font_size(pixels(17.f))
-                 .with_debug_name("gw_attr"));
-
-    dropdown(context, mk(bar.ent(), 2), answers, answer_idx,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pixels(110), pixels(40)})
-                 .with_font_size(pixels(17.f))
-                 .with_debug_name("gw_answer"));
-
-    if (button(context, mk(bar.ent(), 3),
-               ComponentConfig{}
-                   .with_label("Ask")
-                   .with_size(ComponentSize{pixels(96), pixels(40)})
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_corner_radius(8.f)
-                   .with_debug_name("gw_ask"))) {
-      ask();
+    if (!loaded) {
+      loaded = true;
+      portrait_texture = raylib::LoadTexture(
+          afterhours::files::get_resource_path(
+              "images", "guess_who_lab/portraits.png")
+              .string()
+              .c_str());
+      logo_texture = raylib::LoadTexture(
+          afterhours::files::get_resource_path("images",
+                                                "guess_who_lab/logo.png")
+              .string()
+              .c_str());
+      raylib::SetTextureFilter(portrait_texture,
+                               raylib::TEXTURE_FILTER_BILINEAR);
+      raylib::SetTextureFilter(logo_texture, raylib::TEXTURE_FILTER_BILINEAR);
     }
 
-    // Pushes the reset button to the far edge without a magic-width filler.
-    spacer(context, mk(bar.ent(), 4));
+    auto root =
+        div(context, mk(entity, 0),
+            box(scale, 0.f, 0.f, 1280.f, 720.f)
+                .with_on_draw_bg([scale](RectangleType r) {
+                  draw_background(r, scale);
+                })
+                .with_debug_name("gw_root"));
 
-    div(context, mk(bar.ent(), 5),
-        ComponentConfig{}
-            .with_label(fmt::format("{} standing", standing()))
-            .with_size(ComponentSize{pixels(150), pixels(40)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(afterhours::Color{150, 220, 170, 255})
-            .with_font_size(pixels(19.f))
-            .with_debug_name("gw_standing"));
+    auto text = [&](int id, const std::string &label, float x, float y,
+                    float width, float height, float size,
+                    afterhours::Color color,
+                    TextAlignment alignment = TextAlignment::Left,
+                    const std::string &font = "FredokaMockBold") {
+      return div(context, mk(root.ent(), id),
+                 box(scale, x, y, width, height)
+                     .with_label(label)
+                     .with_font(font, pixels(size * scale))
+                     .with_custom_text_color(color)
+                     .with_alignment(alignment)
+                     .with_text_inset(0.f, 0.f));
+    };
 
-    if (button(context, mk(bar.ent(), 6),
-               ComponentConfig{}
-                   .with_label("Reset")
-                   .with_size(ComponentSize{pixels(86), pixels(40)})
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_corner_radius(8.f)
-                   .with_debug_name("gw_reset"))) {
+    sprite(context, mk(root.ent(), 1), logo_texture,
+           {0.f, 0.f, static_cast<float>(logo_texture.width),
+            static_cast<float>(logo_texture.height)},
+           box(scale, 41.f, 4.f, 271.f, 101.f)
+               .with_ignore_pointer_events()
+               .with_debug_name("gw_logo"));
+    div(context, mk(root.ent(), 2),
+        box(scale, 379.f, 36.f, 10.f, 10.f)
+            .with_on_draw_bg([](RectangleType r) {
+              afterhours::draw_circle(
+                  static_cast<int>(r.x + r.width * .5f),
+                  static_cast<int>(r.y + r.height * .5f), r.width * .5f,
+                  afterhours::Color{230, 62, 62, 255});
+            }));
+    text(3, "YOUR TURN", 402.f, 24.f, 200.f, 38.f, 21.f, navy);
+    text(4, "Find the mystery person", 378.f, 55.f, 270.f, 32.f, 20.f,
+         afterhours::Color{54, 95, 130, 255}, TextAlignment::Left,
+         "AtkinsonMock");
+
+    if (button(
+            context, mk(root.ent(), 5),
+            box(scale, 1093.f, 31.f, 143.f, 48.f)
+                .with_label("New game")
+                .with_font("AtkinsonMock", pixels(21.f * scale))
+                .with_custom_background(afterhours::Color{255, 255, 255, 96})
+                .with_border(white, 2.f * scale)
+                .with_corner_radius(20.f * scale)
+                .with_custom_text_color(navy)
+                .with_alignment(TextAlignment::Center)
+                .with_text_inset(0.f, 0.f)
+                .with_on_draw_fg([scale, navy](RectangleType r) {
+                  const float cx = r.x + 119.f * scale;
+                  const float cy = r.y + 24.f * scale;
+                  afterhours::draw_ring_segment(
+                      cx, cy, 5.f * scale, 7.f * scale, -55.f, 245.f, 18,
+                      navy);
+                  afterhours::draw_line_ex(
+                      {cx + 2.f * scale, cy - 7.f * scale},
+                      {cx + 8.f * scale, cy - 7.f * scale}, 2.f * scale,
+                      navy);
+                  afterhours::draw_line_ex(
+                      {cx + 8.f * scale, cy - 7.f * scale},
+                      {cx + 7.f * scale, cy - 1.f * scale}, 2.f * scale,
+                      navy);
+                })
+                .with_debug_name("gw_reset"))) {
       reset();
     }
 
-    div(context, mk(root.ent(), 1),
-        ComponentConfig{}
-            .with_label(last_question)
-            .with_size(ComponentSize{percent(1.f), pixels(34)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(afterhours::Color{190, 198, 218, 255})
-            .with_font_size(pixels(17.f))
-            .with_debug_name("gw_log"));
+    div(context, mk(root.ent(), 10),
+        box(scale, 40.f, 105.f, 1200.f, 75.f)
+            .with_custom_background(afterhours::Color{255, 255, 255, 153})
+            .with_corner_radius(14.f * scale)
+            .with_on_draw_fg([scale](RectangleType r) {
+              afterhours::draw_rectangle_rounded(
+                  {r.x, r.y + r.height - 2.f * scale, r.width, 2.f * scale},
+                  .2f, 8, afterhours::Color{133, 179, 209, 255},
+                  RoundedCorners().all_round());
+            })
+            .with_debug_name("gw_question"));
+    text(11, "DOES YOUR PERSON", 60.f, 119.f, 180.f, 46.f, 21.f, navy);
 
-    // ---- the wall -----------------------------------------------------
-    auto wall = vstack(context, mk(root.ent(), 2),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.f), expand()})
-                           .with_no_wrap()
-                           .with_debug_name("gw_wall"));
-
-    for (int r = 0; r < kRows; r++) {
-      auto row = hstack(context, mk(wall.ent(), r),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.f), percent(0.333f)})
-                            .with_no_wrap()
-                            .with_debug_name(fmt::format("gw_row_{}", r)));
-
-      for (int c = 0; c < kCols; c++) {
-        const int i = r * kCols + c;
-        const Face &f = face(i);
-        const bool out = down[i];
-
-        const afterhours::Color card_bg =
-            out ? afterhours::Color{28, 30, 38, 255}
-                : afterhours::Color{48, 54, 72, 255};
-        const afterhours::Color name_fg =
-            out ? afterhours::Color{92, 98, 112, 255}
-                : afterhours::Color{235, 240, 250, 255};
-
-        auto card = vstack(
-            context, mk(row.ent(), c),
-            ComponentConfig{}
-                .with_size(ComponentSize{expand(), percent(0.94f)})
-                .with_custom_background(card_bg)
-                .with_padding(Spacing::xs)
-                .with_margin(Margin{.right = pixels(5)})
-                .with_corner_radius(9.f)
-                .with_min_width(pixels(120))
-                .with_max_width(pixels(180))
-                .with_shadow(ShadowStyle::Soft, 0.f, 3.f)
-                .with_clip_children(true)
-                .with_align_items(AlignItems::Center)
-                .with_no_wrap()
-                .with_debug_name(fmt::format("gw_card_{}", i)));
-
-        div(context, mk(card.ent(), 0),
-            ComponentConfig{}
-                .with_label(f.name)
-                .with_size(ComponentSize{percent(1.f), pixels(30)})
-                .with_background(Theme::Usage::None)
-                .with_custom_text_color(name_fg)
-                .with_font_size(pixels(21.f))
-                .with_alignment(TextAlignment::Center));
-
-        // The face, drawn rather than assembled from widgets: three shapes a
-        // card does not need three entities for.
-        const int hair = f.hair;
-        const bool glasses = f.glasses;
-        const bool hat = f.hat;
-        div(context, mk(card.ent(), 1),
-            ComponentConfig{}
-                .with_size(ComponentSize{percent(1.f), expand()})
-                .with_background(Theme::Usage::None)
-                .with_on_draw_fg([hair, glasses, hat, out](RectangleType rr) {
-                  const float cx = rr.x + rr.width * 0.5f;
-                  const float cy = rr.y + rr.height * 0.48f;
-                  const float rad = std::min(rr.width, rr.height) * 0.30f;
-                  const unsigned char a = out ? 90 : 255;
-                  const afterhours::Color skin{214, 176, 140, a};
-                  const afterhours::Color hairc =
-                      hair == 0 ? afterhours::Color{60, 44, 38, a}
-                      : hair == 1 ? afterhours::Color{224, 196, 118, a}
-                                  : afterhours::Color{196, 92, 52, a};
-                  afterhours::draw_circle_v({cx, cy}, rad, skin);
-                  afterhours::draw_rectangle(
-                      {cx - rad, cy - rad * 1.15f, rad * 2.f, rad * 0.72f},
-                      hairc);
-                  if (hat)
-                    afterhours::draw_rectangle(
-                        {cx - rad * 1.15f, cy - rad * 1.62f, rad * 2.3f,
-                         rad * 0.5f},
-                        afterhours::Color{70, 120, 190, a});
-                  if (glasses) {
-                    const afterhours::Color lens{240, 240, 250, a};
-                    afterhours::draw_circle_v({cx - rad * 0.42f, cy}, rad * 0.26f, lens);
-                    afterhours::draw_circle_v({cx + rad * 0.42f, cy}, rad * 0.26f, lens);
-                  }
-                }));
-
-        dropdown(context, mk(card.ent(), 2), notes, note_idx[i],
-                 ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.f), pixels(30)})
-                     .with_font_size(pixels(15.f))
-                     .with_debug_name(fmt::format("gw_note_{}", i)));
-      }
+    dropdown(context, mk(root.ent(), 12), attributes, attribute_index,
+             box(scale, 240.f, 120.f, 245.f, 45.f)
+                 .with_font("AtkinsonMock", pixels(24.f * scale))
+                 .with_custom_background(white)
+                 .with_border(afterhours::Color{176, 207, 225, 255},
+                              2.f * scale)
+                 .with_corner_radius(8.f * scale)
+                 .with_custom_text_color(navy)
+                 .with_debug_name("gw_trait"));
+    dropdown(context, mk(root.ent(), 13), answers, answer_index,
+             box(scale, 501.f, 120.f, 80.f, 45.f)
+                 .with_font("AtkinsonMock", pixels(24.f * scale))
+                 .with_custom_background(white)
+                 .with_border(afterhours::Color{176, 207, 225, 255},
+                              2.f * scale)
+                 .with_corner_radius(8.f * scale)
+                 .with_custom_text_color(navy)
+                 .with_debug_name("gw_answer"));
+    if (button(context, mk(root.ent(), 14),
+               box(scale, 597.f, 117.f, 174.f, 50.f)
+                   .with_label("Ask question")
+                   .with_font("AtkinsonMock", pixels(23.f * scale))
+                   .with_custom_background(afterhours::Color{236, 75, 70, 255})
+                   .with_custom_text_color(white)
+                   .with_alignment(TextAlignment::Center)
+                   .with_text_inset(0.f, 0.f)
+                   .with_corner_radius(9.f * scale)
+                   .with_on_draw_fg([scale](RectangleType r) {
+                     afterhours::draw_rectangle(
+                         {r.x, r.y + r.height - 4.f * scale, r.width,
+                         4.f * scale},
+                         afterhours::Color{181, 44, 49, 255});
+                     const afterhours::Color white{255, 255, 255, 255};
+                     const float x = r.x + 151.f * scale;
+                     const float cy = r.y + 24.f * scale;
+                     afterhours::draw_line_ex(
+                         {x - 8.f * scale, cy}, {x, cy}, 2.f * scale,
+                         white);
+                     afterhours::draw_line_ex(
+                         {x - 5.f * scale, cy - 5.f * scale}, {x, cy},
+                         2.f * scale, white);
+                     afterhours::draw_line_ex(
+                         {x, cy}, {x - 5.f * scale, cy + 5.f * scale},
+                         2.f * scale, white);
+                   })
+                   .with_debug_name("gw_ask"))) {
+      ask_question();
     }
+    text(15, fmt::format("{} faces left", faces_left()), 1070.f, 119.f,
+         150.f, 46.f, 23.f, navy, TextAlignment::Right);
+
+    div(context, mk(root.ent(), 20),
+        box(scale, 40.f, 193.f, 1200.f, 461.f)
+            .with_on_draw_bg([scale](RectangleType r) {
+              draw_board(r, scale);
+            })
+            .with_debug_name("gw_board"));
+
+    for (int index = 0; index < kCount; ++index) {
+      const int row = index / kCols;
+      const int col = index % kCols;
+      const float x = 69.f + static_cast<float>(col) * 145.f;
+      const float y = 217.f + static_cast<float>(row) * 142.f;
+      const bool eliminated = down[index];
+      const auto face_button =
+          button(context, mk(root.ent(), 100 + index),
+                 box(scale, x, y, 128.f, 102.f)
+                     .with_click_activation(ClickActivationMode::Release)
+                     .with_on_draw_bg([eliminated, scale](RectangleType r) {
+                       draw_portrait_panel(r, eliminated, scale);
+                     })
+                     .with_debug_name("gw_face_" + std::to_string(index)));
+
+      const float source_x = static_cast<float>(col) * 256.f;
+      const float source_y = static_cast<float>(row) * 168.f;
+      div(context, mk(root.ent(), 200 + index),
+          box(scale, x, y - 5.f, 128.f, 84.f)
+              .with_on_draw_fg([texture = portrait_texture, source_x, source_y,
+                                eliminated, scale](RectangleType r) {
+                RectangleType destination = r;
+                if (eliminated) {
+                  destination.x += 17.f * scale;
+                  destination.y += 58.f * scale;
+                  destination.width -= 34.f * scale;
+                  destination.height = 31.f * scale;
+                }
+                raylib::DrawTexturePro(
+                    texture, {source_x, source_y, 256.f, 168.f}, destination,
+                    {0.f, 0.f}, 0.f,
+                    eliminated ? raylib::Color{255, 255, 255, 105}
+                               : raylib::WHITE);
+              })
+              .with_ignore_pointer_events());
+      div(context, mk(root.ent(), 300 + index),
+          box(scale, x + 4.f, y + 77.f, 120.f, 20.f)
+              .with_custom_background(
+                  eliminated ? afterhours::Color{255, 247, 220, 110}
+                             : afterhours::Color{255, 247, 220, 255})
+              .with_ignore_pointer_events());
+      text(400 + index, face(index).name, x + 4.f, y + 76.f, 120.f, 22.f,
+           17.5f,
+           eliminated ? afterhours::Color{36, 46, 55, 115}
+                      : afterhours::Color{36, 46, 55, 255},
+           TextAlignment::Center);
+      if (face_button) {
+        down[index] = !down[index];
+        feedback = down[index] ? std::string(face(index).name) + " flipped down"
+                               : std::string(face(index).name) + " restored";
+      }
+
+      dropdown(
+          context, mk(root.ent(), 500 + index), notes, note_index[index],
+          box(scale, x, y + 106.f, 128.f, 22.f)
+              .with_font("AtkinsonMock", pixels(14.f * scale))
+              .with_custom_background(afterhours::Color{7, 70, 121, 255})
+              .with_custom_text_color(afterhours::Color{212, 233, 246, 255})
+              .with_corner_radius(3.f * scale)
+              .with_debug_name("gw_note_" + std::to_string(index)));
+    }
+
+    text(700, feedback, 48.f, 674.f, 650.f, 34.f, 20.f,
+         afterhours::Color{54, 95, 130, 255}, TextAlignment::Left,
+         "AtkinsonMock");
+    text(701, "Click a face to flip it down.", 950.f, 674.f, 282.f, 34.f,
+         20.f, afterhours::Color{54, 95, 130, 255}, TextAlignment::Right,
+         "AtkinsonMock");
   }
 };
 

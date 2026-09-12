@@ -69,7 +69,7 @@ recorded in `docs/AFTERHOURS_GAPS.md`; this table records delivery and checks.
 | sports_settings | Updated; styling gaps recorded | E2E 145 passed: domain values, keyboard and slider edits, tab changes, true defaults, close/reopen and resize; independent review confirms knob/value agreement. |
 | rubber_bandits_menu | Updated; styling gaps recorded | E2E 146 passed: menu and character selection, keyboard, supporter feedback, all four long-name states and both resolutions; independent final visual review. |
 | kart_select | Updated; styling gaps recorded | Existing E2E 42_kart_select and new 147 passed: driver/vehicle pointer and arrow navigation, preview/stats, ready feedback and resize; 720p/1080p independently reviewed. |
-| guess_who_lab | Pending | |
+| guess_who_lab | Updated; styling gaps recorded | Existing play E2E 121 and new 148 passed: question/answer dropdown keyboard use, filtering, card flips, notes/reset and resize; 720p/1080p independently reviewed. |
 | aim_chat | Updated; icon/type gaps recorded | Existing text-editing E2E 08_text_area_arrow_keys and new 149 passed: buddy drafts/history, Enter/Shift+Enter, menus, warn/block, window controls and resize; 720p/1080p reviewed. |
 | media_library | Updated; minor styling gaps recorded | E2E 150 passed: 24-item paging, search/filter/sort, collections/watchlist, grid/list, local player pause/seek and resize; 720p/1080p and list/player states reviewed. |
 | offsite_backup | Updated; styling gaps recorded | E2E 60_offsite_backup and 151 passed: seeded totals, rescan, pause, backup settings, local actions and resize; final 720p/1080p reviewed. |

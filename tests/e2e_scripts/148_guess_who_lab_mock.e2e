@@ -1,0 +1,88 @@
+# Approved Who's Who layout, dropdown stress, and responsive behavior.
+
+goto_screen guess_who_lab
+wait 0.5
+
+expect_text "YOUR TURN"
+expect_text "Find the mystery person"
+expect_text "New game"
+expect_text "DOES YOUR PERSON"
+expect_text "wear glasses?"
+expect_text "Yes"
+expect_text "Ask question"
+expect_text "24 faces left"
+expect_text "Ada"
+expect_text "Yuki"
+expect_text "Not sure"
+assert_ui gw_root x=0 y=0 w=1280 h=720
+assert_ui gw_logo x=41 y=4 w=271 h=101
+assert_ui gw_reset x=1093 y=31 w=143 h=48
+assert_ui gw_question x=40 y=105 w=1200 h=75
+assert_ui gw_trait x=240 y=120 w=245 h=45
+assert_ui gw_answer x=501 y=120 w=80 h=45
+assert_ui gw_ask x=597 y=117 w=174 h=50
+assert_ui gw_board x=40 y=193 w=1200 h=461
+assert_ui gw_face_0 x=69 y=217 w=128 h=102
+assert_ui gw_note_0 x=69 y=323 w=128 h=22
+assert_ui gw_face_23 x=1084 y=501 w=128 h=102
+assert_ui gw_note_23 x=1084 y=607 w=128 h=22
+assert_no_overflow
+assert_within_parents
+screenshot guess_who_mock_default
+
+# Both question dropdowns are keyboard operable.
+focus_ui gw_trait
+key ENTER
+wait 0.2
+key DOWN
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "wear a hat?"
+
+focus_ui gw_answer
+key ENTER
+wait 0.2
+key DOWN
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "No"
+
+click_ui gw_ask
+wait 0.4
+expect_text "13 faces left"
+expect_text "Question 1: No! 13 possible people left."
+screenshot guess_who_mock_filtered
+
+# Card notes remain real dropdowns and Reset restores their state.
+click_ui gw_reset
+wait 0.3
+focus_ui gw_note_0
+key ENTER
+wait 0.2
+key DOWN
+wait 0.2
+key ENTER
+wait 0.3
+expect_text "Maybe"
+click_ui gw_face_23
+wait 0.2
+expect_text "23 faces left"
+expect_text "Yuki flipped down"
+click_ui gw_reset
+wait 0.3
+expect_text "24 faces left"
+expect_text "Not sure"
+
+resize 1920 1080
+wait 0.3
+assert_ui gw_root x=0 y=0 w=1920 h=1080
+assert_ui gw_logo x=62 y=6 w=407 h=152
+assert_ui gw_question x=60 y=158 w=1800 h=113
+assert_ui gw_board x=60 y=290 w=1800 h=692
+assert_ui gw_face_0 x=104 y=326 w=192 h=153
+assert_ui gw_note_0 x=104 y=485 w=192 h=33
+assert_ui gw_face_23 x=1626 y=752 w=192 h=153
+assert_no_overflow
+assert_within_parents

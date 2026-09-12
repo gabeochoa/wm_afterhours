@@ -111,6 +111,9 @@ remain open for user review. Delivery status: `docs/screen-audit.md`.
 | kart_select / racer selection | Generic cards, missing preview art and misplaced controls differed from the mock. | wm | Isolated eight-racer portrait/kart atlases, native labels and stats, checker header, platform and keyboard/pointer selection. E2E 42/147 pass. |
 | kart_select / fine styling and scope | Display type lacks italic slant, labels have different weight/spacing and preview shadows are flatter. Ready reports the chosen driver/vehicle in this standalone demo. | wm | Open cosmetic differences and demo scope; all art is present and both resolutions independently reviewed. |
 
+| guess_who_lab / board and questions | Generic board lacked the mock portraits and complete question/note controls. | wm | Isolated logo and 24-portrait atlas, native cards/labels, two question dropdowns and 24 note dropdowns; filtering, flips and reset work. E2E 121/148 pass without overflow. |
+| guess_who_lab / fine styling | Native typography, title-case names and dropdown chevrons differ; outlines are heavier and reset/ask arrows sit closer to labels. | wm | Open cosmetic differences. All 24 cards and controls remain readable and contained at both resolutions. |
+
 ---
 
 ### Capture runner: multiple resolutions in one process
