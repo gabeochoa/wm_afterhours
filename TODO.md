@@ -1,5 +1,20 @@
 # TODO
 
+## Performance follow-ups — 2026-09-12
+
+- [ ] Move screen artwork into texture atlases. Measure texture switches, draw
+  calls and frame time before and after; preserve filtering and crisp edges.
+- [ ] Speed up launch. Profile time to the first usable screen, including font
+  loading, asset loading and screen initialization; defer work that is not
+  needed for that first screen. Record cold and warm startup measurements.
+- [ ] Audit CPU and RAM usage. Measure idle and active screens, then repeat
+  screen switches to check for memory growth and retained textures/entities.
+  Record representative frame times, CPU usage, resident memory and peaks
+  before choosing optimizations.
+
+Start with wm-owned changes. Any required afterhours edits remain pending user
+review. These follow-ups are separate from the current visual parity audit.
+
 ## The short version
 
 Fixed in afterhours: scroll views misplaced margined children; sideways
