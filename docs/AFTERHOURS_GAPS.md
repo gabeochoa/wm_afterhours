@@ -252,7 +252,7 @@ are not accepted decisions.
 | Item | Decision | Scope / condition |
 |---|---|---|
 | UP-01 Audio gains | Implemented locally | Master scales music/effects while preserving their relative preferences. afterhours `1fce0d9`; validation below. |
-| UP-02 Settings saves | Approved | Preserve the previous file on failure and report failures accurately. |
+| UP-02 Settings saves | Implemented locally | afterhours `325caee`; preserve the previous file on failure and report failures accurately. |
 | UP-03 Test clipboard | Approved | Isolate both app and built-in widget clipboard operations. |
 | UP-04 Native dialogs | Approved | Shared open/save/folder dialogs with safe completion and test responses. macOS first behind one portable public API; unsupported backends use the common result contract. |
 | UP-05 Binding persistence | Approved | Save/load complete bindings, including modifiers and axes. |
@@ -271,6 +271,7 @@ are not accepted decisions.
 | Item | Local change | Validation |
 |---|---|---|
 | UP-01 | afterhours `1fce0d9`, included by wm's submodule pin | Regression failed before the fix with 7/34 checks passing. Afterward all 39 checks pass, including the new master getter. Full afterhours `make -C tests -j2 test` exits 0; no-backend compile check passes. |
+| UP-02 | afterhours `325caee` | JSON/raw failure regression failed before and passes after; atomic-file tests 29/29. Raw-only compilation passes. Bitsery 5.2.4 save/load round-trip passes. |
 
 All other approved UP items remain unimplemented in this work. Commits are
 local; nothing was pushed. Tests and builds use `nice -n 10`.

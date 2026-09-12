@@ -1,0 +1,29 @@
+# Approved gap implementation
+
+The user requested all approved gaps, each in its own local commit. No pushes.
+Apply review feedback by rewriting the original relevant commit, preserving
+later changes. Add no code comments; leave existing comments unchanged unless
+they become false. Run work with `nice -n 10`, builds with `-j2`.
+
+Each library change has its own afterhours commit and a wm adoption commit.
+
+| Work | Status |
+|---|---|
+| UP-01 Audio gains | Complete, afterhours `1fce0d9` |
+| UP-02 Settings saves | Complete, afterhours `325caee` |
+| UP-03 Scoped test clipboard | Next |
+| UP-04 Native dialogs, portable API, macOS first | Pending |
+| UP-05 Complete binding persistence | Pending |
+| UP-06 Automatic binding prompts with device override | Pending |
+| UP-09 Filesystem watcher, portable API, macOS first | Pending |
+| UP-10 Explicit capture formats | Pending |
+| UP-11 Default profiling UI and compile-out support | Pending |
+| UP-12 Charts required by profiler, interactive wm test screen | Pending |
+| wm searchable screen tree | Pending |
+
+UP-07 and UP-08 remain deferred. Sound-feedback and periodic timers remain
+skipped. The wider chart set remains TODO. Performance investigations and
+older visual gaps retain their separate recorded scope.
+
+A separate subagent is preparing a plugin architecture proposal grounded in
+current consumers. That work is a plan only, not a library migration.
