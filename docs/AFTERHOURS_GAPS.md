@@ -21,20 +21,11 @@ See also: `docs/vendor_ui_sizing_issues.md`
 
 ### From floatinghotel's footguns list
 
-Their July list, rechecked against `main`. Most of it has since landed --
+Their July list, rechecked against `main`. **All of it has now landed** --
 label word-wrap, `Dim::Text` as a measured-width unit, `with_corner_radius`,
 row-flex `expand()`, index-based tick iteration (their heap-use-after-free),
-and the button-inside-a-clickable-row hit priority, which now has a test named
-after it. What is left:
-
-- **absolute children need a manual `with_render_layer`** to stack correctly.
-  Tried defaulting `with_absolute_position()` to layer 1, on the reasoning that
-  CSS paints absolute above in-flow. **Reverted**: `file_tree` went 65.8% and
-  `islands_trains_settings` 25.2%, because absolute is used for full-screen
-  underlays as well as overlays, and the underlay covered everything. Nothing
-  in the config says which is meant, so the fix needs a way to state intent --
-  an `above`/`below` on the call, or a separate overlay concept -- not a
-  blanket default.
+the button-inside-a-clickable-row hit priority, the sokol group, and the
+absolute-stacking one via `with_overlay`.
 
 ### From hanabi's triage
 
@@ -69,6 +60,25 @@ the `height_of` overload.
   (endless-dance-chaos, minor) — a `wait` cannot land inside a batch of
   substeps, so its resolution is the batch. They rated it low and documented it
   on their side; keeping `sim_steps` small is the whole workaround.
+
+### Wrappers
+
+- **raw `raylib::` calls with no wrapper** (puzzle gap 18) — they count 79 raw
+  sites, but the count overstates it: the top entries are *types*
+  (`raylib::Color` x57, `Image` x18, `Vector` x10, `Font`, `Rectangle`,
+  `Camera`) and enum constants, which afterhours already aliases and they could
+  swap today. Rechecked across `backends/` and `plugins/`, what is genuinely
+  unwrapped is: the image pixel API (`ImageDrawRectangle`, `GenImageColor`,
+  `ImageFormat`, `GetPixelDataSize`, `GetImageColor`), plus
+  `ToggleBorderlessWindowed`, `IsAudioDeviceReady` and `GetKeyPressed`.
+  `LoadImageFromTexture` and `ImageFlipVertical` exist inside afterhours but
+  are not exposed.
+  Only the image group is a coherent abstraction; the rest are one-function
+  wrappers in unrelated areas. **Not started**: wm manipulates no images, so it
+  would be unexercised API designed from a grep of a consumer that cannot be
+  built here. Ask puzzle which calls actually block them first.
+  (Blend mode is *not* among them -- `set_blend_mode`/`blend_scope` are wrapped
+  in all three backends and raylib's reaches `rlSetBlendMode`.)
 
 ### Diagnostics
 
@@ -187,6 +197,10 @@ Six of hanabi's top ten are already in and they do not know it -- their pin is
   and then `std::sort`ed to return one entity. Takes the minimum now, except
   where a stateful mod like `take()` sits after the orderby and needs the real
   order.
+- **absolute children stacking** (floatinghotel) — `with_overlay(levels)`:
+  absolute plus a layer relative to the parent, so a nested overlay clears the
+  one it sits in. Opt-in, because absolute is also how underlays are built --
+  a blanket default blanked `file_tree` and `islands_trains_settings`.
 - **card preset** — `with_card(pad)`: Surface, rounded corners, padding.
 - **font sizes off the type scale** — `ValidationConfig::enforce_font_size_tiers`,
   opt-in.
