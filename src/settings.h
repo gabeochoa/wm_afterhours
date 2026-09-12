@@ -22,7 +22,7 @@ struct Settings {
   void operator=(const Settings &) = delete;
 
   bool load_save_file(int, int);
-  void write_save_file();
+  bool write_save_file();
 
   void reset();
   void refresh_settings();

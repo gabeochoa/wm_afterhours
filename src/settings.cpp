@@ -198,26 +198,25 @@ bool Settings::load_save_file(int width, int height) {
   }
 }
 
-void Settings::write_save_file() {
+bool Settings::write_save_file() {
   // If no settings file was loaded, use default path
   std::string save_path = data->loaded_from;
   if (save_path.empty()) {
     save_path = "settings.json";
   }
 
-  std::ofstream ofs(save_path);
-  if (!ofs.good()) {
-    std::cerr << "write_json_config_file error: Couldn't open file "
-                 "for writing: "
-              << save_path << std::endl;
-    return;
+  try {
+    const nlohmann::json settingsJSON = *data;
+    const auto content = settingsJSON.dump(4);
+    if (!files::write_string_atomic(save_path, content)) {
+      log_warn("Settings::write_save_file: failed to save {}", save_path);
+      return false;
+    }
+    data->loaded_from = save_path;
+    log_info("Saved settings to {}", data->loaded_from);
+    return true;
+  } catch (const std::exception &error) {
+    log_warn("Settings::write_save_file: {}: {}", save_path, error.what());
+    return false;
   }
-  data->loaded_from = save_path;
-
-  log_info("Saving to {}", data->loaded_from);
-
-  nlohmann::json settingsJSON = *data;
-
-  ofs << settingsJSON.dump(4);
-  ofs.close();
 }
