@@ -31,8 +31,8 @@ Pending rows are proposals. Accepted rows record the user's answers.
 | Decision | Affected work | Recommendation / choice to settle | Status |
 |---|---|---|---|
 | D-01 Platform coverage | UP-04 dialogs; UP-09 file watching | Implement macOS first behind one platform-independent public API. Callers use the same types, calls and result handling everywhere, without platform conditionals. Other backends initially return the shared unsupported result. | Accepted |
-| D-02 Chart scope | UP-12 | Choose the initial chart types and useful interactions. Proposed foundation is line, area, bar, scatter and sparkline, with hover values, live data and a wm test screen. Decide whether other types or pan/zoom are needed initially. | Asked; awaiting answer |
-| D-03 Profiling experience | UP-11 | Choose default presentation and collection behavior: an opt-in overlay with an embeddable panel, collection only while enabled, bounded history, pause/reset and custom counters. Confirm whether background recording or export is needed initially. | Pending |
+| D-02 Chart scope | UP-12 | Build the charts needed by the profiling UI first and exercise them in the wm test screen. Keep the broader chart set and additional interactions as TODOs; they do not block the profiling UI. | Accepted |
+| D-03 Profiling experience | UP-11 | Settle recording behavior when the panel is hidden. Proposed presentation remains an opt-in overlay with an embeddable panel, bounded history, pause/reset and custom counters. | Recording question asked; awaiting answer |
 | D-04 Input prompts | UP-06 | Choose automatic switching behavior. Proposed default switches on deliberate keyboard/gamepad input, ignores stick noise and incidental pointer motion, and allows callers to pin a device. | Pending |
 | D-05 Screen discovery | wm TODO | Choose searchable categories/tree versus a flat searchable list. Preserve comma/period cycling without duplicate destinations and keep the active screen visible. | Pending |
 
@@ -48,6 +48,20 @@ Before a backend exists, return the common unsupported outcome through that
 same API. Do not pretend success or report cancellation. This keeps error
 handling portable without claiming identical availability. Test responses must
 also work through the common API on unsupported hosts.
+
+### D-02: Profiling determines the first chart scope
+
+The user chose to focus on charts needed for the profiling UI and leave the
+rest as TODOs. Start with frame-time history; reuse the same time-series
+rendering for other profiling histories where useful. Choose further chart
+types only when the profiling panel needs them. Preserve live updates, value
+inspection and the interactive wm test screen for the charts actually built.
+
+The previously proposed five-chart set is no longer a first-release requirement.
+Area, bar, scatter and sparkline variants that the profiler does not need remain
+follow-up work. Pie/donut, stacked charts, histograms and pan/zoom were offered
+as options, not individually approved requirements. Reassess them when extending
+the chart set. This decision does not defer unrelated approved upstream gaps.
 
 ## Work outside this decision batch
 

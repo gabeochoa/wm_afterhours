@@ -1,5 +1,14 @@
 # TODO
 
+## Charts after the profiling UI
+
+- [ ] Extend UP-12 beyond the charts needed by the default profiling UI.
+  Keep unneeded area, bar, scatter and sparkline variants as follow-ups.
+  Reassess pie/donut, stacked charts, histograms and pan/zoom when a consumer
+  needs them; these options are not individually approved requirements.
+  Extend the interactive wm chart test screen with each implemented type.
+  See `docs/gap-design-decisions.md`, D-02.
+
 ## Screen navigation follow-up
 
 - [ ] Improve screen switching and discovery. Investigate the duplicate screens

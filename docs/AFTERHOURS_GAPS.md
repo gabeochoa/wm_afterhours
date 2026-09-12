@@ -260,7 +260,7 @@ are not accepted decisions.
 | UP-09 Filesystem watcher | Approved | Upstream the existing watcher, macOS first behind one portable public API with an explicit unsupported result elsewhere. Wordproc is a possible second consumer, not a confirmed one. |
 | UP-10 Capture formats | Approved | Make encoded and raw capture results explicit and consistent. |
 | UP-11 Default profiling UI | Requested addition | Useful defaults with customization; reuse existing profiling hooks. |
-| UP-12 Chart set and test screen | Approved, expanded | Replace the small sparkline proposal with a chart set and an interactive wm test screen. |
+| UP-12 Chart set and test screen | Approved, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
 | UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
 | Periodic timer helper | Skip | No shared remainder-preserving timer requested. |
 
@@ -507,7 +507,7 @@ resume and reset with clear sampling windows and units. Missing counters must
 show as unavailable. The default setup should need no custom data provider for
 metrics already collected by the library. Apps can add named counters with
 units, select sections and history duration, and use their theme in an embedded
-panel or overlay. Reuse the chart set in UP-12.
+panel or overlay. Drive UP-12's initial chart scope from this panel's needs.
 
 Keep measurement meanings accurate. The current built-in collector sums elapsed
 wall time across calls and puts call counts in `PerfEntry::entity_count`; its
@@ -527,18 +527,23 @@ performance improvement or an implemented feature.
 
 ### UP-12: Chart set with an interactive test screen
 
-The user approved the sparkline idea and expanded it to a chart set with a wm
-test screen. Proposed initial coverage is line, area, bar, scatter and sparkline
-charts, with hover values and changing datasets. Share axes, scales, labels,
-legends and theme styling where useful; sparklines can omit the full chart
-chrome. The profiling panel is a concrete consumer for time-series charts.
+The user approved a chart set with a wm test screen, then narrowed the first
+implementation to charts needed by the profiling UI. Start with frame-time
+history and reuse that time-series rendering for other profiling histories
+where useful. Include hover values and changing datasets. Share axes, scales,
+labels and theme styling as needed by these actual consumers.
+
+The broader line/area/bar/scatter/sparkline set remains follow-up work where
+the profiling UI does not need it. Additional types and pan/zoom are possible
+extensions, not first-release requirements. Track them in the root TODO rather
+than making the profiling panel wait for a general chart suite.
 
 Keep data ownership and application-specific aggregation with callers. The wm
 test screen should exercise empty, single-value and constant datasets, negative
 values, multiple series, live updates and resizing. Validate finite coordinate
 mapping, clipping, readable labels, hover selection, and keyboard access to
-interactive controls. The user requested the chart set and test screen; the
-initial chart types and interactions are proposed implementation scope.
+interactive controls. Apply these cases to the charts built for the profiler;
+extend coverage as the broader chart set is implemented.
 
 ### Smaller opportunities and their decisions
 
