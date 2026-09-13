@@ -1,0 +1,87 @@
+goto_screen hstack_showcase
+resize 1280 720
+wait 0.3
+click_ui hstack_page_0
+wait 0.2
+expect_text "Horizontal stack layout"
+expect_text "Equal-width children"
+expect_text "explicit gap is 0."
+expect_text "content 1128px / child 338.4px"
+expect_text "Main-axis distribution"
+expect_text "Space between"
+expect_text "Space around"
+expect_text "Around has half-sized edge gaps."
+assert_ui root x=60 y=0 w=1160 h=720
+assert_ui basic_row x=60 y=246 w=1160 h=88
+assert_ui box_0 w=338 h=48
+assert_ui jc_row_0 w=208 h=140
+assert_ui jc_box_0_0 x=72 y=565 w=30 h=30
+assert_ui jc_box_1_0 x=404 y=565 w=30 h=30
+assert_ui jc_box_3_0 x=780 y=565
+assert_ui jc_box_3_1 x=856 y=565
+assert_ui jc_box_3_2 x=932 y=565
+assert_within_parents
+screenshot hstack_distribution
+focus_ui hstack_page_1
+key ENTER
+wait 0.2
+expect_text "Cross-axis alignment"
+expect_text "heights 85%, 50%, 65% of content height"
+expect_text "Toolbar pattern"
+expect_text "SpaceBetween / trailing Settings action"
+expect_text "Four equal cards"
+expect_text "Each 22% wide / SpaceAround / gap 0"
+expect_text "Six expanding cards"
+expect_text "1,248"
+expect_text "$8,420"
+expect_text "2.1%"
+expect_text "Colors identify cards"
+assert_ui ai_row_0 x=60 y=291 w=228 h=224
+assert_ui ai_box_0_0 w=28 h=170
+assert_ui ai_box_0_1 w=28 h=100
+assert_ui ai_box_0_2 w=28 h=130
+assert_ui toolbar x=820 y=249 w=400 h=50
+assert_ui dashboard x=60 y=628 w=1160 h=60
+assert_ui metric_0 x=60 y=628 w=160 h=60
+assert_ui metric_5 x=1060 y=628 w=160 h=60
+assert_ui card_0 w=88
+assert_within_parents
+screenshot hstack_patterns
+click_ui toolbar_0
+wait 0.2
+expect_text "File command activated."
+focus_ui toolbar_1
+key ENTER
+wait 0.2
+expect_text "Edit command activated."
+click_ui toolbar_2
+wait 0.2
+expect_text "View command activated."
+focus_ui toolbar_settings
+key ENTER
+wait 0.2
+expect_text "Trailing Settings action activated."
+click_ui hstack_page_0
+wait 0.2
+click_ui hstack_page_1
+wait 0.2
+expect_text "Trailing Settings action activated."
+resize 1920 1080
+wait 0.3
+assert_ui root x=90 y=0 w=1740 h=1080
+assert_ui metric_0 w=240 h=90
+assert_ui ai_box_0_0 w=42 h=255
+assert_within_parents
+screenshot hstack_patterns_1080
+resize 1024 768
+wait 0.3
+assert_ui root x=48 y=96 w=928 h=576
+assert_ui metric_0 w=128 h=48
+assert_within_parents
+screenshot hstack_patterns_narrow
+click_ui hstack_page_0
+wait 0.2
+assert_ui jc_box_0_0 w=24 h=24
+assert_within_parents
+screenshot hstack_distribution_narrow
+resize 1280 720

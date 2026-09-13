@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,292 completed; 1,243 remaining.
+1,317 completed; 1,218 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3784,79 +3784,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/hstack_showcase_720p.png) · [Visual review](design-audit.html#screen=hstack_showcase)
 
-- [ ] `hstack_showcase-01` · P2 · proposal. Heading: Add Horizontal stack layout as a subtitle.
+- [x] `hstack_showcase-01` · P2 · proposal. Heading: Add Horizontal stack layout as a subtitle.
   Evidence: hstack() Showcase has no plain-language explanation.
 
-- [ ] `hstack_showcase-02` · P2 · proposal. Basic row: Label this row Equal-width children.
+- [x] `hstack_showcase-02` · P2 · proposal. Basic row: Label this row Equal-width children.
   Evidence: Item 1, Item 2, and Item 3 have no section label.
 
-- [ ] `hstack_showcase-03` · P3 · proposal. Basic-row gaps: Add an external gap measurement caption.
+- [x] `hstack_showcase-03` · P3 · proposal. Basic-row gaps: Add an external gap measurement caption.
   Evidence: Large gaps are visible but their configured size is not.
 
-- [ ] `hstack_showcase-04` · P2 · proposal. Justification section: Add Main-axis distribution above the five examples.
+- [x] `hstack_showcase-04` · P2 · proposal. Justification section: Add Main-axis distribution above the five examples.
   Evidence: Five pink headers appear without a shared section title.
 
-- [ ] `hstack_showcase-05` · P2 · proposal. Between and Around: Use Space between and Space around in external captions.
+- [x] `hstack_showcase-05` · P2 · proposal. Between and Around: Use Space between and Space around in external captions.
   Evidence: The shortened names omit Space.
 
-- [ ] `hstack_showcase-06` · P2 · proposal. Pink header text: Increase caption size and apply equal horizontal padding.
+- [x] `hstack_showcase-06` · P2 · proposal. Pink header text: Increase caption size and apply equal horizontal padding.
   Evidence: Small black handwritten labels sit close to the left edge.
 
-- [ ] `hstack_showcase-07` · P2 · proposal. Unnumbered cyan boxes: Add 1, 2, and 3 labels to reveal item order.
+- [x] `hstack_showcase-07` · P2 · proposal. Unnumbered cyan boxes: Add 1, 2, and 3 labels to reveal item order.
   Evidence: The repeated boxes contain no identity markers.
 
-- [ ] `hstack_showcase-08` · P3 · proposal. Start example: Add a faint tested-edge guide in the frame.
+- [x] `hstack_showcase-08` · P3 · proposal. Start example: Add a faint tested-edge guide in the frame.
   Evidence: Its packed group has no left-edge reference.
 
-- [ ] `hstack_showcase-09` · P3 · proposal. End example: Add a faint right-edge guide.
+- [x] `hstack_showcase-09` · P3 · proposal. End example: Add a faint right-edge guide.
   Evidence: The right-aligned group has no right-edge reference.
 
-- [ ] `hstack_showcase-10` · P3 · proposal. Center example: Add a subtle centerline behind the sample.
+- [x] `hstack_showcase-10` · P3 · proposal. Center example: Add a subtle centerline behind the sample.
   Evidence: The centered group lacks a midpoint marker.
 
-- [ ] `hstack_showcase-11` · P3 · proposal. Between example: Add small equal-gap brackets outside the item row.
+- [x] `hstack_showcase-11` · P3 · proposal. Between example: Add small equal-gap brackets outside the item row.
   Evidence: Equal gaps are shown without measurement cues.
 
-- [ ] `hstack_showcase-12` · P3 · proposal. Around example: Annotate edge versus internal spacing beneath the frame.
+- [x] `hstack_showcase-12` · P3 · proposal. Around example: Annotate edge versus internal spacing beneath the frame.
   Evidence: The half-size edge gaps are not explained.
 
-- [ ] `hstack_showcase-13` · P2 · proposal. Cross-axis section: Add Cross-axis alignment above them.
+- [x] `hstack_showcase-13` · P2 · proposal. Cross-axis section: Add Cross-axis alignment above them.
   Evidence: Green headers Start, Center, and End lack a group label.
 
-- [ ] `hstack_showcase-14` · P3 · proposal. Unequal item heights: Caption their fixed heights as part of the test setup.
+- [x] `hstack_showcase-14` · P3 · proposal. Unequal item heights: Caption their fixed heights as part of the test setup.
   Evidence: Green, orange, and purple item heights vary without a legend.
+  Disposition: The native fixtures use 85%, 50%, and 65% of content height. Captions report the actual relative sizing rather than claiming fixed pixel heights.
 
-- [ ] `hstack_showcase-15` · P2 · proposal. Alignment guides: Add straight reference guides inside the three samples.
+- [x] `hstack_showcase-15` · P2 · proposal. Alignment guides: Add straight reference guides inside the three samples.
   Evidence: Rounded frames make common top and bottom edges less obvious.
 
-- [ ] `hstack_showcase-16` · P2 · proposal. Toolbar Pattern heading: Increase its text and align it with toolbar content.
+- [x] `hstack_showcase-16` · P2 · proposal. Toolbar Pattern heading: Increase its text and align it with toolbar content.
   Evidence: The label is tiny relative to the blue title strip.
 
-- [ ] `hstack_showcase-17` · P2 · proposal. Toolbar commands: Use a readable command size within the toolbar specimen.
+- [x] `hstack_showcase-17` · P2 · proposal. Toolbar commands: Use a readable command size within the toolbar specimen.
   Evidence: File, Edit, and View are much smaller than the large surrounding examples.
 
-- [ ] `hstack_showcase-18` · P3 · proposal. Settings placement: Annotate it as the trailing action using remaining width.
+- [x] `hstack_showcase-18` · P3 · proposal. Settings placement: Annotate it as the trailing action using remaining width.
   Evidence: The right-aligned Settings button demonstrates spare-space use without explanation.
 
-- [ ] `hstack_showcase-19` · P2 · proposal. Card Row title: Rename it Four equal cards with fixed gaps.
+- [x] `hstack_showcase-19` · P2 · proposal. Card Row title: Rename it Four equal cards with fixed gaps.
   Evidence: The title does not explain which hstack behavior it demonstrates.
+  Disposition: These are four equal 22%-width children distributed by SpaceAround with no explicit gap. Captions preserve and explain that configuration.
 
-- [ ] `hstack_showcase-20` · P2 · proposal. A B C D cards: Center the letters or add a consistent inset.
+- [x] `hstack_showcase-20` · P2 · proposal. A B C D cards: Center the letters or add a consistent inset.
   Evidence: Single letters sit against the left edges of the small cards.
 
-- [ ] `hstack_showcase-21` · P2 · proposal. Dashboard row: Label the row Six expanding cards.
+- [x] `hstack_showcase-21` · P2 · proposal. Dashboard row: Label the row Six expanding cards.
   Evidence: Users, Revenue, Orders, Growth, Active, and Churn appear without a section heading.
 
-- [ ] `hstack_showcase-22` · P2 · proposal. Dashboard text: Add a consistent text inset without changing the card widths.
+- [x] `hstack_showcase-22` · P2 · proposal. Dashboard text: Add a consistent text inset without changing the card widths.
   Evidence: Each metric label sits flush against its card's left edge.
 
-- [ ] `hstack_showcase-23` · P3 · proposal. Dashboard values: Add small fixed values to make the dashboard example recognizable.
+- [x] `hstack_showcase-23` · P3 · proposal. Dashboard values: Add small fixed values to make the dashboard example recognizable.
   Evidence: The metric cards have labels but no sample values.
 
-- [ ] `hstack_showcase-24` · P3 · proposal. Dashboard color key: Caption them as identity colors or reduce unrelated semantic associations.
+- [x] `hstack_showcase-24` · P3 · proposal. Dashboard color key: Caption them as identity colors or reduce unrelated semantic associations.
   Evidence: Six bright colors suggest meaning without a legend.
 
-- [ ] `hstack_showcase-25` · P3 · proposal. Bottom empty space: Use it for the stack width and gap configuration summary.
+- [x] `hstack_showcase-25` · P3 · proposal. Bottom empty space: Use it for the stack width and gap configuration summary.
   Evidence: A broad blank region remains below the dashboard row.
 
 ### images

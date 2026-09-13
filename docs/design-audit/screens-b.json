@@ -2626,7 +2626,8 @@
         "change": "Use it for the stack width and gap configuration summary."
       }
     ],
-    "sha256": "4c617c180b93c99ff752743f13c381255ffb23e04a1c9a3bee3477a14945ec57"
+    "sha256": "4c617c180b93c99ff752743f13c381255ffb23e04a1c9a3bee3477a14945ec57",
+    "evidence": "docs/design-audit/originals/hstack_showcase_720p.png"
   },
   {
     "id": "images",

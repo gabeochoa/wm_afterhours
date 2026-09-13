@@ -1947,7 +1947,7 @@ All three rows are captured at rest. Their hover and click differences are inten
 
 ## hstack showcase
 
-[Current baseline](../../screenshot-baselines/screens/hstack_showcase_720p.png) · [Visual review](../../design-audit.html#screen=hstack_showcase)
+[Reviewed image](../../docs/design-audit/originals/hstack_showcase_720p.png) · [Current baseline](../../screenshot-baselines/screens/hstack_showcase_720p.png) · [Visual review](../../design-audit.html#screen=hstack_showcase)
 
 Baseline SHA-256: `4c617c180b93c99ff752743f13c381255ffb23e04a1c9a3bee3477a14945ec57`
 
