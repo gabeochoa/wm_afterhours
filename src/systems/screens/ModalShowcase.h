@@ -66,7 +66,6 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_grid_snapping(false);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(22 * s));
-    if (!afterhours::modal::is_active()) (void)context.pressed(InputAction::MenuBack);
     const auto at = [s](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
           .with_absolute_position(x * s, y * s).with_corner_radius(0)
