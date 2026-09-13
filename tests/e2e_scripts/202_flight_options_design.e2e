@@ -16,9 +16,16 @@ expect_text "Enter activates the focused control."
 assert_ui flight_root x=0 y=0 w=1280 h=720
 assert_ui flight_settings x=384 y=136 w=456 h=426
 assert_ui flight_preview x=868 y=136 w=324 h=426
-assert_ui flight_option_0 x=404 y=208 w=416 h=42
+assert_ui flight_option_0 x=396 y=208 w=432 h=42
 assert_within_parents
 screenshot flight_options_design
+focus_ui flight_category_0
+wait 0.2
+assert_ui flight_category_0 x=86 y=164 w=252 h=34
+screenshot flight_options_category_focus
+focus_ui flight_option_0
+wait 0.2
+screenshot flight_options_row_focus
 click_ui flight_option_3
 wait 0.2
 expect_text "CURRENT SELECTION"

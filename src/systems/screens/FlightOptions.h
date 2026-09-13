@@ -207,8 +207,9 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     label(14, "AUDIO / LANGUAGE", 102, 453, 224, 23, 16, muted);
     for (size_t i = 0; i < categories.size(); ++i) {
       auto category = action(20 + static_cast<int>(i), categories[i].name,
-          102, category_y(i), 228, 34, 24, "flight_category_" + std::to_string(i),
+          86, category_y(i), 252, 34, 24, "flight_category_" + std::to_string(i),
           false, active_tab == i ? bright : cyan);
+      category.ent().get<HasLabel>().text_x_offset = 16 * scale;
       if (category) choose_category(i);
       if (focus_category == static_cast<int>(i)) {
         context.set_focus(category.ent().id);
@@ -223,7 +224,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(content.ent(), 100 + static_cast<int>(i)), box(scale, 396, y, 432, 42)
           .with_custom_background(selected ? afterhours::Color{31, 61, 83, 210} : afterhours::Color{12, 35, 53, 170})
           .with_ignore_pointer_events());
-      auto option = action(40 + static_cast<int>(i), "", 404, y, 416, 42, 22,
+      auto option = action(40 + static_cast<int>(i), "", 396, y, 432, 42, 22,
           "flight_option_" + std::to_string(i), rows[i].unavailable);
       if (rows[i].unavailable) option.ent().removeComponent<HasClickListener>();
       label(110 + static_cast<int>(i), rows[i].name + (rows[i].unavailable ? " (Unavailable)" : ""),
