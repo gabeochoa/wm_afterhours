@@ -122,7 +122,7 @@ struct ExampleLayout : ScreenSystem<UIContext<InputAction>> {
           .with_size({percent(.95f), pixels(40)})
           .with_label(fmt::format("Item {}", i + 1)).with_font("AtkinsonMock", pixels(22 * s))
           .with_custom_background(colors[i]).with_custom_text_color({255, 255, 244, 255})
-          .with_alignment(TextAlignment::Center).with_text_inset(12 * s)
+          .with_alignment(TextAlignment::Center).with_text_inset(12 * s, 2 * s)
           .with_corner_radius(7 * s).with_border(selected_item == i ? ink : colors[i], 2 * s)
           .with_margin(Margin{.bottom = pixels(i == 2 ? 0 : 3)})
           .with_debug_name(fmt::format("layout_column_item_{}", i)));
