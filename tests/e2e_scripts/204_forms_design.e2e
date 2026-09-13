@@ -22,9 +22,8 @@ expect_text "V-Sync"
 expect_text "Synchronize frames with the display."
 expect_no_text "Ambient Occlusion"
 expect_text "More options below / scroll this list"
-expect_text "Current settings"
-expect_text "Resolution / demo preset"
-expect_text "Quality / demo preset"
+expect_text "Live preview"
+expect_text "Bloom on"
 expect_text "1920x1080"
 expect_text "Medium"
 expect_text "Copy saves the summary as text."
@@ -41,9 +40,10 @@ assert_ui volume_progress x=68 y=428 w=524 h=8
 assert_ui level_progress x=68 y=478 w=524 h=8
 assert_ui forms_options x=660 y=164 w=548 h=290
 assert_ui forms_music_toggle w=44 h=44
-assert_ui forms_status_panel x=48 y=516 w=1184 h=63
-assert_ui clipboard_row x=48 y=596 w=1184 h=106
-assert_ui forms_clipboard_output x=466 y=636 w=746 h=58
+assert_ui forms_status_panel x=48 y=516 w=564 h=186
+assert_ui forms_preview x=64 y=554 w=532 h=136
+assert_ui clipboard_row x=636 y=516 w=596 h=186
+assert_ui forms_clipboard_output x=974 y=650 w=242 h=36
 assert_no_overflow
 assert_within_parents
 screenshot forms_design
@@ -83,6 +83,22 @@ expect_text "End of options / scroll up to Audio"
 assert_no_overflow
 assert_within_parents
 screenshot forms_design_scrolled
+click_ui forms_bloom_toggle
+wait 0.2
+expect_text "Bloom off"
+screenshot forms_preview_without_bloom
+click_ui forms_bloom_toggle
+wait 0.2
+expect_text "Bloom on"
+focus_ui forms_subtitles_toggle
+key ENTER
+wait 0.2
+expect_text "Follow the light"
+focus_ui forms_fps_toggle
+key ENTER
+wait 0.2
+expect_text "FPS"
+screenshot forms_preview_options
 mouse_move 75% 45%
 scroll_wheel 0 50
 wait 0.3
@@ -93,8 +109,8 @@ wait 0.3
 assert_ui left_column x=72 y=165 w=846 h=585
 assert_ui forms_options x=990 y=246 w=822 h=435
 assert_ui volume_progress x=102 y=642 w=786 h=12
-assert_ui forms_status_panel x=72 y=774 w=1776 h=95
-assert_ui forms_clipboard_output x=699 y=954 w=1119 h=87
+assert_ui forms_status_panel x=72 y=774 w=846 h=279
+assert_ui forms_clipboard_output x=1461 y=975 w=363 h=54
 assert_no_overflow
 assert_within_parents
 screenshot forms_design_1080
@@ -104,7 +120,7 @@ assert_ui forms_bg w=1024 h=768
 assert_ui left_column x=38 y=184 w=451 h=312
 assert_ui forms_options x=528 y=227 w=438 h=232
 assert_ui volume_progress x=54 y=438 w=419 h=6
-assert_ui forms_clipboard_output x=373 y=605 w=597 h=46
+assert_ui forms_clipboard_output x=779 y=616 w=194 h=29
 assert_no_overflow
 assert_within_parents
 screenshot forms_design_narrow

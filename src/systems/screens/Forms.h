@@ -41,11 +41,16 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
   std::vector<std::string> languages = {"English", "Spanish",  "French",
                                         "German",  "Japanese", "Korean"};
 
+  float preview_time = 0;
+  float saved_preview_time = 0;
+
   // Clipboard demo state
   std::string clipboard_display = "(clipboard empty)";
 
   void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
+                     UIContext<InputAction> &context, float dt) override {
+    preview_time += dt;
+    if (auto_save && preview_time - saved_preview_time >= 3) saved_preview_time = preview_time;
     context.theme = afterhours::ui::theme_presets::neon_dark();
     context.theme.primary = {88, 186, 183, 255};
     context.theme.secondary = {49, 64, 82, 255};
@@ -74,7 +79,7 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background({14, 22, 33, 255}).with_corner_radius(0)
         .with_debug_name("forms_bg"));
     text(1, "Form Components", 48, 20, 1184, 44, 34, ink, "forms_title");
-    text(2, "Adjust the demo controls. Copy a settings summary or read your clipboard.",
+    text(2, "Change the controls to see the preview respond. Settings apply to this scene.",
          48, 70, 1184, 28, 20, muted, "forms_subtitle");
     div(context, mk(entity, 3), at(48, 110, 564, 390)
         .with_custom_background(panel).with_corner_radius(12 * s)
@@ -241,24 +246,103 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
     const std::string status = "Volume: " + std::to_string(static_cast<int>(volume_slider * 100)) +
         "% | Resolution: " + resolutions[resolution_index] +
         " | Quality: " + quality_options[quality_index];
-    div(context, mk(entity, 80), at(48, 516, 1184, 63)
+    div(context, mk(entity, 80), at(48, 516, 564, 186)
         .with_custom_background(panel).with_corner_radius(10 * s)
         .with_debug_name("forms_status_panel"));
-    text(81, "Current settings", 64, 533, 228, 30, 22, ink, "forms_status_heading");
-    text(82, "Volume", 316, 522, 210, 23, 16, muted, "forms_status_volume_label");
-    text(83, fmt::format("{}%", static_cast<int>(volume_slider * 100)),
-         316, 546, 210, 27, 22, ink, "forms_status_volume");
-    text(84, "Resolution / demo preset", 596, 522, 290, 23, 16, muted, "forms_status_resolution_label");
-    text(85, resolutions[resolution_index], 596, 546, 290, 27, 22, ink, "forms_status_resolution");
-    text(86, "Quality / demo preset", 952, 522, 250, 23, 16, muted, "forms_status_quality_label");
-    text(87, quality_options[quality_index], 952, 546, 250, 27, 22, ink, "forms_status_quality");
-    div(context, mk(entity, 90), at(48, 596, 1184, 106)
+    text(81, "Live preview", 64, 522, 200, 28, 22, ink, "forms_status_heading");
+    text(82, bloom_effect ? "Bloom on" : "Bloom off", 432, 522, 160, 28,
+         17, muted, "forms_preview_bloom");
+    div(context, mk(entity, 88), at(64, 554, 532, 136)
+        .with_corner_radius(0).with_debug_name("forms_preview")
+        .with_custom_background({10, 17, 27, 255})
+        .with_on_draw_fg([this, s](RectangleType r) {
+          const float exposure = 0.3f + brightness_slider * 1.4f;
+          const auto color = [exposure](int red, int green, int blue, int alpha = 255) {
+            return raylib::Color{static_cast<unsigned char>(std::min(255.f, red * exposure)),
+                                 static_cast<unsigned char>(std::min(255.f, green * exposure)),
+                                 static_cast<unsigned char>(std::min(255.f, blue * exposure)),
+                                 static_cast<unsigned char>(alpha)};
+          };
+          const float inset = fullscreen ? 0.f : 8 * s;
+          const raylib::Rectangle view{r.x + inset, r.y + inset, r.width - inset * 2, r.height - inset * 2};
+          raylib::DrawRectangleGradientV(static_cast<int>(view.x), static_cast<int>(view.y),
+              static_cast<int>(view.width), static_cast<int>(view.height), color(15, 28, 48), color(34, 55, 68));
+          const int stars = 8 + static_cast<int>(quality_index) * 12;
+          const float quantum = (5.f - static_cast<float>(resolution_index)) * s * 0.35f;
+          const float time = vsync ? std::floor(preview_time * 60) / 60 : preview_time;
+          const float speed = 0.5f + difficulty_slider * 1.5f;
+          const float x = view.x + view.width * (0.5f + 0.34f * std::sin(time * speed));
+          const float y = view.y + view.height * 0.49f;
+          const float radius = 9 * s;
+          for (int i = 0; i < stars; ++i) {
+            const float px = view.x + std::fmod(static_cast<float>(i * 67 + 17) * s, view.width);
+            const float py = view.y + std::fmod(static_cast<float>(i * 19 + 9) * s, view.height * 0.7f);
+            raylib::DrawRectangleRec({std::floor(px / quantum) * quantum, std::floor(py / quantum) * quantum, quantum, quantum}, color(169, 208, 220));
+          }
+          const int barriers = 1 + static_cast<int>(difficulty_slider * 5);
+          for (int i = 0; i < barriers; ++i) {
+            const float px = view.x + (static_cast<float>(i) + 1) * view.width / static_cast<float>(barriers + 1);
+            const raylib::Rectangle block{px, view.y + view.height * 0.70f, 14 * s, view.height * 0.30f};
+            if (ambient_occlusion)
+              raylib::DrawCircleGradient(static_cast<int>(px + 7 * s), static_cast<int>(view.y + view.height - 8 * s), 22 * s, {0, 0, 0, 150}, {0, 0, 0, 0});
+            raylib::DrawRectangleRec(block, color(82, 116, 132));
+          }
+          if (motion_blur) {
+            for (int i = 8; i > 0; --i) {
+              const float previous = view.x + view.width * (0.5f + 0.34f * std::sin((time - static_cast<float>(i) * 0.018f) * speed));
+              raylib::DrawCircleV({previous, y}, radius, color(103, 224, 210, 12 + (8 - i) * 3));
+            }
+          }
+          if (bloom_effect) {
+            raylib::BeginBlendMode(raylib::BLEND_ADDITIVE);
+            raylib::DrawCircleGradient(static_cast<int>(x), static_cast<int>(y), 38 * s, color(79, 232, 211, 145), {0, 0, 0, 0});
+            raylib::EndBlendMode();
+          }
+          if (anti_aliasing) {
+            for (int edge = 3; edge > 0; --edge)
+              raylib::DrawCircleV({x, y}, radius + static_cast<float>(edge) * 0.35f * s, color(182, 255, 231, 38));
+          }
+          raylib::DrawCircleV({x, y}, radius, color(182, 255, 231));
+          if (show_hud) {
+            raylib::DrawRectangleRec({view.x + 8 * s, view.y + 8 * s, 76 * s, 5 * s}, color(55, 83, 101));
+            raylib::DrawRectangleRec({view.x + 8 * s, view.y + 8 * s, (1 - difficulty_slider * 0.7f) * 76 * s, 5 * s}, color(124, 219, 182));
+          }
+          for (int channel = 0; channel < 2; ++channel) {
+            const bool active = channel == 0 ? enable_music : enable_sfx;
+            const float pulse = channel == 0 ? 0.55f + 0.3f * std::sin(time * 6) : std::pow(std::max(0.f, std::sin(time * speed)), 8.f);
+            const float level = active ? pulse * volume_slider : 0.f;
+            raylib::DrawRectangleRec({view.x + view.width - 54 * s, view.y + (8 + channel * 9) * s, 44 * s, 4 * s}, color(55, 83, 101));
+            raylib::DrawRectangleRec({view.x + view.width - 54 * s, view.y + (8 + channel * 9) * s, 44 * s * level, 4 * s}, color(129, 204, 219));
+          }
+        }));
+    if (show_fps)
+      text(89, fmt::format("{} FPS", dt > 0 ? static_cast<int>(1.f / dt) : 0),
+           274, 522, 152, 28, 17, muted, "forms_preview_fps");
+    if (subtitles) {
+      const std::array<const char *, 6> captions{"Follow the light", "Sigue la luz", "Suivez la lumiere", "Folge dem Licht", "光を追いかけて", "빛을 따라가세요"};
+      div(context, mk(entity, 97), at(194, 660, 280, 24).with_label(captions[language_index])
+          .with_font(language_index == 4 ? "Sazanami" : language_index == 5 ? "NotoSansKR" : "AtkinsonMock", pixels(17 * s))
+          .with_custom_background({10, 17, 27, 230}).with_custom_text_color(ink)
+          .with_alignment(TextAlignment::Center).with_ignore_pointer_events()
+          .with_debug_name("forms_preview_subtitle"));
+    }
+    div(context, mk(entity, 90), at(636, 516, 596, 186)
         .with_custom_background(panel).with_corner_radius(10 * s)
         .with_debug_name("clipboard_row"));
-    text(91, "Copy saves the summary as text.", 64, 604, 372, 23, 18, muted, "forms_clipboard_copy_help");
-    text(92, "Paste reads text; it does not apply settings.", 64, 628, 388, 23, 17, muted, "forms_clipboard_paste_help");
+    dropdown(context, mk(entity, 84), resolutions, resolution_index,
+        at(652, 526, 198, 34).with_font("AtkinsonMock", pixels(18 * s))
+            .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
+            .with_debug_name("forms_resolution"));
+    dropdown(context, mk(entity, 86), quality_options, quality_index,
+        at(866, 526, 140, 34).with_font("AtkinsonMock", pixels(18 * s))
+            .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
+            .with_debug_name("forms_quality"));
+    text(87, auto_save ? fmt::format("Saved {:.0f}s", saved_preview_time) : "Autosave off",
+         1018, 526, 196, 34, 17, muted, "forms_preview_saved");
+    text(91, "Copy saves the summary as text.", 652, 568, 560, 23, 18, muted, "forms_clipboard_copy_help");
+    text(92, "Paste reads text; it does not apply settings.", 652, 594, 560, 23, 17, muted, "forms_clipboard_paste_help");
     // Copy button - copies current status to clipboard
-    if (button(context, mk(entity, 93), at(64, 658, 162, 36)
+    if (button(context, mk(entity, 93), at(652, 650, 162, 36)
         .with_label("Copy Status").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({85, 181, 176, 255}).with_custom_text_color({12, 30, 38, 255})
         .with_corner_radius(6 * s).with_debug_name("copy_btn"))) {
@@ -266,20 +350,20 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
       clipboard_display = "Copied!";
     }
     // Paste button - reads from clipboard
-    if (button(context, mk(entity, 94), at(238, 658, 128, 36)
+    if (button(context, mk(entity, 94), at(826, 650, 128, 36)
         .with_label("Paste").with_font("AtkinsonMock", pixels(19 * s))
         .with_custom_background({48, 71, 93, 255}).with_custom_text_color(ink)
         .with_corner_radius(6 * s).with_debug_name("paste_btn"))) {
       clipboard_display = afterhours::clipboard::has_text()
           ? afterhours::clipboard::get_text() : "(clipboard empty)";
     }
-    text(95, "Clipboard result / read only", 466, 604, 746, 25, 18, muted, "forms_clipboard_label");
+    text(95, "Clipboard result / read only", 974, 618, 238, 25, 15, muted, "forms_clipboard_label");
     const std::string display_text = clipboard_display.length() > 140
         ? clipboard_display.substr(0, 137) + "..." : clipboard_display;
-    div(context, mk(entity, 96), at(466, 636, 746, 58)
-        .with_label(display_text).with_font("AtkinsonMock", pixels(19 * s))
+    div(context, mk(entity, 96), at(974, 650, 242, 36)
+        .with_label(display_text).with_font("AtkinsonMock", pixels(16 * s))
         .with_custom_background({14, 25, 38, 255}).with_custom_text_color(ink)
-        .with_text_overflow(TextOverflow::Wrap).with_text_inset(10 * s)
+        .with_text_overflow(TextOverflow::Ellipsis).with_text_inset(6 * s)
         .with_corner_radius(6 * s).with_debug_name("forms_clipboard_output"));
   }
 };
