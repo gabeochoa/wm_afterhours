@@ -24,6 +24,7 @@ mouse_move 620 320
 wait 0.2
 expect_text "Fix login bug"
 expect_text "Drop in In progress / position 2. Release to move."
+assert_ui drag_overlay x=453 y=272 w=334 h=96
 screenshot drag_drop_active
 mouse_move 1025 310
 wait 0.2

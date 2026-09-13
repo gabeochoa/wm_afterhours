@@ -163,18 +163,6 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
       }
     }
     const std::array<afterhours::Color, 3> accents{{{136, 173, 233, 255}, {238, 191, 116, 255}, {126, 209, 166, 255}}};
-    if (dragging) {
-      auto overlay = find_drag_tagged(DragTag::Overlay);
-      if (overlay && overlay.asE().has<UIComponent>()) {
-        overlay.asE().get<UIComponent>().enable_font("AtkinsonMock", pixels(23 * s), true);
-        if (overlay.asE().has<HasLabel>()) {
-          auto &text = overlay.asE().get<HasLabel>();
-          text.font_name = "AtkinsonMock";
-          text.alignment = TextAlignment::Center;
-          text.explicit_text_color = theme.font;
-        }
-      }
-    }
     const auto wheel = afterhours::input::get_mouse_wheel_move_v();
     // Columns container
     auto columns = div(context, mk(root.ent(), 6), box(0, 142, 1160, 422).with_debug_name("columns_container"));
@@ -232,7 +220,6 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font("AtkinsonMock", pixels(23 * s)).with_custom_text_color(theme.font)
             .with_alignment(TextAlignment::Center).with_skip_tabbing(true)
             .with_debug_name("task_" + std::to_string(card.id)));
-        if (dragging && card_ui.ent().hasTag(DragTag::DraggedItem)) continue;
         div(context, mk(card_ui.ent(), 0), box(0, 12, 3, 72).with_custom_background(card.color).with_ignore_pointer_events());
         label(card_ui.ent(), 1, fmt::format("SPR-{:02d} / {}", card.id, card.type), 16, 8, 228, 23, 16);
         label(card_ui.ent(), 2, col == 2 ? "Complete" : card.priority + " priority", 16, 68, 215, 21, 16);
