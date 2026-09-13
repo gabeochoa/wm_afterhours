@@ -83,3 +83,31 @@ screenshot toasts_design_narrow_severity
 click_ui toast_clear
 wait 0.2
 resize 1280 720
+wait 0.2
+focus_ui toast_position
+key RIGHT
+wait 0.2
+expect_focused toast_position
+expect_text "Top left"
+expect_text "Stack grows downward"
+click_ui btn_info
+wait 0.2
+screenshot toasts_top_left
+focus_ui toast_position
+key RIGHT
+wait 0.2
+expect_focused toast_position
+expect_text "Top right"
+screenshot toasts_top_right
+key RIGHT
+wait 0.2
+expect_focused toast_position
+expect_text "Bottom left"
+screenshot toasts_bottom_left
+key RIGHT
+wait 0.2
+expect_focused toast_position
+expect_text "Bottom right"
+screenshot toasts_bottom_right
+key RIGHT
+click_ui toast_clear

@@ -13,6 +13,7 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
+  size_t position_index = 4;
   int toast_counter = 0;
   int notifications_sent = 0;
   std::string last_notification = "None yet";
@@ -117,7 +118,7 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
       ++notifications_sent;
       last_notification = "Coral notification / 4 s";
     }
-    text(56, "Native stack: new notifications accumulate upward.", 64, 437, 592, 28, 18);
+    text(56, "Stack direction follows the selected screen corner.", 64, 437, 592, 28, 18);
     text(57, "Coral / #FF7F50", 688, 437, 188, 28, 17);
     section(60, 498, 178, "section3");
     text(61, "Simulated action feedback", 64, 511, 812, 30, 23);
@@ -133,11 +134,21 @@ struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
         .with_background(Theme::Usage::Surface).with_corner_radius(10 * s));
     text(71, "Preview location", 948, 140, 268, 32, 23);
     div(context, mk(root.ent(), 72), at(948, 187, 268, 143).with_border(theme.font_muted, s)
-        .with_ignore_pointer_events().with_on_draw_fg([theme, s](RectangleType r) {
-          for (int i = 0; i < 3; ++i)
-            afterhours::draw_rectangle({r.x + (r.width - 120 * s) / 2, r.y + r.height - (26 + i * 25) * s, 120 * s, 18 * s}, theme.primary);
+        .with_ignore_pointer_events().with_on_draw_fg([theme, s, corner = position_index](RectangleType r) {
+          const float x = corner == 4 ? r.x + (r.width - 120 * s) / 2 :
+                          corner % 2 == 0 ? r.x + 8 * s : r.x + r.width - 128 * s;
+          for (int i = 0; i < 3; ++i) {
+            const float y = corner < 2 ? r.y + (8 + i * 25) * s : r.y + r.height - (26 + i * 25) * s;
+            afterhours::draw_rectangle({x, y, 120 * s, 18 * s}, theme.primary);
+          }
         }));
-    text(73, "Bottom center / stack grows upward", 948, 344, 268, 52, 19);
+    const std::vector<std::string> positions{"Top left", "Top right", "Bottom left", "Bottom right", "Bottom center"};
+    if (stepper(context, mk(root.ent(), 73), positions, position_index,
+        at(948, 344, 268, 40).with_font("AtkinsonMock", pixels(18 * s))
+            .with_custom_background(theme.secondary).with_custom_text_color(theme.font)
+            .with_debug_name("toast_position")))
+      toast::position = static_cast<toast::Position>(position_index);
+    text(77, position_index < 2 ? "Stack grows downward" : "Stack grows upward", 948, 385, 268, 24, 17);
     int active_count = 0;
     for (afterhours::Entity &notice : notices)
       if (!notice.get<toast::Toast>().is_expired()) ++active_count;
