@@ -20,6 +20,7 @@ expect_text "DEVTEAM"
 assert_ui empire_root x=0 y=0 w=1280 h=720
 assert_ui empire_project_1 x=751 y=418 w=405 h=70
 assert_ui empire_action_0 x=282 y=517 w=278 h=44
+assert_ui empire_upgrade_badge x=179 y=425 w=28 h=28
 assert_within_parents
 screenshot empire_design
 click_ui empire_tab_2
@@ -72,12 +73,14 @@ resize 1920 1080
 wait 0.3
 assert_ui empire_root x=0 y=0 w=1920 h=1080
 assert_ui empire_dashboard x=381 y=386 w=1413 h=513
+assert_ui empire_upgrade_badge w=42 h=42
 assert_within_parents
 screenshot empire_design_1080
 resize 1024 768
 wait 0.3
 assert_ui empire_root x=0 y=0 w=1024 h=768
 assert_ui empire_dashboard x=203 y=302 w=754 h=274
+assert_ui empire_upgrade_badge w=22 h=22
 assert_within_parents
 screenshot empire_design_narrow
 resize 1280 720

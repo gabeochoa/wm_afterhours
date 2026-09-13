@@ -425,11 +425,11 @@ struct EmpireTycoonScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center));
       if (i == 2) {
         div(context, mk(content.ent(), 130),
-            box(scale, 182, y + 5, 22, 22)
+            box(scale, 179, y + 2, 28, 28)
                 .with_label("!")
                 .with_custom_background(afterhours::Color{242, 108, 105, 255})
                 .with_border(afterhours::Color{118, 62, 64, 255}, 2.f)
-                .with_corner_radius(11.f * scale)
+                .with_corner_radius(14.f * scale)
                 .with_font("FredokaMockBold", pixels(24.f * scale))
                 .with_custom_text_color(white)
                 .with_alignment(TextAlignment::Center)
