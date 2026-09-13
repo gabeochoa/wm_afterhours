@@ -3005,7 +3005,7 @@ This baseline shows launchers rather than open modal states. Sixteen proposals i
 
 ## rect algebra lab
 
-[Current baseline](../../screenshot-baselines/screens/rect_algebra_lab_720p.png) · [Visual review](../../design-audit.html#screen=rect_algebra_lab)
+[Reviewed image](../../docs/design-audit/originals/rect_algebra_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/rect_algebra_lab_720p.png) · [Visual review](../../design-audit.html#screen=rect_algebra_lab)
 
 Baseline SHA-256: `82930845574da68b09e7c22afcba18e6b82d6eb4b8844c20c1435ab0b88cb119`
 

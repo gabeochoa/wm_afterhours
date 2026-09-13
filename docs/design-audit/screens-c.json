@@ -918,7 +918,8 @@
         "change": "Label the 10 px left-panel and 20 px right-panel padding in the legend."
       }
     ],
-    "sha256": "82930845574da68b09e7c22afcba18e6b82d6eb4b8844c20c1435ab0b88cb119"
+    "sha256": "82930845574da68b09e7c22afcba18e6b82d6eb4b8844c20c1435ab0b88cb119",
+    "evidence": "docs/design-audit/originals/rect_algebra_lab_720p.png"
   },
   {
     "id": "rubber_bandits_menu",

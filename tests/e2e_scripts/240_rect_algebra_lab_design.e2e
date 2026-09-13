@@ -1,0 +1,47 @@
+goto_screen rect_algebra_lab
+resize 1280 720
+wait 0.3
+expect_text "Rectangle algebra"
+expect_text "Static geometry demonstration / cut, pad, expand and align"
+expect_text "Window tiling"
+expect_text "Cut header, pad body, center box"
+expect_text "Sidebar / cut_left 90 px"
+expect_text "Inspector / cut_right 110 px"
+expect_text "Status strip / cut_bottom 26 px"
+expect_text "Tabs / cut_top 24 px"
+expect_text "Outer pad 20 px; header cut 22 px"
+expect_text "Inner outline / pad(body, 6 px)"
+expect_text "Center box / 64 × 36 px"
+expect_text "Hit target / expand 12 px = 88 × 60 px"
+expect_text "align_top / bottom / left / right"
+expect_text "All operation values are screen px."
+assert_ui ral_root x=0 y=0 w=1280 h=720
+assert_ui ral_tiling x=32 y=190 w=596 h=280
+assert_ui ral_repro x=652 y=190 w=596 h=280
+assert_no_overflow
+assert_within_parents
+screenshot rect_algebra_design
+click_ui ral_guides
+wait 0.2
+expect_text "Center guides: off"
+screenshot rect_algebra_design_no_guides
+focus_ui ral_guides
+key ENTER
+wait 0.2
+expect_text "Center guides: on"
+resize 1920 1080
+wait 0.3
+assert_ui ral_tiling x=48 y=285 w=894 h=420
+assert_ui ral_repro x=978 y=285 w=894 h=420
+assert_no_overflow
+assert_within_parents
+screenshot rect_algebra_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ral_root x=0 y=96 w=1024 h=576
+assert_ui ral_tiling x=26 y=248 w=477 h=224
+assert_ui ral_repro x=522 y=248 w=477 h=224
+assert_no_overflow
+assert_within_parents
+screenshot rect_algebra_design_narrow
+resize 1280 720

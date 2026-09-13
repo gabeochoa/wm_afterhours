@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,658 completed; 877 remaining.
+1,678 completed; 857 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5956,64 +5956,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/rect_algebra_lab_720p.png) · [Visual review](design-audit.html#screen=rect_algebra_lab)
 
-- [ ] `rect_algebra_lab-01` · P2 · proposal. Left diagram heading: Label it Window tiling above the drawing.
+- [x] `rect_algebra_lab-01` · P2 · proposal. Left diagram heading: Label it Window tiling above the drawing.
   Evidence: The tiled rectangle has no local title.
 
-- [ ] `rect_algebra_lab-02` · P2 · proposal. Right diagram heading: Label it Cut header, pad body, center box.
+- [x] `rect_algebra_lab-02` · P2 · proposal. Right diagram heading: Label it Cut header, pad body, center box.
   Evidence: The orange box diagram has no local title.
 
-- [ ] `rect_algebra_lab-03` · P2 · proposal. Sidebar rectangle: Place Sidebar in an external callout tied to that rectangle.
+- [x] `rect_algebra_lab-03` · P2 · proposal. Sidebar rectangle: Place Sidebar in an external callout tied to that rectangle.
   Evidence: The tall narrow left pane has no identifier.
 
-- [ ] `rect_algebra_lab-04` · P2 · proposal. Main canvas: Add a Canvas label outside its measured geometry.
+- [x] `rect_algebra_lab-04` · P2 · proposal. Main canvas: Add a Canvas label outside its measured geometry.
   Evidence: The largest blue rectangle is unlabeled.
 
-- [ ] `rect_algebra_lab-05` · P2 · proposal. Inspector pane: Add an Inspector callout with its 110 px cut width.
+- [x] `rect_algebra_lab-05` · P2 · proposal. Inspector pane: Add an Inspector callout with its 110 px cut width.
   Evidence: The right narrow blue pane cannot be distinguished by purpose.
 
-- [ ] `rect_algebra_lab-06` · P2 · proposal. Bottom strip: Label it Status strip, cut_bottom 26 px.
+- [x] `rect_algebra_lab-06` · P2 · proposal. Bottom strip: Label it Status strip, cut_bottom 26 px.
   Evidence: The gray strip along the bottom has no description.
 
-- [ ] `rect_algebra_lab-07` · P2 · proposal. Top strip: Label it Tabs, cut_top 24 px.
+- [x] `rect_algebra_lab-07` · P2 · proposal. Top strip: Label it Tabs, cut_top 24 px.
   Evidence: The short gray strip above the canvas has no description.
 
-- [ ] `rect_algebra_lab-08` · P2 · proposal. Operation order: Add a numbered sequence in a small legend under the diagram.
+- [x] `rect_algebra_lab-08` · P2 · proposal. Operation order: Add a numbered sequence in a small legend under the diagram.
   Evidence: The left result shows no sequence for the nested cuts.
 
-- [ ] `rect_algebra_lab-09` · P2 · proposal. Right header strip: Add a callout for the 22 px header cut.
+- [x] `rect_algebra_lab-09` · P2 · proposal. Right header strip: Add a callout for the 22 px header cut.
   Evidence: The blue top strip has no stated height.
 
-- [ ] `rect_algebra_lab-10` · P2 · proposal. Inner outline: Annotate the inset distance outside the outline.
+- [x] `rect_algebra_lab-10` · P2 · proposal. Inner outline: Annotate the inset distance outside the outline.
   Evidence: The purple rectangle does not explain the 6 px inset.
 
-- [ ] `rect_algebra_lab-11` · P2 · proposal. Orange box: Label it 64 × 36 near the diagram.
+- [x] `rect_algebra_lab-11` · P2 · proposal. Orange box: Label it 64 × 36 near the diagram.
   Evidence: The centered orange box has no dimensions.
 
-- [ ] `rect_algebra_lab-12` · P2 · proposal. Orange outer outline: Label it expand 12 px hit target.
+- [x] `rect_algebra_lab-12` · P2 · proposal. Orange outer outline: Label it expand 12 px hit target.
   Evidence: The dim orange outline can read as a decorative border.
 
-- [ ] `rect_algebra_lab-13` · P2 · proposal. Top green tick: Add align_top to the legend with its green swatch.
+- [x] `rect_algebra_lab-13` · P2 · proposal. Top green tick: Add align_top to the legend with its green swatch.
   Evidence: The green marker is unnamed.
 
-- [ ] `rect_algebra_lab-14` · P2 · proposal. Edge marker system: Add a compact legend naming top, bottom, left and right alignment.
+- [x] `rect_algebra_lab-14` · P2 · proposal. Edge marker system: Add a compact legend naming top, bottom, left and right alignment.
   Evidence: Four green markers indicate alignment without named edges.
 
-- [ ] `rect_algebra_lab-15` · P3 · proposal. Diagram key: Provide one legend mapping each color to its operation.
+- [x] `rect_algebra_lab-15` · P3 · proposal. Diagram key: Provide one legend mapping each color to its operation.
   Evidence: Blue, purple, orange and green have no semantic key.
 
-- [ ] `rect_algebra_lab-16` · P2 · proposal. Center verification: Add faint optional center guides that intersect at the box center.
+- [x] `rect_algebra_lab-16` · P2 · proposal. Center verification: Add faint optional center guides that intersect at the box center.
   Evidence: The orange rectangle appears centered but has no reference axes.
 
-- [ ] `rect_algebra_lab-17` · P3 · proposal. Root title: Include expand in the title or subtitle.
+- [x] `rect_algebra_lab-17` · P3 · proposal. Root title: Include expand in the title or subtitle.
   Evidence: rect algebra: cut, pad, align omits expand despite showing it.
 
-- [ ] `rect_algebra_lab-18` · P3 · proposal. Unused lower area: Use that area for the operation legend and formulas.
+- [x] `rect_algebra_lab-18` · P3 · proposal. Unused lower area: Use that area for the operation legend and formulas.
   Evidence: A large dark strip remains below both diagrams.
 
-- [ ] `rect_algebra_lab-19` · P2 · proposal. Static demo framing: Add a Static geometry demonstration caption.
+- [x] `rect_algebra_lab-19` · P2 · proposal. Static demo framing: Add a Static geometry demonstration caption.
   Evidence: The diagram looks like an empty application shell.
 
-- [ ] `rect_algebra_lab-20` · P3 · proposal. Measured padding: Label the 10 px left-panel and 20 px right-panel padding in the legend.
+- [x] `rect_algebra_lab-20` · P3 · proposal. Measured padding: Label the 10 px left-panel and 20 px right-panel padding in the legend.
   Evidence: The outer and inner margins are visible but undocumented.
 
 ### rubber_bandits_menu
