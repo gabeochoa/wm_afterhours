@@ -83,7 +83,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(row1.ent(), i), ComponentConfig{}.with_size({percent(.30f), percent(.85f)})
             .with_label("Item " + std::to_string(i + 1)).with_alignment(TextAlignment::Center)
             .with_font("AtkinsonMock", pixels(23 * s)).with_custom_background(colors[i])
-            .with_custom_text_color({0, 0, 0, 255}).with_roundness(.08f).with_skip_grid_snap(true)
+            .with_custom_text_color({0, 0, 0, 255}).with_corner_radius(8.f * s).with_skip_grid_snap(true)
             .with_debug_name("box_" + std::to_string(i)));
       label(root.ent(), 13, "Content 1128px / child 338.4px / edge 18.8px / internal gap 37.6px.",
             0, 343, 1160, 26, 18);
@@ -106,7 +106,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
           div(context, mk(frame.ent(), k), ComponentConfig{}.with_size({pixels(30 * s), pixels(30 * s)})
               .with_label(std::to_string(k + 1)).with_font("AtkinsonMock", pixels(18 * s))
               .with_alignment(TextAlignment::Center).with_custom_text_color({0, 0, 0, 255})
-              .with_custom_background(teal).with_roundness(.15f).with_skip_grid_snap(true)
+              .with_custom_background(teal).with_corner_radius(8.f * s).with_skip_grid_snap(true)
               .with_debug_name("jc_box_" + std::to_string(j) + "_" + std::to_string(k)));
         div(context, mk(root.ent(), 40 + j), box(x, 509, 208, 140).with_ignore_pointer_events()
             .with_on_draw_fg([j, s, eid = frame.ent().id](RectangleType r) {
@@ -194,7 +194,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(cards.ent(), i), ComponentConfig{}.with_size({percent(.22f), percent(.85f)})
           .with_label(std::string(1, static_cast<char>('A' + i))).with_alignment(TextAlignment::Center)
           .with_font("AtkinsonMock", pixels(24 * s)).with_custom_background(card_colors[i])
-          .with_custom_text_color({0, 0, 0, 255}).with_roundness(.12f).with_skip_grid_snap(true)
+          .with_custom_text_color({0, 0, 0, 255}).with_corner_radius(8.f * s).with_skip_grid_snap(true)
           .with_debug_name("card_" + std::to_string(i)));
     // == Row 4: Dashboard cards spanning full width ==
     label(root.ent(), 90, "Six expanding cards", 0, 553, 1160, 31, 25, true);
@@ -206,7 +206,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
     const std::array<const char *, 6> values{"1,248", "$8,420", "326", "+12.4%", "842", "2.1%"};
     for (int i = 0; i < 6; ++i) {
       auto card = div(context, mk(dashboard.ent(), i), ComponentConfig{}.with_size({expand(), percent(1.f)})
-          .with_custom_background(dash_colors[i]).with_roundness(.10f).with_skip_grid_snap(true)
+          .with_custom_background(dash_colors[i]).with_corner_radius(8.f * s).with_skip_grid_snap(true)
           .with_debug_name("metric_" + std::to_string(i)));
       div(context, mk(card.ent(), 0), box(10, 5, 140, 22).with_label(names[i])
           .with_font("AtkinsonMock", pixels(17 * s)).with_alignment(TextAlignment::Left)
