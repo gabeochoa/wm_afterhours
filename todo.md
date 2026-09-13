@@ -38,7 +38,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] **UP-13:** Retire UI draw commands at each update so skipped renders do not accumulate stale submissions. Floatinghotel carries a queue-clearing system.
 - [ ] **UP-14:** Remove configuration-owned texture references when a reused widget becomes texture-free, without unloading resources shared by other widgets. Floatinghotel removes references before retiring image previews.
-- [ ] **UP-15:** Give virtual-list row heights, leading spacers and trailing extents consistent logical/physical units under Adaptive zoom. Floatinghotel currently normalizes generated children itself.
+- [x] **UP-15:** Give virtual-list row heights, leading spacers and trailing extents consistent logical/physical units under Adaptive zoom. Floatinghotel currently normalizes generated children itself.
 - [ ] **UP-16:** Replace the headless Metal render target only at a safe frame boundary. Hanabi defers resizes to avoid destroying active pass attachments.
 - [ ] **UP-17:** Detect incomplete fontstash measurements and keep them out of layout caches; define missing-glyph rendering and recovery. Hanabi's atlas guard is still needed despite the existing atlas-full warning.
 - [ ] **UP-18:** Inject and release actual Cmd/Super modifiers in E2E chords; define alias behavior without silently substituting Ctrl. Hanabi currently accepts Ctrl to make shortcuts testable.
@@ -97,7 +97,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [x] Expire UI actions each frame so stale Escape cannot dismiss a newly opened dialog; clear actions on screen reset and defer synthetic test input until the next frame. See docs/AFTERHOURS_GAPS.md.
 
-- [ ] Make virtual-list row stride consistent with grid snapping so the last row remains reachable; see docs/AFTERHOURS_GAPS.md.
+- [x] Make virtual-list row stride consistent with grid snapping so the last row remains reachable; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Decode e2e typed UTF-8 into Unicode codepoints before queuing input; see docs/AFTERHOURS_GAPS.md.
 

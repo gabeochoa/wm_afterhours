@@ -1670,3 +1670,20 @@ Verification for this audit:
 - Desktop Escape bypass was verified in the windowed loop code. Input, focus, dismissal, and resizing were exercised through the headless runtime; this does not claim a physical keyboard test on a desktop window.
 
 The combined Escape test initially suggested a short wait, but headless time steps are fixed. An isolated watcher test reproduced the stale press across dialog lifetimes. The fix changes press ownership; the test wait is unchanged.
+
+## September 13 consumer-gap fixes
+
+### UP-15: virtual-list zoom and row stride
+
+The list used physical scroll offsets to index logical row heights. Its generated
+children also lost component scaling overrides, while grid snapping changed row
+positions independently of the indexed stride. The fix resolves windowing metrics
+into physical pixels, keeps generated dimensions in the list’s logical units, and
+disables position snapping on those internal rows and spacers. Padding and gaps
+now contribute once to the content extent. Shrinking and empty lists clamp or
+clear stale scroll offsets.
+
+Validation: `virtual_list_test` passes 16,373 checks across 100%, 140%, and 200%
+zoom, uniform and variable heights, grid on/off, component/screen overrides,
+pixel/percent/screen-relative viewports, start/middle/end, and shrinking lists.
+The consumer no longer needs to scale row heights and then divide child heights.
