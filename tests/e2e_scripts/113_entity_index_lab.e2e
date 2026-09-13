@@ -1,18 +1,19 @@
 # add_index / whereIndexed over a parent link held in a component field.
 #
-# Asserts the two spellings agree before it asserts anything about cost: an
-# index that is fast and wrong is worse than the scan it replaced.
+# Asserts Scan and Indexed lookup return the same entity IDs before
+# checking the lookup-work comparison.
 
 goto_screen entity_index_lab
 wait 0.5
 
-# Both spellings find the same 24 ports.
-expect_text "Both spellings return 24"
-expect_text "and 24 by index"
+# Both queries find the same 24 port entities.
+expect_text "Results match: 24"
+expect_text "Handle resolves / same scale"
 
-# The graph is built once, not per frame. If build_graph ran every frame this
-# count would climb and the screen would say something else.
-expect_text "in a collection of 1030"
+# The collection includes app entities as well as the demo graph.
+expect_text "Live collection"
+expect_text "Demo + app entities"
+expect_text "24 ports across 6 devices"
 
 # The indexed lookup drives the port table, so the first device's ports are on
 # screen and named.

@@ -66,7 +66,7 @@
         "priority": "P3",
         "area": "Device count",
         "observation": "DEVICES does not state the number of listed devices.",
-        "change": "Label the section Devices · 6."
+        "change": "Label the section Devices \u00b7 6."
       },
       {
         "id": "09",
@@ -205,7 +205,8 @@
         "change": "Place the short instruction directly under DEVICES."
       }
     ],
-    "sha256": "5b64ec912ff78533d2eab5f8b937f66c47909529a1ed0bfd6b9f1bdb6b6f96b7"
+    "sha256": "5b64ec912ff78533d2eab5f8b937f66c47909529a1ed0bfd6b9f1bdb6b6f96b7",
+    "evidence": "docs/design-audit/originals/entity_index_lab_720p.png"
   },
   {
     "id": "example_borders",
@@ -2698,7 +2699,7 @@
         "priority": "P2",
         "area": "Sprite metadata",
         "observation": "The first row provides no source dimensions or scale.",
-        "change": "Add a compact 100 × 100 source metadata caption."
+        "change": "Add a compact 100 \u00d7 100 source metadata caption."
       },
       {
         "id": "11",
@@ -2874,7 +2875,7 @@
         "priority": "P2",
         "area": "Resolution formatting",
         "observation": "2560x1440 uses a cramped lowercase x.",
-        "change": "Use 2560 × 1440 with readable spacing."
+        "change": "Use 2560 \u00d7 1440 with readable spacing."
       },
       {
         "id": "07",
@@ -3225,7 +3226,7 @@
         "kind": "proposal",
         "priority": "P3",
         "area": "Header context",
-        "observation": "Grand Prix · Mushroom Cup is smaller and distant from the screen title.",
+        "observation": "Grand Prix \u00b7 Mushroom Cup is smaller and distant from the screen title.",
         "change": "Group race context under the title or closer to the player indicator."
       },
       {
@@ -3458,7 +3459,7 @@
         "priority": "P2",
         "area": "Language selectors",
         "observation": "EN, KO, and JA show ISO codes without native names.",
-        "change": "Add English, 한국어, and 日本語 in a wider selector group."
+        "change": "Add English, \ud55c\uad6d\uc5b4, and \u65e5\u672c\u8a9e in a wider selector group."
       },
       {
         "id": "02",
@@ -3594,7 +3595,7 @@
         "priority": "P2",
         "area": "Footer instructions",
         "observation": "Press 1/2/3 to switch languages repeats the key labels without mapping them.",
-        "change": "Show 1 English · 2 Korean · 3 Japanese in the footer."
+        "change": "Show 1 English \u00b7 2 Korean \u00b7 3 Japanese in the footer."
       },
       {
         "id": "19",
@@ -3634,7 +3635,7 @@
         "priority": "P2",
         "area": "Top sample",
         "observation": "Left, Center, and Right panels have no local section heading.",
-        "change": "Label the top frame Row · centered children."
+        "change": "Label the top frame Row \u00b7 centered children."
       },
       {
         "id": "03",
@@ -3642,7 +3643,7 @@
         "priority": "P2",
         "area": "Lower sample",
         "observation": "Stacked Item 1 through 3 have no local section heading.",
-        "change": "Label the lower frame Column · stacked children."
+        "change": "Label the lower frame Column \u00b7 stacked children."
       },
       {
         "id": "04",
@@ -3793,7 +3794,7 @@
         "kind": "proposal",
         "priority": "P2",
         "area": "Number sequence",
-        "observation": "Cases 1–5 run down the left and 6–7 start again at the top right.",
+        "observation": "Cases 1\u20135 run down the left and 6\u20137 start again at the top right.",
         "change": "Add clear column labels or a numbered index to establish reading order."
       },
       {
@@ -3810,7 +3811,7 @@
         "priority": "P3",
         "area": "Percent sample",
         "observation": "Red and cyan overlap by design but their dimensions are not shown.",
-        "change": "Add parent 300 × 80 and child 100% dimension captions."
+        "change": "Add parent 300 \u00d7 80 and child 100% dimension captions."
       },
       {
         "id": "08",
@@ -3874,7 +3875,7 @@
         "priority": "P2",
         "area": "Z-order question",
         "observation": "BLUE mk(2000) ON TOP? reads as unresolved despite the status badge.",
-        "change": "Use a neutral Blue entity · created second label outside the overlap."
+        "change": "Use a neutral Blue entity \u00b7 created second label outside the overlap."
       },
       {
         "id": "16",
@@ -4449,7 +4450,7 @@
         "kind": "proposal",
         "priority": "P2",
         "area": "Pagination",
-        "observation": "Page numbers 1–4 are tiny and close to the bottom edge.",
+        "observation": "Page numbers 1\u20134 are tiny and close to the bottom edge.",
         "change": "Increase page-control size and bottom padding."
       },
       {
@@ -4514,7 +4515,7 @@
         "priority": "P2",
         "area": "Open-state status",
         "observation": "The status still says click a menu while Bottom is already open.",
-        "change": "Show Bottom menu open · placed above anchor in the baseline state."
+        "change": "Show Bottom menu open \u00b7 placed above anchor in the baseline state."
       },
       {
         "id": "07",
@@ -4714,7 +4715,7 @@
         "priority": "P3",
         "area": "Animation timing",
         "observation": "The screenshot does not describe the animation cycle.",
-        "change": "Add a small 0–100% looping caption with duration."
+        "change": "Add a small 0\u2013100% looping caption with duration."
       },
       {
         "id": "13",
@@ -4842,7 +4843,7 @@
         "priority": "P2",
         "area": "Timer",
         "observation": "The 000 display has no time unit or label.",
-        "change": "Add Time · seconds beneath or above the timer."
+        "change": "Add Time \u00b7 seconds beneath or above the timer."
       },
       {
         "id": "03",
@@ -4866,7 +4867,7 @@
         "priority": "P2",
         "area": "Difficulty identity",
         "observation": "The 16-by-16 board is visible but the difficulty is unnamed.",
-        "change": "Show Intermediate · 16 × 16 in the game status area."
+        "change": "Show Intermediate \u00b7 16 \u00d7 16 in the game status area."
       },
       {
         "id": "06",
@@ -5154,7 +5155,7 @@
         "priority": "P2",
         "area": "Sensitivity value meaning",
         "observation": "Default gives no measurable or relative value.",
-        "change": "Show Default · 1.0× or another meaningful scale if supported."
+        "change": "Show Default \u00b7 1.0\u00d7 or another meaningful scale if supported."
       },
       {
         "id": "16",
@@ -5490,7 +5491,7 @@
         "priority": "P2",
         "area": "Fixed-font sample",
         "observation": "font_size 18 mixes API syntax with human-facing metadata.",
-        "change": "Show Fixed font size · 18 px."
+        "change": "Show Fixed font size \u00b7 18 px."
       },
       {
         "id": "06",
@@ -5506,7 +5507,7 @@
         "priority": "P2",
         "area": "Fixed-wrap dimensions",
         "observation": "280x110 uses cramped dimension formatting.",
-        "change": "Show Width 280 px · Height 110 px in the caption."
+        "change": "Show Width 280 px \u00b7 Height 110 px in the caption."
       },
       {
         "id": "08",
@@ -5585,7 +5586,7 @@
         "kind": "proposal",
         "priority": "P2",
         "area": "Dynamic dimensions",
-        "observation": "300 × 120 appears in parentheses inside the instruction.",
+        "observation": "300 \u00d7 120 appears in parentheses inside the instruction.",
         "change": "Show Width and Height as separate live value badges."
       },
       {
@@ -6057,7 +6058,7 @@
         "kind": "proposal",
         "priority": "P2",
         "area": "Border-only grouping",
-        "observation": "Border A–C have dark centers while Trans A–B have white backing.",
+        "observation": "Border A\u2013C have dark centers while Trans A\u2013B have white backing.",
         "change": "Separate the transparency modes with subgroup captions."
       },
       {
@@ -6090,7 +6091,7 @@
         "priority": "P2",
         "area": "Size metadata",
         "observation": "Small, Medium, and Large have no dimensions.",
-        "change": "Add width × height captions."
+        "change": "Add width \u00d7 height captions."
       },
       {
         "id": "12",
@@ -6794,7 +6795,7 @@
   {
     "id": "pinch_zoom_lab",
     "baseline": "screenshot-baselines/screens/pinch_zoom_lab_720p.png",
-    "summary": "The resting square demonstrates 1.00× scale with zero events. Fifteen proposals improve gesture instructions and diagnostic clarity; no unsupported-gesture or input failure is inferred.",
+    "summary": "The resting square demonstrates 1.00\u00d7 scale with zero events. Fifteen proposals improve gesture instructions and diagnostic clarity; no unsupported-gesture or input failure is inferred.",
     "findings": [
       {
         "id": "01",
@@ -6826,7 +6827,7 @@
         "priority": "P2",
         "area": "Scale formatting",
         "observation": "1.00x uses a lowercase x.",
-        "change": "Use 1.00× consistently for magnification."
+        "change": "Use 1.00\u00d7 consistently for magnification."
       },
       {
         "id": "05",
@@ -6842,7 +6843,7 @@
         "priority": "P3",
         "area": "Reference size",
         "observation": "The square has no fixed-size comparison reference.",
-        "change": "Add a faint 1.00× outline behind the scaling sample."
+        "change": "Add a faint 1.00\u00d7 outline behind the scaling sample."
       },
       {
         "id": "07",
@@ -6898,7 +6899,7 @@
         "priority": "P3",
         "area": "Reset reference",
         "observation": "No visible action restores the square to the reference scale.",
-        "change": "Add Reset to 1.00× near the scale readout."
+        "change": "Add Reset to 1.00\u00d7 near the scale readout."
       },
       {
         "id": "14",

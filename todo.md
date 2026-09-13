@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-731 completed; 1,804 remaining.
+756 completed; 1,779 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2854,79 +2854,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/entity_index_lab_720p.png) · [Visual review](design-audit.html#screen=entity_index_lab)
 
-- [ ] `entity_index_lab-01` · P2 · proposal. Patch Bay title: Add a small Secondary index demo subtitle beside Patch Bay.
+- [x] `entity_index_lab-01` · P2 · proposal. Patch Bay title: Add a small Secondary index demo subtitle beside Patch Bay.
   Evidence: The title names an audio tool but not the indexing demonstration.
 
-- [ ] `entity_index_lab-02` · P2 · proposal. Introductory sentence: Break the instruction and implementation explanation into separate lines.
+- [x] `entity_index_lab-02` · P2 · proposal. Introductory sentence: Break the instruction and implementation explanation into separate lines.
   Evidence: The single sentence stretches across most of the screen in small spaced lettering.
 
-- [ ] `entity_index_lab-03` · P2 · proposal. Metric footer: Present Scan 6,228 and Index 24 as adjacent labeled counters.
+- [x] `entity_index_lab-03` · P2 · proposal. Metric footer: Present Scan 6,228 and Index 24 as adjacent labeled counters.
   Evidence: The green sentence places 6228 and 24 inside prose.
 
-- [ ] `entity_index_lab-04` · P2 · proposal. Collection size: Give collection size its own neutral counter beside the comparison.
+- [x] `entity_index_lab-04` · P2 · proposal. Collection size: Give collection size its own neutral counter beside the comparison.
   Evidence: The collection size 1030 sits at the end of the metric sentence.
 
-- [ ] `entity_index_lab-05` · P2 · proposal. Equality statement: Place a Results match: 24 indicator with the counters.
+- [x] `entity_index_lab-05` · P2 · proposal. Equality statement: Place a Results match: 24 indicator with the counters.
   Evidence: The result-equivalence statement is detached below the performance line.
 
-- [ ] `entity_index_lab-06` · P3 · proposal. Footer explanation: Name Scan and Indexed lookup explicitly in the explanation.
+- [x] `entity_index_lab-06` · P3 · proposal. Footer explanation: Name Scan and Indexed lookup explicitly in the explanation.
   Evidence: Both spellings return 24 requires knowledge of two code expressions.
 
-- [ ] `entity_index_lab-07` · P2 · proposal. Mixer A card: Add a selected marker at the leading edge of Mixer A.
+- [x] `entity_index_lab-07` · P2 · proposal. Mixer A card: Add a selected marker at the leading edge of Mixer A.
   Evidence: The selected device is communicated only through its blue fill.
 
-- [ ] `entity_index_lab-08` · P3 · proposal. Device count: Label the section Devices · 6.
+- [x] `entity_index_lab-08` · P3 · proposal. Device count: Label the section Devices · 6.
   Evidence: DEVICES does not state the number of listed devices.
 
-- [ ] `entity_index_lab-09` · P2 · proposal. Port table title: Increase the table title and pair it with a 4 ports summary.
+- [x] `entity_index_lab-09` · P2 · proposal. Port table title: Increase the table title and pair it with a 4 ports summary.
   Evidence: Mixer A has the same small type scale as device names.
 
-- [ ] `entity_index_lab-10` · P3 · proposal. Port slot header: Label the column Slot index to explain zero-based numbering.
+- [x] `entity_index_lab-10` · P3 · proposal. Port slot header: Label the column Slot index to explain zero-based numbering.
   Evidence: SLOT numbers start at 0 with no explanation.
 
-- [ ] `entity_index_lab-11` · P2 · proposal. Slot column: Align the heading and all slot numbers to one inset.
+- [x] `entity_index_lab-11` · P2 · proposal. Slot column: Align the heading and all slot numbers to one inset.
   Evidence: The SLOT heading begins left of the numeric cell alignment.
 
-- [ ] `entity_index_lab-12` · P2 · proposal. Port column: Align the PORT heading with the port-name cells.
+- [x] `entity_index_lab-12` · P2 · proposal. Port column: Align the PORT heading with the port-name cells.
   Evidence: PORT starts noticeably left of Input L and Input R.
 
-- [ ] `entity_index_lab-13` · P2 · proposal. State column: Align the STATE heading with its cell labels.
+- [x] `entity_index_lab-13` · P2 · proposal. State column: Align the STATE heading with its cell labels.
   Evidence: STATE starts left of connected and idle.
 
-- [ ] `entity_index_lab-14` · P2 · proposal. Status encoding: Add a filled status dot for connected and an outlined dot for idle.
+- [x] `entity_index_lab-14` · P2 · proposal. Status encoding: Add a filled status dot for connected and an outlined dot for idle.
   Evidence: Connected is green while idle is muted italic text.
 
-- [ ] `entity_index_lab-15` · P3 · proposal. Device names: Use a secondary device-type label to distinguish names from categories.
+- [x] `entity_index_lab-15` · P3 · proposal. Device names: Use a secondary device-type label to distinguish names from categories.
   Evidence: Mixer A and Preamp 1 mix letter and number identifiers without explanation.
 
-- [ ] `entity_index_lab-16` · P2 · proposal. Device badges: Use a compact count badge with brighter text at the same trailing inset.
+- [x] `entity_index_lab-16` · P2 · proposal. Device badges: Use a compact count badge with brighter text at the same trailing inset.
   Evidence: Each 4 ports count is pale blue and distant from the device name.
 
-- [ ] `entity_index_lab-17` · P3 · proposal. List panel: Reduce its height or add a compact total of 24 ports there.
+- [x] `entity_index_lab-17` · P3 · proposal. List panel: Reduce its height or add a compact total of 24 ports there.
   Evidence: The device list has about 100 pixels of empty space below Monitor.
 
-- [ ] `entity_index_lab-18` · P2 · proposal. Detail panel: Fit the table panel to its content and bring comparison counters upward.
+- [x] `entity_index_lab-18` · P2 · proposal. Detail panel: Fit the table panel to its content and bring comparison counters upward.
   Evidence: Four short table rows occupy less than half the tall panel.
 
-- [ ] `entity_index_lab-19` · P3 · proposal. Panel spacing: Use a consistent 24-pixel inter-panel gap.
+- [x] `entity_index_lab-19` · P3 · proposal. Panel spacing: Use a consistent 24-pixel inter-panel gap.
   Evidence: The gap between device and detail panels is wider than either panel's internal padding.
 
-- [ ] `entity_index_lab-20` · P2 · proposal. Metric hierarchy: Move the scan/index comparison directly under the table.
+- [x] `entity_index_lab-20` · P2 · proposal. Metric hierarchy: Move the scan/index comparison directly under the table.
   Evidence: The main learning result is near the bottom, below a large empty panel region.
 
-- [ ] `entity_index_lab-21` · P3 · proposal. Port relationship: Add a small Selected device label or connector between Mixer A and its table.
+- [x] `entity_index_lab-21` · P3 · proposal. Port relationship: Add a small Selected device label or connector between Mixer A and its table.
   Evidence: Device and port panels have no shared visual connector.
 
-- [ ] `entity_index_lab-22` · P2 · proposal. Technical typography: Use a readable tabular face for slot indices and measurements.
+- [x] `entity_index_lab-22` · P2 · proposal. Technical typography: Use a readable tabular face for slot indices and measurements.
   Evidence: The numeric counters and device slots use the same handwritten face as titles.
 
-- [ ] `entity_index_lab-23` · P3 · proposal. Send row: Give idle status a small neutral badge while retaining the same row geometry.
+- [x] `entity_index_lab-23` · P3 · proposal. Send row: Give idle status a small neutral badge while retaining the same row geometry.
   Evidence: Send is the only idle port but looks otherwise identical to connected rows.
 
-- [ ] `entity_index_lab-24` · P3 · proposal. Comparison scale: Add proportionate scan and index bars under their counters.
+- [x] `entity_index_lab-24` · P3 · proposal. Comparison scale: Add proportionate scan and index bars under their counters.
   Evidence: The footer states vastly different work counts without a visual scale.
 
-- [ ] `entity_index_lab-25` · P3 · proposal. Selection instruction: Place the short instruction directly under DEVICES.
+- [x] `entity_index_lab-25` · P3 · proposal. Selection instruction: Place the short instruction directly under DEVICES.
   Evidence: Pick a device appears only in the page-wide sentence.
 
 ### example_borders

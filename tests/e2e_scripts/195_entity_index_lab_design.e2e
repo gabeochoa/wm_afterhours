@@ -1,0 +1,88 @@
+goto_screen entity_index_lab
+resize 1280 720
+wait 0.5
+expect_text "Patch Bay"
+expect_text "Secondary index demo"
+expect_text "Devices / 6"
+expect_text "Select a device to inspect its ports."
+expect_text "24 ports across 6 devices"
+expect_text "Selected device"
+expect_text "Mixer A"
+expect_text "Mixing console"
+expect_text "Microphone preamp"
+expect_text "4 ports"
+expect_text "Slot index"
+expect_text "Slot indices start at 0. Port states are illustrative."
+expect_text "Input L"
+expect_text "Input R"
+expect_text "Send"
+expect_text "Return"
+expect_text "connected"
+expect_text "idle"
+expect_text "Lookup work / 6 device queries / not elapsed time"
+expect_text "Scan"
+expect_text "Indexed lookup"
+expect_text "Live collection"
+expect_text "Entity checks / linear scale"
+expect_text "Handle resolves / same scale"
+expect_text "Demo + app entities"
+expect_text "Results match: 24"
+expect_text "Scan and indexed lookup return the same port entity IDs."
+expect_text "Lookup counts exclude index rebuild cost and other queries on this screen."
+assert_ui ei_listpanel x=48 y=120 w=344 h=510
+assert_ui ei_detailpanel x=416 y=120 w=816 h=334
+assert_ui ei_dev_0 x=64 y=211 w=312 h=52
+assert_ui ei_selected_marker x=64 y=218 w=4 h=38
+assert_ui ei_devcount_0 x=306 y=223 w=60 h=28
+assert_ui ei_col_0 x=448
+assert_ui ei_slot_0 x=448
+assert_ui ei_col_1 x=626
+assert_ui ei_pname_0 x=626
+assert_ui ei_col_2 x=974
+assert_ui ei_pstate_0 x=974
+assert_ui ei_idle_dot w=10 h=10
+assert_ui ei_metrics_panel x=416 y=478 w=816 h=152
+assert_ui ei_scan_bar w=234 h=7
+assert_ui ei_index_bar_track w=234 h=7
+assert_no_overflow
+assert_within_parents
+screenshot entity_index_lab_design
+click_ui ei_dev_2
+wait 0.3
+expect_text "Tape Deck"
+expect_text "Results match: 24"
+assert_ui ei_selected_marker y=338
+focus_ui ei_dev_3
+key ENTER
+wait 0.3
+expect_text "Reverb 2"
+assert_ui ei_selected_marker y=398
+expect_text "Results match: 24"
+click_ui ei_dev_5
+wait 0.3
+assert_ui ei_selected_marker y=518
+expect_text "Monitor"
+expect_text "24 ports across 6 devices"
+expect_text "Results match: 24"
+resize 1920 1080
+wait 0.3
+assert_ui ei_listpanel x=72 y=180 w=516 h=765
+assert_ui ei_detailpanel x=624 y=180 w=1224 h=501
+assert_ui ei_metrics_panel x=624 y=717 w=1224 h=228
+assert_ui ei_scan_bar w=351
+assert_no_overflow
+assert_within_parents
+screenshot entity_index_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ei_canvas w=1024 h=768
+assert_ui ei_listpanel x=38 y=192 w=275 h=408
+assert_ui ei_detailpanel x=333 y=192 w=653 h=267
+assert_ui ei_metrics_panel x=333 y=478 w=653 h=122
+assert_no_overflow
+assert_within_parents
+screenshot entity_index_lab_design_narrow
+click_ui ei_dev_0
+wait 0.2
+expect_text "Results match: 24"
+resize 1280 720

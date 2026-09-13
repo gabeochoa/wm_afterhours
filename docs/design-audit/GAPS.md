@@ -1492,7 +1492,7 @@ The dashboard follows the Dream Incorporated mock. Proposals improve metric sema
 
 ## entity index lab
 
-[Current baseline](../../screenshot-baselines/screens/entity_index_lab_720p.png) · [Visual review](../../design-audit.html#screen=entity_index_lab)
+[Reviewed image](../../docs/design-audit/originals/entity_index_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/entity_index_lab_720p.png) · [Visual review](../../design-audit.html#screen=entity_index_lab)
 
 Baseline SHA-256: `5b64ec912ff78533d2eab5f8b937f66c47909529a1ed0bfd6b9f1bdb6b6f96b7`
 
