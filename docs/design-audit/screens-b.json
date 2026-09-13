@@ -5806,7 +5806,8 @@
         "change": "Use a clearer value face while retaining informal headings."
       }
     ],
-    "sha256": "42d980e0283b6ee8e8fbe4d519f0bab26f163015c0ad04c7aaf2614b570d6de1"
+    "sha256": "42d980e0283b6ee8e8fbe4d519f0bab26f163015c0ad04c7aaf2614b570d6de1",
+    "evidence": "docs/design-audit/originals/navigation_bar_demo_720p.png"
   },
   {
     "id": "neon_strike",

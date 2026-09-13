@@ -1,0 +1,49 @@
+goto_screen navigation_bar_demo
+resize 1280 720
+wait 0.4
+expect_text "Cycle selectors"
+expect_text "Selected category: Graphics"
+expect_text "2 of 3 / Wraps"
+expect_text "Quick rounds with a score to beat."
+expect_text "Level 1 of 6"
+expect_text "Sample level: Harbour approach"
+assert_ui navbar_bg x=200 y=42 w=880 h=636
+assert_ui navbar_category_0 w=60
+assert_ui navbar_category_1 w=640
+assert_ui navbar_category_2 w=60
+assert_within_parents
+screenshot navigation_bar_design
+click_ui navbar_category_0
+wait 0.2
+expect_text "Selected category: Gameplay"
+expect_text "4 of 4 / Wraps"
+focus_ui navbar_category_2
+key ENTER
+wait 0.2
+expect_text "Selected category: Graphics"
+click_ui navbar_mode_2
+wait 0.2
+expect_text "Play together with other players."
+click_ui navbar_mode_2
+wait 0.2
+expect_text "Follow a sequence of story chapters."
+click_ui navbar_level_0
+wait 0.2
+expect_text "Level 6 of 6"
+expect_text "Sample level: Summit finish"
+click_ui navbar_level_2
+wait 0.2
+expect_text "Level 1 of 6"
+expect_text "Selected category: Graphics"
+expect_text "Follow a sequence of story chapters."
+resize 1920 1080
+wait 0.3
+assert_ui navbar_bg x=300 y=63 w=1320 h=954
+assert_within_parents
+screenshot navigation_bar_design_1080
+resize 1024 768
+wait 0.3
+assert_ui navbar_bg x=160 y=130 w=704 h=509
+assert_within_parents
+screenshot navigation_bar_design_narrow
+resize 1280 720

@@ -205,8 +205,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes first left-arrow focus outline. The three blue selector bars and large surrounding margins are unchanged. Current review applies to visible selector composition.",
-    "sha256": "1453db0dbcfc353e5062ef66bfd6e1f12798929d1bbf2bca6c8353b45c3e1b47",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "f42960e5d3eb887017e23702add98362311666901e0bac37c35334a6a65831fe",
     "additional_findings": []
   },
   {

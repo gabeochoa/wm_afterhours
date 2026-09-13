@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,251 completed; 1,284 remaining.
+1,267 completed; 1,268 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5020,52 +5020,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/navigation_bar_demo_720p.png) · [Visual review](design-audit.html#screen=navigation_bar_demo)
 
-- [ ] `navigation_bar_demo-01` · P2 · proposal. Title: Use Cycle selectors with the component name in a subtitle.
+- [x] `navigation_bar_demo-01` · P2 · proposal. Title: Use Cycle selectors with the component name in a subtitle.
   Evidence: Navigation Bar Component Showcase is a long technical heading.
 
-- [ ] `navigation_bar_demo-02` · P2 · proposal. Settings category count: Add a current-position value such as 1 of N.
+- [x] `navigation_bar_demo-02` · P2 · proposal. Settings category count: Add a current-position value such as 1 of N.
   Evidence: Graphics appears without the total number of categories.
 
-- [ ] `navigation_bar_demo-03` · P2 · proposal. Game mode count: Add an option count or short adjacent option preview.
+- [x] `navigation_bar_demo-03` · P2 · proposal. Game mode count: Add an option count or short adjacent option preview.
   Evidence: Arcade gives no clue to the other available modes.
 
-- [ ] `navigation_bar_demo-04` · P2 · proposal. Level position: Show Level 1 of 6 inside the selector.
+- [x] `navigation_bar_demo-04` · P2 · proposal. Level position: Show Level 1 of 6 inside the selector.
   Evidence: The caption says 6 options while the bar says Level 1.
 
-- [ ] `navigation_bar_demo-05` · P2 · proposal. Arrow grouping: Use bounded arrow buttons around a more compact value field.
+- [x] `navigation_bar_demo-05` · P2 · proposal. Arrow grouping: Use bounded arrow buttons around a more compact value field.
   Evidence: Chevrons sit far from their centered values.
 
-- [ ] `navigation_bar_demo-06` · P2 · proposal. Arrow affordance: Add subtle separators around the arrow buttons.
+- [x] `navigation_bar_demo-06` · P2 · proposal. Arrow affordance: Add subtle separators around the arrow buttons.
   Evidence: Chevrons share the same blue surface as the value.
 
-- [ ] `navigation_bar_demo-07` · P2 · proposal. Section labels: Increase label contrast and use consistent naming.
+- [x] `navigation_bar_demo-07` · P2 · proposal. Section labels: Increase label contrast and use consistent naming.
   Evidence: Settings Categories and Game Mode Selector are small and muted.
 
-- [ ] `navigation_bar_demo-08` · P3 · proposal. Graphics context: Add a Selected category: Graphics result line.
+- [x] `navigation_bar_demo-08` · P3 · proposal. Graphics context: Add a Selected category: Graphics result line.
   Evidence: No selected-category result appears below Graphics.
 
-- [ ] `navigation_bar_demo-09` · P3 · proposal. Arcade meaning: Add a short description below the selector.
+- [x] `navigation_bar_demo-09` · P3 · proposal. Arcade meaning: Add a short description below the selector.
   Evidence: The mode name has no description.
 
-- [ ] `navigation_bar_demo-10` · P3 · proposal. Level identity: Add a sample level name or thumbnail.
+- [x] `navigation_bar_demo-10` · P3 · proposal. Level identity: Add a sample level name or thumbnail.
   Evidence: Level 1 is generic despite the wide bar.
 
-- [ ] `navigation_bar_demo-11` · P2 · proposal. Instruction: Add Use the arrows to cycle through each example.
+- [x] `navigation_bar_demo-11` · P2 · proposal. Instruction: Add Use the arrows to cycle through each example.
   Evidence: No visible text explains the selectors.
 
-- [ ] `navigation_bar_demo-12` · P3 · proposal. Boundary behavior: Add Wraps or Stops at ends matching the configuration.
+- [x] `navigation_bar_demo-12` · P3 · proposal. Boundary behavior: Add Wraps or Stops at ends matching the configuration.
   Evidence: The screenshot does not state whether options wrap.
 
-- [ ] `navigation_bar_demo-13` · P2 · proposal. Control widths: Reduce their widths for easier visual association.
+- [x] `navigation_bar_demo-13` · P2 · proposal. Control widths: Reduce their widths for easier visual association.
   Evidence: Wide bars contain only a short value and chevrons.
 
-- [ ] `navigation_bar_demo-14` · P3 · proposal. Top empty area: Move the group upward or center the whole group vertically.
+- [x] `navigation_bar_demo-14` · P3 · proposal. Top empty area: Move the group upward or center the whole group vertically.
   Evidence: A large blank navy area precedes the title.
 
-- [ ] `navigation_bar_demo-15` · P3 · proposal. Right empty area: Center them with equal side margins.
+- [x] `navigation_bar_demo-15` · P3 · proposal. Right empty area: Center them with equal side margins.
   Evidence: The controls are left-shifted inside the panel.
 
-- [ ] `navigation_bar_demo-16` · P3 · proposal. Value typography: Use a clearer value face while retaining informal headings.
+- [x] `navigation_bar_demo-16` · P3 · proposal. Value typography: Use a clearer value face while retaining informal headings.
   Evidence: Graphics, Arcade, and Level 1 use handwritten text.
 
 ### neon_strike

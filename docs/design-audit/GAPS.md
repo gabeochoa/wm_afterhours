@@ -2553,7 +2553,7 @@ The blocks intentionally compare hard breaks, wrapping, styled runs, preserved b
 
 ## navigation bar demo
 
-[Current baseline](../../screenshot-baselines/screens/navigation_bar_demo_720p.png) · [Visual review](../../design-audit.html#screen=navigation_bar_demo)
+[Reviewed image](../../docs/design-audit/originals/navigation_bar_demo_720p.png) · [Current baseline](../../screenshot-baselines/screens/navigation_bar_demo_720p.png) · [Visual review](../../design-audit.html#screen=navigation_bar_demo)
 
 Baseline SHA-256: `42d980e0283b6ee8e8fbe4d519f0bab26f163015c0ad04c7aaf2614b570d6de1`
 
@@ -2582,7 +2582,7 @@ Three legible cycle selectors are under-explained. Sixteen distinct proposals ar
 
 [Image](../../baseline_screenshots/navigation_bar_demo.png)
 
-Current capture removes first left-arrow focus outline. The three blue selector bars and large surrounding margins are unchanged. Current review applies to visible selector composition.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## neon strike
 
