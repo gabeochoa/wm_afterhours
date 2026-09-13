@@ -39,7 +39,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 - [x] **UP-13:** Retire UI draw commands at each update so skipped renders do not accumulate stale submissions. Floatinghotel carries a queue-clearing system.
 - [x] **UP-14:** Remove configuration-owned texture references when a reused widget becomes texture-free, without unloading resources shared by other widgets. Floatinghotel removes references before retiring image previews.
 - [x] **UP-15:** Give virtual-list row heights, leading spacers and trailing extents consistent logical/physical units under Adaptive zoom. Floatinghotel currently normalizes generated children itself.
-- [ ] **UP-16:** Replace the headless Metal render target only at a safe frame boundary. Hanabi defers resizes to avoid destroying active pass attachments.
+- [x] **UP-16:** Replace the headless Metal render target only at a safe frame boundary. Hanabi defers resizes to avoid destroying active pass attachments.
 - [ ] **UP-17:** Detect incomplete fontstash measurements and keep them out of layout caches; define missing-glyph rendering and recovery. Hanabi's atlas guard is still needed despite the existing atlas-full warning.
 - [ ] **UP-18:** Inject and release actual Cmd/Super modifiers in E2E chords; define alias behavior without silently substituting Ctrl. Hanabi currently accepts Ctrl to make shortcuts testable.
 - [ ] **UP-19:** Parse quoted E2E property values, escaped quotes and backslashes consistently. Floatinghotel cannot assert its multiword file-header property through the generic parser.

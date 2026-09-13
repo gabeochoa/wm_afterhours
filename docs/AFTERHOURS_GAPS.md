@@ -1718,3 +1718,19 @@ Validation: `ui_texture_lifecycle_test` passes 13 checks for the same widget ID
 transitioning image → text → replacement image, a second widget sharing the old
 texture, and manually attached texture preservation. Floatinghotel’s explicit
 resource-retirement code remains untouched.
+
+### UP-16: headless Metal resize
+
+`set_window_size` queues the latest valid headless dimensions. The next frame
+applies them before opening its pass, allocating a replacement before retiring
+the old target and preserving HiDPI scale. Requested dimensions do not become
+reported dimensions until applied. A request for the current size cancels a pending
+resize. Invalid or oversized requests leave the last valid request intact.
+
+Previously the setter assumed no render pass was active, immediately destroyed
+its attachments, and allocated logical dimensions without the render scale.
+Validation: real Metal `sokol_resize_test` passes 1,356 checks separately at 1×,
+2× and 3×, including framebuffer colors/dimensions, active-pass preservation,
+coalescing, cancellation, auxiliary targets, and 64 repeated resizes. Hanabi was
+not modified. Malformed initial graphics Config validation remains a separate
+initialization concern; this change validates resize requests.
