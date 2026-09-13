@@ -3463,7 +3463,7 @@ The sports settings preserve the mint accent and blurred scene, but unusual valu
 
 ## stepper showcase
 
-[Current baseline](../../screenshot-baselines/screens/stepper_showcase_720p.png) · [Visual review](../../design-audit.html#screen=stepper_showcase)
+[Reviewed image](../../docs/design-audit/originals/stepper_showcase_720p.png) · [Current baseline](../../screenshot-baselines/screens/stepper_showcase_720p.png) · [Visual review](../../design-audit.html#screen=stepper_showcase)
 
 Baseline SHA-256: `a86885f7ca278450b8e862de3b2f8b4bc1f0e5da5522374987de6dc823856aa0`
 

@@ -1,0 +1,86 @@
+goto_screen stepper_showcase
+resize 1280 720
+wait 0.4
+expect_text "Stepper Showcase"
+expect_text "Stepper Variants"
+expect_text "Card Selector"
+expect_text "2560 × 1440"
+expect_text "60 FPS"
+expect_text "Warrior accent / #AA4B41"
+expect_text "Heavy armor, melee attacks, high defense."
+assert_ui root x=0 y=0 w=1280 h=720
+assert_ui step_resolution w=342 h=45
+assert_ui step_resolution_next w=44 h=44
+assert_ui step_class w=512 h=53
+expect_text "3 / 4  |  Default"
+expect_text "1 / 5  |  Default"
+assert_within_parents
+screenshot stepper_design
+click_ui step_resolution_next
+wait 0.2
+expect_text "3840 × 2160"
+expect_text "4 / 4  |  Changed"
+focus_element step_resolution_next
+key ENTER
+wait 0.2
+expect_text "1280 × 720"
+expect_text "1 / 4  |  Changed"
+click_ui step_resolution_previous
+wait 0.2
+expect_text "3840 × 2160"
+click_ui step_quality_previous
+wait 0.2
+expect_text "Low"
+click_ui step_quality_previous
+wait 0.2
+expect_text "Ultra"
+click_ui step_language_previous
+wait 0.2
+expect_text "Japanese"
+click_ui step_difficulty_next
+wait 0.2
+expect_text "Hard"
+click_ui step_framerate_next
+wait 0.2
+expect_text "120 FPS"
+click_ui step_class_next
+wait 0.2
+expect_text "Mage"
+expect_text "Mage accent / #3C50B4"
+expect_text "Ranged spells, low defense, high damage."
+focus_element step_class_next
+key ENTER
+wait 0.2
+expect_text "Rogue"
+expect_text "Fast attacks, stealth, critical strikes."
+key ENTER
+wait 0.2
+expect_text "Healer"
+expect_text "Support class, restoration, shields."
+assert_within_parents
+screenshot stepper_healer
+key ENTER
+wait 0.2
+expect_text "Warrior"
+click_ui step_reset
+wait 0.3
+expect_text "2560 × 1440"
+expect_text "Medium"
+expect_text "English"
+expect_text "Normal"
+expect_text "60 FPS"
+expect_text "3 / 4  |  Default"
+expect_text "Warrior"
+resize 1920 1080
+wait 0.3
+assert_ui root x=0 y=0 w=1920 h=1080
+assert_ui step_resolution w=513 h=68
+assert_within_parents
+screenshot stepper_design_1080
+resize 1024 768
+wait 0.3
+assert_ui root x=0 y=0 w=1024 h=768
+assert_ui step_resolution w=274 h=36
+assert_within_parents
+screenshot stepper_design_narrow
+resize 1280 720

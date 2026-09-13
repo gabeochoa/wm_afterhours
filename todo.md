@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,055 completed; 480 remaining.
+2,073 completed; 462 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6859,58 +6859,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/stepper_showcase_720p.png) · [Visual review](design-audit.html#screen=stepper_showcase)
 
-- [ ] `stepper_showcase-01` · P2 · proposal. Left steppers: Place each arrow-value-arrow group in a subtle outlined region.
+- [x] `stepper_showcase-01` · P2 · proposal. Left steppers: Place each arrow-value-arrow group in a subtle outlined region.
   Evidence: Thin arrows float around values without visible grouping.
 
-- [ ] `stepper_showcase-02` · P2 · proposal. Resolution text: Use 2560 × 1440.
+- [x] `stepper_showcase-02` · P2 · proposal. Resolution text: Use 2560 × 1440.
   Evidence: 2560x1440 uses a compact lowercase x.
 
-- [ ] `stepper_showcase-03` · P2 · proposal. Framerate value: Show 60 FPS.
+- [x] `stepper_showcase-03` · P2 · proposal. Framerate value: Show 60 FPS.
   Evidence: 60 lacks a unit.
 
-- [ ] `stepper_showcase-04` · P2 · proposal. Stepper arrows: Increase glyph size and contrast while retaining consistent spacing.
+- [x] `stepper_showcase-04` · P2 · proposal. Stepper arrows: Increase glyph size and contrast while retaining consistent spacing.
   Evidence: All arrow glyphs are small and muted.
 
-- [ ] `stepper_showcase-05` · P2 · proposal. Choice count: Add a compact index/count in specimen metadata.
+- [x] `stepper_showcase-05` · P2 · proposal. Choice count: Add a compact index/count in specimen metadata.
   Evidence: None of the five steppers reveals its number of options.
 
-- [ ] `stepper_showcase-06` · P2 · proposal. Boundary behavior: Add a footer note stating the actual wrap or clamp behavior.
+- [x] `stepper_showcase-06` · P2 · proposal. Boundary behavior: Add a footer note stating the actual wrap or clamp behavior.
   Evidence: The initial values do not explain whether arrows wrap.
 
-- [ ] `stepper_showcase-07` · P2 · proposal. Card-selector labels: Separate choices into clear segments with consistent spacing.
+- [x] `stepper_showcase-07` · P2 · proposal. Card-selector labels: Separate choices into clear segments with consistent spacing.
   Evidence: Healer Warrior Mage reads as one line of words.
 
-- [ ] `stepper_showcase-08` · P2 · proposal. Selected class: Add a selected underline or compact marker.
+- [x] `stepper_showcase-08` · P2 · proposal. Selected class: Add a selected underline or compact marker.
   Evidence: Warrior is distinguished mainly by brighter text.
 
-- [ ] `stepper_showcase-09` · P2 · proposal. Card text hierarchy: Bring the description closer to the title.
+- [x] `stepper_showcase-09` · P2 · proposal. Card text hierarchy: Bring the description closer to the title.
   Evidence: Warrior and the description are separated by a large empty gap.
 
-- [ ] `stepper_showcase-10` · P2 · proposal. Card description: Increase it to 14 to 16 px actual size.
+- [x] `stepper_showcase-10` · P2 · proposal. Card description: Increase it to 14 to 16 px actual size.
   Evidence: Heavy armor, melee attacks, high defense is small for the card size.
 
-- [ ] `stepper_showcase-11` · P3 · proposal. Card artwork: Add a restrained class emblem or compact stat row.
+- [x] `stepper_showcase-11` · P3 · proposal. Card artwork: Add a restrained class emblem or compact stat row.
   Evidence: A large solid coral card contains only two text blocks.
 
-- [ ] `stepper_showcase-12` · P2 · proposal. Card association: Align its title with the active tab and keep the active accent consistent.
+- [x] `stepper_showcase-12` · P2 · proposal. Card association: Align its title with the active tab and keep the active accent consistent.
   Evidence: The Warrior card has no connector to the selector above.
 
-- [ ] `stepper_showcase-13` · P3 · proposal. Card color meaning: Identify it as Warrior accent in the specimen notes.
+- [x] `stepper_showcase-13` · P3 · proposal. Card color meaning: Identify it as Warrior accent in the specimen notes.
   Evidence: The coral fill has no explanatory legend.
 
-- [ ] `stepper_showcase-14` · P2 · proposal. Section comparison: Add a subtitle explaining that both cycle through a finite option list.
+- [x] `stepper_showcase-14` · P2 · proposal. Section comparison: Add a subtitle explaining that both cycle through a finite option list.
   Evidence: Stepper Variants and Card Selector do not state the shared underlying behavior.
 
-- [ ] `stepper_showcase-15` · P3 · proposal. Panel whitespace: Use the lower area for option counts and interaction notes.
+- [x] `stepper_showcase-15` · P3 · proposal. Panel whitespace: Use the lower area for option counts and interaction notes.
   Evidence: Both panels leave substantial empty space below their controls.
 
-- [ ] `stepper_showcase-16` · P2 · proposal. Default state: Add a compact Current defaults summary or reset control.
+- [x] `stepper_showcase-16` · P2 · proposal. Default state: Add a compact Current defaults summary or reset control.
   Evidence: Medium, English, Normal and 60 appear without default markers.
 
-- [ ] `stepper_showcase-17` · P3 · proposal. Heading alignment: Use a consistent heading alignment across the two panes.
+- [x] `stepper_showcase-17` · P3 · proposal. Heading alignment: Use a consistent heading alignment across the two panes.
   Evidence: The left heading aligns left while Card Selector is centered.
 
-- [ ] `stepper_showcase-18` · P2 · proposal. Keyboard guidance: Add a guide matched to the implemented arrow and focus behavior.
+- [x] `stepper_showcase-18` · P2 · proposal. Keyboard guidance: Add a guide matched to the implemented arrow and focus behavior.
   Evidence: No visible hint explains how the active selector changes choices.
 
 ### styled_text_lab

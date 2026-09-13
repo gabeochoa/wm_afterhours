@@ -3265,7 +3265,8 @@
         "change": "Add a guide matched to the implemented arrow and focus behavior."
       }
     ],
-    "sha256": "a86885f7ca278450b8e862de3b2f8b4bc1f0e5da5522374987de6dc823856aa0"
+    "sha256": "a86885f7ca278450b8e862de3b2f8b4bc1f0e5da5522374987de6dc823856aa0",
+    "evidence": "docs/design-audit/originals/stepper_showcase_720p.png"
   },
   {
     "id": "styled_text_lab",

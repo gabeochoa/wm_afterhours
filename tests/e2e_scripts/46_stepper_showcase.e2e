@@ -4,6 +4,7 @@
 
 # Navigate to the stepper showcase screen
 goto_screen stepper_showcase
+resize 1280 720
 wait 0.5
 
 # =========================================================================
@@ -28,12 +29,7 @@ screenshot stepper_initial
 # =========================================================================
 # Test 1: Click the Resolution > button to advance
 # =========================================================================
-# Tab to Resolution < button, then > button
-key TAB
-wait 0.2
-# Should be on Resolution < button, skip to >
-key TAB
-wait 0.2
+focus_element step_resolution_next
 # Click > to advance Resolution
 key ENTER
 wait 0.3
@@ -63,39 +59,10 @@ screenshot stepper_resolution_back
 # =========================================================================
 # Reset navigation from the start
 goto_screen stepper_showcase
+resize 1280 720
 wait 0.5
 
-# Tab through all the stepper buttons to reach the Card Selector
-# Each stepper has 2 tab stops (< and >)
-# Resolution < > = 2, Quality < > = 2, Language < > = 2,
-# Difficulty < > = 2, Framerate < > = 2 = 10 tabs
-# Then Card Selector < > = 2 more tabs
-# Tab to Card Selector > button (skip past all 5 steppers)
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-key TAB
-wait 0.1
-# Now on Card Selector < button, advance to >
-key TAB
-wait 0.1
-key TAB
-wait 0.1
+focus_element step_class_next
 # Click > to advance from Warrior to Mage
 key ENTER
 wait 0.3
