@@ -1,0 +1,69 @@
+goto_screen scroll_click_bug
+resize 1280 720
+wait 0.3
+click_ui scroll_click_reset
+wait 0.2
+expect_text "Scroll click verification"
+expect_text "After scrolling, the clicked row must match the reported button index."
+expect_text "Last clicked: none"
+expect_text "20 buttons / zero-based indices"
+expect_text "Scroll offset: 0 px"
+expect_text "Expected / pointer row"
+expect_text "Actual / button callback"
+expect_text "Pointer comparison pending"
+assert_ui scroll_click_area x=64 y=218 w=810 h=300
+assert_ui scroll_btn_0 h=40
+assert_no_overflow
+screenshot scroll_click_design
+mouse_move 350 250
+mouse_down 350 250
+wait 0.15
+mouse_up
+wait 0.2
+expect_text "Last clicked: Button 0"
+expect_text "MATCH"
+scroll_wheel 0 -10
+wait 0.3
+expect_text "Scroll offset: 200 px"
+mouse_move 350 272
+mouse_down 350 272
+wait 0.15
+mouse_up
+wait 0.2
+expect_text "Last clicked: Button 5"
+expect_text "MATCH"
+screenshot scroll_click_design_scrolled
+scroll_wheel 0 -100
+wait 0.3
+mouse_move 350 496
+mouse_down 350 496
+wait 0.15
+mouse_up
+wait 0.2
+expect_text "Last clicked: Button 19"
+expect_text "MATCH"
+screenshot scroll_click_design_bottom
+focus_ui scroll_btn_17
+key ENTER
+wait 0.2
+expect_text "Last clicked: Button 17"
+expect_text "No pointer result"
+focus_ui scroll_click_reset
+key ENTER
+wait 0.2
+expect_text "Last clicked: none"
+expect_text "Scroll offset: 0 px"
+expect_text "Pointer comparison pending"
+resize 1920 1080
+wait 0.3
+assert_ui scroll_click_area x=96 y=327 w=1215 h=300
+assert_ui scroll_btn_0 h=40
+assert_no_overflow
+screenshot scroll_click_design_1080
+resize 1024 768
+wait 0.3
+assert_ui scroll_click_area x=51 y=270 w=648 h=300
+assert_ui scroll_btn_0 h=40
+assert_no_overflow
+screenshot scroll_click_design_narrow
+resize 1280 720

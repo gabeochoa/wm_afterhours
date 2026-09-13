@@ -1271,7 +1271,8 @@
         "change": "Add a Zero-based indices note beside the count."
       }
     ],
-    "sha256": "6beb45fb74e2b9a473a885a1d88bafa2190242fefb9e2fab3af96b17134fd3ea"
+    "sha256": "6beb45fb74e2b9a473a885a1d88bafa2190242fefb9e2fab3af96b17134fd3ea",
+    "evidence": "docs/design-audit/originals/scroll_click_bug_720p.png"
   },
   {
     "id": "scroll_clip_bug",

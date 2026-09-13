@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,718 completed; 817 remaining.
+1,733 completed; 802 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6106,49 +6106,49 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/scroll_click_bug_720p.png) · [Visual review](design-audit.html#screen=scroll_click_bug)
 
-- [ ] `scroll_click_bug-01` · P2 · proposal. Test title: Add a subtitle stating that the clicked label must match the reported index after scrolling.
+- [x] `scroll_click_bug-01` · P2 · proposal. Test title: Add a subtitle stating that the clicked label must match the reported index after scrolling.
   Evidence: Scroll Click Bug Test names a bug without a visible expected outcome.
 
-- [ ] `scroll_click_bug-02` · P2 · proposal. Initial status: Prefix it with Last clicked and show a neutral empty value.
+- [x] `scroll_click_bug-02` · P2 · proposal. Initial status: Prefix it with Last clicked and show a neutral empty value.
   Evidence: No button clicked yet does not identify the output field.
 
-- [ ] `scroll_click_bug-03` · P2 · proposal. List context: Display 20 buttons above the viewport.
+- [x] `scroll_click_bug-03` · P2 · proposal. List context: Display 20 buttons above the viewport.
   Evidence: Only Button 0 through part of Button 6 are visible.
 
-- [ ] `scroll_click_bug-04` · P2 · proposal. Scroll position: Add Scroll offset: 0 px beside the status.
+- [x] `scroll_click_bug-04` · P2 · proposal. Scroll position: Add Scroll offset: 0 px beside the status.
   Evidence: The initial scrollbar gives no numeric offset.
 
-- [ ] `scroll_click_bug-05` · P2 · proposal. Visible range: Show the visible range separately from the last-click result.
+- [x] `scroll_click_bug-05` · P2 · proposal. Visible range: Show the visible range separately from the last-click result.
   Evidence: The partial Button 6 has no range summary.
 
-- [ ] `scroll_click_bug-06` · P2 · proposal. Reproduction steps: Place a short scroll-then-click procedure there.
+- [x] `scroll_click_bug-06` · P2 · proposal. Reproduction steps: Place a short scroll-then-click procedure there.
   Evidence: The large blank area below the list contains no procedure.
 
-- [ ] `scroll_click_bug-07` · P2 · proposal. Expected result: Display Expected label and Actual clicked label side by side after selection.
+- [x] `scroll_click_bug-07` · P2 · proposal. Expected result: Display Expected label and Actual clicked label side by side after selection.
   Evidence: The status line has no comparison target.
 
-- [ ] `scroll_click_bug-08` · P3 · proposal. Title bar alignment: Add 12 px inner padding.
+- [x] `scroll_click_bug-08` · P3 · proposal. Title bar alignment: Add 12 px inner padding.
   Evidence: The title text touches the left of its white backing.
 
-- [ ] `scroll_click_bug-09` · P3 · proposal. List inset: Reduce the gutter to a consistent 12 to 16 px if it is not part of the hit-test fixture.
+- [x] `scroll_click_bug-09` · P3 · proposal. List inset: Reduce the gutter to a consistent 12 to 16 px if it is not part of the hit-test fixture.
   Evidence: A wide blank gutter separates button ends from the scrollbar.
 
-- [ ] `scroll_click_bug-10` · P2 · proposal. Button identifiers: Add a small left-aligned index column while preserving the button hit area.
+- [x] `scroll_click_bug-10` · P2 · proposal. Button identifiers: Add a small left-aligned index column while preserving the button hit area.
   Evidence: Centered Button N labels make row identity far from the left edge.
 
-- [ ] `scroll_click_bug-11` · P3 · proposal. Status legibility: Increase actual text size and use a darker neutral color.
+- [x] `scroll_click_bug-11` · P3 · proposal. Status legibility: Increase actual text size and use a darker neutral color.
   Evidence: The initial status is light gray and small.
 
-- [ ] `scroll_click_bug-12` · P2 · proposal. Reset control: Add Reset scroll and result outside the viewport.
+- [x] `scroll_click_bug-12` · P2 · proposal. Reset control: Add Reset scroll and result outside the viewport.
   Evidence: The initial composition offers no visible way to return to its starting state.
 
-- [ ] `scroll_click_bug-13` · P3 · proposal. Fixture frame: Tighten the outer frame around the list and explanatory text.
+- [x] `scroll_click_bug-13` · P3 · proposal. Fixture frame: Tighten the outer frame around the list and explanatory text.
   Evidence: A large light panel surrounds a comparatively small test area.
 
-- [ ] `scroll_click_bug-14` · P2 · proposal. Clipping boundary: Label the viewport bottom as the intentional clip boundary.
+- [x] `scroll_click_bug-14` · P2 · proposal. Clipping boundary: Label the viewport bottom as the intentional clip boundary.
   Evidence: The partially visible final button could look accidental to a reviewer.
 
-- [ ] `scroll_click_bug-15` · P3 · proposal. Index convention: Add a Zero-based indices note beside the count.
+- [x] `scroll_click_bug-15` · P3 · proposal. Index convention: Add a Zero-based indices note beside the count.
   Evidence: Buttons begin at 0 with no explanation.
 
 ### scroll_clip_bug

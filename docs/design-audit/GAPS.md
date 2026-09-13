@@ -3080,7 +3080,7 @@ The menu captures the playful yellow and turquoise direction, but small utility 
 
 ## scroll click bug
 
-[Current baseline](../../screenshot-baselines/screens/scroll_click_bug_720p.png) · [Visual review](../../design-audit.html#screen=scroll_click_bug)
+[Reviewed image](../../docs/design-audit/originals/scroll_click_bug_720p.png) · [Current baseline](../../screenshot-baselines/screens/scroll_click_bug_720p.png) · [Visual review](../../design-audit.html#screen=scroll_click_bug)
 
 Baseline SHA-256: `6beb45fb74e2b9a473a885a1d88bafa2190242fefb9e2fab3af96b17134fd3ea`
 
