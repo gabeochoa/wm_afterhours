@@ -1,0 +1,73 @@
+goto_screen system_profile_lab
+resize 1280 720
+wait 0.5
+expect_text "System profiler"
+expect_text "Stopped"
+expect_text "No data"
+expect_text "Start recording to collect frame timings."
+expect_text "System timings appear after recording starts."
+expect_text "Sample window: last 0 frames"
+expect_text "Clear samples"
+expect_text "Resident memory"
+assert_ui spl_root w=1280 h=720
+click_ui profiler_pause
+wait 0.2
+expect_no_text "Resume view"
+assert_within_parents
+screenshot system_profile_empty_design
+click_ui profiler_record
+wait 1.2
+expect_text "Recording"
+expect_text "Stop recording"
+expect_no_text "Start recording to collect frame timings."
+expect_no_text "System timings appear after recording starts."
+expect_text "View live"
+click_ui spl_load
+wait 0.4
+expect_text "Synthetic workload: On"
+expect_text "40,000 sine iterations / frame"
+click_ui profiler_sort
+wait 0.2
+expect_text "Sort: overall average, descending"
+expect_text "Overall avg / ms v"
+click_ui profiler_pause
+wait 0.3
+expect_text "Resume view"
+expect_text "View paused"
+assert_within_parents
+screenshot system_profile_recording_design
+click_ui spl_visibility
+wait 0.2
+expect_text "Panel hidden. Recording continues in the background."
+expect_no_text "Resume view"
+click_ui spl_visibility
+wait 0.2
+expect_text "Resume view"
+click_ui profiler_pause
+wait 0.2
+expect_text "View live"
+focus_element profiler_record
+key ENTER
+wait 0.3
+expect_text "Stopped"
+expect_text "Start recording"
+click_ui profiler_reset
+wait 0.3
+expect_text "Sample window: last 0 frames / 0 recorded since clear"
+expect_text "No data"
+expect_text "Synthetic workload: On"
+expect_text "Sort: overall average, descending"
+click_ui spl_load
+wait 0.2
+expect_text "Synthetic workload: Off"
+resize 1920 1080
+wait 0.4
+assert_ui spl_root w=1920 h=1080
+assert_within_parents
+screenshot system_profile_1080_design
+resize 1024 768
+wait 0.4
+assert_ui spl_root w=1024 h=768
+assert_within_parents
+screenshot system_profile_1024_design
+resize 1280 720

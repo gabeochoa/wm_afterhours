@@ -3746,7 +3746,8 @@
         "change": "Use a compact bordered table shell sized to the available data area."
       }
     ],
-    "sha256": "0681d6834ac760cf6550b90c194c4a281e06124ce8187822804ce5fb959dc831"
+    "sha256": "0681d6834ac760cf6550b90c194c4a281e06124ce8187822804ce5fb959dc831",
+    "evidence": "docs/design-audit/originals/system_profile_lab_720p.png"
   },
   {
     "id": "tab_container",

@@ -11,7 +11,7 @@ validate_screen system_profile_lab
 
 click_ui profiler_record
 wait 0.8
-expect_text "Recording in background"
+expect_text "Recording"
 expect_text "ScreenCyclerSystem / update"
 assert_within_parents
 

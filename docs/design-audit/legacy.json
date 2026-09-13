@@ -303,8 +303,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Add load focus outline. Both are the stopped, empty state with zero timing statistics and unavailable CPU/RAM. Neither demonstrates live refresh rate or recording performance.",
-    "sha256": "654d14b638087e160a3bd407807297acd7ac8039098c243437b0d3ae438378bf",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "a4a3001ea59926af7e25a465fbab000d4a0c462d73947fc546a0cfe0210b5761",
     "additional_findings": []
   },
   {

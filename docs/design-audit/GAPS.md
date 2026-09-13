@@ -3550,7 +3550,7 @@ The unequal document lengths and header-only horizontal synchronization are deli
 
 ## system profile lab
 
-[Current baseline](../../screenshot-baselines/screens/system_profile_lab_720p.png) · [Visual review](../../design-audit.html#screen=system_profile_lab)
+[Reviewed image](../../docs/design-audit/originals/system_profile_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/system_profile_lab_720p.png) · [Visual review](../../design-audit.html#screen=system_profile_lab)
 
 Baseline SHA-256: `0681d6834ac760cf6550b90c194c4a281e06124ce8187822804ce5fb959dc831`
 
@@ -3583,7 +3583,7 @@ The profiler is stopped with no samples, so zero data and unavailable process me
 
 [Image](../../baseline_screenshots/system_profile_lab.png)
 
-Current capture removes Add load focus outline. Both are the stopped, empty state with zero timing statistics and unavailable CPU/RAM. Neither demonstrates live refresh rate or recording performance.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## tab container
 

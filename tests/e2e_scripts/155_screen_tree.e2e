@@ -19,7 +19,7 @@ key DOWN
 wait 0.2
 key ENTER
 wait 0.4
-expect_text "Profiler"
+expect_text "System profiler"
 expect_no_text "Screens / search and browse"
 key GRAVE
 wait 0.3
@@ -29,7 +29,7 @@ wait 0.3
 expect_text "No matching screens"
 key ESCAPE
 wait 0.3
-expect_text "Profiler"
+expect_text "System profiler"
 key GRAVE
 wait 0.3
 click_ui nav_filter
@@ -40,7 +40,7 @@ wait 0.2
 screenshot screen_tree
 key ENTER
 wait 0.3
-expect_text "Charts / frame timings"
+expect_text "Frame timing chart"
 key GRAVE
 wait 0.3
 key UP
@@ -51,7 +51,7 @@ key RIGHT
 wait 0.2
 key ESCAPE
 wait 0.3
-expect_text "Charts / frame timings"
+expect_text "Frame timing chart"
 key GRAVE
 wait 0.3
 key UP
@@ -64,7 +64,7 @@ click_ui nav_category_System_Demos
 wait 0.2
 click_ui nav_screen_chart_lab
 wait 0.3
-expect_text "Charts / frame timings"
+expect_text "Frame timing chart"
 expect_no_text "Screens / search and browse"
 resize 1920 1080
 wait 0.3
@@ -73,5 +73,5 @@ wait 0.3
 expect_text "* chart_lab"
 click_ui nav_close
 wait 0.2
-expect_text "Charts / frame timings"
+expect_text "Frame timing chart"
 resize 1280 720

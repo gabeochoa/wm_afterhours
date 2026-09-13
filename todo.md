@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,318 completed; 217 remaining.
+2,338 completed; 197 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7038,64 +7038,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/system_profile_lab_720p.png) · [Visual review](design-audit.html#screen=system_profile_lab)
 
-- [ ] `system_profile_lab-01` · P2 · proposal. Empty FPS metric: Use an em dash or No data until samples exist.
+- [x] `system_profile_lab-01` · P2 · proposal. Empty FPS metric: Use an em dash or No data until samples exist.
   Evidence: 0.0 FPS is shown before any frames are recorded.
 
-- [ ] `system_profile_lab-02` · P2 · proposal. Empty frame timing: Render an explicit unmeasured state consistently across timing values.
+- [x] `system_profile_lab-02` · P2 · proposal. Empty frame timing: Render an explicit unmeasured state consistently across timing values.
   Evidence: Avg 0.00 ms/frame reads as a measured zero.
 
-- [ ] `system_profile_lab-03` · P2 · proposal. Percentile labels: Use separate labeled metric blocks with ms units on each.
+- [x] `system_profile_lab-03` · P2 · proposal. Percentile labels: Use separate labeled metric blocks with ms units on each.
   Evidence: p50, p95 and p99 are packed into one line.
 
-- [ ] `system_profile_lab-04` · P2 · proposal. Sample window: Give sample count and collection window their own metadata label.
+- [x] `system_profile_lab-04` · P2 · proposal. Sample window: Give sample count and collection window their own metadata label.
   Evidence: Last 0 frames is appended to the metric sentence.
 
-- [ ] `system_profile_lab-05` · P2 · proposal. Recording state: Place a status badge beside the recording control.
+- [x] `system_profile_lab-05` · P2 · proposal. Recording state: Place a status badge beside the recording control.
   Evidence: Recording stopped is small and visually detached from Start recording.
 
-- [ ] `system_profile_lab-06` · P2 · proposal. Primary action: Make recording the primary action in the stopped state.
+- [x] `system_profile_lab-06` · P2 · proposal. Primary action: Make recording the primary action in the stopped state.
   Evidence: Start recording has the same emphasis as Reset and Sort recent.
 
-- [ ] `system_profile_lab-07` · P2 · proposal. Pause view control: Explain view pause independently of recording or disable it until there is a view to pause.
+- [x] `system_profile_lab-07` · P2 · proposal. Pause view control: Explain view pause independently of recording or disable it until there is a view to pause.
   Evidence: Pause view appears while no samples exist.
 
-- [ ] `system_profile_lab-08` · P2 · proposal. Sort action: Show Sort: recent average, descending with a matching header marker.
+- [x] `system_profile_lab-08` · P2 · proposal. Sort action: Show Sort: recent average, descending with a matching header marker.
   Evidence: Sort recent does not reveal sorting direction or selected column.
 
-- [ ] `system_profile_lab-09` · P2 · proposal. Chart empty state: Center a helpful empty state with Start recording to collect frame timings.
+- [x] `system_profile_lab-09` · P2 · proposal. Chart empty state: Center a helpful empty state with Start recording to collect frame timings.
   Evidence: No samples is placed near the upper-left of a large empty plot.
 
-- [ ] `system_profile_lab-10` · P2 · proposal. Chart identity: Add Frame time history and labeled ms/time axes.
+- [x] `system_profile_lab-10` · P2 · proposal. Chart identity: Add Frame time history and labeled ms/time axes.
   Evidence: The large plot has no title or axes in its empty state.
 
-- [ ] `system_profile_lab-11` · P2 · proposal. Table empty state: Explain that system timings will appear after recording starts.
+- [x] `system_profile_lab-11` · P2 · proposal. Table empty state: Explain that system timings will appear after recording starts.
   Evidence: No system samples yet repeats the chart's empty message.
 
-- [ ] `system_profile_lab-12` · P2 · proposal. CPU unavailable: Add a concise platform-support note or diagnostic reason when known.
+- [x] `system_profile_lab-12` · P2 · proposal. CPU unavailable: Add a concise platform-support note or diagnostic reason when known.
   Evidence: Process CPU: unavailable provides no local explanation.
 
-- [ ] `system_profile_lab-13` · P2 · proposal. Memory unavailable: Use separate CPU and memory metric cards with clear unavailable values.
+- [x] `system_profile_lab-13` · P2 · proposal. Memory unavailable: Use separate CPU and memory metric cards with clear unavailable values.
   Evidence: Resident memory: unavailable is buried in the same sentence.
 
-- [ ] `system_profile_lab-14` · P2 · proposal. Add load action: Label it Add synthetic workload and show its enabled state.
+- [x] `system_profile_lab-14` · P2 · proposal. Add load action: Label it Add synthetic workload and show its enabled state.
   Evidence: Add load gives no indication of the synthetic load type.
 
-- [ ] `system_profile_lab-15` · P2 · proposal. Hide panel action: Rename it Hide profiler panel.
+- [x] `system_profile_lab-15` · P2 · proposal. Hide panel action: Rename it Hide profiler panel.
   Evidence: Hide panel does not identify what disappears.
 
-- [ ] `system_profile_lab-16` · P2 · proposal. Table units: Use one heading format with ms units consistently.
+- [x] `system_profile_lab-16` · P2 · proposal. Table units: Use one heading format with ms units consistently.
   Evidence: Recent avg and Overall avg use parentheses while Last frame ms does not.
 
-- [ ] `system_profile_lab-17` · P2 · proposal. System/phase hierarchy: Clarify the expected hierarchy with a sample or two-line heading.
+- [x] `system_profile_lab-17` · P2 · proposal. System/phase hierarchy: Clarify the expected hierarchy with a sample or two-line heading.
   Evidence: System / phase combines two concepts in a single column heading.
 
-- [ ] `system_profile_lab-18` · P3 · proposal. Toolbar layout: Group demo controls separately with a small Demo workload caption.
+- [x] `system_profile_lab-18` · P3 · proposal. Toolbar layout: Group demo controls separately with a small Demo workload caption.
   Evidence: Add load and Hide panel occupy a separate top row from the profiler controls.
 
-- [ ] `system_profile_lab-19` · P2 · proposal. Reset scope: Rename it Clear samples if that is its actual effect.
+- [x] `system_profile_lab-19` · P2 · proposal. Reset scope: Rename it Clear samples if that is its actual effect.
   Evidence: Reset is ambiguous between samples, view state and workload.
 
-- [ ] `system_profile_lab-20` · P3 · proposal. Unused lower area: Use a compact bordered table shell sized to the available data area.
+- [x] `system_profile_lab-20` · P3 · proposal. Unused lower area: Use a compact bordered table shell sized to the available data area.
   Evidence: The table empty state leaves a broad black field.
 
 ### tab_container
