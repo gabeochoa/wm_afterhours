@@ -1,0 +1,86 @@
+goto_screen potion_crafting
+resize 1280 720
+wait 0.5
+expect_text "Alchemist's Workshop"
+expect_text "Gold"
+expect_text "2,450"
+expect_text "Ready to brew"
+expect_text "Sea Salt × 3"
+expect_text "Star Dust × 1"
+expect_text "Required 3 / Owned 12"
+expect_text "Required 1 / Owned 1"
+expect_text "After brew: 9 remaining"
+expect_text "After brew: 0 remaining"
+expect_text "45 s recipe / Instant demo / Makes 1 potion"
+expect_text "Marked tiles are used by this recipe."
+expect_text "Recipe notes / Sea Salt"
+expect_text "47 potions brewed"
+assert_ui potion_bg x=0 y=0 w=1280 h=720
+assert_ui potion_recipe_1 x=24 y=332 w=274 h=92
+assert_ui potion_brew x=448 y=586 w=296 h=49
+assert_within_parents
+screenshot potion_crafting_design
+click_ui potion_brew
+wait 0.3
+expect_text "Brew complete / 100% bottled"
+expect_text "Mana Elixir brewed. Restores 30 MP."
+expect_text "Required 3 / Owned 9"
+expect_text "Required 1 / Owned 0"
+expect_text "Not enough in stock"
+expect_text "48 potions brewed"
+click_ui potion_brew
+wait 0.2
+expect_text "Gather the missing ingredients before brewing."
+expect_text "48 potions brewed"
+click_ui potion_tab_1
+wait 0.3
+expect_text "Ingredient inventory"
+click_ui potion_ingredient_5
+wait 0.2
+expect_text "Recipe notes / Star Dust"
+expect_text "Star Dust awakens the final brew. Sprinkle gently and stir clockwise."
+assert_within_parents
+screenshot potion_crafting_inventory
+click_ui potion_tab_2
+wait 0.3
+expect_text "The alchemist's journal"
+expect_text "Mana Elixir brewed. Restores 30 MP."
+click_ui potion_tab_0
+wait 0.2
+focus_element potion_recipe_0
+key ENTER
+wait 0.3
+expect_text "A little comfort for a weary traveler."
+expect_text "Ready to brew"
+expect_text "Moonpetal × 2"
+expect_text "Honey Dew × 1"
+expect_text "Required 2 / Owned 5"
+expect_text "Required 1 / Owned 8"
+focus_element potion_brew
+key ENTER
+wait 0.3
+expect_text "Healing Potion brewed. Restores 50 HP."
+expect_text "49 potions brewed"
+expect_text "Required 2 / Owned 3"
+expect_text "Required 1 / Owned 7"
+assert_within_parents
+screenshot potion_crafting_complete
+resize 1920 1080
+wait 0.3
+assert_ui potion_bg x=0 y=0 w=1920 h=1080
+assert_ui potion_title x=48 y=71 w=1275 h=74
+assert_within_parents
+screenshot potion_crafting_design_1080
+resize 1024 768
+wait 0.3
+assert_ui potion_bg x=0 y=0 w=1024 h=768
+assert_ui potion_title x=26 y=134 w=680 h=39
+assert_within_parents
+screenshot potion_crafting_design_narrow
+click_ui potion_tab_1
+wait 0.2
+assert_within_parents
+click_ui potion_tab_2
+wait 0.2
+assert_within_parents
+resize 1280 720

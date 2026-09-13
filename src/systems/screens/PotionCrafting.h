@@ -7,6 +7,7 @@
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
 #include <array>
+#include <cmath>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -71,7 +72,7 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_tab = 0;
   int selected_ingredient = -1;
   int potions_brewed = 47;
-  float brew_progress = .65f;
+  float brew_progress = 0;
   std::string last_brew;
   std::string message;
   std::array<raylib::Texture2D, 10> art{};
@@ -99,11 +100,13 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
       }
       art_loaded = true;
     }
-    const afterhours::Color ink{77, 67, 45, 255}, muted{131, 113, 75, 255};
-    const afterhours::Color rule{161, 139, 97, 255}, paper{232, 217, 175, 255};
-    const afterhours::Color olive{119, 116, 72, 255};
-    const float scale = context.screen_height / 720.f;
-    UIStylingDefaults::get().set_default_font("Garamond", h720(20.f));
+    const afterhours::Color ink{66, 51, 29, 255}, muted{92, 72, 43, 255};
+    const afterhours::Color rule{154, 129, 84, 255}, paper{238, 224, 185, 255};
+    const afterhours::Color olive{64, 78, 35, 255}, unavailable{137, 44, 28, 255};
+    const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    const float left = (context.screen_width / scale - 1280) / 2;
+    const float top = (context.screen_height / scale - 720) / 2;
+    context.scaling_mode = ScalingMode::Proportional;
     Theme theme;
     theme.font = ink;
     theme.font_muted = muted;
@@ -113,295 +116,222 @@ struct PotionCraftingScreen : ScreenSystem<UIContext<InputAction>> {
     theme.accent = afterhours::Color{109, 82, 39, 255};
     theme.corner_radius = 0;
     context.set_theme(theme);
-    auto box = [scale](float x, float y, float w, float h) {
-      return ComponentConfig{}
-          .with_size({pixels(w * scale), pixels(h * scale)})
-          .with_absolute_position(x * scale, y * scale)
-          .with_corner_radius(0.f)
-          .with_background(Theme::Usage::None);
-    };
-    auto text = [&](int id, float x, float y, float w, float h,
-                    const std::string &label, float size,
-                    afterhours::Color color, const std::string &name = "",
-                    TextAlignment align = TextAlignment::Left) {
-      div(context, mk(entity, id),
-          box(x, y, w, h)
-              .with_label(label)
-              .with_font("Garamond", h720(size * 1.25f))
-              .with_text_overflow(TextOverflow::Wrap)
-              .with_custom_text_color(color)
-              .with_letter_spacing(0)
-              .with_alignment(align)
-              .with_debug_name(name)
-              .with_ignore_pointer_events());
-    };
-    auto line = [&](int id, float x, float y, float w, float h) {
-      div(context, mk(entity, id),
-          box(x, y, w, h)
-              .with_custom_background(rule)
-              .with_ignore_pointer_events());
-    };
-    auto picture = [&](int id, size_t index, float x, float y, float w,
-                       float h) {
-      const auto texture = art[index];
-      sprite(context, mk(entity, id), texture,
-             {0, 0, static_cast<float>(texture.width),
-              static_cast<float>(texture.height)},
-             box(x, y, w, h).with_ignore_pointer_events());
-    };
-    div(context, mk(entity, 0),
-        box(0, 0, 1280, 720).with_on_draw_bg([](RectangleType r) {
-          afterhours::draw_rectangle_gradient_v(r, {215, 199, 153, 255},
-                                                {226, 209, 163, 255});
-          for (float y = 0; y < r.height; y += 4 * r.height / 720.f)
-            afterhours::draw_rectangle(
-                {r.x, r.y + y, r.width, r.height / 720.f}, {155, 131, 81, 35});
+    auto root = div(context, mk(entity), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_corner_radius(0).with_custom_background(paper).with_debug_name("potion_bg")
+        .with_on_draw_bg([](RectangleType r) {
+          afterhours::draw_rectangle_gradient_v(r, {224, 207, 162, 255}, {241, 226, 188, 255});
+          for (float y = 0; y < r.height; y += 4)
+            afterhours::draw_rectangle({r.x, r.y + y, r.width, 1}, {120, 91, 43, 8});
         }));
-    div(context, mk(entity, 1),
-        box(36, 47, 36, 36)
-            .with_ignore_pointer_events()
-            .with_on_draw_fg([ink](RectangleType r) {
-              const float s = r.width / 36;
-              afterhours::draw_line_ex({r.x + 3 * s, r.y + 15 * s},
-                                       {r.x + 15 * s, r.y + 4 * s}, 5 * s, ink);
-              afterhours::draw_ellipse(static_cast<int>(r.x + 21 * s),
-                                       static_cast<int>(r.y + 9 * s), 9 * s,
-                                       7 * s, ink);
-              afterhours::draw_line_ex({r.x + 12 * s, r.y + 34 * s},
-                                       {r.x + 15 * s, r.y + 22 * s}, 3 * s,
-                                       ink);
-              afterhours::draw_line_ex({r.x + 30 * s, r.y + 34 * s},
-                                       {r.x + 27 * s, r.y + 22 * s}, 3 * s,
-                                       ink);
-              afterhours::draw_line_ex({r.x + 15 * s, r.y + 22 * s},
-                                       {r.x + 27 * s, r.y + 22 * s}, 3 * s,
-                                       ink);
-              afterhours::draw_line_ex({r.x + 21 * s, r.y + 22 * s},
-                                       {r.x + 21 * s, r.y + 34 * s}, 3 * s,
-                                       ink);
-            }));
-    text(2, 90, 27, 450, 20, "T H E  A R T  O F  A L C H E M Y", 11, ink);
-    text(3, 90, 45, 620, 45, "Alchemist's Workshop", 37, ink, "potion_title");
-    div(context, mk(entity, 4),
-        box(1098, 32, 146, 56)
-            .with_custom_background(paper)
-            .with_border(rule, 1));
-    text(5, 1138, 41, 100, 38, "2,450", 28, ink, "potion_gold",
-         TextAlignment::Center);
-    div(context, mk(entity, 8),
-        box(1121, 46, 27, 27)
-            .with_ignore_pointer_events()
-            .with_on_draw_fg([ink](RectangleType r) {
-              const raylib::Vector2 c{r.x + r.width * .5f,
-                                      r.y + r.height * .5f};
-              raylib::DrawCircleLinesV(c, r.width * .45f, ink);
-              raylib::DrawCircleV(c, r.width * .34f, ink);
-            }));
-    line(6, 36, 96, 1208, 1);
-    line(7, 36, 152, 1208, 1);
+    const auto box = [scale, left, top](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
+          .with_absolute_position((left + x) * scale, (top + y) * scale)
+          .with_corner_radius(0).with_background(Theme::Usage::None);
+    };
+    const int section = static_cast<int>(selected_tab) * 1000;
+    const auto eid = [section](int id) { return id < 40 ? id : id + section; };
+    const auto text = [&](int id, float x, float y, float w, float h, const std::string &value,
+                          float size, afterhours::Color color, const std::string &name = "",
+                          TextAlignment align = TextAlignment::Left) {
+      return div(context, mk(root.ent(), eid(id)), box(x, y, w, h).with_label(value)
+          .with_font("Garamond", pixels(size * scale)).with_custom_text_color(color)
+          .with_text_overflow(TextOverflow::Wrap).with_alignment(align)
+          .with_ignore_pointer_events().with_debug_name(name));
+    };
+    const auto line = [&](int id, float x, float y, float w, float h, afterhours::Color color) {
+      div(context, mk(root.ent(), eid(id)), box(x, y, w, h).with_custom_background(color)
+          .with_ignore_pointer_events());
+    };
+    const auto picture = [&](int id, size_t index, float x, float y, float w, float h) {
+      const auto texture = art[index];
+      const RectangleType source = index < 4 ? RectangleType{64, 27, 272, 351}
+                                             : RectangleType{0, 0, 400, 400};
+      const float fit = std::min(w / source.width, h / source.height);
+      const float width = source.width * fit;
+      const float height = source.height * fit;
+      auto image = sprite(context, mk(root.ent(), eid(id)), texture, source,
+          box(x + (w - width) / 2, y + (h - height) / 2, width, height).with_ignore_pointer_events());
+      if (index < 4 || index == 6 || index == 9) return;
+      image.ent().addComponentIfMissing<HasOnDraw>().fg = [index](RectangleType r) {
+        const auto point = [r](float x, float y) { return raylib::Vector2{r.x + x * r.width, r.y + y * r.height}; };
+        if (index == 4) {
+          for (int i = 0; i < 5; ++i) {
+            const float angle = static_cast<float>(i) * 1.256637f;
+            raylib::DrawCircleV(point(.48f + .12f * std::cos(angle), .28f + .12f * std::sin(angle)), r.width * .085f, {250, 241, 217, 255});
+          }
+          raylib::DrawCircleV(point(.48f, .28f), r.width * .065f, {178, 131, 42, 255});
+          return;
+        }
+        if (index == 5) {
+          for (int i = 0; i < 4; ++i)
+            afterhours::draw_line_ex(point(.57f, .59f), point(.32f + static_cast<float>(i) * .13f, .94f), r.width * .045f, {134, 60, 25, 255});
+          return;
+        }
+        if (index == 7) {
+          raylib::DrawTriangle(point(.70f, .57f), point(.62f, .76f), point(.78f, .76f), {189, 111, 14, 255});
+          raylib::DrawCircleV(point(.70f, .76f), r.width * .08f, {189, 111, 14, 255});
+          return;
+        }
+        for (int i = 0; i < 5; ++i) {
+          const float y = .35f + static_cast<float>(i) * .10f;
+          afterhours::draw_line_ex(point(.53f, y), point(.30f, y - .13f), r.width * .035f, {44, 66, 43, 255});
+          afterhours::draw_line_ex(point(.53f, y), point(.77f, y - .13f), r.width * .035f, {44, 66, 43, 255});
+        }
+      };
+    };
+    text(2, 32, 22, 700, 24, "THE ART OF ALCHEMY", 18, muted);
+    text(3, 32, 47, 850, 49, "Alchemist's Workshop", 43, ink, "potion_title");
+    div(context, mk(root.ent(), 4), box(1052, 27, 196, 63).with_custom_background(paper).with_border(rule, 1));
+    text(5, 1064, 39, 66, 37, "Gold", 22, muted);
+    text(8, 1130, 37, 106, 41, "2,450", 32, ink, "potion_gold", TextAlignment::Right);
+    line(6, 24, 103, 1232, 1, rule);
+    line(7, 24, 157, 1232, 1, rule);
     const std::array<std::string, 3> tabs{"Recipes", "Inventory", "Journal"};
     for (size_t i = 0; i < tabs.size(); ++i) {
-      auto config = box(36 + 120.f * i, 99, 108, 49)
-                        .with_label(tabs[i])
-                        .with_font("Garamond", h720(25))
-                        .with_custom_text_color(ink)
-                        .with_alignment(TextAlignment::Center)
-                        .with_debug_name("potion_tab_" + std::to_string(i));
-      if (i == selected_tab)
-        config.with_custom_background({210, 191, 144, 255});
-      if (button(context, mk(entity, 10 + static_cast<int>(i)), config))
-        selected_tab = i;
-      if (i == selected_tab)
-        line(20 + static_cast<int>(i), 36 + 120.f * i, 145, 108, 3);
+      const float x = 24 + 140.f * static_cast<float>(i);
+      auto config = box(x, 109, 132, 42).with_label(tabs[i])
+          .with_font("Garamond", pixels(27 * scale)).with_custom_text_color(ink)
+          .with_alignment(TextAlignment::Center).with_debug_name("potion_tab_" + std::to_string(i));
+      if (i == selected_tab) config.with_custom_background({213, 192, 143, 255});
+      if (button(context, mk(root.ent(), 10 + static_cast<int>(i)), config)) selected_tab = i;
+      if (i == selected_tab) line(20 + static_cast<int>(i), x, 150, 132, 3, ink);
     }
-    text(30, 884, 106, 360, 36, "Wednesday, the 12th day of Autumn", 15, ink,
-         "", TextAlignment::Right);
-    line(31, 36, 655, 1208, 1);
-    text(32, 36, 660, 150, 32, "Alchemy Level: 12", 13, muted);
-    text(33, 195, 660, 130, 32, "4 recipes known", 13, muted);
-    text(34, 339, 660, 220, 32,
-         std::to_string(potions_brewed) + " potions brewed", 13, muted,
-         "potion_total");
-    text(35, 913, 660, 331, 32, "Tab: move   Enter: choose", 13, muted, "",
-         TextAlignment::Right);
-
+    text(30, 848, 113, 400, 33, "Wednesday, the 12th day of Autumn", 21, muted, "", TextAlignment::Right);
+    line(31, 24, 682, 1232, 1, rule);
+    text(32, 24, 687, 188, 29, "Alchemy level 12", 21, ink);
+    text(33, 223, 687, 171, 29, "4 recipes known", 21, ink);
+    text(34, 405, 687, 263, 29, std::to_string(potions_brewed) + " potions brewed", 21, ink, "potion_total");
+    for (int i = 0; i < 2; ++i) {
+      const float x = 878 + static_cast<float>(i) * 173;
+      div(context, mk(root.ent(), 36 + i), box(x, 688, i == 0 ? 49 : 67, 27)
+          .with_custom_background(paper).with_border(rule, 1));
+      text(38 + i, x, 687, i == 0 ? 49 : 67, 29, i == 0 ? "Tab" : "Enter", 20, ink, "", TextAlignment::Center);
+    }
+    text(35, 933, 687, 112, 29, "Move", 20, muted);
+    text(9, 1124, 687, 124, 29, "Choose", 20, muted);
     if (selected_tab == 2) {
-      text(40, 60, 182, 700, 48, "The alchemist's journal", 34, ink,
-           "potion_journal");
-      text(41, 60, 246, 1120, 44,
-           last_brew.empty()
-               ? "No potions bottled today. The workbench is ready."
-               : last_brew,
-           25, ink, "potion_journal_entry");
-      text(42, 60, 308, 1120, 40,
-           "A steady hand. A patient heart. One more drop.", 22, muted);
+      text(40, 48, 190, 1120, 49, "The alchemist's journal", 36, ink, "potion_journal");
+      text(41, 48, 266, 1120, 70, last_brew.empty() ? "No potions bottled today. The workbench is ready." : last_brew,
+           30, ink, "potion_journal_entry");
+      text(42, 48, 355, 1120, 38, "Each completed brew uses ingredients from your inventory.", 25, muted);
       return;
     }
-
     const bool inventory = selected_tab == 1;
     if (inventory) {
-      text(40, 36, 175, 700, 45, "Ingredient inventory", 32, ink,
-           "potion_inventory");
-      text(41, 36, 225, 740, 32,
-           "Select an ingredient to read your field notes.", 20, muted);
+      text(40, 32, 183, 1100, 48, "Ingredient inventory", 36, ink, "potion_inventory");
+      text(41, 32, 233, 1100, 35, "Select an ingredient for field notes. The leading mark identifies ingredients for " + std::string(recipes[selected_recipe].name) + ".", 24, muted);
     } else {
-      line(50, 321, 167, 1, 478);
-      line(51, 342, 167, 1, 478);
-      line(52, 869, 167, 1, 478);
-      text(53, 36, 175, 276, 40, "Recipe book", 27, ink);
-      text(54, 36, 215, 276, 26, "Notes from a practiced hand", 14, muted);
+      line(50, 310, 174, 1, 494, rule);
+      line(51, 880, 174, 1, 494, rule);
+      text(53, 24, 176, 276, 40, "Recipe book", 30, ink);
       for (size_t i = 0; i < recipes.size(); ++i) {
-        float y = 250 + 83.f * i;
-        auto config =
-            box(36, y, 267, 82)
-                .with_debug_name("potion_recipe_" + std::to_string(i));
-        if (i == selected_recipe)
-          config.with_custom_background({234, 219, 178, 255})
-              .with_border(rule, 1);
+        const float y = 231 + 101.f * static_cast<float>(i);
         const int id = 100 + static_cast<int>(i) * 10;
-        if (button(context, mk(entity, id), config)) {
+        auto config = box(24, y, 274, 92).with_debug_name("potion_recipe_" + std::to_string(i));
+        if (i == selected_recipe) config.with_custom_background(paper).with_border(rule, 1);
+        if (button(context, mk(root.ent(), eid(id)), config)) {
           selected_recipe = i;
           brew_progress = 0;
           message.clear();
         }
-        picture(id + 1, i, 43, y + 9, 52, 58);
-        text(id + 2, 100, y + 7, 200, 27, recipes[i].name, 20, ink);
-        text(id + 3, 100, y + 34, 200, 19, recipes[i].effect, 13, muted);
-        text(id + 4, 100, y + 53, 200, 20,
-             std::to_string(recipes[i].seconds) + "s to brew", 13, muted);
+        if (i == selected_recipe) line(id + 5, 24, y, 4, 92, olive);
+        picture(id + 1, i, 34, y + 18, 44, 57);
+        text(id + 2, 84, y + 5, 207, 30, recipes[i].name, 25, ink);
+        text(id + 3, 84, y + 35, 207, 25, recipes[i].effect, 21, muted);
+        text(id + 4, 84, y + 63, 207, 24, std::to_string(recipes[i].seconds) + " s recipe", 20, muted);
       }
-      text(150, 72, 587, 210, 63,
-           "A steady hand.\nA patient heart.\nOne more drop.", 17, muted, "",
-           TextAlignment::Center);
-      const auto &recipe = recipes[selected_recipe];
-      text(200, 350, 175, 510, 45, recipe.name, 34, ink, "potion_recipe_title",
-           TextAlignment::Center);
-      text(201, 350, 215, 510, 28, recipe.description, 15, muted, "",
-           TextAlignment::Center);
-      div(context, mk(entity, 202),
-          box(478, 236, 256, 256)
-              .with_ignore_pointer_events()
-              .with_on_draw_fg([](RectangleType r) {
-                const raylib::Color faint{116, 101, 66, 35};
-                const raylib::Vector2 c{r.x + r.width / 2, r.y + r.height / 2};
-                raylib::DrawCircleLinesV(c, r.width * .49f, faint);
-                raylib::DrawCircleLinesV(c, r.width * .43f, faint);
-                raylib::DrawPolyLines(c, 3, r.width * .44f, -90, faint);
-                raylib::DrawPolyLines(c, 3, r.width * .44f, 90, faint);
-                raylib::DrawCircleLinesV(c, r.width * .245f, faint);
-              }));
-      picture(203, selected_recipe, 502, 254, 208, 208);
-      div(context, mk(entity, 204),
-          box(416, 456, 380, 17).with_on_draw_bg([](RectangleType r) {
-            afterhours::draw_rectangle_gradient_v(r, {175, 151, 107, 255},
-                                                  {102, 84, 58, 255});
-            for (int i = 0; i < 3; ++i)
-              afterhours::draw_rectangle(
-                  {r.x, r.y + r.height * i / 3, r.width, r.height / 6},
-                  {155, 128, 88, 255});
+      text(150, 24, 644, 274, 28, "Four recipes, one workbench.", 21, muted);
+      const auto &active = recipes[selected_recipe];
+      const bool available = can_brew(active);
+      text(200, 328, 175, 536, 43, active.name, 36, ink, "potion_recipe_title", TextAlignment::Center);
+      text(201, 340, 220, 512, 36, active.description, 23, muted, "", TextAlignment::Center);
+      div(context, mk(root.ent(), eid(202)), box(503, 260, 186, 154).with_ignore_pointer_events()
+          .with_on_draw_fg([](RectangleType r) {
+            const raylib::Vector2 center{r.x + r.width / 2, r.y + r.height / 2};
+            const raylib::Color faint{116, 101, 66, 65};
+            raylib::DrawCircleLinesV(center, r.height * .48f, faint);
+            raylib::DrawPolyLines(center, 3, r.height * .46f, -90, faint);
+            raylib::DrawPolyLines(center, 3, r.height * .46f, 90, faint);
           }));
-      div(context, mk(entity, 205),
-          box(465, 485, 282, 8)
-              .with_custom_background({187, 170, 128, 255})
-              .with_border(rule, 1));
-      div(context, mk(entity, 206),
-          box(465, 485, 282 * brew_progress, 8)
-              .with_custom_background({118, 129, 77, 255}));
-      text(207, 420, 496, 370, 25,
-           brew_progress == 1
-               ? "Brew complete"
-               : std::to_string(static_cast<int>(brew_progress * 100)) +
-                     "% brewed",
-           13, ink, "potion_progress", TextAlignment::Center);
-      for (size_t i = 0; i < recipe.required.size(); ++i) {
-        auto [index, count] = recipe.required[i];
-        float x = 471 + 172.f * i;
-        picture(210 + static_cast<int>(i) * 4, index + 4, x, 544, 34, 40);
-        text(211 + static_cast<int>(i) * 4, x + 36, 542, 123, 23,
-             std::string(ingredients[index].name) + " x " +
-                 std::to_string(count),
-             13, ink);
-        text(212 + static_cast<int>(i) * 4, x + 36, 565, 123, 20,
-             ingredients[index].count >= count ? "Available" : "Not enough", 12,
-             ingredients[index].count >= count
-                 ? afterhours::Color{106, 121, 70, 255}
-                 : afterhours::Color{158, 56, 36, 255},
+      picture(203, selected_recipe, 523, 261, 146, 148);
+      line(204, 461, 411, 270, 3, rule);
+      text(207, 340, 423, 512, 31, brew_progress == 1 ? "Brew complete / 100% bottled" : available ? "Ready to brew" : "Missing ingredients",
+           25, brew_progress == 1 || available ? olive : unavailable, "potion_progress", TextAlignment::Center);
+      for (size_t i = 0; i < active.required.size(); ++i) {
+        const auto [index, count] = active.required[i];
+        const auto &ingredient = ingredients[index];
+        const float x = 328 + 276.f * static_cast<float>(i);
+        const int id = 210 + static_cast<int>(i) * 10;
+        const bool enough = ingredient.count >= count;
+        div(context, mk(root.ent(), eid(id)), box(x, 464, 260, 82).with_custom_background(paper).with_border(rule, 1));
+        text(id + 1, x + 10, 469, 240, 28, std::string(ingredient.name) + " × " + std::to_string(count), 24, ink);
+        text(id + 2, x + 10, 497, 240, 23, "Required " + std::to_string(count) + " / Owned " + std::to_string(ingredient.count), 20, muted,
              "potion_required_" + std::to_string(i));
+        text(id + 3, x + 31, 520, 219, 22, enough ? "After brew: " + std::to_string(ingredient.count - count) + " remaining" : "Not enough in stock",
+             19, enough ? olive : unavailable);
+        div(context, mk(root.ent(), eid(id + 4)), box(x + 12, 525, 12, 12).with_ignore_pointer_events()
+            .with_on_draw_fg([enough, olive, unavailable](RectangleType r) {
+              const auto color = enough ? olive : unavailable;
+              afterhours::draw_line_ex({r.x, r.y + r.height * .5f}, {r.x + r.width * .4f, r.y + r.height}, 2, color);
+              afterhours::draw_line_ex({r.x + r.width * .4f, r.y + r.height}, {r.x + r.width, r.y}, 2, color);
+              if (!enough) afterhours::draw_line_ex({r.x, r.y}, {r.x + r.width, r.y + r.height}, 2, color);
+            }));
       }
-      text(220, 596, 544, 30, 40, "+", 25, ink);
-      const bool available = can_brew(recipe);
-      if (button(
-              context, mk(entity, 230),
-              box(496, 605, 220, 54)
-                  .with_label(available ? "Brew potion" : "Missing ingredients")
-                  .with_font("Garamond", h720(available ? 30.f : 23.f))
-                  .with_custom_background(olive)
-                  .with_border(ink, 2)
-                  .with_custom_text_color(paper)
-                  .with_alignment(TextAlignment::Center)
-                  .with_debug_name("potion_brew"))) {
+      text(232, 328, 552, 536, 27, std::to_string(active.seconds) + " s recipe / Instant demo / Makes 1 potion", 21, muted, "", TextAlignment::Center);
+      if (button(context, mk(root.ent(), eid(230)), box(448, 586, 296, 49)
+          .with_label(available ? "Brew potion" : "Missing ingredients").with_font("Garamond", pixels(29 * scale))
+          .with_custom_background(available ? olive : afterhours::Color{105, 82, 48, 255})
+          .with_border(ink, 1).with_custom_text_color({255, 246, 216, 255})
+          .with_alignment(TextAlignment::Center).with_debug_name("potion_brew"))) {
         if (available) {
-          for (auto [index, count] : recipe.required)
-            ingredients[index].count -= count;
+          for (auto [index, count] : active.required) ingredients[index].count -= count;
           ++potions_brewed;
           brew_progress = 1;
-          last_brew =
-              std::string(recipe.name) + " brewed. " + recipe.effect + ".";
+          last_brew = std::string(active.name) + " brewed. " + active.effect + ".";
           message = last_brew;
-        } else
+        } else {
           message = "Gather the missing ingredients before brewing.";
+        }
       }
-      div(context, mk(entity, 231),
-          box(500, 609, 212, 46)
-              .with_border({160, 155, 104, 255}, 1)
-              .with_ignore_pointer_events());
-      text(232, 377, 675, 457, 18,
-           std::to_string(recipe.seconds) + " seconds / Produces 1 potion", 12,
-           muted, "", TextAlignment::Center);
-      if (!message.empty())
-        text(233, 360, 523, 492, 20, message, 13, ink, "potion_message",
-             TextAlignment::Center);
+      text(233, 328, 643, 536, 33, message.empty() ? "Combine ingredients, then bottle the potion." : message,
+           21, ink, "potion_message", TextAlignment::Center);
     }
-    const float gx = inventory ? 36.f : 898.f;
-    const float gy = inventory ? 278.f : 250.f;
+    const float gx = inventory ? 32.f : 900.f;
+    const float gy = inventory ? 293.f : 228.f;
     if (!inventory) {
-      text(300, 898, 175, 340, 40, "Ingredients", 27, ink);
-      text(301, 898, 215, 340, 26, "Gathered from near and far", 14, muted);
+      text(300, 900, 176, 348, 40, "Ingredients", 30, ink);
+      text(301, 900, 209, 348, 22, "Marked tiles are used by this recipe.", 18, muted);
     }
     for (size_t i = 0; i < ingredients.size(); ++i) {
-      const float x = gx + static_cast<float>(inventory ? i : i % 3) * 116.f;
-      const float y =
-          gy + (inventory ? 0.f : static_cast<float>(i / 3) * 143.f);
+      const float x = gx + static_cast<float>(inventory ? i : i % 3) * (inventory ? 202.f : 116.f);
+      const float y = gy + (inventory ? 0 : static_cast<float>(i / 3) * 140);
+      const float width = inventory ? 190.f : 108.f;
+      const float height = inventory ? 176.f : 132.f;
       const int id = 310 + static_cast<int>(i) * 10;
-      if (button(
-              context, mk(entity, id),
-              box(x, y, 108, 135)
-                  .with_custom_background(
-                      selected_ingredient == static_cast<int>(i)
-                          ? afterhours::Color{249, 236, 199, 255}
-                          : paper)
-                  .with_border(
-                      selected_ingredient == static_cast<int>(i) ? ink : rule,
-                      1)
-                  .with_debug_name("potion_ingredient_" + std::to_string(i))))
-        selected_ingredient = static_cast<int>(i);
-      picture(id + 1, i + 4, x + 15, y + 17, 77, 85);
-      text(id + 2, x + 3, y + 99, 102, 30, ingredients[i].name, 14, ink, "",
-           TextAlignment::Center);
-      text(id + 3, x + 65, y + 3, 36, 22,
-           "x " + std::to_string(ingredients[i].count), 13, ink,
-           "potion_stock_" + std::to_string(i), TextAlignment::Right);
+      bool required = false;
+      for (const auto &[index, count] : recipes[selected_recipe].required) {
+        if (index == i && count > 0) required = true;
+      }
+      const bool selected = selected_ingredient == static_cast<int>(i);
+      if (button(context, mk(root.ent(), eid(id)), box(x, y, width, height)
+          .with_custom_background(selected ? afterhours::Color{251, 241, 211, 255} : paper)
+          .with_border(selected ? ink : rule, selected ? 2 : 1)
+          .with_debug_name("potion_ingredient_" + std::to_string(i)))) selected_ingredient = static_cast<int>(i);
+      if (required) line(id + 5, x + 3, y + 3, 3, height - 6, olive);
+      picture(id + 1, i + 4, x + width / 2 - (inventory ? 52 : 33), y + 22,
+              inventory ? 104 : 66, inventory ? 104 : 66);
+      text(id + 2, x + 4, y + height - 48, width - 8, 44, ingredients[i].name, inventory ? 26 : 20, ink, "", TextAlignment::Center);
+      div(context, mk(root.ent(), eid(id + 4)), box(x + width - 58, y + 5, 51, 24).with_custom_background({216, 195, 147, 255}));
+      text(id + 3, x + width - 58, y + 3, 51, 28, "× " + std::to_string(ingredients[i].count), 20, ink,
+           "potion_stock_" + std::to_string(i), TextAlignment::Center);
     }
-    const float note_y = inventory ? 438.f : 553.f;
-    line(380, gx, note_y, inventory ? 1120.f : 340.f, 1);
-    text(381, gx, note_y + 10, inventory ? 1120.f : 340.f, 40,
-         "Alchemist's note", 21, ink, "", TextAlignment::Center);
-    const auto &note =
-        ingredients[selected_ingredient < 0
-                        ? 2
-                        : static_cast<size_t>(selected_ingredient)];
-    text(382, gx + 8, note_y + 54, inventory ? 1104.f : 324.f, 44, note.note,
-         14, muted, "potion_field_note", TextAlignment::Center);
+    const float note_y = inventory ? 508.f : 517.f;
+    const float note_width = inventory ? 1216.f : 348.f;
+    line(380, gx, note_y, note_width, 1, rule);
+    const auto &note = ingredients[selected_ingredient < 0 ? 2 : static_cast<size_t>(selected_ingredient)];
+    text(381, gx, note_y + 8, note_width, 31, std::string("Recipe notes / ") + note.name, 25, ink);
+    text(382, gx, note_y + 43, note_width, inventory ? 80 : 107, note.note, inventory ? 27 : 23, muted, "potion_field_note");
   }
 };
 

@@ -2829,7 +2829,7 @@ The Branch panel is intentionally pinned open and placement examples are fixture
 
 ## potion crafting
 
-[Current baseline](../../screenshot-baselines/screens/potion_crafting_720p.png) · [Visual review](../../design-audit.html#screen=potion_crafting)
+[Reviewed image](../../docs/design-audit/originals/potion_crafting_720p.png) · [Current baseline](../../screenshot-baselines/screens/potion_crafting_720p.png) · [Visual review](../../design-audit.html#screen=potion_crafting)
 
 Baseline SHA-256: `4998d4b25be8c71676d896bbceacaebe36f66ebf36da4b2f907cf6d3cfb42da2`
 

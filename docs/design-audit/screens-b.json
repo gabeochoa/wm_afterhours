@@ -7368,6 +7368,7 @@
         "change": "Add Gold as a small caption or a clearer coin symbol."
       }
     ],
-    "sha256": "4998d4b25be8c71676d896bbceacaebe36f66ebf36da4b2f907cf6d3cfb42da2"
+    "sha256": "4998d4b25be8c71676d896bbceacaebe36f66ebf36da4b2f907cf6d3cfb42da2",
+    "evidence": "docs/design-audit/originals/potion_crafting_720p.png"
   }
 ]

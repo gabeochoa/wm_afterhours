@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,751 completed; 784 remaining.
+1,776 completed; 759 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5589,79 +5589,83 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/potion_crafting_720p.png) · [Visual review](design-audit.html#screen=potion_crafting)
 
-- [ ] `potion_crafting-01` · P2 · proposal. Parchment texture: Reduce texture contrast in text-heavy regions.
+- [x] `potion_crafting-01` · P2 · proposal. Parchment texture: Reduce texture contrast in text-heavy regions.
   Evidence: Fine horizontal lines run directly behind every label.
 
-- [ ] `potion_crafting-02` · P2 · proposal. Recipe descriptions: Increase effect-text size and contrast.
+- [x] `potion_crafting-02` · P2 · proposal. Recipe descriptions: Increase effect-text size and contrast.
   Evidence: Restores 30 MP and other effects are small and pale.
 
-- [ ] `potion_crafting-03` · P2 · proposal. Recipe times: Use readable duration labels with consistent spacing before seconds.
+- [x] `potion_crafting-03` · P2 · proposal. Recipe times: Use readable duration labels with consistent spacing before seconds.
   Evidence: 30s to brew and 45s to brew are tiny.
 
-- [ ] `potion_crafting-04` · P2 · proposal. Selected recipe: Add a clear selected marker or stronger leading rule.
+- [x] `potion_crafting-04` · P2 · proposal. Selected recipe: Add a clear selected marker or stronger leading rule.
   Evidence: Mana Elixir uses a pale rectangular border with little contrast.
 
-- [ ] `potion_crafting-05` · P2 · proposal. Recipe icons: Normalize bottle scale and outline weight across recipes.
+- [x] `potion_crafting-05` · P2 · proposal. Recipe icons: Normalize bottle scale and outline weight across recipes.
   Evidence: Small potion icons occupy different visual weights by fill color.
 
-- [ ] `potion_crafting-06` · P2 · proposal. Center subtitle: Increase contrast and keep it subordinate to the recipe title.
+- [x] `potion_crafting-06` · P2 · proposal. Center subtitle: Increase contrast and keep it subordinate to the recipe title.
   Evidence: The remedy for an exhausted mind is faint under Mana Elixir.
 
-- [ ] `potion_crafting-07` · P2 · proposal. Brew state: Label the active state Brewing and make the action reflect the current process.
+- [x] `potion_crafting-07` · P2 · proposal. Brew state: Label the active state Brewing and make the action reflect the current process.
   Evidence: 65% brewed appears above a button still labeled Brew potion.
+  Disposition: The original 65% value never advanced. This fixture crafts instantly, so the UI now shows Ready or Bottled and identifies instant demo behavior.
 
-- [ ] `potion_crafting-08` · P2 · proposal. Progress value: Increase value size and give the fill stronger separation from the track.
+- [x] `potion_crafting-08` · P2 · proposal. Progress value: Increase value size and give the fill stronger separation from the track.
   Evidence: 65% brewed is tiny below a thin low-contrast bar.
+  Disposition: Replaced the arbitrary 65% with actual ready/completed state.
 
-- [ ] `potion_crafting-09` · P2 · proposal. Progress placement: Reduce shelf emphasis or increase progress-bar prominence.
+- [x] `potion_crafting-09` · P2 · proposal. Progress placement: Reduce shelf emphasis or increase progress-bar prominence.
   Evidence: A thick wooden shelf is more prominent than the progress bar beneath it.
 
-- [ ] `potion_crafting-10` · P2 · proposal. Required ingredient counts: Use readable names and multiplication signs.
+- [x] `potion_crafting-10` · P2 · proposal. Required ingredient counts: Use readable names and multiplication signs.
   Evidence: Sea Salt x 3 and Star Dust x 1 are small below the illustration.
 
-- [ ] `potion_crafting-11` · P2 · proposal. Availability states: Add a check icon and stronger text contrast.
+- [x] `potion_crafting-11` · P2 · proposal. Availability states: Add a check icon and stronger text contrast.
   Evidence: Available is pale green without the mock's clear checkmark.
 
-- [ ] `potion_crafting-12` · P2 · proposal. Inventory relation: Show Required 3 / Owned 12 and Required 1 / Owned 1 beside the recipe.
+- [x] `potion_crafting-12` · P2 · proposal. Inventory relation: Show Required 3 / Owned 12 and Required 1 / Owned 1 beside the recipe.
   Evidence: Required counts and inventory counts are far apart without a shared notation.
 
-- [ ] `potion_crafting-13` · P2 · proposal. Last Star Dust: Add a small After brew: 0 note to make the inventory consequence visible.
+- [x] `potion_crafting-13` · P2 · proposal. Last Star Dust: Add a small After brew: 0 note to make the inventory consequence visible.
   Evidence: The recipe requires the entire visible Star Dust stock of one.
 
-- [ ] `potion_crafting-14` · P2 · proposal. Brew action contrast: Increase text and border contrast while keeping the muted aesthetic.
+- [x] `potion_crafting-14` · P2 · proposal. Brew action contrast: Increase text and border contrast while keeping the muted aesthetic.
   Evidence: The olive button blends with the brown parchment palette.
 
-- [ ] `potion_crafting-15` · P2 · proposal. Brew duration footer: Move it closer to the action and use a readable size.
+- [x] `potion_crafting-15` · P2 · proposal. Brew duration footer: Move it closer to the action and use a readable size.
   Evidence: 45 seconds / Produces 1 potion is tiny near the bottom edge.
 
-- [ ] `potion_crafting-16` · P2 · proposal. Ingredient tile names: Increase label size and maintain equal bottom padding.
+- [x] `potion_crafting-16` · P2 · proposal. Ingredient tile names: Increase label size and maintain equal bottom padding.
   Evidence: Moonpetal and Fire Root use small centered serif labels.
 
-- [ ] `potion_crafting-17` · P2 · proposal. Inventory quantity placement: Use consistent compact quantity badges.
+- [x] `potion_crafting-17` · P2 · proposal. Inventory quantity placement: Use consistent compact quantity badges.
   Evidence: x 5, x 3, and other quantities sit tiny in tile corners.
 
-- [ ] `potion_crafting-18` · P3 · proposal. Herb silhouettes: Make their leaf silhouettes more distinct in addition to color.
+- [x] `potion_crafting-18` · P3 · proposal. Herb silhouettes: Make their leaf silhouettes more distinct in addition to color.
   Evidence: Moonpetal, Fire Root, Honey Dew, and Shadow Moss share very similar stem shapes.
 
-- [ ] `potion_crafting-19` · P2 · proposal. Ingredient selection: Highlight Sea Salt and Star Dust as recipe ingredients.
+- [x] `potion_crafting-19` · P2 · proposal. Ingredient selection: Highlight Sea Salt and Star Dust as recipe ingredients.
   Evidence: All six inventory tiles use the same frame with no indication of which are required.
 
-- [ ] `potion_crafting-20` · P2 · proposal. Alchemist note: Increase body contrast and line height.
+- [x] `potion_crafting-20` · P2 · proposal. Alchemist note: Increase body contrast and line height.
   Evidence: The instruction is small and faint beneath a decorative heading.
 
-- [ ] `potion_crafting-21` · P3 · proposal. Note instruction sequence: Pair the note with a visible current brewing step.
+- [x] `potion_crafting-21` · P3 · proposal. Note instruction sequence: Pair the note with a visible current brewing step.
   Evidence: Add Star Dust only after the water turns clear is detached from the brewing status.
+  Disposition: The fixture has no timed brewing stages. Recipe flavor text remains separate from the explicitly labeled instant demo state.
 
-- [ ] `potion_crafting-22` · P2 · proposal. Recipe-book quotation: Reduce decorative quote prominence or move it to a smaller note block.
+- [x] `potion_crafting-22` · P2 · proposal. Recipe-book quotation: Reduce decorative quote prominence or move it to a smaller note block.
   Evidence: Three faint lines compete for space below the recipe list.
 
-- [ ] `potion_crafting-23` · P2 · proposal. Footer statistics: Use a consistent readable metadata scale and clearer group spacing.
+- [x] `potion_crafting-23` · P2 · proposal. Footer statistics: Use a consistent readable metadata scale and clearer group spacing.
   Evidence: Alchemy Level, recipes known, and potions brewed are tiny.
 
-- [ ] `potion_crafting-24` · P2 · proposal. Keyboard footer: Add readable keycaps and a visible close/back action if available.
+- [x] `potion_crafting-24` · P2 · proposal. Keyboard footer: Add readable keycaps and a visible close/back action if available.
   Evidence: Tab: move Enter: choose is small and omits the mock's Close workshop action.
+  Disposition: Added readable keycaps. There is no close/back action in this standalone fixture.
 
-- [ ] `potion_crafting-25` · P3 · proposal. Currency identity: Add Gold as a small caption or a clearer coin symbol.
+- [x] `potion_crafting-25` · P3 · proposal. Currency identity: Add Gold as a small caption or a clearer coin symbol.
   Evidence: 2,450 has a generic circular icon without a currency name.
 
 ### powerwash_settings

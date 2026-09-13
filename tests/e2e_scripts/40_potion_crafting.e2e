@@ -1,13 +1,14 @@
 goto_screen potion_crafting
+resize 1280 720
 wait 0.5
 expect_text "Alchemist's Workshop"
 expect_text "2,450"
-assert_ui potion_title x=90 y=45 w=620 h=45
-assert_ui potion_recipe_1 x=36 y=333 w=267 h=82
-assert_ui potion_brew x=496 y=605 w=220 h=54
+assert_ui potion_title x=32 y=47 w=850 h=49
+assert_ui potion_recipe_1 x=24 y=332 w=274 h=92
+assert_ui potion_brew x=448 y=586 w=296 h=49
 assert_no_overflow
 assert_within_parents
-expect_text "65% brewed"
+expect_text "Ready to brew"
 expect_text "47 potions brewed"
 screenshot potion_crafting_initial
 
@@ -17,8 +18,8 @@ wait 0.2
 expect_text "Mana Elixir brewed. Restores 30 MP."
 expect_text "48 potions brewed"
 expect_text "Missing ingredients"
-expect_text "x 9"
-expect_text "x 0"
+expect_text "× 9"
+expect_text "× 0"
 click_ui potion_brew
 wait 0.2
 expect_text "48 potions brewed"
@@ -45,21 +46,21 @@ focus_ui potion_recipe_0
 key ENTER
 wait 0.2
 expect_text "A little comfort for a weary traveler."
-expect_text "0% brewed"
+expect_text "Ready to brew"
 focus_ui potion_brew
 key ENTER
 wait 0.2
 expect_text "Healing Potion brewed. Restores 50 HP."
 expect_text "49 potions brewed"
-expect_text "x 3"
-expect_text "x 7"
+expect_text "× 3"
+expect_text "× 7"
 assert_no_overflow
 assert_within_parents
 screenshot potion_crafting_brewed
 
 resize 1920 1080
 wait 0.5
-assert_ui potion_title x=135 y=68 w=930 h=68
+assert_ui potion_title x=48 y=71 w=1275 h=74
 assert_no_overflow
 assert_within_parents
 screenshot potion_crafting_1080p
