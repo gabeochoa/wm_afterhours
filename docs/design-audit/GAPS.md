@@ -2865,7 +2865,7 @@ The parchment workshop composition is coherent. Improve text contrast, ingredien
 
 ## powerwash settings
 
-[Current baseline](../../screenshot-baselines/screens/powerwash_settings_720p.png) · [Visual review](../../design-audit.html#screen=powerwash_settings)
+[Reviewed image](../../docs/design-audit/originals/powerwash_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/powerwash_settings_720p.png) · [Visual review](../../design-audit.html#screen=powerwash_settings)
 
 Baseline SHA-256: `083a89475060533ed215da2150839f6e60c4ae38c41907054637817230d2ee01`
 

@@ -1,0 +1,108 @@
+goto_screen powerwash_settings
+resize 1280 720
+wait 0.5
+expect_text "SETTINGS"
+expect_text "Video settings"
+expect_text "Tablet navigation"
+expect_text "10.00"
+expect_text "200"
+expect_text "2560 × 1440"
+expect_text "VSync"
+expect_text "Ambient occlusion"
+expect_text "100% (native)"
+expect_text "Anti-Aliasing"
+expect_text "reduce graphics processing load."
+expect_text "Changes apply immediately in this preview."
+expect_text "Reset video settings"
+expect_text "Change category"
+assert_ui pw_root x=0 y=0 w=1280 h=720
+assert_ui pw_header x=63 y=69 w=1154 h=54
+assert_ui pw_row_4 x=75 y=325 w=610 h=37
+assert_ui pw_value_4 x=433 y=326 w=251 h=35
+assert_within_parents
+screenshot powerwash_settings_design
+click_ui pw_value_4
+wait 0.2
+expect_text "Anti-Aliasing: 4x"
+key LEFT
+wait 0.2
+expect_text "Anti-Aliasing: 2x"
+key UP
+wait 0.2
+expect_text "Vertical synchronization matches frame presentation to the display refresh cycle."
+key RIGHT
+wait 0.2
+expect_text "VSync: Off"
+click_ui pw_row_5
+wait 0.2
+expect_text "SSAO means screen-space ambient occlusion."
+click_ui pw_row_6
+wait 0.2
+expect_text "100% uses the selected resolution without scaling."
+click_ui pw_value_6
+wait 0.2
+expect_text "Render Scale: 75%"
+click_ui pw_footer_reset
+wait 0.2
+expect_text "Defaults restored"
+expect_text "100% (native)"
+key D
+wait 0.2
+expect_text "Audio settings"
+expect_text "Master Volume"
+expect_text "Reset audio settings"
+click_ui pw_value_0
+wait 0.2
+expect_text "Master Volume: 0%"
+key R
+wait 0.2
+expect_text "Defaults restored"
+expect_text "100%"
+key A
+wait 0.2
+expect_text "Video settings"
+click_ui pw_tab_0
+wait 0.2
+expect_text "General settings"
+expect_text "Colorblind Mode"
+click_ui pw_value_2
+wait 0.2
+expect_text "Deuteranopia"
+assert_within_parents
+click_ui pw_tab_4
+wait 0.2
+expect_text "Controls settings"
+expect_text "Controller Vibration"
+click_ui pw_footer_select
+wait 0.2
+expect_text "Controller Vibration: Off"
+click_ui pw_footer_close
+wait 0.2
+expect_text "Settings closed"
+click_ui pw_reopen
+wait 0.2
+expect_text "Settings open"
+expect_text "Controls settings"
+key ESCAPE
+wait 0.2
+expect_text "Settings closed"
+click_ui pw_reopen
+wait 0.2
+click_ui pw_tab_2
+wait 0.2
+click_ui pw_row_4
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui pw_root x=0 y=0 w=1920 h=1080
+assert_ui pw_tablet x=84 y=93 w=1752 h=864
+assert_ui pw_row_4 x=113 y=488 w=915 h=56
+assert_within_parents
+screenshot powerwash_settings_design_1080
+resize 1024 768
+wait 0.3
+assert_ui pw_root x=0 y=0 w=1024 h=768
+assert_ui pw_tablet x=45 y=146 w=934 h=461
+assert_within_parents
+screenshot powerwash_settings_design_narrow
+resize 1280 720

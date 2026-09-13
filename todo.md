@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,776 completed; 759 remaining.
+1,804 completed; 731 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5672,88 +5672,88 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/powerwash_settings_720p.png) · [Visual review](design-audit.html#screen=powerwash_settings)
 
-- [ ] `powerwash_settings-01` · P2 · defect. Resolution value: Inset every value 10 px from its border.
+- [x] `powerwash_settings-01` · P2 · defect. Resolution value: Inset every value 10 px from its border.
   Evidence: 2560 x 1440 touches the value box left border.
 
-- [ ] `powerwash_settings-02` · P2 · defect. Footer Select hint: Add an 8 px keycap-to-label gap.
+- [x] `powerwash_settings-02` · P2 · defect. Footer Select hint: Add an 8 px keycap-to-label gap.
   Evidence: The Enter keycap nearly touches Select.
 
-- [ ] `powerwash_settings-03` · P2 · defect. Footer Reset hint: Give each action group a 20 px trailing gap.
+- [x] `powerwash_settings-03` · P2 · defect. Footer Reset hint: Give each action group a 20 px trailing gap.
   Evidence: Reset and the next Enter keycap sit nearly together.
 
-- [ ] `powerwash_settings-04` · P2 · defect. Top counters: Render recognizable resource icons and increase counter text to 14 px actual size.
+- [x] `powerwash_settings-04` · P2 · defect. Top counters: Render recognizable resource icons and increase counter text to 14 px actual size.
   Evidence: O 10.00, O 200 and [] 1 are barely legible.
 
-- [ ] `powerwash_settings-05` · P2 · proposal. Dropdown arrows: Use consistent 12 px chevrons aligned to a shared inset.
+- [x] `powerwash_settings-05` · P2 · proposal. Dropdown arrows: Use consistent 12 px chevrons aligned to a shared inset.
   Evidence: Nine values end in tiny v glyphs.
 
-- [ ] `powerwash_settings-06` · P2 · proposal. Anti-Aliasing selection: Extend a selection outline around the complete label and value row.
+- [x] `powerwash_settings-06` · P2 · proposal. Anti-Aliasing selection: Extend a selection outline around the complete label and value row.
   Evidence: Only the label half gets the pale selection treatment.
 
-- [ ] `powerwash_settings-07` · P2 · proposal. Selected label: Use the dark navy text token for the selected label.
+- [x] `powerwash_settings-07` · P2 · proposal. Selected label: Use the dark navy text token for the selected label.
   Evidence: The Anti-Aliasing text is subdued blue on pale gray.
 
-- [ ] `powerwash_settings-08` · P2 · proposal. Help heading: Increase the heading weight and add 8 px before the paragraph.
+- [x] `powerwash_settings-08` · P2 · proposal. Help heading: Increase the heading weight and add 8 px before the paragraph.
   Evidence: Anti-Aliasing is close in size to its body copy.
 
-- [ ] `powerwash_settings-09` · P2 · proposal. Help explanation: Constrain paragraphs to about 48 characters per line.
+- [x] `powerwash_settings-09` · P2 · proposal. Help explanation: Constrain paragraphs to about 48 characters per line.
   Evidence: The help text spans several long lines across the right pane.
 
-- [ ] `powerwash_settings-10` · P2 · proposal. FPS wording: Replace with reduce graphics processing load so the performance effect is clear.
+- [x] `powerwash_settings-10` · P2 · proposal. FPS wording: Replace with reduce graphics processing load so the performance effect is clear.
   Evidence: The explanation says reduce FPS load.
 
-- [ ] `powerwash_settings-11` · P2 · proposal. Render Scale value: Display the actual native scale, such as 100%, with a native label.
+- [x] `powerwash_settings-11` · P2 · proposal. Render Scale value: Display the actual native scale, such as 100%, with a native label.
   Evidence: Off appears in a control otherwise associated with scaling percentages.
 
-- [ ] `powerwash_settings-12` · P3 · proposal. Resolution notation: Use the multiplication sign with consistent spacing.
+- [x] `powerwash_settings-12` · P3 · proposal. Resolution notation: Use the multiplication sign with consistent spacing.
   Evidence: Resolution uses a lowercase x between dimensions.
 
-- [ ] `powerwash_settings-13` · P3 · proposal. Vsync label: Use VSync and expand it in the associated help.
+- [x] `powerwash_settings-13` · P3 · proposal. Vsync label: Use VSync and expand it in the associated help.
   Evidence: Vsync is styled differently from the familiar VSync spelling.
 
-- [ ] `powerwash_settings-14` · P2 · proposal. SSAO row: Expose Ambient occlusion in the label or a short adjacent qualifier.
+- [x] `powerwash_settings-14` · P2 · proposal. SSAO row: Expose Ambient occlusion in the label or a short adjacent qualifier.
   Evidence: SSAO is the only unexplained acronym in the list.
 
-- [ ] `powerwash_settings-15` · P3 · proposal. Model and texture quality: Use one consistent scale across both quality controls.
+- [x] `powerwash_settings-15` · P3 · proposal. Model and texture quality: Use one consistent scale across both quality controls.
   Evidence: High and Highest use different quality vocabularies.
 
-- [ ] `powerwash_settings-16` · P2 · proposal. Settings categories: Add a small Video settings breadcrumb by SETTINGS to identify the current section immediately.
+- [x] `powerwash_settings-16` · P2 · proposal. Settings categories: Add a small Video settings breadcrumb by SETTINGS to identify the current section immediately.
   Evidence: The category tabs sit below a tall content block.
 
-- [ ] `powerwash_settings-17` · P2 · proposal. Header icons: Add short captions or an explicit application-navigation group label.
+- [x] `powerwash_settings-17` · P2 · proposal. Header icons: Add short captions or an explicit application-navigation group label.
   Evidence: Six unlabeled symbols appear above the settings rows.
 
-- [ ] `powerwash_settings-18` · P3 · proposal. Active gear icon: Add a small Settings caption to establish what the selected icon represents.
+- [x] `powerwash_settings-18` · P3 · proposal. Active gear icon: Add a small Settings caption to establish what the selected icon represents.
   Evidence: The selected gear has a brighter tile but no text.
 
-- [ ] `powerwash_settings-19` · P3 · proposal. Tablet backdrop: Add the soft tablet shadow from mocks.html to separate the panel from the scene.
+- [x] `powerwash_settings-19` · P3 · proposal. Tablet backdrop: Add the soft tablet shadow from mocks.html to separate the panel from the scene.
   Evidence: Large peach tiles surround a dense blue panel.
 
-- [ ] `powerwash_settings-20` · P3 · proposal. Watermark: Increase the watermark size modestly while keeping it secondary.
+- [x] `powerwash_settings-20` · P3 · proposal. Watermark: Increase the watermark size modestly while keeping it secondary.
   Evidence: FUTURLAB / POWERWASH SIMULATOR is very faint at the pane bottom.
 
-- [ ] `powerwash_settings-21` · P2 · proposal. Tab controls A and D: Add a concise Change category hint alongside the footer controls.
+- [x] `powerwash_settings-21` · P2 · proposal. Tab controls A and D: Add a concise Change category hint alongside the footer controls.
   Evidence: A and D keycaps sit alone at opposite ends of the strip.
 
-- [ ] `powerwash_settings-22` · P2 · proposal. Close button: Use a standard close glyph with a stable centered alignment.
+- [x] `powerwash_settings-22` · P2 · proposal. Close button: Use a standard close glyph with a stable centered alignment.
   Evidence: A plain X in a blue square is separated from its footer explanation.
 
-- [ ] `powerwash_settings-23` · P2 · proposal. Reset action: Rename to Reset video settings to match the active tab.
+- [x] `powerwash_settings-23` · P2 · proposal. Reset action: Rename to Reset video settings to match the active tab.
   Evidence: The footer says Reset without naming its scope.
 
-- [ ] `powerwash_settings-24` · P2 · proposal. Change status: Add a compact Changes apply immediately message near the footer if that is the actual behavior.
+- [x] `powerwash_settings-24` · P2 · proposal. Change status: Add a compact Changes apply immediately message near the footer if that is the actual behavior.
   Evidence: No visible saved or pending state appears beside the settings.
 
-- [ ] `powerwash_settings-25` · P3 · proposal. Row borders: Reduce inactive border weight and reserve the strongest edge for selection.
+- [x] `powerwash_settings-25` · P3 · proposal. Row borders: Reduce inactive border weight and reserve the strongest edge for selection.
   Evidence: Every row has strong double blue divisions.
 
-- [ ] `powerwash_settings-26` · P2 · proposal. Product typography parity: Match the target font face, weight and tracking, then recheck wrapping and value padding.
+- [x] `powerwash_settings-26` · P2 · proposal. Product typography parity: Match the target font face, weight and tracking, then recheck wrapping and value padding.
   Evidence: The current help and row labels are more widely spaced and lighter than the compact condensed type in the rendered mock.
 
-- [ ] `powerwash_settings-27` · P3 · proposal. Scene perspective parity: Restore the target's perspective planes and tile geometry.
+- [x] `powerwash_settings-27` · P3 · proposal. Scene perspective parity: Restore the target's perspective planes and tile geometry.
   Evidence: The current peach background is a flat grid while the target shows a receding tiled corner around the tablet.
 
-- [ ] `powerwash_settings-28` · P3 · proposal. Active Video tab parity: Match the target tab treatment with a clear bottom selection rule.
+- [x] `powerwash_settings-28` · P3 · proposal. Active Video tab parity: Match the target tab treatment with a clear bottom selection rule.
   Evidence: The current Video tab has a strong four-sided outline; the target uses a blue fill and bright bottom edge.
 
 ### race_results

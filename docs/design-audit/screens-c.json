@@ -229,7 +229,8 @@
         "change": "Match the target tab treatment with a clear bottom selection rule."
       }
     ],
-    "sha256": "083a89475060533ed215da2150839f6e60c4ae38c41907054637817230d2ee01"
+    "sha256": "083a89475060533ed215da2150839f6e60c4ae38c41907054637817230d2ee01",
+    "evidence": "docs/design-audit/originals/powerwash_settings_720p.png"
   },
   {
     "id": "race_results",
