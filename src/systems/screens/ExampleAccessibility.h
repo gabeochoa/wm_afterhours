@@ -99,7 +99,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_font("AtkinsonMock", h720(36.f))
             .with_auto_text_color(true)
             .with_rounded_corners(std::bitset<4>(0b1100))
-            .with_roundness(0.10f)
+            .with_corner_radius(8.f * context.screen_height / 720.f)
             .with_alignment(TextAlignment::Center));
 
     // Theme validation status badge
@@ -120,7 +120,7 @@ struct ExampleAccessibility : ScreenSystem<UIContext<InputAction>> {
             .with_auto_text_color(true)
             .with_font("AtkinsonMock", h720(22.f))
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.5f)
+            .with_corner_radius(8.f * context.screen_height / 720.f)
             .with_alignment(TextAlignment::Center));
 
     div(context, mk(entity, 5),
