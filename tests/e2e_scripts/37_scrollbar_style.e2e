@@ -6,6 +6,7 @@
 # the view's rect and that is where the resolution bugs lived.
 
 goto_screen scrollbar_style_lab
+resize 1280 720
 wait 0.5
 assert_within_parents
 validate_screen scrollbar_style_lab

@@ -256,13 +256,13 @@
     "screen": "scrollbar_style_lab",
     "baseline": "baseline_screenshots/scrollbar_style_lab.png",
     "current": "screenshot-baselines/screens/scrollbar_style_lab_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Four tracks deliberately compare default, accent, explicit-color and no-track styles. Preserve those differences. Small headers and nearly identical repeated row text hinder the comparison.",
-    "sha256": "28fcd043a647faca491c9ab3417db32e881454fb884762f82a0135e2b145e205",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "a218920f80a5ae8682bb877fd5983dd7bbbc99eaeacc4dcc5ca866ac924d4080",
     "additional_findings": []
   },
   {

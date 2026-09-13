@@ -3163,7 +3163,7 @@ The two-axis demo is understandable, but its inversion control and position indi
 
 ## scrollbar style lab
 
-[Current baseline](../../screenshot-baselines/screens/scrollbar_style_lab_720p.png) · [Visual review](../../design-audit.html#screen=scrollbar_style_lab)
+[Reviewed image](../../docs/design-audit/originals/scrollbar_style_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/scrollbar_style_lab_720p.png) · [Visual review](../../design-audit.html#screen=scrollbar_style_lab)
 
 Baseline SHA-256: `28fcd043a647faca491c9ab3417db32e881454fb884762f82a0135e2b145e205`
 
@@ -3192,7 +3192,7 @@ The four styling variants are intentional, including the low-contrast accent and
 
 [Image](../../baseline_screenshots/scrollbar_style_lab.png)
 
-Pixel-identical. Four tracks deliberately compare default, accent, explicit-color and no-track styles. Preserve those differences. Small headers and nearly identical repeated row text hinder the comparison.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## secure tunnel
 

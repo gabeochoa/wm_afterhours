@@ -1,0 +1,36 @@
+goto_screen scrollbar_style_lab
+resize 1280 720
+wait 0.4
+expect_text "Scrollbar styling"
+expect_text "24 rows / Offset 0px"
+expect_text "Thumb usage: Accent"
+expect_text "Track: 60, 30, 30, 255"
+expect_text "Thumb: 235, 120, 90, 255"
+expect_text "Track alpha: 0"
+assert_ui sbs_view_0 x=16 y=144 w=300 h=340
+assert_ui sbs_view_3 x=964 y=144 w=300 h=340
+assert_within_parents
+screenshot scrollbar_style_design
+click_ui sbs_preset_1
+wait 0.3
+expect_text "24 rows / Offset 118px"
+screenshot scrollbar_style_middle
+focus_ui sbs_preset_2
+key ENTER
+wait 0.3
+expect_text "24 rows / Offset 236px"
+screenshot scrollbar_style_end
+click_ui sbs_preset_0
+wait 0.3
+expect_text "24 rows / Offset 0px"
+resize 1920 1080
+wait 0.3
+assert_ui sbs_view_0 w=450 h=510
+assert_within_parents
+screenshot scrollbar_style_design_1080
+resize 1024 768
+wait 0.3
+assert_ui sbs_root x=0 y=96 w=1024 h=576
+assert_within_parents
+screenshot scrollbar_style_design_narrow
+resize 1280 720

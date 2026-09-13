@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,101 completed; 434 remaining.
+2,117 completed; 418 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6274,52 +6274,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/scrollbar_style_lab_720p.png) · [Visual review](design-audit.html#screen=scrollbar_style_lab)
 
-- [ ] `scrollbar_style_lab-01` · P2 · proposal. Main title: Inset it by 16 px to align with the first pane.
+- [x] `scrollbar_style_lab-01` · P2 · proposal. Main title: Inset it by 16 px to align with the first pane.
   Evidence: The long title begins at the extreme left edge.
 
-- [ ] `scrollbar_style_lab-02` · P2 · proposal. Variant captions: Increase caption size to a readable 13 px actual size.
+- [x] `scrollbar_style_lab-02` · P2 · proposal. Variant captions: Increase caption size to a readable 13 px actual size.
   Evidence: default, usage: Accent thumb, explicit colours and thicker, no track are small.
 
-- [ ] `scrollbar_style_lab-03` · P2 · proposal. Default variant: Add a two-line token caption beneath it.
+- [x] `scrollbar_style_lab-03` · P2 · proposal. Default variant: Add a two-line token caption beneath it.
   Evidence: The default pane does not name its track or thumb tokens.
 
-- [ ] `scrollbar_style_lab-04` · P2 · proposal. Accent variant: Add an Accent swatch and resolved color value outside the pane.
+- [x] `scrollbar_style_lab-04` · P2 · proposal. Accent variant: Add an Accent swatch and resolved color value outside the pane.
   Evidence: The magenta thumb is a deliberate theme usage but its token is only in the title.
 
-- [ ] `scrollbar_style_lab-05` · P2 · proposal. Explicit colors variant: Label both RGBA values beneath the pane.
+- [x] `scrollbar_style_lab-05` · P2 · proposal. Explicit colors variant: Label both RGBA values beneath the pane.
   Evidence: The orange thumb and dark red track have no color values shown.
 
-- [ ] `scrollbar_style_lab-06` · P2 · proposal. Thicker variant: Label its 14 px thickness.
+- [x] `scrollbar_style_lab-06` · P2 · proposal. Thicker variant: Label its 14 px thickness.
   Evidence: The thicker teal thumb has no numeric width annotation.
 
-- [ ] `scrollbar_style_lab-07` · P2 · proposal. Transparent track: Add an explicit Track alpha 0 caption.
+- [x] `scrollbar_style_lab-07` · P2 · proposal. Transparent track: Add an explicit Track alpha 0 caption.
   Evidence: No track can be mistaken for a missing renderer.
 
-- [ ] `scrollbar_style_lab-08` · P2 · proposal. Row count: Add the full row count to each pane's metadata.
+- [x] `scrollbar_style_lab-08` · P2 · proposal. Row count: Add the full row count to each pane's metadata.
   Evidence: Rows 00 through 13 are visible with no total count.
 
-- [ ] `scrollbar_style_lab-09` · P2 · proposal. Scroll state: Add a shared scroll offset readout for comparison.
+- [x] `scrollbar_style_lab-09` · P2 · proposal. Scroll state: Add a shared scroll offset readout for comparison.
   Evidence: Equal thumb positions are shown without reported offsets.
 
-- [ ] `scrollbar_style_lab-10` · P2 · proposal. Thumb size: Show viewport/content ratio below the columns.
+- [x] `scrollbar_style_lab-10` · P2 · proposal. Thumb size: Show viewport/content ratio below the columns.
   Evidence: Thumb length is visibly comparable but undocumented.
 
-- [ ] `scrollbar_style_lab-11` · P3 · proposal. Row text: Increase their type size while keeping row heights fixed.
+- [x] `scrollbar_style_lab-11` · P3 · proposal. Row text: Increase their type size while keeping row heights fixed.
   Evidence: Row identifiers are tiny relative to the empty pane width.
 
-- [ ] `scrollbar_style_lab-12` · P2 · proposal. Comparison controls: Add shared start, middle and end presets outside the panes.
+- [x] `scrollbar_style_lab-12` · P2 · proposal. Comparison controls: Add shared start, middle and end presets outside the panes.
   Evidence: No control sets every variant to the same scrolled position.
 
-- [ ] `scrollbar_style_lab-13` · P2 · proposal. Track/thumb distinction: Use a small annotated scrollbar key in the lower empty area.
+- [x] `scrollbar_style_lab-13` · P2 · proposal. Track/thumb distinction: Use a small annotated scrollbar key in the lower empty area.
   Evidence: The title mentions track and thumb without a diagram.
 
-- [ ] `scrollbar_style_lab-14` · P3 · proposal. Unused lower area: Use it for the variant specification table.
+- [x] `scrollbar_style_lab-14` · P3 · proposal. Unused lower area: Use it for the variant specification table.
   Evidence: Nearly half the screen is blank.
 
-- [ ] `scrollbar_style_lab-15` · P2 · proposal. Baseline variant naming: Use consistent human-readable headings and put API tokens in smaller metadata.
+- [x] `scrollbar_style_lab-15` · P2 · proposal. Baseline variant naming: Use consistent human-readable headings and put API tokens in smaller metadata.
   Evidence: default is lowercase while Accent uses a token-like capital.
 
-- [ ] `scrollbar_style_lab-16` · P3 · proposal. Width comparison: Add a width-only comparison swatch alongside its metadata to isolate thickness.
+- [x] `scrollbar_style_lab-16` · P3 · proposal. Width comparison: Add a width-only comparison swatch alongside its metadata to isolate thickness.
   Evidence: The thick variant changes both color and width.
 
 ### secure_tunnel

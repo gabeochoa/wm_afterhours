@@ -1708,7 +1708,8 @@
         "change": "Add a width-only comparison swatch alongside its metadata to isolate thickness."
       }
     ],
-    "sha256": "28fcd043a647faca491c9ab3417db32e881454fb884762f82a0135e2b145e205"
+    "sha256": "28fcd043a647faca491c9ab3417db32e881454fb884762f82a0135e2b145e205",
+    "evidence": "docs/design-audit/originals/scrollbar_style_lab_720p.png"
   },
   {
     "id": "secure_tunnel",
