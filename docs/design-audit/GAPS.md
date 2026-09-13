@@ -959,7 +959,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## composer lab
 
-[Current baseline](../../screenshot-baselines/screens/composer_lab_720p.png) · [Visual review](../../design-audit.html#screen=composer_lab)
+[Reviewed image](../../docs/design-audit/originals/composer_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/composer_lab_720p.png) · [Visual review](../../design-audit.html#screen=composer_lab)
 
 Baseline SHA-256: `73d0972a89851ea849389acbcc7820b7cff5ff67a417f000fd33d388dda71b65`
 

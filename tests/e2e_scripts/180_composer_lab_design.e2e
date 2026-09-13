@@ -1,0 +1,84 @@
+goto_screen composer_lab
+resize 1280 720
+wait 0.5
+expect_text "Composer lab"
+expect_text "1. Growing composer"
+expect_text "Submissions: 0"
+expect_text "Visible rows 3 / cap 5"
+expect_text "Nothing submitted yet"
+expect_text "Cursor (byte offset)"
+expect_text "Row / byte col (0-based)"
+expect_text "Scroll Y (px)"
+expect_text "Widest visual line (px)"
+expect_text "Clipped by design"
+expect_text "Rows 10-12 of 12"
+assert_ui cl_composer x=88 y=186 w=684 h=68
+assert_ui cl_plain x=88 y=374 w=580 h=88
+assert_ui cl_nowrap x=88 y=536 w=580 h=28
+assert_ui cl_clipped x=88 y=634 w=684 h=68
+screenshot composer_lab_design
+focus_element cl_composer
+key CTRL+A
+type "alpha"
+key SHIFT+ENTER
+type "beta"
+wait 0.2
+expect_text "Visible rows 2 / cap 5"
+key ENTER
+wait 0.3
+expect_text "Submissions: 1"
+expect_text "alpha beta"
+expect_text "Last submission / 10 bytes"
+expect_text "Visible rows 1 / cap 5"
+assert_ui cl_composer h=28
+type "one"
+key SHIFT+ENTER
+type "two"
+key SHIFT+ENTER
+type "three"
+key SHIFT+ENTER
+type "four"
+key SHIFT+ENTER
+type "five"
+wait 0.3
+expect_text "Visible rows 5 / cap 5"
+assert_ui cl_composer h=108
+expect_text "Submissions: 1"
+focus_element cl_plain
+wait 0.2
+expect_text "State / 2. Wrapping"
+key CTRL+A
+type "paragraph"
+key ENTER
+type "second row"
+wait 0.2
+expect_text "Submissions: 1"
+expect_text "paragraph"
+expect_text "second row"
+click_ui cl_guides
+wait 0.2
+expect_text "Hide row guides"
+screenshot composer_lab_design_guides
+triple_click_ui cl_nowrap
+wait 0.3
+expect_selected_text cl_nowrap "wrapping is off on this one so this long line just runs on and gets clipped at the edge"
+expect_text "State / 3. No wrap"
+click_ui cl_scroll_top
+wait 0.3
+expect_text "Rows 1-3 of 12"
+expect_text "State / 4. Scrolling"
+click_ui cl_scroll_bottom
+wait 0.3
+expect_text "Rows 10-12 of 12"
+screenshot composer_lab_design_scroll
+resize 1920 1080
+wait 0.4
+assert_ui cl_plain x=132 y=561 w=870 h=132
+assert_ui cl_clipped x=132 y=951 w=1026 h=102
+screenshot composer_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui cl_canvas w=1024 h=768
+assert_ui cl_nowrap x=70 y=525 w=464 h=22
+screenshot composer_lab_design_narrow
+resize 1280 720

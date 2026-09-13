@@ -4731,7 +4731,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "73d0972a89851ea849389acbcc7820b7cff5ff67a417f000fd33d388dda71b65"
+    "sha256": "73d0972a89851ea849389acbcc7820b7cff5ff67a417f000fd33d388dda71b65",
+    "evidence": "docs/design-audit/originals/composer_lab_720p.png"
   },
   {
     "id": "config_gap_gallery",

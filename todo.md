@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-530 completed; 2,005 remaining.
+555 completed; 1,980 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1715,79 +1715,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/composer_lab_720p.png) · [Visual review](design-audit.html#screen=composer_lab)
 
-- [ ] `composer_lab-01` · P2 · proposal. Title width: Separate the title from a short behavior subtitle.
+- [x] `composer_lab-01` · P2 · proposal. Title width: Separate the title from a short behavior subtitle.
   Evidence: Composer Lab uses a long technical sentence as its title.
 
-- [ ] `composer_lab-02` · P2 · proposal. Section 1 heading: Use a readable heading with API flags on a second line.
+- [x] `composer_lab-02` · P2 · proposal. Section 1 heading: Use a readable heading with API flags on a second line.
   Evidence: auto-grow + submit_on_enter is tiny.
 
-- [ ] `composer_lab-03` · P2 · proposal. First field help: Move persistent guidance outside the input.
+- [x] `composer_lab-03` · P2 · proposal. First field help: Move persistent guidance outside the input.
   Evidence: The editable value doubles as the full instruction.
 
-- [ ] `composer_lab-04` · P2 · proposal. Send count: Show a compact submission counter beside the field.
+- [x] `composer_lab-04` · P2 · proposal. Send count: Show a compact submission counter beside the field.
   Evidence: Sends: 0 is buried in the first heading.
 
-- [ ] `composer_lab-05` · P2 · proposal. Submitted output: Add a labeled last-submitted preview.
+- [x] `composer_lab-05` · P2 · proposal. Submitted output: Add a labeled last-submitted preview.
   Evidence: The first example has no visible result area for sent text.
 
-- [ ] `composer_lab-06` · P2 · proposal. Row-cap context: Draw a neutral maximum-height outline behind the field.
+- [x] `composer_lab-06` · P2 · proposal. Row-cap context: Draw a neutral maximum-height outline behind the field.
   Evidence: Capped at 5 rows is named but not visually marked.
 
-- [ ] `composer_lab-07` · P2 · proposal. Current rows: Place current/cap row counts immediately below the first field.
+- [x] `composer_lab-07` · P2 · proposal. Current rows: Place current/cap row counts immediately below the first field.
   Evidence: The rows 3 diagnostic is far to the right.
 
-- [ ] `composer_lab-08` · P2 · proposal. State table type: Increase diagnostic text size.
+- [x] `composer_lab-08` · P2 · proposal. State table type: Increase diagnostic text size.
   Evidence: Composer state keys and values are very small.
 
-- [ ] `composer_lab-09` · P2 · proposal. State alignment: Use a compact aligned two-column table.
+- [x] `composer_lab-09` · P2 · proposal. State alignment: Use a compact aligned two-column table.
   Evidence: Keys and values are separated by a wide empty gutter.
 
-- [ ] `composer_lab-10` · P2 · proposal. Cursor units: Label the unit explicitly.
+- [x] `composer_lab-10` · P2 · proposal. Cursor units: Label the unit explicitly.
   Evidence: Cursor 136 does not state bytes, characters or codepoints.
 
-- [ ] `composer_lab-11` · P2 · proposal. Row/column indexing: State the indexing convention.
+- [x] `composer_lab-11` · P2 · proposal. Row/column indexing: State the indexing convention.
   Evidence: 2/32 has no zero-based or one-based explanation.
 
-- [ ] `composer_lab-12` · P2 · proposal. Scroll units: Display the unit used by the field.
+- [x] `composer_lab-12` · P2 · proposal. Scroll units: Display the unit used by the field.
   Evidence: scroll y0.0 lacks units.
 
-- [ ] `composer_lab-13` · P2 · proposal. Widest measurement: Rename it Widest visual line.
+- [x] `composer_lab-13` · P2 · proposal. Widest measurement: Rename it Widest visual line.
   Evidence: widest 404px does not identify what width was measured.
 
-- [ ] `composer_lab-14` · P2 · proposal. Second field heading: Split behavior label from input instruction.
+- [x] `composer_lab-14` · P2 · proposal. Second field heading: Split behavior label from input instruction.
   Evidence: Word wrap on competes with the long Enter explanation.
 
-- [ ] `composer_lab-15` · P2 · proposal. Second field height: Add optional baseline guides to explain its fixed capacity.
+- [x] `composer_lab-15` · P2 · proposal. Second field height: Add optional baseline guides to explain its fixed capacity.
   Evidence: The empty lower area has no visible row guides.
 
-- [ ] `composer_lab-16` · P2 · proposal. No-wrap fixture: Add a small Clipped by design annotation outside the field.
+- [x] `composer_lab-16` · P2 · proposal. No-wrap fixture: Add a small Clipped by design annotation outside the field.
   Evidence: The third line clips intentionally with no external endpoint cue.
 
-- [ ] `composer_lab-17` · P2 · proposal. No-wrap hidden extent: Add a text-length or horizontal-overflow diagnostic.
+- [x] `composer_lab-17` · P2 · proposal. No-wrap hidden extent: Add a text-length or horizontal-overflow diagnostic.
   Evidence: The visible line does not show how much content continues.
 
-- [ ] `composer_lab-18` · P2 · proposal. Scroll fixture: Display Rows 10–12 of 12 beside it.
+- [x] `composer_lab-18` · P2 · proposal. Scroll fixture: Display Rows 10–12 of 12 beside it.
   Evidence: The fourth field shows ten, eleven, twelve without its current position.
 
-- [ ] `composer_lab-19` · P2 · proposal. Scroll cue: Add an external scroll-range indicator without changing clipping.
+- [x] `composer_lab-19` · P2 · proposal. Scroll cue: Add an external scroll-range indicator without changing clipping.
   Evidence: The scroll fixture has no visible scrollbar in this capture.
 
-- [ ] `composer_lab-20` · P2 · proposal. Key reference: Increase type and group movement, editing and selection.
+- [x] `composer_lab-20` · P2 · proposal. Key reference: Increase type and group movement, editing and selection.
   Evidence: Keyboard help is tiny and densely packed.
 
-- [ ] `composer_lab-21` · P2 · proposal. Platform shortcuts: Show the active platform's keys first.
+- [x] `composer_lab-21` · P2 · proposal. Platform shortcuts: Show the active platform's keys first.
   Evidence: Alt/Ctrl and Cmd/Ctrl syntax is hard to scan.
 
-- [ ] `composer_lab-22` · P2 · proposal. Mouse help: Use a compact list below keyboard help.
+- [x] `composer_lab-22` · P2 · proposal. Mouse help: Use a compact list below keyboard help.
   Evidence: Mouse instructions wrap into two distant short lines.
 
-- [ ] `composer_lab-23` · P2 · proposal. Two-column balance: Widen the examples and diagnostic table proportionally.
+- [x] `composer_lab-23` · P2 · proposal. Two-column balance: Widen the examples and diagnostic table proportionally.
   Evidence: The content occupies only the left two-thirds of the screen.
 
-- [ ] `composer_lab-24` · P2 · proposal. Section spacing: Use consistent section spacing.
+- [x] `composer_lab-24` · P2 · proposal. Section spacing: Use consistent section spacing.
   Evidence: The first-to-second field gap is much larger than later gaps.
 
-- [ ] `composer_lab-25` · P2 · proposal. Focused example label: Show the active example number beside the state heading.
+- [x] `composer_lab-25` · P2 · proposal. Focused example label: Show the active example number beside the state heading.
   Evidence: The state table says focused yes without naming the field.
 
 ### config_gap_gallery
@@ -8107,6 +8107,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review text-area wheel scrolling, returned focus target and scaled auto-grow padding; see `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review external checkbox state synchronization so app resets do not require editing `HasCheckboxState`; see `docs/AFTERHOURS_GAPS.md`.
 

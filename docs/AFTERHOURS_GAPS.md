@@ -236,6 +236,21 @@ now combines hover translation with press scale. Upstream needs explicit
 composition or precedence for multiple triggers targeting the same property;
 keep this policy visible rather than silently overwriting a track.
 
+### Text-area scrolling, focus targets and scaled auto-grow padding
+
+`text_area.h` calls `ensure_cursor_visible_at_row` during every rebuild before
+applying the mouse wheel. A wheel offset away from the caret is therefore
+reset on the next idle frame. The wm example offers Top/Bottom caret
+navigation and reports the real scroll range; independent wheel scrolling
+still needs an upstream fix. Its focus target is the inner field, while the
+returned entity is a wrapper: setting focus on that wrapper is discarded by
+EndUIContextManager because the wrapper is absent from focused_ids. A
+supported focus-target accessor would avoid callers inspecting child order.
+Auto-grow also adds a fixed 8px to row heights while the field padding uses
+height-scaled h720(4) on each side; at 1080p five 30px rows receive 158px
+outer height but need 162px. Review scaled padding and caret-visible scrolling
+separately.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from
