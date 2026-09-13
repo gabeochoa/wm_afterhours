@@ -24,7 +24,8 @@ namespace ui_tree_dump {
 inline nlohmann::json size_json(const afterhours::ui::Size &s) {
   return {{"dim", std::string(magic_enum::enum_name(s.dim))},
           {"value", s.value},
-          {"strictness", s.strictness}};
+          {"strictness", s.strictness},
+          {"screen_reference", std::string(magic_enum::enum_name(s.screen_reference))}};
 }
 
 inline nlohmann::json build(afterhours::Entity &entity,

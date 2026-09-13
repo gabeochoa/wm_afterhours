@@ -196,6 +196,15 @@ Preload &Preload::make_singleton() {
       }
     }
 
+    for (const auto &[name, source] : font_config::aliases) {
+      auto font = font_mgr.fonts.find(source);
+      if (font == font_mgr.fonts.end()) {
+        log_warn("Cannot register font alias {}: {} is not loaded", name, source);
+        continue;
+      }
+      font_mgr.load_font(name, font->second);
+    }
+
     apply_ui_styling_defaults();
   }
   return *this;

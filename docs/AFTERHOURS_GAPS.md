@@ -1734,3 +1734,67 @@ Validation: real Metal `sokol_resize_test` passes 1,356 checks separately at 1×
 coalescing, cancellation, auxiliary targets, and 64 repeated resizes. Hanabi was
 not modified. Malformed initial graphics Config validation remains a separate
 initialization concern; this change validates resize requests.
+
+### Default-theme integration
+
+The old default palette, handwritten fallback font, and separately styled
+overlays made unstyled controls inconsistent. The new neutral theme supplies
+contrast-checked semantic colors, pixel radii, derived borders/elevation, and
+shared typography. WM aliases its fallback names to its existing 192px Atkinson
+regular/bold atlases rather than loading duplicate font textures. The new
+`default_theme` screen demonstrates settings, navigation, validation, disabled
+controls, confirmation, tooltips and toasts without custom colors or font faces.
+
+The integration pass found additional incorrect assumptions:
+
+- Slider thumb sizes and offsets inherited viewport-relative units, even though
+  the thumb belongs to a track. The track/label now divide their parent and the
+  thumb uses track-relative percentages, including drag updates. Stored slider
+  callbacks also captured temporary label/placement variables by reference;
+  those values now survive the builder call.
+- Native modal chrome mixed global proportional spacing with context-local
+  Adaptive panels. A fixed-height login panel at 1080p shrank its header beneath
+  its close button. Header, title, padding and the square close button now use
+  the resolved context/application mode. Title width consumes the remaining
+  header space instead of depending on stale child measurement.
+- Tooltip sizing guessed character widths and drew with whichever font was
+  active. It now measures and renders the configured family, wraps long text,
+  honors placement and clamps to the viewport.
+- Equal spacing tokens previously resolved horizontal values against screen
+  width and vertical values against height. Converting them eagerly to pixels
+  fixed that mismatch but froze saved configurations across resize. Height-based
+  proportional spacing must remain lazy; cached configuration is a supported
+  use case, not a reason to require applications to rebuild it.
+
+Explicit text-input autofit remains height-derived. Supplying a global font is
+not an instruction to override an explicit autofit request. Theme-file
+persistence for the new optional tokens and general styled-label line spacing
+remain recorded separately in `todo.md`.
+
+Library verification: default-theme contrast/draw capture 49/49, design defaults
+and persistent spacing 1,214/1,214, autolayout 358/358, modal layout 69/69, slider
+geometry 75/75, and virtual lists 16,373/16,373. The autolayout test source still
+emits nine pre-existing designated-initializer-order warnings; no new warning
+was introduced in the changed library code.
+
+Screenshot review also caught an error → normal transition retaining its red
+fill: `Usage::None` previously skipped color reconciliation. Explicit no-fill
+now clears the old color, including restyles and their text contrast hint.
+Native toasts gain text inset and a 48px default height; their desired sizes
+resolve again after resize, and edge/center anchoring uses their actual width.
+Customize toast dimensions through `UIComponent::set_desired_width/height`;
+computed dimensions belong to layout.
+
+A second screenshot check found that explicit text inset was measured but not
+applied at draw time. The immediate plain-text path substituted a legacy 5px
+margin; the batched path positioned text again using the uninset box. Both
+paths now draw inside the configured inset, and styled runs apply it once.
+The regression checks actual text coordinates for plain/styled labels in both
+renderers, rather than only asserting that the inset field was populated.
+
+Final WM verification: 15/15 E2E scripts passed after the renderer correction,
+covering the new page, advanced/native dialogs, context menus, popovers, both
+drag lists, text inputs/autofit, toasts, virtual lists and focus/Escape behavior.
+The WM build emitted no warnings. Fresh screenshots were inspected at 720p and
+1080p, including validation recovery, save confirmation, focus and the toast.
+The multiline rendering suite passes 62/62 checks.

@@ -81,9 +81,7 @@ inline std::vector<int> get_inline_prompt_codepoints() {
 inline std::vector<FontDef> get_all_fonts() {
   return {
       // Core UI fonts
-      {"__default", "Gaegu-Bold.ttf"},
       {"__symbol", "AtkinsonHyperlegible-Regular.ttf"},
-      {"__unset", "Gaegu-Bold.ttf"},
 
       // Named fonts for screens
       {"Gaegu-Bold", "Gaegu-Bold.ttf"},
@@ -95,7 +93,6 @@ inline std::vector<FontDef> get_all_fonts() {
       {"FredokaMockBold", "Fredoka-MockBold.ttf", false, nullptr, 192},
       {"BlackOpsOne", "BlackOpsOne-Regular.ttf"},
       {"Atkinson", "AtkinsonHyperlegible-Regular.ttf"},
-      {"AtkinsonMockBold", "AtkinsonHyperlegible-Bold.ttf", false, nullptr, 192},
       {"AtkinsonMock@bold", "AtkinsonHyperlegible-Bold.ttf", false, nullptr, 192},
       {"AtkinsonMock", "AtkinsonHyperlegible-Regular.ttf", false, nullptr,
        192},
@@ -127,5 +124,18 @@ inline std::vector<FontDef> get_all_fonts() {
        get_japanese_codepoints, 32},
   };
 }
+
+struct FontAlias {
+  const char *name;
+  const char *source;
+};
+
+inline constexpr FontAlias aliases[] = {
+    {"__default", "AtkinsonMock"},
+    {"__default@bold", "AtkinsonMock@bold"},
+    {"__unset", "AtkinsonMock"},
+    {"__unset@bold", "AtkinsonMock@bold"},
+    {"AtkinsonMockBold", "AtkinsonMock@bold"},
+};
 
 } // namespace font_config

@@ -1,0 +1,79 @@
+goto_screen default_theme
+resize 1280 720
+wait 0.5
+expect_text "Your workspace"
+expect_text "No changes saved yet."
+screenshot default_theme_page
+assert_ui default_page x=48 y=48 w=1184 h=624
+assert_ui default_card x=272 y=152 w=648 h=448
+assert_no_overflow
+assert_within_parents
+mouse_move 1040 308
+wait 0.4
+screenshot default_theme_tooltip
+mouse_move 40 40
+click_ui default_help
+wait 0.2
+expect_text "About this theme"
+key ESCAPE
+wait 0.2
+expect_no_text "About this theme"
+focus_ui default_name
+select_all
+key BACKSPACE
+wait 0.2
+click_ui default_save
+wait 0.2
+expect_text "Enter a project name before saving."
+expect_no_text "Save workspace?"
+screenshot default_theme_error
+focus_ui default_name
+type "Shared studio"
+wait 0.2
+expect_input_text default_name "Shared studio"
+click_ui default_visibility
+wait 0.2
+click_text "My team"
+wait 0.2
+expect_text "My team"
+focus_ui default_volume
+key RIGHT
+wait 0.2
+expect_no_text "Volume: 60%"
+screenshot default_theme_focus
+click_ui default_nav_1
+wait 0.2
+expect_text "Email notifications are on."
+click_ui toggle_track
+wait 0.2
+expect_text "Email notifications are off."
+screenshot default_theme_notifications
+click_ui default_nav_2
+wait 0.2
+expect_text "You are the workspace owner."
+screenshot default_theme_disabled
+click_ui default_nav_0
+wait 0.2
+click_ui default_save
+wait 0.2
+expect_text "Save workspace?"
+expect_text "Keep editing"
+screenshot default_theme_dialog
+key ESCAPE
+wait 0.2
+expect_no_text "Save workspace?"
+expect_text "No changes saved yet."
+click_ui default_save
+wait 0.2
+click_text "Confirm save"
+wait 0.3
+expect_text "Saved 1 time(s)."
+expect_text "Workspace settings saved."
+screenshot default_theme_saved
+resize 1920 1080
+wait 0.3
+assert_ui default_page x=72 y=72 w=1776 h=936
+assert_ui default_card x=408 y=228 w=972 h=672
+assert_no_overflow
+screenshot default_theme_1080
+resize 1280 720

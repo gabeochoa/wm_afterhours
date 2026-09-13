@@ -33,7 +33,8 @@ assumptions and performance measurements are in [AFTERHOURS_GAPS.md](docs/AFTERH
 
 ## New consumer gaps collected September 13
 
-These are collection results, not implementation approvals. Source evidence,
+UP-13 through UP-16 are implemented locally. The remaining items are collection
+results, not implementation approvals. Source evidence,
 causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAPS.md#consumer-gap-refresh-2026-09-13).
 
 - [x] **UP-13:** Retire UI draw commands at each update so skipped renders do not accumulate stale submissions. Floatinghotel carries a queue-clearing system.
@@ -59,7 +60,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 ## Existing project backlog
 
-- [ ] Build a polished default theme that looks good with no application styling or customization. Use Dannaway’s supplied “How to build a design system” as a reference: a small semantic color palette with verified contrast, one readable font family with regular/bold weights, a balanced type scale with explicit line heights, major/minor spacing units, and restrained pixel radii and elevation. Make native components and their hover/focus/disabled/error states inherit those defaults consistently, including dialog/tooltip/toast descendants. Demonstrate unstyled forms, settings, navigation and a complete page; include concise usage guidance. Review any afterhours changes before upstreaming.
+- [x] Build a polished default theme that looks good with no application styling or customization. Use Dannaway’s supplied “How to build a design system” as a reference: a small semantic color palette with verified contrast, one readable font family with regular/bold weights, a balanced type scale with explicit line heights, major/minor spacing units, and restrained pixel radii and elevation. Make native components and their hover/focus/disabled/error states inherit those defaults consistently, including dialog/tooltip/toast descendants. Demonstrate unstyled forms, settings, navigation and a complete page; include concise usage guidance. Review any afterhours changes before upstreaming. Implemented by the default theme, native control/overlay inheritance, the `default_theme` workspace demo and [usage guidance](docs/default-theme.md). General styled-label line spacing remains a separate item below.
 
 - [ ] Review Adham Dannaway’s supplied “16 little UI design tips that make a big impact” as a practical design checklist. Group related content with spacing; keep visual treatments and behavior consistent; make hierarchy and the primary action clear with a squint/blur check; remove unnecessary decoration and use color purposefully. Check text and essential control contrast against the applicable WCAG thresholds, and pair color indicators with another cue. Default ordinary UI to one readable sans-serif family with a high x-height, regular/bold weights and limited uppercase; left-align longer text and evaluate 1.5–2× body line height. Review dark-gray text and brand-specific exceptions in context rather than applying every guideline mechanically.
 
@@ -85,9 +86,11 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Define and implement native cross-axis Stretch sizing for unspecified dimensions; see docs/AFTERHOURS_GAPS.md.
 
-- [ ] Choose one major and one minor spacing unit for vertical rhythm, and align sections, groups and controls to those units by default.
+- [x] Choose one major and one minor spacing unit for vertical rhythm, and align sections, groups and controls to those units by default. Default spacing uses 8px major and 4px minor units; the default-theme page demonstrates them.
 
 - [ ] Investigate faster text layout using prepared text and cached measurements. Review [the plan](docs/plans/text-layout-performance.md) before implementation.
+
+- [ ] Persist optional theme radius/color overrides and the panel radius through theme-file save/load.
 
 - [ ] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md.
 
