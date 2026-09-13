@@ -1,0 +1,120 @@
+goto_screen parcel_corps_settings
+resize 1280 720
+wait 0.4
+expect_text "Settings"
+expect_text "LANGUAGE & TEXT"
+expect_text "DISPLAY"
+expect_text "AUDIO"
+expect_text "Text Language"
+expect_text "King's English"
+expect_text "Fullscreen"
+expect_text "Anti-aliasing"
+expect_text "MSAA"
+expect_text "V-sync"
+expect_text "2560 × 1440"
+expect_text "Changes apply locally"
+expect_text "Grow your delivery network"
+expect_text "Sign up 4 businesses: 1 / 4"
+expect_text "First business signed up"
+expect_text "8 viewers · 10 messages"
+expect_text "mph"
+assert_ui parcel_canvas w=1280 h=720
+assert_ui parcel_root x=0 y=0 w=1280 h=720
+assert_ui parcel_phone x=40 y=26 w=440 h=674
+assert_ui parcel_back x=68 y=109 w=32 h=32
+assert_ui parcel_language_row x=68 y=174 w=384 h=38
+assert_ui parcel_language_value x=276 y=179 w=164 h=28
+assert_ui parcel_msaa_row x=68 y=364 w=384 h=46
+assert_ui parcel_msaa_prev x=284 y=368 w=32 h=32
+assert_ui parcel_msaa_value x=318 y=368 w=88 h=32 text=2x
+assert_ui parcel_msaa_next x=408 y=368 w=32 h=32
+assert_ui parcel_fullscreen_toggle_state text=On
+assert_ui parcel_motion_toggle_state text=On
+assert_ui parcel_vsync_toggle_state text=On
+assert_ui parcel_audio_value text=85%
+assert_ui parcel_music_value text=75%
+assert_ui parcel_audio_slider x=280 y=569 w=100 h=30
+assert_ui parcel_music_slider x=280 y=613 w=100 h=30
+assert_ui parcel_status x=68 y=652 w=384 h=25
+assert_ui parcel_quest x=520 y=34 w=400 h=108
+assert_ui parcel_level x=864 y=46 w=42 h=28
+assert_ui parcel_chat x=944 y=34 w=288 h=212
+assert_ui parcel_speed x=1104 y=592 w=128 h=96
+assert_no_overflow
+assert_within_parents
+screenshot parcel_corps_settings_design
+click_ui parcel_language_row
+wait 0.2
+expect_text "English US"
+click_ui parcel_fullscreen_toggle
+click_ui parcel_motion_toggle
+click_ui parcel_vsync_toggle
+wait 0.3
+assert_ui parcel_fullscreen_toggle_state text=Off
+assert_ui parcel_motion_toggle_state text=Off
+assert_ui parcel_vsync_toggle_state text=Off
+focus_ui parcel_subtitles_toggle
+key ENTER
+wait 0.2
+assert_ui parcel_subtitles_toggle_state text=Off
+click_ui parcel_msaa_prev
+wait 0.2
+assert_ui parcel_msaa_value text=Off
+click_ui parcel_msaa_prev
+wait 0.2
+assert_ui parcel_msaa_value text=8x
+click_ui parcel_texture_next
+wait 0.2
+assert_ui parcel_texture_value text=Ultra
+click_ui parcel_texture_next
+wait 0.2
+assert_ui parcel_texture_value text=Low
+set_slider parcel_audio_slider 0.5
+wait 0.2
+assert_ui parcel_audio_value text=50%
+focus_ui parcel_audio_slider
+key RIGHT
+wait 0.2
+assert_ui parcel_audio_value text=51%
+expect_text "Audio Volume: 51%"
+set_slider parcel_music_slider 0.25
+wait 0.2
+assert_ui parcel_music_value text=25%
+focus_ui parcel_music_slider
+key LEFT
+wait 0.2
+assert_ui parcel_music_value text=24%
+click_ui parcel_back
+wait 0.3
+expect_text "Open settings"
+expect_no_text "Text Language"
+screenshot parcel_corps_settings_design_closed
+click_ui parcel_reopen
+wait 0.3
+expect_text "Text Language"
+assert_ui parcel_fullscreen_toggle_state text=Off
+assert_ui parcel_audio_value text=51%
+resize 1920 1080
+wait 0.3
+assert_ui parcel_root x=0 y=0 w=1920 h=1080
+assert_ui parcel_phone x=60 y=39 w=660 h=1011
+assert_ui parcel_language_row x=102 y=261 w=576 h=57
+assert_ui parcel_audio_slider x=420 y=854 w=150 h=45
+assert_no_overflow
+assert_within_parents
+screenshot parcel_corps_settings_design_1080
+resize 1024 768
+wait 0.3
+assert_ui parcel_canvas w=1024 h=768
+assert_ui parcel_root x=0 y=96 w=1024 h=576
+assert_ui parcel_phone x=32 y=117 w=352 h=539
+assert_ui parcel_audio_slider x=224 y=551 w=80 h=24
+assert_ui parcel_status x=54 y=618 w=307 h=20
+assert_no_overflow
+assert_within_parents
+screenshot parcel_corps_settings_design_narrow
+key ESCAPE
+wait 0.3
+expect_text "Open settings"
+click_ui parcel_reopen
+resize 1280 720

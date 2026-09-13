@@ -2731,7 +2731,7 @@ Current capture removes the first back-arrow outline. Selected Page 1, Medium an
 
 ## parcel corps settings
 
-[Current baseline](../../screenshot-baselines/screens/parcel_corps_settings_720p.png) · [Visual review](../../design-audit.html#screen=parcel_corps_settings)
+[Reviewed image](../../docs/design-audit/originals/parcel_corps_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/parcel_corps_settings_720p.png) · [Visual review](../../design-audit.html#screen=parcel_corps_settings)
 
 Baseline SHA-256: `9f13c3a494f26fed9e4769236bd9878efab854a8e06a193827dfbe680e00fae0`
 

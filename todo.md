@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,605 completed; 930 remaining.
+1,630 completed; 905 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5381,79 +5381,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/parcel_corps_settings_720p.png) · [Visual review](design-audit.html#screen=parcel_corps_settings)
 
-- [ ] `parcel_corps_settings-01` · P2 · proposal. Phone title: Tighten the gap to give the lower controls more room.
+- [x] `parcel_corps_settings-01` · P2 · proposal. Phone title: Tighten the gap to give the lower controls more room.
   Evidence: Settings is separated from the first row by a large blank gap.
 
-- [ ] `parcel_corps_settings-02` · P2 · proposal. Text Language value: Increase value readability and trailing padding.
+- [x] `parcel_corps_settings-02` · P2 · proposal. Text Language value: Increase value readability and trailing padding.
   Evidence: King's English is small and close to the right border.
 
-- [ ] `parcel_corps_settings-03` · P2 · proposal. Category symbols: Use recognizable language, display, motion, sync, and audio symbols.
+- [x] `parcel_corps_settings-03` · P2 · proposal. Category symbols: Use recognizable language, display, motion, sync, and audio symbols.
   Evidence: T, D, X, S, and asterisks form an unexplained icon column.
 
-- [ ] `parcel_corps_settings-04` · P2 · proposal. Category color meaning: Group rows by category or add a compact category legend.
+- [x] `parcel_corps_settings-04` · P2 · proposal. Category color meaning: Group rows by category or add a compact category legend.
   Evidence: Green, orange, red, and blue badges have no key.
 
-- [ ] `parcel_corps_settings-05` · P2 · proposal. Resolution value: Use a clear multiplication sign and a stable value column.
+- [x] `parcel_corps_settings-05` · P2 · proposal. Resolution value: Use a clear multiplication sign and a stable value column.
   Evidence: 2560 x 1440 is small in a dense row.
 
-- [ ] `parcel_corps_settings-06` · P2 · proposal. Full Screen label: Use Fullscreen consistently.
+- [x] `parcel_corps_settings-06` · P2 · proposal. Full Screen label: Use Fullscreen consistently.
   Evidence: Full Screen differs from the common single-word setting name.
 
-- [ ] `parcel_corps_settings-07` · P2 · proposal. MSAA meaning: Add an Anti-aliasing subtitle or expand the label.
+- [x] `parcel_corps_settings-07` · P2 · proposal. MSAA meaning: Add an Anti-aliasing subtitle or expand the label.
   Evidence: MSAA is shown without an explanation.
 
-- [ ] `parcel_corps_settings-08` · P2 · proposal. MSAA arrows: Use centered geometric chevrons and equal button insets.
+- [x] `parcel_corps_settings-08` · P2 · proposal. MSAA arrows: Use centered geometric chevrons and equal button insets.
   Evidence: Small angle-bracket characters fill large dark buttons.
 
-- [ ] `parcel_corps_settings-09` · P2 · proposal. Quality value: Give the value a fixed-width centered region.
+- [x] `parcel_corps_settings-09` · P2 · proposal. Quality value: Give the value a fixed-width centered region.
   Evidence: High is squeezed between the two arrow buttons.
 
-- [ ] `parcel_corps_settings-10` · P2 · proposal. Toggle states: Add a consistent state label where space allows.
+- [x] `parcel_corps_settings-10` · P2 · proposal. Toggle states: Add a consistent state label where space allows.
   Evidence: Several vivid green switches have no explicit On text.
 
-- [ ] `parcel_corps_settings-11` · P2 · proposal. Motion Blur icon: Use a motion-blur symbol rather than an error-like X.
+- [x] `parcel_corps_settings-11` · P2 · proposal. Motion Blur icon: Use a motion-blur symbol rather than an error-like X.
   Evidence: The red X badge resembles an error despite the toggle being on.
 
-- [ ] `parcel_corps_settings-12` · P2 · proposal. VSync naming: Use V-sync or Vertical sync consistently.
+- [x] `parcel_corps_settings-12` · P2 · proposal. VSync naming: Use V-sync or Vertical sync consistently.
   Evidence: VSync lacks the spacing and casing used elsewhere in settings.
 
-- [ ] `parcel_corps_settings-13` · P2 · proposal. Settings open text: Move this status into a footer or replace it with an Audio section heading.
+- [x] `parcel_corps_settings-13` · P2 · proposal. Settings open text: Move this status into a footer or replace it with an Audio section heading.
   Evidence: Settings open interrupts the list between VSync and audio controls.
 
-- [ ] `parcel_corps_settings-14` · P2 · proposal. Audio sliders: Increase track and thumb readability while keeping compact row heights.
+- [x] `parcel_corps_settings-14` · P2 · proposal. Audio sliders: Increase track and thumb readability while keeping compact row heights.
   Evidence: Thin tracks and small white thumbs sit in short rows.
 
-- [ ] `parcel_corps_settings-15` · P2 · proposal. Audio values: Show the current percentage beside each slider.
+- [x] `parcel_corps_settings-15` · P2 · proposal. Audio values: Show the current percentage beside each slider.
   Evidence: Audio Volume and Music Volume have no numeric percentages.
 
-- [ ] `parcel_corps_settings-16` · P2 · proposal. Bottom controls: Add bottom padding or a visible scroll boundary.
+- [x] `parcel_corps_settings-16` · P2 · proposal. Bottom controls: Add bottom padding or a visible scroll boundary.
   Evidence: Music Volume sits close to the phone's lower inner edge.
 
-- [ ] `parcel_corps_settings-17` · P2 · proposal. Phone close path: Add a back chevron near the title if the settings flow supports it.
+- [x] `parcel_corps_settings-17` · P2 · proposal. Phone close path: Add a back chevron near the title if the settings flow supports it.
   Evidence: The phone shows Settings without a visible back or close control.
 
-- [ ] `parcel_corps_settings-18` · P3 · proposal. Phone status bar: Use recognizable battery and signal symbols with consistent spacing.
+- [x] `parcel_corps_settings-18` · P3 · proposal. Phone status bar: Use recognizable battery and signal symbols with consistent spacing.
   Evidence: A blank white pill and green battery-like shape replace the mock's recognizable signal and battery indicators.
 
-- [ ] `parcel_corps_settings-19` · P2 · proposal. Objective copy: Combine it into one objective with a distinct completion state.
+- [x] `parcel_corps_settings-19` · P2 · proposal. Objective copy: Combine it into one objective with a distinct completion state.
   Evidence: The business sign-up objective repeats twice in the blue panel.
 
-- [ ] `parcel_corps_settings-20` · P2 · proposal. Objective marker: Place the level badge in a dedicated corner outside the text block.
+- [x] `parcel_corps_settings-20` · P2 · proposal. Objective marker: Place the level badge in a dedicated corner outside the text block.
   Evidence: The small Lv0 badge overlaps the objective's last line.
 
-- [ ] `parcel_corps_settings-21` · P2 · proposal. Live-chat text: Reduce chat prominence while the phone is open and keep message text legible.
+- [x] `parcel_corps_settings-21` · P2 · proposal. Live-chat text: Reduce chat prominence while the phone is open and keep message text legible.
   Evidence: Tiny bright usernames and messages compete with settings.
 
-- [ ] `parcel_corps_settings-22` · P3 · proposal. Live header: Add clear viewer/chat icons or labels around the counts.
+- [x] `parcel_corps_settings-22` · P3 · proposal. Live header: Add clear viewer/chat icons or labels around the counts.
   Evidence: 08, 10, and EDDCOATES form an unexplained compact cluster.
 
-- [ ] `parcel_corps_settings-23` · P2 · proposal. Speed display: Use a conventional speed unit and a consistent safe-area inset.
+- [x] `parcel_corps_settings-23` · P2 · proposal. Speed display: Use a conventional speed unit and a consistent safe-area inset.
   Evidence: 009 and M/h appear in a small panel at the lower-right edge.
 
-- [ ] `parcel_corps_settings-24` · P3 · proposal. Background rider: Clarify the silhouette and face details without increasing background contrast.
+- [x] `parcel_corps_settings-24` · P3 · proposal. Background rider: Clarify the silhouette and face details without increasing background contrast.
   Evidence: The rider's simplified face and hands are hard to distinguish against the clothing.
 
-- [ ] `parcel_corps_settings-25` · P3 · proposal. Overlay competition: Dim secondary HUD elements while settings has visual priority.
+- [x] `parcel_corps_settings-25` · P3 · proposal. Overlay competition: Dim secondary HUD elements while settings has visual priority.
   Evidence: The phone, objective panel, live chat, and speed panel all remain prominent.
 
 ### pinch_zoom_lab

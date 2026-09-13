@@ -6821,7 +6821,8 @@
         "change": "Dim secondary HUD elements while settings has visual priority."
       }
     ],
-    "sha256": "9f13c3a494f26fed9e4769236bd9878efab854a8e06a193827dfbe680e00fae0"
+    "sha256": "9f13c3a494f26fed9e4769236bd9878efab854a8e06a193827dfbe680e00fae0",
+    "evidence": "docs/design-audit/originals/parcel_corps_settings_720p.png"
   },
   {
     "id": "pinch_zoom_lab",
