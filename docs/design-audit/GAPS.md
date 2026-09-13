@@ -3587,7 +3587,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## tab container
 
-[Current baseline](../../screenshot-baselines/screens/tab_container_720p.png) · [Visual review](../../design-audit.html#screen=tab_container)
+[Reviewed image](../../docs/design-audit/originals/tab_container_720p.png) · [Current baseline](../../screenshot-baselines/screens/tab_container_720p.png) · [Visual review](../../design-audit.html#screen=tab_container)
 
 Baseline SHA-256: `e8f83335c9f12baf65135a56351884cb4c65d4f805133f7fa4d8ff65f73f3f32`
 
@@ -3618,7 +3618,7 @@ The active Profile tab is clear, but the static profile content and footer actio
 
 [Image](../../baseline_screenshots/tab_container.png)
 
-Current capture removes Profile focus outline and leaves the blue selected-tab underline clear. The large profile content well and three small footer actions remain unchanged.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## tabbing
 

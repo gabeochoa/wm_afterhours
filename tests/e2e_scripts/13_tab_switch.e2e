@@ -1,47 +1,24 @@
-# Tab Container Test
-# Tests tab container component rendering and switching
-
-# Navigate to the tab container screen
 goto_screen tab_container
+resize 1280 720
 wait 0.5
-
-# Validate initial screen against baseline
 validate_screen tab_container
-
-# Verify we're on the correct screen
-expect_text "Profile"
-
-# Layout assertions based on source code math (1280x720 screen)
-# Root: screen_pct(0.85) x screen_pct(0.88) = 1088 x 633.6 → grid snaps to 632
-assert_ui root w=1088 h=632
-
-# Footer buttons: pixels(80) x pixels(36)
-assert_ui btn_ok w=80 h=36
-assert_ui btn_cancel w=80 h=36
-assert_ui btn_apply w=80 h=36
-
-# Profile tab section title: percent(1.0) x pixels(56)
-assert_ui_text "Profile Settings" h=56
-
-# Content lines: percent(1.0) x pixels(44)
-assert_ui_text "Username: player_one" h=44
-assert_ui_text "Email: player@example.com" h=44
-assert_ui_text "Account created: January 2024" h=44
-assert_ui_text "Subscription: Premium" h=44
-assert_ui_text "Last login: Today at 10:30 AM" h=44
-
-# Footer row: percent(1.0) x pixels(50)
-assert_ui dialog_footer h=50
-
-# Tab container: percent(1.0) x pixels(52)
-assert_ui tabs h=52
-
-# Tab to switch between tabs
-key TAB
-wait 0.2
+expect_text "Profile details"
+expect_text "player_one"
+expect_text "player@example.com"
+expect_text "January 2024"
+expect_text "Premium"
+expect_text "2024-01-15 10:30 UTC"
+assert_ui root w=1280 h=720
+assert_ui tc_close w=180 h=46
+assert_ui tabs w=1144 h=58
+focus_element tab_1
 key ENTER
 wait 0.3
-
-# Take screenshot after tab switch
+expect_text "Audio sample"
+expect_no_text "Profile details"
 screenshot tab_after_switch
-
+focus_element tab_2
+key ENTER
+wait 0.3
+expect_text "Display sample"
+expect_no_text "Audio sample"

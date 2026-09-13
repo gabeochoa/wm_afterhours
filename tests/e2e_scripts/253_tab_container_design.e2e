@@ -1,0 +1,77 @@
+goto_screen tab_container
+resize 1280 720
+wait 0.4
+expect_text "Tab container demo"
+expect_text "Profile details"
+expect_text "Example profile / read-only fixture data"
+expect_text "player_one"
+expect_text "player@example.com"
+expect_text "Premium"
+expect_text "2024-01-15 10:30 UTC"
+expect_text "No pending changes"
+expect_no_text "Apply"
+expect_no_text "Cancel"
+assert_ui root w=1280 h=720
+assert_ui tabs w=1144 h=58
+assert_within_parents
+screenshot tab_profile_design
+click_ui tc_copy
+wait 0.2
+expect_text "Email copied"
+click_ui tab_1
+wait 0.3
+expect_text "Audio sample"
+expect_text "Master volume"
+expect_text "80%"
+expect_text "60%"
+expect_text "75%"
+expect_text "Bar width specimens"
+expect_no_text "Profile details"
+assert_ui bar_0 w=120 h=24
+assert_ui bar_4 w=480 h=24
+assert_within_parents
+screenshot tab_audio_design
+focus_element tab_2
+key ENTER
+wait 0.3
+expect_text "Display sample"
+expect_text "1920 × 1080"
+expect_text "#FF5757"
+expect_text "#BD57FF"
+expect_no_text "Audio sample"
+assert_ui swatch_0 w=60 h=60
+assert_ui swatch_5 w=60 h=60
+assert_within_parents
+screenshot tab_display_design
+click_ui tc_close
+wait 0.3
+expect_text "Example closed."
+expect_no_text "Display sample"
+expect_no_text "No pending changes"
+focus_element tc_reopen
+key ENTER
+wait 0.3
+expect_text "Display sample"
+click_ui tab_0
+wait 0.3
+expect_text "Profile details"
+expect_text "Email copied"
+resize 1920 1080
+wait 0.3
+assert_ui root w=1920 h=1080
+assert_within_parents
+screenshot tab_profile_1080_design
+click_ui tab_1
+wait 0.3
+assert_ui bar_0 w=180 h=36
+assert_within_parents
+resize 1024 768
+wait 0.3
+assert_ui root w=1024 h=768
+assert_within_parents
+screenshot tab_audio_1024_design
+click_ui tab_2
+wait 0.3
+assert_within_parents
+screenshot tab_display_1024_design
+resize 1280 720

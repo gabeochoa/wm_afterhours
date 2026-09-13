@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,338 completed; 197 remaining.
+2,356 completed; 179 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7102,58 +7102,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/tab_container_720p.png) · [Visual review](design-audit.html#screen=tab_container)
 
-- [ ] `tab_container-01` · P2 · proposal. Page identity: Add Tab container demo above the tab strip.
+- [x] `tab_container-01` · P2 · proposal. Page identity: Add Tab container demo above the tab strip.
   Evidence: The panel begins directly with tabs and has no demo title.
 
-- [ ] `tab_container-02` · P2 · proposal. Profile heading: Use Profile details for the displayed read-only state.
+- [x] `tab_container-02` · P2 · proposal. Profile heading: Use Profile details for the displayed read-only state.
   Evidence: Profile Settings suggests editable controls but shows only text.
 
-- [ ] `tab_container-03` · P2 · proposal. Username row: Separate label and value into aligned columns.
+- [x] `tab_container-03` · P2 · proposal. Username row: Separate label and value into aligned columns.
   Evidence: Username and player_one share the same weight in one string.
 
-- [ ] `tab_container-04` · P2 · proposal. Email row: Use a clear value field with a copy affordance if appropriate to the demo.
+- [x] `tab_container-04` · P2 · proposal. Email row: Use a clear value field with a copy affordance if appropriate to the demo.
   Evidence: The email address is presented as plain prose.
 
-- [ ] `tab_container-05` · P2 · proposal. Subscription value: Use a small subscription badge to distinguish status from identity fields.
+- [x] `tab_container-05` · P2 · proposal. Subscription value: Use a small subscription badge to distinguish status from identity fields.
   Evidence: Premium is plain text among metadata.
 
-- [ ] `tab_container-06` · P2 · proposal. Last login: Use a stable sample date/time label or identify it as fixture data.
+- [x] `tab_container-06` · P2 · proposal. Last login: Use a stable sample date/time label or identify it as fixture data.
   Evidence: Today at 10:30 AM lacks a time-zone or fixed baseline context.
 
-- [ ] `tab_container-07` · P2 · proposal. Field spacing: Reduce row gaps and use a compact details grid.
+- [x] `tab_container-07` · P2 · proposal. Field spacing: Reduce row gaps and use a compact details grid.
   Evidence: Five short rows are spread across a tall empty content panel.
 
-- [ ] `tab_container-08` · P2 · proposal. Content width: Constrain the details region or add a second metadata column.
+- [x] `tab_container-08` · P2 · proposal. Content width: Constrain the details region or add a second metadata column.
   Evidence: All content is left-aligned inside a very wide blank white panel.
 
-- [ ] `tab_container-09` · P2 · proposal. OK action: Use a clear primary action style if it is enabled.
+- [x] `tab_container-09` · P2 · proposal. OK action: Use a clear primary action style if it is enabled.
   Evidence: OK is dark gray and visually resembles a disabled action.
 
-- [ ] `tab_container-10` · P2 · proposal. Apply action: Show a No pending changes state or omit Apply from this read-only tab.
+- [x] `tab_container-10` · P2 · proposal. Apply action: Show a No pending changes state or omit Apply from this read-only tab.
   Evidence: Apply appears active despite no visible editable fields.
 
-- [ ] `tab_container-11` · P2 · proposal. Cancel action: Use Close for a read-only demonstration or explain the editable state.
+- [x] `tab_container-11` · P2 · proposal. Cancel action: Use Close for a read-only demonstration or explain the editable state.
   Evidence: Cancel has no context for what is canceled in the static details view.
 
-- [ ] `tab_container-12` · P2 · proposal. Footer alignment: Align the footer group to the content right inset.
+- [x] `tab_container-12` · P2 · proposal. Footer alignment: Align the footer group to the content right inset.
   Evidence: The button group ends before the content panel's right edge.
 
-- [ ] `tab_container-13` · P2 · proposal. Tab semantics: Use labels matching the actual account/audio/display content after checking each pane.
+- [x] `tab_container-13` · P2 · proposal. Tab semantics: Use labels matching the actual account/audio/display content after checking each pane.
   Evidence: Account and Settings are broad labels that do not describe their contents.
 
-- [ ] `tab_container-14` · P3 · proposal. Tab edges: Simplify internal joins to create one coherent tab strip.
+- [x] `tab_container-14` · P3 · proposal. Tab edges: Simplify internal joins to create one coherent tab strip.
   Evidence: All three tabs have rounded top shapes, including internal joins.
 
-- [ ] `tab_container-15` · P2 · proposal. Selected tab cue: Add stronger selected text weight while retaining the underline.
+- [x] `tab_container-15` · P2 · proposal. Selected tab cue: Add stronger selected text weight while retaining the underline.
   Evidence: A thin blue underline is the only explicit active marker.
 
-- [ ] `tab_container-16` · P2 · proposal. Demo instructions: Add one concise instruction outside the specimen.
+- [x] `tab_container-16` · P2 · proposal. Demo instructions: Add one concise instruction outside the specimen.
   Evidence: No text explains that changing tabs swaps the content pane.
 
-- [ ] `tab_container-17` · P3 · proposal. Profile data provenance: Add a small Example profile caption.
+- [x] `tab_container-17` · P3 · proposal. Profile data provenance: Add a small Example profile caption.
   Evidence: player@example.com appears without a sample-data cue.
 
-- [ ] `tab_container-18` · P2 · proposal. State coverage: Capture Account and Settings as named companion states for visual review.
+- [x] `tab_container-18` · P2 · proposal. State coverage: Capture Account and Settings as named companion states for visual review.
   Evidence: Only Profile content is visible in the baseline.
 
 ### tabbing

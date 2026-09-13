@@ -3899,7 +3899,8 @@
         "change": "Capture Account and Settings as named companion states for visual review."
       }
     ],
-    "sha256": "e8f83335c9f12baf65135a56351884cb4c65d4f805133f7fa4d8ff65f73f3f32"
+    "sha256": "e8f83335c9f12baf65135a56351884cb4c65d4f805133f7fa4d8ff65f73f3f32",
+    "evidence": "docs/design-audit/originals/tab_container_720p.png"
   },
   {
     "id": "tabbing",

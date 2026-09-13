@@ -317,8 +317,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Profile focus outline and leaves the blue selected-tab underline clear. The large profile content well and three small footer actions remain unchanged.",
-    "sha256": "532df9b9d5a46a43ee8a8076fef5f24e91d4d4a2162075a2577b1a1eb27d11f7",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "12eb0d89ce1973a1b61229187a05fc5c2fd4c8e62c5ba02d9b1cf43e2d1f3a1c",
     "additional_findings": []
   },
   {
