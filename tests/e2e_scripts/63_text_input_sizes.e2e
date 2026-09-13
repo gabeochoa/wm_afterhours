@@ -2,6 +2,9 @@
 
 goto_screen text_input_sizes
 wait 0.5
+assert_ui input_24px h=24
+assert_ui input_48px h=48
+assert_ui input_100px h=100
 screenshot sizes_01_empty
 
 # Type into the smallest field
@@ -9,6 +12,8 @@ focus_ui input_24px
 wait 0.2
 type "hello"
 wait 0.2
+expect_input_text input_24px "hello"
+expect_input_selection input_24px 5 5
 screenshot sizes_02_small_typed
 
 # Type into a medium field
@@ -16,6 +21,8 @@ focus_ui input_48px
 wait 0.2
 type "hello world"
 wait 0.2
+expect_input_text input_48px "hello world"
+expect_input_selection input_48px 11 11
 screenshot sizes_03_medium_typed
 
 # Type into the largest field
@@ -23,6 +30,8 @@ focus_ui input_100px
 wait 0.2
 type "Big text"
 wait 0.2
+expect_input_text input_100px "Big text"
+expect_input_selection input_100px 8 8
 screenshot sizes_04_large_typed
 
 # Select all in medium field to show selection scaling
@@ -30,6 +39,7 @@ focus_ui input_48px
 wait 0.2
 key CTRL+A
 wait 0.2
+expect_input_selection input_48px 0 11
 screenshot sizes_05_medium_selected
 
 # Select all in large field
@@ -37,6 +47,7 @@ focus_ui input_100px
 wait 0.2
 key CTRL+A
 wait 0.2
+expect_input_selection input_100px 0 8
 screenshot sizes_06_large_selected
 
 # Fill all fields and show the range
@@ -66,4 +77,9 @@ focus_ui input_24px
 wait 0.2
 key CTRL+A
 wait 0.2
+expect_input_selection input_24px 0 5
+expect_input_text input_32px "sample"
+expect_input_text input_40px "sample"
+expect_input_text input_60px "sample"
+expect_input_text input_80px "sample"
 screenshot sizes_07_all_filled_small_selected
