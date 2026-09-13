@@ -3,6 +3,7 @@
 #include "rl.h"
 
 namespace render_backend {
+inline bool draw_directly_to_window = false;
 inline void BeginDrawing() { raylib::BeginDrawing(); }
 
 inline void EndDrawing() { raylib::EndDrawing(); }

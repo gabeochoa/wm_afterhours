@@ -62,7 +62,7 @@ struct FontDef {
   std::string filename; // relative to fonts/ directory
   bool needs_codepoints = false;
   std::function<std::vector<int>()> get_codepoints = nullptr;
-  int raster_size = 32;
+  int raster_size = 96;
 };
 
 // Get all font definitions - this is the single source of truth
@@ -72,31 +72,31 @@ inline std::vector<FontDef> get_all_fonts() {
   return {
       // Core UI fonts
       {"__default", "Gaegu-Bold.ttf"},
-      {"__symbol", "Gaegu-Bold.ttf"},
+      {"__symbol", "AtkinsonHyperlegible-Regular.ttf"},
       {"__unset", "Gaegu-Bold.ttf"},
 
       // Named fonts for screens
       {"Gaegu-Bold", "Gaegu-Bold.ttf"},
-      {"GaeguMock", "Gaegu-Bold.ttf", false, nullptr, 96},
+      {"GaeguMock", "Gaegu-Bold.ttf", false, nullptr, 192},
       {"EqProRounded", "eqprorounded-regular.ttf"},
       {"Garamond", "EBGaramond-Regular.ttf"},
       {"NerdSymbols", "SymbolsNerdFont-Regular.ttf"},
       {"Fredoka", "Fredoka-VariableFont_wdth,wght.ttf"},
-      {"FredokaMockBold", "Fredoka-MockBold.ttf", false, nullptr, 96},
+      {"FredokaMockBold", "Fredoka-MockBold.ttf", false, nullptr, 192},
       {"BlackOpsOne", "BlackOpsOne-Regular.ttf"},
       {"Atkinson", "AtkinsonHyperlegible-Regular.ttf"},
+      {"AtkinsonMockBold", "AtkinsonHyperlegible-Bold.ttf", false, nullptr, 192},
+      {"AtkinsonMock@bold", "AtkinsonHyperlegible-Bold.ttf", false, nullptr, 192},
       {"AtkinsonMock", "AtkinsonHyperlegible-Regular.ttf", false, nullptr,
-       96},
+       192},
 
-      // A real same-family weight pair, which nothing else bundled here is:
-      // the only other true bold is Gaegu-Bold, and that IS the default face.
       // The "@bold" suffix is the convention FontManager::resolve_weighted
       // looks for, so a TextSpan asking for Bold resolves to the second entry
       // and falls back to the first when it is absent.
       // Oldschool PC Font Pack, CC BY-SA 4.0 -- see OLDSCHOOL_PC_FONTS_*.txt.
       {"DGOne", "Px437_DG_One.ttf"},
       {"DGOne@bold", "Px437_DG_One_bold.ttf"},
-      {"DGOneMock", "Px437_DG_One.ttf", false, nullptr, 96},
+      {"DGOneMock", "Px437_DG_One.ttf", false, nullptr, 192},
 
       // The only bundled family with more than two weights, so it is the one
       // that can actually show what with_font_weight does. OFL, see
@@ -106,13 +106,14 @@ inline std::vector<FontDef> get_all_fonts() {
       {"Archivo@medium", "ArchivoNarrow-Medium.ttf"},
       {"Archivo@semibold", "ArchivoNarrow-SemiBold.ttf"},
       {"Archivo@bold", "ArchivoNarrow-Bold.ttf"},
-      {"ArchivoMock", "ArchivoNarrow-Regular.ttf", false, nullptr, 96},
-      {"ArchivoMockBold", "ArchivoNarrow-Bold.ttf", false, nullptr, 96},
+      {"ArchivoMock", "ArchivoNarrow-Regular.ttf", false, nullptr, 192},
+      {"ArchivoMockBold", "ArchivoNarrow-Bold.ttf", false, nullptr, 192},
+      {"ArchivoMockBoldItalic", "ArchivoNarrow-BoldItalic.ttf", false, nullptr, 192},
 
       // CJK fonts with special codepoint loading
-      {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints},
+      {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints, 32},
       {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,
-       get_japanese_codepoints},
+       get_japanese_codepoints, 32},
   };
 }
 

@@ -1,9 +1,11 @@
 #include "../game.h"
+#include "../render_backend.h"
 #include "LetterboxLayout.h"
 
 struct RenderRenderTexture : afterhours::System<> {
   virtual ~RenderRenderTexture() {}
   virtual void once(float) const override {
+    if (render_backend::draw_directly_to_window) return;
     const int window_w = raylib::GetScreenWidth();
     const int window_h = raylib::GetScreenHeight();
     const int content_w = mainRT.texture.width;

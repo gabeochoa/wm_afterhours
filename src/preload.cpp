@@ -67,6 +67,7 @@ Preload &Preload::init(const char *title) {
   // Set log level BEFORE InitWindow to suppress init messages
   raylib::SetTraceLogLevel(raylib::LOG_ERROR);
 
+  raylib::SetConfigFlags(raylib::FLAG_WINDOW_HIGHDPI);
   raylib::InitWindow(width, height, title);
 
   // The pinch monitor is app-wide, but installing it before there is an app to
@@ -118,11 +119,8 @@ void apply_ui_styling_defaults() {
   // short boxes report overflow.
   ui::imm::ThemeDefaults::get().theme.text_inset = {5.f, 0.f};
 
-  // Without this every screen that does not name a font warns once per text
-  // element. base() is what ComponentConfig already defaults to, so this sets
-  // the name without changing any size.
   ui::imm::UIStylingDefaults::get().set_default_font(
-      ui::UIComponent::DEFAULT_FONT, ui::imm::TypographyScale::base());
+      "AtkinsonMock", ui::imm::TypographyScale::base());
 
   // Hear about text too small to read; the library still clamps it for now.
   ui::imm::ThemeDefaults::get().theme.min_font_size_warn_720p = 16.f;

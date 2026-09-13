@@ -126,9 +126,9 @@ void game() {
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                        Settings::get().get_screen_height());
   uiFont = afterhours::load_font_from_file(
-      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+      afterhours::files::get_resource_path("fonts", "AtkinsonHyperlegible-Regular.ttf")
           .string()
-          .c_str());
+          .c_str(), 192);
 
   afterhours::SystemManager systems;
 
@@ -211,9 +211,9 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                        Settings::get().get_screen_height());
   uiFont = afterhours::load_font_from_file(
-      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+      afterhours::files::get_resource_path("fonts", "AtkinsonHyperlegible-Regular.ttf")
           .string()
-          .c_str());
+          .c_str(), 192);
 
   afterhours::SystemManager systems;
 
@@ -395,6 +395,10 @@ struct ScreenCyclerSystem : afterhours::System<> {
 void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
                      bool profile) {
   configure_validation();
+  render_backend::draw_directly_to_window = true;
+#ifdef AFTER_HOURS_ENABLE_MCP
+  render_backend::draw_directly_to_window = !g_mcp_mode;
+#endif
 
   mainRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                      Settings::get().get_screen_height());
@@ -402,9 +406,9 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
                                        Settings::get().get_screen_height());
 
   uiFont = afterhours::load_font_from_file(
-      afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+      afterhours::files::get_resource_path("fonts", "AtkinsonHyperlegible-Regular.ttf")
           .string()
-          .c_str());
+          .c_str(), 192);
 
 #ifdef AFTER_HOURS_ENABLE_MCP
   init_mcp();
@@ -436,13 +440,15 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
   }
 
   {
+    if (!render_backend::draw_directly_to_window) {
+      systems.register_update_system(std::make_unique<afterhours::window_manager::CollectCurrentResolution>());
+    }
+    systems.register_update_system(std::make_unique<afterhours::window_manager::CollectAvailableResolutions>());
+    systems.register_update_system(std::make_unique<UpdateRenderTexture>());
     afterhours::input::register_update_systems(systems);
-    afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
-
-    systems.register_update_system(std::make_unique<UpdateRenderTexture>());
   }
 
   {
@@ -655,9 +661,9 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     screenRT = raylib::LoadRenderTexture(Settings::get().get_screen_width(),
                                          Settings::get().get_screen_height());
     uiFont = afterhours::load_font_from_file(
-        afterhours::files::get_resource_path("fonts", "Gaegu-Bold.ttf")
+        afterhours::files::get_resource_path("fonts", "AtkinsonHyperlegible-Regular.ttf")
             .string()
-            .c_str());
+            .c_str(), 192);
   }
 
   std::vector<std::string> screen_names =

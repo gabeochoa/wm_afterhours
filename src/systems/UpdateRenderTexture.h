@@ -13,10 +13,17 @@ struct UpdateRenderTexture : afterhours::System<> {
   virtual ~UpdateRenderTexture() {}
 
   void once(float) override {
-    const afterhours::window_manager::ProvidesCurrentResolution *pcr =
+    afterhours::window_manager::ProvidesCurrentResolution *pcr =
         afterhours::EntityHelper::get_singleton_cmp<
             afterhours::window_manager::ProvidesCurrentResolution>();
-    if (!pcr || pcr->current_resolution == resolution) return;
+    if (!pcr) return;
+    if (render_backend::draw_directly_to_window) {
+      pcr->current_resolution = {raylib::GetScreenWidth(), raylib::GetScreenHeight()};
+      resolution = pcr->current_resolution;
+      Settings::get().update_resolution(resolution);
+      return;
+    }
+    if (pcr->current_resolution == resolution) return;
     resolution = pcr->current_resolution;
     Settings::get().update_resolution(resolution);
     if (afterhours::graphics::is_headless()) {
