@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,186 completed; 349 remaining.
+2,202 completed; 333 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7343,52 +7343,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_input_lab_720p.png) · [Visual review](design-audit.html#screen=text_input_lab)
 
-- [ ] `text_input_lab-01` · P2 · proposal. Primary field label: Label it Selection and caret specimen.
+- [x] `text_input_lab-01` · P2 · proposal. Primary field label: Label it Selection and caret specimen.
   Evidence: The first input has no local label.
 
-- [ ] `text_input_lab-02` · P2 · proposal. State group: Place them in a compact Inspector panel with aligned value columns.
+- [x] `text_input_lab-02` · P2 · proposal. State group: Place them in a compact Inspector panel with aligned value columns.
   Evidence: text, cursor, selection, focused and scroll_x sit directly on the black page.
 
-- [ ] `text_input_lab-03` · P2 · proposal. Cursor index: Label it Caret character index and state the indexing convention.
+- [x] `text_input_lab-03` · P2 · proposal. Cursor index: Label it Caret character index and state the indexing convention.
   Evidence: cursor: 11 does not explain index units.
 
-- [ ] `text_input_lab-04` · P2 · proposal. Selection range: Show Start 0, End 11 and note whether end is exclusive.
+- [x] `text_input_lab-04` · P2 · proposal. Selection range: Show Start 0, End 11 and note whether end is exclusive.
   Evidence: selection: 0..11 does not explain endpoint semantics.
 
-- [ ] `text_input_lab-05` · P2 · proposal. Selection length: Add Selected characters: 11.
+- [x] `text_input_lab-05` · P2 · proposal. Selection length: Add Selected characters: 11.
   Evidence: The full phrase is selected but no count is shown.
 
-- [ ] `text_input_lab-06` · P2 · proposal. Horizontal scroll: Show Horizontal scroll: 0.0 px.
+- [x] `text_input_lab-06` · P2 · proposal. Horizontal scroll: Show Horizontal scroll: 0.0 px.
   Evidence: scroll_x: 0.0 lacks units.
 
-- [ ] `text_input_lab-07` · P2 · proposal. Focus readout: Use a distinct Focused badge next to the inspected field name.
+- [x] `text_input_lab-07` · P2 · proposal. Focus readout: Use a distinct Focused badge next to the inspected field name.
   Evidence: focused: yes is embedded among numeric data.
 
-- [ ] `text_input_lab-08` · P2 · proposal. Inspector association: Label the inspector's target or show a separate dump for the overflow field.
+- [x] `text_input_lab-08` · P2 · proposal. Inspector association: Label the inspector's target or show a separate dump for the overflow field.
   Evidence: Two inputs are visible but only one state dump appears.
 
-- [ ] `text_input_lab-09` · P2 · proposal. Overflow source text: Show the full source string in an external read-only caption.
+- [x] `text_input_lab-09` · P2 · proposal. Overflow source text: Show the full source string in an external read-only caption.
   Evidence: The lower text is clipped so its full source cannot be read.
 
-- [ ] `text_input_lab-10` · P2 · proposal. Overflow dimensions: Label its exact viewport width and text width.
+- [x] `text_input_lab-10` · P2 · proposal. Overflow dimensions: Label its exact viewport width and text width.
   Evidence: The lower field has no width annotation.
 
-- [ ] `text_input_lab-11` · P2 · proposal. Expected clipping: Add external edge ticks at the field's clip limits.
+- [x] `text_input_lab-11` · P2 · proposal. Expected clipping: Add external edge ticks at the field's clip limits.
   Evidence: The instruction says text must stay inside the box without marking that boundary.
 
-- [ ] `text_input_lab-12` · P2 · proposal. Initial selection: Add a caption Initial state: all text selected.
+- [x] `text_input_lab-12` · P2 · proposal. Initial selection: Add a caption Initial state: all text selected.
   Evidence: The first field starts fully selected with no explanation.
 
-- [ ] `text_input_lab-13` · P2 · proposal. Test procedure: Add a short keyboard procedure beneath the inspector.
+- [x] `text_input_lab-13` · P2 · proposal. Test procedure: Add a short keyboard procedure beneath the inspector.
   Evidence: The page gives no sequence for observing caret, selection and scroll changes.
 
-- [ ] `text_input_lab-14` · P2 · proposal. Reset specimen: Add Reset fixture outside the tested fields.
+- [x] `text_input_lab-14` · P2 · proposal. Reset specimen: Add Reset fixture outside the tested fields.
   Evidence: No control restores hello world and the initial selection.
 
-- [ ] `text_input_lab-15` · P3 · proposal. Empty right region: Use a second column for expected outcomes and event history.
+- [x] `text_input_lab-15` · P3 · proposal. Empty right region: Use a second column for expected outcomes and event history.
   Evidence: Most of the screen is unused.
 
-- [ ] `text_input_lab-16` · P2 · proposal. Action evidence: Add a small last-action label so captures can be tied to a reproducible input step.
+- [x] `text_input_lab-16` · P2 · proposal. Action evidence: Add a small last-action label so captures can be tied to a reproducible input step.
   Evidence: The state dump shows only current values.
 
 ### text_input_sizes
@@ -8149,6 +8149,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Decode e2e typed UTF-8 into Unicode codepoints before queuing input; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Clip nested scroll backgrounds, borders and scrollbars to their ancestor viewport; see docs/AFTERHOURS_GAPS.md.
 

@@ -3724,7 +3724,7 @@ The form fits, but its labels are unusually small and its profile context mixes 
 
 ## text input lab
 
-[Current baseline](../../screenshot-baselines/screens/text_input_lab_720p.png) · [Visual review](../../design-audit.html#screen=text_input_lab)
+[Reviewed image](../../docs/design-audit/originals/text_input_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_input_lab_720p.png) · [Visual review](../../design-audit.html#screen=text_input_lab)
 
 Baseline SHA-256: `f2ab6e280cf18132eccf2ac281500a67da3e9dc1e776ccaf71a564b2479aad3c`
 

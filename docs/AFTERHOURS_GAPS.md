@@ -433,6 +433,16 @@ fixture toggle. Upstream should clip nested viewport decorations and both
 scrollbars to the ancestor intersection while leaving their own viewport
 geometry unchanged.
 
+### E2E typed input queues UTF-8 bytes instead of Unicode codepoints
+
+HandleTypeCommand iterates UTF-8 bytes into push_char(char), and
+get_char_pressed promotes those bytes to int. Signed-char builds turn C3 A9
+into negative values, so café arrives as caf; unsigned-char builds would
+deliver separate incorrect codepoints. Decode UTF-8 once and queue integer
+codepoints. WM tests ASCII typing and provides a visible café preset to
+verify5-byte/4-codepoint storage and native caret movement around é without
+claiming the e2e typing path supports Unicode.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

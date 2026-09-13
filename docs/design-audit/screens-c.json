@@ -4515,7 +4515,8 @@
         "change": "Add a small last-action label so captures can be tied to a reproducible input step."
       }
     ],
-    "sha256": "f2ab6e280cf18132eccf2ac281500a67da3e9dc1e776ccaf71a564b2479aad3c"
+    "sha256": "f2ab6e280cf18132eccf2ac281500a67da3e9dc1e776ccaf71a564b2479aad3c",
+    "evidence": "docs/design-audit/originals/text_input_lab_720p.png"
   },
   {
     "id": "text_input_sizes",

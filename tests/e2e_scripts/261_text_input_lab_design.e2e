@@ -1,0 +1,104 @@
+goto_screen text_input_lab
+resize 1280 720
+wait 0.3
+click_ui lab_reset
+wait 0.3
+expect_text "Text input inspector"
+expect_text "Selection and caret specimen"
+expect_text "Inspector / primary field"
+expect_text "Caret byte index"
+expect_text "Selection end byte"
+expect_text "Selected code points"
+expect_text "Indices start at 0; selection end is exclusive."
+expect_text "Initial/reset state: hello world is fully selected."
+expect_text "Focused"
+expect_input_text lab_input "hello world"
+expect_input_selection lab_input 0 11
+expect_text "Field 240 px / full text"
+assert_ui lab_input x=48 y=148 w=360 h=40
+assert_ui lab_overflow_input x=648 y=148 w=240 h=40
+focus_ui lab_overflow_input
+key CTRL+A
+type "short"
+wait 0.2
+assert_no_overflow
+assert_within_parents
+click_ui lab_reset
+wait 0.2
+expect_input_selection lab_input 0 11
+expect_input_text lab_overflow_input "the quick brown fox jumps over the lazy dog and keeps on running"
+screenshot text_input_lab_design
+key RIGHT
+wait 0.2
+expect_input_selection lab_input 11 11
+key LEFT
+wait 0.2
+expect_input_selection lab_input 10 10
+expect_text "Caret moved to byte 10"
+key SHIFT+LEFT
+wait 0.2
+expect_input_selection lab_input 9 10
+expect_text "Selection bytes 9 to 10"
+key CTRL+A
+type "cafe"
+wait 0.2
+expect_input_text lab_input "cafe"
+click_ui lab_unicode
+wait 0.2
+expect_input_text lab_input "café"
+expect_text "5 / 4"
+key CTRL+A
+wait 0.2
+expect_input_selection lab_input 0 5
+key RIGHT
+wait 0.1
+expect_input_selection lab_input 5 5
+key LEFT
+wait 0.1
+expect_input_selection lab_input 3 3
+key SHIFT+RIGHT
+wait 0.1
+expect_input_selection lab_input 3 5
+expect_text "Selected code points"
+screenshot text_input_lab_design_unicode
+focus_ui lab_overflow_input
+key END
+wait 0.2
+expect_text "Unfocused"
+screenshot text_input_lab_design_overflow_end
+focus_ui lab_reset
+key ENTER
+wait 0.3
+expect_input_text lab_input "hello world"
+expect_input_selection lab_input 0 11
+expect_input_text lab_overflow_input "the quick brown fox jumps over the lazy dog and keeps on running"
+resize 1920 1080
+wait 0.3
+assert_ui lab_input x=72 y=222 w=540 h=60
+focus_ui lab_overflow_input
+key CTRL+A
+type "short"
+wait 0.2
+assert_no_overflow
+assert_within_parents
+click_ui lab_reset
+wait 0.2
+expect_input_selection lab_input 0 11
+expect_input_text lab_overflow_input "the quick brown fox jumps over the lazy dog and keeps on running"
+screenshot text_input_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui lab_root x=0 y=96 w=1024 h=576
+assert_ui lab_input x=38 y=214 w=288 h=32
+focus_ui lab_overflow_input
+key CTRL+A
+type "short"
+wait 0.2
+assert_no_overflow
+assert_within_parents
+click_ui lab_reset
+wait 0.2
+expect_input_selection lab_input 0 11
+expect_input_text lab_overflow_input "the quick brown fox jumps over the lazy dog and keeps on running"
+screenshot text_input_lab_design_narrow
+resize 1280 720
