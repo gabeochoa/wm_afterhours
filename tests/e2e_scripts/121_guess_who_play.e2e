@@ -3,7 +3,7 @@
 goto_screen guess_who_lab
 wait 0.5
 expect_text "24 faces left"
-expect_text "A little question. A big clue."
+expect_text "Choose a trait, enter the answer, then ask."
 
 # A portrait is a live toggle.
 click_ui gw_face_0
@@ -25,6 +25,6 @@ expect_text "Question 1: Yes! 12 possible people left."
 click_ui gw_reset
 wait 0.4
 expect_text "24 faces left"
-expect_text "A little question. A big clue."
+expect_text "Choose a trait, enter the answer, then ask."
 assert_no_overflow
 assert_within_parents

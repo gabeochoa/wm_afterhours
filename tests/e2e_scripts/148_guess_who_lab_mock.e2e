@@ -3,7 +3,7 @@
 goto_screen guess_who_lab
 wait 0.5
 
-expect_text "YOUR TURN"
+expect_text "PLAYER 1 / YOUR TURN"
 expect_text "Find the mystery person"
 expect_text "New game"
 expect_text "DOES YOUR PERSON"
@@ -15,17 +15,17 @@ expect_text "Ada"
 expect_text "Yuki"
 expect_text "Not sure"
 assert_ui gw_root x=0 y=0 w=1280 h=720
-assert_ui gw_logo x=41 y=4 w=271 h=101
-assert_ui gw_reset x=1093 y=31 w=143 h=48
-assert_ui gw_question x=40 y=105 w=1200 h=75
-assert_ui gw_trait x=240 y=120 w=245 h=45
-assert_ui gw_answer x=501 y=120 w=80 h=45
-assert_ui gw_ask x=597 y=117 w=174 h=50
-assert_ui gw_board x=40 y=193 w=1200 h=461
-assert_ui gw_face_0 x=69 y=217 w=128 h=102
-assert_ui gw_note_0 x=69 y=323 w=128 h=22
-assert_ui gw_face_23 x=1084 y=501 w=128 h=102
-assert_ui gw_note_23 x=1084 y=607 w=128 h=22
+assert_ui gw_logo x=41 y=8 w=228 h=85
+assert_ui gw_reset x=1066 y=29 w=170 h=42
+assert_ui gw_question x=40 y=94 w=1200 h=76
+assert_ui gw_trait x=58 y=126 w=282 h=36
+assert_ui gw_answer x=364 y=126 w=100 h=36
+assert_ui gw_ask x=488 y=120 w=208 h=44
+assert_ui gw_board x=40 y=198 w=1200 h=484
+assert_ui gw_face_0 x=56 y=210 w=132 h=112
+assert_ui gw_note_0 x=56 y=326 w=132 h=24
+assert_ui gw_face_23 x=1092 y=530 w=132 h=112
+assert_ui gw_note_23 x=1092 y=646 w=132 h=24
 assert_no_overflow
 assert_within_parents
 screenshot guess_who_mock_default
@@ -78,11 +78,11 @@ expect_text "Not sure"
 resize 1920 1080
 wait 0.3
 assert_ui gw_root x=0 y=0 w=1920 h=1080
-assert_ui gw_logo x=62 y=6 w=407 h=152
-assert_ui gw_question x=60 y=158 w=1800 h=113
-assert_ui gw_board x=60 y=290 w=1800 h=692
-assert_ui gw_face_0 x=104 y=326 w=192 h=153
-assert_ui gw_note_0 x=104 y=485 w=192 h=33
-assert_ui gw_face_23 x=1626 y=752 w=192 h=153
+assert_ui gw_logo x=62 y=12 w=342 h=128
+assert_ui gw_question x=60 y=141 w=1800 h=114
+assert_ui gw_board x=60 y=297 w=1800 h=726
+assert_ui gw_face_0 x=84 y=315 w=198 h=168
+assert_ui gw_note_0 x=84 y=489 w=198 h=36
+assert_ui gw_face_23 x=1638 y=795 w=198 h=168
 assert_no_overflow
 assert_within_parents

@@ -1,0 +1,95 @@
+goto_screen guess_who_lab
+resize 1280 720
+wait 0.3
+click_ui gw_reset
+wait 0.2
+expect_text "PLAYER 1 / YOUR TURN"
+expect_text "Answer"
+expect_text "Board status"
+expect_text "24 faces left"
+expect_text "Clues appear here after you ask."
+expect_text "Choose a trait, enter the answer, then ask."
+expect_text "Click a face to flip. Notes are reminders, not eliminations."
+assert_ui gw_root x=0 y=0 w=1280 h=720
+assert_ui gw_logo x=41 y=8 w=228 h=85
+assert_ui gw_reset x=1066 y=29 w=170 h=42
+assert_ui gw_question x=40 y=94 w=1200 h=76
+assert_ui gw_trait x=58 y=126 w=282 h=36
+assert_ui gw_answer x=364 y=126 w=100 h=36
+assert_ui gw_ask x=488 y=120 w=208 h=44
+assert_ui gw_board x=40 y=198 w=1200 h=484
+assert_ui gw_face_0 x=56 y=210 w=132 h=112
+assert_ui gw_note_0 x=56 y=326 w=132 h=24
+assert_ui gw_face_23 x=1092 y=530 w=132 h=112
+assert_ui gw_note_23 x=1092 y=646 w=132 h=24
+assert_within_parents
+screenshot guess_who_design
+focus_ui gw_note_0
+key ENTER
+wait 0.2
+key DOWN
+wait 0.1
+key DOWN
+wait 0.1
+key DOWN
+wait 0.2
+key ENTER
+wait 0.2
+expect_text "This one!"
+expect_text "24 faces left"
+screenshot guess_who_candidate_note
+focus_ui gw_face_0
+key ENTER
+wait 0.2
+expect_text "23 faces left"
+expect_text "Ada flipped down"
+expect_text "This one!"
+click_ui gw_face_0
+wait 0.2
+expect_text "24 faces left"
+click_ui gw_ask
+wait 0.3
+expect_text "12 faces left"
+expect_text "Glasses: Yes"
+expect_text "Question 1: Yes! 12 possible people left."
+screenshot guess_who_clue_history
+click_ui gw_reset
+wait 0.2
+expect_text "Clues appear here after you ask."
+expect_text "24 faces left"
+focus_ui gw_trait
+key ENTER
+wait 0.2
+key DOWN
+wait 0.2
+key ENTER
+wait 0.2
+focus_ui gw_answer
+key ENTER
+wait 0.2
+key DOWN
+wait 0.2
+key ENTER
+wait 0.2
+click_ui gw_ask
+wait 0.2
+expect_text "Hat: No"
+expect_text "13 faces left"
+click_ui gw_reset
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui gw_root x=0 y=0 w=1920 h=1080
+assert_ui gw_face_0 x=84 y=315 w=198 h=168
+assert_ui gw_note_23 x=1638 y=969 w=198 h=36
+assert_within_parents
+screenshot guess_who_design_1080
+resize 1024 768
+wait 0.3
+assert_ui gw_canvas x=0 y=0 w=1024 h=768
+assert_ui gw_root x=0 y=96 w=1024 h=576
+assert_ui gw_face_0 x=45 y=264 w=106 h=90
+assert_ui gw_note_23 x=874 y=613 w=106 h=19
+assert_within_parents
+screenshot guess_who_design_narrow
+resize 1280 720

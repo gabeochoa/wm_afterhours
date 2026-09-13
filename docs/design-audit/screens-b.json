@@ -2090,7 +2090,8 @@
         "change": "Add a legend distinguishing note state from eliminated state."
       }
     ],
-    "sha256": "b938b2f8802a0c099a5107bcdae43c1a4882b638c6d013acba4ff1ac1ee94cbc"
+    "sha256": "b938b2f8802a0c099a5107bcdae43c1a4882b638c6d013acba4ff1ac1ee94cbc",
+    "evidence": "docs/design-audit/originals/guess_who_lab_720p.png"
   },
   {
     "id": "horizontal_drag",

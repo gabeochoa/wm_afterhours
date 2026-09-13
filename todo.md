@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,023 completed; 1,512 remaining.
+1,048 completed; 1,487 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3578,79 +3578,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/guess_who_lab_720p.png) · [Visual review](design-audit.html#screen=guess_who_lab)
 
-- [ ] `guess_who_lab-01` · P2 · defect. New game label: Add a visible gap between the label and reset icon.
+- [x] `guess_who_lab-01` · P2 · defect. New game label: Add a visible gap between the label and reset icon.
   Evidence: The reset glyph touches the end of New game.
 
-- [ ] `guess_who_lab-02` · P2 · defect. Ask question label: Separate the arrow with consistent button-icon spacing.
+- [x] `guess_who_lab-02` · P2 · defect. Ask question label: Separate the arrow with consistent button-icon spacing.
   Evidence: The arrow touches the final letter of question.
 
-- [ ] `guess_who_lab-03` · P2 · proposal. Question sentence: Add a clear gap between the prompt and trait field.
+- [x] `guess_who_lab-03` · P2 · proposal. Question sentence: Add a clear gap between the prompt and trait field.
   Evidence: DOES YOUR PERSON runs directly into the first dropdown.
 
-- [ ] `guess_who_lab-04` · P2 · proposal. Answer field: Label the field Answer above the compact selector.
+- [x] `guess_who_lab-04` · P2 · proposal. Answer field: Label the field Answer above the compact selector.
   Evidence: Yes has no visible label explaining whose answer it represents.
 
-- [ ] `guess_who_lab-05` · P2 · proposal. Trait selector: Replace it with a crisp down chevron aligned to the trailing inset.
+- [x] `guess_who_lab-05` · P2 · proposal. Trait selector: Replace it with a crisp down chevron aligned to the trailing inset.
   Evidence: The selector ends with a literal v.
 
-- [ ] `guess_who_lab-06` · P2 · proposal. Per-face note selectors: Increase note text and give the arrow a separate trailing slot.
+- [x] `guess_who_lab-06` · P2 · proposal. Per-face note selectors: Increase note text and give the arrow a separate trailing slot.
   Evidence: Twenty-four Not sure v labels use very small text.
 
-- [ ] `guess_who_lab-07` · P2 · proposal. Note versus elimination: Label the note row as a note and keep the flip instruction beside the board.
+- [x] `guess_who_lab-07` · P2 · proposal. Note versus elimination: Label the note row as a note and keep the flip instruction beside the board.
   Evidence: Each face has both a portrait and note control without a local distinction.
 
-- [ ] `guess_who_lab-08` · P2 · proposal. Remaining count: Pair it with a small board-status label or progress indicator.
+- [x] `guess_who_lab-08` · P2 · proposal. Remaining count: Pair it with a small board-status label or progress indicator.
   Evidence: 24 faces left is isolated at the right of the question bar.
 
-- [ ] `guess_who_lab-09` · P3 · proposal. Turn indicator: Use an active-player token or arrow consistent with the board palette.
+- [x] `guess_who_lab-09` · P3 · proposal. Turn indicator: Use an active-player token or arrow consistent with the board palette.
   Evidence: A red dot accompanies YOUR TURN without explaining red's meaning.
 
-- [ ] `guess_who_lab-10` · P2 · proposal. Turn heading: Add Player 1 or the active player's name beside the turn label.
+- [x] `guess_who_lab-10` · P2 · proposal. Turn heading: Add Player 1 or the active player's name beside the turn label.
   Evidence: YOUR TURN and Find the mystery person lack player identity.
 
-- [ ] `guess_who_lab-11` · P2 · proposal. Game objective: Add a short first-turn instruction near the question bar.
+- [x] `guess_who_lab-11` · P2 · proposal. Game objective: Add a short first-turn instruction near the question bar.
   Evidence: Find the mystery person does not explain the question-and-answer sequence.
 
-- [ ] `guess_who_lab-12` · P3 · proposal. Logo scale: Reduce its height slightly to give the header a calmer top margin.
+- [x] `guess_who_lab-12` · P3 · proposal. Logo scale: Reduce its height slightly to give the header a calmer top margin.
   Evidence: The stacked logo fills nearly the entire header height.
 
-- [ ] `guess_who_lab-13` · P2 · proposal. Portrait details: Increase facial-detail contrast while retaining all 24 visible cards.
+- [x] `guess_who_lab-13` · P2 · proposal. Portrait details: Increase facial-detail contrast while retaining all 24 visible cards.
   Evidence: Glasses, eye color, and hair details are small within the 8-column board.
 
-- [ ] `guess_who_lab-14` · P3 · proposal. Hat cropping: Provide consistent headroom for hatted portraits.
+- [x] `guess_who_lab-14` · P3 · proposal. Hat cropping: Provide consistent headroom for hatted portraits.
   Evidence: Tall hats touch or disappear beneath the top card edge.
 
-- [ ] `guess_who_lab-15` · P2 · proposal. Name strips: Increase the name-strip separation from each face.
+- [x] `guess_who_lab-15` · P2 · proposal. Name strips: Increase the name-strip separation from each face.
   Evidence: Names sit in narrow cream bands very close to portrait art.
 
-- [ ] `guess_who_lab-16` · P3 · proposal. Card borders: Reduce border emphasis and reserve stronger framing for a chosen candidate.
+- [x] `guess_who_lab-16` · P3 · proposal. Card borders: Reduce border emphasis and reserve stronger framing for a chosen candidate.
   Evidence: Thick yellow double borders compete with distinguishing facial features.
 
-- [ ] `guess_who_lab-17` · P2 · proposal. Board frame: Simplify the frame to reclaim space for portraits and notes.
+- [x] `guess_who_lab-17` · P2 · proposal. Board frame: Simplify the frame to reclaim space for portraits and notes.
   Evidence: Multiple blue bevel bands consume height around the grid.
 
-- [ ] `guess_who_lab-18` · P3 · proposal. Card row gaps: Increase vertical gap between complete card groups.
+- [x] `guess_who_lab-18` · P3 · proposal. Card row gaps: Increase vertical gap between complete card groups.
   Evidence: The note bar nearly touches the next row's top border.
 
-- [ ] `guess_who_lab-19` · P2 · proposal. Footer help: Place the instruction immediately above or below the board near its leading edge.
+- [x] `guess_who_lab-19` · P2 · proposal. Footer help: Place the instruction immediately above or below the board near its leading edge.
   Evidence: Click a face to flip it down is far from the card controls.
 
-- [ ] `guess_who_lab-20` · P3 · proposal. Feedback sentence: Use an instructional starting message until the first question is asked.
+- [x] `guess_who_lab-20` · P3 · proposal. Feedback sentence: Use an instructional starting message until the first question is asked.
   Evidence: A little question. A big clue. occupies the feedback area without showing game state.
 
-- [ ] `guess_who_lab-21` · P2 · proposal. Question history: Reserve a compact clue-history strip near the remaining count.
+- [x] `guess_who_lab-21` · P2 · proposal. Question history: Reserve a compact clue-history strip near the remaining count.
   Evidence: The composition has no visible record area for previous clues.
 
-- [ ] `guess_who_lab-22` · P3 · proposal. Trait grammar: Group trait selection separately from answer confirmation through spacing.
+- [x] `guess_who_lab-22` · P3 · proposal. Trait grammar: Group trait selection separately from answer confirmation through spacing.
   Evidence: Does your person plus wear glasses is clear but tightly merged with answer and action.
 
-- [ ] `guess_who_lab-23` · P2 · proposal. Reset action hierarchy: Reduce its visual emphasis so the question action remains primary.
+- [x] `guess_who_lab-23` · P2 · proposal. Reset action hierarchy: Reduce its visual emphasis so the question action remains primary.
   Evidence: New game has a large outline pill near the turn status.
 
-- [ ] `guess_who_lab-24` · P3 · proposal. Card coordinate reference: Add subtle row markers to support discussing or testing a specific card.
+- [x] `guess_who_lab-24` · P3 · proposal. Card coordinate reference: Add subtle row markers to support discussing or testing a specific card.
   Evidence: The dense grid provides only personal names for locating faces.
 
-- [ ] `guess_who_lab-25` · P2 · proposal. Board status semantics: Add a legend distinguishing note state from eliminated state.
+- [x] `guess_who_lab-25` · P2 · proposal. Board status semantics: Add a legend distinguishing note state from eliminated state.
   Evidence: All note rows say Not sure while the header says 24 faces left.
 
 ### horizontal_drag

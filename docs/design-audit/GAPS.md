@@ -1851,7 +1851,7 @@ Pixel-identical. Two top-aligned table examples occupy little of the canvas. Une
 
 ## guess who lab
 
-[Current baseline](../../screenshot-baselines/screens/guess_who_lab_720p.png) · [Visual review](../../design-audit.html#screen=guess_who_lab)
+[Reviewed image](../../docs/design-audit/originals/guess_who_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/guess_who_lab_720p.png) · [Visual review](../../design-audit.html#screen=guess_who_lab)
 
 Baseline SHA-256: `b938b2f8802a0c099a5107bcdae43c1a4882b638c6d013acba4ff1ac1ee94cbc`
 
