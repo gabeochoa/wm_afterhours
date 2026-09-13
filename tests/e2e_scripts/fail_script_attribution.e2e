@@ -16,6 +16,8 @@ wait 0.3
 reset_test_state
 wait 0.2
 
+expect_text "deliberately absent pending assertion"
+
 # The last-command case: this is the final command, and its failure still
 # has to land here.
 expect_text "deliberately absent, this script is meant to fail"
