@@ -13,12 +13,12 @@ assert_within_parents
 screenshot scrollbar_style_design
 click_ui sbs_preset_1
 wait 0.3
-expect_text "24 rows / Offset 118px"
+expect_text "24 rows / Offset 124px"
 screenshot scrollbar_style_middle
 focus_ui sbs_preset_2
 key ENTER
 wait 0.3
-expect_text "24 rows / Offset 236px"
+expect_text "24 rows / Offset 248px"
 screenshot scrollbar_style_end
 click_ui sbs_preset_0
 wait 0.3
