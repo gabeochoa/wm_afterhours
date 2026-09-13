@@ -1,0 +1,110 @@
+goto_screen minesweeper_lab
+resize 1280 720
+wait 0.3
+click_ui ms_reset
+wait 0.2
+expect_text "Mines remaining"
+expect_text "Time / seconds"
+expect_text "New game"
+expect_text "Intermediate / 16 x 16"
+expect_text "40 mines / 216 safe cells"
+expect_text "Prepared sample"
+expect_text "210 safe cells remaining"
+expect_text "Flags are notes, not confirmed mines."
+expect_text "Left: reveal. Right: place or remove a flag."
+expect_text "038"
+expect_text "000"
+assert_ui ms_root x=0 y=0 w=1280 h=720
+assert_ui ms_window x=406 y=23 w=468 h=652
+assert_ui ms_score x=429 y=101 w=422 h=92
+assert_ui ms_board x=429 y=218 w=422 h=422
+assert_ui ms_0_0 x=432 y=221 w=26 h=26
+assert_ui ms_15_15 x=822 y=611 w=26 h=26
+assert_ui ms_task x=88 y=687 w=170 h=30
+assert_no_overflow
+assert_within_parents
+screenshot minesweeper_design
+wait 1.2
+expect_text "000"
+right_click_ui ms_5_0
+wait 0.2
+expect_text "037"
+expect_text "Game in progress"
+expect_text "Flag placed."
+wait 1.0
+expect_no_text "000"
+right_click_ui ms_5_0
+wait 0.2
+expect_text "038"
+expect_text "Flag removed."
+click_ui ms_15_0
+wait 0.2
+expect_text "squares open."
+focus_ui ms_reset
+key ENTER
+wait 0.2
+expect_text "Prepared sample"
+expect_text "210 safe cells remaining"
+expect_text "000"
+click_ui ms_0_8
+wait 0.2
+expect_text "BOOM!"
+expect_text "Mine revealed"
+expect_text "210 safe cells remaining"
+screenshot minesweeper_design_loss
+click_ui ms_game_menu
+wait 0.2
+expect_text "Prepared sample"
+expect_text "038"
+focus_ui ms_help
+key ENTER
+wait 0.2
+expect_text "Clear all safe cells. Flags are your notes."
+click_ui ms_maximize
+wait 0.2
+assert_ui ms_window x=0 y=0 w=1280 h=681
+assert_ui ms_board x=429 y=195 w=422 h=422
+assert_no_overflow
+assert_within_parents
+screenshot minesweeper_design_maximized
+click_ui ms_maximize
+wait 0.2
+assert_ui ms_window x=406 y=23 w=468 h=652
+click_ui ms_minimize
+wait 0.2
+expect_no_text "038"
+click_ui ms_task
+wait 0.2
+expect_text "038"
+click_ui ms_close
+wait 0.2
+expect_no_text "038"
+click_ui ms_task
+wait 0.2
+expect_text "038"
+expect_text "Prepared sample"
+click_ui ms_start
+wait 0.2
+expect_text "New Minesweeper"
+focus_ui ms_start_game
+key ENTER
+wait 0.2
+expect_text "Prepared sample"
+resize 1920 1080
+wait 0.3
+assert_ui ms_root x=0 y=0 w=1920 h=1080
+assert_ui ms_window x=609 y=35 w=702 h=978
+assert_ui ms_board x=644 y=327 w=633 h=633
+assert_no_overflow
+assert_within_parents
+screenshot minesweeper_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ms_root x=0 y=96 w=1024 h=576
+assert_ui ms_window x=325 y=114 w=374 h=522
+assert_ui ms_board x=343 y=270 w=338 h=338
+assert_ui ms_0_0 x=346 y=273 w=21 h=21
+assert_no_overflow
+assert_within_parents
+screenshot minesweeper_design_narrow
+resize 1280 720

@@ -2403,7 +2403,7 @@ The page contains several useful meter forms. The animated 1% capture is a momen
 
 ## minesweeper lab
 
-[Current baseline](../../screenshot-baselines/screens/minesweeper_lab_720p.png) · [Visual review](../../design-audit.html#screen=minesweeper_lab)
+[Reviewed image](../../docs/design-audit/originals/minesweeper_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/minesweeper_lab_720p.png) · [Visual review](../../design-audit.html#screen=minesweeper_lab)
 
 Baseline SHA-256: `87397a8c2165611f20828963c18f4536a275582430aa244f11b1e03c61354031`
 

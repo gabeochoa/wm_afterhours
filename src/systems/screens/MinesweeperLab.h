@@ -23,6 +23,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
   bool revealed[kSize][kSize]{};
   bool flagged[kSize][kSize]{};
   bool laid_out = false;
+  bool started = false;
   bool window_open = true;
   bool minimized = false;
   bool maximized = false;
@@ -31,7 +32,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
   int flags_left = kMines;
   float elapsed_seconds = 0.f;
   std::string status_message =
-      "Left click to reveal. Right click to mark a mine.";
+      "Left: reveal. Right: place or remove a flag.";
 
   const afterhours::Color desktop_teal{0, 128, 128, 255};
   const afterhours::Color win_gray{192, 192, 192, 255};
@@ -46,7 +47,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     return ComponentConfig{}
         .with_size(ComponentSize{pixels(width * scale), pixels(height * scale)})
         .with_absolute_position(pixels(x * scale), pixels(y * scale))
-        .with_background(Theme::Usage::None);
+        .with_background(Theme::Usage::None).with_corner_radius(0).with_skip_grid_snap(true);
   }
 
   static void draw_bevel(RectangleType r, afterhours::Color fill, bool raised,
@@ -91,6 +92,8 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     const float top = r.y + 5.f * scale;
     afterhours::draw_line_ex({cx, top}, {cx, r.y + 20.f * scale}, 2.f * scale,
                              afterhours::Color{0, 0, 0, 255});
+    afterhours::draw_triangle({cx + scale, top - scale}, {cx - 11.f * scale, top + 5.f * scale},
+                              {cx + scale, top + 11.f * scale}, afterhours::Color{0, 0, 0, 255});
     afterhours::draw_triangle({cx, top}, {cx - 9.f * scale, top + 5.f * scale},
                               {cx, top + 10.f * scale},
                               afterhours::Color{220, 0, 0, 255});
@@ -181,6 +184,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     flags_left = kMines;
     elapsed_seconds = 0.f;
     laid_out = true;
+    started = false;
 
     for (int r = 0; r < kSize; ++r) {
       bool done = false;
@@ -203,7 +207,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
           --flags_left;
           ++flagged_count;
         }
-    status_message = "Left click to reveal. Right click to mark a mine.";
+    status_message = "Left: reveal. Right: place or remove a flag.";
   }
 
   void reveal(int row, int col) {
@@ -279,7 +283,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float dt) override {
     if (!laid_out)
       reset();
-    if (phase == Phase::Playing && window_open && !minimized)
+    if (started && phase == Phase::Playing && window_open && !minimized)
       elapsed_seconds = std::min(999.f, elapsed_seconds + dt);
 
     Theme theme;
@@ -296,24 +300,27 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Adaptive;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(16.f));
 
-    const float scale =
-        context.screen_height > 0.f ? context.screen_height / 720.f : 1.f;
+    const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    div(context, mk(entity, 9900), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background(desktop_teal).with_corner_radius(0));
     auto root =
         div(context, mk(entity, 0),
             box(scale, 0.f, 0.f, 1280.f, 720.f)
+                .with_absolute_position((context.screen_width - 1280 * scale) / 2, (context.screen_height - 720 * scale) / 2)
                 .with_on_draw_bg([color = desktop_teal](RectangleType r) {
                   afterhours::draw_rectangle(r, color);
                 })
                 .with_debug_name("ms_root"));
 
     div(context, mk(root.ent(), 1),
-        box(scale, 51.f, 26.f, 48.f, 44.f)
+        box(scale, 68.f, 26.f, 64.f, 60.f)
             .with_on_draw_bg([](RectangleType r) { draw_monitor(r); })
             .with_debug_name("ms_desktop_icon"));
     div(context, mk(root.ent(), 2),
-        box(scale, 24.f, 75.f, 95.f, 18.f)
+        box(scale, 24.f, 94.f, 152.f, 25.f)
             .with_label("My Computer")
-            .with_font("AtkinsonMock", pixels(16.f * scale))
+            .with_font("AtkinsonMock", pixels(18.f * scale))
             .with_custom_text_color(win_light)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("ms_desktop_label"));
@@ -321,7 +328,28 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     const float window_x = maximized ? 0.f : 406.f;
     const float window_y = maximized ? 0.f : 23.f;
     const float window_w = maximized ? 1280.f : 468.f;
-    const float window_h = maximized ? 681.f : 629.f;
+    const float window_h = maximized ? 681.f : 652.f;
+    const float board_x = (window_w - 422.f) / 2;
+    int safe_remaining = 0;
+    for (int row = 0; row < kSize; ++row)
+      for (int col = 0; col < kSize; ++col)
+        if (!mine[row][col] && !revealed[row][col]) ++safe_remaining;
+    const auto caption = [&](int id, const std::string &text, float x, float y, float width, float height, float size, bool bold = false) {
+      return div(context, mk(root.ent(), id), box(scale, x, y, width, height).with_label(text)
+          .with_font(bold ? "AtkinsonMockBold" : "AtkinsonMock", pixels(size * scale))
+          .with_custom_text_color(win_light).with_alignment(TextAlignment::Left)
+          .with_ignore_pointer_events());
+    };
+    caption(60, "MINESWEEPER LAB", 906, 250, 332, 35, 27, true);
+    caption(61, "Intermediate / 16 x 16", 906, 298, 332, 29, 23, true);
+    caption(62, "40 mines / 216 safe cells", 906, 334, 332, 27, 20);
+    caption(63, phase == Phase::Won ? "Board complete" : phase == Phase::Lost ? "Mine revealed" :
+        started ? "Game in progress" : "Prepared sample", 906, 382, 332, 30, 23, true);
+    caption(64, fmt::format("{} safe cells remaining", safe_remaining), 906, 420, 332, 28, 21);
+    caption(65, "New game restores the same sample:", 906, 468, 332, 26, 18);
+    caption(66, "an open safe area and two placed flags.", 906, 497, 332, 26, 18);
+    caption(67, "The clock starts with your first move.", 906, 526, 332, 26, 18);
+    caption(68, "Flags are notes, not confirmed mines.", 906, 565, 332, 26, 18);
 
     if (window_open && !minimized) {
       auto window =
@@ -349,41 +377,53 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(window.ent(), 2),
           box(scale, 32.f, 7.f, window_w - 120.f, 26.f)
               .with_label("Minesweeper")
-              .with_font("ArchivoMockBold", pixels(18.f * scale))
+              .with_font("AtkinsonMockBold", pixels(20.f * scale))
               .with_custom_text_color(win_light)
               .with_alignment(TextAlignment::Left)
               .with_debug_name("ms_title"));
 
-      auto title_button = [&](int id, const std::string &label, float x,
+      auto title_button = [&](int id, float x,
                               const std::string &name) {
         return button(
             context, mk(window.ent(), id),
             box(scale, x, 9.f, 22.f, 22.f)
-                .with_label(label)
-                .with_font("ArchivoMockBold", pixels(16.f * scale))
                 .with_custom_text_color(black)
                 .with_alignment(TextAlignment::Center)
                 .with_click_activation(ClickActivationMode::Release)
                 .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
                   draw_bevel(r, color, true, 2.f * scale);
                 })
+                .with_on_draw_fg([id, scale](RectangleType r) {
+                  const auto glyph_ink = afterhours::Color{0, 0, 0, 255};
+                  if (id == 3) {
+                    afterhours::draw_rectangle({r.x + 5 * scale, r.y + 15 * scale, 12 * scale, 2 * scale}, glyph_ink);
+                    return;
+                  }
+                  if (id == 4) {
+                    raylib::DrawRectangleLinesEx({r.x + 5 * scale, r.y + 5 * scale, 12 * scale, 12 * scale}, scale, glyph_ink);
+                    afterhours::draw_rectangle({r.x + 5 * scale, r.y + 5 * scale, 12 * scale, 3 * scale}, glyph_ink);
+                    return;
+                  }
+                  raylib::DrawLineEx({r.x + 6 * scale, r.y + 6 * scale}, {r.x + 16 * scale, r.y + 16 * scale}, 2 * scale, glyph_ink);
+                  raylib::DrawLineEx({r.x + 16 * scale, r.y + 6 * scale}, {r.x + 6 * scale, r.y + 16 * scale}, 2 * scale, glyph_ink);
+                })
                 .with_debug_name(name));
       };
 
-      if (title_button(3, "_", window_w - 79.f, "ms_minimize"))
+      if (title_button(3, window_w - 82.f, "ms_minimize"))
         minimized = true;
-      if (title_button(4, "□", window_w - 55.f, "ms_maximize")) {
+      if (title_button(4, window_w - 56.f, "ms_maximize")) {
         maximized = !maximized;
         status_message = maximized ? "Window maximized." : "Window restored.";
       }
-      if (title_button(5, "×", window_w - 31.f, "ms_close")) {
+      if (title_button(5, window_w - 30.f, "ms_close")) {
         window_open = false;
         minimized = false;
       }
 
       if (button(context, mk(window.ent(), 6),
-                 box(scale, 8.f, 36.f, 54.f, 24.f)
-                     .with_label("Game")
+                 box(scale, 8.f, 36.f, 104.f, 24.f)
+                     .with_label("New game")
                      .with_font("AtkinsonMock", pixels(19.f * scale))
                      .with_custom_text_color(black)
                      .with_alignment(TextAlignment::Center)
@@ -392,7 +432,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
         reset();
       }
       if (button(context, mk(window.ent(), 7),
-                 box(scale, 68.f, 36.f, 45.f, 24.f)
+                 box(scale, 120.f, 36.f, 64.f, 24.f)
                      .with_label("Help")
                      .with_font("AtkinsonMock", pixels(19.f * scale))
                      .with_custom_text_color(black)
@@ -400,26 +440,24 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
                      .with_click_activation(ClickActivationMode::Release)
                      .with_debug_name("ms_help"))) {
         status_message =
-            "Reveal a square. Right-click to flag. Clear every safe square.";
+            "Clear all safe cells. Flags are your notes.";
       }
 
       div(context, mk(window.ent(), 8),
-          box(scale, 6.f, 64.f, window_w - 12.f, 531.f)
-              .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
-                draw_bevel(r, color, true, 3.f * scale);
-              })
+          box(scale, 6.f, 64.f, window_w - 12.f, 554.f)
+              .with_custom_background(win_gray)
               .with_debug_name("ms_game"));
       div(context, mk(window.ent(), 9),
-          box(scale, 21.f, 78.f, 426.f, 68.f)
+          box(scale, board_x, 78.f, 422.f, 92.f)
               .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
                 draw_bevel(r, color, false, 3.f * scale);
               })
               .with_debug_name("ms_score"));
 
       div(context, mk(window.ent(), 11),
-          box(scale, 32.f, 89.f, 141.f, 45.f)
+          box(scale, board_x + 11.f, 112.f, 126.f, 44.f)
               .with_label(fmt::format("{:03d}", flags_left))
-              .with_font("DGOneMock", pixels(42.f * scale))
+              .with_font("AtkinsonMock", pixels(34.f * scale)).with_letter_spacing(3.f * scale)
               .with_custom_text_color(afterhours::Color{255, 0, 0, 255})
               .with_custom_background(black)
               .with_alignment(TextAlignment::Center)
@@ -427,7 +465,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
 
       if (button(
               context, mk(window.ent(), 12),
-              box(scale, 212.f, 90.f, 44.f, 44.f)
+              box(scale, board_x + 189.f, 112.f, 44.f, 44.f)
                   .with_background(Theme::Usage::None)
                   .with_click_activation(ClickActivationMode::Release)
                   .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
@@ -439,23 +477,37 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
       }
 
       div(context, mk(window.ent(), 13),
-          box(scale, 295.f, 89.f, 141.f, 45.f)
+          box(scale, board_x + 285.f, 112.f, 126.f, 44.f)
               .with_label(
                   fmt::format("{:03d}", static_cast<int>(elapsed_seconds)))
-              .with_font("DGOneMock", pixels(42.f * scale))
+              .with_font("AtkinsonMock", pixels(34.f * scale)).with_letter_spacing(3.f * scale)
               .with_custom_text_color(afterhours::Color{255, 0, 0, 255})
               .with_custom_background(black)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("ms_timer"));
 
+      const auto score_label = [&](int id, const std::string &value, float x, float y, float w) {
+        div(context, mk(window.ent(), id), box(scale, x, y, w, 22).with_label(value)
+            .with_font("AtkinsonMock", pixels(16 * scale)).with_custom_text_color(black)
+            .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+      };
+      score_label(70, "Mines remaining", board_x + 3, 83, 146);
+      score_label(71, "Time / seconds", board_x + 277, 83, 142);
+      score_label(72, "New game", board_x + 151, 83, 120);
       auto board =
           div(context, mk(window.ent(), 14),
-              box(scale, 21.f, 158.f, 422.f, 422.f)
+              box(scale, board_x, 195.f, 422.f, 422.f)
                   .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
                     draw_bevel(r, color, false, 3.f * scale);
                   })
                   .with_debug_name("ms_board"));
 
+      for (int i = 0; i < kSize; ++i) {
+        score_label(80 + i, std::string(1, static_cast<char>('A' + i)), board_x + 3 + i * 26.f, 172, 26);
+        div(context, mk(window.ent(), 100 + i), box(scale, board_x - 23, 198 + i * 26.f, 23, 26)
+            .with_label(std::to_string(i + 1)).with_font("AtkinsonMock", pixels(12 * scale))
+            .with_custom_text_color(black).with_alignment(TextAlignment::Center).with_ignore_pointer_events());
+      }
       for (int row = 0; row < kSize; ++row) {
         for (int col = 0; col < kSize; ++col) {
           const bool open = revealed[row][col];
@@ -471,7 +523,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
               box(scale, 3.f + static_cast<float>(col) * 26.f,
                   3.f + static_cast<float>(row) * 26.f, 26.f, 26.f)
                   .with_label(face)
-                  .with_font("AtkinsonMock", pixels(24.f * scale))
+                  .with_font("AtkinsonMockBold", pixels(24.f * scale))
                   .with_custom_text_color(count_color(nearby))
                   .with_alignment(TextAlignment::Center)
                   .with_click_activation(ClickActivationMode::Release)
@@ -481,7 +533,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
                     if (open || lost_mine) {
                       afterhours::draw_rectangle(
                           r, lost_mine ? afterhours::Color{255, 0, 0, 255}
-                                       : color);
+                                       : afterhours::Color{207, 207, 207, 255});
                       afterhours::draw_rectangle(
                           {r.x + r.width - scale, r.y, scale, r.height},
                           afterhours::Color{128, 128, 128, 255});
@@ -489,7 +541,9 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
                           {r.x, r.y + r.height - scale, r.width, scale},
                           afterhours::Color{128, 128, 128, 255});
                     } else {
-                      draw_bevel(r, color, true, 3.f * scale);
+                      draw_bevel(r, color, true, 2.f * scale);
+                      afterhours::draw_rectangle({r.x, r.y, r.width, 2 * scale}, {230, 230, 230, 255});
+                      afterhours::draw_rectangle({r.x, r.y, 2 * scale, r.height}, {230, 230, 230, 255});
                     }
                   })
                   .with_on_draw_fg(
@@ -503,9 +557,12 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
 
           if (phase != Phase::Playing)
             continue;
-          if (cell)
+          if (cell && !revealed[row][col] && !flagged[row][col]) {
+            started = true;
             reveal(row, col);
+          }
           if (context.is_right_click(cell.ent().id) && !revealed[row][col]) {
+            started = true;
             if (flagged[row][col]) {
               flagged[row][col] = false;
               ++flags_left;
@@ -520,9 +577,9 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
       }
 
       div(context, mk(window.ent(), 15),
-          box(scale, 6.f, 598.f, window_w - 12.f, 25.f)
+          box(scale, 6.f, 622.f, window_w - 12.f, 25.f)
               .with_label(status_message)
-              .with_font("AtkinsonMock", pixels(16.f * scale))
+              .with_font("AtkinsonMock", pixels(17.f * scale))
               .with_custom_text_color(black)
               .with_alignment(TextAlignment::Left)
               .with_on_draw_bg([color = win_gray, scale](RectangleType r) {
@@ -554,7 +611,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 34),
         box(scale, 34.f, 687.f, 43.f, 30.f)
             .with_label("Start")
-            .with_font("ArchivoMockBold", pixels(16.f * scale))
+            .with_font("AtkinsonMockBold", pixels(16.f * scale))
             .with_custom_text_color(black)
             .with_alignment(TextAlignment::Center)
             .with_text_inset(0.f, 0.f)
@@ -565,7 +622,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
 
     auto task_button =
         button(context, mk(root.ent(), 32),
-               box(scale, 88.f, 687.f, 190.f, 30.f)
+               box(scale, 88.f, 687.f, 170.f, 30.f)
                    .with_click_activation(ClickActivationMode::Release)
                    .with_on_draw_bg(
                        [color = win_gray, scale,
@@ -577,9 +634,9 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
                        })
                    .with_debug_name("ms_task"));
     div(context, mk(root.ent(), 35),
-        box(scale, 124.f, 687.f, 150.f, 30.f)
+        box(scale, 124.f, 687.f, 128.f, 30.f)
             .with_label("Minesweeper")
-            .with_font("ArchivoMockBold", pixels(16.f * scale))
+            .with_font("AtkinsonMockBold", pixels(16.f * scale))
             .with_custom_text_color(black)
             .with_alignment(TextAlignment::Left)
             .with_text_inset(0.f, 0.f)
@@ -597,7 +654,7 @@ struct MinesweeperLab : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(root.ent(), 33),
-        box(scale, 1185.f, 687.f, 92.f, 30.f)
+        box(scale, 1191.f, 687.f, 86.f, 30.f)
             .with_label("12:00 PM")
             .with_font("AtkinsonMock", pixels(16.f * scale))
             .with_custom_text_color(black)

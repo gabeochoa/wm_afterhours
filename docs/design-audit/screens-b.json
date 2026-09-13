@@ -5054,7 +5054,8 @@
         "change": "Use a restrained external demo caption to explain the prepared game state without crowding the board."
       }
     ],
-    "sha256": "87397a8c2165611f20828963c18f4536a275582430aa244f11b1e03c61354031"
+    "sha256": "87397a8c2165611f20828963c18f4536a275582430aa244f11b1e03c61354031",
+    "evidence": "docs/design-audit/originals/minesweeper_lab_720p.png"
   },
   {
     "id": "mini_motorways_settings",

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,480 completed; 1,055 remaining.
+1,505 completed; 1,030 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4709,79 +4709,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/minesweeper_lab_720p.png) · [Visual review](design-audit.html#screen=minesweeper_lab)
 
-- [ ] `minesweeper_lab-01` · P2 · proposal. Mine counter: Add a small Mines remaining caption in the status area or beside the display.
+- [x] `minesweeper_lab-01` · P2 · proposal. Mine counter: Add a small Mines remaining caption in the status area or beside the display.
   Evidence: The red 038 counter has no label.
 
-- [ ] `minesweeper_lab-02` · P2 · proposal. Timer: Add Time · seconds beneath or above the timer.
+- [x] `minesweeper_lab-02` · P2 · proposal. Timer: Add Time · seconds beneath or above the timer.
   Evidence: The 000 display has no time unit or label.
 
-- [ ] `minesweeper_lab-03` · P2 · proposal. Counter typography: Tune segment spacing so each digit is distinct while preserving the digital style.
+- [x] `minesweeper_lab-03` · P2 · proposal. Counter typography: Tune segment spacing so each digit is distinct while preserving the digital style.
   Evidence: The thick pixel digits make 038 visually dense.
 
-- [ ] `minesweeper_lab-04` · P2 · proposal. Reset face: Add a small New game caption near the face control.
+- [x] `minesweeper_lab-04` · P2 · proposal. Reset face: Add a small New game caption near the face control.
   Evidence: The smiley button has no visible reset label.
 
-- [ ] `minesweeper_lab-05` · P2 · proposal. Difficulty identity: Show Intermediate · 16 × 16 in the game status area.
+- [x] `minesweeper_lab-05` · P2 · proposal. Difficulty identity: Show Intermediate · 16 × 16 in the game status area.
   Evidence: The 16-by-16 board is visible but the difficulty is unnamed.
 
-- [ ] `minesweeper_lab-06` · P2 · proposal. Starting state: Mark the baseline as a prepared sample state in the demo frame.
+- [x] `minesweeper_lab-06` · P2 · proposal. Starting state: Mark the baseline as a prepared sample state in the demo frame.
   Evidence: Some cells are revealed and two flags are placed while the timer reads zero.
 
-- [ ] `minesweeper_lab-07` · P2 · proposal. Status instruction: Increase status text readability within the classic status bar.
+- [x] `minesweeper_lab-07` · P2 · proposal. Status instruction: Increase status text readability within the classic status bar.
   Evidence: Left click to reveal. Right click to mark a mine uses small text at the bottom.
 
-- [ ] `minesweeper_lab-08` · P2 · proposal. Flagging wording: Use Place or remove a flag in the instruction.
+- [x] `minesweeper_lab-08` · P2 · proposal. Flagging wording: Use Place or remove a flag in the instruction.
   Evidence: Mark a mine could imply certainty rather than a player annotation.
 
-- [ ] `minesweeper_lab-09` · P2 · proposal. Board coordinates: Offer subtle external coordinate labels for demo inspection.
+- [x] `minesweeper_lab-09` · P2 · proposal. Board coordinates: Offer subtle external coordinate labels for demo inspection.
   Evidence: The dense grid has no row or column reference.
 
-- [ ] `minesweeper_lab-10` · P3 · proposal. Flag glyphs: Increase flag silhouette clarity within the existing cell size.
+- [x] `minesweeper_lab-10` · P3 · proposal. Flag glyphs: Increase flag silhouette clarity within the existing cell size.
   Evidence: Tiny red flags have little separation from the dark mast.
 
-- [ ] `minesweeper_lab-11` · P3 · proposal. Revealed numbers: Increase numeral weight while keeping classic number colors.
+- [x] `minesweeper_lab-11` · P3 · proposal. Revealed numbers: Increase numeral weight while keeping classic number colors.
   Evidence: Blue 1 and green 2 are thin compared with the surrounding bevels.
 
-- [ ] `minesweeper_lab-12` · P2 · proposal. Revealed-cell state: Clarify the exposed-cell fill without changing covered-cell bevels.
+- [x] `minesweeper_lab-12` · P2 · proposal. Revealed-cell state: Clarify the exposed-cell fill without changing covered-cell bevels.
   Evidence: Empty revealed cells and numbered cells use almost the same flat gray as recessed boundaries.
 
-- [ ] `minesweeper_lab-13` · P3 · proposal. Cell bevel weight: Slightly reduce bevel contrast while preserving the retro grid structure.
+- [x] `minesweeper_lab-13` · P3 · proposal. Cell bevel weight: Slightly reduce bevel contrast while preserving the retro grid structure.
   Evidence: Bright repeated bevels dominate the board more than the few revealed numbers.
 
-- [ ] `minesweeper_lab-14` · P3 · proposal. Board outer frame: Reduce one redundant outer inset while retaining the classic sunken frame.
+- [x] `minesweeper_lab-14` · P3 · proposal. Board outer frame: Reduce one redundant outer inset while retaining the classic sunken frame.
   Evidence: Several nested bevels consume space around the cells.
 
-- [ ] `minesweeper_lab-15` · P2 · proposal. Game menu: Use consistent menu-item padding and readable text size.
+- [x] `minesweeper_lab-15` · P2 · proposal. Game menu: Use consistent menu-item padding and readable text size.
   Evidence: Game and Help are small and closely packed.
 
-- [ ] `minesweeper_lab-16` · P2 · proposal. Window title: Increase title text slightly and align it cleanly with the app icon.
+- [x] `minesweeper_lab-16` · P2 · proposal. Window title: Increase title text slightly and align it cleanly with the app icon.
   Evidence: Minesweeper is small within the blue title bar.
 
-- [ ] `minesweeper_lab-17` · P2 · proposal. Maximize control: Render a clear maximize glyph at the pixel grid.
+- [x] `minesweeper_lab-17` · P2 · proposal. Maximize control: Render a clear maximize glyph at the pixel grid.
   Evidence: The middle window control appears as an almost blank square.
 
-- [ ] `minesweeper_lab-18` · P3 · proposal. Close glyph: Center and enlarge the glyph within the classic control.
+- [x] `minesweeper_lab-18` · P3 · proposal. Close glyph: Center and enlarge the glyph within the classic control.
   Evidence: The x is tiny compared with its gray button.
 
-- [ ] `minesweeper_lab-19` · P3 · proposal. Window-control spacing: Add one consistent pixel-grid gap between them.
+- [x] `minesweeper_lab-19` · P3 · proposal. Window-control spacing: Add one consistent pixel-grid gap between them.
   Evidence: The minimize, maximize, and close buttons nearly touch.
 
-- [ ] `minesweeper_lab-20` · P3 · proposal. Desktop icon label: Use the same retro bitmap text style as the desktop shell.
+- [x] `minesweeper_lab-20` · P3 · proposal. Desktop icon label: Use the same retro bitmap text style as the desktop shell.
   Evidence: My Computer uses a different handwritten-looking face from the window chrome.
+  Disposition: Used the same readable Atkinson shell labels as the desktop composition. The bundled DGOne face has square advances and would make these narrow controls less legible.
 
-- [ ] `minesweeper_lab-21` · P3 · proposal. Desktop icon scale: Balance icon scale with the centered label width.
+- [x] `minesweeper_lab-21` · P3 · proposal. Desktop icon scale: Balance icon scale with the centered label width.
   Evidence: The monitor icon is small compared with the label's wide footprint.
 
-- [ ] `minesweeper_lab-22` · P3 · proposal. Taskbar app button: Use a width closer to the app label or show active-window emphasis more clearly.
+- [x] `minesweeper_lab-22` · P3 · proposal. Taskbar app button: Use a width closer to the app label or show active-window emphasis more clearly.
   Evidence: The Minesweeper task button leaves a large unused interior span.
 
-- [ ] `minesweeper_lab-23` · P3 · proposal. Taskbar clock: Tighten horizontal padding to match the classic clock treatment.
+- [x] `minesweeper_lab-23` · P3 · proposal. Taskbar clock: Tighten horizontal padding to match the classic clock treatment.
   Evidence: 12:00 PM sits in a wide recessed region.
 
-- [ ] `minesweeper_lab-24` · P2 · proposal. Game progress: Add a compact safe-cells-remaining readout as optional demo metadata.
+- [x] `minesweeper_lab-24` · P2 · proposal. Game progress: Add a compact safe-cells-remaining readout as optional demo metadata.
   Evidence: The status area shows input instructions but no revealed-cell progress.
 
-- [ ] `minesweeper_lab-25` · P3 · proposal. Desktop empty space: Use a restrained external demo caption to explain the prepared game state without crowding the board.
+- [x] `minesweeper_lab-25` · P3 · proposal. Desktop empty space: Use a restrained external demo caption to explain the prepared game state without crowding the board.
   Evidence: The centered window leaves broad blank teal fields.
 
 ### mini_motorways_settings

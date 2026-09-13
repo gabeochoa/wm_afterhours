@@ -26,5 +26,5 @@ expect_text "squares open."
 # Reset puts the board back rather than reshuffling it, seed included.
 click_ui ms_reset
 wait 0.4
-expect_text "Left click to reveal. Right click to mark a mine."
+expect_text "Left: reveal. Right: place or remove a flag."
 expect_text "038"
