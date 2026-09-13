@@ -2793,7 +2793,7 @@ The resting square demonstrates 1.00× scale with zero events. Fifteen proposals
 
 ## popover lab
 
-[Current baseline](../../screenshot-baselines/screens/popover_lab_720p.png) · [Visual review](../../design-audit.html#screen=popover_lab)
+[Reviewed image](../../docs/design-audit/originals/popover_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/popover_lab_720p.png) · [Visual review](../../design-audit.html#screen=popover_lab)
 
 Baseline SHA-256: `a477f7db51342b7777f22a5893b51934b900793e8d7ea0b76772cca07238cff3`
 

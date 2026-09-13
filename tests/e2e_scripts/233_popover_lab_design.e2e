@@ -1,0 +1,82 @@
+goto_screen popover_lab
+resize 1280 720
+wait 0.4
+expect_text "Popovers"
+expect_text "Anchored panels containing controls"
+expect_text "Branch opens initially"
+expect_text "Branch: main"
+expect_text "Switch branch"
+expect_text "Current"
+expect_text "Last action"
+expect_text "No action yet. Branch opens initially for comparison."
+assert_ui pv_live_branch x=430 y=132 w=320 h=224
+assert_no_overflow
+screenshot popover_design
+click_ui pv_branch_2
+wait 0.2
+expect_text "Branch: fix/tab-focus"
+expect_text "Demo branch switched to fix/tab-focus"
+expect_no_text "Switch branch"
+click_ui pv_trigger_pinned
+wait 0.2
+expect_text "fix/tab-focus  Current"
+click_ui pv_branch_0
+wait 0.2
+expect_text "Branch: main"
+click_ui pv_trigger
+wait 0.2
+expect_text "Commit options / demo"
+assert_ui pv_live_commit x=48 y=132 w=320 h=216
+click_ui pv_amend
+wait 0.2
+expect_text "Commit options / demo"
+focus_ui pv_signoff
+key ENTER
+wait 0.2
+expect_text "Commit options / demo"
+focus_ui pv_commit
+key ENTER
+wait 0.2
+expect_text "Demo commit: amend previous / sign-off omitted"
+expect_no_text "Commit options / demo"
+click_ui pv_trigger
+wait 0.2
+expect_text "Commit options / demo"
+screenshot popover_design_form
+click_ui pv_place_0
+wait 0.2
+expect_no_text "Commit options / demo"
+expect_text "Panel Above"
+assert_ui pv_live_place_0 x=48 y=428 w=190 h=72
+screenshot popover_design_above
+click_ui pv_place_1
+wait 0.2
+expect_text "Panel Right"
+expect_no_text "Panel Above"
+assert_ui pv_live_place_1 x=580 y=500 w=190 h=72
+screenshot popover_design_right
+click_ui pv_place_2
+wait 0.2
+expect_text "Panel Left"
+assert_ui pv_live_place_2 x=842 y=500 w=190 h=72
+screenshot popover_design_left
+click_ui pv_trigger_low
+wait 0.2
+expect_text "Flipped above the trigger"
+assert_ui pv_live_low x=48 y=528 w=320 h=120
+screenshot popover_design_flip
+resize 1920 1080
+wait 0.3
+assert_ui pv_root x=0 y=0 w=1920 h=1080
+assert_ui pv_trigger_low x=72 y=972 w=375 h=54
+assert_ui pv_live_low x=72 y=792 w=480 h=180
+assert_no_overflow
+screenshot popover_design_1080
+resize 1024 768
+wait 0.3
+assert_ui pv_root x=0 y=96 w=1024 h=576
+assert_ui pv_trigger_low x=38 y=710 w=200 h=29
+assert_ui pv_live_low x=38 y=614 w=256 h=96
+assert_no_overflow
+screenshot popover_design_narrow
+resize 1280 720

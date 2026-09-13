@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,872 completed; 663 remaining.
+1,897 completed; 638 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5510,79 +5510,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/popover_lab_720p.png) · [Visual review](design-audit.html#screen=popover_lab)
 
-- [ ] `popover_lab-01` · P2 · proposal. Page title: Use Popovers with a separate Anchored panels containing controls subtitle.
+- [x] `popover_lab-01` · P2 · proposal. Page title: Use Popovers with a separate Anchored panels containing controls subtitle.
   Evidence: The heading is a long sentence combining component name and purpose.
 
-- [ ] `popover_lab-02` · P2 · proposal. Instruction: Explain that Branch is pinned open for comparison.
+- [x] `popover_lab-02` · P2 · proposal. Instruction: Explain that Branch is pinned open for comparison.
   Evidence: Click a trigger to open its panel appears even though Branch is already open.
+  Disposition: The native panel is initially open and closes when focus moves outside. Corrected the mistaken pinned-state description.
 
-- [ ] `popover_lab-03` · P2 · proposal. Commit options trigger: Add a short Amend and sign-off form caption beneath it.
+- [x] `popover_lab-03` · P2 · proposal. Commit options trigger: Add a short Amend and sign-off form caption beneath it.
   Evidence: The closed trigger gives no preview of its form contents.
 
-- [ ] `popover_lab-04` · P2 · proposal. Branch trigger: Show Branch: main or a separate current-branch badge.
+- [x] `popover_lab-04` · P2 · proposal. Branch trigger: Show Branch: main or a separate current-branch badge.
   Evidence: Branch does not identify the current branch.
 
-- [ ] `popover_lab-05` · P2 · proposal. Branch heading: Increase its size and clarify Switch branch.
+- [x] `popover_lab-05` · P2 · proposal. Branch heading: Increase its size and clarify Switch branch.
   Evidence: Switch to is tiny above the four branch buttons.
 
-- [ ] `popover_lab-06` · P2 · proposal. Branch names: Use a readable monospaced face for branch names.
+- [x] `popover_lab-06` · P2 · proposal. Branch names: Use a readable monospaced face for branch names.
   Evidence: main and release/2.4 use small handwritten text.
 
-- [ ] `popover_lab-07` · P2 · proposal. Current branch: Mark the current branch with a check or Current label.
+- [x] `popover_lab-07` · P2 · proposal. Current branch: Mark the current branch with a check or Current label.
   Evidence: All four branch rows have identical cyan fills.
 
-- [ ] `popover_lab-08` · P2 · proposal. Branch row padding: Add consistent horizontal insets.
+- [x] `popover_lab-08` · P2 · proposal. Branch row padding: Add consistent horizontal insets.
   Evidence: Branch names sit close to the left edges of their pills.
 
-- [ ] `popover_lab-09` · P2 · proposal. Popover anchor relationship: Add a small anchor cue or consistent offset that makes ownership clear.
+- [x] `popover_lab-09` · P2 · proposal. Popover anchor relationship: Add a small anchor cue or consistent offset that makes ownership clear.
   Evidence: The panel begins directly below the trigger without a pointer or gap.
 
-- [ ] `popover_lab-10` · P2 · proposal. Explanation heading: Give it a stronger heading size.
+- [x] `popover_lab-10` · P2 · proposal. Explanation heading: Give it a stronger heading size.
   Evidence: What a popover is for is small within the large dark panel.
 
-- [ ] `popover_lab-11` · P2 · proposal. Explanation body: Use readable body text with paragraph spacing.
+- [x] `popover_lab-11` · P2 · proposal. Explanation body: Use readable body text with paragraph spacing.
   Evidence: The body is tiny, widely spaced, and broken into isolated lines.
 
-- [ ] `popover_lab-12` · P2 · proposal. Focus explanation: Rephrase as You can use controls inside without dismissing the panel.
+- [x] `popover_lab-12` · P2 · proposal. Focus explanation: Rephrase as You can use controls inside without dismissing the panel.
   Evidence: Focus landing inside must not close it describes an internal rule.
 
-- [ ] `popover_lab-13` · P3 · proposal. Menu comparison: Add a small static menu-versus-form illustration.
+- [x] `popover_lab-13` · P3 · proposal. Menu comparison: Add a small static menu-versus-form illustration.
   Evidence: The note mentions menus without showing the difference.
 
-- [ ] `popover_lab-14` · P2 · proposal. Placement heading: Use Placement and edge flipping as a clear section heading.
+- [x] `popover_lab-14` · P2 · proposal. Placement heading: Use Placement and edge flipping as a clear section heading.
   Evidence: Placement, and what happens when there is no room is a long low-emphasis line.
 
-- [ ] `popover_lab-15` · P2 · proposal. Above sample caption: Use a centered readable caption with consistent inset.
+- [x] `popover_lab-15` · P2 · proposal. Above sample caption: Use a centered readable caption with consistent inset.
   Evidence: anchored Above is tiny and left-flush inside its panel.
 
-- [ ] `popover_lab-16` · P2 · proposal. Right sample caption: Add internal padding without changing its anchor placement.
+- [x] `popover_lab-16` · P2 · proposal. Right sample caption: Add internal padding without changing its anchor placement.
   Evidence: anchored Right touches the panel's left edge.
 
-- [ ] `popover_lab-17` · P2 · proposal. Left sample caption: Inset the caption while retaining the diagnostic focus outline.
+- [x] `popover_lab-17` · P2 · proposal. Left sample caption: Inset the caption while retaining the diagnostic focus outline.
   Evidence: anchored Left sits close to the outlined boundary.
 
-- [ ] `popover_lab-18` · P3 · proposal. Placement direction: Add small directional arrows outside each trigger-panel pair.
+- [x] `popover_lab-18` · P3 · proposal. Placement direction: Add small directional arrows outside each trigger-panel pair.
   Evidence: Above, Right, and Left labels require mentally tracking their panels.
 
-- [ ] `popover_lab-19` · P3 · proposal. Placement grouping: Frame each pair within a labeled comparison region without changing its anchor geometry.
+- [x] `popover_lab-19` · P3 · proposal. Placement grouping: Frame each pair within a labeled comparison region without changing its anchor geometry.
   Evidence: The three examples occupy irregular widths and alignments.
 
-- [ ] `popover_lab-20` · P2 · proposal. Bottom trigger: Rename it Bottom-edge flip using the shared label style.
+- [x] `popover_lab-20` · P2 · proposal. Bottom trigger: Rename it Bottom-edge flip using the shared label style.
   Evidence: near the bottom is lowercase and differs from the other trigger labels.
 
-- [ ] `popover_lab-21` · P2 · proposal. Bottom expected result: Add a small expected-placement diagram or companion open-state capture.
+- [x] `popover_lab-21` · P2 · proposal. Bottom expected result: Add a small expected-placement diagram or companion open-state capture.
   Evidence: The bottom panel is closed, so its flipping behavior is not visible.
 
-- [ ] `popover_lab-22` · P3 · proposal. Trigger versus panel colors: Add a compact Trigger / Popover color key.
+- [x] `popover_lab-22` · P3 · proposal. Trigger versus panel colors: Add a compact Trigger / Popover color key.
   Evidence: Cyan triggers and dark panels lack a shared legend.
 
-- [ ] `popover_lab-23` · P3 · proposal. Pinned-state identity: Add Pinned example as a small external badge.
+- [x] `popover_lab-23` · P3 · proposal. Pinned-state identity: Add Pinned example as a small external badge.
   Evidence: The Branch panel resembles a user-opened panel without stating its fixture role.
+  Disposition: Labeled Branch opens initially. Native focus ownership does not support pinning this fixture while independently opening the others.
 
-- [ ] `popover_lab-24` · P3 · proposal. Empty central space: Use the space for anchor and fallback-placement guides.
+- [x] `popover_lab-24` · P3 · proposal. Empty central space: Use the space for anchor and fallback-placement guides.
   Evidence: Broad blank regions separate the upper and lower demonstrations.
 
-- [ ] `popover_lab-25` · P2 · proposal. Result feedback: Reserve a labeled Last action line for branch or commit outcomes.
+- [x] `popover_lab-25` · P2 · proposal. Result feedback: Reserve a labeled Last action line for branch or commit outcomes.
   Evidence: The only status text is the initial instruction.
 
 ### potion_crafting

@@ -7161,7 +7161,8 @@
         "change": "Reserve a labeled Last action line for branch or commit outcomes."
       }
     ],
-    "sha256": "a477f7db51342b7777f22a5893b51934b900793e8d7ea0b76772cca07238cff3"
+    "sha256": "a477f7db51342b7777f22a5893b51934b900793e8d7ea0b76772cca07238cff3",
+    "evidence": "docs/design-audit/originals/popover_lab_720p.png"
   },
   {
     "id": "potion_crafting",
