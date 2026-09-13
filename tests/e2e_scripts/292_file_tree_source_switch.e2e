@@ -1,0 +1,18 @@
+goto_screen file_tree
+resize 1280 720
+wait 0.4
+expect_text "Project sources"
+expect_text "6 folders / 12 files in project"
+click_ui source_btn
+wait 0.3
+expect_text "All files"
+expect_no_text "6 folders / 12 files in project"
+expect_text "makefile"
+click_ui source_btn
+wait 0.3
+expect_text "Project sources"
+expect_text "6 folders / 12 files in project"
+click_ui file_row_FileTreeShowcase.h
+wait 0.2
+expect_text "#pragma once"
+expect_text "Read only"
