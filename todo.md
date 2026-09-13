@@ -1,5 +1,26 @@
 # Project todo
 
+## Latest visual feedback
+
+- [ ] Improve context menu appearance.
+- [ ] Improve modal and popup appearance. Preserve the dialog screens, which the user likes.
+- [ ] Add Escape to go back in `deadspace_settings`.
+- [ ] Redesign the decorative frames.
+- [ ] Fix Divider Lab height clipping: a bottom row appears too early instead of remaining clipped.
+- [ ] Make the dragged card preview match the actual card, including its contents, styling and size, in both vertical and horizontal drag-and-drop lists.
+- [ ] Make Fight Menu tabs switch the displayed content and selected state.
+- [ ] Improve File Tree details with a readable source-code preview for the selected file and scrolling for long files.
+- [ ] Fix Flight Options focus rings that appear too narrow for their controls.
+- [ ] Make Form controls affect the screen: buttons and sliders should apply their settings, including enabling and adjusting bloom.
+- [ ] Improve the visual design of Who's Who (`guess_who_lab`).
+- [ ] Fix the unexpected space around item 3 in HStack's Center and End examples.
+- [ ] Remove focus and click behavior from Islands & Trains progress indicators; keep interaction on the buttons.
+- [ ] Investigate and reduce the slow loading time of Kirby Options.
+- [ ] Add a multilingual inline-icon screen using prompts such as "Press [Space] to jump". Let each translation place the key icon where its sentence grammar requires, with English and Korean examples; verify wrapping and alignment when the icon moves within the sentence.
+- [ ] Design layout test screens whose failures are immediately obvious, inspired by Acid2. Use compositions that form a clear expected image when sizing, alignment and clipping are correct, alongside numeric assertions.
+- [ ] Improve the Media Player's visual design and interaction polish.
+- [ ] Fix Offsite Backup's dropdown-looking control: make it an actual dropdown, or remove the dropdown styling if it is not a selector.
+
 ## New consumer gaps collected September 13
 
 These are collection results, not implementation approvals. Source evidence,
