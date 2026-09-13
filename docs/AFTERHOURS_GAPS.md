@@ -226,18 +226,25 @@ keep this policy visible rather than silently overwriting a track.
 
 ### Text-area scrolling, focus targets and scaled auto-grow padding
 
-`text_area.h` calls `ensure_cursor_visible_at_row` during every rebuild before
-applying the mouse wheel. A wheel offset away from the caret is therefore
-reset on the next idle frame. The wm example offers Top/Bottom caret
-navigation and reports the real scroll range; independent wheel scrolling
-still needs an upstream fix. Its focus target is the inner field, while the
-returned entity is a wrapper: setting focus on that wrapper is discarded by
+Composer Lab 4 exposed an incorrect assumption in `text_area.h`: rebuilding
+an unchanged field was treated as a request to reveal its caret. This reset
+wheel scrolling on the next idle frame. The original wheel test inspected only
+the event frame, so it missed the failure. The library now reveals the caret
+when focus, caret position or text changes, and on explicit keyboard navigation.
+Idle frames preserve manual scrolling and clamp it to the current content range.
+Wheel input is applied before creating visible rows; fractional offsets move
+text, selection and caret together rather than snapping text to whole rows.
+Regression coverage includes idle frames, fractional rows, navigation with an
+unchanged caret, and shorter replacement content.
+
+The focus target is still the inner field, while the returned entity is a
+wrapper: setting focus on that wrapper is discarded by
 EndUIContextManager because the wrapper is absent from focused_ids. A
 supported focus-target accessor would avoid callers inspecting child order.
 Auto-grow also adds a fixed 8px to row heights while the field padding uses
 height-scaled h720(4) on each side; at 1080p five 30px rows receive 158px
-outer height but need 162px. Review scaled padding and caret-visible scrolling
-separately.
+outer height but need 162px. Focus-target access and size resolution remain
+open.
 
 Floatinghotel supplies another unit failure in the same component:
 `floatinghotel/src/ecs/sidebar_system.h:1215` uses an explicit pixel line height.

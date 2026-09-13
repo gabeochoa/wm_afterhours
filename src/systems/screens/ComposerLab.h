@@ -170,7 +170,7 @@ struct ComposerLab : ScreenSystem<UIContext<InputAction>> {
     const size_t total_rows = scroll_state.layout_cache.line_count();
     const size_t first = std::min(total_rows, static_cast<size_t>(scroll_state.scroll_offset_y / line_height) + 1);
     const size_t last = std::min(total_rows, static_cast<size_t>(std::ceil((scroll_state.scroll_offset_y + scroll_view[1]) / line_height)));
-    label(fmt::format("Rows {}-{} of {} / {:.0f}px scroll / Top and Bottom move the caret", first, last, total_rows,
+    label(fmt::format("Rows {}-{} of {} / {:.0f}px / Wheel scrolls, buttons move caret", first, last, total_rows,
                       scroll_state.scroll_offset_y), 16, 611, 696, 22, 16, muted, "cl_scroll_range");
     div(context, mk(root.ent(), id++), box(left + 713, 634, 5, 68)
         .with_custom_background({66, 79, 100, 255}).with_ignore_pointer_events()
