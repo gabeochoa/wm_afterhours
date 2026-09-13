@@ -5357,7 +5357,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "55f011da55c9cf312034d99b6f95908098c9273e55a5f98d636fbd9d78e54a24"
+    "sha256": "55f011da55c9cf312034d99b6f95908098c9273e55a5f98d636fbd9d78e54a24",
+    "evidence": "docs/design-audit/originals/cozy_cafe_720p.png"
   },
   {
     "id": "deadspace_settings",

@@ -1067,7 +1067,7 @@ The open context menu provides direct evidence of a clipped first label. Remaini
 
 ## cozy cafe
 
-[Current baseline](../../screenshot-baselines/screens/cozy_cafe_720p.png) · [Visual review](../../design-audit.html#screen=cozy_cafe)
+[Reviewed image](../../docs/design-audit/originals/cozy_cafe_720p.png) · [Current baseline](../../screenshot-baselines/screens/cozy_cafe_720p.png) · [Visual review](../../design-audit.html#screen=cozy_cafe)
 
 Baseline SHA-256: `55f011da55c9cf312034d99b6f95908098c9273e55a5f98d636fbd9d78e54a24`
 

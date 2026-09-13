@@ -1,0 +1,118 @@
+goto_screen cozy_cafe
+resize 1280 720
+wait 0.4
+expect_text "Blossom Cafe"
+expect_text "1347 coins"
+expect_no_text "Gold:"
+expect_text "4 / 5"
+expect_text "Customers served: 23"
+expect_text "Selected"
+expect_text "Floral coffee / promotion earns 25 coins"
+expect_text "Promote Lavender Latte"
+expect_text "+25 coins instantly / no cost"
+expect_text "2 waiting"
+expect_text "Emma"
+expect_text "Cappuccio"
+expect_text "Waited 2m"
+expect_text "Waited 5m"
+expect_text "50%"
+expect_text "14%"
+expect_text "LOW"
+expect_text "Serve Emma"
+expect_text "+12 coins per order / first in queue"
+expect_text "Music: 70%"
+expect_text "Guild chat"
+expect_text "2 notices"
+expect_text "1 recipe note"
+expect_text "No notices"
+assert_ui paper_board x=116 y=15 w=1048 h=690
+assert_ui special_0 x=185 y=215 w=391 h=57
+assert_ui promote_special x=185 y=410 w=391 h=46
+assert_ui customer_row_0 x=679 y=219 w=417 h=88
+assert_ui customer_row_1 x=679 y=314 w=417 h=88
+assert_ui prog_bg_0 w=158 h=14
+assert_ui prog_fill_0 w=79 h=14
+assert_ui notices_Inventory w=29 h=29
+assert_ui research_book w=42 h=42
+assert_ui music_slider x=320 y=537 w=373 h=36
+assert_no_overflow
+assert_within_parents
+screenshot cozy_cafe_design
+click_ui special_2
+wait 0.2
+expect_text "Promote Matcha Cake"
+focus_ui special_2
+key TAB
+wait 0.2
+expect_focused promote_special
+key ENTER
+wait 0.2
+expect_text "Matcha Cake promoted"
+expect_text "1372 coins"
+click_ui serve_next
+wait 0.2
+expect_text "1 waiting"
+expect_text "Serve Oliver"
+expect_text "Customers served: 24"
+expect_text "1384 coins"
+expect_no_text "Cappuccio"
+expect_text "14%"
+click_ui serve_next
+wait 0.2
+expect_text "0 waiting"
+expect_text "All orders served"
+expect_text "Queue complete"
+expect_text "Customers served: 25"
+expect_text "1396 coins"
+click_ui serve_next
+wait 0.2
+expect_text "1396 coins"
+set_slider music_slider 0
+wait 0.2
+expect_text "Music: 0%"
+set_slider music_slider 1
+wait 0.2
+expect_text "Music: 100%"
+assert_ui music_fill x=324 y=548 w=365 h=14
+set_slider music_slider 0.35
+wait 0.2
+expect_text "Music: 35%"
+click_ui tool_Inventory
+wait 0.2
+expect_text "Inventory opened"
+expect_text "Pantry: stock check due"
+expect_text "Storage: shelf labels ready"
+click_ui tool_close
+wait 0.2
+click_ui tool_Research
+wait 0.2
+expect_text "Recipe notebook: try a lavender latte."
+click_ui tool_close
+wait 0.2
+click_ui tool_Crafting
+wait 0.2
+expect_text "Your crafting station has no new notices."
+click_ui tool_close
+resize 1920 1080
+wait 0.3
+assert_ui paper_board x=174 y=23 w=1572 h=1035
+assert_ui music_slider x=480 y=806 w=560 h=54
+assert_ui research_book x=1392 y=878 w=63 h=63
+assert_no_overflow
+assert_within_parents
+screenshot cozy_cafe_design_1080
+resize 1024 768
+wait 0.3
+assert_ui cafe_background w=1024 h=768
+assert_ui paper_board x=93 y=108 w=838 h=552
+assert_ui specials_panel x=119 y=196 w=372 h=312
+assert_ui music_slider x=256 y=526 w=298 h=29
+assert_no_overflow
+assert_within_parents
+screenshot cozy_cafe_design_narrow
+click_ui tool_Research
+wait 0.2
+expect_text "Recipe notebook: try a lavender latte."
+assert_within_parents
+screenshot cozy_cafe_design_narrow_tool
+resize 1280 720

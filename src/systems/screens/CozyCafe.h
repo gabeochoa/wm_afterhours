@@ -3,7 +3,6 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
-#include "../../ui_workarounds/NotificationBadge.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
@@ -17,18 +16,15 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
   size_t selected_special = 0;
   int gold_coins = 1347;
   int customers_today = 23;
+  int opened_tool = -1;
   std::string status_message = "Guildmate23: need help with the recipe?";
 
   // Loaded textures
   bool textures_loaded = false;
   raylib::Texture2D star_filled_tex{};
   raylib::Texture2D star_empty_tex{};
-  raylib::Texture2D clock_tex{};
   raylib::Texture2D flower_tex{};
-  raylib::Texture2D avatar_guildmate_tex{};
-  raylib::Texture2D avatar_devteam_tex{};
   raylib::Texture2D icon_inventory_tex{};
-  raylib::Texture2D icon_research_tex{};
   raylib::Texture2D icon_crafting_tex{};
 
   void load_textures_if_needed() {
@@ -45,11 +41,9 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     };
     star_filled_tex = load("cozy_cafe/star.png");
     star_empty_tex = load("cozy_cafe/star_empty.png");
-    clock_tex = load("cozy_cafe/clock.png");
     flower_tex = load("cozy_cafe/flower.png");
 
     icon_inventory_tex = load("cozy_cafe/inventory.png");
-    icon_research_tex = load("cozy_cafe/research.png");
     icon_crafting_tex = load("cozy_cafe/crafting.png");
   }
 
@@ -90,7 +84,20 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     load_textures_if_needed();
 
-    UIStylingDefaults::get().set_default_font("GaeguMock", h720(18.0f));
+    const float screen_w = context.screen_width > 0.f
+                               ? context.screen_width
+                               : Settings::get().get_screen_width();
+    const float screen_h = context.screen_height > 0.f
+                               ? context.screen_height
+                               : Settings::get().get_screen_height();
+    const float scale = std::min(screen_w / 1280.f, screen_h / 720.f);
+    const float offset_x = (screen_w - 1280.f * scale) / 2;
+    const float offset_y = (screen_h - 720.f * scale) / 2;
+    auto ax = [=](float v) { return offset_x + v * scale; };
+    auto ay = [=](float v) { return offset_y + v * scale; };
+    auto px = [=](float v) { return pixels(v * scale); };
+
+    UIStylingDefaults::get().set_default_font("GaeguMock", px(18));
     Theme theme;
     theme.font = dark_text;
     theme.darkfont = cream_surface;
@@ -101,46 +108,59 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = sage_header;
     theme.accent = rose_btn;
     theme.error = badge_red;
-    theme.roundness = 0.12f;
-    theme.segments = 8;
+    theme.corner_radius = 8.f * scale;
     context.set_theme(theme);
 
-    const float screen_w =
-        context.screen_width > 0.f
-            ? context.screen_width
-            : static_cast<float>(Settings::get().get_screen_width());
-    const float screen_h =
-        context.screen_height > 0.f
-            ? context.screen_height
-            : static_cast<float>(Settings::get().get_screen_height());
-    const float sx = screen_w / 1280.f;
-    const float sy = screen_h / 720.f;
-    auto ax = [sx](float v) { return v * sx; };
-    auto ay = [sy](float v) { return v * sy; };
-    auto pxf = [sx](float v) { return pixels(static_cast<int>(v * sx)); };
-    auto pyf = [sy](float v) { return pixels(static_cast<int>(v * sy)); };
-
-    auto outline = [sy](float radius, float thickness,
-                        afterhours::Color color) {
+    auto outline = [=](float radius, float thickness, afterhours::Color color) {
       return [=](RectangleType rect) {
-        const float width = thickness * sy;
+        const float width = thickness * scale;
         rect.x += width / 2;
         rect.y += width / 2;
         rect.width -= width;
         rect.height -= width;
         const float roundness = std::clamp(
-            2 * (radius * sy - width / 2) / std::min(rect.width, rect.height),
+            2 * (radius * scale - width / 2) / std::min(rect.width, rect.height),
             0.f, 1.f);
         afterhours::draw_rectangle_rounded_lines_ex(rect, roundness, 24, width,
-                                                    color);
+                                                   color);
       };
+    };
+    auto box = [&](float x, float y, float w, float h,
+                   afterhours::Color color, float radius = 0.f) {
+      return ComponentConfig{}
+          .with_size({px(w), px(h)})
+          .with_absolute_position(ax(x), ay(y))
+          .with_custom_background(color)
+          .with_corner_radius(radius * scale);
+    };
+    auto label = [&](int id, const std::string &value, float x, float y,
+                     float w, float h, float size,
+                     afterhours::Color color, const char *name = "",
+                     const char *font = "GaeguMock") {
+      div(context, mk(entity, id),
+          box(x, y, w, h, {0, 0, 0, 0})
+              .with_label(value)
+              .with_font(font, px(size))
+              .with_custom_text_color(color)
+              .with_letter_spacing(0)
+              .with_ignore_pointer_events()
+              .with_debug_name(name));
+    };
+    auto image = [&](int id, const raylib::Texture2D &texture,
+                     float x, float y, float w, float h, const char *name) {
+      if (texture.id == 0) return;
+      sprite(context, mk(entity, id), texture,
+             {0, 0, static_cast<float>(texture.width),
+              static_cast<float>(texture.height)},
+             box(x, y, w, h, {0, 0, 0, 0})
+                 .with_ignore_pointer_events()
+                 .with_debug_name(name));
     };
 
     // ========== BACKGROUND AND PAPER BOARD ==========
     div(context, mk(entity, 1),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(static_cast<float>(screen_w)),
-                                     pixels(static_cast<float>(screen_h))})
+            .with_size({pixels(screen_w), pixels(screen_h)})
             .with_corner_radius(0)
             .with_on_draw_bg([](RectangleType r) {
               afterhours::draw_rectangle_gradient_v(r, {157, 131, 94, 255},
@@ -148,593 +168,359 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_background(Theme::Usage::None)
             .with_debug_name("cafe_background"));
-
     div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(1048.f), pyf(690.f)})
-            .with_absolute_position(ax(116.0f), ay(15.0f))
-            .with_custom_background(paper_surface)
-            .with_border(afterhours::Color{107, 78, 52, 255}, 4.0f)
-            .with_soft_shadow(0.0f, 6.0f, 0.0f,
-                              afterhours::Color{110, 83, 52, 45})
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(38.f * sy)
+        box(116, 15, 1048, 690, paper_surface, 38)
+            .with_soft_shadow(0, 6 * scale, 0, {110, 83, 52, 45})
             .with_on_draw_fg(outline(38, 4, {107, 78, 52, 255}))
             .with_debug_name("paper_board"));
 
     // ========== HEADER ==========
     // Title with flower symbol
     // Flower icon
-    if (flower_tex.id != 0) {
-      afterhours::texture_manager::Rectangle src{0, 0, (float)flower_tex.width,
-                                                 (float)flower_tex.height};
-      sprite(context, mk(entity, 9), flower_tex, src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pxf(38), pyf(38)})
-                 .with_absolute_position(ax(148.0f), ay(49.0f))
-                 .with_debug_name("flower_icon"));
-    }
-
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_label("Blossom Cafe")
-            .with_size(ComponentSize{pxf(340), pyf(50)})
-            .with_absolute_position(ax(flower_tex.id != 0 ? 188.0f : 150.0f),
-                                    ay(47.0f))
-            .with_font("GaeguMock", h720(47.0f))
-            .with_custom_text_color(cream_surface)
-            .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-            .with_letter_spacing(0.f)
-            .with_letter_spacing(-2.5f * sy)
-            .with_debug_name("cafe_title"));
-
+    image(9, flower_tex, 148, 49, 38, 38, "flower_icon");
+    label(10, "Blossom Cafe", 188, 41, 428, 60, 52, dark_text,
+          "cafe_title", "GaeguMock");
     // Gold pill background
     div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(185), pyf(52)})
-            .with_absolute_position(ax(677.0f), ay(45.0f))
-            .with_custom_background(afterhours::Color{255, 247, 222, 180})
-            .with_border(afterhours::Color{123, 93, 63, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(15.f * sy)
-            .with_on_draw_fg(outline(15, 2, brown_border))
+        box(663, 43, 207, 56, {255, 247, 222, 255}, 16)
+            .with_on_draw_fg(outline(16, 2, brown_border))
             .with_debug_name("gold_pill"));
-
-    div(context, mk(entity, 21),
-        ComponentConfig{}
-            .with_label("Gold:  $" + std::to_string(gold_coins))
-            .with_size(ComponentSize{pxf(165), pyf(32)})
-            .with_absolute_position(ax(696.0f), ay(58.0f))
-            .with_font("GaeguMock", h720(26.0f))
-            .with_custom_text_color(cream_surface)
-            .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-            .with_letter_spacing(0.f)
-            .with_debug_name("gold_text"));
-
+    div(context, mk(entity, 22),
+        box(676, 57, 27, 27, {223, 174, 70, 255}, 13.5f)
+            .with_label("G")
+            .with_font("GaeguMock", px(18))
+            .with_custom_text_color(brown_border)
+            .with_alignment(TextAlignment::Center)
+            .with_on_draw_fg(outline(13.5f, 2, brown_border))
+            .with_ignore_pointer_events());
+    label(21, std::to_string(gold_coins) + " coins", 705, 52, 158, 38,
+          26, dark_text, "gold_text", "GaeguMock");
     // Rating box - widened to fit all content including numeric rating
     div(context, mk(entity, 30),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(252), pyf(68)})
-            .with_absolute_position(ax(883.0f), ay(37.0f))
-            .with_custom_background(afterhours::Color{255, 247, 222, 165})
-            .with_border(afterhours::Color{123, 93, 63, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(16.f * sy)
+        box(883, 37, 252, 68, {255, 247, 222, 255}, 16)
             .with_on_draw_fg(outline(16, 2, brown_border))
             .with_debug_name("rating_box"));
-
     // Rating label
-    div(context, mk(entity, 31),
-        ComponentConfig{}
-            .with_label("Rating:")
-            .with_size(ComponentSize{pxf(84), pyf(29)})
-            .with_absolute_position(ax(908.0f), ay(51.0f))
-            .with_font("GaeguMock", h720(25.0f))
-            .with_letter_spacing(0.f)
-            .with_custom_text_color(dark_text));
-
+    label(31, "4 / 5", 893, 44, 67, 28, 20, dark_text, "rating_value");
     for (int i = 0; i < 5; ++i) {
-      const auto texture = i < 4 ? star_filled_tex : star_empty_tex;
-      sprite(context, mk(entity, 33 + i), texture,
-             {0, 0, (float)texture.width, (float)texture.height},
-             ComponentConfig{}
-                 .with_size({pxf(23), pyf(23)})
-                 .with_absolute_position(ax(991.f + i * 24.f), ay(45.f))
-                 .with_ignore_pointer_events()
-                 .with_debug_name(fmt::format("cc_star_{}", i)));
+      if (i == 4) {
+        div(context, mk(entity, 38),
+            box(1093, 46, 25, 25, {211, 199, 168, 255}, 5)
+                .with_ignore_pointer_events());
+      }
+      image(33 + i, i < 4 ? star_filled_tex : star_empty_tex,
+            969.f + i * 31.f, 46, 25, 25, "rating_star");
     }
-
-    div(context, mk(entity, 32),
-        ComponentConfig{}
-            .with_label("Customers Served: " + std::to_string(customers_today))
-            .with_size(ComponentSize{pxf(220), pyf(26)})
-            .with_absolute_position(ax(908.0f), ay(76.0f))
-            .with_font("GaeguMock", h720(22.0f))
-            .with_custom_text_color(dark_text)
-            .with_letter_spacing(0.f)
-            .with_debug_name("served_text"));
+    label(32, "Customers served: " + std::to_string(customers_today),
+          898, 75, 223, 23, 17, dark_text, "served_text");
 
     // ========== LEFT PANEL: Today's Specials ==========
     // Center content to better match square inspiration on widescreen
-    // Use percent widths for cohesive layout grid
-    float left_panel_x = 149.0f;
-    float panel_y = 125.0f;
-    float left_panel_w = 465.0f;
-    float panel_h = 390.0f;
-
     div(context, mk(entity, 100),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(left_panel_w), pyf(panel_h)})
-            .with_absolute_position(ax(left_panel_x), ay(panel_y))
-            .with_custom_background(panel_left)
-            .with_border(afterhours::Color{116, 83, 56, 255}, 3.0f)
-            .with_soft_shadow(4.0f, 7.0f, 0.0f,
-                              afterhours::Color{110, 83, 52, 55})
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(36.f * sy)
+        box(149, 125, 465, 390, panel_left, 36)
+            .with_soft_shadow(4 * scale, 7 * scale, 0, {110, 83, 52, 55})
             .with_on_draw_fg(outline(36, 3, brown_border))
             .with_debug_name("specials_panel"));
-
     // Brown header
     div(context, mk(entity, 101),
-        ComponentConfig{}
+        box(149, 133, 465, 60, {0, 0, 0, 0})
             .with_label("Today's Specials")
-            .with_size(ComponentSize{pxf(left_panel_w), pyf(72)})
-            .with_absolute_position(ax(left_panel_x), ay(panel_y + 3.0f))
-            .with_background(Theme::Usage::None)
-            .with_font("GaeguMock", h720(43.0f))
-            .with_custom_text_color(cream_surface)
-            .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-            .with_letter_spacing(0.f)
+            .with_font("GaeguMock", px(43))
+            .with_custom_text_color(dark_text)
             .with_alignment(TextAlignment::Center)
-            .with_letter_spacing(-2.f * sy)
             .with_debug_name("specials_title"));
-
     div(context, mk(entity, 102),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(429.f), pyf(292.f)})
-            .with_absolute_position(ax(166.0f), ay(203.0f))
-            .with_custom_background(afterhours::Color{255, 249, 227, 255})
-            .with_border(afterhours::Color{158, 130, 91, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(22.f * sy)
+        box(166, 203, 429, 292, {255, 249, 227, 255}, 22)
             .with_on_draw_fg(outline(22, 2, {158, 130, 91, 255}))
             .with_debug_name("specials_inner"));
-
-    // Menu items - styled as pill buttons with colored fills (minimum 44px
-    // touch targets)
-    afterhours::Color menu_colors[] = {pink_btn, mint_btn, tan_btn};
-    float menu_y = 227.0f;
-    float menu_btn_w = 357.0f;
-    for (size_t i = 0; i < daily_specials.size(); i++) {
-      bool selected = (i == selected_special);
-      afterhours::Color btn_bg = menu_colors[i];
-
+    const afterhours::Color menu_colors[] = {pink_btn, mint_btn, tan_btn};
+    const char *descriptions[] = {"Floral coffee / promotion earns 25 coins",
+                                  "Sweet toast / promotion earns 25 coins",
+                                  "Green tea cake / promotion earns 25 coins"};
+    for (size_t i = 0; i < daily_specials.size(); ++i) {
+      const bool selected = i == selected_special;
+      const float y = 215.f + static_cast<float>(i) * 63.f;
       if (button(context, mk(entity, 110 + static_cast<int>(i)),
-                 ComponentConfig{}
-                     .with_label(daily_specials[i])
-                     .with_size(ComponentSize{pxf(menu_btn_w), pyf(50)})
-                     .with_absolute_position(ax(203.0f),
-                                             ay(menu_y + (float)i * 67.0f))
-                     .with_custom_background(btn_bg)
-                     .with_border(brown_border, selected ? 3.0f : 2.0f)
-                     .with_soft_shadow(2.0f, 3.0f, 8.0f,
-                                       afterhours::Color{0, 0, 0, 35})
-                     .with_font("GaeguMock", h720(32.0f))
-                     .with_custom_text_color(cream_surface)
-                     .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-                     .with_letter_spacing(0.f)
-                     .with_rounded_corners(RoundedCorners())
-                     .with_corner_radius(25.f * sy)
-                     .with_alignment(TextAlignment::Center)
-                     .with_on_draw_fg(outline(25, selected ? 4.f : 2.5f, brown_border))
+                 box(185, y, 391, 57, menu_colors[i], 18)
+                     .with_on_draw_fg(outline(18, selected ? 3.5f : 2.f,
+                                              brown_border))
                      .with_debug_name("special_" + std::to_string(i)))) {
         selected_special = i;
       }
+      label(130 + static_cast<int>(i), daily_specials[i], 200, y + 1,
+            272, 33, 30, dark_text, "special_name", "GaeguMock");
+      label(140 + static_cast<int>(i), descriptions[i], 200, y + 31,
+            364, 20, 15, dark_text, "special_description");
+      if (!selected) continue;
+      div(context, mk(entity, 150 + static_cast<int>(i)),
+          box(480, y + 8, 83, 23, brown_border, 8)
+              .with_label("Selected")
+              .with_font("GaeguMock", px(15))
+              .with_custom_text_color(cream_surface)
+              .with_alignment(TextAlignment::Center)
+              .with_ignore_pointer_events()
+              .with_debug_name("selected_special"));
     }
-
     // Promote Special button - widened for full text visibility (minimum 44px
     // touch target)
-    float promote_y = 431.0f;
-    if (button(
-            context, mk(entity, 120),
-            ComponentConfig{}
-                .with_label("Promote Special   ")
-                .with_size(ComponentSize{pxf(menu_btn_w), pyf(46)})
-                .with_absolute_position(ax(203.0f), ay(promote_y))
-                .with_custom_background(afterhours::Color{255, 247, 222, 255})
-                .with_border(brown_border, 2.0f)
-                .with_font("GaeguMock", h720(29.0f))
-                .with_custom_text_color(cream_surface)
-                .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-                .with_letter_spacing(0.f)
-                .with_rounded_corners(RoundedCorners())
-                .with_corner_radius(14.f * sy)
-                .with_alignment(TextAlignment::Center)
-                .with_on_draw_fg(outline(14, 2, brown_border))
-                .with_debug_name("promote_special"))) {
+    if (button(context, mk(entity, 120),
+               box(185, 410, 391, 46, {255, 240, 194, 255}, 14)
+                   .with_label("Promote " + daily_specials[selected_special])
+                   .with_font("GaeguMock", px(28))
+                   .with_custom_text_color(dark_text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_on_draw_fg(outline(14, 2, brown_border))
+                   .with_debug_name("promote_special"))) {
       gold_coins += 25;
       status_message = daily_specials[selected_special] + " promoted";
     }
-
-    // Clock icon on Promote button - positioned to not overlap text
-    if (clock_tex.id != 0) {
-      afterhours::texture_manager::Rectangle clock_src{
-          0, 0, (float)clock_tex.width, (float)clock_tex.height};
-      sprite(context, mk(entity, 121), clock_tex, clock_src,
-             ComponentConfig{}
-                 .with_size(ComponentSize{pxf(33), pyf(33)})
-                 .with_ignore_pointer_events()
-                 .with_absolute_position(ax(479.0f), ay(promote_y + 7.0f))
-                 .with_debug_name("clock_icon"));
-    }
+    label(121, "+25 coins instantly / no cost", 217, 463, 339, 24,
+          17, dark_text, "promotion_reward");
 
     // ========== RIGHT PANEL: Customers ==========
-    // Connected to left panel via consistent panel_gap
-    float right_panel_x = 644.0f;
-    float right_panel_w = 490.0f;
-
     div(context, mk(entity, 200),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(right_panel_w), pyf(panel_h)})
-            .with_absolute_position(ax(right_panel_x), ay(panel_y))
-            .with_custom_background(panel_right)
-            .with_border(afterhours::Color{116, 83, 56, 255}, 3.0f)
-            .with_soft_shadow(4.0f, 7.0f, 0.0f,
-                              afterhours::Color{110, 83, 52, 55})
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(36.f * sy)
+        box(644, 125, 490, 390, panel_right, 36)
+            .with_soft_shadow(4 * scale, 7 * scale, 0, {110, 83, 52, 55})
             .with_on_draw_fg(outline(36, 3, brown_border))
             .with_debug_name("customers_panel"));
-
     // Sage header
-    div(context, mk(entity, 201),
-        ComponentConfig{}
-            .with_label("Customers")
-            .with_size(ComponentSize{pxf(right_panel_w), pyf(72)})
-            .with_absolute_position(ax(right_panel_x), ay(panel_y + 3.0f))
-            .with_background(Theme::Usage::None)
-            .with_font("GaeguMock", h720(43.0f))
-            .with_custom_text_color(cream_surface)
-            .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-            .with_letter_spacing(0.f)
-            .with_alignment(TextAlignment::Center)
-            .with_letter_spacing(-2.f * sy)
-            .with_debug_name("customers_title"));
-
+    label(201, "Customers", 690, 132, 240, 57, 43, dark_text,
+          "customers_title", "GaeguMock");
+    label(203, std::to_string(waiting_customers.size()) + " waiting",
+          959, 149, 135, 29, 22, dark_text, "waiting_count");
     div(context, mk(entity, 202),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(453.f), pyf(292.f)})
-            .with_absolute_position(ax(661.0f), ay(203.0f))
-            .with_custom_background(afterhours::Color{255, 249, 227, 255})
-            .with_border(afterhours::Color{158, 130, 91, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(22.f * sy)
+        box(661, 203, 453, 292, {255, 249, 227, 255}, 22)
             .with_on_draw_fg(outline(22, 2, {158, 130, 91, 255}))
             .with_debug_name("customers_inner"));
 
     // Customer rows
-    float cust_y = 247.0f;
-    for (size_t i = 0; i < waiting_customers.size(); i++) {
-      auto &c = waiting_customers[i];
-      float row_y = cust_y + (float)i * 90.0f;
-
-      // Name - Order (own line, full width so it never collides with the
-      // patience row below it)
-      div(context, mk(entity, 210 + static_cast<int>(i) * 10),
-          ComponentConfig{}
-              .with_label(c.name + " - " + c.order)
-              .with_size(ComponentSize{pxf(300), pyf(34)})
-              .with_absolute_position(ax(696.0f), ay(row_y))
-              .with_font("GaeguMock", h720(28.0f))
-              .with_custom_text_color(dark_text)
-              .with_letter_spacing(0.f)
-              .with_debug_name("cust_" + std::to_string(i)));
-
+    for (size_t i = 0; i < waiting_customers.size(); ++i) {
+      const auto &customer = waiting_customers[i];
+      const float y = 219.f + static_cast<float>(i) * 95.f;
+      const int id = 210 + static_cast<int>(i) * 20;
+      const bool low = customer.progress < .35f;
+      div(context, mk(entity, id),
+          box(679, y, 417, 88, low ? afterhours::Color{249, 227, 212, 255}
+                                   : afterhours::Color{247, 241, 216, 255}, 12)
+              .with_debug_name("customer_row_" + std::to_string(i)));
+      if (low) {
+        div(context, mk(entity, id + 1),
+            box(679, y + 12, 4, 64, badge_red, 2)
+                .with_debug_name("customer_urgent"));
+      }
+      label(id + 2, customer.name, 691, y - 1, 241, 35, 30,
+            dark_text, "cust_name", "GaeguMock");
+      label(id + 3, customer.order, 695, y + 31, 229, 25, 19,
+            dark_text, "cust_order");
+      label(id + 4, "Waited " + std::to_string(customer.wait_time) + "m",
+            970, y + 4, 119, 27, 18, low ? badge_red : dark_text,
+            "customer_wait");
       // Patience row sits BELOW the name
-      float prow_y = row_y + 42.0f;
-
-      // Patience label with warning text for low patience
-      bool low_patience = c.progress < 0.35f;
-      std::string patience_text = low_patience ? "Patience: LOW" : "Patience:";
-      div(context, mk(entity, 215 + static_cast<int>(i) * 10),
-          ComponentConfig{}
-              .with_label(patience_text)
-              .with_size(ComponentSize{pxf(120), pyf(22)})
-              .with_absolute_position(ax(696.0f), ay(prow_y + 4.0f))
-              .with_font("GaeguMock", h720(14.0f))
-              .with_letter_spacing(0.f)
-              .with_custom_text_color(low_patience ? badge_red
-                                                   : theme.font_muted));
-
+      label(id + 5, "Patience", 695, y + 60, 116, 23, 17,
+            dark_text, "patience_label");
       // Progress bar bg with label
-      div(context, mk(entity, 211 + static_cast<int>(i) * 10),
-          ComponentConfig{}
-              .with_size(ComponentSize{pxf(162), pyf(8)})
-              .with_absolute_position(ax(803.0f), ay(prow_y + 8.0f))
-              .with_custom_background(afterhours::Color{211, 195, 158, 255})
-              .with_border(afterhours::Color{164, 147, 112, 255}, 1.0f)
-              .with_rounded_corners(RoundedCorners())
-              .with_corner_radius(25.f * sy)
+      div(context, mk(entity, id + 6),
+          box(809, y + 65, 158, 14, {211, 195, 158, 255}, 7)
               .with_debug_name("prog_bg_" + std::to_string(i)));
-
       // Progress fill
-      if (c.progress > 0.0f) {
-        div(context, mk(entity, 212 + static_cast<int>(i) * 10),
-            ComponentConfig{}
-                .with_size(ComponentSize{pxf(160 * c.progress), pyf(6)})
-                .with_absolute_position(ax(804.0f), ay(prow_y + 9.0f))
-                .with_custom_background(
-                    i == 0 ? afterhours::Color{154, 172, 124, 255}
-                           : afterhours::Color{202, 151, 128, 255})
-                .with_rounded_corners(RoundedCorners())
-                .with_corner_radius(25.f * sy)
+      if (customer.progress > 0) {
+        div(context, mk(entity, id + 7),
+            box(809, y + 65, 158 * customer.progress, 14,
+                low ? badge_red : afterhours::Color{104, 130, 82, 255}, 7)
                 .with_debug_name("prog_fill_" + std::to_string(i)));
       }
-
-      // Time badge (minimum 44px for touch)
-      afterhours::Color time_bg = (c.wait_time > 3) ? rose_btn : panel_right;
-      div(context, mk(entity, 213 + static_cast<int>(i) * 10),
-          ComponentConfig{}
-              .with_label(std::to_string(c.wait_time) + "m")
-              .with_size(ComponentSize{pxf(56), pyf(32)})
-              .with_absolute_position(ax(1039.0f), ay(row_y - 2.0f))
-              .with_custom_background(time_bg)
+      label(id + 8, std::to_string(static_cast<int>(std::round(
+                             customer.progress * 100))) + "%",
+            972, y + 59, 60, 24, 17, dark_text, "patience_value");
+      if (!low) continue;
+      div(context, mk(entity, id + 9),
+          box(1034, y + 58, 54, 26, badge_red, 8)
+              .with_label("LOW")
+              .with_font("GaeguMock", px(18))
               .with_custom_text_color(cream_surface)
-              .with_border(afterhours::Color{124, 91, 60, 255}, 2.0f)
-              .with_rounded_corners(RoundedCorners())
-              .with_corner_radius(6.f * sy)
               .with_alignment(TextAlignment::Center)
-              .with_font("GaeguMock", h720(20.0f))
-              .with_letter_spacing(0.f)
-              .with_debug_name("time_" + std::to_string(i)));
+              .with_debug_name("patience_low"));
     }
-
-    // Serve Next button (minimum 44px touch target)
-    float serve_btn_y = 421.0f;
-    if (button(
-            context, mk(entity, 250),
-            ComponentConfig{}
-                .with_label("Serve Next")
-                .with_size(ComponentSize{pxf(355), pyf(53)})
-                .with_absolute_position(ax(709.0f), ay(serve_btn_y))
-                .with_custom_background(rose_btn)
-                .with_border(afterhours::Color{124, 91, 60, 255}, 2.0f)
-                .with_soft_shadow(2.0f, 3.0f, 10.0f,
-                                  afterhours::Color{0, 0, 0, 40})
-                .with_font("GaeguMock", h720(37.0f))
-                .with_custom_text_color(cream_surface)
-                .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-                .with_letter_spacing(0.f)
-                .with_rounded_corners(RoundedCorners())
-                .with_corner_radius(25.f * sy)
-                .with_alignment(TextAlignment::Center)
-                .with_disabled(waiting_customers.empty())
-                .with_on_draw_fg(outline(25, 2.5, brown_border))
-                .with_debug_name("serve_next"))) {
-      customers_today += 1;
+    if (button(context, mk(entity, 250),
+               box(709, 421, 355, 48,
+                   waiting_customers.empty() ? panel_left : rose_btn, 20)
+                   .with_label(waiting_customers.empty()
+                                   ? "Queue complete"
+                                   : "Serve " + waiting_customers.front().name)
+                   .with_font("GaeguMock", px(34))
+                   .with_custom_text_color(dark_text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_disabled(waiting_customers.empty())
+                   .with_on_draw_fg(outline(20, 2.5f, brown_border))
+                   .with_debug_name("serve_next"))) {
+      ++customers_today;
       gold_coins += 12;
       status_message = "Served " + waiting_customers.front().name + "'s order";
       waiting_customers.erase(waiting_customers.begin());
     }
-
+    label(251, "+12 coins per order / first in queue", 725, 471, 331, 22,
+          16, dark_text, "serve_reward");
     if (waiting_customers.empty()) {
-      div(context, mk(entity, 260),
-          ComponentConfig{}
-              .with_label("All orders served")
-              .with_size({pxf(355), pyf(48)})
-              .with_absolute_position(ax(709), ay(292))
-              .with_font("GaeguMock", h720(28))
-              .with_custom_text_color(dark_text)
-              .with_alignment(TextAlignment::Center));
+      label(260, "All orders served", 733, 283, 316, 45, 32,
+            dark_text, "queue_empty", "GaeguMock");
+      label(261, "The counter is ready for a quiet moment.", 704, 330,
+            377, 27, 18, dark_text, "queue_empty_detail");
     }
 
-    // ========== SEPARATOR: Between main panels and bottom sections ==========
-    div(context, mk(entity, 299),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(978), pyf(1)})
-            .with_absolute_position(ax(150.0f), ay(panel_y + panel_h + 8.0f))
-            .with_custom_background(afterhours::Color{130, 110, 90, 0})
-            .with_debug_name("section_separator_1"));
-
     // ========== MUSIC SLIDER ==========
-    // Connected to main layout via left_panel_x
-    float slider_y = 533.0f;
-    float slider_w = 378.0f;
-
+    label(303, "Music: " + std::to_string(static_cast<int>(
+                                std::round(music_volume * 100))) + "%",
+          153, 536, 161, 35, 24, dark_text, "music_label", "GaeguMock");
     slider(context, mk(entity, 300), music_volume,
-           ComponentConfig{}
-               .with_size(ComponentSize{pxf(slider_w), pyf(26)})
-               .with_absolute_position(ax(155.0f), ay(slider_y))
-               .with_custom_background(afterhours::Color{0, 0, 0, 0})
-               .with_rounded_corners(RoundedCorners())
-               .with_corner_radius(25.f * sy)
+           box(320, 537, 373, 36, {0, 0, 0, 0}, 18)
                .with_debug_name("music_slider"),
            SliderHandleValueLabelPosition::None);
-
     div(context, mk(entity, 301),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(slider_w), pyf(17)})
-            .with_absolute_position(ax(155.0f), ay(slider_y + 2.0f))
-            .with_custom_background(afterhours::Color{116, 81, 53, 255})
-            .with_border(afterhours::Color{119, 86, 56, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(25.f * sy)
+        box(324, 548, 365, 14, {205, 186, 148, 255}, 7)
             .with_ignore_pointer_events()
             .with_debug_name("music_track"));
-
-    div(context, mk(entity, 302),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(slider_w * music_volume), pyf(11)})
-            .with_absolute_position(ax(159.0f), ay(slider_y + 5.0f))
-            .with_custom_background(panel_right)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(25.f * sy)
-            .with_ignore_pointer_events()
-            .with_debug_name("music_fill"));
-
+    if (music_volume > 0) {
+      div(context, mk(entity, 302),
+          box(324, 548, 365 * music_volume, 14, {104, 130, 82, 255}, 7)
+              .with_ignore_pointer_events()
+              .with_debug_name("music_fill"));
+    }
     div(context, mk(entity, 304),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(27), pyf(30)})
-            .with_absolute_position(
-                ax(155.0f + (slider_w - 27.0f) * music_volume),
-                ay(slider_y - 4.0f))
-            .with_custom_background(panel_right)
-            .with_border(afterhours::Color{124, 91, 60, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(1.0f)
+        box(320 + 345 * music_volume, 541, 28, 28, cream_surface, 14)
+            .with_on_draw_fg(outline(14, 2.5f, brown_border))
             .with_ignore_pointer_events()
             .with_debug_name("music_handle"));
 
-    div(context, mk(entity, 303),
-        ComponentConfig{}
-            .with_label("Music: " +
-                        std::to_string(
-                            static_cast<int>(std::round(music_volume * 100))) +
-                        "%")
-            .with_size(ComponentSize{pxf(180), pyf(30)})
-            .with_absolute_position(ax(157.0f), ay(575.0f))
-            .with_font("GaeguMock", h720(27.0f))
-            .with_custom_text_color(cream_surface)
-            .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-            .with_letter_spacing(0.f)
-            .with_debug_name("music_label"));
-
     // ========== CHAT BOX ==========
-    float chat_y = 603.0f;
-    float chat_w = 543.0f;
-
+    label(399, "Guild chat", 154, 575, 250, 27, 24, dark_text,
+          "guild_chat_title", "GaeguMock");
     div(context, mk(entity, 400),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(chat_w), pyf(75)})
-            .with_absolute_position(ax(152.0f), ay(chat_y))
-            .with_custom_background(chat_bg)
-            .with_border(afterhours::Color{121, 91, 61, 255}, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_corner_radius(8.f * sy)
-            .with_on_draw_fg(outline(8, 2, brown_border))
+        box(152, 605, 543, 78, chat_bg, 12)
+            .with_on_draw_fg(outline(12, 2, brown_border))
             .with_debug_name("chat_box"));
-
     // Chat messages with avatars - data-driven
-    struct ChatMsg {
-      int avatar_id;
-      int text_id;
-      float y;
-      raylib::Texture2D *tex;
-      const char *fallback;
-      afterhours::Color fallback_bg;
-      const char *message;
-    };
-    float chat_line1_y = chat_y + 10.0f;
-    float chat_line2_y = chat_y + 37.0f;
-    ChatMsg chat_msgs[] = {
-        {405,
-         401,
-         chat_line1_y,
-         &avatar_guildmate_tex,
-         "G",
-         {182, 201, 155, 255},
-         status_message.c_str()},
-        {406,
-         402,
-         chat_line2_y,
-         &avatar_devteam_tex,
-         "D",
-         {214, 163, 167, 255},
-         "DevTeam_Support: Check out the new update!"},
-    };
-    for (auto &cm : chat_msgs) {
-      div(context, mk(entity, cm.avatar_id),
-          ComponentConfig{}
-              .with_label(cm.fallback)
-              .with_size({pxf(21), pyf(21)})
-              .with_absolute_position(ax(164.f), ay(cm.y + 5.f))
-              .with_custom_background(cm.fallback_bg)
-              .with_font("Atkinson", h720(12))
-              .with_custom_text_color({100, 91, 61, 255})
-              .with_roundness(1)
+    const char *messages[] = {status_message.c_str(),
+                             "DevTeam_Support: Check out the new update!"};
+    for (int i = 0; i < 2; ++i) {
+      const float y = 615.f + static_cast<float>(i) * 30.f;
+      div(context, mk(entity, 405 + i),
+          box(164, y + 3, 23, 23, i == 0 ? mint_btn : pink_btn, 11.5f)
+              .with_label(i == 0 ? "G" : "D")
+              .with_font("GaeguMock", px(14))
+              .with_custom_text_color(dark_text)
               .with_alignment(TextAlignment::Center));
-      div(context, mk(entity, cm.text_id),
-          ComponentConfig{}
-              .with_label(cm.message)
-              .with_size(ComponentSize{pxf(500), pyf(28)})
-              .with_absolute_position(ax(193.0f), ay(cm.y + 1.0f))
-              .with_font("Archivo", h720(22.0f))
-              .with_custom_text_color(cream_surface)
-              .with_letter_spacing(0.f)
-              .with_debug_name(cm.text_id == 401 ? "chat_status"
-                                                 : "chat_support"));
+      label(401 + i, messages[i], 194, y, 488, 29, 20, cream_surface,
+            i == 0 ? "chat_status" : "chat_support", "GaeguMock");
     }
 
     // ========== BOTTOM RIGHT: Icons with Badges ==========
     // Connected to right panel via consistent positioning
-    float icon_x = 835.0f;
-    float icon_y = 590.0f;
-    float icon_size = 64.0f; // Minimum 44px for touch targets
-    float icon_img_size = 52.0f;
-    float icon_offset = (icon_size - icon_img_size) / 2.0f;
-    float icon_spacing = 109.0f;
-
-    // ========== SEPARATOR: Between chat and icons ==========
-    div(context, mk(entity, 499),
-        ComponentConfig{}
-            .with_size(ComponentSize{pxf(1), pyf(80)})
-            .with_absolute_position(ax(icon_x - 20.0f), ay(chat_y + 2.0f))
-            .with_custom_background(afterhours::Color{130, 110, 90, 0})
-            .with_debug_name("section_separator_2"));
-
     // Bottom-right icon buttons - data-driven
     struct IconBtn {
-      int base_id;
-      raylib::Texture2D *tex;
-      const char *label;
+      int id;
+      raylib::Texture2D *texture;
+      const char *name;
       const char *badge;
+      const char *detail;
     };
-    IconBtn icon_btns[] = {
-        {500, &icon_inventory_tex, "Inventory", "2"},
-        {510, &icon_research_tex, "Research", "!"},
-        {520, &icon_crafting_tex, "Crafting", nullptr},
-    };
-    for (size_t ib = 0; ib < 3; ib++) {
-      auto &btn = icon_btns[ib];
-      float bx = icon_x + (float)ib * icon_spacing;
-
-      if (button(
-              context, mk(entity, btn.base_id),
-              ComponentConfig{}
-                  .with_size(ComponentSize{pxf(icon_size), pyf(icon_size)})
-                  .with_absolute_position(ax(bx), ay(icon_y))
-                  .with_custom_background(afterhours::Color{250, 237, 206, 255})
-                  .with_border(brown_border, 2.0f)
-                  .with_rounded_corners(RoundedCorners())
-                  .with_corner_radius(14.f * sy)
-                  .with_debug_name(std::string("tool_") + btn.label))) {
-        status_message = std::string(btn.label) + " opened";
+    const IconBtn tools[] = {{500, &icon_inventory_tex, "Inventory", "2", "2 notices"},
+                             {510, nullptr, "Research", "1", "1 recipe note"},
+                             {520, &icon_crafting_tex, "Crafting", nullptr, "No notices"}};
+    for (size_t i = 0; i < 3; ++i) {
+      const auto &tool = tools[i];
+      const float x = 801.f + static_cast<float>(i) * 114.f;
+      if (button(context, mk(entity, tool.id),
+                 box(x, 574, 68, 64, {250, 237, 206, 255}, 14)
+                     .with_on_draw_fg(outline(14, 2, brown_border))
+                     .with_debug_name(std::string("tool_") + tool.name))) {
+        opened_tool = static_cast<int>(i);
+        status_message = std::string(tool.name) + " opened";
       }
-      sprite(context, mk(entity, btn.base_id + 1), *btn.tex,
-             {0, 0, (float)btn.tex->width, (float)btn.tex->height},
-             ComponentConfig{}
-                 .with_size({pxf(icon_img_size), pyf(icon_img_size)})
-                 .with_absolute_position(ax(bx + icon_offset),
-                                         ay(icon_y + icon_offset))
-                 .with_ignore_pointer_events());
-      if (btn.badge) {
-        ui_workarounds::notification_badge(
-            context, entity, btn.base_id + 2, btn.badge,
-            ax(bx + icon_size - 14.0f), ay(icon_y - 5.0f), ax(22.0f),
-            badge_red);
+      if (i != 1) {
+        image(tool.id + 1, *tool.texture, x + 8, 580, 52, 52, "tool_icon");
+      } else {
+        div(context, mk(entity, tool.id + 1),
+            box(x + 13, 585, 42, 42, {0, 0, 0, 0})
+                .with_ignore_pointer_events()
+                .with_on_draw_fg([=](RectangleType r) {
+                  raylib::DrawRectangleRounded(
+                      {r.x, r.y, r.width, r.height}, .14f, 8,
+                      {118, 83, 56, 255});
+                  raylib::DrawRectangleRounded(
+                      {r.x + 3 * scale, r.y + 3 * scale,
+                       r.width - 6 * scale, r.height - 6 * scale},
+                      .1f, 8, {255, 249, 227, 255});
+                  raylib::DrawLineEx({r.x + r.width / 2, r.y + 4 * scale},
+                                     {r.x + r.width / 2, r.y + r.height - 4 * scale},
+                                     2 * scale, {118, 83, 56, 255});
+                  for (int line = 0; line < 3; ++line) {
+                    const float y = r.y + (12.f + static_cast<float>(line) * 8.f) * scale;
+                    raylib::DrawLineEx({r.x + 7 * scale, y},
+                                       {r.x + 16 * scale, y}, 2 * scale,
+                                       {154, 172, 124, 255});
+                    raylib::DrawLineEx({r.x + 26 * scale, y},
+                                       {r.x + 35 * scale, y}, 2 * scale,
+                                       {154, 172, 124, 255});
+                  }
+                })
+                .with_debug_name("research_book"));
       }
-      div(context, mk(entity, btn.base_id + 3),
-          ComponentConfig{}
-              .with_label(btn.label)
-              .with_size(ComponentSize{pxf(icon_size + 44), pyf(22)})
-              .with_absolute_position(ax(bx - 22.0f),
-                                      ay(icon_y + icon_size + 8.0f))
-              .with_font("GaeguMock", h720(20.0f))
-              .with_custom_text_color(cream_surface)
-              .with_text_stroke(afterhours::Color{107, 78, 52, 255}, .65f * sy)
-              .with_letter_spacing(0.f)
-              .with_alignment(TextAlignment::Center));
+      if (tool.badge) {
+        div(context, mk(entity, tool.id + 2),
+            box(x + 50, 565, 29, 29, badge_red, 14.5f)
+                .with_label(tool.badge)
+                .with_font("GaeguMock", px(19))
+                .with_custom_text_color(cream_surface)
+                .with_alignment(TextAlignment::Center)
+                .with_ignore_pointer_events()
+                .with_debug_name(std::string("notices_") + tool.name));
+      }
+      div(context, mk(entity, tool.id + 3),
+          box(x - 17, 641, 102, 29, {0, 0, 0, 0})
+              .with_label(tool.name)
+              .with_font("GaeguMock", px(25))
+              .with_custom_text_color(dark_text)
+              .with_alignment(TextAlignment::Center)
+              .with_ignore_pointer_events());
+      div(context, mk(entity, tool.id + 4),
+          box(x - 23, 669, 114, 21, {0, 0, 0, 0})
+              .with_label(tool.detail)
+              .with_font("GaeguMock", px(15))
+              .with_custom_text_color(dark_text)
+              .with_alignment(TextAlignment::Center)
+              .with_ignore_pointer_events());
+    }
+    if (opened_tool < 0) return;
+    const auto &tool = tools[opened_tool];
+    div(context, mk(entity, 600),
+        box(152, 575, 543, 112, cream_surface, 12)
+            .with_render_layer(10)
+            .with_on_draw_fg(outline(12, 2, brown_border))
+            .with_debug_name("tool_details"));
+    div(context, mk(entity, 601),
+        box(164, 580, 424, 28, {0, 0, 0, 0})
+            .with_label(std::string(tool.name) + " opened")
+            .with_font("GaeguMock", px(27))
+            .with_custom_text_color(dark_text)
+            .with_render_layer(11));
+    const char *details[] = {"Pantry: stock check due\nStorage: shelf labels ready",
+                              "Recipe notebook: try a lavender latte.",
+                              "Your crafting station has no new notices."};
+    div(context, mk(entity, 602),
+        box(165, 616, 510, 61, {0, 0, 0, 0})
+            .with_label(details[opened_tool])
+            .with_font("GaeguMock", px(18))
+            .with_custom_text_color(dark_text)
+            .with_render_layer(11));
+    if (button(context, mk(entity, 603),
+               box(595, 581, 84, 30, panel_left, 8)
+                   .with_label("Close")
+                   .with_font("GaeguMock", px(17))
+                   .with_custom_text_color(dark_text)
+                   .with_alignment(TextAlignment::Center)
+                   .with_render_layer(12)
+                   .with_debug_name("tool_close"))) {
+      opened_tool = -1;
     }
   }
 };

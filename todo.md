@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-643 completed; 1,892 remaining.
+668 completed; 1,867 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1952,79 +1952,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/cozy_cafe_720p.png) · [Visual review](design-audit.html#screen=cozy_cafe)
 
-- [ ] `cozy_cafe-01` · P2 · proposal. Outlined title: Strengthen the outline or fill for easier reading.
+- [x] `cozy_cafe-01` · P2 · proposal. Outlined title: Strengthen the outline or fill for easier reading.
   Evidence: Blossom Cafe uses a very thin dark outline around pale letters.
 
-- [ ] `cozy_cafe-02` · P2 · proposal. Gold label: Use one currency convention and an icon.
+- [x] `cozy_cafe-02` · P2 · proposal. Gold label: Use one currency convention and an icon.
   Evidence: Gold: $1347 mixes a fantasy currency name with a dollar symbol.
 
-- [ ] `cozy_cafe-03` · P2 · proposal. Gold number: Use solid tabular digits for the balance.
+- [x] `cozy_cafe-03` · P2 · proposal. Gold number: Use solid tabular digits for the balance.
   Evidence: The outlined digits are harder to read than neighboring text.
 
-- [ ] `cozy_cafe-04` · P2 · proposal. Rating stars: Increase the distinction between earned and unearned stars.
+- [x] `cozy_cafe-04` · P2 · proposal. Rating stars: Increase the distinction between earned and unearned stars.
   Evidence: Filled and empty stars differ subtly.
 
-- [ ] `cozy_cafe-05` · P2 · proposal. Rating value: Add a small 4/5 value.
+- [x] `cozy_cafe-05` · P2 · proposal. Rating value: Add a small 4/5 value.
   Evidence: Only stars communicate the numeric rating.
 
-- [ ] `cozy_cafe-06` · P2 · proposal. Customers served: Increase inset or put the count on its own quieter line.
+- [x] `cozy_cafe-06` · P2 · proposal. Customers served: Increase inset or put the count on its own quieter line.
   Evidence: Customers Served: 23 is tight within the rating box.
 
-- [ ] `cozy_cafe-07` · P2 · proposal. Special selection: Add a small Selected marker.
+- [x] `cozy_cafe-07` · P2 · proposal. Special selection: Add a small Selected marker.
   Evidence: Lavender Latte differs mainly by border weight.
 
-- [ ] `cozy_cafe-08` · P2 · proposal. Special names: Use stronger solid brown text or a thicker outline.
+- [x] `cozy_cafe-08` · P2 · proposal. Special names: Use stronger solid brown text or a thicker outline.
   Evidence: Outlined white lettering is delicate on pastel fills.
 
-- [ ] `cozy_cafe-09` · P2 · proposal. Special economics: Add a concise value caption per item.
+- [x] `cozy_cafe-09` · P2 · proposal. Special economics: Add a concise value caption per item.
   Evidence: No prices or benefits accompany the three specials.
+  Disposition: Promotion grants 25 coins immediately for every special. Captions state that actual value instead of inventing different prices.
 
-- [ ] `cozy_cafe-10` · P2 · proposal. Promote action: Include Lavender Latte in a small action caption.
+- [x] `cozy_cafe-10` · P2 · proposal. Promote action: Include Lavender Latte in a small action caption.
   Evidence: Promote Special does not name the selected special.
 
-- [ ] `cozy_cafe-11` · P2 · proposal. Promote clock: Show the promotion duration beside it.
+- [x] `cozy_cafe-11` · P2 · proposal. Promote clock: Show the promotion duration beside it.
   Evidence: The clock icon does not state cost or duration.
+  Disposition: The existing promotion has no timer or cost. Replaced the misleading clock with an explicit +25 coins instantly / no cost caption.
 
-- [ ] `cozy_cafe-12` · P2 · proposal. Customer title: Add a 2 waiting count.
+- [x] `cozy_cafe-12` · P2 · proposal. Customer title: Add a 2 waiting count.
   Evidence: Customers gives no queue length.
 
-- [ ] `cozy_cafe-13` · P2 · proposal. Order text: Separate customer name from the order description.
+- [x] `cozy_cafe-13` · P2 · proposal. Order text: Separate customer name from the order description.
   Evidence: Emma - Cappuccio puts name and order on one long line.
 
-- [ ] `cozy_cafe-14` · P2 · proposal. Customer rows: Add a subtle separator or distinct row spacing.
+- [x] `cozy_cafe-14` · P2 · proposal. Customer rows: Add a subtle separator or distinct row spacing.
   Evidence: Emma and Oliver have no visual divider.
 
-- [ ] `cozy_cafe-15` · P2 · proposal. Wait times: Label the badges Waited or Remaining.
+- [x] `cozy_cafe-15` · P2 · proposal. Wait times: Label the badges Waited or Remaining.
   Evidence: 2m and 5m do not say whether they are elapsed or remaining.
 
-- [ ] `cozy_cafe-16` · P2 · proposal. Patience labels: Increase their text size.
+- [x] `cozy_cafe-16` · P2 · proposal. Patience labels: Increase their text size.
   Evidence: Patience and Patience: LOW are very small.
 
-- [ ] `cozy_cafe-17` · P2 · proposal. Low patience: Add a clear low-patience icon or badge.
+- [x] `cozy_cafe-17` · P2 · proposal. Low patience: Add a clear low-patience icon or badge.
   Evidence: The red warning relies on tiny colored text.
 
-- [ ] `cozy_cafe-18` · P2 · proposal. Patience bars: Increase their height and show a numeric or verbal status.
+- [x] `cozy_cafe-18` · P2 · proposal. Patience bars: Increase their height and show a numeric or verbal status.
   Evidence: Bars are narrow and visually weak.
 
-- [ ] `cozy_cafe-19` · P2 · proposal. Serve target: Show Serve Emma if queue order is fixed.
+- [x] `cozy_cafe-19` · P2 · proposal. Serve target: Show Serve Emma if queue order is fixed.
   Evidence: Serve Next does not reveal which customer will be served.
 
-- [ ] `cozy_cafe-20` · P2 · proposal. Urgency ordering: Use a modest urgency accent on Oliver's row.
+- [x] `cozy_cafe-20` · P2 · proposal. Urgency ordering: Use a modest urgency accent on Oliver's row.
   Evidence: Oliver is low on patience but remains visually secondary.
 
-- [ ] `cozy_cafe-21` · P2 · proposal. Music layout: Place Music 70% in the same control row.
+- [x] `cozy_cafe-21` · P2 · proposal. Music layout: Place Music 70% in the same control row.
   Evidence: The slider appears above its label rather than beside it.
 
-- [ ] `cozy_cafe-22` · P2 · proposal. Music track: Increase filled/unfilled distinction.
+- [x] `cozy_cafe-22` · P2 · proposal. Music track: Increase filled/unfilled distinction.
   Evidence: The brown unfilled track blends into the warm outline.
 
-- [ ] `cozy_cafe-23` · P2 · proposal. Chat hierarchy: Add a small Guild chat label.
+- [x] `cozy_cafe-23` · P2 · proposal. Chat hierarchy: Add a small Guild chat label.
   Evidence: Two chat messages share one heavy brown block without a header.
 
-- [ ] `cozy_cafe-24` · P2 · proposal. Research icon: Use a book, flask or research-related symbol.
+- [x] `cozy_cafe-24` · P2 · proposal. Research icon: Use a book, flask or research-related symbol.
   Evidence: A gift icon is labeled Research.
 
-- [ ] `cozy_cafe-25` · P2 · proposal. Tool badges: Enlarge badges slightly and explain their counts in tool captions.
+- [x] `cozy_cafe-25` · P2 · proposal. Tool badges: Enlarge badges slightly and explain their counts in tool captions.
   Evidence: Inventory 2 and Research! badges are tiny at button corners.
 
 ### deadspace_settings
