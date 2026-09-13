@@ -1,0 +1,21 @@
+goto_screen cozy_cafe
+wait 0.3
+click_ui tool_Inventory
+wait 0.3
+expect_text "Pantry: stock check due"
+key ESCAPE
+wait 0.3
+expect_no_text "Pantry: stock check due"
+expect_focused tool_Inventory
+click_ui tool_Research
+wait 0.3
+screenshot cozy_tool_popup_focus
+click 40 40
+wait 0.3
+expect_no_text "Recipe notebook: try a lavender latte."
+click_ui tool_Crafting
+wait 0.3
+key ENTER
+wait 0.3
+expect_no_text "Your crafting station has no new notices."
+expect_focused tool_Crafting

@@ -5,6 +5,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/menu.h>
 #include <afterhours/src/plugins/files.h>
 
 using namespace afterhours::ui;
@@ -490,15 +491,18 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_alignment(TextAlignment::Center)
               .with_ignore_pointer_events());
     }
-    if (opened_tool < 0) return;
-    const auto &tool = tools[opened_tool];
-    div(context, mk(entity, 600),
-        box(152, 575, 543, 112, cream_surface, 12)
-            .with_render_layer(10)
-            .with_on_draw_fg(outline(12, 2, brown_border))
+    bool tool_open = opened_tool >= 0;
+    auto tool_panel = popover(context, mk(entity, 600),
+        {ax(152), ay(687), 543 * scale, 0}, tool_open,
+        overlay::Placement::Above,
+        ComponentConfig{}.with_size({px(543), px(112)})
+            .with_custom_background(cream_surface).with_corner_radius(12 * scale)
+            .with_render_layer(10).with_on_draw_fg(outline(12, 2, brown_border))
             .with_debug_name("tool_details"));
-    div(context, mk(entity, 601),
-        box(164, 580, 424, 28, {0, 0, 0, 0})
+    if (!tool_open) { opened_tool = -1; return; }
+    const auto &tool = tools[opened_tool];
+    div(context, mk(tool_panel.ent(), 601),
+        ComponentConfig{}.with_size({px(424), px(28)}).with_absolute_position(pixels(12 * scale), pixels(5 * scale)).with_transparent_bg()
             .with_label(std::string(tool.name) + " opened")
             .with_font("GaeguMock", px(27))
             .with_custom_text_color(dark_text)
@@ -506,14 +510,14 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     const char *details[] = {"Pantry: stock check due\nStorage: shelf labels ready",
                               "Recipe notebook: try a lavender latte.",
                               "Your crafting station has no new notices."};
-    div(context, mk(entity, 602),
-        box(165, 616, 510, 61, {0, 0, 0, 0})
+    div(context, mk(tool_panel.ent(), 602),
+        ComponentConfig{}.with_size({px(510), px(61)}).with_absolute_position(pixels(13 * scale), pixels(41 * scale)).with_transparent_bg()
             .with_label(details[opened_tool])
             .with_font("GaeguMock", px(18))
             .with_custom_text_color(dark_text)
             .with_render_layer(11));
-    if (button(context, mk(entity, 603),
-               box(595, 581, 84, 30, panel_left, 8)
+    if (button(context, mk(tool_panel.ent(), 603),
+               ComponentConfig{}.with_size({px(84), px(30)}).with_absolute_position(pixels(443 * scale), pixels(6 * scale)).with_custom_background(panel_left).with_corner_radius(8 * scale)
                    .with_label("Close")
                    .with_font("GaeguMock", px(17))
                    .with_custom_text_color(dark_text)
