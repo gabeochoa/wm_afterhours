@@ -1,5 +1,21 @@
 # Project todo
 
+## New consumer gaps collected September 13
+
+These are collection results, not implementation approvals. Source evidence,
+causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAPS.md#consumer-gap-refresh-2026-09-13).
+
+- [ ] **UP-13:** Retire UI draw commands at each update so skipped renders do not accumulate stale submissions. Floatinghotel carries a queue-clearing system.
+- [ ] **UP-14:** Remove configuration-owned texture references when a reused widget becomes texture-free, without unloading resources shared by other widgets. Floatinghotel removes references before retiring image previews.
+- [ ] **UP-15:** Give virtual-list row heights, leading spacers and trailing extents consistent logical/physical units under Adaptive zoom. Floatinghotel currently normalizes generated children itself.
+- [ ] **UP-16:** Replace the headless Metal render target only at a safe frame boundary. Hanabi defers resizes to avoid destroying active pass attachments.
+- [ ] **UP-17:** Detect incomplete fontstash measurements and keep them out of layout caches; define missing-glyph rendering and recovery. Hanabi's atlas guard is still needed despite the existing atlas-full warning.
+- [ ] **UP-18:** Inject and release actual Cmd/Super modifiers in E2E chords; define alias behavior without silently substituting Ctrl. Hanabi currently accepts Ctrl to make shortcuts testable.
+- [ ] **UP-19:** Parse quoted E2E property values, escaped quotes and backslashes consistently. Floatinghotel cannot assert its multiword file-header property through the generic parser.
+- [ ] **UP-20:** Add native image/sprite tint configuration composed with opacity. Kart uses custom Raylib drawing for driver-colored sprites.
+- [ ] **UP-21:** Make immediate-renderer E2E text visibility respect ancestor clips, matching the already corrected batched path. Distinguish full visibility from partial visibility and text existence.
+- [ ] **UP-22:** Resolve semantic font tiers through the selected scaling mode so Adaptive zoom scales text with controls. Explicit screen-relative sizes should retain their meaning.
+
 ## Library follow-ups retained from earlier reviews
 
 - [ ] **Connect the advertised minimum touch-target validation option.** `vendor/afterhours/src/plugins/ui/validation_config.h:86–87` exposes `enforce_min_touch_target` and `min_touch_target_size`, and `any_enabled()` includes the flag. A complete source search finds no consumer of either setting outside that file; neither registration helper in `validation_systems.h:855–897` registers a corresponding check. Enabling the flag therefore silently does nothing. Implement an opt-in validator against actual interactive hit rectangles, respect visibility/disabled policy, and verify a too-small enabled control reports while an adequate control does not, with the flag off/on and split/single collection configurations. Keep the threshold configurable; 44px is a project/default guideline rather than an unconditional WCAG requirement.

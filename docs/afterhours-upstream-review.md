@@ -1,5 +1,9 @@
 # Cross-project afterhours review
 
+The [September 13 refresh](#september-13-refresh) adds ten source-backed gaps,
+UP-13 through UP-22, and corrects the earlier recommendation to remove Hanabi's
+atlas guard. The September 12 inventory below remains a historical snapshot.
+
 Review date: 2026-09-12. Findings are in [AFTERHOURS_GAPS.md](AFTERHOURS_GAPS.md#cross-project-upstream-review-2026-09-12), UP-01 through UP-10. Three smaller opportunities were initially deferred there. The gap file now also records user decisions, including an expanded chart set and a default profiling UI requested after this source review.
 
 ## Scope and method
@@ -100,3 +104,81 @@ These source patterns do not justify new APIs. Adoption can still require consum
 Game rules, save schemas, economies, combat events, baseball simulation, terrain/maze behavior, Git refresh classification, browser profile routing, chat transport, service APIs and agent orchestration remain application responsibilities. Direct graphics calls alone were not treated as proof of a missing library API. Platform picker/watcher/accessibility requests are optional boundaries, not proposals to absorb their applications.
 
 No tests were rerun for this documentation-only change. Checks covered project assignment completeness, source-reference validity, duplicate/implemented-feature filtering, and Markdown diff consistency. Implementation validation scenarios live beside each gap.
+
+## September 13 refresh
+
+This pass collects new gaps before starting more implementation. The findings
+are [UP-13 through UP-22](AFTERHOURS_GAPS.md#consumer-gap-refresh-2026-09-13),
+with one matching entry per gap in `todo.md`. The current comparison library
+is WM's afterhours `d90db15a5f9c0e745a3302339d653829a4aa7c59`.
+
+### Coverage and limits
+
+- Re-inventoried 38 other consumer/tool project directories under `~/p/`,
+  excluding the standalone afterhours checkout, WM and hidden tool directories.
+  Twenty contain native source files. The inventory found 2,116 native source
+  paths; a marker search examined 1,897 files under application `src` paths or
+  named `main.cpp`, across 19 projects. These are search counts, not claims that
+  every file was read line by line.
+- Focused reads followed source workarounds and consumer gap documents in
+  floatinghotel, Hanabi, kart, puzzle, cartographer, wordproc, MyNameChef and
+  pharmasea. Findings were checked against current library implementations,
+  including the specific fontstash measurement path used by Sokol.
+- This pass did not repeat the earlier JavaScript/web application review.
+  Projects without native source remain inventoried, not newly code-audited.
+  Vendor trees, generated output, assets, personal configuration, stored
+  messages and data were excluded from the consumer scan.
+- No consumer or library files, pins or settings were changed. No app, build,
+  test, benchmark or external service was run. Review commands used `nice`.
+  Old logs named in consumer documents were not treated as freshly reproduced
+  failures. Each new entry specifies the runtime checks needed for closure.
+
+Local snapshots for the focused reads follow. Change counts cover tracked
+files only; the review preserved those edits and read the working source.
+
+| Consumer | HEAD | Tracked changes | Pinned afterhours | Focus |
+| --- | --- | ---: | --- | --- |
+| floatinghotel | `39fd3232ef31` | 25 | `b385dc993f7f` | Idle redraw queue, texture retirement, zoom adapter, font sizes, test parser and visibility workarounds |
+| hanabi | `c031a6df9ba1` | 0 | `1ac6db21da87` | Atlas measurement guard, deferred target resize, Cmd/Ctrl test accommodation and current gap index |
+| kart-afterhours | `fd5a77f92d6f` | 0 | `fc4d6253b5b7` | Driver-colored sprite callback and existing layout workarounds |
+| armchair_coach/puzzle | `42759cd22caf` | 0 | `876497c53179` | Updated focus-gap and performance-correction documents; app-specific node behavior excluded |
+| cartographer | `f63bd9795ef6` | 3 | `2007d1718617` | Requested components, test command packs, settings and source workaround markers |
+| wordproc | `c70ee2e7cb42` | 1 | `51ad3d9cc353` | Toolbar rendering and right-click test workaround, compared with current APIs |
+| MyNameChef | `0a33b5441865` | 2 | `12a45712c8c1` | Query/plugin improvement plan and current source markers |
+| pharmasea | `fec888b3b253` | 0 | `13281193d3b6` | Entity ID/ownership adaptation and source markers; no new proposal beyond existing ownership work |
+
+The eight principal consumer implementation files cited by the new findings
+were hashed and checked again before completing the review; none changed
+during that check interval. This does not make the dirty consumer worktrees
+immutable or imply that every source file was checked for concurrent edits.
+
+### Corrections and duplicate filtering
+
+- The earlier statement that all ten Hanabi priorities were closed was too
+  broad. A capacity warning does not make an incomplete measurement safe to
+  cache. The recommendation to delete `atlas_guard.h` is withdrawn; UP-17
+  describes the remaining contract.
+- Floatinghotel's clipped-text complaint is partly fixed already. Current
+  batched rendering intersects ancestor clips and registers the composed
+  label. UP-21 targets immediate-renderer parity, not a replacement for that
+  existing fix.
+- Keyboard scroll reveal, outside-click menu dismissal, available-space
+  dropdown scrolling, toast font inheritance and right-click test injection
+  already exist in current afterhours. Old consumer pins or comments do not
+  establish new gaps. App adoption needs its own regression checks.
+- Kart's absolute-X unit workaround, floatinghotel's snapped virtual row
+  stride, tree presentation needs and text-area issues map to existing WM
+  gaps. The text-area entry gained the additional raw-Size line-height evidence
+  from floatinghotel; it did not become a duplicate task.
+- Wordproc's toolbar overlay alone does not justify a new bitmap API:
+  textures, image buttons and custom drawing already exist. UP-20 is the
+  narrower missing native tint configuration demonstrated by kart.
+- Puzzle's focus-group proposal and floatinghotel's deferred native window
+  presentation deserve separate API discussion. This collection does not
+  approve a focus-navigation redesign, native window lifecycle API or the
+  unrelated cascade-delete plan.
+
+Start implementation with UP-13/14/16 if preventing corrupted rendering and
+invalid GPU references is the priority. UP-18/19/21 improve the reliability of
+the tests used to judge the remaining changes. This is a suggested order, not
+implementation work performed in this pass.

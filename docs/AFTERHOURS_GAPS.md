@@ -7,14 +7,11 @@ were frozen pending user review during the visual audit. Subsequently approved
 cross-project changes are tracked in the implementation status below; this does
 not approve every older library finding.
 
-The cross-project library inventory below was rechecked against `main` on
-2026-09-12. That sweep is
-worth repeating before trusting any of it, because the consumer docs these were
-collected from are all months stale: of everything collected this cycle, hanabi
-had 6 of their top 10 already fixed, cartographer's component asks were almost
-entirely in, floatinghotel's footgun list was half done, and three of their four
-sokol items had landed. The most valuable output of a collection pass is now
-telling the projects what they can delete, not finding new work.
+The September 13 consumer refresh compares current application workarounds
+with afterhours `d90db15`, rather than treating old consumer pins as the current
+library. It adds UP-13 through UP-22 below and corrects an earlier overbroad
+claim that Hanabi could delete its atlas guard. Some requests are adoption
+work; others still need library changes. Source review is not runtime proof.
 
 See also: `docs/vendor_ui_sizing_issues.md`
 
@@ -241,6 +238,15 @@ Auto-grow also adds a fixed 8px to row heights while the field padding uses
 height-scaled h720(4) on each side; at 1080p five 30px rows receive 158px
 outer height but need 162px. Review scaled padding and caret-visible scrolling
 separately.
+
+Floatinghotel supplies another unit failure in the same component:
+`floatinghotel/src/ecs/sidebar_system.h:1215` uses an explicit pixel line height.
+Its gap report records almost zero-height rows from `h720(18)`. Current
+`vendor/afterhours/src/plugins/ui/text_input/text_area.h:107` reads
+`text_area_line_height.value_or(pixels(20.f)).value`, discarding the Size unit.
+Resolve the requested unit before using it for row layout, and test both pixel
+and screen-relative heights with Adaptive zoom. This is additional evidence
+for the existing text-area work, not a second implementation item.
 
 ### Bracket decorations add padding to an already padded rectangle
 
@@ -627,6 +633,201 @@ it does not use the UI context's pressed/repeat pacing. wm wraps the listener
 with `pressed_or_repeat` so keyboard adjustment follows the existing repeat
 schedule. E2E 142 verifies exact single steps in both directions, dragging,
 and resized input. Library input pacing remains open for review.
+
+## Consumer gap refresh, 2026-09-13
+
+UP-13 through UP-22 are newly collected, open items. Each was checked against
+WM's afterhours `d90db15a5f9c0e745a3302339d653829a4aa7c59` and current consumer
+source. No application, test or benchmark was run for this collection pass.
+Consumer-reported failures below remain reports from those projects, not new
+measurements. [Review coverage](afterhours-upstream-review.md#september-13-refresh)
+records the inspected versions and limits. Consumer paths start at `~/p/`;
+library paths start at `wm_afterhours/vendor/afterhours/`.
+
+### UP-13: Retire UI draw commands at the update boundary
+
+- Consumer evidence: `floatinghotel/src/ui_context.h:40` implements
+  `ClearPendingUIDraws` and registers it before UI updates at line 67. The
+  consumer's idle-redraw report records commands accumulating across skipped
+  renders, with missing text on the next redraw.
+- Current boundary: `src/plugins/ui/systems.h:227` begins a UI update without
+  clearing `render_cmds`. The clears are in the two renderers at
+  `src/plugins/ui/rendering.h:1928` and `:2644`, and in the explicit context
+  reset at `src/plugins/ui/context.h:383`.
+- Wrong assumption: every UI rebuild is followed by a render. Idle applications
+  and hosts batching test updates violate that assumption.
+- Proposed scope: define which update owns the queued UI commands and retire
+  the previous update's commands before rebuilding. Preserve intentional
+  same-update overlay submissions and multiple UI contexts.
+- Closure: build the same UI for twelve skipped renders, then draw once.
+  Command count and text pixels should match one ordinary update/render cycle
+  in both renderers. Exercise the host's idle-redraw path too.
+
+### UP-14: Clear retained texture state when configuration removes it
+
+- Consumer evidence: `floatinghotel/src/ui/image_diff.h:30` removes
+  `HasTexture` components referencing its exact retiring image handles before
+  unloading the images. Its image-to-source transition previously reported
+  Metal validation failures for dead views and samplers.
+- Current boundary: `src/plugins/ui/component_init.h:286` returns immediately
+  when `texture_config` is absent, retaining the old `HasTexture`. Nearby
+  `apply_shadow` already removes an absent configuration-owned component.
+- Wrong assumption: omitting a setting on a retained immediate-mode entity
+  means keep the old setting. Here the new widget intentionally has no image.
+- Proposed scope: reconcile configuration-owned texture state on removal.
+  Distinguish component detachment from GPU resource ownership; removing one
+  widget's reference must not unload a texture shared by other widgets.
+- Closure: reuse a widget ID for image, text-only, then image; retire the first
+  handle and verify no draw references it. Include shared textures and both
+  renderers, with a Metal run for resource-lifetime validation.
+
+### UP-15: Give virtual-list row metrics consistent units
+
+- Consumer evidence: `floatinghotel/src/ui/virtual_list.h:12` multiplies logical
+  row heights by zoom before calling the native list, then divides generated
+  row/spacer desired heights by that zoom. This adapter supports both constant
+  and variable heights.
+- Current boundary: `src/plugins/ui/imm_components.h:214` indexes row metrics
+  with resolved viewport heights and scroll offsets, stores trailing extent
+  directly at line 297, and wraps leading extent and row heights in `pixels()`
+  at lines 309 and 321. Adaptive layout scales those pixel values again.
+- Wrong assumption: a row height can be both a physical scroll distance and a
+  logical layout dimension without conversion.
+- Proposed scope: specify the public row-height unit and convert once for
+  window selection, spacer layout and trailing extent. This is separate from
+  the already tracked grid-snapping stride discrepancy.
+- Closure: constant and variable-height lists at 100%, 140% and 200% zoom,
+  scrolled to start/middle/end, with snapping disabled first. Assert actual
+  row pitch, visible indices and last-row containment, then test snapping.
+
+### UP-16: Defer headless Metal target replacement until outside its pass
+
+- Consumer evidence: `hanabi/src/util/gfx_resize.h:48` records resize requests;
+  line 68 applies them before opening the next frame. The consumer reports
+  `VALIDATE_APIP_ATTACHMENTS_ALIVE` when resizing inside an active pass and
+  supplies `scripts/stress_resize_gate.sh` as its regression gate.
+- Current boundary: `src/backends/sokol/backend.h:433` immediately unloads and
+  recreates the headless target. `src/plugins/window_manager.h:143` delegates
+  headless resize to this path without checking whether a pass is active.
+- Wrong assumption: a resize event is necessarily outside rendering. Scripted
+  resize commands can execute from inside the host's open frame.
+- Proposed scope: make the frame boundary responsible for replacing a target
+  still used by a pass; define when the new logical and framebuffer dimensions
+  become observable. Preserve requests made before the first frame.
+- Closure: request several resizes inside and outside a Metal pass, then draw
+  and capture. Verify actual target dimensions, attachment validity and bounded
+  resource counts, including repeated identical sizes.
+
+### UP-17: Report incomplete fontstash measurements and avoid caching them
+
+- Consumer evidence: `hanabi/src/util/atlas_guard.h:165` checks impossible
+  widths; its `probe` at line 194 tests atlas capacity. The consumer report
+  shows plausible but drastically short widths after exhaustion. Its own
+  guard explicitly cannot detect every partial drop.
+- Current boundary: `src/backends/sokol/backend.h:160` warns when the atlas
+  fills. `src/backends/sokol/font_helper.h:87` still stores the returned bounds
+  in `measure_memo` without a completeness signal. In
+  `vendor/fontstash/fontstash.h:1526`, a missing glyph is skipped without
+  advancing the measurement.
+- Wrong assumption: reporting atlas exhaustion makes subsequent measurements
+  trustworthy. A positive, incomplete width can poison layout caches.
+- Proposed scope: expose measurement completeness or use a measurement path
+  independent of atlas packing, prevent incomplete results entering caches,
+  and define a visible fallback for glyphs that cannot be drawn. Atlas warning
+  callbacks and configurable capacity already exist.
+- Closure: deliberately exhaust a small atlas and measure strings containing
+  cached and uncached glyphs. Check partial loss, zero loss, fallback drawing,
+  cache behavior and recovery. Keep Hanabi's guard until that contract exists.
+
+### UP-18: Inject the actual Cmd/Super modifier in E2E chords
+
+- Consumer evidence: `hanabi/src/keys.h:84` accepts Ctrl as a substitute for Cmd
+  because its scripted tests cannot reach the actual Cmd-only key-state path.
+- Current boundary: `src/core/key_codes.h:302` maps `CMD+` to Ctrl, although
+  `SUPER+` sets a distinct field. `src/plugins/e2e_testing/command_handlers.h:114`
+  holds and schedules release for Ctrl/Shift/Alt only; it ignores `combo.super`.
+- Wrong assumption: Cmd and Ctrl are interchangeable for every shortcut.
+  Consumers inspect physical modifiers and distinguish those chords.
+- Proposed scope: inject and release Super faithfully, and explicitly define
+  the platform meaning of Cmd aliases. Check existing scripts before changing
+  aliases. An application can retain Ctrl shortcuts by choice.
+- Closure: Cmd-only, Ctrl-only and combined modifier shortcuts; verify modifier
+  state during the action and after release, cancellation and script reset.
+  Include a following unmodified key to detect stuck modifiers.
+
+### UP-19: Parse quoted property values consistently in E2E commands
+
+- Consumer evidence: `floatinghotel/docs/afterhours-gaps.md:557` reports
+  `assert_ui file_header_label "text=a-small.cpp  +1  (new file)"` being parsed
+  as an unknown property beginning with a quote. Its current
+  `tests/review_50/item_21.e2e` uses space-free text properties instead.
+- Current boundary: the generic branch at
+  `src/plugins/e2e_testing/runner.h:245` splits arguments with stream extraction.
+  Specialized commands implement their own quoting rules, so a property value
+  containing spaces cannot be expressed consistently.
+- Wrong assumption: whitespace always separates arguments, even inside quoted
+  text. This can prevent a test from naming the value visibly on screen.
+- Proposed scope: a shared argument tokenizer with a documented escape rule;
+  preserve commands intentionally consuming the rest of the line as free text.
+- Closure: quoted multiword values, embedded quotes, backslashes, empty values,
+  multiple properties, malformed input and existing scripts with literal text.
+
+### UP-20: Expose image and sprite tint through component configuration
+
+- Consumer evidence: `kart-afterhours/src/ui/ui_systems.cpp:425` draws kart
+  sprites through a custom Raylib callback to apply each driver's paint color.
+- Current boundary: `src/plugins/ui/components.h:264` gives `HasImage` no tint;
+  `src/plugins/ui/imm_components.h:812` sets texture/source/alignment only.
+  Both image-rendering paths start from white at
+  `src/plugins/ui/rendering.h:1784` and `:2526`, applying only opacity.
+- Wrong assumption: image color is always baked into the asset. Recolored game
+  sprites and monochrome toolbar icons need a foreground tint. Low-level
+  texture drawing already accepts one, so no new rendering backend is needed.
+- Proposed scope: a configuration-owned tint for native image/sprite controls,
+  composed with inherited opacity. Keep atlas selection and game paint policy
+  in consumers.
+- Closure: the same atlas frame with distinct tints in both renderers, nested
+  opacity, and resetting a reused widget to default white.
+
+### UP-21: Match E2E text visibility across immediate and batched rendering
+
+- Consumer evidence: `floatinghotel/src/main.cpp:1332` exposes an app assertion
+  checking whether a source row lies within its scrolling ancestor. Its report
+  describes a text assertion succeeding while the final rows were clipped.
+- Current boundary: the batched renderer now intersects ancestor clips before
+  registering the composed label at `src/plugins/ui/rendering.h:2477`.
+  Immediate `draw_text_in_rect` still registers using only the full-window
+  bounds at line 748. `src/plugins/e2e_testing/visible_text.h:46` knows no
+  ancestor clip. Do not reopen the already fixed batched path.
+- Wrong assumption: submitting a label within the window proves that the user
+  can see it. A scroll viewport can hide it, and tests should not change meaning
+  when the renderer changes.
+- Proposed scope: share clip-aware text registration and distinguish partial
+  visibility from full visibility where a test needs the latter. Preserve a
+  separate way to assert model/text existence without claiming visibility.
+- Closure: visible, partially clipped and fully clipped labels, nested clips
+  and overscan rows in both renderers. Use rendered pixels as the control for
+  the visibility assertions, not only the registry being tested.
+
+### UP-22: Resolve semantic font tiers through the selected scaling mode
+
+- Consumer evidence: `floatinghotel/docs/afterhours-gaps.md:667` reports text
+  remaining small while controls grow at 140% zoom. Current review/search
+  controls use logical pixel font sizes, for example
+  `floatinghotel/src/ui/repo_search.h:136`.
+- Current boundary: `src/plugins/ui/component_config.h:782` always converts
+  `FontSize` tiers to `h720`. `src/plugins/ui/layout_types.h:199` applies
+  Adaptive `ui_scale` to Pixels but not ScreenPercent, which is the unit of
+  `h720`. The tier has lost its semantic intent before the component's scaling
+  mode is resolved.
+- Wrong assumption: screen-relative font size and application zoom are the
+  same scale. A desktop window can keep its resolution while zoom changes.
+- Proposed scope: retain or resolve tier intent at the correct configuration
+  stage, respecting component, screen and application mode selection. Explicit
+  screen-relative font sizes should retain their requested meaning.
+- Closure: all tiers at multiple window heights and zoom factors, comparing
+  Proportional and Adaptive modes and their overrides. Include controls whose
+  dimensions use logical pixels.
 
 ## Cross-project upstream review, 2026-09-12
 
@@ -1063,13 +1264,17 @@ absolute-stacking one via `with_overlay`.
 
 ### From hanabi's triage
 
-hanabi keeps a 14,000-line gap file and an index ranking their top ten by pain
-per line of upstream change. Rechecked against `main`, not their pin
-(`428047e`): **all ten are now closed** -- six were already in when first
-collected, and the rest landed this cycle. Nothing outstanding from that list.
-Worth telling them: they can delete `src/util/atlas_guard.h` (~50 lines) and
-`src/ui/focus_visible.h`, and drop three hand-rolled virtualization windows for
-the `height_of` overload.
+The earlier statement that all ten ranked issues were closed was too broad.
+Hanabi's current index at `c031a6df9ba1` distinguishes landed capabilities from
+remaining contracts. In particular, an atlas-full warning does not provide
+per-measurement completeness: keep `src/util/atlas_guard.h` until UP-17 is
+resolved. UP-16 and UP-18 also have current consumer workarounds.
+
+Variable-height virtualization exists, but that alone does not prove every
+consumer memo or retained index is redundant. Likewise, a ring hidden at rest
+does not establish Hanabi's full keyboard-only visibility policy. Recheck the
+specific behavior before asking a consumer to delete either helper. The
+September 13 refresh is source review, not a runtime closure of their index.
 
 ### Components
 
