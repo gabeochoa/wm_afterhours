@@ -661,7 +661,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_size(ComponentSize{pixels(60.f * s), pixels(60.f * s)})
                 .with_absolute_position(pixels(1016.f * s), pixels(104.f * s))
-                .with_overlay(2)
+                .with_overlay(2).with_roundness(1.f)
                 .with_background(Theme::Usage::None)
                 .with_click_activation(ClickActivationMode::Release)
                 .with_on_draw_bg([close_texture](RectangleType r) {
