@@ -2475,7 +2475,7 @@ The sparse road-map settings composition matches the mock. Improve label contras
 
 ## modals
 
-[Current baseline](../../screenshot-baselines/screens/modals_720p.png) · [Visual review](../../design-audit.html#screen=modals)
+[Reviewed image](../../docs/design-audit/originals/modals_720p.png) · [Current baseline](../../screenshot-baselines/screens/modals_720p.png) · [Visual review](../../design-audit.html#screen=modals)
 
 Baseline SHA-256: `21f847d8bbbcf7a6c3270902928c1d535a7e57e8ee039f9b3497731e45b627d1`
 
@@ -2513,7 +2513,7 @@ No modal is open in this baseline. Findings target the launcher and result displ
 
 [Image](../../baseline_screenshots/modals.png)
 
-Current capture removes Simple Modal focus outline. Both show the launcher rather than an open dialog. Neither capture establishes the appearance or usability of open and stacked modals.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## multiline text lab
 

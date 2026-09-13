@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,293 completed; 242 remaining.
+2,318 completed; 217 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4869,79 +4869,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/modals_720p.png) · [Visual review](design-audit.html#screen=modals)
 
-- [ ] `modals-01` · P2 · proposal. Page title: Add Choose a dialog example and inspect its result beneath the title.
+- [x] `modals-01` · P2 · proposal. Page title: Add Choose a dialog example and inspect its result beneath the title.
   Evidence: Modal Dialogs is the only explanation of the page.
 
-- [ ] `modals-02` · P2 · proposal. Basic category: Add a short description under each launcher.
+- [x] `modals-02` · P2 · proposal. Basic category: Add a short description under each launcher.
   Evidence: Basic does not explain the difference between Simple and Composable.
 
-- [ ] `modals-03` · P2 · proposal. Simple Modal label: Add Plain message dialog as its specimen subtitle.
+- [x] `modals-03` · P2 · proposal. Simple Modal label: Add Plain message dialog as its specimen subtitle.
   Evidence: The launcher names the implementation rather than the visible behavior.
 
-- [ ] `modals-04` · P2 · proposal. Composable Modal label: Add Form controls with Save and Cancel beneath the label.
+- [x] `modals-04` · P2 · proposal. Composable Modal label: Add Form controls with Save and Cancel beneath the label.
   Evidence: Composable is technical without describing its content.
 
-- [ ] `modals-05` · P2 · proposal. Helpers category: Rename it Standard dialog types.
+- [x] `modals-05` · P2 · proposal. Helpers category: Rename it Standard dialog types.
   Evidence: Helpers is an API term without user-visible meaning.
 
-- [ ] `modals-06` · P2 · proposal. Info Dialog and Notice: Add brief purpose captions for informational acknowledgment and notice.
+- [x] `modals-06` · P2 · proposal. Info Dialog and Notice: Add brief purpose captions for informational acknowledgment and notice.
   Evidence: The two launchers have similar names without distinguishing behavior.
 
-- [ ] `modals-07` · P2 · proposal. Confirmation color: Use a neutral confirmation style or label the destructive scenario.
+- [x] `modals-07` · P2 · proposal. Confirmation color: Use a neutral confirmation style or label the destructive scenario.
   Evidence: Confirmation uses dark red although no destructive action is named.
 
-- [ ] `modals-08` · P2 · proposal. Launcher palette: Use consistent launch-button styling and identify variants through labels.
+- [x] `modals-08` · P2 · proposal. Launcher palette: Use consistent launch-button styling and identify variants through labels.
   Evidence: Cyan, purple, and red fills have no legend.
 
-- [ ] `modals-09` · P2 · proposal. Button labels: Increase readable label size and reduce tracking.
+- [x] `modals-09` · P2 · proposal. Button labels: Increase readable label size and reduce tracking.
   Evidence: Small widely spaced text sits inside broad rectangular buttons.
 
-- [ ] `modals-10` · P2 · proposal. Button heights: Increase vertical padding within each control.
+- [x] `modals-10` · P2 · proposal. Button heights: Increase vertical padding within each control.
   Evidence: Launch controls are low relative to their wide row panels.
 
-- [ ] `modals-11` · P2 · proposal. Category column: Use a fixed left category column and align every action group.
+- [x] `modals-11` · P2 · proposal. Category column: Use a fixed left category column and align every action group.
   Evidence: Basic, Helpers, Stacking, and Blocking share space with long action names.
 
-- [ ] `modals-12` · P2 · proposal. Stacking action: Use Open settings and add Then open reset confirmation as a caption.
+- [x] `modals-12` · P2 · proposal. Stacking action: Use Open settings and add Then open reset confirmation as a caption.
   Evidence: Settings + Nested Confirm compresses two steps into one label.
 
-- [ ] `modals-13` · P3 · proposal. Stacking visualization: Add a small two-layer thumbnail beside the launcher.
+- [x] `modals-13` · P3 · proposal. Stacking visualization: Add a small two-layer thumbnail beside the launcher.
   Evidence: The row has no visual indication of two dialog layers.
 
-- [ ] `modals-14` · P2 · proposal. Blocking category: Rename it Background input blocking test.
+- [x] `modals-14` · P2 · proposal. Blocking category: Rename it Background input blocking test.
   Evidence: Blocking does not say what is being tested.
 
-- [ ] `modals-15` · P2 · proposal. Background Button: Add an instruction explaining the intended click-count experiment.
+- [x] `modals-15` · P2 · proposal. Background Button: Add an instruction explaining the intended click-count experiment.
   Evidence: The label does not tell the user to compare its count with a modal open.
 
-- [ ] `modals-16` · P2 · proposal. Clicks counter: Use a compact Background clicks badge adjacent to the button.
+- [x] `modals-16` · P2 · proposal. Clicks counter: Use a compact Background clicks badge adjacent to the button.
   Evidence: Clicks: 0 is left-aligned in an isolated dark rectangle.
 
-- [ ] `modals-17` · P2 · proposal. Results strip: Use separate labeled result fields.
+- [x] `modals-17` · P2 · proposal. Results strip: Use separate labeled result fields.
   Evidence: Confirm: Pending, FYI: Pending, OK:0, and X:0 run together.
 
-- [ ] `modals-18` · P2 · proposal. FYI result name: Use the same name in launcher and result display.
+- [x] `modals-18` · P2 · proposal. FYI result name: Use the same name in launcher and result display.
   Evidence: FYI does not match the visible Notice launcher.
 
-- [ ] `modals-19` · P2 · proposal. OK and X counters: Label them Acknowledged and Dismissed or the actual events.
+- [x] `modals-19` · P2 · proposal. OK and X counters: Label them Acknowledged and Dismissed or the actual events.
   Evidence: The counters have no description of what they count.
 
-- [ ] `modals-20` · P2 · proposal. Pending state: Use Not opened for untouched examples if accurate.
+- [x] `modals-20` · P2 · proposal. Pending state: Use Not opened for untouched examples if accurate.
   Evidence: Pending suggests an active request although no dialog is open.
 
-- [ ] `modals-21` · P2 · proposal. Default capture: Add a labeled static preview alongside the launchers or capture a complementary open state.
+- [x] `modals-21` · P2 · proposal. Default capture: Add a labeled static preview alongside the launchers or capture a complementary open state.
   Evidence: The screenshot shows no actual dialog specimen.
 
-- [ ] `modals-22` · P3 · proposal. Wide empty rows: Use the spare width for short expected-behavior captions.
+- [x] `modals-22` · P3 · proposal. Wide empty rows: Use the spare width for short expected-behavior captions.
   Evidence: Each row extends far beyond its controls.
 
-- [ ] `modals-23` · P3 · proposal. Vertical whitespace: Tighten section spacing to create one coherent gallery.
+- [x] `modals-23` · P3 · proposal. Vertical whitespace: Tighten section spacing to create one coherent gallery.
   Evidence: Large black gaps separate identical launcher panels.
 
-- [ ] `modals-24` · P3 · proposal. Results association: Add matching labels or small result badges beside each relevant launcher.
+- [x] `modals-24` · P3 · proposal. Results association: Add matching labels or small result badges beside each relevant launcher.
   Evidence: The status strip is detached from the launchers that populate it.
 
-- [ ] `modals-25` · P3 · proposal. Reset experiment: Add a compact Reset results action in the result strip.
+- [x] `modals-25` · P3 · proposal. Reset experiment: Add a compact Reset results action in the result strip.
   Evidence: The page has no visible way to restore result counters.
 
 ### multiline_text_lab
@@ -8150,6 +8150,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review unconsumed UI action lifetime so stale Escape cannot dismiss a newly opened dialog; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Make virtual-list row stride consistent with grid snapping so the last row remains reachable; see docs/AFTERHOURS_GAPS.md.
 

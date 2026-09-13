@@ -191,8 +191,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Simple Modal focus outline. Both show the launcher rather than an open dialog. Neither capture establishes the appearance or usability of open and stacked modals.",
-    "sha256": "2eaa4cf1d33eb0d86398143458606dc38464d47fb3f9ab57364f92c285715e18",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "8abc8010dbeaf0c410b2c970084878270f11392d5ec324b4acd81cfb931a9ba3",
     "additional_findings": []
   },
   {

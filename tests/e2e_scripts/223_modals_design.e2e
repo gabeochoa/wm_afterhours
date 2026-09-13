@@ -1,0 +1,179 @@
+goto_screen modals
+resize 1280 720
+wait 0.4
+expect_text "Modal Dialogs"
+expect_text "Choose a dialog example and inspect its result."
+expect_text "Plain message dialog"
+expect_text "Form controls with Save and Cancel"
+expect_text "Then open reset confirmation"
+expect_text "Background clicks: 0"
+expect_text "Info: Not opened"
+expect_text "Confirmation: Not opened"
+expect_text "Notice: Not opened"
+expect_text "Confirmed: 0"
+expect_text "Cancelled: 0"
+expect_text "Form: Not opened"
+assert_ui modal_bg w=1280 h=720
+assert_ui modal_main x=0 y=0 w=1280 h=720
+assert_ui btn_simple x=264 y=150 w=240 h=44
+assert_ui btn_confirm x=532 y=280 w=280 h=44
+assert_ui btn_background x=264 y=538 w=240 h=44
+assert_ui modals_stack_preview x=636 y=432 w=104 h=58
+assert_no_overflow
+assert_within_parents
+screenshot modals_design
+click_ui btn_background
+wait 0.2
+expect_text "Background clicks: 1"
+click_ui btn_simple
+wait 0.3
+expect_text "Basic Modal"
+assert_ui modals_basic_panel x=380 y=230 w=520 h=260
+assert_no_overflow
+assert_within_parents
+screenshot modals_design_basic_open
+focus_ui btn_background
+key ENTER
+wait 0.2
+expect_text "Background clicks: 1"
+screenshot modals_design_after_blocked_enter
+key ESCAPE
+wait 0.3
+expect_no_text "Basic Modal"
+click_ui btn_composable
+wait 0.3
+expect_text "Option A: Off"
+expect_text "Option B: On"
+screenshot modals_design_form_before_click
+click_ui modals_option_a
+wait 0.2
+expect_text "Option A: On"
+click_ui modals_form_save
+wait 0.3
+expect_text "Form: Saved"
+click_ui btn_composable
+wait 0.3
+expect_text "Option A: On"
+click_ui modals_option_b
+wait 0.2
+expect_text "Option B: Off"
+click_ui modals_form_cancel
+wait 0.3
+expect_text "Form: Cancelled"
+click_ui btn_composable
+wait 0.3
+expect_text "Option B: On"
+assert_no_overflow
+screenshot modals_design_composable
+key ESCAPE
+wait 0.3
+expect_text "Form: Dismissed"
+click_ui btn_info
+wait 0.3
+expect_text "Information"
+click_ui modals_info_action_0
+wait 0.3
+expect_text "Info: Acknowledged"
+click_ui btn_confirm
+wait 0.3
+expect_text "Confirmation: Open"
+click_ui modals_confirm_action_1
+wait 0.3
+expect_text "Confirmation: Confirmed"
+expect_text "Confirmed: 1"
+wait 0.4
+expect_text "Confirmed: 1"
+click_ui btn_confirm
+wait 0.3
+click_ui modals_confirm_action_0
+wait 0.3
+expect_text "Confirmation: Cancelled"
+expect_text "Cancelled: 1"
+click_ui btn_confirm
+wait 0.3
+key ESCAPE
+wait 0.3
+expect_text "Confirmation: Cancelled"
+expect_text "Cancelled: 2"
+click_ui btn_notice
+wait 0.3
+expect_text "Update Available"
+click_ui modals_notice_action_0
+wait 0.3
+expect_text "Notice: Release Notes"
+wait 0.4
+expect_text "Notice: Release Notes"
+click_ui btn_notice
+wait 0.3
+click_ui modals_notice_action_1
+wait 0.3
+expect_text "Notice: Later"
+click_ui btn_notice
+wait 0.3
+click_ui modals_notice_action_2
+wait 0.3
+expect_text "Notice: Install Now"
+click_ui btn_stacked
+wait 0.3
+expect_text "Enable notifications: On"
+expect_text "Dark mode: Off"
+click_ui modals_notifications
+click_ui modals_dark_mode
+wait 0.3
+expect_text "Enable notifications: Off"
+expect_text "Dark mode: On"
+click_ui modals_settings_reset
+wait 0.3
+expect_text "Reset Settings?"
+assert_ui modals_nested_panel x=310 y=238 w=660 h=244
+assert_no_overflow
+screenshot modals_design_stacked
+click_ui modals_nested_action_0
+wait 0.3
+expect_no_text "Reset Settings?"
+expect_text "Enable notifications: Off"
+expect_text "Dark mode: On"
+click_ui modals_settings_reset
+wait 0.3
+click_ui modals_nested_action_1
+wait 0.3
+expect_text "Enable notifications: On"
+expect_text "Dark mode: Off"
+click_ui modals_settings_done
+wait 0.3
+click_ui modals_reset
+wait 0.3
+expect_text "Background clicks: 0"
+expect_text "Confirmation: Not opened"
+expect_text "Notice: Not opened"
+expect_text "Info: Not opened"
+expect_text "Confirmed: 0"
+expect_text "Cancelled: 0"
+resize 1920 1080
+wait 0.3
+assert_ui modal_main x=0 y=0 w=1920 h=1080
+assert_ui btn_simple x=396 y=225 w=360 h=66
+assert_no_overflow
+assert_within_parents
+screenshot modals_design_1080
+click_ui btn_simple
+wait 0.3
+assert_ui modals_basic_panel x=570 y=345 w=780 h=390
+assert_no_overflow
+key ESCAPE
+wait 0.3
+resize 1024 768
+wait 0.3
+assert_ui modal_main x=0 y=96 w=1024 h=576
+assert_ui btn_simple x=211 y=216 w=192 h=35
+assert_no_overflow
+assert_within_parents
+screenshot modals_design_narrow
+click_ui btn_composable
+wait 0.3
+assert_ui modals_form_panel x=280 y=250 w=464 h=269
+assert_no_overflow
+assert_within_parents
+screenshot modals_design_narrow_form
+key ESCAPE
+resize 1280 720

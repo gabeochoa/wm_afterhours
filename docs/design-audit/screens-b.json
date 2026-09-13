@@ -5473,7 +5473,8 @@
         "change": "Add a compact Reset results action in the result strip."
       }
     ],
-    "sha256": "21f847d8bbbcf7a6c3270902928c1d535a7e57e8ee039f9b3497731e45b627d1"
+    "sha256": "21f847d8bbbcf7a6c3270902928c1d535a7e57e8ee039f9b3497731e45b627d1",
+    "evidence": "docs/design-audit/originals/modals_720p.png"
   },
   {
     "id": "multiline_text_lab",

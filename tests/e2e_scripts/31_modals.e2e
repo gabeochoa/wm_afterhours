@@ -3,6 +3,7 @@
 
 # Navigate to the modals screen
 goto_screen modals
+resize 1280 720
 wait 0.5
 
 # Validate initial screen against baseline
@@ -24,11 +25,11 @@ wait 0.5
 expect_text "Basic Modal"
 expect_text "This is a simple modal dialog"
 
-# Modal must be CENTERED on the 1280x720 screen (400x200 dialog).
+# Modal must be CENTERED on the 1280x720 screen (520x260 dialog).
 # Regression guard: it previously rendered at the top-left (0,0) because the
 # centered position was poked into computed_rel and then overwritten by the
 # autolayout pass. Fixed by using with_absolute_position(x, y) in modal.h.
-assert_ui modal x=440 y=260 w=400 h=200
+assert_ui modals_basic_panel x=380 y=230 w=520 h=260
 
 # Take screenshot of open modal
 screenshot modals_basic_open
@@ -36,10 +37,8 @@ screenshot modals_basic_open
 # =========================================================================
 # Test 2: Click close button to close modal
 # =========================================================================
-# Tab to the Close button inside the modal
-key TAB
-wait 0.2
-key ENTER
+# Click the Close button inside the modal
+click_ui modals_basic_close
 wait 0.3
 
 # Modal should be closed - "Basic Modal" title should not be visible
@@ -48,13 +47,13 @@ screenshot modals_basic_closed_via_button
 
 # Verify background is visible again
 expect_text "Modal Dialogs"
-expect_text "Basic:"
+expect_text "Basic"
 
 # =========================================================================
 # Test 3: Open modal, click on background button (verify input blocking)
 # =========================================================================
 # First, note the current BG Clicks count
-expect_text "Clicks: 0"
+expect_text "Background clicks: 0"
 
 # Open the modal
 focus_ui btn_simple
@@ -79,7 +78,7 @@ key ESCAPE
 wait 0.3
 
 # Now verify the background button was NOT clicked
-expect_text "Clicks: 0"
+expect_text "Background clicks: 0"
 screenshot modals_input_blocking_verified
 
 # =========================================================================
@@ -103,7 +102,7 @@ screenshot modals_backdrop_dismiss
 
 # Verify background is visible again (modal is closed)
 expect_text "Modal Dialogs"
-expect_text "Basic:"
+expect_text "Basic"
 
 # =========================================================================
 # Test 5: Escape key closes modal
@@ -144,12 +143,8 @@ expect_text "Are you sure"
 # Take screenshot
 screenshot modals_confirm_open
 
-# Click Cancel button (second button)
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key ENTER
+# Click Cancel button
+click_ui modals_confirm_action_0
 wait 0.3
 
 # Should show Cancelled in results
@@ -172,13 +167,7 @@ expect_text "Enable notifications"
 screenshot modals_stacked_settings
 
 # Click "Reset to Defaults" to open nested modal
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key ENTER
+click_ui modals_settings_reset
 wait 0.5
 
 # Nested confirm should appear on top
@@ -195,9 +184,7 @@ wait 0.3
 expect_text "Settings"
 
 # Close settings
-key TAB
-wait 0.2
-key ENTER
+click_ui modals_settings_done
 wait 0.3
 
 # Final screenshot

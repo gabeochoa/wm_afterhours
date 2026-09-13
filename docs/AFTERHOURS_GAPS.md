@@ -454,6 +454,15 @@ both26px row spacing and the last row rectangle at the viewport end. Respect
 per-child snapping configuration consistently and derive virtualization from
 the effective row stride.
 
+### Unconsumed UI actions persist across frames
+
+UIContext retains last_action until a matching widget consumes it, rather than
+expiring it at the end of the input frame. Escape on a gallery with no dialog
+can remain queued and close a later newly opened dialog. ModalShowcase
+consumes otherwise-unused MenuBack while no dialog is active. Review event
+lifetime and explicit consumption upstream so stale actions do not affect
+future controls.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from
