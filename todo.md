@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,048 completed; 1,487 remaining.
+1,066 completed; 1,469 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3721,58 +3721,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/hover_lab_720p.png) · [Visual review](design-audit.html#screen=hover_lab)
 
-- [ ] `hover_lab-01` · P2 · proposal. Title: Use a short title and a separate experiment summary.
+- [x] `hover_lab-01` · P2 · proposal. Title: Use a short title and a separate experiment summary.
   Evidence: The title mixes Hover Lab with two technical concepts on one line.
 
-- [ ] `hover_lab-02` · P2 · proposal. Case captions: Increase caption size and wrap each explanation above its row.
+- [x] `hover_lab-02` · P2 · proposal. Case captions: Increase caption size and wrap each explanation above its row.
   Evidence: The three long captions use tiny handwritten text.
 
-- [ ] `hover_lab-03` · P2 · proposal. Case naming: Add names Direct hover, Subtree hover, and Pointer passthrough.
+- [x] `hover_lab-03` · P2 · proposal. Case naming: Add names Direct hover, Subtree hover, and Pointer passthrough.
   Evidence: Cases are identified by code expressions before their purpose.
 
-- [ ] `hover_lab-04` · P2 · proposal. Star glyphs: Use a recognizable star glyph while preserving the hit-test geometry.
+- [x] `hover_lab-04` · P2 · proposal. Star glyphs: Use a recognizable star glyph while preserving the hit-test geometry.
   Evidence: The interactive stars are rendered as small asterisks.
 
-- [ ] `hover_lab-05` · P2 · proposal. Row labels: Use concise behavior names in the row labels.
+- [x] `hover_lab-05` · P2 · proposal. Row labels: Use concise behavior names in the row labels.
   Evidence: Thread row 1 through 3 do not name the tested behavior.
 
-- [ ] `hover_lab-06` · P2 · proposal. Caption and row grouping: Frame each case with a consistent sample boundary.
+- [x] `hover_lab-06` · P2 · proposal. Caption and row grouping: Frame each case with a consistent sample boundary.
   Evidence: Each caption sits close to the preceding blank gap without a enclosing group.
 
-- [ ] `hover_lab-07` · P2 · proposal. Diagnostic table: Add Case, Row lit, Star hot, and Clicks headings.
+- [x] `hover_lab-07` · P2 · proposal. Diagnostic table: Add Case, Row lit, Star hot, and Clicks headings.
   Evidence: Three diagnostic lines have no column headings.
 
-- [ ] `hover_lab-08` · P2 · proposal. Diagnostic values: Show Yes and No badges beside the API terms.
+- [x] `hover_lab-08` · P2 · proposal. Diagnostic values: Show Yes and No badges beside the API terms.
   Evidence: lit=n and star_hot=n use terse boolean abbreviations.
 
-- [ ] `hover_lab-09` · P2 · proposal. Diagnostic alignment: Use fixed-width columns for the three state fields.
+- [x] `hover_lab-09` · P2 · proposal. Diagnostic alignment: Use fixed-width columns for the three state fields.
   Evidence: Variable-length expressions push values into uneven columns.
 
-- [ ] `hover_lab-10` · P2 · proposal. Diagnostics separation: Place each case's live status directly beneath its row.
+- [x] `hover_lab-10` · P2 · proposal. Diagnostics separation: Place each case's live status directly beneath its row.
   Evidence: All diagnostics sit below all samples.
 
-- [ ] `hover_lab-11` · P2 · proposal. Row 1 explanation: Explain that entering the star removes the row highlight.
+- [x] `hover_lab-11` · P2 · proposal. Row 1 explanation: Explain that entering the star removes the row highlight.
   Evidence: The phrase star steals hotness requires internal terminology.
 
-- [ ] `hover_lab-12` · P2 · proposal. Row 2 explanation: State Row stays highlighted; star still receives clicks.
+- [x] `hover_lab-12` · P2 · proposal. Row 2 explanation: State Row stays highlighted; star still receives clicks.
   Evidence: The subtree behavior is described in a long code-heavy sentence.
 
-- [ ] `hover_lab-13` · P2 · proposal. Row 3 explanation: Add an external Pointer passthrough badge to identify the test variant.
+- [x] `hover_lab-13` · P2 · proposal. Row 3 explanation: Add an external Pointer passthrough badge to identify the test variant.
   Evidence: The star looks identical to the other two despite intentionally ignoring input.
 
-- [ ] `hover_lab-14` · P2 · proposal. Footer instruction: Move the instruction above the samples near the title.
+- [x] `hover_lab-14` · P2 · proposal. Footer instruction: Move the instruction above the samples near the title.
   Evidence: Click each star is small and far below the actual stars.
 
-- [ ] `hover_lab-15` · P3 · proposal. Initial-state capture: Add labeled expected-state thumbnails beside the live examples.
+- [x] `hover_lab-15` · P3 · proposal. Initial-state capture: Add labeled expected-state thumbnails beside the live examples.
   Evidence: All rows have the same resting appearance.
 
-- [ ] `hover_lab-16` · P3 · proposal. Unused right area: Use the right half for a simple row-versus-child hit-test diagram.
+- [x] `hover_lab-16` · P3 · proposal. Unused right area: Use the right half for a simple row-versus-child hit-test diagram.
   Evidence: Most of the canvas is blank.
 
-- [ ] `hover_lab-17` · P3 · proposal. Comparison outcome: Add a small expected-results matrix covering hover and clicks.
+- [x] `hover_lab-17` · P3 · proposal. Comparison outcome: Add a small expected-results matrix covering hover and clicks.
   Evidence: No visual legend explains which case keeps the row wash.
 
-- [ ] `hover_lab-18` · P3 · proposal. Click counter readability: Give each click count a compact, prominent numeric badge.
+- [x] `hover_lab-18` · P3 · proposal. Click counter readability: Give each click count a compact, prominent numeric badge.
   Evidence: star_clicks=0 is embedded at the end of each small diagnostic line.
 
 ### hstack_showcase

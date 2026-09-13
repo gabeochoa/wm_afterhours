@@ -1918,7 +1918,7 @@ Three priority lanes and seven tags form a small drag demonstration. Twenty dist
 
 ## hover lab
 
-[Current baseline](../../screenshot-baselines/screens/hover_lab_720p.png) · [Visual review](../../design-audit.html#screen=hover_lab)
+[Reviewed image](../../docs/design-audit/originals/hover_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/hover_lab_720p.png) · [Visual review](../../design-audit.html#screen=hover_lab)
 
 Baseline SHA-256: `51653f821997a6d6cba947ea89bba9905964c7e243d56a14d5fac41750bc6e09`
 

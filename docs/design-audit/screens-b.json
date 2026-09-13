@@ -2412,7 +2412,8 @@
         "change": "Give each click count a compact, prominent numeric badge."
       }
     ],
-    "sha256": "51653f821997a6d6cba947ea89bba9905964c7e243d56a14d5fac41750bc6e09"
+    "sha256": "51653f821997a6d6cba947ea89bba9905964c7e243d56a14d5fac41750bc6e09",
+    "evidence": "docs/design-audit/originals/hover_lab_720p.png"
   },
   {
     "id": "hstack_showcase",

@@ -1,0 +1,103 @@
+goto_screen hover_lab
+resize 1280 720
+mouse_move 10 10
+wait 0.4
+expect_text "Hover Lab"
+expect_text "Compare direct hover, subtree hover and pointer passthrough."
+expect_text "1. Direct hover"
+expect_text "2. Subtree hover"
+expect_text "3. Pointer passthrough"
+expect_text "Entering the star removes the row highlight."
+expect_text "Row stays highlighted; the star still receives clicks."
+expect_text "The star ignores the pointer. The row receives the hit."
+expect_text "Pointer over the star"
+expect_text "Expected states / reference diagrams, not controls"
+expect_text "Hover queries used by these rows"
+expect_text "1. was_hot(row)"
+expect_text "2. mouse_was_in_subtree(row)"
+expect_text "3. was_hot(row) + ignore_pointer_events"
+assert_ui hv_canvas w=1280 h=720
+assert_ui hv_case_0 x=48 y=128 w=648 h=184
+assert_ui hv_case_1 x=48 y=322 w=648 h=184
+assert_ui hv_case_2 x=48 y=516 w=648 h=184
+assert_ui hv_row_0 x=68 y=198 w=420 h=48
+assert_ui hv_row_1 x=68 y=392 w=420 h=48
+assert_ui hv_row_2 x=68 y=586 w=420 h=48
+assert_ui hv_star_0 x=446 y=204 w=36 h=36
+assert_ui hv_star_1 x=446 y=398 w=36 h=36
+assert_ui hv_star_2 x=446 y=592 w=36 h=36
+assert_ui hv_lit_0 text=No
+assert_ui hv_lit_1 text=No
+assert_ui hv_lit_2 text=No
+assert_ui hv_hot_0 text=No
+assert_ui hv_hot_1 text=No
+assert_ui hv_hot_2 text=No
+assert_ui hv_clicks_0 text=0
+assert_ui hv_clicks_1 text=0
+assert_ui hv_clicks_2 text=0
+assert_no_overflow
+assert_within_parents
+screenshot hover_lab_design
+mouse_move 100 222
+wait 0.2
+assert_ui hv_lit_0 text=Yes
+assert_ui hv_hot_0 text=No
+mouse_move 464 222
+wait 0.2
+assert_ui hv_lit_0 text=No
+assert_ui hv_hot_0 text=Yes
+click_ui hv_star_0
+wait 0.2
+assert_ui hv_clicks_0 text=1
+assert_ui hv_lit_0 text=No
+screenshot hover_lab_design_direct
+mouse_move 100 416
+wait 0.2
+assert_ui hv_lit_1 text=Yes
+assert_ui hv_hot_1 text=No
+mouse_move 464 416
+wait 0.2
+assert_ui hv_lit_1 text=Yes
+assert_ui hv_hot_1 text=Yes
+click_ui hv_star_1
+wait 0.2
+assert_ui hv_clicks_1 text=1
+assert_ui hv_lit_1 text=Yes
+screenshot hover_lab_design_subtree
+mouse_move 464 610
+wait 0.2
+assert_ui hv_lit_2 text=Yes
+assert_ui hv_hot_2 text=No
+mouse_down 464 610
+mouse_up
+wait 0.2
+assert_ui hv_clicks_2 text=0
+assert_ui hv_lit_2 text=Yes
+screenshot hover_lab_design_passthrough
+click_ui hv_reset
+wait 0.2
+assert_ui hv_clicks_0 text=0
+assert_ui hv_clicks_1 text=0
+assert_ui hv_clicks_2 text=0
+resize 1920 1080
+mouse_move 10 10
+wait 0.3
+assert_ui hv_case_0 x=72 y=192 w=972 h=276
+assert_ui hv_row_0 x=102 y=297 w=630 h=72
+assert_ui hv_star_0 x=669 y=306 w=54 h=54
+assert_ui hv_api_panel x=1080 y=843 w=768 h=207
+assert_no_overflow
+assert_within_parents
+screenshot hover_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui hv_canvas w=1024 h=768
+assert_ui hv_case_0 x=38 y=198 w=518 h=147
+assert_ui hv_row_0 x=54 y=254 w=336 h=38
+assert_ui hv_star_0 x=357 y=259 w=29 h=29
+assert_ui hv_reference x=576 y=198 w=410 h=331
+assert_ui hv_api_panel x=576 y=546 w=410 h=110
+assert_no_overflow
+assert_within_parents
+screenshot hover_lab_design_narrow
+resize 1280 720
