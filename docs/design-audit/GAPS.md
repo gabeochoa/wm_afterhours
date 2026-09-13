@@ -3654,7 +3654,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## text
 
-[Current baseline](../../screenshot-baselines/screens/text_720p.png) · [Visual review](../../design-audit.html#screen=text)
+[Reviewed image](../../docs/design-audit/originals/text_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_720p.png) · [Visual review](../../design-audit.html#screen=text)
 
 Baseline SHA-256: `47ec135185d09029d5db399b030d9f8141857693b38b3c6b5ecceb0faa28b649`
 
@@ -3687,7 +3687,7 @@ The typography specimens deliberately vary typeface, size, tracking and color. T
 
 [Image](../../baseline_screenshots/text.png)
 
-Pixel-identical. Serif display specimens contrast with handwritten body and caption samples. Current typography-review findings apply without assuming the mixed families are accidental.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## text input
 

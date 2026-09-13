@@ -1,0 +1,34 @@
+goto_screen text
+resize 1280 720
+wait 0.4
+expect_text "Typography Showcase"
+expect_text "Garamond / 48 px / regular / display"
+expect_text "Gaegu-Bold / 14 px / bold / caption"
+assert_within_parents
+screenshot text_design
+click_ui text_guides
+wait 0.2
+expect_text "Bounds guides: on"
+click_ui text_page_1
+wait 0.2
+expect_text "TRACKING SAMPLE"
+expect_text "spacing -1 px"
+expect_text "spacing +3 px"
+expect_text "FontMuted / metadata"
+assert_within_parents
+screenshot text_design_colors
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot text_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot text_design_narrow
+focus_ui text_page_0
+key ENTER
+wait 0.2
+expect_text "Display Text"
+assert_within_parents
+screenshot text_design_sizes_narrow
+resize 1280 720

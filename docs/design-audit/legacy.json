@@ -340,13 +340,13 @@
     "screen": "text",
     "baseline": "baseline_screenshots/text.png",
     "current": "screenshot-baselines/screens/text_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Serif display specimens contrast with handwritten body and caption samples. Current typography-review findings apply without assuming the mixed families are accidental.",
-    "sha256": "47ec135185d09029d5db399b030d9f8141857693b38b3c6b5ecceb0faa28b649",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "a0af5ef8df25ce98f726a5deef708f08a1ce10944afafa2664e5cd874c32ef38",
     "additional_findings": []
   },
   {

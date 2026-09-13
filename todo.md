@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,371 completed; 164 remaining.
+2,391 completed; 144 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7209,64 +7209,65 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_720p.png) · [Visual review](design-audit.html#screen=text)
 
-- [ ] `text-01` · P2 · proposal. Font families: Label each specimen's font family.
+- [x] `text-01` · P2 · proposal. Font families: Label each specimen's font family.
   Evidence: Serif headings and handwritten body samples appear without font names.
 
-- [ ] `text-02` · P2 · proposal. Display specimen: Show its point or pixel size beside the specimen.
+- [x] `text-02` · P2 · proposal. Display specimen: Show its point or pixel size beside the specimen.
   Evidence: Display Text has no size annotation.
 
-- [ ] `text-03` · P2 · proposal. Headline specimen: Add a small metadata row for size and weight.
+- [x] `text-03` · P2 · proposal. Headline specimen: Add a small metadata row for size and weight.
   Evidence: Headline Style lacks its size and weight.
 
-- [ ] `text-04` · P2 · proposal. Subheading specimen: Label the intended semantic role and size.
+- [x] `text-04` · P2 · proposal. Subheading specimen: Label the intended semantic role and size.
   Evidence: Subheading Text is only differentiated visually.
 
-- [ ] `text-05` · P2 · proposal. Body sample copy: Use a neutral specimen containing uppercase, lowercase, numbers and punctuation.
+- [x] `text-05` · P2 · proposal. Body sample copy: Use a neutral specimen containing uppercase, lowercase, numbers and punctuation.
   Evidence: The sentence claims excellent legibility instead of exposing useful glyphs.
 
-- [ ] `text-06` · P2 · proposal. Body line measure: Show its line width and line-height values.
+- [x] `text-06` · P2 · proposal. Body line measure: Show its line width and line-height values.
   Evidence: The wrapping sample has no content-width annotation.
 
-- [ ] `text-07` · P2 · proposal. Caption specimen: Place readable explanatory metadata outside the small-text specimen.
+- [x] `text-07` · P2 · proposal. Caption specimen: Place readable explanatory metadata outside the small-text specimen.
   Evidence: Caption & metadata is very small and also serves as its own description.
 
-- [ ] `text-08` · P2 · proposal. Tracking samples: Repeat the same phrase in all three samples for direct comparison.
+- [x] `text-08` · P2 · proposal. Tracking samples: Repeat the same phrase in all three samples for direct comparison.
   Evidence: TIGHT TRACKING, WIDE TRACKING and ULTRA SPACED use different words.
 
-- [ ] `text-09` · P2 · proposal. Tracking values: Display exact spacing values in the metadata column.
+- [x] `text-09` · P2 · proposal. Tracking values: Display exact spacing values in the metadata column.
   Evidence: The three tracking labels provide no numeric letter spacing.
 
-- [ ] `text-10` · P2 · proposal. Gold color sample: Add its token and hex value alongside the card.
+- [x] `text-10` · P2 · proposal. Gold color sample: Add its token and hex value alongside the card.
   Evidence: Primary Gold Text has no color-token value.
 
-- [ ] `text-11` · P2 · proposal. Cream color sample: Add foreground/background swatches and a measured contrast value in external metadata.
+- [x] `text-11` · P2 · proposal. Cream color sample: Add foreground/background swatches and a measured contrast value in external metadata.
   Evidence: Light Cream Text has no contrast measurement context.
 
-- [ ] `text-12` · P2 · proposal. Silver color sample: Show their color values side by side to explain the subtle difference.
+- [x] `text-12` · P2 · proposal. Silver color sample: Show their color values side by side to explain the subtle difference.
   Evidence: Silver Accent Text resembles the nearby muted treatment.
 
-- [ ] `text-13` · P2 · proposal. Muted color sample: Add a short secondary-metadata context sample outside the color specimen.
+- [x] `text-13` · P2 · proposal. Muted color sample: Add a short secondary-metadata context sample outside the color specimen.
   Evidence: Muted Secondary Text is presented without a usage example.
 
-- [ ] `text-14` · P2 · proposal. Accent color sample: Label the token and intended accent role.
+- [x] `text-14` · P2 · proposal. Accent color sample: Label the token and intended accent role.
   Evidence: Accent Color Highlight uses a reddish color without naming the token.
 
-- [ ] `text-15` · P3 · proposal. Color card labels: Use identical sample text and move color labels outside the cards.
+- [x] `text-15` · P3 · proposal. Color card labels: Use identical sample text and move color labels outside the cards.
   Evidence: All five cards mix the color name with the sample sentence.
 
-- [ ] `text-16` · P2 · proposal. Hierarchy comparison: Add optional faint baseline guides for visual comparison.
+- [x] `text-16` · P2 · proposal. Hierarchy comparison: Add optional faint baseline guides for visual comparison.
   Evidence: Size examples are stacked without baseline or cap-height guides.
+  Disposition: Guides show native layout bounds; the public font measurement API does not expose baseline metrics.
 
-- [ ] `text-17` · P3 · proposal. Section heading hierarchy: Make the specimen grouping explicit with separate section spacing.
+- [x] `text-17` · P3 · proposal. Section heading hierarchy: Make the specimen grouping explicit with separate section spacing.
   Evidence: Letter Spacing uses the same treatment as Text Size Hierarchy but sits within its column.
 
-- [ ] `text-18` · P2 · proposal. Footer sentence: Replace it with the active font families and rendering scale.
+- [x] `text-18` · P2 · proposal. Footer sentence: Replace it with the active font families and rendering scale.
   Evidence: Elegant typography creates visual hierarchy is a general claim.
 
-- [ ] `text-19` · P3 · proposal. Gold underline: Reduce its prominence so sample rules and guides have a distinct role.
+- [x] `text-19` · P3 · proposal. Gold underline: Reduce its prominence so sample rules and guides have a distinct role.
   Evidence: The heading underline is unlabeled decoration on a specimen-heavy page.
 
-- [ ] `text-20` · P2 · proposal. Baseline rendering context: Add 1280 × 720 and the effective UI scale in a metadata footer.
+- [x] `text-20` · P2 · proposal. Baseline rendering context: Add 1280 × 720 and the effective UI scale in a metadata footer.
   Evidence: The page does not state resolution or scale for the type samples.
 
 ### text_input

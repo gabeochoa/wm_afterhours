@@ -10,245 +10,91 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleText : ScreenSystem<UIContext<InputAction>> {
-  // Elegant dark theme with gold accents - like a luxury brand
-  afterhours::Color bg_charcoal{28, 26, 24, 255};    // Rich charcoal
-  afterhours::Color panel_dark{42, 38, 35, 255};     // Dark panel
-  afterhours::Color gold_accent{205, 175, 110, 255}; // Warm gold
-  afterhours::Color silver_text{210, 210, 215, 255}; // Silver text
-  afterhours::Color cream_text{250, 245, 235, 255};  // Cream white
-  afterhours::Color muted_text{210, 205, 200, 255};  // Brightened for contrast
-  afterhours::Color divider{65, 58, 52, 255};        // Subtle divider
+  bool colors_page=false, guides=false;
 
-  void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
-    Theme theme;
-    theme.font = cream_text;
-    theme.darkfont = bg_charcoal;
-    theme.font_muted = muted_text;
-    theme.background = bg_charcoal;
-    theme.surface = panel_dark;
-    theme.primary = gold_accent;
-    theme.secondary = afterhours::Color{85, 95, 115, 255};
-    theme.accent = afterhours::Color{145, 85, 85, 255};
-    theme.error = afterhours::Color{180, 70, 70, 255};
-    theme.roundness = 0.08f;
-    context.theme = theme;
-
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
-
-    // Full background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(
-                ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_charcoal)
-            .with_debug_name("bg"));
-
-    // Main container panel - sized proportionally to screen
-    float panel_w = screen_width * 0.85f;  // 85% of screen width
-    float panel_h = screen_height * 0.80f; // 80% of screen height
-    float panel_x = (screen_width - panel_w) / 2.0f;
-    float panel_y = (screen_height - panel_h) / 2.0f;
-
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(panel_w), pixels(panel_h)})
-            .with_absolute_position(panel_x, panel_y)
-            .with_custom_background(panel_dark)
-            .with_soft_shadow(6.0f, 8.0f, 20.0f, afterhours::Color{0, 0, 0, 60})
-            .with_rounded_corners(RoundedCorners())
-            .with_debug_name("main_panel"));
-
-    // Header with gold accent line
-    div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_label("Typography Showcase")
-            .with_size(ComponentSize{pixels(panel_w - 60), pixels(48)})
-            .with_absolute_position(panel_x + 30.0f, panel_y + 25.0f)
-            .with_font("Garamond", h720(36.0f))
-            .with_custom_text_color(gold_accent)
-            .with_alignment(TextAlignment::Center));
-
-    // Gold accent line under title
-    div(context, mk(entity, 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(180), pixels(2)})
-            .with_absolute_position(panel_x + (panel_w - 180) / 2.0f,
-                                    panel_y + 78.0f)
-            .with_custom_background(gold_accent));
-
-    // Typography examples in a refined layout
-    float content_y = panel_y + 110.0f;
-    float left_col = panel_x + 50.0f;
-    float right_col = panel_x + panel_w / 2.0f + 30.0f;
-    float col_w = (panel_w / 2.0f) - 80.0f;
-    float content_height = panel_h - 180.0f; // Available height for content
-
-    // Left column - Size variations
-    float left_spacing =
-        content_height / 7.0f;
-
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_label("Text Size Hierarchy")
-            .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position(left_col, content_y)
-            .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(gold_accent));
-
-    // Display text - large
-    div(context, mk(entity, 11),
-        ComponentConfig{}
-            .with_label("Display Text")
-            .with_size(ComponentSize{pixels(col_w), pixels(56)})
-            .with_absolute_position(left_col, content_y + left_spacing * 0.5f)
-            .with_font("Garamond", h720(48.0f))
-            .with_custom_text_color(cream_text));
-
-    div(context, mk(entity, 12),
-        ComponentConfig{}
-            .with_label("Headline Style")
-            .with_size(ComponentSize{pixels(col_w), pixels(44)})
-            .with_absolute_position(left_col, content_y + left_spacing * 1.3f)
-            .with_font("Garamond", h720(36.0f))
-            .with_custom_text_color(silver_text));
-
-    div(context, mk(entity, 13),
-        ComponentConfig{}
-            .with_label("Subheading Text")
-            .with_size(ComponentSize{pixels(col_w), pixels(36)})
-            .with_absolute_position(left_col, content_y + left_spacing * 2.0f)
-            .with_font("Garamond", h720(28.0f))
-            .with_custom_text_color(silver_text));
-
-    div(context, mk(entity, 14),
-        ComponentConfig{}
-            .with_label("Body text for readable content that flows naturally "
-                        "and maintains excellent legibility.")
-            .with_size(ComponentSize{pixels(col_w), pixels(80)})
-            .with_absolute_position(left_col, content_y + left_spacing * 2.7f)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
-            .with_custom_text_color(muted_text)
-            // Wrap, not Ellipsis: it is a body-copy sample, and one truncated
-            // line is not what the screen is demonstrating.
-            .with_text_overflow(TextOverflow::Wrap));
-
-    div(context, mk(entity, 15),
-        ComponentConfig{}
-            .with_label("Caption & metadata - smaller supporting text")
-            .with_size(ComponentSize{pixels(col_w), pixels(28)})
-            .with_absolute_position(left_col, content_y + left_spacing * 4.0f)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_sm())
-            .with_custom_text_color(muted_text));
-
-    // Letter Spacing section
-    div(context, mk(entity, 40),
-        ComponentConfig{}
-            .with_label("Letter Spacing")
-            .with_size(ComponentSize{pixels(col_w), pixels(28)})
-            .with_absolute_position(left_col, content_y + left_spacing * 4.5f)
-            .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(gold_accent));
-
-    div(context, mk(entity, 41),
-        ComponentConfig{}
-            .with_label("TIGHT TRACKING")
-            .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position(left_col, content_y + left_spacing * 5.0f)
-            .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(cream_text)
-            .with_letter_spacing(-1.0f));
-
-    div(context, mk(entity, 42),
-        ComponentConfig{}
-            .with_label("WIDE TRACKING")
-            .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position(left_col, content_y + left_spacing * 5.5f)
-            .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(cream_text)
-            .with_letter_spacing(2.0f));
-
-    div(context, mk(entity, 43),
-        ComponentConfig{}
-            .with_label("ULTRA SPACED")
-            .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position(left_col, content_y + left_spacing * 6.0f)
-            .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(silver_text)
-            .with_letter_spacing(3.0f));
-
-    // Divider line
-    div(context, mk(entity, 16),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(1), pixels(content_height)})
-            .with_absolute_position(panel_x + panel_w / 2.0f, content_y)
-            .with_custom_background(divider));
-
-    // Right column - Color variations
-    float right_item_spacing =
-        (content_height - 30.0f) / 5.0f; // Space for 5 items plus header
-
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_label("Color Treatments")
-            .with_size(ComponentSize{pixels(col_w), pixels(32)})
-            .with_absolute_position(right_col, content_y)
-            .with_font("Garamond", h720(22.0f))
-            .with_custom_text_color(gold_accent));
-
-    struct ColorExample {
-      std::string label;
-      afterhours::Color color;
+  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
+    const afterhours::Color bg{28,26,24,255}, panel{42,38,35,255}, gold{205,175,110,255};
+    const afterhours::Color cream{250,245,235,255}, silver{210,210,215,255}, muted{210,205,200,255};
+    Theme theme;theme.background=bg;theme.surface=panel;theme.font=cream;theme.darkfont=bg;theme.font_muted=muted;
+    theme.primary=gold;context.theme=theme;context.scaling_mode=ScalingMode::Proportional;
+    const float s=std::min(context.screen_width/1280.f,context.screen_height/720.f);
+    const auto box=[s](float x,float y,float w,float h) {
+      return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
+          .with_absolute_position(x*s,y*s).with_corner_radius(0);
     };
-
-    ColorExample examples[] = {
-        {"Primary Gold Text", gold_accent},
-        {"Light Cream Text", cream_text},
-        {"Silver Accent Text", silver_text},
-        {"Muted Secondary Text", muted_text},
-        {"Accent Color Highlight", {210, 140, 140, 255}},
+    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+        .with_custom_background(bg).with_corner_radius(0));
+    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1160*s),pixels(656*s)})
+        .with_absolute_position((context.screen_width-1160*s)/2,(context.screen_height-656*s)/2)
+        .with_custom_background(panel).with_corner_radius(12*s).with_debug_name("main_panel"));
+    const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,
+                         const std::string &font,afterhours::Color color) {
+      return div(context,mk(root.ent(),id),box(x,y,w,h).with_label(text).with_font(font,pixels(size*s))
+          .with_custom_text_color(color).with_alignment(TextAlignment::Left)
+          .with_background(Theme::Usage::None).with_ignore_pointer_events());
     };
-
-    for (int i = 0; i < 5; i++) {
-      float item_y = content_y + 35.0f + i * right_item_spacing;
-      float pill_height = std::min(right_item_spacing - 10.0f, 50.0f);
-
-      // Background pill for each text sample
-      div(context, mk(entity, 30 + i * 2),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(col_w), pixels(pill_height)})
-              .with_absolute_position(right_col, item_y)
-              .with_custom_background(
-                  afterhours::colors::darken(panel_dark, 0.85f))
-              .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.2f)
-              .with_debug_name("color_bg_" + std::to_string(i)));
-
-      div(context, mk(entity, 31 + i * 2),
-          ComponentConfig{}
-              .with_label(examples[i].label)
-              .with_size(
-                  ComponentSize{pixels(col_w - 24), pixels(pill_height - 8)})
-              .with_absolute_position(right_col + 12.0f, item_y + 4.0f)
-              .with_font("Garamond", h720(24.0f))
-              .with_custom_text_color(examples[i].color)
-              .with_debug_name("color_text_" + std::to_string(i)));
+    const auto meta=[&](int id,const std::string &text,float x,float y,float w,float h=28) {
+      return label(id,text,x,y,w,h,19,"AtkinsonMock",muted);
+    };
+    label(0,"Typography Showcase",32,16,660,46,36,"Garamond",gold);
+    for(int i=0;i<2;++i) {
+      if(button(context,mk(root.ent(),1+i),box(32+static_cast<float>(i)*278,76,262,40)
+          .with_label(i==0?"Size hierarchy":"Spacing and color").with_font("AtkinsonMock",pixels(20*s))
+          .with_custom_background(colors_page==(i==1)?gold:afterhours::Color{64,57,49,255})
+          .with_custom_text_color(colors_page==(i==1)?bg:cream).with_corner_radius(6*s)
+          .with_debug_name("text_page_"+std::to_string(i)))) colors_page=i==1;
     }
-
-    // Footer
-    div(context, mk(entity, 50),
-        ComponentConfig{}
-            .with_label("Elegant typography creates visual hierarchy and "
-                        "guides the reader's eye")
-            .with_size(ComponentSize{pixels(panel_w - 100), pixels(30)})
-            .with_absolute_position(panel_x + 50.0f, panel_y + panel_h - 55.0f)
-            .with_font(UIComponent::DEFAULT_FONT, theme.font_size_md())
-            .with_custom_text_color(muted_text)
-            .with_alignment(TextAlignment::Center));
+    if(button(context,mk(root.ent(),3),box(850,76,278,40).with_label(guides?"Bounds guides: on":"Bounds guides: off")
+        .with_font("AtkinsonMock",pixels(19*s)).with_custom_background({64,57,49,255})
+        .with_custom_text_color(cream).with_debug_name("text_guides"))) guides=!guides;
+    if(!colors_page) {
+      meta(10,"Text Size Hierarchy",32,142,560);
+      meta(11,"Family / size at 720p / weight / purpose",678,142,450);
+      struct Sample {const char *text;const char *font;float size,y,h;const char *metadata;afterhours::Color color;};
+      const std::array<Sample,5> samples{{
+        {"Display Text","Garamond",48,182,62,"Garamond / 48 px / regular / display",cream},
+        {"Headline Style","Garamond",36,262,50,"Garamond / 36 px / regular / headline",silver},
+        {"Subheading Text","Garamond",28,330,42,"Garamond / 28 px / regular / subheading",silver},
+        {"Aa Bb Cc 0123456789.,!? Mixed-case text wraps within this sample width.",UIComponent::DEFAULT_FONT,20,392,88,"Gaegu-Bold / 20 px / bold / body",muted},
+        {"Caption & metadata - smaller supporting text",UIComponent::DEFAULT_FONT,14,504,30,"Gaegu-Bold / 14 px / bold / caption",muted}}};
+      for(size_t i=0;i<samples.size();++i) {
+        const auto &sample=samples[i];
+        auto text=label(20+static_cast<int>(i)*3,sample.text,32,sample.y,600,sample.h,sample.size,sample.font,sample.color);
+        if(i==3) text.ent().get<HasLabel>().text_overflow=TextOverflow::Wrap;
+        meta(21+static_cast<int>(i)*3,sample.metadata,678,sample.y,450,38);
+        if(guides) div(context,mk(root.ent(),22+static_cast<int>(i)*3),box(32,sample.y+sample.h,600,1)
+            .with_custom_background({92,82,69,255}).with_ignore_pointer_events());
+      }
+      meta(40,"Body box: 600 x 88 px / native line spacing",678,442,450,38);
+      meta(41,"Caption remains small; these notes stay readable.",678,546,450,46);
+    } else {
+      meta(50,"Letter spacing / same text, face and size",32,142,520);
+      const std::array<float,3> tracking{-1,2,3};
+      for(int i=0;i<3;++i) {
+        const float y=196+static_cast<float>(i)*104;
+        auto sample=label(60+i*3,"TRACKING SAMPLE",32,y,510,40,22,"Garamond",cream);
+        sample.ent().get<HasLabel>().letter_spacing=tracking[i]*s;
+        meta(61+i*3,fmt::format("Garamond 22 px / spacing {:+.0f} px",tracking[i]),32,y+44,510);
+        if(guides) div(context,mk(root.ent(),62+i*3),box(32,y+40,510,1).with_custom_background({92,82,69,255}));
+      }
+      meta(70,"Secondary metadata context",32,526,510);
+      label(71,"Last updated 12 September",32,564,510,32,20,"AtkinsonMock",muted);
+      meta(72,"Color treatments / Garamond 24 px",606,142,522);
+      const auto backing=afterhours::colors::darken(panel,0.85f);
+      const std::array<afterhours::Color,5> colors{gold,cream,silver,muted,afterhours::Color{210,140,140,255}};
+      const std::array<std::string,5> roles{"Primary / gold","Font / cream","Custom / silver","FontMuted / metadata","Custom / highlight"};
+      for(int i=0;i<5;++i) {
+        const float y=184+static_cast<float>(i)*82;
+        div(context,mk(root.ent(),80+i*4),box(606,y,522,38).with_custom_background(backing).with_corner_radius(6*s));
+        label(81+i*4,"Sample text Aa 123",620,y,490,38,24,"Garamond",colors[i]);
+        const auto c=colors[i];
+        meta(82+i*4,fmt::format("{} #{:02X}{:02X}{:02X} / {:.2f}:1",roles[i],c.r,c.g,c.b,afterhours::colors::contrast_ratio(c,backing)),606,y+42,522,30);
+        div(context,mk(root.ent(),83+i*4),box(1098,y+10,20,20).with_custom_background(c));
+      }
+    }
+    meta(110,fmt::format("Garamond + Gaegu-Bold specimens / Atkinson labels / {:.0f} x {:.0f} / scale {:.2f}",context.screen_width,context.screen_height,s),32,614,1096,28);
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(text, "System Demos",
-                        "Text rendering examples with different sizes",
-                        ExampleText)
+                        "Text rendering examples with different sizes", ExampleText)

@@ -3,6 +3,7 @@
 
 # Navigate to the text screen
 goto_screen text
+resize 1280 720
 wait 0.5
 
 # Validate screen against baseline
