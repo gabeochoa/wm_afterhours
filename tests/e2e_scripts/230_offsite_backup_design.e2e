@@ -40,16 +40,33 @@ assert_ui bk_state_1 text=Paused
 click_ui bk_pause
 wait 0.2
 expect_text "Backup resumed"
-click_ui bk_schedule
+click_ui bk_schedule_trigger
 wait 0.2
+expect_text "Hourly"
 expect_text "Daily"
-focus_ui bk_schedule
-key LEFT
+expect_text "Weekly"
+screenshot offsite_backup_schedule_open
+click_ui dropdown_opt_2
 wait 0.2
+expect_text "Run backup: Daily"
+focus_ui bk_schedule_trigger
+key ENTER
+wait 0.2
+key UP
+key ENTER
+wait 0.2
+expect_text "Run backup: Every 4 hours"
+click_ui bk_schedule_trigger
+wait 0.2
+key ESCAPE
+wait 0.2
+expect_no_text "Weekly"
 expect_text "Every 4 hours"
-click_ui bk_retention
+click_ui bk_retention_trigger
 wait 0.2
-expect_text "Forever"
+click_ui dropdown_opt_3
+wait 0.2
+expect_text "Keep file versions: Forever"
 set_slider bk_bandwidth 0.5
 wait 0.3
 expect_text "50%"

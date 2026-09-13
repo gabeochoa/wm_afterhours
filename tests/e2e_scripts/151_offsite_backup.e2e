@@ -40,12 +40,19 @@ click_ui bk_pause
 wait 0.2
 expect_text "Backup resumed"
 
-click_ui bk_schedule
+click_ui bk_schedule_trigger
 wait 0.2
+expect_text "Hourly"
 expect_text "Daily"
-click_ui bk_retention
+expect_text "Weekly"
+click_ui dropdown_opt_2
 wait 0.2
-expect_text "Forever"
+expect_text "Run backup: Daily"
+click_ui bk_retention_trigger
+wait 0.2
+click_ui dropdown_opt_3
+wait 0.2
+expect_text "Keep file versions: Forever"
 set_slider bk_bandwidth 0.72
 wait 0.2
 expect_text "72%"

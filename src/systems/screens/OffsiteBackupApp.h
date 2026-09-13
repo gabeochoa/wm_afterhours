@@ -81,16 +81,6 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
         .with_corner_radius(0.f);
   }
 
-  void change_schedule(int delta) {
-    schedule_idx = (schedule_idx + schedules.size() + delta) % schedules.size();
-    action_status = "Run backup: " + schedules[schedule_idx];
-  }
-
-  void change_retention(int delta) {
-    retention_idx = (retention_idx + retentions.size() + delta) % retentions.size();
-    action_status = "Keep file versions: " + retentions[retention_idx];
-  }
-
   static void draw_background(RectangleType r) {
     afterhours::draw_rectangle_gradient_v(r, afterhours::Color{145, 178, 185, 255},
                                           afterhours::Color{170, 178, 166, 255});
@@ -394,26 +384,37 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
         .with_on_draw_fg([](RectangleType r) { afterhours::draw_line_ex({r.x, r.y + 5}, {r.x + 5, r.y + 11}, 2, {45, 115, 77, 255}); afterhours::draw_line_ex({r.x + 5, r.y + 11}, {r.x + 14, r.y}, 2, {45, 115, 77, 255}); }));
 
     text(200, "Backup settings", 815, 194, 347, 32, 25, ink, TextAlignment::Left, "bk_settings_title");
-    const auto selector = [&](int id, const std::string &value, float y,
-                              const std::string &name, auto change) {
-      auto result = button(context, mk(root.ent(), id), box(scale, 986, y, 176, 36)
-          .with_label(value).with_font("AtkinsonMock", pixels(18 * scale))
-          .with_custom_text_color(ink).with_custom_background({255, 255, 255, 255})
-          .with_border({168, 179, 189, 255}, scale).with_alignment(TextAlignment::Left)
-          .with_text_inset(10 * scale, 0).with_on_draw_fg([scale, mid](RectangleType r) {
-            const float x = r.x + r.width - 21 * scale;
-            const float cy = r.y + r.height / 2;
-            afterhours::draw_line_ex({x, cy - 3 * scale}, {x + 5 * scale, cy + 2 * scale}, 2 * scale, mid);
-            afterhours::draw_line_ex({x + 5 * scale, cy + 2 * scale}, {x + 10 * scale, cy - 3 * scale}, 2 * scale, mid);
-          }).with_debug_name(name));
-      result.ent().template get<HasLabel>().text_x_offset = 10 * scale;
-      if (result || (context.has_focus(result.id()) && context.pressed(InputAction::WidgetRight))) change(1);
-      if (context.has_focus(result.id()) && context.pressed(InputAction::WidgetLeft)) change(-1);
+    const auto selector = [&](int id, const std::vector<std::string> &options, size_t &index,
+                              float y, const std::string &name, const std::string &status_prefix) {
+      const size_t previous = index;
+      auto result = dropdown(context, mk(root.ent(), id), options, index,
+          box(scale, 986, y, 176, 36)
+              .with_font("AtkinsonMock", pixels(18 * scale))
+              .with_custom_text_color(ink).with_custom_background({255, 255, 255, 255})
+              .with_border({168, 179, 189, 255}, scale).with_alignment(TextAlignment::Left)
+              .with_text_inset(10 * scale, 0).with_dropdown_indicators("", "")
+              .with_render_layer(10).with_debug_name(name));
+      if (index != previous) action_status = status_prefix + options[index];
+      const bool expanded = result.ent().get<HasDropdownState>().on;
+      for (const auto child_id : result.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (!child || !child.asE().has<HasLabel>()) continue;
+        auto &trigger = child.asE();
+        trigger.addComponentIfMissing<UIComponentDebug>(name + "_trigger").set(name + "_trigger");
+        trigger.get<HasLabel>().text_x_offset = 10 * scale;
+        trigger.addComponentIfMissing<HasOnDraw>().fg = [scale, mid, expanded](RectangleType r) {
+          const float x = r.x + r.width - 21 * scale;
+          const float cy = r.y + r.height / 2;
+          const float direction = expanded ? -1.f : 1.f;
+          afterhours::draw_line_ex({x, cy - 3 * scale * direction}, {x + 5 * scale, cy + 2 * scale * direction}, 2 * scale, mid);
+          afterhours::draw_line_ex({x + 5 * scale, cy + 2 * scale * direction}, {x + 10 * scale, cy - 3 * scale * direction}, 2 * scale, mid);
+        };
+      }
     };
     text(201, "Run backup", 815, 240, 166, 30, 18, ink, TextAlignment::Left, "bk_run_label");
-    selector(202, schedules[schedule_idx], 237, "bk_schedule", [&](int delta) { change_schedule(delta); });
+    selector(202, schedules, schedule_idx, 237, "bk_schedule", "Run backup: ");
     text(203, "Keep file versions", 815, 284, 166, 30, 18, ink, TextAlignment::Left, "bk_keep_label");
-    selector(204, retentions[retention_idx], 281, "bk_retention", [&](int delta) { change_retention(delta); });
+    selector(204, retentions, retention_idx, 281, "bk_retention", "Keep file versions: ");
     text(205, "Bandwidth limit", 815, 327, 232, 28, 19, ink, TextAlignment::Left, "bk_bandwidth_label");
     text(206, fmt::format("{:.0f}%", bandwidth * 100), 1072, 327, 90, 28, 19, red, TextAlignment::Right, "bk_bandwidth_pct");
     auto bandwidth_slider = slider(context, mk(root.ent(), 207), bandwidth,
