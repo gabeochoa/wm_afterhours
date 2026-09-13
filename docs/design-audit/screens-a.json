@@ -2089,7 +2089,15 @@
         "priority": "P2"
       }
     ],
-    "sha256": "5fb9423d03357b68de07bef30e5c1c6f36c12648c66d0dc6075e1cee522291ea"
+    "sha256": "5fb9423d03357b68de07bef30e5c1c6f36c12648c66d0dc6075e1cee522291ea",
+    "evidence": "docs/design-audit/originals/animation_looping_720p.png",
+    "examples": [
+      {
+        "id": "cycle_overlay",
+        "label": "Current example: Paused cycle samples",
+        "path": "docs/design-audit/examples/animation_looping_overlay_720p.png"
+      }
+    ]
   },
   {
     "id": "animation_spring",

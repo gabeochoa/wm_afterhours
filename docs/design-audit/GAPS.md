@@ -472,11 +472,13 @@ The screenshot shows three unpressed animation buttons. Eighteen distinct presen
 
 ## animation looping
 
-[Current baseline](../../screenshot-baselines/screens/animation_looping_720p.png) · [Visual review](../../design-audit.html#screen=animation_looping)
+[Reviewed image](../../docs/design-audit/originals/animation_looping_720p.png) · [Current baseline](../../screenshot-baselines/screens/animation_looping_720p.png) · [Visual review](../../design-audit.html#screen=animation_looping)
 
 Baseline SHA-256: `5fb9423d03357b68de07bef30e5c1c6f36c12648c66d0dc6075e1cee522291ea`
 
 Loop phase explains the dim glow and moving marker. Twenty supported proposals improve motion diagnosis without judging the captured phase as a defect.
+
+Current example states: [Current example: Paused cycle samples](../../docs/design-audit/examples/animation_looping_overlay_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

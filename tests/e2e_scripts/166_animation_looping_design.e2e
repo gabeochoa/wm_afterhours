@@ -1,0 +1,63 @@
+goto_screen animation_looping
+resize 1280 720
+wait 0.3
+expect_text "Looping animations"
+expect_text "Blue / diagonal translation"
+expect_text "Green / opacity"
+expect_text "Purple / vertical translation"
+expect_text "Orange / orbiting marker"
+expect_text "4.0 s per cycle"
+expect_text "1.5 s per cycle"
+expect_text "2.0 s per cycle"
+expect_text "3.0 s per cycle"
+click_ui pause_cycles
+wait 0.1
+expect_text "Resume all"
+click_ui restart_cycles
+wait 0.2
+expect_text "Paused  /  0.00 s"
+expect_text "Phase 000.0%"
+expect_text "+0.0px"
+expect_text "50%"
+expect_text "0.0px"
+expect_text "0deg"
+assert_ui pulse1_box x=145 y=354 w=120 h=120
+assert_ui pulse2_box x=435 y=354 w=120 h=120
+assert_ui bounce_box x=725 y=304 w=120 h=120
+assert_ui rotate_ring x=1015 y=354 w=120 h=120
+assert_ui rotate_indicator x=1105 y=404 w=20 h=20
+wait 0.5
+expect_text "Paused  /  0.00 s"
+assert_within_parents
+screenshot animation_looping_design_paused
+focus_element toggle_cycle_samples
+key ENTER
+wait 0.1
+expect_text "Hide cycle samples"
+expect_text "Cycle overlay: 8 equally spaced phases."
+screenshot animation_looping_design_overlay
+focus_element pause_cycles
+key ENTER
+wait 0.2
+expect_text "Pause all"
+expect_text "Running"
+expect_no_text "Paused  /  0.00 s"
+click_ui pause_cycles
+click_ui restart_cycles
+wait 0.1
+expect_text "Paused  /  0.00 s"
+resize 1920 1080
+wait 0.2
+assert_ui pulse1_box x=218 y=531 w=180 h=180
+assert_ui bounce_box x=1088 y=456 w=180 h=180
+assert_ui rotate_indicator x=1658 y=606 w=30 h=30
+assert_within_parents
+screenshot animation_looping_design_1080
+resize 1024 768
+wait 0.2
+assert_ui looping_canvas w=1024 h=768
+assert_within_parents
+screenshot animation_looping_design_narrow
+click_ui toggle_cycle_samples
+click_ui pause_cycles
+resize 1280 720

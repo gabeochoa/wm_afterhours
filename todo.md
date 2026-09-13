@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-222 completed; 2,313 remaining.
+242 completed; 2,293 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -727,64 +727,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/animation_looping_720p.png) · [Visual review](design-audit.html#screen=animation_looping)
 
-- [ ] `animation_looping-01` · P2 · proposal. Header placement: Move the header upward to make space for diagnostics.
+- [x] `animation_looping-01` · P2 · proposal. Header placement: Move the header upward to make space for diagnostics.
   Evidence: A large blank area precedes the title.
 
-- [ ] `animation_looping-02` · P2 · proposal. Header construction: Combine them in one padded header.
+- [x] `animation_looping-02` · P2 · proposal. Header construction: Combine them in one padded header.
   Evidence: Title and subtitle occupy touching rounded strips.
 
-- [ ] `animation_looping-03` · P2 · proposal. Breathe label: Add a Translation caption.
+- [x] `animation_looping-03` · P2 · proposal. Breathe label: Add a Translation caption.
   Evidence: Breathe does not state that the sample translates.
 
-- [ ] `animation_looping-04` · P2 · proposal. Glow label: Add an Opacity caption.
+- [x] `animation_looping-04` · P2 · proposal. Glow label: Add an Opacity caption.
   Evidence: Glow does not identify opacity as the animated property.
 
-- [ ] `animation_looping-05` · P2 · proposal. Bounce label: Add a vertical motion arrow outside the specimen.
+- [x] `animation_looping-05` · P2 · proposal. Bounce label: Add a vertical motion arrow outside the specimen.
   Evidence: Bounce does not identify its direction.
 
-- [ ] `animation_looping-06` · P2 · proposal. Spin label: Identify the marker as the orbiting element.
+- [x] `animation_looping-06` · P2 · proposal. Spin label: Identify the marker as the orbiting element.
   Evidence: Spin sits above a stationary-looking brown base and orange marker.
 
-- [ ] `animation_looping-07` · P2 · proposal. Breathe reference: Add an unmoving outline at its center position.
+- [x] `animation_looping-07` · P2 · proposal. Breathe reference: Add an unmoving outline at its center position.
   Evidence: The blue block has no fixed position outline.
 
-- [ ] `animation_looping-08` · P2 · proposal. Glow reference: Add a fully opaque reference chip outside the animation.
+- [x] `animation_looping-08` · P2 · proposal. Glow reference: Add a fully opaque reference chip outside the animation.
   Evidence: The green sample is dim at this capture phase.
 
-- [ ] `animation_looping-09` · P2 · proposal. Bounce bounds: Draw endpoints beside its motion area.
+- [x] `animation_looping-09` · P2 · proposal. Bounce bounds: Draw endpoints beside its motion area.
   Evidence: The purple block has no marked travel range.
 
-- [ ] `animation_looping-10` · P2 · proposal. Spin path: Add a faint orbit guide behind it.
+- [x] `animation_looping-10` · P2 · proposal. Spin path: Add a faint orbit guide behind it.
   Evidence: The orange marker's circular path is invisible.
 
-- [ ] `animation_looping-11` · P2 · proposal. Spin center: Add a small center crosshair.
+- [x] `animation_looping-11` · P2 · proposal. Spin center: Add a small center crosshair.
   Evidence: The brown base does not mark the orbit center.
 
-- [ ] `animation_looping-12` · P2 · proposal. Period labels: Print the period below each name.
+- [x] `animation_looping-12` · P2 · proposal. Period labels: Print the period below each name.
   Evidence: None of the four examples shows its cycle duration.
 
-- [ ] `animation_looping-13` · P2 · proposal. Phase labels: Add a phase readout beneath each sample.
+- [x] `animation_looping-13` · P2 · proposal. Phase labels: Add a phase readout beneath each sample.
   Evidence: The captured examples provide no numeric phase.
 
-- [ ] `animation_looping-14` · P2 · proposal. Amplitude labels: Display translation range or opacity range per example.
+- [x] `animation_looping-14` · P2 · proposal. Amplitude labels: Display translation range or opacity range per example.
   Evidence: The motion extent is not specified.
 
-- [ ] `animation_looping-15` · P2 · proposal. Pause control: Add a Pause all action above the specimen group.
+- [x] `animation_looping-15` · P2 · proposal. Pause control: Add a Pause all action above the specimen group.
   Evidence: Continuous motion has no visible pause control.
 
-- [ ] `animation_looping-16` · P2 · proposal. Replay control: Add Restart cycles beside Pause.
+- [x] `animation_looping-16` · P2 · proposal. Replay control: Add Restart cycles beside Pause.
   Evidence: There is no visible common phase reset.
 
-- [ ] `animation_looping-17` · P2 · proposal. Specimen balance: Increase marker visibility without changing its orbit.
+- [x] `animation_looping-17` · P2 · proposal. Specimen balance: Increase marker visibility without changing its orbit.
   Evidence: Spin's small marker is much less prominent than the three solid blocks.
 
-- [ ] `animation_looping-18` · P2 · proposal. Color explanation: Use captions that pair each color with its animated property.
+- [x] `animation_looping-18` · P2 · proposal. Color explanation: Use captions that pair each color with its animated property.
   Evidence: Four colors do not map to a stated property legend.
 
-- [ ] `animation_looping-19` · P2 · proposal. Footer note: Place a readable formula note under the motion diagnostics.
+- [x] `animation_looping-19` · P2 · proposal. Footer note: Place a readable formula note under the motion diagnostics.
   Evidence: The sin/cos statement is far from the samples and small.
 
-- [ ] `animation_looping-20` · P2 · proposal. Static capture aid: Offer a labeled trail overlay for screenshot comparison.
+- [x] `animation_looping-20` · P2 · proposal. Static capture aid: Offer a labeled trail overlay for screenshot comparison.
   Evidence: A single frame cannot show travel history.
 
 ### animation_spring
