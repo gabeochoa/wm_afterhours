@@ -153,13 +153,13 @@ struct IslandsTrainsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       value = std::min(10, value + 1);
     for (int i = 0; i < 10; ++i) {
       const auto color = i < value ? filled : empty;
-      if (button(context, mk(parent, id + 10 + i),
+      div(context, mk(parent, id + 10 + i),
           box(scale, 646 + static_cast<float>(i) * 13, y, 12, 40)
               .with_on_draw_fg([=](RectangleType r) {
                 afterhours::draw_rectangle({r.x + 2 * scale, r.y + 10 * scale,
                                             8 * scale, 20 * scale}, color);
-              }).with_debug_name(debug_base + "_segment_" + std::to_string(i + 1))))
-        value = i + 1;
+              }).with_ignore_pointer_events()
+              .with_debug_name(debug_base + "_segment_" + std::to_string(i + 1)));
     }
     div(context, mk(parent, id + 3), box(scale, 788, y + 4, 72, 32)
         .with_label(percentage ? fmt::format("{}%", value * 10) : fmt::format("{}/10", value))

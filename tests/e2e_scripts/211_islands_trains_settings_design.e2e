@@ -50,19 +50,34 @@ click_ui it_resolution_next
 click_ui it_resolution_next
 wait 0.2
 expect_text "3840 x 2160"
-click_ui it_pan_segment_10
+click 770 286
+wait 0.2
+assert_ui it_pan_value text=5/10
 click_ui it_pan_next
+click_ui it_pan_next
+click_ui it_pan_next
+click_ui it_pan_next
+click_ui it_pan_next
+click_ui it_pan_next
+
 wait 0.2
 assert_ui it_pan_value text=10/10
 click_ui it_pan_prev
 wait 0.2
 assert_ui it_pan_value text=9/10
-click_ui it_rotate_segment_1
 click_ui it_rotate_prev
 click_ui it_rotate_prev
+click_ui it_rotate_prev
+click_ui it_rotate_prev
+click_ui it_rotate_prev
+click_ui it_rotate_prev
+
 wait 0.2
 assert_ui it_rotate_value text=0/10
-click_ui it_effects_segment_8
+click_ui it_effects_next
+click_ui it_effects_next
+click_ui it_effects_next
+
 click_ui it_music_prev
 wait 0.2
 assert_ui it_effects_value text=80%

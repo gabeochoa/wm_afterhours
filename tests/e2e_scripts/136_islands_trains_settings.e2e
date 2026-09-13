@@ -31,7 +31,10 @@ click_ui it_resolution_next
 wait 0.2
 expect_text "3840 x 2160"
 
-click_ui it_pan_segment_8
+click_ui it_pan_next
+click_ui it_pan_next
+click_ui it_pan_next
+
 click_ui it_music_prev
 wait 0.2
 
