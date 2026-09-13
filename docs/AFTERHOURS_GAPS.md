@@ -314,6 +314,15 @@ but quantizes dash, gap and phase to whole screen pixels and labels their
 actual values; 18,796 resolution/phase combinations of scaled rectangle edges
 completed in an isolated float32 reproduction.
 
+### Dropdowns have no visible-row limit or scrolling configuration
+
+The native dropdown builds one row for every option and positions the entire
+tray below, above or clamped to the viewport. Its public configuration exposes
+neither a maximum visible-row count nor scrolling. The wm month fixture
+preserves all 12 options and accurately labels the resulting tray. Long option
+lists need a viewport and scroll behavior rather than relying on whole-tray
+clamping.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-837 completed; 1,698 remaining.
+862 completed; 1,673 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2699,79 +2699,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/dropdowns_720p.png) · [Visual review](design-audit.html#screen=dropdowns)
 
-- [ ] `dropdowns-01` · P2 · proposal. Title inset: Add internal title padding.
+- [x] `dropdowns-01` · P2 · proposal. Title inset: Add internal title padding.
   Evidence: Dropdown Showcase begins at the header's left edge.
 
-- [ ] `dropdowns-02` · P2 · proposal. Section header treatment: Use neutral headings so controls are identifiable.
+- [x] `dropdowns-02` · P2 · proposal. Section header treatment: Use neutral headings so controls are identifiable.
   Evidence: Card headings use the same teal fill as dropdown controls.
 
-- [ ] `dropdowns-03` · P2 · proposal. Basic label: Add a persistent external label.
+- [x] `dropdowns-03` · P2 · proposal. Basic label: Add a persistent external label.
   Evidence: Alpha names the value without the selected category.
 
-- [ ] `dropdowns-04` · P2 · proposal. Basic chevron: Use a consistent chevron glyph.
+- [x] `dropdowns-04` · P2 · proposal. Basic chevron: Use a consistent chevron glyph.
   Evidence: The closed indicator is a literal v.
 
-- [ ] `dropdowns-05` · P2 · proposal. With Label row: Separate label and control visually.
+- [x] `dropdowns-05` · P2 · proposal. With Label row: Separate label and control visually.
   Evidence: Pet and Cat share one teal pill with weak separation.
 
-- [ ] `dropdowns-06` · P2 · proposal. Pet alignment: Left-align the label near its control.
+- [x] `dropdowns-06` · P2 · proposal. Pet alignment: Left-align the label near its control.
   Evidence: Pet is centered in a wide label region.
 
-- [ ] `dropdowns-07` · P2 · proposal. Many options: Use Month, 12 options.
+- [x] `dropdowns-07` · P2 · proposal. Many options: Use Month, 12 options.
   Evidence: Many Options 12 does not name the month category.
 
-- [ ] `dropdowns-08` · P2 · proposal. Month control width: Use a shared field width across comparable examples.
+- [x] `dropdowns-08` · P2 · proposal. Month control width: Use a shared field width across comparable examples.
   Evidence: January occupies a narrower field than its card header.
 
-- [ ] `dropdowns-09` · P2 · proposal. Scrolling explanation: State the menu's visible-row count.
+- [x] `dropdowns-09` · P2 · proposal. Scrolling explanation: State the menu's visible-row count.
   Evidence: Twelve options, so the list scrolls does not give the visible-row limit.
+  Disposition: Native dropdowns render all options and have no scrolling or visible-row limit. Preserved all 12 months, labeled the behavior, and recorded the missing configuration upstream.
 
-- [ ] `dropdowns-10` · P2 · proposal. Custom marker: Show a small open/closed marker legend.
+- [x] `dropdowns-10` · P2 · proposal. Custom marker: Show a small open/closed marker legend.
   Evidence: Option A[-] uses punctuation whose meaning is unexplained.
 
-- [ ] `dropdowns-11` · P2 · proposal. Custom variant label: Use a meaningful category label.
+- [x] `dropdowns-11` · P2 · proposal. Custom variant label: Use a meaningful category label.
   Evidence: Option A is generic beside the concrete Pet and Month examples.
 
-- [ ] `dropdowns-12` · P2 · proposal. Disabled specimen: Add a readable external state caption.
+- [x] `dropdowns-12` · P2 · proposal. Disabled specimen: Add a readable external state caption.
   Evidence: Frozen is deliberately dim but only its heading explains availability.
 
-- [ ] `dropdowns-13` · P2 · proposal. Disabled explanation: Use Disabled example with concise supporting detail.
+- [x] `dropdowns-13` · P2 · proposal. Disabled explanation: Use Disabled example with concise supporting detail.
   Evidence: Not focusable and does not open describes internal behavior.
 
-- [ ] `dropdowns-14` · P2 · proposal. Custom style caption: List the configured style values.
+- [x] `dropdowns-14` · P2 · proposal. Custom style caption: List the configured style values.
   Evidence: Custom border, fill and corner radius omits values.
 
-- [ ] `dropdowns-15` · P2 · proposal. Ruby naming: Add Gemstone as its external label.
+- [x] `dropdowns-15` · P2 · proposal. Ruby naming: Add Gemstone as its external label.
   Evidence: Ruby implies a gemstone or color but has no category label.
 
-- [ ] `dropdowns-16` · P2 · proposal. Custom comparison: Add a matched default specimen for comparison.
+- [x] `dropdowns-16` · P2 · proposal. Custom comparison: Add a matched default specimen for comparison.
   Evidence: Ruby has no adjacent default-styled control.
 
-- [ ] `dropdowns-17` · P2 · proposal. Description type: Increase body text size.
+- [x] `dropdowns-17` · P2 · proposal. Description type: Increase body text size.
   Evidence: All six descriptions are very small.
 
-- [ ] `dropdowns-18` · P2 · proposal. Description placement: Tighten the control-to-description gap.
+- [x] `dropdowns-18` · P2 · proposal. Description placement: Tighten the control-to-description gap.
   Evidence: Descriptions sit far below controls in tall cards.
 
-- [ ] `dropdowns-19` · P2 · proposal. Card height: Reduce height or add useful parameter captions.
+- [x] `dropdowns-19` · P2 · proposal. Card height: Reduce height or add useful parameter captions.
   Evidence: Each card contains substantial unused lower space.
 
-- [ ] `dropdowns-20` · P2 · proposal. Card outlines: Quiet the card outline and preserve specimen emphasis.
+- [x] `dropdowns-20` · P2 · proposal. Card outlines: Quiet the card outline and preserve specimen emphasis.
   Evidence: Bright thin outlines compete with subtle custom control borders.
 
-- [ ] `dropdowns-21` · P2 · proposal. Footer padding: Inset it consistently.
+- [x] `dropdowns-21` · P2 · proposal. Footer padding: Inset it consistently.
   Evidence: The selection summary begins at its bar's edge.
 
-- [ ] `dropdowns-22` · P2 · proposal. Footer coverage: Include all active example values or label the summary scope.
+- [x] `dropdowns-22` · P2 · proposal. Footer coverage: Include all active example values or label the summary scope.
   Evidence: The summary mentions Alpha, Cat and January but omits other selectable specimens.
 
-- [ ] `dropdowns-23` · P2 · proposal. Footer phrasing: Use Basic: Alpha, Pet: Cat, Month: January as separate fields.
+- [x] `dropdowns-23` · P2 · proposal. Footer phrasing: Use Basic: Alpha, Pet: Cat, Month: January as separate fields.
   Evidence: A long sentence is harder to scan than labeled values.
 
-- [ ] `dropdowns-24` · P2 · proposal. Open-state evidence: Add a separate baseline with one representative menu open.
+- [x] `dropdowns-24` · P2 · proposal. Open-state evidence: Add a separate baseline with one representative menu open.
   Evidence: The gallery shows no expanded menu.
 
-- [ ] `dropdowns-25` · P2 · proposal. Menu placement context: Add a small placement diagram outside the specimens.
+- [x] `dropdowns-25` · P2 · proposal. Menu placement context: Add a small placement diagram outside the specimens.
   Evidence: Closed controls do not reveal the intended popup direction or bounds.
 
 ### empire_tycoon
@@ -8114,6 +8115,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Add configurable visible-row limits and scrolling to native dropdown trays when reviewed upstream; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Fix fractional-boundary nonprogress in native polyline::draw_dashed; wm quantizes marquee parameters to avoid the hang. See docs/AFTERHOURS_GAPS.md.
 

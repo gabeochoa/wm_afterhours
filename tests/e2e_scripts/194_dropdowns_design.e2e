@@ -1,0 +1,87 @@
+goto_screen dropdowns
+resize 1280 720
+wait 0.4
+expect_text "Dropdown Showcase"
+expect_text "Greek letter"
+expect_text "Month / 12 options"
+expect_text "12 rows at once / no scrolling"
+expect_text "[+] closed / [-] open"
+expect_text "Frozen / unavailable"
+expect_text "#DAB475 fill / #F0DFC0 border"
+expect_text "Basic: Alpha"
+expect_text "Pet: Cat"
+expect_text "Month: January"
+expect_text "Preset: Option A"
+expect_text "Disabled: Frozen"
+expect_text "Gemstone: Ruby"
+assert_ui dropdown_bg x=0 y=0 w=1280 h=720
+assert_ui col_basic x=68 y=140 w=368 h=188
+assert_ui basic_dropdown x=84 y=198 w=336 h=44
+assert_ui many_dropdown x=860 y=198 w=336 h=44
+assert_within_parents
+screenshot dropdowns_design
+focus_element basic_dropdown_trigger
+key ENTER
+wait 0.2
+expect_text "Gamma"
+key DOWN
+wait 0.2
+key ENTER
+wait 0.2
+expect_text "Basic: Beta"
+click_ui labeled_dropdown_trigger
+wait 0.2
+click_ui dropdown_opt_2
+wait 0.2
+expect_text "Pet: Bird"
+click_ui many_dropdown_trigger
+wait 0.3
+expect_text "December"
+assert_ui dropdown_options_tray h=528
+assert_within_parents
+screenshot dropdowns_month_open
+click_ui dropdown_opt_11
+wait 0.2
+expect_text "Month: December"
+click_ui indicator_dropdown_trigger
+wait 0.2
+expect_text "Option A [-]"
+click_ui dropdown_opt_2
+wait 0.2
+expect_text "Preset: Option C"
+expect_text "Option C [+]"
+click_ui disabled_dropdown_trigger
+wait 0.2
+expect_text "Disabled: Frozen"
+expect_no_text "Locked"
+click_ui default_gem_dropdown_trigger
+wait 0.2
+click_ui dropdown_opt_1
+wait 0.2
+expect_text "Gemstone: Emerald"
+click_ui styled_dropdown_trigger
+wait 0.2
+click_ui dropdown_opt_2
+wait 0.2
+expect_text "Gemstone: Sapphire"
+resize 1920 1080
+wait 0.3
+assert_ui dropdown_bg x=0 y=0 w=1920 h=1080
+assert_ui col_basic x=102 y=210 w=552 h=282
+assert_within_parents
+screenshot dropdowns_design_1080
+resize 1024 768
+wait 0.3
+assert_ui dropdown_bg x=0 y=0 w=1024 h=768
+assert_ui col_basic x=54 y=208 w=294 h=150
+assert_within_parents
+click_ui many_dropdown_trigger
+wait 0.3
+expect_text "December"
+assert_ui dropdown_options_tray h=424
+assert_within_parents
+screenshot dropdowns_design_narrow_open
+key ESC
+wait 0.2
+expect_text "Month: December"
+resize 1280 720

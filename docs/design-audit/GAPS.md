@@ -1420,7 +1420,7 @@ The three-column board is a drag-and-drop demonstration. Proposals improve card 
 
 ## dropdowns
 
-[Current baseline](../../screenshot-baselines/screens/dropdowns_720p.png) · [Visual review](../../design-audit.html#screen=dropdowns)
+[Reviewed image](../../docs/design-audit/originals/dropdowns_720p.png) · [Current baseline](../../screenshot-baselines/screens/dropdowns_720p.png) · [Visual review](../../design-audit.html#screen=dropdowns)
 
 Baseline SHA-256: `b54aa692fcd71d11e5f288d32dddeb502353d5bad29835ca1962c6e23f982c73`
 
