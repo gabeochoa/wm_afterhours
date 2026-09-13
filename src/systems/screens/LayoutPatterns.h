@@ -53,7 +53,7 @@ struct LayoutPatterns : ScreenSystem<UIContext<InputAction>> {
               .with_auto_text_color(true)
               .with_font("AtkinsonMock", pixels(24.0f))
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f)
               .with_debug_name(fmt::format("pattern_box_{}", i)));
     }
 
