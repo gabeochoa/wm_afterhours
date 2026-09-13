@@ -41,12 +41,12 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color day_edge{211, 220, 228, 255};
   const afterhours::Color day_center{240, 245, 237, 255};
   const afterhours::Color day_road{250, 252, 251, 255};
-  const afterhours::Color day_grid{203, 219, 231, 59};
+  const afterhours::Color day_grid{203, 219, 231, 24};
   const afterhours::Color day_ink{46, 53, 57, 255};
   const afterhours::Color night_edge{29, 42, 47, 255};
   const afterhours::Color night_center{51, 67, 70, 255};
   const afterhours::Color night_road{74, 91, 94, 255};
-  const afterhours::Color night_grid{109, 135, 140, 48};
+  const afterhours::Color night_grid{109, 135, 140, 20};
   const afterhours::Color night_ink{237, 243, 241, 255};
   const afterhours::Color yellow{255, 208, 102, 255};
   const afterhours::Color teal{142, 187, 188, 255};
@@ -57,7 +57,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     return ComponentConfig{}
         .with_size({pixels(width * scale), pixels(height * scale)})
         .with_absolute_position(pixels(x * scale), pixels(y * scale))
-        .with_background(Theme::Usage::None);
+        .with_background(Theme::Usage::None).with_corner_radius(0);
   }
 
   static afterhours::Color mix(afterhours::Color a, afterhours::Color b,
@@ -75,7 +75,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   void draw_backdrop(RectangleType r, float scale) const {
     const auto edge = night_mode ? night_edge : day_edge;
     const auto center = night_mode ? night_center : day_center;
-    const auto road = night_mode ? night_road : day_road;
+    const auto road = mix(center, night_mode ? night_road : day_road, .42f);
     const auto grid = night_mode ? night_grid : day_grid;
     afterhours::draw_rectangle(r, edge);
 
@@ -167,21 +167,17 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   static void draw_cycle_arrow(RectangleType r, bool points_right,
                                afterhours::Color color) {
-    if (points_right) {
-      afterhours::draw_triangle(
-          {r.x + r.width, r.y + r.height * .5f}, {r.x, r.y},
-          {r.x, r.y + r.height}, color);
-    } else {
-      afterhours::draw_triangle(
-          {r.x, r.y + r.height * .5f}, {r.x + r.width, r.y + r.height},
-          {r.x + r.width, r.y}, color);
-    }
+    const float mid = r.y + r.height * .5f;
+    const float tip = r.x + r.width * (points_right ? .67f : .33f);
+    const float edge = r.x + r.width * (points_right ? .33f : .67f);
+    afterhours::draw_line_ex({edge, r.y + r.height * .25f}, {tip, mid}, r.width * .065f, color);
+    afterhours::draw_line_ex({tip, mid}, {edge, r.y + r.height * .75f}, r.width * .065f, color);
   }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     const float scale =
-        context.screen_height > 0.f ? context.screen_height / 720.f : 1.f;
+        std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     const auto ink = night_mode ? night_ink : day_ink;
     const auto canvas = night_mode ? night_center : day_center;
 
@@ -199,7 +195,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.f;
     theme.segments = 24;
     context.set_theme(theme);
-    context.scaling_mode = ScalingMode::Adaptive;
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_grid_snapping(false);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(30.f));
 
     if (context.pressed(InputAction::MenuBack)) {
@@ -209,9 +206,15 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         settings_open = false;
     }
 
+    div(context, mk(entity, 1), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background(night_mode ? night_edge : day_edge)
+        .with_corner_radius(0).with_debug_name("mm_canvas"));
     auto root =
         div(context, mk(entity, 0),
             box(scale, 0.f, 0.f, 1280.f, 720.f)
+                .with_absolute_position((context.screen_width - 1280 * scale) / 2,
+                                        (context.screen_height - 720 * scale) / 2)
                 .with_on_draw_bg([this, scale](RectangleType r) {
                   draw_backdrop(r, scale);
                 })
@@ -235,47 +238,35 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       return;
     }
 
-    if (button(context, mk(root.ent(), 2),
-               box(scale, 26.f, 28.f, 80.f, 70.f)
-                   .with_click_activation(ClickActivationMode::Release)
-                   .with_on_draw_fg([ink](RectangleType r) {
-                     draw_back_arrow(r, ink);
-                   })
-                   .with_debug_name("mm_back"))) {
+    auto back = button(context, mk(root.ent(), 2), box(scale, 48, 40, 152, 48)
+        .with_label("Back").with_font("AtkinsonMock", pixels(26 * scale))
+        .with_custom_text_color(ink).with_custom_background(night_mode ? night_road : day_road)
+        .with_text_inset(40 * scale, 0).with_alignment(TextAlignment::Left)
+        .with_on_draw_fg([ink](RectangleType r) {
+          const float unit = r.height / 48;
+          draw_cycle_arrow({r.x + 5 * unit, r.y + 8 * unit, 30 * unit, 32 * unit}, false, ink);
+        }).with_debug_name("mm_back"));
+    back.ent().get<HasLabel>().text_x_offset = 40 * scale;
+    if (back) {
       settings_open = false;
       tutorial_open = false;
     }
-
-    const std::array<float, 7> nav_widths{128.f, 128.f, 128.f, 199.f,
-                                          172.f, 224.f, 152.f};
-    float nav_y = 133.f;
     for (size_t i = 0; i < categories.size(); ++i) {
       const bool active = active_tab == i;
-      const float width = nav_widths[i] + (active ? 25.f : 0.f);
-      const float height = active ? 62.f : 51.f;
-      const auto fill = active ? yellow : pale_teal;
-      auto cfg =
-          box(scale, 400.f - width, nav_y, width, height)
-              .with_label(categories[i])
-              .with_font("AtkinsonMock",
-                         pixels((active ? 58.f : 51.f) * scale))
-              .with_custom_background(fill)
-              .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-              .with_alignment(TextAlignment::Center)
-              .with_rounded_corners(RoundedCorners().all_sharp())
-              .with_corner_radius(0.f)
-              .with_text_inset(0.f, 0.f)
-              .with_text_stroke(afterhours::Color{255, 255, 255, 255},
-                                .65f * scale)
-              .with_letter_spacing(-1.f * scale)
+      auto tab = button(context, mk(root.ent(), 20 + static_cast<int>(i)),
+          box(scale, 120, 132 + static_cast<float>(i) * 66, 268, 54)
+              .with_label(categories[i]).with_font("AtkinsonMock", pixels(35 * scale))
+              .with_custom_background(active ? yellow : afterhours::Color{175, 206, 207, 255})
+              .with_custom_text_color(day_ink).with_alignment(TextAlignment::Left)
+              .with_text_inset(20 * scale, 0).with_letter_spacing(0)
               .with_click_activation(ClickActivationMode::Release)
-              .with_debug_name("mm_tab_" + std::to_string(i));
-      if (button(context, mk(root.ent(), 20 + static_cast<int>(i)), cfg)) {
+              .with_debug_name("mm_tab_" + std::to_string(i)));
+      tab.ent().get<HasLabel>().text_x_offset = 20 * scale;
+      if (tab) {
         active_tab = i;
         tutorial_open = false;
         feedback.clear();
       }
-      nav_y += height + 13.f;
     }
 
     auto text = [&](int id, const std::string &label, float x, float y,
@@ -289,43 +280,45 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_custom_text_color(ink)
                      .with_alignment(alignment)
                      .with_text_inset(0.f, 0.f)
-                     .with_letter_spacing(-.7f * scale));
+                     .with_letter_spacing(0).with_ignore_pointer_events());
     };
 
+    text(40, categories[active_tab] + " settings", 472, 62, 728, 44, 34);
+    text(41, "Local preferences preview", 472, 108, 728, 26, 18);
     auto toggle = [&](int id, const char *label, bool &value, float row_y,
                       const std::string &debug_name) {
-      text(id, label, 507.f, row_y, 336.f, 81.f, 43.f,
-           TextAlignment::Right);
-      if (button(
-              context, mk(root.ent(), id + 1),
-              box(scale, 877.f, row_y + 8.f, 65.f, 65.f)
-                  .with_click_activation(ClickActivationMode::Release)
-                  .with_on_draw_fg([value, ink, canvas](RectangleType r) {
-                    draw_toggle(r, value, ink, canvas);
-                  })
-                  .with_debug_name(debug_name))) {
+      text(id, label, 472, row_y, 550, 40, 30);
+      if (button(context, mk(root.ent(), id + 1), box(scale, 1144, row_y + 3, 44, 44)
+          .with_click_activation(ClickActivationMode::Release)
+          .with_on_draw_fg([value, ink, canvas](RectangleType r) {
+            draw_toggle(r, value, ink, canvas);
+          }).with_debug_name(debug_name))) {
         value = !value;
         feedback = std::string(label) + (value ? " on" : " off");
       }
+      div(context, mk(root.ent(), id + 2), box(scale, 1052, row_y + 3, 80, 44)
+          .with_label(value ? "On" : "Off").with_font("AtkinsonMock", pixels(25 * scale))
+          .with_custom_text_color(ink).with_alignment(TextAlignment::Right)
+          .with_ignore_pointer_events().with_debug_name(debug_name + "_state"));
     };
 
     auto cycle = [&](int id, const std::string &label, std::string value,
                      float row_y, const std::string &debug_prefix,
                      auto previous, auto next,
                      const std::string &value_font = "AtkinsonMock") {
-      text(id, label, 507.f, row_y, 326.f, 70.f, 30.f, TextAlignment::Left);
+      text(id, label, 472, row_y, 400, 42, 30, TextAlignment::Left);
       if (button(context, mk(root.ent(), id + 1),
-                 box(scale, 843.f, row_y + 7.f, 39.f, 45.f)
+                 box(scale, 896, row_y + 1, 44, 44)
                      .with_click_activation(ClickActivationMode::Release)
                      .with_on_draw_fg([ink](RectangleType r) {
                        draw_cycle_arrow(r, false, ink);
                      })
                      .with_debug_name(debug_prefix + "_left")))
         previous();
-      text(id + 2, value, 912.f, row_y - 2.f, 160.f, 64.f, 37.f,
+      text(id + 2, value, 940, row_y + 1, 204, 44, 27,
            TextAlignment::Center, value_font);
       if (button(context, mk(root.ent(), id + 3),
-                 box(scale, 1101.f, row_y + 7.f, 39.f, 45.f)
+                 box(scale, 1144, row_y + 1, 44, 44)
                      .with_click_activation(ClickActivationMode::Release)
                      .with_on_draw_fg([ink](RectangleType r) {
                        draw_cycle_arrow(r, true, ink);
@@ -335,12 +328,12 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     };
 
     if (active_tab == 0) {
-      toggle(100, "Night Mode", night_mode, 143.f, "mm_night");
-      toggle(110, "Vibration", vibration, 224.f, "mm_vibration");
-      toggle(120, "Hold to Draw/Delete", hold_to_draw, 305.f, "mm_hold");
+      toggle(100, "Night Mode", night_mode, 156.f, "mm_night");
+      toggle(110, "Vibration", vibration, 248.f, "mm_vibration");
+      toggle(120, "Hold to draw or delete", hold_to_draw, 340.f, "mm_hold");
       cycle(
-          130, "Controller Cursor Sensitivity",
-          sensitivity[static_cast<size_t>(sensitivity_level)], 410.f,
+          130, "Cursor sensitivity",
+          sensitivity[static_cast<size_t>(sensitivity_level)], 432.f,
           "mm_sensitivity",
           [&] {
             sensitivity_level =
@@ -357,13 +350,29 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                        sensitivity[static_cast<size_t>(sensitivity_level)];
           });
       div(context, mk(root.ent(), 140),
-          box(scale, 507.f, 498.f, 456.f, 3.f)
+          box(scale, 472, 521, 716, 2)
               .with_custom_background(night_mode
                                           ? afterhours::Color{105, 128, 132, 255}
                                           : afterhours::Color{183, 195, 199, 255})
               .with_debug_name("mm_separator"));
-      toggle(141, "Colorblind Mode", colorblind_mode, 515.f,
+      toggle(141, "Colorblind Mode", colorblind_mode, 542.f,
              "mm_colorblind");
+      text(150, "Preview the darker settings palette.", 472, 198, 550, 27, 19);
+      text(151, "Controller feedback preference.", 472, 290, 550, 27, 19);
+      text(152, "Keep pressed to draw or remove roads.", 472, 382, 550, 27, 19);
+      text(153, "Controller pointer speed: Low / Default / High.", 472, 478, 716, 27, 19);
+      text(154, "Compare the alternative colors in this preview.", 472, 584, 550, 27, 19);
+      div(context, mk(root.ent(), 155), box(scale, 1060, 596, 128, 22)
+          .with_ignore_pointer_events().with_debug_name("mm_palette_preview")
+          .with_on_draw_fg([this](RectangleType r) {
+            const std::array<afterhours::Color, 3> palette = colorblind_mode
+                ? std::array<afterhours::Color, 3>{{{32, 101, 155, 255}, {210, 138, 30, 255}, {117, 71, 128, 255}}}
+                : std::array<afterhours::Color, 3>{{{181, 66, 70, 255}, {56, 120, 106, 255}, {66, 106, 164, 255}}};
+            for (int i = 0; i < 3; ++i) {
+              const float x = r.x + static_cast<float>(i) * r.width / 3;
+              afterhours::draw_circle(static_cast<int>(x + r.height / 2), static_cast<int>(r.y + r.height / 2), r.height / 2, palette[static_cast<size_t>(i)]);
+            }
+          }));
     } else if (active_tab == 1) {
       toggle(200, "Fullscreen", fullscreen, 151.f, "mm_fullscreen");
       cycle(
@@ -428,15 +437,15 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           },
           font);
     } else if (active_tab == 4) {
-      toggle(500, "Hold to Draw/Delete", hold_to_draw, 151.f,
+      toggle(500, "Hold to draw or delete", hold_to_draw, 151.f,
              "mm_controls_hold");
       toggle(510, "Vibration", vibration, 247.f, "mm_controls_vibration");
     } else if (active_tab == 5) {
       text(600, "Cross-Save", 507.f, 151.f, 540.f, 65.f, 38.f);
       div(context, mk(root.ent(), 601),
           box(scale, 507.f, 219.f, 570.f, 105.f)
-              .with_label("Take your cities with you. Connect an account to "
-                          "keep your progress in sync.")
+              .with_label("Local account connection demo. No account is contacted "
+                          "and no progress is uploaded.")
               .with_font("AtkinsonMock", pixels(25.f * scale))
               .with_custom_text_color(ink)
               .with_text_overflow(TextOverflow::Wrap)
@@ -444,9 +453,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_letter_spacing(-.4f * scale));
       if (button(
               context, mk(root.ent(), 602),
-              box(scale, 507.f, 348.f, 290.f, 58.f)
-                  .with_label(account_connected ? "Disconnect account"
-                                                : "Connect account")
+              box(scale, 507.f, 348.f, 390.f, 58.f)
+                  .with_label(account_connected ? "Disconnect demo account"
+                                                : "Connect demo account")
                   .with_font("AtkinsonMock", pixels(27.f * scale))
                   .with_custom_background(teal)
                   .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
@@ -455,7 +464,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                   .with_debug_name("mm_connect"))) {
         account_connected = !account_connected;
         feedback =
-            account_connected ? "Account connected" : "Account disconnected";
+            account_connected ? "Demo account connected" : "Demo account disconnected";
       }
     } else {
       text(700, "Mini Motorways", 507.f, 151.f, 540.f, 65.f, 38.f);
@@ -464,53 +473,24 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(702, "Wellington, New Zealand", 507.f, 260.f, 570.f, 45.f, 27.f);
     }
 
-    text(800, "Mini Motorways release-10-patch-2 (202207010917)", 20.f, 661.f,
-         620.f, 45.f, 26.4f);
-
-    if (button(
-            context, mk(root.ent(), 801),
-            box(scale, 1023.f, 636.f, 222.f, 52.f)
-                .with_custom_background(teal)
-                .with_rounded_corners(RoundedCorners().all_sharp())
-                .with_corner_radius(0.f)
-                .with_on_draw_fg([scale](RectangleType r) {
-                  const afterhours::Color white{255, 255, 255, 255};
-                  const float stroke = 7.f * scale;
-                  const float cy = r.y + r.height * .5f;
-                  afterhours::draw_line_ex(
-                      {r.x + 172.f * scale, cy},
-                      {r.x + 207.f * scale, cy}, stroke, white);
-                  afterhours::draw_line_ex(
-                      {r.x + 195.f * scale, cy - 11.f * scale},
-                      {r.x + 207.f * scale, cy}, stroke, white);
-                  afterhours::draw_line_ex(
-                      {r.x + 207.f * scale, cy},
-                      {r.x + 195.f * scale, cy + 11.f * scale}, stroke, white);
-                })
-                .with_debug_name("mm_tutorial"))) {
+    text(800, "Mini Motorways / 10.2", 48, 658, 350, 36, 18);
+    auto tutorial = button(context, mk(root.ent(), 801), box(scale, 976, 654, 224, 48)
+        .with_label("Tutorial guide").with_font("AtkinsonMock", pixels(24 * scale))
+        .with_custom_background({59, 115, 118, 255}).with_custom_text_color({255, 255, 255, 255})
+        .with_alignment(TextAlignment::Left).with_text_inset(18 * scale, 0)
+        .with_on_draw_fg([scale](RectangleType r) {
+          draw_cycle_arrow({r.x + 185 * scale, r.y + 10 * scale, 24 * scale, 28 * scale}, true, {255, 255, 255, 255});
+        }).with_debug_name("mm_tutorial"));
+    tutorial.ent().get<HasLabel>().text_x_offset = 18 * scale;
+    if (tutorial) {
       tutorial_open = true;
       feedback.clear();
     }
-    div(context, mk(root.ent(), 803),
-        box(scale, 1033.f, 636.f, 150.f, 52.f)
-            .with_label("Tutorial")
-            .with_font("AtkinsonMock", pixels(52.5f * scale))
-            .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
-            .with_alignment(TextAlignment::Left)
-            .with_text_inset(0.f, 0.f)
-            .with_text_stroke(afterhours::Color{255, 255, 255, 255},
-                              .65f * scale)
-            .with_ignore_pointer_events());
-
     if (!feedback.empty() && !tutorial_open)
-      div(context, mk(root.ent(), 802),
-          box(scale, 610.f, 669.f, 370.f, 30.f)
-              .with_label(feedback)
-              .with_font("AtkinsonMock", pixels(17.f * scale))
-              .with_custom_text_color(ink)
-              .with_alignment(TextAlignment::Center)
-              .with_text_inset(0.f, 0.f)
-              .with_debug_name("mm_feedback"));
+      div(context, mk(root.ent(), 802), box(scale, 440, 658, 510, 36)
+          .with_label(feedback).with_font("AtkinsonMock", pixels(18 * scale))
+          .with_custom_text_color(ink).with_alignment(TextAlignment::Center)
+          .with_text_inset(0, 0).with_debug_name("mm_feedback"));
 
     if (tutorial_open) {
       div(context, mk(root.ent(), 900),
@@ -544,7 +524,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_render_layer(42));
       if (button(context, mk(root.ent(), 904),
                  box(scale, 635.f, 442.f, 190.f, 58.f)
-                     .with_label("Start Tutorial")
+                     .with_label("Got it")
                      .with_font("AtkinsonMock", pixels(27.f * scale))
                      .with_custom_background(teal)
                      .with_custom_text_color(
@@ -554,7 +534,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                      .with_render_layer(43)
                      .with_debug_name("mm_tutorial_start"))) {
         tutorial_open = false;
-        feedback = "Tutorial started";
+        feedback = "Tutorial guide closed";
       }
     }
   }

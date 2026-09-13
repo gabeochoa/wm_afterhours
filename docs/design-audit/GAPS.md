@@ -2439,7 +2439,7 @@ The retro desktop styling is deliberate and should remain. Proposals improve gam
 
 ## mini motorways settings
 
-[Current baseline](../../screenshot-baselines/screens/mini_motorways_settings_720p.png) · [Visual review](../../design-audit.html#screen=mini_motorways_settings)
+[Reviewed image](../../docs/design-audit/originals/mini_motorways_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/mini_motorways_settings_720p.png) · [Visual review](../../design-audit.html#screen=mini_motorways_settings)
 
 Baseline SHA-256: `0e4c9f905c109fc046178e22c99369d03be82a60261aacc372f344a0b30ae870`
 

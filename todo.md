@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,455 completed; 1,080 remaining.
+1,480 completed; 1,055 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4788,79 +4788,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/mini_motorways_settings_720p.png) · [Visual review](design-audit.html#screen=mini_motorways_settings)
 
-- [ ] `mini_motorways_settings-01` · P2 · proposal. Inactive navigation: Darken the text or backing to improve contrast.
+- [x] `mini_motorways_settings-01` · P2 · proposal. Inactive navigation: Darken the text or backing to improve contrast.
   Evidence: Video, Audio, and other white labels sit on pale cyan blocks.
 
-- [ ] `mini_motorways_settings-02` · P2 · proposal. Selected Game tab: Use dark selected-tab text while retaining the yellow accent.
+- [x] `mini_motorways_settings-02` · P2 · proposal. Selected Game tab: Use dark selected-tab text while retaining the yellow accent.
   Evidence: White Game text sits on a light yellow block.
 
-- [ ] `mini_motorways_settings-03` · P2 · proposal. Navigation widths: Give the tabs a consistent alignment edge and controlled padding.
+- [x] `mini_motorways_settings-03` · P2 · proposal. Navigation widths: Give the tabs a consistent alignment edge and controlled padding.
   Evidence: Each tab block follows its text width and begins at a different x position.
 
-- [ ] `mini_motorways_settings-04` · P2 · proposal. Language tab: Use a shared navigation width so long labels do not alter the column silhouette.
+- [x] `mini_motorways_settings-04` · P2 · proposal. Language tab: Use a shared navigation width so long labels do not alter the column silhouette.
   Evidence: Language extends far left relative to Video and Audio.
 
-- [ ] `mini_motorways_settings-05` · P2 · proposal. Cross-Save label: Use a consistent text size and add a short account-sync subtitle if needed.
+- [x] `mini_motorways_settings-05` · P2 · proposal. Cross-Save label: Use a consistent text size and add a short account-sync subtitle if needed.
   Evidence: Cross-Save is a wide technical term among shorter category names.
 
-- [ ] `mini_motorways_settings-06` · P2 · proposal. Back icon: Add a Back label or frame it as a consistent navigation control.
+- [x] `mini_motorways_settings-06` · P2 · proposal. Back icon: Add a Back label or frame it as a consistent navigation control.
   Evidence: A large bare arrow floats in the upper-left corner.
 
-- [ ] `mini_motorways_settings-07` · P2 · proposal. Toggle semantics: Add explicit Off text so the X is not mistaken for an error or close action.
+- [x] `mini_motorways_settings-07` · P2 · proposal. Toggle semantics: Add explicit Off text so the X is not mistaken for an error or close action.
   Evidence: Night Mode and Vibration use an X inside a circle for Off.
 
-- [ ] `mini_motorways_settings-08` · P2 · proposal. Enabled toggle: Pair the check with On using the same state layout as disabled rows.
+- [x] `mini_motorways_settings-08` · P2 · proposal. Enabled toggle: Pair the check with On using the same state layout as disabled rows.
   Evidence: Hold to Draw/Delete uses a checkmark without an On label.
 
-- [ ] `mini_motorways_settings-09` · P2 · proposal. Toggle sizing: Reduce circles slightly and align them in a shared trailing column.
+- [x] `mini_motorways_settings-09` · P2 · proposal. Toggle sizing: Reduce circles slightly and align them in a shared trailing column.
   Evidence: Large circular toggles compete with setting names.
 
-- [ ] `mini_motorways_settings-10` · P2 · proposal. Hold label: Use Hold to draw or delete with a short explanation below.
+- [x] `mini_motorways_settings-10` · P2 · proposal. Hold label: Use Hold to draw or delete with a short explanation below.
   Evidence: Hold to Draw/Delete combines two actions in a long phrase.
 
-- [ ] `mini_motorways_settings-11` · P2 · proposal. Night Mode description: Add a brief preview or description of the darker palette.
+- [x] `mini_motorways_settings-11` · P2 · proposal. Night Mode description: Add a brief preview or description of the darker palette.
   Evidence: Night Mode has no indication of what changes.
 
-- [ ] `mini_motorways_settings-12` · P2 · proposal. Vibration context: Add a compact Controller feedback subtitle.
+- [x] `mini_motorways_settings-12` · P2 · proposal. Vibration context: Add a compact Controller feedback subtitle.
   Evidence: Vibration has no note about controller applicability.
 
-- [ ] `mini_motorways_settings-13` · P2 · proposal. Sensitivity typography: Use a consistent setting-label scale.
+- [x] `mini_motorways_settings-13` · P2 · proposal. Sensitivity typography: Use a consistent setting-label scale.
   Evidence: Controller Cursor Sensitivity is much smaller than adjacent setting labels.
 
-- [ ] `mini_motorways_settings-14` · P2 · proposal. Sensitivity layout: Bring arrows closer to the value in a compact selector.
+- [x] `mini_motorways_settings-14` · P2 · proposal. Sensitivity layout: Bring arrows closer to the value in a compact selector.
   Evidence: The value Default and large arrows span a very wide row.
 
-- [ ] `mini_motorways_settings-15` · P2 · proposal. Sensitivity value meaning: Show Default · 1.0× or another meaningful scale if supported.
+- [x] `mini_motorways_settings-15` · P2 · proposal. Sensitivity value meaning: Show Default · 1.0× or another meaningful scale if supported.
   Evidence: Default gives no measurable or relative value.
+  Disposition: Sensitivity has Low, Default and High states but no numeric multiplier. Kept those actual values instead of inventing 1.0x.
 
-- [ ] `mini_motorways_settings-16` · P3 · proposal. Selector arrows: Use lighter chevrons with consistent button bounds.
+- [x] `mini_motorways_settings-16` · P3 · proposal. Selector arrows: Use lighter chevrons with consistent button bounds.
   Evidence: Solid triangles dominate the sensitivity row.
 
-- [ ] `mini_motorways_settings-17` · P2 · proposal. Separator: Align it to the full settings column width.
+- [x] `mini_motorways_settings-17` · P2 · proposal. Separator: Align it to the full settings column width.
   Evidence: The horizontal rule under sensitivity ends before the rightmost controls.
 
-- [ ] `mini_motorways_settings-18` · P2 · proposal. Colorblind Mode label: Add a short palette preview beside the setting.
+- [x] `mini_motorways_settings-18` · P2 · proposal. Colorblind Mode label: Add a short palette preview beside the setting.
   Evidence: A single binary label does not explain the alternative palette.
 
-- [ ] `mini_motorways_settings-19` · P2 · proposal. Content heading: Add a small heading aligned with the first row.
+- [x] `mini_motorways_settings-19` · P2 · proposal. Content heading: Add a small heading aligned with the first row.
   Evidence: The right-side settings have no Game settings heading.
 
-- [ ] `mini_motorways_settings-20` · P3 · proposal. Row spacing: Use a consistent vertical rhythm while keeping a deliberate accessibility group break.
+- [x] `mini_motorways_settings-20` · P3 · proposal. Row spacing: Use a consistent vertical rhythm while keeping a deliberate accessibility group break.
   Evidence: The gap around sensitivity is larger than between the toggles above.
 
-- [ ] `mini_motorways_settings-21` · P2 · proposal. Tutorial action: Increase contrast and give it a clear secondary-action treatment.
+- [x] `mini_motorways_settings-21` · P2 · proposal. Tutorial action: Increase contrast and give it a clear secondary-action treatment.
   Evidence: Tutorial is large white text on pale cyan near the bottom edge.
 
-- [ ] `mini_motorways_settings-22` · P3 · proposal. Tutorial arrow: Use equal horizontal padding around label and arrow.
+- [x] `mini_motorways_settings-22` · P3 · proposal. Tutorial arrow: Use equal horizontal padding around label and arrow.
   Evidence: The large arrow is close to the trailing edge.
 
-- [ ] `mini_motorways_settings-23` · P2 · proposal. Version footer: Reduce its emphasis and shorten the default visible version string.
+- [x] `mini_motorways_settings-23` · P2 · proposal. Version footer: Reduce its emphasis and shorten the default visible version string.
   Evidence: A long release identifier occupies prominent bottom-left space.
 
-- [ ] `mini_motorways_settings-24` · P3 · proposal. Road decoration: Lower its prominence where it intersects tab backgrounds.
+- [x] `mini_motorways_settings-24` · P3 · proposal. Road decoration: Lower its prominence where it intersects tab backgrounds.
   Evidence: The white road bends directly behind the navigation column.
 
-- [ ] `mini_motorways_settings-25` · P3 · proposal. Background grid: Keep grid detail quieter behind the text column.
+- [x] `mini_motorways_settings-25` · P3 · proposal. Background grid: Keep grid detail quieter behind the text column.
   Evidence: Faint grid lines pass through every setting row.
 
 ### modals

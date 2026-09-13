@@ -1,0 +1,98 @@
+goto_screen mini_motorways_settings
+resize 1280 720
+wait 0.4
+expect_text "Game settings"
+expect_text "Local preferences preview"
+expect_text "Back"
+expect_text "Hold to draw or delete"
+expect_text "Controller feedback preference."
+expect_text "Controller pointer speed: Low / Default / High."
+expect_text "Compare the alternative colors in this preview."
+expect_text "Mini Motorways / 10.2"
+assert_ui mm_canvas w=1280 h=720
+assert_ui mm_root x=0 y=0 w=1280 h=720
+assert_ui mm_back x=48 y=40 w=152 h=48
+assert_ui mm_tab_0 x=120 y=132 w=268 h=54
+assert_ui mm_tab_3 x=120 y=330 w=268 h=54
+assert_ui mm_tab_5 x=120 y=462 w=268 h=54
+assert_ui mm_night x=1144 y=159 w=44 h=44
+assert_ui mm_night_state text=Off
+assert_ui mm_vibration_state text=Off
+assert_ui mm_hold_state text=On
+assert_ui mm_colorblind_state text=Off
+assert_ui mm_sensitivity_left x=896 y=433 w=44 h=44
+assert_ui mm_sensitivity_right x=1144 y=433 w=44 h=44
+assert_ui mm_separator x=472 y=521 w=716 h=2
+assert_ui mm_palette_preview x=1060 y=596 w=128 h=22
+assert_ui mm_tutorial x=976 y=654 w=224 h=48
+assert_no_overflow
+assert_within_parents
+screenshot mini_motorways_settings_design
+focus_ui mm_night
+key ENTER
+wait 0.2
+assert_ui mm_night_state text=On
+expect_text "Night Mode on"
+assert_no_overflow
+screenshot mini_motorways_settings_design_night
+click_ui mm_night
+click_ui mm_colorblind
+wait 0.3
+assert_ui mm_night_state text=Off
+assert_ui mm_colorblind_state text=On
+screenshot mini_motorways_settings_design_palette
+click_ui mm_sensitivity_right
+wait 0.2
+expect_text "High"
+click_ui mm_sensitivity_right
+wait 0.2
+expect_text "Low"
+click_ui mm_sensitivity_right
+wait 0.2
+expect_text "Default"
+click_ui mm_tab_5
+wait 0.2
+expect_text "Cross-Save settings"
+expect_text "No account is contacted"
+click_ui mm_connect
+wait 0.2
+expect_text "Demo account connected"
+expect_text "Disconnect demo account"
+assert_no_overflow
+click_ui mm_tab_0
+wait 0.2
+click_ui mm_tutorial
+wait 0.2
+expect_text "Build Your First Motorway"
+expect_text "Got it"
+assert_no_overflow
+click_ui mm_tutorial_start
+wait 0.2
+expect_text "Tutorial guide closed"
+expect_no_text "Build Your First Motorway"
+resize 1920 1080
+wait 0.3
+assert_ui mm_root x=0 y=0 w=1920 h=1080
+assert_ui mm_tab_0 x=180 y=198 w=402 h=81
+assert_ui mm_night x=1716 y=239 w=66 h=66
+assert_ui mm_tutorial x=1464 y=981 w=336 h=72
+assert_no_overflow
+assert_within_parents
+screenshot mini_motorways_settings_design_1080
+resize 1024 768
+wait 0.3
+assert_ui mm_canvas w=1024 h=768
+assert_ui mm_root x=0 y=96 w=1024 h=576
+assert_ui mm_tab_0 x=96 y=202 w=214 h=43
+assert_ui mm_night x=915 y=223 w=35 h=35
+assert_ui mm_tutorial x=781 y=619 w=179 h=38
+assert_no_overflow
+assert_within_parents
+screenshot mini_motorways_settings_design_narrow
+click_ui mm_back
+wait 0.2
+expect_text "Open Settings"
+click_ui mm_reopen
+wait 0.2
+expect_text "Game settings"
+resize 1280 720
