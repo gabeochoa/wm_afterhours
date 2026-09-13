@@ -152,12 +152,12 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     };
     auto action = [&](int id, const std::string &text, float x, float y, float w, float h,
                       const std::string &name, bool filled = false, float size = 22,
-                      const std::string &hint = "") {
+                      const std::string &hint = "", float radius = 0) {
       auto result = button(context, mk(root.ent(), id), box(scale, x, y, w, h).with_label(text)
           .with_font("FredokaMockBold", pixels((size * 1.25f) * scale))
           .with_custom_text_color(filled ? afterhours::Color{255, 255, 255, 255} : ink)
           .with_custom_background(filled ? purple : afterhours::Color{0, 0, 0, 0})
-          .with_corner_radius(filled ? 5 * scale : 0)
+          .with_corner_radius(filled ? 5 * scale : radius * scale)
           .with_alignment(TextAlignment::Center).with_click_activation(ClickActivationMode::Release)
           .with_debug_name(name));
       if (!hint.empty() && (context.was_hot(result.ent().id) || context.has_focus(result.ent().id)))
@@ -192,7 +192,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     div(context, mk(root.ent(), 162), box(scale, 414, 308, 130, 28)
         .with_custom_background({112, 102, 84, 255}));
     label(25, "Common", 414, 308, 130, 28, 17, raylib::WHITE, "kirby_common", "FredokaMockBold");
-    if (action(26, "", 556, 198, 426, 96, "kirby_name", false, 22, help[1])) open(Detail::Name);
+    if (action(26, "", 556, 198, 426, 96, "kirby_name", false, 22, help[1], 48)) open(Detail::Name);
     if (action(27, "", 1052, 198, 132, 94, "kirby_data", false, 22, help[7])) open(Detail::Data);
     if (action(28, "", 212, 269, 106, 56, "kirby_customize", false, 22, help[1])) open(Detail::Name);
     label(163, "Profile customization", 39, 332, 292, 31, 15, ink, "kirby_profile_caption", "FredokaMockBold");
