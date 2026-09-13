@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-25 completed; 2,510 remaining.
+50 completed; 2,485 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -97,79 +97,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/accessibility_720p.png) · [Visual review](design-audit.html#screen=accessibility)
 
-- [ ] `accessibility-01` · P2 · proposal. WCAG badge: Add the number of validated theme pairs under the badge.
+- [x] `accessibility-01` · P2 · proposal. WCAG badge: Add the number of validated theme pairs under the badge.
   Evidence: Theme Passes WCAG AA does not name the checked color pairs.
 
-- [ ] `accessibility-02` · P2 · proposal. WCAG badge scope: Rename it to Theme color pairs pass AA contrast.
+- [x] `accessibility-02` · P2 · proposal. WCAG badge scope: Rename it to Theme color pairs pass AA contrast.
   Evidence: The badge reads like approval of the entire interface.
 
-- [ ] `accessibility-03` · P2 · proposal. WCAG threshold: Show the threshold used for normal text.
+- [x] `accessibility-03` · P2 · proposal. WCAG threshold: Show the threshold used for normal text.
   Evidence: No required contrast ratio appears beside the badge.
 
-- [ ] `accessibility-04` · P2 · proposal. Manual column heading: Add a subtitle saying text colors were chosen manually.
+- [x] `accessibility-04` · P2 · proposal. Manual column heading: Add a subtitle saying text colors were chosen manually.
   Evidence: Without Automatic Contrast describes implementation only.
 
-- [ ] `accessibility-05` · P2 · proposal. Automatic column heading: Add a short dark-or-light text explanation.
+- [x] `accessibility-05` · P2 · proposal. Automatic column heading: Add a short dark-or-light text explanation.
   Evidence: With Automatic Contrast offers no selection rule.
 
-- [ ] `accessibility-06` · P2 · proposal. Dark manual sample: Use Manual light text for parallel labeling.
+- [x] `accessibility-06` · P2 · proposal. Dark manual sample: Use Manual light text for parallel labeling.
   Evidence: Works Fine is vague compared with the neighboring labels.
 
-- [ ] `accessibility-07` · P2 · proposal. Dark sample boundary: Add a neutral outline outside the test color area.
+- [x] `accessibility-07` · P2 · proposal. Dark sample boundary: Add a neutral outline outside the test color area.
   Evidence: The dark manual tile blends into the surrounding panel.
 
-- [ ] `accessibility-08` · P2 · proposal. Dark automatic boundary: Outline its bounds with the same reference stroke.
+- [x] `accessibility-08` · P2 · proposal. Dark automatic boundary: Outline its bounds with the same reference stroke.
   Evidence: The dark automatic tile also lacks a clear extent.
 
-- [ ] `accessibility-09` · P2 · proposal. Light pair: Show chosen foreground values below each tile.
+- [x] `accessibility-09` · P2 · proposal. Light pair: Show chosen foreground values below each tile.
   Evidence: The two light samples look identical without a result annotation.
 
-- [ ] `accessibility-10` · P2 · proposal. Manual note: Place it in the manual column footer with consistent inset.
+- [x] `accessibility-10` · P2 · proposal. Manual note: Place it in the manual column footer with consistent inset.
   Evidence: Manual text color applied is detached from its two samples.
 
-- [ ] `accessibility-11` · P2 · proposal. Automatic note: Give both explanatory footers equal typographic emphasis.
+- [x] `accessibility-11` · P2 · proposal. Automatic note: Give both explanatory footers equal typographic emphasis.
   Evidence: Automatically picks best contrast uses a bright accent unlike the manual footer.
 
-- [ ] `accessibility-12` · P2 · proposal. Swatch heading: Label the rows Light backgrounds and Dark backgrounds.
+- [x] `accessibility-12` · P2 · proposal. Swatch heading: Label the rows Light backgrounds and Dark backgrounds.
   Evidence: Various Backgrounds offers no description of the two rows.
 
-- [ ] `accessibility-13` · P2 · proposal. Swatch identity: Give each tile a compact background color identifier.
+- [x] `accessibility-13` · P2 · proposal. Swatch identity: Give each tile a compact background color identifier.
   Evidence: All sixteen tiles have the same Auto label.
 
-- [ ] `accessibility-14` · P2 · proposal. Swatch foreground: Add the chosen foreground value to each swatch caption.
+- [x] `accessibility-14` · P2 · proposal. Swatch foreground: Add the chosen foreground value to each swatch caption.
   Evidence: Black or white text choices are visible but unnamed.
 
-- [ ] `accessibility-15` · P2 · proposal. Swatch ratios: Show a ratio beneath each test tile.
+- [x] `accessibility-15` · P2 · proposal. Swatch ratios: Show a ratio beneath each test tile.
   Evidence: No tile exposes its measured contrast.
 
-- [ ] `accessibility-16` · P2 · proposal. Swatch ordering: Group or order samples by luminance and label the order.
+- [x] `accessibility-16` · P2 · proposal. Swatch ordering: Group or order samples by luminance and label the order.
   Evidence: The bright row changes hue without a visible sorting principle.
 
-- [ ] `accessibility-17` · P2 · proposal. Dark row pairing: Add column labels if pairs are intended.
+- [x] `accessibility-17` · P2 · proposal. Dark row pairing: Add column labels if pairs are intended.
   Evidence: Dark swatches do not visually establish pairs with the row above.
 
-- [ ] `accessibility-18` · P2 · proposal. Swatch gutters: Use a clearer equal grid gutter around the swatch set.
+- [x] `accessibility-18` · P2 · proposal. Swatch gutters: Use a clearer equal grid gutter around the swatch set.
   Evidence: Horizontal gaps are much smaller than the gap separating the comparison columns.
 
-- [ ] `accessibility-19` · P2 · proposal. Swatch type: Use a conventional text face inside the test swatches.
+- [x] `accessibility-19` · P2 · proposal. Swatch type: Use a conventional text face inside the test swatches.
   Evidence: Small widely tracked lettering makes color comparisons harder to read.
 
-- [ ] `accessibility-20` · P2 · proposal. Title style: Use one readable family with weight differences for hierarchy.
+- [x] `accessibility-20` · P2 · proposal. Title style: Use one readable family with weight differences for hierarchy.
   Evidence: The title uses a different face from the rest of the panel.
+  Resolution: Atkinson throughout, with size establishing hierarchy; the bundled Atkinson face has no bold weight.
 
-- [ ] `accessibility-21` · P2 · proposal. Footer claim: Limit the wording to the tested foreground choices.
+- [x] `accessibility-21` · P2 · proposal. Footer claim: Limit the wording to the tested foreground choices.
   Evidence: Text always remains readable is an absolute statement.
 
-- [ ] `accessibility-22` · P2 · proposal. Footer placement: Move the explanation closer to the grid.
+- [x] `accessibility-22` · P2 · proposal. Footer placement: Move the explanation closer to the grid.
   Evidence: The footer sits well below the swatches with a large blank gap.
 
-- [ ] `accessibility-23` · P2 · proposal. Separators: Align separator ends to the content grid.
+- [x] `accessibility-23` · P2 · proposal. Separators: Align separator ends to the content grid.
   Evidence: Both divider lines are inset farther than the column content.
 
-- [ ] `accessibility-24` · P2 · proposal. Theme identity: Add the theme name alongside validation status.
+- [x] `accessibility-24` · P2 · proposal. Theme identity: Add the theme name alongside validation status.
   Evidence: The panel does not name the theme being validated.
 
-- [ ] `accessibility-25` · P2 · proposal. Test context: Display the text size used in the contrast specimens.
+- [x] `accessibility-25` · P2 · proposal. Test context: Display the text size used in the contrast specimens.
   Evidence: The demonstration gives no sample font size near its AA claim.
 
 ### adaptive_scaling

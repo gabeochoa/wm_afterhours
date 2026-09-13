@@ -168,7 +168,7 @@ Four positioning fixtures expose boundary and text-placement problems. Preserve 
 
 ## accessibility
 
-[Current baseline](../../screenshot-baselines/screens/accessibility_720p.png) · [Visual review](../../design-audit.html#screen=accessibility)
+[Reviewed image](../../docs/design-audit/originals/accessibility_720p.png) · [Current baseline](../../screenshot-baselines/screens/accessibility_720p.png) · [Visual review](../../design-audit.html#screen=accessibility)
 
 Baseline SHA-256: `f27180479a4b3c01ce4b29d9c698c8396e21114d8db2cf9bfecc393689a11a31`
 

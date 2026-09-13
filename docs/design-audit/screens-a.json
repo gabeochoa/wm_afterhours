@@ -414,7 +414,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "f27180479a4b3c01ce4b29d9c698c8396e21114d8db2cf9bfecc393689a11a31"
+    "sha256": "f27180479a4b3c01ce4b29d9c698c8396e21114d8db2cf9bfecc393689a11a31",
+    "evidence": "docs/design-audit/originals/accessibility_720p.png"
   },
   {
     "id": "adaptive_scaling",

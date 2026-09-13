@@ -1,0 +1,22 @@
+goto_screen accessibility
+resize 1280 720
+wait 0.3
+assert_within_parents
+expect_text "Theme color pairs pass AA contrast"
+expect_text "2 checked pairs"
+expect_text "Light backgrounds / increasing luminance"
+click_ui color_0
+wait 0.2
+expect_text "Background #"
+focus_element dark_0
+key ENTER
+wait 0.2
+expect_text "foreground #"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+assert_ui main_panel w=1680 h=996
+click_ui color_7
+wait 0.2
+expect_text "contrast"
+resize 1280 720
