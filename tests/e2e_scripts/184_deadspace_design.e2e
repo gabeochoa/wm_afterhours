@@ -54,9 +54,21 @@ expect_text "Subtitle size"
 click_ui ds_cycle_next_1
 wait 0.2
 expect_text "Spanish"
-action MenuBack
+key ESCAPE
 wait 0.2
 expect_no_text "Subtitle size"
+expect_text "MORE SETTINGS"
+key ESCAPE
+wait 0.2
+expect_no_text "INITIAL SETTINGS > MORE SETTINGS"
+assert_ui ds_back_layer x=448 y=188 w=325 h=350
+assert_ui ds_initial_7 x=448 y=487 w=325 h=31
+expect_text "More Settings / Enter to return"
+screenshot deadspace_initial_back
+click_ui ds_initial_7
+wait 0.2
+expect_text "INITIAL SETTINGS > MORE SETTINGS"
+expect_text "Choose voice and text languages,"
 resize 1920 1080
 wait 0.3
 assert_ui ds_root x=0 y=0 w=1920 h=1080
