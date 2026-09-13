@@ -16,16 +16,14 @@ using namespace afterhours::ui::imm;
 // and it survives focus landing on one of those controls. floatinghotel wants
 // it for the commit amend/fixup panel and the branch selector.
 struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
-  // Closed, like a real trigger. The initially open branch panel below keeps
-  // the baseline showing what a popover looks like.
   bool below_open = false;
   bool flip_open = false;
-  bool pinned_open = true;
+  bool pinned_open = false;
   bool place_open[3] = {false, false, false};
   bool amend = false;
   bool sign_off = true;
   int current_branch = 0;
-  std::string status = "No action yet. Branch opens initially for comparison.";
+  std::string status = "Choose a control to open its panel.";
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -86,7 +84,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     text(0, "Popovers", 48, 16, 550, 46, 38, white, "pv_title", true);
     text(1, "Anchored panels containing controls", 48, 62, 680, 28, 21, muted, "pv_subtitle");
     text(6, "Amend and sign-off form", 48, 146, 330, 27, 19, muted);
-    text(7, "Branch opens initially", 430, 64, 340, 26, 18, muted, "pv_initial");
+    text(7, "Choose a branch", 430, 64, 340, 26, 18, muted, "pv_initial");
     text(8, "Trigger", 942, 24, 100, 28, 18, cyan);
     text(9, "Popover", 1100, 24, 132, 28, 18, white);
     div(context, mk(root.ent(), 80), box(918, 31, 16, 16).with_custom_background(cyan));
@@ -135,8 +133,6 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    // Initially open, so the screen shows a populated panel at rest without
-    // the primary trigger having to lie about its own state.
     static constexpr const char *BRANCHES[4] = {"main", "release/2.4", "fix/tab-focus", "spike/indexing"};
     auto pinned = button(context, mk(root.ent(), 10), control(430, 96, 320, 36)
         .with_label(fmt::format("Branch: {}", BRANCHES[current_branch])).with_debug_name("pv_trigger_pinned"));

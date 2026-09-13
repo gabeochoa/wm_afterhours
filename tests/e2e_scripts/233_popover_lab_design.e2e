@@ -3,12 +3,17 @@ resize 1280 720
 wait 0.4
 expect_text "Popovers"
 expect_text "Anchored panels containing controls"
-expect_text "Branch opens initially"
+expect_text "Choose a branch"
 expect_text "Branch: main"
+expect_no_text "Switch branch"
+expect_no_text "Commit preferences"
+expect_text "Last action"
+expect_text "Choose a control to open its panel."
+screenshot popover_design_closed
+click_ui pv_trigger_pinned
+wait 0.2
 expect_text "Switch branch"
 expect_text "Current"
-expect_text "Last action"
-expect_text "No action yet. Branch opens initially for comparison."
 assert_ui pv_live_branch x=430 y=132 w=320 h=224
 assert_no_overflow
 screenshot popover_design
