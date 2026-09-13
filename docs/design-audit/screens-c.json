@@ -2,7 +2,7 @@
   {
     "id": "powerwash_settings",
     "baseline": "screenshot-baselines/screens/powerwash_settings_720p.png",
-    "summary": "The tablet hierarchy is readable, but value padding, tiny symbols and weak action guidance need attention. Product proposals preserve the blue tablet design in mocks.html. Compared visually with the rendered mocks.html target at 1280 × 720.",
+    "summary": "The tablet hierarchy is readable, but value padding, tiny symbols and weak action guidance need attention. Product proposals preserve the blue tablet design in mocks.html. Compared visually with the rendered mocks.html target at 1280 \u00d7 720.",
     "findings": [
       {
         "id": "01",
@@ -234,7 +234,7 @@
   {
     "id": "race_results",
     "baseline": "screenshot-baselines/screens/race_results_720p.png",
-    "summary": "The result table has a strong player highlight. Smaller text, skewed table geometry and ambiguous standings context weaken an otherwise clear results screen. Compared visually with the rendered mocks.html target at 1280 × 720.",
+    "summary": "The result table has a strong player highlight. Smaller text, skewed table geometry and ambiguous standings context weaken an otherwise clear results screen. Compared visually with the rendered mocks.html target at 1280 \u00d7 720.",
     "findings": [
       {
         "id": "01",
@@ -461,7 +461,8 @@
         "change": "Add the target row separators to strengthen horizontal scanning."
       }
     ],
-    "sha256": "236c7b0761d04da724a163adc1673d9c4a4f06db34bd3dcad8261b284552b69b"
+    "sha256": "236c7b0761d04da724a163adc1673d9c4a4f06db34bd3dcad8261b284552b69b",
+    "evidence": "docs/design-audit/originals/race_results_720p.png"
   },
   {
     "id": "radio_buttons",
@@ -842,7 +843,7 @@
         "priority": "P2",
         "area": "Orange box",
         "observation": "The centered orange box has no dimensions.",
-        "change": "Label it 64 × 36 near the diagram."
+        "change": "Label it 64 \u00d7 36 near the diagram."
       },
       {
         "id": "12",
@@ -922,7 +923,7 @@
   {
     "id": "rubber_bandits_menu",
     "baseline": "screenshot-baselines/screens/rubber_bandits_menu_720p.png",
-    "summary": "The menu captures the playful yellow and turquoise direction, but small utility text and crowded character-selection framing need work. Compared visually with the rendered mocks.html target at 1280 × 720.",
+    "summary": "The menu captures the playful yellow and turquoise direction, but small utility text and crowded character-selection framing need work. Compared visually with the rendered mocks.html target at 1280 \u00d7 720.",
     "findings": [
       {
         "id": "01",
@@ -1706,7 +1707,7 @@
   {
     "id": "secure_tunnel",
     "baseline": "screenshot-baselines/screens/secure_tunnel_720p.png",
-    "summary": "The disconnected state and chosen server are visible, but tiny metadata and approximate map/icon artwork fall short of the clearer product framing in mocks.html. Compared visually with the rendered mocks.html target at 1280 × 720.",
+    "summary": "The disconnected state and chosen server are visible, but tiny metadata and approximate map/icon artwork fall short of the clearer product framing in mocks.html. Compared visually with the rendered mocks.html target at 1280 \u00d7 720.",
     "findings": [
       {
         "id": "01",
@@ -2370,7 +2371,7 @@
   {
     "id": "shop_interface",
     "baseline": "screenshot-baselines/screens/shop_interface_720p.png",
-    "summary": "The store has a coherent parchment treatment. Small metadata, basket controls and alignment need refinement against the richer mocks.html target. Compared visually with the rendered mocks.html target at 1280 × 720.",
+    "summary": "The store has a coherent parchment treatment. Small metadata, basket controls and alignment need refinement against the richer mocks.html target. Compared visually with the rendered mocks.html target at 1280 \u00d7 720.",
     "findings": [
       {
         "id": "01",
@@ -2818,7 +2819,7 @@
         "priority": "P2",
         "area": "Pixel dimensions",
         "observation": "Large empty panes do not show how resizing affects their size.",
-        "change": "Display live width × height in each pane center."
+        "change": "Display live width \u00d7 height in each pane center."
       },
       {
         "id": "11",
@@ -2874,7 +2875,7 @@
   {
     "id": "sports_settings",
     "baseline": "screenshot-baselines/screens/sports_settings_720p.png",
-    "summary": "The sports settings preserve the mint accent and blurred scene, but unusual value markers, unclear units and dense metadata need refinement. Compared visually with the rendered mocks.html target at 1280 × 720.",
+    "summary": "The sports settings preserve the mint accent and blurred scene, but unusual value markers, unclear units and dense metadata need refinement. Compared visually with the rendered mocks.html target at 1280 \u00d7 720.",
     "findings": [
       {
         "id": "01",
@@ -2898,7 +2899,7 @@
         "priority": "P2",
         "area": "Resolution formatting",
         "observation": "2,560x1,440 uses thousands separators and a lowercase x.",
-        "change": "Use 2560 × 1440."
+        "change": "Use 2560 \u00d7 1440."
       },
       {
         "id": "04",
@@ -3122,7 +3123,7 @@
         "priority": "P2",
         "area": "Resolution text",
         "observation": "2560x1440 uses a compact lowercase x.",
-        "change": "Use 2560 × 1440."
+        "change": "Use 2560 \u00d7 1440."
       },
       {
         "id": "03",
@@ -4170,7 +4171,7 @@
         "priority": "P2",
         "area": "Baseline rendering context",
         "observation": "The page does not state resolution or scale for the type samples.",
-        "change": "Add 1280 × 720 and the effective UI scale in a metadata footer."
+        "change": "Add 1280 \u00d7 720 and the effective UI scale in a metadata footer."
       }
     ],
     "sha256": "47ec135185d09029d5db399b030d9f8141857693b38b3c6b5ecceb0faa28b649"
@@ -4666,7 +4667,7 @@
         "priority": "P2",
         "area": "Tiny box annotation",
         "observation": "Small 44x44 uses a textual arrow and compact notation.",
-        "change": "Use a clean callout line and 44 × 44 px label."
+        "change": "Use a clean callout line and 44 \u00d7 44 px label."
       },
       {
         "id": "05",

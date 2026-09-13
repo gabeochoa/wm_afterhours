@@ -1,0 +1,42 @@
+goto_screen race_results
+resize 1280 720
+wait 0.4
+expect_text "Race finish"
+expect_text "Player 1"
+expect_text "Race 3/4"
+expect_text "Race points"
+expect_text "Race time"
+expect_text "Blaze / You"
+expect_text "Top 4 of 8 / cumulative points"
+expect_text "4 points behind the leader"
+expect_text "+2.362 behind the race winner"
+expect_text "YOUR BEST LAP"
+expect_text "No previous lap recorded"
+assert_ui race_result_row_0 x=54 y=152 w=747 h=55
+assert_ui race_result_row_7 x=54 y=537 w=747 h=55
+assert_within_parents
+assert_no_overflow
+screenshot race_results_design
+click_ui race_result_row_5
+wait 0.2
+expect_text "Flash"
+click_ui race_next
+wait 0.2
+expect_text "Next race selected"
+focus_ui race_back
+key ENTER
+wait 0.2
+expect_text "Back"
+resize 1920 1080
+wait 0.3
+assert_ui race_root x=0 y=0 w=1920 h=1080
+assert_within_parents
+assert_no_overflow
+screenshot race_results_design_1080
+resize 1024 768
+wait 0.3
+assert_ui race_root x=0 y=96 w=1024 h=576
+assert_within_parents
+assert_no_overflow
+screenshot race_results_design_narrow
+resize 1280 720

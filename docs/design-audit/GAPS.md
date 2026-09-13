@@ -2904,7 +2904,7 @@ The tablet hierarchy is readable, but value padding, tiny symbols and weak actio
 
 ## race results
 
-[Current baseline](../../screenshot-baselines/screens/race_results_720p.png) · [Visual review](../../design-audit.html#screen=race_results)
+[Reviewed image](../../docs/design-audit/originals/race_results_720p.png) · [Current baseline](../../screenshot-baselines/screens/race_results_720p.png) · [Visual review](../../design-audit.html#screen=race_results)
 
 Baseline SHA-256: `236c7b0761d04da724a163adc1673d9c4a4f06db34bd3dcad8261b284552b69b`
 

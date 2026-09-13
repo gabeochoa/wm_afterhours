@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,630 completed; 905 remaining.
+1,658 completed; 877 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5755,88 +5755,91 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/race_results_720p.png) · [Visual review](design-audit.html#screen=race_results)
 
-- [ ] `race_results-01` · P2 · defect. Table headers: Increase headers to a readable 12 to 14 px actual size.
+- [x] `race_results-01` · P2 · defect. Table headers: Increase headers to a readable 12 to 14 px actual size.
   Evidence: POS., RACER, TIME and PTS are tiny beside the racer names.
 
-- [ ] `race_results-02` · P2 · defect. Points column: Give the points column a constant 20 px right inset.
+- [x] `race_results-02` · P2 · defect. Points column: Give the points column a constant 20 px right inset.
   Evidence: The +4 and +3 values almost touch the sloping right edge.
 
-- [ ] `race_results-03` · P2 · defect. Personal best caption: Increase the caption to at least 12 px and place it closer to the time.
+- [x] `race_results-03` · P2 · defect. Personal best caption: Increase the caption to at least 12 px and place it closer to the time.
   Evidence: New personal best! is extremely small under 0:48.220.
+  Disposition: No previous lap benchmark exists in this fixture. Replaced the unsubstantiated personal-best claim with No previous lap recorded.
 
-- [ ] `race_results-04` · P2 · defect. Controller help: Increase help text and separate key labels into readable groups.
+- [x] `race_results-04` · P2 · defect. Controller help: Increase help text and separate key labels into readable groups.
   Evidence: Arrows to choose A Confirm B Back is tiny in the footer.
 
-- [ ] `race_results-05` · P2 · proposal. Position headline: Label it Race finish or Cup position according to the intended metric.
+- [x] `race_results-05` · P2 · proposal. Position headline: Label it Race finish or Cup position according to the intended metric.
   Evidence: 2nd appears above CUP STANDINGS without a race or cup qualifier.
 
-- [ ] `race_results-06` · P2 · proposal. Player chip: Label it Player 1 so it cannot read as finishing position.
+- [x] `race_results-06` · P2 · proposal. Player chip: Label it Player 1 so it cannot read as finishing position.
   Evidence: P1 in the top-right competes with the second-place result.
 
-- [ ] `race_results-07` · P2 · proposal. Table shape: Keep decorative skew on a backing panel and align the data table to a rectangular grid.
+- [x] `race_results-07` · P2 · proposal. Table shape: Keep decorative skew on a backing panel and align the data table to a rectangular grid.
   Evidence: Rows progressively shift left while column content does not follow the same edge.
 
-- [ ] `race_results-08` · P3 · proposal. Bottom table gap: End the table after the last row or use the band for a labeled total.
+- [x] `race_results-08` · P3 · proposal. Bottom table gap: End the table after the last row or use the band for a labeled total.
   Evidence: An empty pale band remains below Pebble.
 
-- [ ] `race_results-09` · P2 · proposal. Race progress: Give race progress a small four-step marker near the title.
+- [x] `race_results-09` · P2 · proposal. Race progress: Give race progress a small four-step marker near the title.
   Evidence: Race 3/4 is embedded in the circuit title.
 
-- [ ] `race_results-10` · P2 · proposal. Race context: Separate circuit name from championship progress with clear hierarchy.
+- [x] `race_results-10` · P2 · proposal. Race context: Separate circuit name from championship progress with clear hierarchy.
   Evidence: Rainbow Circuit shares one line with progress.
 
-- [ ] `race_results-11` · P2 · proposal. Points label: Rename the left column Race points.
+- [x] `race_results-11` · P2 · proposal. Points label: Rename the left column Race points.
   Evidence: PTS does not distinguish earned points from cumulative standings points.
 
-- [ ] `race_results-12` · P2 · proposal. Time label: Use Race time as the column heading.
+- [x] `race_results-12` · P2 · proposal. Time label: Use Race time as the column heading.
   Evidence: TIME does not say whether this is total race time.
 
-- [ ] `race_results-13` · P2 · proposal. Player identity: Include the driver's name with a You tag for continuity with other screens.
+- [x] `race_results-13` · P2 · proposal. Player identity: Include the driver's name with a You tag for continuity with other screens.
   Evidence: The highlighted racer is only named YOU.
 
-- [ ] `race_results-14` · P3 · proposal. Player portrait: Add a small player badge next to the green portrait.
+- [x] `race_results-14` · P3 · proposal. Player portrait: Add a small player badge next to the green portrait.
   Evidence: The player portrait has the same visual treatment as every opponent.
 
-- [ ] `race_results-15` · P2 · proposal. Standings subset: Label the section Top 4 of 8 or provide a compact full-standings affordance.
+- [x] `race_results-15` · P2 · proposal. Standings subset: Label the section Top 4 of 8 or provide a compact full-standings affordance.
   Evidence: Only four of eight racers are shown in CUP STANDINGS.
 
-- [ ] `race_results-16` · P2 · proposal. Championship gap: Add 4 points behind leader beside the player's cumulative score.
+- [x] `race_results-16` · P2 · proposal. Championship gap: Add 4 points behind leader beside the player's cumulative score.
   Evidence: 38 pts and 42 pts require mental subtraction.
 
-- [ ] `race_results-17` · P2 · proposal. Race gap: Show a +2.362 gap alongside the player time.
+- [x] `race_results-17` · P2 · proposal. Race gap: Show a +2.362 gap alongside the player time.
   Evidence: The player's 2:33.812 requires comparison with 2:31.450.
 
-- [ ] `race_results-18` · P3 · proposal. Best lap association: Rename BEST LAP to YOUR BEST LAP.
+- [x] `race_results-18` · P3 · proposal. Best lap association: Rename BEST LAP to YOUR BEST LAP.
   Evidence: The right card does not identify whose best lap is shown.
 
-- [ ] `race_results-19` · P2 · proposal. Best lap achievement: Add the previous best or improvement delta when available.
+- [x] `race_results-19` · P2 · proposal. Best lap achievement: Add the previous best or improvement delta when available.
   Evidence: Personal best is shown with no prior benchmark.
+  Disposition: No prior lap data is available; the panel states this rather than inventing an improvement.
 
-- [ ] `race_results-20` · P3 · proposal. Standings row separators: Increase separator contrast slightly and use even row padding.
+- [x] `race_results-20` · P3 · proposal. Standings row separators: Increase separator contrast slightly and use even row padding.
   Evidence: Thin separators are weak against the landscape-tinted panel.
 
-- [ ] `race_results-21` · P3 · proposal. Side-panel background: Use a more opaque backing behind text for consistent contrast.
+- [x] `race_results-21` · P3 · proposal. Side-panel background: Use a more opaque backing behind text for consistent contrast.
   Evidence: The landscape silhouette crosses the standings and lap areas.
 
-- [ ] `race_results-22` · P2 · proposal. Next race action: Add the upcoming track name as secondary button text or adjacent copy.
+- [x] `race_results-22` · P2 · proposal. Next race action: Add the upcoming track name as secondary button text or adjacent copy.
   Evidence: NEXT RACE gives no destination context.
+  Disposition: This standalone fixture has no next-track model. The action identifies demo continuation to the final race instead of inventing a destination.
 
-- [ ] `race_results-23` · P3 · proposal. Back action: Use matching navigation chevrons with equal label spacing.
+- [x] `race_results-23` · P3 · proposal. Back action: Use matching navigation chevrons with equal label spacing.
   Evidence: Back uses a text less-than symbol while Next uses a greater-than symbol.
 
-- [ ] `race_results-24` · P3 · proposal. Footer balance: Align help centrally between Back and Next race.
+- [x] `race_results-24` · P3 · proposal. Footer balance: Align help centrally between Back and Next race.
   Evidence: The help text hugs Back while a large empty middle area remains.
 
-- [ ] `race_results-25` · P3 · proposal. Standings emphasis: Add a small player marker to match the highlighted result row.
+- [x] `race_results-25` · P3 · proposal. Standings emphasis: Add a small player marker to match the highlighted result row.
   Evidence: YOU is yellow but has no shape-based indicator in the side list.
 
-- [ ] `race_results-26` · P2 · proposal. Result typography parity: Match the italic display treatment for the title, finish position and standings heading.
+- [x] `race_results-26` · P2 · proposal. Result typography parity: Match the italic display treatment for the title, finish position and standings heading.
   Evidence: The current title and 2nd are upright, while the rendered target uses italic racing typography.
 
-- [ ] `race_results-27` · P3 · proposal. Footer action geometry parity: Apply the target slant to button backings while keeping labels level and padded.
+- [x] `race_results-27` · P3 · proposal. Footer action geometry parity: Apply the target slant to button backings while keeping labels level and padded.
   Evidence: Back and Next race are rectangular in the current image; the target uses slanted button silhouettes.
 
-- [ ] `race_results-28` · P2 · proposal. Result-row separators parity: Add the target row separators to strengthen horizontal scanning.
+- [x] `race_results-28` · P2 · proposal. Result-row separators parity: Add the target row separators to strengthen horizontal scanning.
   Evidence: The current table relies on alternating pale fills, while the target adds visible cyan row rules.
 
 ### radio_buttons
