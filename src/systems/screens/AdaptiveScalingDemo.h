@@ -147,7 +147,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                    .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
                    .with_font("AtkinsonMock", screen_pct(22.f / sh))
                    .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.3f)
+                   .with_corner_radius(8.f * pixel_scale)
                    .with_margin(Margin::Right(pixels(12)))
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("adaptive_mode"));
@@ -162,7 +162,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                                .with_custom_text_color(white)
                                .with_font("AtkinsonMock", screen_pct(24.f / sh))
                                .with_rounded_corners(RoundedCorners())
-                               .with_roundness(0.3f)
+                               .with_corner_radius(8.f * pixel_scale)
                                .with_margin(Margin::Right(pixels(4)))
                                .with_alignment(TextAlignment::Center)
                                .with_debug_name("adaptive_minus"));
@@ -179,7 +179,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
             .with_custom_text_color(white)
             .with_font("AtkinsonMock", screen_pct(22.f / sh))
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
+            .with_corner_radius(8.f * pixel_scale)
             .with_margin(Margin::Right(pixels(4)))
             .with_alignment(TextAlignment::Center));
 
@@ -191,7 +191,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                               .with_custom_text_color(white)
                               .with_font("AtkinsonMock", screen_pct(24.f / sh))
                               .with_rounded_corners(RoundedCorners())
-                              .with_roundness(0.3f)
+                              .with_corner_radius(8.f * pixel_scale)
                               .with_margin(Margin::Right(pixels(16)))
                               .with_alignment(TextAlignment::Center)
                               .with_debug_name("adaptive_plus"));
@@ -267,7 +267,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(184)})
                      .with_custom_background(card_bg)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.06f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_padding(Padding::all(pixels(14)))
                      .with_margin(Margin::Bottom(pixels(12)))
                      .with_no_wrap()
@@ -303,7 +303,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_size(ComponentSize{pixels(48), pixels(48)})
                 .with_custom_background(box_colors[i])
                 .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.15f)
+                .with_corner_radius(8.f * pixel_scale)
                 .with_margin(i < 3 ? Margin::Right(pixels(8)) : Margin{}));
       }
       caption(card.ent(), 3,
@@ -319,7 +319,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(168)})
                      .with_custom_background(card_bg)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.06f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_padding(Padding::all(pixels(14)))
                      .with_margin(Margin::Bottom(pixels(12)))
                      .with_no_wrap()
@@ -342,7 +342,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_font("AtkinsonMock",
                                 screen_pct(22.f * pixel_scale / sh))
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.25f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_margin(Margin::Bottom(pixels(6)))
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("adaptive_button_a")))
@@ -357,7 +357,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_font("AtkinsonMock",
                                 screen_pct(22.f * pixel_scale / sh))
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.25f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_alignment(TextAlignment::Center)
                      .with_debug_name("adaptive_button_b")))
         selected_button = "B selected";
@@ -374,7 +374,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(120)})
                      .with_custom_background(card_bg)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.06f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_padding(Padding::all(pixels(14)))
                      .with_no_wrap()
                      .with_debug_name("card_padding"));
@@ -395,7 +395,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(muted)
               .with_font("AtkinsonMock", screen_pct(20.f * pixel_scale / sh))
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.04f)
+              .with_corner_radius(8.f * pixel_scale)
               .with_padding(Padding::all(pixels(8))));
       caption(inner.ent(), 0, "Inner content area", 30.f);
       const float width = 280.f * pixel_scale;
@@ -435,7 +435,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(176)})
                      .with_custom_background(card_bg)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.06f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_padding(Padding::all(pixels(14)))
                      .with_margin(Margin::Bottom(pixels(12)))
                      .with_no_wrap()
@@ -488,7 +488,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_text_color(items[i].text)
                 .with_font("AtkinsonMock", screen_pct(22.f * pixel_scale / sh))
                 .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.08f)
+                .with_corner_radius(8.f * pixel_scale)
                 .with_alignment(TextAlignment::Center));
       }
     }
@@ -501,7 +501,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(164)})
                      .with_custom_background(card_bg)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.06f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_padding(Padding::all(pixels(14)))
                      .with_margin(Margin::Bottom(pixels(12)))
                      .with_no_wrap()
@@ -541,7 +541,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
               .with_font("AtkinsonMock", screen_pct(20.f * pixel_scale / sh))
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * pixel_scale)
               .with_margin(Margin::Right(pixels(6)))
               .with_alignment(TextAlignment::Center)
               .with_debug_name("adaptive_pixels"));
@@ -555,7 +555,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
               .with_font("AtkinsonMock", screen_pct(20.f / sh))
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * pixel_scale)
               .with_margin(Margin::Right(pixels(6)))
               .with_alignment(TextAlignment::Center)
               .with_scaling_mode(ScalingMode::Proportional)
@@ -571,7 +571,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(afterhours::Color{20, 20, 30, 255})
               .with_font("AtkinsonMock", screen_pct(20.f / sh))
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * pixel_scale)
               .with_alignment(TextAlignment::Center)
               .with_debug_name("adaptive_screen_pct"));
       auto ruler = div(context, mk(card.ent(), 3),
@@ -604,7 +604,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                      .with_size(ComponentSize{percent(1.0f), pixels(132)})
                      .with_custom_background(card_bg)
                      .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.06f)
+                     .with_corner_radius(8.f * pixel_scale)
                      .with_padding(Padding::all(pixels(14)))
                      .with_no_wrap()
                      .with_debug_name("card_breakpoints"));
@@ -635,7 +635,7 @@ struct AdaptiveScalingDemo : ScreenSystem<UIContext<InputAction>> {
                     active ? afterhours::Color{20, 20, 30, 255} : muted)
                 .with_font("AtkinsonMock", screen_pct(20.f * pixel_scale / sh))
                 .with_rounded_corners(RoundedCorners())
-                .with_roundness(0.4f)
+                .with_corner_radius(8.f * pixel_scale)
                 .with_margin(Margin::Right(pixels(6)))
                 .with_alignment(TextAlignment::Center));
       };
