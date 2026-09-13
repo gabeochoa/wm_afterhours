@@ -1,0 +1,63 @@
+goto_screen animation_interactive
+resize 1280 720
+wait 0.3
+expect_text "Three independent buttons. One shared press response"
+expect_text "80 + 120 + 100 ms = 300 ms"
+expect_text "EaseOutQuad / every segment"
+expect_text "Total activations: 0"
+expect_text "Last pressed: none"
+assert_ui btn1 x=202 y=278 w=100 h=100
+assert_ui btn2 x=590 y=278 w=100 h=100
+assert_ui btn3 x=978 y=278 w=100 h=100
+assert_within_parents
+screenshot animation_interactive_design
+click_ui btn1
+wait 0.5
+expect_text "Blue activations: 1"
+expect_text "Green activations: 0"
+expect_text "Purple activations: 0"
+expect_text "Last pressed: Blue"
+focus_ui btn2
+key ENTER
+wait 0.5
+expect_text "Green activations: 1"
+expect_text "Total activations: 2"
+click_ui btn3
+wait 0.5
+expect_text "Purple activations: 1"
+expect_text "Total activations: 3"
+expect_text "Last pressed: Purple"
+click_ui interactive_preview
+wait 1.7
+expect_text "Slow preview complete / 1.20 s"
+expect_text "Blue activations: 1"
+expect_text "Green activations: 1"
+expect_text "Purple activations: 1"
+expect_text "Total activations: 3"
+expect_text "Last pressed: Purple"
+focus_ui interactive_reset
+key ENTER
+wait 0.2
+expect_text "Total activations: 0"
+expect_text "Last pressed: none"
+expect_text "Blue activations: 0"
+expect_text "Green activations: 0"
+expect_text "Purple activations: 0"
+click_ui btn2
+wait 0.5
+expect_text "Green activations: 1"
+expect_text "Total activations: 1"
+expect_text "Last pressed: Green"
+resize 1920 1080
+wait 0.3
+assert_ui btn1 x=303 y=417 w=150 h=150
+assert_ui btn2 x=885 y=417 w=150 h=150
+assert_ui btn3 x=1467 y=417 w=150 h=150
+assert_within_parents
+screenshot animation_interactive_design_1080
+resize 1024 768
+wait 0.3
+assert_ui interactive_canvas w=1024 h=768
+assert_within_parents
+screenshot animation_interactive_design_narrow
+resize 1280 720

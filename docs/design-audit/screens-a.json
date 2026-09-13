@@ -1920,7 +1920,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "5d70ef1709f1616d4a9b8e9c9b46cfbbd118d5930a678694903fc45434feebac"
+    "sha256": "5d70ef1709f1616d4a9b8e9c9b46cfbbd118d5930a678694903fc45434feebac",
+    "evidence": "docs/design-audit/originals/animation_interactive_720p.png"
   },
   {
     "id": "animation_looping",

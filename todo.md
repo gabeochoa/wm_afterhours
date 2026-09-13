@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-204 completed; 2,331 remaining.
+222 completed; 2,313 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -669,58 +669,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/animation_interactive_720p.png) · [Visual review](design-audit.html#screen=animation_interactive)
 
-- [ ] `animation_interactive-01` · P2 · proposal. Header placement: Move it toward the top of the page.
+- [x] `animation_interactive-01` · P2 · proposal. Header placement: Move it toward the top of the page.
   Evidence: The title begins below a very large empty top area.
 
-- [ ] `animation_interactive-02` · P2 · proposal. Header strips: Combine them into one header card.
+- [x] `animation_interactive-02` · P2 · proposal. Header strips: Combine them into one header card.
   Evidence: Title and instruction have touching rounded backgrounds.
 
-- [ ] `animation_interactive-03` · P2 · proposal. Instruction wording: Name the compared press effects.
+- [x] `animation_interactive-03` · P2 · proposal. Instruction wording: State that all three independent buttons use the same press effect.
   Evidence: Click buttons to see press animations does not explain the difference between them.
 
-- [ ] `animation_interactive-04` · P2 · proposal. Blue button: Label it with its press-scale amount.
+- [x] `animation_interactive-04` · P2 · proposal. Blue button: Label it with its press-scale amount.
   Evidence: Click! gives no animation information.
 
-- [ ] `animation_interactive-05` · P2 · proposal. Green button: Use a label naming its distinct response.
+- [x] `animation_interactive-05` · P2 · proposal. Green button: Label the green instance of the shared press response.
   Evidence: Press! reads like a synonym of Click!.
 
-- [ ] `animation_interactive-06` · P2 · proposal. Purple button: Name the actual animation variant.
+- [x] `animation_interactive-06` · P2 · proposal. Purple button: Label the purple instance of the shared press response.
   Evidence: Tap! implies a different device without describing motion.
 
-- [ ] `animation_interactive-07` · P2 · proposal. Specimen captions: Show duration under each button.
+- [x] `animation_interactive-07` · P2 · proposal. Specimen captions: Show duration under each button.
   Evidence: None of the buttons has a timing label.
 
-- [ ] `animation_interactive-08` · P2 · proposal. Scale comparison: Add fixed outlines to make compression visible.
+- [x] `animation_interactive-08` · P2 · proposal. Scale comparison: Add fixed outlines to make compression visible.
   Evidence: All three buttons are identical at rest.
 
-- [ ] `animation_interactive-09` · P2 · proposal. Easing comparison: Display each easing name below its specimen.
+- [x] `animation_interactive-09` · P2 · proposal. Easing comparison: Display each easing name below its specimen.
   Evidence: The screen does not identify the timing curves.
 
-- [ ] `animation_interactive-10` · P2 · proposal. Button grouping: Create equal comparison cards with shared diagnostic rows.
+- [x] `animation_interactive-10` · P2 · proposal. Button grouping: Create equal comparison cards with shared diagnostic rows.
   Evidence: Three isolated squares lack card or section framing.
 
-- [ ] `animation_interactive-11` · P2 · proposal. Color mapping: Associate each color with the named animation variant.
+- [x] `animation_interactive-11` · P2 · proposal. Color mapping: Associate each color with a separate instance of the shared animation.
   Evidence: Blue, green and purple have no legend.
 
-- [ ] `animation_interactive-12` · P2 · proposal. Counter label: Show individual counts alongside the total.
+- [x] `animation_interactive-12` · P2 · proposal. Counter label: Show individual counts alongside the total.
   Evidence: Total clicks counts all variants together.
 
-- [ ] `animation_interactive-13` · P2 · proposal. Last action: Add a Last pressed readout.
+- [x] `animation_interactive-13` · P2 · proposal. Last action: Add a Last pressed readout.
   Evidence: The counter cannot identify the most recently pressed specimen.
 
-- [ ] `animation_interactive-14` · P2 · proposal. Counter reset: Add a small Reset count control.
+- [x] `animation_interactive-14` · P2 · proposal. Counter reset: Add a small Reset count control.
   Evidence: The count is displayed without a visible reset action.
 
-- [ ] `animation_interactive-15` · P2 · proposal. Footer type: Use a readable monospace API label.
+- [x] `animation_interactive-15` · P2 · proposal. Footer type: Use a readable monospace API label.
   Evidence: The with_scale() note is small and widely tracked.
 
-- [ ] `animation_interactive-16` · P2 · proposal. Footer separation: Place it beneath the comparison cards.
+- [x] `animation_interactive-16` · P2 · proposal. Footer separation: Place it beneath the comparison cards.
   Evidence: The implementation note sits far below the examples.
 
-- [ ] `animation_interactive-17` · P2 · proposal. Motion metrics: Add live scale percentages outside the animated buttons.
+- [x] `animation_interactive-17` · P2 · proposal. Motion metrics: Add live scale percentages outside the animated buttons.
   Evidence: No current scale value appears in the screenshot.
 
-- [ ] `animation_interactive-18` · P2 · proposal. Playback aid: Add a labeled slow-preview action for comparing the three effects.
+- [x] `animation_interactive-18` · P2 · proposal. Playback aid: Add a labeled slow-preview action for comparing the three effects.
   Evidence: Only direct pressing is represented.
 
 ### animation_looping

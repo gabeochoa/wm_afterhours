@@ -6,6 +6,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/animation.h>
+#include <array>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -26,199 +27,148 @@ struct AnimationInteractiveDemo : ScreenSystem<UIContext<InputAction>> {
   afterhours::Color box_purple{168, 85, 247, 255};
 
   // Click counters
-  int click_count = 0;
+  std::array<int, 3> activation_counts{};
+  int last_pressed = -1;
+  std::array<bool, 3> preview_mode{};
 
   // For first-run screenshot
   bool first_run = true;
 
-  float get_anim_value(InteractiveAnimKey key, float default_val = 1.0f) {
-    auto val =
-        afterhours::animation::manager<InteractiveAnimKey>().get_value(key);
-    if (val.has_value()) {
-      return val.value();
-    }
-    auto &track =
-        afterhours::animation::manager<InteractiveAnimKey>().ensure_track(key);
-    if (track.current != 0.0f) {
-      return track.current;
-    }
-    return default_val;
+  static constexpr std::array<InteractiveAnimKey, 3> keys{
+      InteractiveAnimKey::Button1Scale, InteractiveAnimKey::Button2Scale,
+      InteractiveAnimKey::Button3Scale};
+  static constexpr std::array<const char *, 3> names{"Blue", "Green", "Purple"};
+
+  float get_anim_value(InteractiveAnimKey key) {
+    return afterhours::animation::manager<InteractiveAnimKey>().ensure_track(key).current;
   }
 
-  void animate_button_press(InteractiveAnimKey key) {
+  void animate_button_press(size_t index, bool preview = false) {
+    preview_mode[index] = preview;
+    const float duration_scale = preview ? 4.f : 1.f;
     // Quick scale down and back up for press feedback
-    afterhours::animation::anim<InteractiveAnimKey>(key).from(1.0f).sequence({
-        {.to_value = 0.85f,
-         .duration = 0.08f,
-         .easing = afterhours::animation::EasingType::EaseOutQuad},
-        {.to_value = 1.1f,
-         .duration = 0.12f,
-         .easing = afterhours::animation::EasingType::EaseOutQuad},
-        {.to_value = 1.0f,
-         .duration = 0.1f,
-         .easing = afterhours::animation::EasingType::EaseOutQuad},
-    });
+    afterhours::animation::anim<InteractiveAnimKey>(keys[index])
+        .from(1.f)
+        .to(.85f, .08f * duration_scale, afterhours::animation::EasingType::EaseOutQuad)
+        .to(1.10f, .12f * duration_scale, afterhours::animation::EasingType::EaseOutQuad)
+        .to(1.f, .10f * duration_scale, afterhours::animation::EasingType::EaseOutQuad);
   }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float dt) override {
     // Update animation manager
-    afterhours::animation::manager<InteractiveAnimKey>().update(dt);
+    auto &manager = afterhours::animation::manager<InteractiveAnimKey>();
+    manager.update(dt);
 
     // Initialize animation tracks to 1.0 on first run for screenshot
     if (first_run) {
       first_run = false;
-      auto &track1 =
-          afterhours::animation::manager<InteractiveAnimKey>().ensure_track(
-              InteractiveAnimKey::Button1Scale);
-      track1.current = 1.0f;
-      auto &track2 =
-          afterhours::animation::manager<InteractiveAnimKey>().ensure_track(
-              InteractiveAnimKey::Button2Scale);
-      track2.current = 1.0f;
-      auto &track3 =
-          afterhours::animation::manager<InteractiveAnimKey>().ensure_track(
-              InteractiveAnimKey::Button3Scale);
-      track3.current = 1.0f;
+      for (auto key : keys) {
+        auto &track = manager.ensure_track(key);
+        track = {};
+        track.current = 1.f;
+      }
     }
 
     // Setup theme
-    auto theme = afterhours::ui::theme_presets::neon_dark();
-    context.theme = theme;
-
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-
-    // Center content vertically: content spans ~370px (title to click counter)
-    float y_offset = std::max(0.0f, (screen_h - 370.0f) / 2.0f - 30.0f);
+    context.theme = afterhours::ui::theme_presets::neon_dark();
+    context.scaling_mode = ScalingMode::Proportional;
+    const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
+    if (s <= 0.f) return;
+    const float left = (context.screen_width / s - 1144.f) / 2.f;
+    const float top = (context.screen_height / s - 720.f) / 2.f;
+    const afterhours::Color muted{183, 194, 214, 255};
+    const afterhours::Color border{75, 87, 108, 255};
+    const auto box = [s, top, left](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position((left + x) * s, (top + y) * s)
+          .with_background(Theme::Usage::None).with_corner_radius(0);
+    };
 
     // Background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_dark)
-            .with_debug_name("bg"));
-
+    auto root = div(context, mk(entity), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background(bg_dark).with_corner_radius(0).with_debug_name("interactive_canvas"));
+    int id = 0;
+    const auto label = [&](const std::string &text, float x, float y, float w, float h,
+                           float size, afterhours::Color color, const std::string &name = "", bool emphasis = false) {
+      return div(context, mk(root.ent(), id++), box(x, y, w, h).with_label(text)
+          .with_font(emphasis ? "AtkinsonMockBold" : "AtkinsonMock", pixels(size * s))
+          .with_custom_text_color(color).with_alignment(TextAlignment::Left)
+          .with_ignore_pointer_events().with_debug_name(name));
+    };
+    div(context, mk(root.ent(), id++), box(0, 24, 1144, 96)
+        .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
     // Title
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_label("Interactive Animations")
-            .with_size(ComponentSize{pixels(screen_w), pixels(60)})
-            .with_absolute_position(0.0f, 30.0f + y_offset)
-            .with_font(UIComponent::DEFAULT_FONT, h720(32.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
+    label("Interactive animations", 24, 35, 1096, 42, 34, text_light);
     // Subtitle
-    div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_label("Click buttons to see press animations")
-            .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position(0.0f, 90.0f + y_offset)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+    label("Three independent buttons. One shared press response: compress, overshoot, settle.",
+          24, 81, 1096, 27, 21, muted);
 
-    // Layout constants
-    float button_size = 100.0f;
-    float button_y = 220.0f + y_offset;
-    float spacing = 160.0f;
-    float center_x = screen_w / 2.0f;
-
-    // Get animated scale values
-    float scale1 = get_anim_value(InteractiveAnimKey::Button1Scale, 1.0f);
-    float scale2 = get_anim_value(InteractiveAnimKey::Button2Scale, 1.0f);
-    float scale3 = get_anim_value(InteractiveAnimKey::Button3Scale, 1.0f);
-
-    // ========== BUTTON 1 ==========
-    // Using with_scale() for smooth animations - bypasses layout recalculation
-    float btn1_x = center_x - spacing - button_size / 2.0f;
-
-    if (button(context, mk(entity, 10),
-               ComponentConfig{}
-                   .with_label("Click!")
-                   .with_size(
-                       ComponentSize{pixels(button_size), pixels(button_size)})
-                   .with_absolute_position(btn1_x, button_y)
-                   .with_scale(scale1) // Smooth visual scaling after layout
-                   .with_custom_background(box_blue)
-                   .with_custom_text_color(text_light)
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.15f)
-                   .with_debug_name("btn1"))) {
-      click_count++;
-      animate_button_press(InteractiveAnimKey::Button1Scale);
+    const std::array<afterhours::Color, 3> colors{box_blue, box_green, box_purple};
+    for (size_t i = 0; i < keys.size(); ++i) {
+      const float x = static_cast<float>(i) * 388.f;
+      const std::string prefix = "interactive_" + std::to_string(i + 1);
+      div(context, mk(root.ent(), id++), box(x, 140, 368, 404)
+          .with_custom_background({32, 38, 51, 255}).with_border(border, s).with_corner_radius(12 * s));
+      label(fmt::format("0{}  {} instance", i + 1, names[i]), x + 20, 152, 328, 33, 27, colors[i]);
+      label("80 + 120 + 100 ms = 300 ms", x + 20, 194, 328, 26, 21, muted);
+      label("EaseOutQuad / every segment", x + 20, 225, 328, 26, 20, muted);
+      div(context, mk(root.ent(), id++), box(x + 134, 278, 100, 100)
+          .with_on_draw_fg([s](RectangleType r) {
+            afterhours::draw_rectangle_rounded_lines_ex(r, .15f, 16, 2 * s, {183, 194, 214, 255});
+          }).with_ignore_pointer_events());
+      const float scale = get_anim_value(keys[i]);
+      // Using with_scale() for smooth animations - bypasses layout recalculation
+      if (button(context, mk(root.ent(), id++), box(x + 134, 278, 100, 100)
+          .with_label("Press").with_scale(scale)
+          .with_font("AtkinsonMock", pixels(25 * s))
+          .with_custom_background(colors[i]).with_custom_text_color({12, 23, 40, 255})
+          .with_corner_radius(7.5f * s).with_click_activation(ClickActivationMode::Press)
+          .with_debug_name("btn" + std::to_string(i + 1)))) {
+        ++activation_counts[i];
+        last_pressed = static_cast<int>(i);
+        animate_button_press(i);
+      }
+      label("100% > 85% > 110% > 100%", x + 20, 391, 328, 27, 22, text_light);
+      div(context, mk(root.ent(), id++), box(x + 20, 430, 328, 34)
+          .with_custom_background({23, 29, 40, 255}).with_corner_radius(6 * s));
+      label(fmt::format("Scale: {:3.0f}%", get_anim_value(keys[i]) * 100),
+            x + 32, 430, 304, 34, 27, text_light, prefix + "_scale", true);
+      label(fmt::format("{} activations: {}", names[i], activation_counts[i]),
+            x + 20, 475, 328, 26, 22, text_light, prefix + "_count");
+      const bool active = manager.ensure_track(keys[i]).active;
+      const std::string phase = preview_mode[i] ? (active ? "Slow preview running / 1.20 s" : "Slow preview complete / 1.20 s")
+                                              : (active ? "Press response running / 0.30 s" : "Ready / 0.30 s response");
+      label(phase, x + 20, 509, 328, 24, 19, muted, prefix + "_phase");
     }
 
-    // ========== BUTTON 2 ==========
-    float btn2_x = center_x - button_size / 2.0f;
-
-    if (button(context, mk(entity, 20),
-               ComponentConfig{}
-                   .with_label("Press!")
-                   .with_size(
-                       ComponentSize{pixels(button_size), pixels(button_size)})
-                   .with_absolute_position(btn2_x, button_y)
-                   .with_scale(scale2) // Smooth visual scaling after layout
-                   .with_custom_background(box_green)
-                   .with_custom_text_color(text_light)
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.15f)
-                   .with_debug_name("btn2"))) {
-      click_count++;
-      animate_button_press(InteractiveAnimKey::Button2Scale);
+    if (button(context, mk(root.ent(), id++), box(0, 564, 280, 42)
+        .with_label("Preview all at 1/4 speed").with_font("AtkinsonMock", pixels(21 * s))
+        .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light)
+        .with_corner_radius(8 * s).with_debug_name("interactive_preview"))) {
+      for (size_t i = 0; i < keys.size(); ++i) animate_button_press(i, true);
     }
-
-    // ========== BUTTON 3 ==========
-    float btn3_x = center_x + spacing - button_size / 2.0f;
-
-    if (button(context, mk(entity, 30),
-               ComponentConfig{}
-                   .with_label("Tap!")
-                   .with_size(
-                       ComponentSize{pixels(button_size), pixels(button_size)})
-                   .with_absolute_position(btn3_x, button_y)
-                   .with_scale(scale3) // Smooth visual scaling after layout
-                   .with_custom_background(box_purple)
-                   .with_custom_text_color(text_light)
-                   .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.15f)
-                   .with_debug_name("btn3"))) {
-      click_count++;
-      animate_button_press(InteractiveAnimKey::Button3Scale);
+    if (button(context, mk(root.ent(), id++), box(296, 564, 180, 42)
+        .with_label("Reset counts").with_font("AtkinsonMock", pixels(21 * s))
+        .with_custom_background({53, 70, 97, 255}).with_custom_text_color(text_light)
+        .with_corner_radius(8 * s).with_debug_name("interactive_reset"))) {
+      activation_counts.fill(0);
+      last_pressed = -1;
     }
-
     // Click counter display
-    div(context, mk(entity, 40),
-        ComponentConfig{}
-            .with_label(fmt::format("Total clicks: {}", click_count))
-            .with_size(ComponentSize{pixels(200), pixels(40)})
-            .with_absolute_position(center_x - 100.0f,
-                                    button_y + button_size + 40.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
+    const int total = activation_counts[0] + activation_counts[1] + activation_counts[2];
+    label(fmt::format("Total activations: {}", total), 504, 568, 308, 31, 25, text_light, "interactive_total");
+    label(last_pressed < 0 ? "Last pressed: none" : "Last pressed: " + std::string(names[last_pressed]),
+          824, 568, 320, 31, 23, text_light, "interactive_last");
+    label("Pointer press or keyboard activation. Preview leaves counts unchanged; Reset clears counts only.",
+          0, 622, 1144, 27, 21, muted);
     // Instructions section
-    div(context, mk(entity, 50),
-        ComponentConfig{}
-            .with_label(
-                "Using with_scale() for smooth visual scaling animations")
-            .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position(0.0f, screen_h - 80.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+    label("with_scale() changes visual size after layout. Resting buttons are 100 x 100 px at 720p.",
+          0, 662, 1144, 28, 20, muted, "interactive_api", true);
   }
 };
 
 REGISTER_EXAMPLE_SCREEN(animation_interactive, "Animations",
-                        "Interactive click animations with squash/stretch",
+                        "Independent buttons with the same press-scale response",
                         AnimationInteractiveDemo)

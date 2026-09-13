@@ -443,7 +443,7 @@ Eleven specimens combine triggers and motion types. Presentation proposals prese
 
 ## animation interactive
 
-[Current baseline](../../screenshot-baselines/screens/animation_interactive_720p.png) · [Visual review](../../design-audit.html#screen=animation_interactive)
+[Reviewed image](../../docs/design-audit/originals/animation_interactive_720p.png) · [Current baseline](../../screenshot-baselines/screens/animation_interactive_720p.png) · [Visual review](../../design-audit.html#screen=animation_interactive)
 
 Baseline SHA-256: `5d70ef1709f1616d4a9b8e9c9b46cfbbd118d5930a678694903fc45434feebac`
 
