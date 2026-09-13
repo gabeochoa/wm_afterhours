@@ -7,303 +7,143 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/toast.h>
+#include <array>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ToastShowcase : ScreenSystem<UIContext<InputAction>> {
   int toast_counter = 0;
-  int undo_counter = 0;
+  int notifications_sent = 0;
+  std::string last_notification = "None yet";
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     using toast = afterhours::toast;
-
-    Theme theme = afterhours::ui::theme_presets::neon_dark();
+    const auto notices = afterhours::EntityQuery().whereHasComponent<toast::Toast>().gen();
+    auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-
-    auto root =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.90f)})
-                .with_background(Theme::Usage::Background)
-                .with_corner_radius(12.f)
-                .with_debug_name("toast_bg"));
-
-    auto main_container =
-        vstack(context, mk(root.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                   .with_justify_content(JustifyContent::SpaceAround)
-                   .with_padding(Spacing::sm)
-                   .with_no_wrap()
-                   .with_debug_name("toast_main"));
-
-    div(context, mk(main_container.ent(), 0),
-        ComponentConfig{}
-            .with_label("Toast Notifications")
-            .with_size(ComponentSize{percent(1.0f), h720(60)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::md)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(32.0f))
-            .with_roundness(0.1f)
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::medium(),
-                                .left = pixels(0),
-                                .right = pixels(0)}));
-
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_grid_snapping(false);
+    const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
+    const auto style_toast = [s](ElementResult notice) {
+      notice.cmp().font_size = pixels(18 * s);
+      auto &label = notice.ent().get<HasLabel>();
+      label.letter_spacing = -1.f;
+      label.text_x_offset = 8 * s;
+    };
+    auto at = [s](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
+    };
+    div(context, mk(entity, 0), ComponentConfig{}.with_size({screen_pct(1), screen_pct(1)})
+        .with_background(Theme::Usage::Background).with_corner_radius(0).with_debug_name("toast_bg"));
+    auto root = div(context, mk(entity, 1), at(0, 0, 1280, 720)
+        .with_absolute_position((context.screen_width - 1280 * s) / 2, (context.screen_height - 720 * s) / 2)
+        .with_debug_name("toast_main"));
+    auto text = [&](int id, const std::string &caption, float x, float y, float w,
+                    float h, float size, const std::string &name = "") {
+      return div(context, mk(root.ent(), id), at(x, y, w, h).with_label(caption)
+          .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(theme.font)
+          .with_text_overflow(TextOverflow::Wrap).with_ignore_pointer_events().with_debug_name(name));
+    };
+    auto action = [&](int id, const std::string &caption, float x, float y,
+                      afterhours::Color background, const std::string &name) {
+      return button(context, mk(root.ent(), id), at(x, y, 188, 44)
+          .with_label(caption).with_font("AtkinsonMock", pixels(20 * s))
+          .with_custom_background(background).with_auto_text_color(true)
+          .with_corner_radius(6 * s).with_debug_name(name));
+    };
+    text(0, "Toast Notifications", 48, 24, 900, 44, 34);
+    text(1, "Inspect native severity, duration and stacking behavior.", 48, 77, 900, 30, 21);
+    if (action(2, "Clear toasts", 1044, 45, theme.secondary, "toast_clear")) {
+      for (afterhours::Entity &notice : notices)
+        notice.get<toast::Toast>().dismiss();
+      last_notification = "All toasts cleared";
+    }
+    const auto section = [&](int id, float y, float h, const std::string &name) {
+      div(context, mk(root.ent(), id), at(48, y, 860, h).with_background(Theme::Usage::Surface)
+          .with_corner_radius(10 * s).with_debug_name(name));
+    };
     // =========================================================================
     // Section 1: Simple toasts
     // =========================================================================
-    auto section1 =
-        vstack(context, mk(main_container.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), h720(140)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::sm)
-                   .with_roundness(0.1f)
-                   .with_debug_name("section1"));
-
+    section(10, 128, 176, "section1");
     // Section header
-    div(context, mk(section1.ent(), 0),
-        ComponentConfig{}
-            .with_label("SIMPLE TOASTS")
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(8)}));
-
-    auto button_row =
-        hstack(context, mk(section1.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                   .with_align_items(AlignItems::Center)
-                   .with_justify_content(JustifyContent::FlexStart)
-                   .with_gap(pixels(8))
-                   .with_debug_name("button_row"));
-
-    if (button(context, mk(button_row.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Info Toast")
-                   .with_size(ComponentSize{pixels(152), pixels(56)})
-                   .with_background(Theme::Usage::Primary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_info"))) {
-      toast::send_info(context, "This is an info message #" +
-                                    std::to_string(++toast_counter));
+    text(11, "Simple toasts / native severity colors", 64, 140, 812, 30, 23);
+    const std::array<const char *, 4> names{"[i] Info Toast", "[+] Success Toast", "[!] Warning Toast", "[x] Error Toast"};
+    const std::array<const char *, 4> messages{"This is an info message", "Operation completed successfully!", "Warning: Check your settings", "Error: Something went wrong!"};
+    const std::array<const char *, 4> debug{"btn_info", "btn_success", "btn_warning", "btn_error"};
+    const std::array<afterhours::Color, 4> colors{theme.primary, theme.secondary, theme.accent, theme.error};
+    const std::array<const char *, 4> lifetime{"Default: 3 s", "Default: 3 s", "Default: 5 s", "Default: 7 s"};
+    for (size_t i = 0; i < names.size(); ++i) {
+      const float x = 64 + static_cast<float>(i) * 208;
+      if (action(20 + static_cast<int>(i), names[i], x, 184, colors[i], debug[i])) {
+        last_notification = messages[i];
+        ++notifications_sent;
+        if (i == 0) style_toast(toast::send_info(context, "[i] This is an info message #" + std::to_string(++toast_counter)));
+        if (i == 1) style_toast(toast::send_success(context, "[+] Operation completed successfully!"));
+        if (i == 2) style_toast(toast::send_warning(context, messages[i]));
+        if (i == 3) style_toast(toast::send_error(context, messages[i]));
+      }
+      text(30 + static_cast<int>(i), lifetime[i], x, 236, 188, 24, 17);
+      text(40 + static_cast<int>(i), messages[i], x, 264, 188, 36, 14);
     }
-
-    if (button(context, mk(button_row.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Success Toast")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_background(Theme::Usage::Secondary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_success"))) {
-      toast::send_success(context, "Operation completed successfully!");
-    }
-
-    afterhours::Color warningBg = theme.accent;
-    if (button(context, mk(button_row.ent(), 2),
-               ComponentConfig{}
-                   .with_label("Warning Toast")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_custom_background(warningBg)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_warning"))) {
-      toast::send_warning(context, "Warning: Check your settings");
-    }
-
-    if (button(context, mk(button_row.ent(), 3),
-               ComponentConfig{}
-                   .with_label("Error Toast")
-                   .with_size(ComponentSize{pixels(152), pixels(56)})
-                   .with_background(Theme::Usage::Error)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f))
-                   .with_roundness(theme.roundness)
-                   .with_debug_name("btn_error"))) {
-      toast::send_error(context, "Error: Something went wrong!");
-    }
-
     // =========================================================================
     // Section 2: Duration and spam
     // =========================================================================
-    auto section2 =
-        vstack(context, mk(main_container.ent(), 2),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), h720(140)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::sm)
-                   .with_roundness(0.1f)
-                   .with_margin(Margin{.top = DefaultSpacing::small(),
-                                       .bottom = pixels(0),
-                                       .left = pixels(0),
-                                       .right = pixels(0)})
-                   .with_debug_name("section2"));
-
-    // Section header
-    div(context, mk(section2.ent(), 0),
-        ComponentConfig{}
-            .with_label("DURATION & SPAM")
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(8)}));
-
-    auto second_row =
-        hstack(context, mk(section2.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                   .with_align_items(AlignItems::Center)
-                   .with_justify_content(JustifyContent::FlexStart)
-                   .with_gap(pixels(8))
-                   .with_debug_name("second_row"));
-
-    // Configurable toast durations for demo
-    constexpr float QUICK_TOAST_DURATION = 1.0f;
-    constexpr float LONG_TOAST_DURATION = 10.0f;
-    constexpr float SPAM_TOAST_DURATION = 4.0f;
-    constexpr int SPAM_TOAST_COUNT = 5;
-
-    if (button(context, mk(second_row.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Quick (displays 1s)")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_background(Theme::Usage::Primary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_quick"))) {
-      toast::send_info(context, "This disappears fast!", QUICK_TOAST_DURATION);
+    section(50, 324, 154, "section2");
+    text(51, "Duration and stacking tests", 64, 338, 812, 30, 23);
+    const afterhours::Color coral{255, 127, 80, 255};
+    if (action(52, "Quick, 1 s", 64, 383, theme.primary, "btn_quick")) {
+      style_toast(toast::send_info(context, "This disappears fast!", 1));
+      ++notifications_sent;
+      last_notification = "Quick notification / 1 s";
     }
-
-    if (button(context, mk(second_row.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Long (displays 10s)")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_background(Theme::Usage::Primary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_long"))) {
-      toast::send_info(context, "This sticks around for a while...",
-                       LONG_TOAST_DURATION);
+    if (action(53, "Long, 10 s", 272, 383, theme.primary, "btn_long")) {
+      style_toast(toast::send_info(context, "This sticks around for a while...", 10));
+      ++notifications_sent;
+      last_notification = "Long notification / 10 s";
     }
-
-    // Warning color for spam button to indicate potential overwhelm
-    afterhours::Color spamWarningBg = theme.accent;
-    if (button(context, mk(second_row.ent(), 2),
-               ComponentConfig{}
-                   .with_label("Spam x5 (!)")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_custom_background(spamWarningBg)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(24.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_spam"))) {
-      for (int i = 0; i < SPAM_TOAST_COUNT; i++) {
-        toast::send_warning(context, "Spam toast #" + std::to_string(i + 1),
-                            SPAM_TOAST_DURATION);
-      }
+    if (action(54, "Show five toasts", 480, 383, theme.accent, "btn_spam")) {
+      for (int i = 0; i < 5; ++i)
+        style_toast(toast::send_warning(context, "Stacking toast #" + std::to_string(i + 1), 4));
+      notifications_sent += 5;
+      last_notification = "Five warnings / 4 s each";
     }
-
-    afterhours::Color coral = {255, 127, 80, 255};
-    if (button(context, mk(second_row.ent(), 3),
-               ComponentConfig{}
-                   .with_label("Custom Color")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_custom_background(coral)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
-                   .with_roundness(theme.roundness)
-                   .with_debug_name("btn_custom"))) {
-      toast::send_custom(context, "Custom colored toast!", coral, 4.0f);
+    if (action(55, "Custom Color", 688, 383, coral, "btn_custom")) {
+      style_toast(toast::send_custom(context, "Custom colored toast!", coral, 4));
+      ++notifications_sent;
+      last_notification = "Coral notification / 4 s";
     }
-
-    // =========================================================================
-    // Section 3: Interactive toasts with buttons
-    // =========================================================================
-    auto section3 =
-        vstack(context, mk(main_container.ent(), 3),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), h720(140)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::sm)
-                   .with_roundness(0.1f)
-                   .with_margin(Margin{.top = DefaultSpacing::small(),
-                                       .bottom = pixels(0),
-                                       .left = pixels(0),
-                                       .right = pixels(0)})
-                   .with_debug_name("section3"));
-
-    // Section header
-    div(context, mk(section3.ent(), 0),
-        ComponentConfig{}
-            .with_label("INTERACTIVE TOASTS")
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(20.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_margin(Margin{.bottom = pixels(8)}));
-
-    auto third_row =
-        hstack(context, mk(section3.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(56)})
-                   .with_align_items(AlignItems::Center)
-                   .with_justify_content(JustifyContent::FlexStart)
-                   .with_gap(pixels(8))
-                   .with_debug_name("third_row"));
-
-    if (button(context, mk(third_row.ent(), 0),
-               ComponentConfig{}
-                   .with_label("With Undo Action")
-                   .with_size(ComponentSize{Size{Dim::Text, 0.f, 1.f}, pixels(56)})
-                   .with_background(Theme::Usage::Secondary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
-                   .with_roundness(theme.roundness)
-                   .with_margin(Margin{.right = DefaultSpacing::tiny()})
-                   .with_debug_name("btn_undo"))) {
-      // Create a toast that shows undo was triggered
-      // Note: For truly interactive toasts with buttons, a different approach
-      // would be needed (modal or persistent UI element)
-      undo_counter++;
-      toast::send_success(
-          context, "Item deleted (undo #" + std::to_string(undo_counter) + ")",
-          5.0f);
+    text(56, "Native stack: new notifications accumulate upward.", 64, 437, 592, 28, 18);
+    text(57, "Coral / #FF7F50", 688, 437, 188, 28, 17);
+    section(60, 498, 178, "section3");
+    text(61, "Simulated action feedback", 64, 511, 812, 30, 23);
+    if (action(62, "Sample deletion", 64, 558, theme.secondary, "btn_undo")) {
+      style_toast(toast::send_success(context, "Demo: deletion feedback only", 5));
+      ++notifications_sent;
+      last_notification = "Deletion feedback / no undo action";
     }
-
-    // Show undo count
-    div(context, mk(third_row.ent(), 1),
-        ComponentConfig{}
-            .with_label("Undos: " + std::to_string(undo_counter))
-            .with_size(ComponentSize{pixels(120), pixels(56)})
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f)));
+    text(63, "Sends a five-second message. No item is deleted and no undo action is attached.",
+         272, 554, 600, 64, 19);
+    text(64, "Notifications sent: " + std::to_string(notifications_sent), 64, 631, 812, 28, 20, "toast_sent");
+    div(context, mk(root.ent(), 70), at(932, 128, 300, 548)
+        .with_background(Theme::Usage::Surface).with_corner_radius(10 * s));
+    text(71, "Preview location", 948, 140, 268, 32, 23);
+    div(context, mk(root.ent(), 72), at(948, 187, 268, 143).with_border(theme.font_muted, s)
+        .with_ignore_pointer_events().with_on_draw_fg([theme, s](RectangleType r) {
+          for (int i = 0; i < 3; ++i)
+            afterhours::draw_rectangle({r.x + (r.width - 120 * s) / 2, r.y + r.height - (26 + i * 25) * s, 120 * s, 18 * s}, theme.primary);
+        }));
+    text(73, "Bottom center / stack grows upward", 948, 344, 268, 52, 19);
+    int active_count = 0;
+    for (afterhours::Entity &notice : notices)
+      if (!notice.get<toast::Toast>().is_expired()) ++active_count;
+    text(74, "Active count: " + std::to_string(active_count), 948, 411, 268, 32, 21, "toast_active");
+    text(75, "Last notification", 948, 466, 268, 28, 19);
+    text(76, last_notification, 948, 505, 268, 118, 20, "toast_last");
   }
 };
 

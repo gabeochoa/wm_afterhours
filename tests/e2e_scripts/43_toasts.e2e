@@ -5,31 +5,30 @@
 
 # Navigate to the toast showcase screen
 goto_screen toasts
+resize 1280 720
 wait 0.5
 
 # =========================================================================
 # Verify initial state
 # =========================================================================
 expect_text "Toast Notifications"
-expect_text "SIMPLE TOASTS"
-expect_text "DURATION & SPAM"
-expect_text "INTERACTIVE TOASTS"
+expect_text "Simple toasts"
+expect_text "Duration and stacking tests"
+expect_text "Simulated action feedback"
 
-# Buttons should be visible (some may be off-screen in narrow viewports)
+# Buttons should be visible
 expect_text "Info Toast"
 expect_text "Success Toast"
 
-# Undo counter starts at 0
-expect_text "Undos: 0"
+# Notification counter starts at 0
+expect_text "Notifications sent: 0"
 
 screenshot toasts_initial
 
 # =========================================================================
 # Test 1: Click Info Toast button
 # =========================================================================
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_info
 wait 0.5
 
 screenshot toasts_info_triggered
@@ -37,9 +36,7 @@ screenshot toasts_info_triggered
 # =========================================================================
 # Test 2: Click Success Toast button
 # =========================================================================
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_success
 wait 0.5
 
 screenshot toasts_success_triggered
@@ -47,9 +44,7 @@ screenshot toasts_success_triggered
 # =========================================================================
 # Test 3: Click Warning Toast button
 # =========================================================================
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_warning
 wait 0.5
 
 screenshot toasts_warning_triggered
@@ -57,9 +52,7 @@ screenshot toasts_warning_triggered
 # =========================================================================
 # Test 4: Click Error Toast button
 # =========================================================================
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_error
 wait 0.5
 
 screenshot toasts_error_triggered
@@ -67,37 +60,23 @@ screenshot toasts_error_triggered
 # =========================================================================
 # Test 5: Click Quick duration toast
 # =========================================================================
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_quick
 wait 0.3
 
 screenshot toasts_quick_triggered
 
 # =========================================================================
-# Test 6: Skip Long, click Spam x5 button
+# Test 6: Click stacking button
 # =========================================================================
-# Skip Long toast button
-key TAB
-wait 0.2
-# Land on Spam x5
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_spam
 wait 0.5
 
 screenshot toasts_spam_triggered
 
 # =========================================================================
-# Test 7: Skip Custom Color, test Undo action
+# Test 7: Test simulated action feedback
 # =========================================================================
-# Skip Custom Color button
-key TAB
-wait 0.2
-# Land on With Undo Action button
-key TAB
-wait 0.2
-key ENTER
+click_ui btn_undo
 wait 0.5
 
 screenshot toasts_undo_first
@@ -112,8 +91,8 @@ screenshot toasts_undo_second
 # Test 8: Verify all sections remain visible
 # =========================================================================
 expect_text "Toast Notifications"
-expect_text "SIMPLE TOASTS"
-expect_text "DURATION & SPAM"
-expect_text "INTERACTIVE TOASTS"
+expect_text "Simple toasts"
+expect_text "Duration and stacking tests"
+expect_text "Simulated action feedback"
 
 screenshot toasts_final

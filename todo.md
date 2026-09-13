@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,256 completed; 279 remaining.
+2,276 completed; 259 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7706,64 +7706,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/toasts_720p.png) · [Visual review](design-audit.html#screen=toasts)
 
-- [ ] `toasts-01` · P2 · defect. Interactive section claim: Rename the section Simulated action feedback or implement an actual undo action in the toast.
+- [x] `toasts-01` · P2 · defect. Interactive section claim: Rename the section Simulated action feedback or implement an actual undo action in the toast.
   Evidence: INTERACTIVE TOASTS and With Undo Action promise an embedded action, but source only increments a counter and sends a toast.
 
-- [ ] `toasts-02` · P2 · defect. Undo counter label: Rename it Notifications sent unless actual undo operations are introduced.
+- [x] `toasts-02` · P2 · defect. Undo counter label: Rename it Notifications sent unless actual undo operations are introduced.
   Evidence: Undos: 0 labels launcher activations as completed undos.
 
-- [ ] `toasts-03` · P2 · defect. Title inset: Add 16 px inner padding.
+- [x] `toasts-03` · P2 · defect. Title inset: Add 16 px inner padding.
   Evidence: Toast Notifications starts flush against the title bar's left edge.
 
-- [ ] `toasts-04` · P2 · defect. Quick duration label: Add at least 12 px horizontal padding.
+- [x] `toasts-04` · P2 · defect. Quick duration label: Add at least 12 px horizontal padding.
   Evidence: Quick displays 1s nearly touches both sides of its button.
 
-- [ ] `toasts-05` · P2 · defect. Long duration label: Increase button width or shorten the label to Long, 10 s.
+- [x] `toasts-05` · P2 · defect. Long duration label: Increase button width or shorten the label to Long, 10 s.
   Evidence: Long displays 10s fills almost the entire button width.
 
-- [ ] `toasts-06` · P2 · proposal. Success color: Add severity icons and text labels so the theme color is not the sole cue.
+- [x] `toasts-06` · P2 · proposal. Success color: Add severity icons and text labels so the theme color is not the sole cue.
   Evidence: Success Toast is purple without an external severity key.
 
-- [ ] `toasts-07` · P2 · proposal. Warning color: Use a warning icon in the launcher and toast specimen.
+- [x] `toasts-07` · P2 · proposal. Warning color: Use a warning icon in the launcher and toast specimen.
   Evidence: Warning Toast is magenta and close to other accents.
 
-- [ ] `toasts-08` · P2 · proposal. Error launcher: Add a consistent error icon aligned with the other severity controls.
+- [x] `toasts-08` · P2 · proposal. Error launcher: Add a consistent error icon aligned with the other severity controls.
   Evidence: Error Toast uses red but no error symbol.
 
-- [ ] `toasts-09` · P2 · proposal. Info launcher: Add a short example-message caption below the launcher.
+- [x] `toasts-09` · P2 · proposal. Info launcher: Add a short example-message caption below the launcher.
   Evidence: Info Toast has no preview of the resulting message.
 
-- [ ] `toasts-10` · P2 · proposal. Duration group title: Rename it Duration and stacking tests.
+- [x] `toasts-10` · P2 · proposal. Duration group title: Rename it Duration and stacking tests.
   Evidence: DURATION & SPAM uses informal stress-test language.
 
-- [ ] `toasts-11` · P2 · proposal. Spam action: Use Show five toasts and describe stacking behavior below it.
+- [x] `toasts-11` · P2 · proposal. Spam action: Use Show five toasts and describe stacking behavior below it.
   Evidence: Spam x5 (!) obscures the exact outcome.
 
-- [ ] `toasts-12` · P2 · proposal. Custom color control: Add an external swatch value or color label.
+- [x] `toasts-12` · P2 · proposal. Custom color control: Add an external swatch value or color label.
   Evidence: Custom Color uses an orange fill without naming the configured color.
 
-- [ ] `toasts-13` · P2 · proposal. Launcher sizing: Use an equal-width severity grid for easier comparison.
+- [x] `toasts-13` · P2 · proposal. Launcher sizing: Use an equal-width severity grid for easier comparison.
   Evidence: Simple toast buttons have uneven widths determined by their labels.
 
-- [ ] `toasts-14` · P2 · proposal. Typography scale: Reduce tracking and use a consistent readable button size.
+- [x] `toasts-14` · P2 · proposal. Typography scale: Reduce tracking and use a consistent readable button size.
   Evidence: Large letter-spaced launcher labels crowd their backgrounds.
 
-- [ ] `toasts-15` · P2 · proposal. Empty toast area: Add a dedicated labeled preview region or companion shown-toast captures.
+- [x] `toasts-15` · P2 · proposal. Empty toast area: Add a dedicated labeled preview region or companion shown-toast captures.
   Evidence: No toast is visible anywhere in the initial capture.
 
-- [ ] `toasts-16` · P2 · proposal. Toast placement: Show a small placement diagram in the unused right side of a section.
+- [x] `toasts-16` · P2 · proposal. Toast placement: Show a small placement diagram in the unused right side of a section.
   Evidence: The launcher page does not state where notifications appear.
 
-- [ ] `toasts-17` · P2 · proposal. Toast lifetime: Label the default duration used by the simple severity examples.
+- [x] `toasts-17` · P2 · proposal. Toast lifetime: Label the default duration used by the simple severity examples.
   Evidence: Only quick and long launchers show duration values.
 
-- [ ] `toasts-18` · P2 · proposal. Clear action: Add Clear toasts outside the fixture previews.
+- [x] `toasts-18` · P2 · proposal. Clear action: Add Clear toasts outside the fixture previews.
   Evidence: No visible action dismisses the stacking test.
 
-- [ ] `toasts-19` · P2 · proposal. Status reporting: Add a shared Last notification and Active count readout.
+- [x] `toasts-19` · P2 · proposal. Status reporting: Add a shared Last notification and Active count readout.
   Evidence: Only the undo simulation has a counter.
 
-- [ ] `toasts-20` · P3 · proposal. Section space: Use that space for concise expected-result and duration metadata.
+- [x] `toasts-20` · P3 · proposal. Section space: Use that space for concise expected-result and duration metadata.
   Evidence: Wide cards leave substantial unused right space.
 
 ### toggle_switches

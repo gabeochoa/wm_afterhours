@@ -5501,7 +5501,8 @@
         "change": "Use that space for concise expected-result and duration metadata."
       }
     ],
-    "sha256": "09e5c316980c035277c80cb1fcab44194c4a060f73cd2157f48d2bb62c0c024c"
+    "sha256": "09e5c316980c035277c80cb1fcab44194c4a060f73cd2157f48d2bb62c0c024c",
+    "evidence": "docs/design-audit/originals/toasts_720p.png"
   },
   {
     "id": "toggle_switches",

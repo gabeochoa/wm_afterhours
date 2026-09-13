@@ -3927,7 +3927,7 @@ Current capture removes Cozy Kraft focus outline while Ocean Navy remains the ac
 
 ## toasts
 
-[Current baseline](../../screenshot-baselines/screens/toasts_720p.png) · [Visual review](../../design-audit.html#screen=toasts)
+[Reviewed image](../../docs/design-audit/originals/toasts_720p.png) · [Current baseline](../../screenshot-baselines/screens/toasts_720p.png) · [Visual review](../../design-audit.html#screen=toasts)
 
 Baseline SHA-256: `09e5c316980c035277c80cb1fcab44194c4a060f73cd2157f48d2bb62c0c024c`
 

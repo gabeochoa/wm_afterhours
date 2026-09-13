@@ -1,0 +1,85 @@
+goto_screen toasts
+resize 1280 720
+wait 0.4
+expect_text "Toast Notifications"
+expect_text "Simulated action feedback"
+expect_text "No item is deleted"
+expect_text "Coral / #FF7F50"
+expect_text "Notifications sent: 0"
+expect_text "Active count: 0"
+assert_ui section1 x=48 y=128 w=860 h=176
+assert_ui btn_info x=64 y=184 w=188 h=44
+assert_ui btn_error x=688 y=184 w=188 h=44
+assert_no_overflow
+assert_within_parents
+screenshot toasts_design_initial
+click_ui btn_info
+wait 0.2
+expect_text "Notifications sent: 1"
+expect_text "Active count: 1"
+click_ui btn_success
+wait 0.2
+click_ui btn_warning
+wait 0.2
+click_ui btn_error
+wait 0.2
+expect_text "Notifications sent: 4"
+expect_text "Active count: 4"
+screenshot toasts_design_severity
+click_ui toast_clear
+wait 0.2
+expect_text "Active count: 0"
+click_ui btn_quick
+wait 0.2
+expect_text "Active count: 1"
+wait 1.2
+expect_text "Active count: 0"
+click_ui btn_long
+wait 1.2
+expect_text "Active count: 1"
+click_ui toast_clear
+wait 0.2
+click_ui btn_spam
+wait 0.2
+expect_text "Notifications sent: 11"
+expect_text "Active count: 5"
+screenshot toasts_design_stacking
+click_ui toast_clear
+wait 0.2
+click_ui btn_custom
+wait 0.2
+expect_text "Coral notification / 4 s"
+expect_text "Custom colored toast!"
+screenshot toasts_design_custom
+click_ui toast_clear
+wait 0.2
+click_ui btn_undo
+wait 0.2
+expect_text "Notifications sent: 13"
+expect_text "Deletion feedback / no undo action"
+screenshot toasts_design_simulated_feedback
+click_ui toast_clear
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui section1 x=72 y=192 w=1290 h=264
+assert_no_overflow
+assert_within_parents
+screenshot toasts_design_1080
+click_ui btn_success
+wait 0.3
+screenshot toasts_design_1080_severity
+click_ui toast_clear
+wait 0.2
+resize 1024 768
+wait 0.3
+assert_ui section1 x=38 y=198 w=688 h=141
+assert_no_overflow
+assert_within_parents
+screenshot toasts_design_narrow
+click_ui btn_success
+wait 0.3
+screenshot toasts_design_narrow_severity
+click_ui toast_clear
+wait 0.2
+resize 1280 720
