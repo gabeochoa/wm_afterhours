@@ -71,7 +71,16 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    context.theme = afterhours::ui::theme_presets::neon_dark();
+    Theme theme;
+    theme.background = {18, 23, 33, 255};
+    theme.surface = {36, 43, 55, 255};
+    theme.primary = {42, 56, 76, 255};
+    theme.secondary = {48, 60, 78, 255};
+    theme.accent = {60, 101, 156, 255};
+    theme.font = {240, 245, 253, 255};
+    theme.font_muted = {165, 177, 193, 255};
+    theme.focus = {165, 201, 248, 255};
+    context.set_theme(theme);
     context.scaling_mode = ScalingMode::Proportional;
     const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
     const float top = (context.screen_height / s - 720.f) / 2.f;
@@ -206,7 +215,9 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
 
     const auto menu_config = ComponentConfig{}.with_size({pixels(340 * s), pixels(44 * s)})
         .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color({255, 255, 255, 255})
-        .with_border({138, 158, 188, 255}, 2 * s).with_render_layer(20);
+        .with_custom_background(theme.surface).with_custom_hover_bg({56, 73, 98, 255})
+        .with_alignment(TextAlignment::Left)
+        .with_border({83, 96, 115, 255}, 2 * s).with_render_layer(20);
     const auto items = file_items();
     const auto render_menu = [&](Vector2Type at, bool &open, bool reopened, const std::string &name) {
       auto pair = mk(root.ent(), id++);
@@ -227,6 +238,7 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
           const bool shortcut = row.has<UIComponentDebug>() &&
                                 row.get<UIComponentDebug>().name_value == "menu_shortcut";
           if (shortcut) {
+            row.removeComponentIfExists<afterhours::HasColor>();
             text.is_disabled = false;
             text.set_explicit_text_color({207, 219, 238, 255});
             row.get<UIComponent>().desired[Axis::X].value -= 7 * s;
@@ -234,7 +246,10 @@ struct ContextMenuLab : ScreenSystem<UIContext<InputAction>> {
             continue;
           }
           text.text_x_offset = 12 * s;
-          if (text.is_disabled) row.removeComponentIfExists<HasClickListener>();
+          if (!text.is_disabled) continue;
+          text.set_explicit_text_color({165, 177, 193, 255});
+          text.is_disabled = false;
+          row.removeComponentIfExists<HasClickListener>();
         }
         const auto placed = overlay::place({at.x, at.y, 0, 0}, 340 * s, 242 * s,
                                             context.screen_width, context.screen_height,
