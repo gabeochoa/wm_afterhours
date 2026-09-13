@@ -3566,7 +3566,8 @@
         "change": "Add a concrete before-pane and table-pane test sequence."
       }
     ],
-    "sha256": "825c267f26c6c4ed5287f8901368c5e682946dd468d3aeb29513e1270e7108ce"
+    "sha256": "825c267f26c6c4ed5287f8901368c5e682946dd468d3aeb29513e1270e7108ce",
+    "evidence": "docs/design-audit/originals/sync_scroll_lab_720p.png"
   },
   {
     "id": "system_profile_lab",

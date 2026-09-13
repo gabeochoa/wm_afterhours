@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,913 completed; 622 remaining.
+1,931 completed; 604 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6977,58 +6977,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/sync_scroll_lab_720p.png) · [Visual review](design-audit.html#screen=sync_scroll_lab)
 
-- [ ] `sync_scroll_lab-01` · P2 · proposal. Group-one subtitle: Increase explanatory text to 12 to 13 px actual size.
+- [x] `sync_scroll_lab-01` · P2 · proposal. Group-one subtitle: Increase explanatory text to 12 to 13 px actual size.
   Evidence: The explanation of the short pane stopping is tiny.
 
-- [ ] `sync_scroll_lab-02` · P2 · proposal. Document text: Increase specimen text size while retaining the row-height relationship.
+- [x] `sync_scroll_lab-02` · P2 · proposal. Document text: Increase specimen text size while retaining the row-height relationship.
   Evidence: Line numbers and code are very small in all three panes.
 
-- [ ] `sync_scroll_lab-03` · P2 · proposal. Before/after content: Use a small actual code difference so before and after are meaningful labels.
+- [x] `sync_scroll_lab-03` · P2 · proposal. Before/after content: Use a small actual code difference so before and after are meaningful labels.
   Evidence: Both sides visibly show value = compute(x) on highlighted rows.
 
-- [ ] `sync_scroll_lab-04` · P2 · proposal. Change colors: Add a legend explaining the color mapping or use conventional removed/added mapping.
+- [x] `sync_scroll_lab-04` · P2 · proposal. Change colors: Add a legend explaining the color mapping or use conventional removed/added mapping.
   Evidence: Before is green and after is red without a key.
 
-- [ ] `sync_scroll_lab-05` · P2 · proposal. Short-pane role: Label it Short content, 24 rows to distinguish content length from viewport height.
+- [x] `sync_scroll_lab-05` · P2 · proposal. Short-pane role: Label it Short content, 24 rows to distinguish content length from viewport height.
   Evidence: Short has fewer rows but the same visible viewport height.
 
-- [ ] `sync_scroll_lab-06` · P2 · proposal. Y status: Use three labeled offset cells with px units.
+- [x] `sync_scroll_lab-06` · P2 · proposal. Y status: Use three labeled offset cells with px units.
   Evidence: y: before 0 after 0 short 0 is tiny and compressed.
 
-- [ ] `sync_scroll_lab-07` · P2 · proposal. Sync state: Use readable badges such as Matching offsets and Short pane following.
+- [x] `sync_scroll_lab-07` · P2 · proposal. Sync state: Use readable badges such as Matching offsets and Short pane following.
   Evidence: y-in-sync and short-following are terse implementation-like phrases.
 
-- [ ] `sync_scroll_lab-08` · P2 · proposal. Clamped state: Add a preset that scrolls the long panes beyond the short pane maximum.
+- [x] `sync_scroll_lab-08` · P2 · proposal. Clamped state: Add a preset that scrolls the long panes beyond the short pane maximum.
   Evidence: The initial frame does not show the short pane at its endpoint.
 
-- [ ] `sync_scroll_lab-09` · P2 · proposal. Group-two explanation: Use a clear heading and one readable instruction line.
+- [x] `sync_scroll_lab-09` · P2 · proposal. Group-two explanation: Use a clear heading and one readable instruction line.
   Evidence: Header tracks the table's x is a long tiny line.
 
-- [ ] `sync_scroll_lab-10` · P2 · proposal. Header cells: Increase text size and use consistent inner padding.
+- [x] `sync_scroll_lab-10` · P2 · proposal. Header cells: Increase text size and use consistent inner padding.
   Evidence: col 1 through col 8 are tiny and flush to their cell starts.
 
-- [ ] `sync_scroll_lab-11` · P2 · proposal. Table cells: Add faint column guides and readable row/column identifiers.
+- [x] `sync_scroll_lab-11` · P2 · proposal. Table cells: Add faint column guides and readable row/column identifiers.
   Evidence: r1c1-style labels are hard to scan across wide empty cells.
 
-- [ ] `sync_scroll_lab-12` · P2 · proposal. Header scrollbar: Label it as a synchronized independent scrollbar so the duplicate bars are intentional.
+- [x] `sync_scroll_lab-12` · P2 · proposal. Header scrollbar: Label it as a synchronized independent scrollbar so the duplicate bars are intentional.
   Evidence: The header shows its own horizontal scrollbar above the table.
 
-- [ ] `sync_scroll_lab-13` · P2 · proposal. X status: Use the same offset-cell treatment as the Y group.
+- [x] `sync_scroll_lab-13` · P2 · proposal. X status: Use the same offset-cell treatment as the Y group.
   Evidence: x: header 0 table 0 is difficult to read below the table.
 
-- [ ] `sync_scroll_lab-14` · P2 · proposal. Axis distinction: Use Vertical group and Horizontal header/table group headings.
+- [x] `sync_scroll_lab-14` · P2 · proposal. Axis distinction: Use Vertical group and Horizontal header/table group headings.
   Evidence: Group 1 and Group 2 are named numerically rather than by tested axis.
 
-- [ ] `sync_scroll_lab-15` · P2 · proposal. Reset control: Add Reset all offsets outside the scroll regions.
+- [x] `sync_scroll_lab-15` · P2 · proposal. Reset control: Add Reset all offsets outside the scroll regions.
   Evidence: No visible control returns both groups to a known state.
 
-- [ ] `sync_scroll_lab-16` · P3 · proposal. Right-side space: Use the remaining area for the synchronization rules and expected clamping behavior.
+- [x] `sync_scroll_lab-16` · P3 · proposal. Right-side space: Use the remaining area for the synchronization rules and expected clamping behavior.
   Evidence: The fixture ends around three-quarters of the screen width.
 
-- [ ] `sync_scroll_lab-17` · P2 · proposal. Viewport metrics: Display viewport and content sizes in a compact spec table.
+- [x] `sync_scroll_lab-17` · P2 · proposal. Viewport metrics: Display viewport and content sizes in a compact spec table.
   Evidence: The thumbnail-like panes have no viewport dimensions shown.
 
-- [ ] `sync_scroll_lab-18` · P2 · proposal. Driver instruction: Add a concrete before-pane and table-pane test sequence.
+- [x] `sync_scroll_lab-18` · P2 · proposal. Driver instruction: Add a concrete before-pane and table-pane test sequence.
   Evidence: The page does not say which pane the reviewer should scroll first.
 
 ### system_profile_lab

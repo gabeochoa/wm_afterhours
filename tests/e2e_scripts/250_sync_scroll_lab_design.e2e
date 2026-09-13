@@ -1,0 +1,70 @@
+goto_screen sync_scroll_lab
+resize 1280 720
+wait 0.3
+click_ui ss_reset
+wait 0.3
+expect_text "Synchronized scrolling"
+expect_text "Vertical group / scroll Before"
+expect_text "Before / 120 rows"
+expect_text "After / 120 rows"
+expect_text "Short content / 24 rows"
+expect_text "value = compute(x)"
+expect_text "value = cached(x)"
+expect_text "- Before: removed"
+expect_text "+ After: added"
+expect_text "Before y: 0 px"
+expect_text "After y: 0 px"
+expect_text "Short y: 0 px"
+expect_text "Matching vertical offsets"
+expect_text "Short pane following"
+expect_text "Header x: 0 px / Table x: 0 px"
+expect_text "Matching horizontal offsets"
+assert_ui ss_pane_1 x=48 y=110 w=340 h=300
+assert_ui ss_pane_2 x=400 y=110 w=340 h=300
+assert_ui ss_pane_3 x=752 y=110 w=200 h=300
+assert_no_overflow
+screenshot sync_scroll_design
+click_ui ss_clamp
+wait 0.3
+expect_text "Before y: 400 px"
+expect_text "After y: 400 px"
+expect_no_text "Short y: 0 px"
+expect_text "Matching vertical offsets"
+expect_text "Short pane at end"
+screenshot sync_scroll_design_clamped
+focus_ui ss_reset
+key ENTER
+wait 0.3
+expect_text "Before y: 0 px"
+expect_text "After y: 0 px"
+expect_text "Short y: 0 px"
+expect_text "Short pane following"
+mouse_move 210 250
+scroll_wheel 0 -3
+wait 0.3
+expect_no_text "Before y: 0 px"
+expect_text "Matching vertical offsets"
+expect_text "Short pane following"
+mouse_move 400 580
+scroll_wheel -5 0
+wait 0.3
+expect_no_text "Header x: 0 px"
+expect_text "Matching horizontal offsets"
+screenshot sync_scroll_design_horizontal
+click_ui ss_reset
+wait 0.3
+expect_text "Header x: 0 px / Table x: 0 px"
+expect_text "Before y: 0 px"
+resize 1920 1080
+wait 0.3
+assert_ui ss_root x=0 y=0 w=1920 h=1080
+assert_ui ss_pane_1 x=72 y=165 w=510 h=450
+assert_no_overflow
+screenshot sync_scroll_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ss_root x=0 y=96 w=1024 h=576
+assert_ui ss_pane_1 x=38 y=184 w=272 h=240
+assert_no_overflow
+screenshot sync_scroll_design_narrow
+resize 1280 720

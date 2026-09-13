@@ -3521,7 +3521,7 @@ The font-weight and fallback cases are intentional and confirmed in source. Eigh
 
 ## sync scroll lab
 
-[Current baseline](../../screenshot-baselines/screens/sync_scroll_lab_720p.png) · [Visual review](../../design-audit.html#screen=sync_scroll_lab)
+[Reviewed image](../../docs/design-audit/originals/sync_scroll_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/sync_scroll_lab_720p.png) · [Visual review](../../design-audit.html#screen=sync_scroll_lab)
 
 Baseline SHA-256: `825c267f26c6c4ed5287f8901368c5e682946dd468d3aeb29513e1270e7108ce`
 
