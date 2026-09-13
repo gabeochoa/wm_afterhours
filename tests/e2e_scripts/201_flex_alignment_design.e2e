@@ -1,0 +1,96 @@
+goto_screen flex_alignment
+resize 1280 720
+wait 0.3
+click_ui tab_0
+wait 0.2
+expect_text "Flexbox alignment"
+expect_text "Overview"
+expect_text "Within each set, only the layout rule changes. Dimensions use 720p design pixels."
+expect_text "JustifyContent / Column / main axis down"
+expect_text "JustifyContent / Row / main axis right"
+expect_text "Before snapping: inner gap = 2 x edge gap + base gap."
+expect_text "AlignItems / heights: 50%, 30%, 40% of content height"
+expect_text "SelfAlign / parent AlignItems::Center"
+expect_text "Auto inherits the parent"
+assert_ui root x=60 y=0 w=1160 h=720
+assert_ui category_tabs x=60 y=111 w=1160 h=38
+assert_ui vertical_0 w=104 h=168
+assert_ui vertical_0_0 x=68 y=278 w=75 h=30
+assert_ui vertical_0_1 y=318
+assert_ui vertical_1_0 y=322
+assert_ui horizontal_0 w=104 h=76
+assert_ui horizontal_0_0 w=20
+assert_ui self_0 y=578
+assert_ui self_1 y=614
+assert_ui self_2 y=614
+assert_ui self_3 y=650
+assert_within_parents
+screenshot flex_alignment_overview
+focus_ui tab_1
+key ENTER
+wait 0.2
+expect_text "three 30px-high children / base gap 10px"
+expect_text "Main axis points down."
+assert_ui vertical_0 w=208 h=290
+assert_ui vertical_0_0 h=30
+assert_within_parents
+screenshot flex_alignment_vertical
+click_ui tab_2
+wait 0.2
+expect_text "three 20px-wide children / base gap 2px"
+expect_text "Main axis points right."
+assert_ui horizontal_0 w=208 h=140
+assert_ui horizontal_0_0 w=20
+assert_within_parents
+screenshot flex_alignment_horizontal
+click_ui tab_3
+wait 0.2
+expect_text "cross axis points down"
+expect_text "Heights are 50%, 30% and 40% of the padded content height."
+assert_ui cross_0 w=368 h=294
+assert_ui cross_0_0 h=141
+assert_ui cross_0_1 h=85
+assert_ui cross_0_2 h=113
+assert_within_parents
+screenshot flex_alignment_cross_axis
+click_ui tab_4
+wait 0.2
+expect_text "Auto inherits the parent's Center alignment"
+assert_ui self_align_container w=1160 h=282
+assert_ui self_0 w=70
+assert_ui self_1 w=60
+assert_ui self_2 w=70
+assert_ui self_3 w=60
+assert_within_parents
+screenshot flex_alignment_self
+click_ui tab_5
+wait 0.2
+expect_text "Gap comparison"
+expect_text "Column / no gap"
+expect_text "Column / gap 10px"
+expect_text "Row / no gap"
+expect_text "Row / gap 10px"
+assert_ui gap_0 w=272 h=294
+assert_ui gap_1 w=272 h=294
+assert_ui gap_2 w=272 h=146
+assert_ui gap_3 w=272 h=146
+assert_within_parents
+screenshot flex_alignment_gap
+resize 1920 1080
+wait 0.3
+assert_ui root x=90 y=0 w=1740 h=1080
+assert_ui gap_0 w=408 h=441
+assert_within_parents
+screenshot flex_alignment_gap_1080
+click_ui tab_0
+wait 0.2
+assert_ui vertical_0 w=156 h=252
+assert_ui horizontal_0_0 w=30
+assert_within_parents
+resize 1024 768
+wait 0.3
+assert_ui root x=48 y=96 w=928 h=576
+assert_ui vertical_0_0 w=60 h=24
+assert_within_parents
+screenshot flex_alignment_overview_narrow
+resize 1280 720

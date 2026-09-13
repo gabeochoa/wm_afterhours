@@ -1669,7 +1669,7 @@ Pixel-identical. Narrow chat bubbles, tiny copy and unlabeled wide gutters are t
 
 ## flex alignment
 
-[Current baseline](../../screenshot-baselines/screens/flex_alignment_720p.png) · [Visual review](../../design-audit.html#screen=flex_alignment)
+[Reviewed image](../../docs/design-audit/originals/flex_alignment_720p.png) · [Current baseline](../../screenshot-baselines/screens/flex_alignment_720p.png) · [Visual review](../../design-audit.html#screen=flex_alignment)
 
 Baseline SHA-256: `4ad0674ff17ce937b4896b21d705318a37a01e9381c3de0f50c6e904c9f9ca8f`
 
@@ -1707,7 +1707,7 @@ The alignment examples expose their intended differences. Improve the explanator
 
 [Image](../../baseline_screenshots/flex_alignment.png)
 
-Current capture removes initial All focus outline. The two-column specimen arrangement remains the same; tiny tab labels and terse 1/2/3 samples remain hard to scan.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## flight options
 

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,166 completed; 1,369 remaining.
+1,191 completed; 1,344 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3230,79 +3230,82 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/flex_alignment_720p.png) · [Visual review](design-audit.html#screen=flex_alignment)
 
-- [ ] `flex_alignment-01` · P2 · proposal. Tab typography: Increase all six tab labels to a readable supporting size.
+- [x] `flex_alignment-01` · P2 · proposal. Tab typography: Increase all six tab labels to a readable supporting size.
   Evidence: Vertical and Horizontal are tiny beside the large page title.
 
-- [ ] `flex_alignment-02` · P2 · proposal. All tab: Bring a brighter active indicator closer to the All label.
+- [x] `flex_alignment-02` · P2 · proposal. All tab: Bring a brighter active indicator closer to the All label.
   Evidence: Selection uses a muted underline at the far bottom of a tall tab.
 
-- [ ] `flex_alignment-03` · P2 · proposal. Gap category: Add a compact gap comparison or rename All to Overview.
+- [x] `flex_alignment-03` · P2 · proposal. Gap category: Add a compact gap comparison or rename All to Overview.
   Evidence: Gap appears in navigation but is absent from the All overview.
+  Disposition: Renamed the old All tab to Overview because it shows vertical and horizontal fixtures while Gap remains separate.
 
-- [ ] `flex_alignment-04` · P2 · proposal. Section headings: Put API names in smaller secondary captions.
+- [x] `flex_alignment-04` · P2 · proposal. Section headings: Put API names in smaller secondary captions.
   Evidence: Long API names compete with the plain-language titles.
 
-- [ ] `flex_alignment-05` · P2 · proposal. Vertical examples: Add a downward main-axis arrow beside the column samples.
+- [x] `flex_alignment-05` · P2 · proposal. Vertical examples: Add a downward main-axis arrow beside the column samples.
   Evidence: Start, End, and Center omit the main-axis direction.
 
-- [ ] `flex_alignment-06` · P2 · proposal. Horizontal examples: Add a rightward main-axis arrow over the row samples.
+- [x] `flex_alignment-06` · P2 · proposal. Horizontal examples: Add a rightward main-axis arrow over the row samples.
   Evidence: The row direction is named only in a long heading.
 
-- [ ] `flex_alignment-07` · P2 · proposal. Cross-axis examples: Add a vertical cross-axis guide outside the sample boxes.
+- [x] `flex_alignment-07` · P2 · proposal. Cross-axis examples: Add a vertical cross-axis guide outside the sample boxes.
   Evidence: Cross-Axis Align has no visual axis reference.
 
-- [ ] `flex_alignment-08` · P2 · proposal. SelfAlign panel: Caption the parent AlignItems::Center setting above the panel.
+- [x] `flex_alignment-08` · P2 · proposal. SelfAlign panel: Caption the parent AlignItems::Center setting above the panel.
   Evidence: Auto and Center occupy the same height without explaining why.
 
-- [ ] `flex_alignment-09` · P3 · proposal. Auto item: Label it Inherits parent in an external caption.
+- [x] `flex_alignment-09` · P3 · proposal. Auto item: Label it Inherits parent in an external caption.
   Evidence: Auto has a unique purple fill with no legend.
 
-- [ ] `flex_alignment-10` · P3 · proposal. SelfAlign colors: Add a small legend mapping colors to the four overrides.
+- [x] `flex_alignment-10` · P3 · proposal. SelfAlign colors: Add a small legend mapping colors to the four overrides.
   Evidence: Start, Auto, Center, and End use four colors without a key.
 
-- [ ] `flex_alignment-11` · P2 · proposal. Vertical item numerals: Center the numerals without changing the box positions.
+- [x] `flex_alignment-11` · P2 · proposal. Vertical item numerals: Center the numerals without changing the box positions.
   Evidence: Numbers sit near the left edge of teal rounded boxes.
 
-- [ ] `flex_alignment-12` · P2 · proposal. Horizontal numerals: Use a more legible numeral face at the same sample dimensions.
+- [x] `flex_alignment-12` · P2 · proposal. Horizontal numerals: Use a more legible numeral face at the same sample dimensions.
   Evidence: Tiny numerals are tightly packed inside narrow pink pills.
 
-- [ ] `flex_alignment-13` · P2 · proposal. Between label: Use Space between in a caption outside the narrow sample.
+- [x] `flex_alignment-13` · P2 · proposal. Between label: Use Space between in a caption outside the narrow sample.
   Evidence: Between abbreviates the actual spacing mode.
 
-- [ ] `flex_alignment-14` · P2 · proposal. Around label: Add an edge-gap diagram beneath the sample.
+- [x] `flex_alignment-14` · P2 · proposal. Around label: Add an edge-gap diagram beneath the sample.
   Evidence: Around leaves the relationship between edge and internal gaps implicit.
+  Disposition: SpaceAround diagrams include the configured base gap: inner gaps equal twice edge space plus that base gap.
 
-- [ ] `flex_alignment-15` · P3 · proposal. Start versus End: Add subtle brackets showing the unused region for both cases.
+- [x] `flex_alignment-15` · P3 · proposal. Start versus End: Add subtle brackets showing the unused region for both cases.
   Evidence: Their leftover space is visible but unmeasured.
 
-- [ ] `flex_alignment-16` · P3 · proposal. Center column: Draw a faint midpoint guide behind the sample.
+- [x] `flex_alignment-16` · P3 · proposal. Center column: Draw a faint midpoint guide behind the sample.
   Evidence: The centered group's relationship to the container midpoint is implicit.
 
-- [ ] `flex_alignment-17` · P3 · proposal. Between column: Add equal-gap markers alongside the three items.
+- [x] `flex_alignment-17` · P3 · proposal. Between column: Add equal-gap markers alongside the three items.
   Evidence: The distribution is visible without identifying equal internal gaps.
 
-- [ ] `flex_alignment-18` · P3 · proposal. Cross-axis item heights: Caption the fixed test heights outside the comparison.
+- [x] `flex_alignment-18` · P3 · proposal. Cross-axis item heights: Caption the fixed test heights outside the comparison.
   Evidence: The three varied heights are unexplained.
+  Disposition: The fixture uses 50%, 30%, and 40% heights, not fixed pixel heights. Captions identify those percentages.
 
-- [ ] `flex_alignment-19` · P2 · proposal. Start cross-axis sample: Add a subtle alignment guide along the tested top edge.
+- [x] `flex_alignment-19` · P2 · proposal. Start cross-axis sample: Add a subtle alignment guide along the tested top edge.
   Evidence: The top edges align but no reference line marks that edge.
 
-- [ ] `flex_alignment-20` · P2 · proposal. End cross-axis sample: Add a straight bottom reference guide inside the frame.
+- [x] `flex_alignment-20` · P2 · proposal. End cross-axis sample: Add a straight bottom reference guide inside the frame.
   Evidence: The common bottom edge is hard to compare against rounded framing.
 
-- [ ] `flex_alignment-21` · P3 · proposal. Horizontal sample frames: Reduce framing height while preserving the row's measured container.
+- [x] `flex_alignment-21` · P3 · proposal. Horizontal sample frames: Reduce framing height while preserving the row's measured container.
   Evidence: Their large empty lower halves make the short row hard to inspect.
 
-- [ ] `flex_alignment-22` · P2 · proposal. Nested panel fills: Remove one decorative background layer around each example group.
+- [x] `flex_alignment-22` · P2 · proposal. Nested panel fills: Remove one decorative background layer around each example group.
   Evidence: Four similar blue-gray surface layers obscure grouping.
 
-- [ ] `flex_alignment-23` · P3 · proposal. Lower panel space: Fit the panels to their sections or use the spare space for a legend.
+- [x] `flex_alignment-23` · P3 · proposal. Lower panel space: Fit the panels to their sections or use the spare space for a legend.
   Evidence: Both outer columns extend well below their content.
 
-- [ ] `flex_alignment-24` · P3 · proposal. Heading insets: Use consistent horizontal padding in every section header.
+- [x] `flex_alignment-24` · P3 · proposal. Heading insets: Use consistent horizontal padding in every section header.
   Evidence: Section headings begin almost at the rounded panel edges.
 
-- [ ] `flex_alignment-25` · P2 · proposal. Overview explanation: Add a one-line comparison rule under Flexbox Alignment Demo.
+- [x] `flex_alignment-25` · P2 · proposal. Overview explanation: Add a one-line comparison rule under Flexbox Alignment Demo.
   Evidence: No short sentence states what changes and what stays fixed between samples.
 
 ### flight_options

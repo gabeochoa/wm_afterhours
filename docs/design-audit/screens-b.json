@@ -1177,7 +1177,8 @@
         "change": "Add a one-line comparison rule under Flexbox Alignment Demo."
       }
     ],
-    "sha256": "4ad0674ff17ce937b4896b21d705318a37a01e9381c3de0f50c6e904c9f9ca8f"
+    "sha256": "4ad0674ff17ce937b4896b21d705318a37a01e9381c3de0f50c6e904c9f9ca8f",
+    "evidence": "docs/design-audit/originals/flex_alignment_720p.png"
   },
   {
     "id": "flight_options",

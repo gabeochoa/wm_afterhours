@@ -9,20 +9,19 @@ wait 0.5
 validate_screen flex_alignment
 
 # Verify we're on the correct screen
-expect_text "Flexbox Alignment Demo"
+expect_text "Flexbox alignment"
 expect_text "Vertical"
 expect_text "Horizontal"
-expect_text "Self Align"
+expect_text "Self align"
 
 # Layout assertions based on source code math (1280x720 screen)
-# Root: screen_pct(1.0) x screen_pct(0.95) = 1280 x 684
-assert_ui root w=1280 h=684
+# Root uses a centered 1160 x 720 design canvas.
+assert_ui root w=1160 h=720
 
-# Title: percent(1.0) x pixels(40)
-assert_ui_text "Flexbox Alignment Demo" h=40
+# Title has a 44px design height.
+assert_ui_text "Flexbox alignment" h=44
 
-# Tab row: percent(1.0) x pixels(44) — contains the category tab selector
-# Note: the category_tabs component inside is pixels(40)
+# Native category tabs use a 38px design height.
 
 screenshot flex_alignment_display
 

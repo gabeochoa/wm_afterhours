@@ -93,8 +93,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes initial All focus outline. The two-column specimen arrangement remains the same; tiny tab labels and terse 1/2/3 samples remain hard to scan.",
-    "sha256": "b1ba382b98073b170d2457be7c755fef95d93612c250873fd6593b19b3442b84",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "054d676e41571879426a05d0fe4417b8e3d24a558c33af748dd054ba590810ac",
     "additional_findings": []
   },
   {
