@@ -20,6 +20,10 @@ assert_ui casual_progress x=654 y=183 w=396 h=77
 assert_ui casual_notifications x=231 y=332 w=396 h=66
 assert_ui casual_language x=231 y=415 w=396 h=66
 assert_ui casual_close x=1022 y=104 w=62 h=62
+assert_ui casual_metadata_0 x=352 y=531 w=646 h=30
+assert_ui casual_metadata_1 x=352 y=561 w=646 h=30
+assert_ui casual_metadata_2 x=352 y=591 w=646 h=30
+assert_ui casual_status y=626 h=26
 assert_within_parents
 screenshot casual_settings_design
 focus_element casual_vibration
@@ -67,6 +71,8 @@ resize 1920 1080
 wait 0.3
 assert_ui casual_board x=255 y=69 w=1410 h=941
 assert_ui casual_music x=366 y=278 w=153 h=105
+assert_ui casual_metadata_0 h=45
+assert_ui casual_metadata_2 h=45
 assert_ui casual_close x=1533 y=156 w=93 h=93
 assert_within_parents
 screenshot casual_settings_design_1080
@@ -74,6 +80,8 @@ resize 1024 768
 wait 0.3
 assert_ui casual_canvas w=1024 h=768
 assert_ui casual_root x=0 y=96 w=1024 h=576
+assert_ui casual_metadata_0 h=24
+assert_ui casual_metadata_2 h=24
 assert_within_parents
 screenshot casual_settings_design_narrow
 click_ui casual_language

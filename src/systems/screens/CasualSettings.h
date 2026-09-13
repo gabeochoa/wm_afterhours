@@ -199,7 +199,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_click_activation(ClickActivationMode::Release).with_debug_name("casual_terms"))) open(Dialog::Terms);
       div(context, mk(board.ent(), 50), box(scale, 569, 425, 226, 1)
           .with_custom_background({137, 85, 62, 120}).with_ignore_pointer_events());
-      if (button(context, mk(board.ent(), 26), box(scale, 61, 453, 819, 119)
+      if (button(context, mk(board.ent(), 26), box(scale, 61, 453, 819, 126)
           .with_custom_hover_bg({255, 237, 199, 70}).with_corner_radius(12 * scale)
           .with_click_activation(ClickActivationMode::Release).with_debug_name("casual_about"))) open(Dialog::About);
       div(context, mk(board.ent(), 51), box(scale, 77, 458, 750, 25).with_label("ABOUT  /  OPEN DETAILS")
@@ -208,14 +208,15 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       constexpr std::array<const char *, 3> metadata_labels{"Build", "Version", "Player ID"};
       constexpr std::array<const char *, 3> metadata_values{"15555-1-114203-20-10200-01", "1.11.0.12346", "281 676 956 389"};
       for (int i = 0; i < 3; ++i) {
-        div(context, mk(board.ent(), 70 + i), box(scale, 77, 487 + i * 25.f, 104, 25)
+        div(context, mk(board.ent(), 70 + i), box(scale, 77, 485 + i * 30.f, 104, 30)
             .with_label(metadata_labels[i]).with_font("FredokaMockBold", pixels(19 * scale))
             .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
-        div(context, mk(board.ent(), 75 + i), box(scale, 182, 487 + i * 25.f, 646, 25)
+        div(context, mk(board.ent(), 75 + i), box(scale, 182, 485 + i * 30.f, 646, 30)
             .with_label(metadata_values[i]).with_font("FredokaMockBold", pixels(27 * scale))
-            .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
+            .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events()
+            .with_debug_name("casual_metadata_" + std::to_string(i)));
       }
-      label(board.ent(), 30, 70, 570, 800, 26,
+      label(board.ent(), 30, 70, 580, 800, 26,
             status.empty() ? "Preferences apply immediately. Kept for this session." : status,
             16.5f, brown, "casual_status");
       if (action(root.ent(), 50, "", 1022, 104, 62, 62, "casual_close", 20, 9)) settings_open = false;
