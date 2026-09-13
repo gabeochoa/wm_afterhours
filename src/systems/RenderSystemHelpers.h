@@ -4,9 +4,11 @@
 #include "../game.h"
 #include "../render_backend.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/ui/text_stroke.h>
 
 struct BeginWorldRender : afterhours::System<> {
   virtual void once(float) const override {
+    afterhours::ui::text_stroke::begin_frame();
     if (render_backend::draw_directly_to_window) {
       render_backend::BeginDrawing();
       render_backend::ClearBackground(raylib::BLACK);
