@@ -4825,7 +4825,8 @@
         "change": "Add the UI scale and capture resolution to the footer."
       }
     ],
-    "sha256": "a528046ab0491541c4ebf55fc1b95520fbbffed95717deca72563ca56cef05d0"
+    "sha256": "a528046ab0491541c4ebf55fc1b95520fbbffed95717deca72563ca56cef05d0",
+    "evidence": "docs/design-audit/originals/text_overflow_720p.png"
   },
   {
     "id": "text_shadow",

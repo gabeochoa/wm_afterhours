@@ -354,13 +354,13 @@
     "screen": "text_overflow",
     "baseline": "baseline_screenshots/text_overflow.png",
     "current": "screenshot-baselines/screens/text_overflow_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Red oversized and clipped samples are the subject of the demo. Improvements must target their surrounding explanation and distinguish expected warning examples from real failures.",
-    "sha256": "a528046ab0491541c4ebf55fc1b95520fbbffed95717deca72563ca56cef05d0",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "1c1c2cac866d4430f8c049d1426a1207627d74a69c6ca14a9a476279302771f9",
     "additional_findings": []
   },
   {

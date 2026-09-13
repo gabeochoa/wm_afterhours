@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,391 completed; 144 remaining.
+2,411 completed; 124 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7448,64 +7448,68 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_overflow_720p.png) · [Visual review](design-audit.html#screen=text_overflow)
 
-- [ ] `text_overflow-01` · P2 · proposal. Debug instruction: Add a zoomed marker key distinguishing debug corners from specimen borders.
+- [x] `text_overflow-01` · P2 · proposal. Debug instruction: Add a zoomed marker key distinguishing debug corners from specimen borders.
   Evidence: The note says red corners appear, while entire sample borders are red.
+  Disposition: Deferred upstream: batched rendering does not emit overflow debug overlays. The screen now identifies this limitation.
 
-- [ ] `text_overflow-02` · P2 · proposal. Good/problem colors: Add explicit Pass specimen and Overflow specimen badges.
+- [x] `text_overflow-02` · P2 · proposal. Good/problem colors: Add explicit Pass specimen and Overflow specimen badges.
   Evidence: Green and red headings carry the main classification.
 
-- [ ] `text_overflow-03` · P2 · proposal. Height specimen: Annotate requested font size, measured text height and available height to explain the case.
+- [x] `text_overflow-03` · P2 · proposal. Height specimen: Annotate requested font size, measured text height and available height to explain the case.
   Evidence: Height is too small! appears to fit within its red frame.
 
-- [ ] `text_overflow-04` · P2 · proposal. Tiny box annotation: Use a clean callout line and 44 × 44 px label.
+- [x] `text_overflow-04` · P2 · proposal. Tiny box annotation: Use a clean callout line and 44 × 44 px label.
   Evidence: Small 44x44 uses a textual arrow and compact notation.
 
-- [ ] `text_overflow-05` · P2 · proposal. First overflow text: Show the source string in external metadata.
+- [x] `text_overflow-05` · P2 · proposal. First overflow text: Show the source string in external metadata.
   Evidence: This is way too ... is truncated without the full source beside it.
 
-- [ ] `text_overflow-06` · P2 · proposal. Narrow overflow case: Label its width and height next to the specimen.
+- [x] `text_overflow-06` · P2 · proposal. Narrow overflow case: Label its width and height next to the specimen.
   Evidence: Long text i... has no dimension annotation.
 
-- [ ] `text_overflow-07` · P2 · proposal. Ellipsis comparison: Add matched-width before/after specimens so ellipsis is the isolated change.
+- [x] `text_overflow-07` · P2 · proposal. Ellipsis comparison: Add matched-width before/after specimens so ellipsis is the isolated change.
   Evidence: The solution samples are wider than the nearby failing examples.
+  Disposition: Preserved native Clip leakage and separated specimens so leaked text does not obscure a neighbor. Own-label clipping remains upstream.
 
-- [ ] `text_overflow-08` · P2 · proposal. Ellipsis label: Rename it Ellipsis behavior and state when wrapping is preferable.
+- [x] `text_overflow-08` · P2 · proposal. Ellipsis label: Rename it Ellipsis behavior and state when wrapping is preferable.
   Evidence: Solution: Ellipsis Truncation can imply every overflow should truncate.
 
-- [ ] `text_overflow-09` · P2 · proposal. OK specimen: Annotate its width, height and text size.
+- [x] `text_overflow-09` · P2 · proposal. OK specimen: Annotate its width, height and text size.
   Evidence: The small green OK box has no dimensions shown.
 
-- [ ] `text_overflow-10` · P2 · proposal. Large fit specimen: Add text bounds and container bounds in a spec caption.
+- [x] `text_overflow-10` · P2 · proposal. Large fit specimen: Add text bounds and container bounds in a spec caption.
   Evidence: This text fits perfectly shows no measurable available space.
 
-- [ ] `text_overflow-11` · P2 · proposal. ABC sequence: Label each box's dimensions beneath it.
+- [x] `text_overflow-11` · P2 · proposal. ABC sequence: Label each box's dimensions beneath it.
   Evidence: Five shrinking ABC boxes have no individual size labels.
 
-- [ ] `text_overflow-12` · P2 · proposal. ABC font changes: Display the font size per sample so two variables are explicit.
+- [x] `text_overflow-12` · P2 · proposal. ABC font changes: Display the font size per sample so two variables are explicit.
   Evidence: The ABC font shrinks across the sequence as well as the boxes.
 
-- [ ] `text_overflow-13` · P2 · proposal. Minimum-size note: Separate touch-target guidance from text-measurement behavior.
+- [x] `text_overflow-13` · P2 · proposal. Minimum-size note: Separate touch-target guidance from text-measurement behavior.
   Evidence: The note links touch target size to text overflow warnings without distinction.
 
-- [ ] `text_overflow-14` · P2 · proposal. Debug mode state: Use a small ON badge next to a Debug overlay label.
+- [x] `text_overflow-14` · P2 · proposal. Debug mode state: Use a small ON badge next to a Debug overlay label.
   Evidence: Debug mode is ON is embedded in a long green sentence.
+  Disposition: Deferred upstream: native debug overlay parity is missing in batched rendering.
 
-- [ ] `text_overflow-15` · P3 · proposal. Title scale: Reduce title footprint and spend space on readable metadata.
+- [x] `text_overflow-15` · P3 · proposal. Title scale: Reduce title footprint and spend space on readable metadata.
   Evidence: Text Overflow Debug Demo is large relative to tiny diagnostics.
 
-- [ ] `text_overflow-16` · P2 · proposal. Specimen identifiers: Add small case IDs for screenshot-to-test mapping.
+- [x] `text_overflow-16` · P2 · proposal. Specimen identifiers: Add small case IDs for screenshot-to-test mapping.
   Evidence: Individual examples have no stable IDs.
 
-- [ ] `text_overflow-17` · P2 · proposal. Expected warning: Add Expected: overflow or Expected: fits under each case.
+- [x] `text_overflow-17` · P2 · proposal. Expected warning: Add Expected: overflow or Expected: fits under each case.
   Evidence: Red-bordered examples have no expected-warning text.
+  Disposition: Native deliberate Ellipsis emits warnings before truncation. The example describes that behavior; suppression remains upstream.
 
-- [ ] `text_overflow-18` · P3 · proposal. Column alignment: Align the first comparison rows while preserving test dimensions.
+- [x] `text_overflow-18` · P3 · proposal. Column alignment: Align the first comparison rows while preserving test dimensions.
   Evidence: The two columns begin at different specimen baselines.
 
-- [ ] `text_overflow-19` · P2 · proposal. Clip boundary: Place debug annotations outside the measured container.
+- [x] `text_overflow-19` · P2 · proposal. Clip boundary: Place debug annotations outside the measured container.
   Evidence: Truncated text and red borders are close enough to obscure corner markers.
 
-- [ ] `text_overflow-20` · P2 · proposal. Rendering scale: Add the UI scale and capture resolution to the footer.
+- [x] `text_overflow-20` · P2 · proposal. Rendering scale: Add the UI scale and capture resolution to the footer.
   Evidence: The page shows fixed-size claims without the effective scale.
 
 ### text_shadow
@@ -8151,6 +8155,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Fix batched Clip bounds, deliberate-Ellipsis warning suppression and overflow debug overlays; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Review unconsumed UI action lifetime so stale Escape cannot dismiss a newly opened dialog; see docs/AFTERHOURS_GAPS.md.
 

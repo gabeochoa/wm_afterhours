@@ -463,6 +463,26 @@ consumes otherwise-unused MenuBack while no dialog is active. Review event
 lifetime and explicit consumption upstream so stale actions do not affect
 future controls.
 
+### Batched text overflow lacks clipping and debug parity
+
+Native batched text-overflow contract: CollectUIRenderingCommands::collect_me
+in rendering.h:2306-2358 measures the full label with resolved theme/label
+insets, then truncates Ellipsis. It calls position_text_ex with
+report_overflow true before the intentional truncation, so Ellipsis emits
+overflow warnings. Clip labels do not emit a scissor matching their own
+container; render_primitives.h renders the full text string, so
+TextOverflow::Clip escapes into neighboring elements. SHOW_TEXT_OVERFLOW_DEBUG
+is only consumed by the immediate renderer and never creates debug primitives
+in the batched path. Repro: text_overflow Compare overflow modes, 150x40
+and90x34 matched Clip/Ellipsis specimens. WM preserves native output,
+separates raw Clip text spatially to avoid obscuring other samples, labels
+observed leakage/missing overlay/false-positive warning, and resolves usable-
+size metadata using resolve_text_inset(context.theme). Upstream needs own-
+label clipping for Clip, deliberate-Ellipsis warning suppression, and
+equivalent debug overlay commands in batched rendering. Related immediate path
+still calls text_inset_for rather than its supplied inset, so label-inset
+parity also needs review.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

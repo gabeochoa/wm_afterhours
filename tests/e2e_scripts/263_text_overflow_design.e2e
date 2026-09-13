@@ -1,0 +1,54 @@
+goto_screen text_overflow
+resize 1280 720
+wait 0.4
+expect_text "Text overflow"
+expect_text "Pass specimens / content fits"
+expect_text "Constrained specimens / ellipsis enabled"
+expect_text "C2 / Expected: fits"
+expect_text "Touch target guidance is separate."
+assert_ui bg w=1280 h=720
+assert_ui card_ok_1 w=380 h=100
+assert_ui fit_large w=360 h=80
+assert_ui card_ok_3 w=52 h=52
+assert_ui card_overflow_3 w=44 h=44
+assert_within_parents
+screenshot text_overflow_specimens_design
+click_ui overflow_compare
+wait 0.3
+expect_text "Same source, 150 × 40px label boxes"
+expect_text "Source: This is way too much text for this tiny container!"
+expect_text "Observed: text escapes its box."
+expect_text "Ellipsis / truncated"
+expect_text "Warning still emitted."
+expect_text "the batched renderer currently omits this overlay."
+expect_text "Wrapping is preferable when all text must remain visible."
+expect_text "both dimensions and requested font size change"
+assert_ui mode_clip w=150 h=40
+assert_ui card_ellipsis_1 w=150 h=40
+assert_ui narrow_clip w=90 h=34
+assert_ui card_ellipsis_2 w=90 h=34
+assert_ui shrink_box_0 w=70 h=70
+assert_ui shrink_box_4 w=44 h=44
+screenshot text_overflow_modes_design
+resize 1920 1080
+wait 0.4
+assert_ui bg w=1920 h=1080
+assert_ui mode_clip w=225 h=60
+assert_ui card_ellipsis_1 w=225 h=60
+expect_text "UI scale 1.50"
+screenshot text_overflow_modes_1080_design
+resize 1024 768
+wait 0.4
+assert_ui bg w=1024 h=768
+assert_ui mode_clip w=120 h=32
+assert_ui card_ellipsis_1 w=120 h=32
+expect_text "UI scale 0.80"
+screenshot text_overflow_modes_1024_design
+focus_element overflow_compare
+key ENTER
+wait 0.3
+expect_text "Pass specimens / content fits"
+expect_text "C2 / Expected: fits"
+assert_within_parents
+screenshot text_overflow_specimens_1024_design
+resize 1280 720

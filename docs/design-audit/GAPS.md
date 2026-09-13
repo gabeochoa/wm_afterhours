@@ -3778,7 +3778,7 @@ The seven input heights intentionally test caret and selection scaling. Sixteen 
 
 ## text overflow
 
-[Current baseline](../../screenshot-baselines/screens/text_overflow_720p.png) · [Visual review](../../design-audit.html#screen=text_overflow)
+[Reviewed image](../../docs/design-audit/originals/text_overflow_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_overflow_720p.png) · [Visual review](../../design-audit.html#screen=text_overflow)
 
 Baseline SHA-256: `a528046ab0491541c4ebf55fc1b95520fbbffed95717deca72563ca56cef05d0`
 
@@ -3811,7 +3811,7 @@ Clipping and shrinking samples are intentional. Twenty proposals improve the deb
 
 [Image](../../baseline_screenshots/text_overflow.png)
 
-Pixel-identical. Red oversized and clipped samples are the subject of the demo. Improvements must target their surrounding explanation and distinguish expected warning examples from real failures.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## text shadow
 
