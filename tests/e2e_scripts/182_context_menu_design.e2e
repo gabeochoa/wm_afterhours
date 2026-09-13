@@ -1,0 +1,73 @@
+goto_screen context_menu_lab
+resize 1280 720
+wait 0.4
+expect_text "Context menus"
+expect_text "Right-click any file row"
+expect_text "Point anchoring"
+expect_text "Clean"
+expect_text "Open at pointer"
+expect_text "Bottom-edge flip test"
+expect_text "Discard is disabled"
+expect_text "Stage file"
+expect_text "Copy path"
+assert_ui cm_root w=1280 h=720
+assert_ui cm_file_0 x=84 y=194 w=572 h=44
+assert_ui cm_file_5 x=84 y=444 w=572 h=44
+assert_within_parents
+screenshot context_menu_design
+click_ui menu_item_2
+wait 0.3
+expect_text "Staged src/renderer.cpp"
+expect_text "Target: src/renderer.cpp / Staged"
+mouse_move 150 212
+wait 0.2
+right_click 150 212
+wait 0.3
+expect_text "menu opened on src/renderer.cpp"
+click_ui menu_item_2
+wait 0.2
+expect_text "Target: src/renderer.cpp / Staged"
+click_ui menu_item_3
+wait 0.3
+expect_text "Unstaged src/renderer.cpp"
+expect_text "Target: src/renderer.cpp / Modified"
+mouse_move 150 463
+wait 0.2
+right_click 150 463
+wait 0.3
+expect_text "menu opened on README.md"
+expect_text "Target: README.md / Clean"
+click_ui menu_item_5
+wait 0.3
+expect_text "Copied path: README.md"
+click_ui cm_anchor_toggle
+wait 0.2
+expect_text "Anchor crosshair: off"
+focus_element cm_anchor_toggle
+key ENTER
+wait 0.2
+expect_text "Anchor crosshair: on"
+mouse_move 1050 672
+wait 0.2
+right_click 1050 672
+wait 0.3
+expect_text "corner menu opened"
+expect_text "Copy path"
+assert_ui menu_list x=940 y=430 w=340
+assert_within_parents
+screenshot context_menu_bottom_flip
+click 900 240
+wait 0.3
+expect_no_text "Copy path"
+resize 1920 1080
+wait 0.3
+assert_ui cm_root w=1920 h=1080
+assert_ui cm_target_corner x=1278 y=975 w=510 h=66
+assert_within_parents
+screenshot context_menu_design_1080
+resize 1024 768
+wait 0.3
+assert_ui cm_root w=1024 h=768
+assert_within_parents
+screenshot context_menu_design_narrow
+resize 1280 720

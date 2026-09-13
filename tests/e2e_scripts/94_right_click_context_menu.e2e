@@ -3,6 +3,7 @@
 # UIContext::is_right_click -> context_menu anchored at mouse.pos.
 
 goto_screen context_menu_lab
+resize 1280 720
 wait 0.5
 
 # The screen opens with the centre menu already up, so a baseline has something
@@ -10,26 +11,26 @@ wait 0.5
 # assertion below cannot tell a fresh open from the default one.
 click 900 300
 wait 0.3
-expect_text "right-click either row"
+expect_text "Right-click any file row"
 
 # Right-click the target row. hot_id has to be resolved from the PREVIOUS
 # frame, so move onto the row and let a frame pass before clicking.
-mouse_move 200 474
+mouse_move 200 570
 wait 0.2
-right_click 200 474
+right_click 200 570
 wait 0.3
 
 # The status line reports where the menu was anchored -- that it moved to the
 # cursor is the point, not just that something opened.
-expect_text "opened at 200,474"
+expect_text "opened at 200,570"
 expect_text "Stage file"
 expect_text "Copy path"
 
 screenshot right_click_menu_open
 
 # A second right-click somewhere else on the row re-anchors it.
-mouse_move 320 470
+mouse_move 320 590
 wait 0.2
-right_click 320 470
+right_click 320 590
 wait 0.3
-expect_text "opened at 320,470"
+expect_text "opened at 320,590"

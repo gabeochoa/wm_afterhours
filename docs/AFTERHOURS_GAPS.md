@@ -272,6 +272,22 @@ presentation/config argument would provide a supported route for font,
 body/action geometry, padding and border customization while preserving native
 modal behavior.
 
+### Menu dismissal, disabled focus targets and presentation options
+
+Native menus dismiss on focus loss, so clicking nonfocusable empty content
+leaves them open. Disabled menu buttons also retain click listeners and can be
+chosen by tray focus traversal; the filename header received the initial focus
+outline in the captured fixture. wm now dismisses outside presses and removes
+listeners from disabled menu rows after building the native menu. Menu text
+padding and shortcut style are not exposed: the screen offsets item labels
+with HasLabel.text_x_offset and removes forced disabled-text dimming from
+shortcut labels. Upstream should expose these presentation options and keep
+disabled items out of keyboard focus traversal. Disabled rows also let pointer
+presses reach underlying focusable content, closing the menu. wm adds
+transparent pointer shields to disabled row bounds and returns focus to the
+native menu list; disabled items should consume hits without becoming focus
+targets.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

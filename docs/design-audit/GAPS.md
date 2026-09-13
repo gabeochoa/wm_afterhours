@@ -1031,7 +1031,7 @@ Clipping, faceted corners and low-contrast explicit text color are intentional. 
 
 ## context menu lab
 
-[Current baseline](../../screenshot-baselines/screens/context_menu_lab_720p.png) · [Visual review](../../design-audit.html#screen=context_menu_lab)
+[Reviewed image](../../docs/design-audit/originals/context_menu_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/context_menu_lab_720p.png) · [Visual review](../../design-audit.html#screen=context_menu_lab)
 
 Baseline SHA-256: `eb760be98e16654c0b1003c5fdea3225f19eb4d4c3ab53604dc7b181fd37c3fa`
 

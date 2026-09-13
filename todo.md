@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-618 completed; 1,917 remaining.
+643 completed; 1,892 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1873,79 +1873,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/context_menu_lab_720p.png) · [Visual review](design-audit.html#screen=context_menu_lab)
 
-- [ ] `context_menu_lab-01` · P1 · defect. Stage file label: Inset menu text clear of its selection outline.
+- [x] `context_menu_lab-01` · P1 · defect. Stage file label: Inset menu text clear of its selection outline.
   Evidence: The open menu shows tage file with the initial S obscured by the selection border.
 
-- [ ] `context_menu_lab-02` · P2 · proposal. Menu padding: Add consistent horizontal item padding.
+- [x] `context_menu_lab-02` · P2 · proposal. Menu padding: Add consistent horizontal item padding.
   Evidence: Unstage and Copy path begin at the menu's left boundary.
 
-- [ ] `context_menu_lab-03` · P2 · proposal. Menu target: Show the target filename in a small menu header.
+- [x] `context_menu_lab-03` · P2 · proposal. Menu target: Show the target filename in a small menu header.
   Evidence: The open menu obscures rows without identifying its target file.
 
-- [ ] `context_menu_lab-04` · P2 · proposal. Row selection: Highlight the context-menu target row.
+- [x] `context_menu_lab-04` · P2 · proposal. Row selection: Highlight the context-menu target row.
   Evidence: No distinct selected-file treatment ties the menu to a row.
 
-- [ ] `context_menu_lab-05` · P2 · proposal. Menu action relationship: Make applicability clear for the target's current staged state.
+- [x] `context_menu_lab-05` · P2 · proposal. Menu action relationship: Make applicability clear for the target's current staged state.
   Evidence: Stage file and Unstage are both visually prominent.
 
-- [ ] `context_menu_lab-06` · P2 · proposal. Disabled action: Add an external note explaining why it is unavailable for this fixture.
+- [x] `context_menu_lab-06` · P2 · proposal. Disabled action: Add an external note explaining why it is unavailable for this fixture.
   Evidence: Discard changes is intentionally dim but unexplained.
 
-- [ ] `context_menu_lab-07` · P2 · proposal. Copy shortcut: Increase shortcut contrast and right inset.
+- [x] `context_menu_lab-07` · P2 · proposal. Copy shortcut: Increase shortcut contrast and right inset.
   Evidence: Cmd+C is dimmer than Copy path and crowded against the right edge.
 
-- [ ] `context_menu_lab-08` · P2 · proposal. Menu grouping: Use a clear separator between repository and utility actions.
+- [x] `context_menu_lab-08` · P2 · proposal. Menu grouping: Use a clear separator between repository and utility actions.
   Evidence: Stage and Unstage are separated from Copy path only by a narrow gap.
 
-- [ ] `context_menu_lab-09` · P2 · proposal. Menu outline: Increase edge separation or add a subtle shadow.
+- [x] `context_menu_lab-09` · P2 · proposal. Menu outline: Increase edge separation or add a subtle shadow.
   Evidence: The menu border is faint against the file rows.
 
-- [ ] `context_menu_lab-10` · P2 · proposal. Menu row heights: Use consistent padded menu rows.
+- [x] `context_menu_lab-10` · P2 · proposal. Menu row heights: Use consistent padded menu rows.
   Evidence: The four items have little breathing room around their text.
 
-- [ ] `context_menu_lab-11` · P2 · proposal. File list headings: Add File and State headers.
+- [x] `context_menu_lab-11` · P2 · proposal. File list headings: Add File and State headers.
   Evidence: Files and statuses have no column labels.
 
-- [ ] `context_menu_lab-12` · P2 · proposal. Status type: Increase status-label size.
+- [x] `context_menu_lab-12` · P2 · proposal. Status type: Increase status-label size.
   Evidence: modified, staged and untracked are tiny.
 
-- [ ] `context_menu_lab-13` · P2 · proposal. State recognition: Use small labeled status chips.
+- [x] `context_menu_lab-13` · P2 · proposal. State recognition: Use small labeled status chips.
   Evidence: All statuses use similar muted text.
 
-- [ ] `context_menu_lab-14` · P2 · proposal. README state: Show Clean if the blank means unchanged.
+- [x] `context_menu_lab-14` · P2 · proposal. README state: Show Clean if the blank means unchanged.
   Evidence: README.md has no status while other rows do.
 
-- [ ] `context_menu_lab-15` · P2 · proposal. Filename type: Use a readable monospace filename face.
+- [x] `context_menu_lab-15` · P2 · proposal. Filename type: Use a readable monospace filename face.
   Evidence: Paths use the decorative handwritten font.
 
-- [ ] `context_menu_lab-16` · P2 · proposal. File rows: Tighten the list for a clearer file-browser pattern.
+- [x] `context_menu_lab-16` · P2 · proposal. File rows: Tighten the list for a clearer file-browser pattern.
   Evidence: Six rounded rectangles have large inter-row gaps.
 
-- [ ] `context_menu_lab-17` · P2 · proposal. Title wording: Use Context menus plus a short subtitle.
+- [x] `context_menu_lab-17` · P2 · proposal. Title wording: Use Context menus plus a short subtitle.
   Evidence: The title packs the point-anchoring rule into its name.
 
-- [ ] `context_menu_lab-18` · P2 · proposal. Top instruction: Change it to Right-click any file row.
+- [x] `context_menu_lab-18` · P2 · proposal. Top instruction: Change it to Right-click any file row.
   Evidence: right-click either row contradicts the six visible file rows.
 
-- [ ] `context_menu_lab-19` · P2 · proposal. Explanation heading: Use Point anchoring.
+- [x] `context_menu_lab-19` · P2 · proposal. Explanation heading: Use Point anchoring.
   Evidence: How this differs from a menu bar is longer than necessary.
 
-- [ ] `context_menu_lab-20` · P2 · proposal. Explanation body: Use a compact readable paragraph with a diagram.
+- [x] `context_menu_lab-20` · P2 · proposal. Explanation body: Use a compact readable paragraph with a diagram.
   Evidence: Five small widely spaced lines spread across a large card.
 
-- [ ] `context_menu_lab-21` · P2 · proposal. Cursor anchor: Add an optional crosshair at the invocation point.
+- [x] `context_menu_lab-21` · P2 · proposal. Cursor anchor: Add an optional crosshair at the invocation point.
   Evidence: The shown menu has no marked anchor point.
 
-- [ ] `context_menu_lab-22` · P2 · proposal. First test button: Label it Open at pointer.
+- [x] `context_menu_lab-22` · P2 · proposal. First test button: Label it Open at pointer.
   Evidence: right-click me lacks the purpose of its test case.
 
-- [ ] `context_menu_lab-23` · P2 · proposal. Lower test button: Label it Bottom-edge flip test.
+- [x] `context_menu_lab-23` · P2 · proposal. Lower test button: Label it Bottom-edge flip test.
   Evidence: right-click me too includes a long parenthetical.
 
-- [ ] `context_menu_lab-24` · P2 · proposal. Lower caption: Place it directly above that button.
+- [x] `context_menu_lab-24` · P2 · proposal. Lower caption: Place it directly above that button.
   Evidence: The bottom explanation is tiny and distant from its test button.
 
-- [ ] `context_menu_lab-25` · P2 · proposal. Empty center: Add a small placement diagram showing below versus flipped above.
+- [x] `context_menu_lab-25` · P2 · proposal. Empty center: Add a small placement diagram showing below versus flipped above.
   Evidence: A large unused middle region separates the test cases.
 
 ### cozy_cafe
@@ -8107,6 +8107,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review native menu outside-click dismissal, disabled focus traversal and item/shortcut presentation options; see `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review a presentation/config argument for native convenience dialogs so consumers need not restyle returned descendants; see `docs/AFTERHOURS_GAPS.md`.
 

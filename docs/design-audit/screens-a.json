@@ -5148,7 +5148,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "eb760be98e16654c0b1003c5fdea3225f19eb4d4c3ab53604dc7b181fd37c3fa"
+    "sha256": "eb760be98e16654c0b1003c5fdea3225f19eb4d4c3ab53604dc7b181fd37c3fa",
+    "evidence": "docs/design-audit/originals/context_menu_lab_720p.png"
   },
   {
     "id": "cozy_cafe",
