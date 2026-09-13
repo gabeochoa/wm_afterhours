@@ -1,0 +1,43 @@
+goto_screen tabbing
+resize 1280 720
+wait 0.4
+expect_text "Keyboard navigation"
+expect_text "Total activations: 0"
+assert_within_parents
+screenshot tabbing_design
+focus_ui tab_button_0
+key ENTER
+wait 0.2
+expect_text "Total activations: 1"
+expect_text "Last activated: OPTION A"
+key TAB
+key ENTER
+wait 0.2
+expect_text "Total activations: 2"
+expect_text "Last activated: OPTION B"
+screenshot tabbing_focused
+key TAB
+key ENTER
+wait 0.2
+expect_text "Last activated: OPTION C"
+key TAB
+key ENTER
+wait 0.2
+expect_text "Last activated: OPTION D"
+key TAB
+key ENTER
+wait 0.2
+expect_text "Total activations: 0"
+key TAB
+key ENTER
+wait 0.2
+expect_text "Last activated: OPTION A"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot tabbing_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot tabbing_design_narrow
+resize 1280 720

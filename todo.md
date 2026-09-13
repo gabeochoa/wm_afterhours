@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,356 completed; 179 remaining.
+2,371 completed; 164 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7160,49 +7160,49 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/tabbing_720p.png) · [Visual review](design-audit.html#screen=tabbing)
 
-- [ ] `tabbing-01` · P2 · proposal. Title wording: Use Keyboard navigation.
+- [x] `tabbing-01` · P2 · proposal. Title wording: Use Keyboard navigation.
   Evidence: KEYBOARD NAV abbreviates the feature name.
 
-- [ ] `tabbing-02` · P2 · proposal. Instruction text: Increase actual instruction size to 13 px.
+- [x] `tabbing-02` · P2 · proposal. Instruction text: Increase actual instruction size to 13 px.
   Evidence: Use TAB to navigate, ENTER to click is small.
 
-- [ ] `tabbing-03` · P2 · proposal. Activation language: Use Enter to activate.
+- [x] `tabbing-03` · P2 · proposal. Activation language: Use Enter to activate.
   Evidence: ENTER to click uses pointer language for a keyboard action.
 
-- [ ] `tabbing-04` · P2 · proposal. Reverse navigation: Add Shift+Tab for reverse navigation if supported.
+- [x] `tabbing-04` · P2 · proposal. Reverse navigation: Add Shift+Tab for reverse navigation if supported.
   Evidence: Only forward Tab navigation is explained.
 
-- [ ] `tabbing-05` · P2 · proposal. Initial focus framing: Add a caption explaining that focus appears after keyboard navigation begins.
+- [x] `tabbing-05` · P2 · proposal. Initial focus framing: Add a caption explaining that focus appears after keyboard navigation begins.
   Evidence: No focused option is shown in this initial screenshot.
 
-- [ ] `tabbing-06` · P2 · proposal. Focus evidence: Add a companion baseline with one keyboard-focused option.
+- [x] `tabbing-06` · P2 · proposal. Focus evidence: Add a companion baseline with one keyboard-focused option.
   Evidence: All four button borders look alike in this state.
 
-- [ ] `tabbing-07` · P2 · proposal. Option identities: Add a short demo note that each activation increments the shared counter.
+- [x] `tabbing-07` · P2 · proposal. Option identities: Add a short demo note that each activation increments the shared counter.
   Evidence: OPTION A through OPTION D name no concrete action.
 
-- [ ] `tabbing-08` · P2 · proposal. Counter label: Rename it Total activations.
+- [x] `tabbing-08` · P2 · proposal. Counter label: Rename it Total activations.
   Evidence: Total Clicks counts keyboard activations under a mouse-specific name.
 
-- [ ] `tabbing-09` · P2 · proposal. Counter feedback: Add Last activated: none beside the count.
+- [x] `tabbing-09` · P2 · proposal. Counter feedback: Add Last activated: none beside the count.
   Evidence: The counter does not identify which option was activated.
 
-- [ ] `tabbing-10` · P2 · proposal. Tab order: Add small 1 to 4 order badges outside the interactive buttons.
+- [x] `tabbing-10` · P2 · proposal. Tab order: Add small 1 to 4 order badges outside the interactive buttons.
   Evidence: The vertical order is visible but not explicitly numbered as focus order.
 
-- [ ] `tabbing-11` · P2 · proposal. Color roles: Add a note that colors test focus visibility across different backgrounds.
+- [x] `tabbing-11` · P2 · proposal. Color roles: Add a note that colors test focus visibility across different backgrounds.
   Evidence: Magenta, cyan, lime and amber are unexplained.
 
-- [ ] `tabbing-12` · P3 · proposal. Focus-ring specification: Show a noninteractive ring swatch with thickness and offset in a small legend.
+- [x] `tabbing-12` · P3 · proposal. Focus-ring specification: Show a noninteractive ring swatch with thickness and offset in a small legend.
   Evidence: The screenshot does not document the configured yellow focus-ring appearance.
 
-- [ ] `tabbing-13` · P2 · proposal. Reset state: Add Reset count outside the demonstrated four-option order or label its tab-order role.
+- [x] `tabbing-13` · P2 · proposal. Reset state: Add Reset count outside the demonstrated four-option order or label its tab-order role.
   Evidence: No reset action is visible for the activation counter.
 
-- [ ] `tabbing-14` · P3 · proposal. Panel border: Simplify the decorative frame so the keyboard ring is easier to distinguish in active captures.
+- [x] `tabbing-14` · P3 · proposal. Panel border: Simplify the decorative frame so the keyboard ring is easier to distinguish in active captures.
   Evidence: The purple outer frame has several close parallel outlines.
 
-- [ ] `tabbing-15` · P2 · proposal. Expected outcome: Add an expected sequence line A, B, C, D and back according to the actual traversal rules.
+- [x] `tabbing-15` · P2 · proposal. Expected outcome: Add an expected sequence line A, B, C, D and back according to the actual traversal rules.
   Evidence: The page has no explicit success statement for traversing all options.
 
 ### text

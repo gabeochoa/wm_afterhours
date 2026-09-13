@@ -10,169 +10,63 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleTabbing : ScreenSystem<UIContext<InputAction>> {
-  int focused_button = 0;
-  std::vector<int> button_clicks = {0, 0, 0, 0};
+  std::array<int,4> button_clicks{};
+  int last = -1;
 
-  // Retro arcade color palette
-  afterhours::Color bg_dark{18, 12, 28, 255};       // Deep purple-black
-  afterhours::Color panel_bg{35, 28, 52, 255};      // Dark purple panel
-  afterhours::Color btn_magenta{165, 55, 140, 255}; // Electric magenta
-  afterhours::Color btn_cyan{55, 195, 195, 255};    // Electric cyan
-  afterhours::Color btn_lime{145, 215, 65, 255};    // Electric lime
-  afterhours::Color btn_amber{235, 175, 55, 255};   // Electric amber
-  afterhours::Color text_light{240, 235, 250, 255}; // Off-white
-  afterhours::Color border_glow{120, 75, 155, 255}; // Purple glow
-
-  // Focus ring configuration - high contrast for visibility on colored buttons
-  afterhours::Color focus_ring_color{255, 255, 100,
-                                     255}; // Bright yellow for high contrast
-  float focus_ring_thickness = 4.0f;       // Thicker than default 3.0f
-  float focus_ring_offset = 5.0f;          // Slightly larger gap
-
-  // UI display options
-  bool show_total_clicks = true; // Set to false to hide click counter footer
-
-  void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
-    // Set up retro arcade theme
+  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
+    const afterhours::Color bg{18,12,28,255}, surface{35,28,52,255}, ink{240,235,250,255}, muted{195,181,215,255};
+    const std::array<afterhours::Color,4> colors{{{165,55,140,255},{55,195,195,255},{145,215,65,255},{235,175,55,255}}};
     Theme theme;
-    theme.font = text_light;
-    theme.darkfont = bg_dark;
-    theme.font_muted = afterhours::Color{180, 170, 200, 255};
-    theme.background = bg_dark;
-    theme.surface = panel_bg;
-    theme.primary = btn_magenta;
-    theme.secondary = btn_cyan;
-    theme.accent = btn_lime;
-    theme.error = afterhours::Color{220, 70, 70, 255};
-    theme.roundness = 0.12f;
-    // Configure focus ring for high contrast on colored buttons
-    theme.focus = focus_ring_color;
-    theme.focus_ring_thickness = focus_ring_thickness;
-    theme.focus_ring_offset = focus_ring_offset;
-    context.theme = theme;
-
-    int screen_width = Settings::get().get_screen_width();
-    int screen_height = Settings::get().get_screen_height();
-
-    // Full screen background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(
-                ComponentSize{pixels(screen_width), pixels(screen_height)})
-            .with_custom_background(bg_dark)
-            .with_debug_name("background"));
-
-    // Main panel with glow effect
-    float panel_width = 380.0f;
-    float panel_height = 420.0f;
-    float panel_x = (screen_width - panel_width) / 2.0f;
-    float panel_y = (screen_height - panel_height) / 2.0f - 20.0f;
-
-    // Panel shadow/glow
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(panel_width + 8),
-                                     pixels(panel_height + 8)})
-            .with_absolute_position(panel_x - 4.0f, panel_y - 4.0f)
-            .with_custom_background(afterhours::Color{100, 60, 140, 60})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.12f)
-            .with_debug_name("panel_glow"));
-
-    // Main panel
-    div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(panel_width), pixels(panel_height)})
-            .with_absolute_position(panel_x, panel_y)
-            .with_custom_background(panel_bg)
-            .with_border(border_glow, 2.0f)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.1f)
-            .with_debug_name("main_panel"));
-
-    // Title bar
-    div(context, mk(entity, 3),
-        ComponentConfig{}
-            .with_label("KEYBOARD NAV")
-            .with_size(ComponentSize{pixels(panel_width - 4), pixels(50)})
-            .with_absolute_position(panel_x + 2.0f, panel_y + 2.0f)
-            .with_custom_background(btn_magenta)
-            .with_font("EqProRounded", h720(26.0f))
-            .with_custom_text_color(text_light)
-            .with_rounded_corners(std::bitset<4>(0b1100))
-            .with_roundness(0.15f)
-            .with_alignment(TextAlignment::Center));
-
-    // Instruction text
-    div(context, mk(entity, 4),
-        ComponentConfig{}
-            .with_label("Use TAB to navigate, ENTER to click")
-            .with_size(ComponentSize{pixels(panel_width - 40), pixels(24)})
-            .with_absolute_position(panel_x + 20.0f, panel_y + 62.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_alignment(TextAlignment::Center));
-
-    // Button colors
-    afterhours::Color btn_colors[] = {btn_magenta, btn_cyan, btn_lime,
-                                      btn_amber};
-    std::string btn_labels[] = {"OPTION A", "OPTION B", "OPTION C", "OPTION D"};
-
-    float button_width = panel_width - 60.0f;
-    float button_height = 55.0f;
-    float button_spacing = 12.0f;
-    float start_y = panel_y + 100.0f;
-    float start_x = panel_x + 30.0f;
-
-    for (int i = 0; i < 4; i++) {
-      float button_y = start_y + i * (button_height + button_spacing);
-      std::string label = btn_labels[i];
-      if (button_clicks[i] > 0) {
-        label += " (" + std::to_string(button_clicks[i]) + ")";
-      }
-
-      auto button_result =
-          button(context, mk(entity, 10 + i),
-                 ComponentConfig{}
-                     .with_label(label)
-                     .with_size(ComponentSize{pixels(button_width),
-                                              pixels(button_height)})
-                     .with_absolute_position(start_x, button_y)
-                     .with_custom_background(btn_colors[i])
-                     .with_border(
-                         afterhours::colors::lighten(btn_colors[i], 1.3f), 2.0f)
-                     .with_soft_shadow(3.0f, 4.0f, 10.0f,
-                                       afterhours::Color{0, 0, 0, 80})
-                     .with_auto_text_color(true)
-                     .with_font("EqProRounded", h720(22.0f))
-                     .with_rounded_corners(RoundedCorners())
-                     .with_roundness(0.4f)
-                     .with_alignment(TextAlignment::Center)
-                     .with_debug_name("tab_button_" + std::to_string(i)));
-
-      if (button_result) {
-        button_clicks[i]++;
-        log_info("Button {} clicked! Count: {}", i + 1, button_clicks[i]);
-      }
+    theme.background=bg; theme.surface=surface; theme.font=ink; theme.darkfont=bg;
+    theme.primary=colors[0]; theme.secondary=colors[1]; theme.accent=colors[2]; theme.font_muted=muted;
+    theme.focus={255,255,100,255}; theme.focus_ring_thickness=4; theme.focus_ring_offset=5;
+    context.theme=theme;
+    context.scaling_mode=ScalingMode::Proportional;
+    const float s=std::min(context.screen_width/1280.f,context.screen_height/720.f);
+    const auto box=[s](float x,float y,float w,float h) {
+      return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
+          .with_absolute_position(x*s,y*s).with_corner_radius(0);
+    };
+    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+        .with_custom_background(bg).with_corner_radius(0).with_debug_name("background"));
+    auto panel=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(920*s),pixels(596*s)})
+        .with_absolute_position((context.screen_width-920*s)/2,(context.screen_height-596*s)/2)
+        .with_custom_background(surface).with_corner_radius(12*s).with_debug_name("main_panel"));
+    const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
+      return div(context,mk(panel.ent(),id),box(x,y,w,h).with_label(text)
+          .with_font("AtkinsonMock",pixels(size*s)).with_custom_text_color(dim?muted:ink)
+          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
+    };
+    label(0,"Keyboard navigation",32,20,856,44,32);
+    label(1,"Tab moves forward. Shift + Tab moves back. Enter activates.",32,74,856,32,21,true);
+    const std::array<std::string,4> names{"OPTION A","OPTION B","OPTION C","OPTION D"};
+    for(int i=0;i<4;++i) {
+      const float y=140+static_cast<float>(i)*78;
+      label(10+i,std::to_string(i+1),32,y,32,55,23,true);
+      if(button(context,mk(panel.ent(),20+i),box(80,y,340,55)
+          .with_label(names[i]+(button_clicks[i]>0 ? " ("+std::to_string(button_clicks[i])+")" : ""))
+          .with_custom_background(colors[i]).with_auto_text_color(true)
+          .with_font("AtkinsonMock",pixels(23*s)).with_corner_radius(11*s)
+          .with_debug_name("tab_button_"+std::to_string(i)))) {++button_clicks[i];last=i;}
     }
-
-    // Footer with total clicks (configurable visibility)
-    if (show_total_clicks) {
-      int total_clicks = 0;
-      for (int i = 0; i < 4; i++)
-        total_clicks += button_clicks[i];
-
-      div(context, mk(entity, 20),
-          ComponentConfig{}
-              .with_label("Total Clicks: " + std::to_string(total_clicks))
-              .with_size(ComponentSize{pixels(panel_width - 40), pixels(28)})
-              .with_absolute_position(panel_x + 20.0f,
-                                      panel_y + panel_height - 40.0f)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_custom_text_color(btn_lime)
-              .with_alignment(TextAlignment::Center));
+    label(30,"Follow the focus ring",476,132,412,36,25);
+    label(31,"It appears after keyboard navigation begins.",476,180,412,56,20,true);
+    label(32,"Four colors test the same yellow ring",476,246,412,32,19,true);
+    label(33,"against different button backgrounds.",476,276,412,32,19,true);
+    div(context,mk(panel.ent(),34),box(486,334,74,40).with_custom_background({0,0,0,0})
+        .with_border(theme.focus,1).with_corner_radius(11*s).with_ignore_pointer_events());
+    label(35,"Ring color / #FFFF64",584,326,304,30,19);
+    label(36,"Requested stroke 4 px / offset 5 px",476,390,412,30,18,true);
+    label(37,"Each activation increments the shared total.",476,432,412,32,18,true);
+    const int total=button_clicks[0]+button_clicks[1]+button_clicks[2]+button_clicks[3];
+    label(38,"Total activations: "+std::to_string(total),32,484,420,32,24);
+    label(39,"Last activated: "+(last<0 ? std::string("none") : names[last]),32,524,420,30,20,true);
+    if(button(context,mk(panel.ent(),40),box(660,486,228,42).with_label("Reset count")
+        .with_font("AtkinsonMock",pixels(20*s)).with_background(Theme::Usage::Secondary)
+        .with_auto_text_color(true).with_corner_radius(8*s).with_debug_name("tab_reset"))) {
+      button_clicks.fill(0);last=-1;
     }
+    label(41,"Tab order: A > B > C > D > Reset > A",476,550,412,28,18,true);
   }
 };
 

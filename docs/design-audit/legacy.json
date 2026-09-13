@@ -331,8 +331,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes initial Option A focus ring. The old image is useful separate evidence of the yellow-and-white keyboard focus treatment. The four colored choices remain otherwise unchanged.",
-    "sha256": "b869ad6f02f36f368112775c8fe581ffd007bf37571ddee895b2df76263e4944",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "cf39d7d4ba6bb2210f24d392e7e944da7ae325f30fe7a25c7d0d5ff4ad7d2d73",
     "additional_findings": []
   },
   {

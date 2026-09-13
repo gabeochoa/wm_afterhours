@@ -3,13 +3,14 @@
 
 # Navigate to the tabbing screen
 goto_screen tabbing
+resize 1280 720
 wait 0.5
 
 # Validate screen against baseline
 validate_screen tabbing
 
 # Verify we're on the correct screen
-expect_text "KEYBOARD NAV"
+expect_text "Keyboard navigation"
 
 # Test tabbing through elements
 key TAB

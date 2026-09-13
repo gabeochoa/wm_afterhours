@@ -4028,7 +4028,8 @@
         "change": "Add an expected sequence line A, B, C, D and back according to the actual traversal rules."
       }
     ],
-    "sha256": "bec573360ceb5fe28ebd2b9c68ed790b4bb4559f35d8b4d1c2d7af6f3ea6b396"
+    "sha256": "bec573360ceb5fe28ebd2b9c68ed790b4bb4559f35d8b4d1c2d7af6f3ea6b396",
+    "evidence": "docs/design-audit/originals/tabbing_720p.png"
   },
   {
     "id": "text",

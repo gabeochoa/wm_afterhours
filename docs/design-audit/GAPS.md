@@ -3622,7 +3622,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## tabbing
 
-[Current baseline](../../screenshot-baselines/screens/tabbing_720p.png) · [Visual review](../../design-audit.html#screen=tabbing)
+[Reviewed image](../../docs/design-audit/originals/tabbing_720p.png) · [Current baseline](../../screenshot-baselines/screens/tabbing_720p.png) · [Visual review](../../design-audit.html#screen=tabbing)
 
 Baseline SHA-256: `bec573360ceb5fe28ebd2b9c68ed790b4bb4559f35d8b4d1c2d7af6f3ea6b396`
 
@@ -3650,7 +3650,7 @@ The initial frame contains no active focus ring, which is not itself a keyboard 
 
 [Image](../../baseline_screenshots/tabbing.png)
 
-Current capture removes initial Option A focus ring. The old image is useful separate evidence of the yellow-and-white keyboard focus treatment. The four colored choices remain otherwise unchanged.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## text
 
