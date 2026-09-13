@@ -206,7 +206,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
     divider(context, mk(entity, 3), Axis::Y,
         box(48, 676, 1180, 1 / s)
             .with_custom_background({139, 160, 191, 255})
-            .with_ignore_pointer_events().with_debug_name("dv_rule"));
+            .with_ignore_pointer_events().with_skip_tabbing(true).with_debug_name("dv_rule"));
     for (int i = 0; i < 2; ++i) {
       div(context, mk(entity, 30 + i), box(i == 0 ? 42.f : 1232.f, 672, 2, 9)
           .with_custom_background({168, 194, 227, 255})
