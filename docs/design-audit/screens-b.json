@@ -3631,7 +3631,8 @@
         "change": "Center the complete demo panel vertically or fit its background to the viewport."
       }
     ],
-    "sha256": "396cda5942420cb0978a10f28f21a6979b322f60303c88cc33b393755ceb110d"
+    "sha256": "396cda5942420cb0978a10f28f21a6979b322f60303c88cc33b393755ceb110d",
+    "evidence": "docs/design-audit/originals/language_demo_720p.png"
   },
   {
     "id": "layout",

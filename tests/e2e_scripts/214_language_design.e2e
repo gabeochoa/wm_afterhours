@@ -1,0 +1,50 @@
+goto_screen language_demo
+resize 1280 720
+wait 0.4
+expect_text "Language Demo"
+expect_text "Current language: English"
+expect_text "Hello!"
+expect_text "Language: English / Active font: AtkinsonMock"
+assert_ui main_bg x=60 y=24 w=1160 h=672
+assert_within_parents
+screenshot language_design
+click_ui language_1
+wait 0.2
+expect_text "언어 데모"
+expect_text "Current language: Korean"
+expect_text "안녕하세요!"
+click_ui language_action_1
+wait 0.2
+expect_text "Demo action: 설정"
+screenshot language_korean
+focus_ui language_2
+key ENTER
+wait 0.2
+expect_text "言語デモ"
+expect_text "Current language: Japanese"
+expect_text "Demo action: 設定"
+click_ui language_continue
+wait 0.2
+expect_text "Demo action: 続ける"
+screenshot language_japanese
+key 1
+wait 0.2
+expect_text "Current language: English"
+expect_text "Demo action: Continue"
+key 2
+wait 0.2
+expect_text "Current language: Korean"
+key 3
+wait 0.2
+expect_text "Current language: Japanese"
+resize 1920 1080
+wait 0.3
+assert_ui main_bg x=90 y=36 w=1740 h=1008
+assert_within_parents
+screenshot language_design_1080
+resize 1024 768
+wait 0.3
+assert_ui main_bg x=48 y=115 w=928 h=538
+assert_within_parents
+screenshot language_design_narrow
+resize 1280 720

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,417 completed; 1,118 remaining.
+1,437 completed; 1,098 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4183,64 +4183,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/language_demo_720p.png) · [Visual review](design-audit.html#screen=language_demo)
 
-- [ ] `language_demo-01` · P2 · proposal. Language selectors: Add English, 한국어, and 日本語 in a wider selector group.
+- [x] `language_demo-01` · P2 · proposal. Language selectors: Add English, 한국어, and 日本語 in a wider selector group.
   Evidence: EN, KO, and JA show ISO codes without native names.
 
-- [ ] `language_demo-02` · P2 · proposal. Selected language: Use one control palette and a clear selected marker.
+- [x] `language_demo-02` · P2 · proposal. Selected language: Use one control palette and a clear selected marker.
   Evidence: EN is blue while the other languages are green, without a legend.
 
-- [ ] `language_demo-03` · P2 · proposal. Selector spacing: Add small uniform gaps between the controls.
+- [x] `language_demo-03` · P2 · proposal. Selector spacing: Add small uniform gaps between the controls.
   Evidence: The three language pills touch one another.
 
-- [ ] `language_demo-04` · P2 · proposal. Keyboard hints: Show the digits in separate compact keycaps.
+- [x] `language_demo-04` · P2 · proposal. Keyboard hints: Show the digits in separate compact keycaps.
   Evidence: [1], [2], and [3] are part of each label string.
 
-- [ ] `language_demo-05` · P2 · proposal. Title bar: Separate the heading visually from the language picker.
+- [x] `language_demo-05` · P2 · proposal. Title bar: Separate the heading visually from the language picker.
   Evidence: The title occupies an oversized blue region that merges into EN.
 
-- [ ] `language_demo-06` · P2 · proposal. Active panel heading: Add Current language: English above the greeting specimen.
+- [x] `language_demo-06` · P2 · proposal. Active panel heading: Add Current language: English above the greeting specimen.
   Evidence: Hello! occupies a large mustard strip without saying it is the active language.
 
-- [ ] `language_demo-07` · P2 · proposal. Greeting typography: Use a deliberate specimen alignment with consistent content insets.
+- [x] `language_demo-07` · P2 · proposal. Greeting typography: Use a deliberate specimen alignment with consistent content insets.
   Evidence: Hello! is left-aligned while all menu labels are centered.
 
-- [ ] `language_demo-08` · P2 · proposal. Menu comparison scope: Add aligned translations for the same set of menu labels.
+- [x] `language_demo-08` · P2 · proposal. Menu comparison scope: Add aligned translations for the same set of menu labels.
   Evidence: The left panel shows five actions while the right compares only Hello and Start.
 
-- [ ] `language_demo-09` · P2 · proposal. Comparison rows: Use Language, Greeting, and Start columns.
+- [x] `language_demo-09` · P2 · proposal. Comparison rows: Use Language, Greeting, and Start columns.
   Evidence: EN, KO, and JA text are embedded in unstructured sentences.
 
-- [ ] `language_demo-10` · P2 · proposal. Script scale: Normalize optical reading size while retaining appropriate fonts per script.
+- [x] `language_demo-10` · P2 · proposal. Script scale: Normalize optical reading size while retaining appropriate fonts per script.
   Evidence: Korean appears markedly smaller than the handwritten English example.
 
-- [ ] `language_demo-11` · P2 · proposal. Japanese baseline: Align row baselines or document the script-specific metrics in captions.
+- [x] `language_demo-11` · P2 · proposal. Japanese baseline: Align row baselines or document the script-specific metrics in captions.
   Evidence: The Japanese sample uses a different apparent vertical alignment.
 
-- [ ] `language_demo-12` · P2 · proposal. Comparison heading: Increase the heading and add a short font-comparison subtitle.
+- [x] `language_demo-12` · P2 · proposal. Comparison heading: Increase the heading and add a short font-comparison subtitle.
   Evidence: All Languages is small above a broad empty panel.
 
-- [ ] `language_demo-13` · P3 · proposal. Unused comparison area: Add a multiline localized specimen to use the available area.
+- [x] `language_demo-13` · P3 · proposal. Unused comparison area: Add a multiline localized specimen to use the available area.
   Evidence: Most of the right panel below the three examples is empty.
 
-- [ ] `language_demo-14` · P2 · proposal. Continue action: Separate the primary action from the menu specimen list.
+- [x] `language_demo-14` · P2 · proposal. Continue action: Separate the primary action from the menu specimen list.
   Evidence: Continue shares the same styling as Start, Settings, About, and Exit.
 
-- [ ] `language_demo-15` · P2 · proposal. Exit ordering: Move Exit into a distinct secondary action group.
+- [x] `language_demo-15` · P2 · proposal. Exit ordering: Move Exit into a distinct secondary action group.
   Evidence: Exit appears directly above Continue without grouping.
 
-- [ ] `language_demo-16` · P2 · proposal. Font metadata: Split language and active-font metadata into labeled values.
+- [x] `language_demo-16` · P2 · proposal. Font metadata: Split language and active-font metadata into labeled values.
   Evidence: Active: ENGLISH and Font: Gaegu-Bold share one footer line.
 
-- [ ] `language_demo-17` · P3 · proposal. Font coverage: Show the font used for each script in the comparison rows.
+- [x] `language_demo-17` · P3 · proposal. Font coverage: Show the font used for each script in the comparison rows.
   Evidence: Only the active English font is named.
 
-- [ ] `language_demo-18` · P2 · proposal. Footer instructions: Show 1 English · 2 Korean · 3 Japanese in the footer.
+- [x] `language_demo-18` · P2 · proposal. Footer instructions: Show 1 English · 2 Korean · 3 Japanese in the footer.
   Evidence: Press 1/2/3 to switch languages repeats the key labels without mapping them.
 
-- [ ] `language_demo-19` · P3 · proposal. Panel junction: Use consistent panel corner treatment at their junction.
+- [x] `language_demo-19` · P3 · proposal. Panel junction: Use consistent panel corner treatment at their junction.
   Evidence: The two side panels meet the footer with small triangular background gaps.
 
-- [ ] `language_demo-20` · P3 · proposal. Viewport composition: Center the complete demo panel vertically or fit its background to the viewport.
+- [x] `language_demo-20` · P3 · proposal. Viewport composition: Center the complete demo panel vertically or fit its background to the viewport.
   Evidence: The content ends well above the bottom of the black viewport.
 
 ### layout

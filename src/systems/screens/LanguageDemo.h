@@ -5,6 +5,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <array>
 #include <afterhours/src/plugins/translation.h>
 
 using namespace afterhours::ui;
@@ -14,21 +15,7 @@ using namespace afterhours::translation;
 struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
   Language current_language = Language::English;
 
-  // Configuration options for design improvements
-  struct Config {
-    // Issue 1: Make keyboard shortcuts more discoverable
-    bool show_prominent_keyboard_hints = true; // Show hints on language buttons
-
-    // Issue 2: Show full language names below ISO codes
-    // NOTE: Disabled by default — multiline labels caused the button_row to
-    // overflow the header's right edge at 68px button width.
-    bool show_full_language_names = false;
-
-    // Issue 3: Button color consistency
-    bool use_consistent_button_colors =
-        true; // Use Primary instead of Accent for Continue button
-  };
-  Config config;
+  std::optional<size_t> last_action;
 
   struct LanguageSample {
     std::string title;
@@ -60,286 +47,115 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Keyboard shortcuts
-    if (raylib::IsKeyPressed(raylib::KEY_ONE) ||
-        raylib::IsKeyPressed(raylib::KEY_KP_1)) {
-      current_language = Language::English;
-    }
-    if (raylib::IsKeyPressed(raylib::KEY_TWO) ||
-        raylib::IsKeyPressed(raylib::KEY_KP_2)) {
-      current_language = Language::Korean;
-    }
-    if (raylib::IsKeyPressed(raylib::KEY_THREE) ||
-        raylib::IsKeyPressed(raylib::KEY_KP_3)) {
-      current_language = Language::Japanese;
-    }
-
+    if (afterhours::input::is_key_pressed(raylib::KEY_ONE) || afterhours::input::is_key_pressed(raylib::KEY_KP_1)) current_language = Language::English;
+    if (afterhours::input::is_key_pressed(raylib::KEY_TWO) || afterhours::input::is_key_pressed(raylib::KEY_KP_2)) current_language = Language::Korean;
+    if (afterhours::input::is_key_pressed(raylib::KEY_THREE) || afterhours::input::is_key_pressed(raylib::KEY_KP_3)) current_language = Language::Japanese;
     auto theme = afterhours::ui::theme_presets::ocean_navy();
+    theme.language_fonts[Language::English] = FontConfig("AtkinsonMock", 1.0f);
+    theme.language_fonts[Language::Korean] = FontConfig("NotoSansKR", 1.35f);
+    theme.language_fonts[Language::Japanese] = FontConfig("Sazanami", 1.15f);
     context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-
-    const FontConfig &font_config = theme.get_font_config(current_language);
-    float scaled_size = theme.get_scaled_font_size(current_language, 20.0f);
-    LanguageSample sample = get_sample(current_language);
-
-    // Main container - centered with padding
-    auto root =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.92f), screen_pct(0.85f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_roundness(0.05f)
-                .with_padding(Spacing::md)
-                .with_debug_name("main_bg"));
-
-    // Content container - use percent(1.0f) to resolve during parent phase
-    auto main =
-        vstack(context, mk(root.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                   .with_no_wrap()
-                   .with_debug_name("main"));
-
-    // ===== HEADER ROW =====
-    auto header =
-        hstack(context, mk(main.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(70)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Padding{.left = pixels(16),
-                                         .right = pixels(16),
-                                         .top = pixels(8),
-                                         .bottom = pixels(8)})
-                   .with_no_wrap()
-                   .with_justify_content(JustifyContent::SpaceBetween)
-                   .with_align_items(AlignItems::Center)
-                   .with_debug_name("header"));
-
-    // Title container - expand to fill remaining space after button_row
-    auto title_container =
-        div(context, mk(header.ent(), 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{expand(), pixels(50)})
-                .with_background(Theme::Usage::Primary)
-                // Spacing::sm scales to ~15 a side, leaving 20 of the 50 for
-                // a 24px title.
-                .with_padding(Padding::all(pixels(6)))
-                .with_debug_name("title_container"));
-
-    // Title text - use expand() to fill title_container after it's resolved
-    div(context, mk(title_container.ent(), 0),
-        ComponentConfig{}
-            .with_label(sample.title)
-            .with_size(ComponentSize{expand(), expand()})
-            .with_font(font_config.font_name, 24.0f * font_config.size_scale)
-            .with_alignment(TextAlignment::Left));
-
-    // Button row container - needs enough width for 3 buttons
-    // Height increased to accommodate full language names when enabled
-    // Using children() instead of fixed pixels to avoid overflow in header
-    auto button_row =
-        hstack(context, mk(header.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{children(), pixels(54)})
-                   .with_no_wrap()
-                   .with_align_items(AlignItems::Center)
-                   .with_debug_name("button_row"));
-
-    // Helper to build language button labels with optional hints and full names
-    auto make_lang_label = [this](const char *code, const char *full_name,
-                                  const char *key_hint) {
-      std::string label = code;
-      if (config.show_full_language_names) {
-        label += std::string("\n") + full_name;
-      }
-      if (config.show_prominent_keyboard_hints) {
-        label += std::string(" [") + key_hint + "]";
-      }
-      return label;
+    context.scaling_mode = ScalingMode::Proportional;
+    const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    const std::array<Language, 3> languages{Language::English, Language::Korean, Language::Japanese};
+    const std::array<const char *, 3> names{"English", "한국어", "日本語"};
+    const std::array<const char *, 3> english_names{"English", "Korean", "Japanese"};
+    const std::array<const char *, 3> paragraphs{
+        "Choose a language.\nChanges apply only to this demo.",
+        "언어를 선택하세요.\n설정은 이 데모에만 적용됩니다.",
+        "言語を選んでください。\n設定はこのデモにのみ適用されます。"};
+    const auto box = [s](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, y * s).with_corner_radius(0);
     };
-
-    // Language buttons - EN
-    if (button(context, mk(button_row.ent(), 0),
-               ComponentConfig{}
-                   .with_label(make_lang_label("EN", "English", "1"))
-                   .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(
-                       UIComponent::DEFAULT_FONT,
-                       pixels(config.show_full_language_names ? 13.0f : 16.0f))
-                   .with_background(current_language == Language::English
-                                        ? Theme::Usage::Primary
-                                        : Theme::Usage::Secondary))) {
-      current_language = Language::English;
+    div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_absolute_position(0, 0).with_background(Theme::Usage::Background).with_corner_radius(0));
+    auto root = div(context, mk(entity, 1), ComponentConfig{}
+        .with_size({pixels(1160 * s), pixels(672 * s)})
+        .with_absolute_position((context.screen_width - 1160 * s) / 2,
+                                (context.screen_height - 672 * s) / 2)
+        .with_background(Theme::Usage::None).with_debug_name("main_bg"));
+    const auto label = [&](int id, const std::string &value, float x, float y,
+                           float w, float h, float size, const std::string &font = "AtkinsonMock") {
+      return div(context, mk(root.ent(), id), box(x, y, w, h).with_label(value)
+          .with_font(font, pixels(size * s)).with_custom_text_color({224, 235, 245, 255})
+          .with_background(Theme::Usage::None).with_alignment(TextAlignment::Left)
+          .with_ignore_pointer_events());
+    };
+    const auto &heading_font = theme.get_font_config(current_language);
+    label(0, get_sample(current_language).title, 0, 0, 1160, 42, 28 * heading_font.size_scale, heading_font.font_name);
+    label(1, "Compare the same content across three scripts and their loaded fonts.", 0, 46, 1160, 28, 20);
+    for (size_t i = 0; i < languages.size(); ++i) {
+      const auto lang = languages[i];
+      const auto &font = theme.get_font_config(lang);
+      const bool active = lang == current_language;
+      auto picker = button(context, mk(root.ent(), 10 + static_cast<int>(i)), box(static_cast<float>(i) * 392, 86, 376, 50)
+          .with_padding(Padding{}).with_label(names[i]).with_font(font.font_name, pixels(22 * font.size_scale * s))
+          .with_background(active ? Theme::Usage::Primary : Theme::Usage::Secondary)
+          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(8 * s)
+          .with_border(active ? afterhours::Color{132, 220, 224, 255} : afterhours::Color{62, 91, 114, 255}, 1)
+          .with_debug_name("language_" + std::to_string(i)));
+      if (picker) current_language = lang;
+      div(context, mk(root.ent(), 70 + static_cast<int>(i)), box(static_cast<float>(i) * 392 + 12, 96, 30, 30)
+          .with_label(std::to_string(i + 1)).with_font("AtkinsonMock", pixels(18 * s))
+          .with_alignment(TextAlignment::Center).with_custom_background({19, 37, 55, 255})
+          .with_custom_text_color({224, 235, 245, 255}).with_corner_radius(4 * s)
+          .with_ignore_pointer_events());
+      if (active) div(context, mk(root.ent(), 80 + static_cast<int>(i)), box(static_cast<float>(i) * 392 + 300, 96, 64, 30)
+          .with_label("Active").with_font("AtkinsonMock", pixels(15 * s))
+          .with_background(Theme::Usage::None).with_custom_text_color({151, 235, 218, 255})
+          .with_ignore_pointer_events());
     }
-
-    // Language buttons - KO
-    if (button(context, mk(button_row.ent(), 1),
-               ComponentConfig{}
-                   .with_label(make_lang_label("KO", "Korean", "2"))
-                   .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(
-                       UIComponent::DEFAULT_FONT,
-                       pixels(config.show_full_language_names ? 13.0f : 16.0f))
-                   .with_background(current_language == Language::Korean
-                                        ? Theme::Usage::Primary
-                                        : Theme::Usage::Secondary))) {
-      current_language = Language::Korean;
+    const size_t selected = current_language == Language::English ? 0 : current_language == Language::Korean ? 1 : 2;
+    const auto &font = theme.get_font_config(current_language);
+    const auto sample = get_sample(current_language);
+    div(context, mk(root.ent(), 20), box(0, 158, 444, 422).with_background(Theme::Usage::Surface).with_corner_radius(12 * s));
+    div(context, mk(root.ent(), 21), box(464, 158, 696, 422).with_background(Theme::Usage::Surface).with_corner_radius(12 * s));
+    label(22, std::string("Current language: ") + english_names[selected], 20, 176, 404, 28, 19);
+    label(23, sample.greeting, 20, 210, 404, 54, 32 * font.size_scale, font.font_name);
+    label(24, "Localized menu controls", 20, 276, 404, 24, 17);
+    for (int i = 0; i < 4; ++i) {
+      const float y = i == 3 ? 518.f : 310 + static_cast<float>(i) * 46;
+      if (button(context, mk(root.ent(), 30 + i), box(20, y, 404, 40)
+          .with_label(sample.menu_items[i]).with_font(font.font_name, pixels(22 * font.size_scale * s))
+          .with_background(i == 3 ? Theme::Usage::Secondary : Theme::Usage::Primary)
+          .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
+          .with_debug_name("language_action_" + std::to_string(i))))
+        last_action = static_cast<size_t>(i);
     }
-
-    // Language buttons - JA
-    if (button(context, mk(button_row.ent(), 2),
-               ComponentConfig{}
-                   .with_label(make_lang_label("JA", "Japanese", "3"))
-                   .with_size(ComponentSize{pixels(68), pixels(48)})
-                   .with_font(
-                       UIComponent::DEFAULT_FONT,
-                       pixels(config.show_full_language_names ? 13.0f : 16.0f))
-                   .with_background(current_language == Language::Japanese
-                                        ? Theme::Usage::Primary
-                                        : Theme::Usage::Secondary))) {
-      current_language = Language::Japanese;
+    if (button(context, mk(root.ent(), 35), box(20, 462, 404, 44)
+        .with_label(sample.button_text).with_font(font.font_name, pixels(22 * font.size_scale * s))
+        .with_background(Theme::Usage::Primary).with_custom_text_color({235, 242, 250, 255})
+        .with_corner_radius(6 * s).with_debug_name("language_continue")))
+      last_action = 4;
+    label(40, "All Languages", 484, 176, 656, 30, 25);
+    label(41, "Shared greeting and Start / 22px with script-specific scaling", 484, 210, 656, 26, 17);
+    label(42, "Language / font", 484, 246, 224, 24, 17);
+    label(43, "Greeting", 714, 246, 264, 24, 17);
+    label(44, "Start", 998, 246, 140, 24, 17);
+    for (size_t i = 0; i < languages.size(); ++i) {
+      const auto &row_font = theme.get_font_config(languages[i]);
+      const auto row_sample = get_sample(languages[i]);
+      const float top = 282 + static_cast<float>(i) * 66;
+      const int id = 50 + static_cast<int>(i) * 4;
+      label(id, english_names[i], 484, top, 224, 28, 20);
+      label(id + 1, row_font.font_name, 484, top + 28, 224, 22, 16);
+      label(id + 2, row_sample.greeting, 714, top, 264, 40, 22 * row_font.size_scale, row_font.font_name);
+      label(id + 3, row_sample.menu_items[0], 998, top, 140, 40, 22 * row_font.size_scale, row_font.font_name);
     }
-
-    // ===== CONTENT ROW ===== - fixed height to enable child percent sizing
-    // Main is ~554px. Header=70, Footer=55, so content = 554-70-55 = 429
-    auto content =
-        hstack(context, mk(main.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), h720(410)})
-                   .with_no_wrap()
-                   .with_debug_name("content"));
-
-    // Left panel - current language demo
-    auto left_panel =
-        vstack(context, mk(content.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::sm)
-                   .with_no_wrap()
-                   .with_margin(Margin{.right = pixels(4)})
-                   .with_debug_name("left_panel"));
-
-    // Greeting - fill parent width
-    div(context, mk(left_panel.ent(), 0),
-        ComponentConfig{}
-            .with_label(sample.greeting)
-            .with_size(ComponentSize{percent(1.0f), pixels(42)})
-            .with_background(Theme::Usage::Accent)
-            .with_font(font_config.font_name, 26.0f * font_config.size_scale)
-            .with_margin(
-                Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
-
-    // Menu items - 44px touch targets
-    for (int i = 0; i < 4; i++) {
-      button(context, mk(left_panel.ent(), i + 1),
-             ComponentConfig{}
-                 .with_label(sample.menu_items[i])
-                 .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                 .with_margin(Margin{.top = screen_pct(0.01f),
-                                     .bottom = screen_pct(0.01f)})
-                 .with_flex_direction(FlexDirection::Row)
-                 .with_font(font_config.font_name, scaled_size)
-                 .with_background(Theme::Usage::Primary));
-    }
-
-    // Continue button - 44px touch target
-    // Color is configurable: consistent (Primary) or distinct (Accent)
-    button(context, mk(left_panel.ent(), 5),
-           ComponentConfig{}
-               .with_label(sample.button_text)
-               .with_size(ComponentSize{percent(1.0f), pixels(44)})
-               .with_margin(Margin{.top = screen_pct(0.01f),
-                                   .bottom = screen_pct(0.01f)})
-               .with_flex_direction(FlexDirection::Row)
-               .with_font(font_config.font_name, 18.0f * font_config.size_scale)
-               .with_background(config.use_consistent_button_colors
-                                    ? Theme::Usage::Primary
-                                    : Theme::Usage::Accent));
-
-    // Right panel - all languages comparison
-    auto right_panel =
-        vstack(context, mk(content.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.49f), percent(1.0f)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::sm)
-                   .with_no_wrap()
-                   .with_margin(Margin{.left = pixels(4)})
-                   .with_debug_name("right_panel"));
-
-    // Title for right panel
-    div(context, mk(right_panel.ent(), 0),
-        ComponentConfig{}
-            .with_label("All Languages")
-            .with_size(ComponentSize{percent(1.0f), pixels(38)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
-            .with_margin(
-                Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
-
-    // English sample
-    auto en = get_sample(Language::English);
-    div(context, mk(right_panel.ent(), 1),
-        ComponentConfig{}
-            .with_label("EN: " + en.greeting + " - " + en.menu_items[0])
-            .with_size(ComponentSize{percent(1.0f), pixels(38)})
-            .with_background(Theme::Usage::None)
-            .with_font("Gaegu-Bold", pixels(18.0f))
-            .with_margin(
-                Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
-
-    // Korean sample
-    auto ko = get_sample(Language::Korean);
-    div(context, mk(right_panel.ent(), 2),
-        ComponentConfig{}
-            .with_label("KO: " + ko.greeting + " - " + ko.menu_items[0])
-            .with_size(ComponentSize{percent(1.0f), pixels(38)})
-            .with_background(Theme::Usage::None)
-            .with_font("NotoSansKR", pixels(18.0f))
-            .with_margin(
-                Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
-
-    // Japanese sample
-    auto ja = get_sample(Language::Japanese);
-    div(context, mk(right_panel.ent(), 3),
-        ComponentConfig{}
-            .with_label("JA: " + ja.greeting + " - " + ja.menu_items[0])
-            .with_size(ComponentSize{percent(1.0f), pixels(38)})
-            .with_background(Theme::Usage::None)
-            .with_font("Sazanami", pixels(18.0f))
-            .with_margin(
-                Margin{.top = screen_pct(0.01f), .bottom = screen_pct(0.01f)}));
-
-    // ===== FOOTER ROW =====
-    auto footer =
-        vstack(context, mk(main.ent(), 2),
-               ComponentConfig{}
-                   // 70 (was 55) to hold two 16px lines; content trimmed to 410
-                   .with_size(ComponentSize{percent(1.0f), h720(70)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::xs));
-
-    std::string lang_name = current_language == Language::English  ? "ENGLISH"
-                            : current_language == Language::Korean ? "KOREAN"
-                                                                   : "JAPANESE";
-
-    div(context, mk(footer.ent(), 0),
-        ComponentConfig{}
-            .with_label("Active: " + lang_name +
-                        " | Font: " + font_config.font_name)
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
-
-    div(context, mk(footer.ent(), 1),
-        ComponentConfig{}
-            .with_label("Press 1/2/3 to switch languages")
-            .with_size(ComponentSize{percent(1.0f), pixels(24)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f)));
+    label(64, paragraphs[selected], 484, 490, 656, 72, 20 * font.size_scale, font.font_name)
+        .ent().get<HasLabel>().text_overflow = TextOverflow::Wrap;
+    const std::string feedback = last_action
+        ? "Demo action: " + (*last_action == 4 ? sample.button_text : sample.menu_items[*last_action])
+        : "Choose a language, then try a localized control.";
+    label(65, feedback, 0, 594, 1160, 32, 21 * font.size_scale, font.font_name)
+        .ent().addComponentIfMissing<UIComponentDebug>("language_feedback").set("language_feedback");
+    label(66, "Language: " + std::string(english_names[selected]) + " / Active font: " + font.font_name,
+          0, 632, 660, 28, 18);
+    label(67, "1 English / 2 Korean / 3 Japanese", 700, 632, 460, 28, 18);
   }
+
 };
 
 REGISTER_EXAMPLE_SCREEN(language_demo, "System Demos",

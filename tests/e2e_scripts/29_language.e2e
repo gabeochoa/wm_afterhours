@@ -3,6 +3,7 @@
 
 # Navigate to the language demo screen
 goto_screen language_demo
+resize 1280 720
 wait 0.5
 
 # Validate screen against baseline
@@ -11,7 +12,7 @@ validate_screen language_demo
 # Verify we're on the correct screen
 expect_text "Language Demo"
 expect_text "All Languages"
-expect_text "Active: ENGLISH"
+expect_text "Language: English"
 
 screenshot language_display
 

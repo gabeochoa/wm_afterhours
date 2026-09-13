@@ -149,8 +149,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes the EN focus outline. English, Korean and Japanese examples still use visibly different text scales. Missing focus styling cannot be inferred from the current idle image.",
-    "sha256": "5b69b21813db4ddea54686fef948a7ff4ff060e0fe4c92516372b92e43330be4",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "e94bb0d20775a50544e0dbba88fd744ab8ec6ebfb2f8762900174f517b51125f",
     "additional_findings": []
   },
   {

@@ -2133,7 +2133,7 @@ The stationery-board composition matches the mock. Refine the interactive hierar
 
 ## language demo
 
-[Current baseline](../../screenshot-baselines/screens/language_demo_720p.png) · [Visual review](../../design-audit.html#screen=language_demo)
+[Reviewed image](../../docs/design-audit/originals/language_demo_720p.png) · [Current baseline](../../screenshot-baselines/screens/language_demo_720p.png) · [Visual review](../../design-audit.html#screen=language_demo)
 
 Baseline SHA-256: `396cda5942420cb0978a10f28f21a6979b322f60303c88cc33b393755ceb110d`
 
@@ -2166,7 +2166,7 @@ The three scripts render in the current baseline. Twenty distinct proposals impr
 
 [Image](../../baseline_screenshots/language_demo.png)
 
-Current capture removes the EN focus outline. English, Korean and Japanese examples still use visibly different text scales. Missing focus styling cannot be inferred from the current idle image.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## layout
 
