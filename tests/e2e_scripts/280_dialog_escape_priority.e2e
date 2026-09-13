@@ -1,0 +1,41 @@
+goto_screen advanced_modals
+wait 0.3
+click_ui btn_settings
+wait 0.3
+expect_text "Apply"
+click 10 10
+wait 0.3
+expect_no_text "Apply"
+goto_screen dialog_prompt
+wait 0.3
+focus_ui text_input_field
+key ESCAPE
+wait 0.3
+expect_no_text "New name"
+expect_text "Rename cancelled. Kept untitled_map.map"
+click_ui dp_open
+wait 0.3
+focus_ui text_input_field
+type "Draft"
+key ESCAPE
+wait 0.3
+expect_text "untitled_map.map"
+expect_focused dp_open
+goto_screen advanced_modals
+wait 0.3
+click_ui btn_settings
+wait 0.3
+focus_ui settings_lang_dropdown
+wait 0.1
+key ENTER
+wait 0.2
+expect_text "German"
+key ESCAPE
+wait 0.3
+expect_no_text "German"
+expect_text "Apply"
+screenshot dialog_dropdown_escape_priority
+key ESCAPE
+wait 0.3
+expect_no_text "Apply"
+expect_focused btn_settings
