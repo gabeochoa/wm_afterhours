@@ -21,10 +21,12 @@ changes to the afterhours contract. It does not mark an approximation as native 
    covers replay, interruption, keyboard activation, reduced motion and a narrow viewport.
    Runtime and fresh visual verification are pending the root batch. Curved/rotated text
    and grapheme animation remain outside this example.
-2. A transparent-control specimen with three backing panels and the same native action
-   on each. Show default, hover, focus and disabled variants; report activation through
-   a visible count. Assert keyboard activation, disabled nonactivation and focus bounds.
-   Capture each backing at 720p and a smaller viewport; calculate composited contrast.
+2. Implemented `TransparentControlsLab.h`, registered as `transparent_controls`, with
+   native Add to list buttons on light, dark and patterned backings. The second button
+   on each panel is disabled; per-panel counts make activation observable.
+   `294_transparent_controls.e2e` covers hover, focus, keyboard/pointer activation,
+   disabled nonactivation, reset and a narrow viewport. See [contrast calculations](transparent-controls-contrast.md).
+   Runtime and fresh visual verification are pending the root batch.
 3. A rolling-value specimen with four explicit target buttons for 9, 10, -1 and 1000,
    plus a reduced-motion switch. Preserve the full current value in one ordinary label.
    Test a second target during transition and carry/borrow. Label any lack of real blur

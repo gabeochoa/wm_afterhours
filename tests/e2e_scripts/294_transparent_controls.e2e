@@ -1,0 +1,68 @@
+goto_screen transparent_controls
+resize 1280 720
+wait 0.3
+expect_text "Clear controls on every background"
+expect_text "Light: 0 added"
+expect_text "Dark: 0 added"
+expect_text "Pattern: 0 added"
+expect_text "Total added: 0"
+assert_ui transparent_canvas w=1280 h=720
+assert_ui transparent_panel_0 x=68 y=148 w=360 h=384
+assert_ui transparent_panel_1 x=460 y=148 w=360 h=384
+assert_ui transparent_panel_2 x=852 y=148 w=360 h=384
+assert_ui transparent_add_0 x=96 y=276 w=304 h=56
+assert_ui transparent_add_1 x=488 y=276 w=304 h=56
+assert_ui transparent_add_2 x=880 y=276 w=304 h=56
+assert_within_parents
+screenshot transparent_controls_default
+mouse_move 248 304
+wait 0.2
+expect_text "Hovered"
+screenshot transparent_controls_hover
+click_ui transparent_add_0
+wait 0.2
+expect_text "Light: 1 added"
+expect_text "Total added: 1"
+mouse_move 30 30
+focus_element transparent_add_1
+wait 0.2
+expect_focused transparent_add_1
+screenshot transparent_controls_focus
+key ENTER
+wait 0.2
+expect_text "Dark: 1 added"
+expect_text "Total added: 2"
+click_ui transparent_add_2
+wait 0.2
+expect_text "Pattern: 1 added"
+expect_text "Total added: 3"
+click_ui transparent_disabled_0
+click_ui transparent_disabled_1
+click_ui transparent_disabled_2
+wait 0.2
+expect_text "Total added: 3"
+focus_element transparent_disabled_1
+key ENTER
+wait 0.2
+expect_text "Dark: 1 added"
+expect_text "Total added: 3"
+resize 1024 768
+wait 0.3
+assert_ui transparent_canvas w=1024 h=768
+assert_ui transparent_panel_0 x=54 y=214 w=288 h=307
+assert_ui transparent_add_0 w=243 h=45
+assert_ui transparent_add_2 w=243 h=45
+assert_within_parents
+screenshot transparent_controls_narrow
+focus_element transparent_add_2
+key ENTER
+wait 0.2
+expect_text "Pattern: 2 added"
+expect_text "Total added: 4"
+click_ui transparent_reset
+wait 0.2
+expect_text "Light: 0 added"
+expect_text "Dark: 0 added"
+expect_text "Pattern: 0 added"
+expect_text "Total added: 0"
+resize 1280 720
