@@ -1,12 +1,11 @@
 # Rubber Bandits decorative artwork
 
-`cast.png` is a 2× transparent raster export of the repo-authored
-`rubber_bandits_menu .cast` SVG in `mocks.html`. It contains only the decorative
-character lineup, castle, money, chests, and bomb. `logo.png` is the same kind
-of export of the decorative title treatment. Menu choices, character controls,
-status text, and other interactive labels remain native UI elements.
+`cast.svg` adapts the repo-authored `rubber_bandits_menu .cast` artwork from
+`mocks.html`. Its decorative lineup has more space around the faces, foot-aligned
+shadows, a quieter castle, and fewer cash props above the native control band.
+`cast.png` is a transparent 2560×1440 raster export of this SVG using CairoSVG.
 
-The images were exported from the standalone mock bundle in Chromium at a
-1280×720 CSS viewport with device scale factor 2. The standalone bundle embeds
-the approved Fredoka font used by the logo. The exports are RGBA PNGs for clean
-720p and 1080p rendering.
+`logo.png` remains the original Chromium export of the decorative title treatment,
+using the approved Fredoka font at a 1280×720 CSS viewport with device scale factor 2.
+Menu choices, character controls, status text, and other interactive labels remain
+native UI elements.

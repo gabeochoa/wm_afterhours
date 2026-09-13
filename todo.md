@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,931 completed; 604 remaining.
+1,958 completed; 577 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6027,85 +6027,85 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/rubber_bandits_menu_720p.png) · [Visual review](design-audit.html#screen=rubber_bandits_menu)
 
-- [ ] `rubber_bandits_menu-01` · P2 · defect. Version label: Increase it to a readable 11 px actual size.
+- [x] `rubber_bandits_menu-01` · P2 · defect. Version label: Increase it to a readable 11 px actual size.
   Evidence: 1.6.0 / RUBBER BANDITS is nearly microscopic at bottom left.
 
-- [ ] `rubber_bandits_menu-02` · P2 · defect. Character favorite label: Give it a dedicated line with at least 12 px readable text.
+- [x] `rubber_bandits_menu-02` · P2 · defect. Character favorite label: Give it a dedicated line with at least 12 px readable text.
   Evidence: FAVOURITE is squeezed between the name and bottom strip.
 
-- [ ] `rubber_bandits_menu-03` · P2 · proposal. Top account strip: Separate account name from a labeled connection badge.
+- [x] `rubber_bandits_menu-03` · P2 · proposal. Top account strip: Separate account name from a labeled connection badge.
   Evidence: The user name and Online status share one tiny line.
 
-- [ ] `rubber_bandits_menu-04` · P2 · proposal. Top-right counters: Add level and currency captions or recognizable matching icons.
+- [x] `rubber_bandits_menu-04` · P2 · proposal. Top-right counters: Add level and currency captions or recognizable matching icons.
   Evidence: A circled 1 and green 20 have no meaning labels.
 
-- [ ] `rubber_bandits_menu-05` · P2 · proposal. Selected Options item: Add equal left padding to match the other menu labels.
+- [x] `rubber_bandits_menu-05` · P2 · proposal. Selected Options item: Add equal left padding to match the other menu labels.
   Evidence: The selected word starts nearly at the turquoise pill edge.
 
-- [ ] `rubber_bandits_menu-06` · P3 · proposal. Selection marker: Use a consistent selection pointer with the same size as the menu text cap height.
+- [x] `rubber_bandits_menu-06` · P3 · proposal. Selection marker: Use a consistent selection pointer with the same size as the menu text cap height.
   Evidence: The diamond at the right of Options has little association with navigation.
 
-- [ ] `rubber_bandits_menu-07` · P2 · proposal. Back spacing: Make the separation an explicit secondary navigation group with a divider.
+- [x] `rubber_bandits_menu-07` · P2 · proposal. Back spacing: Make the separation an explicit secondary navigation group with a divider.
   Evidence: Back is separated from Play Credits by a much larger gap.
 
-- [ ] `rubber_bandits_menu-08` · P2 · proposal. Play Credits wording: Use Credits unless the action actually starts a distinct playable mode.
+- [x] `rubber_bandits_menu-08` · P2 · proposal. Play Credits wording: Use Credits unless the action actually starts a distinct playable mode.
   Evidence: Play Credits reads like gameplay next to Armory.
 
-- [ ] `rubber_bandits_menu-09` · P2 · proposal. Leaderboard width: Maintain a common menu text width and align the selection pill to that width.
+- [x] `rubber_bandits_menu-09` · P2 · proposal. Leaderboard width: Maintain a common menu text width and align the selection pill to that width.
   Evidence: LEADERBOARD is considerably longer than other entries.
 
-- [ ] `rubber_bandits_menu-10` · P2 · proposal. Supporter promo: Use a clear Supporter pack heading and one supporting sentence.
+- [x] `rubber_bandits_menu-10` · P2 · proposal. Supporter promo: Use a clear Supporter pack heading and one supporting sentence.
   Evidence: Get more bandits shares three equally emphasized lines.
 
-- [ ] `rubber_bandits_menu-11` · P2 · proposal. Promo action: Add View pack within the card.
+- [x] `rubber_bandits_menu-11` · P2 · proposal. Promo action: Add View pack within the card.
   Evidence: The supporter card has no explicit action label.
 
-- [ ] `rubber_bandits_menu-12` · P3 · proposal. Promo icon: Add a darker outline so its silhouette reads at a glance.
+- [x] `rubber_bandits_menu-12` · P3 · proposal. Promo icon: Add a darker outline so its silhouette reads at a glance.
   Evidence: The lightning coin uses yellow against pale yellow.
 
-- [ ] `rubber_bandits_menu-13` · P2 · proposal. Character name: Put the name on a solid or translucent backing panel.
+- [x] `rubber_bandits_menu-13` · P2 · proposal. Character name: Put the name on a solid or translucent backing panel.
   Evidence: EARL THE BIRD overlaps a busy trail of banknotes.
 
-- [ ] `rubber_bandits_menu-14` · P2 · proposal. LB and RB hints: Align both on a quiet common baseline around the selection panel.
+- [x] `rubber_bandits_menu-14` · P2 · proposal. LB and RB hints: Align both on a quiet common baseline around the selection panel.
   Evidence: The bumper hints are separated by the character name and currency art.
 
-- [ ] `rubber_bandits_menu-15` · P2 · proposal. Selected character: Add a subtle ground marker to identify the selected character without hiding the lineup.
+- [x] `rubber_bandits_menu-15` · P2 · proposal. Selected character: Add a subtle ground marker to identify the selected character without hiding the lineup.
   Evidence: The large bird overlaps several surrounding characters.
 
-- [ ] `rubber_bandits_menu-16` · P3 · proposal. Character count: Show Earl the Bird with a position indicator such as 3 of 7.
+- [x] `rubber_bandits_menu-16` · P3 · proposal. Character count: Show Earl the Bird with a position indicator such as 3 of 7.
   Evidence: The lineup contains several figures but no selected index.
 
-- [ ] `rubber_bandits_menu-17` · P3 · proposal. Background crown: Refine its crown silhouette or reduce its prominence to avoid a placeholder appearance.
+- [x] `rubber_bandits_menu-17` · P3 · proposal. Background crown: Refine its crown silhouette or reduce its prominence to avoid a placeholder appearance.
   Evidence: A flat yellow block shape rises behind the center figures.
 
-- [ ] `rubber_bandits_menu-18` · P3 · proposal. Ground shadows: Align each shadow beneath its feet using the scene perspective.
+- [x] `rubber_bandits_menu-18` · P3 · proposal. Ground shadows: Align each shadow beneath its feet using the scene perspective.
   Evidence: Several characters appear to float above disconnected oval shadows.
 
-- [ ] `rubber_bandits_menu-19` · P3 · proposal. Cash props: Reserve a clear lower control band and keep props above it.
+- [x] `rubber_bandits_menu-19` · P3 · proposal. Cash props: Reserve a clear lower control band and keep props above it.
   Evidence: Dense banknotes cross the bottom selection controls.
 
-- [ ] `rubber_bandits_menu-20` · P3 · proposal. Rightmost prop: Connect it visually to its prop or remove that ambiguous shape.
+- [x] `rubber_bandits_menu-20` · P3 · proposal. Rightmost prop: Connect it visually to its prop or remove that ambiguous shape.
   Evidence: A dark circle sits beside the cowboy and looks detached.
 
-- [ ] `rubber_bandits_menu-21` · P2 · proposal. Menu help strip: Add vertical breathing room around the help text.
+- [x] `rubber_bandits_menu-21` · P2 · proposal. Menu help strip: Add vertical breathing room around the help text.
   Evidence: Change the game's settings sits at the extreme bottom edge.
 
-- [ ] `rubber_bandits_menu-22` · P2 · proposal. Input guide: Add compact confirm and back hints beside the menu help.
+- [x] `rubber_bandits_menu-22` · P2 · proposal. Input guide: Add compact confirm and back hints beside the menu help.
   Evidence: Only character bumpers are shown despite the main menu being selected.
 
-- [ ] `rubber_bandits_menu-23` · P3 · proposal. Logo prominence: Reduce its footprint slightly to give the menu more breathing room.
+- [x] `rubber_bandits_menu-23` · P3 · proposal. Logo prominence: Reduce its footprint slightly to give the menu more breathing room.
   Evidence: The large logo outweighs the actual selected menu action.
 
-- [ ] `rubber_bandits_menu-24` · P2 · proposal. Online context: Label Back to main menu when that is the actual destination.
+- [x] `rubber_bandits_menu-24` · P2 · proposal. Online context: Label Back to main menu when that is the actual destination.
   Evidence: Online appears in the top strip while Back has no destination.
 
-- [ ] `rubber_bandits_menu-25` · P3 · proposal. Character art density: Increase silhouette separation so hats and faces do not visually merge.
+- [x] `rubber_bandits_menu-25` · P3 · proposal. Character art density: Increase silhouette separation so hats and faces do not visually merge.
   Evidence: The right side packs six smaller figures close together.
 
-- [ ] `rubber_bandits_menu-26` · P2 · proposal. Menu typography parity: Match the target font metrics and tracking so menu labels retain the intended compact width.
+- [x] `rubber_bandits_menu-26` · P2 · proposal. Menu typography parity: Match the target font metrics and tracking so menu labels retain the intended compact width.
   Evidence: The current LEADERBOARD and PLAY CREDITS occupy more horizontal space than the rendered target.
 
-- [ ] `rubber_bandits_menu-27` · P3 · proposal. Supporter card border parity: Restore the double border and inner inset to match the promotional-card treatment.
+- [x] `rubber_bandits_menu-27` · P3 · proposal. Supporter card border parity: Restore the double border and inner inset to match the promotional-card treatment.
   Evidence: The current supporter card has one thin white edge; the target has a rounded double outline.
 
 ### scroll_click_bug

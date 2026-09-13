@@ -1145,7 +1145,8 @@
         "change": "Restore the double border and inner inset to match the promotional-card treatment."
       }
     ],
-    "sha256": "0f27fae182c9c4efd8f95ebedad7a96029286929a5bc4465f6283cf62ecb7afc"
+    "sha256": "0f27fae182c9c4efd8f95ebedad7a96029286929a5bc4465f6283cf62ecb7afc",
+    "evidence": "docs/design-audit/originals/rubber_bandits_menu_720p.png"
   },
   {
     "id": "scroll_click_bug",

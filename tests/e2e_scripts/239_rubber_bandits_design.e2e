@@ -27,7 +27,7 @@ assert_ui rb_selected_marker x=659 y=568 w=98 h=16
 assert_ui rb_footer x=0 y=678 w=1280 h=42
 assert_no_overflow
 assert_within_parents
-screenshot rubber_bandits_menu
+screenshot rubber_bandits_design
 click_ui rb_menu_1
 wait 0.2
 expect_text "Learn the controls"
@@ -74,7 +74,7 @@ wait 0.2
 expect_text "Cosmetic pack preview"
 expect_text "No purchase in this demo"
 assert_no_overflow
-screenshot rubber_bandits_menu_pack
+screenshot rubber_bandits_design_pack
 click_ui rb_promo
 wait 0.2
 expect_text "View pack"
@@ -85,7 +85,7 @@ assert_ui rb_menu_0 x=72 y=486 w=531 h=63
 assert_ui rb_character_panel x=702 y=912 w=1146 h=90
 assert_no_overflow
 assert_within_parents
-screenshot rubber_bandits_menu_1080
+screenshot rubber_bandits_design_1080
 resize 1024 768
 wait 0.3
 assert_ui rb_root x=0 y=96 w=1024 h=576
@@ -93,5 +93,5 @@ assert_ui rb_menu_0 x=38 y=355 w=283 h=34
 assert_ui rb_character_panel x=374 y=582 w=611 h=48
 assert_no_overflow
 assert_within_parents
-screenshot rubber_bandits_menu_narrow
+screenshot rubber_bandits_design_narrow
 resize 1280 720

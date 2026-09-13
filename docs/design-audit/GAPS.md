@@ -3042,7 +3042,7 @@ Pixel-identical. Left blue cut regions and right inset bounds are operation visu
 
 ## rubber bandits menu
 
-[Current baseline](../../screenshot-baselines/screens/rubber_bandits_menu_720p.png) · [Visual review](../../design-audit.html#screen=rubber_bandits_menu)
+[Reviewed image](../../docs/design-audit/originals/rubber_bandits_menu_720p.png) · [Current baseline](../../screenshot-baselines/screens/rubber_bandits_menu_720p.png) · [Visual review](../../design-audit.html#screen=rubber_bandits_menu)
 
 Baseline SHA-256: `0f27fae182c9c4efd8f95ebedad7a96029286929a5bc4465f6283cf62ecb7afc`
 
