@@ -1167,7 +1167,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "f3a03b7ef25b26fbf8f6ee230b471a13b1addd557845f10c811028254ac6a2e9"
+    "sha256": "f3a03b7ef25b26fbf8f6ee230b471a13b1addd557845f10c811028254ac6a2e9",
+    "evidence": "docs/design-audit/originals/alpha_blend_repro_720p.png"
   },
   {
     "id": "angry_birds_settings",

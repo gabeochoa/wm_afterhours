@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-116 completed; 2,419 remaining.
+136 completed; 2,399 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -389,64 +389,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/alpha_blend_repro_720p.png) · [Visual review](design-audit.html#screen=alpha_blend_repro)
 
-- [ ] `alpha_blend_repro-01` · P2 · proposal. Title claim: Qualify the expectation by opacity range.
+- [x] `alpha_blend_repro-01` · P2 · proposal. Title claim: Qualify the expectation by opacity range.
   Evidence: The heading says text should stay readable through the wash, including opaque rows.
 
-- [ ] `alpha_blend_repro-02` · P2 · proposal. First section heading: Use a readable monospace caption above the fixture.
+- [x] `alpha_blend_repro-02` · P2 · proposal. First section heading: Use a readable monospace caption above the fixture.
   Evidence: The full with_custom_background expression is tiny.
 
-- [ ] `alpha_blend_repro-03` · P2 · proposal. Second section heading: Use the same monospace heading treatment as the first section.
+- [x] `alpha_blend_repro-03` · P2 · proposal. Second section heading: Use the same monospace heading treatment as the first section.
   Evidence: with_opacity appears in small handwritten lettering.
 
-- [ ] `alpha_blend_repro-04` · P2 · proposal. Alpha units: Label the right column Alpha / 255.
+- [x] `alpha_blend_repro-04` · P2 · proposal. Alpha units: Label the right column Alpha / 255.
   Evidence: 32 through 255 have no visible alpha-unit label.
 
-- [ ] `alpha_blend_repro-05` · P2 · proposal. Opacity units: Label that column Overlay opacity.
+- [x] `alpha_blend_repro-05` · P2 · proposal. Opacity units: Label that column Overlay opacity.
   Evidence: 15% through 100% lack a column heading.
 
-- [ ] `alpha_blend_repro-06` · P2 · proposal. Opaque alpha row: Add an external Opaque reference annotation.
+- [x] `alpha_blend_repro-06` · P2 · proposal. Opaque alpha row: Add an external Opaque reference annotation.
   Evidence: The final blue row has no visible specimen text, as expected.
 
-- [ ] `alpha_blend_repro-07` · P2 · proposal. Opaque opacity row: Label it Expected complete occlusion outside the overlay.
+- [x] `alpha_blend_repro-07` · P2 · proposal. Opaque opacity row: Label it Expected complete occlusion outside the overlay.
   Evidence: The 100% row is also intentionally blank.
 
-- [ ] `alpha_blend_repro-08` · P2 · proposal. Unwashed reference: Add one zero-opacity reference row.
+- [x] `alpha_blend_repro-08` · P2 · proposal. Unwashed reference: Add one zero-opacity reference row.
   Evidence: Every text sample is covered by some overlay.
 
-- [ ] `alpha_blend_repro-09` · P2 · proposal. Underlying text: Repeat the reference text outside the fixtures.
+- [x] `alpha_blend_repro-09` · P2 · proposal. Underlying text: Repeat the reference text outside the fixtures.
   Evidence: The pangram is printed only inside the tested wash.
 
-- [ ] `alpha_blend_repro-10` · P2 · proposal. Row labels: Increase their size and use aligned tabular numerals.
+- [x] `alpha_blend_repro-10` · P2 · proposal. Row labels: Increase their size and use aligned tabular numerals.
   Evidence: Numeric values are very small and far from the specimen start.
 
-- [ ] `alpha_blend_repro-11` · P2 · proposal. Row padding: Add consistent text inset without changing the overlay extent.
+- [x] `alpha_blend_repro-11` · P2 · proposal. Row padding: Add consistent text inset without changing the overlay extent.
   Evidence: Pangram text starts flush with the wash's left boundary.
 
-- [ ] `alpha_blend_repro-12` · P2 · proposal. Row gaps: Use equal narrow neutral gutters between all rows.
+- [x] `alpha_blend_repro-12` · P2 · proposal. Row gaps: Use equal narrow neutral gutters between all rows.
   Evidence: Several blue rows visually merge together.
 
-- [ ] `alpha_blend_repro-13` · P2 · proposal. Cross-method comparison: Add one matched-value pair for direct comparison.
+- [x] `alpha_blend_repro-13` · P2 · proposal. Cross-method comparison: Add one matched-value pair for direct comparison.
   Evidence: The alpha and opacity sections use different sample values.
 
-- [ ] `alpha_blend_repro-14` · P2 · proposal. Overlay color: Add a small labeled RGB swatch outside the test region.
+- [x] `alpha_blend_repro-14` · P2 · proposal. Overlay color: Add a small labeled RGB swatch outside the test region.
   Evidence: The blue test color is named only in code syntax.
 
-- [ ] `alpha_blend_repro-15` · P2 · proposal. Backing surface: Label the surface over which alpha is being composited.
+- [x] `alpha_blend_repro-15` · P2 · proposal. Backing surface: Label the surface over which alpha is being composited.
   Evidence: The black background's role is not named.
 
-- [ ] `alpha_blend_repro-16` · P2 · proposal. Expected result: Add a one-line equivalence note.
+- [x] `alpha_blend_repro-16` · P2 · proposal. Expected result: Add a one-line equivalence note.
   Evidence: The two methods have no nearby explanation of their expected relationship.
 
-- [ ] `alpha_blend_repro-17` · P2 · proposal. Text foreground: Show its foreground value beside the untouched reference.
+- [x] `alpha_blend_repro-17` · P2 · proposal. Text foreground: Show its foreground value beside the untouched reference.
   Evidence: The source text color is not stated.
 
-- [ ] `alpha_blend_repro-18` · P2 · proposal. Section grouping: Place each stack in an outlined test region with a shared label gutter.
+- [x] `alpha_blend_repro-18` · P2 · proposal. Section grouping: Place each stack in an outlined test region with a shared label gutter.
   Evidence: Two long stacks run almost edge to edge.
 
-- [ ] `alpha_blend_repro-19` · P2 · proposal. Lower empty area: Use a compact expected-versus-observed comparison legend.
+- [x] `alpha_blend_repro-19` · P2 · proposal. Lower empty area: Use a compact expected-versus-observed comparison legend.
   Evidence: The lower quarter contains no interpretive aid.
 
-- [ ] `alpha_blend_repro-20` · P2 · proposal. Capture context: Add a small diagnostic footer with renderer and viewport.
+- [x] `alpha_blend_repro-20` · P2 · proposal. Capture context: Add a small diagnostic footer with renderer and viewport.
   Evidence: The reproduction omits renderer information in the visible frame.
 
 ### angry_birds_settings

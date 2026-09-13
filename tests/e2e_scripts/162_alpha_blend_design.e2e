@@ -1,0 +1,25 @@
+goto_screen alpha_blend_repro
+resize 1280 720
+wait 0.3
+expect_text "At full opacity, the overlay must hide it completely."
+expect_text "Reference: the quick brown fox jumps over the lazy dog"
+expect_text "expected complete occlusion"
+expect_text "Raylib renderer  |  1280 x 720"
+assert_ui ab_canvas w=1280 h=720
+assert_ui ab_under_a128 w=426 h=32
+assert_ui ab_over_a128 w=426 h=32
+assert_ui ab_under_o50 w=426 h=32
+assert_ui ab_over_o50 w=426 h=32
+assert_within_parents
+screenshot alpha_blend_design
+resize 1920 1080
+wait 0.3
+expect_text "Raylib renderer  |  1920 x 1080"
+assert_ui ab_canvas w=1920 h=1080
+assert_ui ab_under_a128 w=639 h=48
+assert_ui ab_over_a128 w=639 h=48
+assert_ui ab_under_o50 w=639 h=48
+assert_ui ab_over_o50 w=639 h=48
+assert_within_parents
+screenshot alpha_blend_design_1080
+resize 1280 720

@@ -307,7 +307,7 @@ Current example states: [Current example: developer log pane](../../docs/design-
 
 ## alpha blend repro
 
-[Current baseline](../../screenshot-baselines/screens/alpha_blend_repro_720p.png) · [Visual review](../../design-audit.html#screen=alpha_blend_repro)
+[Reviewed image](../../docs/design-audit/originals/alpha_blend_repro_720p.png) · [Current baseline](../../screenshot-baselines/screens/alpha_blend_repro_720p.png) · [Visual review](../../design-audit.html#screen=alpha_blend_repro)
 
 Baseline SHA-256: `f3a03b7ef25b26fbf8f6ee230b471a13b1addd557845f10c811028254ac6a2e9`
 
