@@ -407,7 +407,7 @@ Current example states: [Current example: All three playing](../../docs/design-a
 
 ## animation declarative
 
-[Current baseline](../../screenshot-baselines/screens/animation_declarative_720p.png) · [Visual review](../../design-audit.html#screen=animation_declarative)
+[Reviewed image](../../docs/design-audit/originals/animation_declarative_720p.png) · [Current baseline](../../screenshot-baselines/screens/animation_declarative_720p.png) · [Visual review](../../design-audit.html#screen=animation_declarative)
 
 Baseline SHA-256: `78051ceaed6f003df9e4b7f12ccdb51de0f13f58f9dc00a7ea560a919cd3a1f9`
 

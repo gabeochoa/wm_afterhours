@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-179 completed; 2,356 remaining.
+204 completed; 2,331 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -590,79 +590,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/animation_declarative_720p.png) · [Visual review](design-audit.html#screen=animation_declarative)
 
-- [ ] `animation_declarative-01` · P2 · defect. Appear label: Center the label within the specimen.
+- [x] `animation_declarative-01` · P2 · defect. Appear label: Center the label within the specimen.
   Evidence: Appear is flush against the orange tile's left edge while adjacent labels are centered.
 
-- [ ] `animation_declarative-02` · P2 · defect. Pulse label: Apply the same centered alignment as neighboring examples.
+- [x] `animation_declarative-02` · P2 · defect. Pulse label: Apply the same centered alignment as neighboring examples.
   Evidence: Pulse is flush against its orange tile's left edge.
 
-- [ ] `animation_declarative-03` · P2 · proposal. Row grouping: Label trigger examples, motion examples and composition examples.
+- [x] `animation_declarative-03` · P2 · proposal. Row grouping: Label trigger examples, motion examples and composition examples.
   Evidence: Three rows have no section labels.
 
-- [ ] `animation_declarative-04` · P2 · proposal. Hover tile: Add a caption identifying hover scale.
+- [x] `animation_declarative-04` · P2 · proposal. Hover tile: Add a caption identifying hover scale.
   Evidence: Hover names the trigger but not the resulting animation.
 
-- [ ] `animation_declarative-05` · P2 · proposal. Click tile: Use Click to scale with a compact parameter caption.
+- [x] `animation_declarative-05` · P2 · proposal. Click tile: Use Click to scale with a compact parameter caption.
   Evidence: Click! names an input but hides its scale behavior.
 
-- [ ] `animation_declarative-06` · P2 · proposal. Both tile: Label it Hover + click.
+- [x] `animation_declarative-06` · P2 · proposal. Both tile: Label it Hover + click.
   Evidence: Both! requires guessing which two inputs combine.
 
-- [ ] `animation_declarative-07` · P2 · proposal. Appear tile: Add an On entry caption.
+- [x] `animation_declarative-07` · P2 · proposal. Appear tile: Add an On entry caption.
   Evidence: Appear has no indication that it runs on entry.
 
-- [ ] `animation_declarative-08` · P2 · proposal. Slide tile: Show a direction arrow and travel distance.
+- [x] `animation_declarative-08` · P2 · proposal. Slide tile: Show a direction arrow and travel distance.
   Evidence: Slide does not state direction or distance.
 
-- [ ] `animation_declarative-09` · P2 · proposal. Bounce tile: Add a concise bounce parameter line.
-  Evidence: Bounce does not reveal its final scale or overshoot.
+- [x] `animation_declarative-09` · P2 · proposal. Bounce tile: Add the actual upward translation and spring frequency/decay.
+  Evidence: Bounce translates upward; its motion and spring parameters were not shown.
 
-- [ ] `animation_declarative-10` · P2 · proposal. Fade tile: Add the trigger beneath the tile.
+- [x] `animation_declarative-10` · P2 · proposal. Fade tile: Add the trigger beneath the tile.
   Evidence: Fade does not state that hover triggers it.
 
-- [ ] `animation_declarative-11` · P2 · proposal. Pulse tile: Add Looping pulse under the specimen.
+- [x] `animation_declarative-11` · P2 · proposal. Pulse tile: Add Looping pulse under the specimen.
   Evidence: Pulse does not name its repeating behavior.
 
-- [ ] `animation_declarative-12` · P2 · proposal. Slide+Rot tile: Spell out Slide + rotate.
+- [x] `animation_declarative-12` · P2 · proposal. Slide+Rot tile: Spell out Slide + rotate.
   Evidence: Rot abbreviates a motion unlike the full names above.
 
-- [ ] `animation_declarative-13` · P2 · proposal. Rot+Slide tile: Add numbered transform-order labels.
+- [x] `animation_declarative-13` · P2 · proposal. Rot+Slide tile: Add numbered transform-order labels.
   Evidence: Rot+Slide looks almost identical to its neighboring composition.
 
-- [ ] `animation_declarative-14` · P2 · proposal. All 3 tile: List Scale + slide + rotate.
+- [x] `animation_declarative-14` · P2 · proposal. All 3 tile: List Scale + slide + rotate.
   Evidence: All 3 does not identify the included transforms.
 
-- [ ] `animation_declarative-15` · P2 · proposal. Composition reference: Add neutral outlines to expose transform offsets.
+- [x] `animation_declarative-15` · P2 · proposal. Composition reference: Add neutral outlines to expose transform offsets.
   Evidence: The bottom row provides no fixed reference bounds.
 
-- [ ] `animation_declarative-16` · P2 · proposal. Third-row layout: Center the composition group under its heading.
+- [x] `animation_declarative-16` · P2 · proposal. Third-row layout: Balance three composition cards and a fourth legend across the shared grid.
   Evidence: Three bottom tiles sit left of the four-column grid's center.
 
-- [ ] `animation_declarative-17` · P2 · proposal. Fourth empty cell: Use it for a small transform-order legend.
+- [x] `animation_declarative-17` · P2 · proposal. Fourth empty cell: Use it for a small transform-order legend.
   Evidence: An unmarked gap remains at the bottom right.
 
-- [ ] `animation_declarative-18` · P2 · proposal. Click count: Place it beside the trigger section heading.
+- [x] `animation_declarative-18` · P2 · proposal. Click count: Place it beside the trigger section heading.
   Evidence: Total clicks: 0 is separated from the clickable specimens.
 
-- [ ] `animation_declarative-19` · P2 · proposal. Click attribution: Add a last-trigger label next to the counter.
+- [x] `animation_declarative-19` · P2 · proposal. Click attribution: Add a last-trigger label next to the counter.
   Evidence: The total counter does not identify which tile was activated.
 
-- [ ] `animation_declarative-20` · P2 · proposal. Footer code: Use a readable monospace code block.
+- [x] `animation_declarative-20` · P2 · proposal. Footer code: Use a readable monospace code block.
   Evidence: A full API expression is extremely small across the footer.
 
-- [ ] `animation_declarative-21` · P2 · proposal. Footer claim: Replace it with the exact current example configuration.
+- [x] `animation_declarative-21` · P2 · proposal. Footer claim: Replace it with the exact current example configuration.
   Evidence: Old: ~50 lines of boilerplate is not illustrated.
 
-- [ ] `animation_declarative-22` · P2 · proposal. Subtitle: State that each tile declares its own trigger and animation.
+- [x] `animation_declarative-22` · P2 · proposal. Subtitle: State that each tile declares its own trigger and animation.
   Evidence: No boilerplate is promotional wording without explaining the concept.
 
-- [ ] `animation_declarative-23` · P2 · proposal. Color meaning: Add a legend or assign colors consistently by trigger.
+- [x] `animation_declarative-23` · P2 · proposal. Color meaning: Add a legend or assign colors consistently by trigger.
   Evidence: Blue, green, purple and orange repeat with no stated mapping.
 
-- [ ] `animation_declarative-24` · P2 · proposal. Replay discoverability: Add a replay-entry-examples action.
+- [x] `animation_declarative-24` · P2 · proposal. Replay discoverability: Add a replay-entry-examples action.
   Evidence: Entry animations have no visible restart control.
 
-- [ ] `animation_declarative-25` · P2 · proposal. Phase evidence: Add small phase labels outside the moving specimens.
+- [x] `animation_declarative-25` · P2 · proposal. Phase evidence: Add small phase labels outside the moving specimens.
   Evidence: The static view cannot distinguish idle and completed examples.
 
 ### animation_interactive
@@ -8095,6 +8095,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review declarative animation elapsed-time clamping and same-property trigger composition in afterhours; see `docs/AFTERHOURS_GAPS.md`.
 
 ### First-segment animation easing
 

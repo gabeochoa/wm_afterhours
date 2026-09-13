@@ -1,0 +1,36 @@
+disable_animations
+goto_screen animation_declarative
+resize 1280 720
+wait 0.3
+expect_text "Declarative animations"
+expect_text "01  Triggers"
+expect_text "02  Motion"
+expect_text "03  Property combinations"
+expect_text "Entry complete"
+expect_text "Looping"
+assert_ui decl_0 x=135 y=170 w=164 h=64
+assert_ui decl_3 x=981 y=170 w=164 h=64
+assert_within_parents
+screenshot animation_declarative_design
+click_ui click_btn
+wait 0.3
+expect_text "Clicks: 1  /  Last: Click"
+focus_element both_btn
+key ENTER
+wait 0.3
+expect_text "Clicks: 2  /  Last: Hover + click"
+click_ui replay_entry
+wait 8
+expect_text "Entry complete"
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_ui decl_3 x=1472 y=255 w=246 h=96
+assert_within_parents
+screenshot animation_declarative_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot animation_declarative_design_narrow
+resize 1280 720
+enable_animations

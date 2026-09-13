@@ -215,6 +215,27 @@ requesting `EaseOutQuad`. At 0.5s the first sequence produces 0.958333 instead o
 labels and midpoint thumbnails. Afterhours is unchanged. Upstream should copy
 `segments[0].easing` when starting the sequence and test fresh and replayed tracks.
 
+### Declarative animation timing depends on frame rate
+
+`apply_animations()` clamps every elapsed step to 5 ms (`min(ctx.dt, 1/200)`),
+including ordinary 60 Hz frames. Source inspection shows that 60 frames advance
+only 0.3 seconds of animation, so configured durations cannot represent wall
+clock time at that frame rate. Review bounded substeps that consume the full
+elapsed time, and compare 60/120/240 Hz playback before changing afterhours.
+The declarative screen reports active/completed state rather than claiming a
+measured elapsed duration.
+
+### Declarative triggers share one track per property
+
+`HasAnimationState` has one track per property, including one `triggered` bit.
+`apply_animations()` processes every definition against that same bit. A hover
+scale followed by an inactive click scale therefore starts the hover target,
+then immediately reverses it when the click definition observes the shared bit.
+The original Hover + click example configured both definitions on scale. wm
+now combines hover translation with press scale. Upstream needs explicit
+composition or precedence for multiple triggers targeting the same property;
+keep this policy visible rather than silently overwriting a track.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`

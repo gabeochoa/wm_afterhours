@@ -1767,7 +1767,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "78051ceaed6f003df9e4b7f12ccdb51de0f13f58f9dc00a7ea560a919cd3a1f9"
+    "sha256": "78051ceaed6f003df9e4b7f12ccdb51de0f13f58f9dc00a7ea560a919cd3a1f9",
+    "evidence": "docs/design-audit/originals/animation_declarative_720p.png"
   },
   {
     "id": "animation_interactive",
