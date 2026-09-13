@@ -6269,7 +6269,8 @@
         "change": "Use it for the vstack default width/height rules and measured dimensions."
       }
     ],
-    "sha256": "90463f83044553876ff635b1be85f7b12bbd04ff10c42ce9b880680e956c5d01"
+    "sha256": "90463f83044553876ff635b1be85f7b12bbd04ff10c42ce9b880680e956c5d01",
+    "evidence": "docs/design-audit/originals/vstack_showcase_720p.png"
   },
   {
     "id": "widget_gap_gallery",

@@ -4096,7 +4096,7 @@ The 10,000-row count and short scrollbar thumb are intentional. Seventeen propos
 
 ## vstack showcase
 
-[Current baseline](../../screenshot-baselines/screens/vstack_showcase_720p.png) · [Visual review](../../design-audit.html#screen=vstack_showcase)
+[Reviewed image](../../docs/design-audit/originals/vstack_showcase_720p.png) · [Current baseline](../../screenshot-baselines/screens/vstack_showcase_720p.png) · [Visual review](../../design-audit.html#screen=vstack_showcase)
 
 Baseline SHA-256: `90463f83044553876ff635b1be85f7b12bbd04ff10c42ce9b880680e956c5d01`
 

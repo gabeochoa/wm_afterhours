@@ -1,0 +1,36 @@
+goto_screen vstack_showcase
+resize 1280 720
+wait 0.4
+expect_text "Main-axis spacing"
+expect_text "SpaceAround: edge space is half an interior gap."
+assert_ui vstack_jc_0 w=204 h=300
+assert_within_parents
+screenshot vstack_design
+click_ui vstack_page_1
+wait 0.2
+expect_text "Widths: 85% / 50% / 70%"
+expect_text "Content width"
+expect_text "children() keeps content width; expand() fills."
+assert_within_parents
+screenshot vstack_cross_axis
+click_ui vstack_page_2
+wait 0.2
+click_ui vstack_nav_2
+wait 0.2
+expect_text "Profile / Content"
+assert_within_parents
+screenshot vstack_sidebar
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot vstack_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot vstack_design_narrow
+focus_ui vstack_page_0
+key ENTER
+wait 0.2
+assert_within_parents
+screenshot vstack_spacing_narrow
+resize 1280 720

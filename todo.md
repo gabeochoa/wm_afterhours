@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,218 completed; 317 remaining.
+2,240 completed; 295 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -8009,70 +8009,71 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/vstack_showcase_720p.png) · [Visual review](design-audit.html#screen=vstack_showcase)
 
-- [ ] `vstack_showcase-01` · P2 · defect. Top title inset: Add a 12 px title inset.
+- [x] `vstack_showcase-01` · P2 · defect. Top title inset: Add a 12 px title inset.
   Evidence: vstack() Showcase starts at the left edge of the cyan bar.
 
-- [ ] `vstack_showcase-02` · P2 · proposal. Justification section: Add a clear main-axis justification heading above the row.
+- [x] `vstack_showcase-02` · P2 · proposal. Justification section: Add a clear main-axis justification heading above the row.
   Evidence: The top five cards have no shared JustifyContent heading.
 
-- [ ] `vstack_showcase-03` · P2 · proposal. Top captions: Increase their external label size to readable 12 px text.
+- [x] `vstack_showcase-03` · P2 · proposal. Top captions: Increase their external label size to readable 12 px text.
   Evidence: Start, Center, End, Between and Around are tiny.
 
-- [ ] `vstack_showcase-04` · P2 · proposal. Between naming: Use Space between in the label and show the API name in metadata.
+- [x] `vstack_showcase-04` · P2 · proposal. Between naming: Use Space between in the label and show the API name in metadata.
   Evidence: Between abbreviates the actual spacing mode.
 
-- [ ] `vstack_showcase-05` · P2 · proposal. Around naming: Use Space around with a small edge-gap diagram.
+- [x] `vstack_showcase-05` · P2 · proposal. Around naming: Use Space around with a small edge-gap diagram.
   Evidence: Around omits the meaning of edge spacing.
 
-- [ ] `vstack_showcase-06` · P2 · proposal. Main-axis direction: Add a vertical main-axis guide beside the specimens.
+- [x] `vstack_showcase-06` · P2 · proposal. Main-axis direction: Add a vertical main-axis guide beside the specimens.
   Evidence: The top row demonstrates vertical placement without an axis arrow.
 
-- [ ] `vstack_showcase-07` · P2 · proposal. Start specimen: Add an external top-edge marker.
+- [x] `vstack_showcase-07` · P2 · proposal. Start specimen: Add an external top-edge marker.
   Evidence: The three blocks begin at the top but have no start guide.
 
-- [ ] `vstack_showcase-08` · P2 · proposal. Center specimen: Add a faint external centerline tick.
+- [x] `vstack_showcase-08` · P2 · proposal. Center specimen: Add a faint external centerline tick.
   Evidence: The centered group has no midpoint reference.
 
-- [ ] `vstack_showcase-09` · P2 · proposal. End specimen: Add an external bottom-edge marker.
+- [x] `vstack_showcase-09` · P2 · proposal. End specimen: Add an external bottom-edge marker.
   Evidence: The block group ends near the bottom without a baseline marker.
 
-- [ ] `vstack_showcase-10` · P2 · proposal. Between gaps: Annotate the equal interior gap size outside the blocks.
+- [x] `vstack_showcase-10` · P2 · proposal. Between gaps: Annotate the equal interior gap size outside the blocks.
   Evidence: The two interior gaps are not measured.
 
-- [ ] `vstack_showcase-11` · P2 · proposal. Around gaps: Label the expected 1:2 edge-to-interior spacing relationship.
+- [x] `vstack_showcase-11` · P2 · proposal. Around gaps: Label the expected 1:2 edge-to-interior spacing relationship.
   Evidence: The edge gaps and interior gaps are visually different but unexplained.
 
-- [ ] `vstack_showcase-12` · P2 · proposal. Block dimensions: Add a shared legend for their fixed sizes.
+- [x] `vstack_showcase-12` · P2 · proposal. Block dimensions: Add a shared legend for their fixed sizes.
   Evidence: Cyan, magenta and green blocks use different heights with no dimensions.
+  Disposition: Preserved percentage-sized native children and labeled the percentages. Replacing them with fixed heights would remove the original layout comparison.
 
-- [ ] `vstack_showcase-13` · P2 · proposal. Cross-axis heading: Increase heading size and reserve enough height for it.
+- [x] `vstack_showcase-13` · P2 · proposal. Cross-axis heading: Increase heading size and reserve enough height for it.
   Evidence: AlignItems cross-axis is tiny in the green strip.
 
-- [ ] `vstack_showcase-14` · P2 · proposal. Cross-axis direction: Add a horizontal cross-axis arrow above the four cards.
+- [x] `vstack_showcase-14` · P2 · proposal. Cross-axis direction: Add a horizontal cross-axis arrow above the four cards.
   Evidence: The lower specimens do not show the horizontal axis.
 
-- [ ] `vstack_showcase-15` · P2 · proposal. Stretch specimen: Annotate their width constraints and add an auto-width control case to explain what stretch can affect.
+- [x] `vstack_showcase-15` · P2 · proposal. Stretch specimen: Annotate their width constraints and add an auto-width control case to explain what stretch can affect.
   Evidence: The blue blocks retain visibly different widths under Stretch.
 
-- [ ] `vstack_showcase-16` · P2 · proposal. Lower specimen colors: Use matching specimen colors across modes or label color as decorative.
+- [x] `vstack_showcase-16` · P2 · proposal. Lower specimen colors: Use matching specimen colors across modes or label color as decorative.
   Evidence: Each alignment mode changes color as well as position.
 
-- [ ] `vstack_showcase-17` · P2 · proposal. Lower captions: Increase caption size and inner padding.
+- [x] `vstack_showcase-17` · P2 · proposal. Lower captions: Increase caption size and inner padding.
   Evidence: Start, Center, Stretch and End blend into thin green bars.
 
-- [ ] `vstack_showcase-18` · P2 · proposal. Sidebar example: Increase it and identify this as an applied layout example.
+- [x] `vstack_showcase-18` · P2 · proposal. Sidebar example: Increase it and identify this as an applied layout example.
   Evidence: Sidebar + Content is a tiny label across a long blue bar.
 
-- [ ] `vstack_showcase-19` · P2 · proposal. Navigation labels: Increase label size without changing the sidebar layout structure.
+- [x] `vstack_showcase-19` · P2 · proposal. Navigation labels: Increase label size without changing the sidebar layout structure.
   Evidence: Home, Settings, Profile and Help are very small.
 
-- [ ] `vstack_showcase-20` · P2 · proposal. Content rows: Add 10 to 12 px inner text padding.
+- [x] `vstack_showcase-20` · P2 · proposal. Content rows: Add 10 to 12 px inner text padding.
   Evidence: Alerts, Activity and Stats touch their colored row edges.
 
-- [ ] `vstack_showcase-21` · P2 · proposal. Static example semantics: Label them Static layout example unless they are interactive.
+- [x] `vstack_showcase-21` · P2 · proposal. Static example semantics: Label them Static layout example unless they are interactive.
   Evidence: The navigation and content rows look like an application without behavior explanation.
 
-- [ ] `vstack_showcase-22` · P3 · proposal. Metadata space: Use it for the vstack default width/height rules and measured dimensions.
+- [x] `vstack_showcase-22` · P3 · proposal. Metadata space: Use it for the vstack default width/height rules and measured dimensions.
   Evidence: The lower content pane has a large unused area.
 
 ### widget_gap_gallery
