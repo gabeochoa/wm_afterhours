@@ -23,8 +23,8 @@
       1280,
       720
     ],
-    "summary": "Same arrangement and spacing. Current capture removes the initial Surface focus ring. Small labels, detached Styles/Nested badges and a weak translucency demonstration remain visible in both.",
-    "sha256": "5c1873eb68796e5b5d1bc1ea53e5fda7907c427215b331f0a90b8b27918429b8",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "b132a45beb87a1bace371612f123fa0beb5e69e1e3cf3346d7c6166845ee741d",
     "additional_findings": []
   },
   {

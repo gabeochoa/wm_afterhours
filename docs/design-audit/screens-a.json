@@ -3477,7 +3477,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "70021708e5133a12f2e03373432ad76527f8b0bc9166601659492ec6b05ff9a9"
+    "sha256": "70021708e5133a12f2e03373432ad76527f8b0bc9166601659492ec6b05ff9a9",
+    "evidence": "docs/design-audit/originals/cards_720p.png"
   },
   {
     "id": "casual_settings",

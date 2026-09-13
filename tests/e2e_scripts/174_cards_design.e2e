@@ -1,0 +1,50 @@
+goto_screen cards
+resize 1280 720
+wait 0.3
+expect_text "Cards & Panels Gallery"
+expect_text "Cozy Kraft"
+expect_text "140 x 100 px / requested 1 px border #968273"
+expect_text "TL + BR: 6 px; others sharp"
+expect_text "Parent padding: 16 px / item gap: 12 px"
+expect_text "Primary fill: 30% / alpha 76/255"
+expect_text "Guides on / content padding: 12 px"
+assert_ui cards_bg w=1280 h=720
+assert_ui cards_main x=68 y=0 w=1144 h=720
+assert_ui style_card_0 w=140 h=100
+assert_ui style_card_2 w=140 h=100
+assert_ui style_card_3 w=140 h=100
+assert_ui nested_item_1 h=55
+assert_ui nested_item_2 h=55
+assert_ui nested_item_3 h=55
+assert_within_parents
+screenshot cards_design
+click_ui cards_guides
+wait 0.2
+expect_text "Guides off / content padding: 12 px"
+focus_ui cards_guides
+key ENTER
+wait 0.2
+expect_text "Guides on / content padding: 12 px"
+click_ui cards_opacity
+wait 0.2
+expect_text "Opaque Comparison"
+expect_text "Primary fill: 100% / alpha 255/255"
+assert_within_parents
+screenshot cards_opaque_comparison
+focus_ui cards_opacity
+key ENTER
+wait 0.2
+expect_text "Semi-Transparent"
+expect_text "Primary fill: 30% / alpha 76/255"
+resize 1920 1080
+wait 0.3
+assert_ui style_card_0 w=210 h=150
+assert_ui nested_item_1 h=83
+assert_within_parents
+screenshot cards_design_1080
+resize 1024 768
+wait 0.3
+assert_ui cards_bg w=1024 h=768
+assert_within_parents
+screenshot cards_design_narrow
+resize 1280 720

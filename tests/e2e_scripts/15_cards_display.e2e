@@ -11,37 +11,20 @@ validate_screen cards
 # Verify we're on the correct screen
 expect_text "Card"
 
-# Layout assertions based on source code math (1280x720 screen)
-# Root: screen_pct(0.90) = 0.9*1280 x 0.9*720 = 1152 x 648
-assert_ui cards_bg w=1152 h=648
-
-# Row heights
-# 152, not 150: same reason as 02, h720(150) snaps up to the grid.
-assert_ui row1_cards h=152
-# 164, not 165: h720(165) snaps down to the 4px grid.
-assert_ui row2_nested h=164
-
-# Title: percent(0.95) x pixels(50)
-assert_ui_text "Cards & Panels Gallery" h=52
-
-# Card items: pixels(140) x pixels(100)
-assert_ui_text "Surface" w=140 h=100
-assert_ui_text "Sharp" w=140 h=100
-assert_ui_text "Custom" w=140 h=100
-
-# Inner cards: percent(0.30) x pixels(55)
-assert_ui_text "Item 1" h=55
-assert_ui_text "Item 2" h=55
-assert_ui_text "Item 3" h=55
-
-# Nested container: percent(0.33) x children() (title + item row + gaps)
-assert_ui nested_container h=140
-
-# Info panel: percent(0.33) x children()
-assert_ui info_panel h=144
-
-# Row 3: percent(0.95) x pixels(70)
-assert_ui row3_themes h=72
+assert_ui cards_bg w=1280 h=720
+assert_ui cards_main x=68 y=0 w=1144 h=720
+assert_ui row1_cards h=180
+assert_ui row2_nested h=170
+assert_ui cards_title h=40
+assert_ui style_card_0 w=140 h=100
+assert_ui style_card_2 w=140 h=100
+assert_ui style_card_3 w=140 h=100
+assert_ui nested_item_1 h=55
+assert_ui nested_item_2 h=55
+assert_ui nested_item_3 h=55
+assert_ui nested_container h=170
+assert_ui info_panel h=170
+assert_ui row3_themes h=58
+assert_within_parents
 
 screenshot cards_display
-

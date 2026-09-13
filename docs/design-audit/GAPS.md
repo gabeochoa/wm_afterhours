@@ -719,7 +719,7 @@ The disabled treatment and square-corner sample are intentional. Twenty-five pro
 
 ## cards
 
-[Current baseline](../../screenshot-baselines/screens/cards_720p.png) · [Visual review](../../design-audit.html#screen=cards)
+[Reviewed image](../../docs/design-audit/originals/cards_720p.png) · [Current baseline](../../screenshot-baselines/screens/cards_720p.png) · [Visual review](../../design-audit.html#screen=cards)
 
 Baseline SHA-256: `70021708e5133a12f2e03373432ad76527f8b0bc9166601659492ec6b05ff9a9`
 
@@ -757,7 +757,7 @@ The gallery's custom colors, sharp corners and translucent example are intention
 
 [Image](../../baseline_screenshots/cards.png)
 
-Same arrangement and spacing. Current capture removes the initial Surface focus ring. Small labels, detached Styles/Nested badges and a weak translucency demonstration remain visible in both.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## casual settings
 

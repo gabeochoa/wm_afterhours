@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-380 completed; 2,155 remaining.
+405 completed; 2,130 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1231,79 +1231,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/cards_720p.png) · [Visual review](design-audit.html#screen=cards)
 
-- [ ] `cards-01` · P2 · defect. Style specimen labels: Give each label visible internal padding.
+- [x] `cards-01` · P2 · defect. Style specimen labels: Give each label visible internal padding.
   Evidence: Surface, Primary, Sharp and Custom begin directly on their left borders.
 
-- [ ] `cards-02` · P2 · defect. Nested item labels: Add consistent inset to nested labels.
+- [x] `cards-02` · P2 · defect. Nested item labels: Add consistent inset to nested labels.
   Evidence: Item 1, Item 2 and Item 3 touch their colored blocks' left edges.
 
-- [ ] `cards-03` · P2 · proposal. Title inset: Align it to the main content inset.
+- [x] `cards-03` · P2 · proposal. Title inset: Align it to the main content inset.
   Evidence: Cards & Panels Gallery is flush with the brown header's edge.
 
-- [ ] `cards-04` · P2 · proposal. Header width: Use a consistent content width.
+- [x] `cards-04` · P2 · proposal. Header width: Use a consistent content width.
   Evidence: The header is narrower than the white style and nested rows.
 
-- [ ] `cards-05` · P2 · proposal. Style row label: Use a plain section heading to distinguish labels from specimens.
+- [x] `cards-05` · P2 · proposal. Style row label: Use a plain section heading to distinguish labels from specimens.
   Evidence: Styles is a dark button-shaped block.
 
-- [ ] `cards-06` · P2 · proposal. Surface example: Add an external labeled bounds guide.
+- [x] `cards-06` · P2 · proposal. Surface example: Add an external labeled bounds guide.
   Evidence: The white card almost merges into the white row.
 
-- [ ] `cards-07` · P2 · proposal. Primary example: Add its role and resolved color beneath it.
+- [x] `cards-07` · P2 · proposal. Primary example: Add its role and resolved color beneath it.
   Evidence: Primary has no theme-color value shown.
 
-- [ ] `cards-08` · P2 · proposal. Sharp example: Add a matched rounded specimen or state both changed variables.
+- [x] `cards-08` · P2 · proposal. Sharp example: Add a matched rounded specimen or state both changed variables.
   Evidence: Sharp also changes fill and border weight.
+  Disposition: Kept matched 1px requested borders and disclosed corner differences. Actual uniform-border thickness remains an upstream issue; changing the specimen request would hide it.
 
-- [ ] `cards-09` · P2 · proposal. Custom example: Caption the background, border and radius values.
+- [x] `cards-09` · P2 · proposal. Custom example: Caption the background, border and radius values.
   Evidence: Custom does not identify what was customized.
 
-- [ ] `cards-10` · P2 · proposal. Style dimensions: Show the shared outer dimensions once.
+- [x] `cards-10` · P2 · proposal. Style dimensions: Show the shared outer dimensions once.
   Evidence: The card specimens have no size annotation.
 
-- [ ] `cards-11` · P2 · proposal. Style gaps: Use a regular matrix with room for parameter captions.
+- [x] `cards-11` · P2 · proposal. Style gaps: Use a regular matrix with room for parameter captions.
   Evidence: Wide gaps separate four small cards.
 
-- [ ] `cards-12` · P2 · proposal. Nested section label: Move it above the nested examples as a heading.
+- [x] `cards-12` · P2 · proposal. Nested section label: Move it above the nested examples as a heading.
   Evidence: Nested is vertically centered in a button-like plaque.
 
-- [ ] `cards-13` · P2 · proposal. Nested card hierarchy: Increase heading weight and size.
+- [x] `cards-13` · P2 · proposal. Nested card hierarchy: Increase heading weight and size.
   Evidence: Nested Cards has similar typography to its item labels.
 
-- [ ] `cards-14` · P2 · proposal. Nested boundaries: Add a clearer external outline marking the parent bounds.
+- [x] `cards-14` · P2 · proposal. Nested boundaries: Add a clearer external outline marking the parent bounds.
   Evidence: The outer nested card border is faint.
 
-- [ ] `cards-15` · P2 · proposal. Nested padding: Annotate the parent padding.
+- [x] `cards-15` · P2 · proposal. Nested padding: Annotate the parent padding.
   Evidence: Parent-child insets are visible but unmeasured.
 
-- [ ] `cards-16` · P2 · proposal. Nested item spacing: Add a shared gap caption.
+- [x] `cards-16` · P2 · proposal. Nested item spacing: Add a shared gap caption.
   Evidence: The three inner items have no gap value shown.
 
-- [ ] `cards-17` · P2 · proposal. Translucent heading: Make the title treatment consistent with Nested Cards.
+- [x] `cards-17` · P2 · proposal. Translucent heading: Make the title treatment consistent with Nested Cards.
   Evidence: Semi-Transparent sits in a bright white title strip.
 
-- [ ] `cards-18` · P2 · proposal. Opacity evidence: Add a checkerboard or stripe behind the sample to expose blending.
+- [x] `cards-18` · P2 · proposal. Opacity evidence: Add a checkerboard or stripe behind the sample to expose blending.
   Evidence: The translucent panel overlays a nearly flat backing color.
 
-- [ ] `cards-19` · P2 · proposal. Opacity value: Display the configured percentage.
+- [x] `cards-19` · P2 · proposal. Opacity value: Display the configured percentage.
   Evidence: Uses opacity does not state the actual alpha.
 
-- [ ] `cards-20` · P2 · proposal. Opacity copy: Adjust text width or shorten the explanation.
+- [x] `cards-20` · P2 · proposal. Opacity copy: Adjust text width or shorten the explanation.
   Evidence: The description wraps into an awkward short second line.
 
-- [ ] `cards-21` · P2 · proposal. Theme palette label: Use a neutral section label.
+- [x] `cards-21` · P2 · proposal. Theme palette label: Use a neutral section label.
   Evidence: Theme Colors is a brown tile that resembles the primary swatch.
 
-- [ ] `cards-22` · P2 · proposal. Theme palette values: Add compact resolved values beneath the chips.
+- [x] `cards-22` · P2 · proposal. Theme palette values: Add compact resolved values beneath the chips.
   Evidence: Five role chips show names without color values.
 
-- [ ] `cards-23` · P2 · proposal. Background swatch: Give the specimen an external boundary.
+- [x] `cards-23` · P2 · proposal. Background swatch: Give the specimen an external boundary.
   Evidence: Background nearly matches the page around the palette.
 
-- [ ] `cards-24` · P2 · proposal. Theme identity: Name Cozy Kraft near the title.
+- [x] `cards-24` · P2 · proposal. Theme identity: Name Cozy Kraft near the title.
   Evidence: The kraft palette has no visible theme name.
 
-- [ ] `cards-25` · P2 · proposal. Vertical spacing: Tighten spacing and allocate room for card measurements.
+- [x] `cards-25` · P2 · proposal. Vertical spacing: Tighten spacing and allocate room for card measurements.
   Evidence: Large empty bands separate the three rows.
 
 ### casual_settings
