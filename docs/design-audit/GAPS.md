@@ -2367,7 +2367,7 @@ The open Bottom menu is intentionally captured to demonstrate upward placement. 
 
 ## meters gauges
 
-[Current baseline](../../screenshot-baselines/screens/meters_gauges_720p.png) · [Visual review](../../design-audit.html#screen=meters_gauges)
+[Reviewed image](../../docs/design-audit/originals/meters_gauges_720p.png) · [Current baseline](../../screenshot-baselines/screens/meters_gauges_720p.png) · [Visual review](../../design-audit.html#screen=meters_gauges)
 
 Baseline SHA-256: `4238f42dec031f8b73b99813d1e2516871137477ee5fbe535f74cafb1b57b7ee`
 

@@ -384,6 +384,15 @@ completely blank sample areas. Adding a transparent HasColor component routes
 the same native nine-slice textures through the existing renderer. The gates
 should recognize HasNineSliceBorder directly.
 
+### Slider keyboard repeat depends on frame frequency
+
+HandleLeftRight invokes its listener for either pressed or held input every
+update. Native sliders change by one percent on each invocation, so a two-
+frame e2e key press moves 100% to 98%, and the same hold duration at 120 Hz
+can move twice as far as at 60 Hz. wm tests verify the actual value and
+derived gauges. Use elapsed-time repeat with an initial delay and deliberate
+cadence upstream.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

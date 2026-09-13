@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,678 completed; 857 remaining.
+1,703 completed; 832 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4630,79 +4630,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/meters_gauges_720p.png) · [Visual review](design-audit.html#screen=meters_gauges)
 
-- [ ] `meters_gauges-01` · P2 · defect. Stacked Bars heading: Rename the section Paired bars or add an actual stacked companion example.
+- [x] `meters_gauges-01` · P2 · defect. Stacked Bars heading: Rename the section Paired bars or add an actual stacked companion example.
   Evidence: Health and Shield are side by side while the heading calls them Stacked Bars.
 
-- [ ] `meters_gauges-02` · P2 · proposal. Inline abbreviations: Add Health, Mana, and Experience captions.
+- [x] `meters_gauges-02` · P2 · proposal. Inline abbreviations: Add Health, Mana, and Experience captions.
   Evidence: HP, MP, and XP have no expanded names.
 
-- [ ] `meters_gauges-03` · P2 · proposal. Inline meter colors: Give each metric a labeled identity color or explain the common theme treatment.
+- [x] `meters_gauges-03` · P2 · proposal. Inline meter colors: Give each metric a labeled identity color or explain the common theme treatment.
   Evidence: All three bars use the same blue fill and green remainder.
 
-- [ ] `meters_gauges-04` · P2 · proposal. Track color: Use a neutral remainder track and reserve color for the filled portion.
+- [x] `meters_gauges-04` · P2 · proposal. Track color: Use a neutral remainder track and reserve color for the filled portion.
   Evidence: Green remainder segments look like completed progress as strongly as blue fills.
 
-- [ ] `meters_gauges-05` · P2 · proposal. Inline percentages: Move values to a fixed trailing value column.
+- [x] `meters_gauges-05` · P2 · proposal. Inline percentages: Move values to a fixed trailing value column.
   Evidence: 65%, 39%, and 84% sit at the left of their fills.
 
-- [ ] `meters_gauges-06` · P2 · proposal. Inline row grouping: Increase inter-meter group spacing and tighten each label-to-bar gap.
+- [x] `meters_gauges-06` · P2 · proposal. Inline row grouping: Increase inter-meter group spacing and tighten each label-to-bar gap.
   Evidence: HP, MP, and XP labels sit close to the preceding bar.
 
-- [ ] `meters_gauges-07` · P2 · proposal. Health label: Place label and value outside the bar.
+- [x] `meters_gauges-07` · P2 · proposal. Health label: Place label and value outside the bar.
   Evidence: Health: 65% is embedded in the track.
 
-- [ ] `meters_gauges-08` · P2 · proposal. Shield label: Use the same external label/value pattern as Health.
+- [x] `meters_gauges-08` · P2 · proposal. Shield label: Use the same external label/value pattern as Health.
   Evidence: Shield: 29% is embedded in its smaller filled region.
 
-- [ ] `meters_gauges-09` · P3 · proposal. Health-shield relationship: Add a short caption explaining independent health and shield values.
+- [x] `meters_gauges-09` · P3 · proposal. Health-shield relationship: Add a short caption explaining independent health and shield values.
   Evidence: The heading joins the two metrics but gives no shared total or relation.
 
-- [ ] `meters_gauges-10` · P2 · proposal. Animated value: Keep the animated percentage in a stable field beside the bar.
+- [x] `meters_gauges-10` · P2 · proposal. Animated value: Keep the animated percentage in a stable field beside the bar.
   Evidence: 1% sits in a tiny sliver of blue fill.
 
-- [ ] `meters_gauges-11` · P2 · proposal. Animation spinner: Label it as a spinner or circular progress companion according to its role.
+- [x] `meters_gauges-11` · P2 · proposal. Animation spinner: Label it as a spinner or circular progress companion according to its role.
   Evidence: An unlabeled ring sits next to Animated Progress.
 
-- [ ] `meters_gauges-12` · P3 · proposal. Animation timing: Add a small 0–100% looping caption with duration.
+- [x] `meters_gauges-12` · P3 · proposal. Animation timing: Add a small 0–100% looping caption with duration.
   Evidence: The screenshot does not describe the animation cycle.
 
-- [ ] `meters_gauges-13` · P3 · proposal. Animated sample width: Align the pair within a compact sample frame.
+- [x] `meters_gauges-13` · P3 · proposal. Animated sample width: Align the pair within a compact sample frame.
   Evidence: The long bar and small ring leave a large blank right region.
 
-- [ ] `meters_gauges-14` · P2 · proposal. Gauge labels: Add meaningful sample names or Low, Half, and High labels.
+- [x] `meters_gauges-14` · P2 · proposal. Gauge labels: Add meaningful sample names or Low, Half, and High labels.
   Evidence: The circular gauges show only 25%, 50%, and 90%.
 
-- [ ] `meters_gauges-15` · P2 · proposal. Gauge value placement: Move the percentages into the centers for a tighter readout.
+- [x] `meters_gauges-15` · P2 · proposal. Gauge value placement: Move the percentages into the centers for a tighter readout.
   Evidence: Values sit below empty ring centers.
 
-- [ ] `meters_gauges-16` · P2 · proposal. Gauge track contrast: Increase track contrast while preserving colored arcs.
+- [x] `meters_gauges-16` · P2 · proposal. Gauge track contrast: Increase track contrast while preserving colored arcs.
   Evidence: The unfilled ring segments blend into the navy panel.
 
-- [ ] `meters_gauges-17` · P3 · proposal. Gauge color semantics: Add a threshold legend outside the gauges.
+- [x] `meters_gauges-17` · P3 · proposal. Gauge color semantics: Add a threshold legend outside the gauges.
   Evidence: Red, gold, and green suggest thresholds without naming them.
 
-- [ ] `meters_gauges-18` · P3 · proposal. Gauge spacing: Bring them closer into a comparison group.
+- [x] `meters_gauges-18` · P3 · proposal. Gauge spacing: Bring them closer into a comparison group.
   Evidence: Three small rings are spread across almost the entire panel.
 
-- [ ] `meters_gauges-19` · P2 · proposal. Interactive control label: Name the controlled metric and list linked examples.
+- [x] `meters_gauges-19` · P2 · proposal. Interactive control label: Name the controlled metric and list linked examples.
   Evidence: Value: 65% does not say which meters the control affects.
 
-- [ ] `meters_gauges-20` · P2 · proposal. Slider thumb: Use a contrasting thumb outline and a distinct handle shape.
+- [x] `meters_gauges-20` · P2 · proposal. Slider thumb: Use a contrasting thumb outline and a distinct handle shape.
   Evidence: The blue thumb sits on a blue-and-green track with weak separation.
 
-- [ ] `meters_gauges-21` · P2 · proposal. Slider anatomy: Use a thinner track and explicit drag handle to distinguish input from output.
+- [x] `meters_gauges-21` · P2 · proposal. Slider anatomy: Use a thinner track and explicit drag handle to distinguish input from output.
   Evidence: The interactive slider resembles the progress bars above it.
 
-- [ ] `meters_gauges-22` · P3 · proposal. Slider endpoints: Add 0% and 100% endpoint captions.
+- [x] `meters_gauges-22` · P3 · proposal. Slider endpoints: Add 0% and 100% endpoint captions.
   Evidence: The control has no minimum or maximum labels.
 
-- [ ] `meters_gauges-23` · P2 · proposal. Section typography: Increase their size and use consistent left insets.
+- [x] `meters_gauges-23` · P2 · proposal. Section typography: Increase their size and use consistent left insets.
   Evidence: Section labels are small and widely spaced compared with available panel area.
 
-- [ ] `meters_gauges-24` · P3 · proposal. Panel heights: Reduce decorative vertical padding and allocate more room to labels.
+- [x] `meters_gauges-24` · P3 · proposal. Panel heights: Reduce decorative vertical padding and allocate more room to labels.
   Evidence: Large dark panels contain small low-height examples.
 
-- [ ] `meters_gauges-25` · P3 · proposal. Demo footer: Add a compact setup summary below the interactive control.
+- [x] `meters_gauges-25` · P3 · proposal. Demo footer: Add a compact setup summary below the interactive control.
   Evidence: No legend explains shared values or theme behavior.
 
 ### minesweeper_lab
@@ -8137,6 +8137,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Make slider keyboard repeat independent of update frequency; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Include HasNineSliceBorder in native renderability gates so border-only divs paint; see docs/AFTERHOURS_GAPS.md.
 

@@ -4846,7 +4846,8 @@
         "change": "Add a compact setup summary below the interactive control."
       }
     ],
-    "sha256": "4238f42dec031f8b73b99813d1e2516871137477ee5fbe535f74cafb1b57b7ee"
+    "sha256": "4238f42dec031f8b73b99813d1e2516871137477ee5fbe535f74cafb1b57b7ee",
+    "evidence": "docs/design-audit/originals/meters_gauges_720p.png"
   },
   {
     "id": "minesweeper_lab",

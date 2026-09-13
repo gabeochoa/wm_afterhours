@@ -1,0 +1,96 @@
+goto_screen meters_gauges
+resize 1280 720
+wait 0.4
+expect_text "Meters & Gauges"
+expect_text "HP / Health"
+expect_text "MP / Mana"
+expect_text "XP / Experience"
+expect_text "65.00%"
+expect_text "39.00%"
+expect_text "84.50%"
+expect_text "29.25%"
+expect_text "Paired bars / Health + Shield"
+expect_no_text "Stacked Bars"
+expect_text "Independent meters, not a shared total."
+expect_text "Circular companion"
+expect_text "0-100-0% / 6s loop"
+expect_text "3 seconds each way"
+expect_text "Fixed samples / slider-independent"
+expect_text "Low"
+expect_text "Half"
+expect_text "High"
+expect_text "Red: low / Gold: half / Green: high"
+expect_text "Shared control"
+expect_text "Adjusts inline and paired meters"
+assert_ui mg_root x=0 y=0 w=1280 h=720
+assert_ui mg_hp_bar x=272 y=180 w=360 h=18
+assert_ui mg_gauge_25_ring x=818 y=483 w=104 h=104
+assert_ui mg_anim_circle x=814 y=245 w=96 h=96
+assert_ui mg_slider x=98 y=612 w=642 h=32
+assert_within_parents
+screenshot meters_gauges_design
+click_ui mg_pause
+wait 0.1
+click_ui mg_restart
+wait 0.2
+expect_text "Resume"
+assert_ui mg_anim_value text=0.00%
+wait 0.2
+assert_ui mg_anim_value text=0.00%
+set_slider mg_slider_input 0.5
+wait 0.2
+assert_ui mg_hp_value text=50.00%
+assert_ui mg_mp_value text=30.00%
+assert_ui mg_xp_value text=65.00%
+assert_ui mg_shield_value text=22.50%
+assert_ui mg_gauge_25_label text=25%
+assert_ui mg_gauge_50_label text=50%
+assert_ui mg_gauge_90_label text=90%
+assert_ui mg_anim_value text=0.00%
+screenshot meters_gauges_control_half
+set_slider mg_slider_input 0
+wait 0.2
+assert_ui mg_hp_value text=0.00%
+assert_ui mg_mp_value text=0.00%
+assert_ui mg_xp_value text=0.00%
+assert_ui mg_shield_value text=0.00%
+assert_within_parents
+screenshot meters_gauges_control_empty
+set_slider mg_slider_input 1
+wait 0.2
+focus_element mg_slider
+key RIGHT
+wait 0.2
+assert_ui mg_hp_value text=100.00%
+assert_ui mg_mp_value text=60.00%
+assert_ui mg_xp_value text=100.00%
+assert_ui mg_shield_value text=45.00%
+focus_element mg_slider
+key LEFT
+wait 0.2
+assert_ui mg_control_value text=98.00%
+assert_ui mg_hp_value text=98.00%
+assert_ui mg_mp_value text=58.80%
+assert_ui mg_shield_value text=44.10%
+assert_ui mg_xp_value text=100.00%
+assert_within_parents
+screenshot meters_gauges_control_full
+click_ui mg_pause
+wait 0.5
+expect_text "Pause"
+screenshot meters_gauges_resumed
+resize 1920 1080
+wait 0.3
+assert_ui mg_root x=0 y=0 w=1920 h=1080
+assert_ui mg_hp_bar x=408 y=270 w=540 h=27
+assert_ui mg_gauge_25_ring x=1227 y=725 w=156 h=156
+assert_within_parents
+screenshot meters_gauges_design_1080
+resize 1024 768
+wait 0.3
+assert_ui mg_root x=0 y=0 w=1024 h=768
+assert_ui mg_hp_bar x=218 y=240 w=288 h=14
+assert_ui mg_gauge_25_ring x=654 y=482 w=83 h=83
+assert_within_parents
+screenshot meters_gauges_design_narrow
+resize 1280 720
