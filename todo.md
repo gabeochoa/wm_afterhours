@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-781 completed; 1,754 remaining.
+799 completed; 1,736 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2375,58 +2375,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/dialog_fyi_720p.png) · [Visual review](design-audit.html#screen=dialog_fyi)
 
-- [ ] `dialog_fyi-01` · P2 · proposal. Document identity: Show the document name prominently.
+- [x] `dialog_fyi-01` · P2 · proposal. Document identity: Show the document name prominently.
   Evidence: The warning refers only to this document.
 
-- [ ] `dialog_fyi-02` · P2 · proposal. Title question: Use Save changes before leaving?.
+- [x] `dialog_fyi-02` · P2 · proposal. Title question: Use Save changes before leaving?.
   Evidence: Unsaved changes states a condition without naming the decision.
 
-- [ ] `dialog_fyi-03` · P2 · proposal. Trigger context: Name the pending action.
+- [x] `dialog_fyi-03` · P2 · proposal. Trigger context: Name the pending action.
   Evidence: The text does not identify whether closing, switching or quitting caused the prompt.
 
-- [ ] `dialog_fyi-04` · P2 · proposal. Body verbosity: Replace it with the consequence of leaving.
+- [x] `dialog_fyi-04` · P2 · proposal. Body verbosity: Replace it with the consequence of leaving.
   Evidence: What would you like to do? adds length without decision information.
 
-- [ ] `dialog_fyi-05` · P2 · proposal. Save label: Use Save and close when that is the demonstrated flow.
+- [x] `dialog_fyi-05` · P2 · proposal. Save label: Use Save and close when that is the demonstrated flow.
   Evidence: Save does not say whether it also completes the pending action.
 
-- [ ] `dialog_fyi-06` · P2 · proposal. Keep editing: Keep it secondary and add a concise return-to-editor cue.
+- [x] `dialog_fyi-06` · P2 · proposal. Keep editing: Keep it secondary and add a concise return-to-editor cue.
   Evidence: Keep editing clearly preserves work but is visually secondary to Save.
 
-- [ ] `dialog_fyi-07` · P2 · proposal. Discard wording: Use Discard unsaved changes or supporting text.
+- [x] `dialog_fyi-07` · P2 · proposal. Discard wording: Use Discard unsaved changes or supporting text.
   Evidence: Discard changes does not mention permanent loss of unsaved edits.
 
-- [ ] `dialog_fyi-08` · P2 · proposal. Discard styling: Add a clear low-emphasis button boundary.
+- [x] `dialog_fyi-08` · P2 · proposal. Discard styling: Add a clear low-emphasis button boundary.
   Evidence: Discard changes looks like plain text rather than an action.
 
-- [ ] `dialog_fyi-09` · P2 · proposal. Destructive distinction: Use a restrained destructive accent.
+- [x] `dialog_fyi-09` · P2 · proposal. Destructive distinction: Use a restrained destructive accent.
   Evidence: The discard action uses the same pale text as ordinary content.
 
-- [ ] `dialog_fyi-10` · P2 · proposal. Action spacing: Use a structured row with discard separate from keep/save.
+- [x] `dialog_fyi-10` · P2 · proposal. Action spacing: Use a structured row with discard separate from keep/save.
   Evidence: Three actions have uneven apparent widths and gaps.
 
-- [ ] `dialog_fyi-11` · P2 · proposal. Button labels: Increase action-label size.
+- [x] `dialog_fyi-11` · P2 · proposal. Button labels: Increase action-label size.
   Evidence: Keep editing and Save use very small type.
 
-- [ ] `dialog_fyi-12` · P2 · proposal. Body measure: Constrain body text to a comfortable line length.
+- [x] `dialog_fyi-12` · P2 · proposal. Body measure: Constrain body text to a comfortable line length.
   Evidence: The sentence runs across most of a wide dialog.
 
-- [ ] `dialog_fyi-13` · P2 · proposal. Heading weight: Increase heading weight.
+- [x] `dialog_fyi-13` · P2 · proposal. Heading weight: Increase heading weight.
   Evidence: The title differs little from the body style.
 
-- [ ] `dialog_fyi-14` · P2 · proposal. Bottom space: Reduce the panel height.
+- [x] `dialog_fyi-14` · P2 · proposal. Bottom space: Reduce the panel height.
   Evidence: A large blank band remains below the buttons.
 
-- [ ] `dialog_fyi-15` · P2 · proposal. Modal boundary: Add a subtle outline or shadow.
+- [x] `dialog_fyi-15` · P2 · proposal. Modal boundary: Add a subtle outline or shadow.
   Evidence: The dark panel has little separation from the dimmed background.
 
-- [ ] `dialog_fyi-16` · P2 · proposal. Backdrop content: Use a document-editor preview behind the fixture.
+- [x] `dialog_fyi-16` · P2 · proposal. Backdrop content: Use a document-editor preview behind the fixture.
   Evidence: Editor is shown above display-setting rows.
 
-- [ ] `dialog_fyi-17` · P2 · proposal. Backdrop navigation: Use a matching Documents or Editor navigation item.
+- [x] `dialog_fyi-17` · P2 · proposal. Backdrop navigation: Use a matching Documents or Editor navigation item.
   Evidence: Display remains selected for an editor warning.
 
-- [ ] `dialog_fyi-18` · P2 · proposal. Unsaved cue: Add an unsaved marker to the previewed document.
+- [x] `dialog_fyi-18` · P2 · proposal. Unsaved cue: Add an unsaved marker to the previewed document.
   Evidence: No background document tab or dirty marker identifies pending edits.
 
 ### dialog_info

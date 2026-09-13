@@ -1264,7 +1264,7 @@ The destructive action is clearly red and the warning is explicit. Eighteen grou
 
 ## dialog fyi
 
-[Current baseline](../../screenshot-baselines/screens/dialog_fyi_720p.png) · [Visual review](../../design-audit.html#screen=dialog_fyi)
+[Reviewed image](../../docs/design-audit/originals/dialog_fyi_720p.png) · [Current baseline](../../screenshot-baselines/screens/dialog_fyi_720p.png) · [Visual review](../../design-audit.html#screen=dialog_fyi)
 
 Baseline SHA-256: `f5c5a1e0d5fc04b61888ef4d7c8bc6502e1f5ee5819a71f2349cba386e0f54d8`
 

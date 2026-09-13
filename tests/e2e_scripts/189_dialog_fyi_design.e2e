@@ -1,0 +1,82 @@
+goto_screen dialog_fyi
+resize 1280 720
+wait 0.4
+expect_text "Save changes before leaving?"
+expect_text "North meadow field notes.txt"
+expect_text "You are closing this document with unsaved edits."
+expect_text "Keep editing returns to the document."
+expect_text "Discard unsaved changes"
+expect_text "Save and close"
+expect_text "Unsaved changes"
+expect_focused df_keep
+assert_ui modal x=240 y=208 w=800 h=304
+assert_ui df_discard w=272 h=44
+assert_ui df_keep w=176 h=44
+assert_ui df_save w=196 h=44
+assert_ui df_editor w=948 h=232
+assert_within_parents
+screenshot dialog_fyi_design
+key ENTER
+wait 0.3
+expect_no_text "Save changes before leaving?"
+expect_text "Returned to editor. Unsaved changes kept."
+expect_focused df_editor
+key CTRL+A
+type "Updated field notes."
+wait 0.2
+expect_text "Updated field notes."
+click_ui df_close_or_reopen
+wait 0.2
+expect_text "Save changes before leaving?"
+expect_focused df_keep
+click_ui df_save
+wait 0.3
+expect_text "Saved and closed North meadow field notes.txt."
+expect_text "Saved version / document closed"
+expect_text "Updated field notes."
+expect_no_text "Save changes before leaving?"
+click_ui df_close_or_reopen
+wait 0.3
+expect_text "Opened the saved document."
+expect_text "All changes saved"
+expect_text "Updated field notes."
+click_ui df_close_or_reopen
+wait 0.2
+expect_text "Closed the document. No unsaved changes."
+expect_no_text "Save changes before leaving?"
+click_ui df_reset
+wait 0.2
+expect_text "Save changes before leaving?"
+click_ui df_discard
+wait 0.3
+expect_text "Discarded unsaved edits and closed the document."
+expect_text "Record the plant samples."
+expect_no_text "Bring the waterproof notebook."
+expect_no_text "Updated field notes."
+screenshot dialog_fyi_discarded
+click_ui df_close_or_reopen
+wait 0.2
+expect_text "All changes saved"
+expect_no_text "Bring the waterproof notebook."
+click_ui df_reset
+wait 0.2
+key ESCAPE
+wait 0.3
+expect_text "Returned to editor. Unsaved changes kept."
+expect_text "Bring the waterproof notebook."
+expect_focused df_editor
+click_ui df_close_or_reopen
+resize 1920 1080
+wait 0.3
+assert_ui modal w=1200 h=456
+assert_within_parents
+screenshot dialog_fyi_design_1080
+key ESCAPE
+wait 0.2
+resize 1024 768
+click_ui df_close_or_reopen
+wait 0.3
+assert_ui modal w=640 h=243
+assert_within_parents
+screenshot dialog_fyi_design_narrow
+resize 1280 720
