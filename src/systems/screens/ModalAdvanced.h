@@ -67,10 +67,16 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
-    theme.surface = {29, 40, 59, 255};
+    theme.background = {19, 24, 32, 255};
+    theme.surface = {32, 40, 52, 255};
     theme.primary = {57, 99, 168, 255};
-    theme.secondary = {36, 53, 78, 255};
+    theme.secondary = {23, 30, 41, 255};
     theme.accent = {32, 118, 101, 255};
+    theme.font = {237, 242, 249, 255};
+    theme.font_muted = {180, 194, 214, 255};
+    theme.focus = {165, 201, 248, 255};
+    theme.corner_radius = 6;
+    theme.roundness = 0;
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20.f));
@@ -247,6 +253,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
       dialog_presentation::style_title(m.ent());
+      m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
+      m.ent().addComponentIfMissing<HasBorder>().border =
+          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Username label + input
       div(context, mk(m.ent(), 0),
@@ -263,8 +272,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Secondary)
+                     .with_border({99, 117, 142, 255}, pixels(1))
                      .with_font("AtkinsonMock", pixels(20.f))
-                     .with_corner_radius(0.f)
+                     .with_corner_radius(6.f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("login_username_input"));
@@ -284,8 +294,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Secondary)
+                     .with_border({99, 117, 142, 255}, pixels(1))
                      .with_font("AtkinsonMock", pixels(20.f))
-                     .with_corner_radius(0.f)
+                     .with_corner_radius(6.f)
                      .with_mask_char('*')
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -325,6 +336,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(btn_row.ent(), 0),
                  ComponentConfig{}
                      .with_label("Cancel")
+                     .with_background(Theme::Usage::Secondary)
                      .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -361,6 +373,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
       dialog_presentation::style_title(m.ent());
+      m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
+      m.ent().addComponentIfMissing<HasBorder>().border =
+          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Progress bar
       float progress = static_cast<float>(wizard_step + 1) / 3.0f;
@@ -554,6 +569,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
       dialog_presentation::style_title(m.ent());
+      m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
+      m.ent().addComponentIfMissing<HasBorder>().border =
+          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Volume slider
       div(context, mk(m.ent(), 0),
@@ -650,6 +668,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(right_btns.ent(), 0),
                  ComponentConfig{}
                      .with_label("Cancel")
+                     .with_background(Theme::Usage::Secondary)
                      .with_size(ComponentSize{pixels(80), pixels(36)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -689,6 +708,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
       dialog_presentation::style_title(m.ent());
+      m.ent().addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * scale);
+      m.ent().addComponentIfMissing<HasBorder>().border =
+          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(scale));
 
       // Subject
       div(context, mk(m.ent(), 0),
@@ -705,8 +727,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
                      .with_background(Theme::Usage::Secondary)
+                     .with_border({99, 117, 142, 255}, pixels(1))
                      .with_font("AtkinsonMock", pixels(20.f))
-                     .with_corner_radius(0.f)
+                     .with_corner_radius(6.f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("feedback_subject_input"));
@@ -800,6 +823,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(btn_row.ent(), 0),
                  ComponentConfig{}
                      .with_label("Cancel")
+                     .with_background(Theme::Usage::Secondary)
                      .with_size(ComponentSize{pixels(100), pixels(36)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL)
