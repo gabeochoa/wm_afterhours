@@ -7521,6 +7521,7 @@
         "priority": "P2"
       }
     ],
-    "sha256": "6b4ca431ea1b1b5d34a5f0d0a8a115102b559643e63ca20359f4296ac7815a61"
+    "sha256": "6b4ca431ea1b1b5d34a5f0d0a8a115102b559643e63ca20359f4296ac7815a61",
+    "evidence": "docs/design-audit/originals/empire_tycoon_720p.png"
   }
 ]

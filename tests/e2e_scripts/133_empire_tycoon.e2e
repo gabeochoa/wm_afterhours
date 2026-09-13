@@ -1,6 +1,7 @@
 # Empire Tycoon mock parity smoke test.
 
 goto_screen empire_tycoon
+resize 1280 720
 wait 0.5
 
 expect_text "DREAM"
@@ -8,7 +9,7 @@ expect_text "INCORPORATED"
 expect_text "$1,250,980"
 expect_text "Production Overview"
 expect_text "Current Projects"
-expect_text "Toys: 5,200/min"
+expect_text "Toys: 5,200 items/min"
 expect_text "New Rollercoaster"
 expect_text "80%"
 
@@ -32,7 +33,7 @@ expect_text "Finance department selected"
 click_ui empire_action_0
 wait 0.2
 expect_text "$1,275,980"
-expect_text "Toys: 5,600/min"
+expect_text "Toys: 5,600 items/min"
 expect_text "Production boosted!"
 
 click_ui empire_action_1

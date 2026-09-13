@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-862 completed; 1,673 remaining.
+887 completed; 1,648 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2779,79 +2779,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/empire_tycoon_720p.png) · [Visual review](design-audit.html#screen=empire_tycoon)
 
-- [ ] `empire_tycoon-01` · P2 · proposal. Happiness face: Use an expression consistent with high happiness.
+- [x] `empire_tycoon-01` · P2 · proposal. Happiness face: Use an expression consistent with high happiness.
   Evidence: The 85% happiness gauge uses a neutral or unhappy-looking face.
 
-- [ ] `empire_tycoon-02` · P2 · proposal. Resources symbol: Use a gear or resource icon matching the mock.
+- [x] `empire_tycoon-02` · P2 · proposal. Resources symbol: Use a gear or resource icon matching the mock.
   Evidence: Resources repeats a face-like center symbol.
 
-- [ ] `empire_tycoon-03` · P2 · proposal. Gauge values: Use solid readable numeric labels.
+- [x] `empire_tycoon-03` · P2 · proposal. Gauge values: Use solid readable numeric labels.
   Evidence: 85% and 60% appear in very small outlined text.
 
-- [ ] `empire_tycoon-04` · P2 · proposal. Gauge scale: Mark 0 and 100 consistently.
+- [x] `empire_tycoon-04` · P2 · proposal. Gauge scale: Mark 0 and 100 consistently.
   Evidence: The semicircles have ticks but no endpoint labels.
 
-- [ ] `empire_tycoon-05` · P2 · proposal. Gauge fill distinction: Increase filled-versus-unfilled contrast.
+- [x] `empire_tycoon-05` · P2 · proposal. Gauge fill distinction: Increase filled-versus-unfilled contrast.
   Evidence: Resources fill is close in color to its track.
 
-- [ ] `empire_tycoon-06` · P2 · proposal. Cash emphasis: Reduce its scale slightly or strengthen section headings.
+- [x] `empire_tycoon-06` · P2 · proposal. Cash emphasis: Reduce its scale slightly or strengthen section headings.
   Evidence: The large balance dominates the actionable dashboard.
 
-- [ ] `empire_tycoon-07` · P2 · proposal. Currency symbol: Choose one coherent currency convention.
+- [x] `empire_tycoon-07` · P2 · proposal. Currency symbol: Choose one coherent currency convention.
   Evidence: A star coin accompanies a dollar amount.
 
-- [ ] `empire_tycoon-08` · P2 · proposal. Selected department: Add an inset selection outline or check marker.
+- [x] `empire_tycoon-08` · P2 · proposal. Selected department: Add an inset selection outline or check marker.
   Evidence: Rides has no strong selected marker distinct from the other colored tabs.
 
-- [ ] `empire_tycoon-09` · P2 · proposal. Department icons: Increase icon weight and optical size.
+- [x] `empire_tycoon-09` · P2 · proposal. Department icons: Increase icon weight and optical size.
   Evidence: Thin line icons are small inside large tab buttons.
 
-- [ ] `empire_tycoon-10` · P2 · proposal. Upgrade badge: Inset it or reserve a badge corner.
+- [x] `empire_tycoon-10` · P2 · proposal. Upgrade badge: Inset it or reserve a badge corner.
   Evidence: The red exclamation overlaps the tab edge.
 
-- [ ] `empire_tycoon-11` · P2 · proposal. Production units: Use items/min or an appropriate explicit unit.
+- [x] `empire_tycoon-11` · P2 · proposal. Production units: Use items/min or an appropriate explicit unit.
   Evidence: 5,200/min etc. do not identify units produced.
 
-- [ ] `empire_tycoon-12` · P2 · proposal. Production arrows: Add a trend caption such as versus previous minute.
+- [x] `empire_tycoon-12` · P2 · proposal. Production arrows: Add a trend caption such as versus previous minute.
   Evidence: Green up arrows lack a stated comparison period.
 
-- [ ] `empire_tycoon-13` · P2 · proposal. Production status: Increase its size and move it into a clear status row.
+- [x] `empire_tycoon-13` · P2 · proposal. Production status: Increase its size and move it into a clear status row.
   Evidence: All systems running smoothly is extremely small.
 
-- [ ] `empire_tycoon-14` · P2 · proposal. Project title bars: Separate titles from progress tracks more clearly.
+- [x] `empire_tycoon-14` · P2 · proposal. Project title bars: Separate titles from progress tracks more clearly.
   Evidence: Cyan title backgrounds resemble progress fills.
 
-- [ ] `empire_tycoon-15` · P2 · proposal. Project progress: Align values consistently at each track's end.
+- [x] `empire_tycoon-15` · P2 · proposal. Project progress: Align values consistently at each track's end.
   Evidence: 80% and 10% sit far from the bars' starting edges.
 
-- [ ] `empire_tycoon-16` · P2 · proposal. Robot subtitle: Label the rate or replace it with remaining time.
+- [x] `empire_tycoon-16` · P2 · proposal. Robot subtitle: Label the rate or replace it with remaining time.
   Evidence: 3,100/min under a mascot project has no named metric.
 
-- [ ] `empire_tycoon-17` · P2 · proposal. Rollercoaster subtitle: Show remaining time or expected benefit.
+- [x] `empire_tycoon-17` · P2 · proposal. Rollercoaster subtitle: Show remaining time or expected benefit.
   Evidence: Expand the fun is promotional rather than useful status.
 
-- [ ] `empire_tycoon-18` · P2 · proposal. Project selection: Add a selected-project marker.
+- [x] `empire_tycoon-18` · P2 · proposal. Project selection: Add a selected-project marker.
   Evidence: No project is visibly selected for Prioritize.
 
-- [ ] `empire_tycoon-19` · P2 · proposal. Prioritize action: Show Prioritize rollercoaster or a target caption.
+- [x] `empire_tycoon-19` · P2 · proposal. Prioritize action: Show Prioritize rollercoaster or a target caption.
   Evidence: Prioritize does not name its target.
 
-- [ ] `empire_tycoon-20` · P2 · proposal. Speed Up action: Show its resource cost and effect before activation.
+- [x] `empire_tycoon-20` · P2 · proposal. Speed Up action: Show its resource cost and effect before activation.
   Evidence: Speed Up gives no cost or duration.
 
-- [ ] `empire_tycoon-21` · P2 · proposal. New Project action: Give New Project or the principal action a clear hierarchy.
+- [x] `empire_tycoon-21` · P2 · proposal. New Project action: Give New Project or the principal action a clear hierarchy.
   Evidence: All three actions share equal yellow emphasis.
 
-- [ ] `empire_tycoon-22` · P2 · proposal. Milestone identity: Show its goal and reward.
+- [x] `empire_tycoon-22` · P2 · proposal. Milestone identity: Show its goal and reward.
   Evidence: Next Milestone 65% does not name the milestone.
 
-- [ ] `empire_tycoon-23` · P2 · proposal. Milestone number: Increase the numeric label or place it above.
+- [x] `empire_tycoon-23` · P2 · proposal. Milestone number: Increase the numeric label or place it above.
   Evidence: 65% is tiny inside the progress bar.
 
-- [ ] `empire_tycoon-24` · P2 · proposal. Chat channels: Increase text size and distinguish channel labels.
+- [x] `empire_tycoon-24` · P2 · proposal. Chat channels: Increase text size and distinguish channel labels.
   Evidence: GlobalChat and DevTeam messages are very small in a corner panel.
 
-- [ ] `empire_tycoon-25` · P2 · proposal. Bottom navigation: Use solid text at a readable size and equal icon spacing.
+- [x] `empire_tycoon-25` · P2 · proposal. Bottom navigation: Use solid text at a readable size and equal icon spacing.
   Evidence: Shop, Settings and Leaderboard labels are tiny outlined text.
 
 ### entity_index_lab

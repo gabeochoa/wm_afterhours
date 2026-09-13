@@ -1456,7 +1456,7 @@ All six controls are closed, including an intentionally disabled specimen. Findi
 
 ## empire tycoon
 
-[Current baseline](../../screenshot-baselines/screens/empire_tycoon_720p.png) · [Visual review](../../design-audit.html#screen=empire_tycoon)
+[Reviewed image](../../docs/design-audit/originals/empire_tycoon_720p.png) · [Current baseline](../../screenshot-baselines/screens/empire_tycoon_720p.png) · [Visual review](../../design-audit.html#screen=empire_tycoon)
 
 Baseline SHA-256: `6b4ca431ea1b1b5d34a5f0d0a8a115102b559643e63ca20359f4296ac7815a61`
 
