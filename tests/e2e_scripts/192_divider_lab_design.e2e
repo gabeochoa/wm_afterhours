@@ -1,0 +1,119 @@
+goto_screen divider_lab
+resize 1280 720
+wait 0.4
+expect_text "Divider examples"
+expect_text "Width divider"
+expect_text "Height divider"
+expect_text "Left limits: 120-900px / total 1180px"
+expect_text "Top limits: 60-220px / total 280px"
+expect_text "Resolved left: 300px (25.7%)"
+expect_text "Right: 868px (74.3%)"
+expect_text "Resolved top: 150px (56.0%)"
+expect_text "Bottom: 118px (44.0%)"
+expect_text "Top pane / 4 of 4 rows fit"
+expect_text "Bottom pane / 3 of 4 rows fit"
+expect_text "Static 1px separator"
+assert_ui dv_row x=48 y=146 w=1180 h=126
+assert_ui dv_left w=300 h=126
+assert_ui dv_right w=868 h=126
+assert_ui dv_vbar x=348 y=146 w=12 h=126
+assert_ui dv_col x=48 y=354 w=1180 h=280
+assert_ui dv_top h=150
+assert_ui dv_bottom h=118
+assert_ui dv_hbar x=48 y=504 w=1180 h=12
+assert_ui dv_height_bracket x=32 y=354 w=10 h=150
+assert_ui dv_rule x=48 y=676 w=1180 h=1
+assert_no_overflow
+assert_within_parents
+screenshot divider_lab_design
+mouse_down 354 209
+wait 0.1
+mouse_move 454 209
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui dv_left w=400
+assert_ui dv_right w=768
+expect_text "Last drag: +100px"
+mouse_down 800 510
+wait 0.1
+mouse_move 800 550
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui dv_top h=190
+assert_ui dv_bottom h=78
+expect_text "Last drag: +40px"
+expect_text "Bottom pane / 1 of 4 rows fit"
+mouse_down 454 209
+wait 0.1
+mouse_move 1270 209
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui dv_left w=900
+assert_ui dv_right w=268
+assert_no_overflow
+assert_within_parents
+click_ui dv_reset
+wait 0.2
+assert_ui dv_left w=300
+assert_ui dv_top h=150
+expect_text "Last drag: +0px"
+mouse_down 800 510
+wait 0.1
+mouse_move 800 680
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui dv_top h=220
+assert_ui dv_bottom h=48
+expect_text "Bottom pane / 0 of 4 rows fit"
+assert_no_overflow
+assert_within_parents
+click_ui dv_reset
+wait 0.2
+mouse_down 354 209
+wait 0.1
+mouse_move 80 209
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui dv_left w=120
+assert_ui dv_right w=1048
+assert_no_overflow
+assert_within_parents
+screenshot divider_lab_design_minimum_width
+focus_ui dv_reset
+key ENTER
+wait 0.2
+assert_ui dv_left w=300
+mouse_down 640 676
+mouse_move 640 696
+mouse_up
+wait 0.2
+assert_ui dv_rule y=676 h=1
+assert_ui dv_top h=150
+resize 1920 1080
+wait 0.3
+assert_ui dv_row x=72 y=219 w=1770 h=189
+assert_ui dv_left w=450
+assert_ui dv_vbar w=18
+assert_ui dv_top h=225
+assert_ui dv_rule x=72 y=1014 w=1770 h=1
+expect_text "Left limits: 180-1350px / total 1770px"
+expect_text "Resolved left: 450px (25.7%)"
+assert_no_overflow
+assert_within_parents
+screenshot divider_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui dv_canvas w=1024 h=768
+assert_ui dv_row x=38 y=213 w=944 h=101
+assert_ui dv_left w=240
+assert_ui dv_col x=38 y=379 w=944 h=224
+assert_ui dv_rule x=38 y=637 w=944 h=1
+assert_no_overflow
+assert_within_parents
+screenshot divider_lab_design_narrow
+resize 1280 720

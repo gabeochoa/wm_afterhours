@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-815 completed; 1,720 remaining.
+837 completed; 1,698 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2550,70 +2550,70 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/divider_lab_720p.png) · [Visual review](design-audit.html#screen=divider_lab)
 
-- [ ] `divider_lab-01` · P2 · defect. Pane labels: Add a consistent small text inset.
+- [x] `divider_lab-01` · P2 · defect. Pane labels: Add a consistent small text inset.
   Evidence: left 300px, right fills the rest, top 150px and bottom fills the rest touch pane edges.
 
-- [ ] `divider_lab-02` · P2 · proposal. Title: Separate Divider examples from a short instruction.
+- [x] `divider_lab-02` · P2 · proposal. Title: Separate Divider examples from a short instruction.
   Evidence: The title combines the component name and all instructions.
 
-- [ ] `divider_lab-03` · P2 · proposal. Vertical divider: Add a centered grip marker.
+- [x] `divider_lab-03` · P2 · proposal. Vertical divider: Add a centered grip marker.
   Evidence: The narrow bar has no visible grip.
 
-- [ ] `divider_lab-04` · P2 · proposal. Horizontal divider: Add a grip marker to distinguish it.
+- [x] `divider_lab-04` · P2 · proposal. Horizontal divider: Add a grip marker to distinguish it.
   Evidence: The horizontal bar is a plain line like the non-moving rule.
 
-- [ ] `divider_lab-05` · P2 · proposal. Divider labels: Label Width divider and Height divider outside the panes.
+- [x] `divider_lab-05` · P2 · proposal. Divider labels: Label Width divider and Height divider outside the panes.
   Evidence: Neither draggable bar has its own caption.
 
-- [ ] `divider_lab-06` · P2 · proposal. Left dimension: Show the measured width explicitly.
+- [x] `divider_lab-06` · P2 · proposal. Left dimension: Show the measured width explicitly.
   Evidence: left 300px omits whether 300 is requested or actual width.
 
-- [ ] `divider_lab-07` · P2 · proposal. Right dimension: Display the current right-pane width.
+- [x] `divider_lab-07` · P2 · proposal. Right dimension: Display the current right-pane width.
   Evidence: right fills the rest gives no resolved measurement.
 
-- [ ] `divider_lab-08` · P2 · proposal. Top dimension: Add a vertical dimension bracket.
+- [x] `divider_lab-08` · P2 · proposal. Top dimension: Add a vertical dimension bracket.
   Evidence: top 150px omits a measurement guide.
 
-- [ ] `divider_lab-09` · P2 · proposal. Bottom dimension: Display the current bottom-pane height.
+- [x] `divider_lab-09` · P2 · proposal. Bottom dimension: Display the current bottom-pane height.
   Evidence: bottom fills the rest gives no resulting height.
 
-- [ ] `divider_lab-10` · P2 · proposal. Pane total: Add the overall container width beside the first example.
+- [x] `divider_lab-10` · P2 · proposal. Pane total: Add the overall container width beside the first example.
   Evidence: The total split width is not shown.
 
-- [ ] `divider_lab-11` · P2 · proposal. Height total: Add the overall height beside the second example.
+- [x] `divider_lab-11` · P2 · proposal. Height total: Add the overall height beside the second example.
   Evidence: The total split height is not shown.
 
-- [ ] `divider_lab-12` · P2 · proposal. Minimum widths: Show its configured min/max values.
+- [x] `divider_lab-12` · P2 · proposal. Minimum widths: Show its configured min/max values.
   Evidence: No boundary values are visible for the vertical split.
 
-- [ ] `divider_lab-13` · P2 · proposal. Minimum heights: Show its configured height limits.
+- [x] `divider_lab-13` · P2 · proposal. Minimum heights: Show its configured height limits.
   Evidence: No range is given for the horizontal split.
 
-- [ ] `divider_lab-14` · P2 · proposal. Ratio comparison: Add the resulting percentage split beside each pixel value.
+- [x] `divider_lab-14` · P2 · proposal. Ratio comparison: Add the resulting percentage split beside each pixel value.
   Evidence: Only pixel measurements appear.
 
-- [ ] `divider_lab-15` · P2 · proposal. Reset control: Add Reset dividers.
+- [x] `divider_lab-15` · P2 · proposal. Reset control: Add Reset dividers.
   Evidence: No visible action restores 300px and 150px.
 
-- [ ] `divider_lab-16` · P2 · proposal. Drag feedback: Add a drag-delta readout beside each specimen.
+- [x] `divider_lab-16` · P2 · proposal. Drag feedback: Add a drag-delta readout beside each specimen.
   Evidence: No numeric delta is reserved near the bars.
 
-- [ ] `divider_lab-17` · P2 · proposal. Pane content: Add a short paragraph or grid that responds to resizing.
+- [x] `divider_lab-17` · P2 · proposal. Pane content: Add a short paragraph or grid that responds to resizing.
   Evidence: The large empty panes provide little reflow evidence.
 
-- [ ] `divider_lab-18` · P2 · proposal. Vertical specimen height: Reduce its height enough to fit measurement captions.
+- [x] `divider_lab-18` · P2 · proposal. Vertical specimen height: Reduce its height enough to fit measurement captions.
   Evidence: The first split consumes a large area for two short labels.
 
-- [ ] `divider_lab-19` · P2 · proposal. Horizontal specimen labeling: Place labels in consistent top-left positions.
+- [x] `divider_lab-19` · P2 · proposal. Horizontal specimen labeling: Place labels in consistent top-left positions.
   Evidence: Top and bottom text float at vertical centers.
 
-- [ ] `divider_lab-20` · P2 · proposal. Rule caption: Increase its size and use monospace for divider().
+- [x] `divider_lab-20` · P2 · proposal. Rule caption: Increase its size and use monospace for divider().
   Evidence: The bottom API explanation is tiny.
 
-- [ ] `divider_lab-21` · P2 · proposal. Rule semantics: Label it Static 1px separator.
+- [x] `divider_lab-21` · P2 · proposal. Rule semantics: Label it Static 1px separator.
   Evidence: Movement ignored describes implementation rather than visual purpose.
 
-- [ ] `divider_lab-22` · P2 · proposal. Rule boundary: Add endpoint markers outside it for inspection.
+- [x] `divider_lab-22` · P2 · proposal. Rule boundary: Add endpoint markers outside it for inspection.
   Evidence: The thin bottom rule blends into the black background.
 
 ### drag_drop

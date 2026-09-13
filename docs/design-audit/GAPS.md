@@ -1351,7 +1351,7 @@ The rename field is visibly preselected, which is appropriate for this fixture. 
 
 ## divider lab
 
-[Current baseline](../../screenshot-baselines/screens/divider_lab_720p.png) · [Visual review](../../design-audit.html#screen=divider_lab)
+[Reviewed image](../../docs/design-audit/originals/divider_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/divider_lab_720p.png) · [Visual review](../../design-audit.html#screen=divider_lab)
 
 Baseline SHA-256: `39a242480c241637e3e611c5ac408eb11681f5c73870d3f88c7d64f1bcee449b`
 
