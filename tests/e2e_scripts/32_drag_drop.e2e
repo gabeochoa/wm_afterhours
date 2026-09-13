@@ -5,24 +5,26 @@
 # Navigate to drag & drop screen
 goto_screen drag_drop
 wait 0.5
+click_ui board_reset
+wait 0.2
 
-# Verify initial state - column headers show counts
-expect_text "To Do (3)"
-expect_text "In Progress (3)"
-expect_text "Done (2)"
+# Verify initial state - column headers and completion summary
+expect_text "To do"
+expect_text "In progress"
+expect_text "2 of 8 completed"
 
 # Verify card text is present
 expect_text "Fix login bug"
 expect_text "Setup CI"
 
 # Drag "Fix login bug" (3rd card in To Do column) to Done column
-# To Do column center ~22.7%, 3rd card center ~54.6%
-# Done column center ~77.3%, drop between existing cards ~40%
+# To do column center ~18.8%, 3rd card center ~64.4%
+# Done column center ~80.1%, drop between existing cards ~43.1%
 #
 # Split into manual steps so we can assert the overlay is visible mid-drag.
 # During a drag the original card is hidden (should_hide=true), so the only
 # source of its label text is the floating overlay entity.
-mouse_down 22.7% 54.6%
+mouse_down 18.8% 64.4%
 wait 0.3
 mouse_move 50% 50%
 wait 0.3
@@ -30,14 +32,14 @@ wait 0.3
 # If the overlay is broken, this will fail.
 expect_text "Fix login bug"
 # Complete the drag
-mouse_move 77.3% 40%
+mouse_move 80.1% 43.1%
 wait 0.1
 mouse_up
 wait 0.5
 
-# Verify the card moved: To Do should have 2, Done should have 3
-expect_text "To Do (2)"
-expect_text "Done (3)"
+# Verify the card moved: Done should have 3 completed tasks
+expect_text "SPR-03 / Fix login bug moved to Done / position 2."
+expect_text "3 of 8 completed"
 
 # The moved card should still be visible
 expect_text "Fix login bug"

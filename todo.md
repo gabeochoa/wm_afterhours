@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,066 completed; 1,469 remaining.
+1,091 completed; 1,444 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2620,79 +2620,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/drag_drop_720p.png) · [Visual review](design-audit.html#screen=drag_drop)
 
-- [ ] `drag_drop-01` · P2 · defect. Card padding: Add comfortable horizontal text padding.
+- [x] `drag_drop-01` · P2 · defect. Card padding: Add comfortable horizontal text padding.
   Evidence: Design mockups, API endpoints and other titles begin almost on their card borders.
 
-- [ ] `drag_drop-02` · P2 · proposal. Board title: Use a clearer heading face while retaining the casual style.
+- [x] `drag_drop-02` · P2 · proposal. Board title: Use a clearer heading face while retaining the casual style.
   Evidence: Sprint Board uses a large handwritten heading.
 
-- [ ] `drag_drop-03` · P2 · proposal. Instruction type: Reduce it slightly and improve hierarchy.
+- [x] `drag_drop-03` · P2 · proposal. Instruction type: Reduce it slightly and improve hierarchy.
   Evidence: The instruction is almost as large as column headings.
 
-- [ ] `drag_drop-04` · P2 · proposal. Instruction scope: Mention reorder behavior if supported by this demo.
+- [x] `drag_drop-04` · P2 · proposal. Instruction scope: Mention reorder behavior if supported by this demo.
   Evidence: Drag cards between columns omits reordering within a column.
 
-- [ ] `drag_drop-05` · P2 · proposal. Card grip: Add a small grip on each card.
+- [x] `drag_drop-05` · P2 · proposal. Card grip: Add a small grip on each card.
   Evidence: Cards have no visible drag-handle cue.
 
-- [ ] `drag_drop-06` · P2 · proposal. Column counts: Use compact count badges beside the titles.
+- [x] `drag_drop-06` · P2 · proposal. Column counts: Use compact count badges beside the titles.
   Evidence: Counts are embedded in oversized headings.
 
-- [ ] `drag_drop-07` · P2 · proposal. To Do heading: Use consistent sentence casing.
+- [x] `drag_drop-07` · P2 · proposal. To Do heading: Use consistent sentence casing.
   Evidence: To Do differs in capitalization from In Progress.
 
-- [ ] `drag_drop-08` · P2 · proposal. Column boundaries: Increase boundary distinction modestly.
+- [x] `drag_drop-08` · P2 · proposal. Column boundaries: Increase boundary distinction modestly.
   Evidence: Columns and cards are close gray tones.
 
-- [ ] `drag_drop-09` · P2 · proposal. Card borders: Use a slightly stronger card border or subtle shadow.
+- [x] `drag_drop-09` · P2 · proposal. Card borders: Use a slightly stronger card border or subtle shadow.
   Evidence: Very thin outlines are hard to see.
 
-- [ ] `drag_drop-10` · P2 · proposal. Card density: Reduce card height or add useful metadata.
+- [x] `drag_drop-10` · P2 · proposal. Card density: Reduce card height or add useful metadata.
   Evidence: Tall cards contain only one short text line.
 
-- [ ] `drag_drop-11` · P2 · proposal. Board whitespace: Add a quiet drop-area cue at each stack's end.
+- [x] `drag_drop-11` · P2 · proposal. Board whitespace: Add a quiet drop-area cue at each stack's end.
   Evidence: Large empty areas remain under all three stacks.
 
-- [ ] `drag_drop-12` · P2 · proposal. Done status: Add a completion mark or quieter completed treatment.
+- [x] `drag_drop-12` · P2 · proposal. Done status: Add a completion mark or quieter completed treatment.
   Evidence: Done cards look identical to unfinished cards.
 
-- [ ] `drag_drop-13` · P2 · proposal. Task type: Add a small labeled task-type tag.
+- [x] `drag_drop-13` · P2 · proposal. Task type: Add a small labeled task-type tag.
   Evidence: Fix login bug is visually identical to design and documentation tasks.
 
-- [ ] `drag_drop-14` · P2 · proposal. Priority: Add a concise priority marker to representative sample cards.
+- [x] `drag_drop-14` · P2 · proposal. Priority: Add a concise priority marker to representative sample cards.
   Evidence: The board has no visible priority distinction.
 
-- [ ] `drag_drop-15` · P2 · proposal. Assignees: Add compact assignee initials to enrich the realistic specimen.
+- [x] `drag_drop-15` · P2 · proposal. Assignees: Add compact assignee initials to enrich the realistic specimen.
   Evidence: No card shows who owns a task.
 
-- [ ] `drag_drop-16` · P2 · proposal. Task identity: Add short task IDs for tracking moves.
+- [x] `drag_drop-16` · P2 · proposal. Task identity: Add short task IDs for tracking moves.
   Evidence: Titles are the only card identifiers.
 
-- [ ] `drag_drop-17` · P2 · proposal. Column accent: Add restrained status accents to headers.
+- [x] `drag_drop-17` · P2 · proposal. Column accent: Add restrained status accents to headers.
   Evidence: All columns share the same color despite distinct states.
 
-- [ ] `drag_drop-18` · P2 · proposal. Active target explanation: Add a static annotated example or separate drag-state capture.
+- [x] `drag_drop-18` · P2 · proposal. Active target explanation: Add a static annotated example or separate drag-state capture.
   Evidence: The screenshot gives no preview of valid drop locations.
 
-- [ ] `drag_drop-19` · P2 · proposal. Move feedback: Add a small last-move message below the board.
+- [x] `drag_drop-19` · P2 · proposal. Move feedback: Add a small last-move message below the board.
   Evidence: No visible status area is available to report a completed move.
 
-- [ ] `drag_drop-20` · P2 · proposal. Alternative action: Add a visible Move to control for an accessible alternative.
+- [x] `drag_drop-20` · P2 · proposal. Alternative action: Add a visible Move to control for an accessible alternative.
   Evidence: Only dragging is advertised.
 
-- [ ] `drag_drop-21` · P2 · proposal. Reset demo: Add Reset board.
+- [x] `drag_drop-21` · P2 · proposal. Reset demo: Add Reset board.
   Evidence: There is no visible way to restore the initial arrangement.
 
-- [ ] `drag_drop-22` · P2 · proposal. Sprint context: Add a compact sample sprint identifier.
+- [x] `drag_drop-22` · P2 · proposal. Sprint context: Add a compact sample sprint identifier.
   Evidence: Sprint Board has no sprint name or dates.
 
-- [ ] `drag_drop-23` · P2 · proposal. Progress overview: Add an overall 2 of 8 completed summary.
+- [x] `drag_drop-23` · P2 · proposal. Progress overview: Add an overall 2 of 8 completed summary.
   Evidence: 3, 3, 2 counts require mental aggregation.
 
-- [ ] `drag_drop-24` · P2 · proposal. Column spacing: Reduce gutter width modestly.
+- [x] `drag_drop-24` · P2 · proposal. Column spacing: Reduce gutter width modestly.
   Evidence: Wide gutters consume space that could improve card padding.
 
-- [ ] `drag_drop-25` · P2 · proposal. Outer frame: Center the board vertically or use the space for instructions and move feedback.
+- [x] `drag_drop-25` · P2 · proposal. Outer frame: Center the board vertically or use the space for instructions and move feedback.
   Evidence: The board ends above a broad black bottom band.
 
 ### dropdowns
@@ -8120,6 +8120,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review composite drag-preview styling and viewport-aware drag hit testing; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Make disabled controls noninteractive even when their labels are child entities; see docs/AFTERHOURS_GAPS.md.
 

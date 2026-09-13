@@ -1384,7 +1384,7 @@ The two draggable dividers and the non-moving rule are intentional. Twenty-two g
 
 ## drag drop
 
-[Current baseline](../../screenshot-baselines/screens/drag_drop_720p.png) · [Visual review](../../design-audit.html#screen=drag_drop)
+[Reviewed image](../../docs/design-audit/originals/drag_drop_720p.png) · [Current baseline](../../screenshot-baselines/screens/drag_drop_720p.png) · [Visual review](../../design-audit.html#screen=drag_drop)
 
 Baseline SHA-256: `e65a7d9f2c2b1c78ce6b397b586481a1d4e5fb0705af045f1b93a8605bab8293`
 

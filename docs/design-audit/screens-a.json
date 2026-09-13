@@ -7104,7 +7104,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "e65a7d9f2c2b1c78ce6b397b586481a1d4e5fb0705af045f1b93a8605bab8293"
+    "sha256": "e65a7d9f2c2b1c78ce6b397b586481a1d4e5fb0705af045f1b93a8605bab8293",
+    "evidence": "docs/design-audit/originals/drag_drop_720p.png"
   },
   {
     "id": "dropdowns",

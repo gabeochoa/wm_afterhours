@@ -345,6 +345,24 @@ also guards its action. can_be_focused rejects entities without a click or
 drag listener, so this also removes the option from focus traversal. Disabled
 interaction belongs on the control itself rather than its optional label.
 
+### Drag previews omit styling and viewport hit testing needs review
+
+The native drag overlay copies the source label, fill and font but omits
+metadata children, corner shape and border. wm keeps the native overlay and
+explicitly restores its font sizing; the resulting preview is title-only. A
+supported preview renderer or fuller style copy is needed for composite cards.
+HandleDragGroups scans unscrolled child rectangles: a runtime probe clicked
+the visible DB schema card after scrolling but moved Design mockups instead.
+The source hit check also ignores group viewport bounds. Separately,
+rendering.h recalculates scroll content height without cmp.gap and reclamps
+the offset after MeasureScrollViews had computed the correct gap-inclusive
+height, leaving the final card partly inaccessible. wm uses explicit row
+paging via wheel and Up/Down controls, renders at most three native drag
+children, and translates drag indices through the visible slice. Earlier/Later
+actions move selected cards across page boundaries. Native continuous
+scrolling and drag hit testing still need fixes that use the same rendered
+geometry.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from
