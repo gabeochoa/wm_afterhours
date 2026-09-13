@@ -2338,7 +2338,7 @@ The library has a useful grid-detail structure and coherent artwork. Improve rea
 
 ## menu showcase
 
-[Current baseline](../../screenshot-baselines/screens/menu_showcase_720p.png) · [Visual review](../../design-audit.html#screen=menu_showcase)
+[Reviewed image](../../docs/design-audit/originals/menu_showcase_720p.png) · [Current baseline](../../screenshot-baselines/screens/menu_showcase_720p.png) · [Visual review](../../design-audit.html#screen=menu_showcase)
 
 Baseline SHA-256: `970db7dced46987c72bbefa3238d417a2bdd6cc81f71d70c789195b0138dfac5`
 

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,437 completed; 1,098 remaining.
+1,455 completed; 1,080 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4572,58 +4572,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/menu_showcase_720p.png) · [Visual review](design-audit.html#screen=menu_showcase)
 
-- [ ] `menu_showcase-01` · P2 · proposal. Title: Use Anchored menus as a heading with a separate edge-flip subtitle.
+- [x] `menu_showcase-01` · P2 · proposal. Title: Use Anchored menus as a heading with a separate edge-flip subtitle.
   Evidence: Anchored menus and the behavior explanation share one small line.
 
-- [ ] `menu_showcase-02` · P2 · proposal. Top menu group: Place them in a modest menu-bar frame.
+- [x] `menu_showcase-02` · P2 · proposal. Top menu group: Place them in a modest menu-bar frame.
   Evidence: File and Edit look like two isolated large buttons.
 
-- [ ] `menu_showcase-03` · P2 · proposal. Trigger labels: Use Bottom edge and Bottom-right corner.
+- [x] `menu_showcase-03` · P2 · proposal. Trigger labels: Use Bottom edge and Bottom-right corner.
   Evidence: Bottom and Corner describe position without identifying the demonstrated behavior.
 
-- [ ] `menu_showcase-04` · P2 · proposal. Direction cues: Add small down/up indicators beside their labels.
+- [x] `menu_showcase-04` · P2 · proposal. Direction cues: Add small down/up indicators beside their labels.
   Evidence: The upper and lower triggers do not show opening directions.
 
-- [ ] `menu_showcase-05` · P2 · proposal. Status message: Move the instruction below the heading.
+- [x] `menu_showcase-05` · P2 · proposal. Status message: Move the instruction below the heading.
   Evidence: Click a menu appears near the center far from every trigger.
 
-- [ ] `menu_showcase-06` · P2 · proposal. Open-state status: Show Bottom menu open · placed above anchor in the baseline state.
+- [x] `menu_showcase-06` · P2 · proposal. Open-state status: Show Bottom menu open · placed above anchor in the baseline state.
   Evidence: The status still says click a menu while Bottom is already open.
 
-- [ ] `menu_showcase-07` · P2 · proposal. Open menu text: Increase menu-label size and reduce tracking.
+- [x] `menu_showcase-07` · P2 · proposal. Open menu text: Increase menu-label size and reduce tracking.
   Evidence: New, Open, Save, and Revert are small and widely spaced.
 
-- [ ] `menu_showcase-08` · P2 · proposal. New row padding: Increase internal text inset while preserving the focus treatment.
+- [x] `menu_showcase-08` · P2 · proposal. New row padding: Increase internal text inset while preserving the focus treatment.
   Evidence: The highlighted New row is tightly bounded by its outline.
 
-- [ ] `menu_showcase-09` · P2 · proposal. Shortcut contrast: Increase shortcut contrast to a readable secondary level.
+- [x] `menu_showcase-09` · P2 · proposal. Shortcut contrast: Increase shortcut contrast to a readable secondary level.
   Evidence: Cmd+N, Cmd+O, and Cmd+S are very dim against teal.
 
-- [ ] `menu_showcase-10` · P2 · proposal. Shortcut alignment: Add a consistent trailing inset and a fixed shortcut column.
+- [x] `menu_showcase-10` · P2 · proposal. Shortcut alignment: Add a consistent trailing inset and a fixed shortcut column.
   Evidence: Shortcuts sit close to the menu's right edge.
 
-- [ ] `menu_showcase-11` · P2 · proposal. Disabled Revert: Keep it inactive but raise label contrast enough to identify the option.
+- [x] `menu_showcase-11` · P2 · proposal. Disabled Revert: Keep it inactive but raise label contrast enough to identify the option.
   Evidence: Revert is extremely faint inside the gray disabled row.
 
-- [ ] `menu_showcase-12` · P3 · proposal. Disabled explanation: Add an external demo caption explaining that it is intentionally disabled.
+- [x] `menu_showcase-12` · P3 · proposal. Disabled explanation: Add an external demo caption explaining that it is intentionally disabled.
   Evidence: Revert has no visible reason for its disabled example state.
 
-- [ ] `menu_showcase-13` · P2 · proposal. Menu and trigger boundary: Add a subtle border or separator distinguishing the popup from its anchor.
+- [x] `menu_showcase-13` · P2 · proposal. Menu and trigger boundary: Add a subtle border or separator distinguishing the popup from its anchor.
   Evidence: The open menu and Bottom trigger use the same teal fill and meet directly.
 
-- [ ] `menu_showcase-14` · P3 · proposal. Upward-placement proof: Draw a faint viewport-edge guide and an upward placement arrow outside the popup.
+- [x] `menu_showcase-14` · P3 · proposal. Upward-placement proof: Draw a faint viewport-edge guide and an upward placement arrow outside the popup.
   Evidence: The expected flip is visible without a boundary marker.
 
-- [ ] `menu_showcase-15` · P3 · proposal. Corner example: Add a labeled expected-placement diagram beside it.
+- [x] `menu_showcase-15` · P3 · proposal. Corner example: Add a labeled expected-placement diagram beside it.
   Evidence: The Corner trigger is closed, so horizontal clamping is not demonstrated in the capture.
 
-- [ ] `menu_showcase-16` · P3 · proposal. Empty canvas: Use it for a compact placement diagram connecting top, bottom, and corner cases.
+- [x] `menu_showcase-16` · P3 · proposal. Empty canvas: Use it for a compact placement diagram connecting top, bottom, and corner cases.
   Evidence: Most of the central viewport is unused.
 
-- [ ] `menu_showcase-17` · P3 · proposal. Trigger alignment: Add an unobtrusive baseline guide to emphasize their common edge position.
+- [x] `menu_showcase-17` · P3 · proposal. Trigger alignment: Add an unobtrusive baseline guide to emphasize their common edge position.
   Evidence: The bottom-left and bottom-right triggers have no shared footer frame.
 
-- [ ] `menu_showcase-18` · P2 · proposal. Sample identification: Add a short Live menu examples label above the trigger area.
+- [x] `menu_showcase-18` · P2 · proposal. Sample identification: Add a short Live menu examples label above the trigger area.
   Evidence: The page does not distinguish live triggers from explanatory text.
 
 ### meters_gauges

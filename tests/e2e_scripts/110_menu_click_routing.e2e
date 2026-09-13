@@ -9,6 +9,7 @@
 # has to reach a nested control rather than its container.
 
 goto_screen menu_showcase
+resize 1280 720
 wait 0.3
 
 # Bottom defaults open, so its items are on screen and Edit's are not.
@@ -16,12 +17,12 @@ expect_text "Save"
 expect_no_text "Undo"
 
 # Clicking a trigger must reach the trigger, not the holder div wrapping it.
-click_text "Edit"
+click_ui menu_Edit_trigger
 wait 0.3
 expect_text "Undo"
 
 # ...and opening Edit takes focus, which dismisses Bottom.
-expect_no_text "Revert"
+expect_no_text "Save"
 
 # Clicking an item must reach the item, not the tray behind it. The tray
 # carries its own HasClickListener, so this is the nested-control case D3 is
@@ -31,8 +32,8 @@ expect_no_text "Revert"
 # focus loss whatever the click hits, so "Undo is gone" is true even when the
 # tray swallowed it. The status only changes when menu_list returns a chosen
 # index, which needs the item's own listener to have fired.
-expect_text "click a menu"
-click_text "Cut"
+expect_text "Edit menu open / placed below anchor"
+click_ui menu_Edit_menu_item_3
 wait 0.3
 expect_text "Edit item chosen"
 

@@ -1,0 +1,74 @@
+goto_screen menu_showcase
+resize 1280 720
+mouse_move 10 10
+wait 0.4
+expect_text "Anchored menus"
+expect_text "Live menu examples"
+expect_text "Placement reference"
+expect_text "Bottom menu open / placed above anchor"
+expect_text "No item selected yet"
+expect_text "Revert is intentionally disabled to demonstrate an unavailable action."
+expect_text "Shortcut labels are hints"
+assert_ui menu_canvas w=1280 h=720
+assert_ui menu_bar x=48 y=184 w=370 h=64
+assert_ui menu_Bottom_trigger x=48 y=644 w=220 h=40
+assert_ui menu_Bottom_popup x=48 y=474 w=352 h=170
+assert_ui menu_Bottom_menu_item_0 x=48 y=474 w=352 h=40
+assert_ui menu_Bottom_menu_item_4 x=48 y=604 w=352 h=40
+assert_ui menu_Bottom_shortcut_0 x=254 y=474 w=130 h=40
+assert_ui menu_anchor_baseline x=48 y=696 w=1184 h=1
+assert_ui menu_viewport_edge x=0 y=719 w=1280 h=1
+screenshot menu_showcase_design
+click_ui menu_Bottom_menu_item_4
+wait 0.2
+expect_text "No item selected yet"
+click_ui menu_File_trigger
+wait 0.3
+expect_text "File menu open / placed below anchor"
+expect_text "New"
+assert_ui menu_File_popup x=64 y=236 w=352 h=170
+click_ui menu_File_menu_item_0
+wait 0.3
+expect_text "File item chosen: New"
+expect_text "All menus closed"
+focus_ui menu_Edit_trigger
+key ENTER
+wait 0.3
+expect_text "Edit menu open / placed below anchor"
+expect_text "Shift+Cmd+Z"
+assert_ui menu_Edit_popup x=234 y=236 w=352 h=210
+assert_ui menu_Edit_shortcut_1 x=440 y=276 w=130 h=40
+click_ui menu_Edit_menu_item_3
+wait 0.3
+expect_text "Edit item chosen: Cut"
+expect_text "All menus closed"
+click_ui menu_Corner_trigger
+wait 0.3
+expect_text "Corner menu open / placed above anchor, clamped left"
+assert_ui menu_Corner_trigger x=980 y=644 w=252 h=40
+assert_ui menu_Corner_popup x=928 y=434 w=352 h=210
+assert_ui menu_Corner_menu_item_5 x=928 y=604 w=352 h=40
+screenshot menu_showcase_design_corner
+click_ui menu_Corner_menu_item_5
+wait 0.3
+expect_text "Corner item chosen: Paste"
+click_ui menu_Corner_trigger
+wait 0.3
+resize 1920 1080
+wait 0.4
+expect_text "Corner menu open / placed above anchor, clamped left"
+assert_ui menu_Corner_trigger x=1470 y=966 w=378 h=60
+assert_ui menu_Corner_popup x=1392 y=651 w=528 h=315
+assert_ui menu_viewport_edge x=0 y=1079 w=1920 h=1
+screenshot menu_showcase_design_1080
+resize 1024 768
+wait 0.4
+expect_text "Corner menu open / placed above anchor, clamped left"
+assert_ui menu_Corner_trigger x=784 y=707 w=202 h=32
+assert_ui menu_Corner_popup x=742 y=539 w=282 h=168
+assert_ui menu_viewport_edge x=0 y=767 w=1024 h=1
+screenshot menu_showcase_design_narrow
+click_ui menu_Corner_menu_item_0
+wait 0.3
+expect_text "Corner item chosen: Undo"
+resize 1280 720

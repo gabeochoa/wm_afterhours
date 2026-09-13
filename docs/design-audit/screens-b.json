@@ -4637,7 +4637,8 @@
         "change": "Add a short Live menu examples label above the trigger area."
       }
     ],
-    "sha256": "970db7dced46987c72bbefa3238d417a2bdd6cc81f71d70c789195b0138dfac5"
+    "sha256": "970db7dced46987c72bbefa3238d417a2bdd6cc81f71d70c789195b0138dfac5",
+    "evidence": "docs/design-audit/originals/menu_showcase_720p.png"
   },
   {
     "id": "meters_gauges",
