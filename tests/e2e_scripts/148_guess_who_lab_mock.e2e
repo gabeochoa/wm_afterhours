@@ -3,10 +3,10 @@
 goto_screen guess_who_lab
 wait 0.5
 
-expect_text "PLAYER 1 / YOUR TURN"
+expect_text "Player 1 / Your turn"
 expect_text "Find the mystery person"
 expect_text "New game"
-expect_text "DOES YOUR PERSON"
+expect_text "Does your person"
 expect_text "wear glasses?"
 expect_text "Yes"
 expect_text "Ask question"

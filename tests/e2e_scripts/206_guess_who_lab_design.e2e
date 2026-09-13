@@ -3,7 +3,7 @@ resize 1280 720
 wait 0.3
 click_ui gw_reset
 wait 0.2
-expect_text "PLAYER 1 / YOUR TURN"
+expect_text "Player 1 / Your turn"
 expect_text "Answer"
 expect_text "Board status"
 expect_text "24 faces left"
