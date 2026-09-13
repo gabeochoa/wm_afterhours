@@ -1,0 +1,36 @@
+goto_screen layout_acid_test
+resize 1280 720
+wait 0.5
+expect_text "A smile is a layout test."
+expect_text "Expected: a clean smile"
+assert_ui acid_board x=128 y=240 w=288 h=288
+assert_ui acid_reference x=768 y=240 w=288 h=288
+assert_ui acid_row_0 x=128 y=240 w=288 h=24
+assert_ui acid_row_11 x=128 y=504 w=288 h=24
+assert_ui acid_cell_0_0 x=128 y=240 w=24 h=24
+assert_ui acid_cell_4_3 x=200 y=336 w=24 h=24
+assert_ui acid_cell_9_7 x=296 y=456 w=24 h=24
+assert_ui acid_cell_11_11 x=392 y=504 w=24 h=24
+screenshot layout_acid_correct
+click_ui acid_toggle
+wait 0.3
+expect_text "Intentional failure"
+assert_ui acid_cell_0_0 x=128 y=240 w=21 h=21
+assert_ui acid_cell_11_11 x=395 y=507 w=21 h=21
+screenshot layout_acid_broken
+focus_ui acid_toggle
+key ENTER
+wait 0.3
+expect_text "Expected: a clean smile"
+assert_ui acid_cell_11_11 x=392 y=504 w=24 h=24
+resize 1920 1080
+wait 0.3
+assert_ui acid_board x=192 y=360 w=432 h=432
+assert_ui acid_cell_4_3 x=300 y=504 w=36 h=36
+screenshot layout_acid_1080
+resize 1024 768
+wait 0.3
+assert_ui acid_board x=102 y=288 w=230 h=230
+assert_ui acid_cell_0_0 w=19 h=19
+screenshot layout_acid_small
+resize 1280 720
