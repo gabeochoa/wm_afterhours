@@ -8,20 +8,20 @@ expect_text "DISPLAY"
 expect_text "Mode"
 expect_text "Borderless"
 expect_text "Resolution"
-expect_text "2560x1440"
-expect_text "Cam panning speed"
-expect_text "Cam rotating Speed"
+expect_text "2560 x 1440"
+expect_text "Pan speed"
+expect_text "Rotation speed"
 expect_text "PLAY TUTORIAL"
 expect_text "RESET TO DEFAULTS"
 
 assert_ui it_root x=0 y=0 w=1280 h=720
-assert_ui it_paper x=416 y=0 w=447 h=720
-assert_ui it_close x=1212 y=12 w=47 h=48
-assert_ui it_mode_row x=456 y=115 w=367 h=26
-assert_ui it_resolution_row x=456 y=149 w=367 h=26
-assert_ui it_pan_row x=456 y=223 w=367 h=26
-assert_ui it_music_row x=456 y=404 w=367 h=26
-assert_ui it_reset x=520 y=690 w=240 h=25
+assert_ui it_paper x=320 y=0 w=640 h=720
+assert_ui it_close x=894 y=18 w=42 h=42
+assert_ui it_mode_row x=352 y=134 w=576 h=40
+assert_ui it_resolution_row x=352 y=180 w=576 h=40
+assert_ui it_pan_row x=352 y=266 w=576 h=40
+assert_ui it_music_row x=352 y=486 w=576 h=40
+assert_ui it_reset x=352 y=664 w=294 h=38
 
 click_ui it_mode_next
 wait 0.2
@@ -29,7 +29,7 @@ expect_text "Windowed"
 
 click_ui it_resolution_next
 wait 0.2
-expect_text "3840x2160"
+expect_text "3840 x 2160"
 
 click_ui it_pan_segment_8
 click_ui it_music_prev
@@ -38,7 +38,7 @@ wait 0.2
 click_ui it_reset
 wait 0.2
 expect_text "Borderless"
-expect_text "2560x1440"
+expect_text "2560 x 1440"
 
 click_ui it_mode_next
 click_ui it_keyboard
@@ -112,10 +112,10 @@ screenshot islands_trains_settings_review
 resize 1920 1080
 wait 0.3
 assert_ui it_root x=0 y=0 w=1920 h=1080
-assert_ui it_paper x=624 y=0 w=671 h=1080
-assert_ui it_close x=1818 y=18 w=71 h=72
-assert_ui it_mode_row x=684 y=173 w=551 h=39
-assert_ui it_reset x=780 y=1035 w=360 h=38
+assert_ui it_paper x=480 y=0 w=960 h=1080
+assert_ui it_close x=1341 y=27 w=63 h=63
+assert_ui it_mode_row x=528 y=201 w=864 h=60
+assert_ui it_reset x=528 y=996 w=441 h=57
 click_ui it_keyboard
 wait 0.2
 assert_within_parents

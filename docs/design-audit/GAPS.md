@@ -2025,7 +2025,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## islands trains settings
 
-[Current baseline](../../screenshot-baselines/screens/islands_trains_settings_720p.png) · [Visual review](../../design-audit.html#screen=islands_trains_settings)
+[Reviewed image](../../docs/design-audit/originals/islands_trains_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/islands_trains_settings_720p.png) · [Visual review](../../design-audit.html#screen=islands_trains_settings)
 
 Baseline SHA-256: `1869c9b236db424413262914b45f4859eacccf71486cc54ca5019f84852f75d4`
 

@@ -1,0 +1,142 @@
+goto_screen islands_trains_settings
+resize 1280 720
+wait 0.4
+expect_text "SETTINGS"
+expect_text "Changes apply immediately in this demo."
+expect_text "DISPLAY"
+expect_text "CONTROLS"
+expect_text "AUDIO"
+expect_text "TUTORIAL"
+expect_text "Pan speed"
+expect_text "Rotation speed"
+expect_text "Keyboard controls"
+expect_text "Effects volume"
+expect_text "Music volume"
+expect_text "Low 0 / 10 High"
+expect_text "Practice panning, track laying and a train run."
+expect_text "All six settings"
+expect_text "2560 x 1440"
+assert_ui it_root x=0 y=0 w=1280 h=720
+assert_ui it_paper x=320 y=0 w=640 h=720
+assert_ui it_close x=894 y=18 w=42 h=42
+assert_ui it_title x=450 y=18 w=380 h=48
+assert_ui it_mode_row x=352 y=134 w=576 h=40
+assert_ui it_resolution_row x=352 y=180 w=576 h=40
+assert_ui it_mode_prev x=604 y=137 w=32 h=34
+assert_ui it_mode_next x=872 y=137 w=32 h=34
+assert_ui it_pan_row x=352 y=266 w=576 h=40
+assert_ui it_rotate_row x=352 y=312 w=576 h=40
+assert_ui it_pan_value text=5/10
+assert_ui it_rotate_value text=5/10
+assert_ui it_effects_value text=50%
+assert_ui it_music_value text=50%
+assert_ui it_pan_segment_1 x=646 y=266 w=12 h=40
+assert_ui it_pan_segment_10 x=763 y=266 w=12 h=40
+assert_ui it_keyboard x=352 y=358 w=576 h=36
+assert_ui it_effects_row x=352 y=440 w=576 h=40
+assert_ui it_music_row x=352 y=486 w=576 h=40
+assert_ui it_play_tutorial x=352 y=602 w=576 h=36
+assert_ui it_reset x=352 y=664 w=294 h=38
+assert_no_overflow
+assert_within_parents
+screenshot islands_trains_settings_design
+click_ui it_mode_prev
+wait 0.2
+expect_text "Fullscreen"
+click_ui it_resolution_prev
+wait 0.2
+expect_text "1920 x 1080"
+click_ui it_resolution_next
+click_ui it_resolution_next
+wait 0.2
+expect_text "3840 x 2160"
+click_ui it_pan_segment_10
+click_ui it_pan_next
+wait 0.2
+assert_ui it_pan_value text=10/10
+click_ui it_pan_prev
+wait 0.2
+assert_ui it_pan_value text=9/10
+click_ui it_rotate_segment_1
+click_ui it_rotate_prev
+click_ui it_rotate_prev
+wait 0.2
+assert_ui it_rotate_value text=0/10
+click_ui it_effects_segment_8
+click_ui it_music_prev
+wait 0.2
+assert_ui it_effects_value text=80%
+assert_ui it_music_value text=40%
+focus_ui it_reset
+key ENTER
+wait 0.2
+expect_text "Borderless"
+expect_text "2560 x 1440"
+assert_ui it_pan_value text=5/10
+assert_ui it_rotate_value text=5/10
+assert_ui it_effects_value text=50%
+assert_ui it_music_value text=50%
+click_ui it_keyboard
+wait 0.2
+expect_text "Keyboard controls for this mock"
+expect_text "Tab / Shift+Tab"
+click_ui it_detail_back
+wait 0.2
+click_ui it_play_tutorial
+wait 0.2
+expect_text "1. Move the camera"
+click_ui it_tutorial_right
+wait 0.2
+expect_text "Step complete!"
+click_ui it_tutorial_next
+wait 0.2
+expect_text "2. Lay the track"
+click_ui it_tutorial_track
+wait 0.2
+expect_text "TRACK CONNECTED"
+click_ui it_tutorial_next
+wait 0.2
+expect_text "3. Send a train"
+click_ui it_tutorial_train
+wait 3
+expect_text "TRAIN ARRIVED"
+click_ui it_tutorial_next
+wait 0.2
+expect_text "SETTINGS"
+click_ui it_close
+wait 0.2
+expect_text "Settings closed"
+click_ui it_reopen
+wait 0.2
+expect_text "SETTINGS"
+resize 1920 1080
+wait 0.3
+assert_ui it_paper x=480 y=0 w=960 h=1080
+assert_ui it_close x=1341 y=27 w=63 h=63
+assert_ui it_pan_row x=528 y=399 w=864 h=60
+assert_ui it_reset x=528 y=996 w=441 h=57
+assert_no_overflow
+assert_within_parents
+screenshot islands_trains_settings_design_1080
+resize 1024 768
+wait 0.3
+assert_ui it_canvas w=1024 h=768
+assert_ui it_root x=0 y=96 w=1024 h=576
+assert_ui it_paper x=256 y=96 w=512 h=576
+assert_ui it_close x=715 y=110 w=34 h=34
+assert_ui it_pan_row x=282 y=309 w=461 h=32
+assert_ui it_reset x=282 y=627 w=235 h=30
+assert_no_overflow
+assert_within_parents
+screenshot islands_trains_settings_design_narrow
+click_ui it_keyboard
+wait 0.2
+assert_no_overflow
+assert_within_parents
+click_ui it_keyboard_practice
+wait 0.2
+expect_text "1. Move the camera"
+assert_no_overflow
+assert_within_parents
+key ESCAPE
+resize 1280 720

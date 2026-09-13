@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,317 completed; 1,218 remaining.
+1,342 completed; 1,193 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3944,79 +3944,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/islands_trains_settings_720p.png) · [Visual review](design-audit.html#screen=islands_trains_settings)
 
-- [ ] `islands_trains_settings-01` · P2 · proposal. Settings title: Increase title contrast and size while retaining the hand-lettered style.
+- [x] `islands_trains_settings-01` · P2 · proposal. Settings title: Increase title contrast and size while retaining the hand-lettered style.
   Evidence: The title is small and muted at the top of the tall paper.
 
-- [ ] `islands_trains_settings-02` · P2 · proposal. Section headings: Darken the section-heading color for clearer grouping.
+- [x] `islands_trains_settings-02` · P2 · proposal. Section headings: Darken the section-heading color for clearer grouping.
   Evidence: DISPLAY, CONTROLS, AUDIO, and TUTORIAL are pale cyan on cream.
 
-- [ ] `islands_trains_settings-03` · P2 · proposal. Setting labels: Use darker olive text on the same soft row backgrounds.
+- [x] `islands_trains_settings-03` · P2 · proposal. Setting labels: Use darker olive text on the same soft row backgrounds.
   Evidence: Olive-gray labels have little contrast against sage rows.
 
-- [ ] `islands_trains_settings-04` · P2 · proposal. Row height: Increase row height and vertical text padding.
+- [x] `islands_trains_settings-04` · P2 · proposal. Row height: Increase row height and vertical text padding.
   Evidence: Display and audio controls occupy very short strips.
 
-- [ ] `islands_trains_settings-05` · P2 · proposal. Mode value: Use a stronger value weight and a fixed value column.
+- [x] `islands_trains_settings-05` · P2 · proposal. Mode value: Use a stronger value weight and a fixed value column.
   Evidence: Borderless is not visually distinguished from Mode.
 
-- [ ] `islands_trains_settings-06` · P2 · proposal. Resolution formatting: Use 2560 × 1440 with readable spacing.
+- [x] `islands_trains_settings-06` · P2 · proposal. Resolution formatting: Use 2560 × 1440 with readable spacing.
   Evidence: 2560x1440 uses a cramped lowercase x.
+  Disposition: Used ASCII x with spaces because the bundled handwritten font lacks the multiplication glyph.
 
-- [ ] `islands_trains_settings-07` · P2 · proposal. Cycle arrows: Use consistent chevron buttons with visible hit-area framing.
+- [x] `islands_trains_settings-07` · P2 · proposal. Cycle arrows: Use consistent chevron buttons with visible hit-area framing.
   Evidence: Small angle-bracket characters sit near the values.
 
-- [ ] `islands_trains_settings-08` · P2 · proposal. Camera labels: Increase the label-to-control gap or shorten the label to Pan speed.
+- [x] `islands_trains_settings-08` · P2 · proposal. Camera labels: Increase the label-to-control gap or shorten the label to Pan speed.
   Evidence: Cam panning speed nearly touches its decrease arrow.
 
-- [ ] `islands_trains_settings-09` · P2 · proposal. Camera capitalization: Use Camera rotation speed in sentence case.
+- [x] `islands_trains_settings-09` · P2 · proposal. Camera capitalization: Use Camera rotation speed in sentence case.
   Evidence: Cam rotating Speed capitalizes Speed inconsistently.
+  Disposition: Shortened the label to Rotation speed under Controls so the label fits its allotted column at the requested readable size.
 
-- [ ] `islands_trains_settings-10` · P2 · proposal. Segment contrast: Increase their distinction while keeping the pastel palette.
+- [x] `islands_trains_settings-10` · P2 · proposal. Segment contrast: Increase their distinction while keeping the pastel palette.
   Evidence: Active cyan and inactive tan segments are similar in lightness.
 
-- [ ] `islands_trains_settings-11` · P2 · proposal. Camera values: Add current step numbers beside both segment groups.
+- [x] `islands_trains_settings-11` · P2 · proposal. Camera values: Add current step numbers beside both segment groups.
   Evidence: The two camera controls display segments without numeric values.
 
-- [ ] `islands_trains_settings-12` · P2 · proposal. Effects value: Show its percentage in a compact trailing value field.
+- [x] `islands_trains_settings-12` · P2 · proposal. Effects value: Show its percentage in a compact trailing value field.
   Evidence: Effects Volume has no numeric percentage.
 
-- [ ] `islands_trains_settings-13` · P2 · proposal. Music value: Show its percentage aligned with the effects value.
+- [x] `islands_trains_settings-13` · P2 · proposal. Music value: Show its percentage aligned with the effects value.
   Evidence: Music Volume has no numeric percentage.
 
-- [ ] `islands_trains_settings-14` · P3 · proposal. Segment scale: Add one shared Low to High legend for the segmented controls.
+- [x] `islands_trains_settings-14` · P3 · proposal. Segment scale: Add one shared Low to High legend for the segmented controls.
   Evidence: Ten short bars have no minimum or maximum annotation.
 
-- [ ] `islands_trains_settings-15` · P2 · proposal. Keyboard action: Give it a navigation arrow and label it Keyboard controls.
+- [x] `islands_trains_settings-15` · P2 · proposal. Keyboard action: Give it a navigation arrow and label it Keyboard controls.
   Evidence: KEYBOARD resembles another passive setting row.
 
-- [ ] `islands_trains_settings-16` · P2 · proposal. Tutorial action: Use a distinct secondary-action style with a play icon.
+- [x] `islands_trains_settings-16` · P2 · proposal. Tutorial action: Use a distinct secondary-action style with a play icon.
   Evidence: PLAY TUTORIAL has the same subdued appearance as the setting rows.
 
-- [ ] `islands_trains_settings-17` · P3 · proposal. Tutorial section: Add a brief note describing what the tutorial covers.
+- [x] `islands_trains_settings-17` · P3 · proposal. Tutorial section: Add a brief note describing what the tutorial covers.
   Evidence: The section contains only an action with no explanatory text.
 
-- [ ] `islands_trains_settings-18` · P2 · proposal. Reset placement: Move it upward into a clear footer safe area.
+- [x] `islands_trains_settings-18` · P2 · proposal. Reset placement: Move it upward into a clear footer safe area.
   Evidence: RESET TO DEFAULTS sits almost on the bottom edge.
 
-- [ ] `islands_trains_settings-19` · P2 · proposal. Reset affordance: Give it a bordered secondary-button treatment.
+- [x] `islands_trains_settings-19` · P2 · proposal. Reset affordance: Give it a bordered secondary-button treatment.
   Evidence: The reset action is plain low-contrast text.
 
-- [ ] `islands_trains_settings-20` · P3 · proposal. Reset scope: Add a short All settings caption beside the action.
+- [x] `islands_trains_settings-20` · P3 · proposal. Reset scope: Add a short All settings caption beside the action.
   Evidence: Reset to defaults does not state which settings it affects.
 
-- [ ] `islands_trains_settings-21` · P2 · proposal. Close control: Align it with the panel's top corner or add a clear Close label.
+- [x] `islands_trains_settings-21` · P2 · proposal. Close control: Align it with the panel's top corner or add a clear Close label.
   Evidence: The X is isolated far from the narrow paper panel.
 
-- [ ] `islands_trains_settings-22` · P3 · proposal. Paper width: Widen the paper enough to accommodate readable controls and labels.
+- [x] `islands_trains_settings-22` · P3 · proposal. Paper width: Widen the paper enough to accommodate readable controls and labels.
   Evidence: The narrow panel leaves large blank side fields.
 
-- [ ] `islands_trains_settings-23` · P3 · proposal. Lower paper void: Reduce that gap and group reset within the settings footer.
+- [x] `islands_trains_settings-23` · P3 · proposal. Lower paper void: Reduce that gap and group reset within the settings footer.
   Evidence: A large blank region separates Play tutorial from Reset.
 
-- [ ] `islands_trains_settings-24` · P3 · proposal. Section spacing: Use a consistent section-spacing rhythm.
+- [x] `islands_trains_settings-24` · P3 · proposal. Section spacing: Use a consistent section-spacing rhythm.
   Evidence: The gap before AUDIO is notably larger than before CONTROLS.
 
-- [ ] `islands_trains_settings-25` · P3 · proposal. Save behavior communication: Add a small Changes apply immediately message if that matches behavior.
+- [x] `islands_trains_settings-25` · P3 · proposal. Save behavior communication: Add a small Changes apply immediately message if that matches behavior.
   Evidence: No visible note explains whether changes apply immediately.
 
 ### kart_select

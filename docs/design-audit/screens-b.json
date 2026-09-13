@@ -3044,7 +3044,8 @@
         "change": "Add a small Changes apply immediately message if that matches behavior."
       }
     ],
-    "sha256": "1869c9b236db424413262914b45f4859eacccf71486cc54ca5019f84852f75d4"
+    "sha256": "1869c9b236db424413262914b45f4859eacccf71486cc54ca5019f84852f75d4",
+    "evidence": "docs/design-audit/originals/islands_trains_settings_720p.png"
   },
   {
     "id": "kart_select",
