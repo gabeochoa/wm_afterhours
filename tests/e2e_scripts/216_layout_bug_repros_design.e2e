@@ -1,0 +1,94 @@
+goto_screen layout_bug_repros
+resize 1280 720
+wait 0.3
+click_ui inspect_case_1
+click_ui tab_0
+wait 0.2
+expect_text "Layout regression fixtures"
+expect_text "Retained cases / badges state current expectations"
+expect_text "Origin 0,0 at red +"
+expect_text "Case inspector / 1-5 left, 6-7 right"
+expect_text "Parent 300 x 80px / child 100% x 60px"
+expect_text "Expected: red width matches cyan."
+expect_text "Expected width match"
+expect_text "Drawn parent: 300 x 80px at x20, y67"
+assert_ui r1_parent x=20 y=67 w=300 h=80
+assert_ui r1_child w=300 h=60
+assert_ui r2_parent x=20 y=182 w=600 h=80
+assert_ui r2_A w=100 h=60
+assert_ui r2_B w=100 h=60
+assert_ui r2_C w=100 h=60
+assert_ui r3_parent x=400 y=312 w=300 h=100
+assert_ui r3_child1 w=280 h=35
+assert_ui r3_child2 w=280 h=35
+assert_ui r3_origin_marker x=0 y=0 w=20 h=20
+assert_ui r4_red x=20 y=462 w=200
+assert_ui r4_blue x=100 y=482 w=200
+assert_ui r5_auto x=20 y=592 h=40
+assert_ui r5_manual x=20 y=638 h=40
+assert_ui r6_parent x=700 y=67 w=500 h=60
+assert_ui r7_parent x=700 y=182
+assert_within_parents
+screenshot layout_repros_percent
+click_ui inspect_case_2
+wait 0.2
+expect_text "Three separate children use 300px; 300px remains free."
+click_ui inspect_case_3
+wait 0.2
+expect_text "Parent x400, y312, 300 x 100px; children 280 x 35px."
+expect_text "Children follow the parent offset, away from the origin."
+click_ui inspect_case_4
+wait 0.2
+expect_text "Blue covers red. Creation order determines this overlap."
+expect_text "Red / mk(5000) / created first"
+expect_text "Blue / mk(2000) / created second"
+expect_text "mk ID identifies an entity; it does not set render depth."
+screenshot layout_repros_creation_order
+focus_ui inspect_case_5
+key ENTER
+wait 0.2
+expect_text "Compare text fit; auto width need not match 250px."
+expect_text "Drawn widths: auto"
+click_ui inspect_case_6
+wait 0.2
+expect_text "Selected: Tab A / expected inside green bounds"
+click_ui tab_1
+wait 0.2
+expect_text "Selected: Tab B / expected inside green bounds"
+focus_ui tab_2
+key ENTER
+wait 0.2
+expect_text "Selected: Tab C / expected inside green bounds"
+click_ui inspect_case_7
+wait 0.2
+expect_text "Declared sum: 3 x 42 + 2 x 4 = 134px, within 150px."
+expect_text "Drawn rows span"
+expect_text "A On / B Off / C On"
+click 1118 252
+wait 0.2
+expect_text "A On / B On / C On"
+click 1118 204
+wait 0.2
+expect_text "A Off / B On / C On"
+click 1118 300
+wait 0.2
+expect_text "A Off / B On / C Off"
+screenshot layout_repros_toggle_states
+click_ui inspect_case_1
+wait 0.2
+click_ui inspect_case_7
+wait 0.2
+expect_text "A Off / B On / C Off"
+resize 1920 1080
+wait 0.3
+assert_ui r1_parent x=20 y=67
+assert_ui r3_parent x=400 y=312
+assert_ui r3_origin_marker x=0 y=0
+assert_within_parents
+screenshot layout_repros_1080
+resize 1024 768
+wait 0.3
+expect_text "Fixed fixtures need 1280 x 720; enlarge the window."
+assert_ui r3_parent x=400 y=312 w=300 h=100
+screenshot layout_repros_narrow_reference
+resize 1280 720

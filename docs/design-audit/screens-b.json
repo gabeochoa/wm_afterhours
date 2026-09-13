@@ -3973,7 +3973,8 @@
         "change": "Add Retained regression fixtures; badges describe current expectations beneath the title."
       }
     ],
-    "sha256": "e7daac628b2df245860ce0969569516aa7511f9c52dbfd9a2f51a795b673e8ef"
+    "sha256": "e7daac628b2df245860ce0969569516aa7511f9c52dbfd9a2f51a795b673e8ef",
+    "evidence": "docs/design-audit/originals/layout_bug_repros_720p.png"
   },
   {
     "id": "layout_patterns",

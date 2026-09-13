@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,267 completed; 1,268 remaining.
+1,292 completed; 1,243 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4296,79 +4296,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/layout_bug_repros_720p.png) · [Visual review](design-audit.html#screen=layout_bug_repros)
 
-- [ ] `layout_bug_repros-01` · P2 · defect. Z-order caption: Rewrite the expectation to state creation-order rendering and identify blue-on-top as the expected result.
+- [x] `layout_bug_repros-01` · P2 · defect. Z-order caption: Rewrite the expectation to state creation-order rendering and identify blue-on-top as the expected result.
   Evidence: Case 4 says NOT A BUG but its expected-result line calls the visible blue-on-top order a bug.
 
-- [ ] `layout_bug_repros-02` · P2 · proposal. Case status labels: Use separate status badges outside the test geometry.
+- [x] `layout_bug_repros-02` · P2 · proposal. Case status labels: Use separate status badges outside the test geometry.
   Evidence: FIXED and NOT A BUG are embedded in long small captions.
 
-- [ ] `layout_bug_repros-03` · P2 · proposal. Case headings: Increase heading readability without changing the repro coordinates.
+- [x] `layout_bug_repros-03` · P2 · proposal. Case headings: Increase heading readability without changing the repro coordinates.
   Evidence: All seven descriptions use small handwritten text.
 
-- [ ] `layout_bug_repros-04` · P2 · proposal. Expected-result lines: Put expected behavior in a clear two-line caption beneath each case.
+- [x] `layout_bug_repros-04` · P2 · proposal. Expected-result lines: Put expected behavior in a clear two-line caption beneath each case.
   Evidence: The expected and bug descriptions are tiny and dense.
 
-- [ ] `layout_bug_repros-05` · P2 · proposal. Number sequence: Add clear column labels or a numbered index to establish reading order.
+- [x] `layout_bug_repros-05` · P2 · proposal. Number sequence: Add clear column labels or a numbered index to establish reading order.
   Evidence: Cases 1–5 run down the left and 6–7 start again at the top right.
 
-- [ ] `layout_bug_repros-06` · P2 · proposal. Origin marker: Add an Origin 0,0 caption nearby outside its measured location.
+- [x] `layout_bug_repros-06` · P2 · proposal. Origin marker: Add an Origin 0,0 caption nearby outside its measured location.
   Evidence: The red plus at the top-left looks like an unexplained floating control.
 
-- [ ] `layout_bug_repros-07` · P3 · proposal. Percent sample: Add parent 300 × 80 and child 100% dimension captions.
+- [x] `layout_bug_repros-07` · P3 · proposal. Percent sample: Add parent 300 × 80 and child 100% dimension captions.
   Evidence: Red and cyan overlap by design but their dimensions are not shown.
 
-- [ ] `layout_bug_repros-08` · P3 · proposal. Percent expectation: Add a small expected-geometry diagram outside the live sample.
+- [x] `layout_bug_repros-08` · P3 · proposal. Percent expectation: Add a small expected-geometry diagram outside the live sample.
   Evidence: Red fits inside cyan is stated in prose only.
 
-- [ ] `layout_bug_repros-09` · P3 · proposal. Row sample: Caption each child's fixed 100-pixel width.
+- [x] `layout_bug_repros-09` · P3 · proposal. Row sample: Caption each child's fixed 100-pixel width.
   Evidence: A, B, and C show fixed boxes without width annotations.
 
-- [ ] `layout_bug_repros-10` · P3 · proposal. Row leftover space: Label the parent's full width to explain the unused region.
+- [x] `layout_bug_repros-10` · P3 · proposal. Row leftover space: Label the parent's full width to explain the unused region.
   Evidence: The gray parent extends far beyond C without explanation.
 
-- [ ] `layout_bug_repros-11` · P2 · proposal. Flow sample caption: Connect the heading to the yellow parent with a subtle leader outside the test bounds.
+- [x] `layout_bug_repros-11` · P2 · proposal. Flow sample caption: Connect the heading to the yellow parent with a subtle leader outside the test bounds.
   Evidence: The flow sample is far to the right of its case heading.
 
-- [ ] `layout_bug_repros-12` · P3 · proposal. Flow coordinates: Show x and y labels explicitly in the metadata.
+- [x] `layout_bug_repros-12` · P3 · proposal. Flow coordinates: Show x and y labels explicitly in the metadata.
   Evidence: The heading embeds 400,310 without units or a coordinate key.
 
-- [ ] `layout_bug_repros-13` · P3 · proposal. Flow children: Add external child-height and gap labels.
+- [x] `layout_bug_repros-13` · P3 · proposal. Flow children: Add external child-height and gap labels.
   Evidence: Child 1 and Child 2 have no dimension metadata.
 
-- [ ] `layout_bug_repros-14` · P2 · proposal. Z-order label obstruction: Repeat both entity identifiers in an unobstructed external legend.
+- [x] `layout_bug_repros-14` · P2 · proposal. Z-order label obstruction: Repeat both entity identifiers in an unobstructed external legend.
   Evidence: The red box's identifier is covered by the blue box as part of the test.
 
-- [ ] `layout_bug_repros-15` · P2 · proposal. Z-order question: Use a neutral Blue entity · created second label outside the overlap.
+- [x] `layout_bug_repros-15` · P2 · proposal. Z-order question: Use a neutral Blue entity · created second label outside the overlap.
   Evidence: BLUE mk(2000) ON TOP? reads as unresolved despite the status badge.
 
-- [ ] `layout_bug_repros-16` · P3 · proposal. Sizing comparison: Add explicit Auto width and 250 px reference captions beside them.
+- [x] `layout_bug_repros-16` · P3 · proposal. Sizing comparison: Add explicit Auto width and 250 px reference captions beside them.
   Evidence: The green and blue buttons are stacked far below their explanation.
 
-- [ ] `layout_bug_repros-17` · P3 · proposal. Sizing difference: Add aligned width guides extending from their outer edges.
+- [x] `layout_bug_repros-17` · P3 · proposal. Sizing difference: Add aligned width guides extending from their outer edges.
   Evidence: The two button widths are close but difficult to compare vertically.
 
-- [ ] `layout_bug_repros-18` · P2 · proposal. Tab fixture: Add Selected: Tab A in the fixture metadata.
+- [x] `layout_bug_repros-18` · P2 · proposal. Tab fixture: Add Selected: Tab A in the fixture metadata.
   Evidence: Tab A's yellow underline has no textual selected-state caption.
 
-- [ ] `layout_bug_repros-19` · P3 · proposal. Tab container bounds: Add an external labeled outline key instead of altering the tested border.
+- [x] `layout_bug_repros-19` · P3 · proposal. Tab container bounds: Add an external labeled outline key instead of altering the tested border.
   Evidence: The green outline is thin and hard to distinguish from surrounding dark space.
 
-- [ ] `layout_bug_repros-20` · P2 · proposal. Toggle labels: Add light row guides outside the toggle geometry to connect labels and controls.
+- [x] `layout_bug_repros-20` · P2 · proposal. Toggle labels: Add light row guides outside the toggle geometry to connect labels and controls.
   Evidence: Toggle A, B, and C are far from their switches across a wide panel.
 
-- [ ] `layout_bug_repros-21` · P3 · proposal. Toggle state: Add an external On, Off, On state summary.
+- [x] `layout_bug_repros-21` · P3 · proposal. Toggle state: Add an external On, Off, On state summary.
   Evidence: The yellow/gray switch states are not named.
 
-- [ ] `layout_bug_repros-22` · P3 · proposal. Toggle measurement: Display the declared container height and summed child heights.
+- [x] `layout_bug_repros-22` · P3 · proposal. Toggle measurement: Display the declared container height and summed child heights.
   Evidence: The vertical-fit case names the concept without showing measured height.
 
-- [ ] `layout_bug_repros-23` · P2 · proposal. Right empty region: Use it for a compact fixture legend and expected-results summary.
+- [x] `layout_bug_repros-23` · P2 · proposal. Right empty region: Use it for a compact fixture legend and expected-results summary.
   Evidence: Most of the lower-right canvas is unused.
 
-- [ ] `layout_bug_repros-24` · P3 · proposal. Diagnostic color key: Add a per-case parent/child color key.
+- [x] `layout_bug_repros-24` · P3 · proposal. Diagnostic color key: Add a per-case parent/child color key.
   Evidence: Red, cyan, green, yellow, blue, and purple carry different roles across cases.
 
-- [ ] `layout_bug_repros-25` · P2 · proposal. Page purpose: Add Retained regression fixtures; badges describe current expectations beneath the title.
+- [x] `layout_bug_repros-25` · P2 · proposal. Page purpose: Add Retained regression fixtures; badges describe current expectations beneath the title.
   Evidence: Layout Bug Repros alone does not distinguish current regressions from retained historical cases.
 
 ### layout_patterns

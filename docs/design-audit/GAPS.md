@@ -2203,7 +2203,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## layout bug repros
 
-[Current baseline](../../screenshot-baselines/screens/layout_bug_repros_720p.png) · [Visual review](../../design-audit.html#screen=layout_bug_repros)
+[Reviewed image](../../docs/design-audit/originals/layout_bug_repros_720p.png) · [Current baseline](../../screenshot-baselines/screens/layout_bug_repros_720p.png) · [Visual review](../../design-audit.html#screen=layout_bug_repros)
 
 Baseline SHA-256: `e7daac628b2df245860ce0969569516aa7511f9c52dbfd9a2f51a795b673e8ef`
 
