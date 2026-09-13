@@ -485,7 +485,9 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     }
     if (!feedback.empty() && !tutorial_open)
       div(context, mk(root.ent(), 802), box(scale, 440, 658, 510, 36)
-          .with_label(feedback).with_font("AtkinsonMock", pixels(18 * scale))
+          .with_label(feedback)
+          .with_font(feedback == "Language " + languages[3] ? "Sazanami" : "AtkinsonMock",
+                     pixels(18 * scale))
           .with_custom_text_color(ink).with_alignment(TextAlignment::Center)
           .with_text_inset(0, 0).with_debug_name("mm_feedback"));
 
