@@ -8156,6 +8156,8 @@ The existing project backlog is preserved after the screen checklist.
 
 ## Existing project backlog
 
+- [ ] Investigate faster text layout using prepared text and cached measurements. Review [the plan](docs/plans/text-layout-performance.md) before implementation.
+
 - [ ] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Correct native pagination numbered/Previous indices and icon-row container config inheritance; see docs/AFTERHOURS_GAPS.md.
