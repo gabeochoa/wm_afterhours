@@ -12,6 +12,28 @@
 
 ## Existing project backlog
 
+- [ ] Build a polished default theme that looks good with no application styling or customization. Use Dannaway’s supplied “How to build a design system” as a reference: a small semantic color palette with verified contrast, one readable font family with regular/bold weights, a balanced type scale with explicit line heights, major/minor spacing units, and restrained pixel radii and elevation. Make native components and their hover/focus/disabled/error states inherit those defaults consistently, including dialog/tooltip/toast descendants. Demonstrate unstyled forms, settings, navigation and a complete page; include concise usage guidance. Review any afterhours changes before upstreaming.
+
+- [ ] Review Adham Dannaway’s supplied “16 little UI design tips that make a big impact” as a practical design checklist. Group related content with spacing; keep visual treatments and behavior consistent; make hierarchy and the primary action clear with a squint/blur check; remove unnecessary decoration and use color purposefully. Check text and essential control contrast against the applicable WCAG thresholds, and pair color indicators with another cue. Default ordinary UI to one readable sans-serif family with a high x-height, regular/bold weights and limited uppercase; left-align longer text and evaluate 1.5–2× body line height. Review dark-gray text and brand-specific exceptions in context rather than applying every guideline mechanically.
+
+- [ ] Explore expressive typography layouts and placement inspired by contemporary Gen Z design: oversized and overlapping type, rotated or curved text, custom alignment and composition, and animated arrangements. Build visual examples while keeping font-family choices deliberate, text readable, and reduced-motion/accessibility fallbacks available.
+
+- [ ] Expand animations with fade, blur, unblur, lift, fall, scale, dissolve, wipe, raise, curtain, sweep, shear, stretch, iris, spotlight, swing, typewriter, zoom, recede, unroll, blinds, slide, flip, emerge, tumble, drop and cascade. Support each applicable effect on a whole item, individual words (`word-*`) or individual characters (`char-*`), with stagger, interruption and reduced-motion behavior. Preserve grapheme clusters when animating characters.
+
+- [ ] Improve components with transparent backgrounds. Check text contrast, borders, hover/focus/disabled states, hit testing and compositing over different underlying surfaces.
+
+- [ ] Add shader backgrounds per component. Review component-local coordinates, clipping, configurable uniforms and animation time, batching, and a fallback for unsupported renderers.
+
+- [ ] Explore extracting charting into a separate library, vendored as a third-party plugin. Use it to demonstrate the public extension APIs, dependencies, registration and customization that an independent plugin author would use; keep the core small.
+
+- [ ] Support custom indicators for graphics and charts; review marker shapes, labels, thresholds and application-provided drawing against the existing chart API.
+
+- [ ] Add a rolling number animation for counters and changing values: a smooth, blurred transition when a number changes, rather than instantly swapping the text. Define digit transitions, carry/borrow, interruption by a new value, reduced-motion behavior, and a reusable demo before choosing an API.
+
+- [ ] Review [chrstph-gg/sf-windows](https://github.com/chrstph-gg/sf-windows) and record useful ideas or limitations relevant to WM and afterhours before adopting anything.
+
+- [ ] Study [Adham Dannaway’s design system examples](https://www.adhamdannaway.com/blog/design-systems/design-system-examples). Use the supplied article to review consistent typography and spacing, Carbon’s surface colors and larger UI patterns, Atlassian’s semantic color/elevation tokens, Spectrum’s input-dependent sizing and writing guidance, and GOV.UK’s tested accessible patterns. Document a small set of choices that fit WM and afterhours, with visual examples, before adding new APIs.
+
 - [ ] Make toast labels inherit configured UI font/style defaults or accept a presentation argument; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Define and implement native cross-axis Stretch sizing for unspecified dimensions; see docs/AFTERHOURS_GAPS.md.
@@ -83,7 +105,7 @@
 ### Modal heading font
 
 - [ ] Make modal headings inherit the configured font or accept an explicit title style.
-  The open advanced-modal examples retain the library's Gaegu heading. See
+  WM restyles native modal headings locally because the library bypasses the configured font. See
   [the gap](docs/AFTERHOURS_GAPS.md#modal-headings-bypass-the-configured-default-font).
 
 ### Scroll state after changing overflow
