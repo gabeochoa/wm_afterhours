@@ -61,6 +61,32 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
        "Remap your controller layout and keyboard bindings."},
   }};
 
+  const std::array<std::array<MenuOption, 6>, 3> tab_options{{
+      {{{"G", "Arcade", "ARCADE", "Fight a series of opponents and climb to the final match."},
+        {"G", "Versus", "VERSUS", "Challenge a friend in a local head-to-head match."},
+        {"G", "Training", "TRAINING", "Practice combos, movement, and matchups at your own pace."},
+        {"G", "Survival", "SURVIVAL", "Win consecutive matches with one shared health bar."},
+        {"G", "Missions", "MISSIONS", "Learn techniques through focused combat challenges."},
+        {"G", "Replay Theater", "REPLAYS", "Watch saved matches and study your best rounds."}}},
+      {{{"N", "Ranked Match", "RANKED", "Find an opponent at your level and compete for rank points."},
+        {"N", "Player Match", "CASUAL", "Play an unranked match with another online fighter."},
+        {"N", "Create Lobby", "HOST", "Create a room and invite friends to play together."},
+        {"N", "Find Lobby", "LOBBIES", "Browse public rooms and join an open match."},
+        {"N", "Rankings", "RANKINGS", "Compare your standing with fighters around the world."},
+        {"N", "Friends", "FRIENDS", "See your friends and manage match invitations."}}},
+      {{{"D", "Character Color", "COLORS", "Choose a color palette for your favorite fighter."},
+        {"D", "Player Card", "CARD", "Personalize the player card shown before every match."},
+        {"D", "Avatar", "AVATAR", "Choose the avatar that represents you in online lobbies."},
+        {"D", "Titles", "TITLES", "Equip a title earned through your achievements."},
+        {"D", "Gallery", "GALLERY", "Browse unlocked artwork and character illustrations."},
+        {"D", "Music Library", "MUSIC", "Choose the soundtrack for your menu and matches."}}},
+  }};
+
+  void choose_tab(size_t index) {
+    selected_tab = index;
+    active_option = 0;
+  }
+
   void load_texture_if_needed() {
     if (texture_loaded)
       return;
@@ -167,9 +193,9 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       active_option =
           (active_option + menu_options.size() - 1) % menu_options.size();
     if (context.pressed(InputAction::WidgetRight))
-      selected_tab = (selected_tab + 1) % tabs.size();
+      choose_tab((selected_tab + 1) % tabs.size());
     if (context.pressed(InputAction::WidgetLeft))
-      selected_tab = (selected_tab + tabs.size() - 1) % tabs.size();
+      choose_tab((selected_tab + tabs.size() - 1) % tabs.size());
 
     if (context.pressed(InputAction::MenuBack)) {
       active_option = 0;
@@ -280,8 +306,8 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
               .with_custom_text_color(black)
               .with_alignment(TextAlignment::Center)
               .with_debug_name(direction < 0 ? "fighter_previous_tab" : "fighter_next_tab"))) {
-        selected_tab = direction < 0 ? (selected_tab + tabs.size() - 1) % tabs.size()
-                                     : (selected_tab + 1) % tabs.size();
+        choose_tab(direction < 0 ? (selected_tab + tabs.size() - 1) % tabs.size()
+                                 : (selected_tab + 1) % tabs.size());
       }
     };
     bumper(21, "L", 78, -1);
@@ -313,12 +339,12 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
               })
               .with_debug_name("fighter_tab_" + std::to_string(i));
       if (button(context, mk(root.ent(), 30 + static_cast<int>(i)), cfg))
-        selected_tab = i;
+        choose_tab(i);
     }
 
     div(context, mk(root.ent(), 45),
         box(scale, 596, 214, 218, 34)
-            .with_label("Offline Mode")
+            .with_label(selected_tab == 1 ? "Online Mode" : "Offline Mode")
             .with_custom_background(afterhours::Color{238, 233, 203, 245})
             .with_border(afterhours::Color{175, 163, 132, 255}, 2.f)
             .with_corner_radius(7.f * scale)
@@ -328,10 +354,10 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_alignment(TextAlignment::Center)
             .with_debug_name("fighter_mode_tag"));
 
-    const auto &current = menu_options[active_option];
-    for (size_t i = 0; i < menu_options.size(); ++i) {
+    const auto &options = selected_tab == 3 ? menu_options : tab_options[selected_tab];
+    for (size_t i = 0; i < options.size(); ++i) {
       const bool active = i == active_option;
-      const auto &opt = menu_options[i];
+      const auto &opt = options[i];
       const float y = 256.f + static_cast<float>(i) * 58.f;
       const float w = 558.f;
       if (button(context, mk(root.ent(), 100 + static_cast<int>(i)),
@@ -397,6 +423,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
+    const auto &current = options[active_option];
     div(context, mk(root.ent(), 230),
         box(scale, 850, 204, 376, 286)
             .with_on_draw_bg([scale, fill = holo](RectangleType r) {
@@ -447,7 +474,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                             {r.x + 24 * scale, r.y + r.height}, bg);
         }).with_debug_name("fighter_description"));
     div(context, mk(root.ent(), 251), box(scale, 834, 501, 412, 30)
-        .with_label(std::string("OPTIONS / ") + current.short_label)
+        .with_label(std::array<const char *, 4>{"OFFLINE / ", "ONLINE / ", "CUSTOMIZE / ", "OPTIONS / "}[selected_tab] + std::string(current.short_label))
         .with_custom_background(lime).with_font("Garamond", pixels(22 * scale))
         .with_custom_text_color(black).with_alignment(TextAlignment::Left)
         .with_debug_name("fighter_description_title"));

@@ -56,8 +56,27 @@ wait 0.2
 expect_text "OPTIONS / SYSTEM"
 click_ui fighter_previous_tab
 wait 0.2
+expect_text "CUSTOMIZE / COLORS"
+expect_text "Character Color"
+expect_no_text "System Options"
+click_ui fighter_tab_0
+wait 0.2
+expect_text "OFFLINE / ARCADE"
+expect_text "Training"
+click_ui fighter_option_2
+wait 0.2
+expect_text "OFFLINE / TRAINING"
+click_ui fighter_tab_1
+wait 0.2
+expect_text "ONLINE / RANKED"
+expect_text "Online Mode"
+expect_no_text "Training"
+key RIGHT
+wait 0.2
+expect_text "CUSTOMIZE / COLORS"
 click_ui fighter_next_tab
 wait 0.2
+expect_text "OPTIONS / SYSTEM"
 resize 1920 1080
 wait 0.3
 assert_ui fighter_root x=0 y=0 w=1920 h=1080
