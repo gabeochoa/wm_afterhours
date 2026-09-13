@@ -797,7 +797,7 @@ The screen closely matches the playful settings mock. Proposals clarify saved st
 
 ## chart lab
 
-[Current baseline](../../screenshot-baselines/screens/chart_lab_720p.png) · [Visual review](../../design-audit.html#screen=chart_lab)
+[Reviewed image](../../docs/design-audit/originals/chart_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/chart_lab_720p.png) · [Visual review](../../design-audit.html#screen=chart_lab)
 
 Baseline SHA-256: `4523faaa397c00e5b02c254990c31030cbe5d0ee8a444261eff6650facb9d863`
 

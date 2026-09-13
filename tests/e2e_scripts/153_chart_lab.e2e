@@ -1,6 +1,6 @@
 goto_screen chart_lab
 wait 0.4
-expect_text "Charts / frame timings"
+expect_text "Frame timing chart"
 expect_text "Sample 1 of 120"
 click_ui chart_next
 wait 0.2
@@ -25,8 +25,7 @@ expect_text "Pause live"
 click_ui chart_live
 wait 0.2
 expect_text "Start live"
-click_ui chart_previous
-key TAB
+focus_element chart_next
 wait 0.2
 key ENTER
 wait 0.2
@@ -38,5 +37,5 @@ screenshot chart_lab_hover
 resize 1920 1080
 wait 0.3
 assert_ui chart_root w=1920 h=1080
-expect_text "Charts / frame timings"
+expect_text "Frame timing chart"
 resize 1280 720

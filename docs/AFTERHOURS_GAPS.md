@@ -236,6 +236,18 @@ now combines hover translation with press scale. Upstream needs explicit
 composition or precedence for multiple triggers targeting the same property;
 keep this policy visible rather than silently overwriting a track.
 
+### Chart styling and axis-domain controls
+
+`plugins/ui/line_chart.h` hardcodes a 2px series stroke, takes its domain
+only from data bounds, and always paints floating values when hovered. Its
+options expose only unit, selected index and label size. The wm chart now
+adds readable tick labels, shape markers, an external grouped value readout
+and an optional 8.33ms budget line. Native stroke width remains unchanged;
+when the budget is outside the data range, the screen says so instead of
+misplacing the line. Review configurable stroke width, hover-label visibility
+and explicit axis bounds upstream. Constant/single-value axes also repeat
+the same endpoint labels instead of showing a meaningful expanded domain.
+
 ### Auto-text fallback differs by rendering backend
 
 The raylib backend maps `UI_WHITE` to `RAYWHITE` (#F5F5F5), while the other

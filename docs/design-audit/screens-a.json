@@ -3895,7 +3895,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "4523faaa397c00e5b02c254990c31030cbe5d0ee8a444261eff6650facb9d863"
+    "sha256": "4523faaa397c00e5b02c254990c31030cbe5d0ee8a444261eff6650facb9d863",
+    "evidence": "docs/design-audit/originals/chart_lab_720p.png"
   },
   {
     "id": "checkboxes",

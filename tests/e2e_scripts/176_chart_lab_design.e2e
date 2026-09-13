@@ -1,0 +1,90 @@
+goto_screen chart_lab
+resize 1280 720
+wait 0.4
+expect_text "Frame timing chart"
+expect_text "Synthetic demo data"
+expect_text "Preset: Multiple series"
+expect_text "Live off"
+expect_text "Sample 1 of 120 / 0.000 s"
+expect_text "Update: 8.00 ms"
+expect_text "Render: 6.00 ms"
+expect_text "First sample"
+assert_ui chart_root w=1280 h=720
+assert_ui chart_plot x=68 y=244 w=1144 h=312
+assert_ui chart_previous w=42 h=36
+assert_ui chart_next w=42 h=36
+assert_within_parents
+screenshot chart_lab_design
+click_ui chart_previous
+wait 0.2
+expect_text "Sample 1 of 120"
+focus_element chart_next
+key ENTER
+wait 0.2
+expect_text "Sample 2 of 120 / 0.017 s"
+expect_text "Selected sample"
+mouse_move 677 400
+wait 0.2
+expect_text "Hover preview"
+screenshot chart_lab_design_hover
+mouse_move 30 30
+wait 0.2
+expect_text "Sample 2 of 120 / 0.017 s"
+click_ui chart_budget
+wait 0.2
+expect_text "120 fps budget: on"
+expect_text "Dashed line: 8.33 ms / 120 fps budget"
+screenshot chart_lab_design_budget
+click_ui chart_case_0
+wait 0.2
+expect_text "Preset: Empty"
+expect_text "No samples"
+expect_text "No selection"
+expect_text "Update: --"
+click_ui chart_next
+wait 0.2
+expect_text "No samples"
+click_ui chart_case_1
+wait 0.2
+expect_text "Preset: Single sample"
+expect_text "Sample 1 of 1"
+expect_text "8.33 ms budget is above this plot's range"
+click_ui chart_next
+wait 0.2
+expect_text "Sample 1 of 1"
+screenshot chart_lab_design_single
+click_ui chart_case_2
+wait 0.2
+expect_text "Preset: Constant"
+expect_text "Update: 8.00 ms"
+expect_text "Render: --"
+click_ui chart_case_3
+wait 0.2
+expect_text "Preset: Negative-value test"
+expect_text "Negative-value test data exercises the axis"
+expect_text "Update: 0.00 ms"
+screenshot chart_lab_design_negative
+click_ui chart_case_4
+click_ui chart_live
+wait 0.3
+expect_text "Live on"
+expect_text "Pause live"
+click_ui chart_live
+wait 0.2
+expect_text "Live off"
+expect_text "Start live"
+click_ui chart_case_4
+wait 0.2
+expect_text "Update: 8.00 ms"
+resize 1920 1080
+wait 0.3
+assert_ui chart_root w=1920 h=1080
+assert_ui chart_plot x=102 y=366 w=1716 h=468
+assert_within_parents
+screenshot chart_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui chart_root w=1024 h=768
+assert_within_parents
+screenshot chart_lab_design_narrow
+resize 1280 720

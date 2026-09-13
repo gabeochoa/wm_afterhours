@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-430 completed; 2,105 remaining.
+455 completed; 2,080 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1394,80 +1394,83 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/chart_lab_720p.png) · [Visual review](design-audit.html#screen=chart_lab)
 
-- [ ] `chart_lab-01` · P2 · defect. Axis labels: Increase tick-label size and reserve a proper axis gutter.
+- [x] `chart_lab-01` · P2 · defect. Axis labels: Increase tick-label size and reserve a proper axis gutter.
   Evidence: The Y endpoints 11 and 2 are tiny at the far left.
 
-- [ ] `chart_lab-02` · P2 · proposal. X units: Place seconds next to the X axis.
+- [x] `chart_lab-02` · P2 · proposal. X units: Place seconds next to the X axis.
   Evidence: Seconds appears only in the bottom instruction.
 
-- [ ] `chart_lab-03` · P2 · proposal. Y units: Label the Y axis ms.
+- [x] `chart_lab-03` · P2 · proposal. Y units: Label the Y axis ms.
   Evidence: Milliseconds appears only in the bottom instruction.
 
-- [ ] `chart_lab-04` · P2 · proposal. X ticks: Add evenly spaced intermediate time ticks.
+- [x] `chart_lab-04` · P2 · proposal. X ticks: Add evenly spaced intermediate time ticks.
   Evidence: Only 0 and 1.98 are shown across a wide plot.
 
-- [ ] `chart_lab-05` · P2 · proposal. Y ticks: Label each major Y tick.
+- [x] `chart_lab-05` · P2 · proposal. Y ticks: Label each major Y tick.
   Evidence: Several horizontal grid lines have no numeric values.
 
-- [ ] `chart_lab-06` · P2 · proposal. Legend: Increase their size and add short line swatches.
+- [x] `chart_lab-06` · P2 · proposal. Legend: Increase their size and add short line swatches.
   Evidence: Update and Render labels are extremely small.
 
-- [ ] `chart_lab-07` · P2 · proposal. Series distinction: Give one a dashed stroke or different marker shape.
+- [x] `chart_lab-07` · P2 · proposal. Series distinction: Give one a dashed stroke or different marker shape.
   Evidence: The two series differ only by color.
 
-- [ ] `chart_lab-08` · P2 · proposal. Line weight: Increase line width modestly.
+- [x] `chart_lab-08` · P2 · proposal. Line weight: Increase line width modestly.
   Evidence: Both series are very thin against the dark plot.
+  Disposition: Deferred upstream: line_chart hardcodes its 2px series stroke. Kept native rendering and recorded configurable stroke in the project backlog.
 
-- [ ] `chart_lab-09` · P2 · proposal. Grid color: Use a neutral subdued grid color.
+- [x] `chart_lab-09` · P2 · proposal. Grid color: Use a neutral subdued grid color.
   Evidence: Purple grid lines introduce a third color unrelated to the series.
 
-- [ ] `chart_lab-10` · P2 · proposal. Selected sample: Draw a vertical selection line through the selected time.
+- [x] `chart_lab-10` · P2 · proposal. Selected sample: Draw a vertical selection line through the selected time.
   Evidence: Dots at the left mark the first sample without a shared guide.
 
-- [ ] `chart_lab-11` · P2 · proposal. Selected time: Show the corresponding timestamp next to the count.
+- [x] `chart_lab-11` · P2 · proposal. Selected time: Show the corresponding timestamp next to the count.
   Evidence: Sample 1 of 120 omits the selected time.
 
-- [ ] `chart_lab-12` · P2 · proposal. Value labels: Use a compact selected-sample readout outside the plot.
+- [x] `chart_lab-12` · P2 · proposal. Value labels: Use a compact selected-sample readout outside the plot.
   Evidence: 8.00 ms and 6.00 ms float near the first points.
+  Disposition: Added grouped values outside the plot. Native floating hover values remain because line_chart has no suppression option; tracked upstream.
 
-- [ ] `chart_lab-13` · P2 · proposal. Sample counter: Group index, time and both series values.
+- [x] `chart_lab-13` · P2 · proposal. Sample counter: Group index, time and both series values.
   Evidence: The count is detached from both value labels.
 
-- [ ] `chart_lab-14` · P2 · proposal. Previous action: Show the boundary state when no prior sample exists.
+- [x] `chart_lab-14` · P2 · proposal. Previous action: Show the boundary state when no prior sample exists.
   Evidence: Previous sample looks active while sample 1 is selected.
 
-- [ ] `chart_lab-15` · P2 · proposal. Preset selection: Mark the active dataset preset.
+- [x] `chart_lab-15` · P2 · proposal. Preset selection: Mark the active dataset preset.
   Evidence: Empty, Single, Constant, Negative and Multiple all look identical.
 
-- [ ] `chart_lab-16` · P2 · proposal. Multiple wording: Rename it Multiple series.
+- [x] `chart_lab-16` · P2 · proposal. Multiple wording: Rename it Multiple series.
   Evidence: Multiple does not identify multiple series.
 
-- [ ] `chart_lab-17` · P2 · proposal. Single wording: Rename it Single sample.
+- [x] `chart_lab-17` · P2 · proposal. Single wording: Rename it Single sample.
   Evidence: Single does not distinguish one sample from one series.
 
-- [ ] `chart_lab-18` · P2 · proposal. Fixture controls: Separate fixtures from playback controls.
+- [x] `chart_lab-18` · P2 · proposal. Fixture controls: Separate fixtures from playback controls.
   Evidence: Dataset buttons and Start live share one appearance.
 
-- [ ] `chart_lab-19` · P2 · proposal. Live status: Add a Live off status chip.
+- [x] `chart_lab-19` · P2 · proposal. Live status: Add a Live off status chip.
   Evidence: Start live has no persistent paused/live indicator beside it.
 
-- [ ] `chart_lab-20` · P2 · proposal. Chart title: Use Frame timing chart with a demo subtitle.
+- [x] `chart_lab-20` · P2 · proposal. Chart title: Use Frame timing chart with a demo subtitle.
   Evidence: Charts / frame timings mixes gallery and metric names.
 
-- [ ] `chart_lab-21` · P2 · proposal. Plot padding: Add consistent internal plot padding.
+- [x] `chart_lab-21` · P2 · proposal. Plot padding: Add consistent internal plot padding.
   Evidence: The chart begins close to the legend and endpoint labels.
 
-- [ ] `chart_lab-22` · P2 · proposal. Negative fixture cue: Label it Negative-value test data.
+- [x] `chart_lab-22` · P2 · proposal. Negative fixture cue: Label it Negative-value test data.
   Evidence: Negative is available without any explanation of why timings can be negative.
 
-- [ ] `chart_lab-23` · P2 · proposal. Instruction density: Separate input help from chart metadata.
+- [x] `chart_lab-23` · P2 · proposal. Instruction density: Separate input help from chart metadata.
   Evidence: Hover, Tab, Enter and axis units are packed into one line.
 
-- [ ] `chart_lab-24` · P2 · proposal. Sample navigation: Use compact arrows with a clear shared Sample label.
+- [x] `chart_lab-24` · P2 · proposal. Sample navigation: Use compact arrows with a clear shared Sample label.
   Evidence: Long Previous sample and Next sample buttons dominate the footer.
 
-- [ ] `chart_lab-25` · P2 · proposal. Frame budget: Add an optional labeled frame-budget reference line.
+- [x] `chart_lab-25` · P2 · proposal. Frame budget: Add an optional labeled frame-budget reference line.
   Evidence: The chart has no contextual timing threshold.
+  Disposition: Added the optional 8.33ms reference within the current data domain and explicit above/below-range status otherwise. Configurable axis domains remain upstream.
 
 ### checkboxes
 
@@ -8102,6 +8105,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Add reviewed chart options for series stroke, hover-label visibility and explicit axis bounds; native chart styling limitations remain in `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review backend-dependent auto-text fallbacks and contrast-validator foreground precedence; see `docs/AFTERHOURS_GAPS.md`.
 
