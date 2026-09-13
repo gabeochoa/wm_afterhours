@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/modal.h>
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -199,12 +200,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     UIStylingDefaults::get().set_grid_snapping(false);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(30.f));
 
-    if (context.pressed(InputAction::MenuBack)) {
-      if (tutorial_open)
-        tutorial_open = false;
-      else
-        settings_open = false;
-    }
+    if (!tutorial_open && context.pressed(InputAction::MenuBack)) settings_open = false;
 
     div(context, mk(entity, 1), ComponentConfig{}
         .with_size({pixels(context.screen_width), pixels(context.screen_height)})
@@ -290,6 +286,7 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       text(id, label, 472, row_y, 550, 40, 30);
       if (button(context, mk(root.ent(), id + 1), box(scale, 1144, row_y + 3, 44, 44)
           .with_click_activation(ClickActivationMode::Release)
+          .with_roundness(1.f)
           .with_on_draw_fg([value, ink, canvas](RectangleType r) {
             draw_toggle(r, value, ink, canvas);
           }).with_debug_name(debug_name))) {
@@ -492,28 +489,23 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           .with_custom_text_color(ink).with_alignment(TextAlignment::Center)
           .with_text_inset(0, 0).with_debug_name("mm_feedback"));
 
-    if (tutorial_open) {
-      div(context, mk(root.ent(), 900),
-          box(scale, 0.f, 0.f, 1280.f, 720.f)
-              .with_custom_background(afterhours::Color{27, 39, 42, 105})
-              .with_render_layer(40)
-              .with_debug_name("mm_tutorial_scrim"));
-      div(context, mk(root.ent(), 901),
-          box(scale, 420.f, 145.f, 620.f, 390.f)
-              .with_custom_background(canvas)
-              .with_border(ink, 4.f * scale)
-              .with_render_layer(41)
-              .with_debug_name("mm_tutorial_panel"));
-      div(context, mk(root.ent(), 902),
-          box(scale, 462.f, 175.f, 536.f, 65.f)
+    auto tutorial_panel = afterhours::modal(context, mk(root.ent(), 901), tutorial_open,
+        afterhours::ModalConfig{}.with_backdrop_color({27, 39, 42, 105})
+            .with_render_layer(41).with_show_close_button(false)
+            .with_panel(box(scale, 420, 145, 620, 390)
+                .with_custom_background(canvas).with_border(ink, 4 * scale)
+                .with_debug_name("mm_tutorial_panel")));
+    if (tutorial_panel) {
+      div(context, mk(tutorial_panel.ent(), 902),
+          box(scale, 42.f, 30.f, 536.f, 65.f)
               .with_label("Build Your First Motorway")
               .with_font("AtkinsonMock", pixels(37.f * scale))
               .with_custom_text_color(ink)
               .with_alignment(TextAlignment::Center)
               .with_text_inset(0.f, 0.f)
               .with_render_layer(42));
-      div(context, mk(root.ent(), 903),
-          box(scale, 475.f, 252.f, 510.f, 155.f)
+      div(context, mk(tutorial_panel.ent(), 903),
+          box(scale, 55.f, 107.f, 510.f, 155.f)
               .with_label("1. Drag between matching homes and destinations.\n"
                           "2. Hold to remove a road.\n"
                           "3. Keep every building connected as your city grows.")
@@ -522,8 +514,8 @@ struct MiniMotorwaysSettingsScreen : ScreenSystem<UIContext<InputAction>> {
               .with_text_overflow(TextOverflow::Wrap)
               .with_text_inset(0.f, 0.f)
               .with_render_layer(42));
-      if (button(context, mk(root.ent(), 904),
-                 box(scale, 635.f, 442.f, 190.f, 58.f)
+      if (button(context, mk(tutorial_panel.ent(), 904),
+                 box(scale, 215.f, 297.f, 190.f, 58.f)
                      .with_label("Got it")
                      .with_font("AtkinsonMock", pixels(27.f * scale))
                      .with_custom_background(teal)

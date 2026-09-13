@@ -1,0 +1,22 @@
+goto_screen mini_motorways_settings
+wait 0.3
+click_ui mm_tutorial
+wait 0.3
+expect_focused mm_tutorial_start
+tab
+wait 0.1
+expect_focused mm_tutorial_start
+shift_tab
+wait 0.1
+expect_focused mm_tutorial_start
+screenshot motorway_tutorial_keyboard_focus
+key ESCAPE
+wait 0.3
+expect_no_text "Build Your First Motorway"
+expect_focused mm_tutorial
+click_ui mm_tutorial
+wait 0.3
+key ENTER
+wait 0.3
+expect_no_text "Build Your First Motorway"
+expect_focused mm_tutorial
