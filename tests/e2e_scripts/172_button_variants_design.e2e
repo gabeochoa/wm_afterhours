@@ -1,0 +1,124 @@
+goto_screen button_variants
+resize 1280 720
+wait 0.3
+expect_text "Button variants"
+expect_text "Ocean Navy"
+expect_text "Disabled primary"
+expect_text "214 x 40px"
+expect_text "100 x 32px / 16px text"
+expect_text "180 x 40px / 20px text"
+expect_text "214 x 48px / 24px text"
+expect_text "Large outline"
+expect_text "Press any enabled specimen. Its name and count appear here."
+assert_ui bv_0_0 x=216 y=155 w=214 h=40
+assert_ui bv_2_3 x=942 y=275 w=214 h=40
+assert_ui bv_size_0 x=273 y=356 w=100 h=32
+assert_ui bv_theme_0_0 x=232 y=489 w=280 h=30
+assert_ui bv_theme_2_2 x=904 y=565 w=280 h=30
+assert_within_parents
+screenshot button_variants_design
+click_ui bv_toggle_bounds
+wait 0.1
+expect_text "Hide bounds"
+screenshot button_variants_design_bounds
+click_ui bv_0_0
+wait 0.1
+expect_text "Filled / Primary: 1 press / 1 total"
+focus_element bv_0_1
+key ENTER
+wait 0.1
+expect_text "Filled / Accent: 1 press / 2 total"
+click_ui bv_0_2
+wait 0.1
+expect_text "Filled / Secondary: 1 press / 3 total"
+focus_element bv_1_0
+key ENTER
+wait 0.1
+expect_text "Outline / Primary: 1 press / 4 total"
+click_ui bv_1_1
+wait 0.1
+expect_text "Outline / Accent: 1 press / 5 total"
+focus_element bv_1_2
+key ENTER
+wait 0.1
+expect_text "Outline / Secondary: 1 press / 6 total"
+click_ui bv_2_0
+wait 0.1
+expect_text "Ghost / Primary: 1 press / 7 total"
+focus_element bv_2_1
+key ENTER
+wait 0.1
+expect_text "Ghost / Accent: 1 press / 8 total"
+click_ui bv_2_2
+wait 0.1
+expect_text "Ghost / Secondary: 1 press / 9 total"
+focus_element bv_size_0
+key ENTER
+wait 0.1
+expect_text "Size / Small / Primary: 1 press / 10 total"
+click_ui bv_size_1
+wait 0.1
+expect_text "Size / Medium / Primary: 1 press / 11 total"
+focus_element bv_size_2
+key ENTER
+wait 0.1
+expect_text "Size / Large / Primary: 1 press / 12 total"
+click_ui bv_size_3
+wait 0.1
+expect_text "Size / Large outline / Accent: 1 press / 13 total"
+focus_element bv_theme_0_0
+key ENTER
+wait 0.1
+expect_text "Neon Dark / Filled: 1 press / 14 total"
+click_ui bv_theme_0_1
+wait 0.1
+expect_text "Neon Dark / Outline: 1 press / 15 total"
+focus_element bv_theme_0_2
+key ENTER
+wait 0.1
+expect_text "Neon Dark / Ghost: 1 press / 16 total"
+click_ui bv_theme_1_0
+wait 0.1
+expect_text "Cozy Kraft / Filled: 1 press / 17 total"
+focus_element bv_theme_1_1
+key ENTER
+wait 0.1
+expect_text "Cozy Kraft / Outline: 1 press / 18 total"
+click_ui bv_theme_1_2
+wait 0.1
+expect_text "Cozy Kraft / Ghost: 1 press / 19 total"
+focus_element bv_theme_2_0
+key ENTER
+wait 0.1
+expect_text "Sage / Filled: 1 press / 20 total"
+click_ui bv_theme_2_1
+wait 0.1
+expect_text "Sage / Outline: 1 press / 21 total"
+focus_element bv_theme_2_2
+key ENTER
+wait 0.1
+expect_text "Sage / Ghost: 1 press / 22 total"
+click_ui bv_0_3
+wait 0.1
+expect_text "Sage / Ghost: 1 press / 22 total"
+click_ui bv_1_3
+wait 0.1
+expect_text "Sage / Ghost: 1 press / 22 total"
+click_ui bv_2_3
+wait 0.1
+expect_text "Sage / Ghost: 1 press / 22 total"
+resize 1920 1080
+wait 0.3
+expect_text "321 x 60px"
+expect_text "150 x 48px / 24px text"
+assert_ui bv_0_0 x=324 y=233 w=321 h=60
+assert_ui bv_theme_2_2 x=1356 y=848 w=420 h=45
+assert_within_parents
+screenshot button_variants_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bv_root w=1024 h=768
+assert_within_parents
+screenshot button_variants_design_narrow
+resize 1280 720
+click_ui bv_toggle_bounds

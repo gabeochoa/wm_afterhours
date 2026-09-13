@@ -3059,7 +3059,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "d157b9e5c026abd219326fd4e4584cbb183776982fcb9fce7c9c856b6aecb6ed"
+    "sha256": "d157b9e5c026abd219326fd4e4584cbb183776982fcb9fce7c9c856b6aecb6ed",
+    "evidence": "docs/design-audit/originals/button_variants_720p.png"
   },
   {
     "id": "buttons",

@@ -647,7 +647,7 @@ Active e2e baseline updated with the verified blend-mode design; original review
 
 ## button variants
 
-[Current baseline](../../screenshot-baselines/screens/button_variants_720p.png) · [Visual review](../../design-audit.html#screen=button_variants)
+[Reviewed image](../../docs/design-audit/originals/button_variants_720p.png) · [Current baseline](../../screenshot-baselines/screens/button_variants_720p.png) · [Visual review](../../design-audit.html#screen=button_variants)
 
 Baseline SHA-256: `d157b9e5c026abd219326fd4e4584cbb183776982fcb9fce7c9c856b6aecb6ed`
 

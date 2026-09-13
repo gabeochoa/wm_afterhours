@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-330 completed; 2,205 remaining.
+355 completed; 2,180 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1072,79 +1072,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/button_variants_720p.png) · [Visual review](design-audit.html#screen=button_variants)
 
-- [ ] `button_variants-01` · P2 · proposal. Title inset: Align it with the row-label inset.
+- [x] `button_variants-01` · P2 · proposal. Title inset: Align it with the row-label inset.
   Evidence: Button Variants touches the header's left edge.
 
-- [ ] `button_variants-02` · P2 · proposal. Matrix headings: Add column headings above the matrix.
+- [x] `button_variants-02` · P2 · proposal. Matrix headings: Add column headings above the matrix.
   Evidence: Normal, Accent, Secondary and Disabled repeat inside every row.
 
-- [ ] `button_variants-03` · P2 · proposal. Normal terminology: Rename the role Primary.
+- [x] `button_variants-03` · P2 · proposal. Normal terminology: Rename the role Primary.
   Evidence: Normal occupies the same category position as theme color roles.
 
-- [ ] `button_variants-04` · P2 · proposal. Disabled comparison: Label the last column Disabled primary.
+- [x] `button_variants-04` · P2 · proposal. Disabled comparison: Label the last column Disabled primary.
   Evidence: Disabled mixes availability with three color roles.
 
-- [ ] `button_variants-05` · P2 · proposal. Disabled fixture framing: Add neutral external specimen outlines.
+- [x] `button_variants-05` · P2 · proposal. Disabled fixture framing: Add neutral external specimen outlines.
   Evidence: Disabled boundaries blend into the panel.
 
-- [ ] `button_variants-06` · P2 · proposal. Ghost framing: Draw optional diagnostic bounds outside the test controls.
+- [x] `button_variants-06` · P2 · proposal. Ghost framing: Draw optional diagnostic bounds outside the test controls.
   Evidence: Ghost controls look like disconnected text labels.
 
-- [ ] `button_variants-07` · P2 · proposal. Outline comparison: Add enlarged corner samples for the outline row.
+- [x] `button_variants-07` · P2 · proposal. Outline comparison: Add enlarged corner samples for the outline row.
   Evidence: Thin colored outlines are hard to inspect.
+  Disposition: Kept real outline controls with optional exact bounds and requested stroke/radius captions. A fabricated magnified corner would conceal the known native uniform-border thickness limitation.
 
-- [ ] `button_variants-08` · P2 · proposal. Row separation: Use a consistent narrow row gutter.
+- [x] `button_variants-08` · P2 · proposal. Row separation: Use a consistent narrow row gutter.
   Evidence: Filled, Outline and Ghost panels touch with scalloped seams.
 
-- [ ] `button_variants-09` · P2 · proposal. Row-label alignment: Bring them closer in a fixed label column.
+- [x] `button_variants-09` · P2 · proposal. Row-label alignment: Bring them closer in a fixed label column.
   Evidence: Labels sit far left of their specimen grid.
 
-- [ ] `button_variants-10` · P2 · proposal. Specimen sizing: Add one shared width and height caption.
+- [x] `button_variants-10` · P2 · proposal. Specimen sizing: Add one shared width and height caption.
   Evidence: Main matrix controls have no dimensions shown.
 
-- [ ] `button_variants-11` · P2 · proposal. Small specimen: Add measured dimensions below it.
+- [x] `button_variants-11` · P2 · proposal. Small specimen: Add measured dimensions below it.
   Evidence: Small lacks its numeric size.
 
-- [ ] `button_variants-12` · P2 · proposal. Medium specimen: Add a compact token caption.
+- [x] `button_variants-12` · P2 · proposal. Medium specimen: Add a compact token caption.
   Evidence: Medium has no padding or text-size annotation.
 
-- [ ] `button_variants-13` · P2 · proposal. Large specimen: State both font and control dimensions.
+- [x] `button_variants-13` · P2 · proposal. Large specimen: State both font and control dimensions.
   Evidence: Large differs in typography as well as box size.
 
-- [ ] `button_variants-14` · P2 · proposal. Large outline label: Use Large outline.
+- [x] `button_variants-14` · P2 · proposal. Large outline label: Use Large outline.
   Evidence: Lg Outline abbreviates a word used fully elsewhere.
 
-- [ ] `button_variants-15` · P2 · proposal. Size row comparison: Keep the role constant or label the extra variable.
+- [x] `button_variants-15` · P2 · proposal. Size row comparison: Keep the role constant or label the extra variable.
   Evidence: Large outline also changes color role.
 
-- [ ] `button_variants-16` · P2 · proposal. Theme cards: Distribute the three cards evenly across the specimen area.
+- [x] `button_variants-16` · P2 · proposal. Theme cards: Distribute the three cards evenly across the specimen area.
   Evidence: Neon Dark, Cozy Kraft and Sage are left clustered.
 
-- [ ] `button_variants-17` · P2 · proposal. Theme titles: Give card headings a clearer weight.
+- [x] `button_variants-17` · P2 · proposal. Theme titles: Give card headings a clearer weight.
   Evidence: Theme names share the small size of specimen labels.
 
-- [ ] `button_variants-18` · P2 · proposal. Theme button density: Add a small consistent vertical gap.
+- [x] `button_variants-18` · P2 · proposal. Theme button density: Add a small consistent vertical gap.
   Evidence: Filled and Outline buttons touch inside the cards.
 
-- [ ] `button_variants-19` · P2 · proposal. Theme ghost position: Align it in a reserved equal-height row.
+- [x] `button_variants-19` · P2 · proposal. Theme ghost position: Align it in a reserved equal-height row.
   Evidence: Ghost text sits immediately below outline specimens.
 
-- [ ] `button_variants-20` · P2 · proposal. Theme dimensions: State that these are compact previews.
+- [x] `button_variants-20` · P2 · proposal. Theme dimensions: State that these are compact previews.
   Evidence: Theme samples are much smaller than the main matrix.
 
-- [ ] `button_variants-21` · P2 · proposal. Theme output: Add a concise color-pair caption per card.
+- [x] `button_variants-21` · P2 · proposal. Theme output: Add a concise color-pair caption per card.
   Evidence: No resolved foreground values accompany the theme examples.
 
-- [ ] `button_variants-22` · P2 · proposal. Main theme identity: Name the main theme beside the title.
+- [x] `button_variants-22` · P2 · proposal. Main theme identity: Name the main theme beside the title.
   Evidence: The navy matrix does not identify its active theme.
 
-- [ ] `button_variants-23` · P2 · proposal. Footer instruction: Add matching horizontal padding.
+- [x] `button_variants-23` · P2 · proposal. Footer instruction: Add matching horizontal padding.
   Evidence: Try any variant above is flush against the footer edge.
 
-- [ ] `button_variants-24` · P2 · proposal. Footer feedback: State that the footer reports the chosen variant.
+- [x] `button_variants-24` · P2 · proposal. Footer feedback: State that the footer reports the chosen variant.
   Evidence: The initial instruction does not explain the result of pressing a specimen.
 
-- [ ] `button_variants-25` · P2 · proposal. Legend: Add a compact key distinguishing those three dimensions.
+- [x] `button_variants-25` · P2 · proposal. Legend: Add a compact key distinguishing those three dimensions.
   Evidence: Variant appearance, color role and size are interleaved without a guide.
 
 ### buttons
