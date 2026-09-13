@@ -1,0 +1,45 @@
+goto_screen font_weight
+resize 1280 720
+wait 0.4
+expect_text "Font weight"
+expect_text "Requested weight"
+expect_text "Rendered weight"
+expect_text "300 Light"
+expect_text "400 / fallback"
+expect_text "600 Semibold"
+expect_text "0123456789   ! ? : ; , . ( ) [ ]"
+expect_text "500 / 600 close-up"
+expect_text "Medium 500 / 36px"
+expect_text "Semibold 600 / 36px"
+expect_text "Mixed weights on one baseline"
+expect_text "theme.h"
+expect_text "src/ui"
+expect_text "Bounds: off"
+assert_ui fw_root x=0 y=0 w=1280 h=720
+assert_ui fw_sample_300 x=452 y=181 w=440 h=28
+assert_ui fw_sample_700 x=452 y=437 w=440 h=28
+assert_ui fw_closeup x=926 y=138 w=286 h=356
+assert_within_parents
+screenshot font_weight_design
+click_ui fw_guides
+wait 0.2
+expect_text "Bounds: on"
+assert_within_parents
+screenshot font_weight_guides
+focus_element fw_guides
+key ENTER
+wait 0.2
+expect_text "Bounds: off"
+resize 1920 1080
+wait 0.3
+assert_ui fw_root x=0 y=0 w=1920 h=1080
+assert_ui fw_closeup x=1389 y=207 w=429 h=534
+assert_within_parents
+screenshot font_weight_design_1080
+resize 1024 768
+wait 0.3
+assert_ui fw_root x=0 y=0 w=1024 h=768
+assert_ui fw_closeup x=741 y=206 w=229 h=285
+assert_within_parents
+screenshot font_weight_design_narrow
+resize 1280 720

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-912 completed; 1,623 remaining.
+928 completed; 1,607 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3384,52 +3384,53 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/font_weight_720p.png) · [Visual review](design-audit.html#screen=font_weight)
 
-- [ ] `font_weight-01` · P2 · proposal. Title: Separate Font weight from Archivo Narrow and the comparison instruction.
+- [x] `font_weight-01` · P2 · proposal. Title: Separate Font weight from Archivo Narrow and the comparison instruction.
   Evidence: The family name and test instruction share one long small heading.
 
-- [ ] `font_weight-02` · P2 · proposal. Weight labels: Use a neutral label face so letterform style does not distract from weight comparison.
+- [x] `font_weight-02` · P2 · proposal. Weight labels: Use a neutral label face so letterform style does not distract from weight comparison.
   Evidence: Light 300 through Bold 700 use a handwritten face unlike the samples.
 
-- [ ] `font_weight-03` · P2 · proposal. Light fallback label: Separate Requested 300 from Rendered 400 in adjacent columns.
+- [x] `font_weight-03` · P2 · proposal. Light fallback label: Separate Requested 300 from Rendered 400 in adjacent columns.
   Evidence: The fallback explanation is packed into the long row label.
 
-- [ ] `font_weight-04` · P2 · proposal. Row headers: Add Requested weight and Rendered sample column headings.
+- [x] `font_weight-04` · P2 · proposal. Row headers: Add Requested weight and Rendered sample column headings.
   Evidence: No headers distinguish weight metadata from sample text.
 
-- [ ] `font_weight-05` · P2 · proposal. Sample size: Add a larger companion specimen while preserving the current-size test.
+- [x] `font_weight-05` · P2 · proposal. Sample size: Add a larger companion specimen while preserving the current-size test.
   Evidence: The pangram is small relative to the available canvas.
 
-- [ ] `font_weight-06` · P3 · proposal. Baseline reference: Add optional subtle guides beneath each specimen.
+- [x] `font_weight-06` · P3 · proposal. Baseline reference: Add optional subtle guides beneath each specimen.
   Evidence: The rows have no visible baseline guides.
+  Disposition: Guides mark specimen bounds. Public font data does not expose baseline metrics, so no arbitrary edge is presented as a typographic baseline.
 
-- [ ] `font_weight-07` · P3 · proposal. Weight progression: Add a compact 300-to-700 weight scale beside the labels.
+- [x] `font_weight-07` · P3 · proposal. Weight progression: Add a compact 300-to-700 weight scale beside the labels.
   Evidence: Rows have equal spacing but no connecting visual scale.
 
-- [ ] `font_weight-08` · P3 · proposal. Fallback comparison: Group those rows with a fallback bracket.
+- [x] `font_weight-08` · P3 · proposal. Fallback comparison: Group those rows with a fallback bracket.
   Evidence: Light and Regular look alike as expected, but the connection is textual only.
 
-- [ ] `font_weight-09` · P2 · proposal. SemiBold label: Use Semibold 600 consistently with the other row names.
+- [x] `font_weight-09` · P2 · proposal. SemiBold label: Use Semibold 600 consistently with the other row names.
   Evidence: SemiBold capitalization differs from familiar sentence-style naming.
 
-- [ ] `font_weight-10` · P3 · proposal. Pangram numbers: Add a separate 0123456789 line for number-weight comparison.
+- [x] `font_weight-10` · P3 · proposal. Pangram numbers: Add a separate 0123456789 line for number-weight comparison.
   Evidence: Only 0123 represent numeric glyphs.
 
-- [ ] `font_weight-11` · P3 · proposal. Pangram punctuation: Add a short punctuation specimen in the unused right area.
+- [x] `font_weight-11` · P3 · proposal. Pangram punctuation: Add a short punctuation specimen in the unused right area.
   Evidence: The sample includes little punctuation.
 
-- [ ] `font_weight-12` · P2 · proposal. Mixed-weight example: Label this section Mixed weights on one baseline.
+- [x] `font_weight-12` · P2 · proposal. Mixed-weight example: Label this section Mixed weights on one baseline.
   Evidence: theme.h appears below a large gap without a section heading.
 
-- [ ] `font_weight-13` · P2 · proposal. Mixed-weight alignment: Bring the runs closer while keeping the shared baseline test.
+- [x] `font_weight-13` · P2 · proposal. Mixed-weight alignment: Bring the runs closer while keeping the shared baseline test.
   Evidence: theme.h and src/ui are separated by a wide blank gap.
 
-- [ ] `font_weight-14` · P2 · proposal. Mixed-weight explanation: Move it into a legible caption below the specimen.
+- [x] `font_weight-14` · P2 · proposal. Mixed-weight explanation: Move it into a legible caption below the specimen.
   Evidence: Regular weight, same baseline is small and dim.
 
-- [ ] `font_weight-15` · P3 · proposal. Right empty region: Use a second specimen column for a close-up comparison of 500 and 600.
+- [x] `font_weight-15` · P3 · proposal. Right empty region: Use a second specimen column for a close-up comparison of 500 and 600.
   Evidence: The entire right half is unused.
 
-- [ ] `font_weight-16` · P3 · proposal. Specimen metadata: Add the font size and loaded-face names in a compact footer.
+- [x] `font_weight-16` · P3 · proposal. Specimen metadata: Add the font size and loaded-face names in a compact footer.
   Evidence: The screenshot names the family but not the rendered size.
 
 ### forms

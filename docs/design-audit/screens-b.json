@@ -1519,7 +1519,8 @@
         "change": "Add the font size and loaded-face names in a compact footer."
       }
     ],
-    "sha256": "4628ab71e38244ce6cffd58397280bf934c356638851311dfd407fdb471d189a"
+    "sha256": "4628ab71e38244ce6cffd58397280bf934c356638851311dfd407fdb471d189a",
+    "evidence": "docs/design-audit/originals/font_weight_720p.png"
   },
   {
     "id": "forms",

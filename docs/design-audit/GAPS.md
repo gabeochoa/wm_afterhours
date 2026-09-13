@@ -1747,7 +1747,7 @@ The sparse flight-menu composition matches the existing mock. The main opportuni
 
 ## font weight
 
-[Current baseline](../../screenshot-baselines/screens/font_weight_720p.png) · [Visual review](../../design-audit.html#screen=font_weight)
+[Reviewed image](../../docs/design-audit/originals/font_weight_720p.png) · [Current baseline](../../screenshot-baselines/screens/font_weight_720p.png) · [Visual review](../../design-audit.html#screen=font_weight)
 
 Baseline SHA-256: `4628ab71e38244ce6cffd58397280bf934c356638851311dfd407fdb471d189a`
 
