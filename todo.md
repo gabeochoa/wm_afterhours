@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-242 completed; 2,293 remaining.
+262 completed; 2,273 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -791,64 +791,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/animation_spring_720p.png) · [Visual review](design-audit.html#screen=animation_spring)
 
-- [ ] `animation_spring-01` · P2 · proposal. Title wording: Add Spring animation variants as a subtitle.
+- [x] `animation_spring-01` · P2 · proposal. Title wording: Add Spring animation variants as a subtitle.
   Evidence: Springy! does not identify the technical comparison.
 
-- [ ] `animation_spring-02` · P2 · proposal. Title space: Move it upward to reduce unused space.
+- [x] `animation_spring-02` · P2 · proposal. Title space: Move it upward to reduce unused space.
   Evidence: The title starts beneath a large empty top region.
 
-- [ ] `animation_spring-03` · P2 · proposal. Instruction strip: Align it to the specimen group's width.
+- [x] `animation_spring-03` · P2 · proposal. Instruction strip: Align it to the specimen group's width.
   Evidence: The instruction stretches across the screen while specimens are narrow.
 
-- [ ] `animation_spring-04` · P2 · proposal. Boing caption: Add its spring stiffness and damping below.
+- [x] `animation_spring-04` · P2 · proposal. Boing caption: Add its actual oscillation frequency and exponential decay below.
   Evidence: Boing! names a personality rather than a motion property.
 
-- [ ] `animation_spring-05` · P2 · proposal. Jelly caption: Add a short axis or scale descriptor.
+- [x] `animation_spring-05` · P2 · proposal. Jelly caption: Add a short axis or scale descriptor.
   Evidence: Jelly lacks a description of the deformation.
 
-- [ ] `animation_spring-06` · P2 · proposal. Balloon caption: Add a rise/scale descriptor matching the example.
+- [x] `animation_spring-06` · P2 · proposal. Balloon caption: Add a rise/scale descriptor matching the example.
   Evidence: Balloon does not state its motion direction.
 
-- [ ] `animation_spring-07` · P2 · proposal. Drop caption: Show a ghost start marker above the square.
+- [x] `animation_spring-07` · P2 · proposal. Drop caption: Show a ghost start marker above the square.
   Evidence: Drop has no marked starting height.
 
-- [ ] `animation_spring-08` · P2 · proposal. Rocker caption: Add a small pivot marker and angular range.
+- [x] `animation_spring-08` · P2 · proposal. Rocker caption: Show its horizontal origin and displacement range; this specimen does not rotate.
   Evidence: Rocker does not show its pivot.
 
-- [ ] `animation_spring-09` · P2 · proposal. Specimen bounds: Add fixed reference bounds outside the animated fill.
+- [x] `animation_spring-09` · P2 · proposal. Specimen bounds: Add fixed reference bounds outside the animated fill.
   Evidence: None of the five blocks has a neutral resting outline.
 
-- [ ] `animation_spring-10` · P2 · proposal. Color-only identification: Add numbered external labels matching the parameter captions.
+- [x] `animation_spring-10` · P2 · proposal. Color-only identification: Add numbered external labels matching the parameter captions.
   Evidence: The colored blocks contain no persistent identifiers.
 
-- [ ] `animation_spring-11` · P2 · proposal. Label size: Increase specimen-name size.
+- [x] `animation_spring-11` · P2 · proposal. Label size: Increase specimen-name size.
   Evidence: The five names are tiny compared with Springy!.
 
-- [ ] `animation_spring-12` · P2 · proposal. Label plates: Align each label and specimen within a shared card width.
+- [x] `animation_spring-12` · P2 · proposal. Label plates: Align each label and specimen within a shared card width.
   Evidence: 120-pixel plates extend wider than their 100-pixel blocks.
 
-- [ ] `animation_spring-13` · P2 · proposal. Spring parameters: Add a compact five-column parameter table.
+- [x] `animation_spring-13` · P2 · proposal. Spring parameters: Add a compact five-column parameter table.
   Evidence: No visible numeric parameters distinguish the samples.
 
-- [ ] `animation_spring-14` · P2 · proposal. Bounce counter: Rename it Activations if it counts clicks, or state the counting rule.
+- [x] `animation_spring-14` · P2 · proposal. Bounce counter: Rename it Activations if it counts clicks, or state the counting rule.
   Evidence: Bounces: 0 does not define what is counted.
 
-- [ ] `animation_spring-15` · P2 · proposal. Counter placement: Place it adjacent to the restart control.
+- [x] `animation_spring-15` · P2 · proposal. Counter placement: Place it adjacent to the restart control.
   Evidence: The counter sits alone well below the specimens.
 
-- [ ] `animation_spring-16` · P2 · proposal. Counter attribution: Add a last-sample label.
+- [x] `animation_spring-16` · P2 · proposal. Counter attribution: Add a last-sample label.
   Evidence: The count does not identify the last activated spring.
 
-- [ ] `animation_spring-17` · P2 · proposal. Restart wording: Use Restart all five.
+- [x] `animation_spring-17` · P2 · proposal. Restart wording: Use Restart all five.
   Evidence: Restart! omits whether it affects all samples.
 
-- [ ] `animation_spring-18` · P2 · proposal. Restart spacing: Bring them into one control row.
+- [x] `animation_spring-18` · P2 · proposal. Restart spacing: Bring them into one control row.
   Evidence: A large empty gap separates the counter and restart button.
 
-- [ ] `animation_spring-19` · P2 · proposal. Motion phase: Show each specimen's phase below its card.
+- [x] `animation_spring-19` · P2 · proposal. Motion phase: Show each specimen's phase below its card.
   Evidence: No label identifies idle, moving or settled samples.
 
-- [ ] `animation_spring-20` · P2 · proposal. Slow comparison: Add a slow-preview toggle for inspecting overshoot.
+- [x] `animation_spring-20` · P2 · proposal. Slow comparison: Add a slow-preview toggle for inspecting overshoot.
   Evidence: The page offers no visible slower playback aid.
 
 ### auto_text_color

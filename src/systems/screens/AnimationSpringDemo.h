@@ -5,6 +5,7 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <array>
 #include <cmath>
 
 using namespace afterhours::ui;
@@ -22,11 +23,14 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
 
   // Animation state
   float time_elapsed = 0.0f;
-  // Four seconds in the past, so every spring is already settled on the first
+  // Eight seconds in the past, so every spring is already settled on the first
   // frame. Headless renders about two frames, which is nowhere near enough for
   // a spring that starts at zero, and the boxes captured as invisible.
-  float trigger_time = -4.0f;
-  int bounce_count = 0;
+  float trigger_time = -8.0f;
+  int activation_count = 0;
+  bool slow_preview = false;
+  std::string last_sample = "None";
+  std::array<float, 5> box_click_times{-10.f, -10.f, -10.f, -10.f, -10.f};
 
   // Spring physics parameters
   struct SpringParams {
@@ -82,285 +86,145 @@ struct AnimationSpringDemo : ScreenSystem<UIContext<InputAction>> {
     return eased;
   }
 
-  // Pendulum rocker - starts swung to one side, oscillates back to center
+  // Horizontal rocker - starts to one side, oscillates back to center
   float pendulum_rocker(float t, float amplitude = 15.0f,
                         float frequency = 2.0f, float decay = 2.0f) {
     if (t < 0.0f)
       return 0.0f;
-    // Starts at amplitude (tilted), swings back through center, settles at 0
+    // Starts at amplitude, moves back through center, settles at 0
     return amplitude * std::cos(frequency * t * 6.28318f) *
            std::exp(-decay * t);
   }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float dt) override {
-    time_elapsed += dt;
-
-    float anim_t = time_elapsed - trigger_time;
+    time_elapsed += dt * (slow_preview ? .25f : 1.f);
 
     // Setup theme
-    auto theme = afterhours::ui::theme_presets::neon_dark();
-    context.theme = theme;
-
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-    float center_x = screen_w / 2.0f;
-
-    // Center content vertically: content spans ~375px (title to bounce counter)
-    float y_offset = std::max(0.0f, (screen_h - 375.0f) / 2.0f - 25.0f);
-
+    context.theme = afterhours::ui::theme_presets::neon_dark();
+    context.scaling_mode = ScalingMode::Proportional;
+    const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
+    const float top = (context.screen_height / s - 720.f) / 2.f;
+    const float left = (context.screen_width / s - 1144.f) / 2.f;
+    const auto muted = afterhours::Color{183, 194, 214, 255};
+    const auto border = afterhours::Color{75, 87, 108, 255};
+    const auto box = [s, top](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, (y + top) * s).with_corner_radius(0)
+          .with_background(Theme::Usage::None);
+    };
     // Background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_dark)
-            .with_debug_name("bg"));
-
-    // Title with bounce-in effect
-    float title_scale = elastic_pop(anim_t - 0.0f, 1.1f, 2.5f);
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_label("Springy!")
-            .with_size(ComponentSize{pixels(400), pixels(70)})
-            .with_absolute_position(center_x - 200.0f, 25.0f + y_offset)
-            .with_scale(title_scale)
-            .with_font(UIComponent::DEFAULT_FONT, h720(42.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    // Subtitle
-    float sub_scale = elastic_pop(anim_t - 0.15f, 1.05f, 3.0f);
-    div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_label("Click the boxes or restart to see them bounce")
-            .with_size(ComponentSize{pixels(screen_w), pixels(30)})
-            .with_absolute_position(0.0f, 100.0f + y_offset)
-            .with_scale(sub_scale)
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    // Layout
-    float box_size = 100.0f;
-    float box_y = 200.0f + y_offset;
-    float spacing = 150.0f;
-
-    // Store click times for each box
-    static float box_click_times[5] = {-10.0f, -10.0f, -10.0f, -10.0f, -10.0f};
-
-    // ========== BOX 1: Super Bouncy ==========
-    float delay1 = 0.2f;
-    SpringParams bouncy1{.frequency = 4.0f, .decay = 1.5f, .amplitude = 1.0f};
-    // Use click time if clicked since last restart, otherwise entrance
-    // animation
-    float t1 = (box_click_times[0] > trigger_time)
-                   ? (time_elapsed - box_click_times[0])
-                   : (anim_t - delay1);
-    float scale1 = 0.0f + 1.0f * spring_to_target(t1, bouncy1);
-    // Add a little squash/stretch
-    float squash1 = 1.0f + spring_oscillation(t1, {3.0f, 2.0f, 0.08f});
-
-    float x1 = center_x - spacing * 2.0f - box_size / 2.0f;
-
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_label("Boing!")
-            .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position(x1 - 10.0f, box_y - 35.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    if (button(context, mk(entity, 11),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(box_size),
-                                            pixels(box_size * squash1)})
-                   .with_absolute_position(x1, box_y)
-                   .with_scale(scale1)
-                   .with_custom_background(box_pink)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.3f)
-                   .with_debug_name("box1"))) {
-      box_click_times[0] = time_elapsed;
-      bounce_count++;
-    }
-
-    // ========== BOX 2: Jelly ==========
-    float delay2 = 0.35f;
-    SpringParams jelly{.frequency = 3.0f, .decay = 1.2f, .amplitude = 1.0f};
-    float t2 = (box_click_times[1] > trigger_time)
-                   ? (time_elapsed - box_click_times[1])
-                   : (anim_t - delay2);
-    float scale2 = spring_to_target(t2, jelly);
-    float wobble2 = spring_oscillation(t2, {2.5f, 1.5f, 4.0f});
-
-    float x2 = center_x - spacing - box_size / 2.0f;
-
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_label("Jelly")
-            .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position(x2 - 10.0f, box_y - 35.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    if (button(context, mk(entity, 21),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position(x2 + wobble2, box_y)
-                   .with_scale(scale2)
-                   .with_custom_background(box_cyan)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.5f) // Circle
-                   .with_debug_name("box2"))) {
-      box_click_times[1] = time_elapsed;
-      bounce_count++;
-    }
-
-    // ========== BOX 3: Balloon ==========
-    float delay3 = 0.5f;
-    float t3 = (box_click_times[2] > trigger_time)
-                   ? (time_elapsed - box_click_times[2])
-                   : (anim_t - delay3);
-    float scale3 = balloon_pop(t3, 0.6f);
-
-    float x3 = center_x - box_size / 2.0f;
-
-    div(context, mk(entity, 30),
-        ComponentConfig{}
-            .with_label("Balloon")
-            .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position(x3 - 10.0f, box_y - 35.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    if (button(context, mk(entity, 31),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position(x3, box_y)
-                   .with_scale(scale3)
-                   .with_custom_background(box_yellow)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.2f)
-                   .with_debug_name("box3"))) {
-      box_click_times[2] = time_elapsed;
-      bounce_count++;
-    }
-
-    // ========== BOX 4: Drop ==========
-    float delay4 = 0.65f;
-    float t4 = (box_click_times[3] > trigger_time)
-                   ? (time_elapsed - box_click_times[3])
-                   : (anim_t - delay4);
-    float drop_offset =
-        -50.0f + 50.0f * spring_to_target(t4, {3.0f, 1.5f, 1.0f});
-    drop_offset += spring_oscillation(t4, {4.0f, 2.5f, 8.0f});
-
-    float x4 = center_x + spacing - box_size / 2.0f;
-
-    div(context, mk(entity, 40),
-        ComponentConfig{}
-            .with_label("Drop")
-            .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position(x4 - 10.0f, box_y - 35.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    if (button(context, mk(entity, 41),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position(x4, box_y + drop_offset)
-                   .with_custom_background(box_lime)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.15f)
-                   .with_debug_name("box4"))) {
-      box_click_times[3] = time_elapsed;
-      bounce_count++;
-    }
-
-    // ========== BOX 5: Rocker ==========
-    float delay5 = 0.8f;
-    float t5 = (box_click_times[4] > trigger_time)
-                   ? (time_elapsed - box_click_times[4])
-                   : (anim_t - delay5);
-    // Pendulum swing - starts tilted right, swings back and forth, settles
-    float rock = pendulum_rocker(t5, 12.0f, 1.5f, 1.5f);
-
-    float x5 = center_x + spacing * 2.0f - box_size / 2.0f;
-
-    div(context, mk(entity, 50),
-        ComponentConfig{}
-            .with_label("Rocker")
-            .with_size(ComponentSize{pixels(box_size + 20), pixels(24)})
-            .with_absolute_position(x5 - 10.0f, box_y - 35.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
-
-    if (button(context, mk(entity, 51),
-               ComponentConfig{}
-                   .with_size(ComponentSize{pixels(box_size), pixels(box_size)})
-                   .with_absolute_position(x5 + rock, box_y)
-                   .with_custom_background(box_violet)
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.4f)
-                   .with_debug_name("box5"))) {
-      box_click_times[4] = time_elapsed;
-      bounce_count++;
-    }
-
-    // ========== Bounce Counter ==========
-    float counter_scale = 1.0f;
-    static int last_count = 0;
-    static float count_bounce_time = -10.0f;
-    if (bounce_count != last_count) {
-      count_bounce_time = time_elapsed;
-      last_count = bounce_count;
-    }
-    counter_scale = 1.0f + spring_oscillation(time_elapsed - count_bounce_time,
-                                              {5.0f, 3.0f, 0.15f});
-
-    div(context, mk(entity, 60),
-        ComponentConfig{}
-            .with_label(fmt::format("Bounces: {}", bounce_count))
-            .with_size(ComponentSize{pixels(200), pixels(50)})
-            .with_absolute_position(center_x - 100.0f, box_y + box_size + 50.0f)
-            .with_scale(counter_scale)
-            .with_font(UIComponent::DEFAULT_FONT, h720(24.0f))
-            .with_background(Theme::Usage::Surface)
-            .with_custom_text_color(text_light)
-            .with_alignment(TextAlignment::Center));
+    auto root = div(context, mk(entity), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)}).with_corner_radius(0)
+        .with_custom_background(bg_dark).with_debug_name("spring_canvas"));
+    int id = 0;
+    const auto label = [&](const std::string &text, float x, float y, float w, float h,
+                           float size, afterhours::Color color, const std::string &name = "") {
+      return div(context, mk(root.ent(), id++), box(left + x, y, w, h).with_label(text)
+          .with_font("AtkinsonMock", pixels(size * s))
+          .with_custom_text_color(color).with_alignment(TextAlignment::Left)
+          .with_ignore_pointer_events().with_debug_name(name));
+    };
+    div(context, mk(root.ent(), id++), box(left, 24, 1144, 116)
+        .with_custom_background({36, 43, 57, 255}).with_corner_radius(12 * s));
+    label("Springy!", 24, 34, 1096, 42, 34, text_light);
+    label("Spring animation variants", 24, 80, 1096, 26, 23, text_light);
+    label("Click a sample or focus it and press Enter to replay. Outlines mark the resting bounds.",
+          24, 108, 1096, 25, 19, muted);
 
     // ========== Restart Button ==========
-    float btn_scale = elastic_pop(anim_t - 1.0f, 1.08f, 3.0f);
-    if (button(context, mk(entity, 100),
-               ComponentConfig{}
-                   .with_label("Restart!")
-                   .with_size(ComponentSize{pixels(180), pixels(50)})
-                   .with_absolute_position(center_x - 90.0f, screen_h - 90.0f)
-                   .with_scale(btn_scale)
-                   .with_background(Theme::Usage::Primary)
-                   .with_custom_text_color(text_light)
-                   .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.5f)
-                   .with_debug_name("restart_btn"))) {
+    if (button(context, mk(root.ent(), id++), box(left, 582, 226, 46)
+        .with_label("Restart all five").with_font("AtkinsonMock", pixels(23 * s))
+        .with_custom_background({62, 104, 173, 255}).with_custom_text_color(text_light)
+        .with_corner_radius(8 * s).with_debug_name("restart_btn"))) {
       trigger_time = time_elapsed;
       // Reset click times
-      for (int i = 0; i < 5; i++) {
-        box_click_times[i] = -10.0f;
-      }
+      box_click_times.fill(-10.f);
+      last_sample = "All five";
     }
+    if (button(context, mk(root.ent(), id++), box(left + 242, 582, 226, 46)
+        .with_label(slow_preview ? "Slow preview: 0.25x" : "Slow preview: off")
+        .with_font("AtkinsonMock", pixels(21 * s))
+        .with_custom_background(slow_preview ? afterhours::Color{62, 104, 173, 255} : afterhours::Color{47, 60, 82, 255})
+        .with_custom_text_color(text_light).with_corner_radius(8 * s).with_debug_name("slow_preview")))
+      slow_preview = !slow_preview;
+
+    const std::array<const char *, 5> titles{"01  Boing!", "02  Jelly", "03  Balloon", "04  Drop", "05  Rocker"};
+    const std::array<const char *, 5> names{"Boing", "Jelly", "Balloon", "Drop", "Rocker"};
+    const std::array<const char *, 5> descriptors{"Scale + vertical stretch", "Scale + horizontal wobble", "Inflate to full size", "Vertical oscillation", "Horizontal oscillation"};
+    const std::array<afterhours::Color, 5> colors{box_pink, box_cyan, box_yellow, box_lime, box_violet};
+    const std::array<float, 5> delays{.2f, .35f, .5f, .65f, .8f};
+    const std::array<float, 5> roundness{.3f, .5f, .2f, .15f, .4f};
+    const std::array<const char *, 5> primary{"4 Hz / decay 1.5", "3 Hz / decay 1.2", "0.6 s / ease-out cubic", "3 Hz / decay 1.5", "1.5 Hz / decay 1.5"};
+    const std::array<const char *, 5> secondary{"Stretch: 3 Hz / 8%", "Wobble: 2.5 Hz / 4px", "Scale: 0% to 100%", "Start: 50px above", "x range: -12 to +12px"};
+    const std::array<const char *, 5> tertiary{"Stretch decay: 2", "Wobble decay: 1.5", "No overshoot", "Ripple: 4 Hz / 8px", "Rotation: 0 degrees"};
+    const std::array<float, 5> settled_after{3.08f, 3.84f, .6f, 3.08f, 3.08f};
+    for (size_t i = 0; i < names.size(); ++i) {
+      const float x = static_cast<float>(i) * 232.f;
+      const float t = box_click_times[i] > trigger_time
+                          ? time_elapsed - box_click_times[i]
+                          : time_elapsed - trigger_time - delays[i];
+      float scale = 1.f;
+      float height = 100.f;
+      float dx = 0.f;
+      float dy = 0.f;
+      if (i == 0) {
+        scale = spring_to_target(t, {4.f, 1.5f, 1.f});
+        height *= 1.f + spring_oscillation(t, {3.f, 2.f, .08f});
+      }
+      if (i == 1) {
+        scale = spring_to_target(t, {3.f, 1.2f, 1.f});
+        dx = spring_oscillation(t, {2.5f, 1.5f, 4.f});
+      }
+      if (i == 2) scale = balloon_pop(t, .6f);
+      if (i == 3) {
+        dy = -50.f + 50.f * spring_to_target(t, {3.f, 1.5f, 1.f});
+        dy += spring_oscillation(t, {4.f, 2.5f, 8.f});
+      }
+      if (i == 4) dx = pendulum_rocker(t, 12.f, 1.5f, 1.5f);
+      div(context, mk(root.ent(), id++), box(left + x, 160, 216, 396)
+          .with_custom_background({32, 38, 51, 255}).with_border(border, s).with_corner_radius(12 * s));
+      label(titles[i], x + 14, 171, 188, 34, 26, colors[i]);
+      label(descriptors[i], x + 14, 209, 188, 26, 16, muted);
+      if (i == 3) {
+        div(context, mk(root.ent(), id++), box(left + x + 58, 248, 100, 100)
+            .with_on_draw_fg([s](RectangleType r) {
+              afterhours::draw_rectangle_rounded_lines_ex(r, .15f, 12, s, {88, 117, 68, 255});
+            }).with_ignore_pointer_events());
+        label("start", x + 58, 246, 100, 23, 16, muted);
+      }
+      if (button(context, mk(root.ent(), id++), box(left + x + 58 + dx, 298 + dy, 100, height)
+          .with_scale(scale).with_custom_background(colors[i])
+          .with_rounded_corners(RoundedCorners())
+          .with_corner_radius(roundness[i] * std::min(100.f, height) * s / 2.f)
+          .with_debug_name("box" + std::to_string(i + 1)))) {
+        box_click_times[i] = time_elapsed;
+        ++activation_count;
+        last_sample = names[i];
+      }
+      div(context, mk(root.ent(), id++), box(left + x + 55, 295, 106, 106)
+          .with_on_draw_fg([s](RectangleType r) {
+            afterhours::draw_rectangle_rounded_lines_ex(r, .12f, 12, s, {151, 163, 184, 255});
+          }).with_ignore_pointer_events());
+      if (i == 4)
+        div(context, mk(root.ent(), id++), box(left + x + 94, 407, 28, 9)
+            .with_on_draw_fg([s](RectangleType r) {
+              afterhours::draw_rectangle({r.x, r.y + 4 * s, r.width, s}, {183, 194, 214, 255});
+              afterhours::draw_rectangle({r.x + r.width / 2, r.y, s, r.height}, {248, 250, 252, 255});
+            }).with_ignore_pointer_events());
+      label(primary[i], x + 14, 433, 188, 24, 19, text_light);
+      label(secondary[i], x + 14, 461, 188, 24, 18, muted);
+      label(tertiary[i], x + 14, 487, 188, 24, 17, muted);
+      const char *phase = t < 0.f ? "Waiting" : t < settled_after[i] ? "Moving" : "Settled";
+      label(phase, x + 14, 521, 188, 24, 20, text_light, "spring_phase_" + std::to_string(i + 1));
+    }
+    // ========== Bounce Counter ==========
+    label(fmt::format("Activations: {}", activation_count), 492, 586, 260, 33, 25, text_light, "activation_count");
+    label("Last sample: " + last_sample, 772, 586, 372, 33, 23, text_light, "last_sample");
+    label("Activations count individual sample clicks and Enter presses. Restart preserves the count.",
+          0, 640, 1144, 26, 20, muted);
+    label("Decay is per second. Settled means less than 1% of the initial motion envelope remains.",
+          0, 669, 1144, 25, 19, muted);
   }
 };
 

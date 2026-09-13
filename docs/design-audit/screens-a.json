@@ -2265,7 +2265,15 @@
         "priority": "P2"
       }
     ],
-    "sha256": "206808e13affc56cfa413a2ea5ca5162534a59b8845dadb15c0d761acd9b21d2"
+    "sha256": "206808e13affc56cfa413a2ea5ca5162534a59b8845dadb15c0d761acd9b21d2",
+    "evidence": "docs/design-audit/originals/animation_spring_720p.png",
+    "examples": [
+      {
+        "id": "slow_preview",
+        "label": "Current example: Quarter-speed replay",
+        "path": "docs/design-audit/examples/animation_spring_slow_preview_720p.png"
+      }
+    ]
   },
   {
     "id": "auto_text_color",

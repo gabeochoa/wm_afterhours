@@ -505,11 +505,13 @@ Current example states: [Current example: Paused cycle samples](../../docs/desig
 
 ## animation spring
 
-[Current baseline](../../screenshot-baselines/screens/animation_spring_720p.png) · [Visual review](../../design-audit.html#screen=animation_spring)
+[Reviewed image](../../docs/design-audit/originals/animation_spring_720p.png) · [Current baseline](../../screenshot-baselines/screens/animation_spring_720p.png) · [Visual review](../../design-audit.html#screen=animation_spring)
 
 Baseline SHA-256: `206808e13affc56cfa413a2ea5ca5162534a59b8845dadb15c0d761acd9b21d2`
 
 The five spring samples are settled. Twenty proposals describe clearer comparison and controls; differing corner shapes are preserved as specimen choices.
+
+Current example states: [Current example: Quarter-speed replay](../../docs/design-audit/examples/animation_spring_slow_preview_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

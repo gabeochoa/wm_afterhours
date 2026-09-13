@@ -1,0 +1,65 @@
+goto_screen animation_spring
+resize 1280 720
+wait 0.3
+expect_text "Spring animation variants"
+expect_text "4 Hz / decay 1.5"
+expect_text "Scale: 0% to 100%"
+expect_text "Horizontal oscillation"
+expect_text "Rotation: 0 degrees"
+expect_text "Activations: 0"
+expect_text "Last sample: None"
+expect_text "Settled"
+assert_ui spring_canvas w=1280 h=720
+assert_ui restart_btn x=68 y=582 w=226 h=46
+assert_ui slow_preview x=310 y=582 w=226 h=46
+assert_within_parents
+screenshot animation_spring_design
+click_ui box1
+wait 4
+expect_text "Activations: 1"
+expect_text "Last sample: Boing"
+focus_element box2
+key ENTER
+wait 5
+expect_text "Activations: 2"
+expect_text "Last sample: Jelly"
+click_ui box3
+wait 1
+expect_text "Activations: 3"
+expect_text "Last sample: Balloon"
+click_ui box4
+wait 4
+expect_text "Activations: 4"
+expect_text "Last sample: Drop"
+click_ui box5
+wait 4
+expect_text "Activations: 5"
+expect_text "Last sample: Rocker"
+focus_element slow_preview
+key ENTER
+wait 0.2
+expect_text "Slow preview: 0.25x"
+click_ui restart_btn
+wait 1.2
+expect_text "Last sample: All five"
+expect_text "Activations: 5"
+expect_text "Moving"
+screenshot animation_spring_slow_preview
+wait 20
+expect_no_text "Moving"
+expect_no_text "Waiting"
+click_ui slow_preview
+wait 0.2
+expect_text "Slow preview: off"
+resize 1920 1080
+wait 0.3
+assert_ui spring_canvas w=1920 h=1080
+assert_ui restart_btn x=102 y=873 w=339 h=69
+assert_within_parents
+screenshot animation_spring_design_1080
+resize 1024 768
+wait 0.3
+assert_ui spring_canvas w=1024 h=768
+assert_within_parents
+screenshot animation_spring_design_narrow
+resize 1280 720
