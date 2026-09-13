@@ -896,3 +896,17 @@ Regression tests for these live in the afterhours `tests/` suite: `autolayout_te
   `36c_parent_containment` script passes at 720p and 1080p. The small 720p
   viewport change was inspected and its screenshot baseline refreshed.
   No library change is needed.
+
+## Additional diagnostics found while checking startup warnings (September 12, 2026)
+
+The compiler override warnings, toast startup singleton warning, and implicit
+button-padding warning are resolved. The following separate diagnostics appeared
+while running `43_toasts.e2e` and `156_live_profiler.e2e`; both scripts passed.
+
+- `text_input_field` triggers the ignored leaf-label padding warning during the
+  profiler script. Check how the text-input renderer uses its internal padding
+  before changing the widget or exempting it from the diagnostic.
+- Toasts trigger `LabelNoFont` validation for their dynamically created labels.
+  Check font inheritance and ensure toast labels receive a valid font.
+- The custom toast reports a contrast ratio of 2.318397 against the required
+  4.5. Check the showcase color choice and the toast's foreground selection.
