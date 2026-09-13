@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-953 completed; 1,582 remaining.
+973 completed; 1,562 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3653,64 +3653,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/horizontal_drag_720p.png) · [Visual review](design-audit.html#screen=horizontal_drag)
 
-- [ ] `horizontal_drag-01` · P2 · proposal. Page title: Reduce the title size and give the lanes more visual emphasis.
+- [x] `horizontal_drag-01` · P2 · proposal. Page title: Reduce the title size and give the lanes more visual emphasis.
   Evidence: Horizontal Drag & Drop dominates the small amount of content.
 
-- [ ] `horizontal_drag-02` · P2 · proposal. Subtitle: Use a smaller supporting size with a clear gap below the heading.
+- [x] `horizontal_drag-02` · P2 · proposal. Subtitle: Use a smaller supporting size with a clear gap below the heading.
   Evidence: Drag tags between priority lanes is almost title-sized.
 
-- [ ] `horizontal_drag-03` · P2 · proposal. Lane counts: Use compact count badges aligned consistently after each priority name.
+- [x] `horizontal_drag-03` · P2 · proposal. Lane counts: Use compact count badges aligned consistently after each priority name.
   Evidence: Counts are embedded in handwritten heading text.
 
-- [ ] `horizontal_drag-04` · P2 · proposal. Lane labels: Add a severity icon or short High/Medium/Low marker beside each heading.
+- [x] `horizontal_drag-04` · P2 · proposal. Lane labels: Add a severity icon or short High/Medium/Low marker beside each heading.
   Evidence: Red, yellow, and green headings communicate priority mainly through color and words.
 
-- [ ] `horizontal_drag-05` · P2 · proposal. Tag affordance: Add a small drag grip to each tag.
+- [x] `horizontal_drag-05` · P2 · proposal. Tag affordance: Add a small drag grip to each tag.
   Evidence: The colored tags look like ordinary buttons in the resting image.
 
-- [ ] `horizontal_drag-06` · P2 · proposal. Tag color meaning: Use a shared neutral tag fill or explain the tag-color categories.
+- [x] `horizontal_drag-06` · P2 · proposal. Tag color meaning: Use a shared neutral tag fill or explain the tag-color categories.
   Evidence: Seven unrelated tag fills have no visible legend.
 
-- [ ] `horizontal_drag-07` · P2 · proposal. Drop-space cue: Add a faint Drop here cue within each lane's empty region.
+- [x] `horizontal_drag-07` · P2 · proposal. Drop-space cue: Add a faint Drop here cue within each lane's empty region.
   Evidence: Large blank areas to the right of the tags have no instruction.
 
-- [ ] `horizontal_drag-08` · P2 · proposal. Lane dimensions: Reduce lane width or use the space for a visible drop target boundary.
+- [x] `horizontal_drag-08` · P2 · proposal. Lane dimensions: Reduce lane width or use the space for a visible drop target boundary.
   Evidence: All lanes span nearly the entire viewport while holding two or three tags.
 
-- [ ] `horizontal_drag-09` · P2 · proposal. Empty lower region: Fit the panel to the three lanes and center it vertically.
+- [x] `horizontal_drag-09` · P2 · proposal. Empty lower region: Fit the panel to the three lanes and center it vertically.
   Evidence: The bottom quarter of the panel contains no content.
 
-- [ ] `horizontal_drag-10` · P3 · proposal. Row borders: Increase lane boundary contrast slightly.
+- [x] `horizontal_drag-10` · P3 · proposal. Row borders: Increase lane boundary contrast slightly.
   Evidence: Thin outlines are nearly invisible against the dark lane fill.
 
-- [ ] `horizontal_drag-11` · P2 · proposal. High-priority tags: Use one high-priority tag treatment or label their separate categories.
+- [x] `horizontal_drag-11` · P2 · proposal. High-priority tags: Use one high-priority tag treatment or label their separate categories.
   Evidence: Security patch and Data loss fix use two different red tones without distinct meanings.
 
-- [ ] `horizontal_drag-12` · P3 · proposal. Refactor auth label: Use Refactor authentication if space permits.
+- [x] `horizontal_drag-12` · P3 · proposal. Refactor auth label: Use Refactor authentication if space permits.
   Evidence: Auth is abbreviated in an otherwise plain-language board.
 
-- [ ] `horizontal_drag-13` · P3 · proposal. Update deps label: Use Update dependencies for a self-contained sample.
+- [x] `horizontal_drag-13` · P3 · proposal. Update deps label: Use Update dependencies for a self-contained sample.
   Evidence: Deps is a developer abbreviation.
 
-- [ ] `horizontal_drag-14` · P3 · proposal. Rename var label: Use Rename variable.
+- [x] `horizontal_drag-14` · P3 · proposal. Rename var label: Use Rename variable.
   Evidence: Var is abbreviated despite the wide empty lane.
 
-- [ ] `horizontal_drag-15` · P3 · proposal. Readme typo label: Use README typo to identify the document clearly.
+- [x] `horizontal_drag-15` · P3 · proposal. Readme typo label: Use README typo to identify the document clearly.
   Evidence: Readme differs from the conventional filename styling.
 
-- [ ] `horizontal_drag-16` · P2 · proposal. Tag spacing: Use one fixed inter-tag gap across the three lanes.
+- [x] `horizontal_drag-16` · P2 · proposal. Tag spacing: Use one fixed inter-tag gap across the three lanes.
   Evidence: The gap between tags varies because each group uses different widths.
 
-- [ ] `horizontal_drag-17` · P3 · proposal. Lane heading gap: Add a consistent gap between lane title and tags.
+- [x] `horizontal_drag-17` · P3 · proposal. Lane heading gap: Add a consistent gap between lane title and tags.
   Evidence: Headings sit very close to their first tag row.
 
-- [ ] `horizontal_drag-18` · P2 · proposal. Demo result: Reserve a small Last moved status line beneath the lanes.
+- [x] `horizontal_drag-18` · P2 · proposal. Demo result: Reserve a small Last moved status line beneath the lanes.
   Evidence: Only lane counts report the result of moving a tag.
 
-- [ ] `horizontal_drag-19` · P3 · proposal. Starting arrangement: Add a compact Reset example action near the subtitle.
+- [x] `horizontal_drag-19` · P3 · proposal. Starting arrangement: Add a compact Reset example action near the subtitle.
   Evidence: The screen shows no reference for restoring the initial priority distribution.
 
-- [ ] `horizontal_drag-20` · P2 · proposal. Instruction specificity: State whether the demonstration also supports horizontal reordering.
+- [x] `horizontal_drag-20` · P2 · proposal. Instruction specificity: State whether the demonstration also supports horizontal reordering.
   Evidence: The subtitle says move between lanes but does not mention ordering within a lane.
 
 ### hover_lab

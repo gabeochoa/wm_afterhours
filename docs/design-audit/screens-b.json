@@ -2256,7 +2256,8 @@
         "change": "State whether the demonstration also supports horizontal reordering."
       }
     ],
-    "sha256": "e2d3f3912f5c3cf5bad163eddd4409883d83e9cf12794fe1e4a528abbff2a51d"
+    "sha256": "e2d3f3912f5c3cf5bad163eddd4409883d83e9cf12794fe1e4a528abbff2a51d",
+    "evidence": "docs/design-audit/originals/horizontal_drag_720p.png"
   },
   {
     "id": "hover_lab",

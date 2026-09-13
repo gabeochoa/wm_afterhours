@@ -1,0 +1,58 @@
+goto_screen horizontal_drag
+resize 1280 720
+wait 0.4
+expect_text "Horizontal Drag & Drop"
+expect_text "Drag between priority lanes or reorder within a lane."
+expect_text "Neutral tags / lane markers show priority"
+expect_text "Refactor authentication"
+expect_text "Update dependencies"
+expect_text "README typo"
+expect_text "Rename variable"
+assert_ui hdrag_root x=60 y=36 w=1160 h=648
+assert_ui hdrag_lane_0 x=60 y=154 w=1160 h=136
+assert_ui hdrag_group_0 x=76 y=202 w=1128 h=76
+screenshot horizontal_drag_design
+mouse_down 150 219
+wait 0.2
+mouse_move 500 219
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Last moved: Security patch / High priority / position 2"
+click_ui hdrag_reset
+wait 0.2
+mouse_down 150 219
+wait 0.2
+mouse_move 90 367
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Last moved: Security patch / Medium priority / position 1"
+mouse_down 140 219
+wait 0.2
+mouse_move 90 515
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Empty lane / drop a tag here"
+expect_text "Last moved: Data loss fix / Low priority / position 1"
+mouse_down 140 515
+wait 0.2
+mouse_move 140 219
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Last moved: Data loss fix / High priority / position 1"
+focus_ui hdrag_reset
+key ENTER
+wait 0.2
+expect_text "Reset / 7 tags restored to their starting lanes"
+resize 1920 1080
+wait 0.3
+assert_ui hdrag_root x=90 y=54 w=1740 h=972
+screenshot horizontal_drag_design_1080
+resize 1024 768
+wait 0.3
+assert_ui hdrag_root x=48 y=125 w=928 h=518
+screenshot horizontal_drag_design_narrow
+resize 1280 720

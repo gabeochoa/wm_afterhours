@@ -1887,7 +1887,7 @@ The full board is readable and the illustrated cast supports the game. Refine qu
 
 ## horizontal drag
 
-[Current baseline](../../screenshot-baselines/screens/horizontal_drag_720p.png) · [Visual review](../../design-audit.html#screen=horizontal_drag)
+[Reviewed image](../../docs/design-audit/originals/horizontal_drag_720p.png) · [Current baseline](../../screenshot-baselines/screens/horizontal_drag_720p.png) · [Visual review](../../design-audit.html#screen=horizontal_drag)
 
 Baseline SHA-256: `e2d3f3912f5c3cf5bad163eddd4409883d83e9cf12794fe1e4a528abbff2a51d`
 
