@@ -9,8 +9,7 @@ namespace dialog_presentation {
 using namespace afterhours::ui;
 
 inline void style_title(afterhours::Entity &panel) {
-  const auto body_font = imm::UIStylingDefaults::get().default_font_name;
-  const auto font = body_font == "AtkinsonMock" ? std::string("AtkinsonMockBold") : body_font;
+  const auto font = imm::UIStylingDefaults::get().default_font_name;
   for (const auto id : panel.get<UIComponent>().children) {
     auto &header = UICollectionHolder::getEntityForIDEnforce(id);
     if (!header.has<UIComponentDebug>() || header.get<UIComponentDebug>().name() != "modal_header") continue;
