@@ -192,6 +192,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   int race_in_cup = 0;
   int nav_row = 0;
   bool paused = false;
+  bool title_help = false;
 
   std::array<Racer, kRacers> racers{};
   std::array<int, kRacers> points{};
@@ -487,7 +488,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   float scale = 1.f;
 
   void apply_theme(UIContext<InputAction> &context) {
-    scale = context.screen_height / 720.f;
+    scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     if (!art_loaded) {
       std::array<std::string, 23> names{"menu", "scenery", "header", "footer", "platform"};
       for (int i = 0; i < kRacers; ++i) {
@@ -515,13 +516,13 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0;
     context.set_theme(theme);
     context.scaling_mode = ScalingMode::Proportional;
-    UIStylingDefaults::get().set_default_font("FredokaMockBold", h720(25));
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", pixels(25 * scale));
   }
 
   ComponentConfig box(float x, float y, float w, float h) const {
     return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
         .with_absolute_position(x * scale, y * scale)
-        .with_background(Theme::Usage::None).with_corner_radius(0);
+        .with_background(Theme::Usage::None).with_corner_radius(0).with_skip_grid_snap(true);
   }
   static void paint(raylib::Texture2D texture, RectangleType r, float rotation = 0) {
     const raylib::Vector2 origin{r.width / 2, r.height / 2};
@@ -536,17 +537,22 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   }
   ElementResult page(UIContext<InputAction> &c, afterhours::Entity &e,
                      const std::string &name, int background = 0) {
-    auto root = div(c, mk(e), box(0, 0, 1280, 720).with_debug_name(name));
-    image(c, root.ent(), 900, background, 0, 0, 1280, 720);
+    div(c, mk(e, 9900), ComponentConfig{}
+        .with_size({pixels(c.screen_width), pixels(c.screen_height)})
+        .with_custom_background(ink).with_corner_radius(0).with_debug_name("mk_canvas"));
+    auto root = div(c, mk(e), box(0, 0, 1280, 720)
+        .with_absolute_position((c.screen_width - 1280 * scale) / 2, (c.screen_height - 720 * scale) / 2)
+        .with_clip_children(true).with_debug_name(name));
+    if (background >= 0) image(c, root.ent(), 900, background, 0, 0, 1280, 720);
     return root;
   }
   ElementResult label(UIContext<InputAction> &c, afterhours::Entity &p, int id,
                      const std::string &text, float x, float y, float w, float h,
                      float size, afterhours::Color color,
                      const std::string &name = "", TextAlignment align = TextAlignment::Left,
-                     const std::string &font = "ArchivoMock") {
+                     const std::string &font = "FredokaMockBold") {
     return div(c, mk(p, id), box(x, y, w, h).with_label(text)
-        .with_font(font, h720(size * 1.25f))
+        .with_font(font, pixels(size * 1.25f * scale))
         .with_custom_text_color(color).with_alignment(align)
         .with_ignore_pointer_events().with_debug_name(name));
   }
@@ -555,7 +561,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
                        const std::string &name, afterhours::Color fill,
                        afterhours::Color color, float size = 22, bool disabled = false) {
     return button(c, mk(p, id), box(x, y, w, h).with_label(text)
-        .with_font("ArchivoMock", h720(size * 1.25f)).with_custom_background(fill)
+        .with_font("FredokaMockBold", pixels(size * 1.25f * scale)).with_custom_background(fill)
         .with_custom_text_color(color).with_alignment(TextAlignment::Center)
         .with_border(white, 2 * scale).with_corner_radius(0)
         .with_disabled(disabled).with_click_activation(ClickActivationMode::Release)
@@ -564,7 +570,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   void header(UIContext<InputAction> &c, afterhours::Entity &p,
               const std::string &title, const std::string &right) {
     image(c, p, 901, 2, 0, 0, 1280, 88);
-    label(c, p, 902, title, 40, 13, 760, 61, 37, ink, "mk_title", TextAlignment::Left, "ArchivoMockBold");
+    label(c, p, 902, title, 40, 13, 760, 61, 37, ink, "mk_title", TextAlignment::Left, "FredokaMockBold");
     label(c, p, 903, right, 827, 27, 350, 38, 18, ink, "mk_header_right", TextAlignment::Right);
     label(c, p, 904, "P1", 1195, 26, 45, 39, 21, ink, "", TextAlignment::Center);
   }
@@ -608,6 +614,14 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
 
     switch (phase) {
     case Phase::Title:
+      if (title_help) {
+        if (confirm || back) title_help = false;
+        break;
+      }
+      if (back) {
+        title_help = true;
+        break;
+      }
       if (left)
         engine = (engine + 2) % 3;
       if (right)
@@ -750,25 +764,213 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     return order;
   }
 
+  static void title_scenery(RectangleType r) {
+    const float sx = r.width / 1280.f, sy = r.height / 720.f;
+    const auto point = [&](float x, float y) { return raylib::Vector2{r.x + x * sx, r.y + y * sy}; };
+    const auto polygon = [&](std::initializer_list<raylib::Vector2> vertices, afterhours::Color color) {
+      bool first = true;
+      raylib::Vector2 previous{};
+      for (const auto &p : vertices) {
+        const auto current = point(p.x, p.y);
+        if (!first) {
+          const auto bottom_left = raylib::Vector2{previous.x, r.y + r.height};
+          const auto bottom_right = raylib::Vector2{current.x, r.y + r.height};
+          raylib::DrawTriangle(previous, bottom_right, current, color);
+          raylib::DrawTriangle(previous, bottom_left, bottom_right, color);
+        }
+        previous = current;
+        first = false;
+      }
+    };
+    raylib::DrawRectangleGradientV(static_cast<int>(r.x), static_cast<int>(r.y),
+        static_cast<int>(r.width), static_cast<int>(r.height), {83, 178, 231, 255}, {172, 226, 228, 255});
+    polygon({{0, 290}, {132, 193}, {262, 257}, {455, 145}, {663, 292},
+             {857, 179}, {1052, 246}, {1177, 164}, {1280, 214}, {1280, 480}, {0, 480}}, {104, 164, 165, 255});
+    polygon({{0, 359}, {182, 278}, {324, 319}, {509, 248}, {692, 350},
+             {890, 276}, {1078, 329}, {1224, 264}, {1280, 291}, {1280, 522}, {0, 522}}, {97, 159, 99, 255});
+    raylib::DrawRectangleGradientV(static_cast<int>(r.x), static_cast<int>(r.y + 425 * sy),
+        static_cast<int>(r.width), static_cast<int>(r.height - 425 * sy), {115, 177, 96, 255}, {64, 128, 77, 255});
+    const auto road = [&](float width, afterhours::Color color) {
+      auto previous = point(510, 758);
+      for (int i = 1; i <= 90; ++i) {
+        const float t = i / 90.f, a = 1.f - t;
+        const auto p = point(a * a * 510 + 2 * a * t * 767 + t * t * 1062,
+                             a * a * 758 + 2 * a * t * 340 + t * t * 496);
+        raylib::DrawLineEx(previous, p, width * sx, color);
+        previous = p;
+      }
+      for (int i = 1; i <= 60; ++i) {
+        const float t = i / 60.f, a = 1.f - t;
+        const auto p = point(a * a * 1062 + 2 * a * t * 1242 + t * t * 1390,
+                             a * a * 496 + 2 * a * t * 579 + t * t * 783);
+        raylib::DrawLineEx(previous, p, width * sx, color);
+        previous = p;
+      }
+    };
+    road(150, {174, 183, 149, 255});
+    road(128, {90, 111, 116, 255});
+    road(4, {188, 196, 175, 180});
+  }
+
+  static void title_kart(RectangleType r, afterhours::Color body) {
+    const float angle = -0.105f;
+    const float cosine = std::cos(angle), sine = std::sin(angle);
+    static const auto unit_circle = [] {
+      std::array<raylib::Vector2, 49> points{};
+      for (size_t i = 0; i < points.size(); ++i) {
+        const float t = static_cast<float>(i) * 6.2831853f / 48.f;
+        points[i] = {std::cos(t), std::sin(t)};
+      }
+      return points;
+    }();
+    const float unit = r.width / 430.f;
+    const auto point = [&](float x, float y) {
+      const float dx = (x - 215.f) * unit, dy = (y - 150.f) * r.height / 300.f;
+      return raylib::Vector2{r.x + r.width / 2 + dx * cosine - dy * sine,
+                            r.y + r.height / 2 + dx * sine + dy * cosine};
+    };
+    const auto triangle = [](raylib::Vector2 a, raylib::Vector2 b, raylib::Vector2 c, afterhours::Color color) {
+      if ((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) > 0)
+        std::swap(b, c);
+      raylib::DrawTriangle(a, b, c, color);
+    };
+    const auto polygon = [&](std::initializer_list<raylib::Vector2> vertices, afterhours::Color color) {
+      std::array<raylib::Vector2, 8> points{};
+      size_t count = 0;
+      for (const auto &p : vertices) points[count++] = point(p.x, p.y);
+      for (size_t i = 1; i + 1 < count; ++i) triangle(points[0], points[i], points[i + 1], color);
+    };
+    const auto ellipse = [&](float x, float y, float rx, float ry, afterhours::Color color) {
+      auto previous = point(x + rx, y);
+      const auto center = point(x, y);
+      for (size_t i = 1; i < unit_circle.size(); ++i) {
+        const auto next = point(x + rx * unit_circle[i].x, y + ry * unit_circle[i].y);
+        triangle(center, previous, next, color);
+        previous = next;
+      }
+    };
+    const auto line = [&](std::initializer_list<raylib::Vector2> vertices, float width, afterhours::Color color) {
+      bool first = true;
+      raylib::Vector2 previous{};
+      for (const auto &p : vertices) {
+        const auto next = point(p.x, p.y);
+        if (!first) raylib::DrawLineEx(previous, next, width * unit, color);
+        ellipse(p.x, p.y, width / 2, width / 2, color);
+        previous = next;
+        first = false;
+      }
+    };
+    const afterhours::Color ink{29, 40, 57, 255}, skin{247, 201, 159, 255};
+    const auto shade = afterhours::Color{static_cast<unsigned char>(body.r * .67f),
+        static_cast<unsigned char>(body.g * .67f), static_cast<unsigned char>(body.b * .67f), 255};
+    ellipse(216, 278, 158, 21, {18, 49, 54, 15});
+    ellipse(216, 276, 149, 17, {18, 49, 54, 20});
+    ellipse(216, 274, 139, 13, {18, 49, 54, 34});
+    ellipse(302, 226, 37, 48, ink);
+    ellipse(302, 226, 24, 34, {139, 158, 173, 255});
+    ellipse(302, 226, 17, 26, {221, 235, 239, 255});
+    ellipse(302, 226, 7, 13, {101, 124, 139, 255});
+    line({{298, 174}, {321, 163}, {339, 157}}, 12, {102, 122, 133, 255});
+    line({{298, 171}, {321, 160}, {339, 154}}, 7, {218, 230, 229, 255});
+    ellipse(340, 155, 5, 7, ink);
+    ellipse(102, 238, 40, 49, ink);
+    ellipse(102, 238, 26, 33, {133, 153, 169, 255});
+    ellipse(102, 238, 18, 25, {225, 239, 244, 255});
+    ellipse(102, 238, 7, 13, {101, 124, 139, 255});
+    polygon({{78, 181}, {139, 125}, {249, 122}, {326, 196}, {291, 242}, {120, 250}}, ink);
+    polygon({{85, 180}, {142, 130}, {247, 128}, {320, 196}, {286, 235}, {123, 243}}, body);
+    polygon({{123, 217}, {286, 207}, {320, 196}, {286, 235}, {123, 243}}, shade);
+    polygon({{144, 181}, {169, 116}, {231, 116}, {265, 184}}, ink);
+    polygon({{180, 134}, {156, 112}, {177, 71}, {228, 69}, {256, 109}, {232, 134}}, ink);
+    polygon({{182, 129}, {163, 111}, {182, 76}, {226, 75}, {249, 110}, {231, 129}}, body);
+    ellipse(207, 61, 32, 36, {205, 149, 119, 255});
+    ellipse(209, 59, 30, 34, skin);
+    ellipse(207, 23, 34, 24, body);
+    polygon({{173, 20}, {178, 4}, {211, 1}, {239, 15}, {243, 43}, {173, 43}}, body);
+    line({{174, 43}, {243, 43}}, 7, {255, 250, 234, 255});
+    ellipse(212, 23, 11, 11, {255, 250, 234, 255});
+    line({{207, 29}, {207, 18}, {212, 24}, {217, 18}, {217, 29}}, 2.4f, body);
+    ellipse(202, 59, 5, 7, {255, 252, 237, 255});
+    ellipse(222, 59, 5, 7, {255, 252, 237, 255});
+    ellipse(203, 60, 2.8f, 4.6f, ink);
+    ellipse(223, 60, 2.8f, 4.6f, ink);
+    line({{195, 49}, {204, 47}}, 2.2f, ink);
+    line({{219, 47}, {227, 50}}, 2.2f, ink);
+    ellipse(213, 70, 6, 5, {234, 163, 124, 255});
+    line({{199, 78}, {205, 83}, {214, 85}, {224, 79}}, 2.2f, {108, 64, 55, 255});
+    line({{178, 121}, {193, 140}, {209, 145}}, 12, skin);
+    line({{242, 121}, {238, 136}, {247, 145}}, 12, skin);
+    ellipse(230, 150, 28, 12, ink);
+    ellipse(230, 150, 21, 7, {147, 181, 192, 255});
+    line({{211, 146}, {249, 154}}, 3.5f, ink);
+    line({{230, 151}, {227, 170}}, 5, ink);
+    ellipse(209, 145, 8, 6, {255, 247, 226, 255});
+    ellipse(248, 149, 8, 6, {255, 247, 226, 255});
+    line({{91, 186}, {148, 199}, {276, 192}}, 7, {255, 246, 203, 255});
+    line({{100, 239}, {130, 246}, {276, 237}}, 9, {207, 224, 229, 255});
+    line({{106, 236}, {131, 241}, {275, 232}}, 3, {245, 252, 246, 255});
+    ellipse(204, 219, 19, 18, {255, 252, 238, 255});
+    line({{194, 229}, {194, 209}, {204, 220}, {214, 209}, {214, 229}}, 4, {228, 62, 62, 255});
+  }
+
   void build_title(afterhours::Entity &entity, UIContext<InputAction> &c) {
-    auto root = page(c, entity, "mk_title_page", 1);
-    auto logo = div(c, mk(root.ent(), 0), box(67, 77, 530, 259)
+    auto root = page(c, entity, "mk_title_page", -1);
+    div(c, mk(root.ent(), 950), box(0, 0, 1280, 720).with_ignore_pointer_events()
+        .with_on_draw_bg([](RectangleType r) { title_scenery(r); }));
+    auto logo = div(c, mk(root.ent(), 0), box(66, 42, 530, 240)
         .with_styled_label({{"MARLO ", white}, {"KART", gold}})
-        .with_font("FredokaMockBold", h720(132))
+        .with_font("FredokaMockBold", pixels(112 * scale))
         .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Left)
-        .with_text_stroke(ink, 3 * scale).with_text_shadow(ink, 5 * scale, 7 * scale)
+        .with_text_stroke(ink, 2.5f * scale).with_text_shadow(ink, 3 * scale, 4 * scale)
         .with_ignore_pointer_events().with_debug_name("mk_logo"));
-    logo.ent().addComponentIfMissing<HasUIModifiers>().rotation = -5.f;
-    label(c, root.ent(), 1, "AFTERHOURS GRAND PRIX", 79, 326, 490, 49, 15, white);
-    for (int i = 0; i < 3; ++i)
-      if (action(c, root.ent(), 10 + i, kEngineNames[i], 72 + i * 124, 408, 114, 59,
-                 "mk_engine_" + std::to_string(i), engine == i ? gold : afterhours::Color{28, 92, 117, 255},
-                 engine == i ? ink : white, 22)) engine = i;
-    if (action(c, root.ent(), 20, "START YOUR ENGINES", 72, 485, 366, 83,
-               "mk_start", gold, ink, 36)) phase = Phase::Driver;
-    label(c, root.ent(), 21, "Four tracks. Eight racers. One trophy.", 73, 576, 366, 32, 14, white, "", TextAlignment::Center);
-    label(c, root.ent(), 22, "Arrows: engine class     Enter: start", 73, 632, 500, 32, 12, white);
-    image(c, root.ent(), 23, 13 + driver_idx, 613, 208, 645, 450, -8);
+    logo.ent().addComponentIfMissing<HasUIModifiers>().rotation = -4.f;
+    label(c, root.ent(), 1, "AFTERHOURS GRAND PRIX", 77, 288, 500, 36, 22, white,
+          "", TextAlignment::Left, "FredokaMockBold");
+    div(c, mk(root.ent(), 23), box(618, 194, 636, 444).with_ignore_pointer_events()
+        .with_on_draw_fg([color = drivers[driver_idx].color](RectangleType r) { title_kart(r, color); })
+        .with_debug_name("mk_title_kart"));
+    label(c, root.ent(), 24, fmt::format("{} / {}", drivers[driver_idx].name, karts[kart_idx].name),
+          702, 638, 460, 34, 20, white, "mk_title_loadout", TextAlignment::Center, "FredokaMockBold");
+    if (title_help) {
+      plate(c, root.ent(), 40, 58, 335, 510, 318, {20, 44, 85, 245}, transparent, 16);
+      label(c, root.ent(), 41, "RACE CONTROLS", 77, 350, 460, 34, 25, gold, "", TextAlignment::Left, "FredokaMockBold");
+      label(c, root.ent(), 42, "Your kart accelerates and steers automatically.", 77, 395, 460, 27, 17, white);
+      label(c, root.ent(), 43, "Enter / toggle drift; charge through corners.", 77, 430, 460, 27, 17, white);
+      label(c, root.ent(), 44, "Press Enter again to spend the stored boost.", 77, 465, 460, 27, 17, white);
+      label(c, root.ent(), 45, "Shift / use item       Esc / pause or resume", 77, 500, 460, 27, 17, white);
+      label(c, root.ent(), 48, "Four races; every finish adds to your cup points.", 77, 535, 460, 25, 16, white);
+      if (action(c, root.ent(), 46, "BACK TO TITLE", 77, 566, 468, 62, "mk_help_close", gold, ink, 25))
+        title_help = false;
+      label(c, root.ent(), 47, "Enter or Esc closes these instructions.", 77, 669, 500, 30, 17, white);
+      return;
+    }
+    plate(c, root.ent(), 2, 58, 335, 510, 318, {20, 44, 85, 240}, transparent, 16);
+    label(c, root.ent(), 3, "ENGINE CLASS", 77, 350, 260, 32, 22, white, "", TextAlignment::Left, "FredokaMockBold");
+    label(c, root.ent(), 4, fmt::format("Selected: {}", kEngineNames[engine]), 315, 350, 230, 32, 18, gold,
+          "mk_engine_selection", TextAlignment::Right);
+    constexpr std::array<const char *, 3> captions{"Relaxed pace", "Balanced pace", "Fastest pace"};
+    constexpr std::array<const char *, 3> choices{"50 cc", "100 cc", "150 cc"};
+    for (int i = 0; i < 3; ++i) {
+      if (action(c, root.ent(), 10 + i, choices[i], 77 + i * 160.f, 394, 148, 56,
+                 "mk_engine_" + std::to_string(i), engine == i ? gold : afterhours::Color{42, 72, 111, 255},
+                 engine == i ? ink : white, 27)) engine = i;
+      label(c, root.ent(), 30 + i, captions[i], 77 + i * 160.f, 456, 148, 25, 15, white,
+            "", TextAlignment::Center);
+    }
+    if (action(c, root.ent(), 20, "START YOUR ENGINES", 77, 500, 468, 64,
+               "mk_start", gold, ink, 30)) phase = Phase::Driver;
+    label(c, root.ent(), 21, "Select your racer and kart", 77, 570, 468, 29, 18, white,
+          "", TextAlignment::Center);
+    label(c, root.ent(), 22, "Four tracks. Eight racers. One trophy.", 77, 613, 468, 29, 19, white,
+          "", TextAlignment::Center, "FredokaMockBold");
+    plate(c, root.ent(), 50, 77, 671, 62, 30, white, transparent, 5);
+    label(c, root.ent(), 51, "< >", 77, 671, 62, 30, 18, ink, "", TextAlignment::Center);
+    label(c, root.ent(), 52, "Engine class", 148, 671, 161, 30, 18, white);
+    plate(c, root.ent(), 53, 332, 671, 78, 30, white, transparent, 5);
+    label(c, root.ent(), 54, "Enter", 332, 671, 78, 30, 17, ink, "", TextAlignment::Center);
+    label(c, root.ent(), 55, "Select racer", 419, 671, 170, 30, 18, white);
+    if (action(c, root.ent(), 56, "CONTROLS / ESC", 1032, 34, 194, 44, "mk_help", white, ink, 20))
+      title_help = true;
   }
 
   void build_driver(afterhours::Entity &entity, UIContext<InputAction> &c) {
@@ -955,7 +1157,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     } else if (countdown > 0) {
       const int n = static_cast<int>(std::ceil(countdown - .6f));
       div(c, mk(root.ent(), 302), box(499, 174, 282, 165)
-          .with_label(n <= 0 ? "GO!" : std::to_string(n)).with_font("FredokaMockBold", h720(120))
+          .with_label(n <= 0 ? "GO!" : std::to_string(n)).with_font("FredokaMockBold", pixels(120 * scale))
           .with_alignment(TextAlignment::Center).with_custom_text_color(n <= 0 ? white : gold)
           .with_text_stroke(ink, 4 * scale).with_text_shadow(ink, 3 * scale, 5 * scale)
           .with_overlay(2).with_ignore_pointer_events().with_debug_name("mk_countdown"));

@@ -4274,7 +4274,8 @@
         "change": "Add compact Settings and Quit/Back actions if available in this title flow."
       }
     ],
-    "sha256": "3a6553a940a4bfb68d6d7c185750570b125c09d79cd80260deaf1c38ff0d2397"
+    "sha256": "3a6553a940a4bfb68d6d7c185750570b125c09d79cd80260deaf1c38ff0d2397",
+    "evidence": "docs/design-audit/originals/marlo_kart_720p.png"
   },
   {
     "id": "media_library",

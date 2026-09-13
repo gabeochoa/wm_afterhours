@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,367 completed; 1,168 remaining.
+1,392 completed; 1,143 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4413,80 +4413,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/marlo_kart_720p.png) · [Visual review](design-audit.html#screen=marlo_kart)
 
-- [ ] `marlo_kart-01` · P2 · proposal. Engine-class group: Add Engine class above the three choices.
+- [x] `marlo_kart-01` · P2 · proposal. Engine-class group: Add Engine class above the three choices.
   Evidence: 50cc, 100cc, and 150cc have no group label.
 
-- [ ] `marlo_kart-02` · P2 · proposal. Engine explanation: Add short speed/difficulty descriptors below each option.
+- [x] `marlo_kart-02` · P2 · proposal. Engine explanation: Add short speed/difficulty descriptors below each option.
   Evidence: The classes provide displacement values without difficulty context.
 
-- [ ] `marlo_kart-03` · P2 · proposal. Selected 150cc: Add a check or Selected label to 150cc.
+- [x] `marlo_kart-03` · P2 · proposal. Selected 150cc: Add a check or Selected label to 150cc.
   Evidence: The selected state relies on yellow fill.
 
-- [ ] `marlo_kart-04` · P3 · proposal. Engine typography: Use consistent spacing and tabular numerals for the three values.
+- [x] `marlo_kart-04` · P3 · proposal. Engine typography: Use consistent spacing and tabular numerals for the three values.
   Evidence: The labels combine number and cc tightly.
 
-- [ ] `marlo_kart-05` · P2 · proposal. Start label: Add a concise Select racer sublabel to clarify the next step.
+- [x] `marlo_kart-05` · P2 · proposal. Start label: Add a concise Select racer sublabel to clarify the next step.
   Evidence: START YOUR ENGINES is broad promotional copy for entering the next phase.
 
-- [ ] `marlo_kart-06` · P2 · proposal. Start control size: Align its outer width with the group above.
+- [x] `marlo_kart-06` · P2 · proposal. Start control size: Align its outer width with the group above.
   Evidence: The start button is much wider than the engine selector group.
 
-- [ ] `marlo_kart-07` · P2 · proposal. Start text padding: Increase horizontal padding or reduce the text size slightly.
+- [x] `marlo_kart-07` · P2 · proposal. Start text padding: Increase horizontal padding or reduce the text size slightly.
   Evidence: The long label nearly fills the button width.
 
-- [ ] `marlo_kart-08` · P2 · proposal. Control group spacing: Increase the gap between selection and confirmation.
+- [x] `marlo_kart-08` · P2 · proposal. Control group spacing: Increase the gap between selection and confirmation.
   Evidence: The class buttons almost touch the large action beneath them.
 
-- [ ] `marlo_kart-09` · P2 · proposal. Keyboard hints: Use readable keycap-and-label groups beside the controls.
+- [x] `marlo_kart-09` · P2 · proposal. Keyboard hints: Use readable keycap-and-label groups beside the controls.
   Evidence: Arrows: engine class and Enter: start are tiny near the bottom.
 
-- [ ] `marlo_kart-10` · P3 · proposal. Keyboard alignment: Align them on one baseline with equal group spacing.
+- [x] `marlo_kart-10` · P3 · proposal. Keyboard alignment: Align them on one baseline with equal group spacing.
   Evidence: The two keyboard hints have uneven separation and no shared structure.
 
-- [ ] `marlo_kart-11` · P2 · proposal. Game-format sentence: Increase supporting-copy size and contrast.
+- [x] `marlo_kart-11` · P2 · proposal. Game-format sentence: Increase supporting-copy size and contrast.
   Evidence: Four tracks. Eight racers. One trophy. is very small.
 
-- [ ] `marlo_kart-12` · P3 · proposal. Subtitle: Give the subtitle a stronger size and stable baseline.
+- [x] `marlo_kart-12` · P3 · proposal. Subtitle: Give the subtitle a stronger size and stable baseline.
   Evidence: AFTERHOURS GRAND PRIX is tiny under the oversized logo.
 
-- [ ] `marlo_kart-13` · P3 · proposal. Logo spacing: Tighten the two-line logo while retaining its playful tilt.
+- [x] `marlo_kart-13` · P3 · proposal. Logo spacing: Tighten the two-line logo while retaining its playful tilt.
   Evidence: MARLO and KART have a large irregular vertical gap.
 
-- [ ] `marlo_kart-14` · P3 · proposal. Logo outline: Use a more consistent outline and shadow treatment.
+- [x] `marlo_kart-14` · P3 · proposal. Logo outline: Use a more consistent outline and shadow treatment.
   Evidence: The heavy dark outline creates uneven visual weight around the letters.
 
-- [ ] `marlo_kart-15` · P2 · proposal. Kart badge: Restore the red M brand emblem inside the white nose badge.
+- [x] `marlo_kart-15` · P2 · proposal. Kart badge: Restore the red M brand emblem inside the white nose badge.
   Evidence: The red kart has a blank white nose badge; the web mock places a red M inside it.
 
-- [ ] `marlo_kart-16` · P2 · proposal. Driver face: Bring the illustration closer to the expressive racer portrait style.
+- [x] `marlo_kart-16` · P2 · proposal. Driver face: Bring the illustration closer to the expressive racer portrait style.
   Evidence: The large driver has a single dot and no other facial detail.
 
-- [ ] `marlo_kart-17` · P3 · proposal. Driver hands: Clarify hand positions and the wheel silhouette.
+- [x] `marlo_kart-17` · P3 · proposal. Driver hands: Clarify hand positions and the wheel silhouette.
   Evidence: Broad overlapping arm shapes obscure the steering wheel.
 
-- [ ] `marlo_kart-18` · P3 · proposal. Kart wheel perspective: Refine their perspective to match the chassis plane.
+- [x] `marlo_kart-18` · P3 · proposal. Kart wheel perspective: Refine their perspective to match the chassis plane.
   Evidence: Front and rear wheels use noticeably different angle and scale cues.
 
-- [ ] `marlo_kart-19` · P3 · proposal. Exhaust: Add a clearer pipe connection and consistent shading.
+- [x] `marlo_kart-19` · P3 · proposal. Exhaust: Add a clearer pipe connection and consistent shading.
   Evidence: The pale exhaust shape resembles a detached rectangular strip.
 
-- [ ] `marlo_kart-20` · P3 · proposal. Kart shadow: Soften and reduce the shadow to ground the kart.
+- [x] `marlo_kart-20` · P3 · proposal. Kart shadow: Soften and reduce the shadow to ground the kart.
   Evidence: A large dark green oval competes with the wheel shapes.
 
-- [ ] `marlo_kart-21` · P2 · proposal. Racing context: Add a restrained road or track curve behind the kart.
+- [x] `marlo_kart-21` · P2 · proposal. Racing context: Add a restrained road or track curve behind the kart.
   Evidence: The vehicle sits on flat green ground with no visible track.
 
-- [ ] `marlo_kart-22` · P3 · proposal. Mountain backdrop: Add depth through a second subdued ridge layer.
+- [x] `marlo_kart-22` · P3 · proposal. Mountain backdrop: Add depth through a second subdued ridge layer.
   Evidence: Large flat triangles create a static horizon behind the logo.
 
-- [ ] `marlo_kart-23` · P3 · proposal. Horizon stripe: Place controls on a consistent backing or move the horizon away from them.
+- [x] `marlo_kart-23` · P3 · proposal. Horizon stripe: Place controls on a consistent backing or move the horizon away from them.
   Evidence: A bright horizontal green band cuts through the class controls.
 
-- [ ] `marlo_kart-24` · P3 · proposal. Composition balance: Move the controls slightly upward to balance the logo and vehicle.
+- [x] `marlo_kart-24` · P3 · proposal. Composition balance: Move the controls slightly upward to balance the logo and vehicle.
   Evidence: The kart dominates the right while controls cluster low on the left.
 
-- [ ] `marlo_kart-25` · P2 · proposal. Secondary navigation: Add compact Settings and Quit/Back actions if available in this title flow.
+- [x] `marlo_kart-25` · P2 · proposal. Secondary navigation: Add compact Settings and Quit/Back actions if available in this title flow.
   Evidence: The title state exposes only engine class and start.
+  Disposition: There were no title Settings or Quit actions. Added a useful Controls view with working pointer, Enter and Escape navigation while preserving the six-stage Grand Prix flow.
 
 ### media_library
 

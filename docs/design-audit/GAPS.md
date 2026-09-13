@@ -2266,7 +2266,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## marlo kart
 
-[Current baseline](../../screenshot-baselines/screens/marlo_kart_720p.png) · [Visual review](../../design-audit.html#screen=marlo_kart)
+[Reviewed image](../../docs/design-audit/originals/marlo_kart_720p.png) · [Current baseline](../../screenshot-baselines/screens/marlo_kart_720p.png) · [Visual review](../../design-audit.html#screen=marlo_kart)
 
 Baseline SHA-256: `3a6553a940a4bfb68d6d7c185750570b125c09d79cd80260deaf1c38ff0d2397`
 

@@ -1,0 +1,120 @@
+goto_screen marlo_kart
+resize 1280 720
+wait 0.3
+expect_text "MARLO KART"
+expect_text "AFTERHOURS GRAND PRIX"
+expect_text "ENGINE CLASS"
+expect_text "Selected: 150cc"
+expect_text "Relaxed pace"
+expect_text "Balanced pace"
+expect_text "Fastest pace"
+expect_text "Select your racer and kart"
+expect_text "Four tracks. Eight racers. One trophy."
+expect_text "CONTROLS / ESC"
+assert_ui mk_title_page x=0 y=0 w=1280 h=720
+assert_ui mk_engine_0 x=77 y=394 w=148 h=56
+assert_ui mk_engine_2 x=397 y=394 w=148 h=56
+assert_ui mk_start x=77 y=500 w=468 h=64
+assert_ui mk_title_kart x=618 y=194 w=636 h=444
+assert_no_overflow
+assert_within_parents
+screenshot marlo_title_design
+click_ui mk_help
+wait 0.2
+expect_text "RACE CONTROLS"
+expect_text "Your kart accelerates and steers automatically."
+expect_text "Enter / toggle drift; charge through corners."
+expect_text "Press Enter again to spend the stored boost."
+expect_no_text "START YOUR ENGINES"
+assert_no_overflow
+assert_within_parents
+screenshot marlo_controls_design
+key ENTER
+wait 0.2
+expect_text "START YOUR ENGINES"
+expect_no_text "RACE CONTROLS"
+key ESCAPE
+wait 0.2
+expect_text "RACE CONTROLS"
+key ESCAPE
+wait 0.2
+expect_text "Selected: 150cc"
+click_ui mk_engine_0
+wait 0.2
+expect_text "Selected: 50cc"
+key LEFT
+wait 0.2
+expect_text "Selected: 150cc"
+key RIGHT
+wait 0.2
+expect_text "Selected: 50cc"
+click_ui mk_start
+wait 0.3
+expect_text "SELECT DRIVER"
+expect_text "50cc  -  Grand Prix"
+click_ui mk_driver_5
+click_ui mk_kart_2
+wait 0.2
+expect_text "Koda + Rally"
+click_ui mk_driver_back
+wait 0.3
+expect_text "Selected: 50cc"
+expect_text "Koda / Rally"
+screenshot marlo_title_selected_racer
+click_ui mk_engine_2
+wait 0.2
+click_ui mk_start
+wait 0.3
+expect_text "150cc  -  Grand Prix"
+click_ui mk_driver_next
+wait 0.3
+expect_text "SELECT CUP"
+click_ui mk_cup_1
+wait 0.2
+click_ui mk_cup_start
+wait 0.2
+key ESCAPE
+wait 0.2
+expect_text "PAUSED"
+expect_text "Voltway  -  Bolt Cup"
+expect_text "0:00.000"
+click_ui mk_resume
+wait 3.0
+expect_no_text "COINS 0"
+key ESCAPE
+wait 0.2
+click_ui mk_quit
+wait 0.3
+expect_text "MARLO KART"
+expect_text "Selected: 150cc"
+resize 1920 1080
+wait 0.3
+assert_ui mk_title_page x=0 y=0 w=1920 h=1080
+assert_ui mk_start x=116 y=750 w=702 h=96
+assert_no_overflow
+assert_within_parents
+screenshot marlo_title_design_1080
+resize 1024 768
+wait 0.3
+assert_ui mk_title_page x=0 y=96 w=1024 h=576
+assert_ui mk_start x=62 y=496 w=374 h=51
+assert_no_overflow
+assert_within_parents
+screenshot marlo_title_design_narrow
+click_ui mk_help
+wait 0.2
+expect_text "RACE CONTROLS"
+assert_no_overflow
+assert_within_parents
+screenshot marlo_controls_design_narrow
+click_ui mk_help_close
+wait 0.2
+click_ui mk_start
+wait 0.3
+expect_text "SELECT DRIVER"
+assert_ui mk_driver_page x=0 y=96 w=1024 h=576
+assert_ui mk_driver_0 x=32 y=189 w=111 h=124
+assert_no_overflow
+assert_within_parents
+screenshot marlo_driver_design_narrow
+resize 1280 720

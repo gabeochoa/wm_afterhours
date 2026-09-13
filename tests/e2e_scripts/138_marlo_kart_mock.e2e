@@ -1,11 +1,12 @@
 # Native mock fidelity plus pausing during the starting lights.
 # 126/127 retain full Grand Prix and keyboard gameplay coverage.
 goto_screen marlo_kart
+resize 1280 720
 wait 0.5
 expect_text "MARLO KART"
 expect_text "START YOUR ENGINES"
 assert_ui mk_title_page x=0 y=0 w=1280 h=720
-assert_ui mk_start x=72 y=485 w=366 h=83
+assert_ui mk_start x=77 y=500 w=468 h=64
 assert_no_overflow
 assert_within_parents
 screenshot marlo_kart_mock_title
@@ -58,7 +59,7 @@ resize 1920 1080
 wait 0.3
 expect_text "MARLO KART"
 assert_ui mk_title_page x=0 y=0 w=1920 h=1080
-assert_ui mk_start x=108 y=728 w=549 h=125
+assert_ui mk_start x=116 y=750 w=702 h=96
 assert_no_overflow
 assert_within_parents
 screenshot marlo_kart_mock_1080p
