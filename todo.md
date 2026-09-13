@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-305 completed; 2,230 remaining.
+330 completed; 2,205 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -855,79 +855,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/auto_text_color_720p.png) · [Visual review](design-audit.html#screen=auto_text_color)
 
-- [ ] `auto_text_color-01` · P2 · proposal. New default badge: Replace it with a smaller Default enabled annotation or version.
+- [x] `auto_text_color-01` · P2 · proposal. New default badge: Replace it with a smaller Default enabled annotation or version.
   Evidence: NEW DEFAULT is a large yellow badge without a version.
 
-- [ ] `auto_text_color-02` · P2 · proposal. Title balance: Center title and status as a balanced group.
+- [x] `auto_text_color-02` · P2 · proposal. Title balance: Center title and status as a balanced group.
   Evidence: The badge pulls the combined heading off the visual center.
 
-- [ ] `auto_text_color-03` · P2 · proposal. Subtitle claim: State that the system chooses between the configured light and dark colors.
+- [x] `auto_text_color-03` · P2 · proposal. Subtitle claim: State that the system chooses between the configured light and dark colors.
   Evidence: Against any background reads as an unlimited contrast guarantee.
+  Disposition: The chooser also tries backend fallback colors when both theme candidates miss its target. The new subtitle describes all candidates and measured ratios; upstream fallback/validation issues remain in AFTERHOURS_GAPS.
 
-- [ ] `auto_text_color-04` · P2 · proposal. Default heading: Add the default flag name in a monospace caption.
+- [x] `auto_text_color-04` · P2 · proposal. Default heading: Add the default flag name in a monospace caption.
   Evidence: No config needed omits the relevant API setting.
 
-- [ ] `auto_text_color-05` · P2 · proposal. Dark/light pairs: Label columns as paired background families.
+- [x] `auto_text_color-05` · P2 · proposal. Dark/light pairs: Label columns as paired background families.
   Evidence: Near Black over Near White is the only obvious named pair.
 
-- [ ] `auto_text_color-06` · P2 · proposal. Color values: Show compact RGB or hex captions outside the tiles.
+- [x] `auto_text_color-06` · P2 · proposal. Color values: Show compact RGB or hex captions outside the tiles.
   Evidence: Near Black and Dark Blue give no actual values.
 
-- [ ] `auto_text_color-07` · P2 · proposal. Chosen foreground: Add Light text or Dark text result captions.
+- [x] `auto_text_color-07` · P2 · proposal. Chosen foreground: Add Light text or Dark text result captions.
   Evidence: The samples show results without naming the chosen text color.
 
-- [ ] `auto_text_color-08` · P2 · proposal. Contrast ratios: Display contrast ratios for the tested foreground/background pairs.
+- [x] `auto_text_color-08` · P2 · proposal. Contrast ratios: Display contrast ratios for the tested foreground/background pairs.
   Evidence: Best contrast appears twice without measured ratios.
 
-- [ ] `auto_text_color-09` · P2 · proposal. Dark tile borders: Use an explicitly labeled specimen boundary separate from color output.
+- [x] `auto_text_color-09` · P2 · proposal. Dark tile borders: Use an explicitly labeled specimen boundary separate from color output.
   Evidence: Thin outlines distinguish some dark samples from the page.
 
-- [ ] `auto_text_color-10` · P2 · proposal. Light tile row: Label the rows Dark backgrounds and Light backgrounds.
+- [x] `auto_text_color-10` · P2 · proposal. Light tile row: Label the rows Dark backgrounds and Light backgrounds.
   Evidence: The lighter row has no row label.
 
-- [ ] `auto_text_color-11` · P2 · proposal. Mid-tone spelling: Spell out Dark magenta.
+- [x] `auto_text_color-11` · P2 · proposal. Mid-tone spelling: Spell out Dark magenta.
   Evidence: Dk Magenta abbreviates the color inconsistently.
 
-- [ ] `auto_text_color-12` · P2 · proposal. Mid-tone comparison: Order by luminance or state the intended sequence.
+- [x] `auto_text_color-12` · P2 · proposal. Mid-tone comparison: Order by luminance or state the intended sequence.
   Evidence: Six hues appear without a luminance ordering.
 
-- [ ] `auto_text_color-13` · P2 · proposal. Gray specimen: Add a companion light-text reference outside the primary fixture.
+- [x] `auto_text_color-13` · P2 · proposal. Gray specimen: Add a companion light-text reference outside the primary fixture.
   Evidence: Gray's dark text choice is difficult to compare against alternatives.
 
-- [ ] `auto_text_color-14` · P2 · proposal. Teal specimen: Show its luminance in the caption.
+- [x] `auto_text_color-14` · P2 · proposal. Teal specimen: Show its luminance in the caption.
   Evidence: Teal shares a similar brightness with nearby swatches but lacks numeric context.
 
-- [ ] `auto_text_color-15` · P2 · proposal. Explicit options heading: Label the row Configuration examples.
+- [x] `auto_text_color-15` · P2 · proposal. Explicit options heading: Label the row Configuration examples.
   Evidence: The options look like actions even though they are demonstration specimens.
 
-- [ ] `auto_text_color-16` · P2 · proposal. Disabled wording: Use Auto color off: theme font.
+- [x] `auto_text_color-16` · P2 · proposal. Disabled wording: Use Auto color off: theme font.
   Evidence: Disabled (theme font) can be mistaken for a disabled control.
 
-- [ ] `auto_text_color-17` · P2 · proposal. Auto default specimen: Add the resolved foreground below it.
+- [x] `auto_text_color-17` · P2 · proposal. Auto default specimen: Add the resolved foreground below it.
   Evidence: Auto (default) does not show its selected foreground value.
 
-- [ ] `auto_text_color-18` · P2 · proposal. Custom red specimen: Add an Explicit override caption.
+- [x] `auto_text_color-18` · P2 · proposal. Custom red specimen: Add an Explicit override caption.
   Evidence: Custom Red Text does not state that it overrides automatic selection.
 
-- [ ] `auto_text_color-19` · P2 · proposal. Explicit comparison: Add a matched-background comparison row.
+- [x] `auto_text_color-19` · P2 · proposal. Explicit comparison: Add a matched-background comparison row.
   Evidence: The middle example uses a different background from the two outer examples.
 
-- [ ] `auto_text_color-20` · P2 · proposal. Theme heading: Use Theme role examples.
+- [x] `auto_text_color-20` · P2 · proposal. Theme heading: Use Theme role examples.
   Evidence: Works with Theme Colors Too is longer than neighboring section names.
 
-- [ ] `auto_text_color-21` · P2 · proposal. Background role: Add an external outline marking its specimen bounds.
+- [x] `auto_text_color-21` · P2 · proposal. Background role: Add an external outline marking its specimen bounds.
   Evidence: Background has no visible tile boundary because it matches the page.
 
-- [ ] `auto_text_color-22` · P2 · proposal. Theme identity: Add the active theme name above the role row.
+- [x] `auto_text_color-22` · P2 · proposal. Theme identity: Add the active theme name above the role row.
   Evidence: Primary, Accent and Secondary do not name the active theme.
 
-- [ ] `auto_text_color-23` · P2 · proposal. Role ordering: Group Primary and Secondary before Accent.
+- [x] `auto_text_color-23` · P2 · proposal. Role ordering: Group Primary and Secondary before Accent.
   Evidence: Primary, Accent, Secondary uses an unusual sequence.
 
-- [ ] `auto_text_color-24` · P2 · proposal. Separators: Align dividers with the headings' content edge.
+- [x] `auto_text_color-24` · P2 · proposal. Separators: Align dividers with the headings' content edge.
   Evidence: Rules start farther inward than section headings.
 
-- [ ] `auto_text_color-25` · P2 · proposal. Specimen typography: Use a readable body face while retaining the exact tested colors.
+- [x] `auto_text_color-25` · P2 · proposal. Specimen typography: Use a readable body face while retaining the exact tested colors.
   Evidence: All examples use widely spaced handwritten labels.
 
 ### bevel_borders
@@ -8095,6 +8096,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review backend-dependent auto-text fallbacks and contrast-validator foreground precedence; see `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review declarative animation elapsed-time clamping and same-property trigger composition in afterhours; see `docs/AFTERHOURS_GAPS.md`.
 

@@ -538,7 +538,7 @@ Current example states: [Current example: Quarter-speed replay](../../docs/desig
 
 ## auto text color
 
-[Current baseline](../../screenshot-baselines/screens/auto_text_color_720p.png) · [Visual review](../../design-audit.html#screen=auto_text_color)
+[Reviewed image](../../docs/design-audit/originals/auto_text_color_720p.png) · [Current baseline](../../screenshot-baselines/screens/auto_text_color_720p.png) · [Visual review](../../design-audit.html#screen=auto_text_color)
 
 Baseline SHA-256: `793b23efb505f4f33bd2faca3f7cd534321ed898c64eff637679f51957b3e015`
 

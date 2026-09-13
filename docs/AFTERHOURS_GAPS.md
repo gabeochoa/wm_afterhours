@@ -236,6 +236,27 @@ now combines hover translation with press scale. Upstream needs explicit
 composition or precedence for multiple triggers targeting the same property;
 keep this policy visible rather than silently overwriting a track.
 
+### Auto-text fallback differs by rendering backend
+
+The raylib backend maps `UI_WHITE` to `RAYWHITE` (#F5F5F5), while the other
+backend uses #FFFFFF. `auto_text_color()` falls back to `UI_WHITE`/`UI_BLACK`
+when both configured candidates miss the requested contrast. On #737373,
+those raylib fallbacks yield 4.35:1 and 4.43:1; actual white yields 4.74:1.
+Thus the default 4.5:1 target can be missed even for opaque fills. The wm
+showcase names the actual fallback colors and displays measured ratios.
+Review backend-independent fallback colors and tests around this luminance
+range before promising a minimum ratio upstream.
+
+### Contrast validation resolves a different foreground than rendering
+
+`ValidateComponentContrast` checks `background_hint` before
+`explicit_text_color`; `resolve_label_color()` does the reverse. A label with
+an explicit foreground and automatic contrast still enabled can therefore
+be validated against a color it never renders. The auto-text showcase's
+explicit-red and light-reference fixtures exercise that combination. Share
+foreground resolution between rendering and validation, including disabled
+state, before treating the lint as evidence that an explicit color passed.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`

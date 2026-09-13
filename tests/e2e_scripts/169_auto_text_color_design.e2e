@@ -1,0 +1,54 @@
+goto_screen auto_text_color
+resize 1280 720
+wait 0.3
+expect_text "Default enabled"
+expect_text "if both are below 4.5:1, tries #F5F5F5 and #000000"
+expect_text "auto_text_color = true"
+expect_text "Purple / pink pair"
+expect_text "Dark magenta"
+expect_text "Configuration examples"
+expect_text "Theme role examples / Ocean Navy"
+expect_text "Selected: Near Black | bg #14141E | text #FFFFFF"
+assert_ui root_bg w=1280 h=720
+assert_ui dark_btn_0 x=170 y=160 w=245 h=30
+assert_within_parents
+screenshot auto_text_color_design
+click_ui mid_btn_1
+wait 0.2
+expect_text "Selected: Teal | bg #64B4B4 | text #0F1E37"
+click_ui mid_btn_4
+wait 0.2
+expect_text "Selected: Gray | bg #969696 | text #0F1E37"
+click_ui gray_light_reference
+wait 0.2
+expect_text "Selected: Gray / light reference | bg #969696 | text #FFFFFF"
+expect_text "Below-AA reference"
+focus_ui auto_config_red
+key ENTER
+wait 0.2
+expect_text "Selected: Explicit red override | bg #E6E6E6 | text #8C1E1E"
+click_ui auto_config_off
+wait 0.2
+expect_text "Selected: Auto off: theme font | bg #32323C | text #FFFFFF"
+click_ui auto_matched_off
+wait 0.2
+expect_text "Selected: Matched: auto off | bg #E6E6E6 | text #FFFFFF"
+click_ui auto_matched_default
+wait 0.2
+expect_text "Selected: Matched: auto | bg #E6E6E6 | text #0F1E37"
+click_ui auto_role_3
+wait 0.2
+expect_text "Selected: Background | bg #0F1E37 | text #FFFFFF"
+assert_within_parents
+screenshot auto_text_color_background_reference
+resize 1920 1080
+wait 0.3
+assert_ui root_bg w=1920 h=1080
+assert_within_parents
+screenshot auto_text_color_design_1080
+resize 1024 768
+wait 0.3
+assert_ui root_bg w=1024 h=768
+assert_within_parents
+screenshot auto_text_color_design_narrow
+resize 1280 720

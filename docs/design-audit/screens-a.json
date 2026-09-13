@@ -2481,7 +2481,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "793b23efb505f4f33bd2faca3f7cd534321ed898c64eff637679f51957b3e015"
+    "sha256": "793b23efb505f4f33bd2faca3f7cd534321ed898c64eff637679f51957b3e015",
+    "evidence": "docs/design-audit/originals/auto_text_color_720p.png"
   },
   {
     "id": "bevel_borders",
