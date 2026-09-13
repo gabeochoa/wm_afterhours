@@ -5,6 +5,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
 #include <array>
 #include <cctype>
@@ -172,7 +173,6 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     theme.surface = face; theme.secondary = white; theme.primary = blue; theme.accent = blue; theme.corner_radius = 0; theme.roundness = 0;
     c.set_theme(theme); c.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", h720(16.25f));
-    if (c.pressed(InputAction::MenuBack)) dialog = Dialog::None;
     auto root = div(c, mk(entity), box(0, 0, 1280, 720).with_custom_background({0, 130, 128, 255}).with_debug_name("aim_desktop"));
     image(c, root.ent(), 0, 2, 25, 16, 65, 47);
     label(c, root.ent(), 1, "My Computer", 19, 65, 92, 22, 12, white);
@@ -189,7 +189,7 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     if (action(c, root.ent(), 502, buddies[selected].name + (selected == 3 ? " - Chat Room" : " - Instant Message"), 88, 691, 253, 25, "aim_restore_chat", chat_open)) chat_open = true;
     if (action(c, root.ent(), 503, "Buddy List", 347, 691, 190, 25, "aim_restore_buddies", buddy_open)) buddy_open = true;
     label(c, root.ent(), 504, "2:03 PM", 1190, 694, 83, 21, 12, ink);
-    if (dialog != Dialog::None) build_dialog(c, root.ent());
+    build_dialog(c, root.ent());
   }
 
   void build_buddy(UIContext<InputAction> &c, afterhours::Entity &root) {
@@ -390,10 +390,15 @@ struct AIMChatDemo : ScreenSystem<UIContext<InputAction>> {
     case Dialog::Start: heading = "Start"; break;
     default: break;
     }
-    div(c, mk(root, 700), box(0, 0, 1280, 687).with_custom_background({0, 0, 0, 65}).with_overlay(10));
-    auto panel = div(c, mk(root, 701), box(405, 232, 470, menu ? 242 : 256)
-        .with_custom_background(face).with_on_draw_fg([s = scale](RectangleType r) { bevel(r, false, s); })
-        .with_overlay(11).with_debug_name("aim_dialog"));
+    bool open = dialog != Dialog::None;
+    auto panel = afterhours::modal(c, mk(root, 701), open, afterhours::ModalConfig{}
+        .with_backdrop_color({0, 0, 0, 65}).with_render_layer(11)
+        .with_show_close_button(false)
+        .with_panel(box(405, 232, 470, menu ? 242 : 256)
+            .with_custom_background(face)
+            .with_on_draw_fg([s = scale](RectangleType r) { bevel(r, false, s); })
+            .with_debug_name("aim_dialog")));
+    if (!open) { dialog = Dialog::None; return; }
     auto &p = panel.ent();
     div(c, mk(p, 0), box(5, 5, 460, 27).with_custom_background(blue));
     label(c, p, 1, heading, 13, 8, 429, 24, 14, white, "aim_dialog_title", true);

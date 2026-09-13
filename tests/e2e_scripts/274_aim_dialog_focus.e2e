@@ -1,0 +1,25 @@
+goto_screen aim_chat
+wait 0.3
+click_ui warn_btn
+wait 0.3
+expect_focused aim_dialog_confirm
+tab
+wait 0.1
+expect_focused aim_dialog_cancel
+tab
+wait 0.1
+expect_focused aim_dialog_confirm
+shift_tab
+wait 0.1
+expect_focused aim_dialog_cancel
+screenshot aim_dialog_keyboard_focus
+key ESCAPE
+wait 0.3
+expect_no_text "Send Warning"
+expect_focused warn_btn
+click_ui aim_help
+wait 0.3
+expect_focused aim_dialog_confirm
+key ENTER
+wait 0.3
+expect_focused aim_help
