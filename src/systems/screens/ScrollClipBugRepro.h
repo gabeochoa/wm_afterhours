@@ -117,7 +117,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(scroll_bg)
             .with_border(border_green, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
+            .with_corner_radius(8.f * scale)
             .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("scroll_control"));
@@ -132,7 +132,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
               .with_font("AtkinsonMock", pixels(original_fixture ? 19 : 21 * scale)).with_text_inset(0)
               .with_margin(Margin{.bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * scale)
               .with_debug_name(fmt::format("ctrl_{}", i)));
       item.ent().get<HasLabel>().text_x_offset = 12;
     }
@@ -155,7 +155,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(scroll_bg)
             .with_border(border_red, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
+            .with_corner_radius(8.f * scale)
             .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("scroll_clip_rows"));
@@ -170,7 +170,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
               .with_font("AtkinsonMock", pixels(original_fixture ? 19 : 21 * scale)).with_text_inset(0)
               .with_margin(Margin{.bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * scale)
               .with_overflow(Overflow::Hidden, Axis::X)
               .with_debug_name(fmt::format("clip_{}", i)));
       item.ent().get<HasLabel>().text_x_offset = 12;
@@ -194,7 +194,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(scroll_bg)
             .with_border(border_purple, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
+            .with_corner_radius(8.f * scale)
             .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("scroll_nested_wrapper"));
@@ -217,7 +217,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
               .with_font("AtkinsonMock", pixels(original_fixture ? 19 : 21 * scale)).with_text_inset(0)
               .with_margin(Margin{.bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * scale)
               .with_debug_name(fmt::format("nest_{}", i)));
       item.ent().get<HasLabel>().text_x_offset = 12;
     }
@@ -241,7 +241,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(scroll_bg)
             .with_border(border_teal, 2.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
+            .with_corner_radius(8.f * scale)
             .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("scroll_outer"));
@@ -255,7 +255,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
             .with_custom_background(afterhours::Color{50, 55, 65, 255})
             .with_border(row_green, 1.0f)
             .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.04f)
+            .with_corner_radius(8.f * scale)
             .with_overflow(Overflow::Scroll, Axis::Y)
             .with_padding(Spacing::xs)
             .with_debug_name("scroll_inner"));
@@ -270,7 +270,7 @@ struct ScrollClipBugRepro : ScreenSystem<UIContext<InputAction>> {
               .with_font("AtkinsonMock", pixels(original_fixture ? 19 : 21 * scale)).with_text_inset(0)
               .with_margin(Margin{.bottom = pixels(3)})
               .with_rounded_corners(RoundedCorners())
-              .with_roundness(0.08f)
+              .with_corner_radius(8.f * scale)
               .with_debug_name(fmt::format("inner_{}", i)));
       item.ent().get<HasLabel>().text_x_offset = 12;
     }
