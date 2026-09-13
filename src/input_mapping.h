@@ -128,14 +128,6 @@ inline auto get_mapping() {
       KC{raylib::KEY_A, KC::MOD_SUPER},
   };
 
-  mapping[to_int(InputAction::TextSelectLeft)] = {
-      KC{raylib::KEY_LEFT, KC::MOD_SHIFT},
-  };
-
-  mapping[to_int(InputAction::TextSelectRight)] = {
-      KC{raylib::KEY_RIGHT, KC::MOD_SHIFT},
-  };
-
   mapping[to_int(InputAction::TextCopy)] = {
       KC{raylib::KEY_C, KC::MOD_CTRL},
       KC{raylib::KEY_C, KC::MOD_SUPER},
