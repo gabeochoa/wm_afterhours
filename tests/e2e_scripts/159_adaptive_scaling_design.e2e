@@ -1,0 +1,76 @@
+goto_screen adaptive_scaling
+resize 1280 720
+wait 0.3
+assert_within_parents
+assert_ui adaptive_mode w=200
+assert_ui adaptive_pixels w=80
+assert_ui adaptive_screen_pct w=80
+expect_text "Viewport: 1280 x 720 px"
+expect_text "Widths at 100% -> current"
+click_ui adaptive_button_a
+wait 0.2
+expect_text "A selected"
+focus_element adaptive_button_b
+key ENTER
+wait 0.2
+expect_text "B selected"
+click_ui adaptive_plus
+wait 0.2
+click_ui adaptive_plus
+wait 0.2
+click_ui adaptive_plus
+wait 0.2
+click_ui adaptive_plus
+wait 0.2
+click_ui adaptive_plus
+wait 0.2
+expect_text "300%"
+assert_ui adaptive_mode w=200
+assert_ui adaptive_pixels w=240
+assert_ui adaptive_screen_pct w=80
+screenshot adaptive_scaling_300
+mouse_move 500 400
+scroll_wheel -10 -10
+wait 0.3
+expect_no_text "Pixel Sizing"
+screenshot adaptive_scaling_scrolled
+focus_element adaptive_mode
+key ENTER
+wait 0.3
+assert_ui adaptive_pixels w=80
+assert_ui adaptive_screen_pct w=80
+expect_text "Proportional >"
+expect_text "Pixel Sizing"
+focus_element adaptive_mode
+key ENTER
+wait 0.3
+click_ui adaptive_minus
+wait 0.2
+click_ui adaptive_minus
+wait 0.2
+click_ui adaptive_minus
+wait 0.2
+click_ui adaptive_minus
+wait 0.2
+click_ui adaptive_minus
+wait 0.2
+click_ui adaptive_minus
+wait 0.2
+click_ui adaptive_minus
+wait 0.2
+expect_text "50%"
+assert_ui adaptive_pixels w=40
+assert_ui adaptive_screen_pct w=80
+screenshot adaptive_scaling_50
+click_ui adaptive_plus
+wait 0.2
+click_ui adaptive_plus
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_within_parents
+assert_ui adaptive_pixels w=80
+assert_ui adaptive_screen_pct w=120
+assert_ui adaptive_mode w=200
+expect_text "Viewport: 1920 x 1080 px"
+resize 1280 720

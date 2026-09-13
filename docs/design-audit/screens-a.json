@@ -623,7 +623,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "a44d5a368be19a39854736506d6af2265b579ebbeb07a5a5a3b55b6dfcfd16e3"
+    "sha256": "a44d5a368be19a39854736506d6af2265b579ebbeb07a5a5a3b55b6dfcfd16e3",
+    "evidence": "docs/design-audit/originals/adaptive_scaling_720p.png"
   },
   {
     "id": "advanced_modals",

@@ -184,6 +184,15 @@ The screen uses padded parent containers until this is reviewed upstream.
 Pass the resolved inset to `position_text_ex()` consistently and verify both
 single-line and wrapped labels before changing afterhours.
 
+### Overflow mode changes retain scroll state
+
+Switching an existing element from `Overflow::Auto` to `Overflow::Hidden` leaves
+`HasScrollView` attached. Reproduced in `adaptive_scaling`: zoom to 300%, scroll,
+then return to 50%; the old scrollbar remains. `component_init.h` adds scroll
+state when requested but does not remove it when the overflow mode changes.
+wm explicitly removes the scroll component when its canvas fits again.
+Review symmetric component cleanup upstream before relying on runtime mode changes.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`

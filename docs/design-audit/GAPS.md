@@ -204,7 +204,7 @@ The screenshot demonstrates readable automatic and manual contrast. Recommendati
 
 ## adaptive scaling
 
-[Current baseline](../../screenshot-baselines/screens/adaptive_scaling_720p.png) · [Visual review](../../design-audit.html#screen=adaptive_scaling)
+[Reviewed image](../../docs/design-audit/originals/adaptive_scaling_720p.png) · [Current baseline](../../screenshot-baselines/screens/adaptive_scaling_720p.png) · [Visual review](../../design-audit.html#screen=adaptive_scaling)
 
 Baseline SHA-256: `a44d5a368be19a39854736506d6af2265b579ebbeb07a5a5a3b55b6dfcfd16e3`
 

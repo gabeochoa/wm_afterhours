@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-50 completed; 2,485 remaining.
+75 completed; 2,460 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -177,79 +177,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/adaptive_scaling_720p.png) · [Visual review](design-audit.html#screen=adaptive_scaling)
 
-- [ ] `adaptive_scaling-01` · P2 · proposal. Logical dimensions: Increase diagnostic text to a readable body size.
+- [x] `adaptive_scaling-01` · P2 · proposal. Logical dimensions: Increase diagnostic text to a readable body size.
   Evidence: Logical: 1280x720 is tiny beside the scale controls.
 
-- [ ] `adaptive_scaling-02` · P2 · proposal. Header status: Use the header slot for physical viewport dimensions.
+- [x] `adaptive_scaling-02` · P2 · proposal. Header status: Use the header slot for physical viewport dimensions.
   Evidence: Adaptive 100% repeats the mode and scale controls.
 
-- [ ] `adaptive_scaling-03` · P2 · proposal. Mode button: Add a change-mode indicator and name the alternate mode in helper text.
+- [x] `adaptive_scaling-03` · P2 · proposal. Mode button: Add a change-mode indicator and name the alternate mode in helper text.
   Evidence: Mode: Adaptive does not signal that another mode exists.
 
-- [ ] `adaptive_scaling-04` · P2 · proposal. Scale decrement: Label the scale control group with its increment.
+- [x] `adaptive_scaling-04` · P2 · proposal. Scale decrement: Label the scale control group with its increment.
   Evidence: The minus button contains no scale-step hint.
 
-- [ ] `adaptive_scaling-05` · P2 · proposal. Scale readout: Give the numeric readout a distinct non-action field treatment.
+- [x] `adaptive_scaling-05` · P2 · proposal. Scale readout: Give the numeric readout a distinct non-action field treatment.
   Evidence: 100% is styled much like its neighboring buttons.
 
-- [ ] `adaptive_scaling-06` · P2 · proposal. Pixel card description: Increase its text size and align it to the card heading.
+- [x] `adaptive_scaling-06` · P2 · proposal. Pixel card description: Increase its text size and align it to the card heading.
   Evidence: This card is 280x160 px is extremely small.
 
-- [ ] `adaptive_scaling-07` · P2 · proposal. Pixel color squares: Add width-by-height captions outside each square.
+- [x] `adaptive_scaling-07` · P2 · proposal. Pixel color squares: Add width-by-height captions outside each square.
   Evidence: Four colored blocks have no dimensions shown.
 
-- [ ] `adaptive_scaling-08` · P2 · proposal. Pixel square comparison: Label their intended comparison explicitly.
+- [x] `adaptive_scaling-08` · P2 · proposal. Pixel square comparison: Label their intended comparison explicitly.
   Evidence: Color is the only distinction among identical-size samples.
 
-- [ ] `adaptive_scaling-09` · P2 · proposal. Pixel buttons: Use labels that include their fixed pixel dimensions.
+- [x] `adaptive_scaling-09` · P2 · proposal. Pixel buttons: Use labels that include their fixed pixel dimensions.
   Evidence: Button A and Button B do not identify their sizing rule.
+  Resolution: Labels state fill-width x 36 logical pixels; the original widths were percentages, not fixed pixels.
 
-- [ ] `adaptive_scaling-10` · P2 · proposal. Button widths: Show a measured width annotation below the pair.
+- [x] `adaptive_scaling-10` · P2 · proposal. Button widths: Show a measured width annotation below the pair.
   Evidence: Both pixel buttons span nearly the full card.
 
-- [ ] `adaptive_scaling-11` · P2 · proposal. Padding card: Add four small padding brackets around Inner content area.
+- [x] `adaptive_scaling-11` · P2 · proposal. Padding card: Add four small padding brackets around Inner content area.
   Evidence: Padding: 14px all sides lacks visible dimension markers.
 
-- [ ] `adaptive_scaling-12` · P2 · proposal. Padding inner text: Inset its label without changing the measured outer padding.
+- [x] `adaptive_scaling-12` · P2 · proposal. Padding inner text: Inset its label without changing the measured outer padding.
   Evidence: Inner content area sits against the dark rectangle's left edge.
 
-- [ ] `adaptive_scaling-13` · P2 · proposal. Expand heading: Add a brief ratio caption above the colored segments.
+- [x] `adaptive_scaling-13` · P2 · proposal. Expand heading: Add a brief ratio caption above the colored segments.
   Evidence: Expand & Flex does not define the 1x, 2x, 3x ratio.
 
-- [ ] `adaptive_scaling-14` · P2 · proposal. Expand segment boundaries: Add thin neutral dividers that preserve the measured flex widths.
+- [x] `adaptive_scaling-14` · P2 · proposal. Expand segment boundaries: Add thin neutral dividers that preserve the measured flex widths.
   Evidence: Red, amber and green segments touch directly.
 
-- [ ] `adaptive_scaling-15` · P2 · proposal. Expand numeric labels: Increase their size for distance comparison.
+- [x] `adaptive_scaling-15` · P2 · proposal. Expand numeric labels: Increase their size for distance comparison.
   Evidence: 1x, 2x and 3x are small in tall blocks.
 
-- [ ] `adaptive_scaling-16` · P2 · proposal. Expand explanation: Use larger text and a shorter two-line explanation.
+- [x] `adaptive_scaling-16` · P2 · proposal. Expand explanation: Use larger text and a shorter two-line explanation.
   Evidence: The long explanation is tiny and widely tracked.
 
-- [ ] `adaptive_scaling-17` · P2 · proposal. Pixel comparison heading: Name all three sizing systems in the heading.
+- [x] `adaptive_scaling-17` · P2 · proposal. Pixel comparison heading: Name all three sizing systems in the heading.
   Evidence: screen_pct vs pixels omits the h720 sample shown below.
 
-- [ ] `adaptive_scaling-18` · P2 · proposal. px specimen: Label the specimen with its numeric pixel width.
+- [x] `adaptive_scaling-18` · P2 · proposal. px specimen: Label the specimen with its numeric pixel width.
   Evidence: px omits its configured magnitude.
 
-- [ ] `adaptive_scaling-19` · P2 · proposal. h720 specimen: Show its configured value and reference height in a caption.
+- [x] `adaptive_scaling-19` · P2 · proposal. h720 specimen: Show its configured value and reference height in a caption.
   Evidence: h720 is unexplained technical shorthand.
 
-- [ ] `adaptive_scaling-20` · P2 · proposal. scr% specimen: Show the exact screen percentage outside the block.
+- [x] `adaptive_scaling-20` · P2 · proposal. scr% specimen: Show the exact screen percentage outside the block.
   Evidence: scr% does not state its percentage.
 
-- [ ] `adaptive_scaling-21` · P2 · proposal. Comparison alignment: Add a horizontal pixel scale beneath them.
+- [x] `adaptive_scaling-21` · P2 · proposal. Comparison alignment: Add a horizontal pixel scale beneath them.
   Evidence: Three unequal specimens provide no common ruler.
 
-- [ ] `adaptive_scaling-22` · P2 · proposal. Breakpoint chips: Separate width breakpoints from height breakpoints.
+- [x] `adaptive_scaling-22` · P2 · proposal. Breakpoint chips: Separate width breakpoints from height breakpoints.
   Evidence: narrow, medium, wide and short mix width and height categories.
 
-- [ ] `adaptive_scaling-23` · P2 · proposal. Active wide chip: Add a checkmark or Active suffix.
+- [x] `adaptive_scaling-23` · P2 · proposal. Active wide chip: Add a checkmark or Active suffix.
   Evidence: The wide state is communicated mainly by a blue fill.
 
-- [ ] `adaptive_scaling-24` · P2 · proposal. Breakpoint thresholds: Show the numeric threshold for each breakpoint.
+- [x] `adaptive_scaling-24` · P2 · proposal. Breakpoint thresholds: Show the numeric threshold for each breakpoint.
   Evidence: No width or height thresholds appear beside the chips.
 
-- [ ] `adaptive_scaling-25` · P2 · proposal. Empty lower area: Add a compact before-and-after size table for the visible examples.
+- [x] `adaptive_scaling-25` · P2 · proposal. Empty lower area: Add a compact before-and-after size table for the visible examples.
   Evidence: Most of the bottom fifth is unused.
 
 ### advanced_modals
@@ -8093,6 +8094,12 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+### Scroll state after changing overflow
+
+- [ ] Remove obsolete scroll state when an element changes from Auto/Scroll to Hidden/Visible.
+  wm clears it explicitly in `adaptive_scaling`. See
+  [the gap](docs/AFTERHOURS_GAPS.md#overflow-mode-changes-retain-scroll-state).
 
 ### Single-line text insets
 
