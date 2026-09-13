@@ -1,0 +1,30 @@
+goto_screen horizontal_drag
+resize 1280 720
+wait 0.4
+expect_text "Translucent preview: Off"
+click_ui hdrag_ghost
+wait 0.2
+expect_text "Translucent preview: On"
+mouse_down 150 219
+wait 0.2
+mouse_move 500 219
+wait 0.2
+assert_ui drag_overlay x=411 y=202 w=178 h=34
+screenshot horizontal_drag_ghost_on
+mouse_up
+wait 0.2
+expect_text "Last moved: Security patch / High priority / position 2"
+click_ui hdrag_reset
+focus_ui hdrag_ghost
+key ENTER
+wait 0.2
+expect_text "Translucent preview: Off"
+mouse_down 150 219
+wait 0.2
+mouse_move 500 219
+wait 0.2
+assert_ui drag_overlay x=411 y=202 w=178 h=34
+screenshot horizontal_drag_ghost_off
+mouse_up
+wait 0.2
+expect_text "Last moved: Security patch / High priority / position 2"

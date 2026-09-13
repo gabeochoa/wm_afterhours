@@ -17,6 +17,7 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
       {"README typo", "Rename variable"}}};
   std::array<std::vector<std::string>, 3> lanes = initial_lanes;
   std::map<afterhours::EntityID, size_t> group_to_row;
+  bool ghost_preview = false;
   std::string status = "Ready / 7 tags across 3 priority lanes";
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context,
@@ -78,6 +79,12 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
       lanes = initial_lanes;
       status = "Reset / 7 tags restored to their starting lanes";
     }
+    if (button(context, mk(root.ent(), 7), box(916, 62, 244, 40)
+        .with_label(ghost_preview ? "Translucent preview: On" : "Translucent preview: Off")
+        .with_font("AtkinsonMock", pixels(18 * s))
+        .with_custom_background({45, 67, 95, 255}).with_custom_text_color(ink)
+        .with_corner_radius(8 * s).with_debug_name("hdrag_ghost")))
+      ghost_preview = !ghost_preview;
     for (size_t lane = 0; lane < lanes.size(); ++lane) {
       const float top = 118 + static_cast<float>(lane) * 148;
       auto panel = div(context, mk(root.ent(), 10 + static_cast<int>(lane)), box(0, top, 1160, 136)
@@ -111,6 +118,8 @@ struct HorizontalDragShowcase : ScreenSystem<UIContext<InputAction>> {
                                       r.y + r.height / 2 + 4 * static_cast<float>(dy) * s}, s, muted);
             }));
         tag.ent().get<HasLabel>().text_x_offset = 10 * s;
+        tag.ent().addComponentIfMissing<HasOpacity>().value =
+            ghost_preview && tag.ent().hasTag(DragTag::DraggedItem) ? .45f : 1.f;
       }
       div(context, mk(panel.ent(), 4), box(778, 12, 366, 24)
           .with_label(lanes[lane].empty() ? "Empty lane / drop a tag here" : "Drop here or between tags")
