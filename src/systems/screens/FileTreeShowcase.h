@@ -6,6 +6,8 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
@@ -26,9 +28,13 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
   bool use_real_fs = false;
   bool seeded_expansion = false;
 
-  static constexpr const char *SYNTHETIC_ROOT = "~/projects/harbour";
+  std::string preview_path;
+  std::string preview_status;
+  std::vector<std::string> preview_lines;
 
-  FileTreeShowcase() { current_root = SYNTHETIC_ROOT; }
+  static std::string project_root() { return std::filesystem::current_path().string(); }
+
+  FileTreeShowcase() { current_root = project_root(); }
 
   static TreeNode<FileEntry> make_dir(const std::string &parent,
                                       const std::string &name,
@@ -54,46 +60,62 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     return n;
   }
 
-  // A believable project, fixed so the baseline is stable.
   static std::vector<TreeNode<FileEntry>> synthetic_tree() {
-    const std::string r = SYNTHETIC_ROOT;
-    const std::string src = r + "/src";
-    const std::string assets = r + "/assets";
-    return {
-        make_dir(r, "src",
-                 {
-                     make_dir(src, "engine",
-                              {
-                                  make_file(src + "/engine", "renderer.cpp",
-                                            48213),
-                                  make_file(src + "/engine", "renderer.h", 6122),
-                                  make_file(src + "/engine", "scheduler.cpp",
-                                            21504),
-                              }),
-                     make_dir(src, "ui",
-                              {
-                                  make_file(src + "/ui", "layout.cpp", 73940),
-                                  make_file(src + "/ui", "theme.cpp", 12880),
-                              }),
-                     make_file(src, "main.cpp", 3271),
-                 }),
-        make_dir(r, "assets",
-                 {
-                     make_dir(assets, "fonts",
-                              {
-                                  make_file(assets + "/fonts", "Archivo.ttf",
-                                            184320),
-                              }),
-                     make_file(assets, "atlas.png", 2411724),
-                 }),
-        make_dir(r, "tests",
-                 {
-                     make_file(r + "/tests", "layout_test.cpp", 15890),
-                     make_file(r + "/tests", "theme_test.cpp", 8044),
-                 }),
-        make_file(r, "README.md", 4180),
-        make_file(r, "makefile", 2965),
+    const std::string r = project_root();
+    const auto source = [](const std::string &parent, const std::string &name) {
+      std::error_code ec;
+      const auto bytes = std::filesystem::file_size(parent + "/" + name, ec);
+      return make_file(parent, name, ec ? 0 : bytes);
     };
+    return {
+        make_dir(r, "src", {
+            make_dir(r + "/src", "engine", {
+                source(r + "/src/engine", "input_injector.cpp"),
+                source(r + "/src/engine", "input_injector.h")}),
+            make_dir(r + "/src", "systems", {
+                make_dir(r + "/src/systems", "screens", {
+                    source(r + "/src/systems/screens", "FileTreeShowcase.h"),
+                    source(r + "/src/systems/screens", "Forms.h"),
+                    source(r + "/src/systems/screens", "DividerShowcase.h"),
+                    source(r + "/src/systems/screens", "KirbyOptions.h")})}),
+            source(r + "/src", "main.cpp"),
+            source(r + "/src", "settings.cpp")}),
+        make_dir(r, "tests", {
+            make_dir(r + "/tests", "e2e_scripts", {
+                source(r + "/tests/e2e_scripts", "199_file_tree_design.e2e"),
+                source(r + "/tests/e2e_scripts", "204_forms_design.e2e")})}),
+        source(r, "makefile"),
+        source(r, "todo.md")};
+  }
+
+  void read_preview(const FileEntry *selected) {
+    const auto path = selected && !selected->is_directory ? selected->path : "";
+    if (path == preview_path) return;
+    preview_path = path;
+    preview_lines.clear();
+    preview_status.clear();
+    if (path.empty()) return;
+    std::ifstream input(path, std::ios::binary);
+    if (!input) {
+      preview_status = "Could not open this file.";
+      return;
+    }
+    constexpr size_t limit = 128 * 1024;
+    std::string contents(limit, '\0');
+    input.read(contents.data(), static_cast<std::streamsize>(contents.size()));
+    contents.resize(static_cast<size_t>(input.gcount()));
+    if (contents.find('\0') != std::string::npos) {
+      preview_status = "Binary file / text preview unavailable";
+      return;
+    }
+    std::istringstream lines(contents);
+    for (std::string line; std::getline(lines, line);) {
+      if (!line.empty() && line.back() == '\r') line.pop_back();
+      for (size_t i = 0; (i = line.find('\t', i)) != std::string::npos; i += 4)
+        line.replace(i, 1, "    ");
+      preview_lines.push_back(std::move(line));
+    }
+    preview_status = contents.size() == limit ? "Preview limited to first 128 KB" : "Read only";
   }
 
   std::vector<TreeNode<FileEntry>> scan_directory(const std::string &dir_path) {
@@ -139,8 +161,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 
   void lazy_load_children(TreeNode<FileEntry> &node, HasTreeViewState &state) {
-    // The synthetic tree ships its children already, and scanning a made-up
-    // path would only empty them.
+    // The curated tree already contains the source files selected for this demo.
     if (!use_real_fs)
       return;
     if (!node.data.is_directory)
@@ -230,7 +251,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
       return result;
     };
     if (control(10, "Home", 24, 104, "home_btn")) {
-      current_root = use_real_fs ? std::filesystem::current_path().string() : SYNTHETIC_ROOT;
+      current_root = use_real_fs ? std::filesystem::current_path().string() : project_root();
       needs_refresh = true;
       seeded_expansion = false;
     }
@@ -240,9 +261,9 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
       needs_refresh = true;
     }
     if (control(12, "Refresh", 248, 128, "refresh_btn")) needs_refresh = true;
-    if (control(13, use_real_fs ? "Real files" : "Sample data", 958, 178, "source_btn")) {
+    if (control(13, use_real_fs ? "All files" : "Project sources", 958, 178, "source_btn")) {
       use_real_fs = !use_real_fs;
-      current_root = use_real_fs ? std::filesystem::current_path().string() : SYNTHETIC_ROOT;
+      current_root = use_real_fs ? std::filesystem::current_path().string() : project_root();
       needs_refresh = true;
       seeded_expansion = false;
     }
@@ -250,11 +271,12 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     label(2, current_root, 24, 116, 1112, 30, 21, true)
         .ent().addComponentIfMissing<UIComponentDebug>("path_label").set("path_label");
     label(42, "Name", 24, 156, 400, 26, 18, true);
-    label(43, "Size", 596, 156, 104, 26, 18, true);
-    label(44, "Selection details", 760, 156, 348, 26, 18, true);
+    label(43, "Size", 420, 156, 104, 26, 18, true);
+    label(44, "Source preview", 548, 156, 560, 26, 18, true);
     if (needs_refresh) {
       cached_roots = use_real_fs ? scan_directory(current_root) : synthetic_tree();
       needs_refresh = false;
+      preview_path.clear();
     }
     auto tree_pair = mk(root.ent(), 3);
     auto [tree_entity, tree_parent] = deref(tree_pair);
@@ -295,7 +317,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     config.get_id = [](const FileEntry &entry) { return entry.path; };
     config.is_expandable = [](const FileEntry &entry) { return entry.is_directory; };
     auto result = tree_view(context, tree_pair, cached_roots, config,
-        box(24, 186, 676, 430).with_font("AtkinsonMock", pixels(19 * s))
+        box(24, 186, 500, 430).with_font("AtkinsonMock", pixels(17 * s))
           .with_custom_text_color(theme.font).with_custom_background(theme.surface)
           .with_debug_name("file_tree"));
     if (!result.cmp().children.empty()) {
@@ -320,7 +342,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
           caption.font_name = entry->is_directory ? "AtkinsonMockBold" : "AtkinsonMock";
           auto &text_cmp = text.asE().get<UIComponent>();
           text_cmp.desired_margin[Axis::left] = pixels(46 * s);
-          text_cmp.desired_margin[Axis::right] = pixels(108 * s);
+          text_cmp.desired_margin[Axis::right] = pixels(88 * s);
           const bool expanded = state.is_expanded(entry->path);
           div(context, mk(row, 300), box(0, 0, 42, 23)
               .with_background(Theme::Usage::None).with_ignore_pointer_events()
@@ -344,24 +366,47 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
                 raylib::DrawRectangleLinesEx({r.x + 25 * s, middle - 8 * s, 12 * s, 16 * s}, 1 * s, theme.font_muted);
               }));
           if (entry->is_directory) continue;
-          div(context, mk(row, 301), box(552 - 20 * static_cast<float>(depth), 0, 114, 23)
+          div(context, mk(row, 301), box(388 - 20 * static_cast<float>(depth), 0, 102, 23)
               .with_label(format_size(entry->file_size)).with_font("AtkinsonMock", pixels(17 * s))
               .with_alignment(TextAlignment::Right).with_custom_text_color(theme.font_muted)
               .with_background(Theme::Usage::None).with_ignore_pointer_events());
         }
       }
     }
-    div(context, mk(root.ent(), 50), box(736, 186, 400, 430)
-        .with_custom_background({21, 29, 43, 255}).with_corner_radius(8 * s));
-    label(51, selected ? selected->name : "No selection", 760, 210, 352, 42, 25);
-    label(52, selected ? (selected->is_directory ? "Folder" : "File") : "Select a file to view details",
-          760, 264, 352, 32, 20, true);
-    label(53, selected ? (selected->is_directory ? "Expand or collapse with Enter" : format_size(selected->file_size))
-                       : "Click a row or use Tab and Enter.", 760, 306, 352, 32, 18, true);
-    label(54, selected ? selected->path : "Sample data never changes your files.", 760, 356, 352, 88, 18, true)
-        .ent().get<HasLabel>().text_overflow = TextOverflow::Wrap;
-    label(55, use_real_fs ? "Read-only local directory" : "harbour / sample project", 760, 560, 352, 30, 17, true);
-    label(4, fmt::format("{} folders / {} files{}", folders, files, use_real_fs ? " loaded" : " in sample"),
+    const bool changed_preview = preview_path != (selected && !selected->is_directory ? selected->path : "");
+    read_preview(selected);
+    div(context, mk(root.ent(), 50), box(540, 186, 596, 430)
+        .with_custom_background({17, 24, 36, 255}).with_corner_radius(8 * s));
+    label(51, selected ? selected->name : "No selection", 552, 194, 572, 34, 23);
+    label(52, selected ? (selected->is_directory ? "Expand or collapse with Enter" : format_size(selected->file_size))
+                       : "Select a file to read its source", 552, 230, 572, 26, 17, true);
+    label(54, selected ? selected->path : current_root, 552, 260, 572, 28, 16, true)
+        .ent().addComponentIfMissing<UIComponentDebug>("file_preview_path").set("file_preview_path");
+    auto preview = virtual_list(context, mk(root.ent(), 56), preview_lines.size(), 24 * s,
+        [&](size_t index, afterhours::Entity &row) {
+          const auto &line = preview_lines[index];
+          const float width = std::max(548 * s, (76 + static_cast<float>(line.size()) * 18) * s);
+          row.get<UIComponent>().set_desired_width(pixels(width));
+          div(context, mk(row, 0), ComponentConfig{}
+              .with_size({pixels(width), pixels(24 * s)})
+              .with_label(fmt::format("{:4}  {}", index + 1, line))
+              .with_font("AtkinsonMock", pixels(18 * s)).with_text_inset(0)
+              .with_custom_text_color(theme.font).with_background(Theme::Usage::None)
+              .with_corner_radius(0).with_ignore_pointer_events()
+              .with_debug_name("file_preview_line_" + std::to_string(index + 1)));
+        }, box(552, 298, 572, 274).with_overflow(Overflow::Scroll, Axis::X)
+              .with_custom_background({17, 24, 36, 255}).with_debug_name("file_preview"));
+    auto &preview_scroll = preview.ent().get<HasScrollView>();
+    preview_scroll.scroll_speed = 36 * s;
+    if (changed_preview) {
+      preview_scroll.scroll_offset = {};
+      preview_scroll.scroll_target = {};
+      preview_scroll.last_eased_offset = {};
+    }
+    label(55, preview_status.empty() ? "Select a source file on the left" : preview_status +
+          fmt::format(" / {} lines / scroll to read", preview_lines.size()),
+          552, 580, 572, 28, 16, true);
+    label(4, fmt::format("{} folders / {} files{}", folders, files, use_real_fs ? " loaded" : " in project"),
           24, 626, 676, 26, 18, true).ent().addComponentIfMissing<UIComponentDebug>("status_bar").set("status_bar");
   }
 
