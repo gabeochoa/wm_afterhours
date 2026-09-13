@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include "DialogPresentation.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
@@ -66,115 +67,143 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
+    theme.surface = {29, 40, 59, 255};
+    theme.primary = {57, 99, 168, 255};
+    theme.secondary = {36, 53, 78, 255};
+    theme.accent = {32, 118, 101, 255};
     context.theme = theme;
     context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
-                                              pixels(16.0f));
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20.f));
+
+    const float sw = static_cast<float>(Settings::get().get_screen_width());
+    const float sh = static_cast<float>(Settings::get().get_screen_height());
+    const float scale = sh / 720.f;
+    const float panel_width = std::min(sw - 64.f * scale, 1120.f * scale);
+    const float card_width = (panel_width - 64.f * scale) / 2.f;
+    const auto ink = afterhours::Color{231, 237, 248, 255};
+    const auto muted = afterhours::Color{174, 190, 212, 255};
+    const auto surface = afterhours::Color{29, 40, 59, 255};
+    const auto action = afterhours::Color{57, 99, 168, 255};
 
     auto root =
         div(context, mk(entity, 0),
             ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
-                .with_background(Theme::Usage::Background)
-                .with_corner_radius(12.f)
-                .with_self_align(SelfAlign::Center)
-                .with_padding(Spacing::xl)
+                .with_size({screen_pct(1.f), screen_pct(1.f)})
+                .with_custom_background(afterhours::Color{9, 14, 24, 255})
+                .with_corner_radius(0.f)
                 .with_debug_name("adv_modal_bg"));
-
-    auto main = vstack(
-        context, mk(root.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_no_wrap()
-            .with_debug_name("adv_modal_main"));
+    auto main =
+        vstack(context, mk(root.ent(), 0),
+               ComponentConfig{}
+                   .with_size({pixels(panel_width), pixels(500.f * scale)})
+                   .with_absolute_position((sw - panel_width) / 2.f,
+                                           (sh - 500.f * scale) / 2.f)
+                   .with_custom_background(afterhours::Color{20, 28, 43, 255})
+                   .with_padding(Padding::all(pixels(24.f * scale)))
+                   .with_corner_radius(12.f * scale)
+                   .with_no_wrap()
+                   .with_debug_name("adv_modal_main"));
 
     // Title
     div(context, mk(main.ent(), 0),
         ComponentConfig{}
             .with_label("Advanced Modals")
-            .with_size(ComponentSize{percent(1.0f), h720(50)})
-            .with_background(Theme::Usage::Surface)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(28.0f)));
+            .with_size({percent(1.f), pixels(40.f * scale)})
+            .with_font("AtkinsonMockBold", pixels(36.f * scale))
+            .with_custom_text_color(ink));
+    div(context, mk(main.ent(), 4),
+        ComponentConfig{}
+            .with_label("Four interactive examples: validation, guided setup, "
+                        "preferences, and feedback.")
+            .with_size({percent(1.f), pixels(28.f * scale)})
+            .with_font("AtkinsonMock", pixels(20.f * scale))
+            .with_custom_text_color(muted));
+
+    auto launcher = [&](afterhours::Entity &row, int id,
+                        const std::string &title,
+                        const std::string &description,
+                        afterhours::Color accent,
+                        const std::string &debug_name) {
+      auto card =
+          vstack(context, mk(row, id),
+                 ComponentConfig{}
+                     .with_size({pixels(card_width), pixels(144.f * scale)})
+                     .with_custom_background(surface)
+                     .with_corner_radius(8.f * scale)
+                     .with_padding(Padding::all(pixels(16.f * scale)))
+                     .with_gap(pixels(6.f * scale))
+                     .with_no_wrap());
+      auto heading = hstack(context, mk(card.ent(), 0),
+                            ComponentConfig{}
+                                .with_size({percent(1.f), pixels(24.f * scale)})
+                                .with_gap(pixels(8.f * scale))
+                                .with_no_wrap());
+      div(context, mk(heading.ent(), 0),
+          ComponentConfig{}
+              .with_size({pixels(4.f * scale), pixels(24.f * scale)})
+              .with_custom_background(accent)
+              .with_corner_radius(0.f));
+      div(context, mk(heading.ent(), 1),
+          ComponentConfig{}
+              .with_label(title)
+              .with_size({expand(), pixels(24.f * scale)})
+              .with_font("AtkinsonMock", pixels(22.f * scale))
+              .with_custom_text_color(ink));
+      div(context, mk(card.ent(), 1),
+          ComponentConfig{}
+              .with_label(description)
+              .with_size({percent(1.f), pixels(24.f * scale)})
+              .with_font("AtkinsonMock", pixels(20.f * scale))
+              .with_custom_text_color(muted));
+      return button(context, mk(card.ent(), 2),
+                    ComponentConfig{}
+                        .with_label("Open " + title)
+                        .with_size({percent(1.f), pixels(38.f * scale)})
+                        .with_custom_background(action)
+                        .with_custom_text_color(ink)
+                        .with_font("AtkinsonMock", pixels(22.f * scale))
+                        .with_alignment(TextAlignment::Center)
+                        .with_corner_radius(8.f * scale)
+                        .with_cursor(CursorType::Pointer)
+                        .with_debug_name(debug_name));
+    };
 
     // 2x2 grid of trigger buttons
-    auto grid_top = hstack(
-        context, mk(main.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(80)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::sm)
-            .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("grid_top"));
-
-    if (button(context, mk(grid_top.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Login Form")
-                   .with_size(ComponentSize{pixels(220), pixels(50)})
-                   .with_background(Theme::Usage::Primary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                   .with_roundness(0.08f)
-                   .with_cursor(CursorType::Pointer)
-                   .with_debug_name("btn_login"))) {
+    auto grid_top = hstack(context, mk(main.ent(), 1),
+                           ComponentConfig{}
+                               .with_size({percent(1.f), pixels(144.f * scale)})
+                               .with_gap(pixels(16.f * scale))
+                               .with_no_wrap()
+                               .with_margin(Margin::Top(pixels(12.f * scale)))
+                               .with_debug_name("grid_top"));
+    if (launcher(grid_top.ent(), 0, "Login Form",
+                 "Required username and password.",
+                 afterhours::Color{95, 160, 255, 255}, "btn_login")) {
       show_login = true;
-      login_error = "";
+      login_error.clear();
     }
-
-    if (button(context, mk(grid_top.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Multi-Step Wizard")
-                   .with_size(ComponentSize{pixels(220), pixels(50)})
-                   .with_background(Theme::Usage::Accent)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                   .with_roundness(0.08f)
-                   .with_cursor(CursorType::Pointer)
-                   .with_debug_name("btn_wizard"))) {
+    if (launcher(grid_top.ent(), 1, "Setup Wizard",
+                 "Three-step account and preference setup.",
+                 afterhours::Color{226, 180, 98, 255}, "btn_wizard")) {
       show_wizard = true;
       wizard_step = 0;
     }
-
-    auto grid_bot = hstack(
-        context, mk(main.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), h720(80)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::sm)
-            .with_align_items(AlignItems::Center)
-            .with_justify_content(JustifyContent::SpaceAround)
-            .with_margin(Margin{.top = DefaultSpacing::small()})
-            .with_debug_name("grid_bot"));
-
-    if (button(context, mk(grid_bot.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Settings Panel")
-                   .with_size(ComponentSize{pixels(220), pixels(50)})
-                   .with_background(Theme::Usage::Secondary)
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                   .with_roundness(0.08f)
-                   .with_cursor(CursorType::Pointer)
-                   .with_debug_name("btn_settings"))) {
+    auto grid_bot = hstack(context, mk(main.ent(), 2),
+                           ComponentConfig{}
+                               .with_size({percent(1.f), pixels(144.f * scale)})
+                               .with_gap(pixels(16.f * scale))
+                               .with_no_wrap()
+                               .with_margin(Margin::Top(pixels(12.f * scale)))
+                               .with_debug_name("grid_bot"));
+    if (launcher(grid_bot.ent(), 0, "Settings Panel",
+                 "Volume, language, theme, and notifications.",
+                 afterhours::Color{88, 195, 157, 255}, "btn_settings"))
       show_settings = true;
-    }
-
-    if (button(context, mk(grid_bot.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Feedback Form")
-                   .with_size(ComponentSize{pixels(220), pixels(50)})
-                   .with_custom_background(afterhours::Color{140, 70, 70, 255})
-                   .with_auto_text_color(true)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                   .with_roundness(0.08f)
-                   .with_cursor(CursorType::Pointer)
-                   .with_debug_name("btn_feedback"))) {
+    if (launcher(grid_bot.ent(), 1, "Feedback Form",
+                 "Category, severity rating, and a written message.",
+                 afterhours::Color{208, 143, 186, 255}, "btn_feedback")) {
       show_feedback = true;
-      feedback_error = "";
+      feedback_error.clear();
     }
 
     // Status line
@@ -188,17 +217,24 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
     if (status.empty())
       status = "Open a modal above to get started";
 
-    div(context, mk(main.ent(), 3),
+    auto status_panel =
+        div(context, mk(main.ent(), 3),
+            ComponentConfig{}
+                .with_size({percent(1.f), pixels(56.f * scale)})
+                .with_custom_background(surface)
+                .with_corner_radius(8.f * scale)
+                .with_padding(Padding{.top = pixels(8.f * scale),
+                                      .left = pixels(16.f * scale),
+                                      .bottom = pixels(8.f * scale),
+                                      .right = pixels(16.f * scale)})
+                .with_margin(Margin::Top(pixels(16.f * scale))));
+    div(context, mk(status_panel.ent(), 0),
         ComponentConfig{}
             .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), h720(40)})
-            .with_custom_background(
-                afterhours::colors::lighten(theme.background, 0.08f))
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_roundness(0.1f)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_margin(Margin{.top = DefaultSpacing::small()}));
+            .with_size({percent(1.f), percent(1.f)})
+            .with_custom_text_color(muted)
+            .with_font("AtkinsonMock", pixels(22.f * scale))
+            .with_text_overflow(TextOverflow::Wrap));
 
     // =====================================================================
     // Modal 1: Login Form
@@ -210,6 +246,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_title("Login")
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
+      dialog_presentation::style_title(m.ent());
 
       // Username label + input
       div(context, mk(m.ent(), 0),
@@ -217,7 +254,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Username")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -225,9 +262,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       text_input(context, mk(m.ent(), 1), login_username,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                     .with_background(Theme::Usage::Primary)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-                     .with_roundness(0.1f)
+                     .with_background(Theme::Usage::Secondary)
+                     .with_font("AtkinsonMock", pixels(20.f))
+                     .with_corner_radius(0.f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("login_username_input"));
@@ -238,7 +275,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Password")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -246,9 +283,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       text_input(context, mk(m.ent(), 3), login_password,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                     .with_background(Theme::Usage::Primary)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-                     .with_roundness(0.1f)
+                     .with_background(Theme::Usage::Secondary)
+                     .with_font("AtkinsonMock", pixels(20.f))
+                     .with_corner_radius(0.f)
                      .with_mask_char('*')
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -259,7 +296,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                     ComponentConfig{}
                         .with_label("Remember me")
                         .with_size(ComponentSize{pixels(300), pixels(36)})
-                        .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                        .with_font("AtkinsonMock", pixels(20.f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)
                         .with_debug_name("login_remember_toggle"));
@@ -271,7 +308,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_label(login_error)
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_custom_text_color(afterhours::Color{255, 100, 100, 255})
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_render_layer(CL));
       }
@@ -323,6 +360,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_title("Setup Wizard")
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
+      dialog_presentation::style_title(m.ent());
 
       // Progress bar
       float progress = static_cast<float>(wizard_step + 1) / 3.0f;
@@ -340,7 +378,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label(step_label)
               .with_size(ComponentSize{percent(1.0f), pixels(40)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+              .with_font("AtkinsonMock", pixels(18.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -353,7 +391,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_label("Name")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_skip_tabbing(true)
                 .with_render_layer(CL));
@@ -361,9 +399,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         text_input(context, mk(m.ent(), 3), wizard_name,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                       .with_background(Theme::Usage::Primary)
-                       .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-                       .with_roundness(0.1f)
+                       .with_background(Theme::Usage::Secondary)
+                       .with_font("AtkinsonMock", pixels(20.f))
+                       .with_corner_radius(0.f)
                        .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_render_layer(CL)
                        .with_debug_name("wizard_name_input"));
@@ -373,7 +411,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_label("Email")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_skip_tabbing(true)
                 .with_render_layer(CL));
@@ -381,9 +419,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
         text_input(context, mk(m.ent(), 5), wizard_email,
                    ComponentConfig{}
                        .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                       .with_background(Theme::Usage::Primary)
-                       .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-                       .with_roundness(0.1f)
+                       .with_background(Theme::Usage::Secondary)
+                       .with_font("AtkinsonMock", pixels(20.f))
+                       .with_corner_radius(0.f)
                        .with_margin(Margin{.bottom = DefaultSpacing::small()})
                        .with_render_layer(CL)
                        .with_debug_name("wizard_email_input"));
@@ -395,7 +433,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_label("Theme")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_skip_tabbing(true)
                 .with_render_layer(CL));
@@ -406,7 +444,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                     wizard_theme_idx,
                     ComponentConfig{}
                         .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                        .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                        .with_font("AtkinsonMock", pixels(20.f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)
                         .with_debug_name("wizard_theme_radio"));
@@ -416,7 +454,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
             ComponentConfig{}
                 .with_label("Enable notifications")
                 .with_size(ComponentSize{pixels(340), pixels(40)})
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_render_layer(CL)
                 .with_debug_name("wizard_notif_toggle"));
@@ -428,7 +466,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_label("Review your settings:")
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_skip_tabbing(true)
                 .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -446,7 +484,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_custom_background(
                     afterhours::colors::lighten(theme.surface, 0.05f))
                 .with_auto_text_color(true)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+                .with_font("AtkinsonMock", pixels(18.f))
                 .with_alignment(TextAlignment::Left)
                 .with_padding(Spacing::sm)
                 .with_roundness(0.08f)
@@ -515,6 +553,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_title("Settings")
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
+      dialog_presentation::style_title(m.ent());
 
       // Volume slider
       div(context, mk(m.ent(), 0),
@@ -522,7 +561,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Volume")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -542,7 +581,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Language")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -552,7 +591,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       dropdown(context, mk(m.ent(), 3), languages, settings_lang_idx,
                ComponentConfig{}
                    .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                   .with_font("AtkinsonMock", pixels(20.f))
                    .with_margin(Margin{.bottom = DefaultSpacing::small()})
                    .with_render_layer(CL)
                    .with_debug_name("settings_lang_dropdown"));
@@ -562,7 +601,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                     ComponentConfig{}
                         .with_label("Dark Mode")
                         .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
-                        .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                        .with_font("AtkinsonMock", pixels(20.f))
                         .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
                         .with_render_layer(CL)
                         .with_debug_name("settings_dark_toggle"));
@@ -571,7 +610,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                     ComponentConfig{}
                         .with_label("Notifications")
                         .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(40)})
-                        .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                        .with_font("AtkinsonMock", pixels(20.f))
                         .with_margin(Margin{.bottom = DefaultSpacing::small()})
                         .with_render_layer(CL)
                         .with_debug_name("settings_notif_toggle"));
@@ -649,6 +688,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_title("Submit Feedback")
                 .with_closed_by(afterhours::ClosedBy::Any)
                 .with_backdrop_color({0, 0, 0, 180}))) {
+      dialog_presentation::style_title(m.ent());
 
       // Subject
       div(context, mk(m.ent(), 0),
@@ -656,7 +696,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Subject")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -664,9 +704,9 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
       text_input(context, mk(m.ent(), 1), feedback_subject,
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                     .with_background(Theme::Usage::Primary)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-                     .with_roundness(0.1f)
+                     .with_background(Theme::Usage::Secondary)
+                     .with_font("AtkinsonMock", pixels(20.f))
+                     .with_corner_radius(0.f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("feedback_subject_input"));
@@ -677,7 +717,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Category")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -688,7 +728,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                feedback_category_idx,
                ComponentConfig{}
                    .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(36)})
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                   .with_font("AtkinsonMock", pixels(20.f))
                    .with_margin(Margin{.bottom = DefaultSpacing::small()})
                    .with_render_layer(CL)
                    .with_debug_name("feedback_cat_dropdown"));
@@ -699,7 +739,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Severity")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -719,7 +759,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
               .with_label("Message")
               .with_size(ComponentSize{percent(1.0f), pixels(24)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+              .with_font("AtkinsonMock", pixels(20.f))
               .with_alignment(TextAlignment::Left)
               .with_skip_tabbing(true)
               .with_render_layer(CL));
@@ -728,7 +768,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 ComponentConfig{}
                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(100)})
                     .with_background(Theme::Usage::Primary)
-                    .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+                    .with_font("AtkinsonMock", pixels(18.f))
                     .with_roundness(0.08f)
                     .with_max_lines(5)
                     .with_line_height(pixels(18))
@@ -743,7 +783,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_label(feedback_error)
                 .with_size(ComponentSize{percent(1.0f), pixels(24)})
                 .with_custom_text_color(afterhours::Color{255, 100, 100, 255})
-                .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
+                .with_font("AtkinsonMock", pixels(20.f))
                 .with_alignment(TextAlignment::Left)
                 .with_render_layer(CL));
       }

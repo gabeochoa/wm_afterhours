@@ -56,6 +56,9 @@ def build(check=False):
             raise ValueError(f"Unexpected baseline path: {path}")
         if screen["sha256"] != digest(ROOT / screen.get("evidence", screen["baseline"])):
             raise ValueError(f"Baseline changed since review: {screen['id']}")
+        for example in screen.get("examples", []):
+            if not example["label"] or not (ROOT / example["path"]).is_file():
+                raise ValueError(f"Missing example capture: {screen['id']}-{example['id']}")
         screen["has_mock"] = screen["id"] in mock_ids
         screen["reference"] = references.get(screen["id"])
         screen["legacy"] = [capture for capture in legacy if capture["screen"] == screen["id"]]
@@ -106,6 +109,9 @@ def build(check=False):
                   f"[Current baseline](../../{screen['baseline']}) · "
                   f"[Visual review](../../design-audit.html#screen={screen['id']})", "",
                   f"Baseline SHA-256: `{screen['sha256']}`", "", screen["summary"], ""]
+        if screen.get("examples"):
+            lines += ["Current example states: " + " · ".join(
+                f"[{example['label']}](../../{example['path']})" for example in screen["examples"]), ""]
         lines += finding_table(screen["findings"], screen["id"])
         for capture in screen["legacy"]:
             lines += ["", f"### Additional capture: {capture['id']}", "",

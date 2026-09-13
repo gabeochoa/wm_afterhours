@@ -240,11 +240,13 @@ The active wide 100% state is legible, but small diagnostic text and unmeasured 
 
 ## advanced modals
 
-[Current baseline](../../screenshot-baselines/screens/advanced_modals_720p.png) · [Visual review](../../design-audit.html#screen=advanced_modals)
+[Reviewed image](../../docs/design-audit/originals/advanced_modals_720p.png) · [Current baseline](../../screenshot-baselines/screens/advanced_modals_720p.png) · [Visual review](../../design-audit.html#screen=advanced_modals)
 
 Baseline SHA-256: `de1d0ba753e60e3640e31973637edbe78b25c09823a213873115e97c5f86029c`
 
 Only the launcher is captured. Sixteen defensible improvements address its sparse composition and discoverability; modal interiors and behavior are outside this screenshot's evidence.
+
+Current example states: [Current example: login validation](../../docs/design-audit/examples/advanced_modals_login_validation_720p.png) · [Current example: wizard setup](../../docs/design-audit/examples/advanced_modals_wizard_step1_720p.png) · [Current example: settings](../../docs/design-audit/examples/advanced_modals_settings_open_720p.png) · [Current example: feedback](../../docs/design-audit/examples/advanced_modals_feedback_open_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

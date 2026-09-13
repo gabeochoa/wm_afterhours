@@ -760,7 +760,30 @@
         "priority": "P2"
       }
     ],
-    "sha256": "de1d0ba753e60e3640e31973637edbe78b25c09823a213873115e97c5f86029c"
+    "sha256": "de1d0ba753e60e3640e31973637edbe78b25c09823a213873115e97c5f86029c",
+    "evidence": "docs/design-audit/originals/advanced_modals_720p.png",
+    "examples": [
+      {
+        "id": "login_validation",
+        "label": "Current example: login validation",
+        "path": "docs/design-audit/examples/advanced_modals_login_validation_720p.png"
+      },
+      {
+        "id": "wizard_step1",
+        "label": "Current example: wizard setup",
+        "path": "docs/design-audit/examples/advanced_modals_wizard_step1_720p.png"
+      },
+      {
+        "id": "settings_open",
+        "label": "Current example: settings",
+        "path": "docs/design-audit/examples/advanced_modals_settings_open_720p.png"
+      },
+      {
+        "id": "feedback_open",
+        "label": "Current example: feedback",
+        "path": "docs/design-audit/examples/advanced_modals_feedback_open_720p.png"
+      }
+    ]
   },
   {
     "id": "aim_chat",

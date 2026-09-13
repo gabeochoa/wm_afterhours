@@ -1,0 +1,25 @@
+goto_screen advanced_modals
+resize 1280 720
+wait 0.3
+assert_within_parents
+click_ui btn_login
+wait 0.3
+click_ui login_submit_btn
+wait 0.3
+expect_text "Username and password are required"
+screenshot advanced_modals_login_example
+key ESCAPE
+wait 0.3
+resize 1920 1080
+wait 0.3
+assert_within_parents
+assert_ui adv_modal_main w=1680 h=750
+click_ui btn_login
+wait 0.3
+click_ui login_submit_btn
+wait 0.3
+expect_text "Username and password are required"
+assert_within_parents
+screenshot advanced_modals_login_1080
+key ESCAPE
+resize 1280 720

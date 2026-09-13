@@ -193,6 +193,16 @@ state when requested but does not remove it when the overflow mode changes.
 wm explicitly removes the scroll component when its canvas fits again.
 Review symmetric component cleanup upstream before relying on runtime mode changes.
 
+### Modal headings bypass the configured default font
+
+The modal plugin explicitly uses `UIComponent::DEFAULT_FONT` for its heading,
+so `UIStylingDefaults::set_default_font("AtkinsonMock", ...)` changes the controls
+but leaves modal titles in Gaegu. `ModalConfig` has no title-font override.
+Observed in the `advanced_modals` and Offsite Backup open-dialog captures.
+WM now restyles the returned heading entities to the screen’s font family.
+Let built-in headings inherit the configured default or expose a title style
+after upstream review.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`

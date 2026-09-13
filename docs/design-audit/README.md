@@ -12,6 +12,9 @@ HTTP server started at the repository root.
 Use the screen search to find names or words in findings. Select Current C++,
 Comparison image, or Slider. Comparisons include existing handcrafted web mocks,
 original inspiration images where available, and older baseline captures.
+Updated screens also offer Before design updates; the reviewed image and its
+hash remain unchanged in `originals/`. Current example captures show open dialogs
+or other states when available.
 View at 100% keeps the C++ image at 1280×720 instead of scaling it to the window.
 
 Queue checkboxes save choices in this browser. Export queue downloads the selected
@@ -56,5 +59,6 @@ The review page passed 282 browser checks covering all 117 baseline images,
 persistence and export, keyboard navigation, deep links and local-file loading.
 Separate checks exercised pointer and keyboard slider controls and inspected the
 desktop and 390px layouts. All 26 mock canvases rendered at 1280×720 with their
-comparison assets loaded and no JavaScript exceptions. C++ code and baseline
-images were not changed by this audit.
+comparison assets loaded and no JavaScript exceptions. The initial audit left
+C++ code and baseline images unchanged. Implementation commits update current
+baselines after visual review and keep completion status in `todo.md`.

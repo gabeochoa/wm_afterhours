@@ -63,6 +63,7 @@ function targetsFor(screen) {
   if (screen.evidence) targets.push({id: 'reviewed', label: 'Before design updates', path: screen.evidence});
   if (screen.has_mock) targets.push({id: 'mock', label: 'Web mock'});
   if (screen.reference) targets.push({id: 'source', label: 'Original source image', path: screen.reference});
+  targets.push(...(screen.examples || []));
   for (const capture of screen.legacy) targets.push({
     id: capture.id, label: `Older: ${capture.id.replaceAll('_', ' ')}`, path: capture.baseline, capture
   });

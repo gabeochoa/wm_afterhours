@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-75 completed; 2,460 remaining.
+91 completed; 2,444 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -257,53 +257,54 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/advanced_modals_720p.png) · [Visual review](design-audit.html#screen=advanced_modals)
 
-- [ ] `advanced_modals-01` · P2 · proposal. Title bar: Add consistent text inset.
+- [x] `advanced_modals-01` · P2 · proposal. Title bar: Add consistent text inset.
   Evidence: Advanced Modals starts directly at the blue strip's left edge.
 
-- [ ] `advanced_modals-02` · P2 · proposal. Title hierarchy: Add one sentence describing the four examples beneath it.
+- [x] `advanced_modals-02` · P2 · proposal. Title hierarchy: Add one sentence describing the four examples beneath it.
   Evidence: The heading occupies a full-width strip despite little supporting content.
 
-- [ ] `advanced_modals-03` · P2 · proposal. Outer canvas: Center the page within equal outer margins.
+- [x] `advanced_modals-03` · P2 · proposal. Outer canvas: Center the page within equal outer margins.
   Evidence: A black border surrounds the navy page with uneven apparent margins.
 
-- [ ] `advanced_modals-04` · P2 · proposal. Header gap: Reduce it to the normal section spacing.
+- [x] `advanced_modals-04` · P2 · proposal. Header gap: Reduce it to the normal section spacing.
   Evidence: A large empty gap separates the title from the first launcher row.
 
-- [ ] `advanced_modals-05` · P2 · proposal. Row gap: Use a compact two-column card grid.
+- [x] `advanced_modals-05` · P2 · proposal. Row gap: Use a compact two-column card grid.
   Evidence: The two button rows are separated by about a button-height of empty space.
 
-- [ ] `advanced_modals-06` · P2 · proposal. Login launcher: Add a caption identifying required-field validation.
+- [x] `advanced_modals-06` · P2 · proposal. Login launcher: Add a caption identifying required-field validation.
   Evidence: Login Form offers no hint of the demonstrated validation.
 
-- [ ] `advanced_modals-07` · P2 · proposal. Wizard launcher: Show a Three-step setup caption.
+- [x] `advanced_modals-07` · P2 · proposal. Wizard launcher: Show a Three-step setup caption.
   Evidence: Multi-Step Wizard gives no visible step count.
 
-- [ ] `advanced_modals-08` · P2 · proposal. Settings launcher: Add a short caption naming the visible settings categories.
+- [x] `advanced_modals-08` · P2 · proposal. Settings launcher: Add a short caption naming the visible settings categories.
   Evidence: Settings Panel does not identify its control types.
 
-- [ ] `advanced_modals-09` · P2 · proposal. Feedback launcher: Add a brief rating-and-comment caption.
+- [x] `advanced_modals-09` · P2 · proposal. Feedback launcher: Add a brief rating-and-comment caption.
   Evidence: Feedback Form gives no indication of its example purpose.
 
-- [ ] `advanced_modals-10` · P2 · proposal. Launcher colors: Use a shared action style with small category accents.
+- [x] `advanced_modals-10` · P2 · proposal. Launcher colors: Use a shared action style with small category accents.
   Evidence: Blue, ochre, green and dusty red assign unrelated meanings.
 
-- [ ] `advanced_modals-11` · P2 · proposal. Button shape: Choose a deliberate shared corner system for launchers and panels.
+- [x] `advanced_modals-11` · P2 · proposal. Button shape: Choose a deliberate shared corner system for launchers and panels.
   Evidence: Square buttons sit inside strongly rounded row panels.
 
-- [ ] `advanced_modals-12` · P2 · proposal. Button balance: Bring each button and its description into a single card.
+- [x] `advanced_modals-12` · P2 · proposal. Button balance: Bring each button and its description into a single card.
   Evidence: Very wide gaps separate paired actions.
 
-- [ ] `advanced_modals-13` · P2 · proposal. Launch verbs: Prefix them with Open to clarify the immediate action.
+- [x] `advanced_modals-13` · P2 · proposal. Launch verbs: Prefix them with Open to clarify the immediate action.
   Evidence: All four labels are nouns.
 
-- [ ] `advanced_modals-14` · P2 · proposal. Status instruction: Increase the instruction size and align it to the grid.
+- [x] `advanced_modals-14` · P2 · proposal. Status instruction: Increase the instruction size and align it to the grid.
   Evidence: Open a modal above to get started is small inside a wide strip.
 
-- [ ] `advanced_modals-15` · P2 · proposal. Status strip inset: Add horizontal padding equal to the title inset.
+- [x] `advanced_modals-15` · P2 · proposal. Status strip inset: Add horizontal padding equal to the title inset.
   Evidence: The instruction starts flush against its background edge.
 
-- [ ] `advanced_modals-16` · P2 · proposal. Default screenshot state: Provide a separate clearly labeled example-open baseline alongside this launcher.
+- [x] `advanced_modals-16` · P2 · proposal. Default screenshot state: Provide a separate clearly labeled example-open baseline alongside this launcher.
   Evidence: No modal specimen appears in the baseline.
+  Resolution: Four current open-form examples are available in the visual review, including [login validation](docs/design-audit/examples/advanced_modals_login_validation_720p.png).
 
 ### aim_chat
 
@@ -8094,6 +8095,12 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+### Modal heading font
+
+- [ ] Make modal headings inherit the configured font or accept an explicit title style.
+  The open advanced-modal examples retain the library's Gaegu heading. See
+  [the gap](docs/AFTERHOURS_GAPS.md#modal-headings-bypass-the-configured-default-font).
 
 ### Scroll state after changing overflow
 
