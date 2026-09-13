@@ -44,6 +44,20 @@ click_ui profiler_sort
 wait 0.2
 expect_text "Sort: overall"
 screenshot live_profiler
+mouse_down 300 330
+wait 0.1
+mouse_move 700 330
+wait 0.2
+mouse_up
+wait 0.2
+expect_text "Selected avg (ms)"
+expect_text "Peak frame (ms)"
+expect_text "Resume view"
+screenshot live_profiler_selection
+click_ui profiler_clear_selection
+wait 0.2
+expect_text "Recent avg (ms)"
+expect_text "Pause view"
 key F3
 wait 0.2
 expect_no_text "Live profiler / chart_lab"
