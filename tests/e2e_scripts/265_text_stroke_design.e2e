@@ -1,0 +1,54 @@
+goto_screen text_stroke
+resize 1280 720
+wait 0.4
+expect_text "Text stroke / outline"
+expect_text "native eight-direction glyph copies"
+expect_text "T1 / No stroke"
+expect_text "T2 / 5.0px stroke / 13.9% of font"
+expect_text "T3 / 72.0px font, 8.0px stroke"
+expect_text "T4 / #50FFFF + #B41414"
+expect_text "T5 / Bright outline"
+expect_text "T6 / Low contrast / no stroke"
+expect_text "T7 / Outlined / 4.0px black"
+expect_text "10px at 1× is an extreme specimen."
+assert_ui bg w=1280 h=720
+assert_ui light_bg w=680 h=111
+assert_ui stroke_white_none h=58
+assert_ui stroke_white h=58
+assert_ui stroke_zero h=62
+assert_ui thickness_4 h=62
+assert_within_parents
+screenshot text_stroke_design
+click_ui stroke_detail_toggle
+wait 0.3
+expect_text "T2 glyph detail / 5× redraw"
+expect_text "Native glyph redrawn at 180px"
+expect_text "Outline 25px / 13.9% of font"
+assert_ui stroke_glyph_detail w=360 h=300
+assert_within_parents
+screenshot text_stroke_comparison_detail
+focus_element stroke_detail_toggle
+key ENTER
+wait 0.3
+expect_text "Extreme glyph detail / 5× redraw"
+expect_text "Native glyph redrawn at 200px"
+expect_text "Outline 50px / 25.0% of font"
+assert_within_parents
+screenshot text_stroke_extreme_detail
+key ENTER
+wait 0.3
+expect_text "Thickness ladder"
+expect_no_text "Native glyph redrawn"
+resize 1920 1080
+wait 0.3
+assert_ui bg w=1920 h=1080
+expect_text "UI scale 1.50"
+assert_within_parents
+screenshot text_stroke_1080_design
+resize 1024 768
+wait 0.3
+assert_ui bg w=1024 h=768
+expect_text "UI scale 0.80"
+assert_within_parents
+screenshot text_stroke_1024_design
+resize 1280 720

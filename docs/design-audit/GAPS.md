@@ -3851,7 +3851,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## text stroke
 
-[Current baseline](../../screenshot-baselines/screens/text_stroke_720p.png) · [Visual review](../../design-audit.html#screen=text_stroke)
+[Reviewed image](../../docs/design-audit/originals/text_stroke_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_stroke_720p.png) · [Visual review](../../design-audit.html#screen=text_stroke)
 
 Baseline SHA-256: `609191a71324ec3d5a3b7fc5ff28b5384fa1c7be1b82883c5831a58870305653`
 
@@ -3884,7 +3884,7 @@ The thick outlines and white-on-light control are intentional. Twenty findings p
 
 [Image](../../baseline_screenshots/text_stroke.png)
 
-Pixel-identical. The invisible/visible captions beneath the WHITE sample are covered by the tip strip. Chunky 8px and 10px outlines are intentional stroke specimens.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## themes
 

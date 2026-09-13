@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,430 completed; 105 remaining.
+2,450 completed; 85 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7577,64 +7577,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_stroke_720p.png) · [Visual review](design-audit.html#screen=text_stroke)
 
-- [ ] `text_stroke-01` · P1 · defect. WHITE captions: Move the tip down or the specimen up so both captions are fully readable.
+- [x] `text_stroke-01` · P1 · defect. WHITE captions: Move the tip down or the specimen up so both captions are fully readable.
   Evidence: The invisible and visible! captions are covered by the bottom tip strip.
 
-- [ ] `text_stroke-02` · P2 · proposal. White control label: Use Low contrast and Outlined for more precise captions.
+- [x] `text_stroke-02` · P2 · proposal. White control label: Use Low contrast and Outlined for more precise captions.
   Evidence: invisible describes text that is faintly visible and frames the example as absolute.
 
-- [ ] `text_stroke-03` · P2 · proposal. No-stroke comparison: Repeat the same specimen text and place variant labels outside it.
+- [x] `text_stroke-03` · P2 · proposal. No-stroke comparison: Repeat the same specimen text and place variant labels outside it.
   Evidence: NO STROKE and WITH STROKE use different strings.
 
-- [ ] `text_stroke-04` · P2 · proposal. Comparison width: Add an enlarged glyph detail to distinguish stroke expansion from a background fill.
+- [x] `text_stroke-04` · P2 · proposal. Comparison width: Add an enlarged glyph detail to distinguish stroke expansion from a background fill.
   Evidence: The dark outline behind WITH STROKE resembles a rectangular backing.
 
-- [ ] `text_stroke-05` · P2 · proposal. Bold specimen: Show font size alongside stroke width to explain relative thickness.
+- [x] `text_stroke-05` · P2 · proposal. Bold specimen: Show font size alongside stroke width to explain relative thickness.
   Evidence: BOLD uses an 8 px stroke but lacks the font size.
 
-- [ ] `text_stroke-06` · P2 · proposal. Contrast colors: Display foreground and outline color values in a separate caption.
+- [x] `text_stroke-06` · P2 · proposal. Contrast colors: Display foreground and outline color values in a separate caption.
   Evidence: CONTRAST is cyan/red without color token metadata.
 
-- [ ] `text_stroke-07` · P2 · proposal. Glow wording: Label it Bright outline or add a separate blurred glow comparison.
+- [x] `text_stroke-07` · P2 · proposal. Glow wording: Label it Bright outline or add a separate blurred glow comparison.
   Evidence: GLOW uses a hard bright outline while the caption calls it a glow.
 
-- [ ] `text_stroke-08` · P2 · proposal. Thickness ladder baseline: Add a zero-stroke reference above the ladder.
+- [x] `text_stroke-08` · P2 · proposal. Thickness ladder baseline: Add a zero-stroke reference above the ladder.
   Evidence: The ladder starts at 2 px with no zero-stroke control.
 
-- [ ] `text_stroke-09` · P2 · proposal. Thickness labels: Increase label size and use spaced px notation.
+- [x] `text_stroke-09` · P2 · proposal. Thickness labels: Increase label size and use spaced px notation.
   Evidence: 2px through 10px use small distant labels.
 
-- [ ] `text_stroke-10` · P2 · proposal. Ladder row alignment: Align them within clear specimen rows.
+- [x] `text_stroke-10` · P2 · proposal. Ladder row alignment: Align them within clear specimen rows.
   Evidence: The text and thickness descriptions are separated by large blank gaps.
 
-- [ ] `text_stroke-11` · P2 · proposal. Ten-pixel outline: Label it Extreme thickness specimen and provide a close-up for assessment.
+- [x] `text_stroke-11` · P2 · proposal. Ten-pixel outline: Label it Extreme thickness specimen and provide a close-up for assessment.
   Evidence: The 10 px sample has visible chunky artifacts that are part of the extreme case.
 
-- [ ] `text_stroke-12` · P2 · proposal. Stroke algorithm context: Add a short metadata note identifying the stroke method under test.
+- [x] `text_stroke-12` · P2 · proposal. Stroke algorithm context: Add a short metadata note identifying the stroke method under test.
   Evidence: The different outline edges have no rendering-method explanation.
 
-- [ ] `text_stroke-13` · P2 · proposal. Font identity: Label BlackOpsOne and its sample size.
+- [x] `text_stroke-13` · P2 · proposal. Font identity: Label BlackOpsOne and its sample size.
   Evidence: The pixel-like display font is unnamed.
 
-- [ ] `text_stroke-14` · P2 · proposal. Title effect: Document its settings or use a neutral title to isolate the specimen effects.
+- [x] `text_stroke-14` · P2 · proposal. Title effect: Document its settings or use a neutral title to isolate the specimen effects.
   Evidence: The title also has a stroke but no specification.
 
-- [ ] `text_stroke-15` · P3 · proposal. Subtitle size: Increase its readable size modestly.
+- [x] `text_stroke-15` · P3 · proposal. Subtitle size: Increase its readable size modestly.
   Evidence: The subtitle is small and subdued compared with the large effect samples.
 
-- [ ] `text_stroke-16` · P2 · proposal. White panel metadata: Add background and foreground values outside the control panel.
+- [x] `text_stroke-16` · P2 · proposal. White panel metadata: Add background and foreground values outside the control panel.
   Evidence: The white-on-light panel does not state its background color.
 
-- [ ] `text_stroke-17` · P2 · proposal. Caption alignment: Use a consistent left column and text measure for metadata.
+- [x] `text_stroke-17` · P2 · proposal. Caption alignment: Use a consistent left column and text measure for metadata.
   Evidence: Descriptions run across varying widths under the left specimens.
 
-- [ ] `text_stroke-18` · P2 · proposal. Thickness advice: Express guidance as a stroke-to-font-size ratio or include the reference font size.
+- [x] `text_stroke-18` · P2 · proposal. Thickness advice: Express guidance as a stroke-to-font-size ratio or include the reference font size.
   Evidence: The tip gives absolute widths without relating them to font size.
 
-- [ ] `text_stroke-19` · P3 · proposal. Case numbering: Add small IDs for comparison across captures.
+- [x] `text_stroke-19` · P3 · proposal. Case numbering: Add small IDs for comparison across captures.
   Evidence: The effect cases have names but no stable identifiers.
 
-- [ ] `text_stroke-20` · P2 · proposal. Rendering scale: Add capture scale and effective stroke units in the footer.
+- [x] `text_stroke-20` · P2 · proposal. Rendering scale: Add capture scale and effective stroke units in the footer.
   Evidence: Pixel-width labels do not show whether UI scaling is applied.
 
 ### themes

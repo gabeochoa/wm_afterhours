@@ -9,9 +9,9 @@ wait 0.5
 validate_screen text_stroke
 
 # Verify we're on the correct screen
-expect_text "Text Stroke / Outline"
-expect_text "NO STROKE"
-expect_text "WITH STROKE"
+expect_text "Text stroke / outline"
+expect_text "T1 / No stroke"
+expect_text "T2 / 5.0px stroke"
 
 screenshot text_stroke_display
 

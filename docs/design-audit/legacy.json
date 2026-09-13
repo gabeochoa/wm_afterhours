@@ -382,13 +382,13 @@
     "screen": "text_stroke",
     "baseline": "baseline_screenshots/text_stroke.png",
     "current": "screenshot-baselines/screens/text_stroke_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. The invisible/visible captions beneath the WHITE sample are covered by the tip strip. Chunky 8px and 10px outlines are intentional stroke specimens.",
-    "sha256": "609191a71324ec3d5a3b7fc5ff28b5384fa1c7be1b82883c5831a58870305653",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "b00b4132cfa0172d210dd8edf924c1c295691bc65459280532c062e881c43f5b",
     "additional_findings": []
   },
   {

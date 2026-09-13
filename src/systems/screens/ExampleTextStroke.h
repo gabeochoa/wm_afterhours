@@ -5,316 +5,95 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <array>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
-
-  // Dark theme for better stroke visibility
-  afterhours::Color bg_dark{25, 28, 38, 255};
-  afterhours::Color surface{40, 45, 60, 255};
-  afterhours::Color text_white{255, 255, 255, 255};
-  afterhours::Color text_muted{140, 145, 160, 255};
+  int detail = 0;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    Theme theme;
-    theme.font = text_white;
-    theme.darkfont = bg_dark;
-    theme.font_muted = text_muted;
-    theme.background = bg_dark;
-    theme.surface = surface;
-    theme.primary = afterhours::Color{80, 160, 255, 255};
-    theme.roundness = 0.1f;
-    context.theme = theme;
-
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-
-    // Background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_dark)
-            .with_debug_name("bg"));
-
-    // Page title with stroke to demonstrate the feature
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_label("Text Stroke / Outline")
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
-            .with_absolute_position(20.0f, 22.0f)
-            .with_font("BlackOpsOne", h720(36.0f))
-            .with_custom_text_color(text_white)
-            .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 3.0f)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_label("Create bold outlines for game titles and headers")
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
-            .with_absolute_position(20.0f, 65.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    int id = 10;
-    float margin = 80.0f;  // Side margins
-    float col_gap = 60.0f; // Gap between columns
-    float col1_x = margin;
-    float col1_width = (screen_w - 2 * margin - col_gap) *
-                       0.55f; // Left column: 55% of content area
-    float col2_x = margin + col1_width + col_gap;
-
-    // ========== LEFT COLUMN: Side-by-side comparisons ==========
-
-    // Using BlackOpsOne for bold, blocky text that shows stroke clearly
-    const char *bold_font = "BlackOpsOne";
-
-    // Consistent vertical spacing for left column rows
-    float content_start = 115.0f;
-    float desc_gap = 4.0f; // Gap between styled text and its description
-    float row_gap = 10.0f; // Gap between description and next row
-    float desc_h = 24.0f;
-
-    // Row 1: NO STROKE vs WITH STROKE (same yellow color)
-    afterhours::Color yellow{255, 220, 80, 255};
-    afterhours::Color dark_outline{20, 15, 0, 255}; // Darker for more contrast
-
-    float row1_y = content_start;
-    float row1_text_h = 50.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("NO STROKE")
-            .with_size(ComponentSize{pixels(280), pixels(row1_text_h)})
-            .with_absolute_position(col1_x, row1_y)
-            .with_font(bold_font, h720(36.0f))
-            .with_custom_text_color(yellow)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("WITH STROKE")
-            .with_size(ComponentSize{pixels(320), pixels(row1_text_h)})
-            .with_absolute_position(col1_x + 290.0f, row1_y)
-            .with_font(bold_font, h720(36.0f))
-            .with_custom_text_color(yellow)
-            .with_text_stroke(dark_outline, 5.0f)
-            .with_alignment(TextAlignment::Left));
-
-    float desc1_y = row1_y + row1_text_h + desc_gap;
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Same yellow color with dark outline for contrast")
-            .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position(col1_x, desc1_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 2: BOLD thick stroke (8px - more legible than 12px)
-    afterhours::Color hot_pink{255, 50, 150, 255};
-    afterhours::Color deep_purple{40, 0, 60, 255}; // Even darker
-
-    float row2_y = desc1_y + desc_h + row_gap;
-    float row2_text_h = 85.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("BOLD")
-            .with_size(ComponentSize{pixels(col1_width), pixels(row2_text_h)})
-            .with_absolute_position(col1_x, row2_y)
-            .with_font(bold_font, h720(72.0f))
-            .with_custom_text_color(hot_pink)
-            .with_text_stroke(deep_purple, 8.0f)
-            .with_alignment(TextAlignment::Left));
-
-    float desc2_y = row2_y + row2_text_h + desc_gap;
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Thick 8px stroke creates a chunky game-style effect")
-            .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position(col1_x, desc2_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 3: Contrasting stroke color (cyan text, red stroke)
-    afterhours::Color cyan{80, 255, 255, 255};
-    afterhours::Color red_stroke{180, 20, 20, 255};
-
-    float row3_y = desc2_y + desc_h + row_gap;
-    float row3_text_h = 70.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("CONTRAST")
-            .with_size(ComponentSize{pixels(col1_width), pixels(row3_text_h)})
-            .with_absolute_position(col1_x, row3_y)
-            .with_font(bold_font, h720(56.0f))
-            .with_custom_text_color(cyan)
-            .with_text_stroke(red_stroke, 8.0f)
-            .with_alignment(TextAlignment::Left));
-
-    float desc3_y = row3_y + row3_text_h + desc_gap;
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Cyan text with red outline for a vibrant look")
-            .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position(col1_x, desc3_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 4: "Glow" effect - dark text with bright stroke
-    afterhours::Color dark_text{20, 20, 40, 255};
-    afterhours::Color glow_cyan{80, 220, 255, 255};
-
-    float row4_y = desc3_y + desc_h + row_gap;
-    float row4_text_h = 70.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("GLOW")
-            .with_size(ComponentSize{pixels(col1_width), pixels(row4_text_h)})
-            .with_absolute_position(col1_x, row4_y)
-            .with_font(bold_font, h720(56.0f))
-            .with_custom_text_color(dark_text)
-            .with_text_stroke(glow_cyan, 8.0f)
-            .with_alignment(TextAlignment::Left));
-
-    float desc4_y = row4_y + row4_text_h + desc_gap;
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Dark text with bright outline creates a glow effect")
-            .with_size(ComponentSize{pixels(col1_width), pixels(desc_h)})
-            .with_absolute_position(col1_x, desc4_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 5: White on light background - stroke makes it readable
-    afterhours::Color light_bg{220, 225, 235, 255};
-    float light_panel_width = col1_width; // Width matches left column
-
-    float row5_y = desc4_y + desc_h + row_gap;
-    float row5_panel_h = 80.0f;
-
-    // Light background panel
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(
-                ComponentSize{pixels(light_panel_width), pixels(row5_panel_h)})
-            .with_absolute_position(col1_x, row5_y)
-            .with_custom_background(light_bg)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("light_bg"));
-
-    float white_text_y = row5_y + 10.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("WHITE")
-            .with_size(ComponentSize{pixels(180), pixels(55)})
-            .with_absolute_position(col1_x + 30.0f, white_text_y)
-            .with_font(bold_font, h720(40.0f))
-            .with_custom_text_color(text_white)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("WHITE")
-            .with_size(ComponentSize{pixels(180), pixels(55)})
-            .with_absolute_position(col1_x + light_panel_width * 0.5f,
-                                    white_text_y)
-            .with_font(bold_font, h720(40.0f))
-            .with_custom_text_color(text_white)
-            .with_text_stroke(afterhours::Color{0, 0, 0, 255}, 4.0f)
-            .with_alignment(TextAlignment::Left));
-
-    float desc5_y = row5_y + row5_panel_h + desc_gap;
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("invisible")
-            .with_size(ComponentSize{pixels(100), pixels(20)})
-            .with_absolute_position(col1_x + 50.0f, desc5_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("visible!")
-            .with_size(ComponentSize{pixels(100), pixels(20)})
-            .with_absolute_position(col1_x + light_panel_width * 0.5f + 20.0f,
-                                    desc5_y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_custom_text_color(afterhours::Color{60, 60, 80, 255}));
-
-    // ========== RIGHT COLUMN: Thickness comparison ==========
-
-    float right_col_width = screen_w - col2_x - margin;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Outline Thickness:")
-            .with_size(ComponentSize{pixels(right_col_width), pixels(34)})
-            .with_absolute_position(col2_x, content_start)
-            .with_font("Gaegu-Bold", h720(26.0f))
-            .with_custom_text_color(text_white));
-
-    afterhours::Color orange{255, 180, 60, 255};
-    afterhours::Color dark_orange{80, 40, 0, 255}; // Darker for more contrast
-
-    float thickness_y = content_start + 50.0f;
-    float thicknesses[] = {2.0f, 4.0f, 6.0f, 8.0f, 10.0f};
-    const char *thickness_labels[] = {"2px - subtle", "4px - medium",
-                                      "6px - bold", "8px - chunky",
-                                      "10px - heavy"};
-
-    for (int i = 0; i < 5; i++) {
-      div(context, mk(entity, id++),
-          ComponentConfig{}
-              .with_label("STROKE")
-              .with_size(ComponentSize{pixels(220), pixels(60)})
-              .with_absolute_position(col2_x, thickness_y + i * 85.0f)
-              .with_font(bold_font, h720(40.0f))
-              .with_custom_text_color(orange)
-              .with_text_stroke(dark_orange, thicknesses[i])
-              .with_alignment(TextAlignment::Left)
-              .with_debug_name("thickness_" + std::to_string(i)));
-
-      div(context, mk(entity, id++),
-          ComponentConfig{}
-              .with_label(thickness_labels[i])
-              .with_size(ComponentSize{pixels(160), pixels(34)})
-              .with_absolute_position(col2_x + 230.0f,
-                                      thickness_y + i * 85.0f + 14.0f)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_custom_text_color(text_muted)
-              .with_debug_name("thickness_label_" + std::to_string(i)));
+    context.theme = theme_presets::neon_dark();
+    context.scaling_mode = ScalingMode::Proportional;
+    const afterhours::Color white{255, 255, 255, 255}, muted{181, 197, 218, 255};
+    const afterhours::Color panel{37, 47, 64, 255};
+    const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    const float left = (context.screen_width / scale - 1144) / 2;
+    const float top = (context.screen_height / scale - 720) / 2;
+    const auto box = [scale, left, top](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
+          .with_absolute_position((left + x) * scale, (top + y) * scale)
+          .with_background(Theme::Usage::None).with_corner_radius(0);
+    };
+    auto root = div(context, mk(entity), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background({19, 28, 43, 255}).with_corner_radius(0).with_debug_name("bg"));
+    const auto label = [&](int id, float x, float y, float w, float h, const std::string &text, float size,
+                           afterhours::Color color, const std::string &name = "") {
+      return div(context, mk(root.ent(), id), box(x, y, w, h).with_label(text)
+          .with_font("AtkinsonMock", pixels(size * scale)).with_custom_text_color(color)
+          .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Left)
+          .with_ignore_pointer_events().with_debug_name(name));
+    };
+    const auto sample = [&](int id, float x, float y, float w, float h, const std::string &text, float size,
+                            afterhours::Color color, afterhours::Color outline, float thickness, const std::string &name) {
+      return div(context, mk(root.ent(), id), box(x, y, w, h).with_label(text)
+          .with_font("AtkinsonMock", pixels(size * scale)).with_custom_text_color(color)
+          .with_text_stroke(outline, thickness * scale).with_alignment(TextAlignment::Left).with_debug_name(name));
+    };
+    label(0, 0, 24, 884, 45, "Text stroke / outline", 35, white);
+    label(1, 0, 79, 1144, 31, "Atkinson / native eight-direction glyph copies / no blurred glow", 22, muted);
+    const std::array<const char *, 3> detail_labels{"Glyph detail: Off", "Glyph detail: 5px", "Glyph detail: 10px"};
+    if (button(context, mk(root.ent(), 2), box(910, 29, 234, 43).with_label(detail_labels[static_cast<size_t>(detail)])
+        .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(panel).with_custom_text_color(white)
+        .with_corner_radius(6 * scale).with_debug_name("stroke_detail_toggle"))) detail = (detail + 1) % 3;
+    const auto backing = [&](int id, float y, float h) {
+      div(context, mk(root.ent(), id), box(0, y, 680, h).with_custom_background(panel).with_corner_radius(8 * scale));
+    };
+    backing(10, 137, 98);
+    sample(11, 20, 146, 306, 55, "STROKE", 36, {255, 220, 80, 255}, {20, 15, 0, 255}, 0, "stroke_none");
+    sample(12, 356, 146, 304, 55, "STROKE", 36, {255, 220, 80, 255}, {20, 15, 0, 255}, 5, "stroke_comparison");
+    label(13, 20, 201, 306, 28, "T1 / No stroke / 36px at 1×", 19, muted);
+    label(14, 356, 201, 304, 28, fmt::format("T2 / {:.1f}px stroke / 13.9% of font", 5 * scale), 18, muted);
+    backing(20, 249, 140);
+    sample(21, 20, 258, 306, 91, "BOLD", 72, {255, 50, 150, 255}, {40, 0, 60, 255}, 8, "stroke_bold");
+    sample(22, 326, 270, 334, 78, "CONTRAST", 56, {80, 255, 255, 255}, {180, 20, 20, 255}, 8, "stroke_contrast");
+    label(23, 20, 348, 306, 36, fmt::format("T3 / {:.1f}px font, {:.1f}px stroke\nOutline is 11.1% of font size", 72 * scale, 8 * scale), 18, muted);
+    label(24, 356, 348, 304, 36, fmt::format("T4 / #50FFFF + #B41414\nFont {:.1f}px / stroke {:.1f}px", 56 * scale, 8 * scale), 18, muted);
+    backing(30, 403, 112);
+    sample(31, 20, 414, 306, 77, "GLOW", 56, {20, 20, 40, 255}, {80, 220, 255, 255}, 8, "stroke_bright");
+    label(32, 356, 419, 304, 84, fmt::format("T5 / Bright outline\n#141428 + #50DCFF\nFont {:.1f}px / stroke {:.1f}px", 56 * scale, 8 * scale), 21, muted);
+    div(context, mk(root.ent(), 40), box(0, 529, 680, 111).with_custom_background({220, 225, 235, 255}).with_corner_radius(8 * scale).with_debug_name("light_bg"));
+    sample(41, 20, 535, 306, 58, "WHITE", 40, white, {0, 0, 0, 255}, 0, "stroke_white_none");
+    sample(42, 356, 535, 304, 58, "WHITE", 40, white, {0, 0, 0, 255}, 4, "stroke_white");
+    label(43, 20, 603, 306, 27, "T6 / Low contrast / no stroke", 20, {40, 52, 71, 255});
+    label(44, 356, 603, 304, 27, fmt::format("T7 / Outlined / {:.1f}px black", 4 * scale), 20, {40, 52, 71, 255});
+    div(context, mk(root.ent(), 50), box(704, 137, 440, 503).with_custom_background(panel).with_corner_radius(8 * scale));
+    if (detail == 0) {
+      label(51, 724, 146, 400, 33, "Thickness ladder / 40px font at 1×", 23, white);
+      const std::array<float, 6> thicknesses{0, 2, 4, 6, 8, 10};
+      for (size_t i = 0; i < thicknesses.size(); ++i) {
+        const float y = 185 + static_cast<float>(i) * 70;
+        sample(60 + static_cast<int>(i), 724, y, 247, 62, "STROKE", 40, {255, 180, 60, 255}, {80, 40, 0, 255}, thicknesses[i],
+               i == 0 ? "stroke_zero" : "thickness_" + std::to_string(i - 1));
+        label(70 + static_cast<int>(i), 987, y + 6, 137, 49,
+              fmt::format("{:.1f} px\n{:.0f}% of font", thicknesses[i] * scale, thicknesses[i] / 40 * 100), 20, muted);
+      }
+      label(80, 724, 611, 400, 23, "10px at 1× is an extreme specimen.", 18, muted);
     }
-
-    // ========== Tip bar at bottom ==========
-    float code_y = screen_h - 82.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w - 2 * margin), pixels(44)})
-            .with_absolute_position(margin, code_y)
-            .with_custom_background(surface)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
-            .with_debug_name("code_bg"));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Tip: Use 2-6px for readable text, 6-10px for "
-                        "decorative titles and headers")
-            .with_size(
-                ComponentSize{pixels(screen_w - 2 * margin - 20), pixels(28)})
-            .with_absolute_position(margin + 10.0f, code_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(afterhours::Color{150, 220, 150, 255})
-            .with_alignment(TextAlignment::Left));
+    if (detail != 0) {
+      const float font = detail == 1 ? 180.f : 200.f;
+      const float width = detail == 1 ? 25.f : 50.f;
+      label(81, 724, 149, 400, 58, detail == 1 ? "T2 glyph detail / 5× redraw" : "Extreme glyph detail / 5× redraw", 26, white);
+      auto glyph = sample(82, 744, 216, 360, 300, "A", font, detail == 1 ? afterhours::Color{255, 220, 80, 255} : afterhours::Color{255, 180, 60, 255},
+                          detail == 1 ? afterhours::Color{20, 15, 0, 255} : afterhours::Color{80, 40, 0, 255}, width, "stroke_glyph_detail");
+      glyph.ent().get<HasLabel>().alignment = TextAlignment::Center;
+      label(83, 724, 530, 400, 89, fmt::format("Native glyph redrawn at {:.0f}px\nOutline {:.0f}px / {:.1f}% of font\nEight offset copies, then foreground.", font * scale, width * scale, width / font * 100), 22, muted);
+    }
+    label(90, 0, 650, 1144, 31, "Light panel: #DCE1EB / foreground #FFFFFF. Stroke copies extend in eight directions; thick outlines can form gaps.", 20, muted);
+    label(91, 0, 686, 1144, 26, fmt::format("{:.0f} × {:.0f} / UI scale {:.2f}× / Labels show rendered stroke pixels. Compare stroke size with its font size.", context.screen_width, context.screen_height, scale), 19, muted);
   }
 };
 

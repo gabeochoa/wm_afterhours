@@ -5155,7 +5155,8 @@
         "change": "Add capture scale and effective stroke units in the footer."
       }
     ],
-    "sha256": "609191a71324ec3d5a3b7fc5ff28b5384fa1c7be1b82883c5831a58870305653"
+    "sha256": "609191a71324ec3d5a3b7fc5ff28b5384fa1c7be1b82883c5831a58870305653",
+    "evidence": "docs/design-audit/originals/text_stroke_720p.png"
   },
   {
     "id": "themes",
