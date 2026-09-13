@@ -1,6 +1,7 @@
 # Kart selection remains live while matching the approved racer mock.
 
 goto_screen kart_select
+resize 1280 720
 wait 0.5
 
 expect_text "SELECT YOUR RACER"
@@ -48,7 +49,7 @@ expect_text "Selected Off-Road"
 focus_ui kart_ready
 key ENTER
 wait 0.2
-expect_text "RACING!"
+expect_text "CONFIRMED"
 expect_text "Ready to race: Blaze + Off-Road"
 click_ui kart_back
 wait 0.2

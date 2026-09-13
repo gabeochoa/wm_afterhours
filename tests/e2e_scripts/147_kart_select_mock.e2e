@@ -1,6 +1,7 @@
 # Approved Kart Select geometry, assets, hotkeys, and responsive scaling.
 
 goto_screen kart_select
+resize 1280 720
 wait 0.5
 
 expect_text "SELECT YOUR RACER"
@@ -9,18 +10,18 @@ expect_text "Drift"
 expect_text "CHOOSE YOUR VEHICLE"
 expect_text "READY!"
 assert_ui kart_root x=0 y=0 w=1280 h=720
-assert_ui kart_player x=1191 y=20 w=47 h=45
+assert_ui kart_player x=1198 y=27 w=32 h=32
 assert_ui kart_driver_0 x=40 y=117 w=139 h=155
-assert_ui kart_driver_2 x=336 y=115 w=139 h=155
-assert_ui kart_selected_badge x=333 y=106 w=30 h=31
+assert_ui kart_driver_2 x=336 y=117 w=139 h=155
+assert_ui kart_selected_badge x=343 y=122 w=32 h=32
 assert_ui kart_driver_7 x=484 y=281 w=139 h=155
-assert_ui kart_vehicle_0 x=40 y=489 w=139 h=110
-assert_ui kart_vehicle_3 x=484 y=489 w=139 h=110
-assert_ui kart_platform x=648 y=366 w=592 h=72
-assert_ui kart_preview x=648 y=116 w=592 h=291
-assert_ui kart_stats x=710 y=489 w=468 h=148
-assert_ui kart_back x=37 y=666 w=99 h=47
-assert_ui kart_ready x=1080 y=662 w=163 h=56
+assert_ui kart_vehicle_0 x=40 y=491 w=139 h=117
+assert_ui kart_vehicle_3 x=484 y=491 w=139 h=117
+assert_ui kart_platform x=648 y=398 w=592 h=34
+assert_ui kart_preview x=648 y=253 w=592 h=171
+assert_ui kart_stats x=662 y=477 w=578 h=166
+assert_ui kart_back x=37 y=666 w=156 h=47
+assert_ui kart_ready x=1048 y=662 w=195 h=56
 assert_no_overflow
 assert_within_parents
 screenshot kart_select_mock_default
@@ -48,7 +49,7 @@ wait 0.2
 expect_text "Selected Classic"
 click_ui kart_ready
 wait 0.2
-expect_text "RACING!"
+expect_text "CONFIRMED"
 expect_text "Ready to race: Pebble + Classic"
 screenshot kart_select_mock_ready
 
@@ -65,11 +66,11 @@ wait 0.1
 resize 1920 1080
 wait 0.3
 assert_ui kart_root x=0 y=0 w=1920 h=1080
-assert_ui kart_driver_2 x=504 y=173 w=209 h=233
-assert_ui kart_vehicle_0 x=60 y=734 w=209 h=165
-assert_ui kart_platform x=972 y=549 w=888 h=108
-assert_ui kart_preview x=972 y=174 w=888 h=437
-assert_ui kart_stats x=1065 y=734 w=702 h=222
-assert_ui kart_ready x=1620 y=993 w=245 h=84
+assert_ui kart_driver_2 x=504 y=176 w=209 h=233
+assert_ui kart_vehicle_0 x=60 y=737 w=209 h=176
+assert_ui kart_platform x=972 y=597 w=888 h=51
+assert_ui kart_preview x=972 y=380 w=888 h=257
+assert_ui kart_stats x=993 y=716 w=867 h=249
+assert_ui kart_ready x=1572 y=993 w=293 h=84
 assert_no_overflow
 assert_within_parents

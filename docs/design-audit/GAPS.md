@@ -2061,7 +2061,7 @@ The paper-strip settings design matches the mock. Its muted palette and compact 
 
 ## kart select
 
-[Current baseline](../../screenshot-baselines/screens/kart_select_720p.png) · [Visual review](../../design-audit.html#screen=kart_select)
+[Reviewed image](../../docs/design-audit/originals/kart_select_720p.png) · [Current baseline](../../screenshot-baselines/screens/kart_select_720p.png) · [Visual review](../../design-audit.html#screen=kart_select)
 
 Baseline SHA-256: `856192ba3e5d5faea51a2cf4c47839fd73618d02fcb2c3d4f94a1cfdb2598fe6`
 

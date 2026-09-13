@@ -56,7 +56,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     return ComponentConfig{}
         .with_size({pixels(width * scale), pixels(height * scale)})
         .with_absolute_position(pixels(x * scale), pixels(y * scale))
-        .with_background(Theme::Usage::None);
+        .with_background(Theme::Usage::None).with_corner_radius(0);
   }
 
   static void draw_skew_plate(RectangleType r, float offset,
@@ -81,7 +81,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
               {r.x + static_cast<float>(col) * 26.f * scale,
                r.y + static_cast<float>(row) * 26.f * scale,
                26.f * scale, 26.f * scale},
-              afterhours::Color{255, 255, 255, 7});
+              afterhours::Color{255, 255, 255, 3});
 
     afterhours::draw_rectangle(
         {r.x, r.y, 730.f * scale, 84.f * scale},
@@ -138,19 +138,59 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     afterhours::draw_rectangle(
         {r.x, r.y, r.width * std::clamp(value, 0.f, 1.f), r.height},
         afterhours::Color{255, 214, 56, 255});
-    for (float x = 25.f; x < 326.f; x += 28.f) {
-      const bool filled = x < 326.f * value;
+    for (int i = 1; i < 10; ++i)
       afterhours::draw_rectangle(
-          {r.x + x * scale, r.y, 3.f * scale, r.height},
-          filled ? afterhours::Color{255, 237, 143, 255}
-                 : afterhours::Color{99, 147, 180, 255});
+          {r.x + r.width * static_cast<float>(i) / 10 - scale, r.y, 2 * scale, r.height},
+          afterhours::Color{0, 44, 75, 255});
+  }
+
+  static void draw_portrait_detail(RectangleType r, size_t index) {
+    const float s = r.width / 230;
+    const auto point = [&](float x, float y) { return Vector2Type{r.x + x * s, r.y + y * s}; };
+    const afterhours::Color dark{35, 46, 64, 255};
+    const auto line = [&](float x1, float y1, float x2, float y2, float width) {
+      afterhours::draw_line_ex(point(x1, y1), point(x2, y2), width * s, dark);
+    };
+    const auto dot = [&](float x, float y, float radius, afterhours::Color color) {
+      const auto p = point(x, y);
+      afterhours::draw_circle(static_cast<int>(p.x), static_cast<int>(p.y), radius * s, color);
+    };
+    if (index == 0 || index == 5) {
+      for (float x : {102.f, 114.f, 126.f}) dot(x, 157, index == 0 ? 6.f : 8.f, dark);
+      return;
     }
+    if (index == 1 || index == 7) {
+      for (float x : {91.f, 136.f}) {
+        const auto p = point(x, 120);
+        afterhours::draw_circle_lines(static_cast<int>(p.x), static_cast<int>(p.y), 18 * s, dark);
+      }
+      line(109, 120, 118, 120, 3);
+      if (index == 7) line(67, 101, 156, 101, 5);
+      return;
+    }
+    if (index == 2) {
+      for (float x : {77.f, 85.f, 143.f, 151.f}) dot(x, 143, 2.5f, {166, 81, 55, 255});
+      return;
+    }
+    if (index == 3) {
+      line(76, 99, 105, 104, 5);
+      line(124, 104, 153, 99, 5);
+      return;
+    }
+    if (index == 4) {
+      line(58, 198, 83, 214, 7);
+      line(58, 210, 78, 226, 7);
+      return;
+    }
+    line(153, 39, 142, 58, 5);
+    line(142, 58, 157, 55, 5);
+    line(157, 55, 144, 77, 5);
   }
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    const float scale =
-        context.screen_height > 0.f ? context.screen_height / 720.f : 1.f;
+    UIStylingDefaults::get().default_font_name = "ArchivoMockBold";
+    const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     Theme theme;
     theme.font = white;
     theme.darkfont = navy;
@@ -160,10 +200,10 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = bright_blue;
     theme.accent = yellow;
     theme.roundness = 0.f;
+    theme.corner_radius = 0.f;
     theme.segments = 16;
     context.set_theme(theme);
-    context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font("ArchivoMockBold", pixels(20.f));
+    context.scaling_mode = ScalingMode::Proportional;
 
     if (!loaded) {
       loaded = true;
@@ -212,63 +252,69 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       status = "Selected " + kart_names[selected_kart];
     }
 
+    auto background = div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background(deep_blue).with_corner_radius(0).with_debug_name("kart_root"));
     auto root =
-        div(context, mk(entity, 0),
+        div(context, mk(background.ent(), 0),
             box(scale, 0.f, 0.f, 1280.f, 720.f)
+                .with_absolute_position((context.screen_width - 1280 * scale) / 2,
+                                        (context.screen_height - 720 * scale) / 2)
                 .with_on_draw_bg([scale](RectangleType r) {
                   draw_background(r, scale);
                 })
-                .with_debug_name("kart_root"));
+                .with_debug_name("kart_content"));
 
     auto text = [&](int id, const std::string &label, float x, float y,
                     float width, float height, float size,
                     afterhours::Color color,
                     TextAlignment alignment = TextAlignment::Left,
-                    const std::string &font = "ArchivoMockBold") {
+                    const std::string &font = "ArchivoMockBold",
+                    const std::string &debug_name = "") {
       return div(context, mk(root.ent(), id),
                  box(scale, x, y, width, height)
                      .with_label(label)
                      .with_font(font, pixels(size * scale))
                      .with_custom_text_color(color)
                      .with_alignment(alignment)
-                     .with_text_inset(0.f, 0.f));
+                     .with_text_inset(0.f, 0.f).with_ignore_pointer_events().with_debug_name(debug_name));
     };
 
-    text(1, "SELECT YOUR RACER", 44.f, 10.f, 430.f, 68.f, 46.f, navy,
+    text(1, "SELECT YOUR RACER", 44.f, 4.f, 620.f, 48.f, 42.f, navy,
          TextAlignment::Left);
-    text(2, "Grand Prix · Mushroom Cup", 900.f, 17.f, 268.f, 52.f, 25.f,
-         white, TextAlignment::Right);
+    text(2, "Grand Prix · Mushroom Cup", 44.f, 51.f, 660.f, 27.f, 23.f,
+         navy, TextAlignment::Left);
     div(context, mk(root.ent(), 3),
-        box(scale, 1191.f, 20.f, 47.f, 45.f)
+        box(scale, 1198.f, 27.f, 32.f, 32.f)
             .with_label("P1")
-            .with_font("ArchivoMockBold", pixels(26.f * scale))
-            .with_custom_background(afterhours::Color{255, 228, 65, 255})
+            .with_font("ArchivoMockBold", pixels(22.f * scale))
+            .with_custom_background(yellow).with_border(navy, 2 * scale)
             .with_custom_text_color(afterhours::Color{38, 60, 85, 255})
             .with_alignment(TextAlignment::Center)
             .with_text_inset(0.f, 0.f)
             .with_rounded_corners(RoundedCorners().all_sharp())
             .with_debug_name("kart_player"));
 
-    auto portrait = [&](int id, size_t index, float x, float y) {
+    auto portrait = [&](int id, size_t index, float x, float y, float width, float height) {
       const float source_x = static_cast<float>(index % 4) * 230.f;
       const float source_y = static_cast<float>(index / 4) * 250.f;
       sprite(context, mk(root.ent(), id), portraits_texture,
              {source_x, source_y, 230.f, 250.f},
-             box(scale, x, y, 115.f, 125.f).with_ignore_pointer_events());
+             box(scale, x, y, width, height).with_ignore_pointer_events()
+                 .with_on_draw_fg([index](RectangleType r) { draw_portrait_detail(r, index); }));
     };
     auto kart_thumb = [&](int id, size_t index, float x, float y) {
-      const float source_x = static_cast<float>(index % 4) * 240.f;
-      const float source_y = static_cast<float>(index / 4) * 150.f;
+      portrait(id + 300, selected_character, x + 47, y + 14, 30, 32.61f);
       sprite(context, mk(root.ent(), id), karts_texture,
-             {source_x, source_y, 240.f, 150.f},
-             box(scale, x, y, 120.f, 75.f).with_ignore_pointer_events());
+             {static_cast<float>(index) * 240, 60, 240, 90},
+             box(scale, x + 10, y + 37.5f, 100, 37.5f).with_ignore_pointer_events());
     };
 
     for (size_t i = 0; i < characters.size(); ++i) {
       const float x = 40.f + static_cast<float>(i % 4) * 148.f;
       const float base_y = 117.f + static_cast<float>(i / 4) * 164.f;
       const bool selected = selected_character == i;
-      const float y = base_y - (selected ? 2.f : 0.f);
+      const float y = base_y;
       auto card =
           button(context, mk(root.ent(), 20 + static_cast<int>(i)),
                  box(scale, x, y, 139.f, 155.f)
@@ -277,23 +323,23 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                        draw_driver_card(r, selected, scale);
                      })
                      .with_debug_name("kart_driver_" + std::to_string(i)));
-      portrait(40 + static_cast<int>(i), i, x + 12.f, y);
+      portrait(40 + static_cast<int>(i), i, x + 28.1f, y + 30, 82.8f, 90);
       div(context, mk(root.ent(), 60 + static_cast<int>(i)),
-          box(scale, x + 3.f, y + 128.f, 133.f, 24.f)
+          box(scale, x + 3.f, y + 119.f, 133.f, 33.f)
               .with_custom_background(afterhours::Color{217, 242, 250, 238})
               .with_rounded_corners(RoundedCorners().all_sharp())
               .with_corner_radius(0.f)
               .with_ignore_pointer_events());
-      text(80 + static_cast<int>(i), characters[i].name, x + 3.f, y + 127.f,
-           133.f, 26.f, 20.f, navy, TextAlignment::Center);
+      text(80 + static_cast<int>(i), characters[i].name, x + 3.f, y + 120.f,
+           133.f, 30.f, 24.f, navy, TextAlignment::Center);
       if (selected)
         div(context, mk(root.ent(), 100 + static_cast<int>(i)),
-            box(scale, x - 3.f, y - 9.f, 30.f, 31.f)
+            box(scale, x + 7.f, y + 5.f, 32.f, 32.f)
                 .with_label("P1")
-                .with_font("ArchivoMockBold", pixels(19.f * scale))
-                .with_custom_background(afterhours::Color{255, 213, 42, 255})
-                .with_border(white, 2.f * scale)
-                .with_custom_text_color(afterhours::Color{54, 71, 81, 255})
+                .with_font("ArchivoMockBold", pixels(22.f * scale))
+                .with_custom_background(yellow)
+                .with_border(navy, 2.f * scale)
+                .with_custom_text_color(afterhours::Color{38, 60, 85, 255})
                 .with_alignment(TextAlignment::Center)
                 .with_text_inset(0.f, 0.f)
                 .with_ignore_pointer_events()
@@ -305,21 +351,26 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    text(120, "CHOOSE YOUR VEHICLE", 40.f, 451.f, 360.f, 35.f, 20.f, white);
+    text(120, "CHOOSE YOUR VEHICLE", 40.f, 450.f, 430.f, 35.f, 26.f, white);
     for (size_t i = 0; i < kart_names.size(); ++i) {
       const float x = 40.f + static_cast<float>(i) * 148.f;
       const bool selected = selected_kart == i;
       auto card =
           button(context, mk(root.ent(), 130 + static_cast<int>(i)),
-                 box(scale, x, 489.f, 139.f, 110.f)
+                 box(scale, x, 491.f, 139.f, 117.f)
                      .with_click_activation(ClickActivationMode::Release)
                      .with_on_draw_bg([selected, scale](RectangleType r) {
                        draw_vehicle_card(r, selected, scale);
                      })
                      .with_debug_name("kart_vehicle_" + std::to_string(i)));
-      kart_thumb(140 + static_cast<int>(i), i, x + 10.f, 491.f);
-      text(150 + static_cast<int>(i), kart_names[i], x + 3.f, 572.f, 133.f,
-           25.f, 18.f, navy, TextAlignment::Center);
+      kart_thumb(140 + static_cast<int>(i), i, x + 10.f, 501.f);
+      text(150 + static_cast<int>(i), kart_names[i], x + 3.f, 578.f, 133.f,
+           27.f, 22.f, navy, TextAlignment::Center);
+      if (selected)
+        div(context, mk(root.ent(), 160 + static_cast<int>(i)), box(scale, x + 5, 496, 87, 21)
+            .with_label("SELECTED").with_font("ArchivoMockBold", pixels(15 * scale))
+            .with_custom_background(navy).with_custom_text_color(white).with_ignore_pointer_events()
+            .with_alignment(TextAlignment::Center).with_text_inset(0, 0).with_debug_name("kart_vehicle_selected"));
       if (card) {
         selected_kart = i;
         ready = false;
@@ -327,73 +378,43 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    div(context, mk(root.ent(), 170),
-        box(scale, 648.f, 366.f, 592.f, 72.f)
-            .with_on_draw_bg([scale](RectangleType r) {
-              const float cx = r.x + r.width * .5f;
-              afterhours::draw_ellipse(
-                  static_cast<int>(cx),
-                  static_cast<int>(r.y + 52.f * scale), 276.f * scale,
-                  28.f * scale, afterhours::Color{22, 95, 142, 255});
-              afterhours::draw_ellipse(
-                  static_cast<int>(cx),
-                  static_cast<int>(r.y + 42.f * scale), 276.f * scale,
-                  28.f * scale, afterhours::Color{107, 172, 205, 255});
-              afterhours::draw_ellipse(
-                  static_cast<int>(cx),
-                  static_cast<int>(r.y + 28.f * scale), 276.f * scale,
-                  28.f * scale, afterhours::Color{234, 250, 255, 255});
-            })
-            .with_ignore_pointer_events()
-            .with_debug_name("kart_platform"));
-
-    const float big_source_x =
-        static_cast<float>(selected_character % 4) * 1184.f;
-    const float big_source_y =
-        static_cast<float>(selected_character / 4) * 582.f;
+    text(169, "Selected racer and vehicle", 648, 98, 592, 32, 25, white, TextAlignment::Center);
+    div(context, mk(root.ent(), 170), box(scale, 648, 398, 592, 34)
+        .with_on_draw_bg([scale](RectangleType r) {
+          const float cx = r.x + r.width * .5f;
+          afterhours::draw_ellipse(static_cast<int>(cx), static_cast<int>(r.y + 21 * scale),
+              258 * scale, 13 * scale, afterhours::Color{24, 105, 153, 255});
+          afterhours::draw_ellipse(static_cast<int>(cx), static_cast<int>(r.y + 13 * scale),
+              258 * scale, 13 * scale, afterhours::Color{223, 247, 255, 255});
+        }).with_ignore_pointer_events().with_debug_name("kart_platform"));
+    portrait(173, selected_character, 855, 133, 150, 163.04f);
     sprite(context, mk(root.ent(), 171), big_karts_texture,
-           {big_source_x, big_source_y, 1184.f, 582.f},
-           box(scale, 648.f, 116.f, 592.f, 291.f)
-               .with_ignore_pointer_events()
-               .with_debug_name("kart_preview"));
-    text(172, characters[selected_character].name, 648.f, 423.f, 592.f, 58.f,
-         49.f, white, TextAlignment::Center, "FredokaMockBold");
-
-    div(context, mk(root.ent(), 180),
-        box(scale, 710.f, 489.f, 468.f, 148.f)
-            .with_custom_background(afterhours::Color{0, 57, 101, 166})
-            .with_on_draw_fg([scale](RectangleType r) {
-              afterhours::draw_rectangle(
-                  {r.x, r.y, r.width, 2.f * scale},
-                  afterhours::Color{116, 195, 238, 255});
-              afterhours::draw_rectangle(
-                  {r.x, r.y + r.height - 2.f * scale, r.width, 2.f * scale},
-                  afterhours::Color{116, 195, 238, 255});
-            })
-            .with_debug_name("kart_stats"));
-
+           {static_cast<float>(selected_kart) * 1184, 240, 1184, 342},
+           box(scale, 648, 253, 592, 171).with_ignore_pointer_events().with_debug_name("kart_preview"));
+    text(172, characters[selected_character].name + " / " + kart_names[selected_kart],
+         648, 431, 592, 39, 32, white, TextAlignment::Center, "ArchivoMockBold", "kart_preview_identity");
+    div(context, mk(root.ent(), 180), box(scale, 662, 477, 578, 166)
+        .with_custom_background(afterhours::Color{0, 47, 86, 230})
+        .with_debug_name("kart_stats"));
+    text(181, "Driver ratings / 0-10", 680, 482, 542, 27, 22, white);
     const auto &selected = characters[selected_character];
-    const std::array<std::string, 4> stat_names{"Speed", "Acceleration",
-                                                 "Handling", "Weight"};
-    const std::array<float, 4> stat_values{
-        selected.speed, selected.acceleration, selected.handling,
-        selected.weight};
+    const std::array<std::string, 4> stat_names{"Speed", "Acceleration", "Handling", "Weight"};
+    const std::array<float, 4> stat_values{selected.speed, selected.acceleration, selected.handling, selected.weight};
     for (size_t i = 0; i < stat_names.size(); ++i) {
-      const float y = 501.f + static_cast<float>(i) * 31.f;
-      text(190 + static_cast<int>(i), stat_names[i], 734.f, y, 92.f, 27.f,
-           20.f, white);
-      div(context, mk(root.ent(), 200 + static_cast<int>(i)),
-          box(scale, 828.f, y + 9.f, 326.f, 12.f)
-              .with_on_draw_bg([value = stat_values[i],
-                                scale](RectangleType r) {
-                draw_stat_bar(r, value, scale);
-              })
-              .with_debug_name("kart_stat_" + std::to_string(i)));
+      const float y = 511 + static_cast<float>(i) * 27;
+      text(190 + static_cast<int>(i), stat_names[i], 680, y, 146, 26, 22, white);
+      div(context, mk(root.ent(), 200 + static_cast<int>(i)), box(scale, 843, y + 8, 276, 12)
+          .with_on_draw_bg([value = stat_values[i], scale](RectangleType r) { draw_stat_bar(r, value, scale); })
+          .with_debug_name("kart_stat_" + std::to_string(i)));
+      text(210 + static_cast<int>(i), std::to_string(std::lround(stat_values[i] * 10)) + "/10",
+           1135, y, 84, 26, 22, white, TextAlignment::Right, "ArchivoMockBold",
+           "kart_stat_value_" + std::to_string(i));
     }
+    text(220, "Weight is mass, not a handling bonus. Karts are cosmetic.", 680, 619, 542, 22, 18, cyan_line);
 
     auto back =
         button(context, mk(root.ent(), 230),
-               box(scale, 37.f, 666.f, 99.f, 47.f)
+               box(scale, 37.f, 666.f, 156.f, 47.f)
                    .with_on_draw_bg(
                        [scale, arrow_color = afterhours::Color{255, 255, 255,
                                                                255}](
@@ -410,49 +431,22 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                          2.5f * scale, arrow_color);
                        })
                    .with_debug_name("kart_back"));
-    text(231, "Back", 69.f, 666.f, 58.f, 47.f, 25.f, white,
+    text(231, "Back / Esc", 71.f, 666.f, 110.f, 47.f, 23.f, white,
          TextAlignment::Center);
-    if (back) {
+    if (back || context.pressed(InputAction::MenuBack)) {
       ready = false;
       status = "Back selected";
     }
 
-    text(232, "Arrows to choose", 158.f, 671.f, 110.f, 40.f, 18.f,
-         afterhours::Color{57, 101, 123, 255});
-    div(context, mk(root.ent(), 233),
-        box(scale, 271.f, 678.f, 18.f, 18.f)
-            .with_label("A")
-            .with_font("ArchivoMockBold", pixels(14.f * scale))
-            .with_custom_text_color(afterhours::Color{57, 101, 123, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_text_inset(0.f, 0.f)
-            .with_on_draw_bg([scale](RectangleType r) {
-              afterhours::draw_circle_lines(
-                  static_cast<int>(r.x + r.width * .5f),
-                  static_cast<int>(r.y + r.height * .5f), 8.f * scale,
-                  afterhours::Color{57, 101, 123, 255});
-            }));
-    text(234, "Confirm", 293.f, 671.f, 52.f, 40.f, 18.f,
-         afterhours::Color{57, 101, 123, 255});
-    div(context, mk(root.ent(), 235),
-        box(scale, 350.f, 678.f, 18.f, 18.f)
-            .with_label("B")
-            .with_font("ArchivoMockBold", pixels(14.f * scale))
-            .with_custom_text_color(afterhours::Color{57, 101, 123, 255})
-            .with_alignment(TextAlignment::Center)
-            .with_text_inset(0.f, 0.f)
-            .with_on_draw_bg([scale](RectangleType r) {
-              afterhours::draw_circle_lines(
-                  static_cast<int>(r.x + r.width * .5f),
-                  static_cast<int>(r.y + r.height * .5f), 8.f * scale,
-                  afterhours::Color{57, 101, 123, 255});
-            }));
-    text(236, "Back", 372.f, 671.f, 45.f, 40.f, 18.f,
-         afterhours::Color{57, 101, 123, 255});
+    text(232, "Left / Right: Racer", 219, 663, 252, 27, 22, navy);
+    text(233, "Up / Down: Vehicle", 219, 691, 252, 27, 22, navy);
+    text(234, "Tab / Enter: Activate", 490, 675, 314, 32, 22, navy);
+    text(235, "Confirm this lineup", 842, 663, 188, 24, 18, navy, TextAlignment::Right);
+    text(236, "Selection demo", 842, 691, 188, 23, 18, navy, TextAlignment::Right);
 
     auto ready_button =
         button(context, mk(root.ent(), 240),
-               box(scale, 1080.f, 662.f, 163.f, 56.f)
+               box(scale, 1048.f, 662.f, 195.f, 56.f)
                    .with_on_draw_bg([scale](RectangleType r) {
                      draw_skew_plate(r, 7.f * scale,
                                      afterhours::Color{255, 224, 59, 255});
@@ -461,7 +455,7 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                           3.f * scale},
                          afterhours::Color{205, 158, 9, 255});
                      const afterhours::Color arrow{30, 63, 84, 255};
-                     const float x = r.x + 145.f * scale;
+                     const float x = r.x + 177.f * scale;
                      const float cy = r.y + r.height * .5f;
                      afterhours::draw_line_ex(
                          {x - 6.f * scale, cy - 7.f * scale}, {x, cy},
@@ -471,8 +465,8 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
                          2.5f * scale, arrow);
                    })
                    .with_debug_name("kart_ready"));
-    text(241, ready ? "RACING!" : "READY!", 1096.f, 662.f, 120.f, 56.f,
-         29.f, afterhours::Color{30, 63, 84, 255}, TextAlignment::Center);
+    text(241, ready ? "CONFIRMED" : "READY!", 1060.f, 662.f, 148.f, 56.f,
+         26.f, afterhours::Color{30, 63, 84, 255}, TextAlignment::Center);
     if (ready_button) {
       ready = true;
       status = "Ready to race: " + characters[selected_character].name +
@@ -480,8 +474,8 @@ struct KartSelectScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     if (!status.empty())
-      text(250, status, 435.f, 672.f, 610.f, 36.f, 17.f,
-           afterhours::Color{57, 101, 123, 255}, TextAlignment::Center);
+      text(250, status, 40.f, 614.f, 588.f, 32.f, 20.f,
+           white, TextAlignment::Left);
   }
 };
 

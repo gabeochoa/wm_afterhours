@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,141 completed; 1,394 remaining.
+1,166 completed; 1,369 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4017,79 +4017,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/kart_select_720p.png) · [Visual review](design-audit.html#screen=kart_select)
 
-- [ ] `kart_select-01` · P2 · proposal. Preview driver cap: Repeat the portrait cap detail in the large driver preview to strengthen character continuity.
+- [x] `kart_select-01` · P2 · proposal. Preview driver cap: Repeat the portrait cap detail in the large driver preview to strengthen character continuity.
   Evidence: The Drift portrait carries a P on its cap while the large driver cap is blank.
 
-- [ ] `kart_select-02` · P2 · proposal. Vehicle thumbnails: Render the selected racer consistently across all vehicle thumbnails.
+- [x] `kart_select-02` · P2 · proposal. Vehicle thumbnails: Render the selected racer consistently across all vehicle thumbnails.
   Evidence: Each vehicle thumbnail includes a differently colored driver, suggesting a racer change.
 
-- [ ] `kart_select-03` · P2 · proposal. Selected vehicle color: Match the thumbnail to the selected vehicle's preview appearance.
+- [x] `kart_select-03` · P2 · proposal. Selected vehicle color: Match the thumbnail to the selected vehicle's preview appearance.
   Evidence: Standard shows a red kart while the large preview is orange.
 
-- [ ] `kart_select-04` · P2 · proposal. Selected racer badge: Place the badge within a reserved top corner of the selected card.
+- [x] `kart_select-04` · P2 · proposal. Selected racer badge: Place the badge within a reserved top corner of the selected card.
   Evidence: P1 floats above the card and interrupts its border.
 
-- [ ] `kart_select-05` · P2 · proposal. Player indicator duplication: Use a consistent badge shape and color in both locations.
+- [x] `kart_select-05` · P2 · proposal. Player indicator duplication: Use a consistent badge shape and color in both locations.
   Evidence: P1 appears in both the header and selected portrait with different shapes.
 
-- [ ] `kart_select-06` · P2 · proposal. Racer identity: Label the preview Selected racer and vehicle.
+- [x] `kart_select-06` · P2 · proposal. Racer identity: Label the preview Selected racer and vehicle.
   Evidence: Large Drift text appears below the vehicle without a clear section label.
 
-- [ ] `kart_select-07` · P2 · proposal. Vehicle identity: Add Standard beneath the racer name.
+- [x] `kart_select-07` · P2 · proposal. Vehicle identity: Add Standard beneath the racer name.
   Evidence: The preview names Drift but does not repeat Standard.
 
-- [ ] `kart_select-08` · P2 · proposal. Stats values: Add values such as 6/10 in a trailing column.
+- [x] `kart_select-08` · P2 · proposal. Stats values: Add values such as 6/10 in a trailing column.
   Evidence: Four segmented bars have no numeric scores.
 
-- [ ] `kart_select-09` · P2 · proposal. Stats scale: Use a clearly stated common maximum scale.
+- [x] `kart_select-09` · P2 · proposal. Stats scale: Use a clearly stated common maximum scale.
   Evidence: The bars contain many narrow ticks without a labeled range.
 
-- [ ] `kart_select-10` · P2 · proposal. Stat labels: Increase stat labels and align their baselines with the bars.
+- [x] `kart_select-10` · P2 · proposal. Stat labels: Increase stat labels and align their baselines with the bars.
   Evidence: Speed and Acceleration are small compared with the preview name.
 
-- [ ] `kart_select-11` · P3 · proposal. Weight interpretation: Add a short tradeoff description for heavier handling.
+- [x] `kart_select-11` · P3 · proposal. Weight interpretation: Add a short tradeoff description for heavier handling.
   Evidence: Weight uses the same positive yellow fill as speed without context.
 
-- [ ] `kart_select-12` · P2 · proposal. Portrait name strips: Increase name text or strip height slightly.
+- [x] `kart_select-12` · P2 · proposal. Portrait name strips: Increase name text or strip height slightly.
   Evidence: Racer names are small in thin pale strips.
 
-- [ ] `kart_select-13` · P3 · proposal. Portrait art: Add more distinct facial or costume features to aid recognition.
+- [x] `kart_select-13` · P3 · proposal. Portrait art: Add more distinct facial or costume features to aid recognition.
   Evidence: Eight racers share nearly identical facial silhouettes.
 
-- [ ] `kart_select-14` · P2 · proposal. Selected portrait border: Add a dark selected outline or check marker inside the card.
+- [x] `kart_select-14` · P2 · proposal. Selected portrait border: Add a dark selected outline or check marker inside the card.
   Evidence: Yellow fill and a thick yellow border share little contrast.
 
-- [ ] `kart_select-15` · P2 · proposal. Vehicle selection: Add a check or Selected label to its card.
+- [x] `kart_select-15` · P2 · proposal. Vehicle selection: Add a check or Selected label to its card.
   Evidence: Standard relies largely on yellow fill to mark selection.
 
-- [ ] `kart_select-16` · P2 · proposal. Vehicle section title: Increase the label and add a clear section gap.
+- [x] `kart_select-16` · P2 · proposal. Vehicle section title: Increase the label and add a clear section gap.
   Evidence: CHOOSE YOUR VEHICLE is small and close to the cards.
 
-- [ ] `kart_select-17` · P3 · proposal. Vehicle naming: Use consistent title casing across all vehicle labels.
+- [x] `kart_select-17` · P3 · proposal. Vehicle naming: Use consistent title casing across all vehicle labels.
   Evidence: Off-Road is styled differently from plain one-word names.
 
-- [ ] `kart_select-18` · P2 · proposal. Preview illustration: Bring the large driver art to the same character style as the cards.
+- [x] `kart_select-18` · P2 · proposal. Preview illustration: Bring the large driver art to the same character style as the cards.
   Evidence: The preview driver is far less detailed than the selection portraits.
 
-- [ ] `kart_select-19` · P3 · proposal. Preview platform: Reduce platform thickness to give the stat card more breathing room.
+- [x] `kart_select-19` · P3 · proposal. Preview platform: Reduce platform thickness to give the stat card more breathing room.
   Evidence: The oversized pale oval occupies substantial vertical space.
 
-- [ ] `kart_select-20` · P2 · proposal. Footer hints: Increase the hint size and use clearer keycaps.
+- [x] `kart_select-20` · P2 · proposal. Footer hints: Increase the hint size and use clearer keycaps.
   Evidence: Arrows to choose and A Confirm B Back are tiny beside the Back button.
 
-- [ ] `kart_select-21` · P2 · proposal. Back duplication: Combine them into one labeled action with its key hint.
+- [x] `kart_select-21` · P2 · proposal. Back duplication: Combine them into one labeled action with its key hint.
   Evidence: A large Back action and a B Back hint repeat the same function side by side.
 
-- [ ] `kart_select-22` · P2 · proposal. Ready action: Add a small Start Grand Prix or Continue caption appropriate to behavior.
+- [x] `kart_select-22` · P2 · proposal. Ready action: Add a small Start Grand Prix or Continue caption appropriate to behavior.
   Evidence: READY! does not state the next step.
 
-- [ ] `kart_select-23` · P3 · proposal. Ready button padding: Use a controlled icon-to-label gap.
+- [x] `kart_select-23` · P3 · proposal. Ready button padding: Use a controlled icon-to-label gap.
   Evidence: The action text and trailing arrow are spread across the large skewed button.
 
-- [ ] `kart_select-24` · P3 · proposal. Header context: Group race context under the title or closer to the player indicator.
+- [x] `kart_select-24` · P3 · proposal. Header context: Group race context under the title or closer to the player indicator.
   Evidence: Grand Prix · Mushroom Cup is smaller and distant from the screen title.
 
-- [ ] `kart_select-25` · P3 · proposal. Background checks: Lower texture contrast behind cards and stat text.
+- [x] `kart_select-25` · P3 · proposal. Background checks: Lower texture contrast behind cards and stat text.
   Evidence: The checker texture is strong behind the portrait grid.
 
 ### kirby_options

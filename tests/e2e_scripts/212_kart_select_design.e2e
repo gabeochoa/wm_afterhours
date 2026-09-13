@@ -1,0 +1,90 @@
+goto_screen kart_select
+resize 1280 720
+wait 0.4
+expect_text "SELECT YOUR RACER"
+expect_text "Selected racer and vehicle"
+expect_text "Drift / Standard"
+expect_text "Driver ratings / 0-10"
+expect_text "Weight is mass, not a handling bonus. Karts are cosmetic."
+expect_text "SELECTED"
+expect_text "Left / Right: Racer"
+expect_text "Up / Down: Vehicle"
+expect_text "Tab / Enter: Activate"
+expect_text "Back / Esc"
+expect_text "Confirm this lineup"
+expect_text "Selection demo"
+expect_text "READY!"
+assert_ui kart_root x=0 y=0 w=1280 h=720
+assert_ui kart_selected_badge x=343 y=122 w=32 h=32
+assert_ui kart_player x=1198 y=27 w=32 h=32
+assert_ui kart_stat_value_0 text=6/10
+assert_ui kart_stat_value_1 text=6/10
+assert_ui kart_stat_value_2 text=9/10
+assert_ui kart_stat_value_3 text=4/10
+assert_ui kart_preview x=648 y=253 w=592 h=171
+assert_ui kart_stats x=662 y=477 w=578 h=166
+assert_within_parents
+screenshot kart_select_design
+click_ui kart_vehicle_3
+wait 0.2
+expect_text "Selected Classic"
+expect_text "Drift / Classic"
+assert_ui kart_stat_value_0 text=6/10
+assert_ui kart_vehicle_selected x=489 y=496 w=87 h=21
+screenshot kart_select_classic
+click_ui kart_driver_3
+wait 0.2
+expect_text "Tank / Classic"
+assert_ui kart_stat_value_0 text=4/10
+assert_ui kart_stat_value_3 text=10/10
+focus_element kart_driver_7
+key ENTER
+wait 0.2
+expect_text "Pebble / Classic"
+assert_ui kart_stat_value_2 text=10/10
+assert_ui kart_stat_value_3 text=5/10
+key RIGHT
+wait 0.2
+expect_text "Turbo / Classic"
+key DOWN
+wait 0.2
+expect_text "Turbo / Standard"
+focus_element kart_ready
+key ENTER
+wait 0.2
+expect_text "CONFIRMED"
+expect_text "Ready to race: Turbo + Standard"
+expect_no_text "RACING!"
+screenshot kart_select_confirmed
+key ESCAPE
+wait 0.2
+expect_text "READY!"
+expect_text "Back selected"
+key LEFT
+wait 0.2
+expect_text "Pebble / Standard"
+key UP
+wait 0.2
+expect_text "Pebble / Classic"
+click_ui kart_driver_2
+wait 0.2
+click_ui kart_vehicle_0
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui kart_root x=0 y=0 w=1920 h=1080
+assert_ui kart_content x=0 y=0 w=1920 h=1080
+assert_ui kart_selected_badge x=515 y=183 w=48 h=48
+assert_ui kart_stats x=993 y=716 w=867 h=249
+assert_within_parents
+screenshot kart_select_design_1080
+resize 1024 768
+wait 0.3
+assert_ui kart_root x=0 y=0 w=1024 h=768
+assert_ui kart_content x=0 y=96 w=1024 h=576
+assert_ui kart_driver_0 x=32 y=190 w=111 h=124
+assert_ui kart_preview x=518 y=298 w=474 h=137
+assert_ui kart_stats x=530 y=478 w=462 h=133
+assert_within_parents
+screenshot kart_select_design_narrow
+resize 1280 720

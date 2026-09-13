@@ -3248,7 +3248,8 @@
         "change": "Lower texture contrast behind cards and stat text."
       }
     ],
-    "sha256": "856192ba3e5d5faea51a2cf4c47839fd73618d02fcb2c3d4f94a1cfdb2598fe6"
+    "sha256": "856192ba3e5d5faea51a2cf4c47839fd73618d02fcb2c3d4f94a1cfdb2598fe6",
+    "evidence": "docs/design-audit/originals/kart_select_720p.png"
   },
   {
     "id": "kirby_options",
