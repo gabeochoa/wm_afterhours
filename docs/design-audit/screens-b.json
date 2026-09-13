@@ -414,7 +414,8 @@
         "change": "Replace it with a brief explanation that samples intentionally vary one property at a time."
       }
     ],
-    "sha256": "51cc14cf36b1a5a35d88dae3865353f39c1c53f782121bb1553552f40e49a64c"
+    "sha256": "51cc14cf36b1a5a35d88dae3865353f39c1c53f782121bb1553552f40e49a64c",
+    "evidence": "docs/design-audit/originals/example_borders_720p.png"
   },
   {
     "id": "fighter_menu",

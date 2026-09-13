@@ -1,0 +1,97 @@
+goto_screen example_borders
+resize 1280 720
+wait 0.3
+click_ui borders_page_0
+wait 0.2
+expect_text "Border styles"
+expect_text "Width / requested thickness"
+expect_text "1px requested"
+expect_text "3px requested"
+expect_text "6px requested"
+expect_text "#5091DC"
+expect_text "#46BEC8"
+expect_text "#EB9146"
+expect_text "Solid uniform borders currently draw at 1 screen px"
+expect_text "Bottom corners"
+expect_text "Top-left + bottom-right"
+expect_text "0.25 / radius 12.5px"
+expect_text "Offset 5,5 / no blur"
+expect_text "Offset 4,6 / blur 14"
+expect_text "Capsule 1.0 / r18px"
+assert_ui borders_root x=60 y=0 w=1160 h=720
+assert_ui border_0 x=60 y=192 w=100 h=100
+assert_ui corner_2 x=444 y=417 w=100 h=100
+assert_ui true_capsule x=252 y=593 w=160 h=36
+assert_within_parents
+screenshot example_borders_width_corners
+focus_ui borders_page_1
+key ENTER
+wait 0.2
+expect_text "Themed treatments"
+expect_text "Neon glow"
+expect_text "Warm fill / blur 10"
+expect_text "Outline only"
+expect_text "Rest"
+expect_text "Hover"
+expect_text "Pressed"
+expect_text "Hover and pressed share the same fill"
+expect_text "Button activations: 0"
+assert_ui theme_0 w=100 h=100
+assert_ui border_live x=60 y=439 w=220 h=56
+assert_ui nested_outer x=928 y=439 w=280 h=110
+assert_ui nested_filled x=944 y=482 w=120 h=55
+assert_ui nested_outline x=1078 y=482 w=100 h=55
+assert_within_parents
+screenshot example_borders_themes_interaction
+mouse_down 170 467
+wait 0.2
+expect_text "Button activations: 1"
+screenshot example_borders_pressed
+mouse_up
+wait 0.2
+expect_text "Button activations: 1"
+focus_ui border_live
+key ENTER
+wait 0.2
+expect_text "Button activations: 2"
+click_ui borders_page_2
+wait 0.2
+expect_text "Per-side borders"
+expect_text "Left and right"
+expect_text "Top blue 3 / right cyan 2"
+expect_text "Bottom orange 3 / left white 2"
+expect_text "1px / dash 2 / gap 2"
+expect_text "3px / dash 6 / gap 6"
+expect_text "6px / dash 12 / gap 12"
+expect_text "4px / dash 8 / gap 8"
+assert_ui edge_0 x=60 y=211 w=208 h=100
+assert_ui dotted_4 x=1004 y=481 w=208 h=100
+assert_within_parents
+screenshot example_borders_edges
+click_ui borders_page_1
+wait 0.2
+expect_text "Button activations: 2"
+resize 1920 1080
+wait 0.3
+assert_ui borders_root x=90 y=0 w=1740 h=1080
+assert_ui border_live w=330 h=84
+assert_ui nested_outer w=420 h=165
+assert_within_parents
+screenshot example_borders_interaction_1080
+click_ui borders_page_0
+wait 0.2
+assert_ui corner_0 w=150 h=150
+assert_ui true_capsule w=240 h=54
+assert_within_parents
+resize 1024 768
+wait 0.3
+assert_ui borders_root x=48 y=96 w=928 h=576
+assert_ui border_0 w=80 h=80
+assert_ui true_capsule w=128 h=29
+assert_within_parents
+screenshot example_borders_width_narrow
+click_ui borders_page_2
+wait 0.2
+assert_within_parents
+screenshot example_borders_edges_narrow
+resize 1280 720

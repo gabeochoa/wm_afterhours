@@ -1528,7 +1528,7 @@ The device-to-port relationship reads clearly. The performance comparison that m
 
 ## example borders
 
-[Current baseline](../../screenshot-baselines/screens/example_borders_720p.png) · [Visual review](../../design-audit.html#screen=example_borders)
+[Reviewed image](../../docs/design-audit/originals/example_borders_720p.png) · [Current baseline](../../screenshot-baselines/screens/example_borders_720p.png) · [Visual review](../../design-audit.html#screen=example_borders)
 
 Baseline SHA-256: `51cc14cf36b1a5a35d88dae3865353f39c1c53f782121bb1553552f40e49a64c`
 

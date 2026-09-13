@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-973 completed; 1,562 remaining.
+998 completed; 1,537 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2937,79 +2937,83 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/example_borders_720p.png) · [Visual review](design-audit.html#screen=example_borders)
 
-- [ ] `example_borders-01` · P2 · proposal. Thin Medium Thick cards: Add 1 px, 3 px, and 6 px captions outside the samples.
+- [x] `example_borders-01` · P2 · proposal. Thin Medium Thick cards: Add 1 px, 3 px, and 6 px captions outside the samples.
   Evidence: The width examples show names without numeric widths.
+  Disposition: Preserved native requested-width specimens and labeled their actual one-screen-pixel rendering. Configurable uniform solid width remains an upstream gap.
 
-- [ ] `example_borders-02` · P2 · proposal. Blue Cyan Orange cards: Add small color-code captions below these samples.
+- [x] `example_borders-02` · P2 · proposal. Blue Cyan Orange cards: Add small color-code captions below these samples.
   Evidence: Color names are visible but exact tested values are absent.
 
-- [ ] `example_borders-03` · P2 · proposal. Width and color row: Separate the row into labeled Width and Color groups.
+- [x] `example_borders-03` · P2 · proposal. Width and color row: Separate the row into labeled Width and Color groups.
   Evidence: Width variants and hue variants share one undivided row.
 
-- [ ] `example_borders-04` · P2 · proposal. Rounded card: Show the configured roundness in an external caption.
+- [x] `example_borders-04` · P2 · proposal. Rounded card: Show the configured roundness in an external caption.
   Evidence: Rounded names the effect without its radius.
 
-- [ ] `example_borders-05` · P2 · proposal. Pill card: Add a wider companion pill to demonstrate the same corner treatment on an elongated shape.
+- [x] `example_borders-05` · P2 · proposal. Pill card: Add a wider companion pill to demonstrate the same corner treatment on an elongated shape.
   Evidence: The pill demonstration is nearly square.
+  Disposition: Retained the original 0.5 square and added a wider true capsule using 1.0. A 0.5 fraction is not a pill.
 
-- [ ] `example_borders-06` · P2 · proposal. Top Only corner card: Rename this sample Top corners only.
+- [x] `example_borders-06` · P2 · proposal. Top Only corner card: Rename this sample Top corners only.
   Evidence: Top Only is also used in the per-side row for a different property.
+  Disposition: The raw 0b1100 mask rounds the bottom fill corners in this backend. Labeled Bottom corners after checking the native signature and actual pixels; partial outlines round all four corners, tracked upstream.
 
-- [ ] `example_borders-07` · P2 · proposal. Diagonal corner card: Add a miniature corner diagram or explicit corner names.
+- [x] `example_borders-07` · P2 · proposal. Diagonal corner card: Add a miniature corner diagram or explicit corner names.
   Evidence: Diagonal does not say which opposite corners are rounded.
 
-- [ ] `example_borders-08` · P2 · proposal. Hard Shadow card: Caption the offset and spread below the sample.
+- [x] `example_borders-08` · P2 · proposal. Hard Shadow card: Caption the offset and spread below the sample.
   Evidence: The shadow parameter is not identified in its label.
+  Disposition: The hard-shadow API has offsets but no spread parameter. Caption reports offset 5,5 and no blur.
 
-- [ ] `example_borders-09` · P2 · proposal. Soft Shadow card: Place a neutral comparison backdrop behind the shadow examples only.
+- [x] `example_borders-09` · P2 · proposal. Soft Shadow card: Place a neutral comparison backdrop behind the shadow examples only.
   Evidence: The soft shadow blends into the dark page without a comparison reference.
 
-- [ ] `example_borders-10` · P3 · proposal. Corner and shadow grouping: Create separate subgroup captions for corners and shadows.
+- [x] `example_borders-10` · P3 · proposal. Corner and shadow grouping: Create separate subgroup captions for corners and shadows.
   Evidence: Two different properties share the Corners & Shadows label.
 
-- [ ] `example_borders-11` · P2 · proposal. Dark Mode sample: Give it an external sample-name caption so its boundary remains the test subject.
+- [x] `example_borders-11` · P2 · proposal. Dark Mode sample: Give it an external sample-name caption so its boundary remains the test subject.
   Evidence: Dark Mode blends into the page around its thin outline.
 
-- [ ] `example_borders-12` · P3 · proposal. Neon Glow sample: Move the descriptive label below the sample to leave the glow unobscured.
+- [x] `example_borders-12` · P3 · proposal. Neon Glow sample: Move the descriptive label below the sample to leave the glow unobscured.
   Evidence: The glow label and glow border use the same bright cyan.
 
-- [ ] `example_borders-13` · P3 · proposal. Cozy sample: Add a subtitle naming its warm fill and soft border treatment.
+- [x] `example_borders-13` · P3 · proposal. Cozy sample: Add a subtitle naming its warm fill and soft border treatment.
   Evidence: Cozy describes a mood instead of border behavior.
 
-- [ ] `example_borders-14` · P2 · proposal. Danger and Success: Use a consistent icon-and-label pattern for both examples.
+- [x] `example_borders-14` · P2 · proposal. Danger and Success: Use a consistent icon-and-label pattern for both examples.
   Evidence: The two semantic samples use different punctuation prefixes.
 
-- [ ] `example_borders-15` · P2 · proposal. Outline Only sample: Move the long name into an external caption at the shared caption size.
+- [x] `example_borders-15` · P2 · proposal. Outline Only sample: Move the long name into an external caption at the shared caption size.
   Evidence: Outline Only uses much smaller text than neighboring themed samples.
 
-- [ ] `example_borders-16` · P2 · proposal. Interactive Button: Add labeled static Rest, Hover, and Pressed previews beside the live control.
+- [x] `example_borders-16` · P2 · proposal. Interactive Button: Add labeled static Rest, Hover, and Pressed previews beside the live control.
   Evidence: Only the button's resting state is shown.
 
-- [ ] `example_borders-17` · P2 · proposal. Interactive row: Align their sample frames while preserving each component's intrinsic dimensions.
+- [x] `example_borders-17` · P2 · proposal. Interactive row: Align their sample frames while preserving each component's intrinsic dimensions.
   Evidence: The large button and nested panel have different heights and top edges.
 
-- [ ] `example_borders-18` · P2 · proposal. Nested Panel: Add a parent/child key outside the outlined panel.
+- [x] `example_borders-18` · P2 · proposal. Nested Panel: Add a parent/child key outside the outlined panel.
   Evidence: The nested example has no indication of which borders belong to parent and children.
 
-- [ ] `example_borders-19` · P3 · proposal. Inner Card and Second: Rename it Outline child to distinguish its treatment.
+- [x] `example_borders-19` · P3 · proposal. Inner Card and Second: Rename it Outline child to distinguish its treatment.
   Evidence: Second gives no information about the second inner border.
 
-- [ ] `example_borders-20` · P2 · proposal. Per-Side row: Add edge-width captions outside each sample.
+- [x] `example_borders-20` · P2 · proposal. Per-Side row: Add edge-width captions outside each sample.
   Evidence: Top Only and Bottom Only omit the line widths.
 
-- [ ] `example_borders-21` · P2 · proposal. Left+Right sample: Use Left and right with a tiny two-edge diagram.
+- [x] `example_borders-21` · P2 · proposal. Left+Right sample: Use Left and right with a tiny two-edge diagram.
   Evidence: The label uses a compact plus sign unlike the other edge names.
 
-- [ ] `example_borders-22` · P2 · proposal. Mixed sample: Add a four-edge legend naming each color and width.
+- [x] `example_borders-22` · P2 · proposal. Mixed sample: Add a four-edge legend naming each color and width.
   Evidence: Three colors appear without identifying their edge assignment.
 
-- [ ] `example_borders-23` · P2 · proposal. Dotted samples: Add numeric dash and gap captions beneath the dotted examples.
+- [x] `example_borders-23` · P2 · proposal. Dotted samples: Add numeric dash and gap captions beneath the dotted examples.
   Evidence: Thin, Medium, and Thick do not expose dash size or spacing.
 
-- [ ] `example_borders-24` · P2 · proposal. Dotted row placement: Increase the bottom safe margin or fit the gallery into a scrollable frame with a visible boundary.
+- [x] `example_borders-24` · P2 · proposal. Dotted row placement: Increase the bottom safe margin or fit the gallery into a scrollable frame with a visible boundary.
   Evidence: The last row sits only about 12 pixels above the bottom edge.
 
-- [ ] `example_borders-25` · P3 · proposal. Gallery subtitle: Replace it with a brief explanation that samples intentionally vary one property at a time.
+- [x] `example_borders-25` · P3 · proposal. Gallery subtitle: Replace it with a brief explanation that samples intentionally vary one property at a time.
   Evidence: The small pipe-separated subtitle repeats the row names.
 
 ### fighter_menu
@@ -8116,6 +8120,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Make partial rounded outlines match fill masks and correct RoundedCorners::top_round; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Add configurable visible-row limits and scrolling to native dropdown trays when reviewed upstream; see docs/AFTERHOURS_GAPS.md.
 

@@ -323,6 +323,17 @@ preserves all 12 options and accurately labels the resulting tray. Long option
 lists need a viewport and scroll behavior rather than relying on whole-tray
 clamping.
 
+### Partial rounded outlines ignore corner masks
+
+The Raylib backend draw_rectangle_rounded honors corner bits through
+DrawRectangleCustom, but draw_rectangle_rounded_lines calls
+DrawRectangleRoundedLines for every nonzero mask, rounding all four corners.
+The example_borders 0b1100 fixture therefore has bottom-rounded fill and a
+four-corner rounded outline. Outlines should use the same per-corner shape as
+fills. Separately, RoundedCorners::top_round sets TOP_LEFT, TOP_RIGHT and
+BOTTOM_RIGHT to ROUND; the bottom-right assignment contradicts the helper
+name. wm retains the fixtures and describes the visible fill/outline mismatch.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from
