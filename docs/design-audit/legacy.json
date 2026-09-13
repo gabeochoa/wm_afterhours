@@ -172,13 +172,13 @@
     "screen": "layout_patterns",
     "baseline": "baseline_screenshots/layout_patterns.png",
     "current": "screenshot-baselines/screens/layout_patterns_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Only an unlabeled horizontal triplet numbered 1, 2, 3 is visible near the top-left. Current recommendations concern framing and explanation, not a claim the layout engine failed.",
-    "sha256": "617fc8c69a4f01dd6f0db1589d22318d151422289cbd9e617d4a8c3f1c1aa042",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "a956d5fb9c7cbea22d0e83f25b6073ba5f13dd9fa4fe8cd8e4c9aaded3bd4049",
     "additional_findings": []
   },
   {

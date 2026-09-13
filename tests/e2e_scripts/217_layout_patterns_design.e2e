@@ -1,0 +1,41 @@
+goto_screen layout_patterns
+resize 1280 720
+wait 0.4
+expect_text "Fixed horizontal layout"
+expect_text "Parent: 416 x 112px"
+expect_text "Fixed origin: x 40 / y 40"
+expect_text "Child: 120 x 80px"
+expect_text "Gap: 12px"
+expect_text "Padding: 16px on every side"
+expect_text "Three equal children fit without overflow."
+expect_text "3 x 120 + 2 x 12 + 2 x 16 = 416px"
+expect_text "80 + 2 x 16 = 112px"
+expect_text "Colors identify child order"
+expect_text "1 / Cyan"
+expect_text "2 / Pink"
+expect_text "3 / Green"
+assert_ui pattern_row x=40 y=40 w=416 h=112
+assert_ui pattern_box_0 x=56 y=56 w=120 h=80
+assert_ui pattern_box_1 x=188 y=56 w=120 h=80
+assert_ui pattern_box_2 x=320 y=56 w=120 h=80
+assert_ui pattern_legend_0 x=504 y=247 w=128 h=82
+assert_within_parents
+screenshot layout_patterns_design
+resize 1920 1080
+wait 0.3
+assert_ui pattern_row x=40 y=40 w=416 h=112
+assert_ui pattern_box_0 x=56 y=56 w=120 h=80
+assert_ui pattern_box_1 x=188 y=56 w=120 h=80
+assert_ui pattern_box_2 x=320 y=56 w=120 h=80
+assert_within_parents
+screenshot layout_patterns_design_1080
+resize 1024 768
+wait 0.3
+assert_ui pattern_row x=40 y=40 w=416 h=112
+assert_ui pattern_box_0 x=56 y=56 w=120 h=80
+assert_ui pattern_box_1 x=188 y=56 w=120 h=80
+assert_ui pattern_box_2 x=320 y=56 w=120 h=80
+assert_ui pattern_legend_2 x=808 y=247 w=128 h=82
+assert_within_parents
+screenshot layout_patterns_design_narrow
+resize 1280 720

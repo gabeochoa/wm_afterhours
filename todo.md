@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,241 completed; 1,294 remaining.
+1,251 completed; 1,284 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4375,34 +4375,34 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/layout_patterns_720p.png) · [Visual review](design-audit.html#screen=layout_patterns)
 
-- [ ] `layout_patterns-01` · P2 · proposal. Page identification: Add a caption outside the measured fixture naming the fixed horizontal layout test.
+- [x] `layout_patterns-01` · P2 · proposal. Page identification: Add a caption outside the measured fixture naming the fixed horizontal layout test.
   Evidence: The screenshot contains three numbered boxes with no title.
 
-- [ ] `layout_patterns-02` · P2 · proposal. Test purpose: Add a one-line explanation of the expected row arrangement.
+- [x] `layout_patterns-02` · P2 · proposal. Test purpose: Add a one-line explanation of the expected row arrangement.
   Evidence: Nothing visible explains why the three boxes exist.
 
-- [ ] `layout_patterns-03` · P2 · proposal. Parent dimensions: Show its width and height outside the tested rectangle.
+- [x] `layout_patterns-03` · P2 · proposal. Parent dimensions: Show its width and height outside the tested rectangle.
   Evidence: The gray parent has no dimension annotation.
 
-- [ ] `layout_patterns-04` · P3 · proposal. Child dimensions: Add an external 120-pixel child-width annotation.
+- [x] `layout_patterns-04` · P3 · proposal. Child dimensions: Add an external 120-pixel child-width annotation.
   Evidence: The three equal boxes have no size labels.
 
-- [ ] `layout_patterns-05` · P3 · proposal. Gap measurement: Add a 12-pixel gap marker outside the fixture.
+- [x] `layout_patterns-05` · P3 · proposal. Gap measurement: Add a 12-pixel gap marker outside the fixture.
   Evidence: The equal spaces between boxes are visible but unnamed.
 
-- [ ] `layout_patterns-06` · P3 · proposal. Padding measurement: Add a 16-pixel padding guide outside the test geometry.
+- [x] `layout_patterns-06` · P3 · proposal. Padding measurement: Add a 16-pixel padding guide outside the test geometry.
   Evidence: The gray parent padding is visible without a value.
 
-- [ ] `layout_patterns-07` · P2 · proposal. Fixture position: Mark its fixed origin in an external caption so the placement reads as intentional.
+- [x] `layout_patterns-07` · P2 · proposal. Fixture position: Mark its fixed origin in an external caption so the placement reads as intentional.
   Evidence: The sample sits at the upper-left of a mostly blank canvas.
 
-- [ ] `layout_patterns-08` · P3 · proposal. Expected result: Add Three equal children fit without overflow beneath the sample.
+- [x] `layout_patterns-08` · P3 · proposal. Expected result: Add Three equal children fit without overflow beneath the sample.
   Evidence: No visual statement describes the successful geometry.
 
-- [ ] `layout_patterns-09` · P3 · proposal. Number legibility: Provide matching enlarged number labels in the external legend while preserving the tested content.
+- [x] `layout_patterns-09` · P3 · proposal. Number legibility: Provide matching enlarged number labels in the external legend while preserving the tested content.
   Evidence: Black handwritten numerals are small within the bright boxes.
 
-- [ ] `layout_patterns-10` · P3 · proposal. Color meaning: Add an external legend stating that colors identify child order.
+- [x] `layout_patterns-10` · P3 · proposal. Color meaning: Add an external legend stating that colors identify child order.
   Evidence: Cyan, pink, and green are not explained.
 
 ### marlo_kart

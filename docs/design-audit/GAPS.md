@@ -2239,7 +2239,7 @@ Preserve all repro geometry, diagnostic colors, origin marker, overlap, and inte
 
 ## layout patterns
 
-[Current baseline](../../screenshot-baselines/screens/layout_patterns_720p.png) · [Visual review](../../design-audit.html#screen=layout_patterns)
+[Reviewed image](../../docs/design-audit/originals/layout_patterns_720p.png) · [Current baseline](../../screenshot-baselines/screens/layout_patterns_720p.png) · [Visual review](../../design-audit.html#screen=layout_patterns)
 
 Baseline SHA-256: `617fc8c69a4f01dd6f0db1589d22318d151422289cbd9e617d4a8c3f1c1aa042`
 
@@ -2262,7 +2262,7 @@ Source identifies this as a minimal fixed-size fixture for assert_ui checks. Ten
 
 [Image](../../baseline_screenshots/layout_patterns.png)
 
-Pixel-identical. Only an unlabeled horizontal triplet numbered 1, 2, 3 is visible near the top-left. Current recommendations concern framing and explanation, not a claim the layout engine failed.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## marlo kart
 

@@ -4061,7 +4061,8 @@
         "change": "Add an external legend stating that colors identify child order."
       }
     ],
-    "sha256": "617fc8c69a4f01dd6f0db1589d22318d151422289cbd9e617d4a8c3f1c1aa042"
+    "sha256": "617fc8c69a4f01dd6f0db1589d22318d151422289cbd9e617d4a8c3f1c1aa042",
+    "evidence": "docs/design-audit/originals/layout_patterns_720p.png"
   },
   {
     "id": "marlo_kart",
