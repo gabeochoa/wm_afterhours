@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,342 completed; 1,193 remaining.
+1,367 completed; 1,168 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4104,79 +4104,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/kirby_options_720p.png) · [Visual review](design-audit.html#screen=kirby_options)
 
-- [ ] `kirby_options-01` · P2 · proposal. Name control: Display a sample profile name and a smaller Edit name cue.
+- [x] `kirby_options-01` · P2 · proposal. Name control: Display a sample profile name and a smaller Edit name cue.
   Evidence: Name is a generic placeholder in the largest yellow control.
 
-- [ ] `kirby_options-02` · P2 · proposal. Name icon: Reduce it to make room for the actual profile value.
+- [x] `kirby_options-02` · P2 · proposal. Name icon: Reduce it to make room for the actual profile value.
   Evidence: The large profile silhouette consumes much of the name pill.
 
-- [ ] `kirby_options-03` · P2 · proposal. Delete Data action: Use a clear delete-data icon with the existing label.
+- [x] `kirby_options-03` · P2 · proposal. Delete Data action: Use a clear delete-data icon with the existing label.
   Evidence: A small pawn-like symbol does not communicate deletion.
 
-- [ ] `kirby_options-04` · P2 · proposal. Delete action hierarchy: Use a restrained warning accent and separate it from profile editing.
+- [x] `kirby_options-04` · P2 · proposal. Delete action hierarchy: Use a restrained warning accent and separate it from profile editing.
   Evidence: Delete Data sits beside the primary name control without a destructive distinction.
 
-- [ ] `kirby_options-05` · P2 · proposal. Delete label: Increase it to a readable secondary-action size.
+- [x] `kirby_options-05` · P2 · proposal. Delete label: Increase it to a readable secondary-action size.
   Evidence: The label is much smaller than all other action names.
 
-- [ ] `kirby_options-06` · P2 · proposal. Common section tag: Increase its contrast and use a stronger section-label treatment.
+- [x] `kirby_options-06` · P2 · proposal. Common section tag: Increase its contrast and use a stronger section-label treatment.
   Evidence: Common is white on a pale gray strip and small.
 
-- [ ] `kirby_options-07` · P2 · proposal. Bottom help: Move it into a padded footer region inside the board.
+- [x] `kirby_options-07` · P2 · proposal. Bottom help: Move it into a padded footer region inside the board.
   Evidence: The long help sentence sits outside the board near the viewport edge.
 
-- [ ] `kirby_options-08` · P2 · proposal. Help context: Use one specific description for the current selection.
+- [x] `kirby_options-08` · P2 · proposal. Help context: Use one specific description for the current selection.
   Evidence: Enter a new name and customize your controls describes multiple actions at once.
 
-- [ ] `kirby_options-09` · P2 · proposal. Top tabs: Add compact text labels beneath each icon or a visible selected-tab caption.
+- [x] `kirby_options-09` · P2 · proposal. Top tabs: Add compact text labels beneath each icon or a visible selected-tab caption.
   Evidence: Network, controller, home, mail, and star are icon-only.
 
-- [ ] `kirby_options-10` · P2 · proposal. Options selection: Connect the banner visually to the selected gear tab.
+- [x] `kirby_options-10` · P2 · proposal. Options selection: Connect the banner visually to the selected gear tab.
   Evidence: Options is indicated by a purple tab and separate purple banner.
 
-- [ ] `kirby_options-11` · P3 · proposal. Tab spacing: Use a consistent transformed baseline and gap rhythm.
+- [x] `kirby_options-11` · P3 · proposal. Tab spacing: Use a consistent transformed baseline and gap rhythm.
   Evidence: The top icon tabs have irregular apparent gaps due to rotation.
 
-- [ ] `kirby_options-12` · P2 · proposal. L and R hints: Use consistent keycap boxes aligned with the tab row.
+- [x] `kirby_options-12` · P2 · proposal. L and R hints: Use consistent keycap boxes aligned with the tab row.
   Evidence: Small purple key labels float outside the tabs.
 
-- [ ] `kirby_options-13` · P2 · proposal. Controller tile: Use a consistent icon orientation within each tile.
+- [x] `kirby_options-13` · P2 · proposal. Controller tile: Use a consistent icon orientation within each tile.
   Evidence: The controller icon is tilted independently from the text and board.
 
-- [ ] `kirby_options-14` · P2 · proposal. Display tile: Normalize icon stroke and visual weight.
+- [x] `kirby_options-14` · P2 · proposal. Display tile: Normalize icon stroke and visual weight.
   Evidence: Display uses a thin monitor outline beside heavier filled icons.
 
-- [ ] `kirby_options-15` · P2 · proposal. Accessibility tile: Increase label room or reduce its size slightly within the shared type scale.
+- [x] `kirby_options-15` · P2 · proposal. Accessibility tile: Increase label room or reduce its size slightly within the shared type scale.
   Evidence: The wide Accessibility label approaches the cell edges.
 
-- [ ] `kirby_options-16` · P2 · proposal. Sound and Online layout: Use one icon-label layout or explicitly distinguish the two groups.
+- [x] `kirby_options-16` · P2 · proposal. Sound and Online layout: Use one icon-label layout or explicitly distinguish the two groups.
   Evidence: Bottom-row labels sit beside icons while top-row labels sit below them.
 
-- [ ] `kirby_options-17` · P3 · proposal. Tile grid proportions: Use consistent cell proportions or make the grouping meaningful with labels.
+- [x] `kirby_options-17` · P3 · proposal. Tile grid proportions: Use consistent cell proportions or make the grouping meaningful with labels.
   Evidence: Two broad bottom cells differ strongly from the three upper cells.
 
-- [ ] `kirby_options-18` · P2 · proposal. Grid lines: Increase divider contrast slightly to clarify the clickable tile boundaries.
+- [x] `kirby_options-18` · P2 · proposal. Grid lines: Increase divider contrast slightly to clarify the clickable tile boundaries.
   Evidence: Thin beige dividers are faint against off-white paper.
 
-- [ ] `kirby_options-19` · P3 · proposal. Notebook checkboxes: Render them as clearly decorative sketches or add meaningful task labels.
+- [x] `kirby_options-19` · P3 · proposal. Notebook checkboxes: Render them as clearly decorative sketches or add meaningful task labels.
   Evidence: Five empty notebook boxes resemble interactive tasks without readable labels.
 
-- [ ] `kirby_options-20` · P3 · proposal. Notebook block text: Use believable low-emphasis handwritten lines to support the stationery theme.
+- [x] `kirby_options-20` · P3 · proposal. Notebook block text: Use believable low-emphasis handwritten lines to support the stationery theme.
   Evidence: Opaque square marks substitute for writing.
 
-- [ ] `kirby_options-21` · P2 · proposal. Notebook star button: Add a Profile customization caption near the oval.
+- [x] `kirby_options-21` · P2 · proposal. Notebook star button: Add a Profile customization caption near the oval.
   Evidence: The green oval star looks interactive but has no visible label.
 
-- [ ] `kirby_options-22` · P3 · proposal. Pencil decoration: Move them into a margin where they do not obscure the faux content.
+- [x] `kirby_options-22` · P3 · proposal. Pencil decoration: Move them into a margin where they do not obscure the faux content.
   Evidence: Large outlined pencils cover the notebook's last two rows.
 
-- [ ] `kirby_options-23` · P3 · proposal. Notebook footprint: Reduce it slightly to give the options board more whitespace.
+- [x] `kirby_options-23` · P3 · proposal. Notebook footprint: Reduce it slightly to give the options board more whitespace.
   Evidence: The decorative notebook occupies almost a third of the screen.
 
-- [ ] `kirby_options-24` · P3 · proposal. Board shadow: Soften decorative shadows around the main reading area.
+- [x] `kirby_options-24` · P3 · proposal. Board shadow: Soften decorative shadows around the main reading area.
   Evidence: Strong paper shadows and dark notebook shadows compete with tile boundaries.
 
-- [ ] `kirby_options-25` · P3 · proposal. Footer underline: Align it with the inner board margins and shorten it to the help region.
+- [x] `kirby_options-25` · P3 · proposal. Footer underline: Align it with the inner board margins and shorten it to the help region.
   Evidence: The purple line extends nearly to the screen edge below the help text.
 
 ### language_demo

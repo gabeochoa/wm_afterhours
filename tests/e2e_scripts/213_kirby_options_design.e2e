@@ -1,0 +1,132 @@
+goto_screen kirby_options
+resize 1280 720
+mouse_move 10 10
+wait 0.4
+expect_text "Options"
+expect_text "Poppy"
+expect_text "Edit name"
+expect_text "Delete Data"
+expect_text "Common"
+expect_text "Network"
+expect_text "Controller"
+expect_text "Home"
+expect_text "Messages"
+expect_text "Favorites"
+expect_text "Controls & visibility"
+expect_text "Sound & connection"
+expect_text "Profile customization"
+expect_text "Choose a category to customize your rider."
+assert_ui kirby_canvas w=1280 h=720
+assert_ui kirby_root x=0 y=0 w=1280 h=720
+assert_ui kirby_name x=556 y=198 w=426 h=96
+assert_ui kirby_profile_name x=635 y=207 w=326 h=46 text=Poppy
+assert_ui kirby_data x=1052 y=198 w=132 h=94
+assert_ui kirby_previous_tab x=350 y=83 w=32 h=32
+assert_ui kirby_next_tab x=1152 y=83 w=32 h=32
+assert_ui kirby_tab_0 x=396 y=56 w=112 h=88
+assert_ui kirby_tab_5 x=1026 y=40 w=112 h=104
+assert_ui kirby_banner x=940 y=144 w=198 h=34
+assert_ui kirby_option_0 x=414 y=340 w=258 h=130
+assert_ui kirby_option_1 x=672 y=340 w=258 h=130
+assert_ui kirby_option_2 x=930 y=340 w=258 h=130
+assert_ui kirby_option_3 x=414 y=500 w=387 h=130
+assert_ui kirby_option_4 x=801 y=500 w=387 h=130
+assert_ui kirby_message x=414 y=646 w=774 h=36
+assert_ui kirby_footer_rule x=414 y=687 w=774 h=2
+assert_no_overflow
+assert_within_parents
+screenshot kirby_options_design
+mouse_move 540 420
+wait 0.2
+expect_text "Choose your control style and rumble preference."
+mouse_move 795 420
+wait 0.2
+expect_text "Adjust screen brightness and camera distance."
+mouse_move 1055 420
+wait 0.2
+expect_text "Choose text size and color assistance."
+mouse_move 610 565
+wait 0.2
+expect_text "Set music and sound effects levels."
+mouse_move 995 565
+wait 0.2
+expect_text "Choose who can see your player in this local demo."
+mouse_move 10 10
+focus_ui kirby_name
+wait 0.2
+expect_text "Edit the name shown on this profile."
+key ENTER
+wait 0.2
+expect_text "Your name"
+focus_ui kirby_name_input
+key CTRL+A
+type "Nova"
+wait 0.2
+click_ui kirby_name_save
+wait 0.2
+assert_ui kirby_profile_name text=Nova
+expect_text "Name saved: Nova"
+click_ui kirby_customize
+wait 0.2
+expect_input_text kirby_name_input "Nova"
+click_ui kirby_name_cancel
+wait 0.2
+click_ui kirby_tab_3
+wait 0.2
+assert_ui kirby_title text=Messages
+expect_text "No messages"
+click_ui kirby_next_tab
+wait 0.2
+assert_ui kirby_title text=Favorites
+expect_text "Favorite mode"
+click_ui kirby_favorite
+wait 0.2
+expect_text "Top Ride"
+click_ui kirby_next_tab
+wait 0.2
+assert_ui kirby_title text=Options
+click_ui kirby_data
+wait 0.2
+expect_text "Rider: Nova"
+expect_text "Races completed: 12"
+click_ui kirby_delete_request
+wait 0.2
+expect_text "Delete this profile's saved data?"
+expect_text "Your name, records and preferences will be reset."
+assert_no_overflow
+assert_within_parents
+screenshot kirby_options_design_delete_confirmation
+click_ui kirby_delete_cancel
+wait 0.2
+expect_text "Save data"
+key ESCAPE
+wait 0.2
+assert_ui kirby_profile_name text=Nova
+expect_text "Controls & visibility"
+resize 1920 1080
+wait 0.3
+assert_ui kirby_name x=834 y=297 w=639 h=144
+assert_ui kirby_option_0 x=621 y=510 w=387 h=195
+assert_ui kirby_message x=621 y=969 w=1161 h=54
+assert_ui kirby_footer_rule x=621 y=1031 w=1161 h=3
+assert_no_overflow
+assert_within_parents
+screenshot kirby_options_design_1080
+resize 1024 768
+wait 0.3
+assert_ui kirby_canvas w=1024 h=768
+assert_ui kirby_root x=0 y=96 w=1024 h=576
+assert_ui kirby_name x=445 y=254 w=341 h=77
+assert_ui kirby_option_0 x=331 y=368 w=206 h=104
+assert_ui kirby_message x=331 y=613 w=619 h=29
+assert_ui kirby_footer_rule x=331 y=646 w=619 h=2
+assert_no_overflow
+assert_within_parents
+screenshot kirby_options_design_narrow
+click_ui kirby_option_2
+wait 0.2
+expect_text "Color assistance"
+assert_no_overflow
+assert_within_parents
+key ESCAPE
+resize 1280 720

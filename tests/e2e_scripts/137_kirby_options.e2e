@@ -1,13 +1,14 @@
 goto_screen kirby_options
+resize 1280 720
 wait 0.5
 expect_text "Options"
 expect_text "Common"
-expect_text "Name"
+expect_text "Poppy"
 expect_text "Controller"
 expect_text "Accessibility"
 assert_ui kirby_root x=0 y=0 w=1280 h=720
-assert_ui kirby_name x=578 y=172 w=426 h=120
-assert_ui kirby_option_0 x=416 y=333 w=251 h=170
+assert_ui kirby_name x=556 y=198 w=426 h=96
+assert_ui kirby_option_0 x=414 y=340 w=258 h=130
 assert_no_overflow
 assert_within_parents
 screenshot kirby_options_initial
@@ -125,7 +126,7 @@ click_ui kirby_delete_request
 wait 0.2
 click_ui kirby_delete_confirm
 wait 0.2
-expect_text "Rider: Name"
+expect_text "Rider: Poppy"
 expect_text "Races completed: 0"
 expect_text "Records: 0"
 expect_text "Data deleted."
@@ -140,8 +141,10 @@ wait 0.2
 resize 1920 1080
 wait 0.3
 assert_ui kirby_root x=0 y=0 w=1920 h=1080
-assert_ui kirby_name x=867 y=258 w=639 h=180
-assert_ui kirby_option_0 x=624 y=500 w=377 h=255
+assert_ui kirby_name x=834 y=297 w=639 h=144
+assert_ui kirby_option_0 x=621 y=510 w=387 h=195
 assert_no_overflow
 assert_within_parents
 screenshot kirby_options_1080p
+
+resize 1280 720

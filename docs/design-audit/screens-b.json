@@ -3462,7 +3462,8 @@
         "change": "Align it with the inner board margins and shorten it to the help region."
       }
     ],
-    "sha256": "283ee819fc76147bc7c685b06a0b33c0360f4fe1d8bb6a822d3e7ac1f25496ce"
+    "sha256": "283ee819fc76147bc7c685b06a0b33c0360f4fe1d8bb6a822d3e7ac1f25496ce",
+    "evidence": "docs/design-audit/originals/kirby_options_720p.png"
   },
   {
     "id": "language_demo",

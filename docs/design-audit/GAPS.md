@@ -2097,7 +2097,7 @@ The selected racer and vehicle are visible. Improve consistency between the port
 
 ## kirby options
 
-[Current baseline](../../screenshot-baselines/screens/kirby_options_720p.png) · [Visual review](../../design-audit.html#screen=kirby_options)
+[Reviewed image](../../docs/design-audit/originals/kirby_options_720p.png) · [Current baseline](../../screenshot-baselines/screens/kirby_options_720p.png) · [Visual review](../../design-audit.html#screen=kirby_options)
 
 Baseline SHA-256: `283ee819fc76147bc7c685b06a0b33c0360f4fe1d8bb6a822d3e7ac1f25496ce`
 
