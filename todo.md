@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-355 completed; 2,180 remaining.
+380 completed; 2,155 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1152,79 +1152,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/buttons_720p.png) · [Visual review](design-audit.html#screen=buttons)
 
-- [ ] `buttons-01` · P2 · proposal. Title padding: Add the same inset as row labels.
+- [x] `buttons-01` · P2 · proposal. Title padding: Add the same inset as row labels.
   Evidence: Button Gallery starts at the strip's edge.
 
-- [ ] `buttons-02` · P2 · proposal. Header size: Reduce its height or add a short purpose subtitle.
+- [x] `buttons-02` · P2 · proposal. Header size: Reduce its height or add a short purpose subtitle.
   Evidence: The title band is much taller than its text requires.
 
-- [ ] `buttons-03` · P2 · proposal. States label: Rename the row Roles and availability.
+- [x] `buttons-03` · P2 · proposal. States label: Rename the row Roles and availability.
   Evidence: States contains Accent and Secondary, which are color roles.
 
-- [ ] `buttons-04` · P2 · proposal. Normal button: Label it Primary.
+- [x] `buttons-04` · P2 · proposal. Normal button: Label it Primary.
   Evidence: Normal does not identify the primary theme role.
 
-- [ ] `buttons-05` · P2 · proposal. Disabled specimen: Add a readable external Disabled caption.
+- [x] `buttons-05` · P2 · proposal. Disabled specimen: Add a readable external Disabled caption.
   Evidence: The deliberately dim label is difficult to identify independently.
 
-- [ ] `buttons-06` · P2 · proposal. Disabled bounds: Add an external diagnostic boundary.
+- [x] `buttons-06` · P2 · proposal. Disabled bounds: Add an external diagnostic boundary.
   Evidence: The disabled outline is hard to distinguish from the panel.
 
-- [ ] `buttons-07` · P2 · proposal. State dimensions: Add a dimensions caption for this row.
+- [x] `buttons-07` · P2 · proposal. State dimensions: Add a dimensions caption for this row.
   Evidence: The four specimens show no shared measurement.
 
-- [ ] `buttons-08` · P2 · proposal. Size naming: Use Large for parallel labels.
+- [x] `buttons-08` · P2 · proposal. Size naming: Use Large for parallel labels.
   Evidence: Large Button differs from Small and Medium naming.
 
-- [ ] `buttons-09` · P2 · proposal. Size comparison: Print their exact height and padding below them.
+- [x] `buttons-09` · P2 · proposal. Size comparison: Print their exact height and padding below them.
   Evidence: Small and Medium appear similar in height.
 
-- [ ] `buttons-10` · P2 · proposal. Size width: Use a shared test label with external size captions.
+- [x] `buttons-10` · P2 · proposal. Size width: Use a shared test label with external size captions.
   Evidence: Different label lengths influence perceived button size.
 
-- [ ] `buttons-11` · P2 · proposal. Size alignment: Add an optional baseline guide.
+- [x] `buttons-11` · P2 · proposal. Size alignment: Add an optional baseline guide.
   Evidence: Controls are centered vertically but no baseline aid is shown.
 
-- [ ] `buttons-12` · P2 · proposal. Group spacing: Tighten spacing to show a coherent segmented group.
+- [x] `buttons-12` · P2 · proposal. Group spacing: Tighten spacing to show a coherent segmented group.
   Evidence: One through Four are separated widely despite group-specific corner shapes.
 
-- [ ] `buttons-13` · P2 · proposal. Group semantics: Use four related view options for the group example.
+- [x] `buttons-13` · P2 · proposal. Group semantics: Use four related view options for the group example.
   Evidence: One, Two, Three and Four provide no shared task.
 
-- [ ] `buttons-14` · P2 · proposal. Group boundary: Add a caption identifying first, middle and last corners.
+- [x] `buttons-14` · P2 · proposal. Group boundary: Add a caption identifying first, middle and last corners.
   Evidence: There is no outer label explaining the asymmetric corner shapes.
 
-- [ ] `buttons-15` · P2 · proposal. Group selection: State the group's intended behavior in a caption.
+- [x] `buttons-15` · P2 · proposal. Group selection: State the group's intended behavior in a caption.
   Evidence: No visible marker explains whether this is a selection group or independent actions.
 
-- [ ] `buttons-16` · P2 · proposal. Custom heading: Split color examples from the corner example visually.
+- [x] `buttons-16` · P2 · proposal. Custom heading: Split color examples from the corner example visually.
   Evidence: Custom combines color and corner experiments.
 
-- [ ] `buttons-17` · P2 · proposal. Coral sample: Add its configured hex value below it.
+- [x] `buttons-17` · P2 · proposal. Coral sample: Add its configured hex value below it.
   Evidence: Coral shows no color value.
 
-- [ ] `buttons-18` · P2 · proposal. Teal sample: Add a foreground-selection caption.
+- [x] `buttons-18` · P2 · proposal. Teal sample: Add a foreground-selection caption.
   Evidence: Teal's text treatment differs from Coral without explanation.
 
-- [ ] `buttons-19` · P2 · proposal. Sharp sample: Add a matched rounded control for direct comparison.
+- [x] `buttons-19` · P2 · proposal. Sharp sample: Add a matched rounded control for direct comparison.
   Evidence: Sharp lacks a rounded reference beside it.
 
-- [ ] `buttons-20` · P2 · proposal. Main color mapping: Add a small role-color legend.
+- [x] `buttons-20` · P2 · proposal. Main color mapping: Add a small role-color legend.
   Evidence: Blue, ochre and green are unnamed theme colors.
 
-- [ ] `buttons-21` · P2 · proposal. Row width: Use the space for short specimen notes.
+- [x] `buttons-21` · P2 · proposal. Row width: Use the space for short specimen notes.
   Evidence: Most of each full-width row remains empty on the right.
 
-- [ ] `buttons-22` · P2 · proposal. Row alignment: Use a shared four-column comparison grid.
+- [x] `buttons-22` · P2 · proposal. Row alignment: Use a shared four-column comparison grid.
   Evidence: The largest-size specimen extends farther right than other rows.
 
-- [ ] `buttons-23` · P2 · proposal. Panel gaps: Reduce gaps to make room for useful captions.
+- [x] `buttons-23` · P2 · proposal. Panel gaps: Reduce gaps to make room for useful captions.
   Evidence: Vertical spacing dominates the compact specimen content.
 
-- [ ] `buttons-24` · P2 · proposal. Footer padding: Inset footer text consistently.
+- [x] `buttons-24` · P2 · proposal. Footer padding: Inset footer text consistently.
   Evidence: Try any button above begins at the bar edge.
 
-- [ ] `buttons-25` · P2 · proposal. Footer meaning: Describe the selected-button feedback shown there.
+- [x] `buttons-25` · P2 · proposal. Footer meaning: Describe the selected-button feedback shown there.
   Evidence: The instruction does not say what activation reports.
 
 ### cards

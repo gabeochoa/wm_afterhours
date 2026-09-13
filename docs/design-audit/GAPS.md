@@ -683,7 +683,7 @@ The matrix intentionally includes ghost and disabled buttons. Proposals improve 
 
 ## buttons
 
-[Current baseline](../../screenshot-baselines/screens/buttons_720p.png) · [Visual review](../../design-audit.html#screen=buttons)
+[Reviewed image](../../docs/design-audit/originals/buttons_720p.png) · [Current baseline](../../screenshot-baselines/screens/buttons_720p.png) · [Visual review](../../design-audit.html#screen=buttons)
 
 Baseline SHA-256: `b8ed32e2717dc06fcbdc6c73fe8c9551383a671c49a5730a9bb7c2af4a863ca6`
 

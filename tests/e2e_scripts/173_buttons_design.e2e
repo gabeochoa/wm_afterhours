@@ -1,0 +1,85 @@
+goto_screen buttons
+resize 1280 720
+wait 0.4
+expect_text "Button Gallery"
+expect_text "Roles"
+expect_text "and availability"
+expect_text "Primary"
+expect_text "Disabled / opacity 45%"
+expect_text "Small / 90 x 45"
+expect_text "Medium / 120 x 45"
+expect_text "Large / 180 x 60"
+expect_text "Text inset: 5 screen px"
+expect_text "Selected view: None"
+expect_text "#FF7F50"
+expect_text "#006464"
+expect_text "Radius 8px"
+expect_text "Radius 0px"
+expect_text "Try any button above"
+assert_ui buttons_canvas w=1280 h=720
+assert_ui btn_normal x=314 y=158 w=120 h=45
+assert_ui btn_small x=329 y=279 w=90 h=45
+assert_ui btn_medium x=536 y=279 w=120 h=45
+assert_ui btn_large x=728 y=271 w=180 h=60
+assert_ui btn_group_0 x=314 y=407 w=90 h=45
+assert_ui btn_group_1 x=404 y=407 w=90 h=45
+assert_ui btn_group_2 x=494 y=407 w=90 h=45
+assert_ui btn_group_3 x=584 y=407 w=90 h=45
+assert_within_parents
+screenshot buttons_design
+click_ui btn_normal
+wait 0.2
+expect_text "1 pressed so far"
+expect_text "Last activation: Primary / 1 press"
+click_ui btn_disabled
+wait 0.2
+expect_text "1 pressed so far"
+focus_element btn_accent
+key ENTER
+wait 0.2
+expect_text "2 pressed so far"
+expect_text "Last activation: Accent / 1 press"
+click_ui btn_small
+wait 0.2
+expect_text "Last activation: Small / 1 press"
+click_ui btn_group_1
+wait 0.2
+expect_text "Selected view: Week"
+click_ui btn_group_1
+wait 0.2
+expect_text "Selected view: Week"
+expect_text "Last activation: Week / 2 presses"
+focus_element btn_group_3
+key ENTER
+wait 0.2
+expect_text "Selected view: Year"
+click_ui btn_rounded
+wait 0.2
+expect_text "Last activation: Rounded / 1 press"
+click_ui btn_sharp
+wait 0.2
+expect_text "Last activation: Sharp / 1 press"
+expect_text "8 pressed so far"
+click_ui buttons_guides
+wait 0.2
+expect_text "Guides: on"
+assert_ui size_guides w=652 h=30
+screenshot buttons_selection_guides
+focus_element buttons_guides
+key ENTER
+wait 0.2
+expect_text "Guides: off"
+resize 1920 1080
+wait 0.3
+expect_text "Small / 135 x 67.5"
+expect_text "Radius 12px"
+assert_ui buttons_canvas w=1920 h=1080
+assert_ui btn_normal x=471 y=237 w=180 h=68
+assert_within_parents
+screenshot buttons_design_1080
+resize 1024 768
+wait 0.3
+assert_ui buttons_canvas w=1024 h=768
+assert_within_parents
+screenshot buttons_design_narrow
+resize 1280 720

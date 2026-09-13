@@ -3268,7 +3268,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "b8ed32e2717dc06fcbdc6c73fe8c9551383a671c49a5730a9bb7c2af4a863ca6"
+    "sha256": "b8ed32e2717dc06fcbdc6c73fe8c9551383a671c49a5730a9bb7c2af4a863ca6",
+    "evidence": "docs/design-audit/originals/buttons_720p.png"
   },
   {
     "id": "cards",
