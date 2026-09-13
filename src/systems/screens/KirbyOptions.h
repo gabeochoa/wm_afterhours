@@ -3,6 +3,7 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
+#include "KirbyArtwork.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
@@ -25,12 +26,18 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   struct Art {
     const char *name;
     float x, y, w, h;
-    raylib::Texture2D texture{};
   };
+  struct ArtworkCache : afterhours::BaseComponent {
+    raylib::Texture2D texture{};
+    ~ArtworkCache() override {
+      if (texture.id != 0 && raylib::IsWindowReady()) raylib::UnloadTexture(texture);
+    }
+  };
+  raylib::Texture2D atlas{};
   Profile profile;
   Detail detail = Detail::None;
   size_t selected_tab = 5;
-  bool confirm_delete = false, loaded = false, focus_name = false;
+  bool confirm_delete = false, focus_name = false;
   std::string editing_name = "Poppy", status;
   std::array<Art, 25> art{{
       {"desk", 0.f, 0.f, 1280.f, 720.f},
@@ -63,14 +70,15 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color purple{149, 96, 211, 255};
   const afterhours::Color paper{255, 253, 241, 255};
 
-  void load() {
-    if (loaded) return;
-    for (auto &asset : art) {
-      asset.texture = raylib::LoadTexture(afterhours::files::get_resource_path(
-          "images", std::string("kirby_options/") + asset.name + ".png").string().c_str());
-      raylib::SetTextureFilter(asset.texture, raylib::TEXTURE_FILTER_BILINEAR);
+  void load(afterhours::Entity &entity) {
+    auto &cache = entity.addComponentIfMissing<ArtworkCache>();
+    if (cache.texture.id == 0) {
+      cache.texture = raylib::LoadTexture(afterhours::files::get_resource_path(
+          "images", "kirby_options/atlas.png").string().c_str());
+      if (cache.texture.id != 0)
+        raylib::SetTextureFilter(cache.texture, raylib::TEXTURE_FILTER_BILINEAR);
     }
-    loaded = true;
+    atlas = cache.texture;
   }
   void open(Detail next) {
     detail = next;
@@ -85,9 +93,9 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         Detail::Favorites, Detail::None};
     open(panels[i]);
   }
-  static void paint(raylib::Texture2D texture, RectangleType r) {
-    raylib::DrawTexturePro(texture, {0, 0, static_cast<float>(texture.width),
-        static_cast<float>(texture.height)}, r, {0, 0}, 0, raylib::WHITE);
+  static void paint(raylib::Texture2D texture, raylib::Rectangle frame, RectangleType r) {
+    if (texture.id == 0) return;
+    raylib::DrawTexturePro(texture, frame, r, {0, 0}, 0, raylib::WHITE);
   }
   ComponentConfig box(float scale, float x, float y, float w, float h) const {
     return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
@@ -96,7 +104,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   }
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
-    load();
+    load(entity);
     const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     Theme theme;
     theme.font = ink;
@@ -139,7 +147,7 @@ struct KirbyOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       const auto &asset = art[i];
       div(context, mk(root.ent(), 100 + static_cast<int>(i)),
           box(scale, asset.x, asset.y, asset.w, asset.h).with_ignore_pointer_events()
-          .with_on_draw_bg([texture = asset.texture](RectangleType r) { paint(texture, r); }));
+          .with_on_draw_bg([texture = atlas, frame = kirby_artwork_frames[i]](RectangleType r) { paint(texture, frame, r); }));
     };
     auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
                      float size, afterhours::Color color,

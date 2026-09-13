@@ -148,3 +148,11 @@ assert_within_parents
 screenshot kirby_options_1080p
 
 resize 1280 720
+
+goto_screen forms
+wait 0.2
+goto_screen kirby_options
+wait 0.3
+expect_text "Poppy"
+assert_ui kirby_root x=0 y=0 w=1280 h=720
+screenshot kirby_options_revisit
