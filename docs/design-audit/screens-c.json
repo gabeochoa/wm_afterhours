@@ -1571,7 +1571,8 @@
         "change": "Add a labeled scrolled-state preset for side-by-side verification."
       }
     ],
-    "sha256": "ceee72c7cf0d82f36ff893392d462cfa7439720586f9f8efd807fdddd0826780"
+    "sha256": "ceee72c7cf0d82f36ff893392d462cfa7439720586f9f8efd807fdddd0826780",
+    "evidence": "docs/design-audit/originals/scroll_view_720p.png"
   },
   {
     "id": "scrollbar_style_lab",

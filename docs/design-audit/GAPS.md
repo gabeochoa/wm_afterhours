@@ -3133,7 +3133,7 @@ Four intentional clipping variants are present. Sixteen proposals improve the re
 
 ## scroll view
 
-[Current baseline](../../screenshot-baselines/screens/scroll_view_720p.png) · [Visual review](../../design-audit.html#screen=scroll_view)
+[Reviewed image](../../docs/design-audit/originals/scroll_view_720p.png) · [Current baseline](../../screenshot-baselines/screens/scroll_view_720p.png) · [Visual review](../../design-audit.html#screen=scroll_view)
 
 Baseline SHA-256: `ceee72c7cf0d82f36ff893392d462cfa7439720586f9f8efd807fdddd0826780`
 

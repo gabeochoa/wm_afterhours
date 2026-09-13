@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,036 completed; 499 remaining.
+2,055 completed; 480 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6213,61 +6213,61 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/scroll_view_720p.png) · [Visual review](design-audit.html#screen=scroll_view)
 
-- [ ] `scroll_view-01` · P2 · defect. Vertical row text: Inset the labels by 12 px.
+- [x] `scroll_view-01` · P2 · defect. Vertical row text: Inset the labels by 12 px.
   Evidence: Item labels touch their blue cards' left edges.
 
-- [ ] `scroll_view-02` · P2 · defect. Horizontal item text: Center the numbers or use the same 12 px inset as vertical rows.
+- [x] `scroll_view-02` · P2 · defect. Horizontal item text: Center the numbers or use the same 12 px inset as vertical rows.
   Evidence: Numbers 1 through 5 sit flush against card left edges.
 
-- [ ] `scroll_view-03` · P2 · proposal. Invert Scroll control: Render a labeled toggle with an explicit current state.
+- [x] `scroll_view-03` · P2 · proposal. Invert Scroll control: Render a labeled toggle with an explicit current state.
   Evidence: Invert Scroll is a gray rectangle with no visible on/off state.
 
-- [ ] `scroll_view-04` · P2 · proposal. Horizontal progress bar: Label it visible fraction or scroll position according to what it represents.
+- [x] `scroll_view-04` · P2 · proposal. Horizontal progress bar: Label it visible fraction or scroll position according to what it represents.
   Evidence: A blue segment sits in a gray bar below a 0% label.
 
-- [ ] `scroll_view-05` · P2 · proposal. Duplicate horizontal bars: Explain the second indicator or combine the redundant visualizations.
+- [x] `scroll_view-05` · P2 · proposal. Duplicate horizontal bars: Explain the second indicator or combine the redundant visualizations.
   Evidence: The horizontal view has a scrollbar and another unlabeled bar below it.
 
-- [ ] `scroll_view-06` · P2 · proposal. Position labels: Use First visible item and include the full visible range.
+- [x] `scroll_view-06` · P2 · proposal. Position labels: Use First visible item and include the full visible range.
   Evidence: Item 1 of 20 and Item 1 of 15 can imply one visible item.
 
-- [ ] `scroll_view-07` · P3 · proposal. Panel heights: Align outer demo cards while retaining different internal viewport heights.
+- [x] `scroll_view-07` · P3 · proposal. Panel heights: Align outer demo cards while retaining different internal viewport heights.
   Evidence: The vertical viewport is taller than the horizontal viewport.
 
-- [ ] `scroll_view-08` · P2 · proposal. Horizontal blank space: Reduce the viewport to content height or label the intentional spare area.
+- [x] `scroll_view-08` · P2 · proposal. Horizontal blank space: Reduce the viewport to content height or label the intentional spare area.
   Evidence: A large empty white area sits below the horizontal cards.
 
-- [ ] `scroll_view-09` · P2 · proposal. Scroll hints: Place the vertical gesture near Vertical Scroll and the horizontal gesture near Horizontal Scroll.
+- [x] `scroll_view-09` · P2 · proposal. Scroll hints: Place the vertical gesture near Vertical Scroll and the horizontal gesture near Horizontal Scroll.
   Evidence: A long instruction line blends both axis gestures together.
 
-- [ ] `scroll_view-10` · P3 · proposal. Header padding: Add a consistent 12 px title inset.
+- [x] `scroll_view-10` · P3 · proposal. Header padding: Add a consistent 12 px title inset.
   Evidence: Scroll View Demo touches its backing bar left edge.
 
-- [ ] `scroll_view-11` · P2 · proposal. Instruction contrast: Use a darker neutral text token.
+- [x] `scroll_view-11` · P2 · proposal. Instruction contrast: Use a darker neutral text token.
   Evidence: The gray gesture instruction is faint on the light panel.
 
-- [ ] `scroll_view-12` · P2 · proposal. Vertical clip sample: Add an intentional partial item caption below the viewport.
+- [x] `scroll_view-12` · P2 · proposal. Vertical clip sample: Add an intentional partial item caption below the viewport.
   Evidence: Item 5 is partly shown without explanatory framing.
 
-- [ ] `scroll_view-13` · P2 · proposal. Horizontal extent: Add a right-edge continuation cue or adjust the viewport to reveal a partial sixth card.
+- [x] `scroll_view-13` · P2 · proposal. Horizontal extent: Add a right-edge continuation cue or adjust the viewport to reveal a partial sixth card.
   Evidence: Five cards are fully visible even though more items exist.
 
-- [ ] `scroll_view-14` · P2 · proposal. Scroll counts: Add 20 items and 15 items beside the pane headings.
+- [x] `scroll_view-14` · P2 · proposal. Scroll counts: Add 20 items and 15 items beside the pane headings.
   Evidence: The total counts appear only below the panes.
 
-- [ ] `scroll_view-15` · P3 · proposal. Content balance: Tighten the page height or add a concise behavior comparison there.
+- [x] `scroll_view-15` · P3 · proposal. Content balance: Tighten the page height or add a concise behavior comparison there.
   Evidence: Both demos occupy the top half with a large unused lower panel.
 
-- [ ] `scroll_view-16` · P2 · proposal. Reset position: Add a shared Reset position action outside both panes.
+- [x] `scroll_view-16` · P2 · proposal. Reset position: Add a shared Reset position action outside both panes.
   Evidence: No visible control returns either view to its start.
 
-- [ ] `scroll_view-17` · P2 · proposal. Inversion scope: Label it Invert both scroll axes if that matches the implementation.
+- [x] `scroll_view-17` · P2 · proposal. Inversion scope: Label it Invert both scroll axes if that matches the implementation.
   Evidence: The single Invert Scroll control does not name affected axes.
 
-- [ ] `scroll_view-18` · P3 · proposal. Indicator alignment: Align the indicator with the horizontal viewport left edge.
+- [x] `scroll_view-18` · P3 · proposal. Indicator alignment: Align the indicator with the horizontal viewport left edge.
   Evidence: The extra horizontal indicator is centered while text aligns left.
 
-- [ ] `scroll_view-19` · P2 · proposal. Demonstration state: Add a labeled scrolled-state preset for side-by-side verification.
+- [x] `scroll_view-19` · P2 · proposal. Demonstration state: Add a labeled scrolled-state preset for side-by-side verification.
   Evidence: Both panes show only the initial zero-percent state.
 
 ### scrollbar_style_lab

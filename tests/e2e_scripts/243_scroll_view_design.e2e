@@ -1,0 +1,75 @@
+goto_screen scroll_view
+resize 1280 720
+wait 0.4
+expect_text "Scroll View Demo"
+expect_text "Vertical Scroll / 20 items"
+expect_text "Horizontal Scroll / 15 items"
+expect_text "Invert both scroll axes: Off"
+expect_text "Partial rows at the boundary are intentional."
+expect_text "Reading the native scrollbar"
+expect_text "Thumb length shows the visible fraction."
+assert_ui scroll_bg x=0 y=0 w=1280 h=720
+assert_ui vert_section h=509
+assert_ui horiz_section h=509
+assert_ui vert_scroll x=88 y=266 w=512 h=300
+assert_ui horiz_scroll x=680 y=266 w=512 h=110
+assert_ui vert_item_0 h=44
+assert_ui horiz_item_0 w=70 h=70
+expect_text "Vertical position: 0px / 0%"
+expect_text "Horizontal position: 0px / 0%"
+expect_no_text "Item 20"
+screenshot scroll_view_design
+click_ui scroll_halfway
+wait 0.3
+expect_text "50%"
+screenshot scroll_view_halfway
+click_ui scroll_reset
+wait 0.3
+expect_text "Vertical position: 0px / 0%"
+expect_text "Horizontal position: 0px / 0%"
+mouse_move 25% 55%
+scroll_wheel 0 -2
+wait 0.3
+expect_text "Vertical position: 40px"
+click_ui scroll_invert
+wait 0.3
+expect_text "Invert both scroll axes: On"
+mouse_move 25% 55%
+scroll_wheel 0 1
+wait 0.3
+expect_text "Vertical position: 60px"
+mouse_move 75% 44%
+scroll_wheel 2 0
+wait 0.3
+expect_text "Horizontal position: 40px"
+screenshot scroll_view_inverted
+focus_element scroll_invert
+key ENTER
+wait 0.3
+expect_text "Invert both scroll axes: Off"
+click_ui scroll_reset
+wait 0.3
+mouse_move 25% 55%
+scroll_wheel 0 -50
+wait 0.3
+expect_text "Item 20"
+expect_text "100%"
+mouse_move 75% 44%
+scroll_wheel -100 0
+wait 0.3
+expect_text "Visible items 9-15 of 15"
+screenshot scroll_view_end
+click_ui scroll_reset
+resize 1920 1080
+wait 0.3
+assert_ui scroll_bg x=0 y=0 w=1920 h=1080
+assert_ui vert_scroll x=132 y=399 w=768 h=450
+assert_ui horiz_scroll x=1020 y=399 w=768 h=165
+screenshot scroll_view_design_1080
+resize 1024 768
+wait 0.3
+assert_ui scroll_bg x=0 y=0 w=1024 h=768
+assert_ui vert_scroll x=70 y=309 w=410 h=240
+assert_ui horiz_scroll x=544 y=309 w=410 h=88
+screenshot scroll_view_design_narrow
+resize 1280 720
