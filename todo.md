@@ -2,24 +2,34 @@
 
 ## Latest visual feedback
 
-- [ ] Improve context menu appearance.
-- [ ] Improve modal and popup appearance. Preserve the dialog screens, which the user likes.
-- [ ] Add Escape to go back in `deadspace_settings`.
-- [ ] Redesign the decorative frames.
-- [ ] Fix Divider Lab height clipping: a bottom row appears too early instead of remaining clipped.
-- [ ] Make the dragged card preview match the actual card, including its contents, styling and size, in both vertical and horizontal drag-and-drop lists.
-- [ ] Make Fight Menu tabs switch the displayed content and selected state.
-- [ ] Improve File Tree details with a readable source-code preview for the selected file and scrolling for long files.
-- [ ] Fix Flight Options focus rings that appear too narrow for their controls.
-- [ ] Make Form controls affect the screen: buttons and sliders should apply their settings, including enabling and adjusting bloom.
-- [ ] Improve the visual design of Who's Who (`guess_who_lab`).
-- [ ] Fix the unexpected space around item 3 in HStack's Center and End examples.
-- [ ] Remove focus and click behavior from Islands & Trains progress indicators; keep interaction on the buttons.
-- [ ] Investigate and reduce the slow loading time of Kirby Options.
-- [ ] Add a multilingual inline-icon screen using prompts such as "Press [Space] to jump". Let each translation place the key icon where its sentence grammar requires, with English and Korean examples; verify wrapping and alignment when the icon moves within the sentence.
-- [ ] Design layout test screens whose failures are immediately obvious, inspired by Acid2. Use compositions that form a clear expected image when sizing, alignment and clipping are correct, alongside numeric assertions.
-- [ ] Improve the Media Player's visual design and interaction polish.
-- [ ] Fix Offsite Backup's dropdown-looking control: make it an actual dropdown, or remove the dropdown styling if it is not a selector.
+Completed September 13. Screen changes are committed separately. Causes,
+assumptions and performance measurements are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAPS.md#september-13-live-review-fixes).
+
+- [x] Investigate and reduce the 10,000-row Virtual List Lab slowdown. The September 13, 16:00 screenshot shows UI rendering at 22.076 ms recent average and 44.521 ms for the last frame, with process CPU at 62.6% and resident memory at 86.6 MB. The demo already uses a bounded virtual row pool; measure actual live entities and draw commands during idle, scrolling and jumps rather than assuming all 10,000 rows render. Compare profiler hidden/shown and short/long histories to separate list cost from profiler rendering, then profile text, clipping and draw submission. Record before/after frame times and verify work stays bounded as row count increases.
+- [x] Support toast placement in any corner: top-left, top-right, bottom-left and bottom-right, with stacking that follows the selected corner.
+- [x] Investigate and fix the incorrect appearance of text stroke rendering.
+- [x] Use square corners for text selection highlights in Text Input Lab.
+- [x] Fix clipping of the Show/Hide control in Text Input.
+- [x] Improve context menu appearance.
+- [x] Improve modal and popup appearance. Preserve the dialog screens, which the user likes.
+- [x] Add Escape to go back in `deadspace_settings`.
+- [x] Redesign the decorative frames.
+- [x] Fix Divider Lab height clipping: a bottom row appears too early instead of remaining clipped.
+- [x] Make the dragged card preview match the actual card, including its contents, styling and size, in both vertical and horizontal drag-and-drop lists.
+- [x] Make Fight Menu tabs switch the displayed content and selected state.
+- [x] Improve File Tree details with a readable source-code preview for the selected file and scrolling for long files.
+- [x] Fix Flight Options focus rings that appear too narrow for their controls.
+- [x] Make Form controls affect the screen: buttons and sliders should apply their settings, including enabling and adjusting bloom.
+- [x] Improve the visual design of Who's Who (`guess_who_lab`).
+- [x] Fix the unexpected space around item 3 in HStack's Center and End examples.
+- [x] Remove focus and click behavior from Islands & Trains progress indicators; keep interaction on the buttons.
+- [x] Investigate and reduce the slow loading time of Kirby Options.
+- [x] Add a multilingual inline-icon screen using prompts such as "Press [Space] to jump". Let each translation place the key icon where its sentence grammar requires, with English and Korean examples; verify wrapping and alignment when the icon moves within the sentence.
+- [x] Design layout test screens whose failures are immediately obvious, inspired by Acid2. Use compositions that form a clear expected image when sizing, alignment and clipping are correct, alongside numeric assertions.
+- [x] Improve the Media Player's visual design and interaction polish.
+- [x] Fix Offsite Backup's dropdown-looking control: make it an actual dropdown, or remove the dropdown styling if it is not a selector.
+- [x] Investigate and fix the unexpected outline around Stepper text.
+- [x] Add marquee drag selection to the profiler's frame timeline. Highlight the selected frame range and show statistics for only those frames, with a way to clear the selection.
 
 ## New consumer gaps collected September 13
 

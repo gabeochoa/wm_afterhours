@@ -15,6 +15,57 @@ work; others still need library changes. Source review is not runtime proof.
 
 See also: `docs/vendor_ui_sizing_issues.md`
 
+## September 13 live-review fixes
+
+These findings came from the latest interactive screen review. The assumption
+column records what made each mistake easy to repeat. Runtime verification is
+tracked in `scripts/verify_review_todos.py` and the library regression tests.
+The completed run passed 50 distinct E2E scripts, four performance scenarios,
+and 13 focused library suites. New captures were inspected at 720p and at
+the additional resolutions exercised by each screen script. The application
+build completed without warnings. The Forms, Modals and text-stroke baselines were
+replaced after reviewing their changed renders and rerunning the baseline checks.
+
+| Finding | Cause and mistaken assumption | Change and scope |
+|---|---|---|
+| Virtual List Lab rendering became expensive despite virtualization | The list already builds only visible rows plus overscan. Assuming 10,000 live widgets would target the wrong code. A macOS stack sample instead showed repeated scissor ends flushing Raylib batches through Metal submission. | Coalesce adjacent identical clip scopes without reordering draws. Tests cover equal/different clips, intervening unclipped work and final closure. |
+| Dragged cards lost their contents and styling | The overlay copied a few root properties and assumed that represented the card. Nested labels, badges, drawing callbacks and inherited opacity were missing. | Render the source subtree at the preview position while preserving its internal clipping and effective opacity. Restore source geometry afterward; the overlay remains noninteractive. Both renderers have parity tests. |
+| Selection highlights and carets were rounded | Internal text-editing decorations inherited the ordinary component radius. A default appropriate for controls is not appropriate for a selection rectangle. | Set selection and caret radii explicitly to zero in single- and multiline inputs. |
+| Stepper text acquired an outline | The outer configuration, including its border, was copied into arrow and value children. | Strip borders from internal stepper children while retaining the outer control border. |
+| Center/End stacks inserted gaps around 30px children | Final position/cursor snapping still ran after a widget opted out of grid snapping. | Respect parent and child opt-outs during final positioning, including the running layout cursor. Tests assert exact adjacency. |
+| Text strokes showed offset copies instead of a continuous outline | Eight displaced text draws approximate only eight directions and leave holes around thin glyphs or large radii. | Expand actual glyph coverage with a Euclidean distance transform; cache outlined textures and preserve advances. Retire cached textures at frame boundaries and clear them before graphics shutdown. Raylib has pixel/metrics tests; Metal uses the same mask operation but requires separate runtime verification. |
+| A stepper ignored keyboard changes | The widget reset its index before consuming the previous frame's left/right result. Focus eligibility also excluded widgets with only left/right handlers. Pointer arrows masked both bugs. | Consume pending keyboard state before syncing to the caller, report each change once, and normalize against the current option count. Steppers use configured key-repeat events; continuous sliders still use held input. |
+| Reused clipping stayed enabled | Applying visible overflow did not remove `HasClipChildren` installed by an earlier hidden configuration. The Acid test exposed this because its pink probes stayed hidden in the intentional failure mode. | Clear config-owned clipping on a normal rebuild; preserve it for partial restyles. Tests cover both transitions. `HasScrollView` ownership during Scroll→Visible remains a separate open question because callers also install it directly. |
+| Toasts could only stack at bottom center | Positioning was embedded in the renderer rather than an explicit placement choice. | Add top/bottom left/right anchors and preserve bottom-center as the default. Stack and entrance directions follow the chosen anchor. |
+| Profiler could not inspect a frame interval | Per-system history existed in the collector but snapshots exposed only aggregate statistics. | Copy histories only for a frozen view, select an inclusive range and calculate selected average, peak and last-frame timings. Live snapshots retain the cheaper path. |
+| Kirby Options loaded slowly and leaked artwork across visits | Individual textures were loaded by each screen instance without matching ownership/cleanup. | Pack the 22 used images into one atlas and retain it in a resource-owning UI component. This is wm asset ownership work, not a new core atlas API. |
+| Dropdown-looking controls, progress focus targets and inactive tabs | Screen styling implied behaviors that those particular implementations did not provide. | Use actual dropdowns, passive progress segments and distinct tab data. These are wm implementation defects. |
+| Menus, popups and decorative frames looked inconsistent | Local choices overused accent fills, nested outlines and mismatched radii. Library availability did not establish good defaults for each composition. | Simplify those screen styles while preserving the separate Dialog examples the user accepted. |
+| Localized inline key prompts were missing | Treating an icon as fixed before/after a sentence assumes English word order. | Demonstrate translation-owned key placeholders with measured wrapping atoms in English and Korean. This demo does not claim general bidi, Unicode line-breaking or a reusable rich-text API. |
+
+### Virtual-list performance measurements
+
+The headless macOS debug build measured the following on the shared machine.
+Builds and test commands used `nice -n 10`. These runs measure whole-frame costs;
+CPU percentages are unsuitable for an efficiency comparison because the
+headless renderer runs uncapped.
+
+| Scenario | Before average | After average | After p95 | Rows built |
+|---|---:|---:|---:|---:|
+| Profiler hidden, idle | 14.84 ms | 8.22 ms | 10.94 ms | 26 |
+| Profiler shown, idle | 24.76 ms | 11.47 ms | 13.22 ms | Before 30, after 26 |
+| Profiler hidden, repeated start/middle/end jumps | Invalid baseline | 7.82 ms | 9.36 ms | 26–30 |
+| Profiler shown, repeated start/middle/end jumps | Invalid baseline | 11.17 ms | 13.11 ms | 26–30 |
+
+The initial jump benchmark clicked an overlapping profiler launcher instead
+of the End button. Those samples were rejected; the repeat uses keyboard
+activation and asserts each destination. The shown-idle baseline consequently
+started at row 5,000, so it is not a controlled measure of profiler overhead.
+The before sample placed 1,757 of 2,118 render-stack samples under scissor-end
+batch flushes. The optimization preserves draw order and combines only
+adjacent equal clip rectangles. `verify_review_todos.py --benchmark-only`
+repeats idle and jump scenarios, including short and filled history windows.
+
 ## Screen design pass, 2026-09-13
 
 All 117 screen baselines were reviewed and updated in separate local commits.
