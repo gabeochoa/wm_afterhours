@@ -1139,7 +1139,7 @@ Layer overlap, subdued rear menu and scan lines are deliberate holographic styli
 
 ## decorative frame
 
-[Current baseline](../../screenshot-baselines/screens/decorative_frame_720p.png) · [Visual review](../../design-audit.html#screen=decorative_frame)
+[Reviewed image](../../docs/design-audit/originals/decorative_frame_720p.png) · [Current baseline](../../screenshot-baselines/screens/decorative_frame_720p.png) · [Visual review](../../design-audit.html#screen=decorative_frame)
 
 Baseline SHA-256: `681bedb5212f51c9e4a666e7cf75a88d72a406101473ea610d3e7c25b3f5c036`
 

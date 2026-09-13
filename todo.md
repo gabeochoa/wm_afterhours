@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-555 completed; 1,980 remaining.
+575 completed; 1,960 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2110,64 +2110,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/decorative_frame_720p.png) · [Visual review](design-audit.html#screen=decorative_frame)
 
-- [ ] `decorative_frame-01` · P2 · proposal. Subtitle claim: Use identical card content for a controlled comparison.
+- [x] `decorative_frame-01` · P2 · proposal. Subtitle claim: Use identical card content for a controlled comparison.
   Evidence: The same card is shown with three different titles and body texts.
 
-- [ ] `decorative_frame-02` · P2 · proposal. Frame labels: Use Kraft paper and place the API name below.
+- [x] `decorative_frame-02` · P2 · proposal. Frame labels: Use Kraft paper and place the API name below.
   Evidence: KraftPaper is a code-style identifier beside ordinary Simple and Inset labels.
 
-- [ ] `decorative_frame-03` · P2 · proposal. Caption type: Increase caption size.
+- [x] `decorative_frame-03` · P2 · proposal. Caption type: Increase caption size.
   Evidence: Layered + corners and other captions are tiny.
 
-- [ ] `decorative_frame-04` · P2 · proposal. Card headings: Use the same heading to compare frames fairly.
+- [x] `decorative_frame-04` · P2 · proposal. Card headings: Use the same heading to compare frames fairly.
   Evidence: Field Notes, Tide Table and Plate 14 vary in apparent line length.
 
-- [ ] `decorative_frame-05` · P2 · proposal. Body text: Increase body type slightly.
+- [x] `decorative_frame-05` · P2 · proposal. Body text: Increase body type slightly.
   Evidence: The small handwritten body is difficult to inspect from a distance.
 
-- [ ] `decorative_frame-06` · P2 · proposal. Body alignment: Use consistent left-aligned content inset.
+- [x] `decorative_frame-06` · P2 · proposal. Body alignment: Use consistent left-aligned content inset.
   Evidence: All body text is centered despite short prose fragments.
 
-- [ ] `decorative_frame-07` · P2 · proposal. Kraft corner detail: Add a small annotated corner enlargement.
+- [x] `decorative_frame-07` · P2 · proposal. Kraft corner detail: Add a small annotated corner enlargement.
   Evidence: Four dark corner tabs have no explanation.
 
-- [ ] `decorative_frame-08` · P2 · proposal. Kraft layers: Show frame-band and inner-padding measurements.
+- [x] `decorative_frame-08` · P2 · proposal. Kraft layers: Show frame-band and inner-padding measurements.
   Evidence: The layered border has no thickness labels.
 
-- [ ] `decorative_frame-09` · P2 · proposal. Simple border: Add an enlarged reference corner outside the specimen.
+- [x] `decorative_frame-09` · P2 · proposal. Simple border: Add an enlarged reference corner outside the specimen.
   Evidence: A very thin blue outline is hard to inspect.
 
-- [ ] `decorative_frame-10` · P2 · proposal. Inset lighting: Add a subtle top-left lighting arrow.
+- [x] `decorative_frame-10` · P2 · proposal. Inset lighting: Add a subtle top-left lighting arrow.
   Evidence: The gray border's light direction is unnamed.
 
-- [ ] `decorative_frame-11` · P2 · proposal. Inset shadow: Show the configured inset thickness.
+- [x] `decorative_frame-11` · P2 · proposal. Inset shadow: Show the configured inset thickness.
   Evidence: Sunken shadow does not state the shadow dimensions.
 
-- [ ] `decorative_frame-12` · P2 · proposal. Frame dimensions: Print shared outer dimensions above the row.
+- [x] `decorative_frame-12` · P2 · proposal. Frame dimensions: Print shared outer dimensions above the row.
   Evidence: The cards appear similar in size but dimensions are unstated.
 
-- [ ] `decorative_frame-13` · P2 · proposal. Content padding: Add content-bound guides to compare usable space.
+- [x] `decorative_frame-13` · P2 · proposal. Content padding: Add content-bound guides to compare usable space.
   Evidence: Different frame widths leave different visual insets.
 
-- [ ] `decorative_frame-14` · P2 · proposal. Frame colors: Add a neutral-color comparison strip.
+- [x] `decorative_frame-14` · P2 · proposal. Frame colors: Add a neutral-color comparison strip.
   Evidence: Brown, blue and gray alter more than border treatment.
 
-- [ ] `decorative_frame-15` · P2 · proposal. Caption alignment: Use equal caption blocks with consistent gap.
+- [x] `decorative_frame-15` · P2 · proposal. Caption alignment: Use equal caption blocks with consistent gap.
   Evidence: Frame names sit close to the bottoms of large cards.
 
-- [ ] `decorative_frame-16` · P2 · proposal. Card proportion: Reduce card height or add more representative content.
+- [x] `decorative_frame-16` · P2 · proposal. Card proportion: Reduce card height or add more representative content.
   Evidence: Large empty interiors surround two-line texts.
 
-- [ ] `decorative_frame-17` · P2 · proposal. Footer language: State concrete use cases for each frame.
+- [x] `decorative_frame-17` · P2 · proposal. Footer language: State concrete use cases for each frame.
   Evidence: Pick by weight uses subjective guidance.
 
-- [ ] `decorative_frame-18` · P2 · proposal. Footer typography: Increase size and divide guidance by frame.
+- [x] `decorative_frame-18` · P2 · proposal. Footer typography: Increase size and divide guidance by frame.
   Evidence: The recommendation is one small line across a wide bar.
 
-- [ ] `decorative_frame-19` · P2 · proposal. Footer border: Use a quieter note treatment.
+- [x] `decorative_frame-19` · P2 · proposal. Footer border: Use a quieter note treatment.
   Evidence: The recommendation itself has a decorative frame that competes with samples.
 
-- [ ] `decorative_frame-20` · P2 · proposal. Lower whitespace: Use it for a compact parameter legend.
+- [x] `decorative_frame-20` · P2 · proposal. Lower whitespace: Use it for a compact parameter legend.
   Evidence: A large empty band follows the recommendation.
 
 ### decorators

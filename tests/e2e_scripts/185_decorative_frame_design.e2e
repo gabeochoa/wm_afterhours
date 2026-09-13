@@ -1,0 +1,52 @@
+goto_screen decorative_frame
+resize 1280 720
+wait 0.4
+expect_text "Decorative frames"
+expect_text "Identical content and dimensions. Original colors above; neutral colors below."
+expect_text "Outer 344 x 268px / content padding 32px / content 280 x 204px. Values at 720p."
+expect_text "Kraft paper"
+expect_text "DecorativeFrameStyle::KraftPaper"
+expect_text "Field notes"
+expect_text "Sample 07 / pressed fern"
+expect_text "Band 8px / inner step 2.4px"
+expect_text "Requested border: 3px"
+expect_text "Drawn border: 1 screen px"
+expect_text "Corner tab 8.0 screen px"
+expect_text "Edge 3.0 screen px"
+expect_text "Same neutral colors"
+assert_ui bg w=1280 h=720
+assert_ui frames_root x=68 y=0 w=1144 h=720
+assert_ui frame_0 x=80 y=144 w=344 h=268
+assert_ui frame_1 x=468 y=144 w=344 h=268
+assert_ui frame_2 x=856 y=144 w=344 h=268
+assert_ui frame_content_bounds_0 x=112 y=176 w=280 h=204
+assert_ui frame_content_bounds_1 x=500 y=176 w=280 h=204
+assert_ui frame_content_bounds_2 x=888 y=176 w=280 h=204
+assert_ui neutral_frame_0 w=344 h=43
+assert_within_parents
+screenshot decorative_frame_design
+click_ui frames_toggle_guides
+wait 0.2
+expect_text "Hide content bounds"
+screenshot decorative_frame_guides
+focus_ui frames_toggle_guides
+key ENTER
+wait 0.2
+expect_text "Show content bounds"
+resize 1920 1080
+wait 0.3
+assert_ui frame_0 w=516 h=402
+assert_ui frame_content_bounds_0 w=420 h=306
+expect_text "Corner tab 12.0 screen px"
+expect_text "Edge 4.5 screen px"
+assert_within_parents
+screenshot decorative_frame_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bg w=1024 h=768
+assert_ui frames_root x=54 y=96 w=915 h=576
+expect_text "Corner tab 8.5 screen px"
+expect_text "Edge 3.2 screen px"
+assert_within_parents
+screenshot decorative_frame_design_narrow
+resize 1280 720

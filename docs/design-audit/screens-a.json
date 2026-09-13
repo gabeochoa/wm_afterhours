@@ -5732,7 +5732,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "681bedb5212f51c9e4a666e7cf75a88d72a406101473ea610d3e7c25b3f5c036"
+    "sha256": "681bedb5212f51c9e4a666e7cf75a88d72a406101473ea610d3e7c25b3f5c036",
+    "evidence": "docs/design-audit/originals/decorative_frame_720p.png"
   },
   {
     "id": "decorators",
