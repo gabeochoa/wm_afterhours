@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-505 completed; 2,030 remaining.
+530 completed; 2,005 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1634,79 +1634,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/colors_720p.png) · [Visual review](design-audit.html#screen=colors)
 
-- [ ] `colors-01` · P2 · proposal. Theme identity: Move the theme name beside the title.
+- [x] `colors-01` · P2 · proposal. Theme identity: Move the theme name beside the title.
   Evidence: Midnight appears only in the bottom sentence.
 
-- [ ] `colors-02` · P2 · proposal. Title color: Label it as theme chrome or use a neutral heading background.
+- [x] `colors-02` · P2 · proposal. Title color: Label it as theme chrome or use a neutral heading background.
   Evidence: The red title strip resembles the Primary specimen.
 
-- [ ] `colors-03` · P2 · proposal. Theme values: Show resolved values below each role.
+- [x] `colors-03` · P2 · proposal. Theme values: Show resolved values below each role.
   Evidence: Primary through Error/Danger omit their hex values.
 
-- [ ] `colors-04` · P2 · proposal. Surface boundary: Add an external boundary or neutral backing.
+- [x] `colors-04` · P2 · proposal. Surface boundary: Add an external boundary or neutral backing.
   Evidence: The Surface swatch nearly merges with its black tray.
 
-- [ ] `colors-05` · P2 · proposal. Error role: Choose one canonical role name and explain aliases separately.
+- [x] `colors-05` · P2 · proposal. Error role: Choose one canonical role name and explain aliases separately.
   Evidence: Error/Danger combines two semantic names.
+  Disposition: Kept the canonical Error role and described its purpose; the library has no Danger alias.
 
-- [ ] `colors-06` · P2 · proposal. Primary/error comparison: Add a caption distinguishing action and error uses.
+- [x] `colors-06` · P2 · proposal. Primary/error comparison: Add a caption distinguishing action and error uses.
   Evidence: Primary red and error coral are close in hue.
 
-- [ ] `colors-07` · P2 · proposal. Secondary value: Add its foreground contrast ratio.
+- [x] `colors-07` · P2 · proposal. Secondary value: Add its foreground contrast ratio.
   Evidence: The gray Secondary tile has no luminance or contrast context.
 
-- [ ] `colors-08` · P2 · proposal. Accent foreground: Show the resolved foreground choice.
+- [x] `colors-08` · P2 · proposal. Accent foreground: Show the resolved foreground choice.
   Evidence: The yellow Accent uses black text unlike other roles.
 
-- [ ] `colors-09` · P2 · proposal. Role ordering: Group action roles, surfaces and status colors explicitly.
+- [x] `colors-09` · P2 · proposal. Role ordering: Group action roles, surfaces and status colors explicitly.
   Evidence: Surface is placed between Accent and Error.
 
-- [ ] `colors-10` · P2 · proposal. Theme row heading: Use Semantic roles.
+- [x] `colors-10` · P2 · proposal. Theme row heading: Use Semantic roles.
   Evidence: Theme Colors repeats the page title's meaning.
 
-- [ ] `colors-11` · P2 · proposal. Custom heading: Use Fixed custom values.
+- [x] `colors-11` · P2 · proposal. Custom heading: Use Fixed custom values.
   Evidence: Custom Colors does not explain independence from theme roles.
 
-- [ ] `colors-12` · P2 · proposal. Custom values type: Use monospace text for reliable reading.
+- [x] `colors-12` · P2 · proposal. Custom values type: Use monospace text for reliable reading.
   Evidence: Hex codes use handwritten characters.
 
-- [ ] `colors-13` · P2 · proposal. Custom text alignment: Align all blocks to equal internal insets.
+- [x] `colors-13` · P2 · proposal. Custom text alignment: Align all blocks to equal internal insets.
   Evidence: Color names and hex values form left-aligned blocks inside centered tiles.
 
-- [ ] `colors-14` · P2 · proposal. Red naming: Use a precise descriptive name while keeping the value.
+- [x] `colors-14` · P2 · proposal. Red naming: Use a precise descriptive name while keeping the value.
   Evidence: Red is visually coral-pink.
 
-- [ ] `colors-15` · P2 · proposal. Yellow naming: Name it Amber or Warm yellow.
+- [x] `colors-15` · P2 · proposal. Yellow naming: Name it Amber or Warm yellow.
   Evidence: Yellow is visibly amber compared with the theme accent.
 
-- [ ] `colors-16` · P2 · proposal. Palette correspondence: Show a small equality annotation.
+- [x] `colors-16` · P2 · proposal. Palette correspondence: Show a small equality annotation.
   Evidence: Custom Red matches Error/Danger without explanation.
 
-- [ ] `colors-17` · P2 · proposal. Custom foreground: Add the measured foreground ratio below.
+- [x] `colors-17` · P2 · proposal. Custom foreground: Add the measured foreground ratio below.
   Evidence: All custom swatches use black text without a contrast label.
 
-- [ ] `colors-18` · P2 · proposal. Tray bounds: Expand tray padding so all five swatches sit within equal margins.
+- [x] `colors-18` · P2 · proposal. Tray bounds: Expand tray padding so all five swatches sit within equal margins.
   Evidence: The rightmost tiles extend beyond the black inner tray.
 
-- [ ] `colors-19` · P2 · proposal. Tile spacing: Use a five-column grid with uniform gaps.
+- [x] `colors-19` · P2 · proposal. Tile spacing: Use a five-column grid with uniform gaps.
   Evidence: The horizontal gaps are inconsistent at the right edge.
+  Disposition: Five fixed custom colors use five equal columns. Semantic roles use six equal columns to include Background.
 
-- [ ] `colors-20` · P2 · proposal. Header alignment: Align the title text to the swatch content.
+- [x] `colors-20` · P2 · proposal. Header alignment: Align the title text to the swatch content.
   Evidence: The title strip and content use different horizontal insets.
 
-- [ ] `colors-21` · P2 · proposal. Section spacing: Increase the gap before the second section label.
+- [x] `colors-21` · P2 · proposal. Section spacing: Increase the gap before the second section label.
   Evidence: Custom Colors sits close to the upper tray.
 
-- [ ] `colors-22` · P2 · proposal. Footer density: Replace it with a concise theme identifier and legend.
+- [x] `colors-22` · P2 · proposal. Footer density: Replace it with a concise theme identifier and legend.
   Evidence: One long footer sentence repeats the row organization.
 
-- [ ] `colors-23` · P2 · proposal. Footer gap: Move reference details directly under the specimens.
+- [x] `colors-23` · P2 · proposal. Footer gap: Move reference details directly under the specimens.
   Evidence: A large empty space separates swatches from the footer.
 
-- [ ] `colors-24` · P2 · proposal. Missing background role: Add a background swatch within the theme row.
+- [x] `colors-24` · P2 · proposal. Missing background role: Add a background swatch within the theme row.
   Evidence: The gallery shows Surface but not a labeled Background specimen.
 
-- [ ] `colors-25` · P2 · proposal. Reference context: Add a small light-backing comparison strip outside the primary palette.
+- [x] `colors-25` · P2 · proposal. Reference context: Add a small light-backing comparison strip outside the primary palette.
   Evidence: The swatches show colors only on black backing.
 
 ### composer_lab

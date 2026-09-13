@@ -1,0 +1,68 @@
+goto_screen colors
+resize 1280 720
+wait 0.4
+expect_text "Theme Color Swatches"
+expect_text "Midnight"
+expect_text "Semantic roles"
+expect_text "Actions"
+expect_text "Surfaces"
+expect_text "Status"
+expect_text "Background"
+expect_text "Error"
+expect_text "Fixed custom values"
+expect_text "Coral pink"
+expect_text "Amber"
+expect_text "Text #000000"
+expect_text "Contrast 21.00:1"
+expect_text "Coral pink = Midnight Error"
+expect_text "Selected: Primary / #B91C1C"
+assert_ui bg w=1280 h=720
+assert_ui swatch_0 x=88 y=197 w=174 h=78
+assert_ui swatch_5 x=832 y=197 w=174 h=78
+assert_ui swatch_4 x=1018 y=197 w=174 h=78
+assert_ui custom_0 x=88 y=441 w=208 h=60
+assert_ui custom_4 x=984 y=441 w=208 h=60
+assert_within_parents
+screenshot colors_design
+click_ui swatch_2
+wait 0.2
+expect_text "Selected: Accent / #FFD60A"
+expect_text "Emphasis and selection"
+expect_text "1 activations"
+focus_element swatch_3
+key ENTER
+wait 0.2
+expect_text "Selected: Surface / #141414"
+expect_text "Panels and cards"
+click_ui swatch_5
+wait 0.2
+expect_text "Selected: Background / #000000"
+expect_text "Page background"
+screenshot colors_background_comparison
+click_ui swatch_4
+wait 0.2
+expect_text "Selected: Error / #FF6464"
+expect_text "Error status and destructive actions"
+focus_element custom_0
+key ENTER
+wait 0.2
+expect_text "Selected: Coral pink / #FF6464"
+expect_text "Fixed RGB value, independent of semantic roles"
+click_ui custom_3
+wait 0.2
+expect_text "Selected: Amber / #FFC864"
+expect_text "6 activations"
+screenshot colors_custom_comparison
+resize 1920 1080
+wait 0.3
+assert_ui bg w=1920 h=1080
+assert_ui swatch_0 x=132 y=296 w=261 h=117
+assert_ui custom_4 x=1476 y=662 w=312 h=90
+assert_within_parents
+screenshot colors_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bg w=1024 h=768
+assert_within_parents
+screenshot colors_design_narrow
+resize 1280 720

@@ -60,13 +60,13 @@
     "screen": "colors",
     "baseline": "baseline_screenshots/colors.png",
     "current": "screenshot-baselines/screens/colors_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Swatches dominate a small central panel, with a large empty band above the footer. Current palette presentation findings apply; do not replace colors that are the actual specimen.",
-    "sha256": "a722389bdcea1d33575c9f7ea3aaec86b88725d2e18c7052497a88198bbcc26e",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "8a2ffc530a22bfe8ea915592be104a019f4bf0c859fec7c4db8a937d67547a4b",
     "additional_findings": []
   },
   {

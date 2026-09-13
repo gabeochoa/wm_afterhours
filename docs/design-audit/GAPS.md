@@ -917,7 +917,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## colors
 
-[Current baseline](../../screenshot-baselines/screens/colors_720p.png) · [Visual review](../../design-audit.html#screen=colors)
+[Reviewed image](../../docs/design-audit/originals/colors_720p.png) · [Current baseline](../../screenshot-baselines/screens/colors_720p.png) · [Visual review](../../design-audit.html#screen=colors)
 
 Baseline SHA-256: `a722389bdcea1d33575c9f7ea3aaec86b88725d2e18c7052497a88198bbcc26e`
 
@@ -955,7 +955,7 @@ The Midnight palette is intentionally strong and dark. Recommendations clarify s
 
 [Image](../../baseline_screenshots/colors.png)
 
-Pixel-identical. Swatches dominate a small central panel, with a large empty band above the footer. Current palette presentation findings apply; do not replace colors that are the actual specimen.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## composer lab
 

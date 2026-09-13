@@ -4522,7 +4522,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "a722389bdcea1d33575c9f7ea3aaec86b88725d2e18c7052497a88198bbcc26e"
+    "sha256": "a722389bdcea1d33575c9f7ea3aaec86b88725d2e18c7052497a88198bbcc26e",
+    "evidence": "docs/design-audit/originals/colors_720p.png"
   },
   {
     "id": "composer_lab",
