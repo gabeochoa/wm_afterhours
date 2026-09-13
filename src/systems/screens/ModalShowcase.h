@@ -55,13 +55,16 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     Theme theme = afterhours::ui::theme_presets::neon_dark();
-    theme.background = {14, 22, 34, 255};
-    theme.surface = {27, 39, 56, 255};
-    theme.primary = {44, 92, 125, 255};
-    theme.secondary = {53, 68, 90, 255};
-    theme.accent = {50, 110, 139, 255};
+    theme.background = {19, 24, 32, 255};
+    theme.surface = {32, 40, 52, 255};
+    theme.primary = {48, 91, 151, 255};
+    theme.secondary = {48, 59, 76, 255};
+    theme.accent = {48, 91, 151, 255};
     theme.font = {236, 242, 248, 255};
     theme.font_muted = {181, 199, 217, 255};
+    theme.focus = {165, 201, 248, 255};
+    theme.corner_radius = 6;
+    theme.roundness = 0;
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_grid_snapping(false);
@@ -82,7 +85,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto text = [&](int id, const std::string &label, float x, float y,
                           float w, float h, float font_size, const std::string &name = "") {
       return div(context, mk(main.ent(), id), at(x, y, w, h).with_label(label)
-          .with_font("AtkinsonMock", pixels(font_size * s)).with_letter_spacing(0)
+          .with_font(font_size >= 23 ? "AtkinsonMockBold" : "AtkinsonMock", pixels(font_size * s)).with_letter_spacing(0)
           .with_custom_text_color(theme.font).with_text_overflow(TextOverflow::Wrap)
           .with_ignore_pointer_events().with_debug_name(name));
     };
@@ -90,7 +93,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                             float w, const std::string &name) {
       return button(context, mk(main.ent(), id), at(x, y, w, 44).with_label(label)
           .with_font("AtkinsonMock", pixels(22 * s)).with_letter_spacing(0)
-          .with_custom_background(theme.primary).with_custom_text_color(theme.font)
+          .with_custom_background(theme.secondary).with_custom_text_color(theme.font)
+          .with_custom_hover_bg({60, 78, 104, 255})
           .with_corner_radius(6 * s).with_alignment(TextAlignment::Center)
           .with_click_activation(ClickActivationMode::Release).with_debug_name(name));
     };
@@ -195,6 +199,7 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
                                   std::span<const float> action_widths, const std::string &name) {
       dialog_presentation::style(context, panel, width, body_height, action_widths);
       panel.get<UIComponentDebug>().set(name + "_panel");
+      panel.get<HasBorder>().border = Border::all(afterhours::Color{81, 96, 119, 255}, pixels(s));
       for (const auto id : panel.get<UIComponent>().children) {
         auto &child = UICollectionHolder::getEntityForIDEnforce(id);
         if (!child.has<UIComponentDebug>() || child.get<UIComponentDebug>().name() != "dialog_buttons") continue;
@@ -213,7 +218,8 @@ struct ModalShowcase : ScreenSystem<UIContext<InputAction>> {
     };
     const auto action_config = [&](const std::string &label, float width, const std::string &name) {
       return content_config(width, 44).with_label(label).with_corner_radius(6 * s)
-          .with_custom_background(theme.primary).with_alignment(TextAlignment::Center)
+          .with_custom_background(label == "Cancel" || label == "Close" ? theme.secondary : theme.primary)
+          .with_alignment(TextAlignment::Center)
           .with_debug_name(name);
     };
 
