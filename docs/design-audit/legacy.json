@@ -415,8 +415,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Notifications focus outline. General switches and Preferences bracket markers deliberately compare two representations. Locked Setting ON still loses its track against the dark disabled row.",
-    "sha256": "d6af75de471f24d03411947f23c16691d1d58ebc4dea6f554738daf09a9fc61b",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "34e03f2c9f5f587f1f56d618ad9f0fde186dbbb18dc2024178ad21bf0d199ba9",
     "additional_findings": []
   },
   {

@@ -5678,7 +5678,8 @@
         "change": "Add a modest top margin while preserving space for the disabled examples."
       }
     ],
-    "sha256": "c61e6fd9f63b8ee366ead5e8a6db9cd8072803971d14000d0e53f308e7e4e823"
+    "sha256": "c61e6fd9f63b8ee366ead5e8a6db9cd8072803971d14000d0e53f308e7e4e823",
+    "evidence": "docs/design-audit/originals/toggle_switches_720p.png"
   },
   {
     "id": "tooltip_lab",

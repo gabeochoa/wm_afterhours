@@ -21,173 +21,112 @@ struct ToggleSwitchShowcase : ScreenSystem<UIContext<InputAction>> {
   // Disabled toggles (non-interactive)
   bool disabled_on = true;
   bool disabled_off = false;
+  bool reset_pending = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     auto theme = afterhours::ui::theme_presets::neon_dark();
     context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-
-    // Full-screen dark background
-    auto root =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-                .with_background(Theme::Usage::Background)
-                .with_debug_name("toggle_bg"));
-
-    // Centered card (settings panel style)
-    // Height increased from 0.85 to 0.95 to fit all sections (General,
-    // Preferences, Disabled, Status) without overflowing the card bounds.
-    auto card =
-        vstack(context, mk(root.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{screen_pct(0.5f), screen_pct(0.96f)})
-                   .with_self_align(SelfAlign::Center)
-                   .with_custom_background(
-                       afterhours::colors::lighten(theme.background, 0.08f))
-                   .with_rounded_corners(RoundedCorners())
-                   .with_roundness(0.04f)
-                   // Tiny vertical padding: the card is already 0.96 of the
-                   // screen, so the last row's 19px overflow has to come out
-                   // of the padding rather than the height.
-                   .with_padding(Padding{.top = DefaultSpacing::tiny(),
-                                         .bottom = DefaultSpacing::tiny(),
-                                         .left = DefaultSpacing::large(),
-                                         .right = DefaultSpacing::large()})
-                   .with_no_wrap()
-                   .with_debug_name("toggle_card"));
-
-    // Title
-    div(context, mk(card.ent(), 0),
-        ComponentConfig{}
-            .with_label("Settings")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
-            .with_background(Theme::Usage::None)
-            .with_margin(Margin{.bottom = DefaultSpacing::medium()})
-            .with_skip_tabbing(true));
-
-    // ── Pill Style Section ──
-    div(context, mk(card.ent(), 1),
-        ComponentConfig{}
-            .with_label("General")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_background(Theme::Usage::None)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
-    auto make_toggle_row = [&](int idx, const std::string &lbl, bool &val) {
-      toggle_switch(context, mk(card.ent(), idx), val,
-                    ComponentConfig{}
-                        .with_label(lbl)
-                        .with_size(ComponentSize{percent(1.0f), pixels(38)})
-                        .with_custom_background(
-                            afterhours::colors::lighten(theme.surface, 0.06f))
-                        .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
-                        .with_padding(Padding{.left = DefaultSpacing::small(),
-                                              .right = DefaultSpacing::small()})
-                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                        .with_rounded_corners(RoundedCorners())
-                        .with_roundness(0.06f));
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_grid_snapping(false);
+    const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
+    auto at = [s](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, y * s).with_background(Theme::Usage::None).with_corner_radius(0);
     };
-
-    // Circle-style checkbox rows (round checkbox with check/X indicator)
-    auto make_checkbox_circle_row =
-        [&](int idx, const std::string &lbl, bool &val,
-            ComponentConfig extra = ComponentConfig{}) {
-          checkbox(context, mk(card.ent(), idx), val,
-                   ComponentConfig{}
-                       .with_label(lbl)
-                       .with_size(ComponentSize{percent(1.0f), pixels(38)})
-                       .with_custom_background(
-                           afterhours::colors::lighten(theme.surface, 0.06f))
-                       .with_font(UIComponent::DEFAULT_FONT, pixels(17.0f))
-                       // The library default is "V", which this font draws as
-                       // a literal capital V floating in the row.
-                       .with_checkbox_indicators("[x]", "[ ]")
-                       .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                       .with_rounded_corners(RoundedCorners().all_round())
-                       .with_disabled(extra.disabled)
-                       .with_opacity(extra.opacity));
-        };
-
-    // NOTE: Child IDs must be sequential to match visual layout order.
-    // Afterhours sorts children by ID for flex layout.
-    make_toggle_row(2, "Notifications", enable_notifications);
-    make_toggle_row(3, "Sound Effects", enable_sound);
-    make_toggle_row(4, "Vibration", enable_vibration);
-
+    // Full-screen dark background
+    auto background = div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({screen_pct(1), screen_pct(1)}).with_background(Theme::Usage::Background)
+        .with_corner_radius(0).with_debug_name("toggle_bg"));
+    auto root = div(context, mk(background.ent(), 0), at(0, 0, 1280, 720)
+        .with_absolute_position((context.screen_width - 1280 * s) / 2, (context.screen_height - 720 * s) / 2));
+    // Centered card (settings panel style)
+    div(context, mk(root.ent(), 0), at(304, 24, 672, 672)
+        .with_background(Theme::Usage::Surface).with_corner_radius(12 * s).with_debug_name("toggle_card"));
+    const auto label = [&](int id, const std::string &caption, float x, float y,
+                           float w, float h, float size, const std::string &name = "") {
+      return div(context, mk(root.ent(), id), at(x, y, w, h).with_label(caption)
+          .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(theme.font)
+          .with_ignore_pointer_events().with_debug_name(name));
+    };
+    // Title
+    label(1, "Toggle and checkbox settings demo", 328, 42, 624, 44, 29);
+    const int enabled = static_cast<int>(enable_notifications) + static_cast<int>(enable_sound) +
+        static_cast<int>(enable_vibration) + static_cast<int>(dark_mode) +
+        static_cast<int>(auto_save) + static_cast<int>(cloud_sync);
+    label(2, "Editable states: " + std::to_string(enabled) + " On / " + std::to_string(6 - enabled) + " Off",
+          328, 91, 624, 28, 19, "toggle_summary");
+    auto row = [&](int id, const std::string &caption, bool &value, float y,
+                   bool circle, bool disabled, const std::string &name) {
+      div(context, mk(root.ent(), 100 + id), at(328, y, 624, 38)
+          .with_custom_background(afterhours::colors::lighten(theme.surface, .06f)).with_corner_radius(5 * s));
+      label(120 + id, caption, 344, y, 340, 38, 21);
+      auto ep = mk(root.ent(), 140 + id);
+      auto [control, parent] = deref(ep);
+      if (reset_pending && circle && control.has<HasCheckboxState>())
+        control.get<HasCheckboxState>().on = value;
+      if (reset_pending && !circle && control.has<HasToggleSwitchState>()) {
+        auto &state = control.get<HasToggleSwitchState>();
+        state.on = value;
+        state.animation_progress = value ? 1.f : 0.f;
+      }
+      if (circle) {
+        checkbox(context, ep, value, at(862, y + 1, 36, 36)
+            .with_custom_background(theme.primary).with_border(theme.font_muted, s)
+            .with_rounded_corners(RoundedCorners().all_round()).with_corner_radius(18 * s)
+            .with_checkbox_indicators("", "").with_disabled(disabled).with_debug_name(name));
+        if (value)
+          div(context, mk(root.ent(), 160 + id), at(862, y + 1, 36, 36)
+              .with_ignore_pointer_events().with_on_draw_fg([theme, s](RectangleType r) {
+                afterhours::draw_line_ex({r.x + 8 * s, r.y + 18 * s}, {r.x + 15 * s, r.y + 25 * s}, 3 * s, theme.font);
+                afterhours::draw_line_ex({r.x + 15 * s, r.y + 25 * s}, {r.x + 28 * s, r.y + 10 * s}, 3 * s, theme.font);
+              }));
+      } else {
+        auto config = at(854, y, 64, 38).with_size({pixels(std::max(64 * s, 52.f)), pixels(std::max(38 * s, 28.f))})
+            .with_disabled(disabled).with_debug_name(name);
+        config.corner_radius.reset();
+        toggle_switch(context, ep, value, config);
+      }
+      label(180 + id, value ? "On" : "Off", 718, y, 92, 38, 20, name + "_state");
+    };
+    // ── Pill Style Section ──
+    label(3, "General", 328, 131, 260, 28, 23);
+    label(4, "Pill switches", 666, 133, 286, 26, 18);
+    row(0, "Notifications", enable_notifications, 170, false, false, "toggle_notifications");
+    row(1, "Sound Effects", enable_sound, 214, false, false, "toggle_sound");
+    row(2, "Vibration", enable_vibration, 258, false, false, "toggle_vibration");
     // Separator
-    div(context, mk(card.ent(), 5),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
-            .with_custom_background(afterhours::Color{255, 255, 255, 20})
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
+    div(context, mk(root.ent(), 5), at(328, 305, 624, 1).with_custom_background(theme.font_muted));
     // ── Circle Style Section ──
-    div(context, mk(card.ent(), 6),
-        ComponentConfig{}
-            .with_label("Preferences")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_background(Theme::Usage::None)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
-    make_checkbox_circle_row(7, "Dark Mode", dark_mode);
-    make_checkbox_circle_row(8, "Auto-Save", auto_save);
-    make_checkbox_circle_row(9, "Cloud Sync", cloud_sync);
-
+    label(6, "Preferences", 328, 313, 260, 28, 23);
+    label(7, "Checkbox variants / circle", 666, 315, 286, 26, 18);
+    row(3, "Dark Mode", dark_mode, 351, true, false, "toggle_dark_mode");
+    row(4, "Auto-Save", auto_save, 395, true, false, "toggle_auto_save");
+    row(5, "Cloud Sync", cloud_sync, 439, true, false, "toggle_cloud_sync");
     // Separator
-    div(context, mk(card.ent(), 10),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(1)})
-            .with_custom_background(afterhours::Color{255, 255, 255, 20})
-            .with_margin(Margin{.top = DefaultSpacing::small(),
-                                .bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
+    div(context, mk(root.ent(), 8), at(328, 486, 624, 1).with_custom_background(theme.font_muted));
     // ── Disabled Section ──
-    div(context, mk(card.ent(), 11),
-        ComponentConfig{}
-            .with_label("Disabled")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(16.0f))
-            .with_custom_text_color(theme.font_muted)
-            .with_background(Theme::Usage::None)
-            .with_margin(Margin{.bottom = DefaultSpacing::small()})
-            .with_skip_tabbing(true));
-
+    label(9, "Disabled", 328, 496, 260, 28, 23);
+    label(10, "Track On / thumb On", 666, 498, 286, 26, 18);
     // Disabled pill toggle (ON state, non-interactive)
-    toggle_switch(context, mk(card.ent(), 12), disabled_on,
-                  ComponentConfig{}
-                      .with_label("Locked Setting (ON)")
-                      .with_size(ComponentSize{percent(1.0f), pixels(38)})
-                      .with_custom_background(
-                          afterhours::colors::lighten(theme.surface, 0.06f))
-                      .with_font(UIComponent::DEFAULT_FONT, pixels(18.0f))
-                      .with_padding(Padding{.left = DefaultSpacing::small(),
-                                            .right = DefaultSpacing::small()})
-                      .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                      .with_rounded_corners(RoundedCorners())
-                      .with_roundness(0.06f)
-                      .with_disabled(true));
-
+    row(6, "Locked Setting", disabled_on, 535, false, true, "toggle_locked");
+    label(11, "Managed by administrator", 344, 576, 400, 22, 16);
     // Disabled circle checkbox (OFF state, non-interactive)
-    make_checkbox_circle_row(
-        13, "Unavailable Option (OFF)", disabled_off,
-        ComponentConfig{}.with_disabled(true));
-
-    // Status bar removed — toggle states are already visually clear from
-    // the toggle controls themselves. The bar was being pushed outside
-    // the card because the total content (title + sections + separators +
-    // toggles + checkboxes + disabled row) exceeded the card height.
+    row(7, "Unavailable Option", disabled_off, 603, true, true, "toggle_unavailable");
+    label(12, "Not available in this demo", 344, 644, 330, 22, 16);
+    reset_pending = false;
+    if (button(context, mk(root.ent(), 13), at(706, 649, 246, 32)
+        .with_label("Reset demo defaults").with_font("AtkinsonMock", pixels(19 * s))
+        .with_background(Theme::Usage::Primary).with_corner_radius(5 * s).with_debug_name("toggle_reset"))) {
+      enable_notifications = true;
+      enable_sound = false;
+      enable_vibration = true;
+      dark_mode = true;
+      auto_save = false;
+      cloud_sync = true;
+      reset_pending = true;
+    }
   }
 };
 

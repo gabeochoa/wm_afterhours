@@ -1,0 +1,75 @@
+goto_screen toggle_switches
+resize 1280 720
+wait 0.4
+expect_text "Toggle and checkbox settings demo"
+expect_text "Editable states: 4 On / 2 Off"
+expect_text "Pill switches"
+expect_text "Checkbox variants / circle"
+expect_text "Managed by administrator"
+expect_text "Not available in this demo"
+expect_text "Track On / thumb On"
+assert_ui toggle_card x=304 y=24 w=672 h=672
+assert_ui toggle_notifications x=854 y=170 w=64 h=38
+assert_ui toggle_dark_mode x=862 y=352 w=36 h=36
+assert_ui toggle_notifications_state text=On
+assert_ui toggle_sound_state text=Off
+assert_ui toggle_locked_state text=On
+assert_ui toggle_unavailable_state text=Off
+assert_no_overflow
+assert_within_parents
+screenshot toggle_switches_design_initial
+click_ui toggle_notifications
+wait 0.2
+assert_ui toggle_notifications_state text=Off
+expect_text "Editable states: 3 On / 3 Off"
+click_ui toggle_sound
+wait 0.2
+assert_ui toggle_sound_state text=On
+click_ui toggle_vibration
+wait 0.2
+assert_ui toggle_vibration_state text=Off
+click_ui toggle_dark_mode
+wait 0.2
+assert_ui toggle_dark_mode_state text=Off
+click_ui toggle_auto_save
+wait 0.2
+assert_ui toggle_auto_save_state text=On
+click_ui toggle_cloud_sync
+wait 0.2
+assert_ui toggle_cloud_sync_state text=Off
+expect_text "Editable states: 2 On / 4 Off"
+click_ui toggle_locked
+wait 0.2
+assert_ui toggle_locked_state text=On
+click_ui toggle_unavailable
+wait 0.2
+assert_ui toggle_unavailable_state text=Off
+screenshot toggle_switches_design_changed
+click_ui toggle_reset
+wait 0.4
+assert_ui toggle_notifications_state text=On
+assert_ui toggle_sound_state text=Off
+assert_ui toggle_vibration_state text=On
+assert_ui toggle_dark_mode_state text=On
+assert_ui toggle_auto_save_state text=Off
+assert_ui toggle_cloud_sync_state text=On
+expect_text "Editable states: 4 On / 2 Off"
+click_ui toggle_auto_save
+wait 0.2
+assert_ui toggle_auto_save_state text=On
+click_ui toggle_reset
+wait 0.3
+assert_ui toggle_auto_save_state text=Off
+resize 1920 1080
+wait 0.3
+assert_ui toggle_card x=456 y=36 w=1008 h=1008
+assert_no_overflow
+assert_within_parents
+screenshot toggle_switches_design_1080
+resize 1024 768
+wait 0.3
+assert_ui toggle_card x=243 y=115 w=538 h=538
+assert_no_overflow
+assert_within_parents
+screenshot toggle_switches_design_narrow
+resize 1280 720

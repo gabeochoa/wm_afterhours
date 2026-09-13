@@ -3958,7 +3958,7 @@ The baseline contains launchers only. Twenty findings improve the launcher desig
 
 ## toggle switches
 
-[Current baseline](../../screenshot-baselines/screens/toggle_switches_720p.png) · [Visual review](../../design-audit.html#screen=toggle_switches)
+[Reviewed image](../../docs/design-audit/originals/toggle_switches_720p.png) · [Current baseline](../../screenshot-baselines/screens/toggle_switches_720p.png) · [Visual review](../../design-audit.html#screen=toggle_switches)
 
 Baseline SHA-256: `c61e6fd9f63b8ee366ead5e8a6db9cd8072803971d14000d0e53f308e7e4e823`
 
@@ -3991,7 +3991,7 @@ Pill toggles and checkbox variants are intentional. Twenty proposals improve ali
 
 [Image](../../baseline_screenshots/toggle_switches.png)
 
-Current capture removes Notifications focus outline. General switches and Preferences bracket markers deliberately compare two representations. Locked Setting ON still loses its track against the dark disabled row.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## tooltip lab
 

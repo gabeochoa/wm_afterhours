@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,472 completed; 63 remaining.
+2,492 completed; 43 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7775,64 +7775,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/toggle_switches_720p.png) · [Visual review](design-audit.html#screen=toggle_switches)
 
-- [ ] `toggle_switches-01` · P2 · proposal. Page title: Use Toggle and checkbox settings demo.
+- [x] `toggle_switches-01` · P2 · proposal. Page title: Use Toggle and checkbox settings demo.
   Evidence: Settings hides that this is a component comparison.
 
-- [ ] `toggle_switches-02` · P2 · proposal. General labels: Left-align labels with the Preferences rows.
+- [x] `toggle_switches-02` · P2 · proposal. General labels: Left-align labels with the Preferences rows.
   Evidence: Notifications, Sound Effects and Vibration are centered far from the left edge.
 
-- [ ] `toggle_switches-03` · P2 · proposal. Preference label inset: Add 12 px inner padding.
+- [x] `toggle_switches-03` · P2 · proposal. Preference label inset: Add 12 px inner padding.
   Evidence: Dark Mode, Auto-Save and Cloud Sync touch the row left edge.
 
-- [ ] `toggle_switches-04` · P2 · proposal. Preference indicators: Align them in the same right-side control column as the switches.
+- [x] `toggle_switches-04` · P2 · proposal. Preference indicators: Align them in the same right-side control column as the switches.
   Evidence: The [x] and [ ] glyphs float near the row center.
 
-- [ ] `toggle_switches-05` · P2 · proposal. Checkbox rendering: Use a visible checkbox shape with a centered checkmark and retain a caption for its style.
+- [x] `toggle_switches-05` · P2 · proposal. Checkbox rendering: Use a visible checkbox shape with a centered checkmark and retain a caption for its style.
   Evidence: Bracketed text resembles terminal output rather than a circular checkbox specimen.
 
-- [ ] `toggle_switches-06` · P2 · proposal. On-state labels: Add On text beside the switch.
+- [x] `toggle_switches-06` · P2 · proposal. On-state labels: Add On text beside the switch.
   Evidence: Notifications and Vibration rely on magenta fill and thumb position.
 
-- [ ] `toggle_switches-07` · P2 · proposal. Off-state label: Add Off text in the state column.
+- [x] `toggle_switches-07` · P2 · proposal. Off-state label: Add Off text in the state column.
   Evidence: Sound Effects uses a gray track without an Off label.
 
-- [ ] `toggle_switches-08` · P2 · proposal. Section naming: Add Pill switches and Checkbox variants as secondary captions.
+- [x] `toggle_switches-08` · P2 · proposal. Section naming: Add Pill switches and Checkbox variants as secondary captions.
   Evidence: General and Preferences do not identify the different control families.
 
-- [ ] `toggle_switches-09` · P2 · proposal. Disabled switch: Keep the disabled specimen but label track and thumb states in external metadata.
+- [x] `toggle_switches-09` · P2 · proposal. Disabled switch: Keep the disabled specimen but label track and thumb states in external metadata.
   Evidence: Locked Setting ON shows a white thumb with an almost invisible track.
 
-- [ ] `toggle_switches-10` · P2 · proposal. Disabled reason: Add a short sample explanation such as Managed by administrator.
+- [x] `toggle_switches-10` · P2 · proposal. Disabled reason: Add a short sample explanation such as Managed by administrator.
   Evidence: Locked Setting gives no reason for the lock.
 
-- [ ] `toggle_switches-11` · P2 · proposal. Unavailable checkbox: Add an external Not available in this demo note.
+- [x] `toggle_switches-11` · P2 · proposal. Unavailable checkbox: Add an external Not available in this demo note.
   Evidence: Unavailable Option OFF has no reason caption.
 
-- [ ] `toggle_switches-12` · P2 · proposal. Disabled text size: Increase external captions while leaving disabled-state styling intact.
+- [x] `toggle_switches-12` · P2 · proposal. Disabled text size: Increase external captions while leaving disabled-state styling intact.
   Evidence: Disabled labels are small as well as dim.
 
-- [ ] `toggle_switches-13` · P2 · proposal. State vocabulary: Use consistent On and Off state text across all specimens.
+- [x] `toggle_switches-13` · P2 · proposal. State vocabulary: Use consistent On and Off state text across all specimens.
   Evidence: ON/OFF appears only in disabled labels while enabled rows have no words.
 
-- [ ] `toggle_switches-14` · P2 · proposal. Row geometry: Label the shape variation explicitly or use a common row shell around different controls.
+- [x] `toggle_switches-14` · P2 · proposal. Row geometry: Label the shape variation explicitly or use a common row shell around different controls.
   Evidence: General rows are square strips while Preferences rows are rounded.
 
-- [ ] `toggle_switches-15` · P2 · proposal. Section labels: Increase their readable size and use a consistent heading weight.
+- [x] `toggle_switches-15` · P2 · proposal. Section labels: Increase their readable size and use a consistent heading weight.
   Evidence: General, Preferences and Disabled are small and faint.
 
-- [ ] `toggle_switches-16` · P2 · proposal. Control association: Use a structured label/value row with predictable spacing.
+- [x] `toggle_switches-16` · P2 · proposal. Control association: Use a structured label/value row with predictable spacing.
   Evidence: Large gaps separate centered labels from the right-side pill controls.
 
-- [ ] `toggle_switches-17` · P3 · proposal. Separator inset: Align headings, labels and dividers to one inner grid.
+- [x] `toggle_switches-17` · P3 · proposal. Separator inset: Align headings, labels and dividers to one inner grid.
   Evidence: Dividers align with the outer row edges but labels do not.
 
-- [ ] `toggle_switches-18` · P2 · proposal. Initial state summary: Add a small state key outside the controls.
+- [x] `toggle_switches-18` · P2 · proposal. Initial state summary: Add a small state key outside the controls.
   Evidence: The mix of on and off states has no compact comparison legend.
 
-- [ ] `toggle_switches-19` · P2 · proposal. Reset defaults: Add Reset demo defaults below the specimen groups.
+- [x] `toggle_switches-19` · P2 · proposal. Reset defaults: Add Reset demo defaults below the specimen groups.
   Evidence: No visible action restores the initial mixture of states.
 
-- [ ] `toggle_switches-20` · P3 · proposal. Panel margins: Add a modest top margin while preserving space for the disabled examples.
+- [x] `toggle_switches-20` · P3 · proposal. Panel margins: Add a modest top margin while preserving space for the disabled examples.
   Evidence: The main card begins at the viewport top with little title breathing room.
 
 ### tooltip_lab
