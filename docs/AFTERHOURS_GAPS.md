@@ -1703,3 +1703,18 @@ Validation: `ui_update_lifecycle_test` and its single-collection build each pass
 39 checks. Twelve updates without rendering produce the same recorded text and
 command counts as one update/render cycle in both renderers. These are library
 recording-backend checks; Floatinghotel’s own idle loop was not changed or run.
+
+### UP-14: configuration-owned texture references
+
+Applying a texture now marks the reference as configuration-owned. A subsequent
+full widget rebuild without that setting removes the reference and marker.
+Manually attached textures survive unrelated widget configuration, and no GPU
+resource is unloaded by this reconciliation. This replaces the incorrect
+assumption that absent texture configuration means retaining the prior image.
+Applications still own resource lifetime: detach every remaining reference before
+unloading a shared texture.
+
+Validation: `ui_texture_lifecycle_test` passes 13 checks for the same widget ID
+transitioning image → text → replacement image, a second widget sharing the old
+texture, and manually attached texture preservation. Floatinghotel’s explicit
+resource-retirement code remains untouched.
