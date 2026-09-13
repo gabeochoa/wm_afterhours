@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string_view>
 
 #include <afterhours/src/library.h>
 #include <afterhours/src/singleton.h>
@@ -28,3 +29,5 @@ void apply_ui_styling_defaults();
 // process globals that screens write to and never put back, so without this a
 // screen renders differently depending on which screens ran before it.
 void restore_ui_styling_defaults();
+
+void load_ui_fonts(std::string_view screen = {});

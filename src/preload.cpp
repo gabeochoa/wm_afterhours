@@ -2,6 +2,9 @@
 
 #include <afterhours/src/gestures_macos.h>
 
+#include <algorithm>
+#include <chrono>
+#include <cstdlib>
 #include <cstdarg>
 #include <cstdio>
 #include <iostream>
@@ -176,34 +179,7 @@ Preload &Preload::make_singleton() {
         200);
     ui::init_ui_plugin<InputAction>();
 
-    auto &font_mgr = *EntityHelper::get_singleton_cmp<ui::FontManager>();
-
-    for (const auto &font_def : font_config::get_all_fonts()) {
-      std::string path =
-          files::get_resource_path("fonts", font_def.filename).string();
-
-      // One path: the library's loader builds the atlas by hand when there
-      // is no GL context to make a texture in.
-      if (font_def.needs_codepoints && font_def.get_codepoints) {
-        auto codepoints = font_def.get_codepoints();
-        font_mgr.load_font(font_def.name,
-            afterhours::load_font_from_file_with_codepoints(
-                path.c_str(), codepoints.data(),
-                static_cast<int>(codepoints.size()), font_def.raster_size));
-      } else {
-        font_mgr.load_font(font_def.name, afterhours::load_font_from_file(
-            path.c_str(), font_def.raster_size));
-      }
-    }
-
-    for (const auto &[name, source] : font_config::aliases) {
-      auto font = font_mgr.fonts.find(source);
-      if (font == font_mgr.fonts.end()) {
-        log_warn("Cannot register font alias {}: {} is not loaded", name, source);
-        continue;
-      }
-      font_mgr.load_font(name, font->second);
-    }
+    load_ui_fonts();
 
     apply_ui_styling_defaults();
   }
@@ -216,5 +192,41 @@ Preload::~Preload() {
   }
   if (raylib::IsWindowReady()) {
     raylib::CloseWindow();
+  }
+}
+
+void load_ui_fonts(std::string_view screen) {
+  auto *font_mgr = EntityHelper::get_singleton_cmp<ui::FontManager>();
+  if (!font_mgr) return;
+  for (const auto &font_def : font_config::get_all_fonts()) {
+    if (font_mgr->fonts.contains(font_def.name)) continue;
+    if (!font_def.screens.empty() &&
+        std::find(font_def.screens.begin(), font_def.screens.end(), screen) ==
+            font_def.screens.end()) continue;
+    const auto started = std::chrono::steady_clock::now();
+    const auto path = files::get_resource_path("fonts", font_def.filename).string();
+    auto codepoints = font_def.get_codepoints ? font_def.get_codepoints()
+                                             : std::vector<int>{};
+    auto font = font_def.needs_codepoints
+        ? afterhours::load_font_from_file_with_codepoints(
+              path.c_str(), codepoints.data(), static_cast<int>(codepoints.size()),
+              font_def.raster_size)
+        : afterhours::load_font_from_file(path.c_str(), font_def.raster_size);
+    if (font.glyphCount <= 0) {
+      log_warn("Failed to load font: {}", font_def.name);
+      continue;
+    }
+    font_mgr->load_font(font_def.name, font);
+    if (std::getenv("WM_PROFILE_STARTUP")) {
+      const auto elapsed = std::chrono::duration<double, std::milli>(
+          std::chrono::steady_clock::now() - started).count();
+      std::cerr << "[startup] font=" << font_def.name << " ms=" << elapsed
+                << " glyphs=" << font.glyphCount << '\n';
+    }
+  }
+  for (const auto &[name, source] : font_config::aliases) {
+    auto font = font_mgr->fonts.find(source);
+    if (font == font_mgr->fonts.end()) continue;
+    font_mgr->load_font(name, font->second);
   }
 }

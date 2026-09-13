@@ -56,6 +56,18 @@ inline std::vector<int> get_japanese_codepoints() {
   return codepoints;
 }
 
+inline std::vector<int> get_language_japanese_codepoints() {
+  auto codepoints = generate_codepoint_range(0x0020, 0x007E);
+  const std::vector<int> japanese{
+      0x3002, 0x3044, 0x304f, 0x3051, 0x3053, 0x3055, 0x3059, 0x3060,
+      0x3061, 0x3067, 0x306b, 0x306e, 0x306f, 0x307e, 0x307f, 0x308b,
+      0x308c, 0x3092, 0x3093, 0x30c7, 0x30e2, 0x4e86, 0x5831, 0x59cb,
+      0x5b9a, 0x60c5, 0x65e5, 0x672c, 0x7528, 0x7d42, 0x7d9a, 0x8a00,
+      0x8a2d, 0x8a9e, 0x9069, 0x9078, 0x958b, 0xff01};
+  codepoints.insert(codepoints.end(), japanese.begin(), japanese.end());
+  return codepoints;
+}
+
 // Font definition - single source of truth for all fonts
 struct FontDef {
   std::string name;
@@ -63,6 +75,7 @@ struct FontDef {
   bool needs_codepoints = false;
   std::function<std::vector<int>()> get_codepoints = nullptr;
   int raster_size = 96;
+  std::vector<std::string> screens;
 };
 
 inline std::vector<int> get_inline_prompt_codepoints() {
@@ -78,10 +91,9 @@ inline std::vector<int> get_inline_prompt_codepoints() {
 // Get all font definitions - this is the single source of truth
 // Add new fonts here and they'll be available in both windowed and headless
 // modes
-inline std::vector<FontDef> get_all_fonts() {
-  return {
+inline const std::vector<FontDef> &get_all_fonts() {
+  static const std::vector<FontDef> fonts{
       // Core UI fonts
-      {"__symbol", "AtkinsonHyperlegible-Regular.ttf"},
 
       // Named fonts for screens
       {"Gaegu-Bold", "Gaegu-Bold.ttf"},
@@ -118,11 +130,16 @@ inline std::vector<FontDef> get_all_fonts() {
       {"ArchivoMockBoldItalic", "ArchivoNarrow-BoldItalic.ttf", false, nullptr, 192},
 
       // CJK fonts with special codepoint loading
-      {"NotoSansKRInline", "NotoSansMonoCJKkr-Bold.otf", true, get_inline_prompt_codepoints, 96},
-      {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints, 32},
+      {"NotoSansKRInline", "NotoSansMonoCJKkr-Bold.otf", true,
+       get_inline_prompt_codepoints, 96, {"localized_input_prompts"}},
+      {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true,
+       get_korean_codepoints, 32, {"language_demo", "forms", "sync_scroll_lab"}},
+      {"NotoSansJP", "NotoSansMonoCJKjp-Bold.otf", true,
+       get_language_japanese_codepoints, 96, {"language_demo"}},
       {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,
-       get_japanese_codepoints, 32},
+       get_japanese_codepoints, 32, {"forms", "mini_motorways_settings"}},
   };
+  return fonts;
 }
 
 struct FontAlias {
@@ -131,6 +148,7 @@ struct FontAlias {
 };
 
 inline constexpr FontAlias aliases[] = {
+    {"__symbol", "Atkinson"},
     {"__default", "AtkinsonMock"},
     {"__default@bold", "AtkinsonMock@bold"},
     {"__unset", "AtkinsonMock"},

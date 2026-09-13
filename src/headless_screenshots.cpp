@@ -59,55 +59,6 @@ raylib::Font load_font_headless(const char *filename, int fontSize = 32) {
   return afterhours::load_font_from_file(filename, fontSize);
 }
 
-raylib::Font load_font_headless_with_codepoints(const char *filename,
-                                                const int *codepoints,
-                                                int codepointCount,
-                                                int fontSize = 32) {
-  return afterhours::load_font_from_file_with_codepoints(
-      filename, const_cast<int *>(codepoints), codepointCount, fontSize);
-}
-
-// Load all fonts using the shared font configuration
-void load_fonts_into_manager(afterhours::ui::FontManager &font_mgr) {
-  int loaded_count = 0;
-  for (const auto &font_def : font_config::get_all_fonts()) {
-    std::string path =
-        afterhours::files::get_resource_path("fonts", font_def.filename)
-            .string();
-
-    if (font_def.needs_codepoints && font_def.get_codepoints) {
-      auto codepoints = font_def.get_codepoints();
-      raylib::Font font = load_font_headless_with_codepoints(
-          path.c_str(), codepoints.data(), static_cast<int>(codepoints.size()),
-          font_def.raster_size);
-      if (font.glyphCount > 0) {
-        font_mgr.load_font(font_def.name, font);
-        loaded_count++;
-      } else {
-        log_warn("[Headless] Failed to load CJK font: {}", font_def.name);
-      }
-    } else {
-      raylib::Font font = load_font_headless(path.c_str(), font_def.raster_size);
-      if (font.glyphCount > 0) {
-        font_mgr.load_font(font_def.name, font);
-        loaded_count++;
-      } else {
-        log_warn("[Headless] Failed to load font: {}", font_def.name);
-      }
-    }
-  }
-  for (const auto &[name, source] : font_config::aliases) {
-    auto font = font_mgr.fonts.find(source);
-    if (font == font_mgr.fonts.end()) {
-      log_warn("Cannot register font alias {}: {} is not loaded", name, source);
-      continue;
-    }
-    font_mgr.load_font(name, font->second);
-    loaded_count++;
-  }
-  log_info("[Headless] Loaded {} fonts into FontManager", loaded_count);
-}
-
 // Configure UI validation for design rule enforcement
 void configure_validation() {
   auto &config =
@@ -149,12 +100,7 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   // Initialize UI plugin (creates root + singletons in UI collection)
   afterhours::ui::init_ui_plugin<InputAction>();
 
-  // Load custom fonts for headless rendering
-  auto *font_mgr = afterhours::EntityHelper::get_singleton_cmp<
-      afterhours::ui::FontManager>();
-  if (font_mgr) {
-    load_fonts_into_manager(*font_mgr);
-  }
+  load_ui_fonts();
 
   // Create input singleton components (with game's input mapping for test
   // input)

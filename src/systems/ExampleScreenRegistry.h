@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../settings.h"
+#include "../preload.h"
 #include <afterhours/ah.h>
 #include <functional>
 #include <map>
@@ -50,6 +51,7 @@ struct ExampleScreenRegistry {
     if (it == screens.end()) {
       return nullptr;
     }
+    load_ui_fonts(flag_name);
     return it->second.create_system();
   }
 
