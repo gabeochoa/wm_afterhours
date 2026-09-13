@@ -6541,7 +6541,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "02a6bcee771ca3e86d5a818c38925a8afb96a088d0833a7d95f84af6d0f27fd1"
+    "sha256": "02a6bcee771ca3e86d5a818c38925a8afb96a088d0833a7d95f84af6d0f27fd1",
+    "evidence": "docs/design-audit/originals/dialog_info_720p.png"
   },
   {
     "id": "dialog_prompt",

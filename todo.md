@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-799 completed; 1,736 remaining.
+815 completed; 1,720 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2433,52 +2433,53 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/dialog_info_720p.png) · [Visual review](design-audit.html#screen=dialog_info)
 
-- [ ] `dialog_info-01` · P2 · proposal. Action label: Use Return to main menu.
+- [x] `dialog_info-01` · P2 · proposal. Action label: Use Return to main menu.
   Evidence: OK does not name the destination described in the message.
 
-- [ ] `dialog_info-02` · P2 · proposal. Action timing: State whether pressing the button starts the return.
+- [x] `dialog_info-02` · P2 · proposal. Action timing: State whether pressing the button starts the return.
   Evidence: Returning to the main menu sounds automatic despite the acknowledgment button.
 
-- [ ] `dialog_info-03` · P2 · proposal. Connection identity: Show the session or host name when available.
+- [x] `dialog_info-03` · P2 · proposal. Connection identity: Show the session or host name when available.
   Evidence: The message names only the host.
 
-- [ ] `dialog_info-04` · P2 · proposal. Loss explanation: Use the body to explain the known consequence.
+- [x] `dialog_info-04` · P2 · proposal. Loss explanation: Use the body to explain the known consequence.
   Evidence: Disconnected from the host repeats Connection lost.
 
-- [ ] `dialog_info-05` · P2 · proposal. Progress consequence: Add a concise save/progress statement where supported.
+- [x] `dialog_info-05` · P2 · proposal. Progress consequence: Add a concise save/progress statement where supported.
   Evidence: The notice does not say whether match progress is retained.
 
-- [ ] `dialog_info-06` · P2 · proposal. Recovery option: If the demo supports it, add Retry beside return.
+- [x] `dialog_info-06` · P2 · proposal. Recovery option: If the demo supports it, add Retry beside return.
   Evidence: The visible action offers no reconnect path.
+  Disposition: This offline fixture cannot reconnect. It explicitly says reconnect is unavailable and offers a working return to the demo main menu.
 
-- [ ] `dialog_info-07` · P2 · proposal. Connection symbol: Add a small disconnected-network symbol.
+- [x] `dialog_info-07` · P2 · proposal. Connection symbol: Add a small disconnected-network symbol.
   Evidence: No icon distinguishes the notice from ordinary information.
 
-- [ ] `dialog_info-08` · P2 · proposal. Body spacing: Reduce title-to-body spacing.
+- [x] `dialog_info-08` · P2 · proposal. Body spacing: Reduce title-to-body spacing.
   Evidence: Two short lines sit far below the title.
 
-- [ ] `dialog_info-09` · P2 · proposal. Action alignment: Align it consistently with the content column or center it deliberately.
+- [x] `dialog_info-09` · P2 · proposal. Action alignment: Align it consistently with the content column or center it deliberately.
   Evidence: The single button is offset toward the right of the panel.
 
-- [ ] `dialog_info-10` · P2 · proposal. Action type: Increase its label size.
+- [x] `dialog_info-10` · P2 · proposal. Action type: Increase its label size.
   Evidence: OK is tiny inside the teal button.
 
-- [ ] `dialog_info-11` · P2 · proposal. Panel height: Fit its height to the content.
+- [x] `dialog_info-11` · P2 · proposal. Panel height: Fit its height to the content.
   Evidence: The panel has substantial empty space below the action.
 
-- [ ] `dialog_info-12` · P2 · proposal. Panel boundary: Add a subtle border or shadow.
+- [x] `dialog_info-12` · P2 · proposal. Panel boundary: Add a subtle border or shadow.
   Evidence: The notice lacks strong edge separation from the dark backdrop.
 
-- [ ] `dialog_info-13` · P2 · proposal. Backdrop section: Use a lobby or session list behind the fixture.
+- [x] `dialog_info-13` · P2 · proposal. Backdrop section: Use a lobby or session list behind the fixture.
   Evidence: Multiplayer appears above display settings.
 
-- [ ] `dialog_info-14` · P2 · proposal. Sidebar selection: Use a Multiplayer navigation item.
+- [x] `dialog_info-14` · P2 · proposal. Sidebar selection: Use a Multiplayer navigation item.
   Evidence: Display remains selected under a multiplayer notice.
 
-- [ ] `dialog_info-15` · P2 · proposal. Session context: Show its selected session row behind the scrim.
+- [x] `dialog_info-15` · P2 · proposal. Session context: Show its selected session row behind the scrim.
   Evidence: No visible lobby identifies the disconnected session.
 
-- [ ] `dialog_info-16` · P2 · proposal. Heading style: Use a clearer UI heading face.
+- [x] `dialog_info-16` · P2 · proposal. Heading style: Use a clearer UI heading face.
   Evidence: Connection lost uses the same handwritten face as generic demo text.
 
 ### dialog_prompt

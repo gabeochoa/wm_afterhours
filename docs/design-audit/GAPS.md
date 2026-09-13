@@ -1293,7 +1293,7 @@ The three-action unsaved-changes fixture is readable. Eighteen proposals improve
 
 ## dialog info
 
-[Current baseline](../../screenshot-baselines/screens/dialog_info_720p.png) · [Visual review](../../design-audit.html#screen=dialog_info)
+[Reviewed image](../../docs/design-audit/originals/dialog_info_720p.png) · [Current baseline](../../screenshot-baselines/screens/dialog_info_720p.png) · [Visual review](../../design-audit.html#screen=dialog_info)
 
 Baseline SHA-256: `02a6bcee771ca3e86d5a818c38925a8afb96a088d0833a7d95f84af6d0f27fd1`
 

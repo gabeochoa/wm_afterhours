@@ -1,0 +1,57 @@
+goto_screen dialog_info
+resize 1280 720
+wait 0.4
+expect_text "Connection lost"
+expect_text "Multiplayer"
+expect_text "North pier co-op"
+expect_text "Host Alex / disconnected"
+expect_text "Demo lobby: North pier co-op / host Alex"
+expect_text "No match was started, so there is no progress to lose."
+expect_text "Choose Return to main menu below, or press Esc, to leave."
+expect_text "Reconnecting is not supported in this offline demo."
+expect_text "Return to main menu"
+expect_no_text "Resolution"
+expect_no_text "Returning to the main menu."
+assert_ui modal x=260 y=208 w=760 h=304
+assert_ui di_disconnected_icon x=961 y=237 w=30 h=30
+assert_within_parents
+screenshot dialog_info_design
+click_ui di_return
+wait 0.3
+expect_no_text "Connection lost"
+expect_text "Main menu"
+expect_text "No active session"
+expect_text "Returned to the main menu. Open the demo lobby to view it again."
+expect_text "Open demo lobby"
+click_ui di_open_lobby
+wait 0.3
+expect_text "Connection lost"
+expect_text "Host Alex / disconnected"
+key ESCAPE
+wait 0.3
+expect_text "Main menu"
+expect_no_text "Connection lost"
+focus_ui di_open_lobby
+key ENTER
+wait 0.3
+expect_text "Connection lost"
+resize 1920 1080
+wait 0.3
+assert_ui modal x=390 y=312 w=1140 h=456
+assert_ui di_disconnected_icon x=1442 y=356 w=45 h=45
+assert_within_parents
+screenshot dialog_info_design_1080
+click_ui di_return
+wait 0.3
+expect_text "No active session"
+resize 1024 768
+click_ui di_open_lobby
+wait 0.3
+assert_ui modal x=208 y=262 w=608 h=243
+assert_within_parents
+screenshot dialog_info_design_narrow
+key ESCAPE
+wait 0.3
+expect_text "Main menu"
+expect_no_text "Connection lost"
+resize 1280 720
