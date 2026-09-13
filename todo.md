@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-161 completed; 2,374 remaining.
+179 completed; 2,356 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -532,58 +532,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/animation_basic_720p.png) · [Visual review](design-audit.html#screen=animation_basic)
 
-- [ ] `animation_basic-01` · P2 · proposal. Header location: Move the header upward and reclaim space for diagnostics.
+- [x] `animation_basic-01` · P2 · proposal. Header location: Move the header upward and reclaim space for diagnostics.
   Evidence: A large empty region sits above Animation Basics.
 
-- [ ] `animation_basic-02` · P2 · proposal. Title/subtitle bands: Combine them into one padded header block.
+- [x] `animation_basic-02` · P2 · proposal. Title/subtitle bands: Combine them into one padded header block.
   Evidence: Title and subtitle occupy separate touching rounded strips.
 
-- [ ] `animation_basic-03` · P2 · proposal. Main specimen group: Use three equal cards with shared alignment.
+- [x] `animation_basic-03` · P2 · proposal. Main specimen group: Use three equal cards with shared alignment.
   Evidence: The three examples occupy a small area amid large gaps.
 
-- [ ] `animation_basic-04` · P2 · proposal. Slide label order: Match subtitle order to the actual columns.
+- [x] `animation_basic-04` · P2 · proposal. Slide label order: Match subtitle order to the actual columns.
   Evidence: Subtitle says Fade, Slide, Scale while columns show Slide, Fade, Scale.
 
-- [ ] `animation_basic-05` · P2 · proposal. Slide measurement: Add start and end values in a caption.
+- [x] `animation_basic-05` · P2 · proposal. Slide measurement: Add start and end values in a caption.
   Evidence: x offset: 0px shows only the endpoint.
 
-- [ ] `animation_basic-06` · P2 · proposal. Slide reference: Draw a ghost origin outside its final bounds.
+- [x] `animation_basic-06` · P2 · proposal. Slide reference: Draw a ghost origin outside its final bounds.
   Evidence: The green square has no start-position marker.
 
-- [ ] `animation_basic-07` · P2 · proposal. Fade reference: Add a checkerboard or reference swatch behind its test area.
+- [x] `animation_basic-07` · P2 · proposal. Fade reference: Add a checkerboard or reference swatch behind its test area.
   Evidence: The blue square is fully opaque in the captured state.
 
-- [ ] `animation_basic-08` · P2 · proposal. Scale reference: Draw a thin fixed bounds outline behind it.
+- [x] `animation_basic-08` · P2 · proposal. Scale reference: Draw a thin fixed bounds outline behind it.
   Evidence: The purple square has no visible original-size boundary.
 
-- [ ] `animation_basic-09` · P2 · proposal. Animation durations: Add a duration label below each animation name.
+- [x] `animation_basic-09` · P2 · proposal. Animation durations: Add a duration label below each animation name.
   Evidence: No example displays its duration.
 
-- [ ] `animation_basic-10` · P2 · proposal. Animation easing: Display the easing name per specimen.
+- [x] `animation_basic-10` · P2 · proposal. Animation easing: Display the easing name per specimen.
   Evidence: Bounce and other timing differences are not described.
 
-- [ ] `animation_basic-11` · P2 · proposal. Metric chips: Use a shared width and aligned metric baseline.
+- [x] `animation_basic-11` · P2 · proposal. Metric chips: Use a shared width and aligned metric baseline.
   Evidence: The slide chip is wider than the other metric chips.
 
-- [ ] `animation_basic-12` · P2 · proposal. Metric typography: Use readable tabular numeric text.
+- [x] `animation_basic-12` · P2 · proposal. Metric typography: Use readable tabular numeric text.
   Evidence: The metrics use tiny handwritten numerals.
 
-- [ ] `animation_basic-13` · P2 · proposal. Animation phase: Show Ready, Running or Complete beside restart.
+- [x] `animation_basic-13` · P2 · proposal. Animation phase: Show Ready, Running or Complete beside restart.
   Evidence: No status says the examples have completed.
 
-- [ ] `animation_basic-14` · P2 · proposal. Restart label: Increase its contrast relative to the specimen captions.
+- [x] `animation_basic-14` · P2 · proposal. Restart label: Increase its contrast relative to the specimen captions.
   Evidence: Restart Animations is the only action but has low dark-teal emphasis.
 
-- [ ] `animation_basic-15` · P2 · proposal. Restart position: Move it nearer the specimens while preserving separation.
+- [x] `animation_basic-15` · P2 · proposal. Restart position: Move it nearer the specimens while preserving separation.
   Evidence: The restart button is distant from the diagnostic row.
 
-- [ ] `animation_basic-16` · P2 · proposal. Independent playback: Add small individual replay controls for focused comparison.
+- [x] `animation_basic-16` · P2 · proposal. Independent playback: Add small individual replay controls for focused comparison.
   Evidence: One restart action serves all three examples.
 
-- [ ] `animation_basic-17` · P2 · proposal. Timeline: Add a shared progress track with an elapsed-time marker.
+- [x] `animation_basic-17` · P2 · proposal. Timeline: Add a shared progress track with an elapsed-time marker.
   Evidence: There is no way to compare progress in a static frame.
 
-- [ ] `animation_basic-18` · P2 · proposal. Motion comparison: Provide a clearly labeled strip of start, midpoint and endpoint thumbnails.
+- [x] `animation_basic-18` · P2 · proposal. Motion comparison: Provide a clearly labeled strip of start, midpoint and endpoint thumbnails.
   Evidence: All endpoints are identical-size blocks.
 
 ### animation_declarative
@@ -8095,6 +8095,12 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+### First-segment animation easing
+
+- [ ] Make `AnimHandle::sequence()` apply the first segment's easing on fresh and replayed tracks.
+  `animation_basic` uses chained `.to()` calls until the library fix is reviewed.
+  See [the measured gap](docs/AFTERHOURS_GAPS.md#animation-sequences-ignore-the-first-segment-easing).
 
 ### Modal heading font
 

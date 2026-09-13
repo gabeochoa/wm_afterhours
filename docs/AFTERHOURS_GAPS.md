@@ -203,6 +203,18 @@ WM now restyles the returned heading entities to the screen’s font family.
 Let built-in headings inherit the configured default or expose a title style
 after upstream review.
 
+### Animation sequences ignore the first segment easing
+
+`AnimHandle::sequence()` initializes the first segment's destination and duration
+but never assigns `current_easing`. A fresh track therefore runs that segment
+linearly; replay can inherit the easing left by the previous segment. Reproduced
+with a scale sequence from 0 to 1.15 over 0.6s and then to 1 over 0.4s, both
+requesting `EaseOutQuad`. At 0.5s the first sequence produces 0.958333 instead of
+1.118056. Two chained `.to()` calls produce 1.118055 and finish at exactly 1.
+`animation_basic` uses those explicit calls so its live motion matches its timing
+labels and midpoint thumbnails. Afterhours is unchanged. Upstream should copy
+`segments[0].easing` when starting the sequence and test fresh and replayed tracks.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`

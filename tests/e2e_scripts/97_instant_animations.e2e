@@ -13,7 +13,7 @@ disable_animations
 
 # Restart puts every track back to its start value. With instant on they must
 # be at their final values on the very next frame, not 1.6s later.
-click 640 644
+click_ui restart_btn
 wait 0.1
 expect_text "opacity: 100%"
 expect_text "scale: 100%"

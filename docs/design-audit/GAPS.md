@@ -376,11 +376,13 @@ Current example states: [Current example: Unsaved audio settings](../../docs/des
 
 ## animation basic
 
-[Current baseline](../../screenshot-baselines/screens/animation_basic_720p.png) · [Visual review](../../design-audit.html#screen=animation_basic)
+[Reviewed image](../../docs/design-audit/originals/animation_basic_720p.png) · [Current baseline](../../screenshot-baselines/screens/animation_basic_720p.png) · [Visual review](../../design-audit.html#screen=animation_basic)
 
 Baseline SHA-256: `410e822f449b8551124446c7bc5b7518ac28580db5c842f1cdb607f7ffc91127`
 
 The three animations are captured at their endpoints. Eighteen grounded proposals improve comparison; this image does not establish motion defects.
+
+Current example states: [Current example: All three playing](../../docs/design-audit/examples/animation_basic_running_720p.png) · [Current example: Independent scale replay](../../docs/design-audit/examples/animation_basic_scale_running_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

@@ -1,0 +1,43 @@
+goto_screen animation_basic
+resize 1280 720
+wait 0.3
+expect_text "Slide, fade, scale."
+expect_text "0.6 + 0.4 s / EaseOutQuad"
+expect_text "x: -200 px to 0 px"
+expect_text "Scale: 0% to 115% to 100%"
+expect_text "Complete"
+assert_ui slide_box x=292 y=262 w=120 h=120
+assert_ui fade_box x=580 y=262 w=120 h=120
+assert_ui scale_box x=968 y=262 w=120 h=120
+assert_within_parents
+screenshot animation_basic_design
+click_ui restart_btn
+wait 2
+expect_text "x offset: 0px"
+expect_text "opacity: 100%"
+expect_text "scale: 100%"
+expect_text "Last replay: all three  /  1.60 of 1.6 s"
+focus_element replay_fade
+key ENTER
+wait 2
+expect_text "Last replay: fade  /  1.60 of 1.6 s"
+click_ui replay_slide
+wait 1.6
+expect_text "Last replay: slide  /  1.20 of 1.2 s"
+click_ui replay_scale
+wait 1.5
+expect_text "Last replay: scale  /  1.00 of 1.0 s"
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_ui slide_box x=438 y=393 w=180 h=180
+assert_ui fade_box x=870 y=393 w=180 h=180
+assert_ui scale_box x=1452 y=393 w=180 h=180
+assert_within_parents
+screenshot animation_basic_design_1080
+resize 1024 768
+wait 0.3
+assert_ui basic_canvas w=1024 h=768
+assert_within_parents
+screenshot animation_basic_design_narrow
+resize 1280 720

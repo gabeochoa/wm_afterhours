@@ -1546,7 +1546,20 @@
         "priority": "P2"
       }
     ],
-    "sha256": "410e822f449b8551124446c7bc5b7518ac28580db5c842f1cdb607f7ffc91127"
+    "sha256": "410e822f449b8551124446c7bc5b7518ac28580db5c842f1cdb607f7ffc91127",
+    "evidence": "docs/design-audit/originals/animation_basic_720p.png",
+    "examples": [
+      {
+        "id": "running",
+        "label": "Current example: All three playing",
+        "path": "docs/design-audit/examples/animation_basic_running_720p.png"
+      },
+      {
+        "id": "scale_running",
+        "label": "Current example: Independent scale replay",
+        "path": "docs/design-audit/examples/animation_basic_scale_running_720p.png"
+      }
+    ]
   },
   {
     "id": "animation_declarative",
