@@ -139,7 +139,7 @@ struct DropdownShowcase : ScreenSystem<UIContext<InputAction>> {
     label(61, "Value: " + basic_options[basic_idx], 16, 284, 336, 28, 20, ink);
     label(62, "Separate label and selectable value", 404, 253, 336, 28, 19, muted);
     label(63, "Value: " + labeled_options[labeled_idx], 404, 284, 336, 28, 20, ink);
-    label(64, "12 rows at once / no scrolling", 792, 253, 336, 28, 20, muted);
+    label(64, "12 months / scroll to choose", 792, 253, 336, 28, 20, muted);
     label(65, "Open to inspect screen-edge clamping", 792, 284, 336, 28, 18, ink);
     label(66, "[+] closed / [-] open", 16, 463, 336, 28, 20, muted);
     label(67, "Three selectable preset slots", 16, 494, 336, 28, 20, ink);

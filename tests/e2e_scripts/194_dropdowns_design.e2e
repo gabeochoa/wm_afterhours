@@ -4,7 +4,7 @@ wait 0.4
 expect_text "Dropdown Showcase"
 expect_text "Greek letter"
 expect_text "Month / 12 options"
-expect_text "12 rows at once / no scrolling"
+expect_text "12 months / scroll to choose"
 expect_text "[+] closed / [-] open"
 expect_text "Frozen / unavailable"
 expect_text "#DAB475 fill / #F0DFC0 border"
@@ -37,7 +37,9 @@ expect_text "Pet: Bird"
 click_ui many_dropdown_trigger
 wait 0.3
 expect_text "December"
-assert_ui dropdown_options_tray h=528
+assert_ui dropdown_options_tray h=478
+key UP
+wait 0.2
 assert_within_parents
 screenshot dropdowns_month_open
 click_ui dropdown_opt_11
@@ -78,7 +80,7 @@ assert_within_parents
 click_ui many_dropdown_trigger
 wait 0.3
 expect_text "December"
-assert_ui dropdown_options_tray h=424
+assert_ui dropdown_options_tray h=422
 assert_within_parents
 screenshot dropdowns_design_narrow_open
 key ESC
