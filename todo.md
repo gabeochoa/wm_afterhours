@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-136 completed; 2,399 remaining.
+161 completed; 2,374 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -453,79 +453,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/angry_birds_settings_720p.png) · [Visual review](design-audit.html#screen=angry_birds_settings)
 
-- [ ] `angry_birds_settings-01` · P2 · proposal. Audio selected tab: Add a small selected underline or check marker.
+- [x] `angry_birds_settings-01` · P2 · proposal. Audio selected tab: Add a small selected underline or check marker.
   Evidence: AUDIO relies on green fill to distinguish it from blue tabs.
 
-- [ ] `angry_birds_settings-02` · P2 · proposal. Vibration state: Give off-but-interactive controls an explicit toggle marker.
+- [x] `angry_birds_settings-02` · P2 · proposal. Vibration state: Give off-but-interactive controls an explicit toggle marker.
   Evidence: The OFF icon looks disabled while MUSIC and SOUND look enabled.
 
-- [ ] `angry_birds_settings-03` · P2 · proposal. State captions: Increase state caption size and weight.
+- [x] `angry_birds_settings-03` · P2 · proposal. State captions: Increase state caption size and weight.
   Evidence: ON and OFF are much smaller than MUSIC, SOUND and VIBRATION.
 
-- [ ] `angry_birds_settings-04` · P2 · proposal. Sound wording: Rename it SOUND EFFECTS.
+- [x] `angry_birds_settings-04` · P2 · proposal. Sound wording: Rename it SOUND EFFECTS.
   Evidence: SOUND can include the separate music setting.
 
-- [ ] `angry_birds_settings-05` · P2 · proposal. Vibration icon: Use a more balanced vibration glyph.
+- [x] `angry_birds_settings-05` · P2 · proposal. Vibration icon: Use a more balanced vibration glyph.
   Evidence: The phone is tilted and flanked by marks at different angles.
 
-- [ ] `angry_birds_settings-06` · P2 · proposal. Music icon: Normalize icon optical size within all three buttons.
+- [x] `angry_birds_settings-06` · P2 · proposal. Music icon: Normalize icon optical size within all three buttons.
   Evidence: The note occupies less width than the speaker icon.
 
-- [ ] `angry_birds_settings-07` · P2 · proposal. Close control: Bring it slightly inward to preserve a consistent safe margin.
+- [x] `angry_birds_settings-07` · P2 · proposal. Close control: Bring it slightly inward to preserve a consistent safe margin.
   Evidence: The red close button overlaps the outer board edge.
 
-- [ ] `angry_birds_settings-08` · P2 · proposal. Close emphasis: Soften the red or reduce its size relative to confirmation.
+- [x] `angry_birds_settings-08` · P2 · proposal. Close emphasis: Soften the red or reduce its size relative to confirmation.
   Evidence: Close is the strongest red object on a non-destructive screen.
 
-- [ ] `angry_birds_settings-09` · P2 · proposal. Footer action order: Place the primary confirmation at the far right.
+- [x] `angry_birds_settings-09` · P2 · proposal. Footer action order: Place the primary confirmation at the far right.
   Evidence: OK appears before CANCEL and APPLY in a right-aligned group.
 
-- [ ] `angry_birds_settings-10` · P2 · proposal. OK wording: Use DONE or SAVE & CLOSE.
+- [x] `angry_birds_settings-10` · P2 · proposal. OK wording: Use DONE or SAVE & CLOSE.
   Evidence: OK does not explain whether settings save and close.
 
-- [ ] `angry_birds_settings-11` · P2 · proposal. Apply action: Visually distinguish its no-pending-changes state when applicable.
+- [x] `angry_birds_settings-11` · P2 · proposal. Apply action: Visually distinguish its no-pending-changes state when applicable.
   Evidence: APPLY looks active in the unchanged default state.
 
-- [ ] `angry_birds_settings-12` · P2 · proposal. Cancel action: Use a quieter secondary treatment.
+- [x] `angry_birds_settings-12` · P2 · proposal. Cancel action: Use a quieter secondary treatment.
   Evidence: CANCEL has the same glossy emphasis as APPLY.
 
-- [ ] `angry_birds_settings-13` · P2 · proposal. Footer spacing: Add a concise saved/unsaved status on the left.
+- [x] `angry_birds_settings-13` · P2 · proposal. Footer spacing: Add a concise saved/unsaved status on the left.
   Evidence: The footer actions cluster on the right while the left half is empty.
 
-- [ ] `angry_birds_settings-14` · P2 · proposal. Audio instruction: Add a brief Tap an icon to toggle caption.
+- [x] `angry_birds_settings-14` · P2 · proposal. Audio instruction: Add a brief Tap an icon to toggle caption.
   Evidence: The tagline says little about the controls.
 
-- [ ] `angry_birds_settings-15` · P2 · proposal. Tab content association: Reduce the gap between tab navigation and audio description.
+- [x] `angry_birds_settings-15` · P2 · proposal. Tab content association: Reduce the gap between tab navigation and audio description.
   Evidence: The audio controls sit far below the active tab.
 
-- [ ] `angry_birds_settings-16` · P2 · proposal. Info tab wording: Use ABOUT or a more descriptive label.
+- [x] `angry_birds_settings-16` · P2 · proposal. Info tab wording: Use ABOUT or a more descriptive label.
   Evidence: INFO is broad for credits, support and version details.
 
-- [ ] `angry_birds_settings-17` · P2 · proposal. Board size: Reduce outer ornament height to create breathing room.
+- [x] `angry_birds_settings-17` · P2 · proposal. Board size: Reduce outer ornament height to create breathing room.
   Evidence: The board nearly fills the available height.
 
-- [ ] `angry_birds_settings-18` · P2 · proposal. Outer shadow: Soften it to keep the footer visually lighter.
+- [x] `angry_birds_settings-18` · P2 · proposal. Outer shadow: Soften it to keep the footer visually lighter.
   Evidence: A heavy brown shadow adds a thick band under the board.
 
-- [ ] `angry_birds_settings-19` · P2 · proposal. Tab shadows: Reduce shadow depth while retaining the toy-like style.
+- [x] `angry_birds_settings-19` · P2 · proposal. Tab shadows: Reduce shadow depth while retaining the toy-like style.
   Evidence: Dark tab shadows compete with text outlines.
 
-- [ ] `angry_birds_settings-20` · P2 · proposal. Button border color: Use a consistent warmer outline palette.
+- [x] `angry_birds_settings-20` · P2 · proposal. Button border color: Use a consistent warmer outline palette.
   Evidence: Gray-green outlines sit beside warm brown panel outlines.
 
-- [ ] `angry_birds_settings-21` · P2 · proposal. Audio label color: Darken labels slightly for small-screen readability.
+- [x] `angry_birds_settings-21` · P2 · proposal. Audio label color: Darken labels slightly for small-screen readability.
   Evidence: Brown labels are muted against the peach surface.
 
-- [ ] `angry_birds_settings-22` · P2 · proposal. Separator: Increase its contrast modestly.
+- [x] `angry_birds_settings-22` · P2 · proposal. Separator: Increase its contrast modestly.
   Evidence: The thin footer rule is easy to lose against the peach background.
 
-- [ ] `angry_birds_settings-23` · P2 · proposal. Background blocks: Blur or dim them further behind the modal.
+- [x] `angry_birds_settings-23` · P2 · proposal. Background blocks: Blur or dim them further behind the modal.
   Evidence: Stacked dark blocks on the right remain visually prominent.
 
-- [ ] `angry_birds_settings-24` · P2 · proposal. Bottom white line: Remove it or make its purpose clear as a device indicator.
+- [x] `angry_birds_settings-24` · P2 · proposal. Bottom white line: Remove it or make its purpose clear as a device indicator.
   Evidence: An isolated pale line spans much of the screen below the board.
 
-- [ ] `angry_birds_settings-25` · P2 · proposal. Behind-status context: Restore subdued game context above the panel if matching the reference remains the target.
+- [x] `angry_birds_settings-25` · P2 · proposal. Behind-status context: Restore subdued game context above the panel if matching the reference remains the target.
   Evidence: The mock includes heart and currency status behind the board, absent here.
 
 ### animation_basic

@@ -1376,7 +1376,25 @@
         "priority": "P2"
       }
     ],
-    "sha256": "d40ee477215dcc5d20e24691ede3c4b334571f1536ea3cb5f834115683cb2b12"
+    "sha256": "d40ee477215dcc5d20e24691ede3c4b334571f1536ea3cb5f834115683cb2b12",
+    "evidence": "docs/design-audit/originals/angry_birds_settings_720p.png",
+    "examples": [
+      {
+        "id": "pending",
+        "label": "Current example: Unsaved audio settings",
+        "path": "docs/design-audit/examples/angry_birds_pending_720p.png"
+      },
+      {
+        "id": "general",
+        "label": "Current example: General settings",
+        "path": "docs/design-audit/examples/angry_birds_general_720p.png"
+      },
+      {
+        "id": "language",
+        "label": "Current example: Language selection",
+        "path": "docs/design-audit/examples/angry_birds_language_720p.png"
+      }
+    ]
   },
   {
     "id": "animation_basic",

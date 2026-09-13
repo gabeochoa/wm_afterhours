@@ -338,11 +338,13 @@ Fading and disappearance under increasingly opaque overlays are intentional. Twe
 
 ## angry birds settings
 
-[Current baseline](../../screenshot-baselines/screens/angry_birds_settings_720p.png) · [Visual review](../../design-audit.html#screen=angry_birds_settings)
+[Reviewed image](../../docs/design-audit/originals/angry_birds_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/angry_birds_settings_720p.png) · [Visual review](../../design-audit.html#screen=angry_birds_settings)
 
 Baseline SHA-256: `d40ee477215dcc5d20e24691ede3c4b334571f1536ea3cb5f834115683cb2b12`
 
 The baseline closely follows the approved playful settings mock. Findings are design refinements, not rendering failures.
+
+Current example states: [Current example: Unsaved audio settings](../../docs/design-audit/examples/angry_birds_pending_720p.png) · [Current example: General settings](../../docs/design-audit/examples/angry_birds_general_720p.png) · [Current example: Language selection](../../docs/design-audit/examples/angry_birds_language_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

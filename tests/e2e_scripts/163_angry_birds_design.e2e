@@ -1,0 +1,70 @@
+goto_screen angry_birds_settings
+resize 1280 720
+wait 0.3
+expect_text "ABOUT"
+expect_text "SOUND EFFECTS"
+expect_text "All changes saved"
+expect_text "SAVE & CLOSE"
+assert_within_parents
+screenshot angry_birds_design
+click_ui ab_vibration_toggle
+wait 0.2
+expect_text "Unsaved changes"
+click_ui ab_apply
+wait 0.2
+expect_text "Settings applied"
+focus_ui ab_music_toggle
+key ENTER
+wait 0.2
+expect_text "Unsaved changes"
+click_ui ab_cancel
+wait 0.2
+expect_text "Changes restored"
+click_ui ab_music
+wait 0.2
+click_ui ab_ok
+wait 0.2
+expect_text "SETTINGS CLOSED"
+click_ui ab_reopen
+wait 0.2
+expect_text "All changes saved"
+click_ui ab_music
+wait 0.2
+expect_text "Music enabled"
+expect_text "Unsaved changes"
+screenshot angry_birds_design_pending
+click_ui ab_apply
+wait 0.2
+click_ui ab_tab_general
+wait 0.2
+click_ui ab_language
+wait 0.2
+click_ui ab_language_german
+wait 0.2
+click_ui ab_detail_back
+wait 0.2
+expect_text "Unsaved changes"
+click_ui ab_cancel
+wait 0.2
+click_ui ab_language
+wait 0.2
+expect_text "CURRENT LANGUAGE: ENGLISH"
+click_ui ab_language_spanish
+wait 0.2
+click_ui ab_detail_back
+wait 0.2
+click_ui ab_apply
+wait 0.2
+click_ui ab_language
+wait 0.2
+expect_text "CURRENT LANGUAGE: ESPAÑOL"
+click_ui ab_detail_back
+wait 0.2
+click_ui ab_tab_audio
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui ab_board x=255 y=90 w=1410 h=900
+assert_within_parents
+screenshot angry_birds_design_1080
+resize 1280 720

@@ -24,7 +24,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   DetailPanel detail_panel = DetailPanel::None;
   int current_level = 12;
   int saved_level = 9;
-  size_t language = 0;
+  size_t language = 0, saved_language = 0;
   float layout_scale = 1.f;
 
   bool saved_music_on = true;
@@ -34,8 +34,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   std::string status_message;
 
   const afterhours::Color cream{255, 248, 225, 255};
-  const afterhours::Color brown{137, 85, 62, 255};
-  const afterhours::Color brown_muted{161, 103, 78, 255};
+  const afterhours::Color brown{111, 65, 44, 255};
+  const afterhours::Color brown_muted{132, 78, 53, 255};
   const afterhours::Color green{75, 213, 6, 255};
   const afterhours::Color blue{34, 161, 215, 255};
   const afterhours::Color gray{148, 157, 139, 255};
@@ -87,7 +87,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < names.size(); ++i) {
       const std::string path =
           afterhours::files::get_resource_path(
-              "images", std::string("mobile_settings/") + names[i] + ".png")
+              "images", std::string(i == Forest || i == Close || i == Wifi
+                                        ? "mobile_settings/" : "angry_settings/") + names[i] + ".png")
               .string();
       art[i] = raylib::LoadTexture(path.c_str());
       raylib::SetTextureFilter(art[i], raylib::TEXTURE_FILTER_BILINEAR);
@@ -115,8 +116,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                             afterhours::Entity &parent, int id,
                             const std::string &label, float x, float y, float w,
                             float h, bool selected, const std::string &name,
-                            float font_size = 24.f) {
-    const bool footer_plate = w == 144.f && h == 55.f;
+                            float font_size = 24.f, bool disabled = false) {
+    const bool footer_plate = h == 55.f && w <= 176.f;
     const bool tab_plate = w == 262.f && h == 55.f;
     const auto texture =
         art[footer_plate ? (selected ? PillFooterGreen : PillFooterBlue)
@@ -132,18 +133,28 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                       .with_absolute_position(pixels(x * layout_scale),
                                               pixels(y * layout_scale))
                       .with_background(Theme::Usage::None)
-                      .with_custom_text_color(cream)
+                      .with_corner_radius(h * layout_scale / 2.f)
+                      .with_custom_text_color(name == "ab_cancel" || disabled ? brown : cream)
                       .with_font("FredokaMockBold",
                                  pixels(font_size * layout_scale * 1.2f))
                       .with_alignment(TextAlignment::Center)
-                      .with_text_stroke(afterhours::Color{91, 104, 91, 255},
-                                        0.8f * layout_scale)
-                      .with_text_shadow(afterhours::Color{50, 101, 112, 255},
-                                        0.f, 2.f * layout_scale)
+                      .with_text_stroke(afterhours::Color{119, 82, 46, 255},
+                                        name == "ab_cancel" || disabled ? 0.f : 0.6f * layout_scale)
+                      .with_text_shadow(afterhours::Color{112, 78, 49, 120},
+                                        0.f, name == "ab_cancel" || disabled ? 0.f : layout_scale)
                       .with_click_activation(ClickActivationMode::Release)
-                      .with_on_draw_bg([texture, plate_width,
-                                        plate_height](RectangleType r) {
-                        paint_plate(texture, r, plate_width, plate_height);
+                      .with_disabled(disabled)
+                      .with_on_draw_bg([texture, plate_width, plate_height, disabled,
+                                        quiet = name == "ab_cancel", scale = layout_scale](RectangleType r) {
+                        if (!quiet && !disabled) {
+                          paint_plate(texture, r, plate_width, plate_height);
+                          return;
+                        }
+                        afterhours::draw_rectangle_rounded(r, 1.f, 24,
+                            disabled ? afterhours::Color{226, 207, 178, 255} : afterhours::Color{255, 233, 195, 255},
+                            RoundedCorners().all_round());
+                        afterhours::draw_rectangle_rounded_lines_ex(r, 1.f, 24, 2.f * scale,
+                            afterhours::Color{164, 127, 89, 255});
                       })
                       .with_debug_name(name));
   }
@@ -161,8 +172,9 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                       .with_size(ComponentSize{pixels(148.f * layout_scale),
                                                pixels(107.f * layout_scale)})
                       .with_absolute_position(pixels(x * layout_scale),
-                                              pixels(254.f * layout_scale))
+                                              pixels(235.f * layout_scale))
                       .with_background(Theme::Usage::None)
+                      .with_corner_radius(53.5f * layout_scale)
                       .with_click_activation(ClickActivationMode::Release)
                       .with_on_draw_bg([texture](RectangleType r) {
                         paint_plate(texture, r, 119.f, 82.f);
@@ -172,15 +184,14 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void action_label(UIContext<InputAction> &context,
                     afterhours::Entity &board) {
-    if (status_message.empty())
-      return;
     div(context, mk(board, 90),
         ComponentConfig{}
-            .with_label(status_message)
-            .with_size(ComponentSize{pixels(320.f * layout_scale),
-                                     pixels(34.f * layout_scale)})
+            .with_label(std::string(has_changes() ? "Unsaved changes" : "All changes saved") +
+                        (status_message.empty() ? "" : "\n" + status_message))
+            .with_size(ComponentSize{pixels(300.f * layout_scale),
+                                     pixels(55.f * layout_scale)})
             .with_absolute_position(pixels(64.f * layout_scale),
-                                    pixels(494.f * layout_scale))
+                                    pixels(484.f * layout_scale))
             .with_background(Theme::Usage::None)
             .with_custom_text_color(brown_muted)
             .with_font("FredokaMockBold", pixels(20.f * layout_scale))
@@ -188,11 +199,18 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ab_status"));
   }
 
+  bool has_changes() const {
+    return music_on != saved_music_on || sound_on != saved_sound_on ||
+           vibration_on != saved_vibration_on || notifications_off != saved_notifications_off ||
+           language != saved_language;
+  }
+
   void save_settings(const std::string &message) {
     saved_music_on = music_on;
     saved_sound_on = sound_on;
     saved_vibration_on = vibration_on;
     saved_notifications_off = notifications_off;
+    saved_language = language;
     status_message = message;
   }
 
@@ -201,11 +219,12 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     sound_on = saved_sound_on;
     vibration_on = saved_vibration_on;
     notifications_off = saved_notifications_off;
+    language = saved_language;
     status_message = "Changes restored";
   }
 
   void render_tabs(UIContext<InputAction> &context, afterhours::Entity &board) {
-    constexpr std::array<const char *, 3> labels{"AUDIO", "GENERAL", "INFO"};
+    constexpr std::array<const char *, 3> labels{"AUDIO", "GENERAL", "ABOUT"};
     constexpr std::array<const char *, 3> names{
         "ab_tab_audio", "ab_tab_general", "ab_tab_info"};
     for (int i = 0; i < 3; i++) {
@@ -215,6 +234,11 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         active_tab = static_cast<size_t>(i);
         status_message.clear();
       }
+      if (active_tab != static_cast<size_t>(i)) continue;
+      div(context, mk(board, 13 + i), ComponentConfig{}
+          .with_size({pixels(42.f * layout_scale), pixels(3.f * layout_scale)})
+          .with_absolute_position(pixels((171.f + i * 277.f) * layout_scale), pixels(166.f * layout_scale))
+          .with_custom_background(cream).with_corner_radius(0).with_ignore_pointer_events());
     }
   }
 
@@ -222,11 +246,11 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                     afterhours::Entity &board) {
     div(context, mk(board, 20),
         ComponentConfig{}
-            .with_label("A little more music. A little more mayhem.")
-            .with_size(ComponentSize{pixels(580.f * layout_scale),
+            .with_label("Tap an icon to toggle. Your changes apply when saved.")
+            .with_size(ComponentSize{pixels(700.f * layout_scale),
                                      pixels(30.f * layout_scale)})
-            .with_absolute_position(pixels(180.f * layout_scale),
-                                    pixels(197.f * layout_scale))
+            .with_absolute_position(pixels(120.f * layout_scale),
+                                    pixels(183.f * layout_scale))
             .with_background(Theme::Usage::None)
             .with_custom_text_color(brown_muted)
             .with_font("FredokaMockBold", pixels(22.f * layout_scale))
@@ -234,7 +258,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             .with_debug_name("ab_audio_hint"));
 
     const std::array<float, 3> xs{179.f, 396.f, 614.f};
-    const std::array<const char *, 3> labels{"MUSIC", "SOUND", "VIBRATION"};
+    const std::array<const char *, 3> labels{"MUSIC", "SOUND EFFECTS", "VIBRATION"};
     const std::array<const char *, 3> names{"ab_music", "ab_sound",
                                             "ab_vibration"};
     const std::array<AudioIcon, 3> icons{AudioIcon::Music, AudioIcon::Sound,
@@ -243,37 +267,51 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
     for (int i = 0; i < 3; i++) {
       const bool enabled = *values[(size_t)i];
-      if (audio_button(context, board, 30 + i, icons[(size_t)i], enabled,
-                       xs[(size_t)i], names[(size_t)i])) {
+      const auto toggle = [&] {
         *values[(size_t)i] = !enabled;
         const char *display = i == 0 ? "Music" : i == 1 ? "Sound" : "Vibration";
-        status_message =
-            std::string(display) + (!enabled ? " enabled" : " disabled");
-      }
+        status_message = std::string(display) + (!enabled ? " enabled" : " disabled");
+      };
+      if (audio_button(context, board, 30 + i, icons[(size_t)i], enabled,
+                       xs[(size_t)i], names[(size_t)i])) toggle();
 
       div(context, mk(board, 40 + i),
           ComponentConfig{}
               .with_label(labels[(size_t)i])
-              .with_size(ComponentSize{pixels(148.f * layout_scale),
-                                       pixels(31.f * layout_scale)})
-              .with_absolute_position(pixels(xs[(size_t)i] * layout_scale),
-                                      pixels(371.f * layout_scale))
+              .with_size(ComponentSize{pixels(216.f * layout_scale),
+                                       pixels(34.f * layout_scale)})
+              .with_absolute_position(pixels((xs[(size_t)i] - 34.f) * layout_scale),
+                                      pixels(354.f * layout_scale))
               .with_background(Theme::Usage::None)
               .with_custom_text_color(brown)
-              .with_font("FredokaMockBold", pixels(29.f * layout_scale))
+              .with_font("FredokaMockBold", pixels(27.f * layout_scale))
               .with_alignment(TextAlignment::Center));
       div(context, mk(board, 50 + i),
           ComponentConfig{}
               .with_label(enabled ? "ON" : "OFF")
-              .with_size(ComponentSize{pixels(148.f * layout_scale),
-                                       pixels(22.f * layout_scale)})
-              .with_absolute_position(pixels(xs[(size_t)i] * layout_scale),
-                                      pixels(405.f * layout_scale))
+              .with_size(ComponentSize{pixels(74.f * layout_scale),
+                                       pixels(29.f * layout_scale)})
+              .with_absolute_position(pixels((xs[(size_t)i] + 64.f) * layout_scale),
+                                      pixels(395.f * layout_scale))
               .with_background(Theme::Usage::None)
               .with_custom_text_color(brown_muted)
-              .with_font("FredokaMockBold", pixels(18.f * layout_scale))
+              .with_font("FredokaMockBold", pixels(24.f * layout_scale))
               .with_alignment(TextAlignment::Center)
               .with_debug_name(std::string(names[(size_t)i]) + "_state"));
+      if (button(context, mk(board, 60 + i), ComponentConfig{}
+          .with_size({pixels(148.f * layout_scale), pixels(32.f * layout_scale)})
+          .with_absolute_position(pixels(xs[(size_t)i] * layout_scale), pixels(394.f * layout_scale))
+          .with_background(Theme::Usage::None).with_corner_radius(16.f * layout_scale)
+          .with_click_activation(ClickActivationMode::Release)
+          .with_debug_name(std::string(names[(size_t)i]) + "_toggle")
+          .with_on_draw_bg([enabled, scale = layout_scale](RectangleType r) {
+            r = {r.x + 18.f * scale, r.y + 4.f * scale, 46.f * scale, 24.f * scale};
+            afterhours::draw_rectangle_rounded(r, 1.f, 20,
+                enabled ? afterhours::Color{68, 137, 22, 255} : afterhours::Color{123, 101, 74, 255},
+                RoundedCorners().all_round());
+            raylib::DrawCircleV({r.x + (enabled ? 34.f : 12.f) * scale, r.y + r.height / 2},
+                               9.f * scale, {255, 248, 225, 255});
+          }))) toggle();
     }
   }
 
@@ -472,19 +510,20 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                                      pixels(2.f * layout_scale)})
             .with_absolute_position(pixels(61.f * layout_scale),
                                     pixels(461.f * layout_scale))
-            .with_custom_background(afterhours::Color{200, 150, 115, 125})
+            .with_custom_background(afterhours::Color{168, 112, 73, 210})
             .with_debug_name("ab_footer_rule"));
 
-    if (pill_button(context, board, 81, "OK", 414.f, 484.f, 144.f, 55.f, true,
-                    "ab_ok", 23.f)) {
+    if (pill_button(context, board, 81, "SAVE & CLOSE", 704.f, 484.f, 176.f, 55.f, true,
+                    "ab_ok", 19.f)) {
       save_settings("Settings saved");
+      settings_open = false;
     }
-    if (pill_button(context, board, 82, "CANCEL", 575.f, 484.f, 144.f, 55.f,
+    if (pill_button(context, board, 82, "CANCEL", 382.f, 484.f, 144.f, 55.f,
                     false, "ab_cancel", 23.f)) {
       restore_settings();
     }
-    if (pill_button(context, board, 83, "APPLY", 736.f, 484.f, 144.f, 55.f,
-                    false, "ab_apply", 23.f)) {
+    if (pill_button(context, board, 83, "APPLY", 543.f, 484.f, 144.f, 55.f,
+                    false, "ab_apply", 23.f, !has_changes())) {
       save_settings("Settings applied");
     }
     action_label(context, board);
@@ -537,6 +576,17 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
                    })
                    .with_debug_name("ab_root"));
 
+    div(context, mk(root.ent(), 30), ComponentConfig{}
+        .with_size({pixels(220.f * s), pixels(36.f * s)})
+        .with_absolute_position(pixels(56.f * s), pixels(12.f * s))
+        .with_label("5 / 5 lives").with_font("FredokaMockBold", pixels(27.f * s))
+        .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
+    div(context, mk(root.ent(), 31), ComponentConfig{}
+        .with_size({pixels(220.f * s), pixels(36.f * s)})
+        .with_absolute_position(pixels(1004.f * s), pixels(12.f * s))
+        .with_label("1000 coins").with_font("FredokaMockBold", pixels(27.f * s))
+        .with_custom_text_color(cream).with_background(Theme::Usage::None).with_ignore_pointer_events());
+
     if (!settings_open) {
       div(context, mk(root.ent(), 20),
           ComponentConfig{}
@@ -561,7 +611,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
         ComponentConfig{}
             .with_size(ComponentSize{screen_pct(1.f), screen_pct(1.f)})
             .with_absolute_position(pixels(0.f), pixels(0.f))
-            .with_custom_background(afterhours::Color{6, 22, 12, 194})
+            .with_custom_background(afterhours::Color{6, 22, 12, 218})
             .with_ignore_pointer_events()
             .with_debug_name("ab_shade"));
 
@@ -569,11 +619,11 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     auto board = div(
         context, mk(root.ent(), 0),
         ComponentConfig{}
-            .with_size(ComponentSize{pixels(940.f * s), pixels(628.f * s)})
-            .with_absolute_position(pixels(170.f * s), pixels(46.f * s))
+            .with_size(ComponentSize{pixels(940.f * s), pixels(600.f * s)})
+            .with_absolute_position(pixels(170.f * s), pixels(60.f * s))
             .with_background(Theme::Usage::None)
             .with_on_draw_bg([board_texture, s](RectangleType r) {
-              paint(board_texture, {r.x - s, r.y - s, 942.f * s, 640.f * s});
+              paint(board_texture, {r.x - s, r.y - s, 942.f * s, 612.f * s});
             })
             .with_debug_name("ab_board"));
 
@@ -609,8 +659,8 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     if (button(
             context, mk(root.ent(), 1),
             ComponentConfig{}
-                .with_size(ComponentSize{pixels(74.f * s), pixels(74.f * s)})
-                .with_absolute_position(pixels(1047.f * s), pixels(106.f * s))
+                .with_size(ComponentSize{pixels(60.f * s), pixels(60.f * s)})
+                .with_absolute_position(pixels(1016.f * s), pixels(104.f * s))
                 .with_overlay(2)
                 .with_background(Theme::Usage::None)
                 .with_click_activation(ClickActivationMode::Release)
@@ -623,12 +673,7 @@ struct AngryBirdsSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       status_message.clear();
     }
 
-    div(context, mk(root.ent(), 2),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(860.f * s), pixels(4.f * s)})
-            .with_absolute_position(pixels(210.f * s), pixels(698.f * s))
-            .with_custom_background(afterhours::Color{255, 255, 255, 160})
-            .with_debug_name("ab_settings_foot"));
+
   }
 };
 
