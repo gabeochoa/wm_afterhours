@@ -1,0 +1,111 @@
+goto_screen offsite_backup
+resize 1280 720
+wait 0.4
+expect_text "Offsite Backup"
+expect_text "242 GB of 787 GB uploaded"
+expect_text "31%"
+expect_text "2 of 5 folders complete"
+expect_text "24.8 MB/s simulated"
+expect_text "About 6h 7m remaining"
+expect_text "Cap: 24.8 MB/s of 40 MB/s"
+expect_text "Progress"
+expect_text "State"
+expect_text "Size"
+expect_text "787 GB of 2 TB · 39.4% used"
+expect_text "Encrypted backup preview · no files are uploaded"
+assert_ui bk_canvas w=1280 h=720
+assert_ui bk_root x=0 y=0 w=1280 h=720
+assert_ui bk_window x=90 y=65 w=1100 h=622
+assert_ui bk_ring x=126 y=260 w=132 h=132
+assert_ui bk_ring_pct text=31%
+assert_ui bk_state_0 text=Done
+assert_ui bk_state_1 text=Uploading
+assert_ui bk_state_2 text=Done
+assert_ui bk_state_3 text=Queued
+assert_ui bk_state_4 text=Queued
+assert_ui bk_schedule x=986 y=237 w=176 h=36
+assert_ui bk_bandwidth x=826 y=359 w=326 h=32
+assert_ui bk_battery_box x=817 y=455 w=20 h=20
+assert_ui bk_external_box x=817 y=493 w=20 h=20
+assert_ui bk_help x=1144 y=653 w=34 h=31
+assert_no_overflow
+assert_within_parents
+screenshot offsite_backup_design
+click_ui bk_pause
+wait 0.2
+expect_text "Backup paused"
+expect_text "0.0 MB/s simulated"
+expect_text "Waiting to resume"
+assert_ui bk_state_1 text=Paused
+click_ui bk_pause
+wait 0.2
+expect_text "Backup resumed"
+click_ui bk_schedule
+wait 0.2
+expect_text "Daily"
+focus_ui bk_schedule
+key LEFT
+wait 0.2
+expect_text "Every 4 hours"
+click_ui bk_retention
+wait 0.2
+expect_text "Forever"
+set_slider bk_bandwidth 0.5
+wait 0.3
+expect_text "50%"
+expect_text "20.0 MB/s simulated"
+expect_text "Cap: 20.0 MB/s of 40 MB/s"
+expect_text "About 7h 35m remaining"
+click_ui bk_battery_label
+wait 0.2
+expect_text "Pause on battery power: Off"
+click_ui bk_external_label
+wait 0.2
+expect_text "Include external drives: On"
+click_ui bk_manage
+wait 0.3
+expect_text "Personal Backup plan"
+expect_text "All backup versions use 787 GB"
+assert_no_overflow
+screenshot offsite_backup_design_account
+click_ui bk_detail_close
+wait 0.3
+click_ui bk_restore
+wait 0.3
+expect_text "Restore files preview"
+expect_text "Restoring a file requires a connected backup service."
+click_ui bk_detail_close
+wait 0.3
+click_ui bk_help
+wait 0.3
+expect_text "Backup help"
+expect_text "Rescan replays folder discovery."
+key ESCAPE
+wait 0.3
+click_ui bk_rescan
+wait 0.15
+expect_text "Rescan started"
+assert_ui bk_state_1 text=Scanning
+wait 3
+expect_text "242 GB of 787 GB uploaded"
+assert_ui bk_ring_pct text=31%
+assert_ui bk_state_0 text=Done
+assert_ui bk_state_1 text=Uploading
+resize 1920 1080
+wait 0.3
+assert_ui bk_root x=0 y=0 w=1920 h=1080
+assert_ui bk_window x=135 y=98 w=1650 h=933
+assert_ui bk_schedule x=1479 y=356 w=264 h=54
+assert_no_overflow
+assert_within_parents
+screenshot offsite_backup_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bk_canvas w=1024 h=768
+assert_ui bk_root x=0 y=96 w=1024 h=576
+assert_ui bk_window x=72 y=148 w=880 h=498
+assert_ui bk_schedule x=789 y=286 w=141 h=29
+assert_no_overflow
+assert_within_parents
+screenshot offsite_backup_design_narrow
+resize 1280 720

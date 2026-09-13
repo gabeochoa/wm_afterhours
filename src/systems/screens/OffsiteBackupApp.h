@@ -3,7 +3,9 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
+#include "DialogPresentation.h"
 #include <afterhours/ah.h>
+#include <afterhours/src/plugins/modal.h>
 #include <algorithm>
 #include <array>
 #include <bitset>
@@ -17,21 +19,20 @@ using namespace afterhours::ui::imm;
 struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
   struct Folder {
     const char *name;
-    const char *size;
+    float size_gb;
     float target;
   };
 
   static constexpr std::array<Folder, 5> folders{{
-      {"Documents", "12.4 GB", 1.00f}, {"Photos", "184.2 GB", 0.71f},
-      {"Projects", "46.8 GB", 1.00f},  {"Music", "31.0 GB", 0.34f},
-      {"Archive", "512.6 GB", 0.08f},
+      {"Documents", 12.4f, 1.00f}, {"Photos", 184.2f, 0.71f},
+      {"Projects", 46.8f, 1.00f},  {"Music", 31.0f, 0.34f},
+      {"Archive", 512.6f, 0.08f},
   }};
 
   float overall = 0.f;
   std::array<float, 5> folder_now{0.f, 0.f, 0.f, 0.f, 0.f};
   bool seeded = false;
   bool paused = false;
-  int focused_control = 0;
   float bandwidth = 0.62f;
   size_t schedule_idx = 1;
   size_t retention_idx = 2;
@@ -57,7 +58,20 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     return n;
   }
 
-  float total_uploaded_gb() const { return overall * 787.f; }
+  float total_uploaded_gb() const {
+    float total = 0;
+    for (size_t i = 0; i < folders.size(); ++i) total += folders[i].size_gb * folder_now[i];
+    return total;
+  }
+  static float total_gb() {
+    float total = 0;
+    for (const auto &folder : folders) total += folder.size_gb;
+    return total;
+  }
+  enum class Detail { None, Restore, Account, Help };
+  Detail detail = Detail::None;
+  bool detail_open = false;
+
 
   ComponentConfig box(float scale, float x, float y, float w, float h) const {
     return ComponentConfig{}
@@ -65,12 +79,6 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
         .with_absolute_position(x * scale, y * scale)
         .with_background(Theme::Usage::None)
         .with_corner_radius(0.f);
-  }
-
-  static std::string pct_text(float value) {
-    if (value >= .995f)
-      return "done";
-    return fmt::format("{:.0f}%", value * 100.f);
   }
 
   void change_schedule(int delta) {
@@ -81,28 +89,6 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
   void change_retention(int delta) {
     retention_idx = (retention_idx + retentions.size() + delta) % retentions.size();
     action_status = "Keep file versions: " + retentions[retention_idx];
-  }
-
-  void change_bandwidth(int delta) {
-    const float next = std::clamp(bandwidth + static_cast<float>(delta) * .10f, 0.f, 1.f);
-    bandwidth = next;
-    action_status = fmt::format("Bandwidth limit {:.0f}%", bandwidth * 100.f);
-  }
-
-  void activate_focused_control(int delta) {
-    if (focused_control == 0)
-      change_schedule(delta);
-    else if (focused_control == 1)
-      change_retention(delta);
-    else if (focused_control == 2)
-      change_bandwidth(delta);
-    else if (focused_control == 3) {
-      pause_on_battery = !pause_on_battery;
-      action_status = pause_on_battery ? "Battery pause enabled" : "Battery pause disabled";
-    } else if (focused_control == 4) {
-      backup_externals = !backup_externals;
-      action_status = backup_externals ? "External drives included" : "External drives excluded";
-    }
   }
 
   static void draw_background(RectangleType r) {
@@ -173,7 +159,7 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
     const float cx = r.x + r.width * .5f;
     const float cy = r.y + r.height * .5f;
     const float outer = std::min(r.width, r.height) * .5f;
-    const float inner = outer - 12.f;
+    const float inner = outer - r.width * (12.f / 132.f);
     afterhours::draw_ring(cx, cy, inner, outer, 72, afterhours::Color{238, 237, 237, 255});
     afterhours::draw_ring_segment(cx, cy, inner, outer, -90.f, -90.f + 360.f * value, 72,
                                   afterhours::Color{232, 95, 84, 255});
@@ -189,31 +175,9 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
   static void draw_storage(RectangleType r) {
     afterhours::draw_rectangle_rounded(r, .5f, 8, afterhours::Color{227, 231, 235, 255},
                                        std::bitset<4>().set());
-    afterhours::draw_rectangle_rounded({r.x, r.y, r.width * .39f, r.height}, .5f, 8,
+    afterhours::draw_rectangle_rounded({r.x, r.y, r.width * (787.f / 2000.f), r.height}, .5f, 8,
                                        afterhours::Color{144, 158, 172, 255},
                                        std::bitset<4>().set());
-  }
-
-  static void draw_slider(RectangleType r, float value) {
-    afterhours::draw_rectangle_rounded({r.x, r.y + r.height * .5f - 3.f, r.width, 6.f},
-                                       .6f, 8, afterhours::Color{67, 70, 74, 255},
-                                       std::bitset<4>().set());
-    afterhours::draw_rectangle_rounded({r.x, r.y + r.height * .5f - 3.f, r.width * value, 6.f},
-                                       .6f, 8, afterhours::Color{221, 105, 94, 255},
-                                       std::bitset<4>().set());
-    afterhours::draw_circle(static_cast<int>(r.x + r.width * value),
-                            static_cast<int>(r.y + r.height * .5f), 7.f,
-                            afterhours::Color{216, 103, 91, 255});
-  }
-
-  static void draw_toggle(RectangleType r, bool on) {
-    afterhours::draw_rectangle_rounded(r, .5f, 16,
-                                       on ? afterhours::Color{116, 178, 235, 255}
-                                          : afterhours::Color{132, 146, 166, 255},
-                                       std::bitset<4>().set());
-    const float knob_x = on ? r.x + r.width - r.height * .5f : r.x + r.height * .5f;
-    afterhours::draw_circle(static_cast<int>(knob_x), static_cast<int>(r.y + r.height * .5f),
-                            r.height * .38f, afterhours::Color{255, 255, 255, 255});
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -230,80 +194,66 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
       seeded = true;
       for (size_t i = 0; i < folders.size(); ++i)
         folder_now[i] = folders[i].target;
-      overall = .626f;
+      overall = total_uploaded_gb() / total_gb();
     }
 
-    if (context.pressed(InputAction::WidgetDown))
-      focused_control = (focused_control + 1) % 5;
-    if (context.pressed(InputAction::WidgetUp))
-      focused_control = (focused_control + 4) % 5;
-    if (context.pressed(InputAction::WidgetRight))
-      activate_focused_control(1);
-    if (context.pressed(InputAction::WidgetLeft))
-      activate_focused_control(-1);
-
-    float sum = 0.f;
     for (size_t i = 0; i < folders.size(); ++i) {
-      if (!paused)
-        ease(folder_now[i], folders[i].target, dt);
-      sum += folder_now[i];
+      if (!paused) ease(folder_now[i], folders[i].target, dt);
     }
-    if (!paused)
-      ease(overall, sum / static_cast<float>(folders.size()), dt);
+    overall = total_uploaded_gb() / total_gb();
 
     Theme theme;
     theme.font = {53, 58, 64, 255};
     theme.darkfont = {53, 58, 64, 255};
-    theme.font_muted = {135, 144, 154, 255};
+    theme.font_muted = {93, 104, 116, 255};
     theme.background = {249, 249, 249, 255};
     theme.surface = {255, 255, 255, 255};
     theme.primary = {223, 87, 75, 255};
     theme.secondary = {104, 114, 124, 255};
     theme.accent = {223, 87, 75, 255};
-    theme.roundness = .02f;
+    theme.roundness = 0;
+    theme.corner_radius = 0;
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
-    UIStylingDefaults::get().set_default_font("Atkinson", pixels(13.f * scale));
+    UIStylingDefaults::get().set_grid_snapping(false);
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(18.f * scale));
 
+    div(context, mk(entity, 1), ComponentConfig{}
+        .with_size({pixels(screen_w), pixels(screen_h)}).with_corner_radius(0)
+        .with_on_draw_bg([](RectangleType r) { draw_background(r); }).with_debug_name("bk_canvas"));
+    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+        .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
+        .with_debug_name("bk_root"));
     const auto text = [&](int id, std::string label, float x, float y, float w, float h,
                           float size, afterhours::Color color,
                           TextAlignment align = TextAlignment::Left,
-                          const std::string &debug = "", const char *font = "Atkinson") {
-      div(context, mk(entity, id),
-          box(scale, x, y, w, std::max(h, size * 1.62f))
-              .with_label(label)
-              .with_font(font, pixels(size * scale * 1.35f))
-              .with_custom_text_color(color)
-              .with_alignment(align)
-              .with_letter_spacing(0.f)
-              .with_debug_name(debug));
+                          const std::string &debug = "", const char *font = "AtkinsonMock") {
+      div(context, mk(root.ent(), id), box(scale, x, y, w, h)
+          .with_label(label).with_font(font, pixels(size * scale))
+          .with_custom_text_color(color).with_alignment(align)
+          .with_letter_spacing(0).with_text_inset(0, 0)
+          .with_ignore_pointer_events().with_debug_name(debug));
     };
     const auto panel = [&](int id, float x, float y, float w, float h,
                            afterhours::Color fill, const char *debug = "") {
-      div(context, mk(entity, id),
-          box(scale, x, y, w, h).with_custom_background(fill).with_debug_name(debug));
+      div(context, mk(root.ent(), id), box(scale, x, y, w, h)
+          .with_custom_background(fill).with_debug_name(debug));
     };
-
-    const afterhours::Color red{223, 87, 75, 255};
-    const afterhours::Color ink{53, 58, 64, 255};
-    const afterhours::Color mid{103, 114, 126, 255};
-    const afterhours::Color muted{145, 153, 163, 255};
-    const afterhours::Color line{226, 226, 226, 255};
-
-    auto root = div(context, mk(entity, 0),
-                    box(scale, 0, 0, 1280, 720)
-                        .with_on_draw_bg([](RectangleType r) { draw_background(r); })
-                        .with_debug_name("bk_root"));
+    const afterhours::Color red{179, 62, 52, 255};
+    const afterhours::Color ink{45, 53, 61, 255};
+    const afterhours::Color mid{82, 95, 107, 255};
+    const afterhours::Color muted{92, 104, 117, 255};
+    const afterhours::Color line{218, 224, 229, 255};
 
     div(context, mk(root.ent(), 1),
         box(scale, 0, 0, 1280, 28)
             .with_on_draw_bg([](RectangleType r) { draw_menubar(r); })
             .with_debug_name("bk_menubar"));
-    text(2, "Offsite Backup", 37, 7, 100, 16, 13, afterhours::Color{38, 48, 48, 255},
-         TextAlignment::Left, "bk_menu_app", "Archivo@bold");
-    text(3, "File   Edit   Window   Help", 147, 7, 230, 16, 12,
+    text(2, "Offsite Backup", 37, 4, 120, 22, 15, afterhours::Color{38, 48, 48, 255},
+         TextAlignment::Left, "bk_menu_app", "AtkinsonMockBold");
+    text(3, "File   Edit   Window   Help", 176, 4, 268, 22, 15,
          afterhours::Color{49, 62, 62, 255});
-    text(4, "Sat 2:03 PM", 1176, 7, 82, 16, 12, afterhours::Color{28, 39, 39, 255},
+    text(4, "Sat 2:03 PM", 1120, 4, 136, 22, 15, afterhours::Color{28, 39, 39, 255},
          TextAlignment::Right, "bk_menu_time");
 
     div(context, mk(root.ent(), 10),
@@ -314,256 +264,255 @@ struct OffsiteBackupApp : ScreenSystem<UIContext<InputAction>> {
         box(scale, 90, 65, 1100, 35)
             .with_on_draw_bg([](RectangleType r) { draw_titlebar(r); })
             .with_debug_name("bk_titlebar"));
-    text(12, "Offsite Backup", 587, 78, 106, 14, 12, afterhours::Color{82, 82, 82, 255},
-         TextAlignment::Center, "bk_window_title", "Archivo@bold");
+    text(12, "Offsite Backup", 536, 71, 208, 24, 16, afterhours::Color{82, 82, 82, 255},
+         TextAlignment::Center, "bk_window_title", "AtkinsonMockBold");
 
     panel(20, 90, 100, 1100, 76, afterhours::Color{255, 255, 255, 255}, "bk_nav");
     panel(21, 90, 175, 1100, 1, line);
     div(context, mk(root.ent(), 22), box(scale, 126, 117, 24, 42)
                                       .with_on_draw_bg([](RectangleType r) { draw_brand_mark(r); }));
-    text(23, "offsite", 166, 116, 130, 35, 31, red, TextAlignment::Left,
-         "bk_brand", "Archivo@bold");
-    text(24, "COMPUTER BACKUP", 166, 151, 150, 14, 9, muted, TextAlignment::Left,
-         "bk_brand_sub", "Archivo");
+    text(23, "offsite", 166, 112, 200, 37, 32, red, TextAlignment::Left,
+         "bk_brand", "AtkinsonMockBold");
+    text(24, "COMPUTER BACKUP", 166, 148, 210, 22, 15, muted, TextAlignment::Left,
+         "bk_brand_sub", "AtkinsonMock");
 
     if (button(context, mk(root.ent(), 30),
-               box(scale, 910, 100, 64, 76)
+               box(scale, 816, 100, 106, 76)
                    .with_label("Overview")
-                   .with_font("Atkinson", pixels(16.f * scale))
+                   .with_font("AtkinsonMock", pixels(18.f * scale))
                    .with_custom_text_color(red)
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("bk_tab_overview"))) {
       action_status = "Overview";
     }
-    panel(31, 910, 172, 64, 3, red);
+    panel(31, 816, 172, 106, 3, red);
     if (button(context, mk(root.ent(), 32),
-               box(scale, 1000, 100, 58, 76)
+               box(scale, 944, 100, 98, 76)
                    .with_label("Settings")
-                   .with_font("Atkinson", pixels(16.f * scale))
+                   .with_font("AtkinsonMock", pixels(18.f * scale))
                    .with_custom_text_color(afterhours::Color{126, 126, 126, 255})
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("bk_tab_settings"))) {
       action_status = "Settings selected";
-      focused_control = 0;
     }
     if (button(context, mk(root.ent(), 33),
-               box(scale, 1080, 100, 88, 76)
+               box(scale, 1056, 100, 116, 76)
                    .with_label("Restore files")
-                   .with_font("Atkinson", pixels(16.f * scale))
+                   .with_font("AtkinsonMock", pixels(18.f * scale))
                    .with_custom_text_color(afterhours::Color{126, 126, 126, 255})
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("bk_restore"))) {
-      action_status = "Restore options opened";
+      action_status = "Restore preview opened";
+      detail = Detail::Restore;
+      detail_open = true;
     }
 
     panel(40, 90, 176, 697, 474, afterhours::Color{255, 255, 255, 255}, "bk_main");
     panel(41, 786, 176, 1, 474, afterhours::Color{229, 229, 229, 255});
     panel(42, 787, 176, 403, 474, afterhours::Color{248, 249, 250, 255}, "bk_aside");
 
-    div(context, mk(root.ent(), 50), box(scale, 117, 205, 52, 38)
-                                      .with_on_draw_fg([](RectangleType r) { draw_computer(r); }));
-    text(51, "MacBook Pro", 175, 199, 180, 25, 20, ink, TextAlignment::Left,
-         "bk_device", "Archivo@bold");
-    text(52, "Personal Backup - 2 TB plan", 175, 228, 210, 16, 11, muted,
-         TextAlignment::Left, "bk_plan_line");
-    panel(53, 688, 208, 65, 24, afterhours::Color{239, 246, 242, 255}, "bk_health_badge");
-    text(54, "Healthy", 701, 214, 44, 13, 11, afterhours::Color{82, 149, 118, 255},
-         TextAlignment::Center, "bk_health");
-    panel(55, 696, 219, 4, 4, afterhours::Color{82, 149, 118, 255});
-
-    div(context, mk(root.ent(), 60),
-        box(scale, 129, 251, 125, 125)
-            .with_on_draw_fg([value = overall](RectangleType r) { draw_ring(r, value); })
-            .with_debug_name("bk_ring"));
-    text(61, fmt::format("{:.0f}", overall * 100.f), 161, 291, 54, 37, 37, ink,
-         TextAlignment::Right, "bk_ring_pct");
-    text(62, "%", 216, 304, 17, 21, 17, ink, TextAlignment::Left, "bk_ring_percent");
-    text(63, "COMPLETE", 164, 334, 58, 11, 8, muted, TextAlignment::Center,
-         "bk_ring_caption", "Archivo");
-
-    text(64, paused ? "Backup paused" : "Backing up your files", 281, 263, 260, 24, 20, ink,
-         TextAlignment::Left, "bk_progress_title");
-    text(65, fmt::format("{:.0f} GB of 787 GB uploaded", total_uploaded_gb()), 281, 294,
-         220, 17, 13, mid, TextAlignment::Left, "bk_bytes");
-    text(66, fmt::format("{} of 5 folders complete", complete_count()), 281, 318, 180, 15,
-         11, muted, TextAlignment::Left, "bk_folders_done");
-    if (button(context, mk(root.ent(), 67),
-               box(scale, 281, 339, 105, 28)
-                   .with_label(paused ? "> Resume backup" : "II Pause backup")
-                   .with_font("Atkinson", pixels(13.f * scale))
-                   .with_custom_text_color(afterhours::Color{103, 108, 115, 255})
-                   .with_custom_background(afterhours::Color{248, 248, 248, 255})
-                   .with_debug_name("bk_pause"))) {
+    div(context, mk(root.ent(), 50), box(scale, 117, 200, 52, 38)
+        .with_on_draw_fg([](RectangleType r) { draw_computer(r); }));
+    text(51, "MacBook Pro", 180, 194, 330, 30, 25, ink, TextAlignment::Left, "bk_device", "AtkinsonMockBold");
+    text(52, "Personal Backup · 2 TB plan", 180, 225, 380, 26, 18, mid, TextAlignment::Left, "bk_plan_line");
+    panel(53, 642, 204, 112, 32, {231, 244, 235, 255}, "bk_health_badge");
+    text(54, "Healthy", 668, 207, 78, 26, 18, {44, 113, 75, 255}, TextAlignment::Left, "bk_health");
+    div(context, mk(root.ent(), 55), box(scale, 651, 216, 8, 8)
+        .with_on_draw_fg([](RectangleType r) { afterhours::draw_circle(static_cast<int>(r.x + r.width / 2), static_cast<int>(r.y + r.height / 2), r.width / 2, {44, 113, 75, 255}); }));
+    div(context, mk(root.ent(), 60), box(scale, 126, 260, 132, 132)
+        .with_on_draw_fg([value = overall](RectangleType r) { draw_ring(r, value); }).with_debug_name("bk_ring"));
+    text(61, fmt::format("{:.0f}%", overall * 100), 140, 299, 104, 40, 34, ink, TextAlignment::Center, "bk_ring_pct");
+    text(63, "COMPLETE", 140, 339, 104, 23, 15, mid, TextAlignment::Center, "bk_ring_caption");
+    text(64, paused ? "Backup paused" : "Backing up your files", 286, 264, 466, 34, 26, ink, TextAlignment::Left, "bk_progress_title");
+    text(65, fmt::format("{:.0f} GB of {:.0f} GB uploaded", total_uploaded_gb(), total_gb()),
+         286, 304, 466, 28, 21, ink, TextAlignment::Left, "bk_bytes");
+    text(66, fmt::format("{} of 5 folders complete", complete_count()), 286, 335, 300, 26, 18, mid, TextAlignment::Left, "bk_folders_done");
+    auto pause_button = button(context, mk(root.ent(), 67), box(scale, 286, 365, 196, 34)
+        .with_label(paused ? "Resume backup" : "Pause backup")
+        .with_font("AtkinsonMock", pixels(18 * scale)).with_custom_text_color(ink)
+        .with_custom_background({235, 239, 242, 255}).with_corner_radius(4 * scale)
+        .with_text_inset(32 * scale, 0).with_alignment(TextAlignment::Left)
+        .with_on_draw_fg([paused = paused, scale, ink](RectangleType r) {
+          if (paused) {
+            afterhours::draw_triangle({r.x + 12 * scale, r.y + 9 * scale}, {r.x + 12 * scale, r.y + 25 * scale}, {r.x + 24 * scale, r.y + 17 * scale}, ink);
+            return;
+          }
+          afterhours::draw_rectangle({r.x + 12 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, ink);
+          afterhours::draw_rectangle({r.x + 20 * scale, r.y + 9 * scale, 4 * scale, 16 * scale}, ink);
+        }).with_debug_name("bk_pause"));
+    pause_button.ent().get<HasLabel>().text_x_offset = 32 * scale;
+    if (pause_button) {
       paused = !paused;
       action_status = paused ? "Backup paused" : "Backup resumed";
     }
-
-    panel(70, 122, 387, 629, 1, afterhours::Color{238, 238, 238, 255});
-    panel(71, 122, 423, 629, 1, afterhours::Color{238, 238, 238, 255});
-    text(72, "24.8 MB/s upload speed", 128, 399, 170, 13, 11, muted, TextAlignment::Left,
-         "bk_speed");
-    text(73, "About 3 hours remaining", 592, 399, 160, 13, 11, muted, TextAlignment::Right,
-         "bk_eta");
-    text(80, "FOLDERS", 122, 442, 80, 12, 9, muted, TextAlignment::Left,
-         "bk_folders_hdr", "Archivo@bold");
-    if (button(context, mk(root.ent(), 82),
-               box(scale, 700, 435, 52, 22)
-                   .with_label("Rescan")
-                   .with_font("Atkinson", pixels(13.f * scale))
-                   .with_custom_text_color(red)
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Right)
-                   .with_debug_name("bk_rescan"))) {
-      overall = 0.f;
-      for (float &value : folder_now)
-        value = 0.f;
+    panel(70, 122, 410, 629, 1, line);
+    const float speed = paused ? 0 : bandwidth * 40;
+    const int minutes = speed > 0 ? static_cast<int>(std::ceil((total_gb() - total_uploaded_gb()) * 1000 / speed / 60)) : 0;
+    text(72, fmt::format("{:.1f} MB/s simulated", speed), 122, 416, 300, 28, 18, ink, TextAlignment::Left, "bk_speed");
+    text(73, speed > 0 ? fmt::format("About {}h {}m remaining", minutes / 60, minutes % 60) : "Waiting to resume", 432, 416, 322, 28, 18, ink, TextAlignment::Right, "bk_eta");
+    text(80, "FOLDERS", 122, 452, 124, 25, 16, mid, TextAlignment::Left, "bk_folders_hdr", "AtkinsonMockBold");
+    text(81, "Progress", 290, 452, 200, 25, 16, mid);
+    text(83, "State", 530, 452, 116, 25, 16, mid);
+    text(84, "Size", 664, 452, 90, 25, 16, mid, TextAlignment::Right);
+    auto rescan = button(context, mk(root.ent(), 82), box(scale, 644, 365, 110, 34)
+        .with_label("Rescan").with_font("AtkinsonMock", pixels(18 * scale))
+        .with_custom_text_color(red).with_custom_background({245, 238, 235, 255})
+        .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
+        .with_on_draw_fg([scale, red](RectangleType r) {
+          const float x = r.x + 18 * scale, y = r.y + 17 * scale;
+          afterhours::draw_ring_segment(x, y, 6 * scale, 8 * scale, 40, 320, 24, red);
+          afterhours::draw_triangle({x + 6 * scale, y - 8 * scale}, {x + 1 * scale, y - 7 * scale}, {x + 6 * scale, y - 2 * scale}, red);
+        }).with_debug_name("bk_rescan"));
+    rescan.ent().get<HasLabel>().text_x_offset = 38 * scale;
+    if (rescan) {
+      folder_now.fill(0);
       paused = false;
       action_status = "Rescan started";
     }
-
     for (size_t i = 0; i < folders.size(); ++i) {
-      const float y = 469.f + static_cast<float>(i) * 29.f;
-      div(context, mk(root.ent(), 100 + static_cast<int>(i)),
-          box(scale, 121, y + 3, 16, 11)
-              .with_on_draw_fg([](RectangleType r) { draw_folder_icon(r); })
-              .with_debug_name("bk_icon_" + std::to_string(i)));
-      text(110 + static_cast<int>(i), folders[i].name, 146, y, 94, 15, 12, ink,
-           TextAlignment::Left, "bk_name_" + std::to_string(i));
-      div(context, mk(root.ent(), 120 + static_cast<int>(i)),
-          box(scale, 251, y + 3, 367, 5)
-              .with_on_draw_fg([value = folder_now[i]](RectangleType r) {
-                draw_track(r, value, value >= .995f ? afterhours::Color{103, 169, 135, 255}
-                                                    : afterhours::Color{230, 102, 91, 255});
-              })
-              .with_debug_name("bk_bar_" + std::to_string(i)));
-      text(130 + static_cast<int>(i), pct_text(folder_now[i]), 636, y, 42, 15, 10,
-           folder_now[i] >= .995f ? afterhours::Color{94, 155, 127, 255} : muted,
-           TextAlignment::Right, "bk_pct_" + std::to_string(i));
-      text(140 + static_cast<int>(i), folders[i].size, 691, y, 64, 15, 10, muted,
-           TextAlignment::Right, "bk_size_" + std::to_string(i));
+      const float y = 483 + static_cast<float>(i) * 25;
+      const bool done = folder_now[i] >= .995f;
+      const bool scanning = folder_now[i] + .001f < folders[i].target;
+      const std::string state = done ? "Done" : paused ? "Paused" : scanning ? "Scanning" : i == 1 ? "Uploading" : "Queued";
+      div(context, mk(root.ent(), 100 + static_cast<int>(i)), box(scale, 122, y + 7, 16, 12)
+          .with_on_draw_fg([](RectangleType r) { draw_folder_icon(r); }));
+      text(110 + static_cast<int>(i), folders[i].name, 146, y, 132, 24, 18, ink, TextAlignment::Left, "bk_name_" + std::to_string(i));
+      div(context, mk(root.ent(), 120 + static_cast<int>(i)), box(scale, 290, y + 10, 158, 7)
+          .with_on_draw_fg([value = folder_now[i], done](RectangleType r) { draw_track(r, value, done ? afterhours::Color{72, 141, 101, 255} : afterhours::Color{219, 100, 88, 255}); })
+          .with_debug_name("bk_bar_" + std::to_string(i)));
+      text(130 + static_cast<int>(i), fmt::format("{:.0f}%", folder_now[i] * 100), 457, y, 58, 24, 17, mid, TextAlignment::Right, "bk_pct_" + std::to_string(i));
+      text(150 + static_cast<int>(i), state, 547, y, 105, 24, 17, done ? afterhours::Color{45, 115, 77, 255} : mid, TextAlignment::Left, "bk_state_" + std::to_string(i));
+      if (done) div(context, mk(root.ent(), 170 + static_cast<int>(i)), box(scale, 529, y + 6, 12, 12)
+          .with_on_draw_fg([](RectangleType r) { afterhours::draw_line_ex({r.x, r.y + r.height / 2}, {r.x + r.width / 3, r.y + r.height}, 2, {45, 115, 77, 255}); afterhours::draw_line_ex({r.x + r.width / 3, r.y + r.height}, {r.x + r.width, r.y}, 2, {45, 115, 77, 255}); }));
+      text(140 + static_cast<int>(i), fmt::format("{:.1f} GB", folders[i].size_gb), 660, y, 94, 24, 17, ink, TextAlignment::Right, "bk_size_" + std::to_string(i));
     }
+    text(160, "Last completed backup: 2 hours ago", 146, 614, 606, 27, 18, {45, 115, 77, 255}, TextAlignment::Left, "bk_last_label");
+    div(context, mk(root.ent(), 161), box(scale, 124, 622, 14, 12)
+        .with_on_draw_fg([](RectangleType r) { afterhours::draw_line_ex({r.x, r.y + 5}, {r.x + 5, r.y + 11}, 2, {45, 115, 77, 255}); afterhours::draw_line_ex({r.x + 5, r.y + 11}, {r.x + 14, r.y}, 2, {45, 115, 77, 255}); }));
 
-    text(160, "Last completed backup", 132, 618, 135, 15, 11, muted, TextAlignment::Left,
-         "bk_last_label");
-    text(161, "2 hours ago", 282, 618, 92, 15, 11, mid, TextAlignment::Left,
-         "bk_last_value");
-
-    text(200, "Backup settings", 815, 200, 190, 22, 17, ink, TextAlignment::Left,
-         "bk_settings_title");
-    text(201, "Run backup", 815, 247, 120, 17, 12, mid, TextAlignment::Left,
-         "bk_run_label");
-    if (button(context, mk(root.ent(), 202),
-               box(scale, 1025, 238, 137, 27)
-                   .with_label(schedules[schedule_idx])
-                   .with_font("Atkinson", pixels(13.f * scale))
-                   .with_custom_text_color(afterhours::Color{81, 91, 102, 255})
-                   .with_custom_background(afterhours::Color{255, 255, 255, 255})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("bk_schedule"))) {
-      focused_control = 0;
-      change_schedule(1);
+    text(200, "Backup settings", 815, 194, 347, 32, 25, ink, TextAlignment::Left, "bk_settings_title");
+    const auto selector = [&](int id, const std::string &value, float y,
+                              const std::string &name, auto change) {
+      auto result = button(context, mk(root.ent(), id), box(scale, 986, y, 176, 36)
+          .with_label(value).with_font("AtkinsonMock", pixels(18 * scale))
+          .with_custom_text_color(ink).with_custom_background({255, 255, 255, 255})
+          .with_border({168, 179, 189, 255}, scale).with_alignment(TextAlignment::Left)
+          .with_text_inset(10 * scale, 0).with_on_draw_fg([scale, mid](RectangleType r) {
+            const float x = r.x + r.width - 21 * scale;
+            const float cy = r.y + r.height / 2;
+            afterhours::draw_line_ex({x, cy - 3 * scale}, {x + 5 * scale, cy + 2 * scale}, 2 * scale, mid);
+            afterhours::draw_line_ex({x + 5 * scale, cy + 2 * scale}, {x + 10 * scale, cy - 3 * scale}, 2 * scale, mid);
+          }).with_debug_name(name));
+      result.ent().template get<HasLabel>().text_x_offset = 10 * scale;
+      if (result || (context.has_focus(result.id()) && context.pressed(InputAction::WidgetRight))) change(1);
+      if (context.has_focus(result.id()) && context.pressed(InputAction::WidgetLeft)) change(-1);
+    };
+    text(201, "Run backup", 815, 240, 166, 30, 18, ink, TextAlignment::Left, "bk_run_label");
+    selector(202, schedules[schedule_idx], 237, "bk_schedule", [&](int delta) { change_schedule(delta); });
+    text(203, "Keep file versions", 815, 284, 166, 30, 18, ink, TextAlignment::Left, "bk_keep_label");
+    selector(204, retentions[retention_idx], 281, "bk_retention", [&](int delta) { change_retention(delta); });
+    text(205, "Bandwidth limit", 815, 327, 232, 28, 19, ink, TextAlignment::Left, "bk_bandwidth_label");
+    text(206, fmt::format("{:.0f}%", bandwidth * 100), 1072, 327, 90, 28, 19, red, TextAlignment::Right, "bk_bandwidth_pct");
+    auto bandwidth_slider = slider(context, mk(root.ent(), 207), bandwidth,
+        box(scale, 826, 359, 326, 32).with_custom_background({0, 0, 0, 0})
+            .with_on_draw_fg([value = bandwidth, scale](RectangleType r) {
+              const float width = std::max(0.f, r.width - 6.f);
+              const float cy = r.y + r.height / 2;
+              const float cx = r.x + width * value;
+              afterhours::draw_rectangle({r.x, cy - 3 * scale, width, 6 * scale}, {179, 189, 198, 255});
+              afterhours::draw_rectangle({r.x, cy - 3 * scale, width * value, 6 * scale}, {219, 100, 88, 255});
+              afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy), 11 * scale, {130, 60, 51, 255});
+              afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy), 9 * scale, {255, 255, 255, 255});
+              afterhours::draw_circle(static_cast<int>(cx), static_cast<int>(cy), 3 * scale, {219, 100, 88, 255});
+            }).with_debug_name("bk_bandwidth"));
+    for (const auto id : bandwidth_slider.cmp().children) {
+      auto &child = UICollectionHolder::getEntityForIDEnforce(id);
+      if (child.has<HasSliderState>()) child.get<UIComponentDebug>().set("bk_bandwidth_input");
     }
-    text(203, "Keep file versions", 815, 293, 150, 17, 12, mid, TextAlignment::Left,
-         "bk_keep_label");
-    if (button(context, mk(root.ent(), 204),
-               box(scale, 1025, 284, 137, 27)
-                   .with_label(retentions[retention_idx])
-                   .with_font("Atkinson", pixels(13.f * scale))
-                   .with_custom_text_color(afterhours::Color{81, 91, 102, 255})
-                   .with_custom_background(afterhours::Color{255, 255, 255, 255})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("bk_retention"))) {
-      focused_control = 1;
-      change_retention(1);
+    text(208, "0 MB/s", 815, 391, 130, 24, 16, mid);
+    text(209, "40 MB/s", 1032, 391, 130, 24, 16, mid, TextAlignment::Right);
+    text(210, fmt::format("Cap: {:.1f} MB/s of 40 MB/s", bandwidth * 40), 815, 415, 347, 26, 18, ink, TextAlignment::Left, "bk_readout");
+    const auto check = [&](int id, const std::string &label, float y, bool &value,
+                           const std::string &name, const std::string &box_name) {
+      auto result = button(context, mk(root.ent(), id), box(scale, 815, y, 347, 36)
+          .with_label(label).with_font("AtkinsonMock", pixels(18 * scale))
+          .with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+          .with_text_inset(34 * scale, 0).with_debug_name(name));
+      result.ent().get<HasLabel>().text_x_offset = 34 * scale;
+      if (result) {
+        value = !value;
+        action_status = label + (value ? ": On" : ": Off");
+      }
+      div(context, mk(root.ent(), id + 1), box(scale, 817, y + 8, 20, 20)
+          .with_ignore_pointer_events().with_debug_name(box_name)
+          .with_on_draw_fg([value, scale](RectangleType r) {
+            afterhours::draw_rectangle(r, value ? afterhours::Color{185, 66, 54, 255} : afterhours::Color{255, 255, 255, 255});
+            raylib::DrawRectangleLinesEx(r, 1.5f * scale, {124, 137, 149, 255});
+            if (!value) return;
+            afterhours::draw_line_ex({r.x + 4 * scale, r.y + 10 * scale}, {r.x + 8 * scale, r.y + 14 * scale}, 2 * scale, {255, 255, 255, 255});
+            afterhours::draw_line_ex({r.x + 8 * scale, r.y + 14 * scale}, {r.x + 16 * scale, r.y + 5 * scale}, 2 * scale, {255, 255, 255, 255});
+          }));
+    };
+    check(211, "Pause on battery power", 447, pause_on_battery, "bk_battery_label", "bk_battery_box");
+    check(214, "Include external drives", 485, backup_externals, "bk_external_label", "bk_external_box");
+    panel(220, 815, 532, 347, 1, line);
+    text(221, "ACCOUNT STORAGE", 815, 541, 347, 25, 16, mid, TextAlignment::Left, "bk_account_hdr", "AtkinsonMockBold");
+    text(222, "787 GB of 2 TB · 39.4% used", 815, 568, 347, 27, 20, ink, TextAlignment::Left, "bk_plan");
+    div(context, mk(root.ent(), 223), box(scale, 815, 601, 347, 8)
+        .with_on_draw_fg([](RectangleType r) { draw_storage(r); }).with_debug_name("bk_storage"));
+    if (button(context, mk(root.ent(), 224), box(scale, 815, 614, 240, 30)
+        .with_label("Manage account  >").with_font("AtkinsonMock", pixels(18 * scale))
+        .with_custom_text_color(red).with_alignment(TextAlignment::Left)
+        .with_debug_name("bk_manage"))) {
+      detail = Detail::Account;
+      detail_open = true;
+      action_status = "Account preview opened";
     }
-    text(205, "Bandwidth limit", 815, 334, 150, 17, 12, mid, TextAlignment::Left,
-         "bk_bandwidth_label");
-    text(206, fmt::format("{:.0f}%", bandwidth * 100.f), 1124, 334, 38, 17, 12, red,
-         TextAlignment::Right, "bk_bandwidth_pct");
-    if (button(context, mk(root.ent(), 207),
-               box(scale, 816, 356, 344, 16)
-                   .with_label("")
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_on_draw_fg([value = bandwidth](RectangleType r) { draw_slider(r, value); })
-                   .with_debug_name("bk_bandwidth"))) {
-      focused_control = 2;
-      change_bandwidth(1);
-    }
-    text(208, "Slower", 816, 378, 45, 11, 9, muted);
-    text(209, "Faster", 1134, 378, 45, 11, 9, muted, TextAlignment::Right);
-    text(210, fmt::format("Up to {:.1f} MB/s", bandwidth * 40.f), 815, 397, 130, 13, 10,
-         muted, TextAlignment::Left, "bk_readout");
-
-    if (button(context, mk(root.ent(), 211),
-               box(scale, 833, 418, 180, 18)
-                   .with_label("Pause on battery power")
-                   .with_font("Atkinson", pixels(13.f * scale))
-                   .with_custom_text_color(afterhours::Color{114, 124, 134, 255})
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Left)
-                   .with_debug_name("bk_battery_label"))) {
-      focused_control = 3;
-      pause_on_battery = !pause_on_battery;
-      action_status = pause_on_battery ? "Battery pause enabled" : "Battery pause disabled";
-    }
-    div(context, mk(root.ent(), 212),
-        box(scale, 815, 419, 12, 12)
-            .with_custom_background(pause_on_battery ? red : afterhours::Color{255, 255, 255, 255})
-            .with_debug_name("bk_battery_box"));
-    if (button(context, mk(root.ent(), 214),
-               box(scale, 833, 444, 180, 18)
-                   .with_label("Include external drives")
-                   .with_font("Atkinson", pixels(13.f * scale))
-                   .with_custom_text_color(afterhours::Color{114, 124, 134, 255})
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Left)
-                   .with_debug_name("bk_external_label"))) {
-      focused_control = 4;
-      backup_externals = !backup_externals;
-      action_status = backup_externals ? "External drives included" : "External drives excluded";
-    }
-    div(context, mk(root.ent(), 215),
-        box(scale, 815, 445, 12, 12)
-            .with_custom_background(backup_externals ? red : afterhours::Color{255, 255, 255, 255})
-            .with_debug_name("bk_external_box"));
-    panel(220, 815, 471, 347, 1, afterhours::Color{221, 225, 229, 255});
-    text(221, "ACCOUNT STORAGE", 815, 492, 130, 12, 9, afterhours::Color{141, 152, 164, 255},
-         TextAlignment::Left, "bk_account_hdr", "Archivo");
-    text(222, "787 GB of 2 TB", 815, 517, 130, 14, 11, afterhours::Color{100, 111, 124, 255},
-         TextAlignment::Left, "bk_plan");
-    div(context, mk(root.ent(), 223), box(scale, 815, 538, 347, 5)
-                                      .with_on_draw_fg([](RectangleType r) { draw_storage(r); })
-                                      .with_debug_name("bk_storage"));
-    if (button(context, mk(root.ent(), 224),
-               box(scale, 815, 559, 120, 16)
-                   .with_label("Manage account")
-                   .with_font("Atkinson", pixels(12.f * scale))
-                   .with_custom_text_color(afterhours::Color{185, 114, 103, 255})
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Left)
-                   .with_debug_name("bk_manage"))) {
-      action_status = "Plan details opened";
-    }
-    panel(240, 90, 650, 1100, 37, afterhours::Color{250, 250, 250, 255}, "bk_footer");
-    panel(241, 90, 650, 1100, 1, afterhours::Color{228, 228, 228, 255});
-    panel(242, 117, 664, 8, 10, afterhours::Color{181, 193, 111, 255});
-    text(243, "Your files are encrypted and stored safely offsite.", 130, 665, 330, 13, 10,
-         muted, TextAlignment::Left, "bk_footer_text");
-    if (button(context, mk(root.ent(), 244),
-               box(scale, 1145, 658, 20, 20)
-                   .with_label("?")
-                   .with_font("Atkinson", pixels(14.f * scale))
-                   .with_custom_text_color(afterhours::Color{170, 170, 170, 255})
-                   .with_custom_background(afterhours::Color{255, 255, 255, 255})
-                   .with_alignment(TextAlignment::Center)
-                   .with_debug_name("bk_help"))) {
+    panel(240, 90, 650, 1100, 37, {250, 250, 250, 255}, "bk_footer");
+    panel(241, 90, 650, 1100, 1, line);
+    div(context, mk(root.ent(), 242), box(scale, 111, 659, 16, 18)
+        .with_on_draw_fg([scale](RectangleType r) {
+          afterhours::draw_rectangle({r.x + 2 * scale, r.y + 7 * scale, 12 * scale, 11 * scale}, {66, 112, 86, 255});
+          raylib::DrawRectangleLinesEx({r.x + 4 * scale, r.y, 8 * scale, 11 * scale}, 2 * scale, {66, 112, 86, 255});
+        }));
+    text(243, "Encrypted backup preview · no files are uploaded", 138, 656, 540, 27, 16, mid, TextAlignment::Left, "bk_footer_text");
+    if (button(context, mk(root.ent(), 244), box(scale, 1144, 653, 34, 31)
+        .with_label("?").with_font("AtkinsonMock", pixels(23 * scale))
+        .with_custom_text_color(ink).with_custom_background({229, 236, 241, 255})
+        .with_corner_radius(5 * scale).with_alignment(TextAlignment::Center).with_debug_name("bk_help"))) {
+      detail = Detail::Help;
+      detail_open = true;
       action_status = "Backup help opened";
     }
-    text(245, action_status, 915, 665, 210, 13, 10, muted, TextAlignment::Right,
-         "bk_action_status");
+    text(245, action_status, 694, 656, 432, 27, 16, mid, TextAlignment::Right, "bk_action_status");
+    std::string detail_title, detail_text;
+    if (detail == Detail::Restore) {
+      detail_title = "Restore files preview";
+      detail_text = "Documents and Projects are complete in this demo. Restoring a file requires a connected backup service.";
+    } else if (detail == Detail::Account) {
+      detail_title = "Personal Backup plan";
+      detail_text = "All backup versions use 787 GB of a 2,000 GB account. The folder table shows this computer's current upload only. Account management is unavailable in this local demo.";
+    } else {
+      detail_title = "Backup help";
+      detail_text = "Pause stops the preview. Rescan replays folder discovery. The bandwidth slider sets the simulated transfer cap; no files leave this application.";
+    }
+    if (auto dialog = afterhours::modal(context, mk(entity, 900), detail_open,
+          afterhours::ModalConfig{}.with_size(pixels(620 * scale), pixels(310 * scale)).with_title(detail_title))) {
+      dialog_presentation::style_title(dialog.ent());
+      dialog.ent().get<UIComponentDebug>().set("bk_detail_panel");
+      div(context, mk(dialog.ent(), 0), ComponentConfig{}
+          .with_size({percent(1), pixels(150 * scale)}).with_label(detail_text)
+          .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
+          .with_text_overflow(TextOverflow::Wrap).with_render_layer(1001));
+      if (button(context, mk(dialog.ent(), 1), ComponentConfig{}
+          .with_size({pixels(140 * scale), pixels(40 * scale)}).with_label("Close")
+          .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_text_color(ink)
+          .with_custom_background({229, 236, 241, 255}).with_render_layer(1001)
+          .with_debug_name("bk_detail_close"))) detail_open = false;
+    }
   }
 };
 

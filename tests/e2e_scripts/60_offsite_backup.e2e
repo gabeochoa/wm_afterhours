@@ -2,17 +2,18 @@
 # Keeps the seeded backup and rescan regression coverage.
 
 goto_screen offsite_backup
+resize 1280 720
 wait 2.0
 
 expect_text "Backing up your files"
 
 # The ring seeds at its resting value rather than easing up from zero, so the
 # byte readout is stable on the first frame.
-expect_text "493 GB of 787 GB uploaded"
+expect_text "242 GB of 787 GB uploaded"
 expect_text "2 of 5 folders complete"
 
 # Per-folder bars: the two finished folders say so, the rest show a percentage.
-expect_text "done"
+expect_text "Done"
 expect_text "71%"
 expect_text "8%"
 

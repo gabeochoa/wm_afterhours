@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,580 completed; 955 remaining.
+1,605 completed; 930 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5238,79 +5238,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/offsite_backup_720p.png) · [Visual review](design-audit.html#screen=offsite_backup)
 
-- [ ] `offsite_backup-01` · P2 · defect. Summary versus folders: Derive totals and ring progress from the same folder data or label differing scopes explicitly.
+- [x] `offsite_backup-01` · P2 · defect. Summary versus folders: Derive totals and ring progress from the same folder data or label differing scopes explicitly.
   Evidence: 493 GB uploaded is reported, but visible folder sizes and percentages imply about 242 GB uploaded.
 
-- [ ] `offsite_backup-02` · P2 · proposal. Backup ring: Increase the caption and center the value group.
+- [x] `offsite_backup-02` · P2 · proposal. Backup ring: Increase the caption and center the value group.
   Evidence: 63% has a tiny COMPLETE caption.
 
-- [ ] `offsite_backup-03` · P2 · proposal. Pause backup: Use a readable secondary button with a pause icon.
+- [x] `offsite_backup-03` · P2 · proposal. Pause backup: Use a readable secondary button with a pause icon.
   Evidence: Pause backup is tiny and pale.
 
-- [ ] `offsite_backup-04` · P2 · proposal. Transfer speed: Increase contrast and emphasize the value.
+- [x] `offsite_backup-04` · P2 · proposal. Transfer speed: Increase contrast and emphasize the value.
   Evidence: 24.8 MB/s is faint in the transfer row.
 
-- [ ] `offsite_backup-05` · P2 · proposal. Remaining time: Give the estimate a stronger value treatment.
+- [x] `offsite_backup-05` · P2 · proposal. Remaining time: Give the estimate a stronger value treatment.
   Evidence: About 3 hours remaining is low-contrast metadata.
 
-- [ ] `offsite_backup-06` · P2 · proposal. Healthy badge: Use a recognizable status dot and readable text.
+- [x] `offsite_backup-06` · P2 · proposal. Healthy badge: Use a recognizable status dot and readable text.
   Evidence: Healthy has tiny text and a square marker.
 
-- [ ] `offsite_backup-07` · P2 · proposal. Plan subtitle: Increase readability and use a centered-dot separator.
+- [x] `offsite_backup-07` · P2 · proposal. Plan subtitle: Increase readability and use a centered-dot separator.
   Evidence: Personal Backup - 2 TB plan is very small.
 
-- [ ] `offsite_backup-08` · P2 · proposal. Folder table headings: Add Progress and Size headings.
+- [x] `offsite_backup-08` · P2 · proposal. Folder table headings: Add Progress and Size headings.
   Evidence: FOLDERS is the only heading above progress, state, and size columns.
 
-- [ ] `offsite_backup-09` · P2 · proposal. Completed state: Use Done with a check icon consistently.
+- [x] `offsite_backup-09` · P2 · proposal. Completed state: Use Done with a check icon consistently.
   Evidence: done is plain lowercase text beside green bars.
 
-- [ ] `offsite_backup-10` · P2 · proposal. Uploading state: Mark the active upload and identify queued folders if applicable.
+- [x] `offsite_backup-10` · P2 · proposal. Uploading state: Mark the active upload and identify queued folders if applicable.
   Evidence: Photos, Music, and Archive have no activity distinction.
 
-- [ ] `offsite_backup-11` · P2 · proposal. Folder sizes: Increase their size and retain right alignment.
+- [x] `offsite_backup-11` · P2 · proposal. Folder sizes: Increase their size and retain right alignment.
   Evidence: Size values are tiny and pale.
 
-- [ ] `offsite_backup-12` · P2 · proposal. Rescan: Use a readable refresh action with an icon.
+- [x] `offsite_backup-12` · P2 · proposal. Rescan: Use a readable refresh action with an icon.
   Evidence: Rescan is tiny red text.
 
-- [ ] `offsite_backup-13` · P2 · proposal. Schedule selectors: Add visible select affordances.
+- [x] `offsite_backup-13` · P2 · proposal. Schedule selectors: Add visible select affordances.
   Evidence: Every 4 hours and 1 year lack chevrons or strong boundaries.
 
-- [ ] `offsite_backup-14` · P2 · proposal. Schedule labels: Increase contrast and align both rows.
+- [x] `offsite_backup-14` · P2 · proposal. Schedule labels: Increase contrast and align both rows.
   Evidence: Run backup and Keep file versions are faint.
 
-- [ ] `offsite_backup-15` · P2 · proposal. Bandwidth meaning: Pair it directly with the actual 24.8 MB/s cap.
+- [x] `offsite_backup-15` · P2 · proposal. Bandwidth meaning: Pair it directly with the actual 24.8 MB/s cap.
   Evidence: 62% does not identify the full-speed reference.
 
-- [ ] `offsite_backup-16` · P2 · proposal. Bandwidth thumb: Add a contrasting border and larger grip.
+- [x] `offsite_backup-16` · P2 · proposal. Bandwidth thumb: Add a contrasting border and larger grip.
   Evidence: The small coral thumb blends into the fill.
 
-- [ ] `offsite_backup-17` · P2 · proposal. Slider endpoints: Use readable endpoint labels or measured speeds.
+- [x] `offsite_backup-17` · P2 · proposal. Slider endpoints: Use readable endpoint labels or measured speeds.
   Evidence: Slower and Faster are extremely small.
 
-- [ ] `offsite_backup-18` · P2 · proposal. Battery checkbox: Render a clear checkmark inside it.
+- [x] `offsite_backup-18` · P2 · proposal. Battery checkbox: Render a clear checkmark inside it.
   Evidence: The checked state is a solid red square without a check.
 
-- [ ] `offsite_backup-19` · P2 · proposal. External-drive checkbox: Add a visible outline.
+- [x] `offsite_backup-19` · P2 · proposal. External-drive checkbox: Add a visible outline.
   Evidence: The white unchecked square blends into the panel.
 
-- [ ] `offsite_backup-20` · P2 · proposal. Checkbox labels: Increase label size and row spacing.
+- [x] `offsite_backup-20` · P2 · proposal. Checkbox labels: Increase label size and row spacing.
   Evidence: Both settings use tiny text.
 
-- [ ] `offsite_backup-21` · P2 · proposal. Storage values: Strengthen the values and add percent used.
+- [x] `offsite_backup-21` · P2 · proposal. Storage values: Strengthen the values and add percent used.
   Evidence: 787 GB of 2 TB has weak emphasis.
 
-- [ ] `offsite_backup-22` · P2 · proposal. Manage account: Increase readability and add a navigation cue.
+- [x] `offsite_backup-22` · P2 · proposal. Manage account: Increase readability and add a navigation cue.
   Evidence: The link is tiny coral text.
 
-- [ ] `offsite_backup-23` · P2 · proposal. Last completed backup: Increase contrast and add a checkmark.
+- [x] `offsite_backup-23` · P2 · proposal. Last completed backup: Increase contrast and add a checkmark.
   Evidence: The success line is faint beneath the folders.
 
-- [ ] `offsite_backup-24` · P2 · proposal. Security footer: Use a recognizable lock and readable text.
+- [x] `offsite_backup-24` · P2 · proposal. Security footer: Use a recognizable lock and readable text.
   Evidence: A green square precedes the encryption statement.
 
-- [ ] `offsite_backup-25` · P2 · proposal. Help button: Increase icon contrast and button size.
+- [x] `offsite_backup-25` · P2 · proposal. Help button: Increase icon contrast and button size.
   Evidence: The question mark nearly disappears in its white square.
 
 ### pagination

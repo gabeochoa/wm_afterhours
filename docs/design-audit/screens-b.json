@@ -6444,7 +6444,8 @@
         "change": "Increase icon contrast and button size."
       }
     ],
-    "sha256": "64a26a3f494b615b0ef65c4143eb4a63f85aad21adc40294e5bb0c16714382e9"
+    "sha256": "64a26a3f494b615b0ef65c4143eb4a63f85aad21adc40294e5bb0c16714382e9",
+    "evidence": "docs/design-audit/originals/offsite_backup_720p.png"
   },
   {
     "id": "pagination",

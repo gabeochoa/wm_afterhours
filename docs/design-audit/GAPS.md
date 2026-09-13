@@ -2658,7 +2658,7 @@ Border shapes, colors, and transparency variants are intentional. Improve parame
 
 ## offsite backup
 
-[Current baseline](../../screenshot-baselines/screens/offsite_backup_720p.png) · [Visual review](../../design-audit.html#screen=offsite_backup)
+[Reviewed image](../../docs/design-audit/originals/offsite_backup_720p.png) · [Current baseline](../../screenshot-baselines/screens/offsite_backup_720p.png) · [Visual review](../../design-audit.html#screen=offsite_backup)
 
 Baseline SHA-256: `64a26a3f494b615b0ef65c4143eb4a63f85aad21adc40294e5bb0c16714382e9`
 
