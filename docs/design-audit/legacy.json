@@ -163,8 +163,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Left Panel focus outline. Same widely separated row and stack examples, small explanatory footer and detached separator lines.",
-    "sha256": "ece2b824a9b680b137809855afed1e3cbcfcc0a3aeaec08c91e19dba4466909b",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "aeca1ccd011b42111646c804230681c44a61946706799ea133c5794f1148b8d6",
     "additional_findings": []
   },
   {

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,225 completed; 1,310 remaining.
+1,241 completed; 1,294 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4243,52 +4243,53 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/layout_720p.png) · [Visual review](design-audit.html#screen=layout)
 
-- [ ] `layout-01` · P2 · proposal. Page title: Add Row and column layouts as a concise subtitle.
+- [x] `layout-01` · P2 · proposal. Page title: Add Row and column layouts as a concise subtitle.
   Evidence: Layout System Demo does not identify the two demonstrated arrangements.
 
-- [ ] `layout-02` · P2 · proposal. Top sample: Label the top frame Row · centered children.
+- [x] `layout-02` · P2 · proposal. Top sample: Label the top frame Row · centered children.
   Evidence: Left, Center, and Right panels have no local section heading.
 
-- [ ] `layout-03` · P2 · proposal. Lower sample: Label the lower frame Column · stacked children.
+- [x] `layout-03` · P2 · proposal. Lower sample: Label the lower frame Column · stacked children.
   Evidence: Stacked Item 1 through 3 have no local section heading.
 
-- [ ] `layout-04` · P2 · proposal. Guide order: Order the guide descriptions to match the examples.
+- [x] `layout-04` · P2 · proposal. Guide order: Order the guide descriptions to match the examples.
   Evidence: The footer describes Column before Row while the examples show Row first.
 
-- [ ] `layout-05` · P2 · proposal. Guide proximity: Place each explanation directly beneath its sample.
+- [x] `layout-05` · P2 · proposal. Guide proximity: Place each explanation directly beneath its sample.
   Evidence: Row and Column descriptions are far below their corresponding samples.
 
-- [ ] `layout-06` · P3 · proposal. Panel names: Use numbered items and keep position names in the frame caption.
+- [x] `layout-06` · P3 · proposal. Panel names: Use numbered items and keep position names in the frame caption.
   Evidence: Left Panel and Right Panel describe position rather than the layout rule.
 
-- [ ] `layout-07` · P3 · proposal. Top row gaps: Add a fixed-gap annotation outside the samples.
+- [x] `layout-07` · P3 · proposal. Top row gaps: Add a fixed-gap annotation outside the samples.
   Evidence: The gaps between three fixed-width panels are visible but unmeasured.
+  Disposition: The row uses two adjacent 28px margins, producing a 56px gap. Captions show that composition rather than claiming a configured gap.
 
-- [ ] `layout-08` · P3 · proposal. Column gaps: Add a vertical gap bracket with the configured value.
+- [x] `layout-08` · P3 · proposal. Column gaps: Add a vertical gap bracket with the configured value.
   Evidence: The tightly stacked items have no spacing caption.
 
-- [ ] `layout-09` · P3 · proposal. Margins statement: Draw an external margin guide around one sample frame.
+- [x] `layout-09` · P3 · proposal. Margins statement: Draw an external margin guide around one sample frame.
   Evidence: Margins control spacing has no visual reference.
 
-- [ ] `layout-10` · P2 · proposal. Column inner frame: Label Parent and Child stack outside their boundaries.
+- [x] `layout-10` · P2 · proposal. Column inner frame: Label Parent and Child stack outside their boundaries.
   Evidence: A gray rounded panel nests inside a large white panel without naming their roles.
 
-- [ ] `layout-11` · P3 · proposal. Sample color mapping: Add a small color key linking the same three items across both layouts.
+- [x] `layout-11` · P3 · proposal. Sample color mapping: Add a small color key linking the same three items across both layouts.
   Evidence: Green, brown, and rust are reused without an explicit item-identity key.
 
-- [ ] `layout-12` · P2 · proposal. Sample typography: Increase sample-label size with equal insets.
+- [x] `layout-12` · P2 · proposal. Sample typography: Increase sample-label size with equal insets.
   Evidence: Panel names and stacked-item text are small relative to their large colored blocks.
 
-- [ ] `layout-13` · P3 · proposal. Divider lengths: Align divider endpoints with the shared content inset.
+- [x] `layout-13` · P3 · proposal. Divider lengths: Align divider endpoints with the shared content inset.
   Evidence: The thin separators are narrower than the white sample panels.
 
-- [ ] `layout-14` · P2 · proposal. Theme footer: Increase footer readability and separate theme metadata from the layout lesson.
+- [x] `layout-14` · P2 · proposal. Theme footer: Increase footer readability and separate theme metadata from the layout lesson.
   Evidence: Using Sage Natural theme with responsive layouts is tiny at the bottom.
 
-- [ ] `layout-15` · P3 · proposal. Responsive claim: Show current viewport and parent widths as demo metadata.
+- [x] `layout-15` · P3 · proposal. Responsive claim: Show current viewport and parent widths as demo metadata.
   Evidence: The footer names responsive layouts without exposing container dimensions.
 
-- [ ] `layout-16` · P3 · proposal. Vertical composition: Center the complete composition vertically within the viewport.
+- [x] `layout-16` · P3 · proposal. Vertical composition: Center the complete composition vertically within the viewport.
   Evidence: The demo's pale root panel leaves a black band below it.
 
 ### layout_bug_repros

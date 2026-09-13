@@ -3764,7 +3764,8 @@
         "change": "Center the complete composition vertically within the viewport."
       }
     ],
-    "sha256": "4b54ed57c809259cea0fdfdcb280df7c001d2a498583d57454596ea2f2feead3"
+    "sha256": "4b54ed57c809259cea0fdfdcb280df7c001d2a498583d57454596ea2f2feead3",
+    "evidence": "docs/design-audit/originals/layout_720p.png"
   },
   {
     "id": "layout_bug_repros",

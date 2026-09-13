@@ -2170,7 +2170,7 @@ Current capture removes the EN focus outline. English, Korean and Japanese examp
 
 ## layout
 
-[Current baseline](../../screenshot-baselines/screens/layout_720p.png) · [Visual review](../../design-audit.html#screen=layout)
+[Reviewed image](../../docs/design-audit/originals/layout_720p.png) · [Current baseline](../../screenshot-baselines/screens/layout_720p.png) · [Visual review](../../design-audit.html#screen=layout)
 
 Baseline SHA-256: `4b54ed57c809259cea0fdfdcb280df7c001d2a498583d57454596ea2f2feead3`
 
@@ -2199,7 +2199,7 @@ The row and column arrangements are intentional examples. Sixteen distinct propo
 
 [Image](../../baseline_screenshots/layout.png)
 
-Current capture removes Left Panel focus outline. Same widely separated row and stack examples, small explanatory footer and detached separator lines.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## layout bug repros
 

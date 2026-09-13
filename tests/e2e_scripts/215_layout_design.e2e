@@ -1,0 +1,71 @@
+goto_screen layout
+resize 1280 720
+wait 0.4
+expect_text "Layout System Demo"
+expect_text "Row and column layouts"
+expect_text "Row / centered children"
+expect_text "Column / stacked children"
+expect_text "Parent frame"
+expect_text "Child stack"
+expect_text "Item 1"
+expect_text "Item 2"
+expect_text "Item 3"
+expect_text "Row: left to right. Item width 180 px; 28 px side margins make 56 px gaps."
+expect_text "3 px gap"
+expect_text "Column: top to bottom. Each item is 95% of the stack's content width and 40 px high."
+expect_text "Sage Natural theme  /  Viewport 1280 x 720  /  Parent widths: row 1136 px, column 1136 px"
+expect_text "Select any item to highlight its match in the other layout."
+assert_ui layout_canvas w=1280 h=720
+assert_ui layout_main x=48 y=24 w=1184 h=672
+assert_ui row_container x=72 y=156 w=1136 h=120
+assert_ui layout_row_item_0 x=314 y=176 w=180 h=80
+assert_ui layout_row_item_1 x=550 y=176 w=180 h=80
+assert_ui layout_row_item_2 x=786 y=176 w=180 h=80
+assert_ui layout_margin_guide x=286 y=176 w=236 h=80
+assert_ui col_demo_container x=72 y=364 w=1136 h=220
+assert_ui stacked_column x=311 y=384 w=658 h=180
+assert_ui layout_column_item_0 y=392 w=610 h=40
+assert_ui layout_column_item_1 y=435 w=610 h=40
+assert_ui layout_column_item_2 y=478 w=610 h=40
+assert_ui layout_column_gap_guide x=981 y=432 w=12 h=3
+assert_ui section_separator_1 x=72 w=1136 h=1
+assert_ui section_separator_2 x=72 w=1136 h=1
+assert_no_overflow
+assert_within_parents
+screenshot layout_design
+click_ui layout_row_item_1
+wait 0.2
+expect_text "Selected: Item 2 from Row. Colors identify the same items in both arrangements."
+focus_ui layout_column_item_2
+key ENTER
+wait 0.2
+expect_text "Selected: Item 3 from Column. Colors identify the same items in both arrangements."
+resize 1920 1080
+wait 0.3
+expect_text "Row: left to right. Item width 180 px; 42 px side margins make 84 px gaps."
+expect_text "3 px gap"
+expect_text "Sage Natural theme  /  Viewport 1920 x 1080  /  Parent widths: row 1704 px, column 1704 px"
+assert_ui layout_main x=72 y=36 w=1776 h=1008
+assert_ui row_container x=108 y=234 w=1704 h=180
+assert_ui layout_row_item_0 w=180 h=120
+assert_ui layout_column_item_0 h=40
+assert_ui section_separator_1 x=108 w=1704 h=2
+assert_ui section_separator_2 x=108 w=1704 h=2
+assert_no_overflow
+assert_within_parents
+screenshot layout_design_1080
+resize 1024 768
+wait 0.3
+expect_text "Row: left to right. Item width 180 px; 22 px side margins make 45 px gaps."
+expect_text "3 px gap"
+expect_text "Sage Natural theme  /  Viewport 1024 x 768  /  Parent widths: row 909 px, column 909 px"
+assert_ui layout_canvas w=1024 h=768
+assert_ui layout_main x=38 y=115 w=947 h=538
+assert_ui row_container x=58 y=221 w=909 h=96
+assert_ui layout_row_item_0 w=180 h=64
+assert_ui col_demo_container x=58 y=387 w=909 h=176
+assert_ui layout_column_item_0 h=40
+assert_no_overflow
+assert_within_parents
+screenshot layout_design_narrow
+resize 1280 720
