@@ -3,15 +3,16 @@
 
 # Navigate to the text shadow screen
 goto_screen text_shadow
+resize 1280 720
 wait 0.5
 
 # Validate screen against baseline
 validate_screen text_shadow
 
 # Verify we're on the correct screen
-expect_text "Text Drop Shadow"
-expect_text "NO SHADOW"
-expect_text "WITH SHADOW"
+expect_text "Text drop shadow"
+expect_text "S1 / No shadow"
+expect_text "S2 / x +6.0, y +6.0px"
 
 screenshot text_shadow_display
 

@@ -3815,7 +3815,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## text shadow
 
-[Current baseline](../../screenshot-baselines/screens/text_shadow_720p.png) · [Visual review](../../design-audit.html#screen=text_shadow)
+[Reviewed image](../../docs/design-audit/originals/text_shadow_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_shadow_720p.png) · [Visual review](../../design-audit.html#screen=text_shadow)
 
 Baseline SHA-256: `a3630e5e8b01270685a7fd9cd44562fa743a9c3e382299a52329ed1da84b6759`
 
@@ -3847,7 +3847,7 @@ The offset ladder and exaggerated shadows are intentional. Nineteen proposals im
 
 [Image](../../baseline_screenshots/text_shadow.png)
 
-Pixel-identical. Heading shadow competes with the heading itself, and LIGHT captions sit on the lower panel edge. The 1px to 10px samples deliberately expose strong shadow offsets.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## text stroke
 

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,411 completed; 124 remaining.
+2,430 completed; 105 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7516,61 +7516,61 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_shadow_720p.png) · [Visual review](design-audit.html#screen=text_shadow)
 
-- [ ] `text_shadow-01` · P2 · proposal. Page title shadow: Use a restrained title shadow and reserve extreme offsets for the labeled specimens.
+- [x] `text_shadow-01` · P2 · proposal. Page title shadow: Use a restrained title shadow and reserve extreme offsets for the labeled specimens.
   Evidence: Text Drop Shadow has a heavy offset shadow overlapping its letterforms.
 
-- [ ] `text_shadow-02` · P2 · proposal. Subtitle placement: Align it beneath the title or make it a clearly separate page introduction.
+- [x] `text_shadow-02` · P2 · proposal. Subtitle placement: Align it beneath the title or make it a clearly separate page introduction.
   Evidence: The subtitle starts at the far left while the title is centered.
 
-- [ ] `text_shadow-03` · P2 · proposal. No-shadow comparison: Repeat the same text and move variant labels outside the specimens.
+- [x] `text_shadow-03` · P2 · proposal. No-shadow comparison: Repeat the same text and move variant labels outside the specimens.
   Evidence: NO SHADOW and WITH SHADOW use different phrases.
 
-- [ ] `text_shadow-04` · P2 · proposal. Comparison offset: Add x/y offset and opacity metadata.
+- [x] `text_shadow-04` · P2 · proposal. Comparison offset: Add x/y offset and opacity metadata.
   Evidence: The WITH SHADOW specimen does not show its exact offset.
 
-- [ ] `text_shadow-05` · P2 · proposal. Soft/hard comparison: Use identical specimen text with separate Soft and Hard captions.
+- [x] `text_shadow-05` · P2 · proposal. Soft/hard comparison: Use identical specimen text with separate Soft and Hard captions.
   Evidence: SOFT and HARD change the words while comparing shadow presets.
 
-- [ ] `text_shadow-06` · P2 · proposal. Soft-shadow metadata: Show the preset's blur, offset and alpha parameters.
+- [x] `text_shadow-06` · P2 · proposal. Soft-shadow metadata: Show the preset's blur, offset and alpha parameters.
   Evidence: The glow description omits blur and opacity values.
 
-- [ ] `text_shadow-07` · P2 · proposal. Hard-shadow metadata: Add its exact offset and opacity for comparison with Soft.
+- [x] `text_shadow-07` · P2 · proposal. Hard-shadow metadata: Add its exact offset and opacity for comparison with Soft.
   Evidence: HARD has no parameter label.
 
-- [ ] `text_shadow-08` · P2 · proposal. Colored shadow: Display both foreground and shadow color tokens.
+- [x] `text_shadow-08` · P2 · proposal. Colored shadow: Display both foreground and shadow color tokens.
   Evidence: COLORED is cyan/red but no color values are shown.
 
-- [ ] `text_shadow-09` · P2 · proposal. Combo specimen: Add stroke width and shadow offset in an external caption.
+- [x] `text_shadow-09` · P2 · proposal. Combo specimen: Add stroke width and shadow offset in an external caption.
   Evidence: COMBO mixes stroke and shadow without separate measurements.
 
-- [ ] `text_shadow-10` · P2 · defect. LIGHT caption placement: Place one caption directly beneath each LIGHT specimen.
+- [x] `text_shadow-10` · P2 · defect. LIGHT caption placement: Place one caption directly beneath each LIGHT specimen.
   Evidence: flat look and more depth! both sit beneath the left half of the panel.
 
-- [ ] `text_shadow-11` · P2 · defect. LIGHT bottom inset: Increase panel height or move captions up to leave 10 px bottom inset.
+- [x] `text_shadow-11` · P2 · defect. LIGHT bottom inset: Increase panel height or move captions up to leave 10 px bottom inset.
   Evidence: The LIGHT captions nearly touch the dark panel's bottom edge.
 
-- [ ] `text_shadow-12` · P2 · proposal. Offset ladder heading: Label the ladder with the x/y offset convention.
+- [x] `text_shadow-12` · P2 · proposal. Offset ladder heading: Label the ladder with the x/y offset convention.
   Evidence: Shadow Offset Examples does not specify direction.
 
-- [ ] `text_shadow-13` · P2 · proposal. Offset labels: Increase label size and use 1 px notation.
+- [x] `text_shadow-13` · P2 · proposal. Offset labels: Increase label size and use 1 px notation.
   Evidence: 1px through 10px are small at the far right.
 
-- [ ] `text_shadow-14` · P2 · proposal. Ladder spacing: Bring the values closer or add faint row guides.
+- [x] `text_shadow-14` · P2 · proposal. Ladder spacing: Bring the values closer or add faint row guides.
   Evidence: Large blank horizontal gaps separate SHADOW from its numeric label.
 
-- [ ] `text_shadow-15` · P2 · proposal. Ladder baseline: Add optional baseline ticks outside the text.
+- [x] `text_shadow-15` · P2 · proposal. Ladder baseline: Add optional baseline ticks outside the text.
   Evidence: No guide shows the unshadowed glyph baseline.
 
-- [ ] `text_shadow-16` · P2 · proposal. Ladder control: Add an external zero-offset swatch for comparison.
+- [x] `text_shadow-16` · P2 · proposal. Ladder control: Add an external zero-offset swatch for comparison.
   Evidence: The ladder begins at 1 px without a 0 px reference.
 
-- [ ] `text_shadow-17` · P3 · proposal. Description rhythm: Use consistent specimen-to-caption spacing.
+- [x] `text_shadow-17` · P3 · proposal. Description rhythm: Use consistent specimen-to-caption spacing.
   Evidence: Descriptions sit at varying distances from their examples.
 
-- [ ] `text_shadow-18` · P2 · proposal. Bottom tip: Move it closer to the examples or use the region for parameter summaries.
+- [x] `text_shadow-18` · P2 · proposal. Bottom tip: Move it closer to the examples or use the region for parameter summaries.
   Evidence: The tip is far below the specimens in a nearly empty lower region.
 
-- [ ] `text_shadow-19` · P2 · proposal. Font identity: Add the font family and size to the specimen metadata.
+- [x] `text_shadow-19` · P2 · proposal. Font identity: Add the font family and size to the specimen metadata.
   Evidence: The bold pixel font is not named.
 
 ### text_stroke

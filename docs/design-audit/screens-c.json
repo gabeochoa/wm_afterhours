@@ -4986,7 +4986,8 @@
         "change": "Add the font family and size to the specimen metadata."
       }
     ],
-    "sha256": "a3630e5e8b01270685a7fd9cd44562fa743a9c3e382299a52329ed1da84b6759"
+    "sha256": "a3630e5e8b01270685a7fd9cd44562fa743a9c3e382299a52329ed1da84b6759",
+    "evidence": "docs/design-audit/originals/text_shadow_720p.png"
   },
   {
     "id": "text_stroke",

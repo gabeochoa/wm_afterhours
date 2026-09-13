@@ -5,325 +5,94 @@
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
+#include <array>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleTextShadow : ScreenSystem<UIContext<InputAction>> {
-
-  // Light theme so shadows are clearly visible
-  afterhours::Color bg_light{200, 205, 215, 255};
-  afterhours::Color surface{230, 235, 245, 255};
-  afterhours::Color text_dark{30, 35, 45, 255};
-  afterhours::Color text_muted{80, 85, 100, 255};
+  bool guides = false;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    auto theme = afterhours::ui::theme_presets::cozy_kraft();
-    context.theme = theme;
-
-    int screen_w = Settings::get().get_screen_width();
-    int screen_h = Settings::get().get_screen_height();
-
-    // Background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w), pixels(screen_h)})
-            .with_custom_background(bg_light)
-            .with_corner_radius(0.f)
-            .with_debug_name("bg"));
-
-    // Page title with prominent shadow
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_label("Text Drop Shadow")
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(55)})
-            .with_absolute_position(20.0f, 28.0f)
-            .with_font("BlackOpsOne", h720(36.0f))
-            .with_custom_text_color(text_dark)
-            .with_text_shadow(afterhours::Color{0, 0, 0, 255}, 6.0f,
-                              6.0f)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 2),
-        ComponentConfig{}
-            .with_label("Add depth and improve legibility with text shadows")
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(28)})
-            .with_absolute_position(20.0f, 65.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Left));
-
-    int id = 10;
-    float col1_x = 20.0f;
-    float col2_x =
-        screen_w * 0.52f; // Right column starts at 52% of screen width
-
-    // ========== LEFT COLUMN: Side-by-side comparisons ==========
-
-    const char *bold_font = "BlackOpsOne";
-
-    // Row 1: NO SHADOW vs WITH SHADOW - very prominent shadow
-    afterhours::Color yellow{255, 220, 80, 255};
-    afterhours::Color shadow_dark{0, 0, 0,
-                                  255}; // Full opacity for max visibility
-
-    float left_col_width =
-        col2_x - col1_x - 20.0f; // Available width for left column
-    float half_left = left_col_width / 2.0f;
-
-    // Configurable contrast background for light shadow examples
-    afterhours::Color contrast_bg{50, 55, 70, 255};
-    float contrast_panel_padding = 10.0f;
-
-    // Dark panel behind yellow text for better shadow visibility
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(left_col_width), pixels(55)})
-            .with_absolute_position(col1_x - contrast_panel_padding / 2.0f,
-                                    110.0f)
-            .with_custom_background(contrast_bg)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("yellow_panel_bg"));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("NO SHADOW")
-            .with_size(ComponentSize{pixels(half_left - 10), pixels(55)})
-            .with_absolute_position(col1_x, 110.0f)
-            .with_font(bold_font, h720(32.0f))
-            .with_custom_text_color(yellow)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("WITH SHADOW")
-            .with_size(ComponentSize{pixels(half_left), pixels(55)})
-            .with_absolute_position(col1_x + half_left, 110.0f)
-            .with_font(bold_font, h720(32.0f))
-            .with_custom_text_color(yellow)
-            .with_text_shadow(shadow_dark, 6.0f,
-                              6.0f) // Large offset for visibility
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Same color - shadow adds depth")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
-            .with_absolute_position(col1_x, 165.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 2: SOFT vs HARD shadow presets - larger offsets
-    afterhours::Color hot_pink{255, 50, 150, 255};
-
-    // Dark panel behind SOFT/HARD for better shadow visibility (especially soft
-    // shadows)
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(left_col_width), pixels(70)})
-            .with_absolute_position(col1_x - contrast_panel_padding / 2.0f,
-                                    190.0f)
-            .with_custom_background(contrast_bg)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("soft_hard_panel_bg"));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("SOFT")
-            .with_size(ComponentSize{pixels(half_left - 10), pixels(70)})
-            .with_absolute_position(col1_x, 190.0f)
-            .with_font(bold_font, h720(52.0f))
-            .with_custom_text_color(hot_pink)
-            .with_soft_text_shadow(5.0f, 5.0f)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("HARD")
-            .with_size(ComponentSize{pixels(half_left), pixels(70)})
-            .with_absolute_position(col1_x + half_left, 190.0f)
-            .with_font(bold_font, h720(52.0f))
-            .with_custom_text_color(hot_pink)
-            .with_hard_text_shadow(5.0f, 5.0f)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Soft shadow creates a subtle glow effect")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
-            .with_absolute_position(col1_x, 260.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 3: Colored shadows - very visible red shadow
-    afterhours::Color cyan{80, 255, 255, 255};
-    afterhours::Color red_shadow{200, 0, 0, 255}; // Full opacity red
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("COLORED")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(65)})
-            .with_absolute_position(col1_x, 285.0f)
-            .with_font(bold_font, h720(48.0f))
-            .with_custom_text_color(cyan)
-            .with_text_shadow(red_shadow, 6.0f, 6.0f)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Cyan text with red shadow for retro 3D look")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
-            .with_absolute_position(col1_x, 350.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 4: Combined with stroke
-    afterhours::Color orange{255, 180, 60, 255};
-    afterhours::Color dark_stroke{40, 20, 0, 255};
-    afterhours::Color shadow_offset{0, 0, 0, 120};
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("COMBO")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(65)})
-            .with_absolute_position(col1_x, 375.0f)
-            .with_font(bold_font, h720(48.0f))
-            .with_custom_text_color(orange)
-            .with_text_stroke(dark_stroke, 3.0f)
-            .with_text_shadow(shadow_offset, 5.0f, 5.0f)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Combine stroke and shadow for maximum impact")
-            .with_size(ComponentSize{pixels(left_col_width), pixels(24)})
-            .with_absolute_position(col1_x, 440.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted));
-
-    // Row 5: Dark background with light text - shadow adds depth
-    afterhours::Color dark_panel{35, 40, 55, 255};
-    afterhours::Color light_text{255, 255, 255, 255};
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(left_col_width), pixels(70)})
-            .with_absolute_position(col1_x, 465.0f)
-            .with_custom_background(dark_panel)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.15f)
-            .with_debug_name("dark_panel"));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("LIGHT")
-            .with_size(ComponentSize{pixels(half_left - 30), pixels(45)})
-            .with_absolute_position(col1_x + 15.0f, 475.0f)
-            .with_font(bold_font, h720(34.0f))
-            .with_custom_text_color(light_text)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("LIGHT")
-            .with_size(ComponentSize{pixels(half_left - 30), pixels(45)})
-            .with_absolute_position(col1_x + half_left + 15.0f, 475.0f)
-            .with_font(bold_font, h720(34.0f))
-            .with_custom_text_color(light_text)
-            .with_text_shadow(afterhours::Color{0, 0, 0, 180}, 3.0f, 3.0f)
-            .with_alignment(TextAlignment::Left));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("flat look          more depth!")
-            .with_size(ComponentSize{pixels(left_col_width - 30), pixels(20)})
-            .with_absolute_position(col1_x + 25.0f, 520.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(14.0f))
-            .with_custom_text_color(afterhours::Color{140, 145, 170, 255}));
-
-    // ========== RIGHT COLUMN: Offset comparison ==========
-
-    float right_col_width =
-        screen_w - col2_x - 20.0f; // Available width for right column
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Shadow Offset Examples:")
-            .with_size(ComponentSize{pixels(right_col_width), pixels(30)})
-            .with_absolute_position(col2_x, 110.0f)
-            .with_font("Gaegu-Bold", h720(22.0f))
-            .with_custom_text_color(text_dark));
-
-    afterhours::Color purple{180, 100, 255, 255};
-    afterhours::Color purple_shadow{60, 20, 100, 200};
-
-    float offset_y = 140.0f;
-    float offset_spacing = 62.0f; // Reduced spacing to fit 6 items
-    float offsets[] = {1.0f, 2.0f, 4.0f, 6.0f, 8.0f, 10.0f};
-    const char *offset_labels[] = {"1px", "2px", "4px", "6px", "8px", "10px"};
-
-    // Dark panel behind offset examples for better visibility of subtle shadows
-    float offset_panel_height = 6 * offset_spacing;
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(right_col_width),
-                                     pixels(offset_panel_height)})
-            .with_absolute_position(col2_x - contrast_panel_padding / 2.0f,
-                                    offset_y)
-            .with_custom_background(contrast_bg)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.1f)
-            .with_debug_name("offset_panel_bg"));
-
-    for (int i = 0; i < 6; i++) {
-      div(context, mk(entity, id++),
-          ComponentConfig{}
-              .with_label("SHADOW")
-              .with_size(
-                  ComponentSize{pixels(right_col_width - 60), pixels(48)})
-              .with_absolute_position(col2_x, offset_y + i * offset_spacing)
-              .with_font(bold_font, h720(34.0f))
-              .with_custom_text_color(purple)
-              .with_text_shadow(purple_shadow, offsets[i], offsets[i])
-              .with_alignment(TextAlignment::Left)
-              .with_debug_name("offset_" + std::to_string(i)));
-
-      div(context, mk(entity, id++),
-          ComponentConfig{}
-              .with_label(offset_labels[i])
-              .with_size(ComponentSize{pixels(50), pixels(26)})
-              .with_absolute_position(col2_x + right_col_width - 55,
-                                      offset_y + i * offset_spacing + 10.0f)
-              .with_font(UIComponent::DEFAULT_FONT, h720(16.0f))
-              .with_custom_text_color(afterhours::Color{
-                  180, 185, 200, 255}) // Lighter text for dark bg
-              .with_debug_name("offset_label_" + std::to_string(i)));
+    context.theme = theme_presets::neon_dark();
+    context.scaling_mode = ScalingMode::Proportional;
+    const afterhours::Color ink{28, 39, 57, 255}, muted{67, 84, 104, 255};
+    const afterhours::Color panel{39, 47, 64, 255}, pale{192, 207, 230, 255}, white{255, 255, 255, 255};
+    const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    const float left = (context.screen_width / scale - 1144) / 2;
+    const float top = (context.screen_height / scale - 720) / 2;
+    const auto box = [scale, left, top](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
+          .with_absolute_position((left + x) * scale, (top + y) * scale)
+          .with_background(Theme::Usage::None).with_corner_radius(0);
+    };
+    auto root = div(context, mk(entity), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background({224, 231, 241, 255}).with_corner_radius(0).with_debug_name("bg"));
+    const auto label = [&](int id, float x, float y, float w, float h, const std::string &text, float size,
+                           afterhours::Color color, const std::string &name = "") {
+      return div(context, mk(root.ent(), id), box(x, y, w, h).with_label(text)
+          .with_font("AtkinsonMock", pixels(size * scale)).with_custom_text_color(color)
+          .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Left)
+          .with_ignore_pointer_events().with_debug_name(name));
+    };
+    const auto sample = [&](int id, float x, float y, float w, float h, const std::string &text, float size,
+                            afterhours::Color color, TextShadow shadow, const std::string &name) {
+      return div(context, mk(root.ent(), id), box(x, y, w, h).with_label(text)
+          .with_font("AtkinsonMock", pixels(size * scale)).with_custom_text_color(color)
+          .with_text_shadow(shadow).with_alignment(TextAlignment::Left).with_debug_name(name));
+    };
+    label(0, 0, 24, 884, 45, "Text drop shadow", 35, ink);
+    label(1, 0, 79, 1144, 31, "Atkinson / native shadow rendering / metadata uses rendered pixel offsets", 22, muted);
+    if (button(context, mk(root.ent(), 2), box(910, 29, 234, 43).with_label(guides ? "Box guides: On" : "Box guides: Off")
+        .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(white).with_custom_text_color(ink)
+        .with_corner_radius(6 * scale).with_debug_name("shadow_guides"))) guides = !guides;
+    const auto backing = [&](int id, float y, float h) {
+      div(context, mk(root.ent(), id), box(0, y, 680, h).with_custom_background(panel).with_corner_radius(8 * scale));
+    };
+    const TextShadow none{{0, 0, 0, 0}, 0, 0};
+    backing(10, 137, 108);
+    sample(11, 20, 147, 306, 47, "SHADOW", 32, {255, 220, 80, 255}, none, "shadow_none");
+    sample(12, 356, 147, 304, 47, "SHADOW", 32, {255, 220, 80, 255}, {{0, 0, 0, 255}, 6 * scale, 6 * scale}, "shadow_comparison");
+    label(13, 20, 200, 306, 32, "S1 / No shadow / 32px at 1×", 19, pale);
+    label(14, 356, 195, 304, 43, fmt::format("S2 / x +{:.1f}, y +{:.1f}px\nBlack / alpha 255 of 255", 6 * scale, 6 * scale), 19, pale);
+    backing(20, 259, 118);
+    sample(21, 20, 267, 306, 65, "SHADOW", 52, {255, 50, 150, 255}, TextShadow::soft(5 * scale, 5 * scale), "shadow_soft");
+    sample(22, 356, 267, 304, 65, "SHADOW", 52, {255, 50, 150, 255}, TextShadow::hard(5 * scale, 5 * scale), "shadow_hard");
+    label(23, 20, 329, 306, 41, fmt::format("S3 / Soft / offset +{:.1f}, +{:.1f}px\nAlpha 80 of 255 / no blur", 5 * scale, 5 * scale), 18, pale);
+    label(24, 356, 329, 304, 41, fmt::format("S4 / Hard / offset +{:.1f}, +{:.1f}px\nAlpha 180 of 255 / no blur", 5 * scale, 5 * scale), 18, pale);
+    backing(30, 391, 114);
+    sample(31, 20, 400, 306, 62, "COLORED", 48, {80, 255, 255, 255}, {{200, 0, 0, 255}, 6 * scale, 6 * scale}, "shadow_colored");
+    auto combo = sample(32, 356, 400, 304, 62, "COMBO", 48, {255, 180, 60, 255}, {{0, 0, 0, 120}, 5 * scale, 5 * scale}, "shadow_combo");
+    combo.ent().get<HasLabel>().set_text_stroke(afterhours::Color{40, 20, 0, 255}, 3 * scale);
+    label(33, 20, 460, 306, 40, fmt::format("S5 / #50FFFF + #C80000\nOffset +{:.1f}, +{:.1f}px / alpha 255", 6 * scale, 6 * scale), 18, pale);
+    label(34, 356, 460, 304, 40, fmt::format("S6 / Outline {:.1f}px / x,y +{:.1f}px\nShadow alpha 120 of 255", 3 * scale, 5 * scale), 18, pale);
+    backing(40, 519, 117);
+    sample(41, 20, 532, 306, 50, "LIGHT", 34, white, none, "shadow_light_none");
+    sample(42, 356, 532, 304, 50, "LIGHT", 34, white, {{0, 0, 0, 180}, 3 * scale, 3 * scale}, "shadow_light");
+    label(43, 20, 592, 306, 30, "S7 / No shadow / 34px at 1×", 19, pale);
+    label(44, 356, 586, 304, 41, fmt::format("S8 / offset +{:.1f}, +{:.1f}px\nBlack / alpha 180 of 255", 3 * scale, 3 * scale), 19, pale);
+    div(context, mk(root.ent(), 50), box(704, 137, 440, 499).with_custom_background(panel).with_corner_radius(8 * scale));
+    label(51, 724, 145, 400, 30, "Offset ladder / +x right, +y down", 22, white);
+    const std::array<float, 7> offsets{0, 1, 2, 4, 6, 8, 10};
+    for (size_t i = 0; i < offsets.size(); ++i) {
+      const float y = 184 + static_cast<float>(i) * 62;
+      const float offset = offsets[i] * scale;
+      sample(60 + static_cast<int>(i), 734, y, 256, 48, "SHADOW", 34, {180, 100, 255, 255},
+             {{60, 20, 100, 200}, offset, offset}, i == 0 ? "offset_zero" : "offset_" + std::to_string(i - 1));
+      label(70 + static_cast<int>(i), 1002, y + 4, 122, 44,
+            fmt::format("{:.1f} px\nx / y", offset), 21, pale);
+      if (!guides) continue;
+      div(context, mk(root.ent(), 80 + static_cast<int>(i)), box(724, y, 278, 48).with_ignore_pointer_events()
+          .with_on_draw_fg([scale](RectangleType r) {
+            const afterhours::Color guide{130, 151, 180, 255};
+            afterhours::draw_line_ex({r.x, r.y}, {r.x + r.width, r.y}, scale, guide);
+            afterhours::draw_line_ex({r.x, r.y + r.height}, {r.x + 8 * scale, r.y + r.height}, scale, guide);
+          }));
     }
-
-    // ========== Code example at bottom ==========
-    float code_y = screen_h - 68.0f;
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(screen_w - 40), pixels(44)})
-            .with_absolute_position(20.0f, code_y)
-            .with_custom_background(surface)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.2f)
-            .with_debug_name("code_bg"));
-
-    div(context, mk(entity, id++),
-        ComponentConfig{}
-            .with_label("Tip: Use small offsets (1-4px) for subtle depth, "
-                        "larger offsets (6-10px) for bold effects")
-            .with_size(ComponentSize{pixels(screen_w - 60), pixels(28)})
-            .with_absolute_position(30.0f, code_y + 10.0f)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(afterhours::Color{40, 120, 50, 255})
-            .with_alignment(TextAlignment::Left));
+    label(90, 0, 650, 1144, 31, "Soft and Hard change opacity, not blur. The ladder uses #B464FF text and #3C1464 shadow, alpha 200 of 255.", 20, muted);
+    label(91, 0, 686, 1144, 26, fmt::format("{:.0f} × {:.0f} / UI scale {:.2f}× / Ladder font {:.1f}px / Box guides show the unchanged text container.", context.screen_width, context.screen_height, scale, 34 * scale), 19, muted);
   }
 };
 

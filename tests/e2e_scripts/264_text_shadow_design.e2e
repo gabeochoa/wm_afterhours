@@ -1,0 +1,45 @@
+goto_screen text_shadow
+resize 1280 720
+wait 0.4
+expect_text "Text drop shadow"
+expect_text "Atkinson / native shadow rendering"
+expect_text "No shadow / 32px at 1×"
+expect_text "Soft / offset"
+expect_text "Hard / offset"
+expect_text "Alpha 80 of 255 / no blur"
+expect_text "Alpha 180 of 255 / no blur"
+expect_text "S5 / #50FFFF + #C80000"
+expect_text "S6 / Outline 3.0px / x,y +5.0px"
+expect_text "Soft and Hard change opacity, not blur."
+assert_ui bg w=1280 h=720
+assert_ui shadow_none w=306 h=47
+assert_ui shadow_light_none h=50
+assert_ui shadow_light h=50
+assert_ui offset_zero h=48
+assert_ui offset_5 h=48
+assert_within_parents
+screenshot text_shadow_design
+click_ui shadow_guides
+wait 0.3
+expect_text "Box guides: On"
+assert_within_parents
+screenshot text_shadow_guides_design
+resize 1920 1080
+wait 0.3
+expect_text "UI scale 1.50"
+expect_text "Ladder font 51.0px"
+assert_ui bg w=1920 h=1080
+assert_within_parents
+screenshot text_shadow_1080_design
+resize 1024 768
+wait 0.3
+expect_text "UI scale 0.80"
+expect_text "Ladder font 27.2px"
+assert_ui bg w=1024 h=768
+assert_within_parents
+screenshot text_shadow_1024_design
+focus_element shadow_guides
+key ENTER
+wait 0.3
+expect_text "Box guides: Off"
+resize 1280 720

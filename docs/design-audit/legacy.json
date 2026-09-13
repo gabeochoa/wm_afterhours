@@ -368,13 +368,13 @@
     "screen": "text_shadow",
     "baseline": "baseline_screenshots/text_shadow.png",
     "current": "screenshot-baselines/screens/text_shadow_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Heading shadow competes with the heading itself, and LIGHT captions sit on the lower panel edge. The 1px to 10px samples deliberately expose strong shadow offsets.",
-    "sha256": "a3630e5e8b01270685a7fd9cd44562fa743a9c3e382299a52329ed1da84b6759",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "e9656b9ee63c05f634b92a52a7596c9dc39a5aba1abb45a707e1248929d85aa7",
     "additional_findings": []
   },
   {
