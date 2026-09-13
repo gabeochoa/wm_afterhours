@@ -734,6 +734,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
+      ui_context->has_interacted = false;
       restore_ui_styling_defaults();
     }
 
@@ -838,6 +839,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
         afterhours::ui::UIContext<InputAction>>();
     if (ui_context) {
       ui_context->reset();
+      ui_context->has_interacted = false;
       restore_ui_styling_defaults();
     }
 
@@ -1105,6 +1107,7 @@ void reset_e2e_state() {
   if (auto *ui_context = afterhours::EntityHelper::get_singleton_cmp<
           afterhours::ui::UIContext<InputAction>>()) {
     ui_context->reset();
+    ui_context->has_interacted = false;
     restore_ui_styling_defaults();
   }
 
