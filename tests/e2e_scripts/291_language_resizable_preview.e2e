@@ -1,0 +1,45 @@
+goto_screen language_demo
+resize 1280 720
+wait 0.4
+expect_text "Narrow preview"
+assert_ui language_preview w=444 h=422
+assert_ui language_action_0 w=404
+assert_ui language_icon_0 y=344 w=20 h=20
+click_ui language_preview_width
+wait 0.2
+expect_text "Widen preview"
+assert_ui language_preview w=300 h=422
+assert_ui language_action_0 w=260
+assert_ui language_continue w=260
+assert_within_parents
+screenshot language_compact_english
+click_ui language_1
+wait 0.2
+click_ui language_action_0
+wait 0.2
+expect_text "Demo action: 시작"
+assert_ui language_icon_0 y=344 w=20 h=20
+assert_within_parents
+screenshot language_compact_korean
+click_ui language_2
+wait 0.2
+expect_text "Language: Japanese / Active font: NotoSansJP"
+click_ui language_continue
+wait 0.2
+expect_text "Demo action: 続ける"
+assert_ui language_icon_4 w=20 h=20
+assert_within_parents
+screenshot language_compact_japanese
+focus_ui language_preview_width
+key ENTER
+wait 0.2
+expect_text "Narrow preview"
+assert_ui language_preview w=444
+assert_ui language_continue w=404
+resize 1024 768
+wait 0.3
+assert_ui language_preview w=355 h=338
+assert_ui language_icon_4 w=16 h=16
+assert_within_parents
+screenshot language_bold_japanese_narrow_window
+resize 1280 720

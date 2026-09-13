@@ -16,6 +16,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
   Language current_language = Language::English;
 
   std::optional<size_t> last_action;
+  bool compact_preview = false;
 
   struct LanguageSample {
     std::string title;
@@ -53,7 +54,7 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     auto theme = afterhours::ui::theme_presets::ocean_navy();
     theme.language_fonts[Language::English] = FontConfig("AtkinsonMock", 1.0f);
     theme.language_fonts[Language::Korean] = FontConfig("NotoSansKR", 1.35f);
-    theme.language_fonts[Language::Japanese] = FontConfig("Sazanami", 1.15f);
+    theme.language_fonts[Language::Japanese] = FontConfig("NotoSansJP", 1.15f);
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
@@ -85,7 +86,14 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     };
     const auto &heading_font = theme.get_font_config(current_language);
     label(0, get_sample(current_language).title, 0, 0, 1160, 42, 28 * heading_font.size_scale, heading_font.font_name);
-    label(1, "Compare the same content across three scripts and their loaded fonts.", 0, 46, 1160, 28, 20);
+    label(1, "Resize the menu preview and compare translated labels with their action icons.", 0, 46, 1160, 28, 20);
+    if (button(context, mk(root.ent(), 90), box(928, 0, 232, 40)
+        .with_label(compact_preview ? "Widen preview" : "Narrow preview")
+        .with_font("AtkinsonMock", pixels(18 * s))
+        .with_background(Theme::Usage::Secondary)
+        .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
+        .with_debug_name("language_preview_width")))
+      compact_preview = !compact_preview;
     for (size_t i = 0; i < languages.size(); ++i) {
       const auto lang = languages[i];
       const auto &font = theme.get_font_config(lang);
@@ -110,25 +118,65 @@ struct LanguageDemoScreen : ScreenSystem<UIContext<InputAction>> {
     const size_t selected = current_language == Language::English ? 0 : current_language == Language::Korean ? 1 : 2;
     const auto &font = theme.get_font_config(current_language);
     const auto sample = get_sample(current_language);
-    div(context, mk(root.ent(), 20), box(0, 158, 444, 422).with_background(Theme::Usage::Surface).with_corner_radius(12 * s));
+    const float preview_width = compact_preview ? 300.f : 444.f;
+    const float control_width = preview_width - 40;
+    div(context, mk(root.ent(), 20), box(0, 158, preview_width, 422)
+        .with_background(Theme::Usage::Surface).with_corner_radius(12 * s)
+        .with_debug_name("language_preview"));
     div(context, mk(root.ent(), 21), box(464, 158, 696, 422).with_background(Theme::Usage::Surface).with_corner_radius(12 * s));
-    label(22, std::string("Current language: ") + english_names[selected], 20, 176, 404, 28, 19);
-    label(23, sample.greeting, 20, 210, 404, 54, 32 * font.size_scale, font.font_name);
-    label(24, "Localized menu controls", 20, 276, 404, 24, 17);
-    for (int i = 0; i < 4; ++i) {
-      const float y = i == 3 ? 518.f : 310 + static_cast<float>(i) * 46;
-      if (button(context, mk(root.ent(), 30 + i), box(20, y, 404, 40)
-          .with_label(sample.menu_items[i]).with_font(font.font_name, pixels(22 * font.size_scale * s))
-          .with_background(i == 3 ? Theme::Usage::Secondary : Theme::Usage::Primary)
+    label(22, std::string("Current language: ") + english_names[selected], 20, 176, control_width, 28, 19);
+    label(23, sample.greeting, 20, 210, control_width, 54, 32 * font.size_scale, font.font_name);
+    label(24, "Localized menu controls", 20, 276, control_width, 24, 17);
+    auto *fonts = afterhours::EntityHelper::get_singleton_cmp<FontManager>();
+    const auto action = [&](int id, size_t index, const std::string &value,
+                            float y, float height, const std::string &name) {
+      auto control = button(context, mk(root.ent(), id), box(20, y, control_width, height)
+          .with_label(value).with_font(font.font_name, pixels(22 * font.size_scale * s))
+          .with_background(index == 3 ? Theme::Usage::Secondary : Theme::Usage::Primary)
           .with_custom_text_color({235, 242, 250, 255}).with_corner_radius(6 * s)
-          .with_debug_name("language_action_" + std::to_string(i))))
-        last_action = static_cast<size_t>(i);
-    }
-    if (button(context, mk(root.ent(), 35), box(20, 462, 404, 44)
-        .with_label(sample.button_text).with_font(font.font_name, pixels(22 * font.size_scale * s))
-        .with_background(Theme::Usage::Primary).with_custom_text_color({235, 242, 250, 255})
-        .with_corner_radius(6 * s).with_debug_name("language_continue")))
-      last_action = 4;
+          .with_debug_name(name));
+      control.ent().get<HasLabel>().text_x_offset = 14 * s;
+      const float text_width = afterhours::measure_text(fonts->get_font(font.font_name),
+          value.c_str(), 22 * font.size_scale * s, 1.f).x;
+      div(context, mk(root.ent(), id + 100), box(20 + (control_width - text_width / s - 28) / 2,
+          y + (height - 20) / 2, 20, 20)
+          .with_background(Theme::Usage::None).with_ignore_pointer_events()
+          .with_debug_name("language_icon_" + std::to_string(index))
+          .with_on_draw_fg([index, s](RectangleType r) {
+            const auto ink = afterhours::Color{235, 242, 250, 255};
+            const float x = r.x, y = r.y;
+            if (index == 0) {
+              raylib::DrawTriangle({x + 4 * s, y + 2 * s}, {x + 4 * s, y + 18 * s},
+                                   {x + 17 * s, y + 10 * s}, ink);
+              return;
+            }
+            if (index == 1) {
+              for (int row = 0; row < 3; ++row) {
+                const float cy = y + (4 + row * 6) * s;
+                raylib::DrawLineEx({x + 2 * s, cy}, {x + 18 * s, cy}, 2 * s, ink);
+                raylib::DrawCircleV({x + (row == 1 ? 13 : 7) * s, cy}, 3 * s, ink);
+              }
+              return;
+            }
+            if (index == 2) {
+              raylib::DrawRing({x + 10 * s, y + 10 * s}, 8 * s, 9.5f * s, 0, 360, 24, ink);
+              raylib::DrawCircleV({x + 10 * s, y + 6 * s}, 1.3f * s, ink);
+              raylib::DrawLineEx({x + 10 * s, y + 9 * s}, {x + 10 * s, y + 15 * s}, 2 * s, ink);
+              return;
+            }
+            if (index == 3)
+              raylib::DrawRectangleLinesEx({x + s, y + 2 * s, 10 * s, 16 * s}, 1.5f * s, ink);
+            raylib::DrawLineEx({x + 5 * s, y + 10 * s}, {x + 18 * s, y + 10 * s}, 2 * s, ink);
+            raylib::DrawLineEx({x + 13 * s, y + 5 * s}, {x + 18 * s, y + 10 * s}, 2 * s, ink);
+            raylib::DrawLineEx({x + 13 * s, y + 15 * s}, {x + 18 * s, y + 10 * s}, 2 * s, ink);
+          }));
+      if (control) last_action = index;
+    };
+    for (size_t i = 0; i < 4; ++i)
+      action(30 + static_cast<int>(i), i, sample.menu_items[i],
+             i == 3 ? 518.f : 310 + static_cast<float>(i) * 46, 40,
+             "language_action_" + std::to_string(i));
+    action(35, 4, sample.button_text, 462, 44, "language_continue");
     label(40, "All Languages", 484, 176, 656, 30, 25);
     label(41, "Shared greeting and Start / 22px with script-specific scaling", 484, 210, 656, 26, 17);
     label(42, "Language / font", 484, 246, 224, 24, 17);
