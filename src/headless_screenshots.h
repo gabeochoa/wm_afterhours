@@ -33,7 +33,8 @@ int run_all_tests_headless();
 // tab. If screen_filter is empty, tests all screens. Otherwise only the named
 // screen. max_tabs controls how many tab presses per screen. Outputs to
 // g_headless_output_dir/focus_test/{screen}/tab_{n}.png
-void run_focus_ring_test(const std::string &screen_filter, int max_tabs);
+void run_focus_ring_test(const std::string &screen_filter, int max_tabs,
+                         bool audit = false);
 
 // Render one screen headlessly and print/write a flat layout summary.
 // output_path: file path, or "-" / empty for stdout. Returns 0 on success.

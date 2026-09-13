@@ -135,6 +135,7 @@ int main(int argc, char *argv[]) {
     std::cout << "\nFocus Ring Testing:\n";
     std::cout << "  --focus-test [screen]        Tab through screens capturing "
                  "focus ring screenshots\n";
+    std::cout << "  --focus-audit               Record focus geometry, cropped rings and reverse traversal\n";
     std::cout << "  --max-tabs <int>             Max tab presses per screen "
                  "(default: 20)\n";
     return 0;
@@ -175,7 +176,8 @@ int main(int argc, char *argv[]) {
         g_headless_output_dir = output_override;
       }
 
-      run_focus_ring_test(has_focus_param ? focus_screen : "", max_tabs);
+      run_focus_ring_test(has_focus_param ? focus_screen : "", max_tabs,
+                          cmdl["--focus-audit"]);
       return 0;
     }
   }

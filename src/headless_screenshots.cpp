@@ -19,6 +19,7 @@
 #include "testing/test_macros.h"
 #include "testing/layout_summary.h"
 #include "testing/ui_tree_dump.h"
+#include "testing/focus_audit.h"
 #include <fstream>
 #include <afterhours/src/graphics.h>
 
@@ -951,7 +952,7 @@ int run_all_tests_headless() {
 // run_focus_ring_test -- for each screen, capture initial screenshot then
 // inject Tab keypresses one at a time, capturing after each.
 // ---------------------------------------------------------------------------
-void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
+void run_focus_ring_test(const std::string &screen_filter, int max_tabs, bool audit) {
   constexpr int WIDTH = 1280;
   constexpr int HEIGHT = 720;
 
@@ -1066,6 +1067,57 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs) {
       std::filesystem::path output_path = screen_dir / filename;
       afterhours::graphics::capture_frame(output_path);
       log_info("[FocusTest] {}: saved tab_0 (initial)", screen_name);
+    }
+
+    if (audit) {
+      auto initial = focus_audit::snapshot();
+      nlohmann::json report = {{"screen", screen_name}, {"initial", initial},
+                               {"samples", nlohmann::json::array()}};
+      for (bool reverse : {false, true}) {
+        std::set<int> visited;
+        const std::string direction = reverse ? "backward" : "forward";
+        report[direction + "_cycle"] = false;
+        for (int step = 1; step <= max_tabs; ++step) {
+          if (reverse) {
+            afterhours::testing::input_injector::set_key_held(afterhours::keys::LEFT_SHIFT);
+            test_input::simulate_tab();
+            afterhours::testing::test_input::simulate_tab();
+          } else {
+            test_input::simulate_tab();
+            afterhours::testing::test_input::simulate_tab();
+          }
+          for (int pass = 0; pass < 3; ++pass) {
+            test_input::reset_frame();
+            afterhours::testing::test_input::reset_frame();
+            auto &entities = afterhours::EntityHelper::get_entities_for_mod();
+            systems.tick_all(entities, 0.016f);
+            systems.render(entities, 0.016f);
+            afterhours::EntityHelper::cleanup();
+          }
+          afterhours::testing::input_injector::set_key_up(afterhours::keys::LEFT_SHIFT);
+          auto sample = focus_audit::snapshot();
+          const int focused = sample.at("focus_id").get<int>();
+          sample["direction"] = direction;
+          sample["step"] = step;
+          sample["candidate_ids"] = nlohmann::json::array();
+          for (const auto &candidate : sample.at("candidates"))
+            sample["candidate_ids"].push_back(candidate.at("id"));
+          sample.erase("candidates");
+          const bool repeated = !visited.insert(focused).second;
+          if (!repeated && !reverse) {
+            raylib::rlDrawRenderBatchActive();
+            const auto filename = "focus_" + std::to_string(step) + ".png";
+            if (focus_audit::capture_crop(screen_dir / filename, sample))
+              sample["image"] = filename;
+          }
+          report["samples"].push_back(std::move(sample));
+          if (!repeated) continue;
+          report[direction + "_cycle"] = true;
+          break;
+        }
+      }
+      focus_audit::write(screen_dir / "focus.json", report);
+      continue;
     }
 
     // Tab through elements

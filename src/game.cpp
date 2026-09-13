@@ -10,6 +10,7 @@
 #include "settings.h"
 #include "systems/ExampleScreenRegistry.h"
 #include "testing/ui_tree_dump.h"
+#include "testing/focus_audit.h"
 #include "systems/RenderRenderTexture.h"
 #include "systems/RenderScreenHUD.h"
 #include "systems/RenderSystemHelpers.h"
@@ -994,6 +995,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
       std::make_unique<afterhours::testing::HandleResetTestStateCommand>(
           []() { reset_e2e_state(); }));
 
+  focus_audit::register_systems(systems);
   afterhours::testing::register_unknown_handler(systems);
   afterhours::testing::register_cleanup(systems);
 
