@@ -29,14 +29,23 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    context.theme = afterhours::ui::theme_presets::neon_dark();
+    Theme theme;
+    theme.background = {19, 24, 32, 255};
+    theme.surface = {36, 43, 55, 255};
+    theme.primary = {56, 80, 113, 255};
+    theme.secondary = {46, 55, 71, 255};
+    theme.accent = {125, 177, 244, 255};
+    theme.font = {237, 242, 249, 255};
+    theme.font_muted = {175, 187, 204, 255};
+    theme.focus = {165, 201, 248, 255};
+    context.set_theme(theme);
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     const float left = (context.screen_width - 1280 * s) / 2;
     const float top = (context.screen_height - 720 * s) / 2;
     const auto white = afterhours::Color{235, 240, 250, 255};
     const auto muted = afterhours::Color{174, 188, 211, 255};
-    const auto panel = afterhours::Color{34, 46, 66, 255};
-    const auto cyan = afterhours::Color{112, 220, 230, 255};
+    const auto panel = theme.surface;
+    const auto cyan = afterhours::Color{154, 192, 245, 255};
     const auto ink = afterhours::Color{15, 22, 36, 255};
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
     div(context, mk(entity, 900), ComponentConfig{}
@@ -66,7 +75,8 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     };
     auto floating = [&](float w, float h, const std::string &debug) {
       return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
-          .with_custom_background(panel).with_corner_radius(6 * s).with_skip_grid_snap(true)
+          .with_custom_background(panel).with_border({79, 94, 117, 255}, s)
+          .with_corner_radius(8 * s).with_skip_grid_snap(true)
           .with_debug_name(debug);
     };
     auto row = [&](float h) {
@@ -93,7 +103,7 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
       auto body = vstack(context, mk(pop.ent(), 0), ComponentConfig{}
           .with_size({percent(1.f), percent(1.f)}).with_padding(Padding::all(pixels(12 * s)))
           .with_transparent_bg().with_debug_name("pv_body"));
-      div(context, mk(body.ent(), 0), row(34).with_label("Commit options / demo")
+      div(context, mk(body.ent(), 0), row(34).with_label("Commit preferences")
           .with_alignment(TextAlignment::Left).with_custom_text_color(white)
           .with_transparent_bg().with_debug_name("pv_caption"));
       // A checkbox inside is the point: focusing it must NOT dismiss the panel,
@@ -145,8 +155,8 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
         if (button(context, mk(body.ent(), 1 + b), row(36)
             .with_label(fmt::format("  {}{}", BRANCHES[b], b == current_branch ? "  Current" : ""))
             .with_alignment(TextAlignment::Left).with_font("AtkinsonMock", pixels(18 * s))
-            .with_custom_background(b == current_branch ? cyan : afterhours::Color{48, 65, 87, 255})
-            .with_custom_text_color(b == current_branch ? ink : white).with_corner_radius(4 * s)
+            .with_custom_background(b == current_branch ? afterhours::Color{54, 76, 105, 255} : panel)
+            .with_custom_text_color(white).with_custom_hover_bg({61, 76, 100, 255}).with_corner_radius(4 * s)
             // Without this the rounded corners of adjacent rows
             // touch and the column reads as one scalloped block.
             .with_margin(Margin{.bottom = pixels(4 * s)})
@@ -162,9 +172,9 @@ struct PopoverLab : ScreenSystem<UIContext<InputAction>> {
     text(21, "Use controls inside", 828, 108, 388, 34, 27, white, "pv_note_0", true);
     text(22, "Change options without dismissing", 828, 152, 388, 27, 20, muted);
     text(23, "the panel. Move focus outside to close.", 828, 181, 388, 27, 20, muted);
-    text(24, "MENU / choose an item", 828, 229, 360, 26, 19, cyan);
+    text(24, "Menu: choose an item", 828, 229, 360, 26, 19, cyan);
     text(25, "Open   Save   Close", 844, 257, 352, 26, 19, white);
-    text(26, "FORM / edit several options", 828, 295, 372, 26, 19, cyan);
+    text(26, "Form: edit several options", 828, 295, 372, 26, 19, cyan);
     text(27, "[ ] Amend    [x] Sign off", 844, 323, 352, 26, 18, white);
 
     // Placement row: the same panel asked to sit on three different sides.

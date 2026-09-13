@@ -25,27 +25,27 @@ wait 0.2
 expect_text "Branch: main"
 click_ui pv_trigger
 wait 0.2
-expect_text "Commit options / demo"
+expect_text "Commit preferences"
 assert_ui pv_live_commit x=48 y=132 w=320 h=216
 click_ui pv_amend
 wait 0.2
-expect_text "Commit options / demo"
+expect_text "Commit preferences"
 focus_ui pv_signoff
 key ENTER
 wait 0.2
-expect_text "Commit options / demo"
+expect_text "Commit preferences"
 focus_ui pv_commit
 key ENTER
 wait 0.2
 expect_text "Demo commit: amend previous / sign-off omitted"
-expect_no_text "Commit options / demo"
+expect_no_text "Commit preferences"
 click_ui pv_trigger
 wait 0.2
-expect_text "Commit options / demo"
+expect_text "Commit preferences"
 screenshot popover_design_form
 click_ui pv_place_0
 wait 0.2
-expect_no_text "Commit options / demo"
+expect_no_text "Commit preferences"
 expect_text "Panel Above"
 assert_ui pv_live_place_0 x=48 y=428 w=190 h=72
 screenshot popover_design_above
