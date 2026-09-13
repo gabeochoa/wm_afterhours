@@ -1,38 +1,39 @@
 # Sports settings mock parity smoke test.
 
 goto_screen sports_settings
+resize 1280 720
 wait 0.5
 
-expect_text "GRAPHICS"
+expect_text "VIDEO SETTINGS"
 expect_text "Window mode"
 expect_text "Borderless window"
 expect_text "Resolution"
-expect_text "2,560x1,440"
+expect_text "2560 × 1440"
 expect_text "Max FPS"
 expect_text "Anti-Aliasing method"
 expect_text "TSR"
-expect_text "Default value: 120"
+expect_text "Default: 120 FPS"
 
 assert_ui sports_root x=0 y=0 w=1280 h=720
 assert_ui sports_tabs x=0 y=0 w=1280 h=50
 assert_ui sports_settings x=34 y=128 w=572 h=510
 assert_ui sports_row_4 x=34 y=317 w=559 h=39
-assert_ui sports_value_6 x=315 y=403 w=170 h=24
-assert_ui sports_scroll x=600 y=124 w=6 h=498
-assert_ui sports_help x=684 y=92 w=530 h=230
+assert_ui sports_value_6 x=292 y=402 w=284 h=29
+assert_ui sports_divider x=620 y=124 w=2 h=498
+assert_ui sports_help x=680 y=110 w=530 h=400
 assert_ui sports_footer x=0 y=673 w=1280 h=47
 
-assert_ui_text "120" x=280 y=324 w=44 h=29
-assert_ui_text "2.2" x=280 y=364 w=44 h=29
-assert_ui_text "60" x=280 y=484 w=44 h=29
-assert_ui_text "1" x=280 y=524 w=44 h=29
+assert_ui_text "120 FPS" x=282 y=323 w=96 h=29
+assert_ui_text "2.20" x=282 y=363 w=96 h=29
+assert_ui_text "60 FPS" x=282 y=483 w=96 h=29
+assert_ui sports_numeric_9 x=282 y=523 w=96 h=29 text=100%
 click_ui sports_row_4
 key RIGHT
 wait 0.2
-assert_ui_text "132" x=280 y=324 w=44 h=29
+assert_ui_text "132 FPS" x=282 y=323 w=96 h=29
 click_ui sports_reset
 wait 0.2
-assert_ui_text "120" x=280 y=324 w=44 h=29
+assert_ui_text "120 FPS" x=282 y=323 w=96 h=29
 assert_no_overflow
 assert_within_parents
 click_ui sports_value_6
@@ -55,7 +56,7 @@ wait 0.2
 expect_text "25"
 click_ui sports_reset
 wait 0.2
-expect_text "Defaults restored"
+expect_text "defaults restored"
 expect_text "80"
 expect_text "90"
 set_slider sports_slider_2 0.26
@@ -78,5 +79,7 @@ assert_ui sports_root x=0 y=0 w=1920 h=1080
 assert_ui sports_tabs x=0 y=0 w=1920 h=75
 assert_ui sports_settings x=51 y=192 w=858 h=765
 assert_ui sports_row_4 x=51 y=476 w=839 h=59
-assert_ui sports_help x=1026 y=138 w=795 h=345
+assert_ui sports_help x=1020 y=165 w=795 h=600
 assert_ui sports_footer x=0 y=1010 w=1920 h=71
+
+resize 1280 720

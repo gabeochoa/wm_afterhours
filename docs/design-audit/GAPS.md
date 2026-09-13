@@ -3424,7 +3424,7 @@ The nested split geometry is deliberate. Sixteen proposals expose the dimensions
 
 ## sports settings
 
-[Current baseline](../../screenshot-baselines/screens/sports_settings_720p.png) · [Visual review](../../design-audit.html#screen=sports_settings)
+[Reviewed image](../../docs/design-audit/originals/sports_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/sports_settings_720p.png) · [Visual review](../../design-audit.html#screen=sports_settings)
 
 Baseline SHA-256: `f4147107cdcb705670f6843646fcb157139a6042cef16627e4b7980ba50763f4`
 

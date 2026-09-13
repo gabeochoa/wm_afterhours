@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,073 completed; 462 remaining.
+2,101 completed; 434 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6771,88 +6771,88 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/sports_settings_720p.png) · [Visual review](design-audit.html#screen=sports_settings)
 
-- [ ] `sports_settings-01` · P2 · defect. Controller tab hints: Increase glyph size and keycap dimensions.
+- [x] `sports_settings-01` · P2 · defect. Controller tab hints: Increase glyph size and keycap dimensions.
   Evidence: LB and RB labels are nearly microscopic in pale keycaps.
 
-- [ ] `sports_settings-02` · P2 · proposal. Screen percentage value: Display 100%.
+- [x] `sports_settings-02` · P2 · proposal. Screen percentage value: Display 100%.
   Evidence: 100 appears without a percent symbol.
 
-- [ ] `sports_settings-03` · P2 · proposal. Resolution formatting: Use 2560 × 1440.
+- [x] `sports_settings-03` · P2 · proposal. Resolution formatting: Use 2560 × 1440.
   Evidence: 2,560x1,440 uses thousands separators and a lowercase x.
 
-- [ ] `sports_settings-04` · P2 · proposal. Window mode value: Replace ambiguous dots with clear cycling chevrons or a dropdown indicator.
+- [x] `sports_settings-04` · P2 · proposal. Window mode value: Replace ambiguous dots with clear cycling chevrons or a dropdown indicator.
   Evidence: Borderless window is followed by small dot marks.
 
-- [ ] `sports_settings-05` · P2 · proposal. V Sync value: Use a consistent on/off control treatment.
+- [x] `sports_settings-05` · P2 · proposal. V Sync value: Use a consistent on/off control treatment.
   Evidence: Enabled is followed by dots instead of a recognizable control.
 
-- [ ] `sports_settings-06` · P2 · proposal. Anti-aliasing method: Expand the method name in the help pane when selected.
+- [x] `sports_settings-06` · P2 · proposal. Anti-aliasing method: Expand the method name in the help pane when selected.
   Evidence: TSR is an unexplained acronym.
 
-- [ ] `sports_settings-07` · P2 · proposal. Dynamic resolution: Distinguish binary settings from multi-choice selectors.
+- [x] `sports_settings-07` · P2 · proposal. Dynamic resolution: Distinguish binary settings from multi-choice selectors.
   Evidence: Enabled has the same dot pattern as multi-choice settings.
 
-- [ ] `sports_settings-08` · P2 · proposal. Motion blur value: Use On or a labeled intensity percentage according to the real value meaning.
+- [x] `sports_settings-08` · P2 · proposal. Motion blur value: Use On or a labeled intensity percentage according to the real value meaning.
   Evidence: Motion blur shows 1 with no unit or scale.
 
-- [ ] `sports_settings-09` · P2 · proposal. Max FPS units: Display 120 FPS.
+- [x] `sports_settings-09` · P2 · proposal. Max FPS units: Display 120 FPS.
   Evidence: 120 has no FPS suffix in the selected row.
 
-- [ ] `sports_settings-10` · P2 · proposal. Framerate target units: Display 60 FPS and explain its relationship to dynamic resolution.
+- [x] `sports_settings-10` · P2 · proposal. Framerate target units: Display 60 FPS and explain its relationship to dynamic resolution.
   Evidence: 60 has no FPS suffix.
 
-- [ ] `sports_settings-11` · P2 · proposal. Gamma endpoints: Show minimum and maximum values beneath the track.
+- [x] `sports_settings-11` · P2 · proposal. Gamma endpoints: Show minimum and maximum values beneath the track.
   Evidence: The gamma slider shows 2.2 without range labels.
 
-- [ ] `sports_settings-12` · P2 · proposal. FPS endpoints: Label its supported range and any unlimited endpoint.
+- [x] `sports_settings-12` · P2 · proposal. FPS endpoints: Label its supported range and any unlimited endpoint.
   Evidence: The Max FPS track has no endpoint labels.
 
-- [ ] `sports_settings-13` · P2 · proposal. Slider fill: Use distinct filled and remaining segments.
+- [x] `sports_settings-13` · P2 · proposal. Slider fill: Use distinct filled and remaining segments.
   Evidence: Each mint track looks fully filled regardless of thumb position.
 
-- [ ] `sports_settings-14` · P2 · proposal. Selected thumb: Increase thumb size or give it a light outline.
+- [x] `sports_settings-14` · P2 · proposal. Selected thumb: Increase thumb size or give it a light outline.
   Evidence: The dark thumb is small against the mint selection row.
 
-- [ ] `sports_settings-15` · P2 · proposal. Selection frame: Add a consistent gutter between the row edge and the help separator.
+- [x] `sports_settings-15` · P2 · proposal. Selection frame: Add a consistent gutter between the row edge and the help separator.
   Evidence: The selected row touches the divider with little trailing space.
 
-- [ ] `sports_settings-16` · P2 · proposal. Help title: Increase heading prominence and separate it from the body.
+- [x] `sports_settings-16` · P2 · proposal. Help title: Increase heading prominence and separate it from the body.
   Evidence: Max FPS is smaller than the explanatory body text.
 
-- [ ] `sports_settings-17` · P2 · proposal. Help line length: Constrain it to about 45 to 55 characters per line.
+- [x] `sports_settings-17` · P2 · proposal. Help line length: Constrain it to about 45 to 55 characters per line.
   Evidence: The explanation spans a wide, two-line measure.
 
-- [ ] `sports_settings-18` · P2 · proposal. Default value: Style the default as a labeled value pair with the FPS unit.
+- [x] `sports_settings-18` · P2 · proposal. Default value: Style the default as a labeled value pair with the FPS unit.
   Evidence: Default value: 120 is visually similar to the body copy.
 
-- [ ] `sports_settings-19` · P2 · proposal. Backdrop readability: Increase the opacity of the left backing panel for consistent text contrast.
+- [x] `sports_settings-19` · P2 · proposal. Backdrop readability: Increase the opacity of the left backing panel for consistent text contrast.
   Evidence: The fence and figure remain visible behind all setting labels.
 
-- [ ] `sports_settings-20` · P3 · proposal. Divider accent: Use a uniform pane divider or label the scroll indicator if it represents position.
+- [x] `sports_settings-20` · P3 · proposal. Divider accent: Use a uniform pane divider or label the scroll indicator if it represents position.
   Evidence: The mint vertical segment resembles a scrollbar without a label.
 
-- [ ] `sports_settings-21` · P2 · proposal. Category context: Add Video settings as the local heading.
+- [x] `sports_settings-21` · P2 · proposal. Category context: Add Video settings as the local heading.
   Evidence: GRAPHICS appears under the active VIDEO tab but no page title is shown.
 
-- [ ] `sports_settings-22` · P2 · proposal. Reset scope: Name the actual scope in the footer action.
+- [x] `sports_settings-22` · P2 · proposal. Reset scope: Name the actual scope in the footer action.
   Evidence: Reset to default does not identify whether it affects the tab or all settings.
 
-- [ ] `sports_settings-23` · P2 · proposal. Ready status: Use a clear Saved or No pending changes status if supported by the state model.
+- [x] `sports_settings-23` · P2 · proposal. Ready status: Use a clear Saved or No pending changes status if supported by the state model.
   Evidence: Ready is indistinguishable from generic footer text.
 
-- [ ] `sports_settings-24` · P3 · proposal. Footer grouping: Separate status from action groups and use consistent keycap spacing.
+- [x] `sports_settings-24` · P3 · proposal. Footer grouping: Separate status from action groups and use consistent keycap spacing.
   Evidence: Ready, Y Reset and B Back are crowded at the right edge.
 
-- [ ] `sports_settings-25` · P2 · proposal. Graphics quality relationship: Clarify whether texture is an override of the overall preset.
+- [x] `sports_settings-25` · P2 · proposal. Graphics quality relationship: Clarify whether texture is an override of the overall preset.
   Evidence: Graphics quality and Texture quality both show Ultra with no hierarchy.
 
-- [ ] `sports_settings-26` · P2 · proposal. Settings typography parity: Match target font metrics and weight while preserving the existing row positions.
+- [x] `sports_settings-26` · P2 · proposal. Settings typography parity: Match target font metrics and weight while preserving the existing row positions.
   Evidence: The current settings labels are lighter and more widely spaced than the target's compact sans-serif labels.
 
-- [ ] `sports_settings-27` · P3 · proposal. Selected-row treatment parity: Restore the target's distinct label and value backgrounds within the selected row.
+- [x] `sports_settings-27` · P3 · proposal. Selected-row treatment parity: Restore the target's distinct label and value backgrounds within the selected row.
   Evidence: The current Max FPS row is uniformly mint while the target shades its label half darker.
 
-- [ ] `sports_settings-28` · P3 · proposal. Selection accent parity: Match the target stripe treatment without changing indicator dimensions.
+- [x] `sports_settings-28` · P3 · proposal. Selection accent parity: Match the target stripe treatment without changing indicator dimensions.
   Evidence: The current Video underline and tall mint indicator are solid; the target uses a diagonal stripe detail.
 
 ### stepper_showcase

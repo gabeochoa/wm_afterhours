@@ -1,0 +1,87 @@
+goto_screen sports_settings
+resize 1280 720
+wait 0.4
+expect_text "VIDEO SETTINGS"
+expect_text "2560 × 1440"
+expect_text "100%"
+expect_text "120 FPS"
+expect_text "60 FPS"
+expect_text "Default: 120 FPS"
+expect_text "Range: 0–240 FPS / no unlimited option"
+expect_text "Applied locally"
+expect_text "[Y] Reset VIDEO"
+assert_ui sports_root x=0 y=0 w=1280 h=720
+assert_ui sports_row_4 x=34 y=317 w=559 h=39
+assert_ui sports_divider x=620 y=124 w=2 h=498
+assert_ui sports_help x=680 y=110 w=530 h=400
+assert_ui sports_numeric_4 x=282 y=323 w=96 h=29
+assert_ui sports_slider_4 x=386 y=325 w=188 h=22
+assert_no_overflow
+assert_within_parents
+screenshot sports_design
+click_ui sports_row_4
+key RIGHT
+wait 0.2
+expect_text "132 FPS"
+click_ui sports_row_5
+wait 0.2
+expect_text "Range: 1.0–4.75"
+expect_text "4.75"
+expect_text "2.20"
+click_ui sports_value_6
+wait 0.2
+expect_text "DLSS"
+expect_text "Deep Learning Super Sampling"
+click_ui sports_row_9
+wait 0.2
+expect_text "0–200% intensity"
+expect_text "100% is the default"
+click_ui sports_value_3
+wait 0.2
+expect_text "Off"
+click_ui sports_row_11
+wait 0.2
+expect_text "Texture quality is an independent override"
+screenshot sports_design_help
+click_ui sports_reset
+wait 0.2
+expect_text "VIDEO defaults restored"
+expect_text "120 FPS"
+click_ui sports_tab_2
+wait 0.2
+expect_text "Master volume"
+expect_text "[Y] Reset AUDIO"
+set_slider sports_slider_2 0.25
+wait 0.2
+expect_text "25%"
+click_ui sports_tab_1
+wait 0.2
+expect_text "120 FPS"
+click_ui sports_tab_2
+wait 0.2
+expect_text "25%"
+key Y
+wait 0.2
+expect_text "AUDIO defaults restored"
+expect_text "90%"
+resize 1920 1080
+wait 0.3
+assert_ui sports_root x=0 y=0 w=1920 h=1080
+assert_ui sports_row_4 x=51 y=476 w=839 h=59
+assert_no_overflow
+assert_within_parents
+screenshot sports_design_1080
+resize 1024 768
+wait 0.3
+assert_ui sports_root x=0 y=96 w=1024 h=576
+assert_ui sports_row_4 x=27 y=350 w=447 h=31
+assert_no_overflow
+assert_within_parents
+screenshot sports_design_narrow
+click_ui sports_back
+wait 0.2
+expect_text "Settings closed"
+click_ui sports_reopen
+wait 0.2
+expect_text "Master volume"
+resize 1280 720

@@ -1,6 +1,7 @@
 # Migrated from coroutine sports_settings tests (tabs + value change)
 
 goto_screen sports_settings
+resize 1280 720
 wait 0.5
 
 expect_text "Window mode"
@@ -25,5 +26,5 @@ expect_text "132"
 
 click_ui sports_reset
 wait 0.2
-expect_text "Defaults restored"
+expect_text "defaults restored"
 expect_text "120"

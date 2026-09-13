@@ -3113,7 +3113,8 @@
         "change": "Match the target stripe treatment without changing indicator dimensions."
       }
     ],
-    "sha256": "f4147107cdcb705670f6843646fcb157139a6042cef16627e4b7980ba50763f4"
+    "sha256": "f4147107cdcb705670f6843646fcb157139a6042cef16627e4b7980ba50763f4",
+    "evidence": "docs/design-audit/originals/sports_settings_720p.png"
   },
   {
     "id": "stepper_showcase",
