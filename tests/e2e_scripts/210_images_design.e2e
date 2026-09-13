@@ -1,0 +1,82 @@
+goto_screen images
+resize 1280 720
+wait 0.4
+expect_text "Image & Sprite Components"
+expect_text "Static image"
+expect_text "Clickable image"
+expect_text "Fast forward"
+expect_no_text "Play"
+expect_text "100 x 100 source"
+expect_text "x 0 / y 0 / w 100 / h 100"
+expect_text "Full-source frame: 80 x 80px"
+expect_text "Display scale: 0.80x"
+expect_text "Total image-button clicks"
+expect_text "Clicks: 0"
+expect_text "Last: None yet"
+expect_text "Primary"
+expect_text "Accent"
+expect_text "Secondary"
+expect_text "Image with text background"
+expect_text "260 x 64px / 12px icon gap"
+expect_text "White + alpha"
+expect_text "Static action labels"
+expect_text "Cropped to visible pixels"
+expect_text "50px longest visible side"
+expect_text "bilinear filtering"
+assert_ui image_bg x=0 y=0 w=1280 h=720
+assert_ui sprite_icon_1 x=276 y=158 w=80 h=80
+assert_ui sprite_icon_5 x=772 y=158 w=80 h=80
+assert_ui icon_0 x=291 y=587 w=50 h=50
+assert_ui image_container x=264 y=482 w=260 h=64
+assert_ui image_light_sprite x=912 y=482 w=64 h=64
+assert_within_parents
+screenshot images_design
+click_ui sprite_icon_1
+wait 0.2
+expect_text "Clicks: 0"
+click_ui imgbtn_1
+wait 0.2
+expect_text "Clicks: 1"
+expect_text "Last: Settings"
+click_ui imgbtn_2
+wait 0.2
+expect_text "Clicks: 2"
+expect_text "Last: Fast forward"
+focus_element imgbtn_3
+key ENTER
+wait 0.2
+expect_text "Clicks: 3"
+expect_text "Last: Favorite"
+click_ui image_bounds
+wait 0.2
+expect_text "Bounds visible"
+expect_text "Hide image bounds"
+expect_text "Clicks: 3"
+assert_within_parents
+screenshot images_bounds
+focus_element image_bounds
+key ENTER
+wait 0.2
+expect_text "Bounds hidden"
+expect_text "Show image bounds"
+resize 1920 1080
+wait 0.3
+expect_text "Full-source frame: 120 x 120px"
+expect_text "Display scale: 1.20x"
+expect_text "75px longest visible side"
+assert_ui image_bg x=0 y=0 w=1920 h=1080
+assert_ui sprite_icon_1 x=414 y=237 w=120 h=120
+assert_ui image_container x=396 y=723 w=390 h=96
+assert_within_parents
+screenshot images_design_1080
+resize 1024 768
+wait 0.3
+expect_text "Full-source frame: 64 x 64px"
+expect_text "Display scale: 0.64x"
+expect_text "40px longest visible side"
+assert_ui image_bg x=0 y=0 w=1024 h=768
+assert_ui sprite_icon_1 x=221 y=222 w=64 h=64
+assert_ui image_container x=211 y=482 w=208 h=51
+assert_within_parents
+screenshot images_design_narrow
+resize 1280 720

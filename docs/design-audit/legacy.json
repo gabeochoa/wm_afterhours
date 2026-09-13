@@ -135,8 +135,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes the Settings image-button focus ring. Row layout is unchanged. The Play glyph resembles fast-forward and the click tally is detached from its buttons in both.",
-    "sha256": "47379831e154a3b266225a3141a25c83593b33ae77d02b3652fe6daac20b91e9",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "fb2c068b7de3f6c01f223837498c6b04c705b10827efdf487268e668f84332e7",
     "additional_findings": []
   },
   {

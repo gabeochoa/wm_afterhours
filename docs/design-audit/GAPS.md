@@ -1983,7 +1983,7 @@ The intentional colors and item positions demonstrate hstack behavior. Improve s
 
 ## images
 
-[Current baseline](../../screenshot-baselines/screens/images_720p.png) · [Visual review](../../design-audit.html#screen=images)
+[Reviewed image](../../docs/design-audit/originals/images_720p.png) · [Current baseline](../../screenshot-baselines/screens/images_720p.png) · [Visual review](../../design-audit.html#screen=images)
 
 Baseline SHA-256: `71d7b50a816120335ffcbc75e3c765af1e147812c32cf300572f43703604c81a`
 
@@ -2021,7 +2021,7 @@ The sprites render cleanly, and the resting button examples are intact. Proposal
 
 [Image](../../baseline_screenshots/images.png)
 
-Current capture removes the Settings image-button focus ring. Row layout is unchanged. The Play glyph resembles fast-forward and the click tally is detached from its buttons in both.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## islands trains settings
 

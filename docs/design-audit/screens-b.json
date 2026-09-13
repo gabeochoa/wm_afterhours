@@ -2824,7 +2824,8 @@
         "change": "Offer thin optional bounds around the raw sprite samples for inspection."
       }
     ],
-    "sha256": "71d7b50a816120335ffcbc75e3c765af1e147812c32cf300572f43703604c81a"
+    "sha256": "71d7b50a816120335ffcbc75e3c765af1e147812c32cf300572f43703604c81a",
+    "evidence": "docs/design-audit/originals/images_720p.png"
   },
   {
     "id": "islands_trains_settings",

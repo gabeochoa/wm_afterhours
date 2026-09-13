@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-928 completed; 1,607 remaining.
+953 completed; 1,582 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3854,79 +3854,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/images_720p.png) · [Visual review](design-audit.html#screen=images)
 
-- [ ] `images-01` · P2 · defect. Play sprite: Use a single play triangle or rename the specimen Fast forward.
+- [x] `images-01` · P2 · defect. Play sprite: Use a single play triangle or rename the specimen Fast forward.
   Evidence: The icon labeled Play shows two right-pointing triangles, conventionally fast-forward.
 
-- [ ] `images-02` · P2 · proposal. Page title: Increase the heading and shorten the bar to the content width.
+- [x] `images-02` · P2 · proposal. Page title: Increase the heading and shorten the bar to the content width.
   Evidence: Image & Sprite Components uses small text across a wide title bar.
 
-- [ ] `images-03` · P2 · proposal. Section label styles: Use one section-label treatment unless color has a documented meaning.
+- [x] `images-03` · P2 · proposal. Section label styles: Use one section-label treatment unless color has a documented meaning.
   Evidence: Sprites and With Background are cyan while Image Buttons and Icon Row are red.
 
-- [ ] `images-04` · P2 · proposal. Sprite names: Show glyph name and intended action as separate consistent labels.
+- [x] `images-04` · P2 · proposal. Sprite names: Show glyph name and intended action as separate consistent labels.
   Evidence: Gear and Trophy become Settings and Awards in the icon row.
 
-- [ ] `images-05` · P2 · proposal. Favorite naming: Choose one action label across both examples.
+- [x] `images-05` · P2 · proposal. Favorite naming: Choose one action label across both examples.
   Evidence: Favorite in the button row becomes Favorites in the icon row.
 
-- [ ] `images-06` · P2 · proposal. Sprite row alignment: Center each caption directly beneath its sprite.
+- [x] `images-06` · P2 · proposal. Sprite row alignment: Center each caption directly beneath its sprite.
   Evidence: Captions are offset left of the apparent icon centers.
 
-- [ ] `images-07` · P2 · proposal. Icon-row captions: Increase caption size and reduce tracking.
+- [x] `images-07` · P2 · proposal. Icon-row captions: Increase caption size and reduce tracking.
   Evidence: Settings and Play use small widely spaced lettering.
 
-- [ ] `images-08` · P3 · proposal. Gear visual size: Normalize optical icon size in the comparison row.
+- [x] `images-08` · P3 · proposal. Gear visual size: Normalize optical icon size in the comparison row.
   Evidence: The gear appears smaller than the home and play silhouettes.
 
-- [ ] `images-09` · P3 · proposal. Star specimen: Add consistent image bounds behind the specimens to expose size differences.
+- [x] `images-09` · P3 · proposal. Star specimen: Add consistent image bounds behind the specimens to expose size differences.
   Evidence: The star has a smaller visual footprint than the trophy.
 
-- [ ] `images-10` · P2 · proposal. Sprite metadata: Add a compact 100 × 100 source metadata caption.
+- [x] `images-10` · P2 · proposal. Sprite metadata: Add a compact 100 × 100 source metadata caption.
   Evidence: The first row provides no source dimensions or scale.
 
-- [ ] `images-11` · P3 · proposal. Image-button frame: Use a shared frame color or label each theme variant.
+- [x] `images-11` · P3 · proposal. Image-button frame: Use a shared frame color or label each theme variant.
   Evidence: The three buttons use unrelated fill colors.
 
-- [ ] `images-12` · P2 · proposal. Button versus sprite: Add Static image and Clickable image badges beside their headings.
+- [x] `images-12` · P2 · proposal. Button versus sprite: Add Static image and Clickable image badges beside their headings.
   Evidence: The difference between the first and second rows is implied only by titles.
 
-- [ ] `images-13` · P2 · proposal. Click counter: Place it in a visible shared result badge adjacent to the button group.
+- [x] `images-13` · P2 · proposal. Click counter: Place it in a visible shared result badge adjacent to the button group.
   Evidence: Clicks: 0 sits in open space away from the three buttons.
 
-- [ ] `images-14` · P3 · proposal. Counter scope: Label it Total image-button clicks.
+- [x] `images-14` · P3 · proposal. Counter scope: Label it Total image-button clicks.
   Evidence: Clicks: 0 does not say whether all buttons share the counter.
 
-- [ ] `images-15` · P2 · proposal. With Background sample: Rename the section Image with text background.
+- [x] `images-15` · P2 · proposal. With Background sample: Rename the section Image with text background.
   Evidence: The purple Settings rectangle is not described as a compound image-and-label control.
 
-- [ ] `images-16` · P2 · proposal. Compound Settings spacing: Use a consistent icon-to-label gap and centered vertical alignment.
+- [x] `images-16` · P2 · proposal. Compound Settings spacing: Use a consistent icon-to-label gap and centered vertical alignment.
   Evidence: The gear and Settings text have a large unstructured gap.
 
-- [ ] `images-17` · P3 · proposal. Third row height: Fit the sample panel to its contents or add its geometry annotation.
+- [x] `images-17` · P3 · proposal. Third row height: Fit the sample panel to its contents or add its geometry annotation.
   Evidence: A single small sample sits in a long full-width panel.
 
-- [ ] `images-18` · P3 · proposal. Icon row interaction: Label whether these are static icons or actions.
+- [x] `images-18` · P3 · proposal. Icon row interaction: Label whether these are static icons or actions.
   Evidence: The icon row looks similar to the button row but its role is unclear.
 
-- [ ] `images-19` · P2 · proposal. Section label widths: Use a fixed section-label column to align all sample starts.
+- [x] `images-19` · P2 · proposal. Section label widths: Use a fixed section-label column to align all sample starts.
   Evidence: Sprites and Icon Row use narrower labels than the other rows.
 
-- [ ] `images-20` · P2 · proposal. Sample columns: Align matching glyphs vertically across both rows.
+- [x] `images-20` · P2 · proposal. Sample columns: Align matching glyphs vertically across both rows.
   Evidence: The first and fourth rows place matching icons at different x positions.
 
-- [ ] `images-21` · P3 · proposal. Right empty space: Use the area for source-rectangle and scale annotations.
+- [x] `images-21` · P3 · proposal. Right empty space: Use the area for source-rectangle and scale annotations.
   Evidence: Each row leaves a broad unused area on the right.
 
-- [ ] `images-22` · P3 · proposal. Bottom empty space: Center the gallery vertically or add a concise rendering-specification footer.
+- [x] `images-22` · P3 · proposal. Bottom empty space: Center the gallery vertically or add a concise rendering-specification footer.
   Evidence: The page leaves a large empty band beneath Icon Row.
 
-- [ ] `images-23` · P2 · proposal. Home silhouette: Use consistent visual weight in the action row while retaining raw sprites in the first row.
+- [x] `images-23` · P2 · proposal. Home silhouette: Use consistent visual weight in the action row while retaining raw sprites in the first row.
   Evidence: The filled house is a strong shape compared with the detailed outlined gear.
 
-- [ ] `images-24` · P3 · proposal. Sprite background contrast: Add a small light-background companion sample for transparency inspection.
+- [x] `images-24` · P3 · proposal. Sprite background contrast: Add a small light-background companion sample for transparency inspection.
   Evidence: All raw sprites are white on dark with no alternative backdrop reference.
 
-- [ ] `images-25` · P3 · proposal. Image boundaries: Offer thin optional bounds around the raw sprite samples for inspection.
+- [x] `images-25` · P3 · proposal. Image boundaries: Offer thin optional bounds around the raw sprite samples for inspection.
   Evidence: The visible glyphs do not expose their rectangular image bounds.
 
 ### islands_trains_settings

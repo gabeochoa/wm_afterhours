@@ -3,6 +3,7 @@
 
 # Navigate to the images screen
 goto_screen images
+resize 1280 720
 wait 0.5
 
 # Validate initial screen against baseline
@@ -11,17 +12,7 @@ validate_screen images
 # Verify we're on the correct screen
 expect_text "Image & Sprite Components"
 
-# Tab to an image button and click
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
-key TAB
-wait 0.2
+focus_element imgbtn_1
 key ENTER
 wait 0.3
 
