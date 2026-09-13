@@ -62,7 +62,7 @@ inline void draw(afterhours::ui::UIContext<InputAction> &context,
             .with_font_size(pixels(16.f))
             .with_custom_text_color(n == 1 ? ink : dim)
             .with_custom_background(n == 1 ? row : page)
-            .with_roundness(0.2f)
+            .with_corner_radius(8.f)
             .with_debug_name(fmt::format("bd_nav_{}", n)));
   }
 
@@ -92,7 +92,7 @@ inline void draw(afterhours::ui::UIContext<InputAction> &context,
     div(context, mk(entity, i++),
         at(264.f, y, 976.f, 46.f)
             .with_custom_background(row)
-            .with_roundness(0.14f)
+            .with_corner_radius(8.f)
             .with_debug_name(fmt::format("bd_row_{}", r)));
     div(context, mk(entity, i++),
         at(288.f, y, 500.f, 46.f)
