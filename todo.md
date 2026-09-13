@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,276 completed; 259 remaining.
+2,293 completed; 242 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7954,55 +7954,55 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/virtual_list_lab_720p.png) · [Visual review](design-audit.html#screen=virtual_list_lab)
 
-- [ ] `virtual_list_lab-01` · P2 · proposal. Instruction size: Increase it to 13 px actual size.
+- [x] `virtual_list_lab-01` · P2 · proposal. Instruction size: Increase it to 13 px actual size.
   Evidence: The entity-count explanation is tiny beneath the title.
 
-- [ ] `virtual_list_lab-02` · P2 · proposal. Row identifiers: Increase row text size while retaining the fixed row-height test.
+- [x] `virtual_list_lab-02` · P2 · proposal. Row identifiers: Increase row text size while retaining the fixed row-height test.
   Evidence: row 00000 through row 00019 are very small.
 
-- [ ] `virtual_list_lab-03` · P2 · proposal. Row padding: Add 12 px text inset without changing the viewport width.
+- [x] `virtual_list_lab-03` · P2 · proposal. Row padding: Add 12 px text inset without changing the viewport width.
   Evidence: Identifiers begin flush at the list's left edge.
 
-- [ ] `virtual_list_lab-04` · P2 · proposal. Entity-count claim: Add a live rendered-entity count above the list.
+- [x] `virtual_list_lab-04` · P2 · proposal. Entity-count claim: Add a live rendered-entity count above the list.
   Evidence: The instruction says entity count stays flat but no count is displayed.
 
-- [ ] `virtual_list_lab-05` · P2 · proposal. Visible range: Show Visible rows 0 to 19 of 10,000 outside the viewport.
+- [x] `virtual_list_lab-05` · P2 · proposal. Visible range: Show Visible rows 0 to 19 of 10,000 outside the viewport.
   Evidence: Twenty rows are visible with no summarized range.
 
-- [ ] `virtual_list_lab-06` · P2 · proposal. Scroll position: Add numeric offset and percentage readouts.
+- [x] `virtual_list_lab-06` · P2 · proposal. Scroll position: Add numeric offset and percentage readouts.
   Evidence: The tiny thumb conveys little precise position information.
 
-- [ ] `virtual_list_lab-07` · P2 · proposal. Total count formatting: Display 10,000 in descriptive text while keeping zero-padded row IDs.
+- [x] `virtual_list_lab-07` · P2 · proposal. Total count formatting: Display 10,000 in descriptive text while keeping zero-padded row IDs.
   Evidence: 10000 appears without grouping separators.
 
-- [ ] `virtual_list_lab-08` · P2 · proposal. Marked rows: Add a small marker icon or accent stripe alongside the text.
+- [x] `virtual_list_lab-08` · P2 · proposal. Marked rows: Add a small marker icon or accent stripe alongside the text.
   Evidence: Rows 00000, 00007 and 00014 say marked but have no separate visual marker.
 
-- [ ] `virtual_list_lab-09` · P2 · proposal. Marked rule: Add a caption naming the marker interval.
+- [x] `virtual_list_lab-09` · P2 · proposal. Marked rule: Add a caption naming the marker interval.
   Evidence: The reason every seventh row is marked is not explained.
 
-- [ ] `virtual_list_lab-10` · P2 · proposal. Index convention: Label row IDs as zero-based.
+- [x] `virtual_list_lab-10` · P2 · proposal. Index convention: Label row IDs as zero-based.
   Evidence: The first row is 00000 without an indexing note.
 
-- [ ] `virtual_list_lab-11` · P2 · proposal. Jump controls: Add Start, Middle and End presets outside the viewport.
+- [x] `virtual_list_lab-11` · P2 · proposal. Jump controls: Add Start, Middle and End presets outside the viewport.
   Evidence: Only manual scrolling is suggested for a very long list.
 
-- [ ] `virtual_list_lab-12` · P2 · proposal. Jump-to-index: Add a row-index field for reproducible offscreen-range captures.
+- [x] `virtual_list_lab-12` · P2 · proposal. Jump-to-index: Add a row-index field for reproducible offscreen-range captures.
   Evidence: No direct location entry is visible.
 
-- [ ] `virtual_list_lab-13` · P2 · proposal. Virtualization evidence: Add companion captures at a distant offset with the entity-count readout.
+- [x] `virtual_list_lab-13` · P2 · proposal. Virtualization evidence: Add companion captures at a distant offset with the entity-count readout.
   Evidence: The initial frame cannot show entity reuse across distant ranges.
 
-- [ ] `virtual_list_lab-14` · P2 · proposal. Viewport metrics: Show both values with the expected visible-row count.
+- [x] `virtual_list_lab-14` · P2 · proposal. Viewport metrics: Show both values with the expected visible-row count.
   Evidence: The fixed row height and viewport height are undocumented.
 
-- [ ] `virtual_list_lab-15` · P3 · proposal. Row schema: Use aligned Index and State columns for easier scanning.
+- [x] `virtual_list_lab-15` · P3 · proposal. Row schema: Use aligned Index and State columns for easier scanning.
   Evidence: Each line combines an index and state in loose text.
 
-- [ ] `virtual_list_lab-16` · P2 · proposal. End-state framing: Add Last row: 09999 in the test metadata.
+- [x] `virtual_list_lab-16` · P2 · proposal. End-state framing: Add Last row: 09999 in the test metadata.
   Evidence: No indication describes the last row's expected index.
 
-- [ ] `virtual_list_lab-17` · P3 · proposal. Unused row width: Use a compact content column with a subtle grid while preserving the full-width scroll region.
+- [x] `virtual_list_lab-17` · P3 · proposal. Unused row width: Use a compact content column with a subtle grid while preserving the full-width scroll region.
   Evidence: Most of every row is empty.
 
 ### vstack_showcase
@@ -8150,6 +8150,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Make virtual-list row stride consistent with grid snapping so the last row remains reachable; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Decode e2e typed UTF-8 into Unicode codepoints before queuing input; see docs/AFTERHOURS_GAPS.md.
 

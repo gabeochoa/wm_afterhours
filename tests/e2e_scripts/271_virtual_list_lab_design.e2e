@@ -1,0 +1,77 @@
+goto_screen virtual_list_lab
+resize 1280 720
+wait 0.3
+click_ui vl_start
+wait 0.3
+expect_text "Virtual list / 10,000 rows"
+expect_text "Visible rows 0 to 21 of 10,000"
+expect_text "26 px rows / 560 px viewport / 22 visible incl. partial"
+expect_text "Built 26 rows / 78 row UI entities"
+expect_text "0 px / 0.0%"
+assert_ui vl_list x=48 y=84 w=1180 h=560
+assert_ui vl_row_0 x=48 y=84 h=26
+assert_ui vl_row_1 x=48 y=110 h=26
+assert_ui vl_row_21 x=48 y=630 h=26
+assert_no_overflow
+assert_within_parents
+screenshot virtual_list_design
+click_ui vl_middle
+wait 0.3
+expect_text "Visible rows 5000 to 5021 of 10,000"
+expect_text "row 05000"
+expect_text "Built 30 rows / 90 row UI entities"
+screenshot virtual_list_design_middle
+focus_ui vl_end
+key ENTER
+wait 0.3
+expect_text "row 09999"
+expect_text "Visible rows 9978 to 9999 of 10,000"
+expect_text "259440 px / 100.0%"
+assert_ui vl_row_9999 x=48 y=618 h=26
+screenshot virtual_list_design_end
+focus_ui vl_index
+key CTRL+A
+type "7777"
+click_ui vl_jump
+wait 0.3
+expect_text "Jump requested: row 07777"
+expect_text "Visible rows 7777 to 7798 of 10,000"
+expect_text "row 07777"
+screenshot virtual_list_design_jump
+focus_ui vl_index
+key CTRL+A
+type "10000"
+click_ui vl_jump
+wait 0.2
+expect_text "Enter a whole row index from 0 to 9999."
+expect_text "Visible rows 7777 to 7798 of 10,000"
+click_ui vl_start
+wait 0.2
+mouse_move 400 250
+scroll_wheel 0 -5
+wait 0.3
+expect_text "100 px /"
+expect_text "Visible rows 3 to 25 of 10,000"
+screenshot virtual_list_design_wheel
+click_ui vl_start
+resize 1920 1080
+wait 0.3
+assert_ui vl_list x=72 y=126 w=1770 h=840
+assert_ui vl_row_0 h=26
+assert_no_overflow
+assert_within_parents
+screenshot virtual_list_design_1080
+resize 1024 768
+wait 0.3
+assert_ui vl_root x=0 y=96 w=1024 h=576
+assert_ui vl_list x=38 y=163 w=944 h=448
+assert_ui vl_row_0 h=26
+assert_no_overflow
+assert_within_parents
+screenshot virtual_list_design_narrow
+click_ui vl_end
+wait 0.3
+expect_text "row 09999"
+assert_ui vl_row_9999 x=38 y=585 h=26
+screenshot virtual_list_design_narrow_end
+resize 1280 720

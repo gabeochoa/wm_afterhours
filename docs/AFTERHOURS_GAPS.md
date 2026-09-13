@@ -443,6 +443,17 @@ codepoints. WM tests ASCII typing and provides a visible café preset to
 verify5-byte/4-codepoint storage and native caret movement around é without
 claiming the e2e typing path supports Unicode.
 
+### Virtual row grid snapping disagrees with offset math
+
+Native compute_relative_positions snaps each child position and running offset
+whenever global grid snapping is enabled, ignoring child.skip_grid_snap.
+Although row sizes remain26px, positions advance28px while virtual-list offset
+math assumes26px. At End, row09999 exists but is outside the viewport. WM
+disables grid snapping for this screen, restored on screen switch, and tests
+both26px row spacing and the last row rectangle at the viewport end. Respect
+per-child snapping configuration consistently and derive virtualization from
+the effective row stride.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

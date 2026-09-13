@@ -4068,7 +4068,7 @@ The two tray orientations are visible. Sixteen proposals clarify navigation and 
 
 ## virtual list lab
 
-[Current baseline](../../screenshot-baselines/screens/virtual_list_lab_720p.png) · [Visual review](../../design-audit.html#screen=virtual_list_lab)
+[Reviewed image](../../docs/design-audit/originals/virtual_list_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/virtual_list_lab_720p.png) · [Visual review](../../design-audit.html#screen=virtual_list_lab)
 
 Baseline SHA-256: `ba1f0c8ef168650cbccfbde56c69c550e8a99f62e791f60d6ac1f8a27ab92ce1`
 

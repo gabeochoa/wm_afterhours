@@ -6087,7 +6087,8 @@
         "change": "Use a compact content column with a subtle grid while preserving the full-width scroll region."
       }
     ],
-    "sha256": "ba1f0c8ef168650cbccfbde56c69c550e8a99f62e791f60d6ac1f8a27ab92ce1"
+    "sha256": "ba1f0c8ef168650cbccfbde56c69c550e8a99f62e791f60d6ac1f8a27ab92ce1",
+    "evidence": "docs/design-audit/originals/virtual_list_lab_720p.png"
   },
   {
     "id": "vstack_showcase",
