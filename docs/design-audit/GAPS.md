@@ -833,7 +833,7 @@ The chart renders two visible series and a selected first sample. Findings addre
 
 ## checkboxes
 
-[Current baseline](../../screenshot-baselines/screens/checkboxes_720p.png) · [Visual review](../../design-audit.html#screen=checkboxes)
+[Reviewed image](../../docs/design-audit/originals/checkboxes_720p.png) · [Current baseline](../../screenshot-baselines/screens/checkboxes_720p.png) · [Visual review](../../design-audit.html#screen=checkboxes)
 
 Baseline SHA-256: `8803f8f0120ccde187bb361b14b6d4674b1c3e0872d2a2df3e86b126308d25f5`
 
@@ -871,7 +871,7 @@ The screenshot intentionally includes disabled and minimum-selection examples. F
 
 [Image](../../baseline_screenshots/checkboxes.png)
 
-Current capture moves the Primary check value rightward. Colored full-row fills, text-bracket indicators and a large unused lower panel remain in both captures.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## circular progress
 

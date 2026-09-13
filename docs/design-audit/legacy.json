@@ -37,8 +37,8 @@
       1280,
       720
     ],
-    "summary": "Current capture moves the Primary check value rightward. Colored full-row fills, text-bracket indicators and a large unused lower panel remain in both captures.",
-    "sha256": "dbfe1c8df412ebc6d2de2814125a39c29c1c5311db4d3295570013f9bd7c6563",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "b69936303e3b8a03417614b7c040b2d881f5a264ba1d2a604aa65b0511f3cf09",
     "additional_findings": []
   },
   {

@@ -1,0 +1,93 @@
+goto_screen checkboxes
+resize 1280 720
+wait 0.3
+expect_text "Individual controls"
+expect_text "Grouped preferences"
+expect_text "2 of 4 selected"
+expect_text "Min 1, max 2"
+expect_checkbox labeled_primary checked
+expect_checkbox labeled_secondary unchecked
+expect_checkbox labeled_accent checked
+expect_checkbox disabled_checked checked
+expect_checkbox disabled_unchecked unchecked
+expect_checkbox ch_1 checked
+expect_checkbox ch_2 unchecked
+expect_checkbox ch_3 unchecked
+assert_ui bg w=1280 h=720
+assert_ui card x=68 y=0 w=1144 h=720
+assert_ui nl_option_1 w=44 h=44
+assert_ui nl_option_4 w=44 h=44
+assert_within_parents
+screenshot checkboxes_design
+click_ui checkbox_match_roles
+wait 0.2
+expect_checkbox labeled_primary checked
+expect_checkbox labeled_secondary checked
+expect_checkbox labeled_accent checked
+click_ui disabled_checked
+wait 0.2
+expect_checkbox disabled_checked checked
+click_ui disabled_unchecked
+wait 0.2
+expect_checkbox disabled_unchecked unchecked
+focus_ui nl_option_4
+key TAB
+wait 0.2
+expect_focused opt_a
+key ENTER
+wait 0.2
+expect_checkbox opt_a unchecked
+expect_text "1 of 4 selected"
+click_ui opt_b
+wait 0.2
+expect_checkbox opt_b checked
+expect_text "2 of 4 selected"
+click_ui ch_1
+wait 0.2
+expect_checkbox ch_1 checked
+expect_text "Keep one channel selected"
+focus_ui ch_2
+key ENTER
+wait 0.2
+expect_checkbox ch_2 checked
+expect_text "2 selected"
+expect_text "Maximum reached"
+click_ui ch_3
+wait 0.2
+expect_checkbox ch_3 unchecked
+click_ui ch_1
+wait 0.2
+expect_checkbox ch_1 unchecked
+expect_checkbox ch_2 checked
+expect_text "Keep one channel selected"
+focus_ui ch_3
+key ENTER
+wait 0.2
+expect_checkbox ch_3 checked
+expect_text "Maximum reached"
+screenshot checkboxes_limit_reached
+focus_ui checkbox_reset
+key ENTER
+wait 0.2
+expect_checkbox labeled_primary checked
+expect_checkbox labeled_secondary unchecked
+expect_checkbox labeled_accent checked
+expect_checkbox opt_a checked
+expect_checkbox opt_b unchecked
+expect_checkbox opt_c checked
+expect_checkbox opt_d unchecked
+expect_checkbox ch_1 checked
+expect_checkbox ch_2 unchecked
+expect_checkbox ch_3 unchecked
+expect_text "Disabled values: checked / unchecked"
+resize 1920 1080
+wait 0.3
+assert_ui nl_option_1 w=66 h=66
+assert_within_parents
+screenshot checkboxes_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bg w=1024 h=768
+assert_within_parents
+screenshot checkboxes_design_narrow
+resize 1280 720

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-455 completed; 2,080 remaining.
+480 completed; 2,055 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1476,79 +1476,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/checkboxes_720p.png) · [Visual review](design-audit.html#screen=checkboxes)
 
-- [ ] `checkboxes-01` · P2 · defect. Left labels: Add consistent label inset.
+- [x] `checkboxes-01` · P2 · defect. Left labels: Add consistent label inset.
   Evidence: Primary, Secondary and Accent touch their colored row edges.
 
-- [ ] `checkboxes-02` · P2 · defect. Right labels: Inset labels to match the left column.
+- [x] `checkboxes-02` · P2 · defect. Right labels: Inset labels to match the left column.
   Evidence: Option A through D begin directly at the row boundary.
 
-- [ ] `checkboxes-03` · P2 · proposal. Checkbox glyphs: Render clear square checkbox marks.
+- [x] `checkboxes-03` · P2 · proposal. Checkbox glyphs: Render clear square checkbox marks.
   Evidence: Selections use literal [x] and [ ] text.
 
-- [ ] `checkboxes-04` · P2 · proposal. Box-only geometry: Use square specimens or label the pill geometry as intentional.
+- [x] `checkboxes-04` · P2 · proposal. Box-only geometry: Use square specimens or label the pill geometry as intentional.
   Evidence: Box Only specimens look like wide pills.
 
-- [ ] `checkboxes-05` · P2 · proposal. Box-only identity: Add numbered captions outside the controls.
+- [x] `checkboxes-05` · P2 · proposal. Box-only identity: Add numbered captions outside the controls.
   Evidence: Four unlabeled controls have no external identifiers.
 
-- [ ] `checkboxes-06` · P2 · proposal. Box-only states: Add an external on/off legend.
+- [x] `checkboxes-06` · P2 · proposal. Box-only states: Add an external on/off legend.
   Evidence: Two empty pills have no explicit off-state reference.
 
-- [ ] `checkboxes-07` · P2 · proposal. With Label heading: Give headings a neutral treatment.
+- [x] `checkboxes-07` · P2 · proposal. With Label heading: Give headings a neutral treatment.
   Evidence: The section heading uses the same teal fill as its controls.
 
-- [ ] `checkboxes-08` · P2 · proposal. Color role row: Add a matched-state comparison caption.
+- [x] `checkboxes-08` · P2 · proposal. Color role row: Add a matched-state comparison caption.
   Evidence: Primary, Secondary and Accent change row fill along with selection state.
 
-- [ ] `checkboxes-09` · P2 · proposal. Disabled heading: Use a neutral section header.
+- [x] `checkboxes-09` · P2 · proposal. Disabled heading: Use a neutral section header.
   Evidence: Disabled uses bright teal while its examples are intentionally dim.
 
-- [ ] `checkboxes-10` · P2 · proposal. Disabled ON wording: Use Checked and Unchecked.
+- [x] `checkboxes-10` · P2 · proposal. Disabled ON wording: Use Checked and Unchecked.
   Evidence: ON/OFF terminology differs from checkbox checked state.
 
-- [ ] `checkboxes-11` · P2 · proposal. Disabled specimens: Add readable external Disabled captions.
+- [x] `checkboxes-11` · P2 · proposal. Disabled specimens: Add readable external Disabled captions.
   Evidence: Dim text is the only clear explanation of disabled status.
 
-- [ ] `checkboxes-12` · P2 · proposal. Multi-select heading: Separate the count into a compact badge.
+- [x] `checkboxes-12` · P2 · proposal. Multi-select heading: Separate the count into a compact badge.
   Evidence: Selected: 2 of 4 is embedded in a long header.
 
-- [ ] `checkboxes-13` · P2 · proposal. Option names: Use four related preference names.
+- [x] `checkboxes-13` · P2 · proposal. Option names: Use four related preference names.
   Evidence: Option A through D carry no meaningful choice example.
 
-- [ ] `checkboxes-14` · P2 · proposal. Count duplication: Use one prominent count near the group.
+- [x] `checkboxes-14` · P2 · proposal. Count duplication: Use one prominent count near the group.
   Evidence: 2 of 4 appears in both the header and tiny footer.
 
-- [ ] `checkboxes-15` · P2 · proposal. Constrained heading: Use a concrete preference-selection example.
+- [x] `checkboxes-15` · P2 · proposal. Constrained heading: Use a concrete preference-selection example.
   Evidence: Select 1–2 options is followed by generic Choice names.
 
-- [ ] `checkboxes-16` · P2 · proposal. Choice 1 state: Add a note that one selection must remain.
+- [x] `checkboxes-16` · P2 · proposal. Choice 1 state: Add a note that one selection must remain.
   Evidence: The selected minimum-bound choice appears disabled with no explanation.
 
-- [ ] `checkboxes-17` · P2 · proposal. Selection rule: Show Min 1, max 2 beside the count.
+- [x] `checkboxes-17` · P2 · proposal. Selection rule: Show Min 1, max 2 beside the count.
   Evidence: The maximum of two has no visible state summary beyond the heading.
 
-- [ ] `checkboxes-18` · P2 · proposal. Choice color: Explain the category mapping or neutralize row fills.
+- [x] `checkboxes-18` · P2 · proposal. Choice color: Explain the category mapping or neutralize row fills.
   Evidence: Constrained choices use purple while unconstrained choices use teal.
 
-- [ ] `checkboxes-19` · P2 · proposal. Checkbox alignment: Bring marks closer to the label or align them in a clear trailing column.
+- [x] `checkboxes-19` · P2 · proposal. Checkbox alignment: Bring marks closer to the label or align them in a clear trailing column.
   Evidence: Check marks are far from their labels in long filled rows.
 
-- [ ] `checkboxes-20` · P2 · proposal. Column titles: Add equal top-level labels for primitive and grouped examples.
+- [x] `checkboxes-20` · P2 · proposal. Column titles: Add equal top-level labels for primitive and grouped examples.
   Evidence: Left column starts With Label while right starts Multi-Select.
 
-- [ ] `checkboxes-21` · P2 · proposal. Row corner seams: Add narrow regular gutters or shared group corners.
+- [x] `checkboxes-21` · P2 · proposal. Row corner seams: Add narrow regular gutters or shared group corners.
   Evidence: Touching rounded rows create scalloped edges.
 
-- [ ] `checkboxes-22` · P2 · proposal. Footer size: Increase summary typography.
+- [x] `checkboxes-22` · P2 · proposal. Footer size: Increase summary typography.
   Evidence: Both selection summaries are very small.
 
-- [ ] `checkboxes-23` · P2 · proposal. Footer alignment: Align each beneath its associated column.
+- [x] `checkboxes-23` · P2 · proposal. Footer alignment: Align each beneath its associated column.
   Evidence: The summaries cluster near the middle instead of centering below their groups.
 
-- [ ] `checkboxes-24` · P2 · proposal. Lower blank space: Use it for the constrained-selection rule explanation.
+- [x] `checkboxes-24` · P2 · proposal. Lower blank space: Use it for the constrained-selection rule explanation.
   Evidence: The bottom portion of the panel is mostly empty.
 
-- [ ] `checkboxes-25` · P2 · proposal. Title scale: Reduce the title slightly and strengthen section hierarchy.
+- [x] `checkboxes-25` · P2 · proposal. Title scale: Reduce the title slightly and strengthen section hierarchy.
   Evidence: Checkbox Components dominates the small row labels.
 
 ### circular_progress
@@ -8105,6 +8105,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review external checkbox state synchronization so app resets do not require editing `HasCheckboxState`; see `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Add reviewed chart options for series stroke, hover-label visibility and explicit axis bounds; native chart styling limitations remain in `docs/AFTERHOURS_GAPS.md`.
 

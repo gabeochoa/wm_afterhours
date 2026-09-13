@@ -4104,7 +4104,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "8803f8f0120ccde187bb361b14b6d4674b1c3e0872d2a2df3e86b126308d25f5"
+    "sha256": "8803f8f0120ccde187bb361b14b6d4674b1c3e0872d2a2df3e86b126308d25f5",
+    "evidence": "docs/design-audit/originals/checkboxes_720p.png"
   },
   {
     "id": "circular_progress",

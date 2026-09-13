@@ -236,6 +236,17 @@ now combines hover translation with press scale. Upstream needs explicit
 composition or precedence for multiple triggers targeting the same property;
 keep this policy visible rather than silently overwriting a track.
 
+### Checkbox external state is treated as initialization only
+
+`checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from
+the supplied bool only when the entity is first created, then copies retained
+state back to that bool. A reset or matched-state comparison that updates the
+app's existing bools is overwritten on the next call. The wm showcase updates
+existing checkbox state before invoking the native widget, and its reset and
+matched-state E2E checks exercise this path. Review ownership/synchronization
+of externally supplied state upstream so callers need not reach into widget
+components to reset a checkbox.
+
 ### Chart styling and axis-domain controls
 
 `plugins/ui/line_chart.h` hardcodes a 2px series stroke, takes its domain
