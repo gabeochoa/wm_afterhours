@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-998 completed; 1,537 remaining.
+1,023 completed; 1,512 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3309,79 +3309,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/flight_options_720p.png) · [Visual review](design-audit.html#screen=flight_options)
 
-- [ ] `flight_options-01` · P2 · proposal. Flight System suboptions: Increase suboption text while retaining the two-level hierarchy.
+- [x] `flight_options-01` · P2 · proposal. Flight System suboptions: Increase suboption text while retaining the two-level hierarchy.
   Evidence: Four setting names are much smaller than category navigation.
 
-- [ ] `flight_options-02` · P2 · proposal. Suboption spacing: Increase row height to form distinct selection targets.
+- [x] `flight_options-02` · P2 · proposal. Suboption spacing: Increase row height to form distinct selection targets.
   Evidence: Control Type and High-G Turn Settings sit in tightly spaced rows.
 
-- [ ] `flight_options-03` · P2 · proposal. Suboption location: Align their heading with the selected Flight System category.
+- [x] `flight_options-03` · P2 · proposal. Suboption location: Align their heading with the selected Flight System category.
   Evidence: The suboptions start beside the middle of the navigation list.
 
-- [ ] `flight_options-04` · P2 · proposal. Submenu heading: Add a restrained Flight System subheading over the controls.
+- [x] `flight_options-04` · P2 · proposal. Submenu heading: Add a restrained Flight System subheading over the controls.
   Evidence: No heading identifies the short list as Flight System settings.
 
-- [ ] `flight_options-05` · P2 · proposal. Control Type value: Add a right-aligned current setting value.
+- [x] `flight_options-05` · P2 · proposal. Control Type value: Add a right-aligned current setting value.
   Evidence: Control Type shows no current value.
 
-- [ ] `flight_options-06` · P2 · proposal. High-G Turn value: Expose the current mode beside the label.
+- [x] `flight_options-06` · P2 · proposal. High-G Turn value: Expose the current mode beside the label.
   Evidence: High-G Turn Settings shows only its name.
 
-- [ ] `flight_options-07` · P2 · proposal. Collision damage value: Show a compact On or Off value with the setting.
+- [x] `flight_options-07` · P2 · proposal. Collision damage value: Show a compact On or Off value with the setting.
   Evidence: Reduced Collision Damage has no visible on/off state.
 
-- [ ] `flight_options-08` · P2 · proposal. Vibration row: Raise disabled text contrast while keeping it visibly inactive.
+- [x] `flight_options-08` · P2 · proposal. Vibration row: Raise disabled text contrast while keeping it visibly inactive.
   Evidence: Vibration is extremely dim even though its unavailable status is useful information.
 
-- [ ] `flight_options-09` · P2 · proposal. Unavailable explanation: Add a short requirement note beneath the disabled row.
+- [x] `flight_options-09` · P2 · proposal. Unavailable explanation: Add a short requirement note beneath the disabled row.
   Evidence: Vibration says Unavailable without a reason.
 
-- [ ] `flight_options-10` · P3 · proposal. Selected category: Use a taller marker aligned with the row's text block.
+- [x] `flight_options-10` · P3 · proposal. Selected category: Use a taller marker aligned with the row's text block.
   Evidence: A thin gold marker identifies Flight System but stops short of its full row height.
 
-- [ ] `flight_options-11` · P3 · proposal. Selection wash: Limit it to the navigation column width.
+- [x] `flight_options-11` · P3 · proposal. Selection wash: Limit it to the navigation column width.
   Evidence: The faint gold wash stretches far beyond Flight System.
 
-- [ ] `flight_options-12` · P2 · proposal. Options heading: Increase its size or weight to establish a clearer page heading.
+- [x] `flight_options-12` · P2 · proposal. Options heading: Increase its size or weight to establish a clearer page heading.
   Evidence: OPTIONS is only slightly larger than category labels.
 
-- [ ] `flight_options-13` · P2 · proposal. Main navigation width: Provide a quiet text zone behind the navigation list.
+- [x] `flight_options-13` · P2 · proposal. Main navigation width: Provide a quiet text zone behind the navigation list.
   Evidence: Category labels sit beside overlapping technical wire lines.
 
-- [ ] `flight_options-14` · P3 · proposal. Menu spacing: Add subtle groups for input, display, and audio/language settings.
+- [x] `flight_options-14` · P3 · proposal. Menu spacing: Add subtle groups for input, display, and audio/language settings.
   Evidence: The nine category rows form a dense uninterrupted block.
 
-- [ ] `flight_options-15` · P2 · proposal. Help sentence: Move the help closer to the settings panel.
+- [x] `flight_options-15` · P2 · proposal. Help sentence: Move the help closer to the settings panel.
   Evidence: Select the in-flight system is far below the related list.
 
-- [ ] `flight_options-16` · P3 · proposal. Help content: Describe the currently highlighted setting in one concise sentence.
+- [x] `flight_options-16` · P3 · proposal. Help content: Describe the currently highlighted setting in one concise sentence.
   Evidence: The help sentence repeats the selected category without explaining it.
 
-- [ ] `flight_options-17` · P2 · proposal. Footer Enter key: Widen the keycap enough for the full label at readable size.
+- [x] `flight_options-17` · P2 · proposal. Footer Enter key: Widen the keycap enough for the full label at readable size.
   Evidence: Enter is very small inside a narrow outlined keycap.
 
-- [ ] `flight_options-18` · P2 · proposal. Footer Esc key: Use a consistent readable key-label size for Enter and Esc.
+- [x] `flight_options-18` · P2 · proposal. Footer Esc key: Use a consistent readable key-label size for Enter and Esc.
   Evidence: Esc uses a tiny type size compared with BACK.
 
-- [ ] `flight_options-19` · P2 · proposal. Footer OK label: Use Select or Apply according to the action represented.
+- [x] `flight_options-19` · P2 · proposal. Footer OK label: Use Select or Apply according to the action represented.
   Evidence: OK does not describe whether it opens or confirms the selected item.
 
-- [ ] `flight_options-20` · P3 · proposal. Footer grouping: Increase the gap between action groups.
+- [x] `flight_options-20` · P3 · proposal. Footer grouping: Increase the gap between action groups.
   Evidence: Enter OK and Esc BACK have little separation from one another.
 
-- [ ] `flight_options-21` · P3 · proposal. Footer background lines: Clear the wire treatment from the footer's reading area.
+- [x] `flight_options-21` · P3 · proposal. Footer background lines: Clear the wire treatment from the footer's reading area.
   Evidence: Diagonal wire lines pass behind the footer keycaps.
 
-- [ ] `flight_options-22` · P3 · proposal. Right-side radar: Use the radar area for a restrained setting preview or explanatory illustration.
+- [x] `flight_options-22` · P3 · proposal. Right-side radar: Use the radar area for a restrained setting preview or explanatory illustration.
   Evidence: A large faint ellipse occupies much of the empty right half.
 
-- [ ] `flight_options-23` · P3 · proposal. Right angular outline: Integrate it into the preview frame or simplify it.
+- [x] `flight_options-23` · P3 · proposal. Right angular outline: Integrate it into the preview frame or simplify it.
   Evidence: An isolated L-shaped outline has no relation to the displayed settings.
 
-- [ ] `flight_options-24` · P3 · proposal. Page balance: Give the setting detail area more width while retaining the sparse background.
+- [x] `flight_options-24` · P3 · proposal. Page balance: Give the setting detail area more width while retaining the sparse background.
   Evidence: Nearly all informative content sits within the left 500 pixels.
 
-- [ ] `flight_options-25` · P3 · proposal. Technical grid: Reduce grid contrast behind navigation and descriptions.
+- [x] `flight_options-25` · P3 · proposal. Technical grid: Reduce grid contrast behind navigation and descriptions.
   Evidence: Grid lines remain equally visible under text and empty areas.
 
 ### font_weight
@@ -8120,6 +8120,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Make disabled controls noninteractive even when their labels are child entities; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Make partial rounded outlines match fill masks and correct RoundedCorners::top_round; see docs/AFTERHOURS_GAPS.md.
 

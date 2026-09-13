@@ -334,6 +334,17 @@ fills. Separately, RoundedCorners::top_round sets TOP_LEFT, TOP_RIGHT and
 BOTTOM_RIGHT to ROUND; the bottom-right assignment contradicts the helper
 name. wm retains the fixtures and describes the visible fill/outline mismatch.
 
+### Disabled controls depend on having a label component
+
+Native pointer candidate filtering and HandleClicks in ui/systems.h check
+disabled state only when an entity has HasLabel. A button whose content is
+built from child labels therefore remains clickable despite
+with_disabled(true). The unavailable Vibration option in wm reproduced this
+and entered edit mode. wm removes its click listener while unavailable and
+also guards its action. can_be_focused rejects entities without a click or
+drag listener, so this also removes the option from focus traversal. Disabled
+interaction belongs on the control itself rather than its optional label.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

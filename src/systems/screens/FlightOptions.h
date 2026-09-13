@@ -60,20 +60,17 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
   bool editing = false, options_open = true, loaded = false;
   int focus_category = -1, focus_option = -1;
   std::string status;
-  raylib::Texture2D airspace{}, selection{};
+  raylib::Texture2D airspace{};
   const afterhours::Color cyan{155, 223, 255, 255};
   const afterhours::Color bright{228, 249, 255, 255};
   const afterhours::Color gold{255, 244, 192, 255};
-  const afterhours::Color muted{101, 157, 185, 255};
+  const afterhours::Color muted{154, 184, 205, 255};
 
   void load() {
     if (loaded) return;
     airspace = raylib::LoadTexture(afterhours::files::get_resource_path(
         "images", "flight_options/airspace.png").string().c_str());
-    selection = raylib::LoadTexture(afterhours::files::get_resource_path(
-        "images", "flight_options/selection.png").string().c_str());
     raylib::SetTextureFilter(airspace, raylib::TEXTURE_FILTER_BILINEAR);
-    raylib::SetTextureFilter(selection, raylib::TEXTURE_FILTER_BILINEAR);
     loaded = true;
   }
   static void paint(raylib::Texture2D texture, RectangleType r) {
@@ -110,7 +107,7 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
     load();
-    const float scale = context.screen_height / 720.f;
+    const float scale = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
     Theme theme;
     theme.font = cyan;
     theme.darkfont = bright;
@@ -123,7 +120,6 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0;
     context.set_theme(theme);
     context.scaling_mode = ScalingMode::Proportional;
-    UIStylingDefaults::get().set_default_font("Archivo", h720(20));
 
     if (context.pressed(InputAction::MenuBack)) {
       if (!options_open) { options_open = true; status.clear(); }
@@ -154,45 +150,64 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
 
-    auto root = div(context, mk(entity, 0), box(scale, 0, 0, 1280, 720)
+    auto root = div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)}).with_corner_radius(0)
         .with_debug_name("flight_root")
         .with_on_draw_bg([texture = airspace](RectangleType r) { paint(texture, r); }));
-    auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
-                     float size, afterhours::Color color, const std::string &name = "") {
-      return div(context, mk(root.ent(), id), box(scale, x, y, w, h).with_label(text)
-          .with_font("Archivo", h720(size * 1.25f)).with_custom_text_color(color)
-          .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
-          .with_text_shadow({48, 117, 176, 200}, 0, scale)
-          .with_ignore_pointer_events().with_debug_name(name));
+    auto content = div(context, mk(root.ent(), 0), ComponentConfig{}
+        .with_size({pixels(1280 * scale), pixels(720 * scale)})
+        .with_absolute_position((context.screen_width - 1280 * scale) / 2,
+                                (context.screen_height - 720 * scale) / 2)
+        .with_background(Theme::Usage::None).with_corner_radius(0));
+    const auto label = [&](int id, const std::string &text, float x, float y, float w, float h,
+                           float size, afterhours::Color color, const std::string &name = "", bool bold = false) {
+      return div(context, mk(content.ent(), id), box(scale, x, y, w, h).with_label(text)
+          .with_font(bold ? "ArchivoMockBold" : "ArchivoMock", pixels(size * scale))
+          .with_custom_text_color(color).with_alignment(TextAlignment::Left).with_text_inset(0, 0)
+          .with_text_overflow(TextOverflow::Wrap).with_ignore_pointer_events().with_debug_name(name));
     };
-    auto action = [&](int id, const std::string &text, float x, float y, float w, float h,
-                      float size, const std::string &name, bool disabled = false,
-                      afterhours::Color color = afterhours::Color{155, 223, 255, 255}) {
-      return button(context, mk(root.ent(), id), box(scale, x, y, w, h).with_label(text)
-          .with_font("Archivo", h720(size * 1.25f)).with_custom_text_color(color)
+    const auto action = [&](int id, const std::string &text, float x, float y, float w, float h,
+                            float size, const std::string &name, bool disabled = false,
+                            afterhours::Color color = afterhours::Color{155, 223, 255, 255}) {
+      return button(context, mk(content.ent(), id), box(scale, x, y, w, h).with_label(text)
+          .with_font("ArchivoMock", pixels(size * scale)).with_custom_text_color(color)
           .with_alignment(TextAlignment::Left).with_text_inset(0, 0)
-          .with_disabled(disabled).with_click_activation(ClickActivationMode::Release)
-          .with_text_shadow({48, 117, 176, 200}, 0, scale)
-          .with_debug_name(name));
+          .with_disabled(disabled).with_click_activation(ClickActivationMode::Release).with_debug_name(name));
     };
-    label(1, "OPTIONS", 135, 62, 260, 39, 27, cyan, "flight_title");
-
+    label(1, "OPTIONS", 92, 55, 380, 48, 40, bright, "flight_title", true);
+    label(6, "FLIGHT CONFIGURATION", 94, 105, 560, 28, 20, cyan);
     if (!options_open) {
-      label(2, "OPTIONS CLOSED", 153, 230, 370, 42, 25, bright);
-      label(3, status, 153, 278, 540, 34, 18, cyan, "flight_status");
-      if (action(4, "RETURN TO OPTIONS", 153, 342, 270, 34, 20, "flight_reopen")) {
+      div(context, mk(content.ent(), 7), box(scale, 76, 196, 660, 224)
+          .with_custom_background({3, 18, 34, 235}));
+      label(2, "OPTIONS CLOSED", 100, 220, 590, 42, 30, bright);
+      label(3, status, 100, 270, 590, 44, 23, cyan, "flight_status");
+      if (action(4, "RETURN TO OPTIONS", 100, 344, 340, 44, 25, "flight_reopen")) {
         options_open = true;
         editing = false;
         status.clear();
       }
       return;
     }
-
-    div(context, mk(root.ent(), 5), box(scale, 108, 123 + active_tab * 27.f, 360, 67)
-        .with_ignore_pointer_events().with_on_draw_bg([texture = selection](RectangleType r) { paint(texture, r); }));
+    div(context, mk(content.ent(), 8), box(scale, 76, 136, 272, 426)
+        .with_custom_background({3, 18, 34, 225}).with_debug_name("flight_navigation"));
+    div(context, mk(content.ent(), 9), box(scale, 384, 136, 456, 426)
+        .with_custom_background({3, 18, 34, 235}).with_debug_name("flight_settings"));
+    div(context, mk(content.ent(), 10), box(scale, 868, 136, 324, 426)
+        .with_custom_background({5, 24, 44, 235}).with_border({78, 124, 151, 255}, scale)
+        .with_debug_name("flight_preview"));
+    const auto category_y = [](size_t i) {
+      return 164.f + static_cast<float>(i) * 38 + (i >= 5 ? 24 : 0) + (i >= 7 ? 24 : 0);
+    };
+    div(context, mk(content.ent(), 5), box(scale, 86, category_y(active_tab), 252, 34)
+        .with_custom_background({109, 93, 53, 105}).with_ignore_pointer_events());
+    div(context, mk(content.ent(), 11), box(scale, 86, category_y(active_tab) + 2, 4, 30)
+        .with_custom_background(gold).with_ignore_pointer_events());
+    label(12, "INPUT", 102, 139, 224, 23, 16, muted);
+    label(13, "DISPLAY", 102, 353, 224, 23, 16, muted);
+    label(14, "AUDIO / LANGUAGE", 102, 453, 224, 23, 16, muted);
     for (size_t i = 0; i < categories.size(); ++i) {
       auto category = action(20 + static_cast<int>(i), categories[i].name,
-          153, 143 + i * 27.f, 165, 27, 20, "flight_category_" + std::to_string(i),
+          102, category_y(i), 228, 34, 24, "flight_category_" + std::to_string(i),
           false, active_tab == i ? bright : cyan);
       if (category) choose_category(i);
       if (focus_category == static_cast<int>(i)) {
@@ -201,15 +216,26 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
       }
     }
     auto &rows = categories[active_tab].options;
+    label(15, categories[active_tab].name, 404, 153, 416, 38, 27, bright, "flight_subheading", true);
     for (size_t i = 0; i < rows.size(); ++i) {
-      auto option = action(40 + static_cast<int>(i),
-          rows[i].name + (rows[i].unavailable ? " (Unavailable)" : ""), 333,
-          226 + i * 22.f, 230, 17, 13, "flight_option_" + std::to_string(i),
-          rows[i].unavailable, rows[i].unavailable ? muted : editing && selected_option == i ? gold : cyan);
-      if (option) {
+      const float y = 208 + static_cast<float>(i) * 48;
+      const bool selected = selected_option == i;
+      div(context, mk(content.ent(), 100 + static_cast<int>(i)), box(scale, 396, y, 432, 42)
+          .with_custom_background(selected ? afterhours::Color{31, 61, 83, 210} : afterhours::Color{12, 35, 53, 170})
+          .with_ignore_pointer_events());
+      auto option = action(40 + static_cast<int>(i), "", 404, y, 416, 42, 22,
+          "flight_option_" + std::to_string(i), rows[i].unavailable);
+      if (rows[i].unavailable) option.ent().removeComponent<HasClickListener>();
+      label(110 + static_cast<int>(i), rows[i].name + (rows[i].unavailable ? " (Unavailable)" : ""),
+            408, y + 3, 280, 36, 22, rows[i].unavailable ? muted : selected ? gold : cyan);
+      auto value_label = label(120 + static_cast<int>(i), rows[i].values.empty() ? "Restore" : rows[i].values[rows[i].value],
+            688, y + 3, 126, 36, 22, rows[i].unavailable ? muted : bright, "flight_row_value_" + std::to_string(i));
+      value_label.ent().get<HasLabel>().alignment = TextAlignment::Right;
+      if (option && !rows[i].unavailable) {
         selected_option = i;
         if (rows[i].values.empty()) {
           rows[0].value = 0;
+          selected_option = 0;
           editing = false;
           status = "Keyboard bindings restored to WASD";
         } else { editing = true; status.clear(); }
@@ -219,41 +245,49 @@ struct FlightOptionsScreen : ScreenSystem<UIContext<InputAction>> {
         focus_option = -1;
       }
     }
+    const auto &option = rows[selected_option];
+    if (active_tab <= 1)
+      label(130, "Vibration requires a compatible controller.", 404, 410, 416, 30, 20, muted);
+    label(80, option.help, 404, 451, 416, 80, 23, cyan, "flight_help");
+    label(60, editing ? "EDIT PREFERENCE" : "CURRENT SELECTION", 888, 153, 284, 28, 18, muted);
+    label(70, option.name, 888, 197, 284, 68, 28, bright, "flight_edit_name", true);
+    label(71, option.values[option.value], 934, 284, 204, 44, 29, gold, "flight_value", true);
+    label(76, "Saved: " + option.values[option.saved], 888, 350, 284, 32, 23, cyan, "flight_saved_value");
+    label(77, option.value == option.saved ? "Matches saved preference" : "Unapplied change", 888, 389, 284, 30, 22,
+          option.value == option.saved ? muted : gold, "flight_pending");
     if (editing) {
-      auto &option = rows[selected_option];
-      label(70, option.name, 333, 342, 430, 28, 20, bright, "flight_edit_name");
-      label(71, option.values[option.value], 370, 386, 260, 32, 22, gold, "flight_value");
-      if (action(72, "<", 333, 386, 29, 32, 22, "flight_previous")) step(-1);
-      if (action(73, ">", 640, 386, 29, 32, 22, "flight_next")) step(1);
-      if (action(74, "APPLY", 333, 445, 91, 30, 17, "flight_apply")) save();
-      if (action(75, "CANCEL CHANGES", 451, 445, 180, 30, 17, "flight_cancel")) {
+      if (action(72, "<", 890, 284, 32, 44, 32, "flight_previous")) step(-1);
+      if (action(73, ">", 1150, 284, 32, 44, 32, "flight_next")) step(1);
+      if (action(74, "APPLY", 888, 447, 122, 44, 23, "flight_apply")) save();
+      if (action(75, "CANCEL CHANGES", 1026, 447, 146, 44, 22, "flight_cancel")) {
         restore();
         editing = false;
       }
-    }
-    label(80, editing ? rows[selected_option].help :
-          active_tab == 0 ? "Select the in-flight system." : "Configure " + categories[active_tab].name + " settings.",
-          153, 547, 900, 30, 18, cyan, "flight_help");
-    if (!status.empty()) label(81, status, 153, 587, 720, 28, 16, gold, "flight_status");
-    auto keycap = [&](int id, const std::string &key, float x) {
-      div(context, mk(root.ent(), id), box(scale, x, 659, 24, 26).with_label(key)
-          .with_font("Archivo", h720(11 * 1.25f)).with_custom_text_color(cyan)
+    } else label(78, "Select a setting to edit.\nLeft / right changes its value.", 888, 448, 284, 60, 22, cyan);
+    if (!status.empty()) label(81, status, 404, 568, 788, 28, 21, gold, "flight_status");
+    div(context, mk(content.ent(), 82), box(scale, 76, 606, 1116, 98)
+        .with_custom_background({3, 18, 34, 240}).with_debug_name("flight_footer"));
+    const auto keycap = [&](int id, const std::string &key, float x, float width) {
+      div(context, mk(content.ent(), id), box(scale, x, 630, width, 34).with_label(key)
+          .with_font("ArchivoMockBold", pixels(22 * scale)).with_custom_text_color(bright)
           .with_alignment(TextAlignment::Center).with_border({165, 206, 251, 255}, scale)
           .with_corner_radius(3 * scale).with_ignore_pointer_events());
     };
-    keycap(90, "Enter", 149);
-    keycap(91, "Esc", 221);
-    label(92, "OK", 184, 655, 32, 34, 19, cyan);
-    label(93, "BACK", 255, 655, 65, 34, 19, cyan);
-    if (action(94, "", 149, 655, 64, 34, 19, "flight_ok")) {
+    keycap(90, "Enter", 100, 64);
+    keycap(91, "Esc", 306, 52);
+    label(92, "SELECT", 176, 630, 108, 34, 24, cyan);
+    label(93, "BACK", 370, 630, 92, 34, 24, cyan);
+    label(96, "Enter activates the focused control.", 100, 670, 600, 24, 18, muted);
+    if (action(94, "APPLY & CLOSE", 770, 630, 208, 44, 24, "flight_ok")) {
       save();
       editing = false;
       options_open = false;
     }
-    if (action(95, "", 221, 655, 100, 34, 19, "flight_back")) {
+    if (action(95, "BACK", 1026, 630, 146, 44, 24, "flight_back")) {
       if (editing) editing = false;
       else { restore(); options_open = false; }
     }
+
   }
 };
 

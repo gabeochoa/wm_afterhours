@@ -1,0 +1,84 @@
+goto_screen flight_options
+resize 1280 720
+wait 0.4
+expect_text "OPTIONS"
+expect_text "FLIGHT CONFIGURATION"
+expect_text "FLIGHT SYSTEM"
+expect_text "Control Type"
+expect_text "Standard"
+expect_text "Off"
+expect_text "Vibration (Unavailable)"
+expect_text "Vibration requires a compatible controller."
+expect_text "Saved: Standard"
+expect_text "Matches saved preference"
+expect_text "APPLY & CLOSE"
+expect_text "Enter activates the focused control."
+assert_ui flight_root x=0 y=0 w=1280 h=720
+assert_ui flight_settings x=384 y=136 w=456 h=426
+assert_ui flight_preview x=868 y=136 w=324 h=426
+assert_ui flight_option_0 x=404 y=208 w=416 h=42
+assert_within_parents
+screenshot flight_options_design
+click_ui flight_option_3
+wait 0.2
+expect_text "CURRENT SELECTION"
+expect_no_text "EDIT PREFERENCE"
+click_ui flight_option_0
+wait 0.2
+expect_text "EDIT PREFERENCE"
+click_ui flight_next
+wait 0.2
+expect_text "Expert"
+expect_text "Unapplied change"
+expect_text "Saved: Standard"
+click_ui flight_apply
+wait 0.2
+expect_text "Saved: Expert"
+expect_text "Settings applied"
+click_ui flight_next
+wait 0.2
+expect_text "Standard"
+expect_text "Saved: Expert"
+key ESCAPE
+wait 0.2
+key ESCAPE
+wait 0.2
+expect_text "OPTIONS CLOSED"
+expect_text "Unapplied changes discarded"
+click_ui flight_reopen
+wait 0.2
+expect_text "Expert"
+expect_text "Saved: Expert"
+click_ui flight_category_6
+wait 0.2
+expect_text "1920 x 1080"
+expect_text "High"
+expect_text "60 FPS"
+click_ui flight_option_1
+wait 0.2
+click_ui flight_previous
+wait 0.2
+expect_text "Medium"
+expect_text "Saved: High"
+expect_text "Unapplied change"
+click_ui flight_cancel
+wait 0.2
+expect_text "High"
+expect_text "Matches saved preference"
+assert_within_parents
+screenshot flight_options_graphics_design
+resize 1920 1080
+wait 0.3
+assert_ui flight_root x=0 y=0 w=1920 h=1080
+assert_ui flight_settings x=576 y=204 w=684 h=639
+assert_ui flight_preview x=1302 y=204 w=486 h=639
+assert_within_parents
+screenshot flight_options_design_1080
+resize 1024 768
+wait 0.3
+assert_ui flight_root x=0 y=0 w=1024 h=768
+assert_ui flight_settings x=307 y=205 w=365 h=341
+assert_ui flight_footer x=61 y=581 w=893 h=78
+assert_within_parents
+screenshot flight_options_design_narrow
+resize 1280 720

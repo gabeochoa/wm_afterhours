@@ -1384,7 +1384,8 @@
         "change": "Reduce grid contrast behind navigation and descriptions."
       }
     ],
-    "sha256": "b323899f546bd6e5e1c9abe7da6f33f563fc94945b281d07e3cd85c8e7d569f0"
+    "sha256": "b323899f546bd6e5e1c9abe7da6f33f563fc94945b281d07e3cd85c8e7d569f0",
+    "evidence": "docs/design-audit/originals/flight_options_720p.png"
   },
   {
     "id": "font_weight",

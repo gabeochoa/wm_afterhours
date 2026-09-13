@@ -1711,7 +1711,7 @@ Current capture removes initial All focus outline. The two-column specimen arran
 
 ## flight options
 
-[Current baseline](../../screenshot-baselines/screens/flight_options_720p.png) · [Visual review](../../design-audit.html#screen=flight_options)
+[Reviewed image](../../docs/design-audit/originals/flight_options_720p.png) · [Current baseline](../../screenshot-baselines/screens/flight_options_720p.png) · [Visual review](../../design-audit.html#screen=flight_options)
 
 Baseline SHA-256: `b323899f546bd6e5e1c9abe7da6f33f563fc94945b281d07e3cd85c8e7d569f0`
 

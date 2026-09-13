@@ -1,13 +1,14 @@
 goto_screen flight_options
+resize 1280 720
 wait 0.5
 expect_text "OPTIONS"
 expect_text "FLIGHT SYSTEM"
 expect_text "Control Type"
 expect_text "Vibration (Unavailable)"
-expect_text "Select the in-flight system."
+expect_text "Choose between standard or expert control schemes."
 assert_ui flight_root x=0 y=0 w=1280 h=720
-assert_ui flight_category_0 x=153 y=143 w=165 h=27
-assert_ui flight_option_0 x=333 y=226 w=230 h=17
+assert_ui flight_category_0 x=102 y=164 w=228 h=34
+assert_ui flight_option_0 x=404 y=208 w=416 h=42
 assert_no_overflow
 assert_within_parents
 screenshot flight_options_initial
@@ -167,8 +168,8 @@ wait 0.2
 resize 1920 1080
 wait 0.3
 assert_ui flight_root x=0 y=0 w=1920 h=1080
-assert_ui flight_category_0 x=230 y=215 w=248 h=41
-assert_ui flight_option_0 x=500 y=339 w=345 h=26
+assert_ui flight_category_0 x=153 y=246 w=342 h=51
+assert_ui flight_option_0 x=606 y=312 w=624 h=63
 assert_no_overflow
 assert_within_parents
 screenshot flight_options_1080p
