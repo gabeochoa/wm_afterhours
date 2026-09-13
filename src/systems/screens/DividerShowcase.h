@@ -76,7 +76,7 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto pane = [&](ComponentSize size, afterhours::Color color,
                           const char *name) {
       return ComponentConfig{}.with_size(size).with_custom_background(color)
-          .with_corner_radius(0).with_debug_name(name);
+          .with_corner_radius(0).with_overflow(Overflow::Hidden).with_debug_name(name);
     };
     const auto pane_label = [&](afterhours::Entity &parent,
                                 const std::string &value, float width) {
@@ -164,9 +164,9 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
     const auto preview = [&](ElementResult &result, const char *name,
                              const char *prefix, float height) {
       const float width = 1180 * s;
-      const int visible = std::clamp(static_cast<int>((height - 38) / 22), 0, 4);
+      const int visible = std::clamp(static_cast<int>((height - 34) / 22), 0, 4);
       pane_label(result.ent(), fmt::format("{} / {} of 4 rows fit", name, visible), width);
-      for (int i = 0; i < visible; ++i) {
+      for (int i = 0; i < 4; ++i) {
         div(context, mk(result.ent(), 20 + i), ComponentConfig{}
             .with_size({pixels(width - 24 * s), pixels(18 * s)})
             .with_absolute_position(12 * s, (38 + i * 22) * s)
@@ -174,7 +174,8 @@ struct DividerShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font("AtkinsonMock", pixels(15 * s))
             .with_custom_text_color(muted)
             .with_custom_background({33, 47, 68, 255}).with_corner_radius(3 * s)
-            .with_ignore_pointer_events());
+            .with_ignore_pointer_events()
+            .with_debug_name(std::string(name == std::string("Top pane") ? "dv_top_row_" : "dv_bottom_row_") + std::to_string(i + 1)));
       }
     };
     preview(top, "Top pane", "Preview row", top_h);

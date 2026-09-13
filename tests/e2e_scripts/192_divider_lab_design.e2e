@@ -44,7 +44,7 @@ wait 0.2
 assert_ui dv_top h=190
 assert_ui dv_bottom h=78
 expect_text "Last drag: +40px"
-expect_text "Bottom pane / 1 of 4 rows fit"
+expect_text "Bottom pane / 2 of 4 rows fit"
 mouse_down 454 209
 wait 0.1
 mouse_move 1270 209
@@ -69,6 +69,8 @@ wait 0.2
 assert_ui dv_top h=220
 assert_ui dv_bottom h=48
 expect_text "Bottom pane / 0 of 4 rows fit"
+assert_ui dv_bottom_row_1 h=18
+screenshot divider_lab_partial_row
 assert_no_overflow
 assert_within_parents
 click_ui dv_reset
