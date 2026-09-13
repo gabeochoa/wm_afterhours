@@ -28,7 +28,7 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
   const afterhours::Color lime{165, 255, 42, 255};
   const afterhours::Color yellow{255, 225, 51, 255};
   const afterhours::Color white{255, 255, 248, 255};
-  const afterhours::Color muted{166, 166, 160, 255};
+  const afterhours::Color muted{216, 219, 211, 255};
   const afterhours::Color ink{15, 15, 15, 255};
   const afterhours::Color icon_panel{37, 48, 54, 245};
   const afterhours::Color icon_light{232, 251, 255, 255};
@@ -106,17 +106,37 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                       {r.x + left_cut, r.y + r.height}, color);
     draw_triangle_ccw({r.x + r.width - right_cut, r.y}, {r.x + r.width, r.y},
                       {r.x + r.width - right_cut, r.y + r.height}, color);
-    afterhours::draw_rectangle({r.x + left_cut, r.y + r.height - 6.f,
-                                r.width - left_cut - right_cut, 6.f},
+    afterhours::draw_rectangle({r.x + left_cut, r.y + r.height - r.height / 16,
+                                r.width - left_cut - right_cut, r.height / 16},
                                bottom);
   }
 
   static void draw_tab_shape(RectangleType r, afterhours::Color fill,
                              afterhours::Color outline) {
-    afterhours::draw_rectangle({r.x + 8.f, r.y, r.width - 8.f, r.height}, fill);
-    draw_triangle_ccw({r.x, r.y + r.height * 0.32f}, {r.x + 8.f, r.y},
-                      {r.x + 8.f, r.y + r.height}, fill);
-    afterhours::draw_rectangle_outline(r, outline, 2.f);
+    const float scale = r.height / 46.f;
+    afterhours::draw_rectangle({r.x + 8 * scale, r.y, r.width - 8 * scale, r.height}, fill);
+    draw_triangle_ccw({r.x, r.y + r.height * .32f}, {r.x + 8 * scale, r.y},
+                      {r.x + 8 * scale, r.y + r.height}, fill);
+    afterhours::draw_rectangle_outline(r, outline, 2 * scale);
+  }
+
+  const std::array<afterhours::texture_manager::Rectangle, 7> icon_sources{{
+      {29, 19, 142, 162}, {13, 50, 174, 118}, {19, 25, 162, 146},
+      {22, 22, 137, 137}, {19, 19, 162, 162}, {13, 50, 174, 118},
+      {10, 0, 175, 177}}};
+
+  static void draw_binding_icon(RectangleType r) {
+    const float size = r.width * .39f;
+    for (int i = 0; i < 4; ++i) {
+      const float x = r.x + static_cast<float>(i % 2) * r.width * .61f;
+      const float y = r.y + static_cast<float>(i / 2) * r.height * .61f;
+      raylib::DrawRectangleRounded({x, y, size, size}, .2f, 4,
+                                   i == 0 ? raylib::Color{165, 255, 42, 255}
+                                          : raylib::Color{232, 251, 255, 255});
+    }
+    raylib::DrawLineEx({r.x + r.width * .22f, r.y + r.height * .5f},
+                       {r.x + r.width * .78f, r.y + r.height * .5f},
+                       r.width * .05f, {17, 52, 43, 255});
   }
 
   ComponentConfig box(float scale, float x, float y, float w, float h) const {
@@ -140,9 +160,6 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             ? context.screen_height
             : static_cast<float>(Settings::get().get_screen_height());
     const float scale = std::min(screen_w / 1280.f, screen_h / 720.f);
-    auto pxf = [scale](float v) { return pixels(v * scale); };
-    auto X = [scale](float v) { return v * scale; };
-    auto Y = [scale](float v) { return v * scale; };
 
     if (context.pressed(InputAction::WidgetDown))
       active_option = (active_option + 1) % menu_options.size();
@@ -153,6 +170,11 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       selected_tab = (selected_tab + 1) % tabs.size();
     if (context.pressed(InputAction::WidgetLeft))
       selected_tab = (selected_tab + tabs.size() - 1) % tabs.size();
+
+    if (context.pressed(InputAction::MenuBack)) {
+      active_option = 0;
+      selected_tab = 3;
+    }
 
     Theme theme;
     theme.font = white;
@@ -166,42 +188,51 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0.0f;
     theme.segments = 4;
     context.set_theme(theme);
-    UIStylingDefaults::get().set_default_font("Garamond", h720(25.f));
+    UIStylingDefaults::get().set_default_font("Garamond", pixels(25.f * scale));
+    div(context, mk(entity, 999), ComponentConfig{}
+        .with_size({pixels(screen_w), pixels(screen_h)})
+        .with_custom_background(black).with_corner_radius(0)
+        .with_debug_name("fighter_canvas"));
 
     auto root =
         div(context, mk(entity, 0),
             box(scale, 0, 0, 1280, 720)
+                .with_absolute_position((screen_w - 1280 * scale) / 2,
+                                        (screen_h - 720 * scale) / 2)
                 .with_on_draw_bg([texture = lobby_texture](RectangleType r) {
                   afterhours::draw_rectangle(
                       r, afterhours::Color{155, 150, 119, 255});
                   paint(texture, r);
+                  afterhours::draw_rectangle(
+                      {r.x, r.y, r.width, r.height * .29f},
+                      {155, 150, 119, 85});
                 })
                 .with_debug_name("fighter_root"));
 
     div(context, mk(root.ent(), 1),
-        box(scale, 0, 0, 620, 160)
+        box(scale, 0, 0, 700, 150)
             .with_on_draw_bg([c = black](RectangleType r) {
-              afterhours::draw_rectangle({r.x, r.y, r.width * 0.48f, r.height},
+              afterhours::draw_rectangle({r.x, r.y, r.width * 0.65f, r.height},
                                          c);
-              draw_triangle_ccw({r.x + r.width * 0.48f, r.y},
+              draw_triangle_ccw({r.x + r.width * 0.65f, r.y},
                                 {r.x + r.width, r.y}, {r.x, r.y + r.height}, c);
             })
             .with_ignore_pointer_events()
             .with_debug_name("title_wedge"));
 
     div(context, mk(root.ent(), 2),
-        box(scale, 26, 7, 390, 120)
-            .with_label("MainMenu")
-            .with_font("ArchivoMockBold", h720(110.f))
+        box(scale, 26, 13, 480, 105)
+            .with_label("Main Menu")
+            .with_font("Garamond", pixels(96.f * scale))
             .with_custom_text_color(white)
-            .with_text_shadow(afterhours::Color{125, 230, 45, 255}, 5.f * scale,
-                              8.f * scale)
-            .with_letter_spacing(-4.f * scale)
+            .with_text_shadow(afterhours::Color{125, 230, 45, 255}, 2.f * scale,
+                              3.f * scale)
+            .with_letter_spacing(-1.f * scale)
             .with_debug_name("fighter_title"));
 
     div(context, mk(root.ent(), 10),
         box(scale, 942, 48, 282, 52)
-            .with_on_draw_bg([bg = deep_black](RectangleType r) {
+            .with_on_draw_bg([bg = black](RectangleType r) {
               afterhours::draw_rectangle(
                   {r.x + 20.f, r.y, r.width - 40.f, r.height}, bg);
               draw_triangle_ccw({r.x + 20.f, r.y}, {r.x, r.y + r.height},
@@ -215,9 +246,9 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_debug_name("currency_panel"));
     div(context, mk(root.ent(), 11),
-        box(scale, 990, 54, 194, 44)
-            .with_label(std::to_string(currency) + "  P$")
-            .with_font("ArchivoMockBold", h720(39.f))
+        box(scale, 976, 52, 224, 44)
+            .with_label(fmt::format("{},{:03} P$", currency / 1000, currency % 1000))
+            .with_font("Garamond", pixels(39.f * scale))
             .with_custom_text_color(afterhours::Color{241, 255, 199, 255})
             .with_alignment(TextAlignment::Right)
             .with_debug_name("fighter_currency"));
@@ -239,40 +270,41 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             .with_ignore_pointer_events()
             .with_debug_name("fighter_tabs"));
 
-    auto bumper = [&](int id, const char *text, float x) {
-      div(context, mk(root.ent(), id),
-          box(scale, x, 136, 37, 37)
+    auto bumper = [&](int id, const char *text, float x, int direction) {
+      if (button(context, mk(root.ent(), id),
+          box(scale, x, 136, 38, 38)
               .with_label(text)
               .with_custom_background(white)
               .with_border(black, 3.f)
-              .with_font("ArchivoMockBold", h720(33.f))
+              .with_font("Garamond", pixels(33.f * scale))
               .with_custom_text_color(black)
-              .with_alignment(TextAlignment::Center));
+              .with_alignment(TextAlignment::Center)
+              .with_debug_name(direction < 0 ? "fighter_previous_tab" : "fighter_next_tab"))) {
+        selected_tab = direction < 0 ? (selected_tab + tabs.size() - 1) % tabs.size()
+                                     : (selected_tab + 1) % tabs.size();
+      }
     };
-    bumper(21, "L", 82);
-    bumper(22, "R", 1172);
+    bumper(21, "L", 78, -1);
+    bumper(22, "R", 1172, 1);
 
     for (size_t i = 0; i < tabs.size(); ++i) {
       const bool active = i == selected_tab;
-      const float x = 130.f + static_cast<float>(i) * 258.f;
-      const float y = active ? 122.f : 132.f;
-      const float h = active ? 53.f : 43.f;
+      const float x = 128.f + static_cast<float>(i) * 260.f;
+      const float y = 130.f;
+      const float h = 46.f;
       auto cfg =
-          box(scale, x, y, 256, h)
+          box(scale, x, y, 252, h)
               .with_label(tabs[i])
-              .with_font("Garamond", h720(30.f))
-              .with_letter_spacing(3.f * scale)
-              .with_custom_text_color(active ? yellow : muted)
-              .with_text_shadow(active ? afterhours::Color{217, 70, 21, 255}
-                                       : afterhours::Color{0, 0, 0, 0},
-                                2.f * scale, 1.f * scale)
+              .with_font("Garamond", pixels(30.f * scale))
+              .with_letter_spacing(1.f * scale)
+              .with_custom_text_color(active ? ink : muted)
               .with_alignment(TextAlignment::Center)
-              .with_on_draw_bg([active](RectangleType r) {
+              .with_on_draw_bg([active, scale](RectangleType r) {
                 if (active) {
                   draw_tab_shape(r, afterhours::Color{232, 248, 255, 255},
                                  afterhours::Color{156, 157, 149, 255});
                   afterhours::draw_rectangle(
-                      {r.x, r.y + r.height - 8.f, r.width, 8.f},
+                      {r.x, r.y + r.height - 5.f * scale, r.width, 5.f * scale},
                       afterhours::Color{54, 239, 25, 255});
                 } else {
                   draw_tab_shape(r, afterhours::Color{4, 4, 4, 245},
@@ -285,13 +317,13 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
     }
 
     div(context, mk(root.ent(), 45),
-        box(scale, 574, 254, 212, 37)
+        box(scale, 596, 214, 218, 34)
             .with_label("Offline Mode")
             .with_custom_background(afterhours::Color{238, 233, 203, 245})
             .with_border(afterhours::Color{175, 163, 132, 255}, 2.f)
             .with_corner_radius(7.f * scale)
-            .with_font("Garamond", h720(30.f))
-            .with_custom_text_color(afterhours::Color{121, 119, 94, 255})
+            .with_font("Garamond", pixels(25.f * scale))
+            .with_custom_text_color(afterhours::Color{56, 58, 46, 255})
             .with_letter_spacing(2.f * scale)
             .with_alignment(TextAlignment::Center)
             .with_debug_name("fighter_mode_tag"));
@@ -301,39 +333,39 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
       const bool active = i == active_option;
       const auto &opt = menu_options[i];
       const float y = 256.f + static_cast<float>(i) * 58.f;
-      const float w = active ? 657.f : 592.f;
+      const float w = 558.f;
       if (button(context, mk(root.ent(), 100 + static_cast<int>(i)),
                  box(scale, 0, y, w, 48)
                      .with_label("")
-                     .with_custom_text_color(active ? white : muted)
+                     .with_custom_text_color(active ? ink : muted)
                      .with_alignment(TextAlignment::Left)
-                     .with_on_draw_bg([active](RectangleType r) {
+                     .with_on_draw_bg([active, scale](RectangleType r) {
                        draw_slanted_bar(
                            r,
                            active ? afterhours::Color{40, 238, 36, 255}
                                   : afterhours::Color{0, 0, 0, 245},
                            active ? afterhours::Color{0, 0, 0, 255}
                                   : afterhours::Color{119, 123, 119, 255},
-                           24.f, 66.f);
+                           20.f * scale, 28.f * scale);
                      })
                      .with_debug_name("fighter_option_" + std::to_string(i)))) {
         active_option = i;
       }
 
       div(context, mk(root.ent(), 130 + static_cast<int>(i)),
-          box(scale, 149, y + 2.f, 490, 46)
+          box(scale, 140, y + 2.f, 388, 44)
               .with_label(opt.label)
-              .with_font("Garamond", h720(27.f))
-              .with_letter_spacing(4.f * scale)
-              .with_custom_text_color(active ? white : muted)
+              .with_font("Garamond", pixels(27.f * scale))
+              .with_letter_spacing(.6f * scale)
+              .with_custom_text_color(active ? ink : muted)
               .with_alignment(TextAlignment::Left)
               .with_ignore_pointer_events()
               .with_debug_name("fighter_option_label_" + std::to_string(i)));
 
       div(context, mk(root.ent(), 150 + static_cast<int>(i)),
-          box(scale, 55, y, 76, 48)
+          box(scale, 58, y, 64, 48)
               .with_label("")
-              .with_font("ArchivoMockBold", h720(32.f))
+              .with_font("Garamond", pixels(32.f * scale))
               .with_custom_text_color(icon_light)
               .with_alignment(TextAlignment::Center)
               .with_on_draw_bg([bg = icon_panel](RectangleType r) {
@@ -348,87 +380,82 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
                     r, afterhours::Color{55, 71, 82, 255}, 2.f);
               })
               .with_ignore_pointer_events());
-      const auto texture = icons[i];
-      sprite(context, mk(root.ent(), 170 + static_cast<int>(i)), texture,
-             {0, 0, (float)texture.width, (float)texture.height},
-             box(scale, 62, y + 1, 50, 46).with_ignore_pointer_events());
+      if (i == 5) {
+        div(context, mk(root.ent(), 170 + static_cast<int>(i)),
+            box(scale, 72, y + 6, 36, 36)
+                .with_on_draw_fg(draw_binding_icon)
+                .with_ignore_pointer_events().with_debug_name("fighter_binding_icon"));
+      } else {
+        const auto texture = icons[i];
+        const auto source = icon_sources[i];
+        const float icon_scale = 38.f / std::max(source.width, source.height);
+        const float width = source.width * icon_scale;
+        const float height = source.height * icon_scale;
+        sprite(context, mk(root.ent(), 170 + static_cast<int>(i)), texture, source,
+               box(scale, 90 - width / 2, y + (48 - height) / 2, width, height)
+                   .with_ignore_pointer_events());
+      }
     }
 
     div(context, mk(root.ent(), 230),
-        box(scale, 878, 196, 350, 300)
-            .with_on_draw_bg([holo = holo, edge = holo_edge](RectangleType r) {
-              afterhours::draw_rectangle(
-                  {r.x + 40.f, r.y, r.width - 40.f, r.height - 18.f}, holo);
-              draw_triangle_ccw({r.x + 40.f, r.y}, {r.x, r.y + 86.f},
-                                {r.x + 40.f, r.y + r.height}, holo);
-              draw_triangle_ccw(
-                  {r.x + r.width - 40.f, r.y}, {r.x + r.width, r.y},
-                  {r.x + r.width - 40.f, r.y + r.height - 18.f}, holo);
-              afterhours::draw_rectangle_outline(
-                  {r.x + 18.f, r.y + 17.f, r.width - 36.f, r.height - 38.f},
-                  afterhours::Color{167, 255, 234, 210}, 2.f);
-              afterhours::draw_line_ex({r.x + 40.f, r.y},
-                                       {r.x + r.width - 18.f, r.y}, 4.f, edge);
-              afterhours::draw_line_ex({r.x, r.y + 86.f}, {r.x + 40.f, r.y},
-                                       4.f, edge);
-              afterhours::draw_line_ex(
-                  {r.x + r.width - 18.f, r.y},
-                  {r.x + r.width - 18.f, r.y + r.height - 70.f}, 4.f, edge);
-            })
-            .with_debug_name("fighter_holo_card"));
-
-    div(context, mk(root.ent(), 231),
-        box(scale, 965, 218, 150, 28)
-            .with_label(current.short_label)
-            .with_font("ArchivoMockBold", h720(18.f))
-            .with_letter_spacing(8.f * scale)
-            .with_custom_text_color(afterhours::Color{202, 255, 236, 255})
-            .with_debug_name("fighter_holo_label"));
-
-    const auto gear = icons[6];
-    sprite(context, mk(root.ent(), 232), gear,
-           {0, 0, (float)gear.width, (float)gear.height},
-           box(scale, 949, 259, 206, 197)
-               .with_ignore_pointer_events()
-               .with_debug_name("fighter_holo_gear"));
-
-    div(context, mk(root.ent(), 240),
-        box(scale, 808, 388, 455, 82)
-            .with_label(current.label)
-            .with_font("ArchivoMockBold", h720(55.f))
-            .with_letter_spacing(-2.f * scale)
-            .with_custom_text_color(white)
-            .with_text_shadow(lime, 0.f, 7.f * scale)
-            .with_debug_name("fighter_selected_name"));
-
-    div(context, mk(root.ent(), 250),
-        box(scale, 754, 458, 526, 204)
-            .with_on_draw_bg([bg = deep_black](RectangleType r) {
-              afterhours::draw_rectangle(
-                  {r.x + r.width * .19f, r.y, r.width * .81f, r.height}, bg);
-              draw_triangle_ccw({r.x + r.width * .19f, r.y},
-                                {r.x, r.y + r.height * .67f},
-                                {r.x + r.width * .19f, r.y + r.height}, bg);
-            })
-            .with_debug_name("fighter_description"));
-    div(context, mk(root.ent(), 251),
-        box(scale, 840, 458, 440, 30)
-            .with_label(current.label)
-            .with_custom_background(lime)
-            .with_font("Garamond", h720(25.f))
-            .with_custom_text_color(black)
-            .with_letter_spacing(2.f * scale)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("fighter_description_title"));
-    div(context, mk(root.ent(), 252),
-        box(scale, 884, 501, 325, 115)
-            .with_label(current.description)
-            .with_font("Garamond", h720(30.f))
-            .with_text_overflow(TextOverflow::Wrap)
-            .with_custom_text_color(white)
-            .with_letter_spacing(1.4f * scale)
-            .with_alignment(TextAlignment::Center)
-            .with_debug_name("fighter_description_text"));
+        box(scale, 850, 204, 376, 286)
+            .with_on_draw_bg([scale, fill = holo](RectangleType r) {
+              const float cut = 24 * scale;
+              afterhours::draw_rectangle({r.x + cut, r.y, r.width - 2 * cut, r.height}, fill);
+              draw_triangle_ccw({r.x + cut, r.y}, {r.x, r.y + r.height},
+                                {r.x + cut, r.y + r.height}, fill);
+              draw_triangle_ccw({r.x + r.width - cut, r.y}, {r.x + r.width, r.y},
+                                {r.x + r.width - cut, r.y + r.height}, fill);
+              const afterhours::Color frame{209, 255, 230, 255};
+              afterhours::draw_line_ex({r.x + cut, r.y}, {r.x + r.width, r.y}, 2 * scale, frame);
+              afterhours::draw_line_ex({r.x + r.width, r.y},
+                                       {r.x + r.width - cut, r.y + r.height}, 2 * scale, frame);
+              afterhours::draw_line_ex({r.x + r.width - cut, r.y + r.height},
+                                       {r.x, r.y + r.height}, 2 * scale, frame);
+              afterhours::draw_line_ex({r.x, r.y + r.height}, {r.x + cut, r.y}, 2 * scale, frame);
+              afterhours::draw_line_ex({r.x + cut, r.y - 5 * scale},
+                                       {r.x + r.width, r.y - 5 * scale}, 2 * scale,
+                                       {129, 215, 71, 200});
+            }).with_debug_name("fighter_holo_card"));
+    div(context, mk(root.ent(), 231), box(scale, 916, 225, 254, 37)
+        .with_label(current.short_label).with_font("Garamond", pixels(29 * scale))
+        .with_letter_spacing(2 * scale).with_custom_text_color({17, 52, 43, 255})
+        .with_alignment(TextAlignment::Center).with_debug_name("fighter_holo_label"));
+    if (active_option == 5) {
+      div(context, mk(root.ent(), 232), box(scale, 953, 280, 140, 140)
+          .with_on_draw_fg(draw_binding_icon).with_ignore_pointer_events()
+          .with_debug_name("fighter_holo_gear"));
+    } else {
+      const size_t icon = active_option == 0 ? 6 : active_option;
+      const auto source = icon_sources[icon];
+      const float ratio = 148.f / std::max(source.width, source.height);
+      const float width = source.width * ratio;
+      const float height = source.height * ratio;
+      sprite(context, mk(root.ent(), 232), icons[icon], source,
+             box(scale, 1023 - width / 2, 345 - height / 2, width, height)
+                 .with_ignore_pointer_events().with_debug_name("fighter_holo_gear"));
+    }
+    div(context, mk(root.ent(), 240), box(scale, 826, 418, 432, 70)
+        .with_label(current.label).with_font("Garamond", pixels(54 * scale))
+        .with_letter_spacing(-1 * scale).with_custom_text_color(white)
+        .with_text_stroke(black, 3 * scale).with_text_shadow(lime, 0, 2 * scale)
+        .with_debug_name("fighter_selected_name"));
+    div(context, mk(root.ent(), 250), box(scale, 804, 492, 476, 170)
+        .with_on_draw_bg([scale, bg = deep_black](RectangleType r) {
+          afterhours::draw_rectangle({r.x + 24 * scale, r.y, r.width - 24 * scale, r.height}, bg);
+          draw_triangle_ccw({r.x + 24 * scale, r.y}, {r.x, r.y + r.height / 2},
+                            {r.x + 24 * scale, r.y + r.height}, bg);
+        }).with_debug_name("fighter_description"));
+    div(context, mk(root.ent(), 251), box(scale, 834, 501, 412, 30)
+        .with_label(std::string("OPTIONS / ") + current.short_label)
+        .with_custom_background(lime).with_font("Garamond", pixels(22 * scale))
+        .with_custom_text_color(black).with_alignment(TextAlignment::Left)
+        .with_debug_name("fighter_description_title"));
+    div(context, mk(root.ent(), 252), box(scale, 841, 542, 383, 106)
+        .with_label(current.description).with_font("Garamond", pixels(23 * scale))
+        .with_text_overflow(TextOverflow::Wrap).with_custom_text_color(white)
+        .with_letter_spacing(0).with_alignment(TextAlignment::Left)
+        .with_debug_name("fighter_description_text"));
 
     div(context, mk(root.ent(), 300),
         box(scale, 0, 672, 1280, 48)
@@ -439,35 +466,34 @@ struct FighterMenuScreen : ScreenSystem<UIContext<InputAction>> {
             })
             .with_ignore_pointer_events());
 
-    struct Prompt {
-      const char *key;
-      const char *label;
-      float x;
-      float w;
+    const auto keycap = [&](int id, const char *label, float x, float width) {
+      return div(context, mk(root.ent(), id), box(scale, x, 679, width, 32)
+          .with_label(label).with_custom_background(white).with_border(black, 2 * scale)
+          .with_font("Garamond", pixels(23 * scale)).with_custom_text_color(black)
+          .with_alignment(TextAlignment::Center).with_ignore_pointer_events()
+          .with_debug_name("fighter_prompt_key_" + std::to_string(id)));
     };
-    std::array<Prompt, 4> prompts = {
-        {{"+", ": Select", 302.f, 120.f},
-         {"A", ": Confirm", 436.f, 146.f},
-         {"B", ": Return", 603.f, 130.f},
-         {"L  R", ": Change Entry", 752.f, 230.f}}};
-    for (size_t i = 0; i < prompts.size(); ++i) {
-      const auto &p = prompts[i];
-      div(context, mk(root.ent(), 310 + static_cast<int>(i) * 2),
-          box(scale, p.x, 679, i == 0 ? 40.f : (i == 3 ? 65.f : 28.f), 32)
-              .with_label(p.key)
-              .with_custom_background(i == 0 ? afterhours::Color{0, 0, 0, 0}
-                                             : white)
-              .with_border(black, i == 0 ? 0.f : 2.f)
-              .with_font("ArchivoMockBold", h720(i == 0 ? 32.f : 27.f))
-              .with_custom_text_color(i == 0 ? white : black)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name("fighter_prompt_key_" + std::to_string(i)));
-      div(context, mk(root.ent(), 311 + static_cast<int>(i) * 2),
-          box(scale, p.x + (i == 3 ? 73.f : 42.f), 682, p.w, 31)
-              .with_label(p.label)
-              .with_font("Garamond", h720(30.f))
-              .with_custom_text_color(white)
-              .with_text_shadow(black, 2.f * scale, 2.f * scale)
+    keycap(310, "", 250, 32);
+    div(context, mk(root.ent(), 309), box(scale, 254, 683, 24, 24)
+        .with_on_draw_fg([](RectangleType r) {
+          const auto p = [=](float x, float y) { return Vector2Type{r.x + r.width * x, r.y + r.height * y}; };
+          const afterhours::Color c{15, 15, 15, 255};
+          draw_triangle_ccw(p(.5f, 0), p(.25f, .3f), p(.75f, .3f), c);
+          draw_triangle_ccw(p(.5f, 1), p(.25f, .7f), p(.75f, .7f), c);
+          draw_triangle_ccw(p(0, .5f), p(.3f, .25f), p(.3f, .75f), c);
+          draw_triangle_ccw(p(1, .5f), p(.7f, .25f), p(.7f, .75f), c);
+        }).with_ignore_pointer_events());
+    keycap(312, "Enter", 431, 61);
+    keycap(314, "Esc", 637, 45);
+    keycap(316, "L", 839, 32);
+    keycap(318, "R", 879, 32);
+    const std::array<const char *, 4> labels{"Select", "Choose", "Reset", "Change tab"};
+    const std::array<float, 4> positions{292, 502, 692, 921};
+    for (size_t i = 0; i < labels.size(); ++i) {
+      div(context, mk(root.ent(), 330 + static_cast<int>(i)),
+          box(scale, positions[i], 681, i == 3 ? 185 : 129, 31)
+              .with_label(labels[i]).with_font("Garamond", pixels(27 * scale))
+              .with_custom_text_color(white).with_text_shadow(black, scale, scale)
               .with_debug_name("fighter_prompt_label_" + std::to_string(i)));
     }
   }

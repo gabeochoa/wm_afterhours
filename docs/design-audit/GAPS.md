@@ -1564,7 +1564,7 @@ Border variations are intentional fixtures. Improve labels and comparison framin
 
 ## fighter menu
 
-[Current baseline](../../screenshot-baselines/screens/fighter_menu_720p.png) · [Visual review](../../design-audit.html#screen=fighter_menu)
+[Reviewed image](../../docs/design-audit/originals/fighter_menu_720p.png) · [Current baseline](../../screenshot-baselines/screens/fighter_menu_720p.png) · [Visual review](../../design-audit.html#screen=fighter_menu)
 
 Baseline SHA-256: `7e2e44add4913a4c124d23fbf2d3630ca98ca208f6a3ad0b720dc9442d3ad6c8`
 

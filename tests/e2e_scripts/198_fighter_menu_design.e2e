@@ -1,0 +1,78 @@
+goto_screen fighter_menu
+resize 1280 720
+wait 0.4
+expect_text "Main Menu"
+expect_text "25,000 P$"
+expect_text "Offline Mode"
+expect_text "SYSTEM"
+expect_text "OPTIONS / SYSTEM"
+expect_text "Select"
+expect_text "Choose"
+expect_text "Reset"
+expect_text "Change tab"
+expect_text "Enter"
+expect_text "Esc"
+expect_no_text "MainMenu"
+assert_ui fighter_root x=0 y=0 w=1280 h=720
+assert_ui fighter_title x=26 y=13 w=480 h=105
+assert_ui fighter_tab_0 y=130 h=46
+assert_ui fighter_tab_3 y=130 h=46
+assert_ui fighter_previous_tab x=78 y=136 w=38 h=38
+assert_ui fighter_next_tab x=1172 y=136 w=38 h=38
+assert_ui fighter_option_0 x=0 y=256 w=558 h=48
+assert_ui fighter_option_5 x=0 y=546 w=558 h=48
+assert_ui fighter_mode_tag x=596 y=214 w=218 h=34
+assert_ui fighter_holo_card x=850 y=204 w=376 h=286
+assert_ui fighter_selected_name x=826 y=418 w=432 h=70
+assert_ui fighter_description x=804 y=492 w=476 h=170
+assert_ui fighter_description_text x=841 y=542 w=383 h=106
+assert_ui fighter_binding_icon w=36 h=36
+assert_ui fighter_prompt_key_316 w=32 h=32
+assert_ui fighter_prompt_key_318 w=32 h=32
+assert_within_parents
+screenshot fighter_menu_design
+click_ui fighter_option_3
+wait 0.2
+expect_text "OPTIONS / SOUND"
+expect_text "Set music and sound levels, voices, and language preferences."
+screenshot fighter_menu_design_sound
+click_ui fighter_option_5
+wait 0.2
+expect_text "OPTIONS / BUTTONS"
+expect_text "Remap your controller layout and keyboard bindings."
+assert_ui fighter_holo_gear w=140 h=140
+key UP
+wait 0.2
+expect_text "OPTIONS / NETWORK"
+focus_ui fighter_option_1
+key ENTER
+wait 0.2
+expect_text "OPTIONS / GAME"
+key DOWN
+wait 0.2
+expect_text "OPTIONS / DISPLAY"
+key ESCAPE
+wait 0.2
+expect_text "OPTIONS / SYSTEM"
+click_ui fighter_previous_tab
+wait 0.2
+click_ui fighter_next_tab
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui fighter_root x=0 y=0 w=1920 h=1080
+assert_ui fighter_option_0 w=837 h=72
+assert_ui fighter_holo_card x=1275 y=306 w=564 h=429
+assert_ui fighter_description x=1206 y=738 w=714 h=255
+assert_within_parents
+screenshot fighter_menu_design_1080
+resize 1024 768
+wait 0.3
+assert_ui fighter_canvas w=1024 h=768
+assert_ui fighter_root x=0 y=96 w=1024 h=576
+assert_ui fighter_option_0 y=301 w=446 h=38
+assert_ui fighter_mode_tag x=477 y=267 w=174 h=27
+assert_ui fighter_description x=643 y=490 w=381 h=136
+assert_within_parents
+screenshot fighter_menu_design_narrow
+resize 1280 720

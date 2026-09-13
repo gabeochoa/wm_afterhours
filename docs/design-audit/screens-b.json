@@ -622,7 +622,8 @@
         "change": "Use evenly spaced icon-label groups without colon punctuation."
       }
     ],
-    "sha256": "7e2e44add4913a4c124d23fbf2d3630ca98ca208f6a3ad0b720dc9442d3ad6c8"
+    "sha256": "7e2e44add4913a4c124d23fbf2d3630ca98ca208f6a3ad0b720dc9442d3ad6c8",
+    "evidence": "docs/design-audit/originals/fighter_menu_720p.png"
   },
   {
     "id": "file_tree",

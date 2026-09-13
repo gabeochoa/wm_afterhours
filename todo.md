@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-887 completed; 1,648 remaining.
+912 completed; 1,623 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3016,79 +3016,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/fighter_menu_720p.png) · [Visual review](design-audit.html#screen=fighter_menu)
 
-- [ ] `fighter_menu-01` · P2 · proposal. MainMenu heading: Set the heading as Main Menu with visible word spacing.
+- [x] `fighter_menu-01` · P2 · proposal. MainMenu heading: Set the heading as Main Menu with visible word spacing.
   Evidence: MainMenu visually joins the two words.
 
-- [ ] `fighter_menu-02` · P2 · proposal. Heading shadow: Reduce the green offset to keep the title silhouette crisp.
+- [x] `fighter_menu-02` · P2 · proposal. Heading shadow: Reduce the green offset to keep the title silhouette crisp.
   Evidence: The green offset duplicates large white letterforms.
 
-- [ ] `fighter_menu-03` · P2 · proposal. Currency counter: Format the amount as 25,000 P$.
+- [x] `fighter_menu-03` · P2 · proposal. Currency counter: Format the amount as 25,000 P$.
   Evidence: 25000 P$ appears without numeric grouping.
 
-- [ ] `fighter_menu-04` · P3 · proposal. Currency panel: Simplify the panel to one top rule and align the value vertically.
+- [x] `fighter_menu-04` · P3 · proposal. Currency panel: Simplify the panel to one top rule and align the value vertically.
   Evidence: The currency banner has two faint decorative lines above the amount.
 
-- [ ] `fighter_menu-05` · P2 · proposal. Tab labels: Increase inactive-tab label contrast while preserving the active green underline.
+- [x] `fighter_menu-05` · P2 · proposal. Tab labels: Increase inactive-tab label contrast while preserving the active green underline.
   Evidence: Offline, Online, and Customize are low-contrast gray on black.
 
-- [ ] `fighter_menu-06` · P2 · proposal. Selected Options tab: Use a dark label and reserve neon green for the active indicator.
+- [x] `fighter_menu-06` · P2 · proposal. Selected Options tab: Use a dark label and reserve neon green for the active indicator.
   Evidence: Orange letters on a pale cyan fill compete with the neon underline.
 
-- [ ] `fighter_menu-07` · P2 · proposal. Shoulder hints: Use equal inset and equal-size keycaps at both ends.
+- [x] `fighter_menu-07` · P2 · proposal. Shoulder hints: Use equal inset and equal-size keycaps at both ends.
   Evidence: The L and R key boxes differ in spacing from the adjacent tabs.
 
-- [ ] `fighter_menu-08` · P3 · proposal. Tab row: Align all tab label baselines and express selection with the top edge or underline.
+- [x] `fighter_menu-08` · P3 · proposal. Tab row: Align all tab label baselines and express selection with the top edge or underline.
   Evidence: The active tab is taller than inactive tabs without a consistent baseline.
 
-- [ ] `fighter_menu-09` · P2 · proposal. Offline Mode backdrop label: Move or remove this secondary label so its full text remains visible.
+- [x] `fighter_menu-09` · P2 · proposal. Offline Mode backdrop label: Move or remove this secondary label so its full text remains visible.
   Evidence: The central Offline Mode label is partially covered by the selected menu ribbon.
 
-- [ ] `fighter_menu-10` · P2 · proposal. System Options ribbon: Shorten its point and keep a predictable menu-column width.
+- [x] `fighter_menu-10` · P2 · proposal. System Options ribbon: Shorten its point and keep a predictable menu-column width.
   Evidence: The bright green selected row is far wider than its text.
 
-- [ ] `fighter_menu-11` · P2 · proposal. Menu icon column: Normalize the visual size and center each icon in its tile.
+- [x] `fighter_menu-11` · P2 · proposal. Menu icon column: Normalize the visual size and center each icon in its tile.
   Evidence: Slanted dark icon tiles use different apparent icon sizes.
 
-- [ ] `fighter_menu-12` · P2 · proposal. Game Options icon: Use a distinct button-mapping icon for Button Settings.
+- [x] `fighter_menu-12` · P2 · proposal. Game Options icon: Use a distinct button-mapping icon for Button Settings.
   Evidence: Game Options and Button Settings share essentially the same controller silhouette.
 
-- [ ] `fighter_menu-13` · P2 · proposal. Unselected menu labels: Raise contrast and reduce letter spacing in the six menu labels.
+- [x] `fighter_menu-13` · P2 · proposal. Unselected menu labels: Raise contrast and reduce letter spacing in the six menu labels.
   Evidence: Widely spaced gray serif labels require effort against black ribbons.
 
-- [ ] `fighter_menu-14` · P3 · proposal. Menu row spacing: Use consistent row separation across the left column.
+- [x] `fighter_menu-14` · P3 · proposal. Menu row spacing: Use consistent row separation across the left column.
   Evidence: Thin pale gaps between the black ribbons vary in visual weight because of angled ends.
 
-- [ ] `fighter_menu-15` · P2 · proposal. System preview heading: Keep one strong title and use the second line for category context.
+- [x] `fighter_menu-15` · P2 · proposal. System preview heading: Keep one strong title and use the second line for category context.
   Evidence: System Options appears twice in adjacent large and small treatments.
 
-- [ ] `fighter_menu-16` · P2 · proposal. Large System Options text: Use a dark outline or solid backing so System Options stays legible over the pale preview.
+- [x] `fighter_menu-16` · P2 · proposal. Large System Options text: Use a dark outline or solid backing so System Options stays legible over the pale preview.
   Evidence: The white title uses a bright green offset over pale green; the web mock gives it a dark outline.
 
-- [ ] `fighter_menu-17` · P2 · proposal. Gear illustration: Reduce the gear slightly and enlarge SYSTEM to a legible supporting label.
+- [x] `fighter_menu-17` · P2 · proposal. Gear illustration: Reduce the gear slightly and enlarge SYSTEM to a legible supporting label.
   Evidence: The gear dominates the right preview while the category caption is very small.
 
-- [ ] `fighter_menu-18` · P3 · proposal. Preview frame: Keep one primary frame and one subtle offset accent.
+- [x] `fighter_menu-18` · P3 · proposal. Preview frame: Keep one primary frame and one subtle offset accent.
   Evidence: Several translucent green frames overlap at the right edge.
 
-- [ ] `fighter_menu-19` · P2 · proposal. Description text: Left-align the description with a shorter measure and normal spacing.
+- [x] `fighter_menu-19` · P2 · proposal. Description text: Left-align the description with a shorter measure and normal spacing.
   Evidence: The description occupies three centered lines with large letter spacing.
 
-- [ ] `fighter_menu-20` · P3 · proposal. Description panel: Reduce the point so the reading area has a more regular shape.
+- [x] `fighter_menu-20` · P3 · proposal. Description panel: Reduce the point so the reading area has a more regular shape.
   Evidence: The black description panel has a large protruding diagonal left point.
 
-- [ ] `fighter_menu-21` · P2 · proposal. Background character: Place the character within an unobstructed central background zone.
+- [x] `fighter_menu-21` · P2 · proposal. Background character: Place the character within an unobstructed central background zone.
   Evidence: The small character intersects the menu ribbons and pale floor geometry.
 
-- [ ] `fighter_menu-22` · P3 · proposal. Background pattern: Lower their contrast behind interactive labels.
+- [x] `fighter_menu-22` · P3 · proposal. Background pattern: Lower their contrast behind interactive labels.
   Evidence: Crosshairs and diagonal patterns remain strong around the navigation row.
 
-- [ ] `fighter_menu-23` · P2 · proposal. Footer Select hint: Use a consistent directional-pad glyph with the same keycap styling.
+- [x] `fighter_menu-23` · P2 · proposal. Footer Select hint: Use a consistent directional-pad glyph with the same keycap styling.
   Evidence: A plus sign stands in for directional input while other actions use keycaps.
 
-- [ ] `fighter_menu-24` · P2 · proposal. Footer change entry hint: Use two individual L and R keycaps consistently.
+- [x] `fighter_menu-24` · P2 · proposal. Footer change entry hint: Use two individual L and R keycaps consistently.
   Evidence: L R share one wide keycap unlike the separate top shoulder hints.
 
-- [ ] `fighter_menu-25` · P2 · proposal. Footer spacing: Use evenly spaced icon-label groups without colon punctuation.
+- [x] `fighter_menu-25` · P2 · proposal. Footer spacing: Use evenly spaced icon-label groups without colon punctuation.
   Evidence: The hints run across a dark gradient with uneven gaps around colons.
 
 ### file_tree
