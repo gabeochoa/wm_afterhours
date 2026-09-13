@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,958 completed; 577 remaining.
+1,986 completed; 549 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6326,88 +6326,88 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/secure_tunnel_720p.png) · [Visual review](design-audit.html#screen=secure_tunnel)
 
-- [ ] `secure_tunnel-01` · P2 · defect. Server metadata: Increase them to readable 12 to 13 px actual text with darker contrast.
+- [x] `secure_tunnel-01` · P2 · defect. Server metadata: Increase them to readable 12 to 13 px actual text with darker contrast.
   Evidence: Countries and latency values are very small and pale.
 
-- [ ] `secure_tunnel-02` · P2 · defect. Simulation disclaimer: Place a readable Demo mode badge near the connection state.
+- [x] `secure_tunnel-02` · P2 · defect. Simulation disclaimer: Place a readable Demo mode badge near the connection state.
   Evidence: Network simulation only is tiny at the bottom center.
 
-- [ ] `secure_tunnel-03` · P2 · proposal. Protocol control: Add Change protocol or a cycle icon beside the value to explain the existing cycle action.
+- [x] `secure_tunnel-03` · P2 · proposal. Protocol control: Add Change protocol or a cycle icon beside the value to explain the existing cycle action.
   Evidence: WireGuard appears as plain text with no visible change affordance.
 
-- [ ] `secure_tunnel-04` · P2 · defect. Privacy icon: Replace it with a recognizable centered shield outline.
+- [x] `secure_tunnel-04` · P2 · defect. Privacy icon: Replace it with a recognizable centered shield outline.
   Evidence: The shield illustration looks like overlapping thin geometric fragments.
 
-- [ ] `secure_tunnel-05` · P2 · proposal. Rail navigation: Add short labels or an expanded navigation legend for VPN, protection, routing, diagnostics and settings.
+- [x] `secure_tunnel-05` · P2 · proposal. Rail navigation: Add short labels or an expanded navigation legend for VPN, protection, routing, diagnostics and settings.
   Evidence: Five icon controls have no visible text labels.
 
-- [ ] `secure_tunnel-06` · P2 · proposal. Active rail icon: Use a recognizable connection or globe icon matching the map heading.
+- [x] `secure_tunnel-06` · P2 · proposal. Active rail icon: Use a recognizable connection or globe icon matching the map heading.
   Evidence: The active concentric-ring symbol does not identify VPN.
 
-- [ ] `secure_tunnel-07` · P3 · proposal. Brand mark: Refine it into a consistent solid brand mark with balanced stroke weight.
+- [x] `secure_tunnel-07` · P3 · proposal. Brand mark: Refine it into a consistent solid brand mark with balanced stroke weight.
   Evidence: The top rail logo reads as a thin triangle.
 
-- [ ] `secure_tunnel-08` · P2 · proposal. Connection indicator: Use a larger status dot and explicit Disconnected text.
+- [x] `secure_tunnel-08` · P2 · proposal. Connection indicator: Use a larger status dot and explicit Disconnected text.
   Evidence: Not connected has a tiny orange diamond.
 
-- [ ] `secure_tunnel-09` · P2 · proposal. Quick-connect recommendation: Explain the recommendation criterion or recommend the displayed lowest-latency server.
+- [x] `secure_tunnel-09` · P2 · proposal. Quick-connect recommendation: Explain the recommendation criterion or recommend the displayed lowest-latency server.
   Evidence: Fastest available server says Lisbon while Reykjavik shows a lower latency.
 
-- [ ] `secure_tunnel-10` · P2 · proposal. Recommendation copy: Increase contrast and separate server name with stronger weight.
+- [x] `secure_tunnel-10` · P2 · proposal. Recommendation copy: Increase contrast and separate server name with stronger weight.
   Evidence: Fastest available server - Lisbon is faint under the button.
 
-- [ ] `secure_tunnel-11` · P2 · proposal. Search affordance: Add a leading search icon and a stronger field border.
+- [x] `secure_tunnel-11` · P2 · proposal. Search affordance: Add a leading search icon and a stronger field border.
   Evidence: Search locations looks like a blank pale field without a search icon.
 
-- [ ] `secure_tunnel-12` · P3 · proposal. Location count: Use a compact 6 locations label or count badge beside the heading.
+- [x] `secure_tunnel-12` · P3 · proposal. Location count: Use a compact 6 locations label or count badge beside the heading.
   Evidence: The number 6 floats at the far right of ALL LOCATIONS.
 
-- [ ] `secure_tunnel-13` · P2 · proposal. Selected server: Add a checkmark or Selected label.
+- [x] `secure_tunnel-13` · P2 · proposal. Selected server: Add a checkmark or Selected label.
   Evidence: Lisbon is tinted but its selected state has only color.
 
-- [ ] `secure_tunnel-14` · P2 · proposal. Selected-server latency: Use a fixed right-aligned latency column and separate chevron gutter.
+- [x] `secure_tunnel-14` · P2 · proposal. Selected-server latency: Use a fixed right-aligned latency column and separate chevron gutter.
   Evidence: 27 ms is near the row chevron with little room.
 
-- [ ] `secure_tunnel-15` · P3 · proposal. Flag artwork: Use a consistent flag asset set at equal dimensions.
+- [x] `secure_tunnel-15` · P3 · proposal. Flag artwork: Use a consistent flag asset set at equal dimensions.
   Evidence: The small rectangular flags are simplified and visually inconsistent.
 
-- [ ] `secure_tunnel-16` · P2 · proposal. Map geography: Refine the shared map artwork with clearer continental silhouettes while retaining its muted visual weight.
+- [x] `secure_tunnel-16` · P2 · proposal. Map geography: Refine the shared map artwork with clearer continental silhouettes while retaining its muted visual weight.
   Evidence: The current screenshot and rendered mock both use coarse continent polygons that obscure recognizable regions.
 
-- [ ] `secure_tunnel-17` · P2 · proposal. Map markers: Use a selected marker plus restrained labeled server markers.
+- [x] `secure_tunnel-17` · P2 · proposal. Map markers: Use a selected marker plus restrained labeled server markers.
   Evidence: Several dots have no labels or visual connection to listed servers.
 
-- [ ] `secure_tunnel-18` · P2 · proposal. Lisbon callout: Add a small pointer anchored to the selected marker.
+- [x] `secure_tunnel-18` · P2 · proposal. Lisbon callout: Add a small pointer anchored to the selected marker.
   Evidence: The callout sits below the marker without a connector.
 
-- [ ] `secure_tunnel-19` · P2 · proposal. Callout status dot: Give it a meaning label or remove it as redundant decoration.
+- [x] `secure_tunnel-19` · P2 · proposal. Callout status dot: Give it a meaning label or remove it as redundant decoration.
   Evidence: A tiny blue dot appears at the right of Lisbon metadata.
 
-- [ ] `secure_tunnel-20` · P3 · proposal. Callout metadata: Increase its size and use clear separators with equal spacing.
+- [x] `secure_tunnel-20` · P3 · proposal. Callout metadata: Increase its size and use clear separators with equal spacing.
   Evidence: Portugal - pt-04 - 27 ms is narrow and faint.
 
-- [ ] `secure_tunnel-21` · P2 · proposal. Account button: Show an account avatar with an Account label or recognizable profile icon.
+- [x] `secure_tunnel-21` · P2 · proposal. Account button: Show an account avatar with an Account label or recognizable profile icon.
   Evidence: GO in a pale circle could be an action or initials.
 
-- [ ] `secure_tunnel-22` · P2 · proposal. Footer IP state: Emphasize IP not hidden while disconnected.
+- [x] `secure_tunnel-22` · P2 · proposal. Footer IP state: Emphasize IP not hidden while disconnected.
   Evidence: Not hidden is visually as quiet as other metadata.
 
-- [ ] `secure_tunnel-23` · P2 · proposal. Footer route state: Use Not connected as the route summary, retaining route details in diagnostics.
+- [x] `secure_tunnel-23` · P2 · proposal. Footer route state: Use Not connected as the route summary, retaining route details in diagnostics.
   Evidence: No route is technical language for a consumer connection screen.
 
-- [ ] `secure_tunnel-24` · P2 · proposal. Diagnostics link: Increase contrast and add the outward arrow shown in the target.
+- [x] `secure_tunnel-24` · P2 · proposal. Diagnostics link: Increase contrast and add the outward arrow shown in the target.
   Evidence: View diagnostics is faint at the far right footer.
 
-- [ ] `secure_tunnel-25` · P3 · proposal. Privacy card size: Reduce its height or add a clear connection-status detail within the reserved space.
+- [x] `secure_tunnel-25` · P3 · proposal. Privacy card size: Reduce its height or add a clear connection-status detail within the reserved space.
   Evidence: The large card carries a short heading and one line of copy.
 
-- [ ] `secure_tunnel-26` · P2 · proposal. Application font parity: Match the target sans-serif family and weights across titles, location rows and metadata.
+- [x] `secure_tunnel-26` · P2 · proposal. Application font parity: Match the target sans-serif family and weights across titles, location rows and metadata.
   Evidence: The current title and body labels mix narrow display text and widely spaced metadata, while the target uses a compact sans-serif hierarchy.
 
-- [ ] `secure_tunnel-27` · P2 · proposal. Map marker parity: Restore the target marker set and use its consistent white ring thickness.
+- [x] `secure_tunnel-27` · P2 · proposal. Map marker parity: Restore the target marker set and use its consistent white ring thickness.
   Evidence: Current map dots have very thin outlines and fewer visible points than the target's white-ring markers.
 
-- [ ] `secure_tunnel-28` · P3 · proposal. Map backdrop parity: Use the target's smooth pale background without the prominent circular boundary.
+- [x] `secure_tunnel-28` · P3 · proposal. Map backdrop parity: Use the target's smooth pale background without the prominent circular boundary.
   Evidence: A large pale circular disk is visible behind the current map but absent from the rendered target.
 
 ### self_align

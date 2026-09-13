@@ -3,6 +3,7 @@
 #include "../../external.h"
 #include "../../input_mapping.h"
 #include "../ExampleScreenRegistry.h"
+#include "DialogPresentation.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
@@ -27,6 +28,9 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     int ms;
   };
 
+  bool show_details = false;
+  std::string details_title;
+  std::string details_body;
   bool wants_up = false;
   Link link = Link::Off;
   float dialing_for = 0.f;
@@ -48,15 +52,15 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
   }};
   static constexpr std::array<const char *, 3> protocols{{"WireGuard", "OpenVPN", "IKEv2"}};
   static constexpr std::array<Vector2Type, 6> server_points{{
-      {333.f, 70.f}, {349.f, 113.f}, {127.f, 100.f},
-      {206.f, 225.f}, {690.f, 293.f}, {420.f, 227.f},
+      {324.90f, 50.33f}, {351.21f, 111.71f}, {218.77f, 95.34f},
+      {290.80f, 214.18f}, {729.27f, 304.84f}, {407.86f, 287.05f},
   }};
 
   ComponentConfig box(float scale, float x, float y, float w, float h) const {
     return ComponentConfig{}
         .with_size({pixels(w * scale), pixels(h * scale)})
         .with_absolute_position(x * scale, y * scale)
-        .with_background(Theme::Usage::None);
+        .with_background(Theme::Usage::None).with_corner_radius(0);
   }
 
   void load_texture_if_needed() {
@@ -83,14 +87,14 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       return "Negotiating";
     if (l == Link::Up)
       return "Tunnel up";
-    return "Not connected";
+    return "Disconnected";
   }
 
   std::string hero_title() const {
     if (link == Link::Up)
-      return "Your connection\nis protected.";
+      return "Demo connection\nis active.";
     if (link == Link::Dialing)
-      return "Creating a secure\ntunnel.";
+      return "Simulating a\nconnection.";
     return "Your connection\nis unprotected.";
   }
 
@@ -99,7 +103,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       return "Disconnect";
     if (link == Link::Dialing)
       return "Connecting...";
-    return "Quick connect";
+    return "Connect selected server";
   }
 
   std::string selected_route() const {
@@ -164,9 +168,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
   static void draw_map_background(RectangleType r) {
     afterhours::draw_rectangle_gradient_v(r, afterhours::Color{248, 251, 255, 255},
                                           afterhours::Color{231, 237, 246, 255});
-    afterhours::draw_circle(static_cast<int>(r.x + r.width * .47f),
-                            static_cast<int>(r.y + r.height * .48f),
-                            r.width * .52f, afterhours::Color{255, 255, 255, 105});
+
   }
 
   static void draw_rail_icon(RectangleType r, int icon, bool active) {
@@ -175,13 +177,12 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     const float cx = r.x + r.width * .5f;
     const float cy = r.y + r.height * .5f;
     if (icon == 0) {
-      afterhours::draw_triangle({cx, cy - 13.f}, {cx - 9.f, cy + 10.f},
-                                {cx + 9.f, cy + 10.f}, ink);
-      afterhours::draw_triangle({cx, cy - 5.f}, {cx - 4.f, cy + 7.f},
-                                {cx + 4.f, cy + 7.f}, afterhours::Color{28, 39, 67, 255});
+      afterhours::draw_rectangle({cx - 10, cy - 10, 20, 5}, ink);
+      afterhours::draw_rectangle({cx - 3, cy - 5, 6, 18}, ink);
     } else if (icon == 1) {
       afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(cy), 11.f, ink);
-      afterhours::draw_circle_lines(static_cast<int>(cx), static_cast<int>(cy), 7.f, ink);
+      afterhours::draw_line_ex({cx - 11, cy}, {cx + 11, cy}, 2, ink);
+      afterhours::draw_line_ex({cx, cy - 11}, {cx, cy + 11}, 2, ink);
     } else if (icon == 2) {
       afterhours::draw_poly_lines_ex({cx, cy}, 6, 8.f, 30.f, 2.f, ink);
     } else if (icon == 3) {
@@ -227,12 +228,12 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       afterhours::draw_circle(static_cast<int>(r.x + r.width * .47f), static_cast<int>(r.y + r.height * .5f),
                               r.height * .18f, afterhours::Color{255, 218, 92, 255});
     } else if (i == 2) {
-      afterhours::draw_rectangle({r.x + 2.f, r.y + 2.f, r.width - 4.f, r.height - 4.f},
-                                 afterhours::Color{238, 238, 238, 255});
-      afterhours::draw_rectangle({r.x + 2.f, r.y + r.height * .40f, r.width - 4.f, r.height * .20f},
-                                 afterhours::Color{221, 35, 50, 255});
-      afterhours::draw_rectangle({r.x + r.width * .43f, r.y + 2.f, r.width * .16f, r.height - 4.f},
-                                 afterhours::Color{221, 35, 50, 255});
+      const auto red = afterhours::Color{215, 41, 58, 255};
+      afterhours::draw_rectangle({r.x, r.y, r.width * .24f, r.height}, red);
+      afterhours::draw_rectangle({r.x + r.width * .76f, r.y, r.width * .24f, r.height}, red);
+      afterhours::draw_poly({r.x + r.width * .5f, r.y + r.height * .48f}, 5, r.height * .29f, -90, red);
+      afterhours::draw_line_ex({r.x + r.width * .5f, r.y + r.height * .5f},
+          {r.x + r.width * .5f, r.y + r.height * .86f}, r.width * .06f, red);
     } else if (i == 3) {
       afterhours::draw_rectangle({r.x + 2.f, r.y + 2.f, r.width - 4.f, r.height - 4.f},
                                  afterhours::Color{23, 154, 75, 255});
@@ -265,36 +266,30 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     for (size_t i = 0; i < server_points.size(); ++i) {
       const float x = r.x + server_points[i].x * sx;
       const float y = r.y + server_points[i].y * sy;
-      if (i == selected) {
-        afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), 25.f * sx,
-                                afterhours::Color{103, 137, 237, 42});
-        afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), 15.f * sx,
-                                afterhours::Color{102, 133, 233, 255});
-        afterhours::draw_circle_lines(static_cast<int>(x), static_cast<int>(y), 15.f * sx,
-                                      afterhours::Color{255, 255, 255, 255});
-      } else {
-        afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), 7.f * sx,
-                                afterhours::Color{92, 128, 176, 255});
-        afterhours::draw_circle_lines(static_cast<int>(x), static_cast<int>(y), 7.f * sx,
-                                      afterhours::Color{255, 255, 255, 255});
-      }
+      const float radius = (i == selected ? 12.f : 6.f) * sx;
+      if (i == selected)
+        afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), 22 * sx,
+            afterhours::Color{103, 137, 237, 42});
+      afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), radius + 2 * sx,
+          afterhours::Color{255, 255, 255, 255});
+      afterhours::draw_circle(static_cast<int>(x), static_cast<int>(y), radius,
+          afterhours::Color{62, 99, 219, 255});
     }
   }
 
   static void draw_shield(RectangleType r) {
-    const auto fill = afterhours::Color{217, 228, 244, 255};
-    const auto blue = afterhours::Color{104, 135, 189, 255};
-    afterhours::draw_triangle({r.x + r.width * .5f, r.y}, {r.x + r.width, r.y + r.height * .18f},
-                              {r.x + r.width * .5f, r.y + r.height}, fill);
-    afterhours::draw_triangle({r.x + r.width * .5f, r.y}, {r.x, r.y + r.height * .18f},
-                              {r.x + r.width * .5f, r.y + r.height}, fill);
-    afterhours::draw_circle_lines(static_cast<int>(r.x + r.width * .5f),
-                                  static_cast<int>(r.y + r.height * .50f),
-                                  r.width * .18f, blue);
-    afterhours::draw_line_ex({r.x + r.width * .5f, r.y + r.height * .35f},
-                             {r.x + r.width * .5f, r.y + r.height * .75f}, 2.f, blue);
-    afterhours::draw_line_ex({r.x + r.width * .32f, r.y + r.height * .60f},
-                             {r.x + r.width * .68f, r.y + r.height * .60f}, 2.f, blue);
+    const auto ink = afterhours::Color{78, 108, 158, 255};
+    const std::array<Vector2Type, 6> points{{
+        {r.x + r.width * .5f, r.y}, {r.x + r.width, r.y + r.height * .18f},
+        {r.x + r.width * .88f, r.y + r.height * .66f},
+        {r.x + r.width * .5f, r.y + r.height},
+        {r.x + r.width * .12f, r.y + r.height * .66f}, {r.x, r.y + r.height * .18f}}};
+    for (size_t i = 0; i < points.size(); ++i)
+      afterhours::draw_line_ex(points[i], points[(i + 1) % points.size()], r.width * .055f, ink);
+    afterhours::draw_line_ex({r.x + r.width * .32f, r.y + r.height * .48f},
+        {r.x + r.width * .47f, r.y + r.height * .62f}, r.width * .06f, ink);
+    afterhours::draw_line_ex({r.x + r.width * .47f, r.y + r.height * .62f},
+        {r.x + r.width * .72f, r.y + r.height * .34f}, r.width * .06f, ink);
   }
 
   void for_each_with(afterhours::Entity &entity,
@@ -310,21 +305,10 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                                : static_cast<float>(Settings::get().get_screen_height());
     const float scale = std::min(screen_w / 1280.f, screen_h / 720.f);
 
-    if (context.pressed(InputAction::WidgetDown))
-      server_idx = (server_idx + 1) % servers.size();
-    if (context.pressed(InputAction::WidgetUp))
-      server_idx = (server_idx + servers.size() - 1) % servers.size();
-    if (context.pressed(InputAction::WidgetPress))
-      toggle_connection();
-    if (context.pressed(InputAction::WidgetRight))
-      protocol_idx = (protocol_idx + 1) % protocols.size();
-    if (context.pressed(InputAction::WidgetLeft))
-      protocol_idx = (protocol_idx + protocols.size() - 1) % protocols.size();
-
     Theme theme;
     theme.font = {38, 54, 78, 255};
     theme.darkfont = {255, 255, 255, 255};
-    theme.font_muted = {120, 131, 154, 255};
+    theme.font_muted = {85, 102, 126, 255};
     theme.background = {237, 242, 249, 255};
     theme.surface = {255, 255, 255, 255};
     theme.primary = {62, 99, 219, 255};
@@ -334,24 +318,31 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     theme.segments = 8;
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_grid_snapping(false);
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(18.f * scale));
+
+    auto root = div(context, mk(entity, 0),
+                    box(scale, 0, 0, 1280, 720)
+                        .with_absolute_position((screen_w - 1280 * scale) / 2, (screen_h - 720 * scale) / 2)
+                        .with_custom_background(afterhours::Color{237, 242, 249, 255})
+                        .with_debug_name("tn_root"));
 
     const auto text = [&](int id, std::string label, float x, float y, float w, float h,
                           float size, afterhours::Color color,
                           TextAlignment align = TextAlignment::Left,
                           const std::string &debug = "", const char *font = "AtkinsonMock") {
-      div(context, mk(entity, id),
-          box(scale, x, y, w, std::max(h, size * 1.55f))
+      div(context, mk(root.ent(), id),
+          box(scale, x, y, w, h)
               .with_label(label)
-              .with_font(font, pixels(size * scale * 1.30f))
+              .with_font(font, pixels(size * scale))
               .with_custom_text_color(color)
               .with_alignment(align)
-              .with_letter_spacing(-.35f * scale)
+              .with_letter_spacing(0).with_ignore_pointer_events()
               .with_debug_name(debug));
     };
     const auto rect = [&](int id, float x, float y, float w, float h, afterhours::Color fill,
                           const std::string &debug = "") {
-      div(context, mk(entity, id),
+      div(context, mk(root.ent(), id),
           box(scale, x, y, w, h)
               .with_custom_background(fill)
               .with_debug_name(debug));
@@ -360,18 +351,13 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
     const auto navy = afterhours::Color{28, 39, 67, 255};
     const auto rail_active = afterhours::Color{52, 70, 106, 255};
     const auto ink = afterhours::Color{38, 54, 78, 255};
-    const auto muted = afterhours::Color{120, 131, 154, 255};
+    const auto muted = afterhours::Color{85, 102, 126, 255};
     const auto pale = afterhours::Color{237, 241, 255, 255};
     const auto blue = afterhours::Color{62, 99, 219, 255};
 
-    auto root = div(context, mk(entity, 0),
-                    box(scale, 0, 0, 1280, 720)
-                        .with_custom_background(afterhours::Color{237, 242, 249, 255})
-                        .with_debug_name("tn_root"));
-
     rect(10, 0, 0, 70, 720, navy, "tn_rail");
     for (int i = 0; i < 6; ++i) {
-      const float y = i == 5 ? 657.f : 20.f + static_cast<float>(i) * 57.f;
+      const float y = i == 5 ? 638.f : 12.f + static_cast<float>(i) * 80.f;
       const bool active = i == 1;
       if (button(context, mk(root.ent(), 20 + i),
                  box(scale, 13, y, 45, 45)
@@ -380,25 +366,28 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                      .with_corner_radius(7.f * scale)
                      .with_on_draw_fg([i, active](RectangleType r) { draw_rail_icon(r, i, active); })
                      .with_debug_name("tn_rail_" + std::to_string(i)))) {
-        const char *labels[6] = {"Secure Tunnel", "VPN", "Protection settings",
-                                 "Split routing settings", "Diagnostics opened", "Settings opened"};
+        const char *labels[6] = {"Secure Tunnel", "VPN", "Protection: unavailable in demo",
+                                 "Routing: unavailable in demo", "Diagnostics selected", "Settings: local demo only"};
         local_status = labels[i];
       }
+      const char *names[] = {"Tunnel", "VPN", "Protect", "Routes", "Logs", "Setup"};
+      text(700 + i, names[i], 4, y + 47, 62, 22, 13, afterhours::Color{217, 227, 244, 255}, TextAlignment::Center);
     }
 
     rect(30, 70, 0, 352, 720, afterhours::Color{255, 255, 255, 255}, "tn_sidebar");
-    text(31, "Secure Tunnel", 93, 23, 220, 31, 22, ink, TextAlignment::Left,
-         "tn_title", "Archivo@bold");
-    rect(32, 93, 66, 7, 7, link == Link::Up ? afterhours::Color{48, 160, 116, 255}
+    text(31, "Secure Tunnel", 93, 23, 290, 36, 27, ink, TextAlignment::Left,
+         "tn_title", "AtkinsonMockBold");
+    rect(32, 93, 69, 10, 10, link == Link::Up ? afterhours::Color{48, 160, 116, 255}
                                              : afterhours::Color{199, 102, 84, 255});
-    text(33, state_word(link), 107, 62, 150, 18, 12, muted, TextAlignment::Left,
+    text(33, state_word(link), 112, 63, 168, 24, 17, ink, TextAlignment::Left,
          "tn_state");
-    text(34, hero_title(), 92, 87, 282, 66, 25, ink, TextAlignment::Left,
-         "tn_hero", "Archivo@bold");
+    text(738, "Demo mode", 299, 63, 100, 24, 14, blue, TextAlignment::Right, "tn_demo");
+    text(34, hero_title(), 93, 90, 306, 64, 25, ink, TextAlignment::Left,
+         "tn_hero", "AtkinsonMockBold");
     if (button(context, mk(root.ent(), 35),
                box(scale, 93, 157, 306, 44)
                    .with_label(connect_label())
-                   .with_font("Archivo@bold", pixels(18.f * scale))
+                   .with_font("AtkinsonMockBold", pixels(18.f * scale))
                    .with_custom_text_color(afterhours::Color{255, 255, 255, 255})
                    .with_custom_background(link == Link::Up ? afterhours::Color{45, 144, 112, 255}
                                                             : blue)
@@ -407,17 +396,15 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                    .with_debug_name("tn_connect"))) {
       toggle_connection();
     }
-    text(36, std::string(link == Link::Up ? "Connected server - " : "Fastest available server - ") + servers[server_idx].place,
-         118, 210, 260, 18, 11, afterhours::Color{137, 145, 162, 255}, TextAlignment::Center,
-         "tn_quick_place");
-
+    text(36, std::string("Connect to ") + servers[server_idx].place,
+         93, 205, 306, 22, 16, muted, TextAlignment::Center, "tn_quick_place");
     auto search = text_input(context, mk(root.ent(), 40), search_query,
-                             box(scale, 93, 236, 306, 36)
+                             box(scale, 93, 236, 306, 38)
                                  .with_font("AtkinsonMock", pixels(17.f * scale))
                                  .with_placeholder("Search locations")
                                  .with_custom_text_color(afterhours::Color{104, 114, 128, 255})
                                  .with_custom_background(afterhours::Color{247, 248, 250, 255})
-                                 .with_border(afterhours::Color{220, 224, 233, 255}, 1.f)
+                                 .with_border(afterhours::Color{136, 153, 178, 255}, 1.f)
                                  .with_text_inset(34.f * scale, 8.f * scale)
                                  .with_corner_radius(5.f * scale)
                                  .with_debug_name("tn_search"));
@@ -434,9 +421,9 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
                                        1.5f, afterhours::Color{38, 54, 78, 255});
             })
             .with_ignore_pointer_events());
-    text(42, "ALL LOCATIONS", 97, 290, 140, 16, 10, afterhours::Color{139, 148, 165, 255},
-         TextAlignment::Left, "tn_locations_label", "Archivo");
-    text(43, std::to_string(visible_server_count()), 376, 290, 20, 16, 11, muted,
+    text(42, "LOCATIONS", 97, 281, 150, 24, 15, muted,
+         TextAlignment::Left, "tn_locations_label", "AtkinsonMock");
+    text(43, std::to_string(visible_server_count()) + " locations", 280, 281, 116, 24, 14, muted,
          TextAlignment::Right, "tn_locations_count");
 
     int visible_row = 0;
@@ -444,7 +431,7 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
       if (!server_visible(i))
         continue;
       const bool active = i == server_idx;
-      const float y = 305.f + static_cast<float>(visible_row) * 46.f;
+      const float y = 310.f + static_cast<float>(visible_row) * 46.f;
       ++visible_row;
       if (button(context, mk(root.ent(), 50 + static_cast<int>(i)),
                  box(scale, 93, y, 306, 46)
@@ -456,37 +443,37 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
         local_status = std::string("Selected server - ") + servers[i].place;
       }
       div(context, mk(root.ent(), 80 + static_cast<int>(i)),
-          box(scale, 104, y + 13, 22, 15)
+          box(scale, 103, y + 13, 28, 19)
               .with_on_draw_fg([i](RectangleType r) { draw_flag(r, i); })
               .with_ignore_pointer_events());
-      text(90 + static_cast<int>(i), servers[i].place, 138, y + 8, 134, 18, 13,
-           ink, TextAlignment::Left, "tn_server_name_" + std::to_string(i), "Archivo@bold");
-      text(100 + static_cast<int>(i), servers[i].country, 138, y + 27, 142, 16, 11,
-           afterhours::Color{146, 155, 173, 255}, TextAlignment::Left,
+      text(90 + static_cast<int>(i), servers[i].place, 138, y + 3, 156, 22, 19,
+           ink, TextAlignment::Left, "tn_server_name_" + std::to_string(i), "AtkinsonMockBold");
+      text(100 + static_cast<int>(i), servers[i].country, 138, y + 25, 156, 20, 18,
+           afterhours::Color{85, 102, 126, 255}, TextAlignment::Left,
            "tn_server_country_" + std::to_string(i));
-      text(110 + static_cast<int>(i), fmt::format("{} ms", servers[i].ms), 305, y + 15, 68, 17, 11,
-           afterhours::Color{132, 144, 165, 255}, TextAlignment::Right,
+      text(110 + static_cast<int>(i), fmt::format("{} ms", servers[i].ms), 299, y + 24, 74, 20, 18,
+           afterhours::Color{85, 102, 126, 255}, TextAlignment::Right,
            "tn_server_ms_" + std::to_string(i));
-      text(120 + static_cast<int>(i), ">", 383, y + 14, 12, 20, 19,
-           afterhours::Color{137, 150, 172, 255}, TextAlignment::Center);
+      text(120 + static_cast<int>(i), active ? "Selected" : ">", 307, y + 3, 82, 20, 14,
+           active ? blue : muted, TextAlignment::Right);
     }
     if (visible_row == 0) {
       text(130, "No locations found", 111, 318, 220, 24, 14,
            afterhours::Color{137, 145, 162, 255}, TextAlignment::Left,
-           "tn_no_results", "Archivo@bold");
+           "tn_no_results", "AtkinsonMockBold");
       text(131, "Try city or country", 111, 344, 220, 18, 11,
-           afterhours::Color{146, 155, 173, 255}, TextAlignment::Left,
+           afterhours::Color{85, 102, 126, 255}, TextAlignment::Left,
            "tn_no_results_hint");
     }
 
 
     rect(140, 93, 591, 306, 1, afterhours::Color{229, 232, 240, 255}, "tn_protocol_rule");
-    text(141, "Protocol", 98, 611, 90, 17, 11, afterhours::Color{139, 148, 166, 255},
+    text(141, "Change protocol", 98, 611, 144, 24, 16, muted,
          TextAlignment::Left, "tn_protocol_label");
     if (button(context, mk(root.ent(), 142),
-               box(scale, 285, 603, 105, 32)
-                   .with_label(protocols[protocol_idx])
-                   .with_font("AtkinsonMock", pixels(14.f * scale))
+               box(scale, 242, 603, 157, 38)
+                   .with_label(std::string(protocols[protocol_idx]) + "  >")
+                   .with_font("AtkinsonMock", pixels(17.f * scale))
                    .with_custom_text_color(afterhours::Color{72, 87, 116, 255})
                    .with_custom_background(afterhours::Color{0, 0, 0, 0})
                    .with_alignment(TextAlignment::Right)
@@ -499,18 +486,20 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
         box(scale, 422, 0, 858, 648)
             .with_on_draw_bg([](RectangleType r) { draw_map_background(r); })
             .with_debug_name("tn_map"));
-    text(201, "~ VPN", 449, 34, 80, 20, 14, afterhours::Color{156, 168, 187, 255},
+    text(201, "VPN locations", 449, 27, 240, 36, 26, ink,
          TextAlignment::Left, "tn_map_label");
     if (button(context, mk(root.ent(), 202),
-               box(scale, 1221, 24, 32, 32)
-                   .with_label("GO")
-                   .with_font("Archivo@bold", pixels(13.f * scale))
+               box(scale, 1119, 24, 130, 38)
+                   .with_label("Account")
+                   .with_font("AtkinsonMockBold", pixels(17.f * scale))
                    .with_custom_text_color(afterhours::Color{84, 116, 157, 255})
                    .with_custom_background(afterhours::Color{219, 228, 243, 255})
                    .with_corner_radius(16.f * scale)
                    .with_alignment(TextAlignment::Center)
                    .with_debug_name("tn_account"))) {
-      local_status = "Account settings opened";
+      show_details = true;
+      details_title = "Demo account";
+      details_body = "No account is signed in. This local preview does not contact a VPN provider.";
     }
     div(context, mk(root.ent(), 203),
         box(scale, 437, 141, 825, 390)
@@ -520,24 +509,34 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
             })
             .with_debug_name("tn_world_map"));
 
-    const float pin_x = 722.f;
-    const float pin_y = 290.f;
-    div(context, mk(root.ent(), 210),
-        box(scale, pin_x, pin_y, 221, 63)
-            .with_custom_background(afterhours::Color{255, 255, 255, 245})
-            .with_corner_radius(7.f * scale)
-            .with_debug_name("tn_location_card"));
-    div(context, mk(root.ent(), 211),
-        box(scale, pin_x + 19, pin_y + 22, 24, 16)
-            .with_on_draw_fg([idx = server_idx](RectangleType r) { draw_flag(r, idx); })
-            .with_ignore_pointer_events());
-    text(212, servers[server_idx].place, pin_x + 58, pin_y + 16, 110, 19, 14, ink,
-         TextAlignment::Left, "tn_location_name", "Archivo@bold");
-    text(213, fmt::format("{} - {} - {} ms", servers[server_idx].country,
-                          servers[server_idx].tag, servers[server_idx].ms),
-         pin_x + 58, pin_y + 38, 142, 17, 11, afterhours::Color{139, 150, 168, 255},
-         TextAlignment::Left, "tn_location_detail");
-    rect(214, pin_x + 199, pin_y + 31, 4, 4, blue);
+    for (size_t i = 0; i < servers.size(); ++i) {
+      if (i == server_idx) continue;
+      const float x = 437 + server_points[i].x * 825 / 740;
+      const float y = 141 + server_points[i].y * 390 / 350;
+      text(750 + static_cast<int>(i), servers[i].place, std::clamp(x - 64, 445.f, 1120.f),
+           y + 10, 128, 22, 14, ink, TextAlignment::Center);
+    }
+    const float marker_x = 437 + server_points[server_idx].x * 825 / 740;
+    const float marker_y = 141 + server_points[server_idx].y * 390 / 350;
+    const float pin_x = std::clamp(marker_x - 144, 449.f, 952.f);
+    const float pin_y = std::clamp(marker_y + 28, 105.f, 432.f);
+    div(context, mk(root.ent(), 209), box(scale, 0, 0, 1280, 720)
+        .with_ignore_pointer_events().with_on_draw_fg([marker_x, marker_y, pin_x, pin_y, scale, blue](RectangleType r) {
+          afterhours::draw_line_ex({r.x + marker_x * scale, r.y + marker_y * scale},
+              {r.x + std::clamp(marker_x, pin_x + 12, pin_x + 276) * scale, r.y + pin_y * scale},
+              2 * scale, blue);
+        }));
+    div(context, mk(root.ent(), 210), box(scale, pin_x, pin_y, 288, 70)
+        .with_custom_background(afterhours::Color{255, 255, 255, 250})
+        .with_corner_radius(7 * scale).with_debug_name("tn_location_card"));
+    div(context, mk(root.ent(), 211), box(scale, pin_x + 14, pin_y + 13, 24, 16)
+        .with_on_draw_fg([idx = server_idx](RectangleType r) { draw_flag(r, idx); })
+        .with_ignore_pointer_events());
+    text(212, servers[server_idx].place, pin_x + 46, pin_y + 6, 222, 28, 20, ink,
+         TextAlignment::Left, "tn_location_name", "AtkinsonMockBold");
+    text(213, fmt::format("{} / {} / {} ms", servers[server_idx].country,
+         servers[server_idx].tag, servers[server_idx].ms), pin_x + 14, pin_y + 39, 260, 22,
+         17, muted, TextAlignment::Left, "tn_location_detail");
 
     div(context, mk(root.ent(), 220),
         box(scale, 599, 506, 505, 103)
@@ -549,34 +548,40 @@ struct SecureTunnelMockup : ScreenSystem<UIContext<InputAction>> {
         box(scale, 624, 531, 48, 53)
             .with_on_draw_fg([](RectangleType r) { draw_shield(r); })
             .with_ignore_pointer_events());
-    text(222, link == Link::Up ? "You're connected securely." : "Privacy, wherever you go.",
-         692, 538, 330, 24, 17, ink, TextAlignment::Left, "tn_card_title", "Archivo@bold");
-    text(223, link == Link::Up
-                  ? std::string("Traffic is encrypted through ") + servers[server_idx].place + "."
-                  : "Connect to keep your internet traffic private.",
-         692, 571, 350, 21, 12, afterhours::Color{138, 149, 167, 255}, TextAlignment::Left,
-         "tn_card_copy");
+    text(222, link == Link::Up ? "Demo connection active" : "Privacy, wherever you go.",
+         692, 522, 390, 30, 23, ink, TextAlignment::Left, "tn_card_title", "AtkinsonMockBold");
+    text(223, "Network simulation only. Your IP stays visible.", 692, 556, 390, 24, 16,
+         muted, TextAlignment::Left, "tn_card_copy");
+    text(224, "No real traffic is encrypted by this demo.", 692, 582, 390, 22, 15,
+         muted, TextAlignment::Left, "tn_card_scope");
 
     rect(230, 422, 648, 858, 72, afterhours::Color{241, 245, 250, 255}, "tn_bottom");
     rect(231, 422, 648, 858, 1, afterhours::Color{220, 228, 238, 255});
-    text(232, "IP address", 451, 672, 80, 14, 10, afterhours::Color{140, 152, 171, 255});
-    text(233, link == Link::Up ? "185.23.18.42" : "Not hidden", 451, 691, 130, 18, 12,
-         afterhours::Color{99, 114, 139, 255}, TextAlignment::Left, "tn_ip_value");
-    text(234, "Connection", 545, 672, 100, 14, 10, afterhours::Color{140, 152, 171, 255});
-    text(235, link == Link::Up ? selected_route() : "No route", 545, 691, 165, 18, 12,
-         afterhours::Color{99, 114, 139, 255}, TextAlignment::Left, "tn_route_value");
-    if (button(context, mk(root.ent(), 236),
-               box(scale, 1138, 675, 108, 24)
-                   .with_label("View diagnostics")
-                   .with_font("AtkinsonMock", pixels(14.f * scale))
-                   .with_custom_text_color(afterhours::Color{121, 139, 171, 255})
-                   .with_custom_background(afterhours::Color{0, 0, 0, 0})
-                   .with_alignment(TextAlignment::Right)
-                   .with_debug_name("tn_diagnostics"))) {
-      local_status = "Diagnostics opened - simulated network only";
+    text(232, "IP address", 451, 657, 124, 22, 14, muted);
+    text(233, "Not hidden", 451, 685, 144, 24, 18, afterhours::Color{165, 67, 49, 255},
+         TextAlignment::Left, "tn_ip_value", "AtkinsonMockBold");
+    text(234, "Demo connection", 625, 657, 300, 22, 14, muted);
+    text(235, link == Link::Up ? selected_route() : "Not connected", 625, 685, 300, 24,
+         18, ink, TextAlignment::Left, "tn_route_value");
+    if (button(context, mk(root.ent(), 236), box(scale, 1022, 670, 226, 36)
+        .with_label("View diagnostics  >").with_font("AtkinsonMock", pixels(18 * scale))
+        .with_custom_text_color(blue).with_custom_background(afterhours::Color{0, 0, 0, 0})
+        .with_debug_name("tn_diagnostics"))) {
+      show_details = true;
+      details_title = "Connection diagnostics";
+      details_body = "Demo state: " + std::string(state_word(link)) + "\nSelected route: " + selected_route() +
+          "\nProtocol: " + protocols[protocol_idx] + "\nNetwork simulation only. No traffic is routed.";
     }
-    text(237, local_status, 736, 691, 290, 18, 11, afterhours::Color{121, 139, 171, 255},
-         TextAlignment::Left, "tn_local_status");
+    text(739, "Lowest latency: Reykjavik / 14 ms", 93, 649, 306, 22, 14, muted);
+    text(237, local_status, 93, 675, 306, 38, 14, muted, TextAlignment::Left, "tn_local_status");
+    auto details = afterhours::modal::info(context, mk(entity, 790), show_details,
+        details_title, details_body, "Close");
+    if (details) {
+      const std::array<float, 1> widths{120};
+      dialog_presentation::style(context, details.ent(), 620, 144, widths);
+      details.ent().addComponentIfMissing<afterhours::HasColor>(navy).set(navy);
+    }
+
   }
 };
 

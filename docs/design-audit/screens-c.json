@@ -1939,7 +1939,8 @@
         "change": "Use the target's smooth pale background without the prominent circular boundary."
       }
     ],
-    "sha256": "b00daf8458f69f7850ec3a7cf335d77472c52b9e4f23f4efc053d7893fef0052"
+    "sha256": "b00daf8458f69f7850ec3a7cf335d77472c52b9e4f23f4efc053d7893fef0052",
+    "evidence": "docs/design-audit/originals/secure_tunnel_720p.png"
   },
   {
     "id": "self_align",

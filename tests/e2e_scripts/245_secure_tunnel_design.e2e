@@ -20,7 +20,7 @@ assert_ui tn_server_1 x=93 y=356 w=306 h=46
 assert_ui tn_protocol x=242 y=603 w=157 h=38
 assert_no_overflow
 assert_within_parents
-screenshot secure_tunnel_review
+screenshot secure_tunnel_design
 click_ui tn_server_2
 wait 0.2
 expect_text "Selected server - Montreal"
@@ -52,14 +52,14 @@ expect_text "Tunnel up"
 expect_text "Demo connection active"
 expect_text "Not hidden"
 expect_text "Montreal - ca-02"
-screenshot secure_tunnel_review_connected
+screenshot secure_tunnel_design_connected
 click_ui tn_diagnostics
 wait 0.3
 expect_text "Connection diagnostics"
 expect_text "Selected route: Montreal - ca-02"
 expect_text "Protocol: OpenVPN"
 assert_no_overflow
-screenshot secure_tunnel_review_diagnostics
+screenshot secure_tunnel_design_diagnostics
 key ESCAPE
 wait 0.3
 click_ui tn_connect
@@ -77,12 +77,12 @@ assert_ui tn_root x=0 y=0 w=1920 h=1080
 assert_ui tn_connect x=140 y=236 w=459 h=66
 assert_no_overflow
 assert_within_parents
-screenshot secure_tunnel_review_1080
+screenshot secure_tunnel_design_1080
 resize 1024 768
 wait 0.3
 assert_ui tn_root x=0 y=96 w=1024 h=576
 assert_ui tn_connect x=74 y=222 w=245 h=35
 assert_no_overflow
 assert_within_parents
-screenshot secure_tunnel_review_narrow
+screenshot secure_tunnel_design_narrow
 resize 1280 720

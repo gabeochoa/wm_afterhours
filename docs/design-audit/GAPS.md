@@ -3196,7 +3196,7 @@ Pixel-identical. Four tracks deliberately compare default, accent, explicit-colo
 
 ## secure tunnel
 
-[Current baseline](../../screenshot-baselines/screens/secure_tunnel_720p.png) · [Visual review](../../design-audit.html#screen=secure_tunnel)
+[Reviewed image](../../docs/design-audit/originals/secure_tunnel_720p.png) · [Current baseline](../../screenshot-baselines/screens/secure_tunnel_720p.png) · [Visual review](../../design-audit.html#screen=secure_tunnel)
 
 Baseline SHA-256: `b00daf8458f69f7850ec3a7cf335d77472c52b9e4f23f4efc053d7893fef0052`
 
