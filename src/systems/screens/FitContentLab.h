@@ -19,99 +19,157 @@ using namespace afterhours::ui::imm;
 // moves and the bubbles are visibly sized by content rather than by a number
 // someone picked.
 struct FitContentLab : ScreenSystem<UIContext<InputAction>> {
+  bool show_guides = true;
+
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     context.theme = afterhours::ui::theme_presets::neon_dark();
-
+    UIStylingDefaults::get().set_grid_snapping(false);
+    const float s = std::min(context.screen_width / 1280.f,
+                             context.screen_height / 720.f);
+    const float offset_x = (context.screen_width - 1280 * s) / 2;
+    const float offset_y = (context.screen_height - 720 * s) / 2;
+    const auto white = afterhours::Color{235, 241, 250, 255};
+    const auto muted = afterhours::Color{172, 187, 210, 255};
+    const auto incoming = afterhours::Color{47, 57, 76, 255};
+    const auto outgoing = afterhours::Color{45, 79, 129, 255};
+    const auto at = [=](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(offset_x + x * s, offset_y + y * s)
+          .with_corner_radius(0);
+    };
+    const auto label = [&](int id, const std::string &value, float x, float y,
+                           float w, float h, float size, afterhours::Color color,
+                           const std::string &name) {
+      div(context, mk(entity, id), at(x, y, w, h).with_label(value)
+          .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(color)
+          .with_background(Theme::Usage::None).with_ignore_pointer_events()
+          .with_debug_name(name));
+    };
     const std::vector<std::pair<const char *, bool>> messages = {
         {"hi", false},
         {"you around?", true},
         {"yeah, one sec", false},
         {"the layout pass was measuring children before they snapped, so a "
          "row of eight buttons ended up fifteen pixels wider than the bar "
-         "holding them",
-         true},
+         "holding them", true},
         {"ah", false},
         {"anyway it is fixed", true},
     };
-
-    auto root =
-        div(context, mk(entity),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(1.f), screen_pct(1.f)})
-                .with_background(Theme::Usage::Background)
-                .with_padding(Padding::all(w1280(16)))
-                .with_debug_name("fc_root"));
-
-    div(context, mk(root.ent(), 0),
-        ComponentConfig{}
-            .with_label("fit_content: the box is as wide as its text, up to a cap")
-            .with_size(ComponentSize{percent(1.f), h720(34)})
-            .with_font(UIComponent::DEFAULT_FONT, h720(16.f))
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Padding{.left = w1280(12)})
-            .with_debug_name("fc_title"));
-
-    auto columns = hstack(context, mk(root.ent(), 1),
-                          ComponentConfig{}
-                              .with_size(ComponentSize{percent(1.f), children()})
-                              .with_gap(w1280(24))
-                              .with_margin(Margin{.top = h720(12)})
-                              .with_debug_name("fc_columns"));
+    div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background({17, 23, 34, 255}).with_corner_radius(0)
+        .with_debug_name("fc_root"));
+    label(1, "Fit-content bubbles", 48, 20, 916, 44, 34, white, "fc_title");
+    label(2, "Same text, different maximum width.", 48, 70, 1184, 28, 21, muted, "fc_subtitle");
+    if (button(context, mk(entity, 3), at(984, 26, 248, 42)
+        .with_label(show_guides ? "Hide measurement guides" : "Show measurement guides")
+        .with_font("AtkinsonMock", pixels(19 * s)).with_custom_text_color(white)
+        .with_custom_background({43, 70, 108, 255}).with_corner_radius(8 * s)
+        .with_debug_name("fc_guides"))) show_guides = !show_guides;
+    div(context, mk(entity, 4), at(244, 111, 18, 18).with_custom_background(incoming)
+        .with_corner_radius(5 * s));
+    label(5, "Incoming / left", 270, 105, 210, 30, 18, white, "fc_incoming_legend");
+    div(context, mk(entity, 6), at(486, 111, 18, 18).with_custom_background(outgoing)
+        .with_corner_radius(5 * s));
+    label(7, "You / right", 512, 105, 187, 30, 18, white, "fc_outgoing_legend");
+    label(8, "4 = sample layout story", 742, 105, 290, 30, 18, muted, "fc_sample_note");
+    div(context, mk(entity, 9), at(240, 144, 800, 1)
+        .with_custom_background({58, 75, 99, 255}));
 
     // Two caps, same content: the bubbles are sized by what is in them.
     const struct {
       const char *name;
-      const char *caption;
+      float x;
+      float width;
       float cap;
-    } columns_spec[] = {
-        {"fc_wide", "cap 380px", 380.f},
-        {"fc_narrow", "cap 200px", 200.f},
-    };
-
-    int col_idx = 0;
+    } columns_spec[] = {{"fc_wide", 240, 464, 380},
+                        {"fc_narrow", 736, 304, 200}};
+    int index = 0;
     for (const auto &spec : columns_spec) {
-      auto col = vstack(context, mk(columns.ent(), col_idx++),
-                        ComponentConfig{}
-                            .with_size(ComponentSize{expand(), children()})
-                            .with_debug_name(spec.name));
-
-      div(context, mk(col.ent(), 0),
-          ComponentConfig{}
-              .with_label(spec.caption)
-              .with_size(ComponentSize{percent(1.f), h720(22)})
-              .with_font(UIComponent::DEFAULT_FONT, h720(13.f))
-              .with_background(Theme::Usage::None)
-              .with_debug_name(std::string(spec.name) + "_cap"));
-
-      int msg_idx = 1;
-      for (const auto &[text, is_me] : messages) {
+      const int id = 100 + index++ * 100;
+      div(context, mk(entity, id), at(spec.x, 156, spec.width, 480)
+          .with_custom_background({25, 34, 49, 255}).with_corner_radius(12 * s)
+          .with_debug_name(std::string(spec.name) + "_frame"));
+      label(id + 1, fmt::format("Maximum {:.0f} px", spec.cap * s), spec.x + 20,
+            171, spec.width - 40, 31, 22, white, std::string(spec.name) + "_cap");
+      if (show_guides) {
+        div(context, mk(entity, id + 2), at(spec.x + 48, 211, spec.cap, 8)
+            .with_background(Theme::Usage::None).with_ignore_pointer_events()
+            .with_on_draw_fg([=](RectangleType r) {
+              const raylib::Color color{135, 183, 239, 255};
+              raylib::DrawLineEx({r.x, r.y + r.height / 2},
+                                 {r.x + r.width, r.y + r.height / 2}, s, color);
+              raylib::DrawLineEx({r.x, r.y}, {r.x, r.y + r.height}, s, color);
+              raylib::DrawLineEx({r.x + r.width, r.y},
+                                 {r.x + r.width, r.y + r.height}, s, color);
+            }).with_debug_name(std::string(spec.name) + "_width_guide"));
+      }
+      auto column = vstack(context, mk(entity, id + 3),
+          at(spec.x + 20, 230, spec.cap + 28, 0)
+              .with_size({pixels((spec.cap + 28) * s), children()})
+              .with_gap(pixels(10 * s)).with_background(Theme::Usage::None)
+              .with_debug_name(spec.name));
+      int message_index = 0;
+      for (const auto &[message, is_me] : messages) {
+        ++message_index;
+        auto row = hstack(context, mk(column.ent(), message_index),
+            ComponentConfig{}.with_size({percent(1), children()})
+                .with_gap(pixels(8 * s)).with_background(Theme::Usage::None)
+                .with_debug_name(std::string(spec.name) + "_row_" + std::to_string(message_index)));
+        div(context, mk(row.ent(), 1), ComponentConfig{}
+            .with_size({pixels(20 * s), pixels(22 * s)})
+            .with_margin(Margin{.top = pixels(6 * s)})
+            .with_label(std::to_string(message_index)).with_font("AtkinsonMock", pixels(16 * s))
+            .with_custom_text_color(muted).with_background(Theme::Usage::None));
         // A row, so the bubble can sit left or right without stretching: the
         // bubble hugs its text and the row takes the leftover width.
-        auto row =
-            hstack(context, mk(col.ent(), msg_idx),
-                   ComponentConfig{}
-                       .with_size(ComponentSize{percent(1.f), children()})
-                       .with_justify_content(is_me ? JustifyContent::FlexEnd
-                                                   : JustifyContent::FlexStart)
-                       .with_background(Theme::Usage::None)
-                       .with_margin(Margin{.bottom = h720(4)})
-                       .with_debug_name(std::string(spec.name) + "_row_" +
-                                        std::to_string(msg_idx)));
-
-        div(context, mk(row.ent(), 0),
-            ComponentConfig{}
-                .with_label(text)
-                .with_fit_content(w1280(spec.cap), h720(14.f))
-                .with_custom_background(is_me
-                                            ? afterhours::Color{54, 84, 138, 255}
-                                            : afterhours::Color{44, 48, 62, 255})
-                .with_alignment(TextAlignment::Left)
-                .with_debug_name(std::string(spec.name) + "_msg_" +
-                                 std::to_string(msg_idx)));
-        msg_idx++;
+        auto message_row = hstack(context, mk(row.ent(), 2), ComponentConfig{}
+            .with_size({pixels(spec.cap * s), children()})
+            .with_justify_content(is_me ? JustifyContent::FlexEnd : JustifyContent::FlexStart)
+            .with_background(Theme::Usage::None));
+        auto bubble = vstack(context, mk(message_row.ent(), 0), ComponentConfig{}
+            .with_size({children(), children()})
+            .with_max_width(pixels(spec.cap * s))
+            .with_padding(Padding{.top = pixels(8 * s), .left = pixels(12 * s),
+                                  .bottom = pixels(8 * s), .right = pixels(12 * s)})
+            .with_custom_background(is_me ? outgoing : incoming)
+            .with_corner_radius(10 * s)
+            .with_debug_name(std::string(spec.name) + "_msg_" + std::to_string(message_index)));
+        auto content = div(context, mk(bubble.ent(), 0), ComponentConfig{}
+            .with_label(message).with_fit_content(pixels((spec.cap - 24) * s), pixels(18 * s))
+            .with_font("AtkinsonMock", pixels(18 * s)).with_text_inset(0)
+            .with_custom_text_color(white).with_alignment(TextAlignment::Left)
+            .with_background(Theme::Usage::None)
+            .with_debug_name(std::string(spec.name) + "_text_" + std::to_string(message_index)));
+        if (message_index != 4) continue;
+        const auto bounds = bubble.cmp().rect();
+        const auto text_bounds = content.cmp().rect();
+        auto *cache = afterhours::EntityHelper::get_singleton_cmp<TextMeasureCache>();
+        size_t lines = 0;
+        if (cache && text_bounds.width > 0) {
+          lines = afterhours::ui::detail::wrap_text_to_width(
+              message, text_bounds.width, [&](const std::string &line) {
+                return cache->measure(line, "AtkinsonMock", 18 * s, 1).x;
+              }).size();
+        }
+        label(id + 4, fmt::format("Message 4 / {} lines / {:.0f} px high", lines, bounds.height),
+              spec.x, 644, spec.width, 29, 18, muted, std::string(spec.name) + "_metrics");
+        if (!show_guides || index != 2 || bounds.height <= 0) continue;
+        div(context, mk(entity, id + 5), ComponentConfig{}
+            .with_size({pixels(8 * s), pixels(bounds.height)})
+            .with_absolute_position(bounds.x + bounds.width + 12 * s, bounds.y)
+            .with_background(Theme::Usage::None).with_ignore_pointer_events()
+            .with_on_draw_fg([=](RectangleType r) {
+              const raylib::Color color{135, 183, 239, 255};
+              raylib::DrawLineEx({r.x + r.width, r.y}, {r.x + r.width, r.y + r.height}, s, color);
+              raylib::DrawLineEx({r.x, r.y}, {r.x + r.width, r.y}, s, color);
+              raylib::DrawLineEx({r.x, r.y + r.height}, {r.x + r.width, r.y + r.height}, s, color);
+            }).with_debug_name("fc_narrow_height_guide"));
       }
     }
+    label(10, "with_fit_content(max_width, font_size) / short text sets the width; long text wraps at the cap.",
+          48, 686, 1184, 27, 18, white, "fc_sizing_rule");
   }
 };
 

@@ -74,13 +74,13 @@
     "screen": "fit_content_lab",
     "baseline": "baseline_screenshots/fit_content_lab.png",
     "current": "screenshot-baselines/screens/fit_content_lab_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Narrow chat bubbles, tiny copy and unlabeled wide gutters are the same. Preserve the 380px and 200px cap behavior while improving its explanation.",
-    "sha256": "dc9a3cba8c9defc7e15b17a922be3563fad2e164a915178f37a504e58298960a",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "1ff3695c1a9496c09ebf928dca56b34d04aca83aa2e32c584aeab2cbecb32e8a",
     "additional_findings": []
   },
   {

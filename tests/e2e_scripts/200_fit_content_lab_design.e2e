@@ -1,0 +1,62 @@
+goto_screen fit_content_lab
+resize 1280 720
+wait 0.5
+expect_text "Fit-content bubbles"
+expect_text "Same text, different maximum width."
+expect_text "Incoming / left"
+expect_text "You / right"
+expect_text "4 = sample layout story"
+expect_text "Maximum 380 px"
+expect_text "Maximum 200 px"
+expect_text "Hide measurement guides"
+expect_text "with_fit_content(max_width, font_size) / short text sets the width; long text wraps at the cap."
+assert_ui fc_root w=1280 h=720
+assert_ui fc_title x=48 y=20 w=916 h=44
+assert_ui fc_wide_frame x=240 y=156 w=464 h=480
+assert_ui fc_narrow_frame x=736 y=156 w=304 h=480
+assert_ui fc_wide_width_guide x=288 y=211 w=380 h=8
+assert_ui fc_narrow_width_guide x=784 y=211 w=200 h=8
+assert_ui fc_wide_msg_1 h=34
+assert_ui fc_narrow_msg_1 h=34
+assert_ui fc_wide_msg_4 w=380
+assert_ui fc_narrow_msg_4 w=200
+assert_ui fc_wide_text_4 w=356
+assert_ui fc_narrow_text_4 w=176
+assert_ui fc_narrow_height_guide x=996 w=8
+assert_ui fc_wide_metrics x=240 y=644 w=464 h=29
+assert_ui fc_narrow_metrics x=736 y=644 w=304 h=29
+assert_no_overflow
+assert_within_parents
+screenshot fit_content_lab_design
+click_ui fc_guides
+wait 0.2
+expect_text "Show measurement guides"
+focus_ui fc_guides
+key ENTER
+wait 0.2
+expect_text "Hide measurement guides"
+resize 1920 1080
+wait 0.3
+expect_text "Maximum 570 px"
+expect_text "Maximum 300 px"
+assert_ui fc_wide_frame x=360 y=234 w=696 h=720
+assert_ui fc_narrow_frame x=1104 y=234 w=456 h=720
+assert_ui fc_wide_msg_4 w=570
+assert_ui fc_narrow_msg_4 w=300
+assert_ui fc_narrow_height_guide x=1494 w=12
+assert_no_overflow
+assert_within_parents
+screenshot fit_content_lab_design_1080
+resize 1024 768
+wait 0.3
+expect_text "Maximum 304 px"
+expect_text "Maximum 160 px"
+assert_ui fc_root w=1024 h=768
+assert_ui fc_wide_frame x=192 y=221 w=371 h=384
+assert_ui fc_narrow_frame x=589 y=221 w=243 h=384
+assert_ui fc_wide_msg_4 w=304
+assert_ui fc_narrow_msg_4 w=160
+assert_no_overflow
+assert_within_parents
+screenshot fit_content_lab_design_narrow
+resize 1280 720

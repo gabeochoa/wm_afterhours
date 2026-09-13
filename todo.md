@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,191 completed; 1,344 remaining.
+1,207 completed; 1,328 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3178,52 +3178,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/fit_content_lab_720p.png) · [Visual review](design-audit.html#screen=fit_content_lab)
 
-- [ ] `fit_content_lab-01` · P2 · proposal. Page heading: Use Fit-content bubbles as the title and a separate concise API subtitle.
+- [x] `fit_content_lab-01` · P2 · proposal. Page heading: Use Fit-content bubbles as the title and a separate concise API subtitle.
   Evidence: The heading combines an API name and a long explanation at one small size.
 
-- [ ] `fit_content_lab-02` · P2 · proposal. Column labels: Increase the labels and use consistent spacing before px.
+- [x] `fit_content_lab-02` · P2 · proposal. Column labels: Increase the labels and use consistent spacing before px.
   Evidence: cap 380px and cap 200px are much smaller than the already small body text.
 
-- [ ] `fit_content_lab-03` · P2 · proposal. Column framing: Place each conversation in a subtle labeled frame.
+- [x] `fit_content_lab-03` · P2 · proposal. Column framing: Place each conversation in a subtle labeled frame.
   Evidence: The two repeated conversations have no visible panel boundary.
 
-- [ ] `fit_content_lab-04` · P2 · proposal. Column comparison: Add 380 px and 200 px measurement guides above the longest bubbles.
+- [x] `fit_content_lab-04` · P2 · proposal. Column comparison: Add 380 px and 200 px measurement guides above the longest bubbles.
   Evidence: The narrow cap is only described in text.
 
-- [ ] `fit_content_lab-05` · P2 · proposal. Short hi bubbles: Add equal minimum horizontal and vertical bubble padding while preserving content sizing.
+- [x] `fit_content_lab-05` · P2 · proposal. Short hi bubbles: Add equal minimum horizontal and vertical bubble padding while preserving content sizing.
   Evidence: The hi background hugs the letters with almost no visible inset.
 
-- [ ] `fit_content_lab-06` · P2 · proposal. Long technical message: Use a readable body face and more line height for both comparisons.
+- [x] `fit_content_lab-06` · P2 · proposal. Long technical message: Use a readable body face and more line height for both comparisons.
   Evidence: The long message has tightly packed lines and a handwritten face.
 
-- [ ] `fit_content_lab-07` · P2 · proposal. Speaker distinction: Label the two roles outside the samples with a compact legend.
+- [x] `fit_content_lab-07` · P2 · proposal. Speaker distinction: Label the two roles outside the samples with a compact legend.
   Evidence: Left and right alignment plus fill color are the only speaker cues.
 
-- [ ] `fit_content_lab-08` · P3 · proposal. Repeated content: Add Same text, different maximum width beneath the title.
+- [x] `fit_content_lab-08` · P3 · proposal. Repeated content: Add Same text, different maximum width beneath the title.
   Evidence: The columns do not explicitly say they contain identical messages.
 
-- [ ] `fit_content_lab-09` · P2 · proposal. Horizontal empty space: Use narrower comparison frames that keep message relationships easy to follow.
+- [x] `fit_content_lab-09` · P2 · proposal. Horizontal empty space: Use narrower comparison frames that keep message relationships easy to follow.
   Evidence: The short left and right messages sit at opposite edges of very wide columns.
 
-- [ ] `fit_content_lab-10` · P3 · proposal. Bottom empty region: Add a compact explanation of intrinsic width versus maximum width below the examples.
+- [x] `fit_content_lab-10` · P3 · proposal. Bottom empty region: Add a compact explanation of intrinsic width versus maximum width below the examples.
   Evidence: Most of the viewport below the six messages is unused.
 
-- [ ] `fit_content_lab-11` · P3 · proposal. Wide long bubble: Add an external line-count caption to support comparison with the narrow bubble.
+- [x] `fit_content_lab-11` · P3 · proposal. Wide long bubble: Add an external line-count caption to support comparison with the narrow bubble.
   Evidence: Its exact three-line wrap is visible but unannotated.
 
-- [ ] `fit_content_lab-12` · P3 · proposal. Narrow long bubble: Add an external height guide beside the narrow example.
+- [x] `fit_content_lab-12` · P3 · proposal. Narrow long bubble: Add an external height guide beside the narrow example.
   Evidence: Its increased height is visible without a height reference.
 
-- [ ] `fit_content_lab-13` · P2 · proposal. Message ordering: Add unobtrusive message numbers beside matching bubbles.
+- [x] `fit_content_lab-13` · P2 · proposal. Message ordering: Add unobtrusive message numbers beside matching bubbles.
   Evidence: The second conversation ends lower because of wrapping, obscuring one-to-one row comparison.
 
-- [ ] `fit_content_lab-14` · P3 · proposal. Code-oriented prose: Place the technical story in a sample badge and explain the sizing rule separately.
+- [x] `fit_content_lab-14` · P3 · proposal. Code-oriented prose: Place the technical story in a sample badge and explain the sizing rule separately.
   Evidence: The example story mentions a layout bug but does not identify the tested sizing rule.
 
-- [ ] `fit_content_lab-15` · P3 · proposal. Title strip: Reduce the strip to a plain header with a divider above the frames.
+- [x] `fit_content_lab-15` · P3 · proposal. Title strip: Reduce the strip to a plain header with a divider above the frames.
   Evidence: The near-full-width title strip has rounded ends unrelated to the bubble comparison.
 
-- [ ] `fit_content_lab-16` · P2 · proposal. Final bubbles: Use consistent vertical conversation spacing after wrapped messages.
+- [x] `fit_content_lab-16` · P2 · proposal. Final bubbles: Use consistent vertical conversation spacing after wrapped messages.
   Evidence: Anyway it is fixed appears far from the preceding incoming message.
 
 ### flex_alignment

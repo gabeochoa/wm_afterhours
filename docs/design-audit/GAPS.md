@@ -1636,7 +1636,7 @@ The sample tree is stable and readable, but its information density and hierarch
 
 ## fit content lab
 
-[Current baseline](../../screenshot-baselines/screens/fit_content_lab_720p.png) · [Visual review](../../design-audit.html#screen=fit_content_lab)
+[Reviewed image](../../docs/design-audit/originals/fit_content_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/fit_content_lab_720p.png) · [Visual review](../../design-audit.html#screen=fit_content_lab)
 
 Baseline SHA-256: `dc9a3cba8c9defc7e15b17a922be3563fad2e164a915178f37a504e58298960a`
 
@@ -1665,7 +1665,7 @@ Both columns correctly demonstrate content-sized bubbles with different caps. On
 
 [Image](../../baseline_screenshots/fit_content_lab.png)
 
-Pixel-identical. Narrow chat bubbles, tiny copy and unlabeled wide gutters are the same. Preserve the 380px and 200px cap behavior while improving its explanation.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## flex alignment
 

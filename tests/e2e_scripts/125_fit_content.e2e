@@ -8,9 +8,10 @@ wait 0.5
 validate_screen fit_content_lab
 assert_within_parents
 
-# "hi" is 12px, nowhere near the 380 cap: the box is sized by its content, not
-# by the number in the config.
-assert_ui fc_wide_msg_1 w=12
+assert_ui fc_wide_msg_1 h=34
+assert_ui fc_narrow_msg_1 h=34
+assert_ui fc_wide_text_4 w=356
+assert_ui fc_narrow_text_4 w=176
 
 # The same long message under two caps stops at each one and wraps the rest.
 # If fit_content stopped wrapping, these would both run past their cap.
