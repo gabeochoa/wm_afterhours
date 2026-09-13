@@ -1,0 +1,67 @@
+goto_screen podcast_library
+resize 1280 720
+wait 0.4
+expect_text "Signal"
+expect_text "Playback preview. No audio is played."
+expect_text "Paused"
+expect_text "00:00 / 18:24"
+assert_ui podcast_root x=0 y=0 w=1280 h=720
+assert_ui podcast_player x=48 y=562 w=1184 h=120
+assert_within_parents
+assert_no_overflow
+screenshot podcast_library_default
+click_ui podcast_forward
+wait 0.2
+expect_text "00:15 / 18:24"
+wait 1.1
+expect_text "00:15 / 18:24"
+click_ui podcast_back
+wait 0.2
+expect_text "00:00 / 18:24"
+click_ui podcast_back
+wait 0.2
+expect_text "00:00 / 18:24"
+click_ui podcast_episode_1
+wait 0.2
+expect_text "00:00 / 24:08"
+click_ui podcast_speed
+wait 0.2
+expect_text "Speed: 1.5x"
+focus_ui podcast_speed
+key ENTER
+wait 0.2
+expect_text "Speed: 2x"
+focus_ui podcast_play
+key ENTER
+wait 1.1
+expect_text "Playing preview"
+expect_no_text "00:00 / 24:08"
+key ENTER
+wait 0.2
+expect_text "Paused"
+expect_text "Play"
+set_slider podcast_timeline 1
+wait 0.2
+click_ui podcast_forward
+wait 0.2
+expect_text "24:08 / 24:08"
+click_ui podcast_play
+wait 0.2
+expect_text "Playing preview"
+expect_no_text "24:08 / 24:08"
+focus_ui podcast_episode_3
+key ENTER
+wait 0.2
+expect_text "00:00 / 16:15"
+expect_text "Paused"
+click_ui podcast_speed
+wait 0.2
+expect_text "Speed: 1x"
+resize 1024 768
+wait 0.3
+assert_ui podcast_root x=0 y=96 w=1024 h=576
+assert_ui podcast_player x=38 y=546 w=947 h=96
+assert_within_parents
+assert_no_overflow
+screenshot podcast_library_narrow
+resize 1280 720
