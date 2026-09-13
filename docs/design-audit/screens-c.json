@@ -6474,6 +6474,7 @@
         "change": "Use them for concise dimensions, source asset names and expected-result notes."
       }
     ],
-    "sha256": "8abe23cefb8f3c725a04bae2a8d600aa6a493f946535585ef2abe82d30c07b09"
+    "sha256": "8abe23cefb8f3c725a04bae2a8d600aa6a493f946535585ef2abe82d30c07b09",
+    "evidence": "docs/design-audit/originals/widget_gap_gallery_720p.png"
   }
 ]

@@ -1,0 +1,73 @@
+goto_screen widget_gap_gallery
+resize 1280 720
+wait 0.3
+expect_text "Widget integration gallery"
+expect_text "Selected tool: none"
+expect_text "Page 1 of 5"
+expect_text "Arrows wrap. Cyan is selected; white is focus."
+expect_text "Head 90 px + flexible 348 px + tail 90 px"
+expect_text "100 × 100 px sources / 80 × 80 px tiles"
+expect_text "400 × 100 atlas / 50 px icons / 18 px gaps"
+expect_text "Same gear and label; only icon side changes."
+assert_ui wg_group x=68 y=174 w=528 h=44
+assert_ui wg_pages x=68 y=348 w=528 h=44
+assert_ui wg_head x=68 y=524 w=90 h=40
+assert_ui wg_tail x=506 y=524 w=90 h=40
+assert_ui wg_image_0 w=80 h=80
+assert_ui icon_row_item_0 x=668 y=370 w=50 h=50
+assert_ui icon_row_item_3 x=872 y=370 w=50 h=50
+assert_no_overflow
+assert_within_parents
+screenshot widget_gap_design
+click_ui wg_tool_2
+wait 0.2
+expect_text "Selected tool: Rotate"
+focus_ui wg_tool_1
+key ENTER
+wait 0.2
+expect_text "Selected tool: Move"
+click_ui wg_page_3
+wait 0.2
+expect_text "Page 3 of 5"
+click_ui wg_page_0
+wait 0.2
+expect_text "Page 2 of 5"
+click_ui wg_page_1
+wait 0.2
+expect_text "Page 1 of 5"
+click_ui wg_page_0
+wait 0.2
+expect_text "Page 5 of 5"
+click_ui wg_page_6
+wait 0.2
+expect_text "Page 1 of 5"
+focus_ui wg_page_5
+key ENTER
+wait 0.2
+expect_text "Page 5 of 5"
+screenshot widget_gap_design_selected
+click_ui wg_btn_icon_left
+wait 0.2
+expect_text "Configure left: 1 activation"
+focus_ui wg_btn_icon_right
+key ENTER
+wait 0.2
+expect_text "Configure right: 2 activations"
+screenshot widget_gap_design_actions
+resize 1920 1080
+wait 0.3
+assert_ui wg_root x=0 y=0 w=1920 h=1080
+assert_ui wg_image_0 w=120 h=120
+assert_ui icon_row_item_0 w=75 h=75
+assert_no_overflow
+assert_within_parents
+screenshot widget_gap_design_1080
+resize 1024 768
+wait 0.3
+assert_ui wg_root x=0 y=96 w=1024 h=576
+assert_ui wg_image_0 w=64 h=64
+assert_ui icon_row_item_0 w=40 h=40
+assert_no_overflow
+assert_within_parents
+screenshot widget_gap_design_narrow
+resize 1280 720

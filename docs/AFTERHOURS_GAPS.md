@@ -483,6 +483,17 @@ equivalent debug overlay commands in batched rendering. Related immediate path
 still calls text_inset_for rather than its supplied inset, so label-inset
 parity also needs review.
 
+### Pagination indices and icon-row container configuration
+
+Native pagination passes numbered child i+1 into on_option_click(), which
+directly applies modulo options.size(): displayed page1 selects index1 and
+page5 wraps to0. Previous passes prev_index(option_index-1), subtracting twice
+and underflowing at0. WM computes the external index from the clicked native
+child and restores focus to that child. Native icon_row also constructs its
+container via inherit_from(config), losing absolute position, gap and skip-
+grid settings; WM uses a positioned wrapper and configures the returned row.
+Fix the index contract and preserve intended container settings upstream.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

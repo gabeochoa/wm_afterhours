@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,492 completed; 43 remaining.
+2,515 completed; 20 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -8085,76 +8085,78 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/widget_gap_gallery_720p.png) · [Visual review](design-audit.html#screen=widget_gap_gallery)
 
-- [ ] `widget_gap_gallery-01` · P2 · proposal. Page title: Use Widget integration gallery with the included component names beneath it.
+- [x] `widget_gap_gallery-01` · P2 · proposal. Page title: Use Widget integration gallery with the included component names beneath it.
   Evidence: Widgets that had no caller describes project history rather than the displayed features.
 
-- [ ] `widget_gap_gallery-02` · P2 · proposal. API headings: Pair each API name with a plain-language specimen title.
+- [x] `widget_gap_gallery-02` · P2 · proposal. API headings: Pair each API name with a plain-language specimen title.
   Evidence: button_group, image and icon_row are terse code names.
 
-- [ ] `widget_gap_gallery-03` · P2 · proposal. Button group boundaries: Use clear segmented-group joins or uniform small gaps.
+- [x] `widget_gap_gallery-03` · P2 · proposal. Button group boundaries: Use clear segmented-group joins or uniform small gaps.
   Evidence: Select, Move, Rotate and Scale touch with rounded edges at every join.
 
-- [ ] `widget_gap_gallery-04` · P2 · proposal. Tool selection state: Use a labeled Selected tool status directly beneath the buttons.
+- [x] `widget_gap_gallery-04` · P2 · proposal. Tool selection state: Use a labeled Selected tool status directly beneath the buttons.
   Evidence: no tool picked yet is small and separated from the group.
 
-- [ ] `widget_gap_gallery-05` · P2 · proposal. Tool action meaning: Add a short caption that the group chooses an editing tool.
+- [x] `widget_gap_gallery-05` · P2 · proposal. Tool action meaning: Add a short caption that the group chooses an editing tool.
   Evidence: Select is both a tool name and a generic action.
 
-- [ ] `widget_gap_gallery-06` · P2 · proposal. Pagination label: Use Pagination, five pages as the visible section heading.
+- [x] `widget_gap_gallery-06` · P2 · proposal. Pagination label: Use Pagination, five pages as the visible section heading.
   Evidence: pagination is a small API name without content context.
 
-- [ ] `widget_gap_gallery-07` · P2 · proposal. Previous arrow: Document wrap behavior or render a disabled boundary state if previous is unavailable.
+- [x] `widget_gap_gallery-07` · P2 · proposal. Previous arrow: Document wrap behavior or render a disabled boundary state if previous is unavailable.
   Evidence: The previous arrow looks enabled while page 1 is selected.
 
-- [ ] `widget_gap_gallery-08` · P2 · proposal. Selected page: Use one clear selected-state outline distinct from keyboard focus styling.
+- [x] `widget_gap_gallery-08` · P2 · proposal. Selected page: Use one clear selected-state outline distinct from keyboard focus styling.
   Evidence: Page 1 has several close white outlines.
 
-- [ ] `widget_gap_gallery-09` · P2 · proposal. Page status: Increase it and align it to the pagination group inset.
+- [x] `widget_gap_gallery-09` · P2 · proposal. Page status: Increase it and align it to the pagination group inset.
   Evidence: page 1 of 5 is small beneath the controls.
 
-- [ ] `widget_gap_gallery-10` · P2 · proposal. Pagination width: Use equal numeral cells with balanced end-control widths.
+- [x] `widget_gap_gallery-10` · P2 · proposal. Pagination width: Use equal numeral cells with balanced end-control widths.
   Evidence: The page buttons use inconsistent apparent widths beside narrow arrow controls.
 
-- [ ] `widget_gap_gallery-11` · P2 · proposal. Spacer demo label: Add a faint external bracket over the space between head and tail.
+- [x] `widget_gap_gallery-11` · P2 · proposal. Spacer demo label: Add a faint external bracket over the space between head and tail.
   Evidence: spacer pushes the tail to the edge states the effect but not the flexible region.
 
-- [ ] `widget_gap_gallery-12` · P2 · defect. Head label: Inset the label by 10 px.
+- [x] `widget_gap_gallery-12` · P2 · defect. Head label: Inset the label by 10 px.
   Evidence: head touches the left edge of its blue block.
 
-- [ ] `widget_gap_gallery-13` · P2 · defect. Tail label: Apply the same 10 px text inset.
+- [x] `widget_gap_gallery-13` · P2 · defect. Tail label: Apply the same 10 px text inset.
   Evidence: tail touches the left edge of its brown block.
 
-- [ ] `widget_gap_gallery-14` · P2 · proposal. Spacer dimensions: Show fixed item widths and remaining flexible width below the sample.
+- [x] `widget_gap_gallery-14` · P2 · proposal. Spacer dimensions: Show fixed item widths and remaining flexible width below the sample.
   Evidence: Head and tail have no fixed-width metadata.
 
-- [ ] `widget_gap_gallery-15` · P2 · proposal. Image specimens: Add captions beneath each image tile.
+- [x] `widget_gap_gallery-15` · P2 · proposal. Image specimens: Add captions beneath each image tile.
   Evidence: Gear, star and trophy images have no individual names.
 
-- [ ] `widget_gap_gallery-16` · P2 · proposal. Image sizing: Document source dimensions and display size, and center their visible bounds consistently.
+- [x] `widget_gap_gallery-16` · P2 · proposal. Image sizing: Document source dimensions and display size, and center their visible bounds consistently.
   Evidence: The three images have different visual mass inside equal tiles.
 
-- [ ] `widget_gap_gallery-17` · P2 · proposal. Icon-row repetition: Show three distinct labeled sprites from the same sheet.
+- [x] `widget_gap_gallery-17` · P2 · proposal. Icon-row repetition: Show three distinct labeled sprites from the same sheet.
   Evidence: Three identical home icons reveal little about spritesheet cell selection.
 
-- [ ] `widget_gap_gallery-18` · P2 · proposal. Icon-row spacing: Add the configured icon size and gap below the row.
+- [x] `widget_gap_gallery-18` · P2 · proposal. Icon-row spacing: Add the configured icon size and gap below the row.
   Evidence: The home icons lack a visible gap annotation.
 
-- [ ] `widget_gap_gallery-19` · P2 · proposal. Save icon: Use a save icon or rename the action to Configure.
+- [x] `widget_gap_gallery-19` · P2 · proposal. Save icon: Use a save icon or rename the action to Configure.
   Evidence: Save uses a gear icon that usually represents settings.
 
-- [ ] `widget_gap_gallery-20` · P2 · proposal. Next icon: Use a right arrow or rename the action to Favorite.
+- [x] `widget_gap_gallery-20` · P2 · proposal. Next icon: Use a right arrow or rename the action to Favorite.
   Evidence: Next uses a star rather than a directional icon.
 
-- [ ] `widget_gap_gallery-21` · P2 · proposal. Icon-side comparison: Use the same icon and label in both positions for direct comparison.
+- [x] `widget_gap_gallery-21` · P2 · proposal. Icon-side comparison: Use the same icon and label in both positions for direct comparison.
   Evidence: Left and right icon placement also changes the icon and label.
 
-- [ ] `widget_gap_gallery-22` · P3 · proposal. Section alignment: Align corresponding rows or give each specimen a clearly bounded card.
+- [x] `widget_gap_gallery-22` · P3 · proposal. Section alignment: Align corresponding rows or give each specimen a clearly bounded card.
   Evidence: The left and right specimen sections use different vertical baselines.
 
-- [ ] `widget_gap_gallery-23` · P2 · proposal. Unused lower panels: Use them for concise dimensions, source asset names and expected-result notes.
+- [x] `widget_gap_gallery-23` · P2 · proposal. Unused lower panels: Use them for concise dimensions, source asset names and expected-result notes.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Correct native pagination numbered/Previous indices and icon-row container config inheritance; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Fix batched Clip bounds, deliberate-Ellipsis warning suppression and overflow debug overlays; see docs/AFTERHOURS_GAPS.md.
 

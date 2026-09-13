@@ -4129,7 +4129,7 @@ The stack positions and bright colors are deliberate layout specimens. Twenty-tw
 
 ## widget gap gallery
 
-[Current baseline](../../screenshot-baselines/screens/widget_gap_gallery_720p.png) · [Visual review](../../design-audit.html#screen=widget_gap_gallery)
+[Reviewed image](../../docs/design-audit/originals/widget_gap_gallery_720p.png) · [Current baseline](../../screenshot-baselines/screens/widget_gap_gallery_720p.png) · [Visual review](../../design-audit.html#screen=widget_gap_gallery)
 
 Baseline SHA-256: `8abe23cefb8f3c725a04bae2a8d600aa6a493f946535585ef2abe82d30c07b09`
 
