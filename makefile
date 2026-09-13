@@ -139,8 +139,9 @@ INCLUDES := -isystem vendor/
 LDFLAGS := -L. -Lvendor/ $(RAYLIB_LIB) $(FRAMEWORKS) $(COVERAGE_LDFLAGS)
 
 # Directories
-OBJ_DIR := output/objs
-OUTPUT_DIR := output
+OUTPUT_DIR ?= output
+SCREEN_VARIANT := $(if $(SCREEN),$(SCREEN),all)
+OBJ_DIR := $(OUTPUT_DIR)/objs/$(SCREEN_VARIANT)
 TRACE_DIR := $(OUTPUT_DIR)/traces
 TRACE_FILE := $(TRACE_DIR)/ui_tester.trace
 
@@ -157,7 +158,15 @@ else
     SCREEN_HEADERS := $(sort $(wildcard src/systems/screens/*.h))
 endif
 
-SCREEN_INCLUDES_GEN := src/screen_includes.gen
+SCREEN_INCLUDES_GEN := $(OBJ_DIR)/generated/screen_includes.gen
+INCLUDES += -I$(dir $(SCREEN_INCLUDES_GEN)) -Isrc
+SCREEN_SELECTION := $(OUTPUT_DIR)/.screen-selection
+
+.PHONY: force-screen-config
+$(SCREEN_SELECTION): force-screen-config | $(OUTPUT_DIR)/.stamp
+	@printf '%s\n' '$(SCREEN_VARIANT)' > $@.tmp
+	@cmp -s $@.tmp $@ || mv $@.tmp $@
+	@rm -f $@.tmp
 
 # Source files (no screens/*.cpp -- screens are included via generated header in main.cpp)
 MAIN_SRC := $(wildcard src/*.cpp)
@@ -200,7 +209,7 @@ $(OBJ_DIR)/main:
 all: $(MAIN_EXE)
 
 # Main executable
-$(MAIN_EXE): $(MAIN_OBJS) | $(OUTPUT_DIR)/.stamp
+$(MAIN_EXE): $(MAIN_OBJS) $(SCREEN_SELECTION) | $(OUTPUT_DIR)/.stamp
 	@echo "Linking $(MAIN_EXE)..."
 	$(CXX) $(CXXFLAGS) $(MAIN_OBJS) $(LDFLAGS) -o $@
 	@echo "Built $(MAIN_EXE)"
@@ -222,10 +231,12 @@ $(OBJ_DIR)/main/vendor_afterhours_files.o: vendor/afterhours/src/plugins/files.c
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@ -MD -MP -MF $(@:.o=.d) -MT $@
 
 # Generate screen includes file (all screens or single SCREEN=)
-$(SCREEN_INCLUDES_GEN): $(SCREEN_HEADERS)
-	@echo "Generating screen includes ($(words $(SCREEN_HEADERS)) screens)..."
-	@printf "" > $@
-	@for f in $(SCREEN_HEADERS); do echo "#include \"$${f#src/}\"" >> $@; done
+$(SCREEN_INCLUDES_GEN): force-screen-config
+	@mkdir -p $(dir $@)
+	@printf "" > $@.tmp
+	@for f in $(SCREEN_HEADERS); do echo "#include \"$${f#src/}\"" >> $@.tmp; done
+	@cmp -s $@.tmp $@ || mv $@.tmp $@
+	@rm -f $@.tmp
 
 # main.cpp depends on the generated screen includes
 $(OBJ_DIR)/main/main.o: $(SCREEN_INCLUDES_GEN)
