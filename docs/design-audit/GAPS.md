@@ -2694,7 +2694,7 @@ The backup overview has a coherent two-column structure. Improve status readabil
 
 ## pagination
 
-[Current baseline](../../screenshot-baselines/screens/pagination_720p.png) · [Visual review](../../design-audit.html#screen=pagination)
+[Reviewed image](../../docs/design-audit/originals/pagination_720p.png) · [Current baseline](../../screenshot-baselines/screens/pagination_720p.png) · [Visual review](../../design-audit.html#screen=pagination)
 
 Baseline SHA-256: `4df52ecb438e854f893c7fbac734877bdaee6303e295c37dd2011deabb015c97`
 
@@ -2727,7 +2727,7 @@ The fixture reuses buttons for pages, difficulty, and named options. Twenty dist
 
 [Image](../../baseline_screenshots/pagination.png)
 
-Current capture removes the first back-arrow outline. Selected Page 1, Medium and Blue remain magenta. Disabled-back-arrow and selection recommendations require preserving the different semantic states.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## parcel corps settings
 

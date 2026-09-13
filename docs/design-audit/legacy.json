@@ -219,8 +219,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes the first back-arrow outline. Selected Page 1, Medium and Blue remain magenta. Disabled-back-arrow and selection recommendations require preserving the different semantic states.",
-    "sha256": "9fe639a5beb2696c332da6405b4e1aeffa055bbab91178e17a2fa26f01faa3e1",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "6b3954b8a49d76e8d31bbf0f093173eb8a621b2932421a05e819b9eaa2753c53",
     "additional_findings": []
   },
   {

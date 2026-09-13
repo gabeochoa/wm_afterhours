@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,834 completed; 701 remaining.
+1,854 completed; 681 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5317,64 +5317,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/pagination_720p.png) · [Visual review](design-audit.html#screen=pagination)
 
-- [ ] `pagination-01` · P2 · proposal. Title: Use Pagination and option selectors with a short subtitle.
+- [x] `pagination-01` · P2 · proposal. Title: Use Pagination and option selectors with a short subtitle.
   Evidence: Pagination Component Showcase is long and technical.
 
-- [ ] `pagination-02` · P2 · proposal. Page labels: Use compact numeric buttons under a shared Pages label.
+- [x] `pagination-02` · P2 · proposal. Page labels: Use compact numeric buttons under a shared Pages label.
   Evidence: Page repeats in five wide buttons.
 
-- [ ] `pagination-03` · P2 · proposal. Current page: Add a current-page marker or stronger label weight.
+- [x] `pagination-03` · P2 · proposal. Current page: Add a current-page marker or stronger label weight.
   Evidence: Page 1 relies on red fill.
 
-- [ ] `pagination-04` · P2 · proposal. Disabled arrow: Keep it disabled but identifiable and caption its boundary state.
+- [x] `pagination-04` · P2 · proposal. Disabled arrow: Keep it disabled but identifiable and caption its boundary state.
   Evidence: The first previous arrow is very faint.
 
-- [ ] `pagination-05` · P2 · proposal. Chevron style: Use consistent centered geometric chevrons.
+- [x] `pagination-05` · P2 · proposal. Chevron style: Use consistent centered geometric chevrons.
   Evidence: Thin handwritten-looking arrows differ from geometric control shapes.
 
-- [ ] `pagination-06` · P2 · proposal. Page result: Show Page 1 of 5.
+- [x] `pagination-06` · P2 · proposal. Page result: Show Page 1 of 5.
   Evidence: Selected: Page 1 repeats the button without total context.
 
-- [ ] `pagination-07` · P2 · proposal. Page content: Add a small preview reflecting the selected page.
+- [x] `pagination-07` · P2 · proposal. Page content: Add a small preview reflecting the selected page.
   Evidence: No sample content connects to the paginator.
 
-- [ ] `pagination-08` · P2 · proposal. Difficulty role: Label it Single-choice selector using the same control.
+- [x] `pagination-08` · P2 · proposal. Difficulty role: Label it Single-choice selector using the same control.
   Evidence: The difficulty group appears under Pagination without explaining the reuse.
 
-- [ ] `pagination-09` · P2 · proposal. Difficulty meaning: Add short descriptions or an intensity scale.
+- [x] `pagination-09` · P2 · proposal. Difficulty meaning: Add short descriptions or an intensity scale.
   Evidence: Easy through Expert have no descriptions.
 
-- [ ] `pagination-10` · P2 · proposal. Selected difficulty: Add an in-control marker matching current-page selection.
+- [x] `pagination-10` · P2 · proposal. Selected difficulty: Add an in-control marker matching current-page selection.
   Evidence: Medium uses only red fill plus a distant result.
 
-- [ ] `pagination-11` · P2 · proposal. Named color options: State that they are named options or add small swatches.
+- [x] `pagination-11` · P2 · proposal. Named color options: State that they are named options or add small swatches.
   Evidence: All color names use the same cyan button fill.
 
-- [ ] `pagination-12` · P2 · proposal. Blue selection: Use a neutral selection outline to avoid conflicting color meanings.
+- [x] `pagination-12` · P2 · proposal. Blue selection: Use a neutral selection outline to avoid conflicting color meanings.
   Evidence: The Blue option has a red selected background.
 
-- [ ] `pagination-13` · P2 · proposal. Header affordance: Use a quieter noninteractive heading treatment.
+- [x] `pagination-13` · P2 · proposal. Header affordance: Use a quieter noninteractive heading treatment.
   Evidence: Broad cyan headings resemble cyan option buttons.
 
-- [ ] `pagination-14` · P2 · proposal. Header widths: Fit frames to controls or use spare width for explanations.
+- [x] `pagination-14` · P2 · proposal. Header widths: Fit frames to controls or use spare width for explanations.
   Evidence: Headings span the panel while controls occupy about half.
 
-- [ ] `pagination-15` · P2 · proposal. Status spacing: Use shared control-to-result and section spacing.
+- [x] `pagination-15` · P2 · proposal. Status spacing: Use shared control-to-result and section spacing.
   Evidence: Result captions and section gaps lack a consistent rhythm.
 
-- [ ] `pagination-16` · P3 · proposal. Boundary behavior: Add Stops at first and last option if that matches configuration.
+- [x] `pagination-16` · P3 · proposal. Boundary behavior: Add Stops at first and last option if that matches configuration.
   Evidence: Arrow wrap behavior is unstated.
 
-- [ ] `pagination-17` · P3 · proposal. Counts: Use consistent counts across all three sections.
+- [x] `pagination-17` · P3 · proposal. Counts: Use consistent counts across all three sections.
   Evidence: Only difficulty and named options state option counts.
 
-- [ ] `pagination-18` · P2 · proposal. Text tracking: Reduce tracking and use a clearer option face.
+- [x] `pagination-18` · P2 · proposal. Text tracking: Reduce tracking and use a clearer option face.
   Evidence: Widely spaced labels consume unnecessary width.
 
-- [ ] `pagination-19` · P3 · proposal. Outer padding: Tighten decorative outer spacing.
+- [x] `pagination-19` · P3 · proposal. Outer padding: Tighten decorative outer spacing.
   Evidence: The title area and bottom blank region make the panel sparse.
 
-- [ ] `pagination-20` · P3 · proposal. Independent state: Add Each row keeps its own selection below the subtitle.
+- [x] `pagination-20` · P3 · proposal. Independent state: Add Each row keeps its own selection below the subtitle.
   Evidence: Three selected states are shown without explaining independence.
 
 ### parcel_corps_settings
@@ -8142,6 +8142,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Reconcile configuration-owned skip-tabbing flags on true-to-false transitions; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Expose gesture hardware capability separately from idle input; see docs/AFTERHOURS_GAPS.md.
 

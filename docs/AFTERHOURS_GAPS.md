@@ -401,6 +401,16 @@ report no input. wm labels the compiled macOS backend separately and states
 that hardware availability is unknown. Add a backend-neutral capability result
 before consumers claim support availability.
 
+### Configuration-owned skip-tabbing flags persist after being disabled
+
+apply_flags in ui/component_init.h adds SkipWhenTabbing for true but never
+removes it for false. Pagination Previous starts disabled and skipped; after
+it becomes enabled, explicit focus is discarded because it never joins
+focused_ids, then Enter activates Page 1. wm removes SkipWhenTabbing when
+enabling the arrow. Define the lifecycle of configuration-owned flags and
+cover true-to-false transitions without deleting tags deliberately supplied
+outside configuration.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

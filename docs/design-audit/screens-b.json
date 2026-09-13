@@ -6614,7 +6614,8 @@
         "change": "Add Each row keeps its own selection below the subtitle."
       }
     ],
-    "sha256": "4df52ecb438e854f893c7fbac734877bdaee6303e295c37dd2011deabb015c97"
+    "sha256": "4df52ecb438e854f893c7fbac734877bdaee6303e295c37dd2011deabb015c97",
+    "evidence": "docs/design-audit/originals/pagination_720p.png"
   },
   {
     "id": "parcel_corps_settings",

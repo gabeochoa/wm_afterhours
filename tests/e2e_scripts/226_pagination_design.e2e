@@ -1,0 +1,89 @@
+goto_screen pagination
+resize 1280 720
+wait 0.4
+expect_text "Pagination and option selectors"
+expect_text "Each row keeps its own selection."
+expect_text "Pages / 5 options"
+expect_text "Selected: Page 1 of 5"
+expect_text "Previous unavailable / first option."
+expect_text "Welcome"
+expect_text "Difficulty / 4 options"
+expect_text "Difficulty: Medium / 2 of 4"
+expect_text "Single-choice selector"
+expect_text "Medium / balanced challenge"
+expect_text "Named colors / 5 options"
+expect_text "Selected: Blue / 3 of 5"
+expect_text "#468BE1"
+expect_text "White outline marks selection."
+assert_ui bg x=0 y=0 w=1280 h=720
+assert_ui pag1_btn_0 x=152 y=192 w=64 h=48
+assert_ui pag2_btn_0 x=152 y=374 w=104 h=48
+assert_ui pag3_btn_0 x=152 y=556 w=96 h=48
+assert_within_parents
+screenshot pagination_design
+click_ui pag1_previous
+wait 0.2
+expect_text "Selected: Page 1 of 5"
+click_ui pag1_next
+wait 0.2
+expect_text "Selected: Page 2 of 5"
+expect_text "Explore buttons, sliders, and selectors."
+expect_text "Difficulty: Medium / 2 of 4"
+expect_text "Selected: Blue / 3 of 5"
+click_ui pag1_btn_4
+wait 0.2
+expect_text "Selected: Page 5 of 5"
+expect_text "You reached the final sample page."
+click_ui pag1_next
+wait 0.2
+expect_text "Selected: Page 5 of 5"
+focus_element pag1_previous
+key ENTER
+wait 0.2
+expect_text "Selected: Page 4 of 5"
+expect_text "Choose colors, type, and shape for your UI."
+click_ui pag2_btn_3
+wait 0.2
+expect_text "Difficulty: Expert / 4 of 4"
+expect_text "Expert / highest intensity"
+click_ui pag2_next
+wait 0.2
+expect_text "Difficulty: Expert / 4 of 4"
+click_ui pag2_previous
+wait 0.2
+expect_text "Difficulty: Hard / 3 of 4"
+click_ui pag3_btn_3
+wait 0.2
+expect_text "Selected: Yellow / 4 of 5"
+expect_text "#ECC445"
+expect_text "Selected: Page 4 of 5"
+expect_text "Difficulty: Hard / 3 of 4"
+focus_element pag3_next
+key ENTER
+wait 0.2
+expect_text "Selected: Purple / 5 of 5"
+click_ui pag3_next
+wait 0.2
+expect_text "Selected: Purple / 5 of 5"
+click_ui pag3_btn_0
+wait 0.2
+click_ui pag3_previous
+wait 0.2
+expect_text "Selected: Red / 1 of 5"
+assert_within_parents
+screenshot pagination_selections
+resize 1920 1080
+wait 0.3
+assert_ui bg x=0 y=0 w=1920 h=1080
+assert_ui pag1_btn_0 x=228 y=288 w=96 h=72
+assert_ui pag3_btn_0 x=228 y=834 w=144 h=72
+assert_within_parents
+screenshot pagination_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bg x=0 y=0 w=1024 h=768
+assert_ui pag1_btn_0 x=122 y=250 w=51 h=38
+assert_ui pag3_btn_0 x=122 y=541 w=77 h=38
+assert_within_parents
+screenshot pagination_design_narrow
+resize 1280 720
