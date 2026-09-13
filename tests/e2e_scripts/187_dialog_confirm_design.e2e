@@ -1,0 +1,57 @@
+goto_screen dialog_confirm
+resize 1280 720
+wait 0.4
+expect_text "Apply display changes?"
+expect_text "1920 x 1080  ->  2560 x 1440"
+expect_text "Demo preview only"
+assert_ui modal w=760 h=304
+assert_within_parents
+screenshot dialog_confirm_design
+click_text "Keep current settings"
+wait 0.2
+expect_text "Kept 1920 x 1080 at 60 Hz"
+expect_no_text "Apply display changes?"
+click_ui dc_review
+wait 0.2
+click_text "Apply display settings"
+wait 0.2
+expect_text "Keep these display settings?"
+click_text "Revert now"
+wait 0.2
+expect_text "Reverted to 1920 x 1080 at 60 Hz"
+click_ui dc_review
+wait 0.2
+click_text "Apply display settings"
+wait 0.2
+click_text "Keep display settings"
+wait 0.2
+expect_text "Applied 2560 x 1440 at 120 Hz"
+expect_text "Reset display demo"
+click_ui dc_review
+wait 0.2
+click_text "Apply display settings"
+wait 0.2
+key ESCAPE
+wait 0.2
+expect_text "Reverted to 1920 x 1080 at 60 Hz"
+click_ui dc_review
+wait 0.2
+click_text "Apply display settings"
+wait 16
+expect_text "Preview expired. Previous display settings restored."
+expect_no_text "Keep these display settings?"
+click_ui dc_review
+resize 1920 1080
+wait 0.3
+assert_ui modal w=1140 h=456
+assert_within_parents
+screenshot dialog_confirm_design_1080
+key ESCAPE
+wait 0.2
+expect_no_text "Apply display changes?"
+resize 1024 768
+click_ui dc_review
+wait 0.3
+assert_within_parents
+screenshot dialog_confirm_design_narrow
+resize 1280 720

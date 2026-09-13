@@ -111,4 +111,51 @@ inline void draw(afterhours::ui::UIContext<InputAction> &context,
   }
 }
 
+struct ContextRow {
+  std::string label;
+  std::string value;
+  bool highlighted = false;
+};
+
+inline void draw_context(afterhours::ui::UIContext<InputAction> &context,
+                         afterhours::Entity &entity, const std::string &section,
+                         std::initializer_list<ContextRow> rows,
+                         const std::string &status) {
+  using namespace afterhours::ui;
+  using namespace afterhours::ui::imm;
+  const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+  int id = 200;
+  const auto box = [&](float x, float y, float w, float h) {
+    return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+        .with_absolute_position(x * s, y * s).with_corner_radius(0);
+  };
+  div(context, mk(entity, id++), ComponentConfig{}
+      .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+      .with_custom_background({20, 26, 37, 255}).with_corner_radius(0));
+  const auto text = [&](const std::string &value, float x, float y, float w, float h, float size) {
+    div(context, mk(entity, id++), box(x, y, w, h).with_label(value)
+        .with_font("AtkinsonMock", pixels(size * s)).with_alignment(TextAlignment::Left)
+        .with_text_overflow(TextOverflow::Ellipsis)
+        .with_custom_text_color({199, 212, 231, 255}).with_background(Theme::Usage::None));
+  };
+  text("HARBOUR STUDIO", 28, 18, 620, 36, 26);
+  text(section, 264, 86, 936, 42, 32);
+  text("Workspace", 28, 96, 190, 32, 21);
+  div(context, mk(entity, id++), box(20, 146, 206, 44)
+      .with_custom_background({49, 69, 101, 255}).with_corner_radius(8 * s));
+  text(section, 30, 151, 190, 34, 23);
+  text("Preferences", 30, 218, 190, 32, 21);
+  int row = 0;
+  for (const auto &value : rows) {
+    const float y = 152 + row++ * 76.f;
+    div(context, mk(entity, id++), box(264, y, 948, 60)
+        .with_custom_background(value.highlighted ? afterhours::Color{47, 62, 83, 255}
+                                                : afterhours::Color{29, 38, 53, 255})
+        .with_corner_radius(8 * s));
+    text(value.label, 280, y + 12, 356, 36, 22);
+    text(value.value, 650, y + 12, 546, 36, 22);
+  }
+  text(status, 264, 636, 940, 36, 22);
+}
+
 } // namespace dialog_backdrop

@@ -260,6 +260,18 @@ preserves the native decorator and moves content inset into a child, leaving
 the decorated outer panel unpadded. Review the decorator's rectangle contract
 upstream; render/click geometry and decoration should share the same bounds.
 
+### Convenience dialogs do not expose presentation configuration
+
+`modal::confirm`, `confirm_danger`, `fyi`, `info` and `prompt` hardcode dialog
+dimensions, default font names, body heights and action sizes. Longer
+descriptive action labels cannot be laid out through their arguments. wm
+retains the native helpers and adjusts their returned UIComponent/HasLabel
+descendants before layout via DialogPresentation.h. This depends on the
+helpers' internal debug names and child structure. A shared dialog
+presentation/config argument would provide a supported route for font,
+body/action geometry, padding and border customization while preserving native
+modal behavior.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

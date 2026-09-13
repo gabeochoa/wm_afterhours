@@ -1206,7 +1206,7 @@ Sharp borders, grids and accent bars are intentional. The small green panel's br
 
 ## dialog confirm
 
-[Current baseline](../../screenshot-baselines/screens/dialog_confirm_720p.png) · [Visual review](../../design-audit.html#screen=dialog_confirm)
+[Reviewed image](../../docs/design-audit/originals/dialog_confirm_720p.png) · [Current baseline](../../screenshot-baselines/screens/dialog_confirm_720p.png) · [Visual review](../../design-audit.html#screen=dialog_confirm)
 
 Baseline SHA-256: `d843a0a32899ab5415002b53ce8c1135365767d681d3358c3b0df865c50ffbda`
 

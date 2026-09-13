@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-600 completed; 1,935 remaining.
+618 completed; 1,917 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2253,58 +2253,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/dialog_confirm_720p.png) · [Visual review](design-audit.html#screen=dialog_confirm)
 
-- [ ] `dialog_confirm-01` · P2 · proposal. Dialog title: Use Apply display changes?.
+- [x] `dialog_confirm-01` · P2 · proposal. Dialog title: Use Apply display changes?.
   Evidence: Apply changes? does not name the affected settings.
 
-- [ ] `dialog_confirm-02` · P2 · proposal. Change summary: Show a compact old-to-new summary.
+- [x] `dialog_confirm-02` · P2 · proposal. Change summary: Show a compact old-to-new summary.
   Evidence: The dialog describes new settings without listing changed values.
 
-- [ ] `dialog_confirm-03` · P2 · proposal. Restart wording: Describe the visible display interruption.
+- [x] `dialog_confirm-03` · P2 · proposal. Restart wording: Describe the visible display interruption.
   Evidence: Restart the renderer uses implementation terminology.
 
-- [ ] `dialog_confirm-04` · P2 · proposal. Recovery wording: Name the Display settings path.
+- [x] `dialog_confirm-04` · P2 · proposal. Recovery wording: Name the Display settings path.
   Evidence: Revert from the settings menu afterwards gives no precise route.
 
-- [ ] `dialog_confirm-05` · P2 · proposal. Display recovery: Offer an explicit timed-revert design for unsupported display changes.
+- [x] `dialog_confirm-05` · P2 · proposal. Display recovery: Offer an explicit timed-revert design for unsupported display changes.
   Evidence: The message assumes the user can still see the screen after applying.
 
-- [ ] `dialog_confirm-06` · P2 · proposal. Body length: Use a standard body face and shorter sentences.
+- [x] `dialog_confirm-06` · P2 · proposal. Body length: Use a standard body face and shorter sentences.
   Evidence: The explanation wraps across three widely tracked lines.
 
-- [ ] `dialog_confirm-07` · P2 · proposal. Body spacing: Reduce the title-to-body spacing.
+- [x] `dialog_confirm-07` · P2 · proposal. Body spacing: Reduce the title-to-body spacing.
   Evidence: The title and message are separated by a large gap.
 
-- [ ] `dialog_confirm-08` · P2 · proposal. Button size: Increase action-label size.
+- [x] `dialog_confirm-08` · P2 · proposal. Button size: Increase action-label size.
   Evidence: Cancel and Apply labels are small within their buttons.
 
-- [ ] `dialog_confirm-09` · P2 · proposal. Apply label: Use Apply display settings.
+- [x] `dialog_confirm-09` · P2 · proposal. Apply label: Use Apply display settings.
   Evidence: Apply repeats the vague title verb.
 
-- [ ] `dialog_confirm-10` · P2 · proposal. Cancel meaning: Use Keep current settings where space permits.
+- [x] `dialog_confirm-10` · P2 · proposal. Cancel meaning: Use Keep current settings where space permits.
   Evidence: Cancel does not state that current settings remain.
 
-- [ ] `dialog_confirm-11` · P2 · proposal. Button alignment: Align its right edge with the body text column.
+- [x] `dialog_confirm-11` · P2 · proposal. Button alignment: Align its right edge with the body text column.
   Evidence: The action row is inset farther than the message text.
 
-- [ ] `dialog_confirm-12` · P2 · proposal. Button gap: Use a consistent compact action-group gap.
+- [x] `dialog_confirm-12` · P2 · proposal. Button gap: Use a consistent compact action-group gap.
   Evidence: Cancel and Apply are separated by a large empty gap.
 
-- [ ] `dialog_confirm-13` · P2 · proposal. Dialog bottom: Reduce dialog height to fit the content.
+- [x] `dialog_confirm-13` · P2 · proposal. Dialog bottom: Reduce dialog height to fit the content.
   Evidence: Substantial blank space follows the buttons.
 
-- [ ] `dialog_confirm-14` · P2 · proposal. Dialog edge: Add subtle edge separation.
+- [x] `dialog_confirm-14` · P2 · proposal. Dialog edge: Add subtle edge separation.
   Evidence: The dark panel has no clear border or shadow against the backdrop.
 
-- [ ] `dialog_confirm-15` · P2 · proposal. Current context: Mark the pending fields in the backdrop before dimming.
+- [x] `dialog_confirm-15` · P2 · proposal. Current context: Mark the pending fields in the backdrop before dimming.
   Evidence: Visible 2560×1440 and 120Hz values do not identify pending versus current.
 
-- [ ] `dialog_confirm-16` · P2 · proposal. Changed-field cue: Add a small changed marker to edited settings.
+- [x] `dialog_confirm-16` · P2 · proposal. Changed-field cue: Add a small changed marker to edited settings.
   Evidence: All backdrop rows share the same appearance.
 
-- [ ] `dialog_confirm-17` · P2 · proposal. Modal heading hierarchy: Increase heading weight.
+- [x] `dialog_confirm-17` · P2 · proposal. Modal heading hierarchy: Increase heading weight.
   Evidence: The dialog title is only modestly larger than body text.
 
-- [ ] `dialog_confirm-18` · P2 · proposal. Backdrop chrome: Add a Display changes caption within the dialog.
+- [x] `dialog_confirm-18` · P2 · proposal. Backdrop chrome: Add a Display changes caption within the dialog.
   Evidence: Harbour Studio and navigation remain visible but do not identify the confirmation source.
 
 ### dialog_danger
@@ -8107,6 +8107,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review a presentation/config argument for native convenience dialogs so consumers need not restyle returned descendants; see `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review bracket decoration bounds when the decorated component has padding; wm currently puts content inset on a child. See `docs/AFTERHOURS_GAPS.md`.
 

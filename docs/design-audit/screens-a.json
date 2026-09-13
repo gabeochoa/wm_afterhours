@@ -6094,7 +6094,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "d843a0a32899ab5415002b53ce8c1135365767d681d3358c3b0df865c50ffbda"
+    "sha256": "d843a0a32899ab5415002b53ce8c1135365767d681d3358c3b0df865c50ffbda",
+    "evidence": "docs/design-audit/originals/dialog_confirm_720p.png"
   },
   {
     "id": "dialog_danger",
