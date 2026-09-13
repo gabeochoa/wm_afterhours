@@ -34,7 +34,7 @@
 
 - [ ] Study [Adham Dannaway’s design system examples](https://www.adhamdannaway.com/blog/design-systems/design-system-examples). Use the supplied article to review consistent typography and spacing, Carbon’s surface colors and larger UI patterns, Atlassian’s semantic color/elevation tokens, Spectrum’s input-dependent sizing and writing guidance, and GOV.UK’s tested accessible patterns. Document a small set of choices that fit WM and afterhours, with visual examples, before adding new APIs.
 
-- [ ] Make toast labels inherit configured UI font/style defaults or accept a presentation argument; see docs/AFTERHOURS_GAPS.md.
+- [x] Make toast labels inherit configured UI fonts and choose readable text for the notification background. Defaults are captured when the toast is created, including the font size and scaling mode; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Define and implement native cross-axis Stretch sizing for unspecified dimensions; see docs/AFTERHOURS_GAPS.md.
 
@@ -48,7 +48,7 @@
 
 - [ ] Fix batched Clip bounds, deliberate-Ellipsis warning suppression and overflow debug overlays; see docs/AFTERHOURS_GAPS.md.
 
-- [ ] Review unconsumed UI action lifetime so stale Escape cannot dismiss a newly opened dialog; see docs/AFTERHOURS_GAPS.md.
+- [x] Expire UI actions each frame so stale Escape cannot dismiss a newly opened dialog; clear actions on screen reset and defer synthetic test input until the next frame. See docs/AFTERHOURS_GAPS.md.
 
 - [ ] Make virtual-list row stride consistent with grid snapping so the last row remains reachable; see docs/AFTERHOURS_GAPS.md.
 
@@ -74,13 +74,13 @@
 
 - [ ] Make partial rounded outlines match fill masks and correct RoundedCorners::top_round; see docs/AFTERHOURS_GAPS.md.
 
-- [ ] Add configurable visible-row limits and scrolling to native dropdown trays when reviewed upstream; see docs/AFTERHOURS_GAPS.md.
+- [ ] Consider an application-configured visible-row limit for native dropdown trays. Available-space sizing, scrolling, and keyboard reveal are implemented; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Fix fractional-boundary nonprogress in native polyline::draw_dashed; wm quantizes marquee parameters to avoid the hang. See docs/AFTERHOURS_GAPS.md.
 
 - [ ] Review native text-input focus origin across frames and its conflict with generic SelectOnFocus; see docs/AFTERHOURS_GAPS.md.
 
-- [ ] Review native menu outside-click dismissal, disabled focus traversal and item/shortcut presentation options; see `docs/AFTERHOURS_GAPS.md`.
+- [ ] Review native menu item/shortcut presentation options and disabled-row pointer shielding. Outside-click/Escape dismissal, opener restoration and skipping disabled rows during tray traversal are implemented; see `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review a presentation/config argument for native convenience dialogs so consumers need not restyle returned descendants; see `docs/AFTERHOURS_GAPS.md`.
 

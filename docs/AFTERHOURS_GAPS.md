@@ -265,19 +265,14 @@ modal behavior.
 
 ### Menu dismissal, disabled focus targets and presentation options
 
-Native menus dismiss on focus loss, so clicking nonfocusable empty content
-leaves them open. Disabled menu buttons also retain click listeners and can be
-chosen by tray focus traversal; the filename header received the initial focus
-outline in the captured fixture. wm now dismisses outside presses and removes
-listeners from disabled menu rows after building the native menu. Menu text
-padding and shortcut style are not exposed: the screen offsets item labels
+Outside-press/Escape dismissal, opener restoration and skipping disabled rows
+in keyboard tray traversal are resolved by the September focus/popup audit.
+
+Menu text padding and shortcut style remain unexposed. WM offsets item labels
 with HasLabel.text_x_offset and removes forced disabled-text dimming from
-shortcut labels. Upstream should expose these presentation options and keep
-disabled items out of keyboard focus traversal. Disabled rows also let pointer
-presses reach underlying focusable content, closing the menu. wm adds
-transparent pointer shields to disabled row bounds and returns focus to the
-native menu list; disabled items should consume hits without becoming focus
-targets.
+shortcut labels. Disabled rows can also let pointer presses reach underlying
+focusable content; WM adds transparent pointer shields. These presentation
+options and disabled-row hit ownership remain separate follow-ups.
 
 ### Text-input focus origin and generic SelectOnFocus conflict
 
@@ -307,12 +302,11 @@ completed in an isolated float32 reproduction.
 
 ### Dropdowns have no visible-row limit or scrolling configuration
 
-The native dropdown builds one row for every option and positions the entire
-tray below, above or clamped to the viewport. Its public configuration exposes
-neither a maximum visible-row count nor scrolling. The wm month fixture
-preserves all 12 options and accurately labels the resulting tray. Long option
-lists need a viewport and scroll behavior rather than relying on whole-tray
-clamping.
+Available-space sizing and scrolling are resolved by the September audit.
+Native trays use the resolved trigger height, fit above or below the trigger,
+and reveal keyboard-focused options. The month fixture retains all 12 choices
+and exercises scrolling to December. An application-configured visible-row
+limit remains an optional presentation follow-up.
 
 ### Partial rounded outlines ignore corner masks
 
@@ -447,12 +441,10 @@ the effective row stride.
 
 ### Unconsumed UI actions persist across frames
 
-UIContext retains last_action until a matching widget consumes it, rather than
-expiring it at the end of the input frame. Escape on a gallery with no dialog
-can remain queued and close a later newly opened dialog. ModalShowcase
-consumes otherwise-unused MenuBack while no dialog is active. Review event
-lifetime and explicit consumption upstream so stale actions do not affect
-future controls.
+Resolved by the September audit. UIContext expires actions at the next frame,
+clears them on screen reset, and delivers synthetic E2E actions through the
+next-frame queue. The ModalShowcase workaround that drained unused Escape was
+removed. Tests cover reopening dialogs after unrelated Escape presses.
 
 ### Batched text overflow lacks clipping and debug parity
 
@@ -509,13 +501,23 @@ children() as CSS auto.
 
 ### Toast labels bypass configured UI fonts
 
-toast::schedule creates HasLabel without configuring its font, bypassing
-UIStylingDefaults and falling back to the backend default. In the notification
-gallery this produced handwriting labels, LabelNoFont warnings and text
-extending past the native background. WM styles returned native notification
-entities with the gallery font and measured spacing/inset while preserving
-native lifetime, dimensions and stacking. Native toast presentation should
-inherit configured defaults or expose an explicit style argument.
+Resolved locally. toast::schedule now assigns the configured default font and
+size to both the UI component and its label, with the backend default font as
+an explicit fallback. It retains the creation-time scaling mode. A live toast
+keeps its font when a different screen changes UIStylingDefaults.
+
+The old manual construction bypassed the normal component configuration path.
+We assumed passing UIContext into schedule also applied UIStylingDefaults;
+it did not. WM's returned-entity font workaround hid the library defect from
+the gallery test. WM now relies on native font inheritance and retains only
+its smaller notification size, letter spacing and text offset.
+
+Toast text also captures the better-contrast theme foreground for its actual
+background at creation. Previously the renderer used the current theme's
+light font unconditionally, producing unreadable text on coral and changing
+old notifications when the screen theme changed. The mistaken assumption was
+that all severity/custom backgrounds were dark and that a toast could safely
+use whichever screen theme happened to be active later.
 
 ### Follow-ups retained when old audit reports were removed
 
@@ -1319,13 +1321,89 @@ Regression tests for these live in the afterhours `tests/` suite: `autolayout_te
 ## Additional diagnostics found while checking startup warnings (September 12, 2026)
 
 The compiler override warnings, toast startup singleton warning, and implicit
-button-padding warning are resolved. The following separate diagnostics appeared
-while running `43_toasts.e2e` and `156_live_profiler.e2e`; both scripts passed.
+button-padding warning are resolved. The remaining diagnostics are now fixed:
 
-- `text_input_field` triggers the ignored leaf-label padding warning during the
-  profiler script. Check how the text-input renderer uses its internal padding
-  before changing the widget or exempting it from the diagnostic.
-- Toasts trigger `LabelNoFont` validation for their dynamically created labels.
-  Check font inheritance and ensure toast labels receive a valid font.
-- The custom toast reports a contrast ratio of 2.318397 against the required
-  4.5. Check the showcase color choice and the toast's foreground selection.
+- Text fields mark their height-derived internal padding as widget defaults.
+  That padding is used by caret layout and pointer-to-character hit testing.
+  The leaf-label warning had assumed no children meant no padding consumer;
+  an unfocused field has no caret child but still uses the padding. The fix
+  keeps the diagnostic for ordinary labels with explicit ignored padding.
+- Native toast creation inherits the configured font and size, removing the
+  missing-font path without requiring every caller to style the returned entity.
+- Native toasts select a readable foreground against their actual background,
+  including the coral custom toast. The selection remains stable across screen
+  theme changes. See the toast gap above for the cause and earlier assumptions.
+
+Before the fixes, the focused regressions failed 11 toast checks and two
+text-field diagnostic checks. After the fixes: toast 11/11, text input 51/51,
+and label inset 9/9 pass. The toast, toast-design and live-profiler E2E scripts
+pass 3/3 without the padding, missing-font or toast-contrast diagnostics.
+Reviewed the coral toast and severity toasts at 1280×720, 1920×1080 and
+1024×768. The app builds without compiler warnings.
+
+## Focus, modal, and popup audit — September 2026
+
+The audit traversed Tab and Shift+Tab on all 117 registered screens. The first
+pass reached 1,092 focus targets and saved each target's component rectangle,
+scroll-adjusted rectangle, clipping rectangle, focus-ring geometry, and a crop
+of the rendered ring. Separate scripted passes open dialogs, menus, popovers,
+dropdowns, tutorials, tool panels, and the screen browser.
+
+These are library defects or missing contracts exposed by that audit. The fixes
+are local for review; none have been pushed. Geometry checks are paired with rendered screenshots
+and interaction tests; a clean geometry report alone does not establish visibility.
+
+| Gap | What was wrong and why | Assumption that missed it | Fix |
+| --- | --- | --- | --- |
+| Focus paint order | A ring followed its own background but preceded opaque children, images, and custom foreground drawing. Dropdowns, text fields, checkbox labels, and poster tiles covered it. | Checking the ring rectangle, or testing a childless button, was enough to prove visibility. | Both renderers paint the ring after the focused subtree, while preserving the order of later overlays. Tests cover opaque children and an overlapping higher layer. |
+| Incomplete recording backend | The batched fill primitive was a no-op in the recording backend, so tests could observe a ring without the opaque fill that would cover it. | Testing either renderer through that backend captured equivalent drawing operations. | Record batched rounded/rotated fill calls as well; the new paint-order test requires a recorded child fill, then the ring, then a higher overlay. Actual screenshots remain necessary for pixel appearance. |
+| Thin focus targets | A fixed 4px inset produced negative dimensions on 4px split handles and a 1px decorative rule. | Every focusable element was larger than twice the theme inset. | Clamp each axis independently; omit an inner contrast outline when it cannot fit. The decorative rule also explicitly opts out of Tab. Pointer passthrough alone is not a keyboard policy. |
+| Concentric corners | The fill's pixel radius was reused after insetting the ring, so their corner centers differed. | A fixed radius was correct for every rectangle associated with the component. | Subtract the inset before deriving the ring radius; retain concentric expansion for its contrast edges. |
+| Rotated focus targets | Batched rounded outlines had no rotation field, although fills and text could rotate. | Applying translation and scale to the ring rectangle also covered rotation. | Carry rotation through the outline primitive and rotate around the ring center in both renderers. |
+| Scroll extent disagreed between update and render | Neither path included container padding; only the update path included flex gaps. Rendering could clamp a correctly revealed last row back out of view. | Two copies of similar size arithmetic would stay equivalent. | Share the measurement routine, including padding, gaps, margins, and unbuilt virtual-list content. |
+| Keyboard scroll visibility | Tab could reach controls below a scroll viewport without revealing them. Forms and the scroll-click fixture visibly lost focus. | Being built and enabled meant the control was visible to the user. | Reveal a changed keyboard/programmatic focus target through its scroll ancestors. An unchanged focus does not undo manual wheel scrolling. |
+| Custom modal styling | AIM, media playback/settings, the race pause sheet, and the motorway tutorial used drawn panels instead of the modal plugin. Background controls remained keyboard reachable. | A scrim plus disabled background buttons was equivalent to a modal. Disabled buttons intentionally remain discoverable with Tab. | `ModalConfig::with_panel` accepts normal component styling while retaining the shared modal stack, dismissal, input gate, and focus restoration. The screens use that path. |
+| Modal viewport anchoring | A viewport-sized backdrop and centered panel were positioned relative to whichever parent called the modal. An offset/padded parent shifted the backdrop and left part of the window uncovered. | Every caller was the full-screen root at (0, 0). | Attach backdrops and default panels to the layout root; explicitly styled custom panels retain their caller-relative layout. Test an offset, padded parent. |
+| Modal transition timing | The input gate was installed by a system on a later frame. Closing a covered modal could also steal focus from the top dialog. | A one-frame delay was harmless, and every closing dialog owned focus. | Synchronize the gate at open/close transitions; only restore focus owned by the closing dialog. Retire omitted modal panels so conditional rendering cannot leave an invisible input gate. |
+| Backdrop press ownership | The watcher returned early for an empty modal stack without clearing its remembered press. A later dialog could immediately interpret the opening release as an outside click; a release could also cross between stacked dialogs. | A boolean saying that some modal was active was sufficient to authorize dismissal of whichever modal was on top later. | Bind a press to the modal already present before it began; reset ownership when the stack empties and after release. Tests cover reopening, stacking, opening presses, and a valid later backdrop click. |
+| Escape in modal text fields | A text field consumed Escape to blur, then the focus trap put focus back inside. A rename dialog could never close from its input field. | Local blur was the final handler of Escape, independent of an enclosing dialog. | Blur without consuming the enclosing dismissal action. Dropdowns still consume Escape locally, so their open list closes before its dialog. |
+| Stale actions | An unconsumed Escape survived indefinitely in `last_action`; a later popup could consume it. Screen resets did not clear it either. | A press was safe to retain until some future component handled it. | Initialize and expire the action at the next UI frame, clear input bits on reset, and deliver synthetic E2E actions through the existing next-frame queue. |
+| Popup dismissal | Menus, popovers, and dropdowns closed only when focus moved elsewhere. Clicking blank space did not move focus, and Escape was not handled. | Every outside click would focus another control. | Explicit outside-press and Escape dismissal, with focus restoration when the popup still owns focus. Cozy Cafe now uses the same popover behavior. |
+| Pending menu activation | Checking focus-loss dismissal before rebuilding menu rows discarded a click queued by the previous frame. | Closing and selecting were independent, so their order did not matter. | Read pending item selection before applying generic dismissal; cover selection after focus moves and retain real pointer-routing E2Es. |
+| E2E cancellation | Skipping a failed script left other pending assertions alive. They timed out against later screens and falsely blamed those scripts. | Moving the script cursor also cancelled already-dispatched work. | Consume pending commands without creating new failures before finalizing a skipped script, and clear its waits. Test cancellation and the following script. |
+| Disabled menu options | Tray traversal included unavailable menu actions. | A click listener meant an item was navigable. | Exclude disabled labeled items from tray traversal; ordinary disabled controls retain their existing Tab behavior. |
+| Dropdown trigger width | A dropdown copied its percentage width into its trigger, applying the percentage twice. The visible field was narrower than the focus-cluster rectangle. | Reusing a size configuration preserved its resolved size when moved under a new parent. | Size the trigger and optional label against the resolved holder; test both labeled and unlabeled percentage-width controls. |
+| Long dropdowns | A twelve-option list exceeded the available space around its trigger, and used unresolved style units to estimate height. | Flipping/clamping the origin could make an arbitrarily tall list fit. | Resolve row height from the trigger and limit the tray to available space, with scrolling and keyboard reveal. |
+| Corner-unit setter precedence | Calling `with_roundness(1)` after a base style with `with_corner_radius(0)` silently kept square corners. This occurred again while correcting the motorway rings. | The last explicit builder call would override the base style, as other style setters do. | Each setter clears the other unit; tests verify the rendered radius for both call orders. |
+| Custom painted shapes | Some circular or pill-shaped controls advertised square geometry, so a geometrically correct ring still looked wrong. | A custom draw callback communicated its shape to the renderer. | Supply matching corner geometry in the bird, motorway, and Kirby screens. File-tree rows also reserve the ring's full thickness and contrast edge inside their clip. |
+
+The audit distinguishes a popup that intentionally closes when Tab leaves it
+from an unreachable focus target. A changed candidate set is not by itself a
+navigation defect. Geometry dumps are evidence about coordinates, not proof of
+paint visibility: rendered crops and draw-order tests are required too.
+
+Desktop Escape handling also bypassed UI dismissal: the application loop quit
+before modal or screen navigation could handle the key. Headless E2E skipped
+that branch. All windowed runners now leave Escape to UI handling and retain
+window-close exit behavior.
+
+The live close probes also exposed a stale tree assumption: modal ownership walked child vectors during immediate UI construction, when those vectors had already been cleared. Focus restoration consequently failed for every opener except the first page control. Modal ownership now walks the retained parent links; the regression clears the child vector before closing, and the live audit checks the actual restored ID.
+
+Repeat the audits from the WM root after building:
+
+- `python3 scripts/audit_focus.py --output focus-results.json`: traverse both directions on all registered screens; report clipped/degenerate rings and persistent unreachable targets. Use `--screen NAME` for one screen.
+- `python3 scripts/audit_popups.py --output popup-results.json`: open the scripted dialog/popup cases, check modal focus containment and restoration, and retain a compact findings report.
+- Both commands run the app with `nice -n 10` and remove their temporary screenshots automatically. For visual popup review, pass `--capture-dir PATH` with a fresh directory; analyze it later with `--existing PATH`, then delete it after review.
+- To retain focus crops, run `nice -n 10 ./output/ui_tester.exe --focus-test --focus-audit --max-tabs 512 --image-output PATH`, inspect the crops, then use `python3 scripts/audit_focus.py --existing PATH`.
+
+Verification for this audit:
+
+- WM E2E: 280/280 pass in one complete run, including the self-contained stale-backdrop-press regression and failed-script cancellation case.
+- Focus traversal: 117 screens, 1,091 distinct forward targets, complete forward/reverse cycles, no remaining geometry or reachability findings. Reviewed the whole-app crop sheets and the corrected controls at full size.
+- Popups: 73 scripted cases, 2,636 snapshots, including 1,908 modal snapshots; no containment, opener-restoration, dismissal, or geometry findings. Reviewed all 73 open states, plus the corrected controls and existing wizard, validation, and tooltip captures.
+- Baselines: 117/117 comparisons pass after reviewing and updating the affected images. Changes record the newly visible text-field ring, initial rename selection, corrected scroll extents, and dropdown copy.
+- Library: the full library suite completed successfully. After the final refinements, the affected suites also passed: menu 68/68, dialogs 46/46, downstream gaps 96/96, overdraw 3/3, and command cancellation 7/7. The dialog watcher regressions failed three checks before the press-ownership fix.
+- The app build produced no compiler warnings. Builds and app runs used `nice -n 10`, with builds limited to two jobs.
+- Desktop Escape bypass was verified in the windowed loop code. Input, focus, dismissal, and resizing were exercised through the headless runtime; this does not claim a physical keyboard test on a desktop window.
+
+The combined Escape test initially suggested a short wait, but headless time steps are fixed. An isolated watcher test reproduced the stale press across dialog lifetimes. The fix changes press ownership; the test wait is unchanged.
