@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-575 completed; 1,960 remaining.
+600 completed; 1,935 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2174,79 +2174,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/decorators_720p.png) · [Visual review](design-audit.html#screen=decorators)
 
-- [ ] `decorators-01` · P2 · defect. Green status brackets: Anchor the brackets to the visible ONLINE panel bounds.
+- [x] `decorators-01` · P2 · defect. Green status brackets: Anchor the brackets to the visible ONLINE panel bounds.
   Evidence: Green corner brackets extend well beyond the ONLINE panel and around its caption.
 
-- [ ] `decorators-02` · P2 · defect. First quote padding: Add a consistent left content inset.
+- [x] `decorators-02` · P2 · defect. First quote padding: Add a consistent left content inset.
   Evidence: The first quote starts almost against the thick teal accent bar.
 
-- [ ] `decorators-03` · P2 · proposal. Page title: Increase title size modestly.
+- [x] `decorators-03` · P2 · proposal. Page title: Increase title size modestly.
   Evidence: UI Decorators is small relative to the unused screen area.
 
-- [ ] `decorators-04` · P2 · proposal. Subtitle type: Use a readable subtitle with monospace API text.
+- [x] `decorators-04` · P2 · proposal. Subtitle type: Use a readable subtitle with monospace API text.
   Evidence: Composable visual effects via .decorate() is tiny.
 
-- [ ] `decorators-05` · P2 · proposal. Column headings: Add human-readable headings above the API names.
+- [x] `decorators-05` · P2 · proposal. Column headings: Add human-readable headings above the API names.
   Evidence: with_brackets(), with_grid_bg() and with_quote() are small and low-emphasis.
 
-- [ ] `decorators-06` · P2 · proposal. Bracket dimensions: Show bracket length and stroke width in captions.
+- [x] `decorators-06` · P2 · proposal. Bracket dimensions: Show bracket length and stroke width in captions.
   Evidence: The cyan and amber brackets have no length annotation.
 
-- [ ] `decorators-07` · P2 · proposal. Status title: Increase title size or reduce panel height.
+- [x] `decorators-07` · P2 · proposal. Status title: Increase title size or reduce panel height.
   Evidence: SYSTEM STATUS is small inside a large panel.
 
-- [ ] `decorators-08` · P2 · proposal. Status message: Increase body text size.
+- [x] `decorators-08` · P2 · proposal. Status message: Increase body text size.
   Evidence: All systems operational uses very tiny lettering.
 
-- [ ] `decorators-09` · P2 · proposal. Warning text: Enlarge it and separate the percentage.
+- [x] `decorators-09` · P2 · proposal. Warning text: Enlarge it and separate the percentage.
   Evidence: Hull integrity at 47% is smaller than the available panel allows.
 
-- [ ] `decorators-10` · P2 · proposal. Warning punctuation: Use a distinct warning symbol.
+- [x] `decorators-10` · P2 · proposal. Warning punctuation: Use a distinct warning symbol.
   Evidence: ! WARNING ! uses text punctuation as the icon.
 
-- [ ] `decorators-11` · P2 · proposal. Online marker: Increase it slightly and align its center with the label.
+- [x] `decorators-11` · P2 · proposal. Online marker: Increase it slightly and align its center with the label.
   Evidence: The green dot is tiny relative to its status word.
 
-- [ ] `decorators-12` · P2 · proposal. Bracket caption: Move it outside specimen bounds after correcting the anchor.
+- [x] `decorators-12` · P2 · proposal. Bracket caption: Move it outside specimen bounds after correcting the anchor.
   Evidence: The caption sits inside the overextended green brackets.
 
-- [ ] `decorators-13` · P2 · proposal. Grid labels: Label them Coarse 20px and Dense grid with actual spacing.
+- [x] `decorators-13` · P2 · proposal. Grid labels: Label them Coarse 20px and Dense grid with actual spacing.
   Evidence: The first two grids have no individual names.
 
-- [ ] `decorators-14` · P2 · proposal. Grid dot: Label it as the center marker.
+- [x] `decorators-14` · P2 · proposal. Grid dot: Label it as the center marker.
   Evidence: The teal center dot has no stated role.
 
-- [ ] `decorators-15` · P2 · proposal. Dense grid: Add a small spacing ruler outside the panel.
+- [x] `decorators-15` · P2 · proposal. Dense grid: Add a small spacing ruler outside the panel.
   Evidence: Dense lines have no scale reference.
 
-- [ ] `decorators-16` · P2 · proposal. Sector grid: Caption it Grid + brackets.
+- [x] `decorators-16` · P2 · proposal. Sector grid: Caption it Grid + brackets.
   Evidence: SECTOR 7-G has no explanation of combined decorators.
 
-- [ ] `decorators-17` · P2 · proposal. Grid contrast: Show line opacity values for comparison.
+- [x] `decorators-17` · P2 · proposal. Grid contrast: Show line opacity values for comparison.
   Evidence: The three grid specimens vary in brightness without numeric captions.
 
-- [ ] `decorators-18` · P2 · proposal. Quote examples: Label it No attribution to clarify the variant.
+- [x] `decorators-18` · P2 · proposal. Quote examples: Label it No attribution to clarify the variant.
   Evidence: The first quote lacks attribution while the others include it.
 
-- [ ] `decorators-19` · P2 · proposal. First quote wrapping: Adjust content width or text size for a balanced wrap.
+- [x] `decorators-19` · P2 · proposal. First quote wrapping: Adjust content width or text size for a balanced wrap.
   Evidence: The line breaks after you and leaves do. on a short second line.
 
-- [ ] `decorators-20` · P2 · proposal. Quote attribution: Increase attribution size while keeping it secondary.
+- [x] `decorators-20` · P2 · proposal. Quote attribution: Increase attribution size while keeping it secondary.
   Evidence: Commander Shepard and GLaDOS labels are tiny.
 
-- [ ] `decorators-21` · P2 · proposal. Quote bar widths: Show their configured widths.
+- [x] `decorators-21` · P2 · proposal. Quote bar widths: Show their configured widths.
   Evidence: Teal, amber and green accent bars vary markedly.
 
-- [ ] `decorators-22` · P2 · proposal. Quote alignment: Use a shared content inset across examples.
+- [x] `decorators-22` · P2 · proposal. Quote alignment: Use a shared content inset across examples.
   Evidence: The first quote starts farther left than the later quotes.
 
-- [ ] `decorators-23` · P2 · proposal. Column height: Use aligned example rows with separate captions.
+- [x] `decorators-23` · P2 · proposal. Column height: Use aligned example rows with separate captions.
   Evidence: The three specimen stacks end on different baselines.
 
-- [ ] `decorators-24` · P2 · proposal. Lower blank space: Add annotated decorator-parameter references.
+- [x] `decorators-24` · P2 · proposal. Lower blank space: Add annotated decorator-parameter references.
   Evidence: Nearly the lower third is empty.
 
-- [ ] `decorators-25` · P2 · proposal. Color mapping: Add captions separating semantic color from decorator behavior.
+- [x] `decorators-25` · P2 · proposal. Color mapping: Add captions separating semantic color from decorator behavior.
   Evidence: Teal, amber and green denote both status and different examples.
 
 ### dialog_confirm
@@ -8107,6 +8107,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review bracket decoration bounds when the decorated component has padding; wm currently puts content inset on a child. See `docs/AFTERHOURS_GAPS.md`.
 
 - [ ] Review text-area wheel scrolling, returned focus target and scaled auto-grow padding; see `docs/AFTERHOURS_GAPS.md`.
 

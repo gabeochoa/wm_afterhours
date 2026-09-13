@@ -251,6 +251,15 @@ height-scaled h720(4) on each side; at 1080p five 30px rows receive 158px
 outer height but need 162px. Review scaled padding and caret-visible scrolling
 separately.
 
+### Bracket decorations add padding to an already padded rectangle
+
+`with_brackets` expands the supplied component rectangle by computed padding
+even though that rectangle already includes it. The ONLINE sample's brackets
+therefore extend past its visible filled panel when the panel has padding. wm
+preserves the native decorator and moves content inset into a child, leaving
+the decorated outer panel unpadded. Review the decorator's rectangle contract
+upstream; render/click geometry and decoration should share the same bounds.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

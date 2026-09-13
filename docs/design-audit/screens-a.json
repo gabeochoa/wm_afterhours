@@ -5941,7 +5941,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "230e50b4dc19158819202eeedf3a3424f12541ffa75298df251addcf4770b30b"
+    "sha256": "230e50b4dc19158819202eeedf3a3424f12541ffa75298df251addcf4770b30b",
+    "evidence": "docs/design-audit/originals/decorators_720p.png"
   },
   {
     "id": "dialog_confirm",

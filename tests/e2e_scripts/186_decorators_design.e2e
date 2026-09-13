@@ -1,0 +1,67 @@
+goto_screen decorators
+resize 1280 720
+wait 0.4
+expect_text "UI decorators"
+expect_text "Corner brackets"
+expect_text "Grid backgrounds"
+expect_text "Quote bars"
+expect_text ".decorate(with_brackets())"
+expect_text "SYSTEM STATUS"
+expect_text "All systems operational"
+expect_text "Hull integrity"
+expect_text "47%"
+expect_text "ONLINE"
+expect_text "Bracket 18px / stroke 2px"
+expect_text "Bracket 22px / stroke 3px"
+expect_text "Bracket 10px / stroke 2px / 56px panel"
+expect_text "Coarse 20px / center marker"
+expect_text "Dense 12px grid"
+expect_text "Grid + brackets / 24px"
+expect_text "Line #234B4B / alpha 180/255"
+expect_text "Line #328282 / alpha 120/255"
+expect_text "Line #284146 / alpha 100/255"
+expect_text "No attribution"
+expect_text "Commander Shepard"
+expect_text "GLaDOS"
+expect_text "Accent 4px / wrapper inset 24px"
+expect_text "Accent 5px / wrapper inset 24px"
+assert_ui decorators_canvas w=1280 h=720
+assert_ui root x=68 y=0 w=1144 h=720
+assert_ui bracket_panel_1 x=80 y=182 w=328 h=100
+assert_ui bracket_panel_2 x=80 y=348 w=328 h=100
+assert_ui bracket_panel_3 x=80 y=536 w=328 h=56
+assert_ui status_dot x=188 y=558 w=12 h=12
+assert_ui radar_dot x=637 y=229 w=6 h=6
+assert_ui quote_inner_1 x=896 y=194 w=280 h=76
+assert_ui quote_inner_2 x=896 y=360 w=280 h=76
+assert_ui quote_inner_3 x=896 y=526 w=280 h=76
+assert_within_parents
+screenshot decorators_design
+click_ui decorator_measurements
+wait 0.2
+expect_text "Show measurements"
+expect_text "Color carries meaning; brackets add shape."
+expect_text "Grid spacing changes density, not state."
+expect_text "Color is independent of quotation style."
+expect_no_text "Bracket 18px / stroke 2px"
+assert_ui bracket_panel_3 x=80 y=536 w=328 h=56
+screenshot decorators_without_measurements
+focus_ui decorator_measurements
+key ENTER
+wait 0.2
+expect_text "Hide measurements"
+expect_text "Bracket 18px / stroke 2px"
+resize 1920 1080
+wait 0.3
+assert_ui status_dot w=18 h=18
+assert_ui bracket_panel_3 w=492 h=84
+assert_ui quote_inner_1 w=420 h=114
+assert_within_parents
+screenshot decorators_design_1080
+resize 1024 768
+wait 0.3
+assert_ui decorators_canvas w=1024 h=768
+assert_ui root x=54 y=96 w=915 h=576
+assert_within_parents
+screenshot decorators_design_narrow
+resize 1280 720

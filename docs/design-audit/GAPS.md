@@ -1170,7 +1170,7 @@ Frame differences are intentional. Twenty defensible proposals clarify the compa
 
 ## decorators
 
-[Current baseline](../../screenshot-baselines/screens/decorators_720p.png) · [Visual review](../../design-audit.html#screen=decorators)
+[Reviewed image](../../docs/design-audit/originals/decorators_720p.png) · [Current baseline](../../screenshot-baselines/screens/decorators_720p.png) · [Visual review](../../design-audit.html#screen=decorators)
 
 Baseline SHA-256: `230e50b4dc19158819202eeedf3a3424f12541ffa75298df251addcf4770b30b`
 
