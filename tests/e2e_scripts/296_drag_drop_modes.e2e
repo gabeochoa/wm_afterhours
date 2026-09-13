@@ -1,0 +1,60 @@
+goto_screen drag_drop
+resize 1280 720
+wait 0.4
+expect_text "Sprint board"
+expect_text "Board"
+expect_text "Lanes"
+assert_ui drag_drop_root x=60 y=0 w=1160 h=720
+click_ui move_to_2
+wait 0.2
+expect_text "3 of 8 completed"
+expect_text "SPR-01 / Design mockups moved to Done / position 3."
+click_ui drag_mode_lanes
+wait 0.3
+expect_text "Horizontal Drag & Drop"
+expect_no_text "Sprint board"
+assert_ui hdrag_root x=60 y=36 w=1160 h=648
+click_ui hdrag_ghost
+wait 0.2
+expect_text "Translucent preview: On"
+mouse_down 150 219
+wait 0.2
+mouse_move 90 367
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Last moved: Security patch / Medium priority / position 1"
+focus_ui drag_mode_board
+key ENTER
+wait 0.3
+expect_text "Sprint board"
+expect_text "3 of 8 completed"
+expect_text "SPR-01 / Design mockups moved to Done / position 3."
+click_ui move_to_1
+wait 0.2
+expect_text "2 of 8 completed"
+expect_text "SPR-01 / Design mockups moved to In progress / position 4."
+focus_ui drag_mode_lanes
+key ENTER
+wait 0.3
+expect_text "Last moved: Security patch / Medium priority / position 1"
+expect_text "Translucent preview: On"
+mouse_down 150 367
+wait 0.2
+mouse_move 90 219
+wait 0.2
+mouse_up
+wait 0.3
+expect_text "Last moved: Security patch / High priority / position 1"
+screenshot drag_drop_lanes_mode
+resize 1024 768
+wait 0.3
+assert_ui hdrag_root x=48 y=125 w=928 h=518
+assert_ui drag_mode_board x=608 y=116 w=94 h=30
+click_ui drag_mode_board
+wait 0.3
+expect_text "SPR-01 / Design mockups moved to In progress / position 4."
+assert_ui drag_drop_root x=48 y=96 w=928 h=576
+assert_no_overflow
+screenshot drag_drop_board_mode_narrow
+resize 1280 720

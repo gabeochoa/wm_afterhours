@@ -4,6 +4,7 @@
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
+#include "HorizontalDragShowcase.h"
 #include <afterhours/ah.h>
 #include <array>
 
@@ -11,6 +12,9 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
+  HorizontalDragShowcase lanes_demo;
+  bool show_lanes = false;
+
   // Kanban column data
   struct Card {
     int id;
@@ -83,7 +87,30 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
   }
 
   void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
+                     UIContext<InputAction> &context, float dt) override {
+    if (show_lanes) lanes_demo.for_each_with(entity, context, dt);
+    else draw_board(entity, context);
+    const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    const float left = (context.screen_width - 1160 * s) / 2;
+    const float top = (context.screen_height - 720 * s) / 2;
+    const auto *drag = afterhours::EntityHelper::get_singleton_cmp<DragGroupState>();
+    const std::array<const char *, 2> modes{"Board", "Lanes"};
+    for (size_t mode = 0; mode < modes.size(); ++mode) {
+      const bool active = show_lanes == (mode == 1);
+      if (button(context, mk(entity, 1000 + static_cast<int>(mode)), ComponentConfig{}
+          .with_size({pixels(118 * s), pixels(38 * s)})
+          .with_absolute_position(left + (700 + static_cast<float>(mode) * 126) * s, top + 25 * s)
+          .with_label(modes[mode]).with_font("AtkinsonMock", pixels(18 * s))
+          .with_custom_background(active ? afterhours::Color{72, 111, 176, 255}
+                                         : afterhours::Color{42, 52, 69, 255})
+          .with_custom_text_color({237, 243, 251, 255}).with_corner_radius(8 * s)
+          .with_disabled(drag && drag->dragging).with_render_layer(10)
+          .with_debug_name(mode == 0 ? "drag_mode_board" : "drag_mode_lanes")))
+        show_lanes = mode == 1;
+    }
+  }
+
+  void draw_board(afterhours::Entity &entity, UIContext<InputAction> &context) {
     // --- Consume drag-and-drop events first ---
     auto *drag_state = afterhours::EntityHelper::get_singleton_cmp<DragGroupState>();
     if (drag_state) {
@@ -272,5 +299,5 @@ struct DragDropShowcase : ScreenSystem<UIContext<InputAction>> {
 };
 
 REGISTER_EXAMPLE_SCREEN(drag_drop, "Component Galleries",
-                        "Drag and drop between columns with reordering",
+                        "Drag and drop in boards and horizontal priority lanes",
                         DragDropShowcase)
