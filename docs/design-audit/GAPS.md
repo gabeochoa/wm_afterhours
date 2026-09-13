@@ -1816,7 +1816,7 @@ Current capture removes Volume focus outline. The same fixed-height scroller cli
 
 ## grid lab
 
-[Current baseline](../../screenshot-baselines/screens/grid_lab_720p.png) · [Visual review](../../design-audit.html#screen=grid_lab)
+[Reviewed image](../../docs/design-audit/originals/grid_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/grid_lab_720p.png) · [Visual review](../../design-audit.html#screen=grid_lab)
 
 Baseline SHA-256: `78badc2c90a1d684e23b14a11efd4510aff84c81ae292ff8884de95680a2b868`
 
@@ -1847,7 +1847,7 @@ The table geometry and ragged content are intentional tests. Eighteen distinct p
 
 [Image](../../baseline_screenshots/grid_lab.png)
 
-Pixel-identical. Two top-aligned table examples occupy little of the canvas. Unequal sample widths illustrate explicit tracks and must not be normalized as a supposed alignment defect.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## guess who lab
 

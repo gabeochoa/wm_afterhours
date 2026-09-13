@@ -1,0 +1,61 @@
+goto_screen grid_lab
+resize 1280 720
+wait 0.4
+expect_text "Grid layout"
+expect_text "Example 1 / equal columns, ragged text"
+expect_text "Equal 1fr tracks / 1104px total"
+expect_text "'-' is an empty-value fixture"
+expect_text "Example 2 / explicit tracks and a spanning header"
+expect_text "60px"
+expect_text "240px"
+expect_text "120px"
+expect_text "one cell, spanning three tracks"
+expect_text "Border inspection / Medium requests 2px"
+expect_text "8x requested-border diagram"
+expect_text "540px table / row-index gutter / striped body rows"
+expect_text "Columns stay aligned across every row"
+assert_ui gl_root x=0 y=0 w=1280 h=720
+assert_ui gl_t1 x=88 y=218 w=1104
+assert_ui gl_a_0_1 x=364 w=276 h=44
+assert_ui gl_a_2_1 x=364 w=276 h=44
+assert_ui gl_t2 x=88 y=484 w=540
+assert_ui gl_b_0_1 x=148 w=480
+assert_ui gl_b_3_1 x=148 w=240
+assert_ui gl_b_3_2 x=388 w=120
+assert_ui gl_a_1_1 text=a
+assert_within_parents
+screenshot grid_lab_design
+click_ui gl_swap
+wait 0.2
+assert_ui gl_a_2_1 text=a
+assert_ui gl_a_1_1 x=364 w=276
+assert_ui gl_a_2_1 x=364 w=276
+assert_within_parents
+screenshot grid_lab_swapped
+focus_element gl_swap
+key ENTER
+wait 0.2
+assert_ui gl_a_1_1 text=a
+resize 1920 1080
+wait 0.3
+expect_text "90px"
+expect_text "360px"
+expect_text "180px"
+assert_ui gl_root x=0 y=0 w=1920 h=1080
+assert_ui gl_t2 x=132 y=726 w=810
+assert_ui gl_b_0_1 x=222 w=720
+assert_ui gl_b_3_1 x=222 w=360
+assert_within_parents
+screenshot grid_lab_design_1080
+resize 1024 768
+wait 0.3
+expect_text "48px"
+expect_text "192px"
+expect_text "96px"
+assert_ui gl_root x=0 y=0 w=1024 h=768
+assert_ui gl_t2 x=70 y=483 w=432
+assert_ui gl_b_0_1 x=118 w=384
+assert_ui gl_b_3_1 x=118 w=192
+assert_within_parents
+screenshot grid_lab_design_narrow
+resize 1280 720

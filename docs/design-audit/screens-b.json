@@ -1886,7 +1886,8 @@
         "change": "Add Columns stay aligned across every row beneath the examples."
       }
     ],
-    "sha256": "78badc2c90a1d684e23b14a11efd4510aff84c81ae292ff8884de95680a2b868"
+    "sha256": "78badc2c90a1d684e23b14a11efd4510aff84c81ae292ff8884de95680a2b868",
+    "evidence": "docs/design-audit/originals/grid_lab_720p.png"
   },
   {
     "id": "guess_who_lab",

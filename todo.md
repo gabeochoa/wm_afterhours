@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,207 completed; 1,328 remaining.
+1,225 completed; 1,310 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3524,58 +3524,59 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/grid_lab_720p.png) · [Visual review](design-audit.html#screen=grid_lab)
 
-- [ ] `grid_lab-01` · P2 · proposal. Header strip: Use Grid layout as a heading and keep the explanation as a subtitle.
+- [x] `grid_lab-01` · P2 · proposal. Header strip: Use Grid layout as a heading and keep the explanation as a subtitle.
   Evidence: The API explanation is a small single-line title.
 
-- [ ] `grid_lab-02` · P2 · proposal. Equal-track caption: Increase the caption and identify this as Example 1.
+- [x] `grid_lab-02` · P2 · proposal. Equal-track caption: Increase the caption and identify this as Example 1.
   Evidence: Equal columns, ragged text is tiny relative to the table width.
 
-- [ ] `grid_lab-03` · P2 · proposal. Equal-track cell text: Increase the specimen text or add a larger companion specimen.
+- [x] `grid_lab-03` · P2 · proposal. Equal-track cell text: Increase the specimen text or add a larger companion specimen.
   Evidence: Cell text is very small despite broad columns.
 
-- [ ] `grid_lab-04` · P2 · proposal. Cell insets: Add consistent horizontal cell padding.
+- [x] `grid_lab-04` · P2 · proposal. Cell insets: Add consistent horizontal cell padding.
   Evidence: id, name, role, and notes sit almost against grid lines.
 
-- [ ] `grid_lab-05` · P2 · proposal. Column headings: Use a stronger header face while preserving track dimensions.
+- [x] `grid_lab-05` · P2 · proposal. Column headings: Use a stronger header face while preserving track dimensions.
   Evidence: Header text has little weight distinction from the body.
 
-- [ ] `grid_lab-06` · P3 · proposal. ID column: Add an Equal 1fr tracks annotation above the table.
+- [x] `grid_lab-06` · P3 · proposal. ID column: Add an Equal 1fr tracks annotation above the table.
   Evidence: The short numeric column occupies the same width as long role text by design.
 
-- [ ] `grid_lab-07` · P3 · proposal. Ragged name example: Add a caption explaining that content length does not move column boundaries.
+- [x] `grid_lab-07` · P3 · proposal. Ragged name example: Add a caption explaining that content length does not move column boundaries.
   Evidence: a and a much longer name illustrate width variation without a reference.
 
-- [ ] `grid_lab-08` · P3 · proposal. Notes dash: Label it as an empty-value fixture in the caption.
+- [x] `grid_lab-08` · P3 · proposal. Notes dash: Label it as an empty-value fixture in the caption.
   Evidence: The dash in the first notes row has no explanatory context.
 
-- [ ] `grid_lab-09` · P2 · proposal. Second caption: Display the four numeric track sizes above their corresponding columns.
+- [x] `grid_lab-09` · P2 · proposal. Second caption: Display the four numeric track sizes above their corresponding columns.
   Evidence: Explicit tracks does not show the actual track widths.
 
-- [ ] `grid_lab-10` · P2 · proposal. Spanning header: Add a subtle three-column bracket above the merged cell.
+- [x] `grid_lab-10` · P2 · proposal. Spanning header: Add a subtle three-column bracket above the merged cell.
   Evidence: One cell, spanning three tracks is only communicated through text.
 
-- [ ] `grid_lab-11` · P3 · proposal. Blank corner cell: Caption it as the row-index gutter outside the table.
+- [x] `grid_lab-11` · P3 · proposal. Blank corner cell: Caption it as the row-index gutter outside the table.
   Evidence: The second table's first header cell is empty.
 
-- [ ] `grid_lab-12` · P2 · proposal. r1c1 labels: Use a compact monospaced face for the coordinate fixtures.
+- [x] `grid_lab-12` · P2 · proposal. r1c1 labels: Use a compact monospaced face for the coordinate fixtures.
   Evidence: Coordinate-style content is harder to scan in the small handwritten face.
 
-- [ ] `grid_lab-13` · P3 · proposal. Striped second table: Label the alternating-row treatment in the sample metadata.
+- [x] `grid_lab-13` · P3 · proposal. Striped second table: Label the alternating-row treatment in the sample metadata.
   Evidence: The middle body row has a distinct blue fill without an explanation.
 
-- [ ] `grid_lab-14` · P2 · proposal. Thick-border claim: Add an enlarged border detail and the requested border width.
+- [x] `grid_lab-14` · P2 · proposal. Thick-border claim: Add an enlarged border detail and the requested border width.
   Evidence: The caption says thick border but the thin displayed lines are hard to judge at this scale.
+  Disposition: The enlarged specimen is explicitly labeled an 8x requested-border diagram. It is not a magnification of native pixels, whose uniform-border width limitation remains upstream.
 
-- [ ] `grid_lab-15` · P3 · proposal. Table comparison: Give each a clearly bounded sample frame with its own width annotation.
+- [x] `grid_lab-15` · P3 · proposal. Table comparison: Give each a clearly bounded sample frame with its own width annotation.
   Evidence: The first table spans the viewport while the second occupies less than half.
 
-- [ ] `grid_lab-16` · P3 · proposal. Unused lower area: Place a compact track-definition diagram below the rendered examples.
+- [x] `grid_lab-16` · P3 · proposal. Unused lower area: Place a compact track-definition diagram below the rendered examples.
   Evidence: Most of the screen below the second table is empty.
 
-- [ ] `grid_lab-17` · P3 · proposal. Grid-line contrast: Reduce internal line emphasis while keeping the outer test border unchanged.
+- [x] `grid_lab-17` · P3 · proposal. Grid-line contrast: Reduce internal line emphasis while keeping the outer test border unchanged.
   Evidence: Grid lines and small pale text compete for attention.
 
-- [ ] `grid_lab-18` · P2 · proposal. Expected result: Add Columns stay aligned across every row beneath the examples.
+- [x] `grid_lab-18` · P2 · proposal. Expected result: Add Columns stay aligned across every row beneath the examples.
   Evidence: The page describes setup without a short success criterion.
 
 ### guess_who_lab

@@ -116,13 +116,13 @@
     "screen": "grid_lab",
     "baseline": "baseline_screenshots/grid_lab.png",
     "current": "screenshot-baselines/screens/grid_lab_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Two top-aligned table examples occupy little of the canvas. Unequal sample widths illustrate explicit tracks and must not be normalized as a supposed alignment defect.",
-    "sha256": "78badc2c90a1d684e23b14a11efd4510aff84c81ae292ff8884de95680a2b868",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "0690020e7e3ddaf75fa2d9365d55fded72d8ce8673c789f411cfc70c21aa5069",
     "additional_findings": []
   },
   {
