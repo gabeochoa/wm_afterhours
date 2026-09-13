@@ -374,6 +374,16 @@ on internal child ordering. A supported row renderer or accessory callback
 would let consumers add metadata and accessible row decoration without relying
 on internals.
 
+### Bare nine-slice borders do not enter native rendering
+
+Native renderability gates in ui/rendering.h (around lines 1849 and 2578) omit
+HasNineSliceBorder. A div containing only a nine-slice border and
+Theme::Usage::None is never queued, even though layout and interaction
+assertions pass. The wm Stretching and Width/Tint specimens reproduced this as
+completely blank sample areas. Adding a transparent HasColor component routes
+the same native nine-slice textures through the existing renderer. The gates
+should recognize HasNineSliceBorder directly.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

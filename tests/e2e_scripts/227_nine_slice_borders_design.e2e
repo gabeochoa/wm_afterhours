@@ -1,0 +1,124 @@
+goto_screen nine_slice_borders
+resize 1280 720
+wait 0.4
+expect_text "9-slice borders"
+expect_text "Panel styles / filled centers"
+expect_text "uniform source slices: 16px"
+expect_text "panel-000.png"
+expect_text "panel-025.png"
+expect_text "Ornate / panel-005"
+expect_text "16 x 16 source pixels"
+expect_text "6.0x magnification"
+assert_ui bg x=0 y=0 w=1280 h=720
+assert_ui panel_0 x=88 y=281 w=208 h=100
+assert_ui panel_5 x=544 y=471 w=208 h=100
+assert_ui ns_corner_zoom x=812 y=286 w=96 h=96
+assert_within_parents
+screenshot nine_slice_panels_design
+click_ui panel_5
+wait 0.2
+expect_text "Heavy / panel-025"
+click_ui ns_guides
+wait 0.2
+expect_text "Hide slice guides"
+screenshot nine_slice_guides
+click_ui ns_tab_1
+wait 0.2
+expect_text "Border only / transparent centers"
+expect_text "Transparent border assets"
+expect_text "Border 000 / simple"
+expect_text "Transparent border 010"
+expect_text "Center alpha: 0"
+expect_text "Center alpha: 255"
+assert_ui border_0 x=88 y=336 w=208 h=164
+assert_ui border_4 x=984 y=336 w=208 h=164
+assert_within_parents
+screenshot nine_slice_transparency_design
+click_ui ns_tab_2
+wait 0.2
+expect_text "Stretching / original sizes, aligned bottoms"
+expect_text "80 x 55px"
+expect_text "350 x 55px"
+expect_text "70 x 110px"
+expect_text "Same-source comparison / panel-010 everywhere"
+assert_ui ns_original_size_0 x=88 y=335 w=80 h=55
+assert_ui ns_original_size_4 x=992 y=280 w=70 h=110
+assert_ui ns_same_size_3 x=572 y=568 w=350 h=55
+assert_within_parents
+screenshot nine_slice_stretching_design
+click_ui ns_tab_3
+wait 0.2
+expect_text "32px double source slices"
+expect_text "96 x 96 source / 32px"
+expect_text "Tint / border color and text color are chosen separately"
+expect_text "Tint #E6B93C"
+expect_text "Tint #6496DC"
+expect_text "Tint #C85050"
+expect_text "Tint #50B464"
+expect_text "Text #141E32"
+assert_within_parents
+screenshot nine_slice_tint_design
+click_ui ns_tab_4
+wait 0.2
+expect_text "Each click increments the counter."
+expect_text "Button clicks: 0"
+expect_text "Bordered dialog"
+expect_text "Gold child"
+expect_text "Blue child"
+expect_text "Same border texture / only the fill changes"
+click_ui ns_button
+wait 0.2
+expect_text "Button clicks: 1"
+focus_element ns_button
+key ENTER
+wait 0.2
+expect_text "Button clicks: 2"
+assert_ui nested_outer x=820 y=253 w=372 h=220
+assert_within_parents
+screenshot nine_slice_examples_design
+resize 1920 1080
+wait 0.3
+assert_ui bg x=0 y=0 w=1920 h=1080
+assert_within_parents
+screenshot nine_slice_examples_1080
+click_ui ns_tab_0
+wait 0.2
+expect_text "9.0x magnification"
+assert_ui panel_0 x=132 y=422 w=312 h=150
+assert_within_parents
+screenshot nine_slice_panels_1080
+click_ui ns_tab_1
+wait 0.2
+assert_within_parents
+click_ui ns_tab_2
+wait 0.2
+assert_within_parents
+click_ui ns_tab_3
+wait 0.2
+assert_within_parents
+resize 1024 768
+wait 0.3
+assert_ui bg x=0 y=0 w=1024 h=768
+assert_within_parents
+screenshot nine_slice_tint_narrow
+click_ui ns_tab_0
+wait 0.2
+expect_text "4.8x magnification"
+assert_ui panel_0 x=70 y=321 w=166 h=80
+assert_within_parents
+screenshot nine_slice_panels_narrow
+click_ui ns_tab_1
+wait 0.2
+assert_within_parents
+screenshot nine_slice_transparency_narrow
+click_ui ns_tab_2
+wait 0.2
+expect_text "64 x 44px"
+assert_within_parents
+screenshot nine_slice_stretching_narrow
+click_ui ns_tab_4
+wait 0.2
+expect_text "Button clicks: 2"
+assert_within_parents
+screenshot nine_slice_examples_narrow
+resize 1280 720

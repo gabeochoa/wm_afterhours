@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,530 completed; 1,005 remaining.
+1,555 completed; 980 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5158,79 +5158,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/nine_slice_borders_720p.png) · [Visual review](design-audit.html#screen=nine_slice_borders)
 
-- [ ] `nine_slice_borders-01` · P2 · proposal. Title frame: Use a simpler heading treatment.
+- [x] `nine_slice_borders-01` · P2 · proposal. Title frame: Use a simpler heading treatment.
   Evidence: The full-width white frame outweighs small border specimens.
 
-- [ ] `nine_slice_borders-02` · P2 · proposal. Panel names: Add texture IDs beneath the samples.
+- [x] `nine_slice_borders-02` · P2 · proposal. Panel names: Add texture IDs beneath the samples.
   Evidence: Simple, Ornate, and Heavy omit source identifiers.
 
-- [ ] `nine_slice_borders-03` · P3 · proposal. Slice parameters: Add a shared slice-size caption.
+- [x] `nine_slice_borders-03` · P3 · proposal. Slice parameters: Add a shared slice-size caption.
   Evidence: The first row does not state corner-slice dimensions.
 
-- [ ] `nine_slice_borders-04` · P2 · proposal. Corner details: Add a magnified corner inset beside the row.
+- [x] `nine_slice_borders-04` · P2 · proposal. Corner details: Add a magnified corner inset beside the row.
   Evidence: Ornate and Double Line corner details are small.
 
-- [ ] `nine_slice_borders-05` · P3 · proposal. Thick sample: Show its border or slice width externally.
+- [x] `nine_slice_borders-05` · P3 · proposal. Thick sample: Show its border or slice width externally.
   Evidence: Thick gives no border measurement.
 
-- [ ] `nine_slice_borders-06` · P2 · proposal. Decorative and Heavy: Add optional content-inset guides for comparison.
+- [x] `nine_slice_borders-06` · P2 · proposal. Decorative and Heavy: Add optional content-inset guides for comparison.
   Evidence: Broad gold patterns reduce the usable white center.
 
-- [ ] `nine_slice_borders-07` · P2 · proposal. Border-only grouping: Separate the transparency modes with subgroup captions.
+- [x] `nine_slice_borders-07` · P2 · proposal. Border-only grouping: Separate the transparency modes with subgroup captions.
   Evidence: Border A–C have dark centers while Trans A–B have white backing.
 
-- [ ] `nine_slice_borders-08` · P2 · proposal. Border A B C names: Add texture names or short corner descriptions.
+- [x] `nine_slice_borders-08` · P2 · proposal. Border A B C names: Add texture names or short corner descriptions.
   Evidence: Letter names do not explain corner differences.
 
-- [ ] `nine_slice_borders-09` · P2 · proposal. Trans labels: Spell out Transparent border in external captions.
+- [x] `nine_slice_borders-09` · P2 · proposal. Trans labels: Spell out Transparent border in external captions.
   Evidence: Trans abbreviates the tested behavior.
+  Disposition: Transparent border is the source folder name. Its images have opaque white centers, now shown with measured alpha values and checkerboards.
 
-- [ ] `nine_slice_borders-10` · P3 · proposal. Transparency proof: Add checkerboard companion backgrounds.
+- [x] `nine_slice_borders-10` · P3 · proposal. Transparency proof: Add checkerboard companion backgrounds.
   Evidence: Flat backgrounds make transparent regions hard to identify.
 
-- [ ] `nine_slice_borders-11` · P2 · proposal. Size metadata: Add width × height captions.
+- [x] `nine_slice_borders-11` · P2 · proposal. Size metadata: Add width × height captions.
   Evidence: Small, Medium, and Large have no dimensions.
 
-- [ ] `nine_slice_borders-12` · P3 · proposal. Size isolation: Add a same-source comparison across every size.
+- [x] `nine_slice_borders-12` · P3 · proposal. Size isolation: Add a same-source comparison across every size.
   Evidence: Different styles appear within the stretching row.
 
-- [ ] `nine_slice_borders-13` · P2 · proposal. Wide panel copy: Move usage advice below the frame.
+- [x] `nine_slice_borders-13` · P2 · proposal. Wide panel copy: Move usage advice below the frame.
   Evidence: Good for menus is packed inside the specimen label.
 
-- [ ] `nine_slice_borders-14` · P2 · proposal. Tall alignment: Use a shared caption baseline or consistent sample framing.
+- [x] `nine_slice_borders-14` · P2 · proposal. Tall alignment: Use a shared caption baseline or consistent sample framing.
   Evidence: Tall begins above the other size samples.
 
-- [ ] `nine_slice_borders-15` · P3 · proposal. Tall caption: Use uniform external caption sizes.
+- [x] `nine_slice_borders-15` · P3 · proposal. Tall caption: Use uniform external caption sizes.
   Evidence: Tall uses much smaller type than neighboring names.
 
-- [ ] `nine_slice_borders-16` · P2 · proposal. Double-width grouping: Add separate Width and Tint subgroup labels.
+- [x] `nine_slice_borders-16` · P2 · proposal. Double-width grouping: Add separate Width and Tint subgroup labels.
   Evidence: Border width and tint share one heading.
 
-- [ ] `nine_slice_borders-17` · P2 · proposal. Double-width spacing: Increase gaps around these specimens.
+- [x] `nine_slice_borders-17` · P2 · proposal. Double-width spacing: Increase gaps around these specimens.
   Evidence: Thick decorations nearly meet adjacent samples.
 
-- [ ] `nine_slice_borders-18` · P3 · proposal. Double metadata: Caption the 32-pixel slice parameter.
+- [x] `nine_slice_borders-18` · P3 · proposal. Double metadata: Caption the 32-pixel slice parameter.
   Evidence: Double omits its actual slice size.
 
-- [ ] `nine_slice_borders-19` · P3 · proposal. Tint values: Add exact tint values below them.
+- [x] `nine_slice_borders-19` · P3 · proposal. Tint values: Add exact tint values below them.
   Evidence: Gold, Blue, Red, and Green are names without values.
 
-- [ ] `nine_slice_borders-20` · P2 · proposal. Tint text adaptation: Explain that text contrast adapts separately.
+- [x] `nine_slice_borders-20` · P2 · proposal. Tint text adaptation: Explain that text contrast adapts separately.
   Evidence: Text colors vary independently of border tint.
 
-- [ ] `nine_slice_borders-21` · P2 · proposal. Interactive button: Add an external expected-response caption.
+- [x] `nine_slice_borders-21` · P2 · proposal. Interactive button: Add an external expected-response caption.
   Evidence: Click Me! does not say what response to inspect.
 
-- [ ] `nine_slice_borders-22` · P2 · proposal. Dialog specimen: Add a clear dialog title and external border caption.
+- [x] `nine_slice_borders-22` · P2 · proposal. Dialog specimen: Add a clear dialog title and external border caption.
   Evidence: The small corners-stay-crisp sentence is buried in a large pale box.
 
-- [ ] `nine_slice_borders-23` · P2 · proposal. Nested labels: Use Gold child and Blue child.
+- [x] `nine_slice_borders-23` · P2 · proposal. Nested labels: Use Gold child and Blue child.
   Evidence: Inner and Panel do not distinguish the two children.
 
-- [ ] `nine_slice_borders-24` · P3 · proposal. Nested parent border: Add a companion contrast backdrop without changing the texture.
+- [x] `nine_slice_borders-24` · P3 · proposal. Nested parent border: Add a companion contrast backdrop without changing the texture.
   Evidence: The pale outer border blends with its fill.
 
-- [ ] `nine_slice_borders-25` · P3 · proposal. Bottom margin: Add a consistent gallery bottom margin.
+- [x] `nine_slice_borders-25` · P3 · proposal. Bottom margin: Add a consistent gallery bottom margin.
   Evidence: The last examples end close to the viewport edge.
 
 ### offsite_backup
@@ -8133,6 +8134,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Include HasNineSliceBorder in native renderability gates so border-only divs paint; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Review a supported tree row/accessory renderer for icons and metadata columns; wm currently restyles tree_view descendants. See docs/AFTERHOURS_GAPS.md.
 

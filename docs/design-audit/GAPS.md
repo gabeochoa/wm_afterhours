@@ -2622,7 +2622,7 @@ The tactical HUD intentionally leaves the center clear. Improve peripheral legib
 
 ## nine slice borders
 
-[Current baseline](../../screenshot-baselines/screens/nine_slice_borders_720p.png) · [Visual review](../../design-audit.html#screen=nine_slice_borders)
+[Reviewed image](../../docs/design-audit/originals/nine_slice_borders_720p.png) · [Current baseline](../../screenshot-baselines/screens/nine_slice_borders_720p.png) · [Visual review](../../design-audit.html#screen=nine_slice_borders)
 
 Baseline SHA-256: `1970c9e49fafdb73a6fb529e47c4d7a75c4ee34bdc9e79fadb1c00a40459106a`
 

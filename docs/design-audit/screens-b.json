@@ -6234,7 +6234,8 @@
         "change": "Add a consistent gallery bottom margin."
       }
     ],
-    "sha256": "1970c9e49fafdb73a6fb529e47c4d7a75c4ee34bdc9e79fadb1c00a40459106a"
+    "sha256": "1970c9e49fafdb73a6fb529e47c4d7a75c4ee34bdc9e79fadb1c00a40459106a",
+    "evidence": "docs/design-audit/originals/nine_slice_borders_720p.png"
   },
   {
     "id": "offsite_backup",
