@@ -2377,7 +2377,8 @@
         "change": "Increase its contrast after correcting the inventory."
       }
     ],
-    "sha256": "9634e0131a8695bb1d4acabafa4ba52ae6843cb28cf7e9e5aafa9a23c8017620"
+    "sha256": "9634e0131a8695bb1d4acabafa4ba52ae6843cb28cf7e9e5aafa9a23c8017620",
+    "evidence": "docs/design-audit/originals/setting_row_showcase_720p.png"
   },
   {
     "id": "shop_interface",

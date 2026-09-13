@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,150 completed; 385 remaining.
+2,170 completed; 365 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6518,64 +6518,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/setting_row_showcase_720p.png) · [Visual review](design-audit.html#screen=setting_row_showcase)
 
-- [ ] `setting_row_showcase-01` · P2 · defect. Footer inventory: Show those specimen rows or restrict the footer to the three visible families.
+- [x] `setting_row_showcase-01` · P2 · defect. Footer inventory: Show those specimen rows or restrict the footer to the three visible families.
   Evidence: Toggle, Stepper, Slider, Dropdown, Display lists dropdown and display examples that are not visible.
 
-- [ ] `setting_row_showcase-02` · P2 · proposal. Control columns: Use one shared control column across row types.
+- [x] `setting_row_showcase-02` · P2 · proposal. Control columns: Use one shared control column across row types.
   Evidence: Toggles and steppers align at the right edge, while sliders sit near the center.
 
-- [ ] `setting_row_showcase-03` · P2 · proposal. Value column: Place percentages immediately after each slider in a consistent value column.
+- [x] `setting_row_showcase-03` · P2 · proposal. Value column: Place percentages immediately after each slider in a consistent value column.
   Evidence: 80% and 65% sit far from their sliders.
 
-- [ ] `setting_row_showcase-04` · P2 · proposal. Slider track: Add a visible value fill while retaining the green thumb.
+- [x] `setting_row_showcase-04` · P2 · proposal. Slider track: Add a visible value fill while retaining the green thumb.
   Evidence: The dark tracks do not show a filled portion.
 
-- [ ] `setting_row_showcase-05` · P2 · proposal. Master slider mapping: Add labeled endpoints or fix the visual mapping so the reported percentage matches the usable range.
+- [x] `setting_row_showcase-05` · P2 · proposal. Master slider mapping: Add labeled endpoints or fix the visual mapping so the reported percentage matches the usable range.
   Evidence: The 80% thumb appears only about two-thirds across the visible track.
 
-- [ ] `setting_row_showcase-06` · P2 · proposal. Music slider mapping: Use the same explicit range mapping as Master Volume and label its endpoints.
+- [x] `setting_row_showcase-06` · P2 · proposal. Music slider mapping: Use the same explicit range mapping as Master Volume and label its endpoints.
   Evidence: 65% appears just right of the track midpoint.
 
-- [ ] `setting_row_showcase-07` · P2 · proposal. Toggle state text: Add On and Off text beside the switches.
+- [x] `setting_row_showcase-07` · P2 · proposal. Toggle state text: Add On and Off text beside the switches.
   Evidence: Music and Sound Effects are blue and Vibration gray, without state words.
 
-- [ ] `setting_row_showcase-08` · P2 · proposal. Label hierarchy: Use one label size for all setting rows.
+- [x] `setting_row_showcase-08` · P2 · proposal. Label hierarchy: Use one label size for all setting rows.
   Evidence: Master Volume and Music Volume are larger than Music, Sound Effects and Vibration.
 
-- [ ] `setting_row_showcase-09` · P2 · proposal. Language arrows: Use clearer chevrons with consistent visible button bounds.
+- [x] `setting_row_showcase-09` · P2 · proposal. Language arrows: Use clearer chevrons with consistent visible button bounds.
   Evidence: The thin chevrons around English are small and faint.
 
-- [ ] `setting_row_showcase-10` · P2 · proposal. Graphics arrows: Put the three elements in a compact outlined stepper group.
+- [x] `setting_row_showcase-10` · P2 · proposal. Graphics arrows: Put the three elements in a compact outlined stepper group.
   Evidence: High floats between two tiny chevrons with no grouping.
 
-- [ ] `setting_row_showcase-11` · P3 · proposal. Language option context: Add a small option count in the specimen caption.
+- [x] `setting_row_showcase-11` · P3 · proposal. Language option context: Add a small option count in the specimen caption.
   Evidence: English has no indication of position within available choices.
 
-- [ ] `setting_row_showcase-12` · P2 · proposal. Graphics label: Rename it Graphics quality.
+- [x] `setting_row_showcase-12` · P2 · proposal. Graphics label: Rename it Graphics quality.
   Evidence: Graphics is broad while the selected value is High.
 
-- [ ] `setting_row_showcase-13` · P2 · proposal. Section spacing: Reduce gaps and add thin neutral dividers to clarify grouping.
+- [x] `setting_row_showcase-13` · P2 · proposal. Section spacing: Reduce gaps and add thin neutral dividers to clarify grouping.
   Evidence: Large blank gaps separate Toggles, Options and Volume.
 
-- [ ] `setting_row_showcase-14` · P3 · proposal. Title panel: Add a modest gap or divider below the title.
+- [x] `setting_row_showcase-14` · P3 · proposal. Title panel: Add a modest gap or divider below the title.
   Evidence: The title bar blends into the larger content panel.
 
-- [ ] `setting_row_showcase-15` · P2 · proposal. Section captions: Increase caption size and align their baselines to a consistent inset.
+- [x] `setting_row_showcase-15` · P2 · proposal. Section captions: Increase caption size and align their baselines to a consistent inset.
   Evidence: TOGGLES, OPTIONS and VOLUME are small muted labels.
 
-- [ ] `setting_row_showcase-16` · P2 · proposal. Music relationship: Add a brief note explaining the relationship between enablement and volume.
+- [x] `setting_row_showcase-16` · P2 · proposal. Music relationship: Add a brief note explaining the relationship between enablement and volume.
   Evidence: Music appears as both a toggle and Music Volume in separate groups.
 
-- [ ] `setting_row_showcase-17` · P2 · proposal. Row boundaries: Add subtle full-width row separators to aid horizontal scanning.
+- [x] `setting_row_showcase-17` · P2 · proposal. Row boundaries: Add subtle full-width row separators to aid horizontal scanning.
   Evidence: Wide empty space separates labels and controls with no row guides.
 
-- [ ] `setting_row_showcase-18` · P3 · proposal. Slider size: Increase track width to make percentage differences easier to compare.
+- [x] `setting_row_showcase-18` · P3 · proposal. Slider size: Increase track width to make percentage differences easier to compare.
   Evidence: The 152 px tracks occupy a small fraction of the wide panel.
 
-- [ ] `setting_row_showcase-19` · P2 · proposal. Initial values: Add a compact default-state summary below the specimen panel.
+- [x] `setting_row_showcase-19` · P2 · proposal. Initial values: Add a compact default-state summary below the specimen panel.
   Evidence: The screen has no summary of the demonstrated defaults.
 
-- [ ] `setting_row_showcase-20` · P3 · proposal. Footer contrast: Increase its contrast after correcting the inventory.
+- [x] `setting_row_showcase-20` · P3 · proposal. Footer contrast: Increase its contrast after correcting the inventory.
   Evidence: The small family list is dim on the black margin.
 
 ### shop_interface

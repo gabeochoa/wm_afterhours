@@ -3300,7 +3300,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## setting row showcase
 
-[Current baseline](../../screenshot-baselines/screens/setting_row_showcase_720p.png) · [Visual review](../../design-audit.html#screen=setting_row_showcase)
+[Reviewed image](../../docs/design-audit/originals/setting_row_showcase_720p.png) · [Current baseline](../../screenshot-baselines/screens/setting_row_showcase_720p.png) · [Visual review](../../design-audit.html#screen=setting_row_showcase)
 
 Baseline SHA-256: `9634e0131a8695bb1d4acabafa4ba52ae6843cb28cf7e9e5aafa9a23c8017620`
 
