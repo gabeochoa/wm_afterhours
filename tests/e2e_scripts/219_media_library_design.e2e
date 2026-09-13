@@ -29,11 +29,16 @@ wait 0.2
 expect_text "Lantern Field"
 click_ui ml_play
 wait 0.2
-expect_text "LOCAL PLAYBACK PREVIEW"
+expect_text "Playback preview"
 focus_ui ml_overlay_pause
 key ENTER
 wait 0.2
 expect_text "Preview paused"
+assert_ui ml_overlay w=680 h=450
+assert_ui ml_overlay_pause w=140 h=40
+assert_ui ml_progress w=604 h=6
+assert_within_parents
+screenshot media_player_design
 key ESCAPE
 wait 0.2
 resize 1920 1080

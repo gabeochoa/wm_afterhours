@@ -91,7 +91,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
   std::array<bool, 24> watchlist{};
   std::array<raylib::Texture2D, 7> art{};
   std::array<afterhours::EntityID, 6> tile_ids{{-1, -1, -1, -1, -1, -1}};
-  const afterhours::Color ink{232, 232, 232, 255}, muted{149, 151, 156, 255};
+  const afterhours::Color ink{239, 241, 244, 255}, muted{178, 184, 194, 255};
   const afterhours::Color gold{227, 170, 42, 255}, transparent{0, 0, 0, 0};
 
   void load() {
@@ -201,7 +201,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     const bool dark = item % 6 == 1 || item % 6 == 4 || item % 6 == 5;
     const float ty = item % 6 == 4 ? 33 : 212;
     if (unit >= .5f) div(c, mk(frame.ent(), 1), box(ox + 8 * unit, ty * unit, 184 * unit, 25 * unit)
-        .with_label(upper(ITEMS[item].title)).with_font("Garamond", pixels((std::string(ITEMS[item].title).size() > 15 ? 13 : 17) * unit * 1.25f * scale))
+        .with_label(upper(ITEMS[item].title)).with_font("AtkinsonMockBold", pixels((std::string(ITEMS[item].title).size() > 15 ? 13 : 17) * unit * 1.25f * scale))
         .with_custom_text_color(dark ? afterhours::Color{40, 56, 60, 255} : afterhours::Color{246, 236, 219, 255})
         .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     if (unit >= .9f) div(c, mk(frame.ent(), 2), box(ox + 10 * unit, (ty + 29) * unit, 180 * unit, 10 * unit)
@@ -217,7 +217,11 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     theme.surface = {40, 43, 46, 255}; theme.primary = gold; theme.accent = gold; theme.corner_radius = 0; theme.roundness = 0;
     c.set_theme(theme); c.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * scale));
-    if (playing && overlay == Overlay::Player) progress = std::min(progress + std::min(dt, .1f), ITEMS[playing_item].mins * 60.f);
+    if (playing && overlay == Overlay::Player) {
+      const float duration = ITEMS[playing_item].mins * 60.f;
+      progress = std::min(progress + std::min(dt, .1f), duration);
+      if (progress >= duration) playing = false;
+    }
     auto root = div(c, mk(entity), box(0, 0, 1280, 720).with_absolute_position((c.screen_width - 1280 * scale) / 2, (c.screen_height - 720 * scale) / 2).with_debug_name("ml_bg"));
     auto &p = root.ent(); image(c, p, 900, 6, 0, 0, 1280, 720);
     div(c, mk(p, 0), box(0, 0, 1280, 66).with_custom_background({23, 24, 25, 245}));
@@ -365,31 +369,34 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
         .with_backdrop_color({0, 0, 0, 185}).with_render_layer(6)
         .with_show_close_button(false)
         .with_panel(box(300, 135, 680, 450)
-            .with_custom_background({28, 30, 32, 255})
-            .with_border({74, 77, 81, 255}, scale)
-            .with_corner_radius(8 * scale).with_debug_name("ml_overlay")));
+            .with_custom_background({26, 29, 34, 255})
+            .with_border({76, 83, 94, 255}, scale)
+            .with_corner_radius(12 * scale).with_debug_name("ml_overlay")));
     if (!open) { overlay = Overlay::None; playing = false; return; }
     auto &q = panel.ent();
     const std::string heading = overlay == Overlay::Player ? ITEMS[playing_item].title :
         overlay == Overlay::Server ? "Home server" : overlay == Overlay::Settings ? "Library settings" : "Guest profile";
-    label(c, q, 0, heading, 30, 24, 570, 49, 28, ink, "ml_overlay_title");
-    if (action(c, q, 1, "Close", 584, 29, 67, 32, "ml_overlay_close")) { overlay = Overlay::None; playing = false; }
+    label(c, q, 0, heading, 30, 24, 540, 49, 26, ink, "ml_overlay_title", true);
+    if (action(c, q, 1, "Close", 572, 29, 80, 36, "ml_overlay_close")) { overlay = Overlay::None; playing = false; }
     if (overlay == Overlay::Player) {
       poster(c, q, 10, playing_item, 38, 94, 168, 218, false);
-      label(c, q, 11, "LOCAL PLAYBACK PREVIEW", 239, 108, 405, 31, 16, gold);
-      div(c, mk(q, 12), box(239, 152, 400, 91).with_label("No media file is attached. These controls simulate playback locally so you can review the player interaction.")
+      label(c, q, 11, "Playback preview", 239, 102, 405, 31, 18, gold);
+      label(c, q, 19, fmt::format("{}  /  {}  /  {} min", ITEMS[playing_item].kind,
+            ITEMS[playing_item].year, ITEMS[playing_item].mins), 239, 140, 405, 28, 15, muted);
+      div(c, mk(q, 12), box(239, 188, 400, 62).with_label(ITEMS[playing_item].blurb)
           .with_font("AtkinsonMock", pixels(18.75f * scale)).with_custom_text_color(muted).with_text_overflow(TextOverflow::Wrap));
-      label(c, q, 13, playing ? "Playing preview" : "Preview paused", 239, 260, 400, 32, 19, ink, "ml_playback_state");
+      label(c, q, 13, playing ? "Playing preview" : "Preview paused", 239, 266, 400, 32, 19, ink, "ml_playback_state");
+      label(c, q, 21, "Simulated playback. No media file attached.", 239, 300, 400, 26, 13, muted);
       const float length = ITEMS[playing_item].mins * 60.f;
-      div(c, mk(q, 14), box(38, 343, 604, 8).with_custom_background({66, 68, 71, 255})
+      div(c, mk(q, 14), box(38, 343, 604, 6).with_custom_background({66, 68, 71, 255})
           .with_on_draw_fg([fraction = progress / length](RectangleType r) {
             r.width *= fraction; afterhours::draw_rectangle(r, {227, 170, 42, 255});
           }).with_debug_name("ml_progress"));
       label(c, q, 15, fmt::format("{}:{:02} / {}:00", static_cast<int>(progress) / 60, static_cast<int>(progress) % 60, ITEMS[playing_item].mins),
             38, 357, 312, 23, 12, muted, "ml_playback_time");
-      if (action(c, q, 16, "-10 sec", 239, 387, 100, 35, "ml_overlay_rewind")) progress = std::max(0.f, progress - 10);
-      if (action(c, q, 17, playing ? "Pause" : "Resume", 352, 387, 140, 35, "ml_overlay_pause", false, true)) playing = !playing;
-      if (action(c, q, 18, "+10 sec", 505, 387, 100, 35, "ml_overlay_forward")) progress = std::min(length, progress + 10);
+      if (action(c, q, 16, "-10 sec", 168, 387, 108, 40, "ml_overlay_rewind")) progress = std::max(0.f, progress - 10);
+      if (action(c, q, 17, playing ? "Pause" : "Resume", 288, 387, 140, 40, "ml_overlay_pause", false, true)) playing = !playing;
+      if (action(c, q, 18, "+10 sec", 440, 387, 108, 40, "ml_overlay_forward")) progress = std::min(length, progress + 10);
     } else if (overlay == Overlay::Server) {
       label(c, q, 20, "24 titles available in this local demo", 32, 106, 610, 38, 23, ink);
       label(c, q, 21, "No remote server is connected.", 32, 155, 610, 32, 17, muted);

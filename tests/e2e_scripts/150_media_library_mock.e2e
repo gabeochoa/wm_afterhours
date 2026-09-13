@@ -62,7 +62,7 @@ click_ui ml_tile_0
 wait 0.2
 click_ui ml_play
 wait 0.2
-expect_text "LOCAL PLAYBACK PREVIEW"
+expect_text "Playback preview"
 expect_text "Playing preview"
 click_ui ml_overlay_pause
 wait 0.2
@@ -76,7 +76,7 @@ wait 1.2
 expect_text "0:11 / 52:00"
 key ESCAPE
 wait 0.2
-expect_no_text "LOCAL PLAYBACK PREVIEW"
+expect_no_text "Playback preview"
 click_ui ml_server
 wait 0.2
 expect_text "No remote server is connected."
