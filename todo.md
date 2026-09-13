@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,804 completed; 731 remaining.
+1,820 completed; 715 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6665,52 +6665,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/simple_button_720p.png) · [Visual review](design-audit.html#screen=simple_button)
 
-- [ ] `simple_button-01` · P2 · proposal. Main action label: Use Add a click or Increment counter.
+- [x] `simple_button-01` · P2 · proposal. Main action label: Use Add a click or Increment counter.
   Evidence: Click Me! names the input gesture rather than the counter action.
 
-- [ ] `simple_button-02` · P2 · proposal. Counter state: Show Click count: 0 in a stable-width result region.
+- [x] `simple_button-02` · P2 · proposal. Counter state: Show Click count: 0 in a stable-width result region.
   Evidence: No clicks yet... hides the numeric initial value.
 
-- [ ] `simple_button-03` · P2 · proposal. Counter association: Add a small Result caption above the count.
+- [x] `simple_button-03` · P2 · proposal. Counter association: Add a small Result caption above the count.
   Evidence: The gray pill has no label identifying it as button feedback.
 
-- [ ] `simple_button-04` · P2 · proposal. Subtitle: Explain that the main action increments the count.
+- [x] `simple_button-04` · P2 · proposal. Subtitle: Explain that the main action increments the count.
   Evidence: Go ahead, give it a click! repeats the main button wording.
 
-- [ ] `simple_button-05` · P2 · proposal. More Styles heading: Increase it to a readable subsection heading.
+- [x] `simple_button-05` · P2 · proposal. More Styles heading: Increase it to a readable subsection heading.
   Evidence: More Styles is much smaller than surrounding labels.
 
-- [ ] `simple_button-06` · P2 · proposal. Secondary specimen: Add a caption stating whether variant buttons share the counter behavior.
+- [x] `simple_button-06` · P2 · proposal. Secondary specimen: Add a caption stating whether variant buttons share the counter behavior.
   Evidence: Secondary identifies a style but not its relationship to the counter.
 
-- [ ] `simple_button-07` · P2 · proposal. Outline specimen: Strengthen its outline without changing the outline-style specimen.
+- [x] `simple_button-07` · P2 · proposal. Outline specimen: Strengthen its outline without changing the outline-style specimen.
   Evidence: The white button has a very fine lavender edge.
 
-- [ ] `simple_button-08` · P2 · proposal. Bottom specimen labels: Give each specimen a standalone label describing its style.
+- [x] `simple_button-08` · P2 · proposal. Bottom specimen labels: Give each specimen a standalone label describing its style.
   Evidence: Small, Pill and Buttons form a phrase instead of naming three variations.
 
-- [ ] `simple_button-09` · P2 · proposal. Pill specimen: Label the intended radius numerically or render an unmistakable capsule in that specimen.
+- [x] `simple_button-09` · P2 · proposal. Pill specimen: Label the intended radius numerically or render an unmistakable capsule in that specimen.
   Evidence: Pill appears almost as rectangular as Small and Buttons.
 
-- [ ] `simple_button-10` · P3 · proposal. Size comparison: Add its height below the row and the main button height in the same legend.
+- [x] `simple_button-10` · P3 · proposal. Size comparison: Add its height below the row and the main button height in the same legend.
   Evidence: Small is shown without a dimension reference.
 
-- [ ] `simple_button-11` · P3 · proposal. Button alignment: Align all specimen groups to a shared inner card grid.
+- [x] `simple_button-11` · P3 · proposal. Button alignment: Align all specimen groups to a shared inner card grid.
   Evidence: The main button and lower rows use slightly different left insets.
 
-- [ ] `simple_button-12` · P2 · proposal. Color comparison: Use a small legend that names each token so comparison is explicit.
+- [x] `simple_button-12` · P2 · proposal. Color comparison: Use a small legend that names each token so comparison is explicit.
   Evidence: Pastel green, pink and gold buttons change hue and label simultaneously.
 
-- [ ] `simple_button-13` · P2 · proposal. Reset action: Add a quiet Reset count action near the result.
+- [x] `simple_button-13` · P2 · proposal. Reset action: Add a quiet Reset count action near the result.
   Evidence: No reset control is visible for the click count.
 
-- [ ] `simple_button-14` · P3 · proposal. Footer space: Use it for specimen dimensions and shared behavior notes.
+- [x] `simple_button-14` · P3 · proposal. Footer space: Use it for specimen dimensions and shared behavior notes.
   Evidence: A large blank region remains beneath the small buttons inside the card.
 
-- [ ] `simple_button-15` · P3 · proposal. Decoration distribution: Group them closer to the card or reduce their number to keep attention on the examples.
+- [x] `simple_button-15` · P3 · proposal. Decoration distribution: Group them closer to the card or reduce their number to keep attention on the examples.
   Evidence: Confetti dots are scattered far from the central card.
 
-- [ ] `simple_button-16` · P2 · proposal. Initial-state coverage: Add a companion activated-state baseline showing the counter feedback.
+- [x] `simple_button-16` · P2 · proposal. Initial-state coverage: Add a companion activated-state baseline showing the counter feedback.
   Evidence: Only the zero-click state is visible.
 
 ### split_pane_lab

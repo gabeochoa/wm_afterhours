@@ -2,14 +2,15 @@
 # Dumps the UI tree for the simple_button screen and validates structure
 
 goto_screen simple_button
+resize 1280 720
 wait 0.5
 
 # Verify key text elements are visible
 expect_text "Simple Button Demo"
-expect_text "Go ahead, give it a click!"
-expect_text "Click Me!"
-expect_text "No clicks yet..."
-expect_text "More Styles"
+expect_text "Every button adds one click."
+expect_text "Add a click"
+expect_text "Click count: 0"
+expect_text "More styles"
 expect_text "Secondary"
 expect_text "Outline"
 expect_text "Small"
@@ -24,9 +25,9 @@ dump_ui simple_button_bg bg
 dump_ui simple_button_counter counter_bg
 dump_ui simple_button_divider divider
 
-# Assert key element properties (card_width = 400.0f, card_height = 440.0f)
-assert_ui card w=400 h=440
+# Assert key element properties
+assert_ui card w=720 h=620
 assert_ui divider h=1
-assert_ui counter_bg x=550
-assert_ui_text "Click Me!" h=56
-assert_ui_text "Simple Button Demo" w=352
+assert_ui counter_bg w=340
+assert_ui_text "Add a click" h=56
+assert_ui_text "Simple Button Demo" w=656

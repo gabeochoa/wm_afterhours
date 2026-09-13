@@ -1,12 +1,13 @@
 # Migrated from coroutine TEST(simple_button_click)
 
 goto_screen simple_button
+resize 1280 720
 wait 0.5
 
-click_button "Click Me!"
+click_button "Add a click"
 wait 0.3
-expect_text "1 click!"
+expect_text "Click count: 1"
 
-click_button "Click Me!"
+click_button "Add a click"
 wait 0.3
-expect_text "2 clicks!"
+expect_text "Click count: 2"

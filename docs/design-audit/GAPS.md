@@ -3370,7 +3370,7 @@ The store has a coherent parchment treatment. Small metadata, basket controls an
 
 ## simple button
 
-[Current baseline](../../screenshot-baselines/screens/simple_button_720p.png) · [Visual review](../../design-audit.html#screen=simple_button)
+[Reviewed image](../../docs/design-audit/originals/simple_button_720p.png) · [Current baseline](../../screenshot-baselines/screens/simple_button_720p.png) · [Visual review](../../design-audit.html#screen=simple_button)
 
 Baseline SHA-256: `82cc31ae8fe0da493612dcabbf7bb074e203bbea5aac2edded40cf392a50b3b9`
 

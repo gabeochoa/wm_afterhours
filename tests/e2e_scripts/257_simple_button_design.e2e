@@ -1,0 +1,40 @@
+goto_screen simple_button
+resize 1280 720
+wait 0.4
+expect_text "Click count: 0"
+expect_text "Every button adds one click."
+assert_ui card w=720 h=620
+assert_within_parents
+screenshot simple_button_design
+click_ui simple_increment
+wait 0.1
+expect_text "Click count: 1"
+click_ui simple_secondary
+wait 0.1
+click_ui simple_outline
+wait 0.1
+click_ui simple_small
+wait 0.1
+click_ui simple_pill
+wait 0.1
+click_ui simple_gold
+wait 0.1
+expect_text "Click count: 6"
+expect_text "Last activated: Buttons"
+screenshot simple_button_activated
+focus_ui simple_increment
+key ENTER
+wait 0.2
+expect_text "Click count: 7"
+click_ui simple_reset
+wait 0.2
+expect_text "Click count: 0"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot simple_button_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot simple_button_design_narrow
+resize 1280 720

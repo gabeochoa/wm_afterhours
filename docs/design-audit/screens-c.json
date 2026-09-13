@@ -2738,7 +2738,8 @@
         "change": "Add a companion activated-state baseline showing the counter feedback."
       }
     ],
-    "sha256": "82cc31ae8fe0da493612dcabbf7bb074e203bbea5aac2edded40cf392a50b3b9"
+    "sha256": "82cc31ae8fe0da493612dcabbf7bb074e203bbea5aac2edded40cf392a50b3b9",
+    "evidence": "docs/design-audit/originals/simple_button_720p.png"
   },
   {
     "id": "split_pane_lab",
