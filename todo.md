@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,134 completed; 401 remaining.
+2,150 completed; 385 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6161,52 +6161,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/scroll_clip_bug_720p.png) · [Visual review](design-audit.html#screen=scroll_clip_bug)
 
-- [ ] `scroll_clip_bug-01` · P2 · proposal. Instruction line: Increase it to a readable 13 px actual size.
+- [x] `scroll_clip_bug-01` · P2 · proposal. Instruction line: Increase it to a readable 13 px actual size.
   Evidence: The all-four-panels instruction is extremely small.
 
-- [ ] `scroll_clip_bug-02` · P2 · proposal. Panel labels: Increase caption size and keep text white with a separate colored swatch.
+- [x] `scroll_clip_bug-02` · P2 · proposal. Panel labels: Increase caption size and keep text white with a separate colored swatch.
   Evidence: Control, ClipChild rows, Nested wrapper and Scroll in Scroll are tiny colored captions.
 
-- [ ] `scroll_clip_bug-03` · P2 · proposal. Control caption: Add normal rows as its secondary caption.
+- [x] `scroll_clip_bug-03` · P2 · proposal. Control caption: Add normal rows as its secondary caption.
   Evidence: Control gives no structural explanation.
 
-- [ ] `scroll_clip_bug-04` · P2 · proposal. ClipChild caption: Add each row clips its children below the caption.
+- [x] `scroll_clip_bug-04` · P2 · proposal. ClipChild caption: Add each row clips its children below the caption.
   Evidence: ClipChild rows exposes an implementation term without defining it.
 
-- [ ] `scroll_clip_bug-05` · P2 · proposal. Nested wrapper caption: Add a small structure diagram above or below the panel.
+- [x] `scroll_clip_bug-05` · P2 · proposal. Nested wrapper caption: Add a small structure diagram above or below the panel.
   Evidence: Nested wrapper does not show which boundary belongs to the wrapper.
 
-- [ ] `scroll_clip_bug-06` · P2 · proposal. Nested scroll caption: Label both boundaries with matching callout markers.
+- [x] `scroll_clip_bug-06` · P2 · proposal. Nested scroll caption: Label both boundaries with matching callout markers.
   Evidence: Scroll in Scroll does not distinguish inner and outer scroll regions.
 
-- [ ] `scroll_clip_bug-07` · P2 · proposal. Bottom nested border: Add a visible horizontal outer-boundary guide to make intended clipping reviewable.
+- [x] `scroll_clip_bug-07` · P2 · proposal. Bottom nested border: Add a visible horizontal outer-boundary guide to make intended clipping reviewable.
   Evidence: The inner dark frame extends below the common outer bottom line.
 
-- [ ] `scroll_clip_bug-08` · P2 · proposal. Scroll offsets: Add one numeric offset per panel outside the clip region.
+- [x] `scroll_clip_bug-08` · P2 · proposal. Scroll offsets: Add one numeric offset per panel outside the clip region.
   Evidence: No panel reports its current scroll offset.
 
-- [ ] `scroll_clip_bug-09` · P2 · proposal. Comparison state: Add a companion preset that places all panels at the same nonzero offset.
+- [x] `scroll_clip_bug-09` · P2 · proposal. Comparison state: Add a companion preset that places all panels at the same nonzero offset.
   Evidence: All panels start at row 1, so the target scrolled state is absent.
 
-- [ ] `scroll_clip_bug-10` · P2 · proposal. Row labels: Add matching numeric markers at a common x inset for easier alignment comparison.
+- [x] `scroll_clip_bug-10` · P2 · proposal. Row labels: Add matching numeric markers at a common x inset for easier alignment comparison.
   Evidence: Ctrl, Clip, Nest and Inner prefixes differ across comparison panels.
 
-- [ ] `scroll_clip_bug-11` · P3 · proposal. Row text: Increase label size without changing the measured row dimensions.
+- [x] `scroll_clip_bug-11` · P3 · proposal. Row text: Increase label size without changing the measured row dimensions.
   Evidence: Row identifiers are very small inside 40 px colored bands.
 
-- [ ] `scroll_clip_bug-12` · P2 · proposal. Test count: Add total count to each pane caption.
+- [x] `scroll_clip_bug-12` · P2 · proposal. Test count: Add total count to each pane caption.
   Evidence: The screenshot does not state the total rows per pane.
 
-- [ ] `scroll_clip_bug-13` · P2 · proposal. Expected boundary rule: Add a clearly keyed boundary legend outside the fixture.
+- [x] `scroll_clip_bug-13` · P2 · proposal. Expected boundary rule: Add a clearly keyed boundary legend outside the fixture.
   Evidence: The top note mentions colored borders, which are thin and subtle.
 
-- [ ] `scroll_clip_bug-14` · P2 · proposal. Nested scrolling instructions: Add a concise two-step nested-scroll procedure beneath the title.
+- [x] `scroll_clip_bug-14` · P2 · proposal. Nested scrolling instructions: Add a concise two-step nested-scroll procedure beneath the title.
   Evidence: The screenshot gives no way to distinguish moving inner versus outer content.
 
-- [ ] `scroll_clip_bug-15` · P3 · proposal. Bottom margin: Reserve a small external margin for boundary labels without resizing the test viewports.
+- [x] `scroll_clip_bug-15` · P3 · proposal. Bottom margin: Reserve a small external margin for boundary labels without resizing the test viewports.
   Evidence: The test panes run nearly to the viewport edge.
 
-- [ ] `scroll_clip_bug-16` · P2 · proposal. Reset comparison: Add Reset all and Set comparison offset controls above the four panes.
+- [x] `scroll_clip_bug-16` · P2 · proposal. Reset comparison: Add Reset all and Set comparison offset controls above the four panes.
   Evidence: No reset or synchronized positioning control is visible.
 
 ### scroll_view
@@ -8149,6 +8149,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Clip nested scroll backgrounds, borders and scrollbars to their ancestor viewport; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Add consistent configurable line spacing for styled labels; see docs/AFTERHOURS_GAPS.md.
 

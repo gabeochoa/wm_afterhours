@@ -3106,7 +3106,7 @@ The initial screenshot can document the click fixture but cannot establish a cli
 
 ## scroll clip bug
 
-[Current baseline](../../screenshot-baselines/screens/scroll_clip_bug_720p.png) · [Visual review](../../design-audit.html#screen=scroll_clip_bug)
+[Reviewed image](../../docs/design-audit/originals/scroll_clip_bug_720p.png) · [Current baseline](../../screenshot-baselines/screens/scroll_clip_bug_720p.png) · [Visual review](../../design-audit.html#screen=scroll_clip_bug)
 
 Baseline SHA-256: `b6523f529fdbfa843935c27539c10429561613560e0ffd0a42a582113aa2a0ab`
 

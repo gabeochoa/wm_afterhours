@@ -1411,7 +1411,8 @@
         "change": "Add Reset all and Set comparison offset controls above the four panes."
       }
     ],
-    "sha256": "b6523f529fdbfa843935c27539c10429561613560e0ffd0a42a582113aa2a0ab"
+    "sha256": "b6523f529fdbfa843935c27539c10429561613560e0ffd0a42a582113aa2a0ab",
+    "evidence": "docs/design-audit/originals/scroll_clip_bug_720p.png"
   },
   {
     "id": "scroll_view",

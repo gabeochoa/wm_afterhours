@@ -1,0 +1,70 @@
+goto_screen scroll_clip_bug
+resize 1280 720
+wait 0.4
+expect_text "Nested Clip Container Regression Tests"
+expect_text "Normal rows / 20 rows"
+expect_text "Each row clips children / 20"
+expect_text "Scroll > clipped wrapper > 20 rows"
+expect_text "Outer > inner scroll > 20 rows"
+expect_text "Nested wheel: inner"
+expect_text "Nested decoration clipping is pending"
+expect_text "Viewport 390px / rows 40px"
+expect_text "Inner: 0px / height 585px"
+assert_ui bg x=0 y=0 w=1280 h=720
+assert_ui scroll_control x=15 y=260 w=301 h=390
+assert_ui ctrl_0 h=40
+expect_no_text "Ctrl 20"
+expect_no_text "Inner 20"
+screenshot scroll_clip_design
+click_ui clip_compare
+wait 0.3
+expect_text "Control offset: 120px"
+expect_text "Row clip offset: 120px"
+expect_text "Wrapper offset: 120px"
+expect_text "Outer offset: 120px"
+expect_text "Inner: 0px / height 585px"
+screenshot scroll_clip_comparison
+mouse_move 87% 55%
+scroll_wheel 0 -3
+wait 0.3
+expect_text "Inner: 60px / height 585px"
+expect_text "Outer offset: 120px"
+click_ui clip_nested_target
+wait 0.2
+expect_text "Nested wheel: outer"
+mouse_move 87% 55%
+scroll_wheel 0 2
+wait 0.3
+expect_text "Outer offset: 80px"
+expect_text "Inner: 60px / height 585px"
+click_ui clip_reset
+wait 0.3
+expect_text "Control offset: 0px"
+expect_text "Row clip offset: 0px"
+expect_text "Wrapper offset: 0px"
+expect_text "Outer offset: 0px"
+expect_text "Inner: 0px / height 585px"
+click_ui clip_fixture_mode
+wait 0.3
+expect_text "Original geometry: 40px rows"
+assert_ui scroll_control x=15 y=82 w=301 h=618
+assert_ui scroll_inner h=927
+assert_ui ctrl_0 h=40
+screenshot scroll_clip_original_fixture
+click_ui clip_fixture_mode
+wait 0.3
+resize 1920 1080
+wait 0.3
+assert_ui bg x=0 y=0 w=1920 h=1080
+assert_ui scroll_control h=510
+assert_ui ctrl_0 h=40
+expect_text "Inner: 0px / height 765px"
+screenshot scroll_clip_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bg x=0 y=0 w=1024 h=768
+assert_ui scroll_control h=312
+assert_ui ctrl_0 h=40
+expect_text "Inner: 0px / height 468px"
+screenshot scroll_clip_design_narrow
+resize 1280 720

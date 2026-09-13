@@ -419,6 +419,20 @@ actual tight native layout and labels it. A styled-label line-height option
 should be shared by measurement and rendering before consumers can compare
 wider spacing without replacing the renderer.
 
+### Nested scroll decorations escape ancestor clips
+
+Nested scroll decoration clipping: native rows intersect ancestor clip
+rectangles, but rendering.h:1813 and :2561 explicitly skip ancestor scissoring
+for entities with HasScrollView. Their backgrounds and borders extend outside
+an outer scroll viewport. RenderScrollbars at rendering.h:1120 also computes
+the scroll-adjusted viewport without intersecting ancestor clips. Repro:
+scroll_clip_bug original fixture, inner viewport 1.5 times outer height.
+Annotated view hides the inner scrollbar and draws an opaque diagnostic
+footer; original geometry and decoration remain visible via the original
+fixture toggle. Upstream should clip nested viewport decorations and both
+scrollbars to the ancestor intersection while leaving their own viewport
+geometry unchanged.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

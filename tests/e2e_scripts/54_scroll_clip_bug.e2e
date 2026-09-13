@@ -9,7 +9,10 @@
 #   Panel 4 (87%): Scroll view inside scroll view
 
 goto_screen scroll_clip_bug
+resize 1280 720
 wait 0.5
+click_ui clip_fixture_mode
+wait 0.3
 
 # Verify screen loaded
 expect_text "Nested Clip Container Regression Tests"
