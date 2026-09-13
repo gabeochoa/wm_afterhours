@@ -3492,7 +3492,7 @@ The value and card selectors are visible, but grouping and specimen metadata are
 
 ## styled text lab
 
-[Current baseline](../../screenshot-baselines/screens/styled_text_lab_720p.png) · [Visual review](../../design-audit.html#screen=styled_text_lab)
+[Reviewed image](../../docs/design-audit/originals/styled_text_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/styled_text_lab_720p.png) · [Visual review](../../design-audit.html#screen=styled_text_lab)
 
 Baseline SHA-256: `e24fbf539d8d6ee7e258d13f2d497c72e2b525e0fc41118f39afeb6d1d3db698`
 

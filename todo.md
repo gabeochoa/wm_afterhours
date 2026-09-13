@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,854 completed; 681 remaining.
+1,872 completed; 663 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6915,58 +6915,60 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/styled_text_lab_720p.png) · [Visual review](design-audit.html#screen=styled_text_lab)
 
-- [ ] `styled_text_lab-01` · P2 · proposal. Top specimen caption: Increase metadata to a readable 12 to 13 px actual size.
+- [x] `styled_text_lab-01` · P2 · proposal. Top specimen caption: Increase metadata to a readable 12 to 13 px actual size.
   Evidence: DGOne + DGOne@bold is tiny above the sample.
 
-- [ ] `styled_text_lab-02` · P2 · proposal. Regular/bold sample: Inset the specimen text while preserving its measured available width.
+- [x] `styled_text_lab-02` · P2 · proposal. Regular/bold sample: Inset the specimen text while preserving its measured available width.
   Evidence: Text begins flush against the colored block edge.
 
-- [ ] `styled_text_lab-03` · P2 · proposal. Weight-only specimen: Add a run-by-run weight legend beneath the sample.
+- [x] `styled_text_lab-03` · P2 · proposal. Weight-only specimen: Add a run-by-run weight legend beneath the sample.
   Evidence: one colour two weights does not identify which words request bold.
 
-- [ ] `styled_text_lab-04` · P2 · proposal. Colored bold specimen: Explicitly label this as a combined weight-and-color example.
+- [x] `styled_text_lab-04` · P2 · proposal. Colored bold specimen: Explicitly label this as a combined weight-and-color example.
   Evidence: BOLD changes both weight and color.
 
-- [ ] `styled_text_lab-05` · P2 · proposal. Wrap specimen: Add a source-text caption marking the bold span.
+- [x] `styled_text_lab-05` · P2 · proposal. Wrap specimen: Add a source-text caption marking the bold span.
   Evidence: The bold span crosses the line break without a visible run boundary key.
 
-- [ ] `styled_text_lab-06` · P2 · proposal. Wrap width: Annotate the exact content width used for measurement.
+- [x] `styled_text_lab-06` · P2 · proposal. Wrap width: Annotate the exact content width used for measurement.
   Evidence: The wrapping block has no width value shown.
 
-- [ ] `styled_text_lab-07` · P2 · proposal. Wrap line spacing: Add a separate comparison with increased line height while preserving the current baseline specimen.
+- [x] `styled_text_lab-07` · P2 · proposal. Wrap line spacing: Add a separate comparison with increased line height while preserving the current baseline specimen.
   Evidence: Pixel-text lines are tightly packed.
+  Disposition: Native styled-label rendering ignores the text-area line-height configuration. Preserved its actual spacing and recorded a styled-label line-height option upstream.
 
-- [ ] `styled_text_lab-08` · P2 · proposal. Hard-break caption: Label it Explicit newline and show the escaped source in metadata.
+- [x] `styled_text_lab-08` · P2 · proposal. Hard-break caption: Label it Explicit newline and show the escaped source in metadata.
   Evidence: The caption exposes a literal backslash-n token without explanation.
 
-- [ ] `styled_text_lab-09` · P2 · proposal. Hard-break sample: Add line boxes or baseline guides to make the hard-break behavior inspectable.
+- [x] `styled_text_lab-09` · P2 · proposal. Hard-break sample: Add line boxes or baseline guides to make the hard-break behavior inspectable.
   Evidence: Heading and body text have very little vertical separation.
 
-- [ ] `styled_text_lab-10` · P2 · proposal. Second heading: Use a small external run label to distinguish separate weighted spans.
+- [x] `styled_text_lab-10` · P2 · proposal. Second heading: Use a small external run label to distinguish separate weighted spans.
   Evidence: Another heading continues close to the preceding body line.
 
-- [ ] `styled_text_lab-11` · P2 · proposal. Fallback caption: Use a readable two-line caption with the expected regular fallback emphasized.
+- [x] `styled_text_lab-11` · P2 · proposal. Fallback caption: Use a readable two-line caption with the expected regular fallback emphasized.
   Evidence: The no-@bold explanation is tiny and stretches across the block.
 
-- [ ] `styled_text_lab-12` · P2 · proposal. Fallback comparison: Add a same-color comparison so the weight fallback can be assessed directly.
+- [x] `styled_text_lab-12` · P2 · proposal. Fallback comparison: Add a same-color comparison so the weight fallback can be assessed directly.
   Evidence: asks for regular and asks for bold also change color.
 
-- [ ] `styled_text_lab-13` · P2 · proposal. Font identity: Show the actual registered family in the caption.
+- [x] `styled_text_lab-13` · P2 · proposal. Font identity: Show the actual registered family in the caption.
   Evidence: The fallback sample names default face without a readable font-family label.
 
-- [ ] `styled_text_lab-14` · P3 · proposal. Sample numbering: Number them so screenshots can be compared with test definitions.
+- [x] `styled_text_lab-14` · P3 · proposal. Sample numbering: Number them so screenshots can be compared with test definitions.
   Evidence: Five test cases have captions but no stable identifiers.
 
-- [ ] `styled_text_lab-15` · P2 · proposal. Expected results: Add one short expected-result line per case.
+- [x] `styled_text_lab-15` · P2 · proposal. Expected results: Add one short expected-result line per case.
   Evidence: No case states its expected visual outcome beside the specimen.
 
-- [ ] `styled_text_lab-16` · P3 · proposal. Page balance: Use the right region for source spans and resolved weights.
+- [x] `styled_text_lab-16` · P3 · proposal. Page balance: Use the right region for source spans and resolved weights.
   Evidence: All samples occupy the left side, leaving a large blank right region.
 
-- [ ] `styled_text_lab-17` · P2 · proposal. Glyph metric comparison: Add optional baseline and advance-width guides outside the existing text.
+- [x] `styled_text_lab-17` · P2 · proposal. Glyph metric comparison: Add optional baseline and advance-width guides outside the existing text.
   Evidence: Different weights are visible but baseline and advance differences are not annotated.
+  Disposition: Public font data lacks baseline metrics. Guides report actual run advances instead of inventing typographic baselines.
 
-- [ ] `styled_text_lab-18` · P3 · proposal. Title hierarchy: Use a clearer title size and neutral metadata typography.
+- [x] `styled_text_lab-18` · P3 · proposal. Title hierarchy: Use a clearer title size and neutral metadata typography.
   Evidence: Styled Text Lab and sample captions are similarly letter-spaced.
 
 ### sync_scroll_lab
@@ -8142,6 +8144,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Add consistent configurable line spacing for styled labels; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Reconcile configuration-owned skip-tabbing flags on true-to-false transitions; see docs/AFTERHOURS_GAPS.md.
 

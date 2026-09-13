@@ -1,0 +1,54 @@
+goto_screen styled_text_lab
+resize 1280 720
+wait 0.3
+expect_text "Styled text"
+expect_text "01 / Weight + color"
+expect_text "02 / Weight only"
+expect_text "03 / Wrapped spans"
+expect_text "04 / Explicit newline"
+expect_text "05 / Missing bold fallback"
+expect_text "06 / Fallback, same color"
+expect_text "DGOne + DGOne@bold / BOLD requests Bold"
+expect_text "one colour = Regular / two weights = Bold"
+expect_text "Wrap width 350 screen px"
+expect_text "03  Bold: fox jumps over"
+expect_text "04  Bold: both Heading spans"
+expect_text "Native line spacing is fixed."
+expect_text "Gaegu-Bold / no Gaegu-Bold@bold registered"
+expect_text "Expected: both requests use the same face."
+expect_text "DGOne weights have equal glyph advances."
+assert_ui st_real_pair x=48 y=146 w=560 h=60
+assert_ui st_same_colour x=660 y=146 w=560 h=60
+assert_ui st_wrap_bold x=48 y=316 w=360 h=140
+assert_ui st_break_bold x=440 y=316 w=360 h=140
+assert_ui st_fallback x=48 y=573 w=560 h=60
+assert_ui st_fallback_same_color x=660 y=573 w=560 h=60
+assert_no_overflow
+assert_within_parents
+screenshot styled_text_design
+click_ui st_guides
+wait 0.2
+expect_text "Run widths: on"
+screenshot styled_text_design_guides
+focus_ui st_guides
+key ENTER
+wait 0.2
+expect_text "Run widths: off"
+resize 1920 1080
+wait 0.3
+expect_text "Wrap width 530 screen px"
+assert_ui st_real_pair x=72 y=219 w=840 h=90
+assert_ui st_wrap_bold x=72 y=474 w=540 h=210
+assert_no_overflow
+assert_within_parents
+screenshot styled_text_design_1080
+resize 1024 768
+wait 0.3
+expect_text "Wrap width 278 screen px"
+assert_ui st_root x=0 y=96 w=1024 h=576
+assert_ui st_real_pair x=38 y=213 w=448 h=48
+assert_ui st_wrap_bold x=38 y=349 w=288 h=112
+assert_no_overflow
+assert_within_parents
+screenshot styled_text_design_narrow
+resize 1280 720

@@ -411,6 +411,14 @@ enabling the arrow. Define the lifecycle of configuration-owned flags and
 cover true-to-false transitions without deleting tags deliberately supplied
 outside configuration.
 
+### Styled labels cannot configure line spacing
+
+Native draw_runs_in_rect advances by the measured Ag line height and ignores
+the text_area_line_height configuration. The styled text lab preserves the
+actual tight native layout and labels it. A styled-label line-height option
+should be shared by measurement and rendering before consumers can compare
+wider spacing without replacing the renderer.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

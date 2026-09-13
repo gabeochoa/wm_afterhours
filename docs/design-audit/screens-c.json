@@ -3412,7 +3412,8 @@
         "change": "Use a clearer title size and neutral metadata typography."
       }
     ],
-    "sha256": "e24fbf539d8d6ee7e258d13f2d497c72e2b525e0fc41118f39afeb6d1d3db698"
+    "sha256": "e24fbf539d8d6ee7e258d13f2d497c72e2b525e0fc41118f39afeb6d1d3db698",
+    "evidence": "docs/design-audit/originals/styled_text_lab_720p.png"
   },
   {
     "id": "sync_scroll_lab",
