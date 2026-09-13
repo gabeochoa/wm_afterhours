@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../external.h"
+#include "../../artwork_atlas.h"
+#include "../../artwork_frames.h"
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
@@ -21,31 +23,20 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
   std::string status_message = "Guildmate23: need help with the recipe?";
 
   // Loaded textures
-  bool textures_loaded = false;
-  raylib::Texture2D star_filled_tex{};
-  raylib::Texture2D star_empty_tex{};
-  raylib::Texture2D flower_tex{};
-  raylib::Texture2D icon_inventory_tex{};
-  raylib::Texture2D icon_crafting_tex{};
+  artwork::Atlas atlas;
+  artwork::Sprite star_filled_tex{};
+  artwork::Sprite star_empty_tex{};
+  artwork::Sprite flower_tex{};
+  artwork::Sprite icon_inventory_tex{};
+  artwork::Sprite icon_crafting_tex{};
 
   void load_textures_if_needed() {
-    if (textures_loaded)
-      return;
-    textures_loaded = true;
-
-    std::string images_path =
-        afterhours::files::get_resource_path("images", "").string();
-    auto load = [&](const char *name) {
-      auto texture = raylib::LoadTexture((images_path + name).c_str());
-      raylib::SetTextureFilter(texture, raylib::TEXTURE_FILTER_BILINEAR);
-      return texture;
-    };
-    star_filled_tex = load("cozy_cafe/star.png");
-    star_empty_tex = load("cozy_cafe/star_empty.png");
-    flower_tex = load("cozy_cafe/flower.png");
-
-    icon_inventory_tex = load("cozy_cafe/inventory.png");
-    icon_crafting_tex = load("cozy_cafe/crafting.png");
+    atlas.load("cafe.png");
+    star_filled_tex = atlas.sprite(artwork::cafe_frames[0]);
+    star_empty_tex = atlas.sprite(artwork::cafe_frames[1]);
+    flower_tex = atlas.sprite(artwork::cafe_frames[2]);
+    icon_inventory_tex = atlas.sprite(artwork::cafe_frames[3]);
+    icon_crafting_tex = atlas.sprite(artwork::cafe_frames[4]);
   }
 
   std::vector<std::string> daily_specials = {"Lavender Latte", "Honey Toast",
@@ -147,12 +138,10 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
               .with_ignore_pointer_events()
               .with_debug_name(name));
     };
-    auto image = [&](int id, const raylib::Texture2D &texture,
+    auto image = [&](int id, const artwork::Sprite &image,
                      float x, float y, float w, float h, const char *name) {
-      if (texture.id == 0) return;
-      sprite(context, mk(entity, id), texture,
-             {0, 0, static_cast<float>(texture.width),
-              static_cast<float>(texture.height)},
+      if (image.texture.id == 0) return;
+      sprite(context, mk(entity, id), image.texture, image.source,
              box(x, y, w, h, {0, 0, 0, 0})
                  .with_ignore_pointer_events()
                  .with_debug_name(name));
@@ -419,7 +408,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
     // Bottom-right icon buttons - data-driven
     struct IconBtn {
       int id;
-      raylib::Texture2D *texture;
+      artwork::Sprite *texture;
       const char *name;
       const char *badge;
       const char *detail;
@@ -477,7 +466,7 @@ struct CozyCafeScreen : ScreenSystem<UIContext<InputAction>> {
                 .with_debug_name(std::string("notices_") + tool.name));
       }
       div(context, mk(entity, tool.id + 3),
-          box(x - 17, 641, 102, 29, {0, 0, 0, 0})
+          box(x - 23, 641, 114, 29, {0, 0, 0, 0})
               .with_label(tool.name)
               .with_font("GaeguMock", px(25))
               .with_custom_text_color(dark_text)
