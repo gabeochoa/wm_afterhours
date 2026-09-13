@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,014 completed; 521 remaining.
+2,036 completed; 499 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7270,70 +7270,70 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_input_720p.png) · [Visual review](design-audit.html#screen=text_input)
 
-- [ ] `text_input-01` · P2 · defect. Field labels: Increase actual label size to at least 12 to 14 px.
+- [x] `text_input-01` · P2 · defect. Field labels: Increase actual label size to at least 12 to 14 px.
   Evidence: Username, Email, Password and other labels are extremely small.
 
-- [ ] `text_input-02` · P2 · defect. Footer shortcuts: Increase shortcut text and spell out the associated actions.
+- [x] `text_input-02` · P2 · defect. Footer shortcuts: Increase shortcut text and spell out the associated actions.
   Evidence: Tab / Ctrl+A/C/V/X is barely legible.
 
-- [ ] `text_input-03` · P2 · proposal. Page subtitle: Increase its size and contrast below Edit Profile.
+- [x] `text_input-03` · P2 · proposal. Page subtitle: Increase its size and contrast below Edit Profile.
   Evidence: Update your account information is tiny and faint.
 
-- [ ] `text_input-04` · P2 · proposal. Profile context: Group those controls under a separate Input states demo section.
+- [x] `text_input-04` · P2 · proposal. Profile context: Group those controls under a separate Input states demo section.
   Evidence: Search, Readonly Field and Disabled Field do not belong to a coherent edit-profile form.
 
-- [ ] `text_input-05` · P2 · proposal. Bio field: Use a multiline specimen or label it Short bio.
+- [x] `text_input-05` · P2 · proposal. Bio field: Use a multiline specimen or label it Short bio.
   Evidence: Bio is a single short line despite inviting personal description.
 
-- [ ] `text_input-06` · P2 · proposal. Email placeholder: Use Enter email address and show example formatting as helper text.
+- [x] `text_input-06` · P2 · proposal. Email placeholder: Use Enter email address and show example formatting as helper text.
   Evidence: user@example.com can look like a prefilled address.
 
-- [ ] `text_input-07` · P2 · proposal. Username guidance: Add concise requirements beneath the label if the form validates them.
+- [x] `text_input-07` · P2 · proposal. Username guidance: Add concise requirements beneath the label if the form validates them.
   Evidence: Enter username gives no visible format or length guidance.
 
-- [ ] `text_input-08` · P2 · proposal. Password context: Use New password and clarify whether leaving it blank preserves the current password.
+- [x] `text_input-08` · P2 · proposal. Password context: Use New password and clarify whether leaving it blank preserves the current password.
   Evidence: A password field is mixed into profile editing without naming the operation.
 
-- [ ] `text_input-09` · P2 · proposal. Show password control: Increase label size and use a clear show-password icon with sufficient inset.
+- [x] `text_input-09` · P2 · proposal. Show password control: Increase label size and use a clear show-password icon with sufficient inset.
   Evidence: Show is small in a narrow gray segment.
 
-- [ ] `text_input-10` · P2 · proposal. Password segment border: Unify the shared outer border and use a clean internal divider.
+- [x] `text_input-10` · P2 · proposal. Password segment border: Unify the shared outer border and use a clean internal divider.
   Evidence: The Show segment has a different edge treatment from the input.
 
-- [ ] `text_input-11` · P2 · proposal. Search affordance: Add a recognizable search icon and identify what is searched.
+- [x] `text_input-11` · P2 · proposal. Search affordance: Add a recognizable search icon and identify what is searched.
   Evidence: Type to search... has no leading search icon.
 
-- [ ] `text_input-12` · P2 · proposal. Read-only specimen: Use a realistic fixed value and a Read-only badge.
+- [x] `text_input-12` · P2 · proposal. Read-only specimen: Use a realistic fixed value and a Read-only badge.
   Evidence: readonly text here is a placeholder-like sample.
 
-- [ ] `text_input-13` · P2 · proposal. Disabled specimen: Explain why this sample is disabled outside the specimen.
+- [x] `text_input-13` · P2 · proposal. Disabled specimen: Explain why this sample is disabled outside the specimen.
   Evidence: The dim text is deliberately disabled but has no reason caption.
 
-- [ ] `text_input-14` · P2 · proposal. Input boundaries: Use consistent border joins and document any intentional corner-radius variation.
+- [x] `text_input-14` · P2 · proposal. Input boundaries: Use consistent border joins and document any intentional corner-radius variation.
   Evidence: Several field edges have broken-looking corner joins.
 
-- [ ] `text_input-15` · P2 · proposal. Save label size: Increase action text size while preserving the primary color.
+- [x] `text_input-15` · P2 · proposal. Save label size: Increase action text size while preserving the primary color.
   Evidence: Save is tiny inside a strong yellow button.
 
-- [ ] `text_input-16` · P2 · proposal. Cancel label size: Match the Save label size and vertical alignment.
+- [x] `text_input-16` · P2 · proposal. Cancel label size: Match the Save label size and vertical alignment.
   Evidence: Cancel is tiny inside its outlined button.
 
-- [ ] `text_input-17` · P2 · proposal. Footer order: Separate input help from the action group with consistent footer spacing.
+- [x] `text_input-17` · P2 · proposal. Footer order: Separate input help from the action group with consistent footer spacing.
   Evidence: The shortcut hint and action buttons share a sparse line without clear grouping.
 
-- [ ] `text_input-18` · P2 · proposal. Form status: Add a small Demo form or No changes status near the actions.
+- [x] `text_input-18` · P2 · proposal. Form status: Add a small Demo form or No changes status near the actions.
   Evidence: No visible status explains whether this is unsaved sample data.
 
-- [ ] `text_input-19` · P3 · proposal. Title hierarchy: Increase title size so it clearly leads the form.
+- [x] `text_input-19` · P3 · proposal. Title hierarchy: Increase title size so it clearly leads the form.
   Evidence: Edit Profile is only slightly larger than input text.
 
-- [ ] `text_input-20` · P2 · proposal. Optional fields: Label optional fields or add a concise required-fields note.
+- [x] `text_input-20` · P2 · proposal. Optional fields: Label optional fields or add a concise required-fields note.
   Evidence: Username, Email, Password and Bio have no required/optional distinction.
 
-- [ ] `text_input-21` · P3 · proposal. Panel balance: Widen the panel modestly to accommodate readable labels and helper text.
+- [x] `text_input-21` · P3 · proposal. Panel balance: Widen the panel modestly to accommodate readable labels and helper text.
   Evidence: The tall narrow panel leaves broad black margins.
 
-- [ ] `text_input-22` · P2 · proposal. Initial blank form: Populate a clearly labeled sample profile or rename the screen Create profile.
+- [x] `text_input-22` · P2 · proposal. Initial blank form: Populate a clearly labeled sample profile or rename the screen Create profile.
   Evidence: Edit Profile contains placeholders rather than visible existing account data.
 
 ### text_input_lab

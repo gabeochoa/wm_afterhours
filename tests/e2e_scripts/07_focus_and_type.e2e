@@ -5,7 +5,7 @@ goto_screen text_input
 wait 0.5
 
 # Verify we're on the screen
-expect_text "Edit Profile"
+expect_text "Create profile"
 
 # Focus the username input field by debug_name
 focus_element Username_input

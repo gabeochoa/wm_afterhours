@@ -21,7 +21,7 @@ expect_text "Button Gallery"
 goto_screen text_input
 wait 0.3
 
-expect_text "Edit Profile"
+expect_text "Create profile"
 
 # Go to checkboxes screen
 goto_screen checkboxes

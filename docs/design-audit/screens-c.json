@@ -4370,7 +4370,8 @@
         "change": "Populate a clearly labeled sample profile or rename the screen Create profile."
       }
     ],
-    "sha256": "2442effdca504a050be7f25a5b1e767334aadc34efe700601042d8ea2c194081"
+    "sha256": "2442effdca504a050be7f25a5b1e767334aadc34efe700601042d8ea2c194081",
+    "evidence": "docs/design-audit/originals/text_input_720p.png"
   },
   {
     "id": "text_input_lab",

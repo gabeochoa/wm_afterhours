@@ -3691,7 +3691,7 @@ Pixel-identical. Serif display specimens contrast with handwritten body and capt
 
 ## text input
 
-[Current baseline](../../screenshot-baselines/screens/text_input_720p.png) · [Visual review](../../design-audit.html#screen=text_input)
+[Reviewed image](../../docs/design-audit/originals/text_input_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_input_720p.png) · [Visual review](../../design-audit.html#screen=text_input)
 
 Baseline SHA-256: `2442effdca504a050be7f25a5b1e767334aadc34efe700601042d8ea2c194081`
 

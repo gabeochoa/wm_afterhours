@@ -6,21 +6,23 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
+#include <algorithm>
+#include <array>
+#include <cctype>
 
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
-  std::string username = "";
-  std::string email = "";
-  std::string password = "";
-  std::string search_query = "";
-  std::string bio = "";
-  std::string readonly_text = "readonly text here";
-  std::string disabled_text = "disabled text here";
-
+  struct Profile {
+    std::string username, email, password, bio;
+    bool operator==(const Profile &) const = default;
+  } profile, saved_profile;
+  std::string search_query;
+  std::string readonly_text = "Account ID: demo-1042";
+  std::string disabled_text = "Managed by workspace";
   bool show_password = false;
-  std::string status_message = "";
+  std::string status_message;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
@@ -28,287 +30,128 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     theme.secondary = {32, 34, 46, 255};
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
-
-    afterhours::Color field_bg = {32, 34, 46, 255};
-    afterhours::Color field_border = {105, 112, 138, 255};
-    afterhours::Color card_bg = {16, 17, 24, 255};
-    afterhours::Color muted_text = {120, 130, 158, 255};
-    afterhours::Color toggle_bg = {101, 107, 141, 255};
-
-    auto root = div(
-        context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_background(Theme::Usage::Background)
-            .with_justify_content(JustifyContent::Center)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("text_input_root"));
-
-    auto card = vstack(
-        context, mk(root.ent(), 0),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(480), screen_pct(0.95f)})
-            .with_custom_background(card_bg)
-            .with_rounded_corners(RoundedCorners().all_round())
-            .with_roundness(0.04f)
-            .with_padding(Padding{.top = pixels(20), .bottom = pixels(12),
-                                  .left = pixels(32), .right = pixels(32)})
-            .with_no_wrap()
-            .with_debug_name("card"));
-
-    // Title
-    div(context, mk(card.ent(), 0),
-        ComponentConfig{}
-            .with_label("Edit Profile")
-            .with_size(ComponentSize{percent(1.0f), pixels(32)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(22.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true)
-            .with_margin(Margin{.bottom = pixels(2)}));
-
-    // Subtitle
-    div(context, mk(card.ent(), 1),
-        ComponentConfig{}
-            .with_label("Update your account information")
-            .with_size(ComponentSize{percent(1.0f), pixels(18)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(muted_text)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true)
-            .with_margin(Margin{.bottom = pixels(12)}));
-
-    // Height fits the fields (children()) rather than a hardcoded pixels(400)
-    // that was smaller than the 7 fields (~478px) — the overflow used to spill
-    // into the footer. See docs/LAYOUT_AUDIT.md.
-    auto body = vstack(
-        context, mk(card.ent(), 2),
-        ComponentConfig{}
-            // Explicit, not children(): children() measured 12px short of
-            // the fields it holds, and trimming their margins shrank it by
-            // the same amount so it never caught up.
-            .with_size(ComponentSize{percent(1.0f), pixels(500)})
-            .with_no_wrap()
-            .with_justify_content(JustifyContent::FlexStart)
-            .with_debug_name("body"));
-
-    auto make_field = [&](int idx, const std::string &label_text,
-                          const std::string &placeholder, std::string &value,
-                          std::optional<char> mask = std::nullopt) {
-      div(context, mk(body.ent(), idx * 3),
-          ComponentConfig{}
-              .with_label(label_text)
-              .with_size(ComponentSize{percent(1.0f), pixels(18)})
-              .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
-              .with_alignment(TextAlignment::Left)
-              .with_skip_tabbing(true)
-              // 8, not 12: at 12 the last field ran 12px past the body.
-              .with_margin(Margin{.top = pixels(idx == 0 ? 0 : 8),
-                                  .bottom = pixels(4)}));
-
-      auto cfg = ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
-                     .with_custom_background(field_bg)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
-                     .with_placeholder(placeholder)
-                     .with_rounded_corners(RoundedCorners().all_round())
-                     .with_roundness(0.10f)
-                     .with_border(field_border, 1.0f)
-                     .with_debug_name(label_text + "_input");
-
-      if (mask) cfg.with_mask_char(*mask);
-
-      return text_input(context, mk(body.ent(), idx * 3 + 1), value, cfg);
+    const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
+    const float left = (context.screen_width - 1280 * s) / 2;
+    const float top = (context.screen_height - 720 * s) / 2;
+    const afterhours::Color field_bg{32, 34, 46, 255};
+    const afterhours::Color field_border{113, 124, 151, 255};
+    const afterhours::Color card_bg{20, 23, 33, 255};
+    const afterhours::Color muted{182, 194, 217, 255};
+    const afterhours::Color white{242, 244, 250, 255};
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
+    div(context, mk(entity, 900), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_absolute_position(0, 0).with_custom_background({10, 12, 18, 255}).with_corner_radius(0));
+    auto root = div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(1280 * s), pixels(720 * s)})
+        .with_absolute_position(left, top).with_transparent_bg().with_skip_grid_snap(true)
+        .with_debug_name("text_input_root"));
+    auto box = [&](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, y * s).with_transparent_bg()
+          .with_corner_radius(0).with_skip_grid_snap(true);
     };
-
-    if (make_field(0, "Username", "Enter username", username)) {
-      status_message = "Username: " + username;
-    }
-
-    if (make_field(1, "Email", "user@example.com", email)) {
-      status_message = "Email: " + email;
-    }
-
-    div(context, mk(body.ent(), 6),
-        ComponentConfig{}
-            .with_label("Password")
-            .with_size(ComponentSize{percent(1.0f), pixels(18)})
-            .with_background(Theme::Usage::None)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true)
-            .with_margin(Margin{.top = pixels(12), .bottom = pixels(4)}));
-
-    auto pw_row = hstack(
-        context, mk(body.ent(), 7),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(36)})
-            .with_custom_background(field_bg)
-            .with_rounded_corners(RoundedCorners().all_round())
-            .with_roundness(0.10f)
-            .with_border(field_border, 1.0f)
-            .with_debug_name("pw_row"));
-
-    auto pw_cfg = ComponentConfig{}
-                      .with_size(ComponentSize{expand(), pixels(36)})
-                      .with_background(Theme::Usage::None)
-                      .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
-                      .with_placeholder("Enter password")
-                      .with_debug_name("Password_input");
-
+    auto text = [&](int id, std::string value, float x, float y, float w, float h,
+                    float size, afterhours::Color color, const char *debug = "", bool bold = false) {
+      div(context, mk(root.ent(), id), box(x, y, w, h).with_label(value)
+          .with_font(bold ? "AtkinsonMockBold" : "AtkinsonMock", pixels(size * s))
+          .with_alignment(TextAlignment::Left).with_custom_text_color(color)
+          .with_ignore_pointer_events().with_debug_name(debug));
+    };
+    auto input_config = [&](float x, float y, float w, const char *placeholder, const char *debug) {
+      return box(x, y, w, 44).with_custom_background(field_bg).with_border(field_border, 1.f)
+          .with_font("AtkinsonMock", pixels(22 * s)).with_placeholder(placeholder).with_debug_name(debug);
+    };
+    // Title
+    text(1, "Create profile", 48, 20, 1184, 48, 38, white, "text_input_title", true);
+    // Subtitle
+    text(2, "Try native account inputs. This demo stores values only in memory.", 48, 78, 1184, 30, 22, muted);
+    div(context, mk(root.ent(), 3), box(48, 124, 572, 550).with_custom_background(card_bg).with_corner_radius(12 * s).with_debug_name("card"));
+    div(context, mk(root.ent(), 4), box(644, 124, 588, 550).with_custom_background(card_bg).with_corner_radius(12 * s).with_debug_name("input_states"));
+    text(5, "All profile fields are optional. No format validation.", 72, 137, 524, 26, 18, muted);
+    const auto field = [&](int id, const char *label, const char *placeholder, std::string &value,
+                           float label_y, float input_y, const char *debug) {
+      text(100 + id, label, 72, label_y, 524, 28, 20, white);
+      return text_input(context, mk(root.ent(), 200 + id), value, input_config(72, input_y, 524, placeholder, debug));
+    };
+    if (field(0, "Username", "Enter username", profile.username, 174, 202, "Username_input"))
+      status_message = "Username: " + profile.username;
+    if (field(1, "Email", "Enter email address", profile.email, 264, 292, "Email_input"))
+      status_message = "Email: " + profile.email;
+    text(6, "Example: name@example.com", 72, 339, 524, 25, 17, muted);
+    text(7, "New password / optional", 72, 379, 524, 28, 20, white);
+    auto pw_row = div(context, mk(root.ent(), 8), box(72, 407, 524, 44)
+        .with_custom_background(field_bg).with_border(field_border, 1.f).with_debug_name("pw_row"));
+    auto pw_cfg = box(0, 0, 436, 44).with_font("AtkinsonMock", pixels(22 * s))
+        .with_placeholder("Enter a demo password").without_border().with_debug_name("Password_input");
     if (!show_password) pw_cfg.with_mask_char('*');
-
-    auto pw_result = text_input(context, mk(pw_row.ent(), 0), password, pw_cfg);
-    if (pw_result) {
-      status_message = "Password changed";
-    }
-
-    if (button(context, mk(pw_row.ent(), 1),
-               ComponentConfig{}
-                   .with_label(show_password ? "Hide" : "Show")
-                   .with_size(ComponentSize{pixels(52), pixels(36)})
-                   .with_custom_background(toggle_bg)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
-                   .with_rounded_corners(
-                       RoundedCorners().top_right(ROUND).bottom_right(ROUND))
-                   .with_roundness(0.10f)
-                   .with_debug_name("pw_toggle"))) {
-      show_password = !show_password;
-    }
-
+    if (text_input(context, mk(pw_row.ent(), 0), profile.password, pw_cfg)) status_message = "Password changed";
+    if (button(context, mk(pw_row.ent(), 1), box(436, 0, 88, 44)
+        .with_label(show_password ? "Hide" : "Show").with_alignment(TextAlignment::Right)
+        .with_custom_background({73, 82, 108, 255}).with_custom_text_color(white)
+        .with_font("AtkinsonMock", pixels(20 * s)).with_debug_name("pw_toggle")
+        .with_on_draw_fg([s, white](RectangleType r) {
+          raylib::DrawEllipseLines(static_cast<int>(r.x + 18 * s), static_cast<int>(r.y + 22 * s), 9 * s, 5 * s, white);
+          raylib::DrawCircleV({r.x + 18 * s, r.y + 22 * s}, 2 * s, white);
+        }))) show_password = !show_password;
+    text(9, "Blank means no demo password. No account is created.", 72, 454, 524, 25, 17, muted);
     // Bio
-    if (make_field(3, "Bio", "Tell us about yourself", bio)) {
-      status_message = "Bio: " + bio;
-    }
-
+    if (field(3, "Short bio / optional", "Write a short introduction", profile.bio, 493, 521, "Bio_input"))
+      status_message = "Bio: " + profile.bio;
     // Search
-    if (make_field(4, "Search", "Type to search...", search_query)) {
-      status_message = "Search: " + search_query;
+    text(10, "Input states demo", 668, 137, 540, 34, 28, white, "", true);
+    text(11, "Search demo profiles", 668, 180, 540, 28, 20, white);
+    div(context, mk(root.ent(), 12), box(668, 213, 36, 44).with_custom_background(field_bg)
+        .with_on_draw_fg([s, muted](RectangleType r) {
+          raylib::DrawCircleLines(static_cast<int>(r.x + 15 * s), static_cast<int>(r.y + 19 * s), 7 * s, muted);
+          raylib::DrawLineEx({r.x + 20 * s, r.y + 24 * s}, {r.x + 27 * s, r.y + 31 * s}, 2 * s, muted);
+        }));
+    if (text_input(context, mk(root.ent(), 13), search_query,
+        input_config(704, 213, 504, "Type a name to filter", "Search_input"))) status_message = "Search: " + search_query;
+    std::string folded = search_query;
+    std::transform(folded.begin(), folded.end(), folded.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    const std::array<std::string, 3> names{"Alex Rivera", "Morgan Chen", "Sam Taylor"};
+    std::string matches;
+    for (const auto &name : names) {
+      std::string candidate = name;
+      std::transform(candidate.begin(), candidate.end(), candidate.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+      if (candidate.find(folded) == std::string::npos) continue;
+      if (!matches.empty()) matches += ", ";
+      matches += name;
     }
-
+    text(14, matches.empty() ? "No matching demo profiles" : matches, 668, 266, 540, 26, 18, muted, "search_results");
     // Readonly field
-    {
-      div(context, mk(body.ent(), 15),
-          ComponentConfig{}
-              .with_label("Readonly Field")
-              .with_size(ComponentSize{percent(1.0f), pixels(18)})
-              .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
-              .with_alignment(TextAlignment::Left)
-              .with_skip_tabbing(true)
-              .with_margin(Margin{.top = pixels(12), .bottom = pixels(4)}));
-
-      text_input(context, mk(body.ent(), 16), readonly_text,
-                 ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
-                     .with_custom_background(field_bg)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
-                     .with_rounded_corners(RoundedCorners().all_round())
-                     .with_roundness(0.10f)
-                     .with_border(field_border, 1.0f)
-                     .with_readonly()
-                     .with_debug_name("Readonly_input"));
-    }
-
+    text(15, "Account identifier / read-only", 668, 316, 540, 28, 20, white);
+    text_input(context, mk(root.ent(), 16), readonly_text,
+        input_config(668, 347, 540, "", "Readonly_input").with_readonly());
+    text(17, "You can select and copy this fixed demo value.", 668, 400, 540, 26, 18, muted);
     // Disabled field
-    {
-      div(context, mk(body.ent(), 17),
-          ComponentConfig{}
-              .with_label("Disabled Field")
-              .with_size(ComponentSize{percent(1.0f), pixels(18)})
-              .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(12.0f))
-              .with_alignment(TextAlignment::Left)
-              .with_skip_tabbing(true)
-              .with_margin(Margin{.top = pixels(12), .bottom = pixels(4)}));
-
-      text_input(context, mk(body.ent(), 18), disabled_text,
-                 ComponentConfig{}
-                     .with_size(ComponentSize{percent(1.0f), pixels(36)})
-                     .with_custom_background(field_bg)
-                     .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
-                     .with_rounded_corners(RoundedCorners().all_round())
-                     .with_roundness(0.10f)
-                     .with_border(field_border, 1.0f)
-                     .with_disabled(true)
-                     .with_debug_name("Disabled_input"));
+    text(18, "Workspace / disabled", 668, 449, 540, 28, 20, white);
+    text_input(context, mk(root.ent(), 19), disabled_text,
+        input_config(668, 480, 540, "", "Disabled_input").with_disabled(true));
+    text(20, "Disabled fixture: keyboard and pointer editing are off.", 668, 533, 540, 26, 18, muted);
+    text(21, "Field borders are square for a consistent join.", 668, 585, 540, 26, 18, muted);
+    text(22, profile == saved_profile ? "No unsaved profile changes" : "Unsaved demo profile changes",
+         72, 575, 524, 26, 18, muted, "profile_changes");
+    if (button(context, mk(root.ent(), 30), box(344, 618, 118, 40).with_label("Cancel")
+        .with_font("AtkinsonMock", pixels(21 * s)).with_custom_background(card_bg)
+        .with_custom_text_color(white).with_border(field_border, 1.f).with_debug_name("btn_cancel"))) {
+      profile = saved_profile;
+      search_query.clear();
+      show_password = false;
+      status_message = "Restored saved demo profile";
     }
-
-    if (!status_message.empty()) {
-      div(context, mk(body.ent(), 20),
-          ComponentConfig{}
-              .with_label(status_message)
-              .with_size(ComponentSize{percent(1.0f), pixels(20)})
-              .with_background(Theme::Usage::None)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(11.0f))
-              .with_custom_text_color(afterhours::Color{130, 135, 158, 200})
-              .with_margin(Margin{.top = pixels(12)})
-              .with_alignment(TextAlignment::Left)
-              .with_skip_tabbing(true)
-              .with_debug_name("status_bar"));
+    if (button(context, mk(root.ent(), 31), box(478, 618, 118, 40).with_label("Save demo")
+        .with_font("AtkinsonMock", pixels(21 * s)).with_custom_background(theme.accent)
+        .with_custom_text_color(theme.darkfont).with_debug_name("btn_save"))) {
+      saved_profile = profile;
+      status_message = "Saved: " + profile.username + " / " + profile.email;
     }
-
-    auto footer = hstack(
-        context, mk(card.ent(), 3),
-        ComponentConfig{}
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_justify_content(JustifyContent::SpaceBetween)
-            .with_align_items(AlignItems::Center)
-            .with_margin(Margin{.top = pixels(8)})
-            .with_debug_name("footer"));
-
-    div(context, mk(footer.ent(), 0),
-        ComponentConfig{}
-            .with_label("Tab | Ctrl+A/C/V/X")
-            .with_size(ComponentSize{expand(), pixels(20)})
-            .with_background(Theme::Usage::None)
-            .with_custom_text_color(afterhours::Color{120, 130, 158, 255})
-            .with_font(UIComponent::DEFAULT_FONT, pixels(10.0f))
-            .with_alignment(TextAlignment::Left)
-            .with_skip_tabbing(true)
-            .with_debug_name("kbd_hints"));
-
-    auto btn_row = hstack(
-        context, mk(footer.ent(), 1),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(176), pixels(32)})
-            .with_justify_content(JustifyContent::FlexEnd)
-            .with_align_items(AlignItems::Center)
-            .with_debug_name("btn_row"));
-
-    if (button(context, mk(btn_row.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Cancel")
-                   .with_size(ComponentSize{pixels(80), pixels(32)})
-                   .with_custom_background(card_bg)
-                   .with_border(field_border, 1.0f)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
-                   .with_rounded_corners(RoundedCorners().all_round())
-                   .with_roundness(0.10f)
-                   .with_margin(Margin{.right = pixels(12)})
-                   .with_debug_name("btn_cancel"))) {
-      username = "";
-      email = "";
-      password = "";
-      bio = "";
-      search_query = "";
-      status_message = "";
-    }
-
-    if (button(context, mk(btn_row.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Save")
-                   .with_size(ComponentSize{pixels(80), pixels(32)})
-                   .with_custom_background(theme.accent)
-                   .with_custom_text_color(theme.darkfont)
-                   .with_font(UIComponent::DEFAULT_FONT, pixels(13.0f))
-                   .with_rounded_corners(RoundedCorners().all_round())
-                   .with_roundness(0.10f)
-                   .with_debug_name("btn_save"))) {
-      status_message = "Saved: " + username + " / " + email;
-    }
+    div(context, mk(root.ent(), 32), box(668, 624, 540, 30).with_label(status_message.empty() ? "Demo form / ready" : status_message)
+        .with_font("AtkinsonMock", pixels(19 * s)).with_alignment(TextAlignment::Left)
+        .with_custom_text_color(white).with_text_overflow(TextOverflow::Ellipsis).with_debug_name("status_bar"));
+    text(33, "Tab: next field / Shift+Tab: previous / Ctrl or Cmd: A select all, C copy, V paste, X cut",
+         48, 686, 1184, 26, 18, muted, "kbd_hints");
   }
 };
 

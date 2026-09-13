@@ -1,0 +1,91 @@
+goto_screen text_input
+resize 1280 720
+wait 0.3
+click_ui btn_cancel
+wait 0.2
+expect_text "Create profile"
+expect_text "This demo stores values only in memory."
+expect_text "All profile fields are optional. No format validation."
+expect_text "Enter email address"
+expect_text "New password / optional"
+expect_text "Short bio / optional"
+expect_text "Input states demo"
+expect_text "Account identifier / read-only"
+expect_input_text Readonly_input "Account ID: demo-1042"
+expect_input_text Disabled_input "Managed by workspace"
+assert_ui Username_input x=72 y=202 w=524 h=44
+assert_ui Email_input x=72 y=292 w=524 h=44
+assert_ui Password_input w=436 h=44
+assert_ui btn_save x=478 y=618 w=118 h=40
+assert_no_overflow
+assert_within_parents
+screenshot text_input_design
+focus_ui Username_input
+type "Aster"
+wait 0.2
+expect_text "Unsaved demo profile changes"
+expect_text "Username: Aster"
+focus_ui Email_input
+type "aster@example.com"
+wait 0.2
+focus_ui Password_input
+type "demo123"
+wait 0.2
+expect_text "Password changed"
+click_ui pw_toggle
+wait 0.2
+expect_text "Hide"
+expect_text "demo123"
+click_ui pw_toggle
+wait 0.2
+expect_text "Show"
+focus_ui Bio_input
+type "Making a native UI"
+wait 0.2
+focus_ui btn_save
+key ENTER
+wait 0.2
+expect_text "Saved: Aster / aster@example.com"
+expect_text "No unsaved profile changes"
+focus_ui Username_input
+key CTRL+A
+type "Changed"
+wait 0.2
+expect_text "Unsaved demo profile changes"
+click_ui btn_cancel
+wait 0.2
+expect_input_text Username_input "Aster"
+expect_input_text Email_input "aster@example.com"
+expect_input_text Password_input "demo123"
+expect_input_text Bio_input "Making a native UI"
+expect_text "Restored saved demo profile"
+expect_text "No unsaved profile changes"
+focus_ui Search_input
+type "morgan"
+wait 0.2
+expect_text "Morgan Chen"
+expect_no_text "Alex Rivera, Morgan Chen, Sam Taylor"
+focus_ui Readonly_input
+type "blocked"
+key BACKSPACE
+wait 0.2
+expect_input_text Readonly_input "Account ID: demo-1042"
+click_ui Disabled_input
+type "blocked"
+wait 0.2
+expect_input_text Disabled_input "Managed by workspace"
+screenshot text_input_design_saved
+resize 1920 1080
+wait 0.3
+assert_ui Username_input x=108 y=303 w=786 h=66
+assert_no_overflow
+assert_within_parents
+screenshot text_input_design_1080
+resize 1024 768
+wait 0.3
+assert_ui text_input_root x=0 y=96 w=1024 h=576
+assert_ui Username_input x=58 y=258 w=419 h=35
+assert_no_overflow
+assert_within_parents
+screenshot text_input_design_narrow
+resize 1280 720
