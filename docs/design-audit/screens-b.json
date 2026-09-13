@@ -6025,7 +6025,8 @@
         "change": "Reduce their density behind peripheral readouts."
       }
     ],
-    "sha256": "80a906841abee13c2e6b8e27bbbf39c5a7d355ef9a9f3fe406760ad8fd2ff89c"
+    "sha256": "80a906841abee13c2e6b8e27bbbf39c5a7d355ef9a9f3fe406760ad8fd2ff89c",
+    "evidence": "docs/design-audit/originals/neon_strike_720p.png"
   },
   {
     "id": "nine_slice_borders",

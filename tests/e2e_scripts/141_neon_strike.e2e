@@ -1,19 +1,23 @@
 goto_screen neon_strike
+resize 1280 720
 wait 0.5
 assert_ui neon_root w=1280 h=720
-assert_ui neon_reload x=266 y=570 w=140 h=44
-expect_text "35/210"
-expect_text "80 HEALTH"
-expect_text "45% ARMOR"
+assert_ui neon_reload x=282 y=565 w=316 h=60
+expect_text "35"
+expect_text "/ 210"
+expect_text "HEALTH 80/100"
+expect_text "ARMOR 45%"
 assert_no_overflow
 assert_within_parents
 click_ui neon_reload
 wait 0.2
-expect_text "40/205"
+expect_text "40"
+expect_text "/ 205"
 expect_text "Weapon reloaded"
 click_ui neon_reload
 wait 0.2
-expect_text "40/205"
+expect_text "40"
+expect_text "/ 205"
 expect_text "Magazine full"
 click_ui neon_ability_1
 wait 0.2
@@ -36,7 +40,7 @@ screenshot neon_strike_selected
 resize 1920 1080
 wait 0.3
 assert_ui neon_root w=1920 h=1080
-assert_ui neon_reload x=399 y=855 w=210 h=66
+assert_ui neon_reload x=423 y=848 w=474 h=90
 assert_no_overflow
 assert_within_parents
 key R

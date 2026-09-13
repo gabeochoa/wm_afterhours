@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,505 completed; 1,030 remaining.
+1,530 completed; 1,005 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5079,79 +5079,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/neon_strike_720p.png) · [Visual review](design-audit.html#screen=neon_strike)
 
-- [ ] `neon_strike-01` · P2 · proposal. Grenade count: Place both counts at the same lower-right inset inside their tiles.
+- [x] `neon_strike-01` · P2 · proposal. Grenade count: Place both counts at the same lower-right inset inside their tiles.
   Evidence: The grenade count sits outside its tile while the knife count sits inside; the web mock repeats this asymmetry.
 
-- [ ] `neon_strike-02` · P2 · proposal. Equipment key hints: Increase their size and use compact keycaps.
+- [x] `neon_strike-02` · P2 · proposal. Equipment key hints: Increase their size and use compact keycaps.
   Evidence: G and V are tiny in the tile corners.
 
-- [ ] `neon_strike-03` · P2 · proposal. Equipment icons: Normalize optical icon weight within the HUD.
+- [x] `neon_strike-03` · P2 · proposal. Equipment icons: Normalize optical icon weight within the HUD.
   Evidence: Grenade and knife line weights differ from the heavier streak icons.
 
-- [ ] `neon_strike-04` · P2 · proposal. Selected equipment: Add a small selected marker or brighter bottom rule.
+- [x] `neon_strike-04` · P2 · proposal. Selected equipment: Add a small selected marker or brighter bottom rule.
   Evidence: A thin gold outline is the grenade's only selection cue.
 
-- [ ] `neon_strike-05` · P2 · proposal. Ammo readout: Emphasize 35 and reduce reserve-count weight.
+- [x] `neon_strike-05` · P2 · proposal. Ammo readout: Emphasize 35 and reduce reserve-count weight.
   Evidence: 35/210 gives magazine and reserve counts similar emphasis.
 
-- [ ] `neon_strike-06` · P2 · proposal. Weapon identity: Add a small current-weapon label above it.
+- [x] `neon_strike-06` · P2 · proposal. Weapon identity: Add a small current-weapon label above it.
   Evidence: The ammo readout has no weapon name.
 
-- [ ] `neon_strike-07` · P2 · proposal. Health label: Increase health text and reduce skull emphasis.
+- [x] `neon_strike-07` · P2 · proposal. Health label: Increase health text and reduce skull emphasis.
   Evidence: 80 HEALTH is tiny beside a large skull tile.
 
-- [ ] `neon_strike-08` · P2 · proposal. Armor label: Increase text and place it beside its own bar.
+- [x] `neon_strike-08` · P2 · proposal. Armor label: Increase text and place it beside its own bar.
   Evidence: 45% ARMOR is extremely small below two thin bars.
 
-- [ ] `neon_strike-09` · P2 · proposal. Health and armor bars: Give each bar a directly adjacent label or icon.
+- [x] `neon_strike-09` · P2 · proposal. Health and armor bars: Give each bar a directly adjacent label or icon.
   Evidence: Both bars use similar cyan fills without direct labels.
 
-- [ ] `neon_strike-10` · P2 · proposal. Health scale: Show 80/100 or the actual maximum.
+- [x] `neon_strike-10` · P2 · proposal. Health scale: Show 80/100 or the actual maximum.
   Evidence: 80 is shown without a maximum.
 
-- [ ] `neon_strike-11` · P2 · proposal. Map caption: Move them into a readable map footer.
+- [x] `neon_strike-11` · P2 · proposal. Map caption: Move them into a readable map footer.
   Evidence: SECTOR 7B and GRID 042 are tiny along the bottom edge.
 
-- [ ] `neon_strike-12` · P2 · proposal. Map markers: Add a compact ally-marker key near the map.
+- [x] `neon_strike-12` · P2 · proposal. Map markers: Add a compact ally-marker key near the map.
   Evidence: Cyan rings appear without a legend.
 
-- [ ] `neon_strike-13` · P2 · proposal. Objective marker: Increase its contrast and label its objective role.
+- [x] `neon_strike-13` · P2 · proposal. Objective marker: Increase its contrast and label its objective role.
   Evidence: B is small inside a thin amber region.
 
-- [ ] `neon_strike-14` · P3 · proposal. Player direction: Strengthen the triangle outline and soften the cone.
+- [x] `neon_strike-14` · P3 · proposal. Player direction: Strengthen the triangle outline and soften the cone.
   Evidence: The white triangle overlaps a tan view cone.
 
-- [ ] `neon_strike-15` · P2 · proposal. Killstreak header: Label them as charge/progress or use a clearer segmented meter.
+- [x] `neon_strike-15` · P2 · proposal. Killstreak header: Label them as charge/progress or use a clearer segmented meter.
   Evidence: Three squares follow KILLSTREAK without explanation.
 
-- [ ] `neon_strike-16` · P2 · proposal. Streak hotkeys: Use readable, consistently aligned key badges.
+- [x] `neon_strike-16` · P2 · proposal. Streak hotkeys: Use readable, consistently aligned key badges.
   Evidence: 1 through 4 are tiny outside the ability tiles.
 
-- [ ] `neon_strike-17` · P3 · proposal. Gear decorations: Remove repeated gears or label their configuration role.
+- [x] `neon_strike-17` · P3 · proposal. Gear decorations: Remove repeated gears or label their configuration role.
   Evidence: A gear repeats beside each ability without explanation.
 
-- [ ] `neon_strike-18` · P2 · proposal. Ability labels: Increase their size and reduce tracking.
+- [x] `neon_strike-18` · P2 · proposal. Ability labels: Increase their size and reduce tracking.
   Evidence: UAV, RECON, SHIELD, and STRIKE are tiny.
 
-- [ ] `neon_strike-19` · P2 · proposal. Strike icon: Use a recognizable strike symbol distinct from close or cancel.
+- [x] `neon_strike-19` · P2 · proposal. Strike icon: Use a recognizable strike symbol distinct from close or cancel.
   Evidence: A large X represents STRIKE.
 
-- [ ] `neon_strike-20` · P2 · proposal. Objective banner: Add trailing padding inside a stable safe area.
+- [x] `neon_strike-20` · P2 · proposal. Objective banner: Add trailing padding inside a stable safe area.
   Evidence: SECURE OBJECTIVE B sits tight against the right edge.
 
-- [ ] `neon_strike-21` · P2 · proposal. Score shield: Separate score from protection status or explain the symbol.
+- [x] `neon_strike-21` · P2 · proposal. Score shield: Separate score from protection status or explain the symbol.
   Evidence: An unlabeled shield follows SCORE: 15,000.
 
-- [ ] `neon_strike-22` · P2 · proposal. Kill feed: Distinguish actor, action, and target and increase line spacing.
+- [x] `neon_strike-22` · P2 · proposal. Kill feed: Distinguish actor, action, and target and increase line spacing.
   Evidence: Three dense text lines sit beneath the compass.
 
-- [ ] `neon_strike-23` · P3 · proposal. Repeated alert: Differentiate radio activity from event history with labels.
+- [x] `neon_strike-23` · P3 · proposal. Repeated alert: Differentiate radio activity from event history with labels.
   Evidence: Alpha_Six Under fire appears in both feed and voice area.
 
-- [ ] `neon_strike-24` · P2 · proposal. Compass labels: Increase compass text while retaining thin guide lines.
+- [x] `neon_strike-24` · P2 · proposal. Compass labels: Increase compass text while retaining thin guide lines.
   Evidence: Bearing values and direction letters are very small.
 
-- [ ] `neon_strike-25` · P3 · proposal. Background flecks: Reduce their density behind peripheral readouts.
+- [x] `neon_strike-25` · P3 · proposal. Background flecks: Reduce their density behind peripheral readouts.
   Evidence: Gold flecks remain visible behind HUD text.
 
 ### nine_slice_borders

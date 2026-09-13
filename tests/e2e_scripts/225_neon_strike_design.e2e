@@ -1,0 +1,83 @@
+goto_screen neon_strike
+resize 1280 720
+wait 0.3
+expect_text "HUD PREVIEW"
+expect_text "M4 / AUTOMATIC"
+expect_text "35"
+expect_text "/ 210"
+expect_text "HEALTH 80/100"
+expect_text "ARMOR 45%"
+expect_text "EVENT HISTORY"
+expect_text "LIVE RADIO"
+expect_text "STREAK PROGRESS 1/3"
+expect_text "SECTOR 7B / GRID 042"
+expect_text "Ally markers"
+expect_text "B / Objective"
+expect_text "Sample combat values / keys 1-4 select streaks"
+assert_ui neon_root x=0 y=0 w=1280 h=720
+assert_ui neon_reload x=282 y=565 w=316 h=60
+assert_ui neon_map x=37 y=507 w=226 h=158
+assert_ui neon_grenade x=1048 y=591 w=88 h=100
+assert_ui neon_melee x=1150 y=591 w=88 h=100
+assert_ui neon_grenade_count x=1102 y=658 w=30 h=24
+assert_ui neon_melee_count x=1204 y=658 w=30 h=24
+assert_no_overflow
+assert_within_parents
+screenshot neon_strike_design
+key R
+wait 0.2
+expect_text "40"
+expect_text "/ 205"
+expect_text "Weapon reloaded"
+click_ui neon_reload
+wait 0.2
+expect_text "Magazine full"
+click_ui neon_ability_1
+wait 0.2
+expect_text "Recon selected"
+focus_ui neon_ability_0
+key ENTER
+wait 0.2
+expect_text "UAV selected"
+key 3
+wait 0.2
+expect_text "Shield selected"
+key 4
+wait 0.2
+expect_text "Strike selected"
+click_ui neon_melee
+wait 0.2
+expect_text "Melee selected"
+key G
+wait 0.2
+expect_text "Grenade selected"
+key V
+wait 0.2
+expect_text "Melee selected"
+focus_ui neon_grenade
+key ENTER
+wait 0.2
+expect_text "Grenade selected"
+screenshot neon_strike_design_selected
+resize 1920 1080
+wait 0.3
+assert_ui neon_root x=0 y=0 w=1920 h=1080
+assert_ui neon_reload x=423 y=848 w=474 h=90
+assert_ui neon_grenade_count x=1653 y=987 w=45 h=36
+assert_ui neon_melee_count x=1806 y=987 w=45 h=36
+assert_no_overflow
+assert_within_parents
+screenshot neon_strike_design_1080
+resize 1024 768
+wait 0.3
+assert_ui neon_root x=0 y=96 w=1024 h=576
+assert_ui neon_reload x=226 y=548 w=253 h=48
+assert_ui neon_map x=30 y=502 w=181 h=126
+assert_no_overflow
+assert_within_parents
+screenshot neon_strike_design_narrow
+key R
+wait 0.2
+expect_text "Magazine full"
+expect_text "/ 205"
+resize 1280 720

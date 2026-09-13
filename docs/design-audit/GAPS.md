@@ -2586,7 +2586,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## neon strike
 
-[Current baseline](../../screenshot-baselines/screens/neon_strike_720p.png) · [Visual review](../../design-audit.html#screen=neon_strike)
+[Reviewed image](../../docs/design-audit/originals/neon_strike_720p.png) · [Current baseline](../../screenshot-baselines/screens/neon_strike_720p.png) · [Visual review](../../design-audit.html#screen=neon_strike)
 
 Baseline SHA-256: `80a906841abee13c2e6b8e27bbbf39c5a7d355ef9a9f3fe406760ad8fd2ff89c`
 
