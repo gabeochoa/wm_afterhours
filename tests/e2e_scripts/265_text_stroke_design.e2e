@@ -2,7 +2,7 @@ goto_screen text_stroke
 resize 1280 720
 wait 0.4
 expect_text "Text stroke / outline"
-expect_text "native eight-direction glyph copies"
+expect_text "continuous rounded outlines"
 expect_text "T1 / No stroke"
 expect_text "T2 / 5.0px stroke / 13.9% of font"
 expect_text "T3 / 72.0px font, 8.0px stroke"

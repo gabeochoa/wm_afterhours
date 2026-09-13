@@ -44,7 +44,7 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
           .with_text_stroke(outline, thickness * scale).with_alignment(TextAlignment::Left).with_debug_name(name));
     };
     label(0, 0, 24, 884, 45, "Text stroke / outline", 35, white);
-    label(1, 0, 79, 1144, 31, "Atkinson / native eight-direction glyph copies / no blurred glow", 22, muted);
+    label(1, 0, 79, 1144, 31, "Atkinson / continuous rounded outlines / cached glyph coverage", 22, muted);
     const std::array<const char *, 3> detail_labels{"Glyph detail: Off", "Glyph detail: 5px", "Glyph detail: 10px"};
     if (button(context, mk(root.ent(), 2), box(910, 29, 234, 43).with_label(detail_labels[static_cast<size_t>(detail)])
         .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_background(panel).with_custom_text_color(white)
@@ -90,9 +90,9 @@ struct ExampleTextStroke : ScreenSystem<UIContext<InputAction>> {
       auto glyph = sample(82, 744, 216, 360, 300, "A", font, detail == 1 ? afterhours::Color{255, 220, 80, 255} : afterhours::Color{255, 180, 60, 255},
                           detail == 1 ? afterhours::Color{20, 15, 0, 255} : afterhours::Color{80, 40, 0, 255}, width, "stroke_glyph_detail");
       glyph.ent().get<HasLabel>().alignment = TextAlignment::Center;
-      label(83, 724, 530, 400, 89, fmt::format("Native glyph redrawn at {:.0f}px\nOutline {:.0f}px / {:.1f}% of font\nEight offset copies, then foreground.", font * scale, width * scale, width / font * 100), 22, muted);
+      label(83, 724, 530, 400, 89, fmt::format("Native glyph redrawn at {:.0f}px\nOutline {:.0f}px / {:.1f}% of font\nContinuous outline, then foreground.", font * scale, width * scale, width / font * 100), 22, muted);
     }
-    label(90, 0, 650, 1144, 31, "Light panel: #DCE1EB / foreground #FFFFFF. Stroke copies extend in eight directions; thick outlines can form gaps.", 20, muted);
+    label(90, 0, 650, 1144, 31, "Outlines follow the glyph silhouette. Wider strokes fill continuously around thin stems and diagonal edges.", 20, muted);
     label(91, 0, 686, 1144, 26, fmt::format("{:.0f} × {:.0f} / UI scale {:.2f}× / Labels show rendered stroke pixels. Compare stroke size with its font size.", context.screen_width, context.screen_height, scale), 19, muted);
   }
 };
