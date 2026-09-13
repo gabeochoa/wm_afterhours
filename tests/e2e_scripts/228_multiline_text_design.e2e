@@ -1,0 +1,58 @@
+goto_screen multiline_text_lab
+resize 1280 720
+wait 0.4
+expect_text "Text and measured bounds should agree."
+expect_text "Same text, different sizing modes"
+expect_text "Auto-fit result:"
+expect_text "Fixed font size: 18.0px"
+expect_text "Monospaced companion"
+assert_ui ml_hard_autofit x=48 y=192 w=280 h=96
+assert_ui ml_hard_pinned x=360 y=192 w=280 h=96
+assert_ui ml_wrap_fixed w=280 h=110
+assert_ui ml_wrap_selfsizing w=280
+assert_ui ml_blank_line w=280 h=96
+assert_within_parents
+screenshot multiline_design
+focus_ui ml_page_1
+key ENTER
+wait 0.3
+expect_text "Green / content-derived-height reference"
+expect_text "Hot: No / Dragging: No"
+assert_ui ml_resizable x=48 y=256 w=300 h=120
+assert_ui ml_resizable_selfsized x=688 y=256 w=300
+mouse_down 334 362
+wait 0.2
+mouse_move 248 416
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui ml_resizable w=200 h=160
+assert_ui ml_resizable_selfsized w=200
+expect_text "Width 200px / Height 160px"
+screenshot multiline_resize
+mouse_down 234 402
+wait 0.2
+mouse_move 700 496
+wait 0.2
+mouse_up
+wait 0.2
+assert_ui ml_resizable w=540 h=240
+assert_ui ml_resizable_selfsized w=540
+assert_within_parents
+screenshot multiline_wide
+resize 1920 1080
+wait 0.3
+assert_ui ml_resizable w=810 h=360
+assert_within_parents
+screenshot multiline_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ml_resizable w=432 h=192
+assert_within_parents
+screenshot multiline_design_narrow
+click_ui ml_page_0
+wait 0.2
+assert_ui ml_hard_pinned w=224
+assert_within_parents
+screenshot multiline_cases_narrow
+resize 1280 720

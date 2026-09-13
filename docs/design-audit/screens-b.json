@@ -5680,7 +5680,8 @@
         "change": "Place a compact expected line-count and sizing-mode summary there."
       }
     ],
-    "sha256": "a62fba35cf889378fbf68a9fd23b65af5de6e88e289e57420fb6b247866dfaa2"
+    "sha256": "a62fba35cf889378fbf68a9fd23b65af5de6e88e289e57420fb6b247866dfaa2",
+    "evidence": "docs/design-audit/originals/multiline_text_lab_720p.png"
   },
   {
     "id": "navigation_bar_demo",

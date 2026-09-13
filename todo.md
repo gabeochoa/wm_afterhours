@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,555 completed; 980 remaining.
+1,580 completed; 955 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4948,79 +4948,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/multiline_text_lab_720p.png) · [Visual review](design-audit.html#screen=multiline_text_lab)
 
-- [ ] `multiline_text_lab-01` · P2 · proposal. Title: Add Text and measured bounds should agree as a subtitle.
+- [x] `multiline_text_lab-01` · P2 · proposal. Title: Add Text and measured bounds should agree as a subtitle.
   Evidence: Multi-line Text Lab does not state the success criterion.
 
-- [ ] `multiline_text_lab-02` · P2 · proposal. Case captions: Use a larger neutral caption face outside the test boxes.
+- [x] `multiline_text_lab-02` · P2 · proposal. Case captions: Use a larger neutral caption face outside the test boxes.
   Evidence: Small handwritten captions are difficult to scan.
 
-- [ ] `multiline_text_lab-03` · P2 · proposal. Hard-break terminology: Label them Explicit line breaks and retain the escape in metadata.
+- [x] `multiline_text_lab-03` · P2 · proposal. Hard-break terminology: Label them Explicit line breaks and retain the escape in metadata.
   Evidence: The first two captions use a literal newline escape without a plain-language label.
 
-- [ ] `multiline_text_lab-04` · P2 · proposal. Auto-fit sample: Add the resulting font size in an external value label.
+- [x] `multiline_text_lab-04` · P2 · proposal. Auto-fit sample: Add the resulting font size in an external value label.
   Evidence: Auto-fit size gives no rendered font size.
 
-- [ ] `multiline_text_lab-05` · P2 · proposal. Fixed-font sample: Show Fixed font size · 18 px.
+- [x] `multiline_text_lab-05` · P2 · proposal. Fixed-font sample: Show Fixed font size · 18 px.
   Evidence: font_size 18 mixes API syntax with human-facing metadata.
 
-- [ ] `multiline_text_lab-06` · P3 · proposal. Hard-break comparison: Add Same text, different sizing modes above the pair.
+- [x] `multiline_text_lab-06` · P3 · proposal. Hard-break comparison: Add Same text, different sizing modes above the pair.
   Evidence: The two top samples have no shared group title.
 
-- [ ] `multiline_text_lab-07` · P2 · proposal. Fixed-wrap dimensions: Show Width 280 px · Height 110 px in the caption.
+- [x] `multiline_text_lab-07` · P2 · proposal. Fixed-wrap dimensions: Show Width 280 px · Height 110 px in the caption.
   Evidence: 280x110 uses cramped dimension formatting.
 
-- [ ] `multiline_text_lab-08` · P2 · proposal. Self-sizing label: Use Content-derived height with the API name in smaller text.
+- [x] `multiline_text_lab-08` · P2 · proposal. Self-sizing label: Use Content-derived height with the API name in smaller text.
   Evidence: Dim::Text appears without explanation.
 
-- [ ] `multiline_text_lab-09` · P3 · proposal. Wrapped-line counts: Add external Rendered lines: 3 values.
+- [x] `multiline_text_lab-09` · P3 · proposal. Wrapped-line counts: Add external Rendered lines: 3 values.
   Evidence: The fixed and self-sized samples show three lines without a line-count label.
 
-- [ ] `multiline_text_lab-10` · P3 · proposal. Self-sized bounds: Add an external measured-height guide for easier inspection of the intended fit.
+- [x] `multiline_text_lab-10` · P3 · proposal. Self-sized bounds: Add an external measured-height guide for easier inspection of the intended fit.
   Evidence: The short right box ends close to its final line.
 
-- [ ] `multiline_text_lab-11` · P2 · proposal. Styled-run legend: Add a small diff-color key outside the sample.
+- [x] `multiline_text_lab-11` · P2 · proposal. Styled-run legend: Add a small diff-color key outside the sample.
   Evidence: Red removed, green added, and gray context text have no external legend.
 
-- [ ] `multiline_text_lab-12` · P3 · proposal. Styled-run font: Add a monospaced companion specimen while preserving the existing test.
+- [x] `multiline_text_lab-12` · P3 · proposal. Styled-run font: Add a monospaced companion specimen while preserving the existing test.
   Evidence: The code-like diff sample uses the same handwritten face as prose.
 
-- [ ] `multiline_text_lab-13` · P2 · proposal. Blank-line caption: Label it Two line breaks preserve one blank line.
+- [x] `multiline_text_lab-13` · P2 · proposal. Blank-line caption: Label it Two line breaks preserve one blank line.
   Evidence: The preserved blank-line explanation uses tiny escape notation.
 
-- [ ] `multiline_text_lab-14` · P3 · proposal. Blank-line measurement: Add a faint external line-height bracket beside the blank line.
+- [x] `multiline_text_lab-14` · P3 · proposal. Blank-line measurement: Add a faint external line-height bracket beside the blank line.
   Evidence: The gap between above and below is not quantified.
 
-- [ ] `multiline_text_lab-15` · P2 · proposal. Resize instruction: Increase the instruction and show a small resize-arrow glyph.
+- [x] `multiline_text_lab-15` · P2 · proposal. Resize instruction: Increase the instruction and show a small resize-arrow glyph.
   Evidence: Drag the corner handle appears in small text above the panel.
 
-- [ ] `multiline_text_lab-16` · P2 · proposal. Resize handle: Add diagonal grip marks inside the existing handle bounds.
+- [x] `multiline_text_lab-16` · P2 · proposal. Resize handle: Add diagonal grip marks inside the existing handle bounds.
   Evidence: The cyan rounded square looks like a generic button.
 
-- [ ] `multiline_text_lab-17` · P2 · proposal. Dynamic dimensions: Show Width and Height as separate live value badges.
+- [x] `multiline_text_lab-17` · P2 · proposal. Dynamic dimensions: Show Width and Height as separate live value badges.
   Evidence: 300 × 120 appears in parentheses inside the instruction.
 
-- [ ] `multiline_text_lab-18` · P2 · proposal. Comparison distance: Bring its explanatory caption closer or connect the two with a labeled comparison line.
+- [x] `multiline_text_lab-18` · P2 · proposal. Comparison distance: Bring its explanatory caption closer or connect the two with a labeled comparison line.
   Evidence: The same-width green sample sits far to the right of the draggable panel.
 
-- [ ] `multiline_text_lab-19` · P3 · proposal. Comparison alignment: Add a faint alignment guide outside their bounds.
+- [x] `multiline_text_lab-19` · P3 · proposal. Comparison alignment: Add a faint alignment guide outside their bounds.
   Evidence: The draggable and content-height samples share a top edge without an explicit guide.
 
-- [ ] `multiline_text_lab-20` · P3 · proposal. Green sample meaning: Label green as the content-derived-height reference.
+- [x] `multiline_text_lab-20` · P3 · proposal. Green sample meaning: Label green as the content-derived-height reference.
   Evidence: Only the right sample uses green, without a color key.
 
-- [ ] `multiline_text_lab-21` · P2 · proposal. Diagnostic footer: Move them into a readable diagnostic strip with bottom padding.
+- [x] `multiline_text_lab-21` · P2 · proposal. Diagnostic footer: Move them into a readable diagnostic strip with bottom padding.
   Evidence: Mouse, handle, hot, held, and drags values are tiny at the bottom edge.
 
-- [ ] `multiline_text_lab-22` · P2 · proposal. Boolean diagnostics: Display Hot: No and Dragging: No.
+- [x] `multiline_text_lab-22` · P2 · proposal. Boolean diagnostics: Display Hot: No and Dragging: No.
   Evidence: hot=n and held=n require decoding.
 
-- [ ] `multiline_text_lab-23` · P2 · proposal. Handle geometry diagnostic: Separate X, Y, Width, and Height fields.
+- [x] `multiline_text_lab-23` · P2 · proposal. Handle geometry diagnostic: Separate X, Y, Width, and Height fields.
   Evidence: 320,612 28x28 combines position and size without column labels.
 
-- [ ] `multiline_text_lab-24` · P3 · proposal. Case identification: Number the examples to support visual-regression discussions.
+- [x] `multiline_text_lab-24` · P3 · proposal. Case identification: Number the examples to support visual-regression discussions.
   Evidence: The eight specimens have no stable case numbers.
 
-- [ ] `multiline_text_lab-25` · P3 · proposal. Right upper empty space: Place a compact expected line-count and sizing-mode summary there.
+- [x] `multiline_text_lab-25` · P3 · proposal. Right upper empty space: Place a compact expected line-count and sizing-mode summary there.
   Evidence: The upper-right region is unused.
 
 ### navigation_bar_demo

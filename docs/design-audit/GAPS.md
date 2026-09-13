@@ -2517,7 +2517,7 @@ Current capture removes Simple Modal focus outline. Both show the launcher rathe
 
 ## multiline text lab
 
-[Current baseline](../../screenshot-baselines/screens/multiline_text_lab_720p.png) · [Visual review](../../design-audit.html#screen=multiline_text_lab)
+[Reviewed image](../../docs/design-audit/originals/multiline_text_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/multiline_text_lab_720p.png) · [Visual review](../../design-audit.html#screen=multiline_text_lab)
 
 Baseline SHA-256: `a62fba35cf889378fbf68a9fd23b65af5de6e88e289e57420fb6b247866dfaa2`
 
