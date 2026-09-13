@@ -22,6 +22,7 @@ backward::SignalHandling sh;
 #include "testing/e2e_integration.h"
 #include "testing/test_macros.h"
 #include "testing/tests/all_tests.h"
+#include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <sstream>
@@ -98,6 +99,9 @@ int main(int argc, char *argv[]) {
                  "(default: output/)\n";
     std::cout << "  --resolution <res,...>        Resolutions for headless "
                  "screenshots (default: 720p)\n";
+    std::cout << "  --capture-frames <count>      Screenshot settling frames (default: 120)\n";
+    std::cout << "  --capture-dt <seconds>        Screenshot frame delta (default: 1/60)\n";
+    std::cout << "  --instant-animations          Complete tracked animations for capture\n";
     std::cout << "  --screen <name>              Capture only this screen "
                  "(default: all)\n";
     std::cout << "                               Examples: "
@@ -219,6 +223,15 @@ int main(int argc, char *argv[]) {
   bool has_image_backend = cmdl["--image-backend"];
 
   if (has_headless_flag || has_headless_param || has_image_backend) {
+    if (!(cmdl({"--capture-frames"}, 120) >> g_headless_capture.frames) ||
+        g_headless_capture.frames < 2 || g_headless_capture.frames > 10000 ||
+        !(cmdl({"--capture-dt"}, 1.0f / 60.0f) >> g_headless_capture.dt) ||
+        !std::isfinite(g_headless_capture.dt) || g_headless_capture.dt <= 0.0f ||
+        g_headless_capture.dt > 1.0f) {
+      std::cerr << "Capture requires 2..10000 frames and a finite dt in (0, 1].\n";
+      return 1;
+    }
+    g_headless_capture.instant_animations = cmdl["--instant-animations"];
     g_headless_mode = true;
 
     // Determine output directory

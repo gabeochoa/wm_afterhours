@@ -43,6 +43,7 @@ extern afterhours::SystemBase *g_current_screen;
 // Globals defined in main.cpp (declared in headless_screenshots.h)
 // bool g_headless_mode and std::string g_headless_output_dir
 std::vector<HeadlessResolution> g_headless_resolutions;
+HeadlessCaptureOptions g_headless_capture;
 
 // Empty unless --dump-ui-json was passed.
 extern std::string g_headless_ui_json_dir;
@@ -463,10 +464,7 @@ void run_headless_screenshots_at(int width, int height,
           .c_str());
 
   // 5. Configure UI validation
-  // Two tick+render passes are not enough for a time-based animation to
-  // arrive, so a captured screen showed whatever value it happened to reach.
-  // The library already has the knob for exactly this case.
-  afterhours::animation::set_instant(true);
+  afterhours::animation::set_instant(g_headless_capture.instant_animations);
   configure_validation();
 
   // 6. Get all screen names
@@ -526,17 +524,14 @@ void run_headless_screenshots_at(int width, int height,
       }
     }
 
-    // Run two tick+render passes so that decorators which depend on
-    // computed sizes from the previous frame (e.g. corner brackets,
-    // grid backgrounds) have valid data on the second pass.
-    for (int pass = 0; pass < 2; pass++) {
+    for (int pass = 0; pass < g_headless_capture.frames; pass++) {
       {
         auto &entities = afterhours::EntityHelper::get_entities_for_mod();
-        systems.tick_all(entities, 0.016f);
+        systems.tick_all(entities, g_headless_capture.dt);
       }
       {
         auto &entities = afterhours::EntityHelper::get_entities_for_mod();
-        systems.render(entities, 0.016f);
+        systems.render(entities, g_headless_capture.dt);
       }
       afterhours::EntityHelper::cleanup();
     }
@@ -679,9 +674,6 @@ int run_layout_summary(const std::string &screen_name, int width, int height,
           .string()
           .c_str());
 
-  // Two tick+render passes are not enough for a time-based animation to
-  // arrive, so a captured screen showed whatever value it happened to reach.
-  // The library already has the knob for exactly this case.
   afterhours::animation::set_instant(true);
   configure_validation();
   setup_ecs_singletons(width, height);
@@ -774,9 +766,6 @@ int run_all_tests_headless() {
           .string()
           .c_str());
 
-  // Two tick+render passes are not enough for a time-based animation to
-  // arrive, so a captured screen showed whatever value it happened to reach.
-  // The library already has the knob for exactly this case.
   afterhours::animation::set_instant(true);
   configure_validation();
   setup_ecs_singletons(WIDTH, HEIGHT);
@@ -991,9 +980,6 @@ void run_focus_ring_test(const std::string &screen_filter, int max_tabs, bool au
           .string()
           .c_str());
 
-  // Two tick+render passes are not enough for a time-based animation to
-  // arrive, so a captured screen showed whatever value it happened to reach.
-  // The library already has the knob for exactly this case.
   afterhours::animation::set_instant(true);
   configure_validation();
   setup_ecs_singletons(WIDTH, HEIGHT);

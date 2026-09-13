@@ -23,6 +23,14 @@ extern std::string g_headless_screen_filter;
 // Run headless screenshot generation for all registered screens
 // at each resolution in g_headless_resolutions.
 // Outputs PNG files to g_headless_output_dir as {screen}_{label}.png
+struct HeadlessCaptureOptions {
+  int frames = 120;
+  float dt = 1.0f / 60.0f;
+  bool instant_animations = false;
+};
+
+extern HeadlessCaptureOptions g_headless_capture;
+
 void run_headless_screenshots();
 
 // Run all registered coroutine-based tests in headless mode.
