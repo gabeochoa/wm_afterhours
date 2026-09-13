@@ -2633,7 +2633,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "873b7f4a6f5ecb8455292eeb4b56c812420ff07f28d4bf94cd29d8bac1740f0d"
+    "sha256": "873b7f4a6f5ecb8455292eeb4b56c812420ff07f28d4bf94cd29d8bac1740f0d",
+    "evidence": "docs/design-audit/originals/bevel_borders_720p.png"
   },
   {
     "id": "blend_mode_lab",

@@ -1,0 +1,51 @@
+goto_screen bevel_borders
+resize 1280 720
+wait 0.3
+expect_text "Bevel borders"
+expect_text "Outer squares: 100 x 100px."
+expect_text "Raised / highlight top + left"
+expect_text "Sunken / shadow top + left"
+expect_text "Face #414E66"
+expect_text "Highlight #B4BECD"
+expect_text "Shadow #1E2634"
+expect_text "1px corner, enlarged"
+expect_text "Selected: raised / 6px / 88px interior"
+expect_text "Outer: edge color. Inner: 35% toward white / 35% face RGB."
+assert_ui bevel_0_0 x=348 y=276 w=100 h=100
+assert_ui bevel_0_5 x=1028 y=276 w=100 h=100
+assert_ui bevel_1_0 x=348 y=396 w=100 h=100
+assert_ui bevel_zero_0 x=212 y=276 w=100 h=100
+assert_within_parents
+screenshot bevel_borders_design
+click_ui bevel_1_0
+wait 0.1
+expect_text "Selected: sunken / 1px / 98px interior"
+focus_element bevel_0_2
+key ENTER
+wait 0.1
+expect_text "Selected: raised / 3px / 94px interior"
+click_ui bevel_zero_0
+wait 0.1
+expect_text "Selected: raised / 0px / 100px interior"
+focus_element bevel_1_5
+key ENTER
+wait 0.1
+expect_text "Selected: sunken / 6px / 88px interior"
+screenshot bevel_borders_design_sunken
+resize 1920 1080
+wait 0.3
+expect_text "Outer squares: 150 x 150px."
+expect_text "Selected: sunken / 6px / 138px interior"
+assert_ui bevel_0_0 x=522 y=414 w=150 h=150
+assert_ui bevel_1_5 x=1542 y=594 w=150 h=150
+assert_within_parents
+screenshot bevel_borders_design_1080
+resize 1024 768
+wait 0.3
+expect_text "Outer squares: 80 x 80px."
+expect_text "Selected: sunken / 6px / 68px interior"
+assert_ui bevel_canvas w=1024 h=768
+assert_within_parents
+screenshot bevel_borders_design_narrow
+resize 1280 720
+click_ui bevel_0_5

@@ -574,7 +574,7 @@ The varied foreground colors are intentional tests. Proposals clarify the automa
 
 ## bevel borders
 
-[Current baseline](../../screenshot-baselines/screens/bevel_borders_720p.png) · [Visual review](../../design-audit.html#screen=bevel_borders)
+[Reviewed image](../../docs/design-audit/originals/bevel_borders_720p.png) · [Current baseline](../../screenshot-baselines/screens/bevel_borders_720p.png) · [Visual review](../../design-audit.html#screen=bevel_borders)
 
 Baseline SHA-256: `873b7f4a6f5ecb8455292eeb4b56c812420ff07f28d4bf94cd29d8bac1740f0d`
 

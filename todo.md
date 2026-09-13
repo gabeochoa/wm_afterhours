@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-262 completed; 2,273 remaining.
+280 completed; 2,255 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -934,58 +934,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/bevel_borders_720p.png) · [Visual review](design-audit.html#screen=bevel_borders)
 
-- [ ] `bevel_borders-01` · P2 · proposal. Top blank area: Move the title and matrix upward.
+- [x] `bevel_borders-01` · P2 · proposal. Top blank area: Move the title and matrix upward.
   Evidence: The matrix begins after nearly two hundred pixels of empty space.
 
-- [ ] `bevel_borders-02` · P2 · proposal. Title strip: Match the title width to the matrix.
+- [x] `bevel_borders-02` · P2 · proposal. Title strip: Match the title width to the matrix.
   Evidence: BEVEL BORDERS occupies an almost full-width bordered bar.
 
-- [ ] `bevel_borders-03` · P2 · proposal. Title casing: Use sentence case with a stronger weight.
+- [x] `bevel_borders-03` · P2 · proposal. Title casing: Use sentence case with a stronger weight.
   Evidence: All-capital handwritten title is less readable than the subtitle.
 
-- [ ] `bevel_borders-04` · P2 · proposal. Explanation: Split it into two labeled directional diagrams.
+- [x] `bevel_borders-04` · P2 · proposal. Explanation: Split it into two labeled directional diagrams.
   Evidence: The raised/sunken lighting rule is written as one dense line.
 
-- [ ] `bevel_borders-05` · P2 · proposal. Row labels: Reduce the gap to the row-label gutter.
+- [x] `bevel_borders-05` · P2 · proposal. Row labels: Reduce the gap to the row-label gutter.
   Evidence: Raised and Sunken sit far from their first specimen.
 
-- [ ] `bevel_borders-06` · P2 · proposal. Column labels: Keep the column heading and replace inner text with a neutral sample mark.
+- [x] `bevel_borders-06` · P2 · proposal. Column labels: Keep the column heading and replace inner text with a neutral sample mark.
   Evidence: Each thickness is repeated above and inside its squares.
 
-- [ ] `bevel_borders-07` · P2 · proposal. Numeric type: Use tabular numeric text for pixel measurements.
+- [x] `bevel_borders-07` · P2 · proposal. Numeric type: Use tabular numeric text for pixel measurements.
   Evidence: Thickness values use handwritten numerals.
 
-- [ ] `bevel_borders-08` · P2 · proposal. One-pixel detail: Add a magnified 1px corner inset.
+- [x] `bevel_borders-08` · P2 · proposal. One-pixel detail: Add a magnified 1px corner inset.
   Evidence: The thinnest border is difficult to inspect at normal size.
 
-- [ ] `bevel_borders-09` · P2 · proposal. Six-pixel detail: Add a 6px bracket outside its specimen.
+- [x] `bevel_borders-09` · P2 · proposal. Six-pixel detail: Add a 6px bracket outside its specimen.
   Evidence: The widest border lacks a dimension bracket.
 
-- [ ] `bevel_borders-10` · P2 · proposal. Lighting direction: Add a small top-left light-direction arrow.
+- [x] `bevel_borders-10` · P2 · proposal. Lighting direction: Add a small top-left light-direction arrow.
   Evidence: No icon indicates the common top-left light source.
 
-- [ ] `bevel_borders-11` · P2 · proposal. Raised edges: Label one reference square's highlight and shadow edges.
+- [x] `bevel_borders-11` · P2 · proposal. Raised edges: Label one reference square's highlight and shadow edges.
   Evidence: Light and dark edges are not individually identified.
 
-- [ ] `bevel_borders-12` · P2 · proposal. Sunken inversion: Add a small inversion annotation connecting one raised/sunken pair.
+- [x] `bevel_borders-12` · P2 · proposal. Sunken inversion: Add a small inversion annotation connecting one raised/sunken pair.
   Evidence: The lower row repeats the rule without showing correspondence.
 
-- [ ] `bevel_borders-13` · P2 · proposal. Base fill: Add the face-color value in a legend.
+- [x] `bevel_borders-13` · P2 · proposal. Base fill: Add the face-color value in a legend.
   Evidence: The matrix does not name its shared face color.
 
-- [ ] `bevel_borders-14` · P2 · proposal. Edge colors: Show labeled highlight and shadow chips.
+- [x] `bevel_borders-14` · P2 · proposal. Edge colors: Show labeled highlight and shadow chips.
   Evidence: Highlight and shadow colors lack a reference swatch.
 
-- [ ] `bevel_borders-15` · P2 · proposal. Baseline control: Add a zero-width border reference.
+- [x] `bevel_borders-15` · P2 · proposal. Baseline control: Add a zero-width border reference.
   Evidence: All displayed boxes have bevels.
 
-- [ ] `bevel_borders-16` · P2 · proposal. Outer dimensions: Show the shared specimen dimensions.
+- [x] `bevel_borders-16` · P2 · proposal. Outer dimensions: Show the shared specimen dimensions.
   Evidence: The matrix does not state whether outer box sizes are fixed.
 
-- [ ] `bevel_borders-17` · P2 · proposal. Interior size: Add a compact interior-dimension caption per column.
+- [x] `bevel_borders-17` · P2 · proposal. Interior size: Add a compact interior-dimension caption per column.
   Evidence: Thicker borders visibly reduce the usable interior.
 
-- [ ] `bevel_borders-18` · P2 · proposal. Lower blank area: Use it for a single enlarged annotated bevel cross-section.
+- [x] `bevel_borders-18` · P2 · proposal. Lower blank area: Use it for a single enlarged annotated bevel cross-section.
   Evidence: The bottom quarter is empty.
 
 ### blend_mode_lab
