@@ -22,7 +22,7 @@
 </head>
 <body>
 <header class="gallery-bar">
-  <div class="gallery-brand">afterhours <span>design mocks</span></div>
+  <div class="gallery-brand">afterhours <span>design mocks</span> <a id="audit-link" href="design-audit.html" style="color:#b9caff;margin-left:14px">All-screen audit</a></div>
   <nav class="gallery-picker" aria-label="Screen selection">
     <button class="gallery-arrow" id="previous" aria-label="Previous screen" title="Previous screen [">‹</button>
     <label for="screen-picker" class="gallery-sr-only">Choose a screen</label><select id="screen-picker"></select>
@@ -274,6 +274,14 @@ root.querySelector('.gw-reset').onclick=()=>{down.clear();asked=0;root.querySele
 </script>
 <script>
 const screens=window.mockScreens;
+document.getElementById('audit-link').hidden=Boolean(window.mockAssets);
+if(new URLSearchParams(location.search).get('embed')==='1'){
+ document.querySelector('.gallery-bar').hidden=true;
+ document.querySelector('.gallery-footer').hidden=true;
+ document.querySelector('.gallery-bar').style.display='none';
+ document.querySelector('.gallery-footer').style.display='none';
+ document.getElementById('workspace').style.padding='0';
+}
 const appIds=new Set(['aim_chat','secure_tunnel','offsite_backup','media_library']);
 screens.sort((a,b)=>Number(appIds.has(a.id))-Number(appIds.has(b.id))||a.title.localeCompare(b.title));
 const picker=document.getElementById('screen-picker'),stage=document.getElementById('stage'),frame=document.getElementById('frame'),workspace=document.getElementById('workspace');
@@ -295,6 +303,7 @@ function show(id,requestedView='mock',updateURL=true){
  stage.classList.toggle('comparing',comparing);
  document.getElementById('compare-options').classList.toggle('visible',comparing);
  picker.value=screen.id;
+ document.getElementById('audit-link').href=`design-audit.html#screen=${screen.id}`;
  document.getElementById('screen-style').textContent=contentView==='mock'?screen.css:'';
  stage.replaceChildren();
  if(contentView==='mock'){stage.innerHTML=screen.html;if(screen.mount)dispose=screen.mount(stage.firstElementChild)}

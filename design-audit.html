@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baseline design review</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;color:#eef1f6;background:#10131a;--line:#354052;--muted:#b6c1d1;--blue:#a8c9ff}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select{cursor:pointer}button,input,select{border:1px solid var(--line);border-radius:6px;background:#202837;color:inherit;padding:8px 10px;min-height:38px}button:hover:not(:disabled){background:#35445b}button:disabled{opacity:.4;cursor:default}a{color:var(--blue)}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #b7d1ff;outline-offset:3px}[hidden]{display:none!important}
+header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;gap:24px;align-items:center;flex-wrap:wrap}header h1{font-size:20px;margin:0 0 4px}header p{margin:0;color:var(--muted);font-size:13px}header nav{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:14px}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:calc(100vh - 92px)}aside{position:sticky;top:0;height:100vh;min-width:0;border-right:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:12px}label{font-size:13px;color:var(--muted)}aside input,aside select{width:100%;min-width:0}#screen-list{flex:1;min-height:400px;padding:6px;font-size:12px;line-height:1.8;border:0;background:transparent}#screen-list option{padding:8px 6px}#screen-list option:checked{background:#304970;color:#fff}.count{font-size:12px;color:var(--muted)}main{padding:22px;min-width:0}h2{margin:0;font-size:25px;letter-spacing:-.5px}.screen-heading{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.steppers{display:flex;gap:6px}.summary{max-width:1100px;color:var(--muted);font-size:14px;line-height:1.6;margin:10px 0 18px}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0}.toolbar label{display:flex;align-items:center;gap:7px}.toolbar select{max-width:260px}.view-tabs{display:flex;gap:4px}.view-tabs button[aria-pressed=true]{background:#d3e3ff;color:#152440;border-color:#d3e3ff}.preview-scroll{overflow:auto;border:1px solid var(--line);border-radius:8px;background:#090c12}.preview{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden}.preview.actual-size{width:1280px;height:720px}.preview img,.preview iframe{display:block;width:100%;height:100%;position:absolute;inset:0;border:0;object-fit:contain;background:#090c12}.preview .baseline-overlay{z-index:2;pointer-events:none}.preview .divider{position:absolute;z-index:3;top:0;bottom:0;left:50%;width:2px;background:white;pointer-events:none;box-shadow:0 0 0 1px #0007}.preview .divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#152440;border:2px solid white;border-radius:24px;padding:8px;color:#fff;white-space:nowrap}.preview.comparing{touch-action:pan-y;cursor:ew-resize}.preview.comparing iframe{pointer-events:none}.preview .tag{position:absolute;top:12px;padding:5px 9px;font-size:12px;background:#10131aee;border:1px solid #65748e;border-radius:4px;z-index:4;pointer-events:none}.tag.left{left:12px}.tag.right{right:12px}.preview .empty{position:absolute;inset:0;display:grid;place-content:center;padding:40px;text-align:center;color:var(--muted)}#compare-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}#reveal{width:180px;accent-color:#bfd6ff;padding:0}.image-note{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:10px 0 24px}.image-note p{margin:0;flex:1;min-width:220px}#image-note{line-height:1.6}.review-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px;margin-bottom:16px}.review-bar h3{font-size:18px;margin:0 auto 0 0}.review-bar label{display:flex;gap:7px;align-items:center}.findings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.finding{border:1px solid var(--line);border-radius:8px;background:#19202c;padding:17px;min-width:0}.finding.queued{border-color:#8bb6f9}.finding-head{display:flex;align-items:center;gap:8px;font-size:12px;flex-wrap:wrap}.finding-head a{font-variant-numeric:tabular-nums}.badge{padding:3px 7px;border-radius:4px;background:#293649;color:#d6e0ef}.badge.defect{background:#67363e;color:#ffe0e1}.badge.P1{color:#ffd0a6;background:#593a27}.finding h4{font-size:16px;margin:12px 0 8px}.finding p{font-size:14px;line-height:1.55;margin:6px 0;color:#cbd4e2}.finding p.change{color:#f1f5fb}.finding label{margin-left:auto;display:flex;align-items:center;gap:6px}.finding input{width:18px;height:18px;min-height:0;accent-color:#a8c9ff}.method{margin-top:24px;border-top:1px solid var(--line);padding-top:15px;color:var(--muted);font-size:13px;line-height:1.6}.method p{margin:8px 0}.method summary{cursor:pointer}#notice{color:#ffdbad;font-size:13px}#no-findings{color:var(--muted);padding:20px;border:1px dashed var(--line)}
+@media(min-width:1600px){main{max-width:1590px}.findings{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:950px){.layout{grid-template-columns:1fr}aside{position:static;height:auto;min-width:0;border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end}#screen-list{min-height:100px;max-height:140px;grid-column:2;grid-row:1/5}aside label{grid-column:1}.findings{grid-template-columns:1fr}header{padding:16px}main{padding:16px}h2{font-size:22px}}
+@media(max-width:540px){header nav{margin-left:0}.toolbar select{max-width:200px}.view-tabs{width:100%;flex-wrap:wrap}.toolbar label{flex-wrap:wrap}.finding{padding:14px}.preview .tag{font-size:10px;top:5px}.preview .tag.left{left:5px}.preview .tag.right{right:5px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Baseline design review</h1><p id="totals">Loading audit…</p></div>
+  <nav aria-label="Review resources"><a href="mocks.html">Design mocks</a><a href="todo.md">Todo list</a><button id="export">Export queue</button></nav>
+</header>
+<div class="layout">
+<aside aria-label="Choose a screen">
+  <label for="search">Search screens or findings</label><input id="search" type="search" placeholder="e.g. typography, tooltip">
+  <label for="scope">Screen collection</label><select id="scope"><option value="all">All screens</option><option value="mock">With a web mock</option><option value="legacy">With older captures</option><option value="short">Fewer than 25 findings</option><option value="queued">With queued findings</option></select>
+  <label for="screen-list" id="screen-count">Screens</label><select id="screen-list" size="20" aria-describedby="screen-count"></select>
+  <span class="count">[ and ] move between screens.</span>
+</aside>
+<main>
+  <section id="screen-content" aria-labelledby="screen-title">
+    <div class="screen-heading"><h2 id="screen-title"></h2><div class="steppers"><button id="previous" aria-label="Previous screen">← Previous</button><button id="next" aria-label="Next screen">Next →</button></div></div>
+    <p class="summary" id="summary"></p>
+    <div class="toolbar">
+      <div class="view-tabs" role="group" aria-label="Preview view"><button data-view="current" aria-pressed="true">Current C++</button><button data-view="target" aria-pressed="false">Comparison image</button><button data-view="compare" aria-pressed="false">Slider</button></div>
+      <label>Compare with <select id="target"></select></label>
+      <button id="zoom" aria-pressed="false">View at 100%</button>
+      <div id="compare-controls" hidden><label for="reveal">C++ reveal</label><input id="reveal" type="range" min="0" max="100" value="50"><output id="reveal-value">50%</output></div>
+    </div>
+    <div class="preview-scroll"><div id="preview" class="preview"></div></div>
+    <div class="image-note"><p id="image-note"></p><a id="full-image" target="_blank" rel="noopener">Open baseline image</a><a id="open-mock" target="_blank" rel="noopener">Open interactive mock</a></div>
+    <div class="review-bar"><h3 id="finding-count">Findings</h3><label>Type <select id="kind"><option value="all">All</option><option value="defect">Visible defects</option><option value="proposal">Design proposals</option></select></label><label>Priority <select id="priority"><option value="all">All</option><option>P1</option><option>P2</option><option>P3</option></select></label><label><input type="checkbox" id="queued-only">Queued only</label></div>
+    <p id="notice" role="status"></p><p id="no-findings" hidden>No findings match these filters.</p><div id="findings" class="findings"></div>
+    <details class="method"><summary>Scope and review conventions</summary><p>This is an audit of committed 1280×720 captures. Static screenshots do not establish keyboard support, hover states, smooth animation, or performance. A visible defect is separated from a proposed design change. Intentional test fixtures should remain intact.</p><p>P1 marks obscured or unreadable content. P2 affects reading or comparison. P3 covers polish or added explanation. Ownership starts in wm; these findings do not establish that afterhours needs a new API.</p><p>Only existing handcrafted web mocks are shown as mocks. Screens without one still have their baseline and findings. Older captures inherit the applicable current-screen findings, with differences called out. Queue selections stay in this browser and can be exported; they do not mark code as fixed.</p></details>
+  </section>
+  <p id="no-screens" hidden>No screens match. Clear the search or choose another collection.</p>
+</main>
+</div>
+<script src="docs/design-audit/data.js"></script>
+<script src="scripts/design_audit.js"></script>
+</body>
+</html>
