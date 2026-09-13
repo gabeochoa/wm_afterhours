@@ -3,6 +3,7 @@
 # on the RPG general store screen.
 
 goto_screen shop_interface
+resize 1280 720
 wait 0.5
 
 # =========================================================================
@@ -32,15 +33,15 @@ expect_text "Antidote"
 # Default selected item is Health Potion (index 1)
 expect_text "Restores 50 HP instantly."
 expect_text "Consumable"
-expect_text "+ Add to cart"
+expect_text "Add to basket"
 
 # Basket starts with pre-populated items
 expect_text "Your basket"
 expect_text "5 items"
-expect_text "Purchase goods"
+expect_text "Purchase / 180 G"
 
 # Bottom status
-expect_text "A Select   X Add to cart   Y Remove"
+expect_text "[Enter] Select   [X] Add   [Y] Remove"
 
 screenshot shop_initial
 
@@ -57,7 +58,7 @@ screenshot shop_item_selected
 # =========================================================================
 click_ui shop_tab_1
 wait 0.3
-expect_text "Fair prices for spare gear"
+expect_text "Selling is unavailable in this demo."
 screenshot shop_sell_tab
 
 click_ui shop_tab_0
@@ -69,9 +70,9 @@ screenshot shop_buy_tab
 # Test 3: Verify cart details
 # =========================================================================
 expect_text "Health Potion"
-expect_text "x 3"
+expect_text "3"
 expect_text "Torch"
-expect_text "x 2"
+expect_text "2"
 expect_text "Total"
 expect_text "Gold remaining: 3,570 G"
 
@@ -95,6 +96,6 @@ screenshot shop_navigated_item
 # =========================================================================
 # Test 5: Verify stock indicators
 # =========================================================================
-expect_text "2 left"
+expect_text "Low stock"
 
 screenshot shop_final

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,986 completed; 549 remaining.
+2,014 completed; 521 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6579,88 +6579,88 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/shop_interface_720p.png) · [Visual review](design-audit.html#screen=shop_interface)
 
-- [ ] `shop_interface-01` · P2 · defect. List headings: Align headings to the same column grid as the rows.
+- [x] `shop_interface-01` · P2 · defect. List headings: Align headings to the same column grid as the rows.
   Evidence: TYPE, STOCK and PRICE do not align with their data columns.
 
-- [ ] `shop_interface-02` · P2 · defect. Basket count: Increase it to readable 12 px text and bring it closer to Your basket.
+- [x] `shop_interface-02` · P2 · defect. Basket count: Increase it to readable 12 px text and bring it closer to Your basket.
   Evidence: 5 items is tiny in the basket heading corner.
 
-- [ ] `shop_interface-03` · P2 · defect. Gold remaining: Increase it to 13 px and give it its own line spacing.
+- [x] `shop_interface-03` · P2 · defect. Gold remaining: Increase it to 13 px and give it its own line spacing.
   Evidence: Gold remaining: 3,570 G is very small beneath Total.
 
-- [ ] `shop_interface-04` · P2 · defect. Guild note: Add at least 10 px bottom inset.
+- [x] `shop_interface-04` · P2 · defect. Guild note: Add at least 10 px bottom inset.
   Evidence: The note almost touches the item panel's bottom border.
 
-- [ ] `shop_interface-05` · P2 · defect. Footer input hints: Use readable text and distinct keycaps.
+- [x] `shop_interface-05` · P2 · defect. Footer input hints: Use readable text and distinct keycaps.
   Evidence: A Select, X Add to cart and Y Remove are tiny against the dark wood.
 
-- [ ] `shop_interface-06` · P2 · proposal. Market context: Increase actual text size and reduce tracking.
+- [x] `shop_interface-06` · P2 · proposal. Market context: Increase actual text size and reduce tracking.
   Evidence: WILLOWBROOK - MARKET DISTRICT is widely spaced and small.
 
-- [ ] `shop_interface-07` · P2 · proposal. Day status: Use a readable day label and a recognizable sun icon.
+- [x] `shop_interface-07` · P2 · proposal. Day status: Use a readable day label and a recognizable sun icon.
   Evidence: Day 12 and its tiny sun mark are difficult to read.
 
-- [ ] `shop_interface-08` · P3 · proposal. Store ornaments: Replace them with balanced decorative motifs matching the parchment style.
+- [x] `shop_interface-08` · P3 · proposal. Store ornaments: Replace them with balanced decorative motifs matching the parchment style.
   Evidence: The title is flanked by asterisks rather than the richer target ornaments.
 
-- [ ] `shop_interface-09` · P2 · proposal. Gold total: Add G or a labeled coin unit while retaining YOUR GOLD below.
+- [x] `shop_interface-09` · P2 · proposal. Gold total: Add G or a labeled coin unit while retaining YOUR GOLD below.
   Evidence: 3,750 lacks a visible unit beside the number.
 
-- [ ] `shop_interface-10` · P2 · proposal. Buy and Sell tabs: Give both tabs equal dimensions and a clearer active underline.
+- [x] `shop_interface-10` · P2 · proposal. Buy and Sell tabs: Give both tabs equal dimensions and a clearer active underline.
   Evidence: Sell is text on the header with a weak tab boundary.
 
-- [ ] `shop_interface-11` · P2 · proposal. Selected item: Add a small selected marker or stronger left accent.
+- [x] `shop_interface-11` · P2 · proposal. Selected item: Add a small selected marker or stronger left accent.
   Evidence: The potion row uses a pale fill and thin outline only.
 
-- [ ] `shop_interface-12` · P3 · proposal. Item artwork: Use consistent item artwork with stronger silhouettes at equal visual size.
+- [x] `shop_interface-12` · P3 · proposal. Item artwork: Use consistent item artwork with stronger silhouettes at equal visual size.
   Evidence: Sword, armor and shield icons are tiny simplified shapes.
 
-- [ ] `shop_interface-13` · P2 · proposal. Stock values: Increase size and right-align them in a fixed column.
+- [x] `shop_interface-13` · P2 · proposal. Stock values: Increase size and right-align them in a fixed column.
   Evidence: Ordinary stock numbers are small and far from their heading.
 
-- [ ] `shop_interface-14` · P2 · proposal. Low stock: Add a Low stock badge while retaining the numeric count.
+- [x] `shop_interface-14` · P2 · proposal. Low stock: Add a Low stock badge while retaining the numeric count.
   Evidence: 3 left and 2 left use red text but no additional marker.
 
-- [ ] `shop_interface-15` · P2 · proposal. Price formatting: Use a fixed gap and align all numeric values to the right.
+- [x] `shop_interface-15` · P2 · proposal. Price formatting: Use a fixed gap and align all numeric values to the right.
   Evidence: Prices combine amount and G with inconsistent perceived spacing.
 
-- [ ] `shop_interface-16` · P2 · proposal. Detail category: Use a readable uppercase category label with normal tracking.
+- [x] `shop_interface-16` · P2 · proposal. Detail category: Use a readable uppercase category label with normal tracking.
   Evidence: Consumable is extremely letter-spaced and small.
 
-- [ ] `shop_interface-17` · P2 · proposal. Detail potion art: Add fill, highlights and a grounded shadow consistent with the target art.
+- [x] `shop_interface-17` · P2 · proposal. Detail potion art: Add fill, highlights and a grounded shadow consistent with the target art.
   Evidence: The large potion is a sparse outline compared with dense text styling.
 
-- [ ] `shop_interface-18` · P2 · proposal. Detail price: Label it Price per item.
+- [x] `shop_interface-18` · P2 · proposal. Detail price: Label it Price per item.
   Evidence: 50 G sits below the description without a Unit price label.
 
-- [ ] `shop_interface-19` · P2 · proposal. Add to cart button: Use Add to basket consistently.
+- [x] `shop_interface-19` · P2 · proposal. Add to cart button: Use Add to basket consistently.
   Evidence: The button says Add to cart while the destination is called Your basket.
 
-- [ ] `shop_interface-20` · P2 · proposal. Basket quantities: Add compact minus and plus controls beside each quantity.
+- [x] `shop_interface-20` · P2 · proposal. Basket quantities: Add compact minus and plus controls beside each quantity.
   Evidence: x 3 and x 2 are small text with no visible adjustment controls.
 
-- [ ] `shop_interface-21` · P2 · proposal. Remove action: Add a remove control to each basket line.
+- [x] `shop_interface-21` · P2 · proposal. Remove action: Add a remove control to each basket line.
   Evidence: Remove appears only in the footer with no visible basket affordance.
 
-- [ ] `shop_interface-22` · P2 · proposal. Basket line pricing: Add a small Line total heading or unit-price detail.
+- [x] `shop_interface-22` · P2 · proposal. Basket line pricing: Add a small Line total heading or unit-price detail.
   Evidence: 150 G and 30 G are shown without explicit line-total context.
 
-- [ ] `shop_interface-23` · P2 · proposal. Purchase action: Give checkout the stronger primary emphasis and include 180 G in its label.
+- [x] `shop_interface-23` · P2 · proposal. Purchase action: Give checkout the stronger primary emphasis and include 180 G in its label.
   Evidence: Purchase goods uses the same dark style as Add to cart.
 
-- [ ] `shop_interface-24` · P2 · proposal. Checkout spacing: Increase the lower inset to match the side padding.
+- [x] `shop_interface-24` · P2 · proposal. Checkout spacing: Increase the lower inset to match the side padding.
   Evidence: Purchase goods nearly touches the basket panel bottom.
 
-- [ ] `shop_interface-25` · P3 · proposal. Footer status: Use that status area for selected-item or basket feedback instead.
+- [x] `shop_interface-25` · P3 · proposal. Footer status: Use that status area for selected-item or basket feedback instead.
   Evidence: Welcome, adventurer! repeats the greeting at the top.
 
-- [ ] `shop_interface-26` · P2 · proposal. Detail-title typography parity: Increase the detail title weight and keep the description subordinate.
+- [x] `shop_interface-26` · P2 · proposal. Detail-title typography parity: Increase the detail title weight and keep the description subordinate.
   Evidence: Health Potion is light in the current detail panel while the rendered target uses a bold product heading.
 
-- [ ] `shop_interface-27` · P3 · proposal. Wood backdrop parity: Match the target backdrop so geometric facets do not compete with the parchment panels.
+- [x] `shop_interface-27` · P3 · proposal. Wood backdrop parity: Match the target backdrop so geometric facets do not compete with the parchment panels.
   Evidence: The current background has broad angled dark facets behind the cards; the target uses an even wood-grain field.
 
-- [ ] `shop_interface-28` · P2 · proposal. Basket amount emphasis parity: Use the target's stronger amount weight to align basket scanning with the bold overall total.
+- [x] `shop_interface-28` · P2 · proposal. Basket amount emphasis parity: Use the target's stronger amount weight to align basket scanning with the bold overall total.
   Evidence: 150 G and 30 G are light in the current basket while the target uses bold line totals.
 
 ### simple_button

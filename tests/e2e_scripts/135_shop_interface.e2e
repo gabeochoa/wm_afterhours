@@ -1,6 +1,7 @@
 # Shop interface mock parity smoke test.
 
 goto_screen shop_interface
+resize 1280 720
 wait 1
 
 expect_text "WILLOWBROOK - MARKET DISTRICT"
@@ -14,10 +15,10 @@ expect_text "180 G"
 assert_ui shop_root x=0 y=0 w=1280 h=720
 assert_ui shop_wares x=38 y=163 w=750 h=500
 assert_ui shop_item_1 x=53 y=301 w=720 h=46
-assert_ui shop_detail x=812 y=163 w=430 h=230
-assert_ui shop_basket x=812 y=410 w=430 h=253
-assert_ui shop_add_cart x=831 y=327 w=392 h=42
-assert_ui shop_purchase x=838 y=621 w=377 h=36
+assert_ui shop_detail x=812 y=163 w=430 h=209
+assert_ui shop_basket x=812 y=386 w=430 h=277
+assert_ui shop_add_cart x=831 y=319 w=392 h=38
+assert_ui shop_purchase x=838 y=619 w=378 h=30
 
 focus_ui shop_item_1
 key X
@@ -48,7 +49,7 @@ expect_text "0 G"
 
 click_ui shop_tab_1
 wait 0.2
-expect_text "Fair prices for spare gear"
+expect_text "Selling is unavailable in this demo."
 
 screenshot shop_interface_review
 
@@ -57,8 +58,8 @@ wait 0.3
 assert_ui shop_root x=0 y=0 w=1920 h=1080
 assert_ui shop_wares x=57 y=245 w=1125 h=750
 assert_ui shop_item_1 x=80 y=452 w=1080 h=69
-assert_ui shop_detail x=1218 y=245 w=645 h=345
-assert_ui shop_basket x=1218 y=615 w=645 h=380
+assert_ui shop_detail x=1218 y=245 w=645 h=314
+assert_ui shop_basket x=1218 y=579 w=645 h=416
 
 click_ui shop_leave
 wait 0.2
@@ -68,3 +69,5 @@ click_ui shop_reopen
 wait 0.2
 expect_text "Your basket"
 assert_no_overflow
+
+resize 1280 720

@@ -1,0 +1,95 @@
+goto_screen shop_interface
+resize 1280 720
+wait 0.4
+expect_text "General Store"
+expect_text "3,750 G"
+expect_text "5 items"
+expect_text "Price per item: 50 G"
+expect_text "Add to basket"
+expect_text "Line total"
+expect_text "Purchase / 180 G"
+expect_text "Gold remaining: 3,570 G"
+expect_text "Low stock"
+assert_ui shop_root x=0 y=0 w=1280 h=720
+assert_ui shop_item_1 x=53 y=301 w=720 h=46
+assert_ui shop_detail x=812 y=163 w=430 h=209
+assert_ui shop_basket x=812 y=386 w=430 h=277
+assert_ui shop_add_cart x=831 y=319 w=392 h=38
+assert_ui shop_purchase x=838 y=619 w=378 h=30
+assert_no_overflow
+assert_within_parents
+screenshot shop_design
+click_ui shop_plus_1
+wait 0.2
+expect_text "6 items"
+expect_text "Purchase / 230 G"
+click_ui shop_minus_1
+wait 0.2
+expect_text "5 items"
+expect_text "Purchase / 180 G"
+click_ui shop_remove_5
+wait 0.2
+expect_text "3 items"
+expect_text "Purchase / 150 G"
+expect_text "Removed Torch"
+click_ui shop_item_4
+wait 0.2
+expect_text "Casts Fireball. Deals 25 damage."
+click_ui shop_add_cart
+wait 0.2
+expect_text "4 items"
+expect_text "Purchase / 470 G"
+click_ui shop_item_0
+click_ui shop_add_cart
+wait 0.2
+click_ui shop_item_2
+click_ui shop_add_cart
+wait 0.2
+mouse_move 1010 504
+scroll_wheel 0 -10
+wait 0.3
+expect_text "Mana Potion"
+assert_no_overflow
+screenshot shop_design_basket_scroll
+click_ui shop_purchase
+wait 0.2
+expect_text "2,955 G"
+expect_text "Thank you, adventurer!"
+expect_text "0 items"
+expect_text "Basket empty"
+click_ui shop_tab_1
+wait 0.2
+expect_text "Selling is unavailable in this demo."
+expect_text "Sell preview only"
+click_ui shop_add_cart
+wait 0.2
+expect_text "0 items"
+click_ui shop_tab_0
+click_ui shop_item_1
+key X
+wait 0.2
+expect_text "1 items"
+key Y
+wait 0.2
+expect_text "0 items"
+resize 1920 1080
+wait 0.3
+assert_ui shop_root x=0 y=0 w=1920 h=1080
+assert_ui shop_basket x=1218 y=579 w=645 h=416
+assert_no_overflow
+assert_within_parents
+screenshot shop_design_1080
+resize 1024 768
+wait 0.3
+assert_ui shop_root x=0 y=96 w=1024 h=576
+assert_ui shop_wares x=30 y=226 w=600 h=400
+assert_no_overflow
+assert_within_parents
+screenshot shop_design_narrow
+click_ui shop_leave
+wait 0.2
+expect_text "Shop closed"
+click_ui shop_reopen
+wait 0.2
+expect_text "Your basket"
+resize 1280 720

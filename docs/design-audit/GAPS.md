@@ -3331,7 +3331,7 @@ The rows demonstrate several control families, but the visible footer advertises
 
 ## shop interface
 
-[Current baseline](../../screenshot-baselines/screens/shop_interface_720p.png) · [Visual review](../../design-audit.html#screen=shop_interface)
+[Reviewed image](../../docs/design-audit/originals/shop_interface_720p.png) · [Current baseline](../../screenshot-baselines/screens/shop_interface_720p.png) · [Visual review](../../design-audit.html#screen=shop_interface)
 
 Baseline SHA-256: `371f2b8c669479b5327342849c1389870297bed2d6823ab136d900dea26c5b4a`
 

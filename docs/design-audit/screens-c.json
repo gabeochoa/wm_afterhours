@@ -2605,7 +2605,8 @@
         "change": "Use the target's stronger amount weight to align basket scanning with the bold overall total."
       }
     ],
-    "sha256": "371f2b8c669479b5327342849c1389870297bed2d6823ab136d900dea26c5b4a"
+    "sha256": "371f2b8c669479b5327342849c1389870297bed2d6823ab136d900dea26c5b4a",
+    "evidence": "docs/design-audit/originals/shop_interface_720p.png"
   },
   {
     "id": "simple_button",
