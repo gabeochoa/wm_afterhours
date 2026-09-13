@@ -185,7 +185,7 @@
         "kind": "proposal",
         "area": "Percentage reference",
         "observation": "There is no visual scale for the unused half of screen width.",
-        "change": "Add a thin 0–100% ruler outside the samples.",
+        "change": "Add a thin 0\u2013100% ruler outside the samples.",
         "priority": "P2"
       },
       {
@@ -991,7 +991,15 @@
         "priority": "P2"
       }
     ],
-    "sha256": "8bb37a0d438af6d0320177bf5224f6efe12158ac3004a185514ad5de21cb847b"
+    "sha256": "8bb37a0d438af6d0320177bf5224f6efe12158ac3004a185514ad5de21cb847b",
+    "evidence": "docs/design-audit/originals/aim_chat_720p.png",
+    "examples": [
+      {
+        "id": "developer_log",
+        "label": "Current example: developer log pane",
+        "path": "docs/design-audit/examples/aim_chat_developer_log_720p.png"
+      }
+    ]
   },
   {
     "id": "alpha_blend_repro",
@@ -2428,7 +2436,7 @@
   {
     "id": "bevel_borders",
     "baseline": "screenshot-baselines/screens/bevel_borders_720p.png",
-    "summary": "The 1–6 px raised and sunken border matrix is intentional and clean. Eighteen evidence-based proposals improve inspection; twenty-five would require padding this simple fixture.",
+    "summary": "The 1\u20136 px raised and sunken border matrix is intentional and clean. Eighteen evidence-based proposals improve inspection; twenty-five would require padding this simple fixture.",
     "findings": [
       {
         "id": "01",
@@ -2731,7 +2739,7 @@
         "kind": "proposal",
         "area": "Per-blit count",
         "observation": "2 transitions each leaves the total implicit.",
-        "change": "Show 8 blits × 2 = 16 transitions.",
+        "change": "Show 8 blits \u00d7 2 = 16 transitions.",
         "priority": "P2"
       },
       {
@@ -3946,7 +3954,7 @@
         "id": "15",
         "kind": "proposal",
         "area": "Constrained heading",
-        "observation": "Select 1–2 options is followed by generic Choice names.",
+        "observation": "Select 1\u20132 options is followed by generic Choice names.",
         "change": "Use a concrete preference-selection example.",
         "priority": "P2"
       },
@@ -4595,7 +4603,7 @@
         "kind": "proposal",
         "area": "Scroll fixture",
         "observation": "The fourth field shows ten, eleven, twelve without its current position.",
-        "change": "Display Rows 10–12 of 12 beside it.",
+        "change": "Display Rows 10\u201312 of 12 beside it.",
         "priority": "P2"
       },
       {
@@ -5986,7 +5994,7 @@
         "id": "15",
         "kind": "proposal",
         "area": "Current context",
-        "observation": "Visible 2560×1440 and 120Hz values do not identify pending versus current.",
+        "observation": "Visible 2560\u00d71440 and 120Hz values do not identify pending versus current.",
         "change": "Mark the pending fields in the backdrop before dimming.",
         "priority": "P2"
       },

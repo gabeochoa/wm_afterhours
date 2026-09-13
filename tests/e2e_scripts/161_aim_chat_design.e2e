@@ -1,0 +1,55 @@
+goto_screen aim_chat
+resize 1280 720
+wait 0.3
+expect_text "Buddies  3/8 online"
+expect_text "Offline  0/12 online"
+expect_no_text "GET /index.html"
+assert_within_parents
+click_ui aim_demo_log
+wait 0.3
+expect_text "Developer log sample"
+expect_text "GET /index.html"
+assert_within_parents
+screenshot aim_chat_developer_log
+click_ui aim_demo_log
+wait 0.2
+expect_no_text "GET /index.html"
+click_ui aim_group_0
+wait 0.2
+expect_no_text "sk8ergirl88"
+focus_element aim_group_0
+key ENTER
+wait 0.2
+expect_text "sk8ergirl88"
+click_ui aim_group_1
+wait 0.2
+expect_text "Family: all contacts offline"
+click_ui aim_group_2
+wait 0.2
+expect_text "Co-Workers: all contacts offline"
+expect_no_text "Family: all contacts offline"
+click_ui aim_buddy_action_1
+wait 0.2
+expect_text "Friends room - Chat Room"
+focus_ui message_input
+type "Hello room"
+key ENTER
+wait 0.3
+expect_text "coolkid2001: Hello room"
+expect_no_text "Warning level: 0%"
+click_ui aim_chat_minimize
+wait 0.2
+click_ui aim_buddy_action_0
+wait 0.2
+expect_text "SmarterChild - Instant Message"
+click_ui aim_buddy_0
+wait 0.2
+expect_no_text "Hello room"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+click_ui aim_demo_log
+wait 0.3
+assert_within_parents
+screenshot aim_chat_developer_log_1080
+resize 1280 720

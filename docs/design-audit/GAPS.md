@@ -269,11 +269,13 @@ Current example states: [Current example: login validation](../../docs/design-au
 
 ## aim chat
 
-[Current baseline](../../screenshot-baselines/screens/aim_chat_720p.png) · [Visual review](../../design-audit.html#screen=aim_chat)
+[Reviewed image](../../docs/design-audit/originals/aim_chat_720p.png) · [Current baseline](../../screenshot-baselines/screens/aim_chat_720p.png) · [Visual review](../../design-audit.html#screen=aim_chat)
 
 Baseline SHA-256: `8bb37a0d438af6d0320177bf5224f6efe12158ac3004a185514ad5de21cb847b`
 
 The retro desktop is coherent and matches the mock's deliberate HTTP-log example. Proposals refine user-facing content, period-appropriate iconography and hierarchy.
+
+Current example states: [Current example: developer log pane](../../docs/design-audit/examples/aim_chat_developer_log_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

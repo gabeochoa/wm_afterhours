@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-91 completed; 2,444 remaining.
+116 completed; 2,419 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -310,79 +310,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/aim_chat_720p.png) · [Visual review](design-audit.html#screen=aim_chat)
 
-- [ ] `aim_chat-01` · P2 · proposal. Conversation history: Move the developer-log specimen into a separately labeled demo pane.
+- [x] `aim_chat-01` · P2 · proposal. Conversation history: Move the developer-log specimen into a separately labeled demo pane.
   Evidence: The mock's HTTP GET/POST example interrupts the conversation between messages and its timestamp.
 
-- [ ] `aim_chat-02` · P2 · proposal. Desktop computer icon: Replace it with a recognizable period-style computer bitmap.
+- [x] `aim_chat-02` · P2 · proposal. Desktop computer icon: Replace it with a recognizable period-style computer bitmap.
   Evidence: My Computer uses an empty square outline.
 
-- [ ] `aim_chat-03` · P2 · proposal. Desktop folder icon: Use a folder icon consistent with the runner artwork.
+- [x] `aim_chat-03` · P2 · proposal. Desktop folder icon: Use a folder icon consistent with the runner artwork.
   Evidence: My Documents uses an outlined parallelogram.
 
-- [ ] `aim_chat-04` · P2 · proposal. Window controls: Draw a small square window glyph.
+- [x] `aim_chat-04` · P2 · proposal. Window controls: Draw a small square window glyph.
   Evidence: Maximize is rendered as literal [] text.
 
-- [ ] `aim_chat-05` · P2 · proposal. Title minimize: Use a centered pixel-aligned minimize line.
+- [x] `aim_chat-05` · P2 · proposal. Title minimize: Use a centered pixel-aligned minimize line.
   Evidence: The minimize character appears as text at the bottom of a tiny control.
 
-- [ ] `aim_chat-06` · P2 · proposal. Menu rows: Use flat menu labels until selected, matching the mock's menu bar.
+- [x] `aim_chat-06` · P2 · proposal. Menu rows: Use flat menu labels until selected, matching the mock's menu bar.
   Evidence: Each menu item looks like a raised command button.
 
-- [ ] `aim_chat-07` · P2 · proposal. Active window: Give the inactive buddy window a subdued title bar.
+- [x] `aim_chat-07` · P2 · proposal. Active window: Give the inactive buddy window a subdued title bar.
   Evidence: Both title bars use equally vivid blue gradients.
 
-- [ ] `aim_chat-08` · P2 · proposal. Buddy groups: Use consistent small triangle glyphs aligned in one column.
+- [x] `aim_chat-08` · P2 · proposal. Buddy groups: Use consistent small triangle glyphs aligned in one column.
   Evidence: v and > are used as disclosure markers.
 
-- [ ] `aim_chat-09` · P2 · proposal. Buddy count: Use a compact online/total caption in the group header.
+- [x] `aim_chat-09` · P2 · proposal. Buddy count: Use a compact online/total caption in the group header.
   Evidence: Buddies (3/8) does not explain the denominator.
 
-- [ ] `aim_chat-10` · P2 · proposal. Offline group: Use one consistent count convention across groups.
+- [x] `aim_chat-10` · P2 · proposal. Offline group: Use one consistent count convention across groups.
   Evidence: Offline (12) lacks the count format used above it.
 
-- [ ] `aim_chat-11` · P2 · proposal. Buddy selection: Retain indentation but add a small status icon column.
+- [x] `aim_chat-11` · P2 · proposal. Buddy selection: Retain indentation but add a small status icon column.
   Evidence: SmarterChild's selected row starts farther right than group labels.
 
-- [ ] `aim_chat-12` · P2 · proposal. Buddy presence: Add compact online indicators beside each name.
+- [x] `aim_chat-12` · P2 · proposal. Buddy presence: Add compact online indicators beside each name.
   Evidence: Unselected buddy names carry no individual presence marker.
 
-- [ ] `aim_chat-13` · P2 · proposal. Buddy action labels: Rename the group action to Chat room or clarify the distinction.
+- [x] `aim_chat-13` · P2 · proposal. Buddy action labels: Rename the group action to Chat room or clarify the distinction.
   Evidence: IM and Chat appear side by side without visible distinction.
 
-- [ ] `aim_chat-14` · P2 · proposal. Availability bar: Add a small disclosure arrow to mark it as a status control.
+- [x] `aim_chat-14` · P2 · proposal. Availability bar: Add a small disclosure arrow to mark it as a status control.
   Evidence: I'm Available resembles a text field.
 
-- [ ] `aim_chat-15` · P2 · proposal. Buddy footer banner: Reduce its height to return emphasis to contacts.
+- [x] `aim_chat-15` · P2 · proposal. Buddy footer banner: Reduce its height to return emphasis to contacts.
   Evidence: The large AOL banner has more contrast than the buddy list header.
 
-- [ ] `aim_chat-16` · P2 · proposal. Chat identity: Keep the profile name but reduce its red emphasis.
+- [x] `aim_chat-16` · P2 · proposal. Chat identity: Keep the profile name but reduce its red emphasis.
   Evidence: SmarterChild is repeated in the title, profile header and first line.
 
-- [ ] `aim_chat-17` · P2 · proposal. Warning level: Align it with the presence row and reduce its visual priority.
+- [x] `aim_chat-17` · P2 · proposal. Warning level: Align it with the presence row and reduce its visual priority.
   Evidence: Warning level: 0% occupies the far edge of the profile header.
 
-- [ ] `aim_chat-18` · P2 · proposal. Message spacing: Tighten line spacing to match a compact instant-message transcript.
+- [x] `aim_chat-18` · P2 · proposal. Message spacing: Tighten line spacing to match a compact instant-message transcript.
   Evidence: The three short chat lines have substantial vertical spacing.
 
-- [ ] `aim_chat-19` · P2 · proposal. Timestamp: Darken the text enough to read at the existing small size.
+- [x] `aim_chat-19` · P2 · proposal. Timestamp: Darken the text enough to read at the existing small size.
   Evidence: Last message received at 2: 02 PM is faint gray on white.
 
-- [ ] `aim_chat-20` · P2 · proposal. Formatting toolbar: Use recognizable font, color, emoticon and link icons.
+- [x] `aim_chat-20` · P2 · proposal. Formatting toolbar: Use recognizable font, color, emoticon and link icons.
   Evidence: A, B, I, U, A, :) and / have unevenly understandable meanings.
 
-- [ ] `aim_chat-21` · P2 · proposal. Toolbar grouping: Insert narrow separators between formatting and insertion groups.
+- [x] `aim_chat-21` · P2 · proposal. Toolbar grouping: Insert narrow separators between formatting and insertion groups.
   Evidence: Text formatting and insertion actions form one undifferentiated row.
 
-- [ ] `aim_chat-22` · P2 · proposal. Composer label: Increase the label slightly and align it with composer inset.
+- [x] `aim_chat-22` · P2 · proposal. Composer label: Increase the label slightly and align it with composer inset.
   Evidence: Send to: SmarterChild is much smaller than message text.
 
-- [ ] `aim_chat-23` · P2 · proposal. Composer placeholder: Increase placeholder contrast while keeping it secondary.
+- [x] `aim_chat-23` · P2 · proposal. Composer placeholder: Increase placeholder contrast while keeping it secondary.
   Evidence: Type a message is light gray within a large empty white area.
 
-- [ ] `aim_chat-24` · P2 · proposal. Send action: Give Send the default-button outline and separate moderation actions.
+- [x] `aim_chat-24` · P2 · proposal. Send action: Give Send the default-button outline and separate moderation actions.
   Evidence: Send has the same weight as Warn and Block.
 
-- [ ] `aim_chat-25` · P2 · proposal. Connection footer: Use a readable status line with a small connection indicator.
+- [x] `aim_chat-25` · P2 · proposal. Connection footer: Use a readable status line with a small connection indicator.
   Evidence: Direct Connection Established (local demo) is tiny at the bottom edge.
 
 ### alpha_blend_repro
