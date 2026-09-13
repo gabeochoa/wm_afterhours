@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,091 completed; 1,444 remaining.
+1,116 completed; 1,419 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3099,79 +3099,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/file_tree_720p.png) · [Visual review](design-audit.html#screen=file_tree)
 
-- [ ] `file_tree-01` · P2 · proposal. File Tree heading: Increase its size and give the bar a clear window-title treatment.
+- [x] `file_tree-01` · P2 · proposal. File Tree heading: Increase its size and give the bar a clear window-title treatment.
   Evidence: The title is small within a wide gray title bar.
 
-- [ ] `file_tree-02` · P2 · proposal. Outer panel: Add a consistent top margin around the complete window.
+- [x] `file_tree-02` · P2 · proposal. Outer panel: Add a consistent top margin around the complete window.
   Evidence: The top of the rounded panel touches the viewport boundary.
 
-- [ ] `file_tree-03` · P2 · proposal. Tree body: Reduce the panel width or add a selected-file detail pane.
+- [x] `file_tree-03` · P2 · proposal. Tree body: Reduce the panel width or add a selected-file detail pane.
   Evidence: Files occupy the left quarter of a very wide empty panel.
 
-- [ ] `file_tree-04` · P2 · proposal. File sizes: Right-align sizes in a dedicated column.
+- [x] `file_tree-04` · P2 · proposal. File sizes: Right-align sizes in a dedicated column.
   Evidence: 47.1 KB, 6.0 KB, and 21.0 KB begin at different horizontal positions.
 
-- [ ] `file_tree-05` · P2 · proposal. Column labels: Add Name and Size headings above the first tree row.
+- [x] `file_tree-05` · P2 · proposal. Column labels: Add Name and Size headings above the first tree row.
   Evidence: The filename and size values have no column headers.
 
-- [ ] `file_tree-06` · P2 · proposal. Folder indicators: Replace it with a crisp disclosure chevron at a consistent size.
+- [x] `file_tree-06` · P2 · proposal. Folder indicators: Replace it with a crisp disclosure chevron at a consistent size.
   Evidence: Expanded folders use a small handwritten v.
 
-- [ ] `file_tree-07` · P2 · proposal. File versus folder rows: Add folder and file icons while retaining the slash convention if desired.
+- [x] `file_tree-07` · P2 · proposal. File versus folder rows: Add folder and file icons while retaining the slash convention if desired.
   Evidence: Folder identity relies mostly on a trailing slash.
 
-- [ ] `file_tree-08` · P2 · proposal. Nested engine files: Add subtle vertical hierarchy guides.
+- [x] `file_tree-08` · P2 · proposal. Nested engine files: Add subtle vertical hierarchy guides.
   Evidence: Indentation is the only guide connecting renderer files to engine.
 
-- [ ] `file_tree-09` · P2 · proposal. Filename typography: Use a compact readable face for filenames and tabular numerals for sizes.
+- [x] `file_tree-09` · P2 · proposal. Filename typography: Use a compact readable face for filenames and tabular numerals for sizes.
   Evidence: Handwritten letters make renderer.cpp and renderer.h less scannable.
 
-- [ ] `file_tree-10` · P2 · proposal. Root path: Increase its text size and present the path as a breadcrumb.
+- [x] `file_tree-10` · P2 · proposal. Root path: Increase its text size and present the path as a breadcrumb.
   Evidence: ~/projects/harbour is tiny inside a nearly full-width dark pill.
 
-- [ ] `file_tree-11` · P2 · proposal. Sample tree control: Show Sample data as a selected mode beside the path.
+- [x] `file_tree-11` · P2 · proposal. Sample tree control: Show Sample data as a selected mode beside the path.
   Evidence: Sample tree resembles an ordinary action with no mode status.
 
-- [ ] `file_tree-12` · P3 · proposal. Home control: Pair it with a home icon and align it with the breadcrumb start.
+- [x] `file_tree-12` · P3 · proposal. Home control: Pair it with a home icon and align it with the breadcrumb start.
   Evidence: Home is detached from any visible location hierarchy.
 
-- [ ] `file_tree-13` · P3 · proposal. Up control: Group Home and Up as navigation, separated from refresh actions.
+- [x] `file_tree-13` · P3 · proposal. Up control: Group Home and Up as navigation, separated from refresh actions.
   Evidence: The short Up label has the same emphasis as Refresh.
 
-- [ ] `file_tree-14` · P3 · proposal. Refresh control: Add a compact refresh glyph to improve scanning.
+- [x] `file_tree-14` · P3 · proposal. Refresh control: Add a compact refresh glyph to improve scanning.
   Evidence: Refresh has no icon in a toolbar of small text pills.
 
-- [ ] `file_tree-15` · P2 · proposal. Toolbar dimensions: Increase button height and maintain a common label baseline.
+- [x] `file_tree-15` · P2 · proposal. Toolbar dimensions: Increase button height and maintain a common label baseline.
   Evidence: The toolbar buttons are short relative to the file row text.
 
-- [ ] `file_tree-16` · P2 · proposal. Toolbar background: Use a compact toolbar group or add a right-aligned mode indicator.
+- [x] `file_tree-16` · P2 · proposal. Toolbar background: Use a compact toolbar group or add a right-aligned mode indicator.
   Evidence: The dark toolbar strip spans empty space far past the last button.
 
-- [ ] `file_tree-17` · P2 · proposal. No selection footer: Increase it to the same supporting-text size as the path.
+- [x] `file_tree-17` · P2 · proposal. No selection footer: Increase it to the same supporting-text size as the path.
   Evidence: The status text is extremely small and low contrast.
 
-- [ ] `file_tree-18` · P3 · proposal. Selection guidance: Use Select a file to view details in the empty detail region.
+- [x] `file_tree-18` · P3 · proposal. Selection guidance: Use Select a file to view details in the empty detail region.
   Evidence: No selection reports state without suggesting the next step.
 
-- [ ] `file_tree-19` · P3 · proposal. Tree summary: Add a footer count of folders and files.
+- [x] `file_tree-19` · P3 · proposal. Tree summary: Add a footer count of folders and files.
   Evidence: The window contains no summary of the visible sample.
 
-- [ ] `file_tree-20` · P2 · proposal. src assets tests hierarchy: Give top-level folder labels a slightly stronger weight.
+- [x] `file_tree-20` · P2 · proposal. src assets tests hierarchy: Give top-level folder labels a slightly stronger weight.
   Evidence: Top-level folders share the same weight as leaf files.
 
-- [ ] `file_tree-21` · P3 · proposal. Directory groups: Add a small gap before each top-level directory.
+- [x] `file_tree-21` · P3 · proposal. Directory groups: Add a small gap before each top-level directory.
   Evidence: assets and tests follow immediately after the preceding subtree.
 
-- [ ] `file_tree-22` · P3 · proposal. README and makefile: Separate the root-file group with a small consistent gap.
+- [x] `file_tree-22` · P3 · proposal. README and makefile: Separate the root-file group with a small consistent gap.
   Evidence: Root-level files visually blend into the preceding tests subtree.
 
-- [ ] `file_tree-23` · P2 · proposal. Font asset size: Use a muted but legible size column to emphasize names.
+- [x] `file_tree-23` · P2 · proposal. Font asset size: Use a muted but legible size column to emphasize names.
   Evidence: Archivo.ttf and atlas.png sizes share the same tone as their names.
 
-- [ ] `file_tree-24` · P3 · proposal. Window border: Use a clearer surface contrast with a restrained border.
+- [x] `file_tree-24` · P3 · proposal. Window border: Use a clearer surface contrast with a restrained border.
   Evidence: A thin gray outline and nearly identical surrounding grays flatten the window.
 
-- [ ] `file_tree-25` · P3 · proposal. Bottom whitespace: Center the reduced window vertically or expand useful content into that space.
+- [x] `file_tree-25` · P3 · proposal. Bottom whitespace: Center the reduced window vertically or expand useful content into that space.
   Evidence: A broad unused strip remains below the tree window.
 
 ### fit_content_lab
@@ -8120,6 +8120,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Review a supported tree row/accessory renderer for icons and metadata columns; wm currently restyles tree_view descendants. See docs/AFTERHOURS_GAPS.md.
 
 - [ ] Review composite drag-preview styling and viewport-aware drag hit testing; see docs/AFTERHOURS_GAPS.md.
 

@@ -363,6 +363,17 @@ actions move selected cards across page boundaries. Native continuous
 scrolling and drag hit testing still need fixes that use the same rendered
 geometry.
 
+### Native tree rows expose only a label callback
+
+TreeViewConfig exposes label, ID, expandability, indent and height, but no row
+presentation callback. Native rows prepend textual v/> disclosure marks and
+allocate a single label child. The wm file browser keeps tree_view behavior
+but walks the returned row descendants to replace the arrow text, draw crisp
+icons and hierarchy guides, and add a right-aligned size column. This depends
+on internal child ordering. A supported row renderer or accessory callback
+would let consumers add metadata and accessible row decoration without relying
+on internals.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

@@ -1600,7 +1600,7 @@ The selected category is recognizable, but competing neon layers and decorative 
 
 ## file tree
 
-[Current baseline](../../screenshot-baselines/screens/file_tree_720p.png) · [Visual review](../../design-audit.html#screen=file_tree)
+[Reviewed image](../../docs/design-audit/originals/file_tree_720p.png) · [Current baseline](../../screenshot-baselines/screens/file_tree_720p.png) · [Visual review](../../design-audit.html#screen=file_tree)
 
 Baseline SHA-256: `6ea213320a8544e7e4d099d449dedf3f3d022b0258684235b7525f41fe203dda`
 

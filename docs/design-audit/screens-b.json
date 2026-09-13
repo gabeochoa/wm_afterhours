@@ -832,7 +832,8 @@
         "change": "Center the reduced window vertically or expand useful content into that space."
       }
     ],
-    "sha256": "6ea213320a8544e7e4d099d449dedf3f3d022b0258684235b7525f41fe203dda"
+    "sha256": "6ea213320a8544e7e4d099d449dedf3f3d022b0258684235b7525f41fe203dda",
+    "evidence": "docs/design-audit/originals/file_tree_720p.png"
   },
   {
     "id": "fit_content_lab",

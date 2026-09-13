@@ -1,0 +1,44 @@
+goto_screen file_tree
+resize 1280 720
+wait 0.5
+expect_text "File Tree"
+expect_text "Sample data"
+expect_text "6 folders / 12 files in sample"
+expect_text "Name"
+expect_text "Size"
+expect_text "Select a file to view details"
+expect_text "makefile"
+assert_within_parents
+assert_ui main_container x=60 y=28 w=1160 h=664
+assert_ui file_tree x=84 y=214 w=676 h=430
+click_ui file_row_renderer.cpp
+wait 0.2
+expect_text "47.1 KB"
+expect_text "~/projects/harbour/src/engine/renderer.cpp"
+screenshot file_tree_design_selected
+click_ui file_row_engine
+wait 0.2
+expect_no_text "renderer.cpp"
+expect_text "Expand or collapse with Enter"
+key ENTER
+wait 0.2
+expect_text "renderer.cpp"
+click_ui refresh_btn
+wait 0.2
+expect_text "renderer.cpp"
+click_ui home_btn
+wait 0.2
+expect_text "No selection"
+expect_text "~/projects/harbour"
+resize 1920 1080
+wait 0.3
+assert_ui main_container x=90 y=42 w=1740 h=996
+screenshot file_tree_design_1080
+resize 1024 768
+wait 0.3
+assert_ui main_container x=48 y=118 w=928 h=531
+click_ui file_row_Archivo.ttf
+wait 0.2
+expect_text "180.0 KB"
+screenshot file_tree_design_narrow
+resize 1280 720

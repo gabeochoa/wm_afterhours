@@ -3,6 +3,7 @@
 
 # Navigate to the file tree screen
 goto_screen file_tree
+resize 1280 720
 wait 0.5
 
 # =========================================================================
