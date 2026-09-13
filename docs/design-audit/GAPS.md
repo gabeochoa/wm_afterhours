@@ -995,7 +995,7 @@ Clipped no-wrap text and the scrolled twelve-line field are explicit fixtures. P
 
 ## config gap gallery
 
-[Current baseline](../../screenshot-baselines/screens/config_gap_gallery_720p.png) · [Visual review](../../design-audit.html#screen=config_gap_gallery)
+[Reviewed image](../../docs/design-audit/originals/config_gap_gallery_720p.png) · [Current baseline](../../screenshot-baselines/screens/config_gap_gallery_720p.png) · [Visual review](../../design-audit.html#screen=config_gap_gallery)
 
 Baseline SHA-256: `2e263b4b7f300c1a7b220cf0f0a3b171ca1d09cbb742392eb0dd2d62d4985161`
 

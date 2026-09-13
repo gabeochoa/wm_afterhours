@@ -288,6 +288,32 @@ transparent pointer shields to disabled row bounds and returns focus to the
 native menu list; disabled items should consume hits without becoming focus
 targets.
 
+### Text-input focus origin and generic SelectOnFocus conflict
+
+The native text input already selects all on keyboard focus. Adding
+ComponentConfig::with_select_on_focus(true) triggers a synthetic click through
+SelectOnFocus, which invokes the text-input click listener and clears that
+selection. wm removes that conflicting generic flag. Separately, pointer focus
+observed on the following frame can be misclassified as keyboard focus: the
+text input checks input::is_mouse_press(), whose just-pressed state has
+already cleared. The configuration screen reproduces this by clicking away and
+back, then typing: the whole value is replaced. Preserve the focus origin
+across frames so pointer placement and keyboard select-all behave
+consistently. Tests retain this observed limitation rather than disguising it
+in the sample.
+
+### Dashed polylines can stop advancing at fractional boundaries
+
+polyline::draw_dashed can loop forever with fractional dash periods. At
+1024x768 the configuration gallery scales dash 10 / gap 7 to 8 / 5.6; float32
+period becomes 13.6000004. With t=travelled=68, computed run=1.9073486e-6 is
+too small to change either accumulator, so while(t<segment) never advances. A
+sampled native stack confirms polyline.h:92/96. The loop needs guaranteed
+forward progress at segment and pattern boundaries. wm keeps native rendering
+but quantizes dash, gap and phase to whole screen pixels and labels their
+actual values; 18,796 resolution/phase combinations of scaled rectangle edges
+completed in an isolated float32 reproduction.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

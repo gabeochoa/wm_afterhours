@@ -1,0 +1,93 @@
+goto_screen config_gap_gallery
+resize 1280 720
+wait 0.4
+expect_text "Component configuration examples"
+expect_text "Min 90px / max 200px / parent 320px"
+expect_text "80px -> 90px / Min-clamped"
+expect_text "176px -> 176px / Within bounds"
+expect_text "272px -> 200px / Max-clamped"
+expect_text "Gold = requested; cyan = drawn 5 screen px"
+expect_text "Text uses the label; children needs a tree."
+expect_text "children 0x0 screen px"
+expect_text "Tab selects all / arrow keys edit text"
+assert_ui cg_canvas w=1280 h=720
+assert_ui cg_root x=68 y=0 w=1144 h=720
+assert_ui cg_shadow_0 w=96 h=64
+assert_ui cg_reference_0 w=96 h=64
+assert_ui cg_clamp_0 w=90 h=34
+assert_ui cg_clamp_1 w=176 h=34
+assert_ui cg_clamp_2 w=200 h=34
+assert_ui cg_clip w=184 h=76
+assert_ui cg_wrap_child_0 x=476 y=632 w=90 h=27
+assert_ui cg_wrap_child_1 x=476 y=660 w=90 h=27
+click_ui cg_pause
+wait 0.2
+expect_text "Resume marquee"
+screenshot config_gap_gallery_design
+click_ui cg_hide
+wait 0.2
+expect_no_text "row 2 clipped"
+expect_text "2  hidden"
+expect_text "Row 2 is removed from layout."
+focus_ui cg_hide
+key ENTER
+wait 0.2
+expect_text "row 2 clipped"
+expect_text "Row 2 starts below the first two rows."
+click_ui cg_reset
+wait 0.2
+mouse_down 1028 477
+wait 0.2
+expect_text "On pointer down: 1"
+expect_text "On pointer up: 0"
+mouse_up
+wait 0.2
+expect_text "On pointer down: 1"
+mouse_down 1028 520
+wait 0.2
+expect_text "On pointer up: 0"
+mouse_up
+wait 0.2
+expect_text "On pointer up: 1"
+focus_ui cg_reset
+key ENTER
+wait 0.2
+expect_text "On pointer down: 0"
+expect_text "On pointer up: 0"
+key TAB
+wait 0.2
+expect_focused cg_field
+type "Aster"
+wait 0.2
+expect_input_text cg_field "Aster"
+key LEFT
+wait 0.2
+expect_focused cg_field
+type "!"
+wait 0.2
+expect_input_text cg_field "Aste!r"
+click_ui cg_reset
+wait 0.2
+click_ui cg_field
+wait 0.2
+type "+"
+wait 0.2
+expect_input_text cg_field "+"
+key END
+type "ready"
+wait 0.2
+expect_input_text cg_field "+ready"
+resize 1920 1080
+wait 0.3
+assert_ui cg_root w=1716 h=1080
+assert_ui cg_clamp_0 w=135 h=51
+assert_ui cg_clamp_1 w=264 h=51
+assert_ui cg_clamp_2 w=300 h=51
+assert_ui cg_clip w=276 h=114
+screenshot config_gap_gallery_design_1080
+resize 1024 768
+wait 0.3
+assert_ui cg_canvas w=1024 h=768
+assert_ui cg_root x=54 y=96 w=915 h=576
+screenshot config_gap_gallery_design_narrow
+resize 1280 720

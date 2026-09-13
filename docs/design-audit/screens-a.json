@@ -4940,7 +4940,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "2e263b4b7f300c1a7b220cf0f0a3b171ca1d09cbb742392eb0dd2d62d4985161"
+    "sha256": "2e263b4b7f300c1a7b220cf0f0a3b171ca1d09cbb742392eb0dd2d62d4985161",
+    "evidence": "docs/design-audit/originals/config_gap_gallery_720p.png"
   },
   {
     "id": "context_menu_lab",

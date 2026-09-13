@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-756 completed; 1,779 remaining.
+781 completed; 1,754 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1794,80 +1794,82 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/config_gap_gallery_720p.png) · [Visual review](design-audit.html#screen=config_gap_gallery)
 
-- [ ] `config_gap_gallery-01` · P2 · proposal. Page title: Use Component configuration examples.
+- [x] `config_gap_gallery-01` · P2 · proposal. Page title: Use Component configuration examples.
   Evidence: Config options that had no caller describes repository history.
 
-- [ ] `config_gap_gallery-02` · P2 · proposal. Panel headings: Use readable monospace parameter labels.
+- [x] `config_gap_gallery-02` · P2 · proposal. Panel headings: Use readable monospace parameter labels.
   Evidence: API-heavy headings use tiny handwritten text.
 
-- [ ] `config_gap_gallery-03` · P2 · proposal. Shadow labels: Add internal padding or external captions.
+- [x] `config_gap_gallery-03` · P2 · proposal. Shadow labels: Add internal padding or external captions.
   Evidence: hard and soft touch their rectangles' left edges.
 
-- [ ] `config_gap_gallery-04` · P2 · proposal. Shadow comparison: Add matched-shape controls to isolate shadow style.
+- [x] `config_gap_gallery-04` · P2 · proposal. Shadow comparison: Add matched-shape controls to isolate shadow style.
   Evidence: Hard and soft also differ in fill and radius.
 
-- [ ] `config_gap_gallery-05` · P2 · proposal. Hard shadow: Show its x/y offset in a caption.
+- [x] `config_gap_gallery-05` · P2 · proposal. Hard shadow: Show its x/y offset in a caption.
   Evidence: The offset is visible but unspecified.
 
-- [ ] `config_gap_gallery-06` · P2 · proposal. Soft shadow: Display both configured values.
+- [x] `config_gap_gallery-06` · P2 · proposal. Soft shadow: Display both configured values.
   Evidence: Blur and offset are not labeled.
 
-- [ ] `config_gap_gallery-07` · P2 · proposal. Segment example: Spell out 3 corner segments and add a matched smooth sample.
+- [x] `config_gap_gallery-07` · P2 · proposal. Segment example: Spell out 3 corner segments and add a matched smooth sample.
   Evidence: 3 seg uses an abbreviation and no smooth reference.
+  Disposition: Raylib treats requests below four segments as automatic. The specimen now accurately says 3 requested / auto and compares it with 12 segments.
 
-- [ ] `config_gap_gallery-08` · P2 · proposal. Corner radius: Show 4px, 18px and 20px under the samples.
+- [x] `config_gap_gallery-08` · P2 · proposal. Corner radius: Show 4px, 18px and 20px under the samples.
   Evidence: The three radii differ without numeric labels.
 
-- [ ] `config_gap_gallery-09` · P2 · proposal. Clamp heading: Display min 90px and max 200px.
+- [x] `config_gap_gallery-09` · P2 · proposal. Clamp heading: Display min 90px and max 200px.
   Evidence: The heading promises min/max but omits the limits.
 
-- [ ] `config_gap_gallery-10` · P2 · proposal. Clamp values: Add actual resolved pixel widths.
+- [x] `config_gap_gallery-10` · P2 · proposal. Clamp values: Add actual resolved pixel widths.
   Evidence: 25%, 55% and 85% show requested widths only.
 
-- [ ] `config_gap_gallery-11` · P2 · proposal. Clamp state: Label Min-clamped and Max-clamped.
+- [x] `config_gap_gallery-11` · P2 · proposal. Clamp state: Label Min-clamped and Max-clamped.
   Evidence: The first and last samples do not identify which bound applies.
 
-- [ ] `config_gap_gallery-12` · P2 · proposal. Clamp reference: Draw thin reference-length lines behind the specimens.
+- [x] `config_gap_gallery-12` · P2 · proposal. Clamp reference: Draw thin reference-length lines behind the specimens.
   Evidence: No unclamped widths are visible.
 
-- [ ] `config_gap_gallery-13` · P2 · proposal. Clip boundary: Outline its 76px viewport boundary externally.
+- [x] `config_gap_gallery-13` · P2 · proposal. Clip boundary: Outline its 76px viewport boundary externally.
   Evidence: The clipped region ends immediately under partial content.
 
-- [ ] `config_gap_gallery-14` · P2 · proposal. Clip row count: Add 4 source rows, viewport 76px.
+- [x] `config_gap_gallery-14` · P2 · proposal. Clip row count: Add 4 source rows, viewport 76px.
   Evidence: Rows 0 and 1 are visible without a total count.
 
-- [ ] `config_gap_gallery-15` · P2 · proposal. Hide target: Add a small source-row diagram beside the control.
+- [x] `config_gap_gallery-15` · P2 · proposal. Hide target: Add a small source-row diagram beside the control.
   Evidence: Hide row 2 targets a row mostly below the clip boundary.
 
-- [ ] `config_gap_gallery-16` · P2 · proposal. Marquee text: Center it or inset it within the marquee.
+- [x] `config_gap_gallery-16` · P2 · proposal. Marquee text: Center it or inset it within the marquee.
   Evidence: selection begins outside the dashed rectangle's inner edge.
 
-- [ ] `config_gap_gallery-17` · P2 · proposal. Marquee parameters: Display dash 10px, gap 7px outside it.
+- [x] `config_gap_gallery-17` · P2 · proposal. Marquee parameters: Display dash 10px, gap 7px outside it.
   Evidence: The dashed rectangle gives no dash or gap measurements.
 
-- [ ] `config_gap_gallery-18` · P2 · proposal. Draw-layer example: Add small labels marking background fill and foreground stroke.
+- [x] `config_gap_gallery-18` · P2 · proposal. Draw-layer example: Add small labels marking background fill and foreground stroke.
   Evidence: on_draw_bg and on_draw_fg are not visually identified.
 
-- [ ] `config_gap_gallery-19` · P2 · proposal. Explicit text color: Repeat its exact text in a readable external caption.
+- [x] `config_gap_gallery-19` · P2 · proposal. Explicit text color: Repeat its exact text in a readable external caption.
   Evidence: The deliberately dark red sentence is difficult to read.
 
-- [ ] `config_gap_gallery-20` · P2 · proposal. Text inset comparison: Add pixel guides and measured inset readouts to expose the comparison.
+- [x] `config_gap_gallery-20` · P2 · proposal. Text inset comparison: Add pixel guides and measured inset readouts to expose the comparison.
   Evidence: inset 24px and inset 2px appear almost equally flush left.
 
-- [ ] `config_gap_gallery-21` · P2 · proposal. Wrap example: Add a narrow paired specimen that visibly wraps.
+- [x] `config_gap_gallery-21` · P2 · proposal. Wrap example: Add a narrow paired specimen that visibly wraps.
   Evidence: The wrap-enabled sentence remains one line in the screenshot.
 
-- [ ] `config_gap_gallery-22` · P2 · proposal. Activation buttons: Use On pointer down and On pointer up captions.
+- [x] `config_gap_gallery-22` · P2 · proposal. Activation buttons: Use On pointer down and On pointer up captions.
   Evidence: on Press and on Release do not name pointer timing.
 
-- [ ] `config_gap_gallery-23` · P2 · proposal. Counter reset: Add a small shared Reset counters control.
+- [x] `config_gap_gallery-23` · P2 · proposal. Counter reset: Add a small shared Reset counters control.
   Evidence: Both activation counters have no visible reset action.
 
-- [ ] `config_gap_gallery-24` · P2 · proposal. Measurement output: Show the measured text specimen and expected sizing rule alongside.
+- [x] `config_gap_gallery-24` · P2 · proposal. Measurement output: Show the measured text specimen and expected sizing rule alongside.
   Evidence: measure_config says 0x0 has no visible probe or expectation.
 
-- [ ] `config_gap_gallery-25` · P2 · proposal. Focus-selection field: Add an external Select all on focus caption.
+- [x] `config_gap_gallery-25` · P2 · proposal. Focus-selection field: Add an external Select all on focus caption.
   Evidence: focus me, all selected is the only explanation of a behavior.
+  Disposition: The native text field selects all on keyboard focus. Its caption promises Tab selection; tests expose that pointer refocus can also select all. That focus-origin bug and the conflicting generic SelectOnFocus behavior are tracked upstream.
 
 ### context_menu_lab
 
@@ -8111,6 +8113,10 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Fix fractional-boundary nonprogress in native polyline::draw_dashed; wm quantizes marquee parameters to avoid the hang. See docs/AFTERHOURS_GAPS.md.
+
+- [ ] Review native text-input focus origin across frames and its conflict with generic SelectOnFocus; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Review native menu outside-click dismissal, disabled focus traversal and item/shortcut presentation options; see `docs/AFTERHOURS_GAPS.md`.
 
