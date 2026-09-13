@@ -1,0 +1,66 @@
+goto_screen dialog_danger
+resize 1280 720
+wait 0.4
+expect_text "Delete Chapter 3 autosave?"
+expect_text "Chapter 3 - Autosave"
+expect_text "Slot 03 / saved 06 Sep 2026, 21:14"
+expect_text "Playtime: 4h 32m"
+expect_text "Demo data only. Reset save demo restores this example."
+expect_text "Keep save"
+expect_text "Delete save"
+assert_ui modal x=260 y=202 w=760 h=316
+assert_ui dd_chapter_emblem w=72 h=84
+assert_ui dd_warning_icon w=24 h=28
+assert_ui dd_keep w=220 h=44
+assert_ui dd_delete w=220 h=44
+assert_within_parents
+screenshot dialog_danger_design
+focus_ui dd_keep
+key ENTER
+wait 0.2
+expect_no_text "Delete Chapter 3 autosave?"
+expect_text "Kept Chapter 3 autosave. All 3 demo saves remain."
+expect_text "Chapter 3 - Autosave"
+focus_ui dd_review
+key ENTER
+wait 0.2
+expect_text "Delete Chapter 3 autosave?"
+key ESCAPE
+wait 0.2
+expect_text "Kept Chapter 3 autosave. All 3 demo saves remain."
+expect_no_text "Delete Chapter 3 autosave?"
+click_ui dd_review
+wait 0.2
+click_ui dd_delete
+wait 0.2
+expect_text "Deleted Chapter 3 autosave. 2 demo saves remain."
+expect_text "Empty save slot"
+expect_text "Slot 03 / empty"
+expect_no_text "Chapter 3 - Autosave"
+expect_no_text "Delete Chapter 3 autosave?"
+click_ui dd_review
+wait 0.2
+expect_no_text "Delete Chapter 3 autosave?"
+expect_text "2 demo saves"
+screenshot dialog_danger_deleted
+click_ui dd_reset
+wait 0.2
+expect_text "Demo reset. All 3 saves restored."
+expect_text "Chapter 3 - Autosave"
+expect_no_text "Delete Chapter 3 autosave?"
+click_ui dd_review
+resize 1920 1080
+wait 0.3
+assert_ui modal w=1140 h=474
+assert_ui dd_chapter_emblem w=108 h=126
+assert_within_parents
+screenshot dialog_danger_design_1080
+key ESCAPE
+wait 0.2
+resize 1024 768
+click_ui dd_review
+wait 0.3
+assert_ui modal w=608 h=253
+assert_within_parents
+screenshot dialog_danger_design_narrow
+resize 1280 720

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-668 completed; 1,867 remaining.
+686 completed; 1,849 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2313,58 +2313,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/dialog_danger_720p.png) · [Visual review](design-audit.html#screen=dialog_danger)
 
-- [ ] `dialog_danger-01` · P2 · proposal. Save title: Use the title Delete Chapter 3 autosave?
+- [x] `dialog_danger-01` · P2 · proposal. Save title: Use the title Delete Chapter 3 autosave?
   Evidence: Delete save? omits the save's identity.
 
-- [ ] `dialog_danger-02` · P2 · proposal. Save name wrapping: Place the save name on its own line.
+- [x] `dialog_danger-02` · P2 · proposal. Save name wrapping: Place the save name on its own line.
   Evidence: Chapter 3 - Autosave is split across body lines.
 
-- [ ] `dialog_danger-03` · P2 · proposal. Save metadata: Add timestamp and playtime for verification.
+- [x] `dialog_danger-03` · P2 · proposal. Save metadata: Add timestamp and playtime for verification.
   Evidence: Only the save name identifies the destructive target.
 
-- [ ] `dialog_danger-04` · P2 · proposal. Save preview: Add a small slot thumbnail or chapter emblem.
+- [x] `dialog_danger-04` · P2 · proposal. Save preview: Add a small slot thumbnail or chapter emblem.
   Evidence: The dialog has no visual identifier for the save slot.
 
-- [ ] `dialog_danger-05` · P2 · proposal. Warning hierarchy: Emphasize the save name and irreversible consequence separately.
+- [x] `dialog_danger-05` · P2 · proposal. Warning hierarchy: Emphasize the save name and irreversible consequence separately.
   Evidence: Permanent deletion and the object name use equal weight.
 
-- [ ] `dialog_danger-06` · P2 · proposal. Warning redundancy: Use one direct irreversible-action sentence.
+- [x] `dialog_danger-06` · P2 · proposal. Warning redundancy: Use one direct irreversible-action sentence.
   Evidence: Permanently deletes and cannot be undone repeat the same point.
 
-- [ ] `dialog_danger-07` · P2 · proposal. Delete label: Use Delete save.
+- [x] `dialog_danger-07` · P2 · proposal. Delete label: Use Delete save.
   Evidence: Delete is generic.
 
-- [ ] `dialog_danger-08` · P2 · proposal. Cancel label: Use Keep save.
+- [x] `dialog_danger-08` · P2 · proposal. Cancel label: Use Keep save.
   Evidence: Cancel is less explicit than the destructive alternative.
 
-- [ ] `dialog_danger-09` · P2 · proposal. Danger icon: Add a restrained warning icon beside the title.
+- [x] `dialog_danger-09` · P2 · proposal. Danger icon: Add a restrained warning icon beside the title.
   Evidence: Only the button color marks the destructive action visually.
 
-- [ ] `dialog_danger-10` · P2 · proposal. Body font: Use a readable body font for the target identifier.
+- [x] `dialog_danger-10` · P2 · proposal. Body font: Use a readable body font for the target identifier.
   Evidence: The save name uses handwritten characters.
 
-- [ ] `dialog_danger-11` · P2 · proposal. Title gap: Tighten the vertical rhythm.
+- [x] `dialog_danger-11` · P2 · proposal. Title gap: Tighten the vertical rhythm.
   Evidence: A large gap separates title from the warning.
 
-- [ ] `dialog_danger-12` · P2 · proposal. Button text: Increase label size.
+- [x] `dialog_danger-12` · P2 · proposal. Button text: Increase label size.
   Evidence: Action labels are small within 132px buttons.
 
-- [ ] `dialog_danger-13` · P2 · proposal. Action spacing: Use a standard action-row gap.
+- [x] `dialog_danger-13` · P2 · proposal. Action spacing: Use a standard action-row gap.
   Evidence: Cancel and Delete have a wide gap without a grouping cue.
 
-- [ ] `dialog_danger-14` · P2 · proposal. Bottom padding: Reduce panel height.
+- [x] `dialog_danger-14` · P2 · proposal. Bottom padding: Reduce panel height.
   Evidence: Large empty space follows the action row.
 
-- [ ] `dialog_danger-15` · P2 · proposal. Dialog boundary: Add a subtle border or shadow.
+- [x] `dialog_danger-15` · P2 · proposal. Dialog boundary: Add a subtle border or shadow.
   Evidence: The panel blends into the dark display rows behind it.
 
-- [ ] `dialog_danger-16` · P2 · proposal. Backdrop section: Use a small save-slot list behind this fixture.
+- [x] `dialog_danger-16` · P2 · proposal. Backdrop section: Use a small save-slot list behind this fixture.
   Evidence: Save slots appears above Resolution and Refresh rate settings.
 
-- [ ] `dialog_danger-17` · P2 · proposal. Sidebar context: Use a Saves navigation item for this demonstration.
+- [x] `dialog_danger-17` · P2 · proposal. Sidebar context: Use a Saves navigation item for this demonstration.
   Evidence: Display remains selected behind the save deletion dialog.
 
-- [ ] `dialog_danger-18` · P2 · proposal. Selection context: Highlight the target save slot behind the scrim.
+- [x] `dialog_danger-18` · P2 · proposal. Selection context: Highlight the target save slot behind the scrim.
   Evidence: No visible background item corresponds to Chapter 3 autosave.
 
 ### dialog_fyi

@@ -6249,7 +6249,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "f33510b0feb265c69d7b72d0e4cf8a292fb2c112a72ba156becb98ffe68d631e"
+    "sha256": "f33510b0feb265c69d7b72d0e4cf8a292fb2c112a72ba156becb98ffe68d631e",
+    "evidence": "docs/design-audit/originals/dialog_danger_720p.png"
   },
   {
     "id": "dialog_fyi",

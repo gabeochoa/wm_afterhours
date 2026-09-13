@@ -1235,7 +1235,7 @@ A clear two-action confirmation is captured over an intentionally dimmed backdro
 
 ## dialog danger
 
-[Current baseline](../../screenshot-baselines/screens/dialog_danger_720p.png) · [Visual review](../../design-audit.html#screen=dialog_danger)
+[Reviewed image](../../docs/design-audit/originals/dialog_danger_720p.png) · [Current baseline](../../screenshot-baselines/screens/dialog_danger_720p.png) · [Visual review](../../design-audit.html#screen=dialog_danger)
 
 Baseline SHA-256: `f33510b0feb265c69d7b72d0e4cf8a292fb2c112a72ba156becb98ffe68d631e`
 
