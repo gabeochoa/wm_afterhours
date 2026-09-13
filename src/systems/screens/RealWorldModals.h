@@ -49,115 +49,96 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
+    const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     auto theme = afterhours::ui::theme_presets::ocean_navy();
+    theme.background = {16, 29, 48, 255};
+    theme.surface = {28, 46, 68, 255};
+    theme.primary = {43, 85, 125, 255};
+    theme.secondary = {40, 63, 88, 255};
+    theme.font = {237, 244, 251, 255};
+    theme.font_muted = {183, 205, 224, 255};
     context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
-                                              pixels(16.0f));
-
-    auto root =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.90f), screen_pct(0.90f)})
-                .with_background(Theme::Usage::Background)
-                .with_corner_radius(12.f)
-                .with_self_align(SelfAlign::Center)
-                .with_padding(Spacing::xl)
-                .with_debug_name("rw_modal_bg"));
-
-    auto main = vstack(context, mk(root.ent(), 0),
-                       ComponentConfig{}
-                           .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                           .with_no_wrap()
-                           .with_debug_name("rw_modal_main"));
-
-    div(context, mk(main.ent(), 0),
-        ComponentConfig{}
-            .with_label("Real-World Modals")
-            .with_size(ComponentSize{percent(1.0f), pixels(48)})
-            .with_auto_text_color(true)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(26.0f))
-            .with_alignment(TextAlignment::Center));
-
-    auto triggers = hstack(context, mk(main.ent(), 1),
-                           ComponentConfig{}
-                               .with_size(ComponentSize{percent(1.0f), pixels(52)})
-                               .with_justify_content(JustifyContent::Center)
-                               .with_align_items(AlignItems::Center)
-                               .with_no_wrap()
-                               .with_margin(Margin{.top = DefaultSpacing::medium()})
-                               .with_debug_name("rw_triggers"));
-
-    if (button(context, mk(triggers.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Delete Item")
-                   .with_size(ComponentSize{pixels(180), pixels(44)})
-                   .with_background(Theme::Usage::Error)
-                   .with_margin(Margin{.right = DefaultSpacing::small()})
-                   .with_debug_name("btn_delete"))) {
-      show_delete = true;
-      delete_confirm = "";
+    context.scaling_mode = ScalingMode::Proportional;
+    UIStylingDefaults::get().set_grid_snapping(false);
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * s));
+    const auto at = [s](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(x * s, y * s).with_corner_radius(0)
+          .with_background(Theme::Usage::None);
+    };
+    div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background(theme.background).with_corner_radius(0).with_debug_name("rw_modal_bg"));
+    auto main = div(context, mk(entity, 1), at(0, 0, 1280, 720)
+        .with_absolute_position((context.screen_width - 1280 * s) / 2,
+                                (context.screen_height - 720 * s) / 2)
+        .with_debug_name("rw_modal_main"));
+    const auto text = [&](int id, const std::string &label, float x, float y,
+                          float w, float h, float size, const std::string &debug = "") {
+      div(context, mk(main.ent(), id), at(x, y, w, h).with_label(label)
+          .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(theme.font)
+          .with_ignore_pointer_events().with_debug_name(debug));
+    };
+    text(0, "Real-World Modals", 48, 22, 1184, 44, 34, "rw_title");
+    text(1, "Choose a pattern to preview its dialog.", 48, 71, 1184, 28, 22);
+    text(2, "Escape closes a preview. Click outside to dismiss all except the cookie banner.",
+         48, 106, 1184, 28, 18);
+    text(3, "Centered dialogs", 48, 139, 1184, 30, 24);
+    text(4, "Edge overlays", 48, 359, 1184, 30, 24);
+    const std::array<const char *, 6> names{"Preview delete confirmation", "Command Palette", "Terms of Service", "Side Drawer", "Bottom Sheet", "Cookie Banner"};
+    const std::array<const char *, 6> captions{"Type DELETE to enable the action", "Search commands", "Scrollable sample agreement", "Navigation from the right edge", "Actions from the bottom edge", "A short consent strip"};
+    const std::array<const char *, 6> debug{"btn_delete", "btn_palette", "btn_tos", "btn_drawer", "btn_sheet", "btn_cookie"};
+    for (size_t i = 0; i < names.size(); ++i) {
+      const float x = 48 + static_cast<float>(i % 3) * 408;
+      const float y = i < 3 ? 180 : 400;
+      div(context, mk(main.ent(), 10 + static_cast<int>(i)), at(x, y, 368, 170)
+          .with_custom_background(theme.surface).with_corner_radius(10 * s));
+      auto cfg = at(x + 16, y + 14, 336, 44).with_label(names[i])
+          .with_font("AtkinsonMock", pixels(21 * s)).with_letter_spacing(0)
+          .with_custom_text_color(theme.font).with_custom_background(theme.primary)
+          .with_corner_radius(6 * s).with_alignment(TextAlignment::Center)
+          .with_click_activation(ClickActivationMode::Release).with_debug_name(debug[i]);
+      if (i == 0) cfg.with_custom_background(theme.surface).with_border({223, 126, 131, 255}, s);
+      if (button(context, mk(main.ent(), 20 + static_cast<int>(i)), cfg)) {
+        if (i == 0) { show_delete = true; delete_confirm.clear(); }
+        if (i == 1) { show_palette = true; palette_query.clear(); }
+        if (i == 2) show_tos = true;
+        if (i == 3) show_drawer = true;
+        if (i == 4) show_sheet = true;
+        if (i == 5) show_cookie = true;
+      }
+      text(30 + static_cast<int>(i), captions[i], x + 16, y + 69, 336, 27, 18);
+      div(context, mk(main.ent(), 40 + static_cast<int>(i)), at(x + 16, y + 108, 100, 48)
+          .with_border({107, 135, 162, 255}, s).with_ignore_pointer_events()
+          .with_on_draw_fg([i](RectangleType r) {
+            const float unit = r.width / 100;
+            RectangleType sample{r.x + 25 * unit, r.y + 11 * unit, 50 * unit, 27 * unit};
+            if (i == 3) sample = {r.x + 70 * unit, r.y, 30 * unit, r.height};
+            if (i == 4) sample = {r.x, r.y + 28 * unit, r.width, 20 * unit};
+            if (i == 5) sample = {r.x, r.y + 37 * unit, r.width, 11 * unit};
+            raylib::DrawRectangleRec(sample, {75, 142, 181, 255});
+            raylib::DrawRectangleLinesEx(sample, unit, {210, 233, 246, 255});
+          }).with_debug_name("rw_preview_" + std::to_string(i)));
+      text(50 + static_cast<int>(i), "Placement preview", x + 132, y + 118, 220, 27, 17);
     }
+    div(context, mk(main.ent(), 60), at(48, 607, 1184, 88)
+        .with_custom_background({25, 45, 64, 255}).with_corner_radius(10 * s)
+        .with_debug_name("rw_result_panel"));
+    text(61, "Action result", 68, 616, 1144, 28, 22);
+    text(62, status.empty() ? "No action yet" : status, 68, 652, 1144, 28, 20, "rw_action_result");
 
-    if (button(context, mk(triggers.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Command Palette")
-                   .with_size(ComponentSize{pixels(200), pixels(44)})
-                   .with_margin(Margin{.right = DefaultSpacing::small()})
-                   .with_debug_name("btn_palette"))) {
-      show_palette = true;
-      palette_query = "";
-    }
-
-    if (button(context, mk(triggers.ent(), 2),
-               ComponentConfig{}
-                   .with_label("Terms of Service")
-                   .with_size(ComponentSize{pixels(200), pixels(44)})
-                   .with_debug_name("btn_tos"))) {
-      show_tos = true;
-    }
-
-    auto triggers2 = hstack(context, mk(main.ent(), 2),
-                            ComponentConfig{}
-                                .with_size(ComponentSize{percent(1.0f), pixels(52)})
-                                .with_justify_content(JustifyContent::Center)
-                                .with_align_items(AlignItems::Center)
-                                .with_no_wrap()
-                                .with_margin(Margin{.top = DefaultSpacing::small()})
-                                .with_debug_name("rw_triggers2"));
-
-    if (button(context, mk(triggers2.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Side Drawer")
-                   .with_size(ComponentSize{pixels(180), pixels(44)})
-                   .with_margin(Margin{.right = DefaultSpacing::small()})
-                   .with_debug_name("btn_drawer"))) {
-      show_drawer = true;
-    }
-    if (button(context, mk(triggers2.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Bottom Sheet")
-                   .with_size(ComponentSize{pixels(200), pixels(44)})
-                   .with_margin(Margin{.right = DefaultSpacing::small()})
-                   .with_debug_name("btn_sheet"))) {
-      show_sheet = true;
-    }
-    if (button(context, mk(triggers2.ent(), 2),
-               ComponentConfig{}
-                   .with_label("Cookie Banner")
-                   .with_size(ComponentSize{pixels(200), pixels(44)})
-                   .with_debug_name("btn_cookie"))) {
-      show_cookie = true;
-    }
-
-    div(context, mk(main.ent(), 3),
-        ComponentConfig{}
-            .with_label(status.empty() ? "No action yet" : status)
-            .with_size(ComponentSize{percent(1.0f), pixels(28)})
-            .with_custom_text_color(theme.secondary)
-            .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
-            .with_alignment(TextAlignment::Center)
-            .with_margin(Margin{.top = DefaultSpacing::medium()}));
+    const auto style_title = [s](afterhours::Entity &panel) {
+      for (const auto id : panel.get<UIComponent>().children) {
+        auto &header = UICollectionHolder::getEntityForIDEnforce(id);
+        if (!header.has<UIComponentDebug>() || header.get<UIComponentDebug>().name() != "modal_header") continue;
+        for (const auto child_id : header.get<UIComponent>().children) {
+          auto &title = UICollectionHolder::getEntityForIDEnforce(child_id);
+          if (!title.has<UIComponentDebug>() || title.get<UIComponentDebug>().name() != "modal_title") continue;
+          title.get<UIComponent>().enable_font("AtkinsonMockBold", pixels(28 * s), true);
+          title.get<HasLabel>().font_name = "AtkinsonMockBold";
+        }
+      }
+    };
 
     // ===================================================================
     // 1. Type-to-confirm destructive delete
@@ -165,21 +146,24 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     if (auto m = afterhours::modal(
             context, mk(entity, MODAL_DELETE), show_delete,
             afterhours::ModalConfig{}
-                .with_size(pixels(460), pixels(300))
+                .with_size(pixels(620.f * s), pixels(320.f * s))
                 .with_title("Delete Project?")
                 .with_closed_by(afterhours::ClosedBy::Any))) {
+      m.ent().get<UIComponentDebug>().set("rw_delete_panel");
+      style_title(m.ent());
       div(context, mk(m.ent(), 0),
           ComponentConfig{}
-              .with_label("This permanently deletes the project and all its "
-                          "data. Type DELETE to confirm.")
-              .with_size(ComponentSize{percent(1.0f), pixels(48)})
+              .with_label("Preview only: type DELETE to confirm this sample "
+                          "project deletion.")
+              .with_text_overflow(TextOverflow::Wrap)
+              .with_size(ComponentSize{percent(1.0f), pixels(48.f * s)})
               .with_auto_text_color(true)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(15.0f))
+              .with_font("AtkinsonMock", pixels(20.f * s))
               .with_render_layer(CL));
 
       text_input(context, mk(m.ent(), 1), delete_confirm,
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(38)})
+                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(38.f * s)})
                      .with_background(Theme::Usage::Primary)
                      .with_roundness(0.1f)
                      .with_margin(Margin{.top = DefaultSpacing::small(),
@@ -190,7 +174,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       bool can_delete = (delete_confirm == "DELETE");
       auto row = hstack(context, mk(m.ent(), 2),
                         ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                            .with_size(ComponentSize{percent(1.0f), pixels(44.f * s)})
                             .with_justify_content(JustifyContent::SpaceBetween)
                             .with_no_wrap()
                             .with_render_layer(CL));
@@ -198,20 +182,21 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 0),
                  ComponentConfig{}
                      .with_label("Delete")
-                     .with_size(ComponentSize{pixels(180), pixels(38)})
+                     .with_size(ComponentSize{pixels(180.f * s), pixels(38.f * s)})
                      .with_background(Theme::Usage::Error)
                      .with_disabled(!can_delete)
+                     .with_debug_name("rw_delete_confirm")
                      .with_render_layer(CL))) {
         if (can_delete) {
-          status = "Project deleted.";
+          status = "Delete confirmed (demo).";
           show_delete = false;
           delete_confirm = "";
         }
       }
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
-                     .with_label("Cancel")
-                     .with_size(ComponentSize{pixels(180), pixels(38)})
+                     .with_label("Cancel").with_debug_name("rw_delete_cancel")
+                     .with_size(ComponentSize{pixels(180.f * s), pixels(38.f * s)})
                      .with_render_layer(CL))) {
         show_delete = false;
         delete_confirm = "";
@@ -224,12 +209,14 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     if (auto m = afterhours::modal(
             context, mk(entity, MODAL_PALETTE), show_palette,
             afterhours::ModalConfig{}
-                .with_size(pixels(520), pixels(420))
+                .with_size(pixels(660.f * s), pixels(540.f * s))
                 .with_title("Command Palette")
                 .with_closed_by(afterhours::ClosedBy::Any))) {
+      m.ent().get<UIComponentDebug>().set("rw_palette_panel");
+      style_title(m.ent());
       text_input(context, mk(m.ent(), 0), palette_query,
                  ComponentConfig{}
-                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(38)})
+                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(38.f * s)})
                      .with_background(Theme::Usage::Primary)
                      .with_roundness(0.1f)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
@@ -246,18 +233,25 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
         std::string c = cmd;
         if (!q.empty() && lower(c).find(q) == std::string::npos)
           continue;
-        if (button(context, mk(m.ent(), idx++),
+        const int command_index = idx++;
+        auto command = button(context, mk(m.ent(), command_index),
                    ComponentConfig{}
-                       .with_label(c)
-                       .with_size(ComponentSize{percent(1.0f), pixels(34)})
+                       .with_label(c).with_debug_name("rw_command_" + std::to_string(command_index))
+                       .with_size(ComponentSize{percent(1.0f), pixels(38.f * s)})
                        .with_alignment(TextAlignment::Left)
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                       .with_render_layer(CL))) {
-          status = "Ran: " + c;
+                       .with_render_layer(CL));
+        command.ent().get<HasLabel>().text_x_offset = 12 * s;
+        if (command) {
+          status = "Selected command: " + c;
           show_palette = false;
           palette_query = "";
         }
       }
+      if (idx == 1) div(context, mk(m.ent(), 100), ComponentConfig{}
+          .with_label("No matching commands").with_size({percent(1), pixels(44 * s)})
+          .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(theme.font)
+          .with_render_layer(CL));
     }
 
     // ===================================================================
@@ -266,12 +260,14 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     if (auto m = afterhours::modal(
             context, mk(entity, MODAL_TOS), show_tos,
             afterhours::ModalConfig{}
-                .with_size(pixels(560), pixels(460))
+                .with_size(pixels(680.f * s), pixels(560.f * s))
                 .with_title("Terms of Service")
                 .with_closed_by(afterhours::ClosedBy::Any))) {
+      m.ent().get<UIComponentDebug>().set("rw_tos_panel");
+      style_title(m.ent());
       auto scroll = div(context, mk(m.ent(), 0),
                         ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.0f), pixels(320)})
+                            .with_size(ComponentSize{percent(1.0f), pixels(350.f * s)})
                             .with_overflow(Overflow::Scroll, Axis::Y)
                             .with_render_layer(CL)
                             .with_debug_name("tos_scroll"));
@@ -299,10 +295,10 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
         div(context, mk(scroll.ent(), i++),
             ComponentConfig{}
                 .with_label(p)
-                .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(64)})
+                .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(80.f * s)})
                 .with_auto_text_color(true)
                 .with_text_overflow(TextOverflow::Wrap)
-                .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+                .with_font("AtkinsonMock", pixels(20.f * s))
                 .with_alignment(TextAlignment::Left)
                 .with_margin(Margin{.bottom = DefaultSpacing::small()})
                 .with_render_layer(CL));
@@ -310,15 +306,15 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
 
       auto row = hstack(context, mk(m.ent(), 1),
                         ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.0f), pixels(44)})
+                            .with_size(ComponentSize{percent(1.0f), pixels(44.f * s)})
                             .with_justify_content(JustifyContent::SpaceBetween)
                             .with_no_wrap()
                             .with_margin(Margin{.top = DefaultSpacing::small()})
                             .with_render_layer(CL));
       if (button(context, mk(row.ent(), 0),
                  ComponentConfig{}
-                     .with_label("Accept")
-                     .with_size(ComponentSize{pixels(200), pixels(38)})
+                     .with_label("Accept").with_debug_name("rw_terms_accept")
+                     .with_size(ComponentSize{pixels(200.f * s), pixels(38.f * s)})
                      .with_background(Theme::Usage::Primary)
                      .with_render_layer(CL))) {
         status = "Terms accepted.";
@@ -326,8 +322,8 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       }
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
-                     .with_label("Decline")
-                     .with_size(ComponentSize{pixels(200), pixels(38)})
+                     .with_label("Decline").with_debug_name("rw_terms_decline")
+                     .with_size(ComponentSize{pixels(200.f * s), pixels(38.f * s)})
                      .with_render_layer(CL))) {
         status = "Terms declined.";
         show_tos = false;
@@ -340,22 +336,27 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     if (auto m = afterhours::modal(
             context, mk(entity, MODAL_DRAWER), show_drawer,
             afterhours::ModalConfig{}
-                .with_size(pixels(320), screen_pct(1.0f))
+                .with_size(pixels(360.f * s), screen_pct(1.0f))
                 .with_title("Menu")
                 .with_anchor(afterhours::ModalAnchor::Right)
                 .with_closed_by(afterhours::ClosedBy::Any))) {
+      m.ent().get<UIComponentDebug>().set("rw_drawer_panel");
+      style_title(m.ent());
       static constexpr std::array<const char *, 5> items = {
           "Dashboard", "Projects", "Team", "Billing", "Settings"};
       int idx = 0;
       for (const char *it : items) {
-        if (button(context, mk(m.ent(), idx++),
+        const int destination_index = idx++;
+        auto destination = button(context, mk(m.ent(), destination_index),
                    ComponentConfig{}
-                       .with_label(it)
-                       .with_size(ComponentSize{percent(1.0f), pixels(40)})
+                       .with_label(it).with_debug_name("rw_destination_" + std::to_string(destination_index))
+                       .with_size(ComponentSize{percent(1.0f), pixels(40.f * s)})
                        .with_alignment(TextAlignment::Left)
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
-                       .with_render_layer(CL))) {
-          status = std::string("Opened: ") + it;
+                       .with_render_layer(CL));
+        destination.ent().get<HasLabel>().text_x_offset = 12 * s;
+        if (destination) {
+          status = std::string("Selected destination: ") + it;
           show_drawer = false;
         }
       }
@@ -367,13 +368,15 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     if (auto m = afterhours::modal(
             context, mk(entity, MODAL_SHEET), show_sheet,
             afterhours::ModalConfig{}
-                .with_size(percent(1.0f), pixels(240))
+                .with_size(percent(1.0f), pixels(240.f * s))
                 .with_title("Share")
                 .with_anchor(afterhours::ModalAnchor::Bottom)
                 .with_closed_by(afterhours::ClosedBy::Any))) {
+      m.ent().get<UIComponentDebug>().set("rw_sheet_panel");
+      style_title(m.ent());
       auto row = hstack(context, mk(m.ent(), 0),
                         ComponentConfig{}
-                            .with_size(ComponentSize{percent(1.0f), pixels(90)})
+                            .with_size(ComponentSize{percent(1.0f), pixels(90.f * s)})
                             .with_justify_content(JustifyContent::SpaceAround)
                             .with_align_items(AlignItems::Center)
                             .with_no_wrap()
@@ -382,12 +385,13 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
           "Copy Link", "Email", "Message", "More"};
       int idx = 0;
       for (const char *a : actions) {
-        if (button(context, mk(row.ent(), idx++),
+        const int action_index = idx++;
+        if (button(context, mk(row.ent(), action_index),
                    ComponentConfig{}
-                       .with_label(a)
-                       .with_size(ComponentSize{pixels(160), pixels(64)})
+                       .with_label(a).with_debug_name("rw_share_" + std::to_string(action_index))
+                       .with_size(ComponentSize{pixels(160.f * s), pixels(64.f * s)})
                        .with_render_layer(CL))) {
-          status = std::string("Shared via ") + a;
+          status = std::string("Share choice: ") + a;
           show_sheet = false;
         }
       }
@@ -399,11 +403,12 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     if (auto m = afterhours::modal(
             context, mk(entity, MODAL_COOKIE), show_cookie,
             afterhours::ModalConfig{}
-                .with_size(percent(1.0f), pixels(120))
+                .with_size(percent(1.0f), pixels(120.f * s))
                 .with_anchor(afterhours::ModalAnchor::Bottom)
                 .with_show_close_button(false)
                 .with_backdrop_color({0, 0, 0, 60})
                 .with_closed_by(afterhours::ClosedBy::CloseRequest))) {
+      m.ent().get<UIComponentDebug>().set("rw_cookie_panel");
       auto row = hstack(context, mk(m.ent(), 0),
                         ComponentConfig{}
                             .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
@@ -414,15 +419,15 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       div(context, mk(row.ent(), 0),
           ComponentConfig{}
               .with_label("We use cookies to improve your experience.")
-              .with_size(ComponentSize{percent(0.6f), pixels(40)})
+              .with_size(ComponentSize{percent(0.6f), pixels(40.f * s)})
               .with_auto_text_color(true)
               .with_text_overflow(TextOverflow::Wrap)
-              .with_font(UIComponent::DEFAULT_FONT, pixels(14.0f))
+              .with_font("AtkinsonMock", pixels(20.f * s))
               .with_render_layer(CL));
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
-                     .with_label("Reject")
-                     .with_size(ComponentSize{pixels(140), pixels(40)})
+                     .with_label("Reject").with_debug_name("rw_cookie_reject")
+                     .with_size(ComponentSize{pixels(140.f * s), pixels(40.f * s)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL))) {
         status = "Cookies rejected.";
@@ -430,8 +435,8 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       }
       if (button(context, mk(row.ent(), 2),
                  ComponentConfig{}
-                     .with_label("Accept")
-                     .with_size(ComponentSize{pixels(140), pixels(40)})
+                     .with_label("Accept").with_debug_name("rw_cookie_accept")
+                     .with_size(ComponentSize{pixels(140.f * s), pixels(40.f * s)})
                      .with_background(Theme::Usage::Primary)
                      .with_render_layer(CL))) {
         status = "Cookies accepted.";

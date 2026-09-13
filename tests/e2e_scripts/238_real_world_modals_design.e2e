@@ -1,0 +1,131 @@
+goto_screen real_world_modals
+resize 1280 720
+wait 0.4
+expect_text "Real-World Modals"
+expect_text "Choose a pattern to preview its dialog."
+expect_text "Centered dialogs"
+expect_text "Edge overlays"
+expect_text "Search commands"
+expect_text "Scrollable sample agreement"
+expect_text "Placement preview"
+expect_text "Action result"
+expect_text "No action yet"
+assert_ui rw_modal_bg w=1280 h=720
+assert_ui rw_modal_main x=0 y=0 w=1280 h=720
+assert_ui btn_delete x=64 y=194 w=336 h=44
+assert_ui btn_palette x=472 y=194 w=336 h=44
+assert_ui btn_tos x=880 y=194 w=336 h=44
+assert_ui btn_drawer x=64 y=414 w=336 h=44
+assert_ui btn_sheet x=472 y=414 w=336 h=44
+assert_ui btn_cookie x=880 y=414 w=336 h=44
+assert_ui rw_result_panel x=48 y=607 w=1184 h=88
+assert_no_overflow
+assert_within_parents
+screenshot real_world_modals_design
+click_ui btn_delete
+wait 0.3
+expect_text "Delete Project?"
+assert_ui rw_delete_panel x=330 y=200 w=620 h=320
+focus_ui delete_confirm_input
+type "delete"
+wait 0.2
+click_ui rw_delete_confirm
+wait 0.2
+expect_text "Delete Project?"
+focus_ui delete_confirm_input
+key CTRL+A
+type "DELETE"
+wait 0.2
+assert_no_overflow
+screenshot real_world_modals_design_delete
+click_ui rw_delete_confirm
+wait 0.3
+expect_text "Delete confirmed (demo)."
+click_ui btn_palette
+wait 0.3
+assert_ui rw_palette_panel x=310 y=90 w=660 h=540
+expect_text "New File"
+screenshot real_world_modals_design_palette
+expect_text "Open Settings"
+focus_ui palette_query_input
+type "nothing matches"
+wait 0.2
+expect_text "No matching commands"
+focus_ui palette_query_input
+key CTRL+A
+type "git"
+wait 0.2
+expect_text "Git: Commit"
+expect_no_text "New File"
+click_ui rw_command_1
+wait 0.3
+expect_text "Selected command: Git: Commit"
+click_ui btn_tos
+wait 0.3
+assert_ui rw_tos_panel x=300 y=80 w=680 h=560
+expect_text "1. Acceptance."
+mouse_move 640 340
+scroll_wheel 0 -30
+wait 0.3
+expect_text "8. Changes."
+screenshot real_world_modals_design_terms
+click_ui rw_terms_decline
+wait 0.3
+expect_text "Terms declined."
+click_ui btn_drawer
+wait 0.3
+assert_ui rw_drawer_panel x=920 y=0 w=360 h=720
+expect_text "Dashboard"
+assert_no_overflow
+screenshot real_world_modals_design_drawer
+click_ui rw_destination_1
+wait 0.3
+expect_text "Selected destination: Projects"
+click_ui btn_sheet
+wait 0.3
+assert_ui rw_sheet_panel x=0 y=480 w=1280 h=240
+expect_text "Copy Link"
+assert_no_overflow
+screenshot real_world_modals_design_sheet
+click_ui rw_share_0
+wait 0.3
+expect_text "Share choice: Copy Link"
+click_ui btn_cookie
+wait 0.3
+assert_ui rw_cookie_panel x=0 y=600 w=1280 h=120
+expect_text "We use cookies"
+mouse_move 20 300
+click 20 300
+wait 0.2
+expect_text "We use cookies"
+assert_no_overflow
+screenshot real_world_modals_design_cookie
+click_ui rw_cookie_reject
+wait 0.3
+expect_text "Cookies rejected."
+resize 1920 1080
+wait 0.3
+assert_ui btn_delete x=96 y=291 w=504 h=66
+assert_no_overflow
+assert_within_parents
+screenshot real_world_modals_design_1080
+click_ui btn_palette
+wait 0.3
+assert_ui rw_palette_panel x=465 y=135 w=990 h=810
+assert_no_overflow
+key ESCAPE
+wait 0.3
+resize 1024 768
+wait 0.3
+assert_ui rw_modal_main x=0 y=96 w=1024 h=576
+assert_ui btn_delete x=51 y=251 w=269 h=35
+assert_no_overflow
+assert_within_parents
+screenshot real_world_modals_design_narrow
+click_ui btn_delete
+wait 0.3
+assert_ui rw_delete_panel x=264 y=256 w=496 h=256
+assert_no_overflow
+screenshot real_world_modals_design_narrow_delete
+key ESCAPE
+resize 1280 720

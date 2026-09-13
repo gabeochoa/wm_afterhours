@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,170 completed; 365 remaining.
+2,186 completed; 349 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5911,52 +5911,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/real_world_modals_720p.png) · [Visual review](design-audit.html#screen=real_world_modals)
 
-- [ ] `real_world_modals-01` · P2 · defect. Status line: Use a readable neutral status color until an action completes.
+- [x] `real_world_modals-01` · P2 · defect. Status line: Use a readable neutral status color until an action completes.
   Evidence: No action yet is dark green on the navy background.
 
-- [ ] `real_world_modals-02` · P2 · proposal. Page framing: Use a compact centered launcher panel or fill the lower area with pattern descriptions.
+- [x] `real_world_modals-02` · P2 · proposal. Page framing: Use a compact centered launcher panel or fill the lower area with pattern descriptions.
   Evidence: The six launchers occupy only the upper third of a large panel.
 
-- [ ] `real_world_modals-03` · P2 · proposal. Introductory copy: Add Choose a pattern to preview its dialog beneath the heading.
+- [x] `real_world_modals-03` · P2 · proposal. Introductory copy: Add Choose a pattern to preview its dialog beneath the heading.
   Evidence: Real-World Modals gives no instruction for opening examples.
 
-- [ ] `real_world_modals-04` · P2 · proposal. Delete Item button: Label it Preview delete confirmation.
+- [x] `real_world_modals-04` · P2 · proposal. Delete Item button: Label it Preview delete confirmation.
   Evidence: Delete Item sounds like an immediate destructive action on the launcher screen.
 
-- [ ] `real_world_modals-05` · P2 · proposal. Command Palette button: Add Search commands as secondary copy beneath it.
+- [x] `real_world_modals-05` · P2 · proposal. Command Palette button: Add Search commands as secondary copy beneath it.
   Evidence: The launcher names the pattern but gives no example of its purpose.
 
-- [ ] `real_world_modals-06` · P2 · proposal. Terms of Service button: Add a short Scrollable agreement description.
+- [x] `real_world_modals-06` · P2 · proposal. Terms of Service button: Add a short Scrollable agreement description.
   Evidence: The label does not reveal that the demo includes scrollable legal text.
 
-- [ ] `real_world_modals-07` · P2 · proposal. Side Drawer button: Add a miniature right-edge drawer diagram beside the caption.
+- [x] `real_world_modals-07` · P2 · proposal. Side Drawer button: Add a miniature right-edge drawer diagram beside the caption.
   Evidence: The name gives no placement preview.
 
-- [ ] `real_world_modals-08` · P2 · proposal. Bottom Sheet button: Add a bottom-edge preview diagram to distinguish placement.
+- [x] `real_world_modals-08` · P2 · proposal. Bottom Sheet button: Add a bottom-edge preview diagram to distinguish placement.
   Evidence: The launcher has the same visual weight as centered modal examples.
 
-- [ ] `real_world_modals-09` · P2 · proposal. Cookie Banner button: Add a narrow banner preview below its label.
+- [x] `real_world_modals-09` · P2 · proposal. Cookie Banner button: Add a narrow banner preview below its label.
   Evidence: The launcher does not identify this as a noncentral banner pattern.
 
-- [ ] `real_world_modals-10` · P3 · proposal. Pattern grouping: Group centered dialogs separately from edge overlays with small headings.
+- [x] `real_world_modals-10` · P3 · proposal. Pattern grouping: Group centered dialogs separately from edge overlays with small headings.
   Evidence: All six buttons form an undifferentiated grid.
 
-- [ ] `real_world_modals-11` · P2 · proposal. Status context: Place it in an Action result region with a visible heading.
+- [x] `real_world_modals-11` · P2 · proposal. Status context: Place it in an Action result region with a visible heading.
   Evidence: No action yet sits alone without a label.
 
-- [ ] `real_world_modals-12` · P3 · proposal. Destructive accent: Reserve solid red for the destructive action inside the preview and use a red outline here.
+- [x] `real_world_modals-12` · P3 · proposal. Destructive accent: Reserve solid red for the destructive action inside the preview and use a red outline here.
   Evidence: The red Delete Item launcher dominates the otherwise blue grid.
 
-- [ ] `real_world_modals-13` · P3 · proposal. Button widths: Use equal column widths for the three-column grid.
+- [x] `real_world_modals-13` · P3 · proposal. Button widths: Use equal column widths for the three-column grid.
   Evidence: Delete Item is visibly narrower than the other launcher buttons.
 
-- [ ] `real_world_modals-14` · P2 · proposal. Page title scale: Increase title size and reduce letter spacing on launcher labels.
+- [x] `real_world_modals-14` · P2 · proposal. Page title scale: Increase title size and reduce letter spacing on launcher labels.
   Evidence: The title is only moderately larger than the letter-spaced button text.
 
-- [ ] `real_world_modals-15` · P2 · proposal. Dismiss instructions: Add a short dismissal note matched to the actual supported controls.
+- [x] `real_world_modals-15` · P2 · proposal. Dismiss instructions: Add a short dismissal note matched to the actual supported controls.
   Evidence: No guidance explains how demo overlays can be closed.
 
-- [ ] `real_world_modals-16` · P3 · proposal. Initial-state documentation: Add a labeled static pattern thumbnail region or separate open-state baselines for review.
+- [x] `real_world_modals-16` · P3 · proposal. Initial-state documentation: Add a labeled static pattern thumbnail region or separate open-state baselines for review.
   Evidence: The baseline contains no visual specimen of any modal.
 
 ### rect_algebra_lab

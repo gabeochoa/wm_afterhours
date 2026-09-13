@@ -752,7 +752,8 @@
         "change": "Add a labeled static pattern thumbnail region or separate open-state baselines for review."
       }
     ],
-    "sha256": "2417d8153cdac1cbaba619981da860c49c184ba098ea950997db4ba7dd224e98"
+    "sha256": "2417d8153cdac1cbaba619981da860c49c184ba098ea950997db4ba7dd224e98",
+    "evidence": "docs/design-audit/originals/real_world_modals_720p.png"
   },
   {
     "id": "rect_algebra_lab",

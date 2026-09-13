@@ -2978,7 +2978,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## real world modals
 
-[Current baseline](../../screenshot-baselines/screens/real_world_modals_720p.png) · [Visual review](../../design-audit.html#screen=real_world_modals)
+[Reviewed image](../../docs/design-audit/originals/real_world_modals_720p.png) · [Current baseline](../../screenshot-baselines/screens/real_world_modals_720p.png) · [Visual review](../../design-audit.html#screen=real_world_modals)
 
 Baseline SHA-256: `2417d8153cdac1cbaba619981da860c49c184ba098ea950997db4ba7dd224e98`
 
