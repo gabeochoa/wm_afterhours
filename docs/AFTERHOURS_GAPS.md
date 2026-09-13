@@ -1687,3 +1687,19 @@ Validation: `virtual_list_test` passes 16,373 checks across 100%, 140%, and 200%
 zoom, uniform and variable heights, grid on/off, component/screen overrides,
 pixel/percent/screen-relative viewports, start/middle/end, and shrinking lists.
 The consumer no longer needs to scale row heights and then divide child heights.
+
+### UP-13: skipped UI renders
+
+`BeginUIContextManager` now clears only its context’s old submissions before
+running deferred work. Previously the renderers owned this cleanup, assuming
+every update rendered. Current-update overlays and deferred submissions survive;
+another context’s queue is untouched. Both renderers retain their post-draw clear.
+Toast positioning/submission now runs in the render phase: registering toast
+layout before UI initialization previously queued a current-frame toast that
+the next UI begin immediately discarded. The registration-order test covers
+that case after three skipped renders.
+
+Validation: `ui_update_lifecycle_test` and its single-collection build each pass
+39 checks. Twelve updates without rendering produce the same recorded text and
+command counts as one update/render cycle in both renderers. These are library
+recording-backend checks; Floatinghotel’s own idle loop was not changed or run.
