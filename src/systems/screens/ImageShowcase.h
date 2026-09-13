@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../external.h"
+#include "../../artwork_atlas.h"
+#include "../../artwork_frames.h"
 #include "../../input_mapping.h"
 #include "../../theme_presets.h"
 #include "../ExampleScreenRegistry.h"
@@ -17,36 +19,12 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
   int button_clicks = 0;
   std::string last_action = "None yet";
   bool show_bounds = false;
-  bool textures_loaded = false;
-
-  // Textures
-  raylib::Texture2D gear_tex{};
-  raylib::Texture2D star_tex{};
-  raylib::Texture2D trophy_tex{};
-  raylib::Texture2D home_tex{};
-  raylib::Texture2D play_tex{};
-
-  void load_textures() {
-    if (textures_loaded)
-      return;
-    textures_loaded = true;
-
-    std::string icon_path = afterhours::files::get_resource_path(
-                                "kenney/kenney_game-icons/PNG/White/2x/", "")
-                                .string();
-
-    gear_tex = raylib::LoadTexture((icon_path + "gear.png").c_str());
-    star_tex = raylib::LoadTexture((icon_path + "star.png").c_str());
-    trophy_tex = raylib::LoadTexture((icon_path + "trophy.png").c_str());
-    home_tex = raylib::LoadTexture((icon_path + "home.png").c_str());
-    play_tex = raylib::LoadTexture((icon_path + "fastForward.png").c_str());
-    for (auto texture : {gear_tex, star_tex, trophy_tex, home_tex, play_tex})
-      raylib::SetTextureFilter(texture, raylib::TEXTURE_FILTER_BILINEAR);
-  }
+  artwork::Atlas atlas;
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    load_textures();
+    atlas.load("icons.png");
+    const auto gear = atlas.sprite(artwork::icons_frames[0]);
     context.theme = afterhours::ui::theme_presets::neon_dark();
     context.scaling_mode = ScalingMode::Proportional;
     const float scale = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
@@ -70,24 +48,18 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_font("AtkinsonMock", pixels(size * scale)).with_custom_text_color(color)
           .with_alignment(alignment).with_ignore_pointer_events().with_debug_name(name));
     };
-    // Source rect must match each texture's real size — sampling a larger
-    // region than the texture (these icons are 100x100, not 128x128) reads past
-    // the edge and shows adjacent/garbage pixels as bleed.
-    const auto tex_src = [](const raylib::Texture2D &texture) {
-      return raylib::Rectangle{0, 0, static_cast<float>(texture.width), static_cast<float>(texture.height)};
-    };
     struct Specimen {
-      raylib::Texture2D texture;
+      artwork::Sprite image;
       const char *glyph;
       const char *action;
       raylib::Rectangle visible_bounds;
     };
     const std::array<Specimen, 5> specimens{{
-        {gear_tex, "Gear", "Settings", {20, 20, 64, 64}},
-        {star_tex, "Star", "Favorite", {18, 20, 64, 60}},
-        {trophy_tex, "Trophy", "Awards", {18, 28, 64, 56}},
-        {home_tex, "Home", "Home", {20, 18, 64, 64}},
-        {play_tex, "Fast forward", "Fast forward", {14, 20, 76, 64}},
+        {gear, "Gear", "Settings", {20, 20, 64, 64}},
+        {atlas.sprite(artwork::icons_frames[1]), "Star", "Favorite", {18, 20, 64, 60}},
+        {atlas.sprite(artwork::icons_frames[2]), "Trophy", "Awards", {18, 28, 64, 56}},
+        {atlas.sprite(artwork::icons_frames[3]), "Home", "Home", {20, 18, 64, 64}},
+        {atlas.sprite(artwork::icons_frames[4]), "Fast forward", "Fast forward", {14, 20, 76, 64}},
     }};
     const auto size_text = [scale](float width, float height) {
       return fmt::format("{} x {}px", std::lround(width * scale), std::lround(height * scale));
@@ -113,7 +85,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     // Row 1: sprite() demo
     label(10, "Sprites", 20, 153, 166, 30, 24, ink);
     label(11, "Static image", 20, 187, 166, 26, 19, muted);
-    label(12, "Full texture", 20, 223, 166, 25, 19, muted);
+    label(12, "Atlas region", 20, 223, 166, 25, 19, muted);
     label(13, show_bounds ? "Bounds visible" : "Bounds hidden", 20, 255, 166, 25, 19, muted, "image_bounds_status");
     for (size_t i = 0; i < specimens.size(); ++i) {
       const auto &specimen = specimens[i];
@@ -125,16 +97,16 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       if (show_bounds) config.with_on_draw_fg([outline](RectangleType r) {
         afterhours::draw_rectangle_outline(r, outline, 1.f);
       });
-      sprite(context, mk(root.ent(), 30 + static_cast<int>(i)), specimen.texture, tex_src(specimen.texture), config);
+      sprite(context, mk(root.ent(), 30 + static_cast<int>(i)), specimen.image.texture, specimen.image.source, config);
       label(40 + static_cast<int>(i), specimen.glyph, x - 4, 249, 112, 26, 18, ink,
             "sprite_label_" + std::to_string(i + 1), TextAlignment::Center);
-      label(50 + static_cast<int>(i), fmt::format("{} x {} source", specimen.texture.width, specimen.texture.height),
+      label(50 + static_cast<int>(i), fmt::format("{} x {} source", std::lround(specimen.image.source.width), std::lround(specimen.image.source.height)),
             x - 4, 275, 112, 22, 15, muted, "sprite_size_" + std::to_string(i + 1), TextAlignment::Center);
     }
     label(60, "Source rectangle", 844, 156, 280, 27, 22, ink);
-    label(61, fmt::format("x 0 / y 0 / w {} / h {}", gear_tex.width, gear_tex.height), 844, 189, 280, 25, 19, muted);
+    label(61, fmt::format("x {} / y {} / w {} / h {}", std::lround(gear.source.x), std::lround(gear.source.y), std::lround(gear.source.width), std::lround(gear.source.height)), 844, 189, 280, 25, 19, muted);
     label(62, "Full-source frame: " + size_text(80, 80), 844, 220, 280, 25, 19, muted);
-    label(63, fmt::format("Display scale: {:.2f}x", 80 * scale / static_cast<float>(gear_tex.height)), 844, 251, 280, 25, 19, muted);
+    label(63, fmt::format("Display scale: {:.2f}x", 80 * scale / gear.source.height), 844, 251, 280, 25, 19, muted);
     // Row 2: image_button() demo
     label(70, "Image buttons", 20, 335, 166, 30, 24, ink);
     label(71, "Clickable image", 20, 373, 166, 26, 19, muted);
@@ -146,7 +118,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       const int specimen_index = button_indices[i];
       const auto &specimen = specimens[static_cast<size_t>(specimen_index)];
       const float x = 196 + static_cast<float>(specimen_index) * 124;
-      if (image_button(context, mk(root.ent(), 80 + static_cast<int>(i)), specimen.texture, tex_src(specimen.texture),
+      if (image_button(context, mk(root.ent(), 80 + static_cast<int>(i)), specimen.image.texture, specimen.image.source,
           box(x + 20, 333, 64, 64).with_background(button_usage[i]).with_corner_radius(8 * scale)
               .with_debug_name("imgbtn_" + std::to_string(i + 1)))) {
         ++button_clicks;
@@ -169,7 +141,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     label(121, "Static compound", 20, 517, 166, 26, 18, muted);
     div(context, mk(root.ent(), 122), box(196, 482, 260, 64)
         .with_background(Theme::Usage::Secondary).with_corner_radius(8 * scale).with_debug_name("image_container"));
-    sprite(context, mk(root.ent(), 123), gear_tex, tex_src(gear_tex), box(208, 490, 48, 48)
+    sprite(context, mk(root.ent(), 123), gear.texture, gear.source, box(208, 490, 48, 48)
         .with_ignore_pointer_events().with_debug_name("container_gear"));
     label(124, "Settings", 268, 497, 176, 34, 24, ink);
     label(125, "Image with text background", 480, 481, 348, 28, 22, ink);
@@ -184,7 +156,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                                           r.width / 4, r.height / 4}, {148, 163, 183, 255});
             }
         }));
-    sprite(context, mk(root.ent(), 128), gear_tex, tex_src(gear_tex), box(844, 482, 64, 64)
+    sprite(context, mk(root.ent(), 128), gear.texture, gear.source, box(844, 482, 64, 64)
         .with_ignore_pointer_events().with_debug_name("image_light_sprite"));
     label(129, "White + alpha", 920, 482, 204, 27, 21, ink);
     label(130, "Light checkerboard", 920, 516, 204, 25, 18, muted);
@@ -199,7 +171,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       const float height = specimen.visible_bounds.height * factor;
       div(context, mk(root.ent(), 150 + static_cast<int>(i)), box(x + 20, 580, 64, 64)
           .with_custom_background({35, 48, 66, 255}).with_corner_radius(8 * scale));
-      sprite(context, mk(root.ent(), 160 + static_cast<int>(i)), specimen.texture, specimen.visible_bounds,
+      sprite(context, mk(root.ent(), 160 + static_cast<int>(i)), specimen.image.texture,
+          {specimen.image.source.x + specimen.visible_bounds.x, specimen.image.source.y + specimen.visible_bounds.y,
+           specimen.visible_bounds.width, specimen.visible_bounds.height},
           box(x + 52 - width / 2, 612 - height / 2, width, height).with_ignore_pointer_events()
               .with_debug_name("icon_" + std::to_string(i)));
       label(170 + static_cast<int>(i), specimen.action, x - 4, 645, 112, 26, 18, ink,
