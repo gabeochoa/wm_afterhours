@@ -12,12 +12,15 @@ changes to the afterhours contract. It does not mark an approximation as native 
 | Independent chart plugin | WM can consume an independently owned adapter and document explicit dependencies/registration. Current `ChartLab` already demonstrates application-owned drawing around the chart. | Extracting `src/plugins/charts.h` and `src/plugins/ui/line_chart.h`, deciding the supported public boundary and versioning, then migrating upstream callers. Do not vendor a second copy inside WM and call the extraction complete. |
 | Custom chart indicators | Already present in `ChartLab`: circle/square markers, legends, selected sample, threshold line, and text explaining a threshold outside the plot. | Native stroke, hover-label and explicit axis-bound options remain separate tracked gaps. |
 
-## Bounded screen work if selected
+## WM examples and remaining screen options
 
-1. An expressive-type specimen with one oversized two-word composition, a plain reading
-   order underneath, and Replay and Reduce motion controls. Use whole-word motion only.
-   Assert final text, replay, interruption, and the static mode. It completes a WM visual
-   example, not the full curved/rotated/grapheme animation request.
+1. Implemented `TypographyCompositionLab.h`, registered as `typography_composition`.
+   It composes MAKE and WAVES as overlapping whole-word blocks with an ordinary reading
+   order below. Replay restarts a deterministic, dt-driven one-second arrangement;
+   Reduced motion immediately settles both words. `293_typography_composition.e2e`
+   covers replay, interruption, keyboard activation, reduced motion and a narrow viewport.
+   Runtime and fresh visual verification are pending the root batch. Curved/rotated text
+   and grapheme animation remain outside this example.
 2. A transparent-control specimen with three backing panels and the same native action
    on each. Show default, hover, focus and disabled variants; report activation through
    a visible count. Assert keyboard activation, disabled nonactivation and focus bounds.
@@ -27,8 +30,8 @@ changes to the afterhours contract. It does not mark an approximation as native 
    Test a second target during transition and carry/borrow. Label any lack of real blur
    in the research record and leave the full animation requirement open.
 
-These are options, not new implementation commitments. Native effects need upstream
-work; root should avoid introducing local substitutes solely to check off those TODOs.
+The named implemented examples use existing APIs. Remaining screen options are not
+implementation commitments. Native effects still need upstream work.
 
 ## Existing chart-indicator verification
 

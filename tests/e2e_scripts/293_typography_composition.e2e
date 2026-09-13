@@ -1,0 +1,62 @@
+goto_screen typography_composition
+resize 1280 720
+wait 0.3
+expect_text "Words with room to play"
+expect_text "MAKE"
+expect_text "WAVES"
+expect_text "Make waves"
+expect_text "At rest"
+expect_text "Replays: 0"
+assert_ui type_canvas w=1280 h=720
+assert_ui type_composition x=68 y=138 w=1144 h=350
+assert_ui type_make x=118 y=202 w=620 h=154
+assert_ui type_waves x=360 y=302 w=810 h=156
+assert_ui type_replay x=68 y=610 w=180 h=52
+assert_ui type_reduce_motion x=272 y=610 w=300 h=52
+assert_within_parents
+screenshot typography_composition_rest
+click_ui type_replay
+wait 0.1
+expect_text "Playing"
+expect_text "Replays: 1"
+screenshot typography_composition_moving
+click_ui type_replay
+wait 0.1
+expect_text "Playing"
+expect_text "Replays: 2"
+wait 1.1
+expect_text "At rest"
+focus_element type_replay
+key ENTER
+wait 0.1
+expect_text "Playing"
+expect_text "Replays: 3"
+click_ui type_reduce_motion
+wait 0.1
+expect_text "Reduced motion: on"
+expect_text "Still and clear"
+click_ui type_replay
+wait 0.1
+expect_text "Replays: 4"
+expect_text "Still and clear"
+expect_no_text "Playing"
+screenshot typography_composition_reduced
+click_ui type_reduce_motion
+wait 0.1
+expect_text "Reduced motion: off"
+expect_text "At rest"
+resize 1024 768
+wait 0.3
+assert_ui type_canvas w=1024 h=768
+assert_ui type_composition x=54 y=206 w=915 h=280
+assert_ui type_replay w=144 h=42
+assert_ui type_reduce_motion w=240 h=42
+assert_within_parents
+expect_text "Make waves"
+screenshot typography_composition_narrow
+focus_element type_replay
+key ENTER
+wait 1.1
+expect_text "Replays: 5"
+expect_text "At rest"
+resize 1280 720
