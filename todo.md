@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,820 completed; 715 remaining.
+1,834 completed; 701 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6412,46 +6412,46 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/self_align_720p.png) · [Visual review](design-audit.html#screen=self_align)
 
-- [ ] `self_align-01` · P2 · proposal. Parent frame: Label it Column parent with its default align-items value.
+- [x] `self_align-01` · P2 · proposal. Parent frame: Label it Column parent with its default align-items value.
   Evidence: The outlined parent has no label identifying its alignment.
 
-- [ ] `self_align-02` · P2 · proposal. Axis context: Add a horizontal cross-axis arrow above the frame.
+- [x] `self_align-02` · P2 · proposal. Axis context: Add a horizontal cross-axis arrow above the frame.
   Evidence: The subtitle says alignment but does not identify the horizontal cross axis.
 
-- [ ] `self_align-03` · P2 · proposal. Vertical stacking: Add a vertical main-axis arrow outside the frame.
+- [x] `self_align-03` · P2 · proposal. Vertical stacking: Add a vertical main-axis arrow outside the frame.
   Evidence: The three examples descend diagonally without explaining stacking.
 
-- [ ] `self_align-04` · P2 · proposal. Start specimen: Annotate the intentional inset so it is not mistaken for alignment error.
+- [x] `self_align-04` · P2 · proposal. Start specimen: Annotate the intentional inset so it is not mistaken for alignment error.
   Evidence: FlexStart left is separated from the border by an unlabeled inset.
 
-- [ ] `self_align-05` · P2 · proposal. Center specimen: Add a faint center guide behind the specimen.
+- [x] `self_align-05` · P2 · proposal. Center specimen: Add a faint center guide behind the specimen.
   Evidence: Center has no guide showing the parent's center.
 
-- [ ] `self_align-06` · P2 · proposal. End specimen: Add a small right-edge alignment tick.
+- [x] `self_align-06` · P2 · proposal. End specimen: Add a small right-edge alignment tick.
   Evidence: FlexEnd right has no guide tying its edge to the parent.
 
-- [ ] `self_align-07` · P2 · proposal. API naming: Use consistent API names and put plain-language translations below them.
+- [x] `self_align-07` · P2 · proposal. API naming: Use consistent API names and put plain-language translations below them.
   Evidence: FlexStart and FlexEnd are mixed with plain Center.
 
-- [ ] `self_align-08` · P3 · proposal. Legend duplication: Replace the pills with a small mapping from SelfAlign values to resulting positions.
+- [x] `self_align-08` · P3 · proposal. Legend duplication: Replace the pills with a small mapping from SelfAlign values to resulting positions.
   Evidence: Left, Center and Right repeat the box labels without new information.
 
-- [ ] `self_align-09` · P2 · proposal. Specimen text: Increase labels to 14 px actual size while preserving box geometry.
+- [x] `self_align-09` · P2 · proposal. Specimen text: Increase labels to 14 px actual size while preserving box geometry.
   Evidence: Text inside the large colored boxes is small.
 
-- [ ] `self_align-10` · P2 · proposal. Inherited comparison: Add a separate labeled default-alignment comparison outside the existing fixture.
+- [x] `self_align-10` · P2 · proposal. Inherited comparison: Add a separate labeled default-alignment comparison outside the existing fixture.
   Evidence: All three children override alignment, so inheritance is unseen.
 
-- [ ] `self_align-11` · P3 · proposal. Title wording: Use SelfAlign: child alignment overrides.
+- [x] `self_align-11` · P3 · proposal. Title wording: Use SelfAlign: child alignment overrides.
   Evidence: SelfAlign Feature Demo repeats generic demo wording.
 
-- [ ] `self_align-12` · P3 · proposal. Summary line: Replace it with a concrete explanation that the parent remains a column.
+- [x] `self_align-12` · P3 · proposal. Summary line: Replace it with a concrete explanation that the parent remains a column.
   Evidence: Each element picks its own position repeats the subtitle.
 
-- [ ] `self_align-13` · P2 · proposal. Color key: Add textual value labels to the legend so color is optional for interpretation.
+- [x] `self_align-13` · P2 · proposal. Color key: Add textual value labels to the legend so color is optional for interpretation.
   Evidence: Green, brown and orange have no reason beyond position.
 
-- [ ] `self_align-14` · P3 · proposal. Page footprint: Center the complete title-diagram-legend group vertically with even top and bottom space.
+- [x] `self_align-14` · P3 · proposal. Page footprint: Center the complete title-diagram-legend group vertically with even top and bottom space.
   Evidence: The compact diagram floats inside broad empty margins.
 
 ### separators

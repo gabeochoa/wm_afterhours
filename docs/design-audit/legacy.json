@@ -275,8 +275,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes FlexStart focus outline. The three staggered blocks intentionally demonstrate self alignment. Improve reference guides and labels rather than placing all three on one row.",
-    "sha256": "a731cee983c262b160a9bee54bee24b52ce3464afa0250e213e7756ed66896a5",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "ec9abc24f94a23d97a23ae9257c88b4d37008dd98ce19221fe5c7d8da5d88e20",
     "additional_findings": []
   },
   {

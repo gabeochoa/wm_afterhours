@@ -2058,7 +2058,8 @@
         "change": "Center the complete title-diagram-legend group vertically with even top and bottom space."
       }
     ],
-    "sha256": "716c7715cb4afb29a2f24882f5c07448f7ba994f9e2e2c81fa4b01a239f55167"
+    "sha256": "716c7715cb4afb29a2f24882f5c07448f7ba994f9e2e2c81fa4b01a239f55167",
+    "evidence": "docs/design-audit/originals/self_align_720p.png"
   },
   {
     "id": "separators",

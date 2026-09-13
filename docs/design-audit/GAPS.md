@@ -3235,7 +3235,7 @@ The disconnected state and chosen server are visible, but tiny metadata and appr
 
 ## self align
 
-[Current baseline](../../screenshot-baselines/screens/self_align_720p.png) · [Visual review](../../design-audit.html#screen=self_align)
+[Reviewed image](../../docs/design-audit/originals/self_align_720p.png) · [Current baseline](../../screenshot-baselines/screens/self_align_720p.png) · [Visual review](../../design-audit.html#screen=self_align)
 
 Baseline SHA-256: `716c7715cb4afb29a2f24882f5c07448f7ba994f9e2e2c81fa4b01a239f55167`
 
@@ -3262,7 +3262,7 @@ The staggered positions are intentional SelfAlign examples. Fourteen proposals c
 
 [Image](../../baseline_screenshots/self_align.png)
 
-Current capture removes FlexStart focus outline. The three staggered blocks intentionally demonstrate self alignment. Improve reference guides and labels rather than placing all three on one row.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## separators
 

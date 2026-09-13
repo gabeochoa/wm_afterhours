@@ -1,0 +1,29 @@
+goto_screen self_align
+resize 1280 720
+wait 0.4
+expect_text "SelfAlign: child alignment overrides"
+assert_ui demo w=600 h=224
+assert_ui self_align_0 w=184 h=48
+assert_ui self_align_1 w=184 h=48
+assert_ui self_align_2 w=184 h=48
+assert_within_parents
+screenshot self_align_design
+click_ui self_align_2
+wait 0.2
+expect_text "FlexEnd activated"
+click_ui self_align_guides
+wait 0.2
+expect_text "Alignment guides: off"
+focus_ui self_align_0
+key ENTER
+wait 0.2
+expect_text "FlexStart activated"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot self_align_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot self_align_design_narrow
+resize 1280 720
