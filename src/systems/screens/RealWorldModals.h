@@ -51,12 +51,15 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
                      UIContext<InputAction> &context, float) override {
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
     auto theme = afterhours::ui::theme_presets::ocean_navy();
-    theme.background = {16, 29, 48, 255};
-    theme.surface = {28, 46, 68, 255};
-    theme.primary = {43, 85, 125, 255};
-    theme.secondary = {40, 63, 88, 255};
+    theme.background = {19, 24, 32, 255};
+    theme.surface = {32, 40, 52, 255};
+    theme.primary = {48, 91, 151, 255};
+    theme.secondary = {48, 59, 76, 255};
     theme.font = {237, 244, 251, 255};
     theme.font_muted = {183, 205, 224, 255};
+    theme.focus = {165, 201, 248, 255};
+    theme.corner_radius = 6;
+    theme.roundness = 0;
     context.theme = theme;
     context.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_grid_snapping(false);
@@ -128,6 +131,9 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
     text(62, status.empty() ? "No action yet" : status, 68, 652, 1144, 28, 20, "rw_action_result");
 
     const auto style_title = [s](afterhours::Entity &panel) {
+      panel.addComponentIfMissing<HasRoundedCorners>().set_radius_px(12 * s);
+      panel.addComponentIfMissing<HasBorder>().border =
+          Border::all(afterhours::Color{81, 96, 119, 255}, pixels(s));
       for (const auto id : panel.get<UIComponent>().children) {
         auto &header = UICollectionHolder::getEntityForIDEnforce(id);
         if (!header.has<UIComponentDebug>() || header.get<UIComponentDebug>().name() != "modal_header") continue;
@@ -196,6 +202,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label("Cancel").with_debug_name("rw_delete_cancel")
+                     .with_background(Theme::Usage::Secondary)
                      .with_size(ComponentSize{pixels(180.f * s), pixels(38.f * s)})
                      .with_render_layer(CL))) {
         show_delete = false;
@@ -237,6 +244,8 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
         auto command = button(context, mk(m.ent(), command_index),
                    ComponentConfig{}
                        .with_label(c).with_debug_name("rw_command_" + std::to_string(command_index))
+                       .with_custom_background(theme.surface)
+                       .with_custom_hover_bg({56, 73, 96, 255})
                        .with_size(ComponentSize{percent(1.0f), pixels(38.f * s)})
                        .with_alignment(TextAlignment::Left)
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -323,6 +332,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label("Decline").with_debug_name("rw_terms_decline")
+                     .with_background(Theme::Usage::Secondary)
                      .with_size(ComponentSize{pixels(200.f * s), pixels(38.f * s)})
                      .with_render_layer(CL))) {
         status = "Terms declined.";
@@ -350,6 +360,8 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
         auto destination = button(context, mk(m.ent(), destination_index),
                    ComponentConfig{}
                        .with_label(it).with_debug_name("rw_destination_" + std::to_string(destination_index))
+                       .with_custom_background(theme.surface)
+                       .with_custom_hover_bg({56, 73, 96, 255})
                        .with_size(ComponentSize{percent(1.0f), pixels(40.f * s)})
                        .with_alignment(TextAlignment::Left)
                        .with_margin(Margin{.bottom = DefaultSpacing::tiny()})
@@ -427,6 +439,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
       if (button(context, mk(row.ent(), 1),
                  ComponentConfig{}
                      .with_label("Reject").with_debug_name("rw_cookie_reject")
+                     .with_background(Theme::Usage::Secondary)
                      .with_size(ComponentSize{pixels(140.f * s), pixels(40.f * s)})
                      .with_margin(Margin{.right = DefaultSpacing::small()})
                      .with_render_layer(CL))) {
