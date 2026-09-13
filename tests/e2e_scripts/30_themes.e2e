@@ -3,6 +3,7 @@
 
 # Navigate to the themes screen
 goto_screen themes
+resize 1280 720
 wait 0.5
 
 # Validate screen against baseline

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,450 completed; 85 remaining.
+2,472 completed; 63 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7641,70 +7641,70 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/themes_720p.png) · [Visual review](design-audit.html#screen=themes)
 
-- [ ] `themes-01` · P2 · proposal. Checkbox preview: For a more familiar checkbox presentation, place the check inside a visible square beside its label.
+- [x] `themes-01` · P2 · proposal. Checkbox preview: For a more familiar checkbox presentation, place the check inside a visible square beside its label.
   Evidence: The checkbox preview uses a V check indicator inside a wide blue row.
 
-- [ ] `themes-02` · P2 · proposal. Button labels: Expand them to Primary, Secondary, Accent and Disabled.
+- [x] `themes-02` · P2 · proposal. Button labels: Expand them to Primary, Secondary, Accent and Disabled.
   Evidence: P, S, A and D are unexplained one-letter labels.
 
-- [ ] `themes-03` · P2 · proposal. Selected theme marker: Use a checkmark or side marker with readable equal padding.
+- [x] `themes-03` · P2 · proposal. Selected theme marker: Use a checkmark or side marker with readable equal padding.
   Evidence: Ocean Navy is wrapped in greater-than and less-than text.
 
-- [ ] `themes-04` · P2 · proposal. Active-theme banner: Style it as a status badge rather than a control.
+- [x] `themes-04` · P2 · proposal. Active-theme banner: Style it as a status badge rather than a control.
   Evidence: Active: Ocean Navy resembles another gold action button.
 
-- [ ] `themes-05` · P2 · proposal. Theme selection header: Use a plain section heading so it is not mistaken for an action.
+- [x] `themes-05` · P2 · proposal. Theme selection header: Use a plain section heading so it is not mistaken for an action.
   Evidence: Select Theme is styled as a blue button.
 
-- [ ] `themes-06` · P2 · proposal. Slider preview: Add Slider and its current numeric value.
+- [x] `themes-06` · P2 · proposal. Slider preview: Add Slider and its current numeric value.
   Evidence: The wide green bar with blue thumb has no label or value.
 
-- [ ] `themes-07` · P2 · proposal. Slider purpose: Add a specimen caption with thumb size and track size.
+- [x] `themes-07` · P2 · proposal. Slider purpose: Add a specimen caption with thumb size and track size.
   Evidence: The oversized rectangular thumb does not explain its style configuration.
 
-- [ ] `themes-08` · P2 · proposal. Toggle label: Align label left and switch right with a consistent setting-row structure.
+- [x] `themes-08` · P2 · proposal. Toggle label: Align label left and switch right with a consistent setting-row structure.
   Evidence: Toggle is centered far from the right-side switch.
 
-- [ ] `themes-09` · P2 · proposal. Toggle state: Add an explicit state value.
+- [x] `themes-09` · P2 · proposal. Toggle state: Add an explicit state value.
   Evidence: The gray switch has no visible On/Off text.
 
-- [ ] `themes-10` · P2 · proposal. Shadow specimens: Label shadow type separately and add a same-color comparison for shadow strength.
+- [x] `themes-10` · P2 · proposal. Shadow specimens: Label shadow type separately and add a same-color comparison for shadow strength.
   Evidence: Hard, Soft and Accent also change background color.
 
-- [ ] `themes-11` · P2 · proposal. Hard card text: Add consistent inner padding to all three shadow cards.
+- [x] `themes-11` · P2 · proposal. Hard card text: Add consistent inner padding to all three shadow cards.
   Evidence: Hard touches the left edge of its blue card.
 
-- [ ] `themes-12` · P2 · proposal. Text swatches: Inset all text swatches equally.
+- [x] `themes-12` · P2 · proposal. Text swatches: Inset all text swatches equally.
   Evidence: Primary Text, Secondary Text and Surface Text touch their card edges.
 
-- [ ] `themes-13` · P2 · proposal. Surface swatch: Add a neutral external border and token metadata without changing the specimen colors.
+- [x] `themes-13` · P2 · proposal. Surface swatch: Add a neutral external border and token metadata without changing the specimen colors.
   Evidence: Surface Text sits on a nearly matching navy card.
 
-- [ ] `themes-14` · P2 · proposal. Color values: Add a token table showing foreground and background hex values.
+- [x] `themes-14` · P2 · proposal. Color values: Add a token table showing foreground and background hex values.
   Evidence: The preview contains many role colors with no resolved values.
 
-- [ ] `themes-15` · P2 · proposal. Separator: Identify it as the separator specimen and show its token.
+- [x] `themes-15` · P2 · proposal. Separator: Identify it as the separator specimen and show its token.
   Evidence: A green horizontal rule appears without a label.
 
-- [ ] `themes-16` · P2 · proposal. Progress state: Place a readable progress label above the bar.
+- [x] `themes-16` · P2 · proposal. Progress state: Place a readable progress label above the bar.
   Evidence: Loading: 72% is tiny inside the blue fill.
 
-- [ ] `themes-17` · P2 · proposal. Progress semantics: Add an external legend for fill and track tokens rather than silently replacing the theme.
+- [x] `themes-17` · P2 · proposal. Progress semantics: Add an external legend for fill and track tokens rather than silently replacing the theme.
   Evidence: The remaining portion is green, which can look like completion too.
 
-- [ ] `themes-18` · P2 · proposal. Preview title: Increase its hierarchy and identify the active theme beside it.
+- [x] `themes-18` · P2 · proposal. Preview title: Increase its hierarchy and identify the active theme beside it.
   Evidence: Component Preview is a small label in a full-width blue bar.
 
-- [ ] `themes-19` · P3 · proposal. Left rail space: Use it for active-theme metadata or a compact palette summary.
+- [x] `themes-19` · P3 · proposal. Left rail space: Use it for active-theme metadata or a compact palette summary.
   Evidence: The theme list leaves a large unused lower region.
 
-- [ ] `themes-20` · P2 · proposal. Theme comparison: Add named companion captures for all five themes.
+- [x] `themes-20` · P2 · proposal. Theme comparison: Add named companion captures for all five themes.
   Evidence: Only the selected theme is shown, making differences hard to review.
 
-- [ ] `themes-21` · P2 · proposal. Disabled specimen: Add a Disabled state caption outside the intentionally dim control.
+- [x] `themes-21` · P2 · proposal. Disabled specimen: Add a Disabled state caption outside the intentionally dim control.
   Evidence: D is dim but has no external explanation.
 
-- [ ] `themes-22` · P2 · proposal. Theme effect scope: Add a concise instruction above the preview.
+- [x] `themes-22` · P2 · proposal. Theme effect scope: Add a concise instruction above the preview.
   Evidence: The page does not explain that switching a theme recolors all examples.
 
 ### toasts

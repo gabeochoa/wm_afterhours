@@ -401,8 +401,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Cozy Kraft focus outline while Ocean Navy remains the active theme in both. P/S/A/D abbreviations and the unlabeled slider remain difficult to interpret.",
-    "sha256": "86ee9f39226597f6b54e7abbce8d9c26af0bbf6023213c86b7ec1e94915ec858",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "009c84b40b69b527285eb6f55ad563cb4ce3b367bc83ccd6aac8bde5abf6c262",
     "additional_findings": []
   },
   {

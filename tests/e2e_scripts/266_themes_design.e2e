@@ -1,0 +1,75 @@
+goto_screen themes
+resize 1280 720
+wait 0.4
+expect_text "Theme Switcher"
+expect_text "Active: Ocean Navy"
+expect_text "Switching themes recolors every specimen below."
+expect_text "Resolved color tokens"
+expect_text "Disabled state / no action"
+expect_text "Slider / 50%"
+expect_text "handle is 25%"
+expect_text "Shadow comparison / same Primary background"
+expect_text "Loading: 72%"
+assert_ui preview_panel x=336 y=128 w=896 h=558
+assert_ui theme_btn_1 x=64 y=188 w=232 h=42
+assert_ui theme_checkbox x=566 y=389 w=36 h=32
+assert_ui theme_progress x=356 y=668 w=856 h=12
+assert_ui theme_separator x=356 y=631 w=856 h=2
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_ocean
+click_ui theme_sample_0
+wait 0.2
+expect_text "Primary button activated"
+click_ui theme_sample_3
+wait 0.2
+expect_text "Primary button activated"
+click_ui theme_sample_1
+wait 0.2
+expect_text "Secondary button activated"
+set_slider preview_slider 0.75
+wait 0.2
+expect_text "Slider / 75%"
+click_ui theme_checkbox
+wait 0.2
+assert_ui theme_checkbox_state text=Off
+click_ui theme_toggle
+wait 0.2
+assert_ui theme_toggle_state text=On
+click_ui theme_btn_1
+wait 0.3
+expect_text "Active: Cozy Kraft"
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_cozy_kraft
+click_ui theme_btn_2
+wait 0.3
+expect_text "Active: Neon Dark"
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_neon_dark
+click_ui theme_btn_4
+wait 0.3
+expect_text "Active: Midnight"
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_midnight
+click_ui theme_btn_5
+wait 0.3
+expect_text "Active: Sage Natural"
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_sage_natural
+resize 1920 1080
+wait 0.3
+assert_ui preview_panel x=504 y=192 w=1344 h=837
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_1080
+resize 1024 768
+wait 0.3
+assert_ui preview_panel x=269 y=198 w=717 h=446
+assert_no_overflow
+assert_within_parents
+screenshot themes_design_narrow
+resize 1280 720

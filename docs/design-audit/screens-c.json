@@ -5340,7 +5340,8 @@
         "change": "Add a concise instruction above the preview."
       }
     ],
-    "sha256": "18190e9f97324b024987873c8fe2ac8b0708c4fede764e1ae32300f4b424895b"
+    "sha256": "18190e9f97324b024987873c8fe2ac8b0708c4fede764e1ae32300f4b424895b",
+    "evidence": "docs/design-audit/originals/themes_720p.png"
   },
   {
     "id": "toasts",

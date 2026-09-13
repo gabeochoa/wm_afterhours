@@ -3888,7 +3888,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## themes
 
-[Current baseline](../../screenshot-baselines/screens/themes_720p.png) · [Visual review](../../design-audit.html#screen=themes)
+[Reviewed image](../../docs/design-audit/originals/themes_720p.png) · [Current baseline](../../screenshot-baselines/screens/themes_720p.png) · [Visual review](../../design-audit.html#screen=themes)
 
 Baseline SHA-256: `18190e9f97324b024987873c8fe2ac8b0708c4fede764e1ae32300f4b424895b`
 
@@ -3923,7 +3923,7 @@ Ocean Navy intentionally recolors the preview. Twenty-two findings improve token
 
 [Image](../../baseline_screenshots/themes.png)
 
-Current capture removes Cozy Kraft focus outline while Ocean Navy remains the active theme in both. P/S/A/D abbreviations and the unlabeled slider remain difficult to interpret.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## toasts
 
