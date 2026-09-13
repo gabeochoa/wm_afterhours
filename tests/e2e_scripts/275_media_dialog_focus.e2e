@@ -1,0 +1,32 @@
+goto_screen media_library
+wait 0.3
+click_ui ml_settings
+wait 0.3
+expect_focused ml_overlay_close
+shift_tab
+wait 0.1
+expect_focused ml_overlay_sort
+tab
+wait 0.1
+expect_focused ml_overlay_close
+screenshot media_dialog_keyboard_focus
+key ESCAPE
+wait 0.3
+expect_no_text "Library settings"
+expect_focused ml_settings
+click_ui ml_play
+wait 0.3
+expect_focused ml_overlay_close
+key ENTER
+wait 0.3
+expect_focused ml_play
+resize 1280 900
+wait 0.3
+click_ui ml_settings
+wait 0.3
+assert_ui modal_backdrop x=0 y=0 w=1280 h=900
+screenshot media_dialog_tall_viewport
+key ESCAPE
+wait 0.3
+expect_focused ml_settings
+resize 1280 720

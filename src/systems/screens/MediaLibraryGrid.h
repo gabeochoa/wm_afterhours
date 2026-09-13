@@ -5,6 +5,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/text_input/text_input.h>
 #include <algorithm>
 #include <array>
@@ -216,7 +217,6 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     theme.surface = {40, 43, 46, 255}; theme.primary = gold; theme.accent = gold; theme.corner_radius = 0; theme.roundness = 0;
     c.set_theme(theme); c.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * scale));
-    if (c.pressed(InputAction::MenuBack)) { overlay = Overlay::None; playing = false; }
     if (playing && overlay == Overlay::Player) progress = std::min(progress + std::min(dt, .1f), ITEMS[playing_item].mins * 60.f);
     auto root = div(c, mk(entity), box(0, 0, 1280, 720).with_absolute_position((c.screen_width - 1280 * scale) / 2, (c.screen_height - 720 * scale) / 2).with_debug_name("ml_bg"));
     auto &p = root.ent(); image(c, p, 900, 6, 0, 0, 1280, 720);
@@ -321,7 +321,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     for (int slot = 0; slot < 6 && page * 6 + slot < total; ++slot)
       if (tile_ids[slot] >= 0 && c.was_hot(tile_ids[slot])) shown = ids[page * 6 + slot];
     if (!ids.empty()) build_detail(c, p, shown);
-    if (overlay != Overlay::None) build_overlay(c, p);
+    build_overlay(c, p);
   }
 
   void build_detail(UIContext<InputAction> &c, afterhours::Entity &p, int shown) {
@@ -360,9 +360,15 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
   }
 
   void build_overlay(UIContext<InputAction> &c, afterhours::Entity &p) {
-    div(c, mk(p, 700), box(0, 0, 1280, 720).with_custom_background({0, 0, 0, 185}).with_overlay(5));
-    auto panel = div(c, mk(p, 701), box(300, 135, 680, 450).with_custom_background({28, 30, 32, 255})
-        .with_border({74, 77, 81, 255}, scale).with_corner_radius(8 * scale).with_overlay(6).with_debug_name("ml_overlay"));
+    bool open = overlay != Overlay::None;
+    auto panel = afterhours::modal(c, mk(p, 701), open, afterhours::ModalConfig{}
+        .with_backdrop_color({0, 0, 0, 185}).with_render_layer(6)
+        .with_show_close_button(false)
+        .with_panel(box(300, 135, 680, 450)
+            .with_custom_background({28, 30, 32, 255})
+            .with_border({74, 77, 81, 255}, scale)
+            .with_corner_radius(8 * scale).with_debug_name("ml_overlay")));
+    if (!open) { overlay = Overlay::None; playing = false; return; }
     auto &q = panel.ent();
     const std::string heading = overlay == Overlay::Player ? ITEMS[playing_item].title :
         overlay == Overlay::Server ? "Home server" : overlay == Overlay::Settings ? "Library settings" : "Guest profile";
