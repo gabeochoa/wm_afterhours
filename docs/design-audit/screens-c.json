@@ -614,7 +614,8 @@
         "change": "Add a small ring 28 px / dot 18 px caption outside the test controls."
       }
     ],
-    "sha256": "fd1b3220deab73516389f0046c0cb0d0f48f4f1c62bcf77acdd002a4ce68c8bb"
+    "sha256": "fd1b3220deab73516389f0046c0cb0d0f48f4f1c62bcf77acdd002a4ce68c8bb",
+    "evidence": "docs/design-audit/originals/radio_buttons_720p.png"
   },
   {
     "id": "real_world_modals",

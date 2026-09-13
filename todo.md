@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,733 completed; 802 remaining.
+1,751 completed; 784 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5847,58 +5847,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/radio_buttons_720p.png) · [Visual review](design-audit.html#screen=radio_buttons)
 
-- [ ] `radio_buttons-01` · P2 · proposal. Group card height: Size cards to their options and reserve a shared footer for demo notes.
+- [x] `radio_buttons-01` · P2 · proposal. Group card height: Size cards to their options and reserve a shared footer for demo notes.
   Evidence: Fruit and Size leave over half their card empty.
 
-- [ ] `radio_buttons-02` · P2 · proposal. Main heading: Add a consistent 16 px text inset.
+- [x] `radio_buttons-02` · P2 · proposal. Main heading: Add a consistent 16 px text inset.
   Evidence: Radio Button Groups sits flush against its teal bar left edge.
 
-- [ ] `radio_buttons-03` · P2 · proposal. Group headings: Align headings with the option-label column or apply a clear shared inset.
+- [x] `radio_buttons-03` · P2 · proposal. Group headings: Align headings with the option-label column or apply a clear shared inset.
   Evidence: Favorite Fruit, Size and Color hug their header left edges.
 
-- [ ] `radio_buttons-04` · P2 · proposal. Selected markers: Add an adjacent selected badge or stronger outline while retaining the theme swatch.
+- [x] `radio_buttons-04` · P2 · proposal. Selected markers: Add an adjacent selected badge or stronger outline while retaining the theme swatch.
   Evidence: Orange, Small and Blue use a dark magenta dot on a dark card.
 
-- [ ] `radio_buttons-05` · P3 · proposal. Color options: Add small labeled color swatches without changing the radio selection color.
+- [x] `radio_buttons-05` · P3 · proposal. Color options: Add small labeled color swatches without changing the radio selection color.
   Evidence: Red, Green, Blue and Yellow are all text-only.
 
-- [ ] `radio_buttons-06` · P2 · proposal. Summary syntax: Use human-readable labeled values separated into three columns.
+- [x] `radio_buttons-06` · P2 · proposal. Summary syntax: Use human-readable labeled values separated into three columns.
   Evidence: The footer reads Fruit=Orange, Size=Small, Color=Blue.
 
-- [ ] `radio_buttons-07` · P2 · proposal. Summary alignment: Add 16 px inner padding consistent with the title.
+- [x] `radio_buttons-07` · P2 · proposal. Summary alignment: Add 16 px inner padding consistent with the title.
   Evidence: Selected begins flush against the footer edge.
 
-- [ ] `radio_buttons-08` · P2 · proposal. Selection instructions: Add a one-line instruction above the cards.
+- [x] `radio_buttons-08` · P2 · proposal. Selection instructions: Add a one-line instruction above the cards.
   Evidence: The title gives no explanation of one choice per group.
 
-- [ ] `radio_buttons-09` · P2 · proposal. Keyboard guidance: Add a footer note describing the actual Tab and arrow behavior confirmed in source.
+- [x] `radio_buttons-09` · P2 · proposal. Keyboard guidance: Add a footer note describing the actual Tab and arrow behavior confirmed in source.
   Evidence: No key guide is visible beside the groups.
 
-- [ ] `radio_buttons-10` · P3 · proposal. Group numbering: Add small independent group labels so the comparison purpose is evident.
+- [x] `radio_buttons-10` · P3 · proposal. Group numbering: Add small independent group labels so the comparison purpose is evident.
   Evidence: Three equal cards have no explicit group identifiers beyond names.
 
-- [ ] `radio_buttons-11` · P3 · proposal. Defaults: Mark the initial selection as the fixture default in the summary.
+- [x] `radio_buttons-11` · P3 · proposal. Defaults: Mark the initial selection as the fixture default in the summary.
   Evidence: Orange, Small and Blue are selected with no default annotation.
 
-- [ ] `radio_buttons-12` · P2 · proposal. Fruit label width: Add a visible long-label example caption that explains the width test.
+- [x] `radio_buttons-12` · P2 · proposal. Fruit label width: Add a visible long-label example caption that explains the width test.
   Evidence: Watermelon is much longer than Apple and Orange.
 
-- [ ] `radio_buttons-13` · P3 · proposal. Size labels: Name the group Item size so the choices read as a coherent sample form.
+- [x] `radio_buttons-13` · P3 · proposal. Size labels: Name the group Item size so the choices read as a coherent sample form.
   Evidence: Small, Medium and Large contain no size context.
 
-- [ ] `radio_buttons-14` · P3 · proposal. Unequal option counts: Align card bottoms to the option region and label option counts for comparison.
+- [x] `radio_buttons-14` · P3 · proposal. Unequal option counts: Align card bottoms to the option region and label option counts for comparison.
   Evidence: Color has four rows while the other cards have three.
 
-- [ ] `radio_buttons-15` · P3 · proposal. Card border semantics: Use neutral card outlines so magenta is reserved for selection.
+- [x] `radio_buttons-15` · P3 · proposal. Card border semantics: Use neutral card outlines so magenta is reserved for selection.
   Evidence: All three cards use the same magenta as selected radio dots.
 
-- [ ] `radio_buttons-16` · P3 · proposal. Unused lower screen: Vertically center the compact demo within the viewport.
+- [x] `radio_buttons-16` · P3 · proposal. Unused lower screen: Vertically center the compact demo within the viewport.
   Evidence: A broad black band remains below the main panel.
 
-- [ ] `radio_buttons-17` · P2 · proposal. Summary association: Move each selected value directly beneath its group and keep a compact combined summary.
+- [x] `radio_buttons-17` · P2 · proposal. Summary association: Move each selected value directly beneath its group and keep a compact combined summary.
   Evidence: The status line is separated from the cards by a large gutter.
 
-- [ ] `radio_buttons-18` · P3 · proposal. Spec visibility: Add a small ring 28 px / dot 18 px caption outside the test controls.
+- [x] `radio_buttons-18` · P3 · proposal. Spec visibility: Add a small ring 28 px / dot 18 px caption outside the test controls.
   Evidence: The enlarged circles and dots are visible but their dimensions are undocumented.
 
 ### real_world_modals

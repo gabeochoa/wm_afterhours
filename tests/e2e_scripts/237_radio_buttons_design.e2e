@@ -1,0 +1,46 @@
+goto_screen radio_buttons
+resize 1280 720
+wait 0.4
+expect_text "Radio Button Groups"
+expect_text "Item size"
+expect_text "Fruit: Orange"
+expect_text "Size: Small"
+expect_text "Color: Blue"
+expect_text "Fixture default: Orange"
+expect_text "Watermelon tests a longer label."
+assert_ui radio_bg x=60 y=46 w=1160 h=628
+assert_within_parents
+screenshot radio_buttons_design
+click_ui fruit_radios_2
+wait 0.2
+expect_text "Fruit: Watermelon"
+expect_text "Size: Small"
+expect_text "Color: Blue"
+focus_ui size_radios_tray
+key DOWN
+key ENTER
+wait 0.2
+expect_text "Size: Medium"
+focus_ui color_radios_tray
+key ENTER
+wait 0.2
+expect_text "Color: Red"
+key DOWN
+wait 0.2
+expect_text "Color: Red"
+key ENTER
+wait 0.2
+expect_text "Color: Green"
+assert_within_parents
+screenshot radio_buttons_selected
+resize 1920 1080
+wait 0.3
+assert_ui radio_bg x=90 y=69 w=1740 h=942
+assert_within_parents
+screenshot radio_buttons_design_1080
+resize 1024 768
+wait 0.3
+assert_ui radio_bg x=48 y=133 w=928 h=502
+assert_within_parents
+screenshot radio_buttons_design_narrow
+resize 1280 720

@@ -233,8 +233,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes Apple focus outline. Orange is selected independently of Apple focus in the old image. Large empty lower areas within groups remain visible.",
-    "sha256": "49838a9e898865c28f09ca09cb927191ddd422c60b206a88fb534c684eceebda",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "17e53be305e43f02fb8b521d7adb9cf653078ce65a2205c21e47b68bbe3b3f10",
     "additional_findings": []
   },
   {

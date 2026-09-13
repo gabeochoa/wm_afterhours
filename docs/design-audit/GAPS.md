@@ -2943,7 +2943,7 @@ The result table has a strong player highlight. Smaller text, skewed table geome
 
 ## radio buttons
 
-[Current baseline](../../screenshot-baselines/screens/radio_buttons_720p.png) · [Visual review](../../design-audit.html#screen=radio_buttons)
+[Reviewed image](../../docs/design-audit/originals/radio_buttons_720p.png) · [Current baseline](../../screenshot-baselines/screens/radio_buttons_720p.png) · [Visual review](../../design-audit.html#screen=radio_buttons)
 
 Baseline SHA-256: `fd1b3220deab73516389f0046c0cb0d0f48f4f1c62bcf77acdd002a4ce68c8bb`
 
@@ -2974,7 +2974,7 @@ The three groups clearly demonstrate single selection. Eighteen defensible propo
 
 [Image](../../baseline_screenshots/radio_buttons.png)
 
-Current capture removes Apple focus outline. Orange is selected independently of Apple focus in the old image. Large empty lower areas within groups remain visible.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## real world modals
 

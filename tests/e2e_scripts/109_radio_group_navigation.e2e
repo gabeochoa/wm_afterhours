@@ -3,7 +3,9 @@
 goto_screen radio_buttons
 wait 0.5
 
-expect_text "Selected: Fruit=Orange, Size=Small, Color=Blue"
+expect_text "Fruit: Orange"
+expect_text "Size: Small"
+expect_text "Color: Blue"
 
 # Entering the screen auto-focuses the currently-selected radio, so one TAB
 # moves to the next group (Size) rather than to a Fruit option; ENTER on
@@ -12,4 +14,6 @@ key TAB
 wait 0.2
 key ENTER
 wait 0.3
-expect_text "Selected: Fruit=Orange, Size=Small, Color=Blue"
+expect_text "Fruit: Orange"
+expect_text "Size: Small"
+expect_text "Color: Blue"
