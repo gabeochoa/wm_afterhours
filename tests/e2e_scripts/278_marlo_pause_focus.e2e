@@ -1,0 +1,31 @@
+goto_screen marlo_kart
+wait 0.3
+click_ui mk_start
+wait 0.2
+click_ui mk_driver_next
+wait 0.2
+click_ui mk_cup_start
+wait 0.2
+click_ui mk_pause
+wait 0.3
+expect_focused mk_resume
+tab
+wait 0.1
+expect_focused mk_restart
+tab
+wait 0.1
+expect_focused mk_quit
+tab
+wait 0.1
+expect_focused mk_resume
+shift_tab
+wait 0.1
+expect_focused mk_quit
+screenshot marlo_pause_keyboard_focus
+key ENTER
+wait 0.3
+expect_text "START YOUR ENGINES"
+expect_no_text "PAUSED"
+click_ui mk_start
+wait 0.3
+expect_text "SELECT DRIVER"

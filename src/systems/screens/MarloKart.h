@@ -5,6 +5,7 @@
 #include "../ExampleScreenRegistry.h"
 #include <afterhours/ah.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/modal.h>
 #include <afterhours/src/plugins/ui/grid.h>
 #include <algorithm>
 #include <array>
@@ -604,6 +605,7 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
   }
 
   void handle_nav(UIContext<InputAction> &context) {
+    if (phase == Phase::Race && paused) return;
     const bool left = context.pressed_or_repeat(InputAction::WidgetLeft);
     const bool right = context.pressed_or_repeat(InputAction::WidgetRight);
     const bool up = context.pressed_or_repeat(InputAction::WidgetUp);
@@ -1145,15 +1147,21 @@ struct MarloKartScreen : ScreenSystem<UIContext<InputAction>> {
     footer(c, root.ent(), fmt::format("{}  -  {}", track_name(), cups[cup_idx].name));
     label(c, root.ent(), 114, "ENTER: DRIFT", 32, 671, 208, 30, 16, ink);
     label(c, root.ent(), 115, fmt::format("RACE {} / 4", race_in_cup + 1), 1060, 671, 183, 30, 18, ink, "", TextAlignment::Right);
-    if (paused) {
-      div(c, mk(root.ent(), 300), box(0, 0, 1280, 720).with_custom_background({7, 31, 67, 168}).with_overlay(2));
-      auto sheet = div(c, mk(root.ent(), 301), box(430, 195, 420, 324)
-          .with_custom_background(white).with_border(gold, 5 * scale)
-          .with_corner_radius(17 * scale).with_overlay(3).with_debug_name("mk_pause_sheet"));
+    auto sheet = afterhours::modal(c, mk(root.ent(), 301), paused, afterhours::ModalConfig{}
+        .with_backdrop_color({7, 31, 67, 168}).with_render_layer(3)
+        .with_show_close_button(false)
+        .with_panel(box(430, 195, 420, 324)
+            .with_custom_background(white).with_border(gold, 5 * scale)
+            .with_corner_radius(17 * scale).with_debug_name("mk_pause_sheet")));
+    if (sheet) {
       label(c, sheet.ent(), 0, "PAUSED", 32, 20, 356, 63, 41, ink, "", TextAlignment::Center);
       if (action(c, sheet.ent(), 1, "RESUME", 38, 103, 344, 48, "mk_resume", gold, ink)) paused = false;
       if (action(c, sheet.ent(), 2, "RESTART RACE", 38, 166, 344, 48, "mk_restart", blue, white)) start_race();
-      if (action(c, sheet.ent(), 3, "QUIT TO TITLE", 38, 229, 344, 48, "mk_quit", blue, white)) phase = Phase::Title;
+      if (action(c, sheet.ent(), 3, "QUIT TO TITLE", 38, 229, 344, 48, "mk_quit", blue, white)) {
+        paused = false;
+        afterhours::modal::close(sheet.ent().id);
+        phase = Phase::Title;
+      }
     } else if (countdown > 0) {
       const int n = static_cast<int>(std::ceil(countdown - .6f));
       div(c, mk(root.ent(), 302), box(499, 174, 282, 165)
