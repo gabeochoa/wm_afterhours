@@ -23,7 +23,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   int help_topic = 0;
   Progress progress{12, 1000}, saved_progress{8, 650};
   std::string status;
-  std::array<raylib::Texture2D, 11> art{};
+  std::array<raylib::Texture2D, 10> art{};
   bool loaded = false;
   static constexpr std::array<const char *, 3> languages{"English", "Spanish", "French"};
   const afterhours::Color cream{255, 248, 230, 255};
@@ -32,12 +32,12 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
 
   void load() {
     if (loaded) return;
-    constexpr std::array<const char *, 11> names{
+    constexpr std::array<const char *, 10> names{
         "forest", "board", "pill_blue", "music_on", "music_off",
-        "sound_on", "sound_off", "vibration_on", "vibration_off", "close", "wifi"};
+        "sound_on", "sound_off", "vibration_on", "vibration_off", "close"};
     for (size_t i = 0; i < names.size(); ++i) {
       art[i] = raylib::LoadTexture(afterhours::files::get_resource_path(
-          "images", std::string("mobile_settings/") + names[i] + ".png").string().c_str());
+          "images", std::string(i >= 2 && i <= 8 ? "casual_settings/" : "mobile_settings/") + names[i] + ".png").string().c_str());
       raylib::SetTextureFilter(art[i], raylib::TEXTURE_FILTER_BILINEAR);
     }
     loaded = true;
@@ -67,7 +67,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
     load();
-    const float scale = context.screen_height / 720.f;
+    const float scale = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
     Theme theme;
     theme.font = brown;
     theme.darkfont = cream;
@@ -80,19 +80,24 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     theme.roundness = 0;
     context.set_theme(theme);
     context.scaling_mode = ScalingMode::Proportional;
-    UIStylingDefaults::get().set_default_font("FredokaMockBold", h720(23));
+    UIStylingDefaults::get().set_default_font("FredokaMockBold", pixels(23 * scale));
 
     if (!dialog_open && context.pressed(InputAction::MenuBack))
       settings_open = !settings_open;
 
-    auto root = div(context, mk(entity, 0),
-        box(scale, 0, 0, 1280, 720).with_debug_name("casual_root")
+    auto canvas = div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_corner_radius(0).with_debug_name("casual_canvas")
         .with_on_draw_bg([texture = art[0]](RectangleType r) { paint(texture, r); }));
+    auto root = div(context, mk(canvas.ent(), 0), box(scale, 0, 0, 1280, 720)
+        .with_absolute_position((context.screen_width - 1280 * scale) / 2,
+                                (context.screen_height - 720 * scale) / 2)
+        .with_debug_name("casual_root"));
     auto label = [&](afterhours::Entity &parent, int id, float x, float y,
                      float w, float h, const std::string &text, float size,
                      afterhours::Color color, const std::string &name = "", bool shadow = false) {
       return div(context, mk(parent, id), box(scale, x, y, w, h).with_label(text)
-          .with_font("FredokaMockBold", h720(size * 1.25f))
+          .with_font("FredokaMockBold", pixels(size * 1.25f * scale))
           .with_custom_text_color(color).with_alignment(TextAlignment::Center)
           .with_text_shadow(shadow ? brown : afterhours::Color{0, 0, 0, 0},
                             0, 1.5f * scale)
@@ -108,7 +113,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
       const float base_h = texture_index == 2 ? 77.f : texture_index == 9 ? 74.f : 82.f;
       const float image_w = texture.width / 2.f, image_h = texture.height / 2.f;
       return button(context, mk(parent, id), box(scale, x, y, w, h)
-          .with_label(text).with_font("FredokaMockBold", h720(size * 1.25f))
+          .with_label(text).with_font("FredokaMockBold", pixels(size * 1.25f * scale))
           .with_custom_text_color(cream).with_alignment(TextAlignment::Center)
           .with_text_inset(4 * scale, 2 * scale).with_corner_radius(35 * scale)
           .with_text_shadow({67, 128, 144, 255}, 0, 1.5f * scale)
@@ -119,9 +124,17 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           }).with_debug_name(name));
     };
 
-    label(root.ent(), 1, 825, 37, 230, 53, "Unlimited lives", 24, cream);
-    label(root.ent(), 2, 1075, 37, 180, 53,
-          std::to_string(progress.coins) + " coins", 24, cream, "casual_coins");
+    div(context, mk(root.ent(), 1), box(scale, 1068, 28, 184, 52)
+        .with_custom_background({255, 240, 207, 255}).with_corner_radius(26 * scale)
+        .with_border({217, 176, 101, 255}, 3 * scale).with_ignore_pointer_events()
+        .with_on_draw_fg([scale](RectangleType r) {
+          const raylib::Vector2 center{r.x + 27 * scale, r.y + r.height / 2};
+          raylib::DrawCircleV(center, 14 * scale, {244, 187, 50, 255});
+          raylib::DrawCircleLinesV(center, 11 * scale, {165, 108, 31, 255});
+          raylib::DrawLineEx({center.x, center.y - 7 * scale}, {center.x, center.y + 7 * scale},
+                             3 * scale, {255, 231, 132, 255});
+        }));
+    label(root.ent(), 2, 1115, 31, 130, 44, std::to_string(progress.coins) + " +", 24, brown, "casual_coins");
     if (settings_open) {
       div(context, mk(root.ent(), 3), box(scale, 0, 0, 1280, 720)
           .with_custom_background({6, 22, 12, 194}).with_ignore_pointer_events());
@@ -131,43 +144,81 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
             paint(texture, {r.x - scale, r.y - scale, 942 * scale, 640 * scale});
           }));
       label(board.ent(), 1, 0, 18, 940, 80, "SETTINGS", 57.5f, cream, "casual_title", true);
+      label(board.ent(), 2, 61, 106, 396, 25, "AUDIO", 18, brown);
       const std::array<bool *, 3> values{&music_on, &sound_on, &vibrate_on};
       constexpr std::array<const char *, 3> names{"Music", "Sound", "Vibration"};
+      constexpr std::array<const char *, 3> captions{"MUSIC", "SOUND EFFECTS", "VIBRATION"};
       constexpr std::array<const char *, 3> ids{"casual_music", "casual_sound", "casual_vibration"};
       for (size_t i = 0; i < values.size(); ++i) {
-        if (action(board.ent(), 10 + static_cast<int>(i), "", 61 + 138.f * i,
-                   134, 119, 82, ids[i], 20, 3 + static_cast<int>(i) * 2 + (*values[i] ? 0 : 1))) {
+        const float x = 74 + 132.f * i;
+        if (action(board.ent(), 10 + static_cast<int>(i), "", x, 139, 102, 70, ids[i],
+                   20, 3 + static_cast<int>(i) * 2 + (*values[i] ? 0 : 1))) {
           *values[i] = !*values[i];
           status = std::string(names[i]) + (*values[i] ? " on" : " off");
         }
+        label(board.ent(), 60 + static_cast<int>(i), x - 27, 216, 156, 25, captions[i], 14.5f, brown);
+        label(board.ent(), 65 + static_cast<int>(i), x - 13, 240, 128, 22,
+              *values[i] ? "ON" : "OFF", 16, brown, std::string(ids[i]) + "_state");
       }
-      if (action(board.ent(), 20, "", 484, 137, 396, 77,
-                 "casual_progress", 29)) open(Dialog::Progress);
-      label(board.ent(), 40, 500, 138, 280, 40, "SAVE/LOAD", 29, cream);
-      label(board.ent(), 42, 500, 168, 280, 40, "PROGRESS", 29, cream);
-      div(context, mk(board.ent(), 41), box(scale, 742, 142, 67, 75)
-          .with_ignore_pointer_events().with_on_draw_bg([texture = art[10]](RectangleType r) { paint(texture, r); }));
-      if (action(board.ent(), 21, notifications_on ? "NOTIFICATIONS: ON" : "NOTIFICATIONS: OFF",
-                 61, 243, 396, 77, "casual_notifications", 24)) {
+      if (action(board.ent(), 20, "", 484, 137, 396, 77, "casual_progress", 26)) open(Dialog::Progress);
+      label(board.ent(), 40, 494, 143, 306, 35, "PROGRESS SAVE", 26, cream);
+      label(board.ent(), 42, 494, 178, 306, 26, "Save or restore this session", 15.5f, cream);
+      div(context, mk(board.ent(), 41), box(scale, 812, 153, 44, 44)
+          .with_ignore_pointer_events().with_on_draw_bg([scale](RectangleType r) {
+            afterhours::draw_rectangle_rounded(r, .12f, 8, {255, 248, 230, 255});
+            afterhours::draw_rectangle({r.x + 10 * scale, r.y, 24 * scale, 17 * scale}, {34, 161, 215, 255});
+            afterhours::draw_rectangle({r.x + 14 * scale, r.y + 3 * scale, 6 * scale, 11 * scale}, {255, 248, 230, 255});
+            afterhours::draw_rectangle({r.x + 9 * scale, r.y + 25 * scale, 26 * scale, 19 * scale}, {34, 161, 215, 255});
+          }));
+      label(board.ent(), 43, 484, 220, 396, 28,
+            "Saved slot: level " + std::to_string(saved_progress.level) + " / " + std::to_string(saved_progress.coins) + " coins",
+            17, brown, "casual_saved_slot");
+      if (action(board.ent(), 21, "", 61, 286, 396, 66, "casual_notifications", 24)) {
         notifications_on = !notifications_on;
         status = notifications_on ? "Notifications enabled" : "Notifications disabled";
       }
-      if (action(board.ent(), 22, "CREDITS", 484, 243, 396, 77, "casual_credits")) open(Dialog::Credits);
-      if (action(board.ent(), 23, "LANGUAGE", 61, 346, 396, 77, "casual_language")) open(Dialog::Language);
-      if (action(board.ent(), 24, "SUPPORT", 484, 346, 396, 77, "casual_support")) open(Dialog::Support);
-      if (action(board.ent(), 25, "TERMS AND PRIVACY", 484, 449, 396, 77,
-                 "casual_terms", 27)) open(Dialog::Terms);
-      if (button(context, mk(board.ent(), 26), box(scale, 61, 443, 396, 94)
-          .with_click_activation(ClickActivationMode::Release)
-          .with_debug_name("casual_about"))) open(Dialog::About);
-      label(board.ent(), 43, 61, 446, 396, 25, "15555-1-114203-20-10200-01", 16.5f, muted);
-      label(board.ent(), 44, 61, 471, 396, 25, "Version 1.11.0.12346", 16.5f, muted);
-      label(board.ent(), 45, 61, 496, 396, 25, "Player ID: 281676956389", 16.5f, muted);
-      if (!status.empty()) label(board.ent(), 30, 70, 566, 800, 30, status, 17, brown, "casual_status");
-      if (action(root.ent(), 50, "", 1047, 106, 74, 74, "casual_close", 20, 9))
-        settings_open = false;
-      div(context, mk(root.ent(), 51), box(scale, 210, 698, 860, 4)
-          .with_custom_background({255, 255, 255, 160}).with_ignore_pointer_events());
+      label(board.ent(), 44, 72, 290, 280, 32, "NOTIFICATIONS", 23, cream);
+      label(board.ent(), 45, 72, 320, 280, 23, notifications_on ? "ON" : "OFF", 16, cream, "casual_notifications_state");
+      div(context, mk(board.ent(), 46), box(scale, 367, 305, 64, 30)
+          .with_custom_background(notifications_on ? afterhours::Color{91, 176, 45, 255} : afterhours::Color{35, 112, 145, 255})
+          .with_corner_radius(15 * scale).with_border({255, 248, 230, 220}, scale).with_ignore_pointer_events()
+          .with_on_draw_fg([scale, enabled = notifications_on](RectangleType r) {
+            raylib::DrawCircleV({r.x + (enabled ? 49 : 15) * scale, r.y + r.height / 2}, 11 * scale,
+                                {255, 248, 230, 255});
+          }));
+      if (action(board.ent(), 23, "", 61, 369, 396, 66, "casual_language")) open(Dialog::Language);
+      label(board.ent(), 47, 61, 371, 396, 32, "LANGUAGE", 24, cream);
+      label(board.ent(), 48, 61, 403, 396, 24, languages[language], 18, cream, "casual_language_value");
+      label(board.ent(), 49, 484, 267, 396, 27, "HELP & ABOUT", 18, brown);
+      if (action(board.ent(), 22, "CREDITS", 484, 305, 190, 57, "casual_credits", 24)) open(Dialog::Credits);
+      if (action(board.ent(), 24, "SUPPORT", 690, 305, 190, 57, "casual_support", 24)) open(Dialog::Support);
+      if (button(context, mk(board.ent(), 25), box(scale, 484, 387, 396, 44)
+          .with_label("TERMS & PRIVACY").with_font("FredokaMockBold", pixels(25 * scale))
+          .with_custom_text_color(brown).with_alignment(TextAlignment::Center)
+          .with_custom_hover_bg({255, 237, 199, 255}).with_corner_radius(10 * scale)
+          .with_click_activation(ClickActivationMode::Release).with_debug_name("casual_terms"))) open(Dialog::Terms);
+      div(context, mk(board.ent(), 50), box(scale, 569, 425, 226, 1)
+          .with_custom_background({137, 85, 62, 120}).with_ignore_pointer_events());
+      if (button(context, mk(board.ent(), 26), box(scale, 61, 453, 819, 119)
+          .with_custom_hover_bg({255, 237, 199, 70}).with_corner_radius(12 * scale)
+          .with_click_activation(ClickActivationMode::Release).with_debug_name("casual_about"))) open(Dialog::About);
+      div(context, mk(board.ent(), 51), box(scale, 77, 458, 750, 25).with_label("ABOUT  /  OPEN DETAILS")
+          .with_font("FredokaMockBold", pixels(18 * scale)).with_custom_text_color(brown)
+          .with_alignment(TextAlignment::Left).with_ignore_pointer_events());
+      constexpr std::array<const char *, 3> metadata_labels{"Build", "Version", "Player ID"};
+      constexpr std::array<const char *, 3> metadata_values{"15555-1-114203-20-10200-01", "1.11.0.12346", "281 676 956 389"};
+      for (int i = 0; i < 3; ++i) {
+        div(context, mk(board.ent(), 70 + i), box(scale, 77, 487 + i * 25.f, 104, 25)
+            .with_label(metadata_labels[i]).with_font("FredokaMockBold", pixels(19 * scale))
+            .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
+        div(context, mk(board.ent(), 75 + i), box(scale, 182, 487 + i * 25.f, 646, 25)
+            .with_label(metadata_values[i]).with_font("FredokaMockBold", pixels(27 * scale))
+            .with_custom_text_color(brown).with_alignment(TextAlignment::Left).with_ignore_pointer_events());
+      }
+      label(board.ent(), 30, 70, 570, 800, 26,
+            status.empty() ? "Preferences apply immediately. Kept for this session." : status,
+            16.5f, brown, "casual_status");
+      if (action(root.ent(), 50, "", 1022, 104, 62, 62, "casual_close", 20, 9)) settings_open = false;
     } else {
       label(root.ent(), 60, 340, 230, 600, 70, "Ready for another adventure?", 36, cream);
       label(root.ent(), 61, 340, 315, 600, 50,
@@ -180,7 +231,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     constexpr std::array<const char *, 6> titles{
         "About", "Language", "Credits", "Support", "Terms and privacy", "Save / load progress"};
     auto modal = afterhours::modal(context, mk(entity, 500), dialog_open,
-        afterhours::ModalConfig{}.with_size(h720(650), h720(440))
+        afterhours::ModalConfig{}.with_size(pixels(650 * scale), pixels(440 * scale))
             .with_show_close_button(false).with_closed_by(afterhours::ClosedBy::CloseRequest));
     if (!modal) return;
     modal.cmp().set_desired_padding(pixels(0), Axis::X)
@@ -189,7 +240,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     label(panel, 10, 25, 17, 600, 55, titles[static_cast<size_t>(dialog)], 30, brown, "casual_dialog_title");
     auto body = [&](int id, const std::string &text, float y, float height) {
       div(context, mk(panel, id), box(scale, 34, y, 582, height).with_label(text)
-          .with_font("Fredoka", h720(23)).with_custom_text_color(brown)
+          .with_font("Fredoka", pixels(23 * scale)).with_custom_text_color(brown)
           .with_text_overflow(TextOverflow::Wrap).with_alignment(TextAlignment::Center)
           .with_ignore_pointer_events().with_debug_name("casual_dialog_body_" + std::to_string(id)));
     };
@@ -230,7 +281,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
     } else if (dialog == Dialog::Support) {
       constexpr std::array<const char *, 3> help{
           "How can we help? Choose a topic below.",
-          "Audio: open Settings and choose the music or speaker button. Green means on; gray means off.",
+          "Audio: open Settings and choose the music or speaker button. Green means on; blue means off. The labels show the current state.",
           "Progress: Save Progress stores your current level and coins. Load Progress restores the last saved slot."};
       body(11, help[static_cast<size_t>(help_topic)], 83, 132);
       if (modal_action(20, "AUDIO HELP", 35, 234, 280, "casual_help_audio")) help_topic = 1;
@@ -241,7 +292,7 @@ struct CasualSettingsScreen : ScreenSystem<UIContext<InputAction>> {
           ? "Build: 15555-1-114203-20-10200-01\nVersion: 1.11.0.12346\nPlayer ID: 281676956389\nLanguage: " + std::string(languages[language])
           : dialog == Dialog::Credits
           ? "Made with afterhours\nInterface and artwork: wm_afterhours\nFredoka typeface: The Fredoka Project Authors\nThank you for playing!"
-          : "Your privacy\nYour preferences and progress stay on this device. No account, advertising or cloud sync is used.\nUse Save / Load Progress to manage your saved game.";
+          : "Your privacy\nYour preferences and progress last for this demo session. No account, advertising or cloud sync is used.\nUse Save / Load Progress to manage your saved game.";
       body(11, content, 86, 225);
       if (modal_action(31, "CLOSE", 185, 348, 280, "casual_dialog_close")) dialog_open = false;
     }

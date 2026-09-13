@@ -1,0 +1,85 @@
+goto_screen casual_settings
+resize 1280 720
+wait 0.3
+expect_text "AUDIO"
+expect_text "MUSIC"
+expect_text "SOUND EFFECTS"
+expect_text "VIBRATION"
+expect_text "PROGRESS SAVE"
+expect_text "Save or restore this session"
+expect_text "Saved slot: level 8 / 650 coins"
+expect_text "HELP & ABOUT"
+expect_text "English"
+expect_text "Build"
+expect_text "1.11.0.12346"
+expect_text "281 676 956 389"
+expect_text "Preferences apply immediately. Kept for this session."
+expect_no_text "CLOUD SAVE"
+assert_ui casual_music x=244 y=185 w=102 h=70
+assert_ui casual_progress x=654 y=183 w=396 h=77
+assert_ui casual_notifications x=231 y=332 w=396 h=66
+assert_ui casual_language x=231 y=415 w=396 h=66
+assert_ui casual_close x=1022 y=104 w=62 h=62
+assert_within_parents
+screenshot casual_settings_design
+focus_element casual_vibration
+key ENTER
+wait 0.2
+expect_text "Vibration on"
+focus_element casual_notifications
+key ENTER
+wait 0.2
+expect_text "Notifications enabled"
+click_ui casual_language
+wait 0.2
+click_ui casual_language_2
+click_ui casual_language_apply
+wait 0.3
+expect_text "French"
+click_ui casual_close
+wait 0.2
+expect_text "Ready for another adventure?"
+click_ui casual_reopen
+wait 0.2
+expect_text "French"
+click_ui casual_vibration
+wait 0.1
+expect_text "Vibration off"
+click_ui casual_notifications
+wait 0.1
+expect_text "Notifications disabled"
+click_ui casual_progress
+wait 0.2
+expect_text "Saved progress: level 8 / 650 coins"
+click_ui casual_save
+wait 0.2
+expect_text "Saved progress: level 12 / 1000 coins"
+click_ui casual_dialog_close
+wait 0.2
+expect_text "Saved slot: level 12 / 1000 coins"
+click_ui casual_terms
+wait 0.2
+expect_text "Your preferences and progress last for this demo session."
+expect_text "No account, advertising or cloud sync is used."
+key ESCAPE
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui casual_board x=255 y=69 w=1410 h=941
+assert_ui casual_music x=366 y=278 w=153 h=105
+assert_ui casual_close x=1533 y=156 w=93 h=93
+assert_within_parents
+screenshot casual_settings_design_1080
+resize 1024 768
+wait 0.3
+assert_ui casual_canvas w=1024 h=768
+assert_ui casual_root x=0 y=96 w=1024 h=576
+assert_within_parents
+screenshot casual_settings_design_narrow
+click_ui casual_language
+wait 0.2
+expect_text "Choose your preferred language."
+assert_within_parents
+screenshot casual_settings_design_narrow_dialog
+click_ui casual_dialog_close
+resize 1280 720

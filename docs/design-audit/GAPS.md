@@ -761,7 +761,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## casual settings
 
-[Current baseline](../../screenshot-baselines/screens/casual_settings_720p.png) · [Visual review](../../design-audit.html#screen=casual_settings)
+[Reviewed image](../../docs/design-audit/originals/casual_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/casual_settings_720p.png) · [Visual review](../../design-audit.html#screen=casual_settings)
 
 Baseline SHA-256: `213201c1164f7468f31308d33e64f839d85c223e7602bd1c0a53bd635bed7440`
 

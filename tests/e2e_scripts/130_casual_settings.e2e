@@ -1,11 +1,12 @@
 goto_screen casual_settings
 wait 0.5
 expect_text "SETTINGS"
-expect_text "SAVE/LOAD"
-expect_text "NOTIFICATIONS: OFF"
+expect_text "PROGRESS SAVE"
+expect_text "NOTIFICATIONS"
+expect_text "OFF"
 assert_ui casual_board x=170 y=46 w=940 h=627
-assert_ui casual_music x=231 y=180 w=119 h=82
-assert_ui casual_close x=1047 y=106 w=74 h=74
+assert_ui casual_music x=244 y=185 w=102 h=70
+assert_ui casual_close x=1022 y=104 w=62 h=62
 assert_no_overflow
 assert_within_parents
 screenshot casual_settings_initial
@@ -24,7 +25,8 @@ wait 0.2
 expect_text "Vibration on"
 click_ui casual_notifications
 wait 0.2
-expect_text "NOTIFICATIONS: ON"
+expect_text "NOTIFICATIONS"
+expect_text "ON"
 
 # Language selection has explicit Apply and Cancel behavior.
 click_ui casual_language
@@ -81,7 +83,7 @@ wait 0.2
 expect_text "How can we help?"
 click_ui casual_help_audio
 wait 0.2
-expect_text "Green means on; gray means off."
+expect_text "Green means on; blue means off."
 click_ui casual_help_save
 wait 0.2
 expect_text "Load Progress restores the last saved slot."
@@ -97,18 +99,19 @@ wait 0.3
 click_ui casual_close
 wait 0.2
 expect_text "Ready for another adventure?"
-expect_no_text "NOTIFICATIONS: ON"
+expect_no_text "NOTIFICATIONS"
 expect_text "Level 8  /  650 coins"
 click_ui casual_reopen
 wait 0.2
-expect_text "NOTIFICATIONS: ON"
+expect_text "NOTIFICATIONS"
+expect_text "ON"
 click_ui casual_music
 wait 0.2
 expect_text "Music on"
 resize 1920 1080
 wait 0.3
 assert_ui casual_board x=255 y=69 w=1410 h=941
-assert_ui casual_music x=347 y=270 w=179 h=123
+assert_ui casual_music x=366 y=278 w=153 h=105
 assert_no_overflow
 assert_within_parents
 screenshot casual_settings_1080p

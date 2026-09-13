@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-405 completed; 2,130 remaining.
+430 completed; 2,105 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1311,79 +1311,83 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/casual_settings_720p.png) · [Visual review](design-audit.html#screen=casual_settings)
 
-- [ ] `casual_settings-01` · P2 · proposal. Music button: Add MUSIC and its current state beneath the icon.
+- [x] `casual_settings-01` · P2 · proposal. Music button: Add MUSIC and its current state beneath the icon.
   Evidence: The note icon has no visible label or ON text.
 
-- [ ] `casual_settings-02` · P2 · proposal. Sound button: Add SOUND EFFECTS and its current state.
+- [x] `casual_settings-02` · P2 · proposal. Sound button: Add SOUND EFFECTS and its current state.
   Evidence: The speaker icon lacks a separate effects label.
 
-- [ ] `casual_settings-03` · P2 · proposal. Vibration button: Add VIBRATION OFF beneath it.
+- [x] `casual_settings-03` · P2 · proposal. Vibration button: Add VIBRATION OFF beneath it.
   Evidence: Gray fill may read as unavailable rather than off.
 
-- [ ] `casual_settings-04` · P2 · proposal. Audio group: Add a compact AUDIO heading.
+- [x] `casual_settings-04` · P2 · proposal. Audio group: Add a compact AUDIO heading.
   Evidence: Three icon buttons have no group heading.
 
-- [ ] `casual_settings-05` · P2 · proposal. Save/load label: Use CLOUD SAVE with a descriptive secondary caption.
+- [x] `casual_settings-05` · P2 · proposal. Save/load label: Use CLOUD SAVE with a descriptive secondary caption.
   Evidence: SAVE/LOAD PROGRESS combines two distinct operations.
+  Disposition: This is a session-local progress slot, not cloud storage. The control now says Progress Save and explains save/restore for this session.
 
-- [ ] `casual_settings-06` · P2 · proposal. Save/load icon: Use a cloud-save icon.
+- [x] `casual_settings-06` · P2 · proposal. Save/load icon: Use a cloud-save icon.
   Evidence: A Wi-Fi symbol can imply connectivity rather than stored progress.
+  Disposition: Used a save-slot icon; a cloud icon would falsely imply remote persistence.
 
-- [ ] `casual_settings-07` · P2 · proposal. Save status: Add a short saved-state line nearby.
+- [x] `casual_settings-07` · P2 · proposal. Save status: Add a short saved-state line nearby.
   Evidence: The save button shows no account or last-sync status.
 
-- [ ] `casual_settings-08` · P2 · proposal. Notifications control: Add a visible switch indicator.
+- [x] `casual_settings-08` · P2 · proposal. Notifications control: Add a visible switch indicator.
   Evidence: NOTIFICATIONS: OFF looks like a navigation button.
 
-- [ ] `casual_settings-09` · P2 · proposal. Notifications label: Separate the setting name from the OFF state.
+- [x] `casual_settings-09` · P2 · proposal. Notifications label: Separate the setting name from the OFF state.
   Evidence: The full label is denser than neighboring actions.
 
-- [ ] `casual_settings-10` · P2 · proposal. Language button: Show English or the selected language as a secondary value.
+- [x] `casual_settings-10` · P2 · proposal. Language button: Show English or the selected language as a secondary value.
   Evidence: LANGUAGE does not display the current language.
 
-- [ ] `casual_settings-11` · P2 · proposal. Credits priority: Reduce its size or move it into an About group.
+- [x] `casual_settings-11` · P2 · proposal. Credits priority: Reduce its size or move it into an About group.
   Evidence: CREDITS has the same prominence as core preferences.
 
-- [ ] `casual_settings-12` · P2 · proposal. Support priority: Group it with help and legal actions.
+- [x] `casual_settings-12` · P2 · proposal. Support priority: Group it with help and legal actions.
   Evidence: SUPPORT visually competes with save/load.
 
-- [ ] `casual_settings-13` · P2 · proposal. Legal button: Use a quieter legal-link treatment.
+- [x] `casual_settings-13` · P2 · proposal. Legal button: Use a quieter legal-link treatment.
   Evidence: TERMS AND PRIVACY occupies a large glossy action.
 
-- [ ] `casual_settings-14` · P2 · proposal. Build identifier: Prefix it with Build.
+- [x] `casual_settings-14` · P2 · proposal. Build identifier: Prefix it with Build.
   Evidence: 15555-1-114203-20-10200-01 lacks a label.
 
-- [ ] `casual_settings-15` · P2 · proposal. Version text: Use a compact readable numeric face.
+- [x] `casual_settings-15` · P2 · proposal. Version text: Use a compact readable numeric face.
   Evidence: The version uses playful heavy lettering for technical data.
 
-- [ ] `casual_settings-16` · P2 · proposal. Player identifier: Group digits for scanning while preserving the exact value.
+- [x] `casual_settings-16` · P2 · proposal. Player identifier: Group digits for scanning while preserving the exact value.
   Evidence: Player ID is a long uninterrupted number.
 
-- [ ] `casual_settings-17` · P2 · proposal. Metadata alignment: Left-align a compact two-column label/value block.
+- [x] `casual_settings-17` · P2 · proposal. Metadata alignment: Left-align a compact two-column label/value block.
   Evidence: Build, Version and Player ID are centered as one dense block.
 
-- [ ] `casual_settings-18` · P2 · proposal. Metadata placement: Put them in an About footer.
+- [x] `casual_settings-18` · P2 · proposal. Metadata placement: Put them in an About footer.
   Evidence: Technical identifiers sit under Language without a section label.
 
-- [ ] `casual_settings-19` · P2 · proposal. Close control: Move it inward slightly for a cleaner safe margin.
+- [x] `casual_settings-19` · P2 · proposal. Close control: Move it inward slightly for a cleaner safe margin.
   Evidence: The close button extends beyond the board's inner edge.
 
-- [ ] `casual_settings-20` · P2 · proposal. Close semantics: Add Changes save automatically if that is the intended behavior.
+- [x] `casual_settings-20` · P2 · proposal. Close semantics: Add Changes save automatically if that is the intended behavior.
   Evidence: There is no visible saved-state reassurance near the sole exit.
+  Disposition: Preferences apply immediately for this session; copy describes that lifetime without promising persistence.
 
-- [ ] `casual_settings-21` · P2 · proposal. Background currency: Restore a coherent subdued currency chip.
+- [x] `casual_settings-21` · P2 · proposal. Background currency: Restore a coherent subdued currency chip.
   Evidence: 1000 coins appears faintly at the top right without an icon.
 
-- [ ] `casual_settings-22` · P2 · proposal. Grid grouping: Group settings on one side and account/help actions on the other.
+- [x] `casual_settings-22` · P2 · proposal. Grid grouping: Group settings on one side and account/help actions on the other.
   Evidence: Preferences and support actions alternate across the two columns.
+  Disposition: Grouped audio/notification/language settings separately from progress and help. No account exists in this fixture.
 
-- [ ] `casual_settings-23` · P2 · proposal. Save text wrapping: Increase line spacing and rebalance icon spacing.
+- [x] `casual_settings-23` · P2 · proposal. Save text wrapping: Increase line spacing and rebalance icon spacing.
   Evidence: SAVE/LOAD PROGRESS uses a tight two-line block.
 
-- [ ] `casual_settings-24` · P2 · proposal. Button shadows: Reduce shadow depth to open the layout.
+- [x] `casual_settings-24` · P2 · proposal. Button shadows: Reduce shadow depth to open the layout.
   Evidence: Heavy dark shadows crowd the gaps between rows.
 
-- [ ] `casual_settings-25` · P2 · proposal. Bottom line: Remove it unless it represents a deliberate device affordance.
+- [x] `casual_settings-25` · P2 · proposal. Bottom line: Remove it unless it represents a deliberate device affordance.
   Evidence: A long pale line below the board has no clear role.
 
 ### chart_lab

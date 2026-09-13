@@ -3686,7 +3686,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "213201c1164f7468f31308d33e64f839d85c223e7602bd1c0a53bd635bed7440"
+    "sha256": "213201c1164f7468f31308d33e64f839d85c223e7602bd1c0a53bd635bed7440",
+    "evidence": "docs/design-audit/originals/casual_settings_720p.png"
   },
   {
     "id": "chart_lab",
