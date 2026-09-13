@@ -170,9 +170,6 @@ void game() {
   afterhours::ui::validation::register_systems<InputAction>(systems);
 
   while (running && !raylib::WindowShouldClose()) {
-    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
-      running = false;
-    }
     float dt = raylib::GetFrameTime();
     systems.run(dt);
 #if AFTERHOURS_ENABLE_PROFILING
@@ -302,9 +299,6 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   test_system_ptr->set_test(test_name, std::move(test));
 
   while (running && !raylib::WindowShouldClose()) {
-    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
-      running = false;
-    }
     float dt = raylib::GetFrameTime();
     systems.run(dt);
 #if AFTERHOURS_ENABLE_PROFILING
@@ -579,10 +573,6 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
       }
     }
 #endif
-
-    if (raylib::IsKeyPressed(raylib::KEY_ESCAPE) && !navigator->visible && !profiler->visible) {
-      running = false;
-    }
 
     // Screen navigation: . or PageDown = next, , or PageUp = previous
     if (!navigator->visible && (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN) ||
@@ -1019,12 +1009,6 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   };
 
   while (should_continue() && !runner.is_finished()) {
-    if (!afterhours::graphics::is_headless() &&
-        raylib::IsKeyPressed(raylib::KEY_ESCAPE)) {
-      running = false;
-      break;
-    }
-
     // Use graphics API for delta time in headless mode, raylib otherwise
     float dt = afterhours::graphics::is_headless()
                    ? afterhours::graphics::get_delta_time()
