@@ -6951,7 +6951,8 @@
         "change": "Use an unobtrusive grid or ruler to make changes in scale easier to judge."
       }
     ],
-    "sha256": "74d40e1d470b9e8fc4ad2bc5eb7b72acca341f33b0f7f91218ab85468199e1f2"
+    "sha256": "74d40e1d470b9e8fc4ad2bc5eb7b72acca341f33b0f7f91218ab85468199e1f2",
+    "evidence": "docs/design-audit/originals/pinch_zoom_lab_720p.png"
   },
   {
     "id": "popover_lab",

@@ -1,0 +1,73 @@
+goto_screen pinch_zoom_lab
+resize 1280 720
+wait 0.3
+click_ui pz_reset
+wait 0.2
+expect_text "Pinch zoom"
+expect_text "Pinch two fingers on the trackpad to resize the square."
+expect_text "Pinch updates received"
+expect_text "Width / design px"
+expect_text "Height / design px"
+expect_text "Demo prerequisites"
+expect_text "Hardware availability is not"
+expect_text "reported by this API."
+expect_text "Idle"
+expect_text "1.00×"
+assert_ui pz_root x=0 y=0 w=1280 h=720
+assert_ui pz_stage x=48 y=214 w=816 h=424
+assert_ui pz_box x=346 y=316 w=220 h=220
+assert_no_overflow
+assert_within_parents
+screenshot pinch_zoom_design
+pinch 0.25
+wait 0.2
+expect_text "1.25×"
+expect_text "275.0"
+assert_ui pz_box x=319 y=289 w=275 h=275
+pinch 0.25
+wait 0.2
+expect_text "1.56×"
+expect_text "343.8"
+pinch -0.5
+wait 0.2
+expect_text "0.78×"
+expect_text "171.9"
+wait 0.5
+expect_text "0.78×"
+pinch -0.9
+wait 0.2
+expect_text "0.25×"
+expect_text "55.0"
+assert_ui pz_box x=429 y=399 w=55 h=55
+assert_no_overflow
+assert_within_parents
+screenshot pinch_zoom_design_minimum
+pinch 20
+wait 0.2
+expect_text "4.00×"
+expect_text "880.0"
+assert_ui pz_box x=16 y=-14 w=880 h=880
+expect_text "Large zoom is clipped to the preview."
+screenshot pinch_zoom_design_maximum
+focus_ui pz_reset
+key ENTER
+wait 0.2
+expect_text "1.00×"
+assert_ui pz_box x=346 y=316 w=220 h=220
+resize 1920 1080
+wait 0.3
+assert_ui pz_root x=0 y=0 w=1920 h=1080
+assert_ui pz_box x=519 y=474 w=330 h=330
+expect_text "Square 330.0 × 330.0 screen px."
+assert_no_overflow
+assert_within_parents
+screenshot pinch_zoom_design_1080
+resize 1024 768
+wait 0.3
+assert_ui pz_root x=0 y=96 w=1024 h=576
+assert_ui pz_box x=277 y=349 w=176 h=176
+expect_text "Square 176.0 × 176.0 screen px."
+assert_no_overflow
+assert_within_parents
+screenshot pinch_zoom_design_narrow
+resize 1280 720

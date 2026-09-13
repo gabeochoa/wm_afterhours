@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,703 completed; 832 remaining.
+1,718 completed; 817 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -5460,49 +5460,50 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/pinch_zoom_lab_720p.png) · [Visual review](design-audit.html#screen=pinch_zoom_lab)
 
-- [ ] `pinch_zoom_lab-01` · P2 · proposal. Title: Use Pinch zoom with a separate gesture instruction.
+- [x] `pinch_zoom_lab-01` · P2 · proposal. Title: Use Pinch zoom with a separate gesture instruction.
   Evidence: Pinch Zoom - trackpad magnification mixes title and explanation.
 
-- [ ] `pinch_zoom_lab-02` · P2 · proposal. Gesture instruction: Add Pinch two fingers on the trackpad to resize the square.
+- [x] `pinch_zoom_lab-02` · P2 · proposal. Gesture instruction: Add Pinch two fingers on the trackpad to resize the square.
   Evidence: No visible text says how to perform the gesture.
 
-- [ ] `pinch_zoom_lab-03` · P2 · proposal. Diagnostic row: Increase their text size and separate them into labeled fields.
+- [x] `pinch_zoom_lab-03` · P2 · proposal. Diagnostic row: Increase their text size and separate them into labeled fields.
   Evidence: Zoom, events, and pinching state are tiny.
 
-- [ ] `pinch_zoom_lab-04` · P2 · proposal. Scale formatting: Use 1.00× consistently for magnification.
+- [x] `pinch_zoom_lab-04` · P2 · proposal. Scale formatting: Use 1.00× consistently for magnification.
   Evidence: 1.00x uses a lowercase x.
 
-- [ ] `pinch_zoom_lab-05` · P2 · proposal. Square label: Center the value inside the square or add a consistent inset.
+- [x] `pinch_zoom_lab-05` · P2 · proposal. Square label: Center the value inside the square or add a consistent inset.
   Evidence: 1.00x sits against the square's left edge.
 
-- [ ] `pinch_zoom_lab-06` · P3 · proposal. Reference size: Add a faint 1.00× outline behind the scaling sample.
+- [x] `pinch_zoom_lab-06` · P3 · proposal. Reference size: Add a faint 1.00× outline behind the scaling sample.
   Evidence: The square has no fixed-size comparison reference.
 
-- [ ] `pinch_zoom_lab-07` · P3 · proposal. Dimension metadata: Add Width and Height readouts beside zoom.
+- [x] `pinch_zoom_lab-07` · P3 · proposal. Dimension metadata: Add Width and Height readouts beside zoom.
   Evidence: Only scale is shown, not the resulting square dimensions.
 
-- [ ] `pinch_zoom_lab-08` · P2 · proposal. Event counter meaning: Label it Pinch updates received.
+- [x] `pinch_zoom_lab-08` · P2 · proposal. Event counter meaning: Label it Pinch updates received.
   Evidence: events 0 does not explain what increments it.
 
-- [ ] `pinch_zoom_lab-09` · P2 · proposal. Gesture state: Use a clear Idle or Pinching state badge.
+- [x] `pinch_zoom_lab-09` · P2 · proposal. Gesture state: Use a clear Idle or Pinching state badge.
   Evidence: pinching no is terse and visually indistinct from the counter.
 
-- [ ] `pinch_zoom_lab-10` · P2 · proposal. Build requirement footer: Move requirements into a readable Demo prerequisites panel.
+- [x] `pinch_zoom_lab-10` · P2 · proposal. Build requirement footer: Move requirements into a readable Demo prerequisites panel.
   Evidence: A long compiler-flags sentence is tiny at the bottom.
 
-- [ ] `pinch_zoom_lab-11` · P2 · proposal. Unsupported ambiguity: Show a separate Gesture support available/unavailable diagnostic based on capability.
+- [x] `pinch_zoom_lab-11` · P2 · proposal. Unsupported ambiguity: Show a separate Gesture support available/unavailable diagnostic based on capability.
   Evidence: Reads 0 otherwise means no gesture and unavailable support can look the same.
+  Disposition: The gesture API reports deltas and active state, but no hardware capability query. The panel distinguishes the compiled backend from unknown hardware availability; capability reporting remains upstream.
 
-- [ ] `pinch_zoom_lab-12` · P3 · proposal. Technical footer hierarchy: Keep the user gesture instruction primary and build details secondary.
+- [x] `pinch_zoom_lab-12` · P3 · proposal. Technical footer hierarchy: Keep the user gesture instruction primary and build details secondary.
   Evidence: AppKit and a long feature flag dominate the only supporting explanation.
 
-- [ ] `pinch_zoom_lab-13` · P3 · proposal. Reset reference: Add Reset to 1.00× near the scale readout.
+- [x] `pinch_zoom_lab-13` · P3 · proposal. Reset reference: Add Reset to 1.00× near the scale readout.
   Evidence: No visible action restores the square to the reference scale.
 
-- [ ] `pinch_zoom_lab-14` · P3 · proposal. Scale limits: Add the configured range to the sample metadata.
+- [x] `pinch_zoom_lab-14` · P3 · proposal. Scale limits: Add the configured range to the sample metadata.
   Evidence: The screenshot gives no minimum or maximum zoom range.
 
-- [ ] `pinch_zoom_lab-15` · P3 · proposal. Empty space: Use an unobtrusive grid or ruler to make changes in scale easier to judge.
+- [x] `pinch_zoom_lab-15` · P3 · proposal. Empty space: Use an unobtrusive grid or ruler to make changes in scale easier to judge.
   Evidence: A small square occupies the center of a nearly empty canvas.
 
 ### popover_lab
@@ -8137,6 +8138,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Expose gesture hardware capability separately from idle input; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Make slider keyboard repeat independent of update frequency; see docs/AFTERHOURS_GAPS.md.
 

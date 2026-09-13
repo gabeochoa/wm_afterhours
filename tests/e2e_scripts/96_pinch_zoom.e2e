@@ -6,31 +6,31 @@
 
 goto_screen pinch_zoom_lab
 wait 0.4
-expect_text "zoom 1.00x"
+expect_text "1.00×"
 
 # +25% twice compounds to 1.5625, not 1.5 -- a delta multiplies.
 pinch 0.25
 wait 0.2
-expect_text "zoom 1.25x"
+expect_text "1.25×"
 
 pinch 0.25
 wait 0.2
-expect_text "zoom 1.56x"
+expect_text "1.56×"
 
 # Pinching in.
 pinch -0.5
 wait 0.2
-expect_text "zoom 0.78x"
+expect_text "0.78×"
 
 # The delta is per-frame: it must not keep applying once the gesture stops.
 wait 0.5
-expect_text "zoom 0.78x"
+expect_text "0.78×"
 
 # Clamped at the bottom rather than running away.
 pinch -0.9
 wait 0.2
 pinch -0.9
 wait 0.2
-expect_text "zoom 0.25x"
+expect_text "0.25×"
 
 screenshot pinch_zoomed

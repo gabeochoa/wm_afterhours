@@ -393,6 +393,14 @@ can move twice as far as at 60 Hz. wm tests verify the actual value and
 derived gauges. Use elapsed-time repeat with an initial delay and deliberate
 cadence upstream.
 
+### Gesture backend cannot report hardware capability
+
+The gesture API exposes magnification updates and active state but no
+capability query. An idle supported device and unavailable hardware both
+report no input. wm labels the compiled macOS backend separately and states
+that hardware availability is unknown. Add a backend-neutral capability result
+before consumers claim support availability.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

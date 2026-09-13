@@ -2767,7 +2767,7 @@ The phone settings overlay follows the mock composition. Improve phone-control c
 
 ## pinch zoom lab
 
-[Current baseline](../../screenshot-baselines/screens/pinch_zoom_lab_720p.png) · [Visual review](../../design-audit.html#screen=pinch_zoom_lab)
+[Reviewed image](../../docs/design-audit/originals/pinch_zoom_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/pinch_zoom_lab_720p.png) · [Visual review](../../design-audit.html#screen=pinch_zoom_lab)
 
 Baseline SHA-256: `74d40e1d470b9e8fc4ad2bc5eb7b72acca341f33b0f7f91218ab85468199e1f2`
 
