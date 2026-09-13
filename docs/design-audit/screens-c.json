@@ -2876,7 +2876,8 @@
         "change": "Separate Split Pane Lab from a short interaction subtitle."
       }
     ],
-    "sha256": "013a4fc6c2231b2592e8411cf135e089508fae079c51f060bcec76af4a996383"
+    "sha256": "013a4fc6c2231b2592e8411cf135e089508fae079c51f060bcec76af4a996383",
+    "evidence": "docs/design-audit/originals/split_pane_lab_720p.png"
   },
   {
     "id": "sports_settings",

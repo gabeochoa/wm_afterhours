@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,897 completed; 638 remaining.
+1,913 completed; 622 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6719,52 +6719,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/split_pane_lab_720p.png) · [Visual review](design-audit.html#screen=split_pane_lab)
 
-- [ ] `split_pane_lab-01` · P2 · defect. Pane labels: Inset each label by 12 px without changing split geometry.
+- [x] `split_pane_lab-01` · P2 · defect. Pane labels: Inset each label by 12 px without changing split geometry.
   Evidence: sidebar, preview and details touch their panes' left edges.
 
-- [ ] `split_pane_lab-02` · P2 · proposal. Vertical divider: Add a centered grip indicator within the divider.
+- [x] `split_pane_lab-02` · P2 · proposal. Vertical divider: Add a centered grip indicator within the divider.
   Evidence: The narrow vertical separator is hard to distinguish from a pane edge.
 
-- [ ] `split_pane_lab-03` · P2 · proposal. Horizontal divider: Add a short centered grip with a contrasting stroke.
+- [x] `split_pane_lab-03` · P2 · proposal. Horizontal divider: Add a short centered grip with a contrasting stroke.
   Evidence: The horizontal bar has no visible drag handle.
 
-- [ ] `split_pane_lab-04` · P2 · proposal. Ratio caption: Increase it to 13 px actual text.
+- [x] `split_pane_lab-04` · P2 · proposal. Ratio caption: Increase it to 13 px actual text.
   Evidence: sidebar 28% preview 62% is tiny beneath the title.
 
-- [ ] `split_pane_lab-05` · P2 · proposal. Ratio meaning: Label it Preview height: 62% of right pane.
+- [x] `split_pane_lab-05` · P2 · proposal. Ratio meaning: Label it Preview height: 62% of right pane.
   Evidence: Preview 62% could be interpreted as a share of the whole screen.
 
-- [ ] `split_pane_lab-06` · P2 · proposal. Sidebar ratio: Label it Sidebar width: 28% of workspace.
+- [x] `split_pane_lab-06` · P2 · proposal. Sidebar ratio: Label it Sidebar width: 28% of workspace.
   Evidence: Sidebar 28% has no dimension unit context.
 
-- [ ] `split_pane_lab-07` · P2 · proposal. Details ratio: Show its complementary height percentage.
+- [x] `split_pane_lab-07` · P2 · proposal. Details ratio: Show its complementary height percentage.
   Evidence: The details pane has no corresponding size readout.
 
-- [ ] `split_pane_lab-08` · P2 · proposal. Minimum limits: Display the actual minimum and maximum ratios beside the readouts.
+- [x] `split_pane_lab-08` · P2 · proposal. Minimum limits: Display the actual minimum and maximum ratios beside the readouts.
   Evidence: The screenshot shows no allowed resize range.
 
-- [ ] `split_pane_lab-09` · P2 · proposal. Reset geometry: Add Reset to 28% / 62% above the workspace.
+- [x] `split_pane_lab-09` · P2 · proposal. Reset geometry: Add Reset to 28% / 62% above the workspace.
   Evidence: No reset action is visible.
 
-- [ ] `split_pane_lab-10` · P2 · proposal. Pixel dimensions: Display live width × height in each pane center.
+- [x] `split_pane_lab-10` · P2 · proposal. Pixel dimensions: Display live width × height in each pane center.
   Evidence: Large empty panes do not show how resizing affects their size.
 
-- [ ] `split_pane_lab-11` · P2 · proposal. Nesting explanation: Add a small diagram that shows the horizontal split belongs only to the right pane.
+- [x] `split_pane_lab-11` · P2 · proposal. Nesting explanation: Add a small diagram that shows the horizontal split belongs only to the right pane.
   Evidence: The title says drag either divider without explaining the nested split.
 
-- [ ] `split_pane_lab-12` · P3 · proposal. Footer hint: Increase its size and align it with the workspace inset.
+- [x] `split_pane_lab-12` · P3 · proposal. Footer hint: Increase its size and align it with the workspace inset.
   Evidence: The resize-cursor instruction is very small.
 
-- [ ] `split_pane_lab-13` · P2 · proposal. Grip hit region: Show an external annotation describing the actual hit-region width.
+- [x] `split_pane_lab-13` · P2 · proposal. Grip hit region: Show an external annotation describing the actual hit-region width.
   Evidence: Thin visual dividers give little indication of their draggable extent.
 
-- [ ] `split_pane_lab-14` · P3 · proposal. Pane headings: Use consistent sentence-case headings with slightly larger type.
+- [x] `split_pane_lab-14` · P3 · proposal. Pane headings: Use consistent sentence-case headings with slightly larger type.
   Evidence: Lowercase labels are visually weak over large blank fields.
 
-- [ ] `split_pane_lab-15` · P2 · proposal. Static review evidence: Add labeled narrow-sidebar and tall-preview presets for additional baselines.
+- [x] `split_pane_lab-15` · P2 · proposal. Static review evidence: Add labeled narrow-sidebar and tall-preview presets for additional baselines.
   Evidence: Only one split ratio is captured.
 
-- [ ] `split_pane_lab-16` · P3 · proposal. Title line: Separate Split Pane Lab from a short interaction subtitle.
+- [x] `split_pane_lab-16` · P3 · proposal. Title line: Separate Split Pane Lab from a short interaction subtitle.
   Evidence: The instruction is embedded in the page title.
 
 ### sports_settings

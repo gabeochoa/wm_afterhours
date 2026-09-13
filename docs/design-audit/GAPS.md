@@ -3397,7 +3397,7 @@ The compact card is coherent. Sixteen distinct proposals improve the button spec
 
 ## split pane lab
 
-[Current baseline](../../screenshot-baselines/screens/split_pane_lab_720p.png) · [Visual review](../../design-audit.html#screen=split_pane_lab)
+[Reviewed image](../../docs/design-audit/originals/split_pane_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/split_pane_lab_720p.png) · [Visual review](../../design-audit.html#screen=split_pane_lab)
 
 Baseline SHA-256: `013a4fc6c2231b2592e8411cf135e089508fae079c51f060bcec76af4a996383`
 

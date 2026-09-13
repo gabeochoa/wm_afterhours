@@ -8,13 +8,16 @@
 #   horizontal divider y = 84 + 0.62 * 560  = 431 .. 435
 
 goto_screen split_pane_lab
-wait 0.5
+resize 1280 720
+wait 0.3
+click_ui sp_reset
+wait 0.3
 
-expect_text "sidebar 28%"
-expect_text "preview 62%"
-expect_text "sidebar"
-expect_text "preview"
-expect_text "details"
+expect_text "Sidebar width: 28%"
+expect_text "Preview height: 62%"
+expect_text "Sidebar"
+expect_text "Preview"
+expect_text "Details"
 screenshot split_pane_initial
 
 # =========================================================================
@@ -27,8 +30,8 @@ wait 0.3
 mouse_up
 wait 0.3
 
-expect_text "sidebar 38%"
-expect_text "preview 62%"
+expect_text "Sidebar width: 38%"
+expect_text "Preview height: 62%"
 screenshot split_pane_wider_sidebar
 
 # =========================================================================
@@ -43,8 +46,8 @@ wait 0.3
 mouse_up
 wait 0.3
 
-expect_text "sidebar 38%"
-expect_text "preview 72%"
+expect_text "Sidebar width: 38%"
+expect_text "Preview height: 72%"
 screenshot split_pane_shorter_preview
 
 # =========================================================================
@@ -58,5 +61,5 @@ wait 0.3
 mouse_up
 wait 0.3
 
-expect_text "sidebar 28%"
+expect_text "Sidebar width: 28%"
 screenshot split_pane_back_to_start

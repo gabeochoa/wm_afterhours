@@ -1,0 +1,68 @@
+goto_screen split_pane_lab
+resize 1280 720
+wait 0.3
+click_ui sp_reset
+wait 0.3
+expect_text "Split panes"
+expect_text "Preview and Details share the right pane."
+expect_text "Sidebar width: 28% of workspace"
+expect_text "Preview height: 62% of right pane"
+expect_text "Details height:"
+expect_text "Sidebar limit 15–55%"
+expect_text "Preview limit 20–85%"
+expect_text "Details take the rest after the 4 px divider."
+assert_ui sp_outer x=48 y=84 w=1180 h=560
+assert_ui sp_vertical_divider w=4
+assert_ui sp_horizontal_divider h=4
+assert_no_overflow
+assert_within_parents
+screenshot split_pane_design
+click_ui sp_narrow
+wait 0.2
+expect_text "Sidebar width: 15% of workspace"
+screenshot split_pane_design_narrow_sidebar
+click_ui sp_tall
+wait 0.2
+expect_text "Preview height: 85% of right pane"
+assert_no_overflow
+assert_within_parents
+screenshot split_pane_design_tall_preview
+focus_ui sp_reset
+key ENTER
+wait 0.2
+expect_text "Sidebar width: 28% of workspace"
+expect_text "Preview height: 62% of right pane"
+mouse_down 380 300
+wait 0.2
+mouse_move 1100 300
+wait 0.2
+mouse_up
+wait 0.2
+expect_text "Sidebar width: 55% of workspace"
+mouse_down 1000 433
+wait 0.2
+mouse_move 1000 140
+wait 0.2
+mouse_up
+wait 0.2
+expect_text "Preview height: 20% of right pane"
+click_ui sp_reset
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_ui sp_outer x=72 y=126 w=1770 h=840
+assert_ui sp_vertical_divider w=4
+assert_ui sp_horizontal_divider h=4
+assert_no_overflow
+assert_within_parents
+screenshot split_pane_design_1080
+resize 1024 768
+wait 0.3
+assert_ui sp_root x=0 y=96 w=1024 h=576
+assert_ui sp_outer x=38 y=163 w=944 h=448
+assert_ui sp_vertical_divider w=4
+assert_ui sp_horizontal_divider h=4
+assert_no_overflow
+assert_within_parents
+screenshot split_pane_design_narrow
+resize 1280 720
