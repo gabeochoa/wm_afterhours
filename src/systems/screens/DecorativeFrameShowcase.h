@@ -24,6 +24,8 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
     theme.accent = afterhours::Color{200, 80, 60, 255};       // Rust red
     theme.font = afterhours::Color{60, 40, 20, 255};          // Dark brown
     theme.font_muted = afterhours::Color{120, 100, 80, 255};
+    theme.corner_radius = 0;
+    theme.roundness = 0;
     context.set_theme(theme);
     context.scaling_mode = ScalingMode::Proportional;
     const float s = std::min(context.screen_height / 720.f, context.screen_width / 1280.f);
@@ -71,14 +73,12 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
       const char *use;
     };
     const std::array<Variant, 3> variants{{
-        {DecorativeFrameStyle::KraftPaper, "Kraft paper", "KraftPaper", {101, 67, 33, 255},
-         {222, 184, 135, 255}, 8.f, {62, 40, 18, 255}, "Journal pages and field notes"},
-        {DecorativeFrameStyle::Simple, "Simple", "Simple", {70, 130, 180, 255},
-         {240, 248, 255, 255}, 3.f, {28, 52, 78, 255}, "Reference cards and dashboards"},
-        {DecorativeFrameStyle::Inset, "Inset", "Inset", {128, 128, 128, 255},
-         {220, 220, 220, 255}, 5.f, {45, 45, 45, 255}, "Recessed inspector panels"}}};
-    const float edge_px = context.screen_height / 720.f * 3.f;
-    const float tab_px = context.screen_height / 720.f * 8.f;
+        {DecorativeFrameStyle::KraftPaper, "Kraft paper", "KraftPaper", {167, 140, 103, 255},
+         {251, 244, 226, 255}, 8.f, {62, 40, 18, 255}, "Journal pages and field notes"},
+        {DecorativeFrameStyle::Simple, "Simple", "Simple", {117, 143, 134, 255},
+         {245, 250, 247, 255}, 3.f, {28, 52, 78, 255}, "Reference cards and dashboards"},
+        {DecorativeFrameStyle::Inset, "Inset", "Inset", {174, 177, 171, 255},
+         {241, 242, 237, 255}, 5.f, {45, 45, 45, 255}, "Recessed inspector panels"}}};
     for (int i = 0; i < 3; ++i) {
       const auto &v = variants[i];
       const float x = 12 + i * 388.f;
@@ -98,7 +98,7 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_background(Theme::Usage::None).with_text_overflow(TextOverflow::Wrap));
       };
       content(0, "Field notes", 34, 26, true);
-      content(1, "BOTANICAL COLLECTION", 28, 14);
+      content(1, "Botanical collection", 28, 14);
       div(context, mk(card.ent(), 2), ComponentConfig{}
           .with_size({percent(1.f), pixels(s)}).with_skip_grid_snap(true).with_custom_background({v.ink.r, v.ink.g, v.ink.b, 70})
           .with_margin(Margin{.bottom = pixels(12 * s)}).with_corner_radius(0));
@@ -116,67 +116,23 @@ struct DecorativeFrameShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_label(std::string("DecorativeFrameStyle::") + v.api)
           .with_font("AtkinsonMock", pixels(20 * s)).with_custom_text_color(theme.font_muted)
           .with_alignment(TextAlignment::Left).with_ignore_pointer_events());
-      div(context, mk(root.ent(), 40 + i), box(x, 493, 344, 111)
-          .with_custom_background(theme.surface).with_corner_radius(8 * s));
-      div(context, mk(root.ent(), 50 + i), box(x + 8, 501, 94, 94).with_ignore_pointer_events()
-          .with_on_draw_fg([v, i, s](RectangleType r) {
-            const float unit = 3 * s;
-            afterhours::draw_rectangle(r, v.border);
-            if (i == 0) {
-              const float step = 2.4f * unit;
-              afterhours::draw_rectangle({r.x + step, r.y + step, r.width - step, r.height - step},
-                                         afterhours::colors::lighten(v.border, .1f));
-              afterhours::draw_rectangle({r.x + 8 * unit, r.y + 8 * unit,
-                  r.width - 8 * unit, r.height - 8 * unit}, v.fill);
-              afterhours::draw_rectangle({r.x + 8 * unit, r.y + 8 * unit, 8 * unit, 8 * unit},
-                                         afterhours::colors::darken(v.border, .85f));
-              return;
-            }
-            if (i == 1) {
-              afterhours::draw_rectangle(r, v.fill);
-              raylib::DrawLineEx({r.x + 12 * s, r.y + r.height}, {r.x + 12 * s, r.y + 12 * s}, unit, v.border);
-              raylib::DrawLineEx({r.x + 12 * s, r.y + 12 * s}, {r.x + r.width, r.y + 12 * s}, unit, v.border);
-              return;
-            }
-            const auto shadow = afterhours::colors::opacity_pct(afterhours::colors::darken(v.border, .8f), .6f);
-            const auto highlight = afterhours::colors::lighten(v.border, .2f);
-            afterhours::draw_rectangle({r.x, r.y, r.width, 3 * unit}, shadow);
-            afterhours::draw_rectangle({r.x, r.y, 3 * unit, r.height}, shadow);
-            afterhours::draw_rectangle({r.x, r.y + r.height - 3 * unit, r.width, 3 * unit}, highlight);
-            afterhours::draw_rectangle({r.x + r.width - 3 * unit, r.y, 3 * unit, r.height}, highlight);
-            afterhours::draw_rectangle({r.x + 5 * unit, r.y + 5 * unit, r.width - 10 * unit, r.height - 10 * unit}, v.fill);
-            const raylib::Vector2 start{r.x + 24 * s, r.y + 24 * s};
-            const raylib::Vector2 end{r.x + 51 * s, r.y + 51 * s};
-            raylib::DrawLineEx(start, end, 2 * s, {80, 80, 80, 255});
-            raylib::DrawLineEx(end, {end.x - 10 * s, end.y}, 2 * s, {80, 80, 80, 255});
-            raylib::DrawLineEx(end, {end.x, end.y - 10 * s}, 2 * s, {80, 80, 80, 255});
-          }));
-      if (i == 0) {
-        label(root.ent(), 60 + i, "3x layer diagram", x + 108, 501, 228, 24, 18, true);
-        label(root.ent(), 70 + i, "Band 8px / inner step 2.4px", x + 108, 528, 228, 22, 16);
-        label(root.ent(), 80 + i, fmt::format("Corner tab {:.1f} screen px", tab_px), x + 108, 551, 228, 22, 16);
-        label(root.ent(), 90 + i, "Tabs accent all four corners.", x + 108, 574, 228, 22, 16);
-      } else if (i == 1) {
-        label(root.ent(), 60 + i, "3x border diagram", x + 108, 501, 228, 24, 18, true);
-        label(root.ent(), 70 + i, "Requested border: 3px", x + 108, 528, 228, 22, 16);
-        label(root.ent(), 80 + i, "Drawn border: 1 screen px", x + 108, 551, 228, 22, 16);
-        label(root.ent(), 90 + i, "Fill stays inside the frame.", x + 108, 574, 228, 22, 16);
-      } else {
-        label(root.ent(), 60 + i, "3x lighting diagram", x + 108, 501, 228, 24, 18, true);
-        label(root.ent(), 70 + i, "Band 5px / light: upper left", x + 108, 528, 228, 22, 16);
-        label(root.ent(), 80 + i, fmt::format("Edge {:.1f} screen px", edge_px), x + 108, 551, 228, 22, 16);
-        label(root.ent(), 90 + i, "Dark top/left; light bottom/right", x + 108, 574, 228, 22, 15);
-      }
-      label(root.ent(), 100 + i, v.use, x, 612, 344, 24, 18, true);
+      label(root.ent(), 40 + i, v.use, x, 498, 344, 28, 19, true);
+      const std::array<const char *, 3> details{
+          "Layered paper with corner tabs",
+          "A single, consistent border",
+          "A quiet recessed edge"};
+      label(root.ent(), 50 + i, details[i], x, 534, 344, 26, 18);
+      label(root.ent(), 60 + i, fmt::format("Border {:.0f}px / padding 32px", v.border_px),
+            x, 566, 344, 24, 17);
       auto neutral = decorative_frame(context, mk(root.ent(), 110 + i),
-          box(x, 651, 344, 43).with_custom_background({235, 235, 232, 255})
+          box(x, 620, 344, 64).with_custom_background({235, 235, 232, 255})
               .with_border({110, 110, 108, 255}, pixels(v.border_px * s))
               .with_debug_name("neutral_frame_" + std::to_string(i)), v.style);
-      div(context, mk(neutral.ent(), 100), box(24, 9, 296, 25).with_label("Same neutral colors")
+      div(context, mk(neutral.ent(), 100), box(24, 20, 296, 25).with_label("Same neutral colors")
           .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color({50, 50, 48, 255})
           .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     }
-    label(root.ent(), 5, "Neutral palette / same styles and requested bands. Diagrams use 720p values at 3x.", 8, 633, 1128, 20, 16);
+    label(root.ent(), 5, "Neutral palette / the same frame styles without color", 8, 594, 1128, 20, 16);
   }
 };
 
