@@ -82,18 +82,14 @@ struct TextInputDemo : ScreenSystem<UIContext<InputAction>> {
     text(7, "New password / optional", 72, 379, 524, 28, 20, white);
     auto pw_row = div(context, mk(root.ent(), 8), box(72, 407, 524, 44)
         .with_custom_background(field_bg).with_border(field_border, 1.f).with_debug_name("pw_row"));
-    auto pw_cfg = box(0, 0, 436, 44).with_font("AtkinsonMock", pixels(22 * s))
+    auto pw_cfg = box(0, 0, 412, 44).with_font("AtkinsonMock", pixels(22 * s))
         .with_placeholder("Enter a demo password").without_border().with_debug_name("Password_input");
     if (!show_password) pw_cfg.with_mask_char('*');
     if (text_input(context, mk(pw_row.ent(), 0), profile.password, pw_cfg)) status_message = "Password changed";
-    if (button(context, mk(pw_row.ent(), 1), box(436, 0, 88, 44)
-        .with_label(show_password ? "Hide" : "Show").with_alignment(TextAlignment::Right)
+    if (button(context, mk(pw_row.ent(), 1), box(412, 0, 112, 44)
+        .with_label(show_password ? "Hide" : "Show").with_alignment(TextAlignment::Center)
         .with_custom_background({73, 82, 108, 255}).with_custom_text_color(white)
-        .with_font("AtkinsonMock", pixels(20 * s)).with_debug_name("pw_toggle")
-        .with_on_draw_fg([s, white](RectangleType r) {
-          raylib::DrawEllipseLines(static_cast<int>(r.x + 18 * s), static_cast<int>(r.y + 22 * s), 9 * s, 5 * s, white);
-          raylib::DrawCircleV({r.x + 18 * s, r.y + 22 * s}, 2 * s, white);
-        }))) show_password = !show_password;
+        .with_font("AtkinsonMock", pixels(20 * s)).with_debug_name("pw_toggle"))) show_password = !show_password;
     text(9, "Blank means no demo password. No account is created.", 72, 454, 524, 25, 17, muted);
     // Bio
     if (field(3, "Short bio / optional", "Write a short introduction", profile.bio, 493, 521, "Bio_input"))

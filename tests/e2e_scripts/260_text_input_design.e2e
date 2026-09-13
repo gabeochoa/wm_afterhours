@@ -15,7 +15,8 @@ expect_input_text Readonly_input "Account ID: demo-1042"
 expect_input_text Disabled_input "Managed by workspace"
 assert_ui Username_input x=72 y=202 w=524 h=44
 assert_ui Email_input x=72 y=292 w=524 h=44
-assert_ui Password_input w=436 h=44
+assert_ui Password_input w=412 h=44
+assert_ui pw_toggle x=484 y=407 w=112 h=44
 assert_ui btn_save x=478 y=618 w=118 h=40
 assert_no_overflow
 assert_within_parents
