@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-711 completed; 1,824 remaining.
+731 completed; 1,804 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2483,64 +2483,64 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/dialog_prompt_720p.png) · [Visual review](design-audit.html#screen=dialog_prompt)
 
-- [ ] `dialog_prompt-01` · P2 · proposal. Current file: Add a current-file caption.
+- [x] `dialog_prompt-01` · P2 · proposal. Current file: Add a current-file caption.
   Evidence: Rename file does not show the existing name outside the editable field.
 
-- [ ] `dialog_prompt-02` · P2 · proposal. File location: Show a compact parent-folder path.
+- [x] `dialog_prompt-02` · P2 · proposal. File location: Show a compact parent-folder path.
   Evidence: The prompt does not identify the file's folder.
 
-- [ ] `dialog_prompt-03` · P2 · proposal. Field label: Use the persistent label New name.
+- [x] `dialog_prompt-03` · P2 · proposal. Field label: Use the persistent label New name.
   Evidence: Enter a new name for this file is a long instruction.
 
-- [ ] `dialog_prompt-04` · P2 · proposal. Input alignment: Align the field to the content column.
+- [x] `dialog_prompt-04` · P2 · proposal. Input alignment: Align the field to the content column.
   Evidence: The input begins farther right than the title and instruction.
 
-- [ ] `dialog_prompt-05` · P2 · proposal. Input width: Use a shared right alignment.
+- [x] `dialog_prompt-05` · P2 · proposal. Input width: Use a shared right alignment.
   Evidence: The field ends before the action group's right edge.
 
-- [ ] `dialog_prompt-06` · P2 · proposal. Filename typography: Use a clear filename text face.
+- [x] `dialog_prompt-06` · P2 · proposal. Filename typography: Use a clear filename text face.
   Evidence: untitled_map uses handwritten characters.
 
-- [ ] `dialog_prompt-07` · P2 · proposal. Selection fill: Increase selected-text foreground/background separation.
+- [x] `dialog_prompt-07` · P2 · proposal. Selection fill: Increase selected-text foreground/background separation.
   Evidence: The selected text has a low-contrast blue highlight over purple.
 
-- [ ] `dialog_prompt-08` · P2 · proposal. Field boundary: Add a subtle input border.
+- [x] `dialog_prompt-08` · P2 · proposal. Field boundary: Add a subtle input border.
   Evidence: The purple field has no distinct border against its surrounding panel.
 
-- [ ] `dialog_prompt-09` · P2 · proposal. Field color: Use a quieter field fill while preserving selection visibility.
+- [x] `dialog_prompt-09` · P2 · proposal. Field color: Use a quieter field fill while preserving selection visibility.
   Evidence: Purple is stronger than the primary Rename action.
 
-- [ ] `dialog_prompt-10` · P2 · proposal. Extension handling: Show the preserved extension separately if the fixture represents a file with one.
+- [x] `dialog_prompt-10` · P2 · proposal. Extension handling: Show the preserved extension separately if the fixture represents a file with one.
   Evidence: The visible name has no extension context.
 
-- [ ] `dialog_prompt-11` · P2 · proposal. Name constraints: Add concise supported-name guidance below the input.
+- [x] `dialog_prompt-11` · P2 · proposal. Name constraints: Add concise supported-name guidance below the input.
   Evidence: No filename rules are displayed.
 
-- [ ] `dialog_prompt-12` · P2 · proposal. Duplicate context: Reserve a compact validation line without asserting a current error.
+- [x] `dialog_prompt-12` · P2 · proposal. Duplicate context: Reserve a compact validation line without asserting a current error.
   Evidence: The prompt has no space reserved for a duplicate-name message.
 
-- [ ] `dialog_prompt-13` · P2 · proposal. Rename preview: Add a small resulting-filename preview when extension handling matters.
+- [x] `dialog_prompt-13` · P2 · proposal. Rename preview: Add a small resulting-filename preview when extension handling matters.
   Evidence: Only the editable value communicates the result.
 
-- [ ] `dialog_prompt-14` · P2 · proposal. Rename label: Increase action-label size.
+- [x] `dialog_prompt-14` · P2 · proposal. Rename label: Increase action-label size.
   Evidence: Rename is clear but small.
 
-- [ ] `dialog_prompt-15` · P2 · proposal. Cancel placement: Align the action group to the field's right edge with a regular gap.
+- [x] `dialog_prompt-15` · P2 · proposal. Cancel placement: Align the action group to the field's right edge with a regular gap.
   Evidence: Cancel begins well inside the input's left edge.
 
-- [ ] `dialog_prompt-16` · P2 · proposal. Bottom space: Reduce dialog height.
+- [x] `dialog_prompt-16` · P2 · proposal. Bottom space: Reduce dialog height.
   Evidence: The panel leaves a large empty region below the actions.
 
-- [ ] `dialog_prompt-17` · P2 · proposal. Title spacing: Tighten the vertical spacing.
+- [x] `dialog_prompt-17` · P2 · proposal. Title spacing: Tighten the vertical spacing.
   Evidence: The heading and instruction are separated by a large gap.
 
-- [ ] `dialog_prompt-18` · P2 · proposal. Backdrop content: Use a compact file list behind the fixture.
+- [x] `dialog_prompt-18` · P2 · proposal. Backdrop content: Use a compact file list behind the fixture.
   Evidence: Files appears above Resolution and Refresh rate rows.
 
-- [ ] `dialog_prompt-19` · P2 · proposal. Backdrop navigation: Select Files in the demo navigation.
+- [x] `dialog_prompt-19` · P2 · proposal. Backdrop navigation: Select Files in the demo navigation.
   Evidence: Display is selected despite a file rename.
 
-- [ ] `dialog_prompt-20` · P2 · proposal. Target selection: Highlight the renamed file in the backdrop.
+- [x] `dialog_prompt-20` · P2 · proposal. Target selection: Highlight the renamed file in the backdrop.
   Evidence: No background file row matches untitled_map.
 
 ### divider_lab

@@ -1,0 +1,100 @@
+goto_screen dialog_prompt
+resize 1280 720
+wait 0.4
+expect_text "Rename file"
+expect_text "Current: untitled_map.map"
+expect_text "Folder: Harbour Studio / maps"
+expect_text "New name"
+expect_text "Preview: untitled_map.map"
+expect_text "Name available in this folder."
+assert_ui dp_panel x=320 y=161 w=640 h=398
+assert_within_parents
+focus_element dp_name
+wait 0.2
+expect_input_selection dp_name 0 12
+screenshot dialog_prompt_design
+key CTRL+A
+key BACKSPACE
+wait 0.2
+expect_input_text dp_name ""
+expect_text "Enter a name before renaming."
+click_ui dp_rename
+wait 0.2
+expect_text "Rename file"
+expect_text "Current: untitled_map.map"
+focus_element dp_name
+wait 0.2
+type "harbour"
+wait 0.2
+expect_text "That filename already exists in this folder."
+key ENTER
+wait 0.2
+expect_text "Rename file"
+expect_text "Current: untitled_map.map"
+key CTRL+A
+type "invalid/name"
+wait 0.2
+expect_text "Use letters, numbers, underscores, or hyphens."
+key CTRL+A
+type "landing_zone"
+wait 0.2
+expect_text "Preview: landing_zone.map"
+expect_text "Name available in this folder."
+click_ui dp_cancel
+wait 0.2
+expect_text "Rename cancelled. Kept untitled_map.map"
+expect_no_text "Rename file"
+click_ui dp_open
+wait 0.2
+focus_element dp_name
+wait 0.2
+expect_input_text dp_name "untitled_map"
+key CTRL+A
+type "landing_zone"
+wait 0.2
+key ENTER
+wait 0.2
+expect_text "Renamed untitled_map.map to landing_zone.map"
+expect_no_text "Rename file"
+expect_text "landing_zone.map"
+click_ui dp_open
+wait 0.2
+focus_element dp_name
+wait 0.2
+key CTRL+A
+type "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+wait 0.2
+expect_input_text dp_name "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+expect_text "Name available in this folder."
+key CTRL+A
+wait 0.2
+expect_input_selection dp_name 0 40
+assert_ui text_input_field w=512 h=44
+screenshot dialog_prompt_long_name
+key END
+wait 0.2
+expect_input_selection dp_name 40 40
+screenshot dialog_prompt_long_name_tail
+click_ui dp_rename
+wait 0.2
+expect_no_text "Rename file"
+click_ui dp_open
+wait 0.2
+expect_text "Current: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.map"
+resize 1920 1080
+wait 0.3
+assert_ui dp_panel x=480 y=242 w=960 h=597
+assert_ui text_input_field w=768 h=66
+screenshot dialog_prompt_design_1080
+resize 1024 768
+wait 0.3
+assert_ui dp_panel x=256 y=225 w=512 h=318
+assert_ui text_input_field w=410 h=35
+screenshot dialog_prompt_design_narrow
+click_ui dp_cancel
+wait 0.2
+click_ui dp_reset
+wait 0.2
+expect_text "Demo reset. All 3 original filenames restored."
+expect_text "untitled_map.map"
+resize 1280 720

@@ -6707,7 +6707,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "412549308ed04ca639a1f080295d87809a6208253e88efafcea28235ba13c299"
+    "sha256": "412549308ed04ca639a1f080295d87809a6208253e88efafcea28235ba13c299",
+    "evidence": "docs/design-audit/originals/dialog_prompt_720p.png"
   },
   {
     "id": "divider_lab",

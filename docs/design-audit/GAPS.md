@@ -1320,7 +1320,7 @@ This one-button connection notice supports sixteen distinct refinements. More wo
 
 ## dialog prompt
 
-[Current baseline](../../screenshot-baselines/screens/dialog_prompt_720p.png) · [Visual review](../../design-audit.html#screen=dialog_prompt)
+[Reviewed image](../../docs/design-audit/originals/dialog_prompt_720p.png) · [Current baseline](../../screenshot-baselines/screens/dialog_prompt_720p.png) · [Visual review](../../design-audit.html#screen=dialog_prompt)
 
 Baseline SHA-256: `412549308ed04ca639a1f080295d87809a6208253e88efafcea28235ba13c299`
 
