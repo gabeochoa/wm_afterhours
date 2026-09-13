@@ -18,6 +18,24 @@ telling the projects what they can delete, not finding new work.
 
 See also: `docs/vendor_ui_sizing_issues.md`
 
+## Full baseline design audit, 2026-09-12
+
+[todo.md](../todo.md) consolidates all 2,535 audit findings into one checklist,
+grouped by screen, alongside the existing project backlog.
+
+[Per-screen findings and coverage](design-audit/GAPS.md) expand the audit to all
+117 current screen baselines and review the 32 additional images in
+`baseline_screenshots`. [Open the visual review](../design-audit.html) to search
+screens, inspect full-size captures, compare existing web mocks or older images
+with a slider, and queue individual findings for implementation.
+
+Each entry names visible evidence, a proposed change, priority, and whether it is
+a defect or a design proposal. The requested target is 25 distinct findings per
+screen. Screens with fewer defensible findings disclose their actual counts.
+Intentional stress cases remain test fixtures. These are wm design candidates;
+none alone establishes an afterhours API gap. Static screenshots do not prove
+interaction correctness or performance. No screen fixes are claimed by this audit.
+
 ---
 
 ## Screen mock audit

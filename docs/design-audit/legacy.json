@@ -1,0 +1,483 @@
+[
+  {
+    "id": "blend_mode_lab",
+    "screen": "blend_mode_lab",
+    "baseline": "baseline_screenshots/blend_mode_lab.png",
+    "current": "screenshot-baselines/screens/blend_mode_lab_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Alpha, Additive, Multiply and AlphaPremultiply specimens and batch diagrams share the current findings. The dark Multiply intersection is an intentional test, not failed contrast to repair.",
+    "sha256": "fa1082878c46a906e6ff63dc7f6ee19f18457d88c16ef6e31b81ee8d2f68fe19",
+    "additional_findings": []
+  },
+  {
+    "id": "cards",
+    "screen": "cards",
+    "baseline": "baseline_screenshots/cards.png",
+    "current": "screenshot-baselines/screens/cards_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Same arrangement and spacing. Current capture removes the initial Surface focus ring. Small labels, detached Styles/Nested badges and a weak translucency demonstration remain visible in both.",
+    "sha256": "5c1873eb68796e5b5d1bc1ea53e5fda7907c427215b331f0a90b8b27918429b8",
+    "additional_findings": []
+  },
+  {
+    "id": "checkboxes",
+    "screen": "checkboxes",
+    "baseline": "baseline_screenshots/checkboxes.png",
+    "current": "screenshot-baselines/screens/checkboxes_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture moves the Primary check value rightward. Colored full-row fills, text-bracket indicators and a large unused lower panel remain in both captures.",
+    "sha256": "dbfe1c8df412ebc6d2de2814125a39c29c1c5311db4d3295570013f9bd7c6563",
+    "additional_findings": []
+  },
+  {
+    "id": "circular_progress",
+    "screen": "circular_progress",
+    "baseline": "baseline_screenshots/circular_progress.png",
+    "current": "screenshot-baselines/screens/circular_progress_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Animated ring is 55% here and 35% in the current capture. This is a captured animation phase, not a regression. Unequal sample-card heights and small legends remain.",
+    "sha256": "3987e2ca14a09791ad1a00e0ebb4be006e70cd1e1004d7f66ee35b3f4c4f3eb1",
+    "additional_findings": []
+  },
+  {
+    "id": "colors",
+    "screen": "colors",
+    "baseline": "baseline_screenshots/colors.png",
+    "current": "screenshot-baselines/screens/colors_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Swatches dominate a small central panel, with a large empty band above the footer. Current palette presentation findings apply; do not replace colors that are the actual specimen.",
+    "sha256": "a722389bdcea1d33575c9f7ea3aaec86b88725d2e18c7052497a88198bbcc26e",
+    "additional_findings": []
+  },
+  {
+    "id": "fit_content_lab",
+    "screen": "fit_content_lab",
+    "baseline": "baseline_screenshots/fit_content_lab.png",
+    "current": "screenshot-baselines/screens/fit_content_lab_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Narrow chat bubbles, tiny copy and unlabeled wide gutters are the same. Preserve the 380px and 200px cap behavior while improving its explanation.",
+    "sha256": "dc9a3cba8c9defc7e15b17a922be3563fad2e164a915178f37a504e58298960a",
+    "additional_findings": []
+  },
+  {
+    "id": "flex_alignment",
+    "screen": "flex_alignment",
+    "baseline": "baseline_screenshots/flex_alignment.png",
+    "current": "screenshot-baselines/screens/flex_alignment_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes initial All focus outline. The two-column specimen arrangement remains the same; tiny tab labels and terse 1/2/3 samples remain hard to scan.",
+    "sha256": "b1ba382b98073b170d2457be7c755fef95d93612c250873fd6593b19b3442b84",
+    "additional_findings": []
+  },
+  {
+    "id": "forms",
+    "screen": "forms",
+    "baseline": "baseline_screenshots/forms.png",
+    "current": "screenshot-baselines/screens/forms_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Volume focus outline. The same fixed-height scroller clips the next control row and the metadata footer remains small. Keep intentional scroll behavior when revising its presentation.",
+    "sha256": "4a4bbefd7be0f55bf0571b147c046a89fb2df787800f634f5e90ad3f439991ba",
+    "additional_findings": []
+  },
+  {
+    "id": "grid_lab",
+    "screen": "grid_lab",
+    "baseline": "baseline_screenshots/grid_lab.png",
+    "current": "screenshot-baselines/screens/grid_lab_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Two top-aligned table examples occupy little of the canvas. Unequal sample widths illustrate explicit tracks and must not be normalized as a supposed alignment defect.",
+    "sha256": "78badc2c90a1d684e23b14a11efd4510aff84c81ae292ff8884de95680a2b868",
+    "additional_findings": []
+  },
+  {
+    "id": "images",
+    "screen": "images",
+    "baseline": "baseline_screenshots/images.png",
+    "current": "screenshot-baselines/screens/images_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes the Settings image-button focus ring. Row layout is unchanged. The Play glyph resembles fast-forward and the click tally is detached from its buttons in both.",
+    "sha256": "47379831e154a3b266225a3141a25c83593b33ae77d02b3652fe6daac20b91e9",
+    "additional_findings": []
+  },
+  {
+    "id": "language_demo",
+    "screen": "language_demo",
+    "baseline": "baseline_screenshots/language_demo.png",
+    "current": "screenshot-baselines/screens/language_demo_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes the EN focus outline. English, Korean and Japanese examples still use visibly different text scales. Missing focus styling cannot be inferred from the current idle image.",
+    "sha256": "5b69b21813db4ddea54686fef948a7ff4ff060e0fe4c92516372b92e43330be4",
+    "additional_findings": []
+  },
+  {
+    "id": "layout",
+    "screen": "layout",
+    "baseline": "baseline_screenshots/layout.png",
+    "current": "screenshot-baselines/screens/layout_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Left Panel focus outline. Same widely separated row and stack examples, small explanatory footer and detached separator lines.",
+    "sha256": "ece2b824a9b680b137809855afed1e3cbcfcc0a3aeaec08c91e19dba4466909b",
+    "additional_findings": []
+  },
+  {
+    "id": "layout_patterns",
+    "screen": "layout_patterns",
+    "baseline": "baseline_screenshots/layout_patterns.png",
+    "current": "screenshot-baselines/screens/layout_patterns_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Only an unlabeled horizontal triplet numbered 1, 2, 3 is visible near the top-left. Current recommendations concern framing and explanation, not a claim the layout engine failed.",
+    "sha256": "617fc8c69a4f01dd6f0db1589d22318d151422289cbd9e617d4a8c3f1c1aa042",
+    "additional_findings": []
+  },
+  {
+    "id": "modals",
+    "screen": "modals",
+    "baseline": "baseline_screenshots/modals.png",
+    "current": "screenshot-baselines/screens/modals_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Simple Modal focus outline. Both show the launcher rather than an open dialog. Neither capture establishes the appearance or usability of open and stacked modals.",
+    "sha256": "2eaa4cf1d33eb0d86398143458606dc38464d47fb3f9ab57364f92c285715e18",
+    "additional_findings": []
+  },
+  {
+    "id": "navigation_bar_demo",
+    "screen": "navigation_bar_demo",
+    "baseline": "baseline_screenshots/navigation_bar_demo.png",
+    "current": "screenshot-baselines/screens/navigation_bar_demo_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes first left-arrow focus outline. The three blue selector bars and large surrounding margins are unchanged. Current review applies to visible selector composition.",
+    "sha256": "1453db0dbcfc353e5062ef66bfd6e1f12798929d1bbf2bca6c8353b45c3e1b47",
+    "additional_findings": []
+  },
+  {
+    "id": "pagination",
+    "screen": "pagination",
+    "baseline": "baseline_screenshots/pagination.png",
+    "current": "screenshot-baselines/screens/pagination_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes the first back-arrow outline. Selected Page 1, Medium and Blue remain magenta. Disabled-back-arrow and selection recommendations require preserving the different semantic states.",
+    "sha256": "9fe639a5beb2696c332da6405b4e1aeffa055bbab91178e17a2fa26f01faa3e1",
+    "additional_findings": []
+  },
+  {
+    "id": "radio_buttons",
+    "screen": "radio_buttons",
+    "baseline": "baseline_screenshots/radio_buttons.png",
+    "current": "screenshot-baselines/screens/radio_buttons_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Apple focus outline. Orange is selected independently of Apple focus in the old image. Large empty lower areas within groups remain visible.",
+    "sha256": "49838a9e898865c28f09ca09cb927191ddd422c60b206a88fb534c684eceebda",
+    "additional_findings": []
+  },
+  {
+    "id": "rect_algebra_lab",
+    "screen": "rect_algebra_lab",
+    "baseline": "baseline_screenshots/rect_algebra_lab.png",
+    "current": "screenshot-baselines/screens/rect_algebra_lab_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Left blue cut regions and right inset bounds are operation visualizations. Improvements should label those operations and dimensions without treating different rectangles as a layout error.",
+    "sha256": "82930845574da68b09e7c22afcba18e6b82d6eb4b8844c20c1435ab0b88cb119",
+    "additional_findings": []
+  },
+  {
+    "id": "scrollbar_style_lab",
+    "screen": "scrollbar_style_lab",
+    "baseline": "baseline_screenshots/scrollbar_style_lab.png",
+    "current": "screenshot-baselines/screens/scrollbar_style_lab_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Four tracks deliberately compare default, accent, explicit-color and no-track styles. Preserve those differences. Small headers and nearly identical repeated row text hinder the comparison.",
+    "sha256": "28fcd043a647faca491c9ab3417db32e881454fb884762f82a0135e2b145e205",
+    "additional_findings": []
+  },
+  {
+    "id": "self_align",
+    "screen": "self_align",
+    "baseline": "baseline_screenshots/self_align.png",
+    "current": "screenshot-baselines/screens/self_align_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes FlexStart focus outline. The three staggered blocks intentionally demonstrate self alignment. Improve reference guides and labels rather than placing all three on one row.",
+    "sha256": "a731cee983c262b160a9bee54bee24b52ce3464afa0250e213e7756ed66896a5",
+    "additional_findings": []
+  },
+  {
+    "id": "separators",
+    "screen": "separators",
+    "baseline": "baseline_screenshots/separators.png",
+    "current": "screenshot-baselines/screens/separators_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Horizontal and vertical examples share current findings. Blue, green, purple and orange strokes intentionally illustrate customization, not an inconsistent product palette.",
+    "sha256": "dbea58271005366101f89dd8efa4b79f9962c06847ee207aa89d151068759a36",
+    "additional_findings": []
+  },
+  {
+    "id": "system_profile_lab",
+    "screen": "system_profile_lab",
+    "baseline": "baseline_screenshots/system_profile_lab.png",
+    "current": "screenshot-baselines/screens/system_profile_lab_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Add load focus outline. Both are the stopped, empty state with zero timing statistics and unavailable CPU/RAM. Neither demonstrates live refresh rate or recording performance.",
+    "sha256": "654d14b638087e160a3bd407807297acd7ac8039098c243437b0d3ae438378bf",
+    "additional_findings": []
+  },
+  {
+    "id": "tab_container",
+    "screen": "tab_container",
+    "baseline": "baseline_screenshots/tab_container.png",
+    "current": "screenshot-baselines/screens/tab_container_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Profile focus outline and leaves the blue selected-tab underline clear. The large profile content well and three small footer actions remain unchanged.",
+    "sha256": "532df9b9d5a46a43ee8a8076fef5f24e91d4d4a2162075a2577b1a1eb27d11f7",
+    "additional_findings": []
+  },
+  {
+    "id": "tabbing",
+    "screen": "tabbing",
+    "baseline": "baseline_screenshots/tabbing.png",
+    "current": "screenshot-baselines/screens/tabbing_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes initial Option A focus ring. The old image is useful separate evidence of the yellow-and-white keyboard focus treatment. The four colored choices remain otherwise unchanged.",
+    "sha256": "b869ad6f02f36f368112775c8fe581ffd007bf37571ddee895b2df76263e4944",
+    "additional_findings": []
+  },
+  {
+    "id": "text",
+    "screen": "text",
+    "baseline": "baseline_screenshots/text.png",
+    "current": "screenshot-baselines/screens/text_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Serif display specimens contrast with handwritten body and caption samples. Current typography-review findings apply without assuming the mixed families are accidental.",
+    "sha256": "47ec135185d09029d5db399b030d9f8141857693b38b3c6b5ecceb0faa28b649",
+    "additional_findings": []
+  },
+  {
+    "id": "text_overflow",
+    "screen": "text_overflow",
+    "baseline": "baseline_screenshots/text_overflow.png",
+    "current": "screenshot-baselines/screens/text_overflow_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Red oversized and clipped samples are the subject of the demo. Improvements must target their surrounding explanation and distinguish expected warning examples from real failures.",
+    "sha256": "a528046ab0491541c4ebf55fc1b95520fbbffed95717deca72563ca56cef05d0",
+    "additional_findings": []
+  },
+  {
+    "id": "text_shadow",
+    "screen": "text_shadow",
+    "baseline": "baseline_screenshots/text_shadow.png",
+    "current": "screenshot-baselines/screens/text_shadow_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. Heading shadow competes with the heading itself, and LIGHT captions sit on the lower panel edge. The 1px to 10px samples deliberately expose strong shadow offsets.",
+    "sha256": "a3630e5e8b01270685a7fd9cd44562fa743a9c3e382299a52329ed1da84b6759",
+    "additional_findings": []
+  },
+  {
+    "id": "text_stroke",
+    "screen": "text_stroke",
+    "baseline": "baseline_screenshots/text_stroke.png",
+    "current": "screenshot-baselines/screens/text_stroke_720p.png",
+    "pixel_identical": true,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Pixel-identical. The invisible/visible captions beneath the WHITE sample are covered by the tip strip. Chunky 8px and 10px outlines are intentional stroke specimens.",
+    "sha256": "609191a71324ec3d5a3b7fc5ff28b5384fa1c7be1b82883c5831a58870305653",
+    "additional_findings": []
+  },
+  {
+    "id": "themes",
+    "screen": "themes",
+    "baseline": "baseline_screenshots/themes.png",
+    "current": "screenshot-baselines/screens/themes_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Cozy Kraft focus outline while Ocean Navy remains the active theme in both. P/S/A/D abbreviations and the unlabeled slider remain difficult to interpret.",
+    "sha256": "86ee9f39226597f6b54e7abbce8d9c26af0bbf6023213c86b7ec1e94915ec858",
+    "additional_findings": []
+  },
+  {
+    "id": "toggle_switches",
+    "screen": "toggle_switches",
+    "baseline": "baseline_screenshots/toggle_switches.png",
+    "current": "screenshot-baselines/screens/toggle_switches_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes Notifications focus outline. General switches and Preferences bracket markers deliberately compare two representations. Locked Setting ON still loses its track against the dark disabled row.",
+    "sha256": "d6af75de471f24d03411947f23c16691d1d58ebc4dea6f554738daf09a9fc61b",
+    "additional_findings": []
+  },
+  {
+    "id": "tooltip_lab_idle",
+    "screen": "tooltip_lab",
+    "baseline": "baseline_screenshots/tooltip_lab_idle.png",
+    "current": "screenshot-baselines/screens/tooltip_lab_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Current capture removes top-left focus outline. Both idle views show six triggers and no tooltip. Initial focus absence is not proof that keyboard tooltips fail.",
+    "sha256": "931a089a7a03173af9d132eb585408c1a9038060161c62ae1f58dbdccbed35ba",
+    "additional_findings": []
+  },
+  {
+    "id": "tooltip_lab_shown",
+    "screen": "tooltip_lab",
+    "baseline": "baseline_screenshots/tooltip_lab_shown.png",
+    "current": "screenshot-baselines/screens/tooltip_lab_720p.png",
+    "pixel_identical": false,
+    "size": [
+      1280,
+      720
+    ],
+    "summary": "Additional interaction state. The instant trigger is highlighted and a narrow tooltip reads delay 0, shows the moment you arrive. This tooltip is absent from the current idle baseline by design.",
+    "sha256": "6e5e2367d37e0d2f096c76afedbdc0c6b8411cafa9d74860c3264fc1ad60d3d8",
+    "additional_findings": [
+      {
+        "id": "L01",
+        "kind": "proposal",
+        "area": "Instant tooltip copy",
+        "observation": "The shown tooltip sentence is much smaller than the instant trigger label.",
+        "change": "Use at least the readable caption size used by the trigger descriptions; verify the full sentence at 1280×720.",
+        "priority": "P2"
+      },
+      {
+        "id": "L02",
+        "kind": "proposal",
+        "area": "Instant tooltip padding",
+        "observation": "The tooltip sentence almost fills its narrow outlined rectangle.",
+        "change": "Add horizontal and vertical breathing room around the instant-tooltip sentence.",
+        "priority": "P2"
+      },
+      {
+        "id": "L03",
+        "kind": "proposal",
+        "area": "Tooltip border",
+        "observation": "A red outline surrounds a normal informational tooltip.",
+        "change": "Use a neutral tooltip edge and reserve red for a documented diagnostic or warning state.",
+        "priority": "P3"
+      },
+      {
+        "id": "L04",
+        "kind": "proposal",
+        "area": "Trigger-to-tooltip relationship",
+        "observation": "The instant tooltip appears immediately below the button without a visible anchor cue.",
+        "change": "Add a small offset or anchor marker so the tooltip is visually attached to instant rather than a separate control.",
+        "priority": "P3"
+      }
+    ]
+  }
+]
