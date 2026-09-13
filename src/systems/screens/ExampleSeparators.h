@@ -26,7 +26,7 @@ struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
         .with_custom_background({248,250,252,255}).with_corner_radius(0));
     auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1080*s),pixels(672*s)})
         .with_absolute_position((context.screen_width-1080*s)/2,(context.screen_height-672*s)/2)
-        .with_background(Theme::Usage::None).with_debug_name("separators_root"));
+        .with_background(Theme::Usage::None).with_corner_radius(0).with_debug_name("separators_root"));
     const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
       return div(context,mk(root.ent(),id),box(x,y,w,h).with_label(text)
           .with_font("AtkinsonMock",pixels(size*s)).with_custom_text_color(dim?muted:ink)
