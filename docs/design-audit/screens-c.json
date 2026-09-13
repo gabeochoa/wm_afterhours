@@ -2207,7 +2207,8 @@
         "change": "Add a small labeled before/after content grouping example outside the existing specimens."
       }
     ],
-    "sha256": "dbea58271005366101f89dd8efa4b79f9962c06847ee207aa89d151068759a36"
+    "sha256": "dbea58271005366101f89dd8efa4b79f9962c06847ee207aa89d151068759a36",
+    "evidence": "docs/design-audit/originals/separators_720p.png"
   },
   {
     "id": "setting_row_showcase",

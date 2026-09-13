@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,117 completed; 418 remaining.
+2,134 completed; 401 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -6460,55 +6460,58 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/separators_720p.png) · [Visual review](design-audit.html#screen=separators)
 
-- [ ] `separators-01` · P2 · proposal. Right card heading: Rename the card Mixed separator examples or split the gallery into its own subsection.
+- [x] `separators-01` · P2 · proposal. Right card heading: Rename the card Mixed separator examples or split the gallery into its own subsection.
   Evidence: Vertical Separators also contains a horizontal color gallery.
 
-- [ ] `separators-02` · P2 · proposal. Default sample label: Add the default pixel thickness to its label.
+- [x] `separators-02` · P2 · proposal. Default sample label: Add the default pixel thickness to its label.
   Evidence: Basic separator - default style omits the actual thickness.
+  Disposition: The original basic line explicitly requests 3 px; it is not the native separator default. Caption reports that exact specimen thickness.
 
-- [ ] `separators-03` · P2 · proposal. Six-pixel sample: Add a small thickness marker beside the line.
+- [x] `separators-03` · P2 · proposal. Six-pixel sample: Add a small thickness marker beside the line.
   Evidence: The thick line has a dimension in text but no direct ruler.
 
-- [ ] `separators-04` · P2 · proposal. Partial-width sample: Show a faint full-width guide behind the purple specimen.
+- [x] `separators-04` · P2 · proposal. Partial-width sample: Show a faint full-width guide behind the purple specimen.
   Evidence: 60% centered has no full-width reference.
 
-- [ ] `separators-05` · P2 · proposal. Labeled OR sample: Add a caption naming automatic label gap sizing.
+- [x] `separators-05` · P2 · proposal. Labeled OR sample: Add a caption naming automatic label gap sizing.
   Evidence: OR has no explanation of its text gap behavior.
+  Disposition: These are manually composed lines with fixed 60 px and 140 px label gaps, not automatic sizing. Captions identify the actual construction.
 
-- [ ] `separators-06` · P2 · proposal. Labeled Settings sample: Add a note identifying the long-label and accent-color variation.
+- [x] `separators-06` · P2 · proposal. Labeled Settings sample: Add a note identifying the long-label and accent-color variation.
   Evidence: Settings differs from OR in color and word length simultaneously.
 
-- [ ] `separators-07` · P2 · proposal. Navigation sample: Label the row Static navigation example unless it is interactive.
+- [x] `separators-07` · P2 · proposal. Navigation sample: Label the row Static navigation example unless it is interactive.
   Evidence: Home, Settings, Profile and Help look like a working navigation bar.
 
-- [ ] `separators-08` · P2 · proposal. Vertical color changes: Add small color names below the sample or a concise caption.
+- [x] `separators-08` · P2 · proposal. Vertical color changes: Add small color names below the sample or a concise caption.
   Evidence: Three vertical dividers use different colors without a key.
 
-- [ ] `separators-09` · P3 · proposal. Vertical dimensions: Display their dimensions beneath the navigation example.
+- [x] `separators-09` · P3 · proposal. Vertical dimensions: Display their dimensions beneath the navigation example.
   Evidence: The vertical separators have no stated height or thickness.
 
-- [ ] `separators-10` · P3 · proposal. Color gallery width: Add one shared Full width label for the gallery.
+- [x] `separators-10` · P3 · proposal. Color gallery width: Add one shared Full width label for the gallery.
   Evidence: The four color lines are long but have no width specification.
+  Disposition: Each color line fills the same 346 px specimen width, not the full 456 px content column.
 
-- [ ] `separators-11` · P2 · proposal. Color gallery semantics: Include token names or hex values beside the color labels.
+- [x] `separators-11` · P2 · proposal. Color gallery semantics: Include token names or hex values beside the color labels.
   Evidence: Blue, Green, Purple and Orange identify hues but not tokens.
 
-- [ ] `separators-12` · P2 · proposal. Section hierarchy: Use a consistent subsection-heading treatment for both.
+- [x] `separators-12` · P2 · proposal. Section hierarchy: Use a consistent subsection-heading treatment for both.
   Evidence: Color Gallery is embedded in a separator while Labeled Separators is a heading.
 
-- [ ] `separators-13` · P3 · proposal. Footer sentence: Replace it with a note that line dimensions remain fixed across color variants.
+- [x] `separators-13` · P3 · proposal. Footer sentence: Replace it with a note that line dimensions remain fixed across color variants.
   Evidence: Separators help organize and structure UI content states no testable detail.
 
-- [ ] `separators-14` · P2 · proposal. Sample grouping: Use consistent labeled specimen rows with equal text-to-line gaps.
+- [x] `separators-14` · P2 · proposal. Sample grouping: Use consistent labeled specimen rows with equal text-to-line gaps.
   Evidence: Descriptions and lines are separated only by white space.
 
-- [ ] `separators-15` · P3 · proposal. Left card density: Align subsection baselines to make comparison easier.
+- [x] `separators-15` · P3 · proposal. Left card density: Align subsection baselines to make comparison easier.
   Evidence: The left card has six samples while the right has a large navigation sample and four colors.
 
-- [ ] `separators-16` · P3 · proposal. Heading size: Slightly reduce the title and give the specifications more readable space.
+- [x] `separators-16` · P3 · proposal. Heading size: Slightly reduce the title and give the specifications more readable space.
   Evidence: The page title is much larger than sample metadata.
 
-- [ ] `separators-17` · P2 · proposal. Decorative-versus-structural distinction: Add a small labeled before/after content grouping example outside the existing specimens.
+- [x] `separators-17` · P2 · proposal. Decorative-versus-structural distinction: Add a small labeled before/after content grouping example outside the existing specimens.
   Evidence: The screen gives no example of a separator in ordinary content.
 
 ### setting_row_showcase

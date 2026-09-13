@@ -10,350 +10,81 @@ using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
 struct ExampleSeparators : ScreenSystem<UIContext<InputAction>> {
-  // Clean modern color scheme
-  afterhours::Color bg_slate{248, 250, 252, 255};     // Soft gray-blue
-  afterhours::Color card_white{255, 255, 255, 255};   // Pure white
-  afterhours::Color text_dark{30, 41, 59, 255};       // Dark slate
-  afterhours::Color text_muted{100, 116, 139, 255};   // Muted slate
-  afterhours::Color accent_blue{59, 130, 246, 255};   // Vibrant blue
-  afterhours::Color accent_green{34, 197, 94, 255};   // Fresh green
-  afterhours::Color accent_purple{139, 92, 246, 255}; // Soft purple
-  afterhours::Color accent_orange{249, 115, 22, 255}; // Warm orange
-  afterhours::Color border_light{180, 190, 210, 255}; // More visible border
+  bool guides = true;
 
-  void for_each_with(afterhours::Entity &entity,
-                     UIContext<InputAction> &context, float) override {
-    auto theme = afterhours::ui::theme_presets::cozy_kraft();
-    context.theme = theme;
-
-    int screen_width = Settings::get().get_screen_width();
-    float col_width = 520.0f;
-    float card_height = 500.0f;
-    float col_gap = 40.0f;
-    float total_width = col_width * 2 + col_gap;
-    float start_x = (screen_width - total_width) / 2.0f;
-    float content_y = 100.0f;
-
-    // Background
-    div(context, mk(entity, 0),
-        ComponentConfig{}
-            .with_size(
-                ComponentSize{screen_pct(1.0f), screen_pct(1.0f)})
-            .with_custom_background(bg_slate)
-            .with_corner_radius(0.f)
-            .with_debug_name("bg"));
-
-    // Title
-    div(context, mk(entity, 1),
-        ComponentConfig{}
-            .with_label("Separator Widget Demo")
-            .with_size(ComponentSize{pixels(screen_width), pixels(50)})
-            .with_absolute_position(0.0f, 20.0f)
-            .with_font("Gaegu-Bold", h720(42.0f))
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center));
-
-    // ========== LEFT CARD: Horizontal Separators ==========
-    div(context, mk(entity, 10),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(col_width), pixels(card_height)})
-            .with_absolute_position(start_x, content_y)
-            .with_custom_background(card_white)
-            .with_soft_shadow(6.0f, 10.0f, 25.0f,
-                              afterhours::Color{0, 0, 0, 30})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.06f)
-            .with_debug_name("left_card_bg"));
-
-    float y = content_y + 30.0f;
-    float pad = 32.0f;
-    float item_width = col_width - pad * 2;
-
-    // Section title
-    div(context, mk(entity, 11),
-        ComponentConfig{}
-            .with_label("Horizontal Separators")
-            .with_size(ComponentSize{pixels(item_width), pixels(40)})
-            .with_absolute_position(start_x + pad, y)
-            .with_font("Gaegu-Bold", h720(30.0f))
-            .with_custom_text_color(text_dark));
-    y += 48.0f;
-
-    // Basic separator
-    div(context, mk(entity, 12),
-        ComponentConfig{}
-            .with_label("Basic separator - default style")
-            .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted));
-    y += 36.0f;
-
-    div(context, mk(entity, 13),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(item_width), pixels(3)})
-            .with_absolute_position(start_x + pad, y)
-            .with_custom_background(border_light));
-    y += 32.0f;
-
-    // Thick separator
-    div(context, mk(entity, 14),
-        ComponentConfig{}
-            .with_label("Thick separator - 6 pixels tall")
-            .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted));
-    y += 36.0f;
-
-    div(context, mk(entity, 15),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(item_width), pixels(6)})
-            .with_absolute_position(start_x + pad, y)
-            .with_custom_background(border_light));
-    y += 32.0f;
-
-    // Blue separator
-    div(context, mk(entity, 16),
-        ComponentConfig{}
-            .with_label("Custom color - blue accent")
-            .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted));
-    y += 36.0f;
-
-    div(context, mk(entity, 17),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(item_width), pixels(3)})
-            .with_absolute_position(start_x + pad, y)
-            .with_custom_background(accent_blue));
-    y += 32.0f;
-
-    // Partial width separator
-    div(context, mk(entity, 18),
-        ComponentConfig{}
-            .with_label("Partial width - 60% centered")
-            .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position(start_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted));
-    y += 36.0f;
-
-    float partial_width = item_width * 0.6f;
-    div(context, mk(entity, 19),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(partial_width), pixels(3)})
-            .with_absolute_position(
-                start_x + pad + (item_width - partial_width) / 2, y)
-            .with_custom_background(accent_purple));
-    y += 40.0f;
-
-    // Labeled separator section title
-    div(context, mk(entity, 20),
-        ComponentConfig{}
-            .with_label("Labeled Separators")
-            .with_size(ComponentSize{pixels(item_width), pixels(34)})
-            .with_absolute_position(start_x + pad, y)
-            .with_font("Gaegu-Bold", h720(26.0f))
-            .with_custom_text_color(text_dark));
-    y += 40.0f;
-
-    // --- OR --- style separator
-    float line_width = (item_width - 60) / 2;
-    div(context, mk(entity, 21),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(line_width), pixels(3)})
-            .with_absolute_position(start_x + pad, y + 12)
-            .with_custom_background(border_light));
-
-    div(context, mk(entity, 22),
-        ComponentConfig{}
-            .with_label("OR")
-            .with_size(ComponentSize{pixels(50), pixels(28)})
-            .with_absolute_position(start_x + pad + line_width + 5, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 23),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(line_width), pixels(3)})
-            .with_absolute_position(start_x + pad + line_width + 60, y + 12)
-            .with_custom_background(border_light));
-    y += 40.0f;
-
-    // --- Settings --- style separator
-    float settings_label_width = 110.0f;
-    float settings_line_width = (item_width - settings_label_width - 30) / 2;
-    div(context, mk(entity, 24),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(settings_line_width), pixels(3)})
-            .with_absolute_position(start_x + pad, y + 14)
-            .with_custom_background(accent_blue)
-            .with_debug_name("settings_line1"));
-
-    div(context, mk(entity, 25),
-        ComponentConfig{}
-            .with_label("Settings")
-            .with_size(ComponentSize{pixels(settings_label_width), pixels(30)})
-            .with_absolute_position(start_x + pad + settings_line_width + 15, y)
-            .with_font("Gaegu-Bold", h720(22.0f))
-            .with_custom_text_color(accent_blue)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 26),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(settings_line_width), pixels(3)})
-            .with_absolute_position(start_x + pad + settings_line_width +
-                                        settings_label_width + 30,
-                                    y + 14)
-            .with_custom_background(accent_blue));
-
-    // ========== RIGHT CARD: Vertical Separators ==========
-    float right_x = start_x + col_width + col_gap;
-    div(context, mk(entity, 30),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(col_width), pixels(card_height)})
-            .with_absolute_position(right_x, content_y)
-            .with_custom_background(card_white)
-            .with_soft_shadow(6.0f, 10.0f, 25.0f,
-                              afterhours::Color{0, 0, 0, 30})
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.06f)
-            .with_debug_name("right_card_bg"));
-
-    y = content_y + 30.0f;
-
-    // Section title
-    div(context, mk(entity, 31),
-        ComponentConfig{}
-            .with_label("Vertical Separators")
-            .with_size(ComponentSize{pixels(item_width), pixels(40)})
-            .with_absolute_position(right_x + pad, y)
-            .with_font("Gaegu-Bold", h720(30.0f))
-            .with_custom_text_color(text_dark));
-    y += 48.0f;
-
-    div(context, mk(entity, 32),
-        ComponentConfig{}
-            .with_label("Use between navigation items:")
-            .with_size(ComponentSize{pixels(item_width), pixels(28)})
-            .with_absolute_position(right_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-            .with_custom_text_color(text_muted));
-    y += 40.0f;
-
-    // Navigation row with vertical separators
-    float nav_width = item_width;
-    float nav_height = 64.0f;
-    float nav_item_width = 90.0f;
-    float sep_spacing = 12.0f;
-
-    // Nav background
-    div(context, mk(entity, 33),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(nav_width), pixels(nav_height)})
-            .with_absolute_position(right_x + pad, y)
-            .with_custom_background(bg_slate)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.12f)
-            .with_debug_name("nav_bg"));
-
-    float nav_x = right_x + pad + 24; // Added more left padding
-    const char *nav_items[] = {"Home", "Settings", "Profile", "Help"};
-    afterhours::Color sep_colors[] = {text_muted, accent_green, accent_orange};
-
-    for (int i = 0; i < 4; i++) {
-      div(context, mk(entity, 40 + i),
-          ComponentConfig{}
-              .with_label(nav_items[i])
-              .with_size(
-                  ComponentSize{pixels(nav_item_width), pixels(nav_height)})
-              .with_absolute_position(nav_x, y)
-              .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-              .with_custom_text_color(text_dark)
-              .with_alignment(TextAlignment::Center)
-              .with_debug_name(std::string("nav_") + nav_items[i]));
-      nav_x += nav_item_width;
-
-      if (i < 3) {
-        // Vertical separator
-        div(context, mk(entity, 50 + i),
-            ComponentConfig{}
-                .with_size(ComponentSize{pixels(3), pixels(40)})
-                .with_absolute_position(nav_x + sep_spacing, y + 12)
-                .with_custom_background(sep_colors[i])
-                .with_debug_name(std::string("vsep_") + std::to_string(i)));
-        nav_x += sep_spacing * 2 + 3;
-      }
+  void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &context, float) override {
+    context.theme=afterhours::ui::theme_presets::cozy_kraft();
+    context.scaling_mode=ScalingMode::Proportional;
+    const float s=std::min(context.screen_width/1280.f,context.screen_height/720.f);
+    const afterhours::Color ink{30,41,59,255}, muted{82,99,122,255}, line{180,190,210,255};
+    const std::array<afterhours::Color,4> colors{{{59,130,246,255},{34,197,94,255},{139,92,246,255},{249,115,22,255}}};
+    const auto box=[s](float x,float y,float w,float h) {
+      return ComponentConfig{}.with_size({pixels(w*s),pixels(h*s)})
+          .with_absolute_position(x*s,y*s).with_corner_radius(0);
+    };
+    div(context,mk(entity,0),ComponentConfig{}.with_size({pixels(context.screen_width),pixels(context.screen_height)})
+        .with_custom_background({248,250,252,255}).with_corner_radius(0));
+    auto root=div(context,mk(entity,1),ComponentConfig{}.with_size({pixels(1080*s),pixels(672*s)})
+        .with_absolute_position((context.screen_width-1080*s)/2,(context.screen_height-672*s)/2)
+        .with_background(Theme::Usage::None).with_debug_name("separators_root"));
+    const auto label=[&](int id,const std::string &text,float x,float y,float w,float h,float size,bool dim=false) {
+      return div(context,mk(root.ent(),id),box(x,y,w,h).with_label(text)
+          .with_font("AtkinsonMock",pixels(size*s)).with_custom_text_color(dim?muted:ink)
+          .with_alignment(TextAlignment::Left).with_background(Theme::Usage::None).with_ignore_pointer_events());
+    };
+    const auto stroke=[&](int id,float x,float y,float w,float h,afterhours::Color color,const std::string &name="") {
+      return div(context,mk(root.ent(),id),box(x,y,w,h).with_custom_background(color).with_debug_name(name).with_ignore_pointer_events());
+    };
+    label(0,"Separators",0,0,800,40,32);
+    label(1,"Compare thickness, width, labels and color. Dimensions are shown at 720p.",0,44,1080,28,19,true);
+    for(int i=0;i<2;++i) div(context,mk(root.ent(),2+i),box(static_cast<float>(i)*560,88,520,526)
+        .with_custom_background({255,255,255,255}).with_corner_radius(12*s)
+        .with_debug_name(i==0?"left_card_bg":"right_card_bg"));
+    label(10,"Horizontal specimens",32,106,456,34,25);
+    label(11,"Basic / 456 x 3 px / #B4BED2",32,150,456,28,19,true);
+    stroke(12,32,188,456,3,line,"separator_basic");
+    label(13,"Thick / 456 x 6 px",32,216,456,28,19,true);
+    stroke(14,32,254,456,6,line,"separator_thick");
+    if(guides) stroke(15,498,254,2,6,ink);
+    label(16,"Blue / 456 x 3 px / #3B82F6",32,282,456,28,19,true);
+    stroke(17,32,320,456,3,colors[0]);
+    label(18,"Purple / 60% of 456 px / centered",32,348,456,28,19,true);
+    if(guides) stroke(19,32,386,456,1,{220,226,235,255});
+    stroke(20,123.2f,386,273.6f,3,colors[2],"separator_partial");
+    label(21,"Labeled specimens",32,412,456,32,25);
+    stroke(22,32,468,198,3,line);
+    label(23,"OR",235,454,50,28,19);
+    stroke(24,290,468,198,3,line);
+    label(25,"Fixed 60 px label gap",32,486,456,26,17,true);
+    stroke(26,32,540,158,3,colors[0],"settings_line1");
+    label(27,"Settings",205,526,110,30,21);
+    stroke(28,330,540,158,3,colors[0]);
+    label(29,"Long label / fixed 140 px gap / blue accent",32,568,456,26,17,true);
+    label(30,"Mixed separator examples",592,106,456,34,25);
+    label(31,"Static navigation / 3 x 40 px dividers",592,150,456,28,19,true);
+    div(context,mk(root.ent(),32),box(592,188,456,64).with_custom_background({248,250,252,255})
+        .with_corner_radius(8*s).with_debug_name("nav_bg"));
+    const std::array<std::string,4> names{"Home","Settings","Profile","Help"};
+    const std::array<afterhours::Color,3> nav_colors{muted,colors[1],colors[3]};
+    for(int i=0;i<4;++i) {
+      label(40+i,names[i],604+static_cast<float>(i)*110,204,86,30,19);
+      if(i<3) stroke(50+i,697+static_cast<float>(i)*110,200,3,40,nav_colors[i],"vsep_"+std::to_string(i));
     }
-    y += nav_height + 40.0f;
-
-    // Color gallery section
-    float gallery_line_width = (item_width - 140) / 2;
-    div(context, mk(entity, 60),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(gallery_line_width), pixels(3)})
-            .with_absolute_position(right_x + pad, y + 14)
-            .with_custom_background(border_light)
-            .with_debug_name("gallery_line1"));
-
-    div(context, mk(entity, 61),
-        ComponentConfig{}
-            .with_label("Color Gallery")
-            .with_size(ComponentSize{pixels(130), pixels(30)})
-            .with_absolute_position(right_x + pad + gallery_line_width + 5, y)
-            .with_font("Gaegu-Bold", h720(22.0f))
-            .with_custom_text_color(text_dark)
-            .with_alignment(TextAlignment::Center));
-
-    div(context, mk(entity, 62),
-        ComponentConfig{}
-            .with_size(ComponentSize{pixels(gallery_line_width), pixels(3)})
-            .with_absolute_position(right_x + pad + gallery_line_width + 140,
-                                    y + 14)
-            .with_custom_background(border_light));
-    y += 40.0f;
-
-    // Color rows
-    afterhours::Color colors[] = {accent_blue, accent_green, accent_purple,
-                                  accent_orange};
-    const char *color_names[] = {"Blue", "Green", "Purple", "Orange"};
-
-    for (int i = 0; i < 4; i++) {
-      div(context, mk(entity, 70 + i),
-          ComponentConfig{}
-              .with_label(color_names[i])
-              .with_size(ComponentSize{pixels(90), pixels(32)})
-              .with_absolute_position(right_x + pad, y)
-              .with_font(UIComponent::DEFAULT_FONT, h720(20.0f))
-              .with_custom_text_color(text_muted)
-              .with_debug_name(std::string("color_") + color_names[i]));
-
-      div(context, mk(entity, 80 + i),
-          ComponentConfig{}
-              .with_size(ComponentSize{pixels(item_width - 110), pixels(4)})
-              .with_absolute_position(right_x + pad + 100, y + 14)
-              .with_custom_background(colors[i])
-              .with_debug_name(std::string("colorbar_") + color_names[i]));
-      y += 40.0f;
+    label(54,"Slate / Green / Orange",592,258,456,26,17,true);
+    label(55,"Color gallery",592,292,456,32,25);
+    label(56,"Same full-width line / 346 x 4 px",592,326,456,26,17,true);
+    const std::array<std::string,4> captions{"Blue #3B82F6","Green #22C55E","Purple #8B5CF6","Orange #F97316"};
+    for(int i=0;i<4;++i) {
+      const float y=362+static_cast<float>(i)*56;
+      label(60+i,captions[i],592,y,456,26,18,true);
+      stroke(70+i,592,y+34,346,4,colors[i],"colorbar_"+std::array<std::string,4>{"Blue","Green","Purple","Orange"}[i]);
     }
-
-    // Footer
-    y += 24.0f;
-    div(context, mk(entity, 90),
-        ComponentConfig{}
-            .with_label("Separators help organize and structure UI content")
-            .with_size(ComponentSize{pixels(item_width), pixels(30)})
-            .with_absolute_position(right_x + pad, y)
-            .with_font(UIComponent::DEFAULT_FONT, h720(18.0f))
-            .with_custom_text_color(text_muted)
-            .with_alignment(TextAlignment::Center));
+    label(80,"Grouping example: Contact details   |   Delivery address",0,632,790,28,19,true);
+    if(button(context,mk(root.ent(),81),box(816,630,264,36).with_label(guides?"Width guides: on":"Width guides: off")
+        .with_font("AtkinsonMock",pixels(18*s)).with_custom_background({227,235,246,255})
+        .with_custom_text_color(ink).with_corner_radius(8*s).with_debug_name("separator_guides"))) guides=!guides;
   }
 };
 
-REGISTER_EXAMPLE_SCREEN(
-    separators, "Component Galleries",
-    "Separator widget examples (horizontal, vertical, labeled)",
-    ExampleSeparators)
+REGISTER_EXAMPLE_SCREEN(separators, "Component Galleries",
+                        "Separator widget examples (horizontal, vertical, labeled)", ExampleSeparators)

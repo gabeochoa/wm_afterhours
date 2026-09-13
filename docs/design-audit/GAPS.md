@@ -3266,7 +3266,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## separators
 
-[Current baseline](../../screenshot-baselines/screens/separators_720p.png) · [Visual review](../../design-audit.html#screen=separators)
+[Reviewed image](../../docs/design-audit/originals/separators_720p.png) · [Current baseline](../../screenshot-baselines/screens/separators_720p.png) · [Visual review](../../design-audit.html#screen=separators)
 
 Baseline SHA-256: `dbea58271005366101f89dd8efa4b79f9962c06847ee207aa89d151068759a36`
 
@@ -3296,7 +3296,7 @@ The screen clearly presents horizontal, labeled and vertical separators. Sevente
 
 [Image](../../baseline_screenshots/separators.png)
 
-Pixel-identical. Horizontal and vertical examples share current findings. Blue, green, purple and orange strokes intentionally illustrate customization, not an inconsistent product palette.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## setting row showcase
 

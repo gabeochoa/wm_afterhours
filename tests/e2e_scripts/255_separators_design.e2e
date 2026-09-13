@@ -1,0 +1,26 @@
+goto_screen separators
+resize 1280 720
+wait 0.4
+expect_text "Mixed separator examples"
+expect_text "Fixed 60 px label gap"
+assert_ui separator_basic w=456 h=3
+assert_ui separator_thick w=456 h=6
+assert_ui vsep_0 w=3 h=40
+assert_within_parents
+screenshot separators_design
+click_ui separator_guides
+wait 0.2
+expect_text "Width guides: off"
+focus_ui separator_guides
+key ENTER
+wait 0.2
+expect_text "Width guides: on"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot separators_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot separators_design_narrow
+resize 1280 720

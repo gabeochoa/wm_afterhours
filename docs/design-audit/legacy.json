@@ -284,13 +284,13 @@
     "screen": "separators",
     "baseline": "baseline_screenshots/separators.png",
     "current": "screenshot-baselines/screens/separators_720p.png",
-    "pixel_identical": true,
+    "pixel_identical": false,
     "size": [
       1280,
       720
     ],
-    "summary": "Pixel-identical. Horizontal and vertical examples share current findings. Blue, green, purple and orange strokes intentionally illustrate customization, not an inconsistent product palette.",
-    "sha256": "dbea58271005366101f89dd8efa4b79f9962c06847ee207aa89d151068759a36",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "b7fd1a14050cff3e30e02c88cd3220c6f7eff80d8a1cd0cc0fe4376173c42ed4",
     "additional_findings": []
   },
   {
