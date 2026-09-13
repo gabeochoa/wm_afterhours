@@ -205,7 +205,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "5d431252bcb87f1bbd4a2a4d4f40cab3615323fec57c7e2661ae43107e3d87c3"
+    "sha256": "5d431252bcb87f1bbd4a2a4d4f40cab3615323fec57c7e2661ae43107e3d87c3",
+    "evidence": "docs/design-audit/originals/absolute_positioning_720p.png"
   },
   {
     "id": "accessibility",

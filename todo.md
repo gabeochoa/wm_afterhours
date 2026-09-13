@@ -2,7 +2,8 @@
 
 ## Baseline design audit
 
-2,535 open items across 117 screens: 58 visible defects and 2,477 design proposals.
+2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
+25 completed; 2,510 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -17,79 +18,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/absolute_positioning_720p.png) · [Visual review](design-audit.html#screen=absolute_positioning)
 
-- [ ] `absolute_positioning-01` · P1 · defect. Translate example: Size the samples so both complete coordinate labels remain visible.
+- [x] `absolute_positioning-01` · P1 · defect. Translate example: Size the samples so both complete coordinate labels remain visible.
   Evidence: Pink translate(300,10) overlaps the green label's final characters.
 
-- [ ] `absolute_positioning-02` · P2 · defect. Corner-pinning right edge: Compute right anchors from the actual measured well width.
+- [x] `absolute_positioning-02` · P2 · defect. Corner-pinning right edge: Compute right anchors from the actual measured well width.
   Evidence: TR and BR extend beyond the inset demo well.
 
-- [ ] `absolute_positioning-03` · P2 · proposal. Corner-pinning labels: Add an external legend spelling out the four corners.
+- [x] `absolute_positioning-03` · P2 · proposal. Corner-pinning labels: Add an external legend spelling out the four corners.
   Evidence: TL, TR, BL and BR require interpreting abbreviations.
 
-- [ ] `absolute_positioning-04` · P2 · proposal. Corner-pinning bounds: Outline the reference rectangle independently of its children.
+- [x] `absolute_positioning-04` · P2 · proposal. Corner-pinning bounds: Outline the reference rectangle independently of its children.
   Evidence: The well's right boundary disappears behind the corner blocks.
 
-- [ ] `absolute_positioning-05` · P2 · proposal. Corner-pinning geometry: Print measured width and height beneath the reference rectangle.
+- [x] `absolute_positioning-05` · P2 · proposal. Corner-pinning geometry: Print measured width and height beneath the reference rectangle.
   Evidence: Corner samples look wider than tall.
 
-- [ ] `absolute_positioning-06` · P2 · proposal. Corner-pinning spacing: Increase the well height to make top versus bottom anchoring clearer.
+- [x] `absolute_positioning-06` · P2 · proposal. Corner-pinning spacing: Increase the well height to make top versus bottom anchoring clearer.
   Evidence: The two left samples nearly fill the short well vertically.
 
-- [ ] `absolute_positioning-07` · P2 · proposal. Corner-pinning origin: Draw a small crosshair at the container origin.
+- [x] `absolute_positioning-07` · P2 · proposal. Corner-pinning origin: Draw a small crosshair at the container origin.
   Evidence: The top-left block has no marked anchor point.
 
-- [ ] `absolute_positioning-08` · P2 · proposal. Translate reference: Add reference ticks at x=0,100,300 outside the specimens.
+- [x] `absolute_positioning-08` · P2 · proposal. Translate reference: Add reference ticks at x=0,100,300 outside the specimens.
   Evidence: The green and pink boxes have no origin or grid.
 
-- [ ] `absolute_positioning-09` · P2 · proposal. Translate y offsets: Add a 10-pixel offset bracket at the left edge.
+- [x] `absolute_positioning-09` · P2 · proposal. Translate y offsets: Add a 10-pixel offset bracket at the left edge.
   Evidence: Both translate labels show 10 without a visible vertical measurement.
 
-- [ ] `absolute_positioning-10` · P2 · proposal. Translate labels: Use a compact monospace face for numeric coordinates.
+- [x] `absolute_positioning-10` · P2 · proposal. Translate labels: Use a compact monospace face for numeric coordinates.
   Evidence: Coordinate text uses the handwritten display face.
 
-- [ ] `absolute_positioning-11` · P2 · proposal. Title: Inset the title text to align with the section headings.
+- [x] `absolute_positioning-11` · P2 · proposal. Title: Inset the title text to align with the section headings.
   Evidence: The cyan title starts flush against its rounded panel edge.
 
-- [ ] `absolute_positioning-12` · P2 · proposal. Section headings: Increase heading weight while keeping specimen text smaller.
+- [x] `absolute_positioning-12` · P2 · proposal. Section headings: Increase heading weight while keeping specimen text smaller.
   Evidence: Four long technical headings are visually similar to specimen labels.
 
-- [ ] `absolute_positioning-13` · P2 · proposal. Section numbering: Use a narrow numbered gutter for faster section scanning.
+- [x] `absolute_positioning-13` · P2 · proposal. Section numbering: Use a narrow numbered gutter for faster section scanning.
   Evidence: Numbers share the same baseline and weight as full headings.
 
-- [ ] `absolute_positioning-14` · P2 · proposal. Correct-pattern caption: Add a short note that offsets are relative to the demo container.
+- [x] `absolute_positioning-14` · P2 · proposal. Correct-pattern caption: Add a short note that offsets are relative to the demo container.
   Evidence: The first heading calls the pattern correct without stating the rule.
 
-- [ ] `absolute_positioning-15` · P2 · proposal. Flow labels: Add consistent internal label padding.
+- [x] `absolute_positioning-15` · P2 · proposal. Flow labels: Add consistent internal label padding.
   Evidence: Flow A, B and C sit directly on the left edges of their blocks.
 
-- [ ] `absolute_positioning-16` · P2 · proposal. Flow spacing: Annotate the space-around gaps below the row.
+- [x] `absolute_positioning-16` · P2 · proposal. Flow spacing: Annotate the space-around gaps below the row.
   Evidence: Large gaps between Flow A, B and C have no measurement cues.
 
-- [ ] `absolute_positioning-17` · P2 · proposal. Overlay badge: Center the badge label with equal horizontal inset.
+- [x] `absolute_positioning-17` · P2 · proposal. Overlay badge: Center the badge label with equal horizontal inset.
   Evidence: BADGE is left aligned within a wide pink pill.
 
-- [ ] `absolute_positioning-18` · P2 · proposal. Overlay relationship: Add a leader from the badge to its container anchor.
+- [x] `absolute_positioning-18` · P2 · proposal. Overlay relationship: Add a leader from the badge to its container anchor.
   Evidence: The badge crosses Flow C and the well without explaining its anchor.
 
-- [ ] `absolute_positioning-19` · P2 · proposal. Overlay layer: Label the badge layer outside the colored blocks.
+- [x] `absolute_positioning-19` · P2 · proposal. Overlay layer: Label the badge layer outside the colored blocks.
   Evidence: The overlay example does not identify its stacking order.
 
-- [ ] `absolute_positioning-20` · P2 · proposal. Percentage samples: Display viewport width beside the section heading.
+- [x] `absolute_positioning-20` · P2 · proposal. Percentage samples: Display viewport width beside the section heading.
   Evidence: 30% and 20% blocks describe screen sizing but omit reference width.
 
-- [ ] `absolute_positioning-21` · P2 · proposal. Percentage heights: Add computed height text below the specimens.
+- [x] `absolute_positioning-21` · P2 · proposal. Percentage heights: Add computed height text below the specimens.
   Evidence: Both blocks show 8% without an absolute height comparison.
 
-- [ ] `absolute_positioning-22` · P2 · proposal. Percentage labels: Inset percentage labels by a consistent small padding.
+- [x] `absolute_positioning-22` · P2 · proposal. Percentage labels: Inset percentage labels by a consistent small padding.
   Evidence: Text begins at each block's left boundary.
 
-- [ ] `absolute_positioning-23` · P2 · proposal. Percentage reference: Add a thin 0–100% ruler outside the samples.
+- [x] `absolute_positioning-23` · P2 · proposal. Percentage reference: Add a thin 0–100% ruler outside the samples.
   Evidence: There is no visual scale for the unused half of screen width.
 
-- [ ] `absolute_positioning-24` · P2 · proposal. Bottom space: Use it for a compact coordinate-system legend.
+- [x] `absolute_positioning-24` · P2 · proposal. Bottom space: Use it for a compact coordinate-system legend.
   Evidence: A large empty band follows the fourth fixture.
 
-- [ ] `absolute_positioning-25` · P2 · proposal. Demo wells: Add subtle well borders so measured container boundaries remain visible.
+- [x] `absolute_positioning-25` · P2 · proposal. Demo wells: Add subtle well borders so measured container boundaries remain visible.
   Evidence: Inset wells and outer section panels are close in tone.
 
 ### accessibility
@@ -8091,6 +8092,12 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+### Single-line text insets
+
+- [ ] Fix the single-line renderer ignoring `with_text_inset()` after upstream review.
+  Padded label containers work around this in wm. See
+  [the gap](docs/AFTERHOURS_GAPS.md#single-line-labels-ignore-explicit-text-insets).
 
 
 ### Charts after the profiling UI

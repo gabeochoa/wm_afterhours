@@ -54,7 +54,7 @@ def build(check=False):
         path = ROOT / screen["baseline"]
         if path != ROOT / f"screenshot-baselines/screens/{screen['id']}_720p.png":
             raise ValueError(f"Unexpected baseline path: {path}")
-        if screen["sha256"] != digest(path):
+        if screen["sha256"] != digest(ROOT / screen.get("evidence", screen["baseline"])):
             raise ValueError(f"Baseline changed since review: {screen['id']}")
         screen["has_mock"] = screen["id"] in mock_ids
         screen["reference"] = references.get(screen["id"])
@@ -88,7 +88,8 @@ def build(check=False):
              f"The additional captures contribute {metadata['legacy_findings']} more proposals. "
              f"{metadata['screens_at_target']} screens reach the requested 25 findings. "
              "Sparse screens have fewer where further findings would repeat an existing issue or invent a problem.", "",
-             "All entries are open review candidates. Ownership starts in wm; none establishes a missing afterhours API. "
+             "Entries retain the original review evidence; completion is tracked in [todo.md](../../todo.md). "
+             "Ownership starts in wm; none establishes a missing afterhours API. "
              "Preserve intentional test fixtures. A proposal is a possible improvement, not proof of broken behavior. "
              "P1 means unreadable or obscured content, P2 affects ordinary reading or comparison, and P3 is polish or added explanation.", "",
              "[Open the visual review](../../design-audit.html) · "
@@ -101,6 +102,7 @@ def build(check=False):
                      f"{count_defects} | {'yes' if screen['has_mock'] else 'not authored'} |")
     for screen in screens:
         lines += ["", f"## {screen['id'].replace('_', ' ')}", "",
+                  (f"[Reviewed image](../../{screen['evidence']}) · " if screen.get("evidence") else "") +
                   f"[Current baseline](../../{screen['baseline']}) · "
                   f"[Visual review](../../design-audit.html#screen={screen['id']})", "",
                   f"Baseline SHA-256: `{screen['sha256']}`", "", screen["summary"], ""]

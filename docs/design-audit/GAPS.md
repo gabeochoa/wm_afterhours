@@ -4,7 +4,7 @@ Audit of the committed 1280×720 screenshots on 2026-09-12. The review covers vi
 
 117 current screens, 32 additional captures, 2531 findings. 58 are classified as visible defects and 2473 as design proposals. The additional captures contribute 4 more proposals. 58 screens reach the requested 25 findings. Sparse screens have fewer where further findings would repeat an existing issue or invent a problem.
 
-All entries are open review candidates. Ownership starts in wm; none establishes a missing afterhours API. Preserve intentional test fixtures. A proposal is a possible improvement, not proof of broken behavior. P1 means unreadable or obscured content, P2 affects ordinary reading or comparison, and P3 is polish or added explanation.
+Entries retain the original review evidence; completion is tracked in [todo.md](../../todo.md). Ownership starts in wm; none establishes a missing afterhours API. Preserve intentional test fixtures. A proposal is a possible improvement, not proof of broken behavior. P1 means unreadable or obscured content, P2 affects ordinary reading or comparison, and P3 is polish or added explanation.
 
 [Open the visual review](../../design-audit.html) · [Existing product mocks](../../mocks.html) · [Main gaps file](../AFTERHOURS_GAPS.md)
 
@@ -132,7 +132,7 @@ All entries are open review candidates. Ownership starts in wm; none establishes
 
 ## absolute positioning
 
-[Current baseline](../../screenshot-baselines/screens/absolute_positioning_720p.png) · [Visual review](../../design-audit.html#screen=absolute_positioning)
+[Reviewed image](../../docs/design-audit/originals/absolute_positioning_720p.png) · [Current baseline](../../screenshot-baselines/screens/absolute_positioning_720p.png) · [Visual review](../../design-audit.html#screen=absolute_positioning)
 
 Baseline SHA-256: `5d431252bcb87f1bbd4a2a4d4f40cab3615323fec57c7e2661ae43107e3d87c3`
 

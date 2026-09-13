@@ -60,6 +60,7 @@ function filterScreens(preferred) {
 
 function targetsFor(screen) {
   const targets = [];
+  if (screen.evidence) targets.push({id: 'reviewed', label: 'Before design updates', path: screen.evidence});
   if (screen.has_mock) targets.push({id: 'mock', label: 'Web mock'});
   if (screen.reference) targets.push({id: 'source', label: 'Original source image', path: screen.reference});
   for (const capture of screen.legacy) targets.push({
@@ -140,7 +141,8 @@ function renderPreview() {
     preview.append(divider, node('span', 'Current C++', 'tag left'), node('span', target.label, 'tag right'));
     updateReveal();
   }
-  const note = active.has_mock ? 'Web mock available. Compare matching states before judging a mismatch.'
+  const note = active.evidence ? 'Findings describe the image before design updates. Compare both versions; completion is tracked in todo.md.'
+    : active.has_mock ? 'Web mock available. Compare matching states before judging a mismatch.'
     : 'No handcrafted web mock has been authored for this screen. This image is the C++ baseline.';
   byId('image-note').textContent = target?.capture && view !== 'current' ? target.capture.summary : note;
 }
@@ -269,7 +271,7 @@ document.addEventListener('keydown', event => {
 byId('export').addEventListener('click', () => {
   const findings = audit.screens.flatMap(screen => allFindings(screen)
     .filter(item => queue.has(queueKey(screen, item)))
-    .map(item => ({screen: screen.id, baseline: screen.baseline, sha256: screen.sha256, ...item})));
+    .map(item => ({screen: screen.id, baseline: screen.evidence || screen.baseline, sha256: screen.sha256, ...item})));
   const blob = new Blob([JSON.stringify({audit_date: audit.metadata.date, findings}, null, 2) + '\n'], {type: 'application/json'});
   const url = URL.createObjectURL(blob), link = node('a');
   link.href = url; link.download = 'wm-design-review-queue.json'; link.click();

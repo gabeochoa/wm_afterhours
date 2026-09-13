@@ -175,6 +175,15 @@ maximize button has a blue fill in the batch and grey in an isolated capture
 interaction, and remains open for investigation rather than being baselined
 away. The gallery uses the isolated capture.
 
+### Single-line labels ignore explicit text insets
+
+`draw_text_in_rect()` accepts a resolved inset but its single-line branch calls
+`text_inset_for(rect)` instead. Reproduced while redesigning `absolute_positioning`:
+`with_text_inset(12, 0)` leaves Flow and percentage captions against the left edge.
+The screen uses padded parent containers until this is reviewed upstream.
+Pass the resolved inset to `position_text_ex()` consistently and verify both
+single-line and wrapped labels before changing afterhours.
+
 ### Capture runner: multiple resolutions in one process
 
 `--headless-screenshots --screen example_borders --resolution 720p,1080p`

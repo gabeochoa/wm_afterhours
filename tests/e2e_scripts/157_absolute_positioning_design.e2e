@@ -1,0 +1,28 @@
+goto_screen absolute_positioning
+resize 1280 720
+wait 0.3
+assert_within_parents
+assert_ui abs_translate w=160 h=44
+assert_ui corner_tr w=44 h=44
+assert_ui corner_br w=44 h=44
+assert_ui abs_screen_pct w=384
+assert_ui abs_screen_pct_2 w=256
+click_ui abs_translate
+wait 0.2
+expect_text "Translate sample: x=100, y=10"
+focus_element corner_br
+key ENTER
+wait 0.2
+expect_text "Bottom right: 44 x 44 reference pixels"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+assert_ui abs_translate w=240 h=66
+assert_ui corner_tr w=66 h=66
+assert_ui corner_br w=66 h=66
+assert_ui abs_screen_pct w=576
+assert_ui abs_screen_pct_2 w=384
+click_ui abs_translate_2
+wait 0.2
+expect_text "Translate sample: x=300, y=10"
+resize 1280 720
