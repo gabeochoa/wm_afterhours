@@ -85,7 +85,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
             .with_font("AtkinsonMock", pixels(23 * s)).with_custom_background(colors[i])
             .with_custom_text_color({0, 0, 0, 255}).with_roundness(.08f).with_skip_grid_snap(true)
             .with_debug_name("box_" + std::to_string(i)));
-      label(root.ent(), 13, "Before position snapping: content 1128px / child 338.4px / edge 18.8px / internal gap 37.6px.",
+      label(root.ent(), 13, "Content 1128px / child 338.4px / edge 18.8px / internal gap 37.6px.",
             0, 343, 1160, 26, 18);
       // == Row 2: Five JustifyContent demos side-by-side ==
       label(root.ent(), 14, "Main-axis distribution", 0, 390, 1160, 31, 26, true);
@@ -136,7 +136,7 @@ struct HStackShowcase : ScreenSystem<UIContext<InputAction>> {
               if (j == 4) bracket(previous_end, r.x + r.width - 12 * s);
             }));
       }
-      label(root.ent(), 16, "Before position snapping: Between has equal gaps; Around has half-sized edge gaps. Values use 720p design pixels.",
+      label(root.ent(), 16, "Between has equal gaps; Around has half-sized edge gaps. Values use 720p design pixels.",
             0, 672, 1160, 29, 18);
       return;
     }

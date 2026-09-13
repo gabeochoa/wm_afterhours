@@ -6,7 +6,7 @@ wait 0.2
 expect_text "Horizontal stack layout"
 expect_text "Equal-width children"
 expect_text "explicit gap is 0."
-expect_text "content 1128px / child 338.4px"
+expect_text "Content 1128px / child 338.4px"
 expect_text "Main-axis distribution"
 expect_text "Space between"
 expect_text "Space around"
@@ -15,11 +15,16 @@ assert_ui root x=60 y=0 w=1160 h=720
 assert_ui basic_row x=60 y=246 w=1160 h=88
 assert_ui box_0 w=338 h=48
 assert_ui jc_row_0 w=208 h=140
-assert_ui jc_box_0_0 x=72 y=565 w=30 h=30
-assert_ui jc_box_1_0 x=404 y=565 w=30 h=30
-assert_ui jc_box_3_0 x=780 y=565
-assert_ui jc_box_3_1 x=856 y=565
-assert_ui jc_box_3_2 x=932 y=565
+assert_ui jc_box_0_0 x=72 y=564 w=30 h=30
+assert_ui jc_box_1_0 x=402 y=564 w=30 h=30
+assert_ui jc_box_1_1 x=432 y=564 w=30 h=30
+assert_ui jc_box_1_2 x=462 y=564 w=30 h=30
+assert_ui jc_box_2_0 x=591 y=564 w=30 h=30
+assert_ui jc_box_2_1 x=621 y=564 w=30 h=30
+assert_ui jc_box_2_2 x=651 y=564 w=30 h=30
+assert_ui jc_box_3_0 x=780 y=564
+assert_ui jc_box_3_1 x=857 y=564
+assert_ui jc_box_3_2 x=934 y=564
 assert_within_parents
 screenshot hstack_distribution
 focus_ui hstack_page_1
