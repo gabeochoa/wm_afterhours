@@ -502,7 +502,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                 .with_font("AtkinsonMock", pixels(18.f))
                 .with_alignment(TextAlignment::Left)
                 .with_padding(Spacing::sm)
-                .with_roundness(0.08f)
+                .with_corner_radius(8.f * scale)
                 .with_render_layer(CL));
       }
 
@@ -792,7 +792,7 @@ struct ModalAdvanced : ScreenSystem<UIContext<InputAction>> {
                     .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(100)})
                     .with_background(Theme::Usage::Primary)
                     .with_font("AtkinsonMock", pixels(18.f))
-                    .with_roundness(0.08f)
+                    .with_corner_radius(8.f * scale)
                     .with_max_lines(5)
                     .with_line_height(pixels(18))
                     .with_margin(Margin{.bottom = DefaultSpacing::small()})
