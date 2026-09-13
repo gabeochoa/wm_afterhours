@@ -1,7 +1,8 @@
 goto_screen media_library
+resize 1280 720
 wait 0.5
 assert_ui ml_bg x=0 y=0 w=1280 h=720
-assert_ui ml_tile_0 x=228 y=215 w=215 h=219
+assert_ui ml_tile_0 x=228 y=225 w=215 h=212
 expect_text "Harbour Lights"
 expect_text "Showing 1-6 of 24"
 assert_within_parents
@@ -19,7 +20,7 @@ expect_text "Showing 1-1 of 1"
 expect_text "The Long Ascent"
 click_ui ml_queue
 wait 0.2
-expect_text "Your watchlist is empty. Add a title with +."
+expect_text "Your watchlist is empty. Choose Add to watchlist on a title."
 click_ui ml_nav_0
 wait 0.2
 click_ui ml_page_3
@@ -94,7 +95,9 @@ wait 0.2
 resize 1920 1080
 wait 0.3
 assert_ui ml_bg x=0 y=0 w=1920 h=1080
-assert_ui ml_tile_0 x=342 y=323 w=323 h=329
+assert_ui ml_tile_0 x=342 y=338 w=323 h=318
 assert_within_parents
 assert_no_overflow
 screenshot media_library_mock_1080p
+
+resize 1280 720

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,392 completed; 1,143 remaining.
+1,417 completed; 1,118 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -4493,79 +4493,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/media_library_720p.png) · [Visual review](design-audit.html#screen=media_library)
 
-- [ ] `media_library-01` · P2 · proposal. Search placeholder: Increase placeholder size and add a recognizable search icon.
+- [x] `media_library-01` · P2 · proposal. Search placeholder: Increase placeholder size and add a recognizable search icon.
   Evidence: Search your library is tiny inside a wide field.
 
-- [ ] `media_library-02` · P2 · proposal. Header actions: Increase their text size and separate them with consistent spacing.
+- [x] `media_library-02` · P2 · proposal. Header actions: Increase their text size and separate them with consistent spacing.
   Evidence: Home, Server, and Settings are small and low contrast.
 
-- [ ] `media_library-03` · P2 · proposal. Profile badge: Use a recognizable avatar treatment and a visible account label when space permits.
+- [x] `media_library-03` · P2 · proposal. Profile badge: Use a recognizable avatar treatment and a visible account label when space permits.
   Evidence: The lone G appears in a square without context.
 
-- [ ] `media_library-04` · P2 · proposal. Sidebar headings: Increase their size and contrast without competing with navigation.
+- [x] `media_library-04` · P2 · proposal. Sidebar headings: Increase their size and contrast without competing with navigation.
   Evidence: YOUR MEDIA and SERVER are extremely small.
 
-- [ ] `media_library-05` · P2 · proposal. Sidebar alignment: Left-align navigation labels to the same sidebar inset.
+- [x] `media_library-05` · P2 · proposal. Sidebar alignment: Left-align navigation labels to the same sidebar inset.
   Evidence: Navigation text is centered while server text is left-aligned.
 
-- [ ] `media_library-06` · P2 · proposal. Library count: Present it as a compact 24 items badge beside the heading.
+- [x] `media_library-06` · P2 · proposal. Library count: Present it as a compact 24 items badge beside the heading.
   Evidence: 24 is detached from Library and faint.
 
-- [ ] `media_library-07` · P2 · proposal. Repeated Library names: Rename the inner tab All titles or another distinct view name.
+- [x] `media_library-07` · P2 · proposal. Repeated Library names: Rename the inner tab All titles or another distinct view name.
   Evidence: Library appears in the sidebar, page heading, and a tab.
 
-- [ ] `media_library-08` · P2 · proposal. Recommended selection: Increase selected label contrast and keep the underline tightly aligned.
+- [x] `media_library-08` · P2 · proposal. Recommended selection: Increase selected label contrast and keep the underline tightly aligned.
   Evidence: The selected tab uses only a thin yellow underline.
 
-- [ ] `media_library-09` · P2 · proposal. All media filter: Add a trailing chevron and visible filter-control boundary.
+- [x] `media_library-09` · P2 · proposal. All media filter: Add a trailing chevron and visible filter-control boundary.
   Evidence: All media looks like static text without a dropdown indicator.
 
-- [ ] `media_library-10` · P2 · proposal. By title sort: Show Sort: Title with a chevron or direction indicator.
+- [x] `media_library-10` · P2 · proposal. By title sort: Show Sort: Title with a chevron or direction indicator.
   Evidence: By title appears as another loose label.
 
-- [ ] `media_library-11` · P2 · proposal. Grid List switch: Use a clear segmented control with icons and readable labels.
+- [x] `media_library-11` · P2 · proposal. Grid List switch: Use a clear segmented control with icons and readable labels.
   Evidence: Grid and List use tiny text with a faint selected background.
 
-- [ ] `media_library-12` · P2 · proposal. Selected poster frame: Wrap the selection frame around the actual poster or the full card including its metadata.
+- [x] `media_library-12` · P2 · proposal. Selected poster frame: Wrap the selection frame around the actual poster or the full card including its metadata.
   Evidence: The Harbour Lights outline spans the whole tile width while the poster is narrower.
 
-- [ ] `media_library-13` · P2 · proposal. Poster gutters: Use consistent poster-width cards to give the grid a stronger rhythm.
+- [x] `media_library-13` · P2 · proposal. Poster gutters: Use consistent poster-width cards to give the grid a stronger rhythm.
   Evidence: Portrait posters sit within wide dark horizontal gutters.
 
-- [ ] `media_library-14` · P2 · proposal. Media titles: Increase title size and weight slightly.
+- [x] `media_library-14` · P2 · proposal. Media titles: Increase title size and weight slightly.
   Evidence: Harbour Lights and other titles are small relative to their artwork.
 
-- [ ] `media_library-15` · P2 · proposal. Year and type rows: Group metadata with a dot separator beneath the title.
+- [x] `media_library-15` · P2 · proposal. Year and type rows: Group metadata with a dot separator beneath the title.
   Evidence: Years sit left while Feature and Series sit far right in each tile.
 
-- [ ] `media_library-16` · P2 · proposal. Type distinctions: Use compact type badges to distinguish mixed-media results.
+- [x] `media_library-16` · P2 · proposal. Type distinctions: Use compact type badges to distinguish mixed-media results.
   Evidence: Feature, Series, and Album are tiny plain words.
 
-- [ ] `media_library-17` · P3 · proposal. Grid spacing: Increase the vertical gap between complete cards.
+- [x] `media_library-17` · P3 · proposal. Grid spacing: Increase the vertical gap between complete cards.
   Evidence: The second-row poster begins close to the first row's metadata.
 
-- [ ] `media_library-18` · P2 · proposal. Selected detail metadata: Increase size and use clear centered-dot separators.
+- [x] `media_library-18` · P2 · proposal. Selected detail metadata: Increase size and use clear centered-dot separators.
   Evidence: 2019 - 118 min - Feature is small and dim.
 
-- [ ] `media_library-19` · P2 · proposal. Rating stars: Add 4/5 or the intended rating value beside the stars.
+- [x] `media_library-19` · P2 · proposal. Rating stars: Add 4/5 or the intended rating value beside the stars.
   Evidence: Four yellow stars and one gray star have no numeric label.
 
-- [ ] `media_library-20` · P2 · proposal. Description: Increase body size and allow a readable two-line description.
+- [x] `media_library-20` · P2 · proposal. Description: Increase body size and allow a readable two-line description.
   Evidence: The plot sentence is small and occupies a long narrow line.
 
-- [ ] `media_library-21` · P2 · proposal. Director credit: Use Directed by Ana Weir with legible supporting contrast.
+- [x] `media_library-21` · P2 · proposal. Director credit: Use Directed by Ana Weir with legible supporting contrast.
   Evidence: dir. Ana Weir is faint and abbreviated.
 
-- [ ] `media_library-22` · P2 · proposal. Play action: Increase its label and add a single-triangle play icon.
+- [x] `media_library-22` · P2 · proposal. Play action: Increase its label and add a single-triangle play icon.
   Evidence: The main Play button has small text and no play glyph.
 
-- [ ] `media_library-23` · P2 · proposal. Watchlist action: Use an outlined Add to watchlist button or labeled icon.
+- [x] `media_library-23` · P2 · proposal. Watchlist action: Use an outlined Add to watchlist button or labeled icon.
   Evidence: A tiny plus floats beside Play with no visible label.
 
-- [ ] `media_library-24` · P2 · proposal. Pagination: Increase page-control size and bottom padding.
+- [x] `media_library-24` · P2 · proposal. Pagination: Increase page-control size and bottom padding.
   Evidence: Page numbers 1–4 are tiny and close to the bottom edge.
 
-- [ ] `media_library-25` · P2 · proposal. Server status: Add a clear local-library badge or status dot with text.
+- [x] `media_library-25` · P2 · proposal. Server status: Add a clear local-library badge or status dot with text.
   Evidence: Home server and Local demo library are faint and do not expose connection state.
 
 ### menu_showcase

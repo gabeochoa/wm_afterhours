@@ -142,7 +142,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
                       float size, afterhours::Color color, const std::string &name = "",
                       bool strong = false) {
     return div(c, mk(p, id), box(x, y, w, h).with_label(text)
-        .with_font(strong ? "ArchivoMockBold" : "AtkinsonMock", h720(size * (size < 18 ? 1.4f : 1.25f))).with_letter_spacing(-.7f * scale)
+        .with_font(strong ? "AtkinsonMockBold" : "AtkinsonMock", pixels(std::max(17.f, size * 1.25f) * scale))
         .with_custom_text_color(color).with_alignment(TextAlignment::Left)
         .with_ignore_pointer_events().with_debug_name(name));
   }
@@ -150,12 +150,37 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
                        const std::string &text, float x, float y, float w, float h,
                        const std::string &name, bool active = false, bool filled = false) {
     const bool modal_action = name.starts_with("ml_overlay_");
-    return button(c, mk(p, id), box(x, y, w, h).with_label(text)
-        .with_font("AtkinsonMock", h720(16.25f)).with_letter_spacing(-.7f * scale).with_alignment(TextAlignment::Center)
+    auto result = button(c, mk(p, id), box(x, y, w, h).with_label(text)
+        .with_font("AtkinsonMock", pixels(20 * scale)).with_alignment(name.starts_with("ml_nav_") ? TextAlignment::Left : TextAlignment::Center)
         .with_custom_text_color(filled ? afterhours::Color{35, 37, 37, 255} : active ? gold : muted)
         .with_custom_background(filled ? gold : active ? afterhours::Color{57, 55, 49, 255} : transparent)
         .with_corner_radius(4 * scale).with_disabled(overlay != Overlay::None && !modal_action)
-        .with_click_activation(ClickActivationMode::Release).with_debug_name(name));
+        .with_click_activation(ClickActivationMode::Release)
+        .with_border((name == "ml_filter" || name == "ml_sort" || name == "ml_queue") ? afterhours::Color{98, 99, 101, 255} : transparent, scale)
+        .with_debug_name(name));
+    if (name == "ml_play" || name == "ml_profile" || name == "ml_grid" || name == "ml_list") {
+      result.ent().get<HasLabel>().text_x_offset = 8 * scale;
+      result.ent().addComponentIfMissing<HasOnDraw>().fg = [name, s = scale, color = filled ? afterhours::Color{35, 37, 37, 255} : ink](RectangleType r) {
+        const float x = r.x + 12 * s, y = r.y + r.height / 2;
+        if (name == "ml_play") {
+          raylib::DrawTriangle({x, y - 7 * s}, {x, y + 7 * s}, {x + 11 * s, y}, color);
+          return;
+        }
+        if (name == "ml_profile") {
+          raylib::DrawCircleV({x + 5 * s, y - 5 * s}, 4 * s, color);
+          raylib::DrawRectangleRounded({x - s, y + s, 12 * s, 7 * s}, 0.7f, 6, color);
+          return;
+        }
+        for (int row = 0; row < 2; ++row) {
+          if (name == "ml_list") {
+            raylib::DrawRectangleRec({x, y - 5 * s + 7 * row * s, 12 * s, 3 * s}, color);
+            continue;
+          }
+          for (int col = 0; col < 2; ++col) raylib::DrawRectangleRec({x + 7 * col * s, y - 5 * s + 7 * row * s, 4 * s, 4 * s}, color);
+        }
+      };
+    }
+    return result;
   }
   void image(UIContext<InputAction> &c, afterhours::Entity &p, int id, int i,
              float x, float y, float w, float h) {
@@ -175,74 +200,81 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     const bool dark = item % 6 == 1 || item % 6 == 4 || item % 6 == 5;
     const float ty = item % 6 == 4 ? 33 : 212;
     if (unit >= .5f) div(c, mk(frame.ent(), 1), box(ox + 8 * unit, ty * unit, 184 * unit, 25 * unit)
-        .with_label(upper(ITEMS[item].title)).with_font("Garamond", h720((std::string(ITEMS[item].title).size() > 15 ? 13 : 17) * unit * 1.25f))
+        .with_label(upper(ITEMS[item].title)).with_font("Garamond", pixels((std::string(ITEMS[item].title).size() > 15 ? 13 : 17) * unit * 1.25f * scale))
         .with_custom_text_color(dark ? afterhours::Color{40, 56, 60, 255} : afterhours::Color{246, 236, 219, 255})
         .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
     if (unit >= .9f) div(c, mk(frame.ent(), 2), box(ox + 10 * unit, (ty + 29) * unit, 180 * unit, 10 * unit)
         .with_label(ITEMS[item].kind[0] == 'A' ? upper(ITEMS[item].credit) : "A FILM TO GET LOST IN")
-        .with_font("AtkinsonMock", h720(5.5f * unit * 1.25f))
+        .with_font("AtkinsonMock", pixels(5.5f * unit * 1.25f * scale))
         .with_custom_text_color(dark ? muted : afterhours::Color{182, 191, 194, 255})
         .with_alignment(TextAlignment::Center).with_ignore_pointer_events());
   }
 
   void for_each_with(afterhours::Entity &entity, UIContext<InputAction> &c, float dt) override {
-    load(); scale = c.screen_height / 720.f;
+    load(); scale = std::min(c.screen_width / 1280.f, c.screen_height / 720.f);
     Theme theme; theme.font = ink; theme.darkfont = ink; theme.background = {32, 33, 35, 255};
     theme.surface = {40, 43, 46, 255}; theme.primary = gold; theme.accent = gold; theme.corner_radius = 0; theme.roundness = 0;
     c.set_theme(theme); c.scaling_mode = ScalingMode::Proportional;
-    UIStylingDefaults::get().set_default_font("AtkinsonMock", h720(17.5f));
+    UIStylingDefaults::get().set_default_font("AtkinsonMock", pixels(20 * scale));
     if (c.pressed(InputAction::MenuBack)) { overlay = Overlay::None; playing = false; }
     if (playing && overlay == Overlay::Player) progress = std::min(progress + std::min(dt, .1f), ITEMS[playing_item].mins * 60.f);
-    auto root = div(c, mk(entity), box(0, 0, 1280, 720).with_debug_name("ml_bg"));
+    auto root = div(c, mk(entity), box(0, 0, 1280, 720).with_absolute_position((c.screen_width - 1280 * scale) / 2, (c.screen_height - 720 * scale) / 2).with_debug_name("ml_bg"));
     auto &p = root.ent(); image(c, p, 900, 6, 0, 0, 1280, 720);
     div(c, mk(p, 0), box(0, 0, 1280, 66).with_custom_background({23, 24, 25, 245}));
     label(c, p, 1, "media", 25, 13, 125, 45, 29, ink, "ml_brand", true);
     label(c, p, 2, ">", 100, 9, 43, 49, 37, gold);
-    auto input = text_input(c, mk(p, 3), query, box(233, 17, 362, 32)
+    auto input = text_input(c, mk(p, 3), query, box(233, 15, 400, 36)
         .with_custom_background({50, 51, 53, 255}).with_custom_text_color(ink)
-        .with_font("AtkinsonMock", h720(15)).with_corner_radius(4 * scale)
+        .with_font("AtkinsonMock", pixels(19 * scale)).with_corner_radius(4 * scale)
         .with_disabled(overlay != Overlay::None).with_debug_name("ml_search"));
     if (query.empty() && overlay == Overlay::None)
-      div(c, mk(p, 4), box(263, 23, 314, 24).with_label("Search your library")
-          .with_font("AtkinsonMock", h720(15)).with_custom_text_color(muted)
+      div(c, mk(p, 4), box(270, 20, 344, 26).with_label("Search your library")
+          .with_font("AtkinsonMock", pixels(19 * scale)).with_custom_text_color(muted)
           .with_render_layer(10).with_ignore_pointer_events());
+    div(c, mk(p, 9), box(205, 22, 20, 22).with_ignore_pointer_events()
+        .with_on_draw_fg([s = scale, color = muted](RectangleType r) {
+          raylib::DrawCircleLinesV({r.x + 7 * s, r.y + 7 * s}, 6 * s, color);
+          raylib::DrawLineEx({r.x + 11 * s, r.y + 11 * s}, {r.x + 17 * s, r.y + 17 * s}, 2 * s, color);
+        }));
+    div(c, mk(p, 44), box(28, 458, 7, 7).with_ignore_pointer_events()
+        .with_on_draw_fg([](RectangleType r) { raylib::DrawCircleV({r.x + r.width / 2, r.y + r.height / 2}, r.width / 2, {132, 201, 156, 255}); }));
     if (query != previous_query) { previous_query = query; page = 0; }
-    if (action(c, p, 5, "Home", 1010, 20, 54, 28, "ml_home")) { section = Section::Library; view = View::Recommended; media_filter = 0; page = 0; }
-    if (action(c, p, 6, "Server", 1070, 20, 57, 28, "ml_server")) overlay = Overlay::Server;
-    if (action(c, p, 7, "Settings", 1133, 20, 68, 28, "ml_settings")) overlay = Overlay::Settings;
-    if (action(c, p, 8, "G", 1220, 18, 31, 31, "ml_profile", true)) overlay = Overlay::Profile;
+    if (action(c, p, 5, "Home", 884, 16, 66, 36, "ml_home")) { section = Section::Library; view = View::Recommended; media_filter = 0; page = 0; }
+    if (action(c, p, 6, "Server", 958, 16, 72, 36, "ml_server")) overlay = Overlay::Server;
+    if (action(c, p, 7, "Settings", 1038, 16, 104, 36, "ml_settings")) overlay = Overlay::Settings;
+    if (action(c, p, 8, "Guest", 1150, 16, 114, 36, "ml_profile", true)) overlay = Overlay::Profile;
     div(c, mk(p, 10), box(0, 66, 202, 654).with_custom_background({25, 26, 28, 102}));
-    label(c, p, 11, "YOUR MEDIA", 28, 92, 152, 19, 9, {117, 119, 123, 255}, "", true);
+    label(c, p, 11, "YOUR MEDIA", 28, 92, 152, 24, 15, muted, "", true);
     const std::array<const char *, 5> sections{"Library", "Movies", "TV Shows", "Music", "Watchlist"};
     for (int i = 0; i < 5; ++i) {
       const bool active = static_cast<int>(section) == i;
-      if (action(c, p, 20 + i, sections[i], 12, 123 + i * 44, 178, 40, "ml_nav_" + std::to_string(i), active)) {
+      if (action(c, p, 20 + i, sections[i], 28, 123 + i * 44, 162, 40, "ml_nav_" + std::to_string(i), active)) {
         section = static_cast<Section>(i); page = 0; media_filter = 0;
         if (view == View::Collections) view = View::Recommended;
       }
       if (active) div(c, mk(p, 30 + i), box(12, 125 + i * 44, 3, 36).with_custom_background(gold));
     }
     div(c, mk(p, 40), box(27, 363, 148, 1).with_custom_background({65, 66, 70, 255}));
-    label(c, p, 41, "SERVER", 28, 386, 152, 19, 9, {117, 119, 123, 255}, "", true);
+    label(c, p, 41, "SERVER", 28, 386, 152, 24, 15, muted, "", true);
     label(c, p, 42, "Home server", 29, 419, 160, 22, 12, muted);
-    label(c, p, 43, "Local demo library", 33, 446, 152, 18, 10, {98, 102, 107, 255});
+    label(c, p, 43, "Local library", 44, 452, 142, 24, 14, muted);
     auto ids = matching();
     const int total = static_cast<int>(ids.size()), page_count = std::max(1, (total + 5) / 6);
     page = std::clamp(page, 0, page_count - 1);
     if (!ids.empty() && std::find(ids.begin(), ids.end(), selected) == ids.end()) selected = ids[0];
     label(c, p, 50, sections[static_cast<int>(section)], 228, 89, 500, 40, 26, ink, "ml_title");
-    label(c, p, 51, std::to_string(total), 348, 99, 65, 22, 12, {119, 119, 119, 255});
-    const std::array<const char *, 3> views{"Recommended", "Library", "Collections"};
+    label(c, p, 51, fmt::format("{} items", total), 748, 98, 152, 28, 15, muted);
+    const std::array<const char *, 3> views{"Recommended", "All titles", "Collections"};
     for (int i = 0; i < 3; ++i) {
-      if (action(c, p, 60 + i, views[i], 228 + i * 126, 136, 110, 37, "ml_view_" + std::to_string(i), false)) { view = static_cast<View>(i); page = 0; }
-      if (static_cast<int>(view) == i) div(c, mk(p, 65 + i), box(230 + i * 126, 173, 106, 2).with_custom_background(gold));
+      if (action(c, p, 60 + i, views[i], 228 + i * 142, 136, 132, 37, "ml_view_" + std::to_string(i), static_cast<int>(view) == i)) { view = static_cast<View>(i); page = 0; }
+      if (static_cast<int>(view) == i) div(c, mk(p, 65 + i), box(234 + i * 142, 171, 120, 2).with_custom_background(gold));
     }
     const std::array<const char *, 4> kinds{"All media", "Features", "Series", "Albums"};
-    const std::array<const char *, 3> sorts{"By title", "Newest first", "Highest rated"};
-    if (action(c, p, 70, kinds[media_filter], 222, 181, 111, 30, "ml_filter")) { media_filter = (media_filter + 1) % 4; page = 0; }
-    if (action(c, p, 71, sorts[sort], 344, 181, 119, 30, "ml_sort")) { sort = (sort + 1) % 3; page = 0; }
-    if (action(c, p, 72, "Grid", 816, 181, 42, 30, "ml_grid", !list_view)) list_view = false;
-    if (action(c, p, 73, "List", 866, 181, 42, 30, "ml_list", list_view)) list_view = true;
+    const std::array<const char *, 3> sorts{view == View::Library ? "Sort: Title" : "Sort: Suggested", "Sort: Newest", "Sort: Rating"};
+    if (action(c, p, 70, std::string(kinds[media_filter]) + " >", 228, 181, 152, 32, "ml_filter")) { media_filter = (media_filter + 1) % 4; page = 0; }
+    if (action(c, p, 71, std::string(sorts[sort]) + " >", 394, 181, 190, 32, "ml_sort")) { sort = (sort + 1) % 3; page = 0; }
+    if (action(c, p, 72, "Grid", 752, 181, 76, 32, "ml_grid", !list_view)) list_view = false;
+    if (action(c, p, 73, "List", 834, 181, 76, 32, "ml_list", list_view)) list_view = true;
     tile_ids.fill(-1);
     if (view == View::Collections) {
       for (int i = 0; i < 3; ++i) {
@@ -256,31 +288,33 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
       for (int slot = 0; slot < 6 && page * 6 + slot < total; ++slot) {
         const int idx = ids[page * 6 + slot]; const auto &item = ITEMS[idx];
         const float x = list_view ? 228 : 228 + (slot % 3) * 234;
-        const float y = list_view ? 215 + slot * 69 : 215 + (slot / 3) * 231;
-        const float w = list_view ? 682 : 215, h = list_view ? 64 : 219;
+        const float y = list_view ? 215 + slot * 69 : 225 + (slot / 3) * 229;
+        const float w = list_view ? 682 : 215, h = list_view ? 64 : 212;
         auto tile = button(c, mk(p, 100 + slot), box(x, y, w, h)
             .with_padding(Padding{.top = pixels(0), .left = pixels(0), .bottom = pixels(0), .right = pixels(0)})
             .with_custom_background(list_view && selected == idx ? afterhours::Color{57, 55, 49, 255} : transparent)
             .with_disabled(overlay != Overlay::None).with_click_activation(ClickActivationMode::Release)
+            .with_border(selected == idx ? gold : transparent, selected == idx ? scale : 0)
             .with_debug_name("ml_tile_" + std::to_string(slot)));
         tile.cmp().set_desired_padding(pixels(0), Axis::X).set_desired_padding(pixels(0), Axis::Y);
         tile_ids[slot] = tile.ent().id;
-        if (tile) selected = idx;
-        poster(c, tile.ent(), 0, idx, 0, 0, list_view ? 51 : 215, list_view ? 64 : 169, selected == idx);
-        label(c, tile.ent(), 1, item.title, list_view ? 69 : 0, list_view ? 5 : 179,
-              list_view ? 405 : 215, 23, list_view ? 16 : 12, ink, "ml_name_" + std::to_string(slot));
-        label(c, tile.ent(), 2, fmt::format("{}", item.year), list_view ? 69 : 0, list_view ? 35 : 203,
-              97, 16, 10, muted, "ml_kind_" + std::to_string(slot));
-        label(c, tile.ent(), 3, item.kind, list_view ? 438 : 166, list_view ? 24 : 203,
-              67, 16, 10, muted);
+        if (overlay != Overlay::None) tile.ent().removeComponentIfExists<HasClickListener>();
+        if (tile && overlay == Overlay::None) selected = idx;
+        poster(c, tile.ent(), 0, idx, 0, 0, list_view ? 51 : 215, list_view ? 64 : 158, false);
+        label(c, tile.ent(), 1, item.title, list_view ? 69 : 8, list_view ? 5 : 165,
+              list_view ? 405 : 199, 25, 16, ink, "ml_name_" + std::to_string(slot), true);
+        label(c, tile.ent(), 2, fmt::format("{} ·", item.year), list_view ? 69 : 8, list_view ? 35 : 191,
+              76, 22, 13, muted, "ml_kind_" + std::to_string(slot));
+        label(c, tile.ent(), 3, item.kind, list_view ? 438 : 84, list_view ? 24 : 191,
+              120, 22, 13, muted);
         if (list_view) label(c, tile.ent(), 4, fmt::format("{} min", item.mins), 550, 24, 115, 21, 12, muted);
       }
-      if (ids.empty()) label(c, p, 115, section == Section::Watchlist ? "Your watchlist is empty. Add a title with +." : "No titles match your search and filters.",
+      if (ids.empty()) label(c, p, 115, section == Section::Watchlist ? "Your watchlist is empty. Choose Add to watchlist on a title." : "No titles match your search and filters.",
           250, 338, 645, 60, 20, muted, "ml_empty");
       label(c, p, 120, total == 0 ? "Showing 0 of 0" : fmt::format("Showing {}-{} of {}", page * 6 + 1, std::min(page * 6 + 6, total), total),
-            228, 681, 435, 20, 10, {118, 123, 129, 255}, "ml_readout");
+            228, 680, 435, 28, 14, muted, "ml_readout");
       for (int i = 0; i < page_count; ++i)
-        if (action(c, p, 130 + i, std::to_string(i + 1), 792 + i * 30, 674, 26, 26,
+        if (action(c, p, 130 + i, std::to_string(i + 1), 750 + i * 42, 676, 36, 36,
                    "ml_page_" + std::to_string(i), page == i, page == i)) { page = i; selected = ids[i * 6]; }
     }
     int shown = selected;
@@ -294,9 +328,9 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
     const auto &item = ITEMS[shown];
     div(c, mk(p, 300), box(937, 66, 343, 654).with_custom_background({20, 23, 25, 85}).with_debug_name("ml_detail"));
     poster(c, p, 301, shown, 1009, 95, 198, 258, false);
-    label(c, p, 302, item.title, 965, 377, 287, 43, 24, ink, "ml_detail_title");
-    label(c, p, 303, fmt::format("{}  -  {} min  -  {}", item.year, item.mins, item.kind),
-          965, 419, 287, 22, 10, muted, "ml_detail_meta");
+    label(c, p, 302, item.title, 965, 370, 287, 52, 23, ink, "ml_detail_title");
+    label(c, p, 303, fmt::format("{} · {} min · {}", item.year, item.mins, item.kind),
+          965, 429, 287, 26, 14, muted, "ml_detail_meta");
     // Each star is native geometry, so the rating does not depend on a symbol font.
     div(c, mk(p, 304), box(965, 454, 136, 22).with_ignore_pointer_events()
         .with_on_draw_fg([stars = item.stars](RectangleType r) {
@@ -312,15 +346,17 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
             }
           }
         }).with_debug_name("ml_detail_stars"));
-    div(c, mk(p, 305), box(965, 480, 287, 41).with_label(item.blurb)
-        .with_font("AtkinsonMock", h720(16.25f)).with_letter_spacing(-.7f * scale).with_custom_text_color({180, 181, 183, 255})
+    div(c, mk(p, 305), box(965, 498, 287, 60).with_label(item.blurb)
+        .with_font("AtkinsonMock", pixels(20 * scale)).with_custom_text_color({180, 181, 183, 255})
         .with_text_overflow(TextOverflow::Wrap).with_ignore_pointer_events().with_debug_name("ml_detail_blurb"));
-    label(c, p, 306, item.credit, 965, 514, 287, 23, 11, {116, 122, 128, 255}, "ml_detail_credit");
-    if (action(c, p, 307, "Play", 965, 549, 140, 36, "ml_play", false, true)) {
+    const std::string credit = std::string(item.credit).starts_with("dir. ") ? "Directed by " + std::string(item.credit).substr(5) : item.credit;
+    label(c, p, 306, credit, 965, 564, 287, 28, 14, muted, "ml_detail_credit");
+    label(c, p, 310, fmt::format("{} / 5", item.stars), 1114, 452, 110, 26, 16, gold);
+    if (action(c, p, 307, "Play", 965, 607, 287, 40, "ml_play", false, true)) {
       playing_item = shown; progress = 0; playing = true; overlay = Overlay::Player;
     }
-    if (action(c, p, 308, watchlist[shown] ? "-" : "+", 1115, 549, 41, 36, "ml_queue", watchlist[shown], watchlist[shown])) watchlist[shown] = !watchlist[shown];
-    if (watchlist[shown]) label(c, p, 309, "In your watchlist", 965, 594, 249, 23, 11, gold, "ml_saved");
+    if (action(c, p, 308, watchlist[shown] ? "In your watchlist" : "Add to watchlist", 965, 659, 287, 40, "ml_queue", watchlist[shown], watchlist[shown])) watchlist[shown] = !watchlist[shown];
+
   }
 
   void build_overlay(UIContext<InputAction> &c, afterhours::Entity &p) {
@@ -336,7 +372,7 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
       poster(c, q, 10, playing_item, 38, 94, 168, 218, false);
       label(c, q, 11, "LOCAL PLAYBACK PREVIEW", 239, 108, 405, 31, 16, gold);
       div(c, mk(q, 12), box(239, 152, 400, 91).with_label("No media file is attached. These controls simulate playback locally so you can review the player interaction.")
-          .with_font("AtkinsonMock", h720(18.75f)).with_custom_text_color(muted).with_text_overflow(TextOverflow::Wrap));
+          .with_font("AtkinsonMock", pixels(18.75f * scale)).with_custom_text_color(muted).with_text_overflow(TextOverflow::Wrap));
       label(c, q, 13, playing ? "Playing preview" : "Preview paused", 239, 260, 400, 32, 19, ink, "ml_playback_state");
       const float length = ITEMS[playing_item].mins * 60.f;
       div(c, mk(q, 14), box(38, 343, 604, 8).with_custom_background({66, 68, 71, 255})
@@ -356,13 +392,13 @@ struct MediaLibraryGrid : ScreenSystem<UIContext<InputAction>> {
       label(c, q, 30, "Library layout", 32, 113, 286, 35, 21, ink);
       if (action(c, q, 31, list_view ? "List" : "Grid", 349, 110, 291, 40, "ml_overlay_layout", true)) list_view = !list_view;
       label(c, q, 32, "Sort order", 32, 180, 286, 35, 21, ink);
-      const std::array<const char *, 3> sorts{"By title", "Newest first", "Highest rated"};
+      const std::array<const char *, 3> sorts{view == View::Library ? "Sort: Title" : "Sort: Suggested", "Sort: Newest", "Sort: Rating"};
       if (action(c, q, 33, sorts[sort], 349, 177, 291, 40, "ml_overlay_sort", true)) { sort = (sort + 1) % 3; page = 0; }
       label(c, q, 34, "Preferences are kept while this screen is open.", 32, 271, 610, 35, 16, muted);
     } else if (overlay == Overlay::Profile) {
       const int count = static_cast<int>(std::count(watchlist.begin(), watchlist.end(), true));
       label(c, q, 40, "Local guest", 32, 110, 610, 45, 28, ink);
-      label(c, q, 41, fmt::format("{} titles saved to your watchlist", count), 32, 172, 610, 32, 18, gold);
+      label(c, q, 41, fmt::format("{} {} saved to your watchlist", count, count == 1 ? "title" : "titles"), 32, 172, 610, 32, 18, gold);
       label(c, q, 42, "No account or network connection is required.", 32, 225, 610, 32, 17, muted);
       if (action(c, q, 43, "Open watchlist", 32, 318, 224, 42, "ml_overlay_watchlist", false, true)) {
         section = Section::Watchlist; media_filter = 0; page = 0; overlay = Overlay::None;

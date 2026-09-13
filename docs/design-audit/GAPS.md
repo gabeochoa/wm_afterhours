@@ -2302,7 +2302,7 @@ The title state is recognizable and the selected engine class is visible. Refine
 
 ## media library
 
-[Current baseline](../../screenshot-baselines/screens/media_library_720p.png) · [Visual review](../../design-audit.html#screen=media_library)
+[Reviewed image](../../docs/design-audit/originals/media_library_720p.png) · [Current baseline](../../screenshot-baselines/screens/media_library_720p.png) · [Visual review](../../design-audit.html#screen=media_library)
 
 Baseline SHA-256: `b2623fee8eef0f49f715eebe698f084cc77dac22ae09c946f6e042f006cb11b2`
 

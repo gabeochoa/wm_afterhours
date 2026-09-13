@@ -1,0 +1,48 @@
+goto_screen media_library
+resize 1280 720
+wait 0.4
+expect_text "Search your library"
+expect_text "Guest"
+expect_text "24 items"
+expect_text "All titles"
+expect_text "Sort: Suggested"
+expect_text "4 / 5"
+expect_text "Directed by Ana Weir"
+expect_text "Add to watchlist"
+assert_ui ml_tile_0 x=228 y=225 w=215 h=212
+assert_within_parents
+screenshot media_library_design
+click_ui ml_queue
+wait 0.2
+expect_text "In your watchlist"
+click_ui ml_profile
+wait 0.2
+expect_text "Guest profile"
+expect_text "1 title saved to your watchlist"
+key ESCAPE
+wait 0.2
+click_ui ml_page_1
+wait 0.2
+expect_text "Showing 7-12 of 24"
+click_ui ml_tile_1
+wait 0.2
+expect_text "Lantern Field"
+click_ui ml_play
+wait 0.2
+expect_text "LOCAL PLAYBACK PREVIEW"
+focus_ui ml_overlay_pause
+key ENTER
+wait 0.2
+expect_text "Preview paused"
+key ESCAPE
+wait 0.2
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot media_library_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ml_bg x=0 y=96 w=1024 h=576
+assert_within_parents
+screenshot media_library_design_narrow
+resize 1280 720

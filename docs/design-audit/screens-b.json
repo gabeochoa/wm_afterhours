@@ -4483,7 +4483,8 @@
         "change": "Add a clear local-library badge or status dot with text."
       }
     ],
-    "sha256": "b2623fee8eef0f49f715eebe698f084cc77dac22ae09c946f6e042f006cb11b2"
+    "sha256": "b2623fee8eef0f49f715eebe698f084cc77dac22ae09c946f6e042f006cb11b2",
+    "evidence": "docs/design-audit/originals/media_library_720p.png"
   },
   {
     "id": "menu_showcase",
