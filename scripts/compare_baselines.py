@@ -59,9 +59,10 @@ def compare_images_pil(baseline: Path, current: Path) -> float:
         return 100.0
 
     diff = ImageChops.difference(img1, img2)
-    pixels = list(diff.getdata())
-    changed = sum(1 for p in pixels if max(p) > CHANNEL_TOLERANCE)
-    return (changed / len(pixels)) * 100
+    red, green, blue = diff.split()
+    maximum = ImageChops.lighter(ImageChops.lighter(red, green), blue)
+    changed = sum(maximum.histogram()[CHANNEL_TOLERANCE + 1:])
+    return (changed / (diff.width * diff.height)) * 100
 
 
 def compare_images_hash(baseline: Path, current: Path) -> float:

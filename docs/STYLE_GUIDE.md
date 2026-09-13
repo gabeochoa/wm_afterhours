@@ -204,7 +204,7 @@ never overlap (expand up to the neighbor, then stop).
 
 ## Definition of Done — screen layout checklist
 
-`LAYOUT_AUDIT.md` audits against this. A screen is done when:
+Verify this checklist with current screenshots and pointer/keyboard e2e tests. A screen is done when:
 
 - [ ] **No overflow / clipping.** No text spills or is cut by a container/border edge.
 - [ ] **No orphans.** No stray glyph, arrow, dot, or control floating without its row/label.

@@ -18,23 +18,14 @@ telling the projects what they can delete, not finding new work.
 
 See also: `docs/vendor_ui_sizing_issues.md`
 
-## Full baseline design audit, 2026-09-12
+## Screen design pass, 2026-09-13
 
-[todo.md](../todo.md) consolidates all 2,535 audit findings into one checklist,
-grouped by screen, alongside the existing project backlog.
-
-[Per-screen findings and coverage](design-audit/GAPS.md) expand the audit to all
-117 current screen baselines and review the 32 additional images in
-`baseline_screenshots`. [Open the visual review](../design-audit.html) to search
-screens, inspect full-size captures, compare existing web mocks or older images
-with a slider, and queue individual findings for implementation.
-
-Each entry names visible evidence, a proposed change, priority, and whether it is
-a defect or a design proposal. The requested target is 25 distinct findings per
-screen. Screens with fewer defensible findings disclose their actual counts.
-Intentional stress cases remain test fixtures. These are wm design candidates;
-none alone establishes an afterhours API gap. Static screenshots do not prove
-interaction correctness or performance. No screen fixes are claimed by this audit.
+All 117 screen baselines were reviewed and updated in separate local commits.
+Active captures remain in `screenshot-baselines/screens/` and
+`baseline_screenshots/`; interaction coverage is in `tests/e2e_scripts/`.
+The completed audit reports and archived captures were removed.
+[todo.md](../todo.md) retains unresolved work; proven library limitations follow
+below. Static screenshot parity does not establish performance or accessibility.
 
 ---
 
@@ -43,7 +34,7 @@ interaction correctness or performance. No screen fixes are claimed by this audi
 This section also records wm-owned findings from the 26-screen mock audit.
 It does not classify a visual mismatch as a library defect. Library changes
 and the submodule pin are frozen for this pass; proven upstream blockers
-remain open for user review. Delivery status: `docs/screen-audit.md`.
+remain open for user review. Screen changes are recorded in local commits; unresolved work remains in `todo.md`.
 
 ### Visual acceptance reopened
 
@@ -504,6 +495,42 @@ renderer. Border-only UI entities also fail the native renderability gate
 unless they carry HasColor or another recognized visual component. The edge
 guide uses transparent HasColor so its native border is queued; bare borders
 should render without that workaround.
+
+### Cross-axis Stretch does not participate in native sizing
+
+AlignItems::Stretch promises filling unspecified cross-axis sizes, but
+autolayout only checks it in the positioning switch where it behaves like
+FlexStart. No sizing pass reads the setting. children() explicitly requests
+content sizing and therefore is not an automatic width; expand() fills the
+cross axis independently of alignment. VStackShowcase now labels these actual
+rules and retains the content-width specimen. Add a defined unspecified-
+size/stretch contract shared by sizing and layout rather than describing
+children() as CSS auto.
+
+### Toast labels bypass configured UI fonts
+
+toast::schedule creates HasLabel without configuring its font, bypassing
+UIStylingDefaults and falling back to the backend default. In the notification
+gallery this produced handwriting labels, LabelNoFont warnings and text
+extending past the native background. WM styles returned native notification
+entities with the gallery font and measured spacing/inset while preserving
+native lifetime, dimensions and stacking. Native toast presentation should
+inherit configured defaults or expose an explicit style argument.
+
+### Follow-ups retained when old audit reports were removed
+
+The [project todo](../todo.md#library-follow-ups-retained-from-earlier-reviews)
+preserves four source-confirmed items that were absent from the active backlog:
+
+- The advertised minimum touch-target validation flag has no validator.
+- Validation marker cleanup and overlay queries use the default collection,
+  missing child markers in the separate UI collection.
+- Native checkbox indicators still depend on a text glyph; wm draws its own
+  checkmark to avoid font-dependent results.
+- Child clipping uses rectangular scissors even when the parent is rounded.
+  Optional rounded clipping remains a capability proposal.
+
+These need separate library review; no afterhours code changed in this pass.
 
 ### Checkbox external state is treated as initialization only
 
@@ -1164,7 +1191,7 @@ the `height_of` overload.
   explicit font size (auto-fit + wrap is ambiguous).
 
 Batch/headless screenshot determinism is a wm-side tooling concern, not an
-afterhours gap — tracked in `docs/LAYOUT_AUDIT.md`.
+afterhours gap. See the capture-runner focus-state finding in this file.
 
 ---
 

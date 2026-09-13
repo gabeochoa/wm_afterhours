@@ -445,7 +445,6 @@ Only 3 of 8+ interactive elements in tab order on the images screen.
 | Button Variants (Filled, Outline, Ghost) | doc 03 |
 | Stepper/Selector (string, int, float variants) | doc 08 |
 | Tree Node / Collapsible Header (tree_view) | doc 11 |
-| Layout QA audit (89 issues fixed, 0 remaining open) | layout_qa_todo |
 
 ---
 
@@ -500,7 +499,5 @@ Work in parallel tracks. Each track can be done independently.
 | Performance Brainstorm (350+ items) | `vendor/afterhours/docs/speed.md` |
 | egui Comparison | `docs/egui-comparison.md` |
 | Fabula + SwiftUI Comparison | `docs/fabula-comparison.md` |
-| Focus Ring Audit | `docs/focus_ring_audit_consolidated.md` |
-| Layout QA Results | `docs/layout_qa_todo.md` |
 | Icon Registry | `docs/18_icon_registry.md` |
 | Adaptive Scaling | `docs/30_adaptive_scaling.md` |
