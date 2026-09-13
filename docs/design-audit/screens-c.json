@@ -5940,7 +5940,8 @@
         "change": "Add a small Reset demo action outside the tray examples."
       }
     ],
-    "sha256": "55223ab764a9e003c08a9f331d999102f2f0d332c1ca6a26e222aa187a2b4f05"
+    "sha256": "55223ab764a9e003c08a9f331d999102f2f0d332c1ca6a26e222aa187a2b4f05",
+    "evidence": "docs/design-audit/originals/tray_720p.png"
   },
   {
     "id": "virtual_list_lab",

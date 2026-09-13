@@ -1,0 +1,41 @@
+goto_screen tray
+resize 1280 720
+wait 0.4
+expect_text "Tray Navigation"
+expect_text "Last activated: none"
+assert_within_parents
+screenshot tray_design
+focus_ui h_tray
+key RIGHT
+key ENTER
+wait 0.2
+expect_text "Last activated: Horizontal / Beta"
+expect_text "Active tray: Horizontal"
+screenshot tray_horizontal_focus
+key RIGHT
+key RIGHT
+key ENTER
+wait 0.2
+expect_text "Last activated: Horizontal / Alpha"
+key TAB
+key DOWN
+key ENTER
+wait 0.2
+expect_text "Last activated: Vertical / Beta"
+expect_text "Active tray: Vertical"
+screenshot tray_vertical_focus
+click_ui v_btn_2
+wait 0.2
+expect_text "Last activated: Vertical / Gamma"
+click_ui tray_reset
+wait 0.2
+expect_text "Last activated: none"
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot tray_design_1080
+resize 1024 768
+wait 0.3
+assert_within_parents
+screenshot tray_design_narrow
+resize 1280 720

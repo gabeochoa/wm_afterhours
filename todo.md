@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,202 completed; 333 remaining.
+2,218 completed; 317 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7902,52 +7902,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/tray_720p.png) · [Visual review](design-audit.html#screen=tray)
 
-- [ ] `tray-01` · P2 · proposal. Page explanation: Add a sentence describing grouped arrow-key navigation.
+- [x] `tray-01` · P2 · proposal. Page explanation: Add a sentence describing grouped arrow-key navigation.
   Evidence: Tray Navigation does not explain what a tray changes about focus.
 
-- [ ] `tray-02` · P2 · proposal. Horizontal caption: Increase the caption to readable 13 px actual size.
+- [x] `tray-02` · P2 · proposal. Horizontal caption: Increase the caption to readable 13 px actual size.
   Evidence: Horizontal Tray Left/Right uses tiny text.
 
-- [ ] `tray-03` · P2 · proposal. Vertical caption: Match the horizontal caption's size and spacing.
+- [x] `tray-03` · P2 · proposal. Vertical caption: Match the horizontal caption's size and spacing.
   Evidence: Vertical Tray Up/Down is similarly small.
 
-- [ ] `tray-04` · P2 · proposal. Horizontal labels: Use Alpha, Beta and Gamma with a clearly labeled horizontal group.
+- [x] `tray-04` · P2 · proposal. Horizontal labels: Use Alpha, Beta and Gamma with a clearly labeled horizontal group.
   Evidence: H-Alpha, H-Beta and H-Gamma repeat an orientation prefix already in the heading.
 
-- [ ] `tray-05` · P2 · proposal. Vertical labels: Use the same choice labels as the horizontal comparison.
+- [x] `tray-05` · P2 · proposal. Vertical labels: Use the same choice labels as the horizontal comparison.
   Evidence: V-Alpha, V-Beta and V-Gamma repeat the heading.
 
-- [ ] `tray-06` · P2 · proposal. Color comparison: Use matching colors for corresponding choices or document the deliberate contrast test.
+- [x] `tray-06` · P2 · proposal. Color comparison: Use matching colors for corresponding choices or document the deliberate contrast test.
   Evidence: The horizontal and vertical groups use different color sets.
 
-- [ ] `tray-07` · P2 · proposal. Tray boundary: Add subtle group frames outside the buttons.
+- [x] `tray-07` · P2 · proposal. Tray boundary: Add subtle group frames outside the buttons.
   Evidence: The groups have no outline showing where tray ownership begins and ends.
 
-- [ ] `tray-08` · P2 · proposal. Entry/exit guidance: Add Tab guidance for entering and leaving the tray according to actual behavior.
+- [x] `tray-08` · P2 · proposal. Entry/exit guidance: Add Tab guidance for entering and leaving the tray according to actual behavior.
   Evidence: Only arrow directions are shown.
 
-- [ ] `tray-09` · P2 · proposal. Activation guide: Add the supported activation key beside the navigation hints.
+- [x] `tray-09` · P2 · proposal. Activation guide: Add the supported activation key beside the navigation hints.
   Evidence: No text says how to activate the current tray item.
 
-- [ ] `tray-10` · P2 · proposal. Selection feedback: Add Last activated: none beneath the groups.
+- [x] `tray-10` · P2 · proposal. Selection feedback: Add Last activated: none beneath the groups.
   Evidence: No status shows the last activated item.
 
-- [ ] `tray-11` · P2 · proposal. Active group feedback: Add a read-only Active tray status that updates during navigation.
+- [x] `tray-11` · P2 · proposal. Active group feedback: Add a read-only Active tray status that updates during navigation.
   Evidence: The initial frame does not identify a keyboard-active tray.
 
-- [ ] `tray-12` · P2 · proposal. Boundary behavior: Add a concise wrap/clamp note matched to implementation.
+- [x] `tray-12` · P2 · proposal. Boundary behavior: Add a concise wrap/clamp note matched to implementation.
   Evidence: The three-item groups do not explain wrapping at their ends.
 
-- [ ] `tray-13` · P2 · proposal. State coverage: Add companion captures with a focused item in each tray.
+- [x] `tray-13` · P2 · proposal. State coverage: Add companion captures with a focused item in each tray.
   Evidence: Only the initial unfocused composition is shown.
 
-- [ ] `tray-14` · P3 · proposal. Bottom panel space: Use it for the key guide and status readouts.
+- [x] `tray-14` · P3 · proposal. Bottom panel space: Use it for the key guide and status readouts.
   Evidence: A large blank band remains beneath V-Gamma.
 
-- [ ] `tray-15` · P3 · proposal. Group spacing: Use consistent heading-to-group and group-to-group spacing.
+- [x] `tray-15` · P3 · proposal. Group spacing: Use consistent heading-to-group and group-to-group spacing.
   Evidence: The gap after the horizontal row is much larger than its caption gap.
 
-- [ ] `tray-16` · P2 · proposal. Demo reset: Add a small Reset demo action outside the tray examples.
+- [x] `tray-16` · P2 · proposal. Demo reset: Add a small Reset demo action outside the tray examples.
   Evidence: There is no visible way to restore the initial selection state.
 
 ### virtual_list_lab

@@ -4041,7 +4041,7 @@ Additional interaction state. The instant trigger is highlighted and a narrow to
 
 ## tray
 
-[Current baseline](../../screenshot-baselines/screens/tray_720p.png) · [Visual review](../../design-audit.html#screen=tray)
+[Reviewed image](../../docs/design-audit/originals/tray_720p.png) · [Current baseline](../../screenshot-baselines/screens/tray_720p.png) · [Visual review](../../design-audit.html#screen=tray)
 
 Baseline SHA-256: `55223ab764a9e003c08a9f331d999102f2f0d332c1ca6a26e222aa187a2b4f05`
 
