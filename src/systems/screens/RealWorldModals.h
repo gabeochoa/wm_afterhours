@@ -171,7 +171,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(38.f * s)})
                      .with_background(Theme::Usage::Primary)
-                     .with_roundness(0.1f)
+                     .with_corner_radius(8.f * s)
                      .with_margin(Margin{.top = DefaultSpacing::small(),
                                          .bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
@@ -225,7 +225,7 @@ struct RealWorldModals : ScreenSystem<UIContext<InputAction>> {
                  ComponentConfig{}
                      .with_size(ComponentSize{percent(FOCUS_SAFE_WIDTH), pixels(38.f * s)})
                      .with_background(Theme::Usage::Primary)
-                     .with_roundness(0.1f)
+                     .with_corner_radius(8.f * s)
                      .with_margin(Margin{.bottom = DefaultSpacing::small()})
                      .with_render_layer(CL)
                      .with_debug_name("palette_query_input"));
