@@ -19,14 +19,14 @@ changes to the afterhours contract. It does not mark an approximation as native 
    order below. Replay restarts a deterministic, dt-driven one-second arrangement;
    Reduced motion immediately settles both words. `293_typography_composition.e2e`
    covers replay, interruption, keyboard activation, reduced motion and a narrow viewport.
-   Runtime and fresh visual verification are pending the root batch. Curved/rotated text
+   Runtime assertions and fresh screenshot review passed. Curved/rotated text
    and grapheme animation remain outside this example.
 2. Implemented `TransparentControlsLab.h`, registered as `transparent_controls`, with
    native Add to list buttons on light, dark and patterned backings. The second button
    on each panel is disabled; per-panel counts make activation observable.
    `294_transparent_controls.e2e` covers hover, focus, keyboard/pointer activation,
    disabled nonactivation, reset and a narrow viewport. See [contrast calculations](transparent-controls-contrast.md).
-   Runtime and fresh visual verification are pending the root batch.
+   Runtime assertions and fresh screenshot review passed.
 3. A rolling-value specimen with four explicit target buttons for 9, 10, -1 and 1000,
    plus a reduced-motion switch. Preserve the full current value in one ordinary label.
    Test a second target during transition and carry/borrow. Label any lack of real blur
