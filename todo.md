@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-280 completed; 2,255 remaining.
+305 completed; 2,230 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -992,79 +992,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/blend_mode_lab_720p.png) · [Visual review](design-audit.html#screen=blend_mode_lab)
 
-- [ ] `blend_mode_lab-01` · P2 · proposal. Title: Separate the page title from the transition counter.
+- [x] `blend_mode_lab-01` · P2 · proposal. Title: Separate the page title from the transition counter.
   Evidence: Blend modes. Real transitions last frame: 24 merges heading and live metric.
 
-- [ ] `blend_mode_lab-02` · P2 · proposal. Title inset: Add horizontal padding.
+- [x] `blend_mode_lab-02` · P2 · proposal. Title inset: Add horizontal padding.
   Evidence: The title begins at the rounded strip's left edge.
 
-- [ ] `blend_mode_lab-03` · P2 · proposal. Transition definition: Label it GPU blend-state changes or the precise measured operation.
+- [x] `blend_mode_lab-03` · P2 · proposal. Transition definition: Label it GPU blend-state changes or the precise measured operation.
   Evidence: Real transitions is undefined in the visible frame.
 
-- [ ] `blend_mode_lab-04` · P2 · proposal. Transition scope: Show a short scope label.
+- [x] `blend_mode_lab-04` · P2 · proposal. Transition scope: Show a short scope label.
   Evidence: 24 does not say whether it includes both specimen rows.
 
-- [ ] `blend_mode_lab-05` · P2 · proposal. Alpha caption: Add the input alpha value.
+- [x] `blend_mode_lab-05` · P2 · proposal. Alpha caption: Add the input alpha value.
   Evidence: Alpha omits the configured opacity.
 
-- [ ] `blend_mode_lab-06` · P2 · proposal. Additive caption: Add a compact source-plus-destination caption.
+- [x] `blend_mode_lab-06` · P2 · proposal. Additive caption: Add a compact source-plus-destination caption.
   Evidence: Additive provides no blending equation.
 
-- [ ] `blend_mode_lab-07` · P2 · proposal. Multiply caption: Use Multiply.
+- [x] `blend_mode_lab-07` · P2 · proposal. Multiply caption: Use Multiply.
   Evidence: Multiplied differs grammatically from the other mode names.
 
-- [ ] `blend_mode_lab-08` · P2 · proposal. Premultiply caption: Use Premultiplied alpha with the API name beneath.
+- [x] `blend_mode_lab-08` · P2 · proposal. Premultiply caption: Use Premultiplied alpha with the API name beneath.
   Evidence: AlphaPremultiply is a compressed API identifier.
 
-- [ ] `blend_mode_lab-09` · P2 · proposal. Mode title type: Increase label size while preserving specimen area.
+- [x] `blend_mode_lab-09` · P2 · proposal. Mode title type: Increase label size while preserving specimen area.
   Evidence: The four mode labels are tiny.
 
-- [ ] `blend_mode_lab-10` · P2 · proposal. Input colors: Add a labeled RGB input legend.
+- [x] `blend_mode_lab-10` · P2 · proposal. Input colors: Add a labeled RGB input legend.
   Evidence: Red, green and blue inputs are visible but unspecified.
 
-- [ ] `blend_mode_lab-11` · P2 · proposal. Circle order: Number the input circles outside their bounds.
+- [x] `blend_mode_lab-11` · P2 · proposal. Circle order: Number the input circles outside their bounds.
   Evidence: Three overlaps do not state draw order.
 
-- [ ] `blend_mode_lab-12` · P2 · proposal. Alpha overlap: Add a sampled center-color swatch below the panel.
+- [x] `blend_mode_lab-12` · P2 · proposal. Alpha overlap: Add a GPU replay of the center overlap with a separately labeled rounded RGB model.
   Evidence: The center intersection has no measurement label.
 
-- [ ] `blend_mode_lab-13` · P2 · proposal. Multiply visibility: Add a labeled magnified sample beside the panel.
+- [x] `blend_mode_lab-13` · P2 · proposal. Multiply visibility: Add a labeled magnified sample beside the panel.
   Evidence: Dark output is expected but hard to compare to the background.
 
-- [ ] `blend_mode_lab-14` · P2 · proposal. Premultiply contract: State the source-color preparation in its caption.
+- [x] `blend_mode_lab-14` · P2 · proposal. Premultiply contract: State the source-color preparation in its caption.
   Evidence: The panel does not say whether colors are pre-multiplied.
 
-- [ ] `blend_mode_lab-15` · P2 · proposal. Backing color: Show the shared destination color value.
+- [x] `blend_mode_lab-15` · P2 · proposal. Backing color: Show the shared destination color value.
   Evidence: All modes share a dark panel but its color is unnamed.
 
-- [ ] `blend_mode_lab-16` · P2 · proposal. Circle geometry: Document shared radius and overlap distance once.
+- [x] `blend_mode_lab-16` · P2 · proposal. Circle geometry: Document shared radius and overlap distance once.
   Evidence: The specimens have no fixed geometry caption.
 
-- [ ] `blend_mode_lab-17` · P2 · proposal. Top panel alignment: Give all four captions a consistent clear gap.
+- [x] `blend_mode_lab-17` · P2 · proposal. Top panel alignment: Give all four captions a consistent clear gap.
   Evidence: Captions sit very close to panel tops.
 
-- [ ] `blend_mode_lab-18` · P2 · proposal. Batch row headers: Increase their size and simplify the wording.
+- [x] `blend_mode_lab-18` · P2 · proposal. Batch row headers: Increase their size and simplify the wording.
   Evidence: One scope per blit and round the batch are very small.
 
-- [ ] `blend_mode_lab-19` · P2 · proposal. Per-blit count: Show 8 blits × 2 = 16 transitions.
+- [x] `blend_mode_lab-19` · P2 · proposal. Per-blit count: Show 8 blits × 2 = 16 transitions.
   Evidence: 2 transitions each leaves the total implicit.
 
-- [ ] `blend_mode_lab-20` · P2 · proposal. Batch total: Show 8 blits, 2 transitions.
+- [x] `blend_mode_lab-20` · P2 · proposal. Batch total: Show 8 blits, 2 transitions.
   Evidence: 2 total does not identify the number of blits.
 
-- [ ] `blend_mode_lab-21` · P2 · proposal. Batch item identity: Number them lightly outside their fills.
+- [x] `blend_mode_lab-21` · P2 · proposal. Batch item identity: Number them lightly outside their fills.
   Evidence: Eight blue squares per panel have no identifiers.
 
-- [ ] `blend_mode_lab-22` · P2 · proposal. Batch equivalence: State that output should match while state changes differ.
+- [x] `blend_mode_lab-22` · P2 · proposal. Batch equivalence: State that output should match while state changes differ.
   Evidence: The two rows look identical without an explicit expected-result note.
 
-- [ ] `blend_mode_lab-23` · P2 · proposal. Batch boundaries: Draw one bracket over the batch and separate brackets over per-blit samples.
+- [x] `blend_mode_lab-23` · P2 · proposal. Batch boundaries: Draw one bracket over the batch and separate brackets over per-blit samples.
   Evidence: The shared scope is described only in text.
 
-- [ ] `blend_mode_lab-24` · P2 · proposal. Blank lower region: Add a small comparison table of mode and transition count.
+- [x] `blend_mode_lab-24` · P2 · proposal. Blank lower region: Add a small comparison table of mode and transition count.
   Evidence: A large lower region is unused.
 
-- [ ] `blend_mode_lab-25` · P2 · proposal. Capture metadata: Show a stable capture/frame identifier beside the metric.
+- [x] `blend_mode_lab-25` · P2 · proposal. Capture metadata: Show a stable capture/frame identifier beside the metric.
   Evidence: The live count has no frame marker beyond last frame.
 
 ### button_variants

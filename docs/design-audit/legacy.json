@@ -9,8 +9,8 @@
       1280,
       720
     ],
-    "summary": "Pixel-identical. Alpha, Additive, Multiply and AlphaPremultiply specimens and batch diagrams share the current findings. The dark Multiply intersection is an intentional test, not failed contrast to repair.",
-    "sha256": "fa1082878c46a906e6ff63dc7f6ee19f18457d88c16ef6e31b81ee8d2f68fe19",
+    "summary": "Active e2e baseline updated with the verified blend-mode design; original review evidence is retained with the main screen.",
+    "sha256": "cfaabcfae541ab0d41c2ecbe840a122000702478e49a552f8af5ac3683cf157d",
     "additional_findings": []
   },
   {
@@ -451,7 +451,7 @@
         "kind": "proposal",
         "area": "Instant tooltip copy",
         "observation": "The shown tooltip sentence is much smaller than the instant trigger label.",
-        "change": "Use at least the readable caption size used by the trigger descriptions; verify the full sentence at 1280×720.",
+        "change": "Use at least the readable caption size used by the trigger descriptions; verify the full sentence at 1280\u00d7720.",
         "priority": "P2"
       },
       {

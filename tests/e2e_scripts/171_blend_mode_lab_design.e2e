@@ -1,0 +1,44 @@
+goto_screen blend_mode_lab
+resize 1280 720
+wait 0.6
+expect_text "Blend modes"
+expect_text "Blend-state changes: 24"
+expect_text "Fixture 01 / previous render"
+expect_text "Alpha 170 / 255 = 66.7%"
+expect_text "Destination RGB 28, 30, 40"
+expect_text "Multiply"
+expect_text "S*D + D*(1-a)"
+expect_text "Premultiplied alpha"
+expect_text "raw RGB is intentionally unprepared"
+expect_text "8 blits x 2 = 16 changes"
+expect_text "8 blits / 2 changes (2 expected)"
+assert_ui bml_root w=1280 h=720
+assert_ui bml_swatch_0 x=80 y=264 w=250 h=160
+assert_ui bml_swatch_3 x=950 y=264 w=250 h=160
+assert_within_parents
+screenshot blend_mode_lab_design
+click_ui bml_prepare_rgb
+wait 0.3
+expect_text "Premultiply RGB: on"
+expect_text "Fixture 02 / previous render"
+expect_text "RGB is multiplied by alpha before drawing"
+expect_text "Blend-state changes: 24"
+screenshot blend_mode_lab_prepared
+focus_element bml_prepare_rgb
+key ENTER
+wait 0.3
+expect_text "Premultiply RGB: off"
+expect_text "Fixture 01 / previous render"
+resize 1920 1080
+wait 0.3
+expect_text "Blend-state changes: 24"
+assert_ui bml_root w=1920 h=1080
+assert_ui bml_swatch_0 x=120 y=396 w=375 h=240
+assert_within_parents
+screenshot blend_mode_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_ui bml_root w=1024 h=768
+assert_within_parents
+screenshot blend_mode_lab_design_narrow
+resize 1280 720

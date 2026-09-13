@@ -2842,7 +2842,15 @@
         "priority": "P2"
       }
     ],
-    "sha256": "fa1082878c46a906e6ff63dc7f6ee19f18457d88c16ef6e31b81ee8d2f68fe19"
+    "sha256": "fa1082878c46a906e6ff63dc7f6ee19f18457d88c16ef6e31b81ee8d2f68fe19",
+    "evidence": "docs/design-audit/originals/blend_mode_lab_720p.png",
+    "examples": [
+      {
+        "id": "prepared_rgb",
+        "label": "Current example: Prepared premultiplied input",
+        "path": "docs/design-audit/examples/blend_mode_prepared_720p.png"
+      }
+    ]
   },
   {
     "id": "button_variants",

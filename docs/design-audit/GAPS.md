@@ -603,11 +603,13 @@ The 1–6 px raised and sunken border matrix is intentional and clean. Eighteen 
 
 ## blend mode lab
 
-[Current baseline](../../screenshot-baselines/screens/blend_mode_lab_720p.png) · [Visual review](../../design-audit.html#screen=blend_mode_lab)
+[Reviewed image](../../docs/design-audit/originals/blend_mode_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/blend_mode_lab_720p.png) · [Visual review](../../design-audit.html#screen=blend_mode_lab)
 
 Baseline SHA-256: `fa1082878c46a906e6ff63dc7f6ee19f18457d88c16ef6e31b81ee8d2f68fe19`
 
 Dark multiply output and brighter additive output are expected. Proposals explain the blend inputs, ordering and batch-transition comparison.
+
+Current example states: [Current example: Prepared premultiplied input](../../docs/design-audit/examples/blend_mode_prepared_720p.png)
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|
@@ -641,7 +643,7 @@ Dark multiply output and brighter additive output are expected. Proposals explai
 
 [Image](../../baseline_screenshots/blend_mode_lab.png)
 
-Pixel-identical. Alpha, Additive, Multiply and AlphaPremultiply specimens and batch diagrams share the current findings. The dark Multiply intersection is an intentional test, not failed contrast to repair.
+Active e2e baseline updated with the verified blend-mode design; original review evidence is retained with the main screen.
 
 ## button variants
 
