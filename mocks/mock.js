@@ -121,8 +121,8 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands)
     // the parent because CSS left/top is parent-relative while the dump's
     // relative_pos has already been walked up to screen space.
     el.style.position = 'absolute';
-    el.style.left = (n.rect.x - parentRect.x) + 'px';
-    el.style.top  = (n.rect.y - parentRect.y) + 'px';
+    el.style.left = (n.rect.x - parentRect.x - m.left) + 'px';
+    el.style.top  = (n.rect.y - parentRect.y - m.top) + 'px';
   } else {
     el.style.position = 'relative';
   }
