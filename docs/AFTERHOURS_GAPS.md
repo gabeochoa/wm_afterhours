@@ -214,7 +214,7 @@ This was a source review, not an exhaustive line-by-line or runtime audit.
 No applications were run and no consumer or library code was changed.
 
 Availability was checked against both local library copies: standalone
-`afterhours` at `19d6c97` and wm's newer frozen vendor at `e3f13a7`.
+`afterhours` at `19d6c97` and wm's newer frozen vendor at `fee03c2`.
 The former is an ancestor of the latter. A feature present in the newer copy
 is already implemented; publishing and consumer pin updates are separate work.
 These checks do not establish the current state of any remote branch.

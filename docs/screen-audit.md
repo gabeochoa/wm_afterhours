@@ -3,7 +3,7 @@
 The target is `mocks.html`. Published gallery: https://pxl.cl/d8w3j (revision 5).
 The Compare view overlays the source image on the mock or current C++ screenshot.
 Drag the divider, or use the range control with the arrow keys.
-The afterhours pin is frozen at `e3f13a7827e333460d38078fde716e1e4a5a68ef`.
+The afterhours pin is frozen at `fee03c29b10f90bfe843e2ce74704b0578667fcf`.
 
 ## Captures
 

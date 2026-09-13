@@ -15,7 +15,7 @@ All review processing used `nice -n 10`. No applications, builds or tests were r
 ## Library availability
 
 - Standalone `~/p/afterhours`: `19d6c9708a7624f81644a222dbefd02aed298069`, dated August 26.
-- Newer wm vendor: `e3f13a7827e333460d38078fde716e1e4a5a68ef`, dated September 12.
+- Newer wm vendor: `fee03c29b10f90bfe843e2ce74704b0578667fcf`, dated September 12.
 - The standalone commit is an ancestor of the vendored commit. Both trees were inspected. Features present in the newer tree are already implemented, even if consumers or the standalone checkout have not adopted them. No remote publication state was inferred.
 
 ## Project coverage
