@@ -1103,7 +1103,7 @@ The baseline follows the Blossom Cafe mock. Proposals improve customer urgency, 
 
 ## deadspace settings
 
-[Current baseline](../../screenshot-baselines/screens/deadspace_settings_720p.png) · [Visual review](../../design-audit.html#screen=deadspace_settings)
+[Reviewed image](../../docs/design-audit/originals/deadspace_settings_720p.png) · [Current baseline](../../screenshot-baselines/screens/deadspace_settings_720p.png) · [Visual review](../../design-audit.html#screen=deadspace_settings)
 
 Baseline SHA-256: `8ec07e7c81831bbac6abef46bd628914522e3e325a1927dc3f68c52ed107feab`
 

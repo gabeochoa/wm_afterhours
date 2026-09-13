@@ -5566,7 +5566,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "8ec07e7c81831bbac6abef46bd628914522e3e325a1927dc3f68c52ed107feab"
+    "sha256": "8ec07e7c81831bbac6abef46bd628914522e3e325a1927dc3f68c52ed107feab",
+    "evidence": "docs/design-audit/originals/deadspace_settings_720p.png"
   },
   {
     "id": "decorative_frame",

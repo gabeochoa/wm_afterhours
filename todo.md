@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-686 completed; 1,849 remaining.
+711 completed; 1,824 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -2033,79 +2033,81 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/deadspace_settings_720p.png) · [Visual review](design-audit.html#screen=deadspace_settings)
 
-- [ ] `deadspace_settings-01` · P2 · proposal. Front placement: Shift the active stack toward center or reserve the right area for category details.
+- [x] `deadspace_settings-01` · P2 · proposal. Front placement: Shift the active stack toward center or reserve the right area for category details.
   Evidence: The active menu occupies the left half with a large empty right region.
 
-- [ ] `deadspace_settings-02` · P2 · proposal. More settings title: Increase its spacing and prominence modestly.
+- [x] `deadspace_settings-02` · P2 · proposal. More settings title: Increase its spacing and prominence modestly.
   Evidence: MORE SETTINGS is small relative to the wide active panel.
 
-- [ ] `deadspace_settings-03` · P2 · proposal. Settings header: Use it as a breadcrumb identifying the parent menu.
+- [x] `deadspace_settings-03` · P2 · proposal. Settings header: Use it as a breadcrumb identifying the parent menu.
   Evidence: // SETTINGS repeats the title without navigation context.
 
-- [ ] `deadspace_settings-04` · P2 · proposal. Active gameplay: Add a slim selection chevron.
+- [x] `deadspace_settings-04` · P2 · proposal. Active gameplay: Add a slim selection chevron.
   Evidence: Gameplay uses brighter fill and outline but no shape marker.
 
-- [ ] `deadspace_settings-05` · P2 · proposal. Active typography: Give the selected label a slight weight increase.
+- [x] `deadspace_settings-05` · P2 · proposal. Active typography: Give the selected label a slight weight increase.
   Evidence: Gameplay text has similar weight to inactive rows.
 
-- [ ] `deadspace_settings-06` · P2 · proposal. Scanline intensity: Reduce line opacity immediately behind text while preserving the effect.
+- [x] `deadspace_settings-06` · P2 · proposal. Scanline intensity: Reduce line opacity immediately behind text while preserving the effect.
   Evidence: Horizontal lines run through every label.
 
-- [ ] `deadspace_settings-07` · P2 · proposal. Text edge treatment: Tighten the glow around letter edges.
+- [x] `deadspace_settings-07` · P2 · proposal. Text edge treatment: Tighten the glow around letter edges.
   Evidence: Cyan fringe and thin letters reduce clarity.
 
-- [ ] `deadspace_settings-08` · P2 · proposal. Row interiors: Increase left inset beyond the clipped corners.
+- [x] `deadspace_settings-08` · P2 · proposal. Row interiors: Increase left inset beyond the clipped corners.
   Evidence: Labels sit near the left bevel transitions.
 
-- [ ] `deadspace_settings-09` · P2 · proposal. Front header gap: Use a deliberate shared header spacing.
+- [x] `deadspace_settings-09` · P2 · proposal. Front header gap: Use a deliberate shared header spacing.
   Evidence: The heading and Controls row have a larger gap than other rows.
 
-- [ ] `deadspace_settings-10` · P2 · proposal. Row rhythm: Separate legal/about items from gameplay preferences.
+- [x] `deadspace_settings-10` · P2 · proposal. Row rhythm: Separate legal/about items from gameplay preferences.
   Evidence: Eight identical rows provide no category grouping.
 
-- [ ] `deadspace_settings-11` · P2 · proposal. Policies label: Place it in a quieter secondary group.
+- [x] `deadspace_settings-11` · P2 · proposal. Policies label: Place it in a quieter secondary group.
   Evidence: Policies and Licenses is long and visually equal to core settings.
 
-- [ ] `deadspace_settings-12` · P2 · proposal. Credits placement: Add a small gap before the footer.
+- [x] `deadspace_settings-12` · P2 · proposal. Credits placement: Add a small gap before the footer.
   Evidence: Credits sits directly above the footer with little distinction.
 
-- [ ] `deadspace_settings-13` · P2 · proposal. Rear menu prominence: Reduce rear text emphasis a little further.
+- [x] `deadspace_settings-13` · P2 · proposal. Rear menu prominence: Reduce rear text emphasis a little further.
   Evidence: Initial Settings remains detailed enough to compete with the active stack.
 
-- [ ] `deadspace_settings-14` · P2 · proposal. Rear active row: Use a connector or breadcrumb cue to explain the relationship.
+- [x] `deadspace_settings-14` · P2 · proposal. Rear active row: Use a connector or breadcrumb cue to explain the relationship.
   Evidence: More Settings extends out from behind the front stack.
 
-- [ ] `deadspace_settings-15` · P2 · proposal. Rear title: Increase its left safe margin.
+- [x] `deadspace_settings-15` · P2 · proposal. Rear title: Increase its left safe margin.
   Evidence: INITIAL SETTINGS sits close to the screen's left edge.
 
-- [ ] `deadspace_settings-16` · P2 · proposal. Overlapping footer: Offset the rear panel vertically to reduce dense intersections.
+- [x] `deadspace_settings-16` · P2 · proposal. Overlapping footer: Offset the rear panel vertically to reduce dense intersections.
   Evidence: The front footer overlays the rear active-row region.
 
-- [ ] `deadspace_settings-17` · P2 · proposal. Footer key labels: Render Enter and Esc as distinct keycaps.
+- [x] `deadspace_settings-17` · P2 · proposal. Footer key labels: Render Enter and Esc as distinct keycaps.
   Evidence: Enter SELECT and Esc BACK are plain text with similar weight.
 
-- [ ] `deadspace_settings-18` · P2 · proposal. Footer spacing: Give the two actions consistent grouped spacing.
+- [x] `deadspace_settings-18` · P2 · proposal. Footer spacing: Give the two actions consistent grouped spacing.
   Evidence: Select and Back cluster at the right end.
 
-- [ ] `deadspace_settings-19` · P2 · proposal. Footer alignment: Align its outer width with the main panel.
+- [x] `deadspace_settings-19` · P2 · proposal. Footer alignment: Align its outer width with the main panel.
   Evidence: The footer extends slightly beyond the active row stack.
 
-- [ ] `deadspace_settings-20` · P2 · proposal. Menu depth: Add restrained perspective or skew matching the mock.
+- [x] `deadspace_settings-20` · P2 · proposal. Menu depth: Add restrained perspective or skew matching the mock.
   Evidence: The baseline stacks are flatter than the mock's skewed holographic layers.
+  Disposition: Added restrained slanted panel plates within their bounds, preserving readable flat text and the layered menu. Full perspective typography is not implemented.
 
-- [ ] `deadspace_settings-21` · P2 · proposal. Selected description: Show a one-sentence category preview.
+- [x] `deadspace_settings-21` · P2 · proposal. Selected description: Show a one-sentence category preview.
   Evidence: Gameplay has no descriptive content in the empty right area.
 
-- [ ] `deadspace_settings-22` · P2 · proposal. Navigation context: Add Initial settings > More settings as a compact breadcrumb.
+- [x] `deadspace_settings-22` · P2 · proposal. Navigation context: Add Initial settings > More settings as a compact breadcrumb.
   Evidence: No visible cue states this is a submenu.
 
-- [ ] `deadspace_settings-23` · P2 · proposal. Category symbols: Add restrained monochrome category symbols if consistent with the reference.
+- [x] `deadspace_settings-23` · P2 · proposal. Category symbols: Add restrained monochrome category symbols if consistent with the reference.
   Evidence: Long text rows require reading every item.
+  Disposition: The reference is icon-free, so category icons were omitted. A selection chevron supplies a noncolor cue.
 
-- [ ] `deadspace_settings-24` · P2 · proposal. Background grid: Fade its edges more gradually.
+- [x] `deadspace_settings-24` · P2 · proposal. Background grid: Fade its edges more gradually.
   Evidence: The faint grid ends abruptly behind the active panel region.
 
-- [ ] `deadspace_settings-25` · P2 · proposal. Scale balance: Increase active-menu scale slightly while retaining the layered layout.
+- [x] `deadspace_settings-25` · P2 · proposal. Scale balance: Increase active-menu scale slightly while retaining the layered layout.
   Evidence: Large black margins dominate the composition at 720p.
 
 ### decorative_frame

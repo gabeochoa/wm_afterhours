@@ -1,0 +1,80 @@
+goto_screen deadspace_settings
+resize 1280 720
+wait 0.4
+expect_text "MORE SETTINGS"
+expect_text "INITIAL SETTINGS > MORE SETTINGS"
+expect_text "INFORMATION"
+expect_text "Enter"
+expect_text "Esc"
+expect_text "Set difficulty, objectives,"
+expect_text "4 entries / Enter to open"
+assert_ui ds_root x=0 y=0 w=1280 h=720
+assert_ui ds_front_header x=338 y=114 w=465 h=40
+assert_ui ds_category_7 x=338 y=517 w=465 h=44
+assert_ui ds_front_footer x=338 y=586 w=465 h=54
+assert_ui ds_preview_panel x=844 y=164 w=380 h=248
+assert_within_parents
+screenshot deadspace_design
+click_ui ds_category_3
+wait 0.2
+expect_text "Master volume"
+expect_text "80"
+click_ui ds_cycle_next_0
+wait 0.2
+expect_text "90"
+click_ui ds_cycle_prev_3
+wait 0.2
+expect_text "Full"
+click_ui ds_detail_back
+wait 0.2
+expect_text "Balance music and effects,"
+expect_no_text "Master volume"
+click_ui ds_category_3
+wait 0.2
+expect_text "90"
+expect_text "Full"
+click_ui ds_category_5
+wait 0.2
+expect_text "Colourblind mode"
+click_ui ds_cycle_next_1
+wait 0.2
+expect_text "Deuteranopia"
+assert_ui ds_detail_value_1 x=918 y=372 w=232 h=31
+assert_within_parents
+screenshot deadspace_accessibility
+click_ui ds_detail_back
+wait 0.2
+action WidgetUp
+wait 0.2
+expect_text "Choose voice and text languages,"
+action WidgetPress
+wait 0.2
+expect_text "Voice language"
+expect_text "Subtitle size"
+click_ui ds_cycle_next_1
+wait 0.2
+expect_text "Spanish"
+action MenuBack
+wait 0.2
+expect_no_text "Subtitle size"
+resize 1920 1080
+wait 0.3
+assert_ui ds_root x=0 y=0 w=1920 h=1080
+assert_ui ds_front_header x=507 y=171 w=698 h=60
+assert_ui ds_preview_panel x=1266 y=246 w=570 h=372
+assert_within_parents
+screenshot deadspace_design_1080
+resize 1024 768
+wait 0.3
+assert_ui ds_root x=0 y=0 w=1024 h=768
+assert_ui ds_front_header x=270 y=187 w=372 h=32
+assert_ui ds_front_footer x=270 y=565 w=372 h=43
+assert_ui ds_preview_panel x=675 y=227 w=304 h=198
+assert_within_parents
+click_ui ds_category_5
+wait 0.2
+expect_text "Deuteranopia"
+assert_ui ds_detail_panel x=675 y=227 w=304 h=330
+assert_within_parents
+screenshot deadspace_design_narrow
+resize 1280 720
