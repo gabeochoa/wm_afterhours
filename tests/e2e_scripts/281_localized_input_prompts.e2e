@@ -1,0 +1,41 @@
+goto_screen localized_input_prompts
+resize 1280 720
+wait 0.5
+expect_text "Words move. Actions stay the same."
+expect_text "English"
+expect_text "Korean / 한국어"
+expect_text "점프합니다."
+assert_ui lp_root x=0 y=0 w=1280 h=720
+assert_ui lp_sentence_en x=84 y=280 w=512 h=196
+assert_ui lp_sentence_ko x=684 y=280 w=512 h=196
+assert_ui lp_en_word_0 x=84 y=280 h=44
+assert_ui lp_en_key y=280 w=104 h=44
+assert_ui lp_ko_key x=684 y=280 w=104 h=44
+expect_text "Jumps: 0"
+screenshot localized_prompts_wide
+click_ui lp_width
+wait 0.3
+assert_ui lp_sentence_en w=280
+assert_ui lp_sentence_ko w=280
+assert_ui lp_ko_key x=684 y=280 w=104 h=44
+assert_ui lp_en_word_5 y=324
+assert_ui lp_ko_word_3 y=324
+assert_within_parents
+screenshot localized_prompts_narrow
+key SPACE
+wait 0.15
+expect_text "Jumps: 1"
+screenshot localized_prompts_jump
+resize 1920 1080
+wait 0.3
+assert_ui lp_root w=1920 h=1080
+assert_ui lp_ko_key x=1026 y=420 w=156 h=66
+assert_within_parents
+screenshot localized_prompts_1080
+resize 1024 768
+wait 0.3
+assert_ui lp_root x=0 y=96 w=1024 h=576
+assert_ui lp_ko_key w=83 h=35
+assert_within_parents
+screenshot localized_prompts_small
+resize 1280 720

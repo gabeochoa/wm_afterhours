@@ -65,6 +65,16 @@ struct FontDef {
   int raster_size = 96;
 };
 
+inline std::vector<int> get_inline_prompt_codepoints() {
+  auto codepoints = generate_codepoint_range(0x0020, 0x007E);
+  const std::vector<int> korean{
+      0xad6d, 0xb118, 0xb204, 0xb2c8, 0xb2e4, 0xb3c4, 0xb974, 0xb97c,
+      0xba74, 0xbc1c, 0xc138, 0xc5b4, 0xc5d0, 0xc694, 0xc744, 0xc74c,
+      0xc810, 0xcc29, 0xd0a4, 0xd2c8, 0xd310, 0xd504, 0xd558, 0xd55c, 0xd569};
+  codepoints.insert(codepoints.end(), korean.begin(), korean.end());
+  return codepoints;
+}
+
 // Get all font definitions - this is the single source of truth
 // Add new fonts here and they'll be available in both windowed and headless
 // modes
@@ -111,6 +121,7 @@ inline std::vector<FontDef> get_all_fonts() {
       {"ArchivoMockBoldItalic", "ArchivoNarrow-BoldItalic.ttf", false, nullptr, 192},
 
       // CJK fonts with special codepoint loading
+      {"NotoSansKRInline", "NotoSansMonoCJKkr-Bold.otf", true, get_inline_prompt_codepoints, 96},
       {"NotoSansKR", "NotoSansMonoCJKkr-Bold.otf", true, get_korean_codepoints, 32},
       {"Sazanami", "Sazanami-Hanazono-Mincho.ttf", true,
        get_japanese_codepoints, 32},
