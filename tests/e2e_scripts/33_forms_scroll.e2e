@@ -12,7 +12,7 @@ expect_text "Checkboxes"
 
 # Top checkboxes should be visible initially
 expect_text "Music"
-expect_text "SFX"
+expect_text "Sound effects"
 expect_text "Fullscreen"
 
 # Bottom items should NOT be visible yet (they overflow the scroll view)

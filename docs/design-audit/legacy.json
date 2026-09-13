@@ -102,13 +102,13 @@
     "screen": "forms",
     "baseline": "baseline_screenshots/forms.png",
     "current": "screenshot-baselines/screens/forms_720p.png",
-    "pixel_identical": false,
+    "pixel_identical": true,
     "size": [
       1280,
       720
     ],
-    "summary": "Current capture removes Volume focus outline. The same fixed-height scroller clips the next control row and the metadata footer remains small. Keep intentional scroll behavior when revising its presentation.",
-    "sha256": "4a4bbefd7be0f55bf0571b147c046a89fb2df787800f634f5e90ad3f439991ba",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "f4f8490d2c8aeedd160d02f07a1521967ac62f5b9783381e282390f797f59da2",
     "additional_findings": []
   },
   {

@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-1,116 completed; 1,419 remaining.
+1,141 completed; 1,394 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -3441,79 +3441,80 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/forms_720p.png) · [Visual review](design-audit.html#screen=forms)
 
-- [ ] `forms-01` · P2 · proposal. Page title: Add a top safe margin and consistent title padding.
+- [x] `forms-01` · P2 · proposal. Page title: Add a top safe margin and consistent title padding.
   Evidence: Form Components touches the top of its cyan strip.
 
-- [ ] `forms-02` · P2 · proposal. Slider labels: Place labels above their tracks so fills remain visually measurable.
+- [x] `forms-02` · P2 · proposal. Slider labels: Place labels above their tracks so fills remain visually measurable.
   Evidence: Volume, Brightness, and Difficulty are embedded inside the filled halves.
 
-- [ ] `forms-03` · P2 · proposal. Slider thumb contrast: Use a brighter outlined thumb that remains distinct on both track colors.
+- [x] `forms-03` · P2 · proposal. Slider thumb contrast: Use a brighter outlined thumb that remains distinct on both track colors.
   Evidence: Teal thumbs sit on teal filled tracks.
 
-- [ ] `forms-04` · P2 · proposal. Slider values: Place values in a shared trailing column.
+- [x] `forms-04` · P2 · proposal. Slider values: Place values in a shared trailing column.
   Evidence: Percent values are buried inside the labels.
 
-- [ ] `forms-05` · P2 · proposal. Volume track: Reduce the track height while preserving a generous thumb.
+- [x] `forms-05` · P2 · proposal. Volume track: Reduce the track height while preserving a generous thumb.
   Evidence: The thick track resembles a segmented button.
 
-- [ ] `forms-06` · P3 · proposal. Difficulty percentage: Add Easy and Hard endpoint labels or a named level.
+- [x] `forms-06` · P3 · proposal. Difficulty percentage: Add Easy and Hard endpoint labels or a named level.
   Evidence: Difficulty is represented as 30% without a scale explanation.
 
-- [ ] `forms-07` · P3 · proposal. Brightness control: Add a dim-to-bright icon pair outside the track.
+- [x] `forms-07` · P3 · proposal. Brightness control: Add a dim-to-bright icon pair outside the track.
   Evidence: Brightness has no low/high endpoint references.
 
-- [ ] `forms-08` · P2 · proposal. Progress section header: Use a shared header style and reserve colors for the sample contents.
+- [x] `forms-08` · P2 · proposal. Progress section header: Use a shared header style and reserve colors for the sample contents.
   Evidence: Progress Bars uses a red strip while Sliders uses cyan, without a legend.
 
-- [ ] `forms-09` · P2 · proposal. Audio progress label: Move the text outside the bar for an unobstructed progress comparison.
+- [x] `forms-09` · P2 · proposal. Audio progress label: Move the text outside the bar for an unobstructed progress comparison.
   Evidence: Audio Level 75% sits on the colored bar.
 
-- [ ] `forms-10` · P2 · proposal. Level progress label: Separate the label and numeric value from the progress track.
+- [x] `forms-10` · P2 · proposal. Level progress label: Separate the label and numeric value from the progress track.
   Evidence: Level Progress 75/100 is embedded in the fill.
 
-- [ ] `forms-11` · P3 · proposal. Progress units: Caption the two demos Percentage and Custom range.
+- [x] `forms-11` · P3 · proposal. Progress units: Caption the two demos Percentage and Custom range.
   Evidence: One bar uses percent and the other a fraction without explanation.
 
-- [ ] `forms-12` · P2 · proposal. Checkbox marks: Use a clear square checkbox and centered check glyph.
+- [x] `forms-12` · P2 · proposal. Checkbox marks: Use a clear square checkbox and centered check glyph.
   Evidence: Checked states appear as literal [x] strings.
 
-- [ ] `forms-13` · P2 · proposal. Checkbox position: Place each mark consistently before its label or at the trailing edge.
+- [x] `forms-13` · P2 · proposal. Checkbox position: Place each mark consistently before its label or at the trailing edge.
   Evidence: Checkbox marks sit near the center of long cyan rows.
 
-- [ ] `forms-14` · P2 · proposal. Checkbox label size: Increase checkbox labels to match slider-label readability.
+- [x] `forms-14` · P2 · proposal. Checkbox label size: Increase checkbox labels to match slider-label readability.
   Evidence: Music and Fullscreen are much smaller than section headings.
 
-- [ ] `forms-15` · P3 · proposal. Checkbox grouping: Add small Audio and Display group labels.
+- [x] `forms-15` · P3 · proposal. Checkbox grouping: Add small Audio and Display group labels.
   Evidence: Audio and display options form one undifferentiated list.
 
-- [ ] `forms-16` · P3 · proposal. SFX label: Use Sound effects for clearer scanning.
+- [x] `forms-16` · P3 · proposal. SFX label: Use Sound effects for clearer scanning.
   Evidence: SFX is abbreviated while Music is spelled out.
 
-- [ ] `forms-17` · P3 · proposal. V-Sync label: Add a short explanatory subtitle in the demo's available width.
+- [x] `forms-17` · P3 · proposal. V-Sync label: Add a short explanatory subtitle in the demo's available width.
   Evidence: V-Sync has no supporting description.
 
-- [ ] `forms-18` · P2 · proposal. Scroll boundary: Keep clipping intentional but add a fade or More options cue at the boundary.
+- [x] `forms-18` · P2 · proposal. Scroll boundary: Keep clipping intentional but add a fade or More options cue at the boundary.
   Evidence: A sliver of the next checkbox appears at the bottom edge.
 
-- [ ] `forms-19` · P2 · proposal. Scrollbar: Move it closer to the checkbox list and give its track a clearer boundary.
+- [x] `forms-19` · P2 · proposal. Scrollbar: Move it closer to the checkbox list and give its track a clearer boundary.
   Evidence: The thin light thumb sits far to the right of the option rows.
 
-- [ ] `forms-20` · P2 · proposal. Status strip: Use three labeled value groups at a readable size.
+- [x] `forms-20` · P2 · proposal. Status strip: Use three labeled value groups at a readable size.
   Evidence: Volume, Resolution, and Quality appear as one small pipe-separated line.
+  Disposition: Resolution and Quality are existing fixed demonstration values, now labeled demo preset. The clipboard result is read-only; Paste reads text without applying settings.
 
-- [ ] `forms-21` · P3 · proposal. Status relation: Label the strip Current settings to explain that it summarizes the whole form.
+- [x] `forms-21` · P3 · proposal. Status relation: Label the strip Current settings to explain that it summarizes the whole form.
   Evidence: Resolution and Quality are summarized while their controls are offscreen.
 
-- [ ] `forms-22` · P2 · proposal. Clipboard explanation: Increase it and wrap the copy/paste explanation into two short clauses.
+- [x] `forms-22` · P2 · proposal. Clipboard explanation: Increase it and wrap the copy/paste explanation into two short clauses.
   Evidence: The clipboard help sentence is tiny and widely spaced.
 
-- [ ] `forms-23` · P2 · proposal. Copy Status action: Use a clear primary/secondary pairing without danger-like red for Paste.
+- [x] `forms-23` · P2 · proposal. Copy Status action: Use a clear primary/secondary pairing without danger-like red for Paste.
   Evidence: Copy Status and Paste use unrelated cyan and red fills.
 
-- [ ] `forms-24` · P2 · proposal. Clipboard result: Place the result in a labeled read-only output field.
+- [x] `forms-24` · P2 · proposal. Clipboard result: Place the result in a labeled read-only output field.
   Evidence: Clipboard empty is small inline text without a visible output boundary.
 
-- [ ] `forms-25` · P2 · proposal. Clipboard bottom row: Add bottom padding without reducing the scrollable test region.
+- [x] `forms-25` · P2 · proposal. Clipboard bottom row: Add bottom padding without reducing the scrollable test region.
   Evidence: Buttons sit flush against the bottom edge of their enclosing panel.
 
 ### grid_lab

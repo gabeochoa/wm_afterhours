@@ -10,53 +10,6 @@
 using namespace afterhours::ui;
 using namespace afterhours::ui::imm;
 
-namespace forms_presets {
-
-inline ComponentConfig CheckboxConfig(const std::string &label) {
-  return ComponentConfig{}
-      .with_label(label)
-      .with_size(ComponentSize{percent(0.92f), pixels(34)})
-      .with_background(Theme::Usage::Primary)
-      .with_font_size(14.0f)
-      // The library default is "V", which this font draws as a literal
-      // capital V floating in the row.
-      .with_checkbox_indicators("[x]", "[ ]")
-      .with_margin(Spacing::xs);
-}
-
-inline ComponentConfig SectionHeaderConfig(
-    const std::string &label,
-    Theme::Usage bg = Theme::Usage::Primary) {
-  return ComponentConfig{}
-      .with_label(label)
-      .with_size(ComponentSize{percent(0.95f), pixels(36)})
-      .with_background(bg)
-      .with_auto_text_color(true)
-      .with_padding(Spacing::xs)
-      .with_font_size(20.0f)
-      .with_skip_tabbing(true);
-}
-
-inline ComponentConfig SliderConfig(const std::string &label,
-                                    Theme::Usage bg = Theme::Usage::Primary) {
-  return ComponentConfig{}
-      .with_label(label)
-      .with_size(ComponentSize{percent(0.95f), pixels(44)})
-      .with_background(bg)
-      .with_font_size(14.0f)
-      .with_margin(Spacing::xs);
-}
-
-inline ComponentConfig ProgressBarConfig(const std::string &label) {
-  return ComponentConfig{}
-      .with_label(label)
-      .with_size(ComponentSize{percent(0.95f), pixels(28)})
-      .with_font_size(pixels(16.0f))
-      .with_margin(Spacing::xs);
-}
-
-} // namespace forms_presets
-
 struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
   // Slider values
   float volume_slider = 0.75f;
@@ -93,258 +46,241 @@ struct FormsGallery : ScreenSystem<UIContext<InputAction>> {
 
   void for_each_with(afterhours::Entity &entity,
                      UIContext<InputAction> &context, float) override {
-    // Apply neon dark theme with default font for this screen
-    auto theme = afterhours::ui::theme_presets::neon_dark();
-    context.theme = theme;
-    context.scaling_mode = ScalingMode::Adaptive;
-    UIStylingDefaults::get().set_default_font(UIComponent::DEFAULT_FONT,
-                                              pixels(16.0f));
-
-    using namespace forms_presets;
-
-    // Main container background - centered on screen
-    auto root =
-        div(context, mk(entity, 0),
-            ComponentConfig{}
-                .with_size(ComponentSize{screen_pct(0.78f), screen_pct(0.86f)})
-                .with_self_align(SelfAlign::Center)
-                .with_background(Theme::Usage::Background)
-                .with_corner_radius(12.f)
-                .with_debug_name("forms_bg"));
-
-    // Content container with padding
-    auto main_container =
-        vstack(context, mk(root.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(1.0f)})
-                   // Any vertical padding here pushes the clipboard row out.
-                   .with_padding(Padding{.left = DefaultSpacing::small(),
-                                         .right = DefaultSpacing::small()})
-                   .with_no_wrap()
-                   .with_debug_name("forms_main"));
-
-    // Title - use font_size_xl for screen title (largest in hierarchy)
-    div(context, mk(main_container.ent(), 0),
-        ComponentConfig{}
-            .with_label("Form Components")
-            .with_size(ComponentSize{percent(1.0f), pixels(50)})
-            .with_background(Theme::Usage::Primary)
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_font_size(theme.font_size_xl()) // 42px - screen title
-            .with_margin(Margin{.top = pixels(0),
-                                .bottom = DefaultSpacing::small(),
-                                .left = pixels(0),
-                                .right = pixels(0)}));
-
-    // Content area - two columns - adjusted height for all content
-    auto content =
-        hstack(context, mk(main_container.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), percent(0.66f)})
-                   .with_background(Theme::Usage::Surface)
-                   .with_padding(Spacing::sm)
-                   .with_justify_content(JustifyContent::Center)
-                   .with_debug_name("content"));
-
-    // Left column - Sliders
-    auto left_col =
-        vstack(context, mk(content.ent(), 0),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.45f), percent(1.0f)})
-                   .with_custom_background(
-                       afterhours::colors::darken(theme.surface, 0.9f))
-                   // Same: level_progress needed 340 in a 323.6 content box.
-                   .with_padding(Spacing::xs)
-                   .with_debug_name("left_column"));
-
-    // Sliders section header - font_size_md for section headers
-    div(context, mk(left_col.ent(), 0), SectionHeaderConfig("Sliders"));
-
-    // Volume slider - use font_size_sm for control labels, increased handle
-    // visibility
-    slider(context, mk(left_col.ent(), 1), volume_slider,
-           SliderConfig("Volume").with_debug_name("volume_slider"),
-           SliderHandleValueLabelPosition::WithLabel);
-
-    // Brightness slider - increased handle visibility
-    slider(context, mk(left_col.ent(), 2), brightness_slider,
-           SliderConfig("Brightness", Theme::Usage::Accent)
-               .with_debug_name("brightness_slider"),
-           SliderHandleValueLabelPosition::WithLabel);
-
-    // Difficulty slider - increased handle visibility
-    slider(context, mk(left_col.ent(), 3), difficulty_slider,
-           SliderConfig("Difficulty", Theme::Usage::Secondary)
-               .with_debug_name("difficulty_slider"),
-           SliderHandleValueLabelPosition::WithLabel);
-
-    // Progress Bars section header - font_size_md for section headers
-    div(context, mk(left_col.ent(), 4),
-        SectionHeaderConfig("Progress Bars", Theme::Usage::Accent));
-
+    context.theme = afterhours::ui::theme_presets::neon_dark();
+    context.theme.primary = {88, 186, 183, 255};
+    context.theme.secondary = {49, 64, 82, 255};
+    UIStylingDefaults::get().set_grid_snapping(false);
+    const float s = std::min(context.screen_width / 1280.f,
+                             context.screen_height / 720.f);
+    const float ox = (context.screen_width - 1280 * s) / 2;
+    const float oy = (context.screen_height - 720 * s) / 2;
+    const afterhours::Color ink{233, 241, 249, 255};
+    const afterhours::Color muted{161, 182, 202, 255};
+    const afterhours::Color panel{24, 35, 49, 255};
+    const auto at = [=](float x, float y, float w, float h) {
+      return ComponentConfig{}.with_size({pixels(w * s), pixels(h * s)})
+          .with_absolute_position(ox + x * s, oy + y * s).with_corner_radius(0);
+    };
+    const auto text = [&](int id, const std::string &value, float x, float y,
+                          float w, float h, float size, afterhours::Color color,
+                          const std::string &name) {
+      div(context, mk(entity, id), at(x, y, w, h).with_label(value)
+          .with_font("AtkinsonMock", pixels(size * s)).with_custom_text_color(color)
+          .with_background(Theme::Usage::None).with_ignore_pointer_events()
+          .with_debug_name(name));
+    };
+    div(context, mk(entity, 0), ComponentConfig{}
+        .with_size({pixels(context.screen_width), pixels(context.screen_height)})
+        .with_custom_background({14, 22, 33, 255}).with_corner_radius(0)
+        .with_debug_name("forms_bg"));
+    text(1, "Form Components", 48, 20, 1184, 44, 34, ink, "forms_title");
+    text(2, "Adjust the demo controls. Copy a settings summary or read your clipboard.",
+         48, 70, 1184, 28, 20, muted, "forms_subtitle");
+    div(context, mk(entity, 3), at(48, 110, 564, 390)
+        .with_custom_background(panel).with_corner_radius(12 * s)
+        .with_debug_name("left_column"));
+    div(context, mk(entity, 4), at(636, 110, 596, 390)
+        .with_custom_background(panel).with_corner_radius(12 * s)
+        .with_debug_name("right_column"));
+    text(5, "Sliders", 68, 120, 524, 31, 24, ink, "forms_sliders_heading");
+    const auto slider_row = [&](int id, const std::string &name, const char *debug,
+                                float y, float &value) {
+      text(id, name, 68, y, 420, 27, 20, ink, std::string(debug) + "_label");
+      const float drawn_value = value;
+      auto result = slider(context, mk(entity, id + 1), value,
+          at(84, y + 26, 492, 32).with_custom_background({0, 0, 0, 0})
+              .with_debug_name(debug).with_on_draw_fg([=](RectangleType r) {
+                const float width = std::max(0.f, r.width - 6.f);
+                const float center_y = r.y + r.height / 2;
+                const float center_x = r.x + width * drawn_value;
+                raylib::DrawRectangleRounded({r.x, center_y - 3 * s, width, 6 * s},
+                                              1, 8, {53, 75, 96, 255});
+                if (drawn_value > 0) {
+                  raylib::DrawRectangleRounded({r.x, center_y - 3 * s,
+                                                width * drawn_value, 6 * s},
+                                                1, 8, {88, 186, 183, 255});
+                }
+                raylib::DrawCircleV({center_x, center_y}, 11 * s, {13, 31, 44, 255});
+                raylib::DrawCircleV({center_x, center_y}, 9 * s, {239, 250, 247, 255});
+                raylib::DrawCircleV({center_x, center_y}, 3 * s, {53, 111, 115, 255});
+              }));
+      for (const auto child_id : result.cmp().children) {
+        auto child = UICollectionHolder::getEntityForID(child_id);
+        if (!child.valid() || !child.asE().has<HasSliderState>()) continue;
+        child.asE().addComponentIfMissing<UIComponentDebug>(std::string(debug) + "_input")
+            .set(std::string(debug) + "_input");
+      }
+      text(id + 2, fmt::format("{}%", static_cast<int>(value * 100)),
+           512, y, 80, 27, 20, ink, std::string(debug) + "_value");
+    };
+    slider_row(20, "Volume", "volume_slider", 150, volume_slider);
+    slider_row(30, "Brightness", "brightness_slider", 216, brightness_slider);
+    slider_row(40, "Difficulty", "difficulty_slider", 282, difficulty_slider);
+    text(50, "Easy", 68, 337, 180, 23, 17, muted, "forms_easy");
+    text(51, "Hard", 538, 337, 56, 23, 17, muted, "forms_hard");
+    for (int i = 0; i < 2; ++i) {
+      div(context, mk(entity, 52 + i), at(i == 0 ? 60 : 580, 244, 20, 24)
+          .with_background(Theme::Usage::None).with_ignore_pointer_events()
+          .with_on_draw_fg([=](RectangleType r) {
+            const raylib::Vector2 center{r.x + r.width / 2, r.y + r.height / 2};
+            const float radius = (i == 0 ? 3 : 5) * s;
+            raylib::DrawCircleV(center, radius, {199, 223, 223, 255});
+            if (i == 0) return;
+            for (int ray = 0; ray < 8; ++ray) {
+              const float angle = static_cast<float>(ray) * 3.14159265f / 4;
+              raylib::DrawLineEx({center.x + std::cos(angle) * 7 * s,
+                                  center.y + std::sin(angle) * 7 * s},
+                                 {center.x + std::cos(angle) * 10 * s,
+                                  center.y + std::sin(angle) * 10 * s}, s,
+                                 {199, 223, 223, 255});
+            }
+          }).with_debug_name(i == 0 ? "forms_dim_icon" : "forms_bright_icon"));
+    }
+    text(60, "Progress Bars", 68, 367, 524, 29, 24, ink, "forms_progress_heading");
+    text(61, "Audio Level / percentage", 68, 401, 420, 25, 19, muted, "forms_audio_label");
+    text(62, fmt::format("{}%", static_cast<int>(volume_slider * 100)),
+         512, 401, 80, 25, 19, ink, "forms_audio_value");
     // Progress bar showing volume value (dynamic)
-    progress_bar(context, mk(left_col.ent(), 5), volume_slider,
-                 ProgressBarConfig("Audio Level")
-                     .with_debug_name("volume_progress"),
-                 ProgressBarLabelStyle::Percentage);
-
+    progress_bar(context, mk(entity, 63), volume_slider,
+        at(68, 428, 524, 8).with_corner_radius(4 * s)
+            .with_debug_name("volume_progress"), ProgressBarLabelStyle::None);
+    text(64, "Level Progress / custom range", 68, 450, 420, 25, 19, muted, "forms_level_label");
+    text(65, "75/100", 506, 450, 86, 25, 19, ink, "forms_level_value");
     // Progress bar with custom range
-    progress_bar(context, mk(left_col.ent(), 6), 75.f,
-                 ProgressBarConfig("Level Progress")
-                     .with_debug_name("level_progress"),
-                 ProgressBarLabelStyle::Fraction, 0.f, 100.f);
-
-    // Right column - Checkboxes - scrollable when content overflows
-    auto right_col =
-        vstack(context, mk(content.ent(), 1),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(0.42f), percent(1.0f)})
-                   .with_custom_background(
-                       afterhours::colors::darken(theme.surface, 0.9f))
-                   .with_padding(Spacing::sm)
-                   .with_no_wrap()
-                   .with_overflow(Overflow::Scroll, Axis::Y));
-
-    // Checkboxes section header - font_size_md for section headers
-    div(context, mk(right_col.ent(), 0), SectionHeaderConfig("Checkboxes"));
-
-    // Audio checkboxes - font_size_sm for checkbox labels, standardized
-    // checkmark color via Primary
-    checkbox(context, mk(right_col.ent(), 1), enable_music,
-             CheckboxConfig("Music"));
-    checkbox(context, mk(right_col.ent(), 2), enable_sfx,
-             CheckboxConfig("SFX"));
-    // Display checkboxes - standardized checkmark color via Primary
-    checkbox(context, mk(right_col.ent(), 3), fullscreen,
-             CheckboxConfig("Fullscreen"));
-    checkbox(context, mk(right_col.ent(), 4), vsync,
-             CheckboxConfig("V-Sync"));
-    checkbox(context, mk(right_col.ent(), 5), show_fps,
-             CheckboxConfig("Show FPS"));
-    // Additional graphics/gameplay checkboxes (make content overflow for
-    // scroll)
-    checkbox(context, mk(right_col.ent(), 6), show_hud,
-             CheckboxConfig("Show HUD"));
-    checkbox(context, mk(right_col.ent(), 7), auto_save,
-             CheckboxConfig("Auto Save"));
-    checkbox(context, mk(right_col.ent(), 8), subtitles,
-             CheckboxConfig("Subtitles"));
-    checkbox(context, mk(right_col.ent(), 9), motion_blur,
-             CheckboxConfig("Motion Blur"));
-    checkbox(context, mk(right_col.ent(), 10), anti_aliasing,
-             CheckboxConfig("Anti-Aliasing"));
-    checkbox(context, mk(right_col.ent(), 11), ambient_occlusion,
-             CheckboxConfig("Ambient Occlusion"));
-    checkbox(context, mk(right_col.ent(), 12), bloom_effect,
-             CheckboxConfig("Bloom Effect"));
-
-    // Disabled checkbox example - standardized checkmark color via Primary
-    // Enhanced disabled styling: reduced opacity for stronger visual
-    // differentiation
+    progress_bar(context, mk(entity, 66), 75.f,
+        at(68, 478, 524, 8).with_corner_radius(4 * s)
+            .with_debug_name("level_progress"), ProgressBarLabelStyle::None, 0.f, 100.f);
+    text(70, "Checkboxes", 660, 120, 268, 31, 24, ink, "forms_checkboxes_heading");
+    text(74, fmt::format("Music {} / effects {}", enable_music ? "on" : "off", enable_sfx ? "on" : "off"),
+         940, 125, 268, 26, 17, muted, "forms_audio_state");
+    auto options = vstack(context, mk(entity, 71), at(660, 164, 548, 290)
+        .with_background(Theme::Usage::None).with_no_wrap()
+        .with_overflow(Overflow::Scroll, Axis::Y)
+        .with_debug_name("forms_options"));
+    auto &scroll = options.ent().get<HasScrollView>();
+    scroll.scroll_speed = 32 * s;
+    scroll.scrollbar_thickness = pixels(8 * s);
+    scroll.scrollbar_track_color = afterhours::Color{55, 76, 95, 255};
+    scroll.scrollbar_thumb_color = afterhours::Color{180, 205, 222, 255};
+    const auto group = [&](int id, const std::string &value) {
+      div(context, mk(options.ent(), id), ComponentConfig{}
+          .with_size({pixels(524 * s), pixels(28 * s)})
+          .with_label(value).with_font("AtkinsonMock", pixels(17 * s))
+          .with_custom_text_color(muted).with_background(Theme::Usage::None)
+          .with_ignore_pointer_events());
+    };
+    const auto checkbox_row = [&](int id, const std::string &name,
+                                  const std::string &debug, bool &value,
+                                  bool disabled = false) {
+      const bool checked = value;
+      auto result = checkbox(context, mk(options.ent(), id), value,
+          ComponentConfig{}.with_size({pixels(524 * s), pixels(44 * s)})
+              .with_label(name).with_font("AtkinsonMock", pixels(20 * s))
+              .with_custom_text_color(ink).with_alignment(TextAlignment::Left)
+              .with_checkbox_indicators("", "")
+              .with_custom_background({0, 0, 0, 0}).with_corner_radius(0)
+              .with_disabled(disabled).with_debug_name(debug)
+              .with_on_draw_fg([=](RectangleType r) {
+                const auto edge = disabled ? raylib::Color{98, 117, 134, 255}
+                                           : raylib::Color{186, 210, 224, 255};
+                const float x = r.x + 10 * s;
+                const float y = r.y + 10 * s;
+                raylib::DrawRectangleRec({x, y, 24 * s, 24 * s}, edge);
+                raylib::DrawRectangleRec({x + 2 * s, y + 2 * s, 20 * s, 20 * s},
+                                         checked ? raylib::Color{63, 135, 137, 255}
+                                                 : raylib::Color{24, 35, 49, 255});
+                if (!checked) return;
+                raylib::DrawLineEx({x + 5 * s, y + 12 * s},
+                                   {x + 10 * s, y + 17 * s}, 3 * s, edge);
+                raylib::DrawLineEx({x + 10 * s, y + 17 * s},
+                                   {x + 20 * s, y + 6 * s}, 3 * s, edge);
+              }));
+      const auto &children = result.cmp().children;
+      if (children.size() != 2) return;
+      auto &label = UICollectionHolder::getEntityForIDEnforce(children[0]).get<UIComponent>();
+      label.set_desired_width(pixels(480 * s));
+      label.set_desired_margin(pixels(44 * s), Axis::left);
+      auto &toggle = UICollectionHolder::getEntityForIDEnforce(children[1]);
+      auto &toggle_cmp = toggle.get<UIComponent>();
+      toggle_cmp.set_desired_width(pixels(44 * s));
+      toggle_cmp.absolute = true;
+      toggle.addComponentIfMissing<UIComponentDebug>(debug + "_toggle").set(debug + "_toggle");
+    };
+    group(0, "Audio");
+    checkbox_row(1, "Music", "forms_music", enable_music);
+    checkbox_row(2, "Sound effects", "forms_sfx", enable_sfx);
+    group(3, "Display");
+    checkbox_row(4, "Fullscreen", "forms_fullscreen", fullscreen);
+    checkbox_row(5, "V-Sync", "forms_vsync", vsync);
+    div(context, mk(options.ent(), 6), ComponentConfig{}
+        .with_size({pixels(524 * s), pixels(28 * s)})
+        .with_label("Synchronize frames with the display.")
+        .with_font("AtkinsonMock", pixels(17 * s)).with_custom_text_color(muted)
+        .with_background(Theme::Usage::None).with_ignore_pointer_events());
+    checkbox_row(7, "Show FPS", "forms_fps", show_fps);
+    checkbox_row(8, "Show HUD", "forms_hud", show_hud);
+    group(9, "Gameplay and graphics");
+    checkbox_row(10, "Auto Save", "forms_auto_save", auto_save);
+    checkbox_row(11, "Subtitles", "forms_subtitles", subtitles);
+    checkbox_row(12, "Motion Blur", "forms_motion_blur", motion_blur);
+    checkbox_row(13, "Anti-Aliasing", "forms_antialiasing", anti_aliasing);
+    checkbox_row(14, "Ambient Occlusion", "forms_ambient", ambient_occlusion);
+    checkbox_row(15, "Bloom Effect", "forms_bloom", bloom_effect);
     bool disabled_value = true;
-    checkbox(context, mk(right_col.ent(), 13), disabled_value,
-             CheckboxConfig("Disabled")
-                 .with_disabled(true));
-
-    // Language dropdown - font_size_sm for dropdown values
-    dropdown(context, mk(right_col.ent(), 14), languages, language_index,
-             ComponentConfig{}
-                 .with_size(ComponentSize{percent(0.92f), pixels(34)})
-                 .with_background(Theme::Usage::Secondary)
-                 .with_font_size(theme.font_size_sm()) // 16px - values
-                 .with_margin(Spacing::xs)
-                 .with_debug_name("language_dropdown"));
-
-    // Status display - font_size_sm for body text
-    std::string status =
-        "Volume: " + std::to_string(static_cast<int>(volume_slider * 100)) +
+    checkbox_row(16, "Disabled", "forms_disabled", disabled_value, true);
+    group(17, "Language");
+    dropdown(context, mk(options.ent(), 18), languages, language_index,
+        ComponentConfig{}.with_size({pixels(524 * s), pixels(40 * s)})
+            .with_font("AtkinsonMock", pixels(20 * s))
+            .with_custom_background({42, 67, 88, 255}).with_custom_text_color(ink)
+            .with_corner_radius(6 * s).with_debug_name("language_dropdown"));
+    const float max_scroll = std::max(0.f, scroll.content_size.y - options.cmp().rect().height);
+    text(72, scroll.scroll_offset.y + s < max_scroll ? "More options below / scroll this list"
+                                                   : "End of options / scroll up to Audio",
+         660, 466, 548, 26, 17, muted, "forms_scroll_hint");
+    const std::string status = "Volume: " + std::to_string(static_cast<int>(volume_slider * 100)) +
         "% | Resolution: " + resolutions[resolution_index] +
         " | Quality: " + quality_options[quality_index];
-
-    div(context, mk(main_container.ent(), 2),
-        ComponentConfig{}
-            .with_label(status)
-            .with_size(ComponentSize{percent(1.0f), pixels(40)})
-            .with_custom_background(
-                afterhours::colors::lighten(theme.background, 0.08f))
-            .with_auto_text_color(true)
-            .with_padding(Spacing::sm)
-            .with_rounded_corners(RoundedCorners())
-            .with_roundness(0.1f)
-            .with_font_size(theme.font_size_sm()) // 16px - body text
-            .with_margin(Margin{.top = DefaultSpacing::tiny(),
-                                .bottom = pixels(0),
-                                .left = pixels(0),
-                                .right = pixels(0)}));
-
-    // Clipboard demo section with help text
-    div(context, mk(main_container.ent(), 3),
-        ComponentConfig{}
-            .with_label("Clipboard Demo: Copy saves current settings, Paste "
-                        "retrieves saved text")
-            .with_size(ComponentSize{percent(1.0f), pixels(44)})
-            .with_custom_background(
-                afterhours::colors::darken(theme.surface, 0.9f))
-            .with_custom_text_color(theme.font_muted)
-            .with_padding(Spacing::xs)
-            .with_font_size(theme.font_size_sm() - 2.0f) // 12px - help text
-            .with_margin(Margin{.top = DefaultSpacing::tiny(),
-                                .bottom = pixels(0),
-                                .left = pixels(0),
-                                .right = pixels(0)}));
-
-    auto clipboard_row =
-        hstack(context, mk(main_container.ent(), 4),
-               ComponentConfig{}
-                   .with_size(ComponentSize{percent(1.0f), pixels(44)})
-                   .with_justify_content(JustifyContent::SpaceAround)
-                   // No top margin: the row holds 44px buttons and was the
-                   // last child, so the margin was what pushed it out.
-                   .with_debug_name("clipboard_row"));
-
+    div(context, mk(entity, 80), at(48, 516, 1184, 63)
+        .with_custom_background(panel).with_corner_radius(10 * s)
+        .with_debug_name("forms_status_panel"));
+    text(81, "Current settings", 64, 533, 228, 30, 22, ink, "forms_status_heading");
+    text(82, "Volume", 316, 522, 210, 23, 16, muted, "forms_status_volume_label");
+    text(83, fmt::format("{}%", static_cast<int>(volume_slider * 100)),
+         316, 546, 210, 27, 22, ink, "forms_status_volume");
+    text(84, "Resolution / demo preset", 596, 522, 290, 23, 16, muted, "forms_status_resolution_label");
+    text(85, resolutions[resolution_index], 596, 546, 290, 27, 22, ink, "forms_status_resolution");
+    text(86, "Quality / demo preset", 952, 522, 250, 23, 16, muted, "forms_status_quality_label");
+    text(87, quality_options[quality_index], 952, 546, 250, 27, 22, ink, "forms_status_quality");
+    div(context, mk(entity, 90), at(48, 596, 1184, 106)
+        .with_custom_background(panel).with_corner_radius(10 * s)
+        .with_debug_name("clipboard_row"));
+    text(91, "Copy saves the summary as text.", 64, 604, 372, 23, 18, muted, "forms_clipboard_copy_help");
+    text(92, "Paste reads text; it does not apply settings.", 64, 628, 388, 23, 17, muted, "forms_clipboard_paste_help");
     // Copy button - copies current status to clipboard
-    if (button(context, mk(clipboard_row.ent(), 0),
-               ComponentConfig{}
-                   .with_label("Copy Status")
-                   .with_size(ComponentSize{pixels(150), pixels(44)})
-                   .with_background(Theme::Usage::Primary)
-                   .with_font_size(theme.font_size_sm()) // 16px - button text
-                   .with_debug_name("copy_btn"))) {
+    if (button(context, mk(entity, 93), at(64, 658, 162, 36)
+        .with_label("Copy Status").with_font("AtkinsonMock", pixels(19 * s))
+        .with_custom_background({85, 181, 176, 255}).with_custom_text_color({12, 30, 38, 255})
+        .with_corner_radius(6 * s).with_debug_name("copy_btn"))) {
       afterhours::clipboard::set_text(status);
       clipboard_display = "Copied!";
     }
-
     // Paste button - reads from clipboard
-    if (button(context, mk(clipboard_row.ent(), 1),
-               ComponentConfig{}
-                   .with_label("Paste")
-                   .with_size(ComponentSize{pixels(150), pixels(44)})
-                   .with_background(Theme::Usage::Accent)
-                   .with_font_size(theme.font_size_sm()) // 16px - button text
-                   .with_debug_name("paste_btn"))) {
-      if (afterhours::clipboard::has_text()) {
-        clipboard_display = afterhours::clipboard::get_text();
-      } else {
-        clipboard_display = "(clipboard empty)";
-      }
+    if (button(context, mk(entity, 94), at(238, 658, 128, 36)
+        .with_label("Paste").with_font("AtkinsonMock", pixels(19 * s))
+        .with_custom_background({48, 71, 93, 255}).with_custom_text_color(ink)
+        .with_corner_radius(6 * s).with_debug_name("paste_btn"))) {
+      clipboard_display = afterhours::clipboard::has_text()
+          ? afterhours::clipboard::get_text() : "(clipboard empty)";
     }
-
-    // Display clipboard contents (truncated if too long) - smaller font for
-    // secondary info
-    std::string display_text = clipboard_display;
-    if (display_text.length() > 60) {
-      display_text = display_text.substr(0, 57) + "...";
-    }
-
-    div(context, mk(clipboard_row.ent(), 2),
-        ComponentConfig{}
-            .with_label(display_text)
-            .with_size(ComponentSize{expand(), pixels(44)})
-            .with_background(Theme::Usage::Surface)
-            .with_padding(Spacing::sm)
-            .with_font_size(theme.font_size_sm() -
-                            2.0f)); // 14px - secondary text
+    text(95, "Clipboard result / read only", 466, 604, 746, 25, 18, muted, "forms_clipboard_label");
+    const std::string display_text = clipboard_display.length() > 140
+        ? clipboard_display.substr(0, 137) + "..." : clipboard_display;
+    div(context, mk(entity, 96), at(466, 636, 746, 58)
+        .with_label(display_text).with_font("AtkinsonMock", pixels(19 * s))
+        .with_custom_background({14, 25, 38, 255}).with_custom_text_color(ink)
+        .with_text_overflow(TextOverflow::Wrap).with_text_inset(10 * s)
+        .with_corner_radius(6 * s).with_debug_name("forms_clipboard_output"));
   }
 };
 

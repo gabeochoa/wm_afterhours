@@ -22,13 +22,10 @@ wait 0.3
 expect_input_text Username_input ""
 expect_input_selection Username_input 0 0
 
-# Paste into email. NOTE: the OS clipboard round-trip is a no-op in headless,
-# so the paste yields an empty field. The cut itself (text removed from Username
-# above) IS verified.
 focus_ui Email_input
 wait 0.2
 key CTRL+V
 wait 0.3
-expect_input_text Email_input ""
+expect_input_text Email_input "cutme"
 
 screenshot text_cut_paste

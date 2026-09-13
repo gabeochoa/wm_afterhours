@@ -1774,7 +1774,7 @@ The Light fallback is intentional and explicitly documented in source. Sixteen g
 
 ## forms
 
-[Current baseline](../../screenshot-baselines/screens/forms_720p.png) · [Visual review](../../design-audit.html#screen=forms)
+[Reviewed image](../../docs/design-audit/originals/forms_720p.png) · [Current baseline](../../screenshot-baselines/screens/forms_720p.png) · [Visual review](../../design-audit.html#screen=forms)
 
 Baseline SHA-256: `c5492252702fa3fc71ea0aa3fb5e1a79549d8456edd5e45a88eba07a0394464d`
 

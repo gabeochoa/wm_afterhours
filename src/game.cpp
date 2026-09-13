@@ -28,6 +28,7 @@
 #include "testing/test_macros.h"
 #include <afterhours/src/graphics.h>
 #include <afterhours/src/plugins/files.h>
+#include <afterhours/src/plugins/clipboard.h>
 
 #include <afterhours/src/plugins/animation.h>
 #include <afterhours/src/plugins/e2e_testing/e2e_testing.h>
@@ -631,6 +632,9 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
 
 int run_e2e_tests(const e2e::E2EArgs &args,
                   afterhours::testing::E2ERunner &runner, bool profile) {
+  afterhours::clipboard::MemoryProvider clipboard_provider;
+  std::optional<afterhours::clipboard::ScopedProvider> clipboard_scope;
+  if (afterhours::graphics::is_headless()) clipboard_scope.emplace(clipboard_provider);
   configure_validation();
 
   // Set global update-baselines flag
@@ -803,7 +807,8 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   const auto base_rez = afterhours::window_manager::fetch_current_resolution();
 
   // Reset callback for per-script cleanup
-  auto reset_fn = [base_rez, navigator, profiler, profile]() {
+  auto reset_fn = [base_rez, navigator, profiler, profile, &clipboard_provider]() {
+    clipboard_provider.reset();
     profiler->visible = false;
     profiler->show_launcher = profile;
     profiler->state = {};
