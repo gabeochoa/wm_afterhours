@@ -1,0 +1,72 @@
+goto_screen circular_progress
+resize 1280 720
+wait 0.3
+expect_text "Circular progress indicators"
+expect_text "clockwise from the top (-90 degrees)"
+expect_text "30 percentage points/s / 3.33s full cycle"
+expect_text "Stroke 16.0px / diameter 80px"
+expect_text "Stroke 3.0px / diameter 80px"
+expect_text "Diameter 28px"
+expect_text "Diameter 40px"
+expect_text "25%"
+expect_text "50%"
+expect_text "100% Completed"
+expect_text "2x geometry"
+click_ui circular_pause
+click_ui circular_reset
+wait 0.2
+expect_text "Resume live"
+expect_text "Paused / 0.00s elapsed"
+expect_text "Live phase: 1.17s / 3.33s"
+expect_text "Animated  80px / 8.0px / 35%"
+assert_ui progress_10 x=165 y=211 w=80 h=80
+assert_ui progress_30 x=745 y=211 w=80 h=80
+assert_ui progress_size_0 x=162 y=442 w=28 h=28
+assert_ui progress_size_1 x=388 y=436 w=40 h=40
+assert_ui progress_size_4 x=1064 y=416 w=80 h=80
+assert_ui progress_thin_detail x=1040 y=541 w=160 h=160
+assert_within_parents
+screenshot circular_progress_design_paused
+wait 0.3
+expect_text "Paused / 0.00s elapsed"
+focus_element circular_compare
+key ENTER
+wait 0.2
+expect_text "Restore original samples"
+expect_text "Size comparison: 75%, cyan, shared stroke."
+expect_text "Thick ring  80px / 16.0px / 75%"
+expect_text "Thin ring  80px / 3.0px / 75%"
+expect_text "28px / 3.0px / 75%"
+expect_text "80px / 3.0px / 75%"
+expect_text "Animated  80px / 8.0px / 35%"
+expect_no_text "100% Completed"
+screenshot circular_progress_design_matched
+click_ui circular_compare
+wait 0.2
+expect_text "100% Completed"
+expect_text "Thick ring  80px / 16.0px / 42%"
+focus_element circular_pause
+key ENTER
+wait 0.3
+expect_text "Pause live"
+expect_text "Running"
+expect_no_text "Paused / 0.00s elapsed"
+click_ui circular_pause
+click_ui circular_reset
+wait 0.1
+resize 1920 1080
+wait 0.3
+expect_text "Stroke 24.0px / diameter 120px"
+expect_text "Diameter 42px"
+expect_text "240px diameter"
+assert_ui progress_10 x=248 y=317 w=120 h=120
+assert_ui progress_thin_detail x=1560 y=812 w=240 h=240
+assert_within_parents
+screenshot circular_progress_design_1080
+resize 1024 768
+wait 0.3
+assert_ui circular_canvas w=1024 h=768
+assert_within_parents
+screenshot circular_progress_design_narrow
+resize 1280 720
+click_ui circular_pause

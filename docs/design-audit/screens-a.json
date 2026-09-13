@@ -4313,7 +4313,8 @@
         "priority": "P2"
       }
     ],
-    "sha256": "13e82898d147812c3b0984295efe57900734d6183fb92d31dc1bebf2e8bee9fd"
+    "sha256": "13e82898d147812c3b0984295efe57900734d6183fb92d31dc1bebf2e8bee9fd",
+    "evidence": "docs/design-audit/originals/circular_progress_720p.png"
   },
   {
     "id": "colors",

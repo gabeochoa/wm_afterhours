@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-480 completed; 2,055 remaining.
+505 completed; 2,030 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -1555,79 +1555,79 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/circular_progress_720p.png) · [Visual review](design-audit.html#screen=circular_progress)
 
-- [ ] `circular_progress-01` · P2 · proposal. Basic naming: Add the stroke width below the title.
+- [x] `circular_progress-01` · P2 · proposal. Basic naming: Add the stroke width below the title.
   Evidence: Basic does not identify its ring width.
 
-- [ ] `circular_progress-02` · P2 · proposal. Animated naming: Display the cycle duration in its caption.
+- [x] `circular_progress-02` · P2 · proposal. Animated naming: Display the cycle duration in its caption.
   Evidence: Animated shows 35% but no update interval.
 
-- [ ] `circular_progress-03` · P2 · proposal. Thick ring: Show its stroke width in pixels.
+- [x] `circular_progress-03` · P2 · proposal. Thick ring: Show its stroke width in pixels.
   Evidence: Thick Ring gives no numerical thickness.
 
-- [ ] `circular_progress-04` · P2 · proposal. Thin ring: Replace the repeated caption with its stroke width.
+- [x] `circular_progress-04` · P2 · proposal. Thin ring: Replace the repeated caption with its stroke width.
   Evidence: Thin Ring repeats its heading in the description.
 
-- [ ] `circular_progress-05` · P2 · proposal. Basic subtitle: State the configured progress and start angle.
+- [x] `circular_progress-05` · P2 · proposal. Basic subtitle: State the configured progress and start angle.
   Evidence: Static value repeats what the absence of motion already suggests.
 
-- [ ] `circular_progress-06` · P2 · proposal. Top row comparison: Add a matched-value reference for thickness comparison.
+- [x] `circular_progress-06` · P2 · proposal. Top row comparison: Add a matched-value reference for thickness comparison.
   Evidence: All four rings use different values and colors.
 
-- [ ] `circular_progress-07` · P2 · proposal. Start direction: Add a small shared clockwise-from-top legend.
+- [x] `circular_progress-07` · P2 · proposal. Start direction: Add a small shared clockwise-from-top legend.
   Evidence: The arcs have no stated origin or direction.
 
-- [ ] `circular_progress-08` · P2 · proposal. Animated phase: Add a live status and elapsed-time label.
+- [x] `circular_progress-08` · P2 · proposal. Animated phase: Add a live status and elapsed-time label.
   Evidence: 35% has no timestamp or phase context.
 
-- [ ] `circular_progress-09` · P2 · proposal. Live controls: Add a compact Pause action outside the ring.
+- [x] `circular_progress-09` · P2 · proposal. Live controls: Add a compact Pause action outside the ring.
   Evidence: No pause control is visible for the animated sample.
 
-- [ ] `circular_progress-10` · P2 · proposal. Track contrast: Increase track contrast modestly while preserving example colors.
+- [x] `circular_progress-10` · P2 · proposal. Track contrast: Increase track contrast modestly while preserving example colors.
   Evidence: Unfilled tracks are close to the card background.
 
-- [ ] `circular_progress-11` · P2 · proposal. Thin track: Add a magnified thin-ring inset.
+- [x] `circular_progress-11` · P2 · proposal. Thin track: Add a magnified thin-ring inset.
   Evidence: The thin ring's unfilled remainder is difficult to locate.
 
-- [ ] `circular_progress-12` · P2 · proposal. Percent placement: Bring each value nearer its ring or center it inside.
+- [x] `circular_progress-12` · P2 · proposal. Percent placement: Bring each value nearer its ring or center it inside.
   Evidence: Percent values sit well below the rings.
 
-- [ ] `circular_progress-13` · P2 · proposal. Size card heights: Use equal-height containers while retaining ring sizes.
+- [x] `circular_progress-13` · P2 · proposal. Size card heights: Use equal-height containers while retaining ring sizes.
   Evidence: Five size-variation cards have different bottom edges.
 
-- [ ] `circular_progress-14` · P2 · proposal. Size ring alignment: Align centers on a shared horizontal baseline.
+- [x] `circular_progress-14` · P2 · proposal. Size ring alignment: Align centers on a shared horizontal baseline.
   Evidence: Ring centers move downward as diameter increases.
 
-- [ ] `circular_progress-15` · P2 · proposal. 28px value: Display its progress outside the ring.
+- [x] `circular_progress-15` · P2 · proposal. 28px value: Display its progress outside the ring.
   Evidence: The smallest example shows 28px but no percentage.
 
-- [ ] `circular_progress-16` · P2 · proposal. 40px value: Show its value consistently with larger examples.
+- [x] `circular_progress-16` · P2 · proposal. 40px value: Show its value consistently with larger examples.
   Evidence: The second example also lacks a percentage.
 
-- [ ] `circular_progress-17` · P2 · proposal. Size units: Label the row Diameter.
+- [x] `circular_progress-17` · P2 · proposal. Size units: Label the row Diameter.
   Evidence: 28px through 80px do not state diameter versus radius.
 
-- [ ] `circular_progress-18` · P2 · proposal. Size fill variation: Use equal percentages for the size-only comparison.
+- [x] `circular_progress-18` · P2 · proposal. Size fill variation: Use equal percentages for the size-only comparison.
   Evidence: The size row changes progress as well as diameter.
 
-- [ ] `circular_progress-19` · P2 · proposal. Size thickness variation: Show stroke width beneath each diameter.
+- [x] `circular_progress-19` · P2 · proposal. Size thickness variation: Show stroke width beneath each diameter.
   Evidence: Stroke thickness also changes without a caption.
 
-- [ ] `circular_progress-20` · P2 · proposal. Completed ring: Add a small Completed caption.
+- [x] `circular_progress-20` · P2 · proposal. Completed ring: Add a small Completed caption.
   Evidence: 100% is visually a pink ring without a completion cue.
 
-- [ ] `circular_progress-21` · P2 · proposal. Size colors: Use one color for size comparison or explain the mapping.
+- [x] `circular_progress-21` · P2 · proposal. Size colors: Use one color for size comparison or explain the mapping.
   Evidence: Five colors lack a stated relationship to size.
 
-- [ ] `circular_progress-22` · P2 · proposal. Section gap: Align it with the card grid and reduce surrounding gap.
+- [x] `circular_progress-22` · P2 · proposal. Section gap: Align it with the card grid and reduce surrounding gap.
   Evidence: The Size Variations heading floats between rows.
 
-- [ ] `circular_progress-23` · P2 · proposal. Subtitle type: Increase it slightly or replace it with useful parameter guidance.
+- [x] `circular_progress-23` · P2 · proposal. Subtitle type: Increase it slightly or replace it with useful parameter guidance.
   Evidence: Radial progress visualization is small and muted.
 
-- [ ] `circular_progress-24` · P2 · proposal. Footer space: Add a compact parameter table for all ring specimens.
+- [x] `circular_progress-24` · P2 · proposal. Footer space: Add a compact parameter table for all ring specimens.
   Evidence: The bottom fifth is unused.
 
-- [ ] `circular_progress-25` · P2 · proposal. Card padding: Normalize vertical padding within the four main cards.
+- [x] `circular_progress-25` · P2 · proposal. Card padding: Normalize vertical padding within the four main cards.
   Evidence: Top specimen titles sit closer to the card edge than lower captions.
 
 ### colors

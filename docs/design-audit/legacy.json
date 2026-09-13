@@ -51,8 +51,8 @@
       1280,
       720
     ],
-    "summary": "Animated ring is 55% here and 35% in the current capture. This is a captured animation phase, not a regression. Unequal sample-card heights and small legends remain.",
-    "sha256": "3987e2ca14a09791ad1a00e0ebb4be006e70cd1e1004d7f66ee35b3f4c4f3eb1",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "d338db90fb75b6f86c87913e8fb11e63097be3fc4fa5eadb7443f5e1f094d032",
     "additional_findings": []
   },
   {

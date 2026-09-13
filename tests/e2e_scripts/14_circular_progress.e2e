@@ -4,6 +4,10 @@
 # Navigate to the circular progress screen
 goto_screen circular_progress
 wait 0.5
+click_ui circular_pause
+click_ui circular_reset
+mouse_move 1270 710
+wait 0.2
 
 # Validate initial screen against baseline
 validate_screen circular_progress

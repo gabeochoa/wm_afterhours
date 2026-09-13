@@ -875,7 +875,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## circular progress
 
-[Current baseline](../../screenshot-baselines/screens/circular_progress_720p.png) · [Visual review](../../design-audit.html#screen=circular_progress)
+[Reviewed image](../../docs/design-audit/originals/circular_progress_720p.png) · [Current baseline](../../screenshot-baselines/screens/circular_progress_720p.png) · [Visual review](../../design-audit.html#screen=circular_progress)
 
 Baseline SHA-256: `13e82898d147812c3b0984295efe57900734d6183fb92d31dc1bebf2e8bee9fd`
 
@@ -913,7 +913,7 @@ Ring thickness, size and live progress vary intentionally. Twenty-five proposals
 
 [Image](../../baseline_screenshots/circular_progress.png)
 
-Animated ring is 55% here and 35% in the current capture. This is a captured animation phase, not a regression. Unequal sample-card heights and small legends remain.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## colors
 
