@@ -6,6 +6,7 @@
 # through the same overlay::place a dropdown uses.
 
 goto_screen tooltip_lab
+resize 1280 720
 wait 0.4
 
 # The baseline includes keyboard focus on the first button.
@@ -16,7 +17,7 @@ wait 0.1
 expect_focused ttl_btn_0
 validate_screen tooltip_lab_idle
 
-mouse_move 582 553
+mouse_move 582 533
 wait 0.5
 validate_screen tooltip_lab_shown
 

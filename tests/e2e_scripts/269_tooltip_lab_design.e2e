@@ -1,0 +1,55 @@
+goto_screen tooltip_lab
+resize 1280 720
+wait 0.3
+expect_text "Tooltip placement lab"
+expect_text "Default delay: 400 ms"
+expect_text "Expected placement"
+expect_text "Native tooltip: 14 px text"
+assert_ui ttl_btn_0 x=67 y=124 w=160 h=40
+assert_ui ttl_btn_1 x=1040 y=124 w=160 h=40
+assert_ui ttl_btn_3 x=67 y=657 w=160 h=40
+assert_ui ttl_btn_4 x=1040 y=657 w=160 h=40
+assert_no_overflow
+assert_within_parents
+screenshot tooltip_lab_design
+click_ui ttl_bounds
+wait 0.2
+assert_ui ttl_edge_guide x=2 y=2 w=1276 h=716
+mouse_move 147 151
+wait 0.6
+expect_text "Active case: Normal below"
+screenshot tooltip_lab_design_below
+mouse_move 1120 151
+wait 0.6
+expect_text "Active case: Clamp to right edge"
+screenshot tooltip_lab_design_clamp
+mouse_move 147 684
+wait 0.6
+expect_text "Active case: Flip above"
+screenshot tooltip_lab_design_flip
+mouse_move 1120 684
+wait 0.6
+expect_text "Active case: Flip above and clamp"
+screenshot tooltip_lab_design_flip_clamp
+mouse_move 582 367
+wait 0.6
+expect_text "Active case: Long content"
+screenshot tooltip_lab_design_long
+mouse_move 582 540
+wait 0.1
+expect_text "Active case: Instant / 0 ms"
+screenshot tooltip_lab_design_instant
+mouse_move 890 480
+wait 0.2
+expect_text "Active case: None"
+resize 1920 1080
+wait 0.3
+assert_no_overflow
+assert_within_parents
+screenshot tooltip_lab_design_1080
+resize 1024 768
+wait 0.3
+assert_no_overflow
+assert_within_parents
+screenshot tooltip_lab_design_narrow
+resize 1280 720

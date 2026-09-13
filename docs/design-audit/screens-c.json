@@ -5815,7 +5815,8 @@
         "change": "Use a compact central legend without changing trigger positions."
       }
     ],
-    "sha256": "3da02ddc32405e3289d5458682bad2c56fbff920047f030c2b17f6375437ec9d"
+    "sha256": "3da02ddc32405e3289d5458682bad2c56fbff920047f030c2b17f6375437ec9d",
+    "evidence": "docs/design-audit/originals/tooltip_lab_720p.png"
   },
   {
     "id": "tray",

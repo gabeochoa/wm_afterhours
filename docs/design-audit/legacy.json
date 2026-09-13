@@ -429,8 +429,8 @@
       1280,
       720
     ],
-    "summary": "Current capture removes top-left focus outline. Both idle views show six triggers and no tooltip. Initial focus absence is not proof that keyboard tooltips fail.",
-    "sha256": "931a089a7a03173af9d132eb585408c1a9038060161c62ae1f58dbdccbed35ba",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "ff280debb8e59ed0ca5b552f82007d192480b77642e0fe9f83d212a036c107f6",
     "additional_findings": []
   },
   {
@@ -443,8 +443,8 @@
       1280,
       720
     ],
-    "summary": "Additional interaction state. The instant trigger is highlighted and a narrow tooltip reads delay 0, shows the moment you arrive. This tooltip is absent from the current idle baseline by design.",
-    "sha256": "6e5e2367d37e0d2f096c76afedbdc0c6b8411cafa9d74860c3264fc1ad60d3d8",
+    "summary": "Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.",
+    "sha256": "31fc5fb9ffb01e98c60d07d0122bd243e6e3f3cc4ebdb6e938417a67ccde003a",
     "additional_findings": [
       {
         "id": "L01",

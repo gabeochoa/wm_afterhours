@@ -494,6 +494,17 @@ container via inherit_from(config), losing absolute position, gap and skip-
 grid settings; WM uses a positioned wrapper and configures the returned row.
 Fix the index contract and preserve intended container settings upstream.
 
+### Tooltip presentation is hardcoded
+
+Native tooltip rendering fixes font size at14px, padding at8×5px and trigger
+gap at4px. TooltipLab retains native placement, delay, edge flipping and
+clamping, and discloses these limits. Consumers need a shared presentation
+configuration for readable fonts, spacing and scaling without replacing the
+renderer. Border-only UI entities also fail the native renderability gate
+unless they carry HasColor or another recognized visual component. The edge
+guide uses transparent HasColor so its native border is queued; bare borders
+should render without that workaround.
+
 ### Checkbox external state is treated as initialization only
 
 `checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from

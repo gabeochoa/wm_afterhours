@@ -1812,7 +1812,7 @@ The page demonstrates sliders, checkboxes, progress, scrolling, and clipboard st
 
 [Image](../../baseline_screenshots/forms.png)
 
-Current capture removes Volume focus outline. The same fixed-height scroller clips the next control row and the metadata footer remains small. Keep intentional scroll behavior when revising its presentation.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ## grid lab
 
@@ -3995,7 +3995,7 @@ Active e2e baseline refreshed after visual review. The previous capture remains 
 
 ## tooltip lab
 
-[Current baseline](../../screenshot-baselines/screens/tooltip_lab_720p.png) · [Visual review](../../design-audit.html#screen=tooltip_lab)
+[Reviewed image](../../docs/design-audit/originals/tooltip_lab_720p.png) · [Current baseline](../../screenshot-baselines/screens/tooltip_lab_720p.png) · [Visual review](../../design-audit.html#screen=tooltip_lab)
 
 Baseline SHA-256: `3da02ddc32405e3289d5458682bad2c56fbff920047f030c2b17f6375437ec9d`
 
@@ -4024,13 +4024,13 @@ Trigger positions deliberately exercise edge flipping and clamping. Sixteen prop
 
 [Image](../../baseline_screenshots/tooltip_lab_idle.png)
 
-Current capture removes top-left focus outline. Both idle views show six triggers and no tooltip. Initial focus absence is not proof that keyboard tooltips fail.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 ### Additional capture: tooltip_lab_shown
 
 [Image](../../baseline_screenshots/tooltip_lab_shown.png)
 
-Additional interaction state. The instant trigger is highlighted and a narrow tooltip reads delay 0, shows the moment you arrive. This tooltip is absent from the current idle baseline by design.
+Active e2e baseline refreshed after visual review. The previous capture remains in originals until audit cleanup.
 
 | ID | Priority | Type | Visible evidence | Proposed change |
 |---|---|---|---|---|

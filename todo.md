@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,515 completed; 20 remaining.
+2,531 completed; 4 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7839,52 +7839,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/tooltip_lab_720p.png) · [Visual review](design-audit.html#screen=tooltip_lab)
 
-- [ ] `tooltip_lab-01` · P2 · proposal. Page identity: Add Tooltip placement lab as the title.
+- [x] `tooltip_lab-01` · P2 · proposal. Page identity: Add Tooltip placement lab as the title.
   Evidence: The top bar is only an instruction sentence.
 
-- [ ] `tooltip_lab-02` · P2 · proposal. Instruction size: Increase it to 13 px actual text.
+- [x] `tooltip_lab-02` · P2 · proposal. Instruction size: Increase it to 13 px actual text.
   Evidence: The hover-and-flip instruction is small.
 
-- [ ] `tooltip_lab-03` · P2 · proposal. Header padding: Add a consistent 12 to 16 px text inset.
+- [x] `tooltip_lab-03` · P2 · proposal. Header padding: Add a consistent 12 to 16 px text inset.
   Evidence: The instruction starts almost at the bar's left edge.
 
-- [ ] `tooltip_lab-04` · P2 · proposal. Top-left case: Add Normal below as an external case caption.
+- [x] `tooltip_lab-04` · P2 · proposal. Top-left case: Add Normal below as an external case caption.
   Evidence: top left does not say it is the normal-below placement control.
 
-- [ ] `tooltip_lab-05` · P2 · proposal. Top-right case: Add Clamp to right edge as an external caption.
+- [x] `tooltip_lab-05` · P2 · proposal. Top-right case: Add Clamp to right edge as an external caption.
   Evidence: top right does not identify horizontal clamping.
 
-- [ ] `tooltip_lab-06` · P2 · proposal. Bottom-left case: Add Flip above as an external caption.
+- [x] `tooltip_lab-06` · P2 · proposal. Bottom-left case: Add Flip above as an external caption.
   Evidence: bottom left does not name the expected flip.
 
-- [ ] `tooltip_lab-07` · P2 · proposal. Bottom-right case: Add Flip above and clamp as an external caption.
+- [x] `tooltip_lab-07` · P2 · proposal. Bottom-right case: Add Flip above and clamp as an external caption.
   Evidence: bottom right does not name its combined constraints.
 
-- [ ] `tooltip_lab-08` · P2 · proposal. Middle case: Rename it Long content or add that caption.
+- [x] `tooltip_lab-08` · P2 · proposal. Middle case: Rename it Long content or add that caption.
   Evidence: middle does not reveal that it tests long tooltip text.
 
-- [ ] `tooltip_lab-09` · P2 · proposal. Instant case: Label it Instant, 0 ms.
+- [x] `tooltip_lab-09` · P2 · proposal. Instant case: Label it Instant, 0 ms.
   Evidence: instant gives no numeric delay.
 
-- [ ] `tooltip_lab-10` · P2 · proposal. Default delay: Add Default delay: 400 ms to the legend.
+- [x] `tooltip_lab-10` · P2 · proposal. Default delay: Add Default delay: 400 ms to the legend.
   Evidence: Other triggers do not show their 0.4 s delay.
 
-- [ ] `tooltip_lab-11` · P2 · proposal. Expected tooltip content: Add a compact external case table listing trigger, message and expected placement.
+- [x] `tooltip_lab-11` · P2 · proposal. Expected tooltip content: Add a compact external case table listing trigger, message and expected placement.
   Evidence: No tooltip text is visible in the initial state.
 
-- [ ] `tooltip_lab-12` · P2 · proposal. Open-state evidence: Capture one shown-tooltip state per edge case.
+- [x] `tooltip_lab-12` · P2 · proposal. Open-state evidence: Capture one shown-tooltip state per edge case.
   Evidence: The baseline cannot show whether tooltip boxes stay within bounds.
 
-- [ ] `tooltip_lab-13` · P2 · proposal. Viewport bounds: Add an optional edge guide for checking clamping without moving the triggers.
+- [x] `tooltip_lab-13` · P2 · proposal. Viewport bounds: Add an optional edge guide for checking clamping without moving the triggers.
   Evidence: The dark field has no visible safe-area guide.
 
-- [ ] `tooltip_lab-14` · P2 · proposal. Trigger geometry: Show them in a small fixture metadata panel.
+- [x] `tooltip_lab-14` · P2 · proposal. Trigger geometry: Show them in a small fixture metadata panel.
   Evidence: Button dimensions and edge distances are undocumented.
 
-- [ ] `tooltip_lab-15` · P2 · proposal. Active-case status: Add a read-only Active case status in the header.
+- [x] `tooltip_lab-15` · P2 · proposal. Active-case status: Add a read-only Active case status in the header.
   Evidence: There is no readout identifying the currently hovered specimen.
 
-- [ ] `tooltip_lab-16` · P3 · proposal. Unused central space: Use a compact central legend without changing trigger positions.
+- [x] `tooltip_lab-16` · P3 · proposal. Unused central space: Use a compact central legend without changing trigger positions.
   Evidence: Large blank regions are available between the fixed edge triggers.
 
 #### Additional capture: tooltip_lab_shown
@@ -8155,6 +8155,8 @@ The existing project backlog is preserved after the screen checklist.
   Evidence: Both columns leave large blank regions below the final specimens.
 
 ## Existing project backlog
+
+- [ ] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Correct native pagination numbered/Previous indices and icon-row container config inheritance; see docs/AFTERHOURS_GAPS.md.
 
