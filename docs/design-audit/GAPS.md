@@ -3751,7 +3751,7 @@ The selected hello world text and the clipped overflow field are intentional int
 
 ## text input sizes
 
-[Current baseline](../../screenshot-baselines/screens/text_input_sizes_720p.png) · [Visual review](../../design-audit.html#screen=text_input_sizes)
+[Reviewed image](../../docs/design-audit/originals/text_input_sizes_720p.png) · [Current baseline](../../screenshot-baselines/screens/text_input_sizes_720p.png) · [Visual review](../../design-audit.html#screen=text_input_sizes)
 
 Baseline SHA-256: `c00174f90736840d5e4d5f79b10652b8a9a044bf324ca611f1776df7000798e4`
 

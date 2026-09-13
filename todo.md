@@ -3,7 +3,7 @@
 ## Baseline design audit
 
 2,535 tracked items across 117 screens: 58 visible defects and 2,477 design proposals.
-2,240 completed; 295 remaining.
+2,256 completed; 279 remaining.
 This includes four additional findings from the older tooltip capture.
 
 P1: obscured or unreadable content. P2: reading or comparison. P3: polish or added explanation.
@@ -7395,52 +7395,52 @@ The existing project backlog is preserved after the screen checklist.
 
 [Baseline](screenshot-baselines/screens/text_input_sizes_720p.png) · [Visual review](design-audit.html#screen=text_input_sizes)
 
-- [ ] `text_input_sizes-01` · P2 · defect. Height labels: Increase external dimension labels to readable 12 px text.
+- [x] `text_input_sizes-01` · P2 · defect. Height labels: Increase external dimension labels to readable 12 px text.
   Evidence: 24px through 100px are extremely small.
 
-- [ ] `text_input_sizes-02` · P2 · proposal. Subtitle: Increase explanatory text to 13 px actual size.
+- [x] `text_input_sizes-02` · P2 · proposal. Subtitle: Increase explanatory text to 13 px actual size.
   Evidence: Cursor and selection scale with field height is very small.
 
-- [ ] `text_input_sizes-03` · P2 · proposal. Initial content: Prefill matching sample text in a companion state to expose selection height.
+- [x] `text_input_sizes-03` · P2 · proposal. Initial content: Prefill matching sample text in a companion state to expose selection height.
   Evidence: Every field is empty and displays a placeholder.
 
-- [ ] `text_input_sizes-04` · P2 · proposal. Caret comparison: Add dedicated focus captures for each height rather than implying all carets can appear together.
+- [x] `text_input_sizes-04` · P2 · proposal. Caret comparison: Add dedicated focus captures for each height rather than implying all carets can appear together.
   Evidence: Only the first field shows a caret in this capture.
 
-- [ ] `text_input_sizes-05` · P2 · proposal. Selection comparison: Add a companion state with a consistent selected word at each target height.
+- [x] `text_input_sizes-05` · P2 · proposal. Selection comparison: Add a companion state with a consistent selected word at each target height.
   Evidence: No selected range is visible.
 
-- [ ] `text_input_sizes-06` · P2 · proposal. Dimension notation: Use a consistent 24 px notation.
+- [x] `text_input_sizes-06` · P2 · proposal. Dimension notation: Use a consistent 24 px notation.
   Evidence: Labels use 24px with no space.
 
-- [ ] `text_input_sizes-07` · P2 · proposal. Column identification: Add Height above the label column.
+- [x] `text_input_sizes-07` · P2 · proposal. Column identification: Add Height above the label column.
   Evidence: The height labels have no heading.
 
-- [ ] `text_input_sizes-08` · P2 · proposal. Width metadata: Show a shared field-width caption above the stack.
+- [x] `text_input_sizes-08` · P2 · proposal. Width metadata: Show a shared field-width caption above the stack.
   Evidence: All fields appear equal width but the width is undocumented.
 
-- [ ] `text_input_sizes-09` · P2 · proposal. Font metadata: Document the font size beside the common width caption.
+- [x] `text_input_sizes-09` · P2 · proposal. Font metadata: Document the font size beside the common width caption.
   Evidence: Placeholder text appears similar in size despite changing field heights.
 
-- [ ] `text_input_sizes-10` · P2 · proposal. Padding growth: Annotate the padding rule so it can be checked independently of field height.
+- [x] `text_input_sizes-10` · P2 · proposal. Padding growth: Annotate the padding rule so it can be checked independently of field height.
   Evidence: Larger fields show progressively larger left insets.
 
-- [ ] `text_input_sizes-11` · P2 · proposal. Vertical centering: Add optional midline guides outside the active input rendering.
+- [x] `text_input_sizes-11` · P2 · proposal. Vertical centering: Add optional midline guides outside the active input rendering.
   Evidence: The specimen lacks guides for checking text centering.
 
-- [ ] `text_input_sizes-12` · P2 · proposal. Height ruler: Add a thin external height ruler beside each specimen.
+- [x] `text_input_sizes-12` · P2 · proposal. Height ruler: Add a thin external height ruler beside each specimen.
   Evidence: The difference between 24 and 32 px is hard to assess precisely.
 
-- [ ] `text_input_sizes-13` · P3 · proposal. Row spacing: Use equal labeled specimen gutters while preserving exact field heights.
+- [x] `text_input_sizes-13` · P3 · proposal. Row spacing: Use equal labeled specimen gutters while preserving exact field heights.
   Evidence: The gaps between fields are tight compared with the large last field.
 
-- [ ] `text_input_sizes-14` · P2 · proposal. Small-input context: Label them compact-size test cases rather than default form guidance.
+- [x] `text_input_sizes-14` · P2 · proposal. Small-input context: Label them compact-size test cases rather than default form guidance.
   Evidence: The 24 and 32 px specimens could look like recommended product controls.
 
-- [ ] `text_input_sizes-15` · P2 · proposal. Reset content: Add a shared Reset sample text control outside the stack.
+- [x] `text_input_sizes-15` · P2 · proposal. Reset content: Add a shared Reset sample text control outside the stack.
   Evidence: No reset action returns all fields to comparable text.
 
-- [ ] `text_input_sizes-16` · P3 · proposal. Bottom space: Use it for caret, selection and padding measurements.
+- [x] `text_input_sizes-16` · P3 · proposal. Bottom space: Use it for caret, selection and padding measurements.
   Evidence: A large blank area remains below the 100 px field.
 
 ### text_overflow

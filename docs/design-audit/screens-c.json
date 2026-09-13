@@ -4652,7 +4652,8 @@
         "change": "Use it for caret, selection and padding measurements."
       }
     ],
-    "sha256": "c00174f90736840d5e4d5f79b10652b8a9a044bf324ca611f1776df7000798e4"
+    "sha256": "c00174f90736840d5e4d5f79b10652b8a9a044bf324ca611f1776df7000798e4",
+    "evidence": "docs/design-audit/originals/text_input_sizes_720p.png"
   },
   {
     "id": "text_overflow",

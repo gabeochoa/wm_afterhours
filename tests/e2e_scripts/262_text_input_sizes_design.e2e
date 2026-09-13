@@ -1,0 +1,145 @@
+goto_screen text_input_sizes
+resize 1280 720
+wait 0.3
+click_ui sizes_clear
+wait 0.2
+expect_text "Text input sizes"
+expect_text "Shared field width: 620 px"
+expect_text "Font: native type-scale default"
+expect_text "Height-derived font: off"
+expect_text "24 and 32 px are compact-size test cases."
+assert_ui input_24px w=620 h=24
+expect_input_text input_24px ""
+assert_ui input_32px w=620 h=32
+expect_input_text input_32px ""
+assert_ui input_40px w=620 h=40
+expect_input_text input_40px ""
+assert_ui input_48px w=620 h=48
+expect_input_text input_48px ""
+assert_ui input_60px w=620 h=60
+expect_input_text input_60px ""
+assert_ui input_80px w=620 h=80
+expect_input_text input_80px ""
+assert_ui input_100px w=620 h=100
+expect_input_text input_100px ""
+assert_no_overflow
+assert_within_parents
+screenshot text_input_sizes_design
+click_ui sizes_sample
+wait 0.2
+expect_input_text input_24px "hello world"
+expect_input_text input_32px "hello world"
+expect_input_text input_40px "hello world"
+expect_input_text input_48px "hello world"
+expect_input_text input_60px "hello world"
+expect_input_text input_80px "hello world"
+expect_input_text input_100px "hello world"
+screenshot text_input_sizes_design_type_scale
+click_ui sizes_font_mode
+wait 0.2
+expect_text "Height-derived font: on"
+expect_text "Font size = height × 0.5"
+focus_ui input_24px
+key END
+wait 0.2
+expect_text "24 px field / font 12.0 px"
+expect_input_selection input_24px 11 11
+screenshot text_input_sizes_design_24_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_24px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_24_selection
+focus_ui input_32px
+key END
+wait 0.2
+expect_text "32 px field / font 16.0 px"
+expect_input_selection input_32px 11 11
+screenshot text_input_sizes_design_32_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_32px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_32_selection
+focus_ui input_40px
+key END
+wait 0.2
+expect_text "40 px field / font 20.0 px"
+expect_input_selection input_40px 11 11
+screenshot text_input_sizes_design_40_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_40px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_40_selection
+focus_ui input_48px
+key END
+wait 0.2
+expect_text "48 px field / font 24.0 px"
+expect_input_selection input_48px 11 11
+screenshot text_input_sizes_design_48_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_48px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_48_selection
+focus_ui input_60px
+key END
+wait 0.2
+expect_text "60 px field / font 30.0 px"
+expect_input_selection input_60px 11 11
+screenshot text_input_sizes_design_60_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_60px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_60_selection
+focus_ui input_80px
+key END
+wait 0.2
+expect_text "80 px field / font 40.0 px"
+expect_input_selection input_80px 11 11
+screenshot text_input_sizes_design_80_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_80px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_80_selection
+focus_ui input_100px
+key END
+wait 0.2
+expect_text "100 px field / font 50.0 px"
+expect_input_selection input_100px 11 11
+screenshot text_input_sizes_design_100_caret
+key CTRL+A
+wait 0.2
+expect_input_selection input_100px 0 11
+expect_text "Selected bytes: 11"
+screenshot text_input_sizes_design_100_selection
+click_ui sizes_guides
+wait 0.2
+expect_text "Midline guides: on"
+screenshot text_input_sizes_design_guides
+focus_ui sizes_clear
+key ENTER
+wait 0.2
+expect_input_text input_24px ""
+expect_input_text input_100px ""
+resize 1920 1080
+wait 0.3
+assert_ui sizes_root x=320 y=180 w=1280 h=720
+assert_ui input_24px x=484 y=330 w=620 h=24
+assert_ui input_100px x=484 y=698 w=620 h=100
+assert_no_overflow
+assert_within_parents
+screenshot text_input_sizes_design_1080
+resize 1024 768
+wait 0.3
+assert_ui sizes_root x=0 y=24 w=1024 h=720
+assert_ui input_24px x=131 y=174 w=496 h=24
+assert_ui input_100px x=131 y=542 w=496 h=100
+expect_text "Shared field width: 496 px"
+assert_no_overflow
+assert_within_parents
+screenshot text_input_sizes_design_narrow
+resize 1280 720
