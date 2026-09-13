@@ -181,7 +181,7 @@ struct FileTreeShowcase : ScreenSystem<UIContext<InputAction>> {
     context.scaling_mode = ScalingMode::Proportional;
     UIStylingDefaults::get().set_grid_snapping(false);
     const float s = std::min(context.screen_width / 1280.f, context.screen_height / 720.f);
-    context.theme.focus_ring_offset = s;
+    context.theme.focus_ring_offset = 2.5f * s;
     context.theme.focus_ring_thickness = 1.5f * s;
     const float x = (context.screen_width - 1160 * s) / 2;
     const float y = (context.screen_height - 664 * s) / 2;
