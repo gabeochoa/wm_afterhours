@@ -1,5 +1,9 @@
 # Project todo
 
+WM implementation items are complete. The remaining WM verification/research needs
+the external prerequisites listed below; library changes stay deferred. Completed
+work and scope decisions are recorded in [the WM pass](docs/plans/wm-only-todos.md).
+
 ## New consumer gaps collected September 13
 
 These items are collection results, not implementation approvals. Source evidence,
@@ -20,9 +24,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] **Provide a native checkmark rendering option that does not depend on the active text font.** Current `component_config.h:178` still defines `DEFAULT_CHECKBOX_CHECKED = "V"`, and `imm_components.h:1112–1122` copies the indicator string into a label, with a symbol-font fallback only if no explicit font is provided. The WM Checkbox showcase suppresses the native indicator with `with_checkbox_indicators("", "")` and draws a square/check using `draw_mark()` locally. That solves the screen, not the previously accepted library item. Preserve the existing string override for intentional theme styles while providing a real built-in mark or configurable drawing hook. Verify checked/unchecked/disabled states, scaling, and custom fonts. The retained icon-registry proposal is broader and unimplemented; it does not make this native control fix complete. Do not reopen the WM screen audit.
 
-- [ ] **Record optional rounded child clipping as a renderer limitation.** `HasClipChildren` and scroll clipping currently use rectangle intersections and scissor commands (`rendering.h:63–97`, `2543–2568`); parent corner radius is not part of the clip shape. A rectangular child can therefore paint in the cut-out corners of a rounded clipping parent. This is an unsupported feature, not proof the new square-framed fixtures are broken. Keep rectangular scissoring fast; consider an explicit rounded-mask clip only for callers that need it, with nested-clip/backend tests. It is separate from partial rounded outline masks and the already tracked nested scroll-decoration ancestor bypass. This entry preserves the limitation; it does not authorize or require a new masking backend in the current screen pass.
-
-## Existing project backlog
+## Afterhours-dependent work (deferred)
 
 - [ ] Expand animations with fade, blur, unblur, lift, fall, scale, dissolve, wipe, raise, curtain, sweep, shear, stretch, iris, spotlight, swing, typewriter, zoom, recede, unroll, blinds, slide, flip, emerge, tumble, drop and cascade. Support each applicable effect on a whole item, individual words (`word-*`) or individual characters (`char-*`), with stagger, interruption and reduced-motion behavior. Preserve grapheme clusters when animating characters.
 
@@ -30,15 +32,11 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Explore extracting charting into a separate library, vendored as a third-party plugin. Use it to demonstrate the public extension APIs, dependencies, registration and customization that an independent plugin author would use; keep the core small.
 
-- [ ] Add a rolling number animation for counters and changing values: a smooth, blurred transition when a number changes, rather than instantly swapping the text. Define digit transitions, carry/borrow, interruption by a new value, reduced-motion behavior, and a reusable demo before choosing an API.
-
-- [ ] Review [chrstph-gg/sf-windows](https://github.com/chrstph-gg/sf-windows) and record useful ideas or limitations relevant to WM and afterhours before adopting anything. Blocked: the external source loader rejected this URL under its input-filtering policy. No source was retrieved, so there is no completed review.
-
 - [ ] Define and implement native cross-axis Stretch sizing for unspecified dimensions; see docs/AFTERHOURS_GAPS.md.
 
 - [ ] Investigate faster text layout using prepared text and cached measurements. Review [the plan](docs/plans/text-layout-performance.md) before implementation.
 
-- [ ] Persist optional theme radius/color overrides and the panel radius through theme-file save/load.
+- [ ] Persist optional theme radius/color overrides and the panel radius through theme-file save/load. The serializer is `vendor/afterhours/src/plugins/ui/theme_io.h`; this needs a library change.
 
 - [ ] Expose tooltip font, padding and trigger-gap configuration; see docs/AFTERHOURS_GAPS.md.
 
@@ -111,9 +109,11 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
   Extend the interactive wm chart test screen with each implemented type.
   See `docs/gap-design-decisions.md`, D-02.
 
-### Measurements and external review still pending
+### WM verification and external review still pending
 
-- [ ] Measure controlled cold launch and isolated idle CPU on an otherwise idle machine. Headless and verified-vsync windowed startup, workload CPU/RSS, settled frame timings and atlas driver counts are now in [the runtime report](docs/reports/runtime-performance-2026-09-13.md). Shared-machine runs do not control other users or filesystem caches; do not relabel warm launches as cold. Deferred fonts load once and remain resident after visiting their consumer.
+- [ ] Review [chrstph-gg/sf-windows](https://github.com/chrstph-gg/sf-windows) and record useful ideas or limitations relevant to WM and afterhours before adopting anything. Blocked: the external source loader rejected this URL under its input-filtering policy. No source was retrieved, so there is no completed review.
+
+- [ ] Measure controlled cold launch and repeat the idle CPU measurement on an otherwise idle machine. Headless and verified-vsync startup, process-only idle/active CPU, RSS, settled frame timings and atlas driver counts are in [the runtime report](docs/reports/runtime-performance-2026-09-13.md). Shared-machine runs do not control other users or filesystem caches; do not relabel warm launches as cold. Deferred fonts load once and remain resident after visiting their consumer.
 - [ ] Refresh selected CSS/native comparisons when the required local browser is available. [The source review](mocks/REVIEW-2026-09-13.md) fixes double-counted absolute margins, explains intrinsic-text limitations, and identifies changed fixtures. Fresh selected native screenshots/trees and a font-aware viewer are ready at `output/wm-followthrough/mock-review/`. Font files, explicit sizes, wrapping intent, spans and intrinsic text participation are now represented. Browser mismatch counts remain unmeasured because the required local browser prerequisites are absent. Verify browser-vs-Raylib advances, fallback, line breaking and styled-run auto-fit before trusting text differences; absolute origins still replay native coordinates. Do not reuse August counts as current defects.
 
 ### Earlier library requests, still deferred

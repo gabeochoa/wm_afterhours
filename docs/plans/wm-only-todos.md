@@ -118,3 +118,40 @@ and an idle machine for controlled cold-start/isolated idle CPU measurement.
 Those are still unchecked in `todo.md`. The font measurement mismatch and the
 batching investigation belong in `docs/AFTERHOURS_GAPS.md`; no library implementation
 is part of this pass.
+
+## Final WM ownership check
+
+The rolling-number entry was incorrectly grouped with native animation API work.
+Its requested demo fits WM's existing custom-draw hook, so it is now implemented
+as `rolling_number` in System Demos. `src/rolling_number.h` holds reusable numeric
+transition state independently of drawing. It supports six decimal reels for
+integers 0 through 999999, directional carry/borrow, bounded jumps and retargeting
+from the current fractional positions. It is a counter specimen, not a localized
+currency or signed/decimal formatting API.
+
+Changed reels use five weighted vertical glyph samples for motion blur, then draw
+sharply at rest. The screen includes blur on/off, pause/resume and reduced motion.
+Reduced motion settles immediately, including when enabled while paused. Reset
+and increments use the same transition path. Unchanged digits stay sharp. The
+screen uses one Atkinson family throughout and existing high-resolution fonts.
+No shader, font-layout or animation-library changes are required.
+
+Validation: the standalone numeric test covers carry, borrow, an interrupted
+reversal, bounds and negative/large dt. E2E 297 covers pointer/keyboard controls,
+reduced motion, pause/resume and 1024px resizing. Captures were reviewed at rest
+and mid-transition. Pixel comparison confirmed the digit region is unchanged
+when retargeted while paused with blur off. Build emitted no warnings. Run the
+numeric check with `nice -n 10 clang++ -std=c++23 tests/rolling_number_test.cpp -o output/rolling_number_test` followed by `nice -n 10 ./output/rolling_number_test`.
+
+The CPU sampler now also measures differences in the app's own cumulative CPU
+time during settled idle/active intervals. It excludes startup/audit boundaries
+and the sampler's CPU. The runtime report records the actual shared-machine run.
+Controlled cold caches and an otherwise idle laptop remain external conditions.
+
+Remaining implementation entries are library work: the theme serializer is in
+`ui/theme_io.h`; shared effects, glyph segmentation and component shaders require
+native animation/rendering contracts; chart extraction moves existing library
+code; prepared-text layout changes native measurement/layout. The rest name
+specific native component, validation, input or backend fixes. None were replaced
+with WM copies. Browser comparisons and sf-windows remain blocked as previously
+recorded. Other repositories remain outside this WM-only pass.

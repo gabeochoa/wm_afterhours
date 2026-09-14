@@ -1846,3 +1846,18 @@ changing scheduling. Any coalescing must preserve painter order, overlap and cli
 semantics. Do not globally sort by texture or call command counts GPU draw counts.
 This is a measured optimization opportunity, not evidence that the atlas API is
 broken. No afterhours code changed.
+
+## Rounded parent corners do not clip children to the curve
+
+`HasClipChildren` and scroll clipping use rectangle intersections and scissors in
+`src/plugins/ui/rendering.h`. The parent's corner radius is not part of that clip
+shape. A rectangular child can paint into the corners removed from a rounded
+parent's fill. The mistaken assumption is that setting the parent's radius also
+changes its child clipping geometry.
+
+This is an unsupported optional capability, not evidence that WM's square-framed
+fixtures are broken. Keep rectangular scissoring fast. If a consumer requires a
+rounded mask, it needs an explicit opt-in renderer contract with nested clipping
+and backend coverage. Do not conflate it with partial rounded outlines or the
+separately recorded nested scroll-decoration ancestor bypass. The documentation
+task is complete; a new masking backend remains deferred and was not implemented.
