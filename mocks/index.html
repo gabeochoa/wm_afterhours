@@ -7,8 +7,8 @@
   Left pane is the real raylib screenshot. Right pane is the same UI tree laid
   out again by CSS flexbox, from the INTENT afterhours was given (desired sizes,
   flex direction, justify/align, gap, padding) rather than from the rects it
-  computed. Two independent solvers on one input; where they disagree is a
-  question for the layout engine.
+  computed for flow nodes. Absolute origins are replayed from the capture.
+  Differences require checking the mock model before blaming native layout.
 
   Keys match the app: . / PageDown next, , / PageUp previous.
 -->
@@ -87,6 +87,7 @@ async function load(name) {
   }
 
   shot.innerHTML = `<img src="shots/${tree.screenshot}" alt="">`;
+  await loadMockFonts(tree);
   mountMock(mock, tree, $('labels').checked);
 
   fitPanes(vw, vh);
@@ -111,6 +112,7 @@ function report(vw, vh) {
   const tol = +$('tol').value;
   const diffs = collectDiffs($('mock'), tree);
   const bad = diffs.filter(d => worseThan(d, tol));
+  const summary = summarizeDiffs(diffs, tol);
 
   // overlay
   document.querySelectorAll('.truth').forEach(e => e.remove());
@@ -136,6 +138,9 @@ function report(vw, vh) {
   $('diffs').innerHTML = `
     <p>${bad.length} of ${diffs.length} nodes differ by more than ${tol}px
        <span class="muted">(css minus afterhours; dashed red = afterhours)</span></p>
+    <p>${summary.candidates} candidates after excluding modeled text/scroll limits and inherited offsets.
+       ${summary.text} text-related and ${summary.scroll} scroll-related differences may overlap.
+       ${summary.replayed} absolute origins replay native coordinates.</p>
     <table><tr><th>node</th><th>desired</th><th>layout</th>
       <th class="n">Δx</th><th class="n">Δy</th><th class="n">Δw</th><th class="n">Δh</th></tr>
       ${rows}</table>`;
@@ -144,7 +149,7 @@ function report(vw, vh) {
 // ---------------------------------------------------------------------------
 // nav — same keys as the app
 // ---------------------------------------------------------------------------
-const go = i => { cur = (i + screens.length) % screens.length; load(screens[cur]); };
+const go = i => { cur = (i + screens.length) % screens.length; load(screens[cur]).catch(error => { $('status').textContent = error.message; }); };
 
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;

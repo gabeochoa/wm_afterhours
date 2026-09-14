@@ -12,6 +12,8 @@
 #include <afterhours/ah.h>
 #include <nlohmann/json.hpp>
 #include <string>
+#include "../font_config.h"
+#include "../input_mapping.h"
 
 #if __has_include(<magic_enum/magic_enum.hpp>)
 #include <magic_enum/magic_enum.hpp>
@@ -93,6 +95,7 @@ inline nlohmann::json build(afterhours::Entity &entity,
   if (entity.has<HasRoundedCorners>()) {
     const HasRoundedCorners &rc = entity.get<HasRoundedCorners>();
     node["roundness"] = rc.roundness;
+    if (rc.radius_px) node["corner_radius"] = *rc.radius_px;
     // bitset order is imm::CornerPosition: TL, TR, BL, BR.
     node["corners"] = nlohmann::json::array(
         {bool(rc.rounded_corners[0]), bool(rc.rounded_corners[1]),
@@ -109,6 +112,36 @@ inline nlohmann::json build(afterhours::Entity &entity,
   if (entity.has<HasLabel>()) {
     const HasLabel &lbl = entity.get<HasLabel>();
     node["label"] = lbl.label;
+    auto *fm = afterhours::EntityHelper::get_singleton_cmp<FontManager>();
+    auto *context = afterhours::EntityHelper::get_singleton_cmp<UIContext<InputAction>>();
+    if (fm && context) {
+      const auto name = fm->resolve_weighted(cmp.font_name, cmp.font_weight);
+      const auto font_file = [](std::string source) {
+        for (const auto &alias : font_config::aliases)
+          if (source == alias.name) source = alias.source;
+        for (const auto &definition : font_config::get_all_fonts())
+          if (source == definition.name) return definition.filename;
+        return std::string{};
+      };
+      const auto file = font_file(name);
+      const float scale = imm::ThemeDefaults::get().theme.ui_scale;
+      const float size = resolve_to_pixels(cmp.font_size, context->screen_height,
+                                           cmp.resolved_scaling_mode, scale);
+      const auto inset = resolve_text_inset(context->theme, lbl.text_inset);
+      const auto font = fm->get_font(name);
+      const float line_height = afterhours::measure_text(font, "Ag", size, 1.f).y;
+      node["text"] = {{"font", name}, {"file", file}, {"size", size},
+                      {"explicit_size", cmp.font_size_explicitly_set}, {"minimum_size", MIN_FONT_SIZE},
+                      {"line_height", line_height}, {"spacing", 1.f + lbl.letter_spacing},
+                      {"inset_x", inset.x}, {"inset_y", inset.y},
+                      {"offset_x", lbl.text_x_offset}, {"offset_y", lbl.text_y_offset}};
+      node["text"]["spans"] = nlohmann::json::array();
+      for (const auto &span : lbl.spans) {
+        const auto span_font = fm->resolve_weighted(cmp.font_name, span.weight);
+        node["text"]["spans"].push_back({{"text", span.text}, {"font", span_font},
+                                       {"file", font_file(span_font)}});
+      }
+    }
     node["text_alignment"] = std::string(magic_enum::enum_name(lbl.alignment));
     node["text_overflow"] =
         std::string(magic_enum::enum_name(lbl.text_overflow));

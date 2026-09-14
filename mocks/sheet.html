@@ -82,10 +82,12 @@ const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.cla
     rows.appendChild(row);
 
     stages[0].innerHTML = `<img src="shots/${tree.screenshot}" alt="">`;
+    await loadMockFonts(tree);
     mountMock(stages[1], tree, true);
 
     const diffs = collectDiffs(stages[1], tree);
     const bad = diffs.filter(d => worseThan(d, TOL));
+    const summary = summarizeDiffs(diffs, TOL);
     for (const d of diffs) {
       const t = el('div', 'truth');
       t.style.left = d.ah.x + 'px';   t.style.top = d.ah.y + 'px';
@@ -98,12 +100,13 @@ const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.cla
       Math.max(Math.abs(a.dx),Math.abs(a.dy),Math.abs(a.dw),Math.abs(a.dh)))[0];
     cap.innerHTML =
       `<b>${name}</b><span class="${bad.length ? 'n bad' : 'n'}">` +
-      `${bad.length}/${diffs.length} nodes differ &gt;${TOL}px</span>` +
+      `${bad.length}/${diffs.length} nodes differ &gt;${TOL}px; ${summary.candidates} candidates; ` +
+      `${summary.text} text, ${summary.scroll} scroll; ${summary.replayed} replayed origins</span>` +
       (worst ? `<span class="n">worst: ${worst.name} ` +
                `Δx${worst.dx.toFixed(0)} Δy${worst.dy.toFixed(0)} ` +
                `Δw${worst.dw.toFixed(0)} Δh${worst.dh.toFixed(0)}</span>` : '');
 
-    built.push({ name, row, bad: bad.length, total: diffs.length,
+    built.push({ name, row, summary, bad: bad.length, total: diffs.length,
                  nodes: bad.map(d => ({ n: d.name, dx: +d.dx.toFixed(1), dy: +d.dy.toFixed(1),
                                         dw: +d.dw.toFixed(1), dh: +d.dh.toFixed(1),
                                         want: d.desired, dir: d.dir, j: d.justify,
@@ -129,8 +132,8 @@ const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.cla
   const dump = document.createElement('pre');
   dump.id = 'raw'; dump.hidden = true;
   dump.textContent = JSON.stringify(built.map(b =>
-    ({ name: b.name, bad: b.bad, total: b.total, nodes: b.nodes })));
+    ({ name: b.name, bad: b.bad, total: b.total, summary: b.summary, nodes: b.nodes })));
   document.body.appendChild(dump);
   window.__ready = true;
-})();
+})().catch(error => { document.getElementById('hd').textContent = error.message; });
 </script>

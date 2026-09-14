@@ -53,6 +53,114 @@ function hasExpandingChild(n, row) {
   return n.children.some((c) => !c.absolute && c.desired[axis].dim === 'Expand');
 }
 
+const loadedFonts = new Map();
+
+async function loadMockFonts(tree) {
+  const jobs = [];
+  const prepare = t => {
+    if (!t?.file) return;
+    if (!loadedFonts.has(t.font)) {
+      const url = '../resources/fonts/' + encodeURIComponent(t.file);
+      const face = new FontFace(JSON.stringify(t.font), `url(${JSON.stringify(url)})`);
+      loadedFonts.set(t.font, face.load().then(loaded => document.fonts.add(loaded)));
+    }
+    jobs.push(loadedFonts.get(t.font));
+  };
+  const visit = n => {
+    prepare(n.text);
+    (n.text?.spans || []).forEach(prepare);
+    n.children.forEach(visit);
+  };
+  tree.tree.forEach(visit);
+  await Promise.all(jobs);
+}
+
+function appendLabel(el, n, showLabels) {
+  if (!n.label) return;
+  const label = document.createElement('span');
+  label.className = 'lbl';
+  label.textContent = n.label;
+  label.style.visibility = showLabels ? 'visible' : 'hidden';
+  const t = n.text;
+  el.mockText = t;
+  if (!t) {
+    el.dataset.textModel = 'missing-font-metadata';
+    el.appendChild(label);
+    return;
+  }
+  const intrinsic = n.children.length === 0 && [n.desired.x.dim, n.desired.y.dim]
+    .some(dim => dim === 'Text' || dim === 'Children');
+  el.dataset.textModel = t.explicit_size || intrinsic ? 'font-metrics' : 'auto-fit';
+  if (!t.file) el.dataset.textModel = 'missing-font-file';
+  if (t.spans?.length) {
+    label.textContent = '';
+    for (const run of t.spans) {
+      const span = document.createElement('span');
+      span.textContent = run.text;
+      span.style.fontFamily = JSON.stringify(run.font);
+      label.appendChild(span);
+    }
+  }
+  label.style.position = intrinsic ? 'relative' : 'absolute';
+  label.style.inset = 'auto';
+  label.style.display = 'block';
+  label.style.flexShrink = '0';
+  label.style.boxSizing = 'border-box';
+  label.style.fontFamily = JSON.stringify(t.font);
+  label.style.fontSize = t.size + 'px';
+  label.style.lineHeight = t.line_height + 'px';
+  label.style.fontKerning = 'none';
+  label.style.fontVariantLigatures = 'none';
+  label.style.letterSpacing = t.spacing + 'px';
+  label.style.whiteSpace = n.text_overflow === 'Wrap' && t.explicit_size ? 'pre-wrap' : 'pre';
+  label.style.overflowWrap = 'normal';
+  label.style.wordBreak = 'normal';
+  label.style.textAlign = {Left:'left', Right:'right', Center:'center'}[n.text_alignment] || 'center';
+  label.style.padding = `0 ${t.inset_x}px`;
+  label.style.overflow = 'hidden';
+  if (n.text_overflow === 'Ellipsis') label.style.textOverflow = 'ellipsis';
+  if (intrinsic) {
+    label.style.alignSelf = 'stretch';
+    label.style.maxWidth = '100%';
+    label.style.left = t.offset_x + 'px';
+    label.style.top = t.offset_y + 'px';
+  } else {
+    label.style.left = t.offset_x + 'px';
+    label.style.right = '0';
+    label.style.top = `calc(50% + ${t.offset_y}px)`;
+    label.style.transform = 'translateY(-50%)';
+    label.style.maxHeight = '100%';
+  }
+  el.appendChild(label);
+}
+
+function fitAutoLabels(root) {
+  const canvas = document.createElement('canvas');
+  const measure = canvas.getContext('2d');
+  for (const el of root.querySelectorAll('[data-text-model="auto-fit"]')) {
+    const label = el.querySelector(':scope > .lbl');
+    const t = el.mockText;
+    if (!label || !t) continue;
+    const width = Math.max(0, el.clientWidth - 2 * t.inset_x - t.offset_x);
+    const height = Math.max(0, el.clientHeight - 2 * t.inset_y);
+    const ratio = t.size > 0 ? t.line_height / t.size : 1;
+    const lines = label.textContent.split('\n');
+    let low = t.minimum_size ?? 16, high = Math.min(height, 200);
+    while (high - low > .5) {
+      const size = (low + high) / 2;
+      measure.font = `${size}px ${JSON.stringify(t.font)}`;
+      measure.fontKerning = 'none';
+      const widest = Math.max(...lines.map(line => measure.measureText(line).width +
+        Math.max(0, Array.from(line).length - 1) * t.spacing));
+      if (size * ratio * lines.length <= height &&
+          (label.style.textOverflow === 'ellipsis' || widest <= width)) low = size;
+      else high = size;
+    }
+    label.style.fontSize = low + 'px';
+    label.style.lineHeight = low * ratio + 'px';
+  }
+}
+
 function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands) {
   const el = document.createElement('div');
   el.className = 'node';
@@ -106,8 +214,8 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands)
     el.style.alignSelf = ALIGN[n.self_align] || 'auto';
 
   // raylib roundness is a fraction of the short side, halved; CSS wants px.
-  if (n.roundness && n.corners) {
-    const r = n.roundness * Math.min(n.rect.width, n.rect.height) / 2;
+  if (n.corners && (n.corner_radius !== undefined || n.roundness)) {
+    const r = n.corner_radius ?? n.roundness * Math.min(n.rect.width, n.rect.height) / 2;
     const [tl, tr, bl, br] = n.corners;
     el.style.borderRadius =
       `${tl ? r : 0}px ${tr ? r : 0}px ${br ? r : 0}px ${bl ? r : 0}px`;
@@ -127,12 +235,7 @@ function buildNode(n, vw, vh, parentDir, showLabels, parentRect, siblingExpands)
     el.style.position = 'relative';
   }
 
-  if (showLabels && n.label) {
-    const s = document.createElement('span');
-    s.className = 'lbl';
-    s.textContent = n.label;
-    el.appendChild(s);
-  }
+  appendLabel(el, n, showLabels);
   const childrenExpand = hasExpandingChild(n, row);
   for (const c of n.children)
     el.appendChild(buildNode(c, vw, vh, row ? 'row' : 'column', showLabels,
@@ -148,6 +251,7 @@ function mountMock(stage, tree, showLabels) {
   root.style.position = 'absolute';
   root.style.left = '0'; root.style.top = '0';
   stage.appendChild(root);
+  fitAutoLabels(root);
   return root;
 }
 
@@ -181,7 +285,7 @@ function collectDiffs(stageEl, tree) {
       // Why CSS is allowed to disagree here, if it is:
       //   scroll  - the mock has no clipping, so it shows content afterhours hid
       //   text    - browser font metrics are not raylib's, so Text/Children drift
-      underScroll, underText: texty, pdx, pdy,
+      underScroll, underText: texty, textModel: el.dataset.textModel || null, pdx, pdy,
     });
     const scrolls = underScroll || n.clips || n.scrolls;
     const kids = [...el.children].filter(c => c.classList.contains('node'));
@@ -194,3 +298,16 @@ function collectDiffs(stageEl, tree) {
 
 const worseThan = (d, tol) =>
   Math.max(Math.abs(d.dx), Math.abs(d.dy), Math.abs(d.dw), Math.abs(d.dh)) > tol;
+
+function summarizeDiffs(diffs, tolerance) {
+  const bad = diffs.filter(d => worseThan(d, tolerance));
+  return {
+    total: diffs.length, differing: bad.length,
+    text: bad.filter(d => d.underText).length,
+    scroll: bad.filter(d => d.underScroll).length,
+    replayed: diffs.filter(d => d.absolute).length,
+    candidates: bad.filter(d => !d.underText && !d.underScroll &&
+      (Math.abs(d.dw) > tolerance || Math.abs(d.dh) > tolerance ||
+       (!d.absolute && (Math.abs(d.dx - d.pdx) > tolerance || Math.abs(d.dy - d.pdy) > tolerance)))).length,
+  };
+}

@@ -5,10 +5,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-make -j8
+nice -n 10 make -j2
 
 # Screenshot and dump come from the same frame; see headless_screenshots.cpp.
-./output/ui_tester.exe --headless-screenshots \
+nice -n 10 ./output/ui_tester.exe --headless-screenshots \
   --image-output mocks/shots/ --dump-ui-json mocks/trees/ >/dev/null 2>&1
 
 # Manifest, so index.html knows what to page through.
