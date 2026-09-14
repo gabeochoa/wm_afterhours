@@ -782,7 +782,7 @@ library paths start at `wm_afterhours/vendor/afterhours/`.
   widths; its `probe` at line 194 tests atlas capacity. The consumer report
   shows plausible but drastically short widths after exhaustion. Its own
   guard explicitly cannot detect every partial drop.
-- Current boundary: `src/backends/sokol/backend.h:160` warns when the atlas
+- Original failure boundary at `c5cfd35`: `src/backends/sokol/backend.h:160` warns when the atlas
   fills. `src/backends/sokol/font_helper.h:87` still stores the returned bounds
   in `measure_memo` without a completeness signal. In
   `vendor/fontstash/fontstash.h:1526`, a missing glyph is skipped without
@@ -796,6 +796,21 @@ library paths start at `wm_afterhours/vendor/afterhours/`.
 - Closure: deliberately exhaust a small atlas and measure strings containing
   cached and uncached glyphs. Check partial loss, zero loss, fallback drawing,
   cache behavior and recovery. Keep Hanabi's guard until that contract exists.
+
+Narrow fix completed September 14 after review of its cost: Sokol now uses
+`fonsTextAdvance`, which reads existing advances or font metrics without packing
+glyph images. Both cache layers receive the complete width under atlas exhaustion.
+The regression failed six checks before the change and passes after it; DPI,
+rounding, spacing and fallback-font parity also pass. Cold measurement fell from
+89.836 us to 3.308 us in the fixture; resident-glyph misses stayed near 2.5 us and
+memo hits near 0.06–0.07 us. The full method and limits are in
+[the measurement report](../vendor/afterhours/docs/font-atlas-measurement.md).
+
+The approved scope deliberately leaves missing-glyph drawing, automatic atlas
+recovery and generalized measurement errors deferred. Hanabi's guard is unchanged.
+The earlier assumption that this needed a new application-facing result type was
+too broad for the atlas-exhaustion defect: removing the allocation dependency
+fixes that defect without changing callers or adding a cache.
 
 ### UP-18: Inject the actual Cmd/Super modifier in E2E chords
 
