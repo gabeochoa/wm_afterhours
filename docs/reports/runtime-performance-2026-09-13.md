@@ -77,8 +77,8 @@ in `output/wm-only-todos/font-repeat/summary.json`. Fonts stay resident when ret
 to Latin-only screens.
 
 Raw local reports are in `output/wm-only-todos/runtime-matched-before/report.json`
-and `output/wm-only-todos/runtime-final/report.json`. Controlled cold starts,
-windowed CPU/frame measurements and retained GPU texture accounting remain open.
+and `output/wm-only-todos/runtime-final/report.json`. Controlled cold starts
+and retained GPU texture accounting remain open. Windowed measurements follow below.
 
 ## Artwork atlas checks
 
@@ -93,5 +93,94 @@ remaining scaled icon differs by one red-channel level in one pixel. This is
 consistent with texture-coordinate rounding. Labels describing atlas coordinates
 were updated separately. Headless resource cleanup was corrected during review.
 
-This verifies appearance and resource consolidation. Driver texture-bind/draw-call
-counts and attributable frame-time gains are not measured, and remain in `todo.md`.
+This verifies appearance and resource consolidation. The driver measurement below
+found no draw-call or texture-bind reduction.
+
+## Driver measurement of the artwork atlases
+
+`scripts/mac_gl_probe.c` is a WM-owned macOS OpenGL interposer. It counts
+`glDrawArrays`, `glDrawElements` and `glBindTexture`, then records those counters
+at `CGLFlushDrawable`. It requests and records swap interval 1 on each present.
+Texture-bind calls include unbinds and redundant binds; they are not a count of
+unique resident textures. Frame times are present-to-present wall times, including
+probe overhead and waiting, not GPU execution times.
+
+The before binary was built from `f5338fdd`, with only `CozyCafe.h` and
+`ImageShowcase.h` restored from `a5cae19c`, the pre-atlas versions. A temporary
+`AtlasComparisonScreens.h` included those two screens for a smaller build. Both
+binaries used afterhours `c5cfd359967c6bb165fd40b6a2bc14d5009adc2f` and the
+same resources/settings. The comparison is between the original screen revisions
+and their atlas revisions, including their accompanying caption changes.
+
+`scripts/measure_atlas.py` renders 360 requested frames, excludes the first 100
+and final 30 presents, and requires nonzero draw counts and swap interval 1.
+Each run retained 235 frames. Two runs per screen/version reversed the order on
+the second repeat. These were reduced-priority runs on the shared machine without
+our builds running concurrently. The temporary before worktree is removed after
+measurement; the recipe above and the script allow rebuilding it.
+
+| Screen | Original draws / binds | Atlas draws / binds | Original median ms, repeats | Atlas median ms, repeats |
+|---|---:|---:|---:|---:|
+| Cozy Cafe | 66 / 68 | 66 / 68 | 8.306 / 8.798 | 8.417 / 8.380 |
+| Images | 59 / 61 | 59 / 61 | 8.864 / 8.677 | 8.187 / 8.432 |
+
+The counts matched in both repeats. Cafe p95 ranged from 11.628 to 16.008 ms
+before and 11.604 to 12.486 ms after; Images ranged from 12.152 to 12.452 ms before
+and 12.347 to 12.350 ms after. These timings do not demonstrate an attributable
+performance gain. Keeping artwork in fewer texture resources did not merge these
+screens' submitted draws. The gaps file records the need to attribute state
+boundaries before attempting a library batching change.
+
+Build and run the probe with:
+
+```sh
+nice -n 10 clang -dynamiclib -Wno-deprecated-declarations scripts/mac_gl_probe.c \
+  -framework OpenGL -o output/mac_gl_probe.dylib
+nice -n 10 python3 scripts/measure_atlas.py \
+  --before /absolute/path/to/before/ui_tester.exe --after output/ui_tester.exe \
+  --probe output/mac_gl_probe.dylib --output output/atlas-measurement
+```
+
+The launcher applies niceness in the child before executing the app directly.
+A protected system utility in front of the app can strip the DYLD instrumentation
+environment. Both measurement scripts reject missing probe data. The probe is
+optional and is neither linked into WM nor compiled into afterhours.
+Raw CSVs and summaries are in `output/wm-followthrough/atlas-measurement/`.
+
+## Windowed workload with verified swap interval
+
+The final windowed run used the current WM binary, niceness 10, the GL probe,
+360 frames each of Buttons, Chart Lab and returned Buttons, plus three switch
+cycles. The profiler overlay was disabled. The probe checked swap interval 1 on
+every recorded present. Python and the C probe use `CLOCK_MONOTONIC` so phase
+markers share the same clock on macOS. Samples within 0.5 seconds of a phase
+boundary are excluded from the frame-time table.
+
+| Phase | Settled frames | Frame median / p95 | Draw / bind calls |
+|---|---:|---:|---:|
+| Buttons idle | 277 | 8.830 / 13.897 ms | 54 / 56 |
+| Chart Lab active | 264 | 8.437 / 12.528 ms | 41 / 43 |
+| Returned Buttons | 261 | 8.339 / 12.820 ms | 54 / 56 |
+
+Startup upper bounds were 1.244, 1.830 and 1.219 seconds. The first is another
+observed launch, not a cold cache. The workload took 13.386 seconds, used 8.966
+CPU seconds including the sampler, and averaged 67.0% CPU over startup, audits,
+navigation and frames. This is not an isolated idle CPU measurement. Peak sampled
+RSS was 425.2 MiB; RSS after the initial idle phase was 370.0 MiB and after the
+returned idle phase 370.5 MiB. Audit counts stayed at 65 for Buttons and 33 for
+Chart Lab across all visits. This short run cannot establish absence of leaks.
+
+No build or other test of ours overlapped this run. Other users' machine load,
+display scheduling, memory compression and filesystem caches were uncontrolled.
+The controlled cold-start/idle-machine experiment remains open. Earlier probe
+trials were discarded because the app reset vsync or the clocks were mismatched.
+
+```sh
+nice -n 10 python3 scripts/profile_runtime.py --binary output/ui_tester.exe \
+  --windowed --gl-probe output/mac_gl_probe.dylib --frames 360 --switch-cycles 3 \
+  --output output/windowed-measurement
+```
+
+Raw proof is in `output/wm-followthrough/windowed-verified/report.json` and each
+run's `gl.csv`. Invalid or missing instrumentation now fails the measurement
+instead of silently producing a supposedly vsynced result.

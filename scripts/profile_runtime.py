@@ -1,4 +1,6 @@
 import argparse
+import csv
+import statistics
 import json
 from pathlib import Path
 import platform
@@ -11,7 +13,7 @@ import tempfile
 import time
 
 
-def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False):
+def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False, windowed=False, gl_probe=None):
     run_dir = work / name
     run_dir.mkdir()
     (run_dir / 'resources').symlink_to(root / 'resources', target_is_directory=True)
@@ -32,16 +34,21 @@ def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False):
         lines += ['key F3', 'wait_frames 2', 'click_ui profiler_record', 'wait_frames 2', f'audit_ui {run_dir}/profiler', 'wait_frames 2']
     script = run_dir / 'workload.e2e'
     script.write_text('\n'.join(lines) + '\n')
-    command = ['nice', '-n', '10', str(binary), '--headless', '--quiet', '--test-script', str(script), '--timeout', str(timeout), *(['--profile'] if frame_metrics else [])]
+    command = [str(binary), *([] if windowed else ['--headless']), '--quiet', '--test-script', str(script), '--timeout', str(timeout), *(['--profile'] if frame_metrics else [])]
     samples = []
     observations = []
     before = resource.getrusage(resource.RUSAGE_CHILDREN)
-    start = time.monotonic()
+    start = time.clock_gettime(time.CLOCK_MONOTONIC)
+    environment = {**os.environ, "WM_PROFILE_STARTUP": "1"}
+    if gl_probe:
+        environment.update(DYLD_INSERT_LIBRARIES=str(gl_probe),
+                           WM_GL_PROBE_OUTPUT=str(run_dir / 'gl.csv'), WM_GL_PROBE_VSYNC='1')
     with (run_dir / 'run.log').open('w') as log:
-        process = subprocess.Popen(command, cwd=run_dir, stdout=log, stderr=subprocess.STDOUT, env={**os.environ, "WM_PROFILE_STARTUP": "1"})
+        process = subprocess.Popen(command, cwd=run_dir, stdout=log, stderr=subprocess.STDOUT, env=environment,
+                                   preexec_fn=lambda: os.nice(max(0, 10 - os.nice(0))))
         try:
             while process.poll() is None:
-                elapsed = time.monotonic() - start
+                elapsed = time.clock_gettime(time.CLOCK_MONOTONIC) - start
                 if elapsed > timeout:
                     process.kill()
                     raise TimeoutError(f'{name} exceeded {timeout}s; see {run_dir}/run.log')
@@ -62,10 +69,10 @@ def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False):
             if process.poll() is None:
                 process.kill()
             process.wait()
-    end = time.monotonic() - start
+    end = time.clock_gettime(time.CLOCK_MONOTONIC) - start
     after = resource.getrusage(resource.RUSAGE_CHILDREN)
     cpu = after.ru_utime + after.ru_stime - before.ru_utime - before.ru_stime
-    record = {'name': name, 'command': command, 'exit_code': process.returncode, 'wall_seconds': end,
+    record = {'name': name, 'command': command, 'exit_code': process.returncode, 'wall_seconds': end, 'monotonic_start': start,
               'cpu_seconds_with_sampler': cpu, 'average_cpu_percent_with_sampler': 100 * cpu / end,
               'sampled_peak_rss_mib': max((sample.get('rss_mib', 0) for sample in samples), default=0),
               'first_usable_seconds_upper_bound': observations[0]['seconds'] if observations else None,
@@ -74,6 +81,28 @@ def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False):
     profiler_path = run_dir / 'profiler.json'
     if profiler_path.exists():
         record['profiler_labels'] = [item['label'] for item in json.loads(profiler_path.read_text()).get('elements', []) if item.get('label')]
+    if gl_probe:
+        with (run_dir / 'gl.csv').open() as file:
+            frames_seen = list(csv.DictReader(file))[1:]
+        if not frames_seen or not any(int(f['draw_calls']) for f in frames_seen):
+            raise RuntimeError(f'GL probe did not observe rendering: {run_dir}')
+        if any(int(f['swap_interval']) != 1 for f in frames_seen):
+            raise RuntimeError(f'GL probe did not retain swap interval 1: {run_dir}')
+        record['gl_phases'] = []
+        for previous, current in zip(observations, observations[1:]):
+            if current['phase'] not in ('idle', 'active', 'returned_idle'):
+                continue
+            settled = [f for f in frames_seen if
+                       previous['seconds'] + 0.5 < float(f['seconds']) - start < current['seconds'] - 0.5]
+            if not settled:
+                raise RuntimeError(f'No settled frames for {current["phase"]}; increase --frames')
+            times = sorted(float(f['frame_ms']) for f in settled)
+            record['gl_phases'].append({
+                'phase': current['phase'], 'frames': len(times),
+                'frame_ms_median': statistics.median(times),
+                'frame_ms_p95': times[int(.95 * (len(times) - 1))],
+                'draw_calls_median': statistics.median(int(f['draw_calls']) for f in settled),
+                'texture_bind_calls_median': statistics.median(int(f['texture_bind_calls']) for f in settled)})
     (run_dir / 'measurement.json').write_text(json.dumps(record, indent=2) + '\n')
     if process.returncode:
         raise RuntimeError(f'{name} failed: {run_dir}/run.log')
@@ -81,31 +110,35 @@ def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Bounded headless startup, CPU and RSS audit with isolated settings.')
+    parser = argparse.ArgumentParser(description='Bounded startup, CPU and RSS audit with isolated settings.')
     parser.add_argument('--binary', type=Path, required=True)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--output', type=Path)
     parser.add_argument('--startup-runs', type=int, default=3)
     parser.add_argument('--frames', type=int, default=180)
     parser.add_argument('--switch-cycles', type=int, default=5)
+    parser.add_argument('--windowed', action='store_true')
+    parser.add_argument('--gl-probe', type=Path)
     parser.add_argument('--frame-metrics', action='store_true', help='Record aggregate frame timings through the existing profiler overlay')
     parser.add_argument('--timeout', type=float, default=120)
     args = parser.parse_args()
     if not 1 <= args.startup_runs <= 20 or not 1 <= args.frames <= 10000 or not 0 <= args.switch_cycles <= 100 or not 0 < args.timeout <= 600:
         parser.error('Require runs 1..20, frames 1..10000, cycles 0..100, timeout (0, 600]')
+    if args.gl_probe and (not args.windowed or not args.gl_probe.is_file()):
+        parser.error('--gl-probe requires --windowed and an existing dylib')
     work = args.output.resolve() if args.output else Path(tempfile.mkdtemp(prefix='wm-runtime-'))
     work.mkdir(parents=True, exist_ok=True)
     results = []
     for index in range(args.startup_runs):
-        result = run(args.binary.resolve(), args.root.resolve(), work, f'startup_{index}', 0, 0, args.timeout)
+        result = run(args.binary.resolve(), args.root.resolve(), work, f'startup_{index}', 0, 0, args.timeout, windowed=args.windowed, gl_probe=args.gl_probe.resolve() if args.gl_probe else None)
         results.append(result)
         print(f"{result['name']}: ready <= {result['first_usable_seconds_upper_bound']:.3f}s; peak RSS {result['sampled_peak_rss_mib']:.1f} MiB", flush=True)
-    results.append(run(args.binary.resolve(), args.root.resolve(), work, 'workload', args.frames, args.switch_cycles, args.timeout, args.frame_metrics))
-    report = {'platform': platform.platform(), 'binary': str(args.binary.resolve()), 'runs': results,
+    results.append(run(args.binary.resolve(), args.root.resolve(), work, 'workload', args.frames, args.switch_cycles, args.timeout, args.frame_metrics, args.windowed, args.gl_probe.resolve() if args.gl_probe else None))
+    report = {'platform': platform.platform(), 'binary': str(args.binary.resolve()), 'windowed': args.windowed, 'runs': results,
               'notes': ['The first launch is filesystem-cache-uncontrolled, not a guaranteed cold launch. Later launches are warm repeats.',
                         'Startup ends at a UI audit after two rendered frames. Polling and audit overhead make it an upper bound.',
                         'RSS is sampled every ~50ms plus ps overhead. Process CPU totals include ps sampler subprocesses.',
-                        'Headless software rendering is uncapped; CPU usage is not representative of a vsynced window.',
+                        'Windowed mode uses the app display; headless mode is uncapped. The optional GL probe requests swap interval 1 and logs the actual value.',
                         'Phase wall times include navigation, audit screenshots, E2E dispatch and polling. They are not isolated frame times.',
                         'Optional profiler timings cover the whole workload and include dispatch/audit frames, with collection enabled.',
                         'UI element counts cover the visible audit tree, not all retained ECS entities or GPU textures.',
