@@ -1,0 +1,59 @@
+goto_screen rolling_number
+resize 1280 720
+wait 0.3
+expect_text "Numbers in motion"
+expect_text "Target: 000099"
+expect_text "At rest"
+screenshot rolling_number_default
+click_ui rolling_add
+wait_frames 6
+screenshot rolling_number_moving
+wait 0.8
+expect_text "Target: 000100"
+expect_text "At rest"
+click_ui rolling_subtract
+wait 0.8
+expect_text "Target: 000099"
+click_ui rolling_999
+wait 0.8
+click_ui rolling_add
+wait 0.8
+expect_text "Target: 001000"
+click_ui rolling_jump
+click_ui rolling_subtract
+wait 0.8
+expect_text "Target: 001024"
+focus_element rolling_reduced
+key ENTER
+wait 0.1
+expect_text "Reduced motion: on"
+click_ui rolling_reset
+wait 0.1
+expect_text "Target: 000000"
+expect_text "At rest"
+click_ui rolling_subtract
+wait 0.1
+expect_text "Target: 000000"
+click_ui rolling_reduced
+click_ui rolling_blur
+wait 0.1
+expect_text "Motion blur: off"
+click_ui rolling_add
+click_ui rolling_pause
+wait 0.8
+expect_text "Paused"
+screenshot rolling_number_paused
+click_ui rolling_jump
+wait 0.2
+expect_text "Target: 000026"
+screenshot rolling_number_retarget_paused
+click_ui rolling_pause
+wait 0.8
+expect_text "At rest"
+resize 1024 768
+wait 0.3
+assert_ui rolling_root w=1024 h=768
+assert_ui rolling_digits w=864 h=123
+assert_within_parents
+screenshot rolling_number_narrow
+resize 1280 720
