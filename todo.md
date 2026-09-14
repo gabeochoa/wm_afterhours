@@ -32,7 +32,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Add a rolling number animation for counters and changing values: a smooth, blurred transition when a number changes, rather than instantly swapping the text. Define digit transitions, carry/borrow, interruption by a new value, reduced-motion behavior, and a reusable demo before choosing an API.
 
-- [ ] Review [chrstph-gg/sf-windows](https://github.com/chrstph-gg/sf-windows) and record useful ideas or limitations relevant to WM and afterhours before adopting anything.
+- [ ] Review [chrstph-gg/sf-windows](https://github.com/chrstph-gg/sf-windows) and record useful ideas or limitations relevant to WM and afterhours before adopting anything. Blocked: the external source loader rejected this URL under its input-filtering policy. No source was retrieved, so there is no completed review.
 
 - [ ] Define and implement native cross-axis Stretch sizing for unspecified dimensions; see docs/AFTERHOURS_GAPS.md.
 
@@ -113,10 +113,8 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 ### Measurements and external review still pending
 
-- [ ] Measure artwork atlas texture switches, driver draw calls and windowed frame time. WM now packs the Cafe and icon artwork into two padded atlases; pixel preservation and texture counts are checked. Driver-level savings remain unmeasured. Do not add afterhours instrumentation in the WM-only pass.
-- [ ] Measure controlled cold launch and vsynced window CPU/frame times on an otherwise idle machine. Bounded headless startup, CPU/RSS and repeat-switch measurements are recorded in [the runtime report](docs/reports/runtime-performance-2026-09-13.md). Deferred fonts load once and remain resident after visiting their consumer.
-- [ ] Refresh selected CSS/native comparisons when the required local browser is available. [The source review](mocks/REVIEW-2026-09-13.md) fixes double-counted absolute margins, explains intrinsic-text limitations, and identifies changed fixtures. Fresh browser mismatch counts remain unmeasured. Start with multiline text, File Tree, decorators, forms, Islands, themes and meters; do not reuse August counts as current defects.
-- [ ] Extend the mock's text/font/wrapping model before using it to judge text-sized native nodes. Its absolutely positioned labels contribute no intrinsic height. Native coordinates replayed for absolute nodes cannot independently validate placement.
+- [ ] Measure controlled cold launch and isolated idle CPU on an otherwise idle machine. Headless and verified-vsync windowed startup, workload CPU/RSS, settled frame timings and atlas driver counts are now in [the runtime report](docs/reports/runtime-performance-2026-09-13.md). Shared-machine runs do not control other users or filesystem caches; do not relabel warm launches as cold. Deferred fonts load once and remain resident after visiting their consumer.
+- [ ] Refresh selected CSS/native comparisons when the required local browser is available. [The source review](mocks/REVIEW-2026-09-13.md) fixes double-counted absolute margins, explains intrinsic-text limitations, and identifies changed fixtures. Fresh selected native screenshots/trees and a font-aware viewer are ready at `output/wm-followthrough/mock-review/`. Font files, explicit sizes, wrapping intent, spans and intrinsic text participation are now represented. Browser mismatch counts remain unmeasured because the required local browser prerequisites are absent. Verify browser-vs-Raylib advances, fallback, line breaking and styled-run auto-fit before trusting text differences; absolute origins still replay native coordinates. Do not reuse August counts as current defects.
 
 ### Earlier library requests, still deferred
 

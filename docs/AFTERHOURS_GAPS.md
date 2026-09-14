@@ -1798,3 +1798,51 @@ drag lists, text inputs/autofit, toasts, virtual lists and focus/Escape behavior
 The WM build emitted no warnings. Fresh screenshots were inspected at 720p and
 1080p, including validation recovery, save confirmation, focus and the toast.
 The multiline rendering suite passes 62/62 checks.
+
+
+## Text measurement and rendering use different font inputs (September 13 follow-through)
+
+WM's mock export exposed a library contract mismatch. `AutoLayout::get_text_size_for_axis`
+uses `widget.font_name` directly and fixes spacing at `1.f` in
+`src/plugins/autolayout.h`. Rendering resolves `cmp.font_weight` through
+`FontManager::resolve_weighted` and uses `1.f + HasLabel::letter_spacing` in
+`src/plugins/ui/rendering.h`. A text-sized bold or letter-spaced label can therefore
+be sized with different advances from those used to draw it. This is source-confirmed;
+a minimal native regression test is still needed before an upstream implementation.
+
+My assumption was that a label's font, weight and spacing were one shared measurement
+contract. They are currently resolved separately. WM now exports these inputs and
+loads the same font files for its CSS comparison; it must not copy the native solved
+height or silently ignore weight to manufacture agreement.
+
+Needed upstream: resolve one text-measurement descriptor before both layout and
+rendering, including family variant, pixel size, letter spacing, wrapping and line
+metrics. Preserve the distinction between explicit font size and auto-fit. Test
+`Dim::Text` width and wrapped height with a registered regular/bold pair and nonzero
+letter spacing, then compare actual render bounds. Styled spans need the same rule
+per run. Keep existing explicit-size behavior and make backend limitations visible.
+No afterhours files were edited for this investigation.
+
+## Atlases alone do not reduce submitted draws in the measured screens
+
+The WM-only OpenGL probe measured both the original separate textures and the
+atlas-backed versions at swap interval 1. Cozy Cafe remained at 66 draw calls and
+68 texture-bind calls per settled frame; Images remained at 59 and 61. Two runs
+per version reproduced those counts. The complete method and frame-time results
+are in [the runtime report](reports/runtime-performance-2026-09-13.md).
+
+My assumption was that sharing an artwork texture would also join its draws.
+That is insufficient when intervening commands change render state. Source review
+shows that `RenderBatcher::render` in `src/plugins/ui/render_primitives.h` preserves
+command order, dispatches images individually and only groups adjacent compatible
+rectangle commands. Text and clipping commands can remain between image commands.
+Raylib may still batch compatible submissions internally. These source facts do
+not establish which boundaries caused every observed driver draw.
+
+Needed before an upstream optimization: attribute driver draws and state changes
+to the ordered command stream, including texture, scissor, shader and layer. Find
+avoidable boundaries with a small overlapping-image/text/clip fixture before
+changing scheduling. Any coalescing must preserve painter order, overlap and clip
+semantics. Do not globally sort by texture or call command counts GPU draw counts.
+This is a measured optimization opportunity, not evidence that the atlas API is
+broken. No afterhours code changed.

@@ -37,8 +37,8 @@ Broad older requests such as more juice and game interactivity are checked again
 | Chart indicators | Current Chart Lab already has distinct marker shapes, threshold lines and application drawing. Tests 153/176 passed; fresh charts show both marker types and threshold visibility. Native chart options/extraction remain open. |
 | Podcast / theme swatches | New `podcast_library` has simulated playback, seeking, speed and episode selection. Existing theme gallery covers swatches. No audio playback is claimed. |
 | Pixel-intended roundness | Nine remaining caller files now use explicit radii. Remaining fractions describe circles/pills or the roundness gallery. |
-| Artwork atlases | Cafe and image examples each use one padded atlas for five source images. Generator checks source pixels and padding. Driver draw-call measurements remain open. |
-| Launch and CPU/RAM | Deferred CJK fonts, shared loading and a bounded measurement script. Fonts remain loaded after first use; see runtime report and retained windowed/cold-start checks. |
+| Artwork atlases | Cafe and image examples each use one padded atlas for five source images. Generator checks source pixels and padding. Follow-through driver measurements found unchanged draw/bind counts; see runtime report. |
+| Launch and CPU/RAM | Deferred CJK fonts, shared loading and a bounded measurement script. Fonts remain loaded after first use; headless and verified-vsync windowed measurements are in the runtime report. Controlled cold-start/isolated idle checks remain open. |
 | Generated include collision | Includes and objects live under each output/screen variant. Independent build directories no longer overwrite a shared source header. |
 | Assertion-free E2E scripts | Inventory distinguishes interactive scripts from capture-only fixtures; seven scripts gained behavioral assertions. New word-selection assertion exposed redundant WM Shift+Arrow mappings, now removed. |
 | Headless settling | Screenshot frames/dt configurable, with default 120 frames and optional instant animations. Non-screenshot test modes retain their prior policy. |
@@ -53,8 +53,8 @@ Broad older requests such as more juice and game interactivity are checked again
 | Old config/layout/checkbox/game polish | Replacement screens have current interaction coverage. Fixed actual text-box height warnings in layout, Casual Settings and Empire Tycoon; broad old requests are not treated as unbounded redesign work. |
 | Layout warnings in decorators, nine-slice, parcels, cards | Source/capture review separates existing intentional boundary specimens from caller defects. New library behavior is deferred. |
 | Layout run-to-run report | Standalone and all-screen native captures are pixel-identical. Historical E2E variation is not reproduced by that comparison; the repeated same-phase E2E capture is also pixel-identical. The historical variation was not reproduced. |
-| Mock diagonal offsets / unreachable text | Fixed duplicated CSS absolute margins. Historical missing AIM messages are present; text intrinsic sizing is absent from the mock. Fresh browser comparison remains blocked by the unavailable required browser setup. |
-| sf-windows | External source access was denied by security review. No source audit or adoption is claimed; todo retained. |
+| Mock diagonal offsets / unreachable text | Fixed duplicated CSS absolute margins. Historical missing AIM messages are present; the follow-through adds font metadata and intrinsic text participation to the mock. Fresh browser comparison remains blocked by the unavailable required browser setup. |
+| sf-windows | The external source loader rejected the URL under its input-filtering policy. No source audit or adoption is claimed; todo retained. |
 
 ## Review findings corrected during verification
 
@@ -96,3 +96,25 @@ later library/API review rather than hidden behind screen-specific patches.
 The local decision log is `output/wm-only-todos/decisions.tsv`. Review captures and
 machine-readable results are under `output/wm-only-todos`; temporary worktrees and
 unneeded test-generated files are removed after verification. No push was made.
+
+## Follow-through after the incomplete handoff
+
+The original handoff left executable WM work among the next-five suggestions.
+That was incomplete scope handling. Commits `49746363` and `b4c87b31` finish the
+font-aware mock input work and add WM-only OpenGL/runtime measurements. Afterhours
+remains unchanged at `c5cfd359967c6bb165fd40b6a2bc14d5009adc2f`.
+
+The final build passed without warnings. Mock Node checks pass, including hidden
+labels retaining intrinsic size and report limitations. Eight fresh native
+captures include 325 labels with resolvable font assets. The viewer and hashed
+inputs are in `output/wm-followthrough/mock-review/`. The atlas experiment completed
+eight runs; the windowed workload and three startup runs passed with verified swap
+interval 1. The temporary 261 MiB comparison worktree and failed probe trials were
+removed. Reports retain the evidence and reproduction commands.
+
+Remaining WM verification has concrete external prerequisites: a working local
+browser for CSS/native comparison, permitted external source access for sf-windows,
+and an idle machine for controlled cold-start/isolated idle CPU measurement.
+Those are still unchecked in `todo.md`. The font measurement mismatch and the
+batching investigation belong in `docs/AFTERHOURS_GAPS.md`; no library implementation
+is part of this pass.
