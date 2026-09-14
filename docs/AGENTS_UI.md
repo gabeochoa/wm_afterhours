@@ -1,79 +1,63 @@
-# Agent UI Development Guide
+# Build and test
 
-Headless CLI + E2E only. **Do not use MCP** (`--mcp`, `layout_test.py`, `screenshot_all_screens.py`, etc.).
+Use the headless CLI and E2E scripts for native checks. Do not use the old MCP
+capture workflow. Run builds/tests at `nice -n 10`, with at most two build jobs
+on the shared laptop. Batch edits before rebuilding, then test affected screens
+one at a time. Keep each screen change in its own commit.
 
-## Quick commands
-
-```bash
-make                          # build ui_tester
-make test                     # all E2E scripts, headless + quiet
-make test-visible             # E2E with visible window (debug)
-make run-all-tests            # FontConfig coroutine tests only (UI → E2E)
-make test-layout              # Catch2 autolayout (zero GPU)
-make validate-screenshots     # PNG regression vs baselines
-make ci                       # build + validate + coroutine + E2E
+```sh
+nice -n 10 make -j2
+nice -n 10 make test
+nice -n 10 make test-layout
+nice -n 10 make validate-screenshots
+nice -n 10 ./output/ui_tester.exe --test-script tests/e2e_scripts/101_layout_patterns.e2e --headless --quiet
+nice -n 10 ./output/ui_tester.exe --layout-summary layout_patterns
 ```
 
-Single script:
+`make test-visible` opens a window for debugging. `make run-all-tests` runs the
+remaining FontConfig coroutine tests; new UI tests belong in E2E scripts.
+`make ci` combines the project checks. Headless batches reuse one process to
+avoid accumulating WindowServer resources.
 
-```bash
-./output/ui_tester.exe --test-script tests/e2e_scripts/101_layout_patterns.e2e --headless --quiet
+## Screen changes
+
+1. Add stable `with_debug_name(...)` names to controls under test.
+2. Start scripts with `goto_screen <name>` and `wait 0.5`. Assert geometry with
+   `assert_ui` / `assert_ui_text`, and behavior through observable state.
+3. Exercise pointer and keyboard input, disabled/empty states, and resizing.
+4. Capture and inspect the rendered result. Use labeled contact sheets for
+   sequences, then full-size crops for uncertain details.
+5. Use `validate_screen` for existing baselines. Update only reviewed baselines;
+   a passing native baseline does not establish parity with `mocks.html`.
+
+Use compact assertion failures and layout summaries first. Reserve `dump_ui`
+for focused regressions. `--time-scale` can shorten E2E waits; capture animation
+keyframes rather than dumping every frame. Remove only your temporary scripts,
+images and audit directories after review.
+
+## Focus and popups
+
+```sh
+python3 scripts/audit_focus.py --output output/focus-results.json
+python3 scripts/audit_popups.py --output output/popup-results.json
 ```
 
-Layout bounds (named elements only, not full tree):
+These scripts run the app with `nice` and clean temporary screenshots. Focus
+supports `--screen NAME`; popups support `--capture-dir PATH` and `--existing PATH`.
+For retained focus crops, run the app with `--focus-test --focus-audit --max-tabs 512
+--image-output PATH`, then analyze with `audit_focus.py --existing PATH`.
 
-```bash
-./output/ui_tester.exe --layout-summary layout_patterns
-```
+Check ring paint order as well as rectangle bounds. Check Tab/Shift+Tab cycles,
+clipped targets, modal containment, Escape/outside dismissal and opener restoration.
+Keep screen capture state independent of preceding tests.
 
-## Token budget (best → worst)
+## Interpreting failures
 
-1. **Exit code** — `make test` pass/fail
-2. **`assert_ui` failure line** — primary debug signal (~1 line)
-3. **Catch2** — layout math, zero GPU (`vendor/afterhours/example/ui_layout/`)
-4. **E2E summary** — `E2E passed 91/91` with `--quiet`
-5. **`--layout-summary`** — one line per named element when asserts aren't enough
-6. **`validate-screenshots`** — pixel diff count, not full image
-7. **Screenshot PNG** — last resort
+Account for requested margins, gaps, negative offsets, strict sizing and scroll
+clipping before reporting a solver defect. Synthetic key presses become visible
+on a later frame; `wait` advances simulation batches. Prove a new assertion fails
+on the broken behavior. A visible-text registry or geometry dump alone cannot
+prove that pixels were drawn.
 
-**Never** use `dump_ui` or full UI trees in routine agent loops.
-
-## E2E script rules
-
-- Use `assert_ui` / `assert_ui_text` for every layout claim
-- Use `goto_screen <name>` then `wait 0.5` before asserts
-- Prefer `validate_screen` over raw `screenshot` when a baseline exists
-- `dump_ui` only in dedicated regression scripts (e.g. `100_dump_simple_button.e2e`)
-
-## Adding a new screen or E2E test
-
-1. Add screen under `src/systems/screens/` with stable `with_debug_name(...)` on elements you will assert
-2. **Build:** `make`
-3. **Visual check (required for new tests):** capture a render and inspect it before committing
-
-```bash
-# One-off visual capture
-printf 'goto_screen my_screen\nwait 0.5\nscreenshot my_screen_review\n' > /tmp/review.e2e
-./output/ui_tester.exe --test-script /tmp/review.e2e --headless
-open /tmp/e2e_screenshot_my_screen_review.png   # macOS
-```
-
-Or headless batch for all screens:
-
-```bash
-make screenshots   # output/{screen}_720p.png
-```
-
-4. Write `.e2e` script with `assert_ui` one-liners; add `screenshot` line for review artifacts in `/tmp/`
-5. Run: `./output/ui_tester.exe --test-script tests/e2e_scripts/NN_my_test.e2e --headless --quiet`
-6. If visual baselines are needed: `make update-baselines` then use `validate_screen` in the script
-
-## Mac notes
-
-- Default to headless (`make test`) — avoids WindowServer RAM from many windows
-- Use `make test-visible` only when debugging interactively
-- Single-process batch: one `ui_tester` run per `make test`, not one window per script
-
-## Animation
-
-Use `--time-scale` for faster E2E waits. Capture one screenshot per keyframe; do not dump per-frame JSON.
+[Mock comparison limits](../mocks/README.md) explain which CSS differences are
+independent evidence. [Gaps](AFTERHOURS_GAPS.md) track library blockers.

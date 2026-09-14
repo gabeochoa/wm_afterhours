@@ -1,1878 +1,247 @@
-# Afterhours Library Gaps & Workarounds
-
-This file tracks afterhours library limitations and wm-owned implementation
-and visual parity gaps. Each finding identifies its owner where known;
-resolved findings remain as evidence. Library changes and the submodule pin
-were frozen pending user review during the visual audit. Subsequently approved
-cross-project changes are tracked in the implementation status below; this does
-not approve every older library finding.
-
-The September 13 consumer refresh compares current application workarounds
-with afterhours `d90db15`, rather than treating old consumer pins as the current
-library. It adds UP-13 through UP-22 below and corrects an earlier overbroad
-claim that Hanabi could delete its atlas guard. Some requests are adoption
-work; others still need library changes. Source review is not runtime proof.
-
-See also: `docs/vendor_ui_sizing_issues.md`
-
-## September 13 live-review fixes
-
-These findings came from the latest interactive screen review. The assumption
-column records what made each mistake easy to repeat. Runtime verification is
-tracked in `scripts/verify_review_todos.py` and the library regression tests.
-The completed run passed 50 distinct E2E scripts, four performance scenarios,
-and 13 focused library suites. New captures were inspected at 720p and at
-the additional resolutions exercised by each screen script. The application
-build completed without warnings. The Forms, Modals and text-stroke baselines were
-replaced after reviewing their changed renders and rerunning the baseline checks.
-
-| Finding | Cause and mistaken assumption | Change and scope |
-|---|---|---|
-| Virtual List Lab rendering became expensive despite virtualization | The list already builds only visible rows plus overscan. Assuming 10,000 live widgets would target the wrong code. A macOS stack sample instead showed repeated scissor ends flushing Raylib batches through Metal submission. | Coalesce adjacent identical clip scopes without reordering draws. Tests cover equal/different clips, intervening unclipped work and final closure. |
-| Dragged cards lost their contents and styling | The overlay copied a few root properties and assumed that represented the card. Nested labels, badges, drawing callbacks and inherited opacity were missing. | Render the source subtree at the preview position while preserving its internal clipping and effective opacity. Restore source geometry afterward; the overlay remains noninteractive. Both renderers have parity tests. |
-| Selection highlights and carets were rounded | Internal text-editing decorations inherited the ordinary component radius. A default appropriate for controls is not appropriate for a selection rectangle. | Set selection and caret radii explicitly to zero in single- and multiline inputs. |
-| Stepper text acquired an outline | The outer configuration, including its border, was copied into arrow and value children. | Strip borders from internal stepper children while retaining the outer control border. |
-| Center/End stacks inserted gaps around 30px children | Final position/cursor snapping still ran after a widget opted out of grid snapping. | Respect parent and child opt-outs during final positioning, including the running layout cursor. Tests assert exact adjacency. |
-| Text strokes showed offset copies instead of a continuous outline | Eight displaced text draws approximate only eight directions and leave holes around thin glyphs or large radii. | Expand actual glyph coverage with a Euclidean distance transform; cache outlined textures and preserve advances. Retire cached textures at frame boundaries and clear them before graphics shutdown. Raylib has pixel/metrics tests; Metal uses the same mask operation but requires separate runtime verification. |
-| A stepper ignored keyboard changes | The widget reset its index before consuming the previous frame's left/right result. Focus eligibility also excluded widgets with only left/right handlers. Pointer arrows masked both bugs. | Consume pending keyboard state before syncing to the caller, report each change once, and normalize against the current option count. Steppers use configured key-repeat events; continuous sliders still use held input. |
-| Reused clipping stayed enabled | Applying visible overflow did not remove `HasClipChildren` installed by an earlier hidden configuration. The Acid test exposed this because its pink probes stayed hidden in the intentional failure mode. | Clear config-owned clipping on a normal rebuild; preserve it for partial restyles. Tests cover both transitions. `HasScrollView` ownership during Scroll→Visible remains a separate open question because callers also install it directly. |
-| Toasts could only stack at bottom center | Positioning was embedded in the renderer rather than an explicit placement choice. | Add top/bottom left/right anchors and preserve bottom-center as the default. Stack and entrance directions follow the chosen anchor. |
-| Profiler could not inspect a frame interval | Per-system history existed in the collector but snapshots exposed only aggregate statistics. | Copy histories only for a frozen view, select an inclusive range and calculate selected average, peak and last-frame timings. Live snapshots retain the cheaper path. |
-| Kirby Options loaded slowly and leaked artwork across visits | Individual textures were loaded by each screen instance without matching ownership/cleanup. | Pack the 22 used images into one atlas and retain it in a resource-owning UI component. This is wm asset ownership work, not a new core atlas API. |
-| Dropdown-looking controls, progress focus targets and inactive tabs | Screen styling implied behaviors that those particular implementations did not provide. | Use actual dropdowns, passive progress segments and distinct tab data. These are wm implementation defects. |
-| Menus, popups and decorative frames looked inconsistent | Local choices overused accent fills, nested outlines and mismatched radii. Library availability did not establish good defaults for each composition. | Simplify those screen styles while preserving the separate Dialog examples the user accepted. |
-| Localized inline key prompts were missing | Treating an icon as fixed before/after a sentence assumes English word order. | Demonstrate translation-owned key placeholders with measured wrapping atoms in English and Korean. This demo does not claim general bidi, Unicode line-breaking or a reusable rich-text API. |
-
-### Virtual-list performance measurements
-
-The headless macOS debug build measured the following on the shared machine.
-Builds and test commands used `nice -n 10`. These runs measure whole-frame costs;
-CPU percentages are unsuitable for an efficiency comparison because the
-headless renderer runs uncapped.
-
-| Scenario | Before average | After average | After p95 | Rows built |
-|---|---:|---:|---:|---:|
-| Profiler hidden, idle | 14.84 ms | 8.22 ms | 10.94 ms | 26 |
-| Profiler shown, idle | 24.76 ms | 11.47 ms | 13.22 ms | Before 30, after 26 |
-| Profiler hidden, repeated start/middle/end jumps | Invalid baseline | 7.82 ms | 9.36 ms | 26–30 |
-| Profiler shown, repeated start/middle/end jumps | Invalid baseline | 11.17 ms | 13.11 ms | 26–30 |
-
-The initial jump benchmark clicked an overlapping profiler launcher instead
-of the End button. Those samples were rejected; the repeat uses keyboard
-activation and asserts each destination. The shown-idle baseline consequently
-started at row 5,000, so it is not a controlled measure of profiler overhead.
-The before sample placed 1,757 of 2,118 render-stack samples under scissor-end
-batch flushes. The optimization preserves draw order and combines only
-adjacent equal clip rectangles. `verify_review_todos.py --benchmark-only`
-repeats idle and jump scenarios, including short and filled history windows.
-
-## Screen design pass, 2026-09-13
-
-All 117 screen baselines were reviewed and updated in separate local commits.
-Active captures remain in `screenshot-baselines/screens/` and
-`baseline_screenshots/`; interaction coverage is in `tests/e2e_scripts/`.
-The completed audit reports and archived captures were removed.
-[todo.md](../todo.md) retains unresolved work; proven library limitations follow
-below. Static screenshot parity does not establish performance or accessibility.
-
----
-
-## Screen mock audit
-
-This section also records wm-owned findings from the 26-screen mock audit.
-It does not classify a visual mismatch as a library defect. Library changes
-and the submodule pin are frozen for this pass; proven upstream blockers
-remain open for user review. Screen changes are recorded in local commits; unresolved work remains in `todo.md`.
-
-### Visual acceptance reopened
-
-The user rejected the earlier assessment that the remaining differences were
-only minor or cosmetic. The C++ screens still fall short of the web mocks.
-The earlier reviews established functional progress and readable layouts;
-they did not establish visual parity. All 26 screens retain open visual gaps.
-
-The web mock remains the acceptance target. Typography, composition, depth,
-artwork and control states must be reviewed together. Passing E2E tests proves
-the asserted behavior. Passing screenshot validation proves stability against
-native baselines. Neither proves a match to `mocks.html`.
-
-### Shared visual gaps
-
-These entries collect the implementation shortcuts behind the per-screen
-findings below. They describe missing results in wm, not confirmed missing
-APIs in afterhours. Check the existing library support before assigning an
-upstream change; library changes still require user review.
-
-| ID | Open gap and evidence | Ownership / next work | Closure evidence |
-|---|---|---|---|
-| VP-01 | Typography does not match the browser: font weight, italics, tracking, line height, wrapping and mixed-size text. Fighter, Flight, Race Results and Kart Select have different display lettering; Potion and Shop lack the target italic treatment; Neon uses one ammo font size. | wm must match actual font faces and text metrics. Investigate library support only where a specific text treatment cannot be expressed. Synthetic outlines or a larger atlas alone do not reproduce the intended weight or slant. | Compare headings, body copy, values and hints at 720p/1080p. Match hierarchy, baseline placement, line breaks and emphasis without clipping. |
-| VP-02 | Rotation, skew and perspective were flattened. Fighter's title/hologram and Dead Space's rows lack the target transforms; Parcel's phone and Empire's logo remain upright. These change the composition substantially. | wm implementation gap. Determine whether existing drawing and transform support can reproduce the composition; any missing reusable transform API needs a separate library reproduction. | Match angles, silhouettes and overlap to the mock. Transformed controls must retain correctly placed pointer targets and keyboard navigation. |
-| VP-03 | Gradients, shadows, glow and inset highlights are simplified or absent. Cozy loses radial lighting and paper depth; Empire loses plate/button shading; Dead Space and Flight lose glow; PowerWash, Kart, Offsite and Secure Tunnel have flatter shadows. | wm implementation gap; library capability and rendering cost need investigation. Flat fills are not an accepted substitute for the mock's depth. | Compare light direction, gradient falloff, shadow spread, glow and foreground/background separation in matched captures. |
-| VP-04 | Borders, corner shapes, clipping and layered decoration differ. Cozy lacks inset arcs and its paper fold; Minesweeper has square bevel joins; Marlo cards differ in rounding; Guess Who outlines are heavier; Potion's inset border is faint. | wm owns the visible result. The uniform-border thickness bug is separately proven below; do not assign every shape mismatch to that bug. | Match border thickness, corner silhouettes, inset edges and overlaps at both resolutions. Verify content and shadows clip where the mock clips them. |
-| VP-05 | Artwork, icons and small controls are approximated with simpler shapes or text glyphs. PowerWash status/gear icons, Secure Tunnel flags/shield, AIM and Media toolbar icons, Shop items and Offsite folders differ; mobile currency/lives decoration is missing or simplified. | wm art and rendering work. Use faithful isolated artwork or native vector drawing while keeping labels, values and controls live. | Compare silhouettes, stroke weights, detail, color and scale. No missing or substitute glyphs where the mock has a distinct icon. |
-| VP-06 | Spacing and proportions remain wrong even where the main panels align. Parcel's objective badge crowds text; PowerWash help wraps differently; Guess Who arrows sit too close to labels; Race headers and Flight keycaps are smaller; several screens have different rail, footer or label spacing. | wm layout and text measurement. Absence of overflow is only a minimum correctness check. | Match padding, alignment, line lengths, density and relative sizes to the mock in the same viewport and state. |
-| VP-07 | Decorative backgrounds lost material and scene detail. Cozy lacks grain; Islands has approximate paper/background contours; Parcel's street/rider and PowerWash's wall/pool scene are simplified. These affect the overall resemblance, not just individual widgets. | wm artwork/composition work. Keep decorative textures separate from changing content. | Compare the full canvas as well as control crops. Match texture, scene geometry, contrast and the balance between decoration and controls. |
-| VP-08 | Control-state appearance has not been accepted against the web mock. Sports selected-row shading differs; Media's selected poster border differs; Guess Who dropdown chevrons differ. Existing interaction tests do not establish matching hover, focus, pressed, disabled, expanded or transition visuals across all screens. | wm review and implementation. Audit these states explicitly; record any missing transition or state treatment with a reproduction instead of assuming it matches because the control works. | Capture matching pointer and keyboard states, open menus/dialogs, selection, disabled controls and transitions. Compare appearance and hit areas against the web version while preserving existing behavior. |
-| VP-09 | Visual review used an inadequate acceptance standard. Substantial changes to perspective, type and depth were labeled cosmetic; passing native baselines and E2E checks were used to support overly broad completion claims. | wm audit process. Reopen visual acceptance for all 26 screens and keep functional verification separate from appearance. | Each screen needs direct web-versus-C++ review in matched states and resolutions. Close concrete visual findings only when the result matches or the user accepts a specific deviation. |
-| VP-10 | Browser styling is easy to compose, while the native implementations used repeated custom drawing and approximations. The audit has not established which treatments need better library APIs and which merely need correct wm code. | wm investigation first. For a proposed library gap, record the desired effect, existing API attempted, minimal reproduction and limitation. Existing border/position/slider findings below remain separate proven cases. | Each suspected API gap has evidence and a clear owner. Library availability alone does not close the corresponding visual gap; the screen must render the intended result. |
-
-### Per-screen findings
-
-The following rows preserve implemented fixes and known residual differences.
-References to passing tests or previous reviews are evidence of those checks,
-not visual acceptance. The shared gaps above and these screen-specific visual
-gaps remain open.
-
-| Screen / state | Finding | Owner | Disposition / evidence |
-|---|---|---|---|
-| Hosted gallery / comparison views | Relative image and font URLs break outside the repository. | wm tooling | Standalone export embeds all 48 assets; 26 canvases and all comparison images verified outside the repo. Pixelcloud revision 5 embeds all 26 audited native baselines and opens directly in a draggable Original vs Mock/Current comparison; pointer and keyboard checks passed. |
-| potion_crafting / recipe view | Dark panels, text initials for ingredients, and a rectangular flask did not match the parchment composition. | wm | Replaced with parchment layout, botanical/bottle artwork, scaled geometry and Garamond text; reviewed at 720p and 1080p. |
-| potion_crafting / crafting | Brew ignored clicks; tabs did not change content; recipe row IDs overlapped. | wm | Unique IDs, live stock consumption, shortage handling, recipe-aware ingredient requirements, inventory and journal views. E2E 40 exercises pointer, real Tab traversal, Enter, repeated shortage and resize. |
-| potion_crafting / visual parity | Secondary copy lacks the target's italic face; brew button's inset border is subtler; footer gives keyboard guidance instead of the decorative Close workshop hint. | wm | Open visual parity gap. No library blocker claimed; gameplay and layout checks pass. |
-| angry_birds_settings / layout | Flat board, mismatched icons and uneven button caps did not resemble the mobile settings mock. | wm | Shared label-free forest, board and button artwork, high-resolution Fredoka atlas, and explicit scaled geometry. Fresh 720p/1080p captures reviewed independently. |
-| angry_birds_settings / interactions | Language, help and progress actions lacked useful views. | wm | Real language selection, separate campaign save/load state, credits/support/privacy views, notification/audio settings, apply/cancel, close/reopen and Escape. E2E 128 and responsive/containment regressions pass. |
-| angry_birds_settings / visual parity | Native font outlines are heavier; hint baseline is about 7px higher; faint background currency pill is absent. | wm | Open visual parity gap; primary layout and control geometry match. |
-| cozy_cafe / layout | Mis-sized panels, substitute icons, faint borders and clipped footer/music labels differed from the cafe mock. | wm | Matched panel geometry, isolated flower/star/tool artwork, scaled outlines and improved type. Fresh 720p/1080p captures; independent reviews. |
-| cozy_cafe / service and selection | Serving incremented counters without removing orders; selected specials lacked a visible state. | wm | Serve consumes the next order and disables when empty, promotion uses the selected special, visible selection outline and live music control. E2E 129 checks pointer, Tab/Enter, depleted queue and resize. |
-| cozy_cafe / visual parity | Paper lacks the mock's grain, radial glow, inset arcs and corner fold; native text outlines are stronger and title wider; customer separators use hyphens. | wm | Open visual parity gap. Correctness, overflow and parent containment checks pass. |
-| casual_settings / layout and dialogs | Generic colors, substitute icons and inert information actions differed from the mobile mock. | wm | Shared decorative board/icons, matched geometry, high-resolution rounded type, language apply/cancel, campaign save/load, credits, support FAQ, terms and about views. E2E 130 passes at both resolutions, including dialog containment and keyboard use. |
-| casual_settings / visual parity | Faint lives/currency pills are simplified to a currency label; native label outlines differ. | wm | Open visual parity gap. Fresh 720p/1080p captures independently reviewed; text-overflow warnings resolved. |
-| fighter_menu / rendering and navigation | Missing lobby, invisible slanted triangles, blurred display type and letter substitutes for icons weakened the fighter layout. | wm | Fixed triangle winding and background layering, added isolated lobby/icons and a 96px display font. Live tabs and option descriptions; E2E 131 passes pointer, Enter/arrows and 1080 resize. Fresh images independently reviewed. |
-| fighter_menu / visual parity | Title/hologram lack the mock's rotation and perspective; serif weight is thinner; lobby and panel shading are approximate. | wm | Open visual parity gap. No clipping or interaction blocker found in the final 720p/1080p review. |
-| flight_options / layout and settings | Generic options layout and shallow interactions did not match the flight-system mock. | wm | Matched the airspace grid, selection geometry, nine categories and setting editors. Apply/cancel retains or discards values; keyboard and pointer coverage in E2E 134. |
-| flight_options / visual parity | Native lettering is thinner and lacks the browser glow; keycap labels are smaller. Vibration is explicitly marked unavailable. | wm | Open visual parity gap and a stated hardware limitation; final 720p/1080p review found no clipping or interaction blocker. |
-| deadspace_settings / hologram and controls | Rectangular slabs, invisible corner triangles and inert categories missed the hologram design. | wm | Winding-correct clipped polygons, scan lines, layered menus and live category detail settings; E2E 132 passes pointer/keyboard/back and resize. |
-| deadspace_settings / visual parity | Rows lack the mock's perspective skew and stronger glow; rear panel contrast and keycaps differ. | wm | Open visual parity gap. Final 720p/1080p captures independently reviewed with no clipping or unreadable selection. |
-| kirby_options / notebook and preferences | Plain panels and decorative-only options missed the notebook composition and useful interactions. | wm | Isolated paper, tab and icon artwork with native labels; editable name, per-category preferences, favorite mode, tab views and confirmed profile reset. E2E 137 covers pointer, Tab/Enter and resize. |
-| kirby_options / visual parity | Native type spacing/weight and pencil artwork differ; bumper hints use purple rather than dark keycaps. Online view is explicitly local. | wm | Open visual parity gap and stated simulation scope. Final 720p/1080p images independently reviewed. |
-| minesweeper_lab / desktop and game | Generic chrome, unreadable counters and overlapping taskbar text missed the classic desktop mock. | wm | Native desktop/window/taskbar, high-resolution font aliases, regular counter face to distinguish zero from eight, separate labels for icon buttons, real game reset and window state controls. Existing play test 120 and new 139 pass. |
-| minesweeper_lab / visual parity | Bevel corners are square instead of diagonal, menu underlines are absent and window text spacing differs. | wm | Open visual parity gap; board gameplay preserved and 720p/1080p reviewed. Access-key underlines remain an existing library gap below. |
-| empire_tycoon / dashboard and state | Hidden park art, substitute icons, misplaced controls and faint borders weakened the tycoon composition. | wm | Isolated park/icons, winding/layering fixes, scaled outlines and dashboard geometry. Live production, cash, projects, gauges and milestone react to actions; E2E 133 passes. |
-| empire_tycoon / visual parity and scope | Logo remains upright; plates/buttons lack target gradients and inset highlights; body text uses a heavier rounded face; gauges and chat tail are simplified. Tool buttons report selection without full destination screens, as in the mock. | wm | Open visual parity gap and bounded demo navigation. 720p/1080p reviewed; no library changes. |
-| mini_motorways_settings / layout and categories | Typography, detached controls and road bend artifacts missed the map-like settings mock. | wm | Native grid/road geometry, scaled controls and real per-tab content; ring-based bend eliminates draw-segment artifacts. |
-| mini_motorways_settings / visual parity | Font tracking, symbol edges and exact tutorial/version text dimensions differ. | wm | Open visual parity gap; E2E 140 covers pointer, keyboard, values and containment at both resolutions. |
-| neon_strike / HUD and actions | Generic HUD placement, missing artwork and inert controls differed from the mock. | wm | Matched map/compass/equipment geometry with isolated text-free art and native high-resolution labels. Reload transfers reserve ammunition; abilities and equipment have visible selection. |
-| neon_strike / visual parity | Ammo uses one font size instead of mixed sizes; objective chevrons and subtle background glow differ. | wm | Open visual parity gap. E2E 141 and final 720p/1080p reviews pass. |
-| marlo_kart / six-phase presentation | Driver/kart/cup screens and racing presentation did not match the mock; custom roads/maps were accidentally covered by panel fills in the first audit draft. | wm | Isolated driver/kart/trophy art, live text and HUD, perspective road with moving stripes, visible shared-path minimap/cup previews, pause above countdown. Existing fixed-step racing, items, drift, eight racers, four cups and points remain intact. E2E 126/127/138 pass. |
-| marlo_kart / visual parity | Card rounding, label proportions and key hints differ from the mock; native race view follows the real simulation rather than the gallery's phase shortcuts. | wm | Open visual parity gap; all six phases visually reviewed, including actual cup completion and trophy standings. High-resolution regular font removes enlarged-text blur. |
-| aim_chat / desktop and messaging | Simplified chrome and shared/inert conversation actions did not match the classic messenger mock. | wm | Two native windows, desktop/taskbar, isolated buddy history/drafts, multiline composer, warn/block, menus and window controls. Existing text-editing test and E2E 149 pass. |
-| aim_chat / modal hit testing | The nested pasted-log scrollbar intercepted Clear unsent draft in the Edit dialog, leaving the dialog open and blocking minimize. | wm workaround; deeper ownership unresolved | Disable both underlying scroll axes while a modal is open; restore on close. Reproduced before fix; E2E 149 now clears the draft and minimizes/restores correctly. No afterhours edit. |
-| aim_chat / visual parity and scope | Fonts are lighter; some toolbar/taskbar icons are text substitutes; italic/underline report format availability instead of formatting text. Buddy List is a fixed-size utility window. | wm | Open visual parity and formatting gaps. Chat maximize works; messaging is explicitly a local demo. |
-| islands_trains_settings / layout and actions | Centered paper/row proportions differed and Keyboard/Tutorial had no visible effect; Close only displayed a status. | wm | Matched paper/controls and added bindings help, local pan/place/run tutorial, real close/reopen with preserved preferences. E2E 136 covers these flows. |
-| islands_trains_settings / visual parity | Typography and close glyph are lighter; paper/background contours and gradient are approximate. | wm | Open visual parity gap; all controls and tutorial views remain contained at both resolutions. |
-| media_library / layout and browsing | Generic grid and card padding displaced posters; tiny thumbnail labels overflowed in list mode. | wm | Matched library/sidebar/detail composition, six isolated poster templates with native titles, real filtering/sorting/paging, list view and per-item watchlist. Removed duplicate tiny list-poster titles; adjacent live titles remain. |
-| media_library / visual parity and playback | Text is lighter and some navigation icons are text substitutes; selected poster border is thinner. Playback is a labeled local preview rather than a media backend. | wm | Open visual parity gap and explicit demo scope. E2E 150 covers browsing and pause/seek with parent containment. |
-| shop_interface / shop and basket | Generic rounded rows, mismatched proportions and invisible flask liquid weakened the store mock. | wm | Square table rows, paper/wood frames, visible liquid, native item art, live basket purchase and gold/stock changes. Keyboard add/remove and real close/reopen verified in E2E 135. |
-| shop_interface / visual parity and scope | Emboldened serif headings are softer/heavier than target; item drawings and italic text remain approximate. Basket previews only its first three distinct items; Sell remains a preview tab. | wm | Open visual parity and demo-scope gaps. Full basket totals still include every item; primary purchase flow and 720p/1080p containment pass. |
-| rubber_bandits_menu / layout and roster | Logo font, promo overflow, squared selection and invisible bolt differed from the mock. | wm | Correct isolated logo/cast, rounded selection, bounded promo text, native bolt and live character/menu state. All four names checked for overflow. |
-| rubber_bandits_menu / visual parity | Promo border/inset, character-label weight and small footer details differ. Supporter action is local demo feedback. | wm | Open visual parity gap; final 720p/1080p images and long-name state reviewed. |
-| secure_tunnel / client and connection | Dark state-matrix demo lacked the mock map/sidebar and location search. | wm | Native client layout, isolated map art with live markers, typed search and filtered rows, selected-server details and protocol selection. Existing Off/Dialing/Up transition preserved; E2E 152 passes. |
-| secure_tunnel / visual parity and scope | Condensed type, flag/icon drawings, rail spacing and shadows differ; shield artwork is approximate. Protocol, diagnostics and account actions are local simulations. | wm | Open visual parity and demo-scope gaps. The screen states network simulation; no real tunnel is created. |
-| parcel_corps_settings / phone settings | Controls extended beyond the phone, selector arrows hid values and volume controls only incremented on clicks. | wm | Contained native controls with visible values; real draggable sliders and predictable keyboard steps. Status moved into free space above audio rows. E2E 142 verifies exact values and drag at both resolutions. |
-| parcel_corps_settings / visual parity | Phone remains upright, rider/street art and icons are simplified, and the objective badge crowds its final line. | wm | Open visual parity gap. Primary settings are readable and unobstructed; previous review checked readability, not visual parity. |
-| race_results / results layout | Tiny text, invisible header triangles, rounded rows and missing footer contrast weakened the results mock. | wm | Matched skewed row fills/backing, readable standings, corrected triangle winding, isolated shared racing scenery/portraits and restored light footer. |
-| race_results / visual parity and scope | Native type lacks italic slant and some headers are smaller; result action buttons report navigation choices in this standalone screen. | wm | Open visual parity gap and demo navigation scope. E2E 144 covers selection/action feedback and resize. |
-| sports_settings / graphics settings | Labels displayed raw slider percentages instead of FPS/gamma; controls reused cached values across tabs and Back only changed a status. | wm | Domain value formatting, per-tab slider identity, internal state synchronization after external edits/reset, real close/reopen and initial-value reset. Exact scene artwork and native controls match the layout. |
-| sports_settings / visual parity | Text weight, selected-row shading and tiny bumper keycap glyphs differ; scrollbar lacks diagonal stripes. | wm | Open visual parity gap. E2E 145 and independent audio/default captures confirm values and knob positions agree. |
-| offsite_backup / backup layout | Small type and overlapping old controls obscured the new backup layout. | wm | Matched desktop/window/panels, removed duplicate rows/switches, separated checkbox labels and completion text. Existing progress/rescan model and local backup controls retained. |
-| offsite_backup / visual parity and scope | Native typography/ring differ, folder icons are faint, and borders/shadows are flatter than the mock. Backup, restore and account actions are local demonstrations. | wm | Open visual parity gap and demo scope; final labels and controls are readable without overlap. |
-| powerwash_settings / tablet and actions | Generic panel geometry, clipped help/keycaps and status-only close/reset differed from the mock. | wm | Matched tablet, tabs and setting rows; native values, initial-value reset and real close/reopen/Escape. Fresh captures and E2E 143 pass. |
-| powerwash_settings / visual parity | Status and gear icons are approximate; help wraps differently; background wall/pool shapes and tablet shadow are simplified. | wm | Open visual parity gap. Both resolutions remain readable and contained. |
-| kart_select / racer selection | Generic cards, missing preview art and misplaced controls differed from the mock. | wm | Isolated eight-racer portrait/kart atlases, native labels and stats, checker header, platform and keyboard/pointer selection. E2E 42/147 pass. |
-| kart_select / visual parity and scope | Display type lacks italic slant, labels have different weight/spacing and preview shadows are flatter. Ready reports the chosen driver/vehicle in this standalone demo. | wm | Open visual parity gap and demo scope; all art is present and both resolutions independently reviewed. |
-| guess_who_lab / board and questions | Generic board lacked the mock portraits and complete question/note controls. | wm | Isolated logo and 24-portrait atlas, native cards/labels, two question dropdowns and 24 note dropdowns; filtering, flips and reset work. E2E 121/148 pass without overflow. |
-| guess_who_lab / visual parity | Native typography, title-case names and dropdown chevrons differ; outlines are heavier and reset/ask arrows sit closer to labels. | wm | Open visual parity gap. All 24 cards and controls remain readable and contained at both resolutions. |
-
----
-
-
-### Final regression audit
-
-The full suite exposed stale Sports/Shop expectations and an Empire status
-label whose text needed 181px in a 170px box. The legacy tests now exercise
-the approved controls; Empire's box is 190px wide with its visual center
-unchanged. Fresh default captures are byte-identical after that containment
-fix. The Tooltip baseline included a keyboard focus ring inherited from an
-earlier script. Its test now sends Tab and explicitly focuses the first button;
-both existing tooltip baselines match exactly without replacement.
-
-
-### Capture runner: focus state leaked between screens
-
-`UIContext::reset()` leaves `has_interacted` set. A screen that explicitly took
-focus therefore enabled a ring in every later batch capture, while the same
-screen captured alone had no ring. wm's screenshot reset now clears that flag
-once per screen; explicit focus inside a screen still works. This changes 45
-legacy baselines only by removing focus outlines (88,315 pixels total,
-independently reviewed); the other 45 legacy images are identical. No legacy
-screen source or library code changed. The 26 audited screens pass the same
-comparison threshold against their isolated captures; 25 match pixel for pixel.
-
-AIM retains a separate small capture-order difference: the disabled Buddy List
-maximize button has a blue fill in the batch and grey in an isolated capture
-(17×17px region). This is below the screenshot threshold, does not change
-interaction, and remains open for investigation rather than being baselined
-away. The gallery uses the isolated capture.
-
-### Single-line labels ignore explicit text insets
-
-`draw_text_in_rect()` accepts a resolved inset but its single-line branch calls
-`text_inset_for(rect)` instead. Reproduced while redesigning `absolute_positioning`:
-`with_text_inset(12, 0)` leaves Flow and percentage captions against the left edge.
-The screen uses padded parent containers until this is reviewed upstream.
-Pass the resolved inset to `position_text_ex()` consistently and verify both
-single-line and wrapped labels before changing afterhours.
-
-### Overflow mode changes retain scroll state
-
-Switching an existing element from `Overflow::Auto` to `Overflow::Hidden` leaves
-`HasScrollView` attached. Reproduced in `adaptive_scaling`: zoom to 300%, scroll,
-then return to 50%; the old scrollbar remains. `component_init.h` adds scroll
-state when requested but does not remove it when the overflow mode changes.
-wm explicitly removes the scroll component when its canvas fits again.
-Review symmetric component cleanup upstream before relying on runtime mode changes.
-
-### Modal headings bypass the configured default font
-
-The modal plugin explicitly uses `UIComponent::DEFAULT_FONT` for its heading,
-so `UIStylingDefaults::set_default_font("AtkinsonMock", ...)` changes the controls
-but leaves modal titles in Gaegu. `ModalConfig` has no title-font override.
-Observed in the `advanced_modals` and Offsite Backup open-dialog captures.
-WM now restyles the returned heading entities to the screen’s font family.
-Let built-in headings inherit the configured default or expose a title style
-after upstream review.
-
-### Animation sequences ignore the first segment easing
-
-`AnimHandle::sequence()` initializes the first segment's destination and duration
-but never assigns `current_easing`. A fresh track therefore runs that segment
-linearly; replay can inherit the easing left by the previous segment. Reproduced
-with a scale sequence from 0 to 1.15 over 0.6s and then to 1 over 0.4s, both
-requesting `EaseOutQuad`. At 0.5s the first sequence produces 0.958333 instead of
-1.118056. Two chained `.to()` calls produce 1.118055 and finish at exactly 1.
-`animation_basic` uses those explicit calls so its live motion matches its timing
-labels and midpoint thumbnails. Afterhours is unchanged. Upstream should copy
-`segments[0].easing` when starting the sequence and test fresh and replayed tracks.
-
-### Declarative animation timing depends on frame rate
-
-`apply_animations()` clamps every elapsed step to 5 ms (`min(ctx.dt, 1/200)`),
-including ordinary 60 Hz frames. Source inspection shows that 60 frames advance
-only 0.3 seconds of animation, so configured durations cannot represent wall
-clock time at that frame rate. Review bounded substeps that consume the full
-elapsed time, and compare 60/120/240 Hz playback before changing afterhours.
-The declarative screen reports active/completed state rather than claiming a
-measured elapsed duration.
-
-### Declarative triggers share one track per property
-
-`HasAnimationState` has one track per property, including one `triggered` bit.
-`apply_animations()` processes every definition against that same bit. A hover
-scale followed by an inactive click scale therefore starts the hover target,
-then immediately reverses it when the click definition observes the shared bit.
-The original Hover + click example configured both definitions on scale. wm
-now combines hover translation with press scale. Upstream needs explicit
-composition or precedence for multiple triggers targeting the same property;
-keep this policy visible rather than silently overwriting a track.
-
-### Text-area scrolling, focus targets and scaled auto-grow padding
-
-Composer Lab 4 exposed an incorrect assumption in `text_area.h`: rebuilding
-an unchanged field was treated as a request to reveal its caret. This reset
-wheel scrolling on the next idle frame. The original wheel test inspected only
-the event frame, so it missed the failure. The library now reveals the caret
-when focus, caret position or text changes, and on explicit keyboard navigation.
-Idle frames preserve manual scrolling and clamp it to the current content range.
-Wheel input is applied before creating visible rows; fractional offsets move
-text, selection and caret together rather than snapping text to whole rows.
-Regression coverage includes idle frames, fractional rows, navigation with an
-unchanged caret, and shorter replacement content.
-
-The focus target is still the inner field, while the returned entity is a
-wrapper: setting focus on that wrapper is discarded by
-EndUIContextManager because the wrapper is absent from focused_ids. A
-supported focus-target accessor would avoid callers inspecting child order.
-Auto-grow also adds a fixed 8px to row heights while the field padding uses
-height-scaled h720(4) on each side; at 1080p five 30px rows receive 158px
-outer height but need 162px. Focus-target access and size resolution remain
-open.
-
-Floatinghotel supplies another unit failure in the same component:
-`floatinghotel/src/ecs/sidebar_system.h:1215` uses an explicit pixel line height.
-Its gap report records almost zero-height rows from `h720(18)`. Current
-`vendor/afterhours/src/plugins/ui/text_input/text_area.h:107` reads
-`text_area_line_height.value_or(pixels(20.f)).value`, discarding the Size unit.
-Resolve the requested unit before using it for row layout, and test both pixel
-and screen-relative heights with Adaptive zoom. This is additional evidence
-for the existing text-area work, not a second implementation item.
-
-### Bracket decorations add padding to an already padded rectangle
-
-`with_brackets` expands the supplied component rectangle by computed padding
-even though that rectangle already includes it. The ONLINE sample's brackets
-therefore extend past its visible filled panel when the panel has padding. wm
-preserves the native decorator and moves content inset into a child, leaving
-the decorated outer panel unpadded. Review the decorator's rectangle contract
-upstream; render/click geometry and decoration should share the same bounds.
-
-### Convenience dialogs do not expose presentation configuration
-
-`modal::confirm`, `confirm_danger`, `fyi`, `info` and `prompt` hardcode dialog
-dimensions, default font names, body heights and action sizes. Longer
-descriptive action labels cannot be laid out through their arguments. wm
-retains the native helpers and adjusts their returned UIComponent/HasLabel
-descendants before layout via DialogPresentation.h. This depends on the
-helpers' internal debug names and child structure. A shared dialog
-presentation/config argument would provide a supported route for font,
-body/action geometry, padding and border customization while preserving native
-modal behavior.
-
-### Menu dismissal, disabled focus targets and presentation options
-
-Outside-press/Escape dismissal, opener restoration and skipping disabled rows
-in keyboard tray traversal are resolved by the September focus/popup audit.
-
-Menu text padding and shortcut style remain unexposed. WM offsets item labels
-with HasLabel.text_x_offset and removes forced disabled-text dimming from
-shortcut labels. Disabled rows can also let pointer presses reach underlying
-focusable content; WM adds transparent pointer shields. These presentation
-options and disabled-row hit ownership remain separate follow-ups.
-
-### Text-input focus origin and generic SelectOnFocus conflict
-
-The native text input already selects all on keyboard focus. Adding
-ComponentConfig::with_select_on_focus(true) triggers a synthetic click through
-SelectOnFocus, which invokes the text-input click listener and clears that
-selection. wm removes that conflicting generic flag. Separately, pointer focus
-observed on the following frame can be misclassified as keyboard focus: the
-text input checks input::is_mouse_press(), whose just-pressed state has
-already cleared. The configuration screen reproduces this by clicking away and
-back, then typing: the whole value is replaced. Preserve the focus origin
-across frames so pointer placement and keyboard select-all behave
-consistently. Tests retain this observed limitation rather than disguising it
-in the sample.
-
-### Dashed polylines can stop advancing at fractional boundaries
-
-polyline::draw_dashed can loop forever with fractional dash periods. At
-1024x768 the configuration gallery scales dash 10 / gap 7 to 8 / 5.6; float32
-period becomes 13.6000004. With t=travelled=68, computed run=1.9073486e-6 is
-too small to change either accumulator, so while(t<segment) never advances. A
-sampled native stack confirms polyline.h:92/96. The loop needs guaranteed
-forward progress at segment and pattern boundaries. wm keeps native rendering
-but quantizes dash, gap and phase to whole screen pixels and labels their
-actual values; 18,796 resolution/phase combinations of scaled rectangle edges
-completed in an isolated float32 reproduction.
-
-### Dropdowns have no visible-row limit or scrolling configuration
-
-Available-space sizing and scrolling are resolved by the September audit.
-Native trays use the resolved trigger height, fit above or below the trigger,
-and reveal keyboard-focused options. The month fixture retains all 12 choices
-and exercises scrolling to December. An application-configured visible-row
-limit remains an optional presentation follow-up.
-
-### Partial rounded outlines ignore corner masks
-
-The Raylib backend draw_rectangle_rounded honors corner bits through
-DrawRectangleCustom, but draw_rectangle_rounded_lines calls
-DrawRectangleRoundedLines for every nonzero mask, rounding all four corners.
-The example_borders 0b1100 fixture therefore has bottom-rounded fill and a
-four-corner rounded outline. Outlines should use the same per-corner shape as
-fills. Separately, RoundedCorners::top_round sets TOP_LEFT, TOP_RIGHT and
-BOTTOM_RIGHT to ROUND; the bottom-right assignment contradicts the helper
-name. wm retains the fixtures and describes the visible fill/outline mismatch.
-
-### Disabled controls depend on having a label component
-
-Native pointer candidate filtering and HandleClicks in ui/systems.h check
-disabled state only when an entity has HasLabel. A button whose content is
-built from child labels therefore remains clickable despite
-with_disabled(true). The unavailable Vibration option in wm reproduced this
-and entered edit mode. wm removes its click listener while unavailable and
-also guards its action. can_be_focused rejects entities without a click or
-drag listener, so this also removes the option from focus traversal. Disabled
-interaction belongs on the control itself rather than its optional label.
-
-### Drag previews omit styling and viewport hit testing needs review
-
-The native drag overlay copies the source label, fill and font but omits
-metadata children, corner shape and border. wm keeps the native overlay and
-explicitly restores its font sizing; the resulting preview is title-only. A
-supported preview renderer or fuller style copy is needed for composite cards.
-HandleDragGroups scans unscrolled child rectangles: a runtime probe clicked
-the visible DB schema card after scrolling but moved Design mockups instead.
-The source hit check also ignores group viewport bounds. Separately,
-rendering.h recalculates scroll content height without cmp.gap and reclamps
-the offset after MeasureScrollViews had computed the correct gap-inclusive
-height, leaving the final card partly inaccessible. wm uses explicit row
-paging via wheel and Up/Down controls, renders at most three native drag
-children, and translates drag indices through the visible slice. Earlier/Later
-actions move selected cards across page boundaries. Native continuous
-scrolling and drag hit testing still need fixes that use the same rendered
-geometry.
-
-### Native tree rows expose only a label callback
-
-TreeViewConfig exposes label, ID, expandability, indent and height, but no row
-presentation callback. Native rows prepend textual v/> disclosure marks and
-allocate a single label child. The wm file browser keeps tree_view behavior
-but walks the returned row descendants to replace the arrow text, draw crisp
-icons and hierarchy guides, and add a right-aligned size column. This depends
-on internal child ordering. A supported row renderer or accessory callback
-would let consumers add metadata and accessible row decoration without relying
-on internals.
-
-### Bare nine-slice borders do not enter native rendering
-
-Native renderability gates in ui/rendering.h (around lines 1849 and 2578) omit
-HasNineSliceBorder. A div containing only a nine-slice border and
-Theme::Usage::None is never queued, even though layout and interaction
-assertions pass. The wm Stretching and Width/Tint specimens reproduced this as
-completely blank sample areas. Adding a transparent HasColor component routes
-the same native nine-slice textures through the existing renderer. The gates
-should recognize HasNineSliceBorder directly.
-
-### Slider keyboard repeat depends on frame frequency
-
-HandleLeftRight invokes its listener for either pressed or held input every
-update. Native sliders change by one percent on each invocation, so a two-
-frame e2e key press moves 100% to 98%, and the same hold duration at 120 Hz
-can move twice as far as at 60 Hz. wm tests verify the actual value and
-derived gauges. Use elapsed-time repeat with an initial delay and deliberate
-cadence upstream.
-
-### Gesture backend cannot report hardware capability
-
-The gesture API exposes magnification updates and active state but no
-capability query. An idle supported device and unavailable hardware both
-report no input. wm labels the compiled macOS backend separately and states
-that hardware availability is unknown. Add a backend-neutral capability result
-before consumers claim support availability.
-
-### Configuration-owned skip-tabbing flags persist after being disabled
-
-apply_flags in ui/component_init.h adds SkipWhenTabbing for true but never
-removes it for false. Pagination Previous starts disabled and skipped; after
-it becomes enabled, explicit focus is discarded because it never joins
-focused_ids, then Enter activates Page 1. wm removes SkipWhenTabbing when
-enabling the arrow. Define the lifecycle of configuration-owned flags and
-cover true-to-false transitions without deleting tags deliberately supplied
-outside configuration.
-
-### Styled labels cannot configure line spacing
-
-Native draw_runs_in_rect advances by the measured Ag line height and ignores
-the text_area_line_height configuration. The styled text lab preserves the
-actual tight native layout and labels it. A styled-label line-height option
-should be shared by measurement and rendering before consumers can compare
-wider spacing without replacing the renderer.
-
-### Nested scroll decorations escape ancestor clips
-
-Nested scroll decoration clipping: native rows intersect ancestor clip
-rectangles, but rendering.h:1813 and :2561 explicitly skip ancestor scissoring
-for entities with HasScrollView. Their backgrounds and borders extend outside
-an outer scroll viewport. RenderScrollbars at rendering.h:1120 also computes
-the scroll-adjusted viewport without intersecting ancestor clips. Repro:
-scroll_clip_bug original fixture, inner viewport 1.5 times outer height.
-Annotated view hides the inner scrollbar and draws an opaque diagnostic
-footer; original geometry and decoration remain visible via the original
-fixture toggle. Upstream should clip nested viewport decorations and both
-scrollbars to the ancestor intersection while leaving their own viewport
-geometry unchanged.
-
-### E2E typed input queues UTF-8 bytes instead of Unicode codepoints
-
-HandleTypeCommand iterates UTF-8 bytes into push_char(char), and
-get_char_pressed promotes those bytes to int. Signed-char builds turn C3 A9
-into negative values, so café arrives as caf; unsigned-char builds would
-deliver separate incorrect codepoints. Decode UTF-8 once and queue integer
-codepoints. WM tests ASCII typing and provides a visible café preset to
-verify5-byte/4-codepoint storage and native caret movement around é without
-claiming the e2e typing path supports Unicode.
-
-### Virtual row grid snapping disagrees with offset math
-
-Native compute_relative_positions snaps each child position and running offset
-whenever global grid snapping is enabled, ignoring child.skip_grid_snap.
-Although row sizes remain26px, positions advance28px while virtual-list offset
-math assumes26px. At End, row09999 exists but is outside the viewport. WM
-disables grid snapping for this screen, restored on screen switch, and tests
-both26px row spacing and the last row rectangle at the viewport end. Respect
-per-child snapping configuration consistently and derive virtualization from
-the effective row stride.
-
-### Unconsumed UI actions persist across frames
-
-Resolved by the September audit. UIContext expires actions at the next frame,
-clears them on screen reset, and delivers synthetic E2E actions through the
-next-frame queue. The ModalShowcase workaround that drained unused Escape was
-removed. Tests cover reopening dialogs after unrelated Escape presses.
-
-### Batched text overflow lacks clipping and debug parity
-
-Native batched text-overflow contract: CollectUIRenderingCommands::collect_me
-in rendering.h:2306-2358 measures the full label with resolved theme/label
-insets, then truncates Ellipsis. It calls position_text_ex with
-report_overflow true before the intentional truncation, so Ellipsis emits
-overflow warnings. Clip labels do not emit a scissor matching their own
-container; render_primitives.h renders the full text string, so
-TextOverflow::Clip escapes into neighboring elements. SHOW_TEXT_OVERFLOW_DEBUG
-is only consumed by the immediate renderer and never creates debug primitives
-in the batched path. Repro: text_overflow Compare overflow modes, 150x40
-and90x34 matched Clip/Ellipsis specimens. WM preserves native output,
-separates raw Clip text spatially to avoid obscuring other samples, labels
-observed leakage/missing overlay/false-positive warning, and resolves usable-
-size metadata using resolve_text_inset(context.theme). Upstream needs own-
-label clipping for Clip, deliberate-Ellipsis warning suppression, and
-equivalent debug overlay commands in batched rendering. Related immediate path
-still calls text_inset_for rather than its supplied inset, so label-inset
-parity also needs review.
-
-### Pagination indices and icon-row container configuration
-
-Native pagination passes numbered child i+1 into on_option_click(), which
-directly applies modulo options.size(): displayed page1 selects index1 and
-page5 wraps to0. Previous passes prev_index(option_index-1), subtracting twice
-and underflowing at0. WM computes the external index from the clicked native
-child and restores focus to that child. Native icon_row also constructs its
-container via inherit_from(config), losing absolute position, gap and skip-
-grid settings; WM uses a positioned wrapper and configures the returned row.
-Fix the index contract and preserve intended container settings upstream.
-
-### Tooltip presentation is hardcoded
-
-Native tooltip rendering fixes font size at14px, padding at8×5px and trigger
-gap at4px. TooltipLab retains native placement, delay, edge flipping and
-clamping, and discloses these limits. Consumers need a shared presentation
-configuration for readable fonts, spacing and scaling without replacing the
-renderer. Border-only UI entities also fail the native renderability gate
-unless they carry HasColor or another recognized visual component. The edge
-guide uses transparent HasColor so its native border is queued; bare borders
-should render without that workaround.
-
-### Cross-axis Stretch does not participate in native sizing
-
-AlignItems::Stretch promises filling unspecified cross-axis sizes, but
-autolayout only checks it in the positioning switch where it behaves like
-FlexStart. No sizing pass reads the setting. children() explicitly requests
-content sizing and therefore is not an automatic width; expand() fills the
-cross axis independently of alignment. VStackShowcase now labels these actual
-rules and retains the content-width specimen. Add a defined unspecified-
-size/stretch contract shared by sizing and layout rather than describing
-children() as CSS auto.
-
-### Toast labels bypass configured UI fonts
-
-Resolved locally. toast::schedule now assigns the configured default font and
-size to both the UI component and its label, with the backend default font as
-an explicit fallback. It retains the creation-time scaling mode. A live toast
-keeps its font when a different screen changes UIStylingDefaults.
-
-The old manual construction bypassed the normal component configuration path.
-We assumed passing UIContext into schedule also applied UIStylingDefaults;
-it did not. WM's returned-entity font workaround hid the library defect from
-the gallery test. WM now relies on native font inheritance and retains only
-its smaller notification size, letter spacing and text offset.
-
-Toast text also captures the better-contrast theme foreground for its actual
-background at creation. Previously the renderer used the current theme's
-light font unconditionally, producing unreadable text on coral and changing
-old notifications when the screen theme changed. The mistaken assumption was
-that all severity/custom backgrounds were dark and that a toast could safely
-use whichever screen theme happened to be active later.
-
-### Follow-ups retained when old audit reports were removed
-
-The [project todo](../todo.md#library-follow-ups-retained-from-earlier-reviews)
-preserves four source-confirmed items that were absent from the active backlog:
-
-- The advertised minimum touch-target validation flag has no validator.
-- Validation marker cleanup and overlay queries use the default collection,
-  missing child markers in the separate UI collection.
-- Native checkbox indicators still depend on a text glyph; wm draws its own
-  checkmark to avoid font-dependent results.
-- Child clipping uses rectangular scissors even when the parent is rounded.
-  Optional rounded clipping remains a capability proposal.
-
-These need separate library review; no afterhours code changed in this pass.
-
-### Checkbox external state is treated as initialization only
-
-`checkbox(ctx, parent, bool&, config)` initializes `HasCheckboxState` from
-the supplied bool only when the entity is first created, then copies retained
-state back to that bool. A reset or matched-state comparison that updates the
-app's existing bools is overwritten on the next call. The wm showcase updates
-existing checkbox state before invoking the native widget, and its reset and
-matched-state E2E checks exercise this path. Review ownership/synchronization
-of externally supplied state upstream so callers need not reach into widget
-components to reset a checkbox.
-
-### Chart styling and axis-domain controls
-
-`plugins/ui/line_chart.h` hardcodes a 2px series stroke, takes its domain
-only from data bounds, and always paints floating values when hovered. Its
-options expose only unit, selected index and label size. The wm chart now
-adds readable tick labels, shape markers, an external grouped value readout
-and an optional 8.33ms budget line. Native stroke width remains unchanged;
-when the budget is outside the data range, the screen says so instead of
-misplacing the line. Review configurable stroke width, hover-label visibility
-and explicit axis bounds upstream. Constant/single-value axes also repeat
-the same endpoint labels instead of showing a meaningful expanded domain.
-
-### Auto-text fallback differs by rendering backend
-
-The raylib backend maps `UI_WHITE` to `RAYWHITE` (#F5F5F5), while the other
-backend uses #FFFFFF. `auto_text_color()` falls back to `UI_WHITE`/`UI_BLACK`
-when both configured candidates miss the requested contrast. On #737373,
-those raylib fallbacks yield 4.35:1 and 4.43:1; actual white yields 4.74:1.
-Thus the default 4.5:1 target can be missed even for opaque fills. The wm
-showcase names the actual fallback colors and displays measured ratios.
-Review backend-independent fallback colors and tests around this luminance
-range before promising a minimum ratio upstream.
-
-### Contrast validation resolves a different foreground than rendering
-
-`ValidateComponentContrast` checks `background_hint` before
-`explicit_text_color`; `resolve_label_color()` does the reverse. A label with
-an explicit foreground and automatic contrast still enabled can therefore
-be validated against a color it never renders. The auto-text showcase's
-explicit-red and light-reference fixtures exercise that combination. Share
-foreground resolution between rendering and validation, including disabled
-state, before treating the lint as evidence that an explicit color passed.
-
-### Capture runner: multiple resolutions in one process
-
-`--headless-screenshots --screen example_borders --resolution 720p,1080p`
-crashes at the second resolution in `EntityCollection::invalidate_entity_slot_if_any`
-with an out-of-range slot. Reproduced on unchanged `example_borders`, independently
-of the new screen layout. Separate 720p and 1080p invocations work. Owner is not
-established between wm reset sequencing and the library collection lifetime;
-afterhours remains frozen. This is not an implementation of the unrelated
-cascade-delete plan.
-
-### Absolute horizontal positions resolve against screen height
-
-At the frozen pin, `component_init.h` resolves both `translate_x` and
-`translate_y` using `screen_height`. Passing `w1280(1047)` as an absolute x
-therefore produces 589px at 1280×720 instead of 1047px. The first Angry Birds
-audit draft reproduced the misplaced controls. wm now supplies explicit pixel
-positions scaled from the current UI context. Library behavior remains open
-for review; no vendor changes were made.
-
-### Uniform solid borders ignore requested thickness
-
-`rendering.h`'s uniform-border branch calls `draw_rectangle_rounded_lines`
-without passing `BorderSide::thickness`. The rounded helper renders a 1px
-outline; the sharp helper uses a fixed 3px. Cozy Cafe's requested 4px paper
-border and 3px panel borders consequently appeared as faint 1px lines.
-The wm screen draws its outlines with the existing thickness-aware helper.
-A library fix is deferred for user review. This also explains the subtler
-Potion Crafting inset border noted above.
-
-
-### Slider state does not follow external model changes
-
-At the frozen pin, `imm_components.h` initializes `HasSliderState` only when
-creating the slider, then writes its cached value back through the supplied
-reference on subsequent frames. Sports settings reproduced stale knob positions
-after tab switches and Reset, even when the displayed domain values changed.
-wm now uses per-tab slider IDs and synchronizes the cached state when the model
-changes externally. E2E 145 checks reset values and subsequent keyboard/drag
-edits; independent captures confirm labels and knob positions agree. Whether
-this should be a controlled-value API is deferred for library review.
-
-### Slider keyboard steps repeat within one keypress
-
-Parcel Corps reproduced 25 → 23 from one injected Left keypress. The native
-slider listener increments by 0.01 for each callback while the key is held;
-it does not use the UI context's pressed/repeat pacing. wm wraps the listener
-with `pressed_or_repeat` so keyboard adjustment follows the existing repeat
-schedule. E2E 142 verifies exact single steps in both directions, dragging,
-and resized input. Library input pacing remains open for review.
+# Afterhours gaps
+
+Current work is in [todo.md](../todo.md). Entries below retain causes, workarounds
+and closure checks. Source-only findings need reproduction before implementation;
+old line numbers describe the reviewed snapshot. Completed fixes are summarized
+in [history](history.md). Consumer source paths are relative to `~/p/`.
 
 ## Consumer gap refresh, 2026-09-13
 
-UP-13 through UP-22 are newly collected, open items. Each was checked against
-WM's afterhours `d90db15a5f9c0e745a3302339d653829a4aa7c59` and current consumer
-source. No application, test or benchmark was run for this collection pass.
-Consumer-reported failures below remain reports from those projects, not new
-measurements. [Review coverage](afterhours-upstream-review.md#september-13-refresh)
-records the inspected versions and limits. Consumer paths start at `~/p/`;
-library paths start at `wm_afterhours/vendor/afterhours/`.
-
-### UP-13: Retire UI draw commands at the update boundary
-
-- Consumer evidence: `floatinghotel/src/ui_context.h:40` implements
-  `ClearPendingUIDraws` and registers it before UI updates at line 67. The
-  consumer's idle-redraw report records commands accumulating across skipped
-  renders, with missing text on the next redraw.
-- Current boundary: `src/plugins/ui/systems.h:227` begins a UI update without
-  clearing `render_cmds`. The clears are in the two renderers at
-  `src/plugins/ui/rendering.h:1928` and `:2644`, and in the explicit context
-  reset at `src/plugins/ui/context.h:383`.
-- Wrong assumption: every UI rebuild is followed by a render. Idle applications
-  and hosts batching test updates violate that assumption.
-- Proposed scope: define which update owns the queued UI commands and retire
-  the previous update's commands before rebuilding. Preserve intentional
-  same-update overlay submissions and multiple UI contexts.
-- Closure: build the same UI for twelve skipped renders, then draw once.
-  Command count and text pixels should match one ordinary update/render cycle
-  in both renderers. Exercise the host's idle-redraw path too.
-
-### UP-14: Clear retained texture state when configuration removes it
-
-- Consumer evidence: `floatinghotel/src/ui/image_diff.h:30` removes
-  `HasTexture` components referencing its exact retiring image handles before
-  unloading the images. Its image-to-source transition previously reported
-  Metal validation failures for dead views and samplers.
-- Current boundary: `src/plugins/ui/component_init.h:286` returns immediately
-  when `texture_config` is absent, retaining the old `HasTexture`. Nearby
-  `apply_shadow` already removes an absent configuration-owned component.
-- Wrong assumption: omitting a setting on a retained immediate-mode entity
-  means keep the old setting. Here the new widget intentionally has no image.
-- Proposed scope: reconcile configuration-owned texture state on removal.
-  Distinguish component detachment from GPU resource ownership; removing one
-  widget's reference must not unload a texture shared by other widgets.
-- Closure: reuse a widget ID for image, text-only, then image; retire the first
-  handle and verify no draw references it. Include shared textures and both
-  renderers, with a Metal run for resource-lifetime validation.
-
-### UP-15: Give virtual-list row metrics consistent units
-
-- Consumer evidence: `floatinghotel/src/ui/virtual_list.h:12` multiplies logical
-  row heights by zoom before calling the native list, then divides generated
-  row/spacer desired heights by that zoom. This adapter supports both constant
-  and variable heights.
-- Current boundary: `src/plugins/ui/imm_components.h:214` indexes row metrics
-  with resolved viewport heights and scroll offsets, stores trailing extent
-  directly at line 297, and wraps leading extent and row heights in `pixels()`
-  at lines 309 and 321. Adaptive layout scales those pixel values again.
-- Wrong assumption: a row height can be both a physical scroll distance and a
-  logical layout dimension without conversion.
-- Proposed scope: specify the public row-height unit and convert once for
-  window selection, spacer layout and trailing extent. This is separate from
-  the already tracked grid-snapping stride discrepancy.
-- Closure: constant and variable-height lists at 100%, 140% and 200% zoom,
-  scrolled to start/middle/end, with snapping disabled first. Assert actual
-  row pitch, visible indices and last-row containment, then test snapping.
-
-### UP-16: Defer headless Metal target replacement until outside its pass
-
-- Consumer evidence: `hanabi/src/util/gfx_resize.h:48` records resize requests;
-  line 68 applies them before opening the next frame. The consumer reports
-  `VALIDATE_APIP_ATTACHMENTS_ALIVE` when resizing inside an active pass and
-  supplies `scripts/stress_resize_gate.sh` as its regression gate.
-- Current boundary: `src/backends/sokol/backend.h:433` immediately unloads and
-  recreates the headless target. `src/plugins/window_manager.h:143` delegates
-  headless resize to this path without checking whether a pass is active.
-- Wrong assumption: a resize event is necessarily outside rendering. Scripted
-  resize commands can execute from inside the host's open frame.
-- Proposed scope: make the frame boundary responsible for replacing a target
-  still used by a pass; define when the new logical and framebuffer dimensions
-  become observable. Preserve requests made before the first frame.
-- Closure: request several resizes inside and outside a Metal pass, then draw
-  and capture. Verify actual target dimensions, attachment validity and bounded
-  resource counts, including repeated identical sizes.
+Compared with afterhours `d90db15`; source review only. UP-13/14/15/16 later landed.
 
 ### UP-17: Report incomplete fontstash measurements and avoid caching them
 
-- Consumer evidence: `hanabi/src/util/atlas_guard.h:165` checks impossible
-  widths; its `probe` at line 194 tests atlas capacity. The consumer report
-  shows plausible but drastically short widths after exhaustion. Its own
-  guard explicitly cannot detect every partial drop.
-- Original failure boundary at `c5cfd35`: `src/backends/sokol/backend.h:160` warns when the atlas
-  fills. `src/backends/sokol/font_helper.h:87` still stores the returned bounds
-  in `measure_memo` without a completeness signal. In
-  `vendor/fontstash/fontstash.h:1526`, a missing glyph is skipped without
-  advancing the measurement.
-- Wrong assumption: reporting atlas exhaustion makes subsequent measurements
-  trustworthy. A positive, incomplete width can poison layout caches.
-- Proposed scope: expose measurement completeness or use a measurement path
-  independent of atlas packing, prevent incomplete results entering caches,
-  and define a visible fallback for glyphs that cannot be drawn. Atlas warning
-  callbacks and configurable capacity already exist.
-- Closure: deliberately exhaust a small atlas and measure strings containing
-  cached and uncached glyphs. Check partial loss, zero loss, fallback drawing,
-  cache behavior and recovery. Keep Hanabi's guard until that contract exists.
+Sokol measurement formerly packed glyphs and silently skipped advances when the atlas filled, poisoning both caches. Hanabi's `src/util/atlas_guard.h` cannot detect every plausible partial width. `c93e10e` fixes measurement with atlas-independent `fonsTextAdvance`; the six-check failing regression now passes. No new cache or public result type was needed.
 
-Narrow fix completed September 14 after review of its cost: Sokol now uses
-`fonsTextAdvance`, which reads existing advances or font metrics without packing
-glyph images. Both cache layers receive the complete width under atlas exhaustion.
-The regression failed six checks before the change and passes after it; DPI,
-rounding, spacing and fallback-font parity also pass. Cold measurement fell from
-89.836 us to 3.308 us in the fixture; resident-glyph misses stayed near 2.5 us and
-memo hits near 0.06–0.07 us. The full method and limits are in
-[the measurement report](../vendor/afterhours/docs/font-atlas-measurement.md).
-
-The approved scope deliberately leaves missing-glyph drawing, automatic atlas
-recovery and generalized measurement errors deferred. Hanabi's guard is unchanged.
-The earlier assumption that this needed a new application-facing result type was
-too broad for the atlas-exhaustion defect: removing the allocation dependency
-fixes that defect without changing callers or adding a cache.
+Missing-glyph drawing, automatic recovery and general error reporting remain deferred. Keep Hanabi's guard. See [measurement evidence](../vendor/afterhours/docs/font-atlas-measurement.md).
 
 ### UP-18: Inject the actual Cmd/Super modifier in E2E chords
 
-- Consumer evidence: `hanabi/src/keys.h:84` accepts Ctrl as a substitute for Cmd
-  because its scripted tests cannot reach the actual Cmd-only key-state path.
-- Current boundary: `src/core/key_codes.h:302` maps `CMD+` to Ctrl, although
-  `SUPER+` sets a distinct field. `src/plugins/e2e_testing/command_handlers.h:114`
-  holds and schedules release for Ctrl/Shift/Alt only; it ignores `combo.super`.
-- Wrong assumption: Cmd and Ctrl are interchangeable for every shortcut.
-  Consumers inspect physical modifiers and distinguish those chords.
-- Proposed scope: inject and release Super faithfully, and explicitly define
-  the platform meaning of Cmd aliases. Check existing scripts before changing
-  aliases. An application can retain Ctrl shortcuts by choice.
-- Closure: Cmd-only, Ctrl-only and combined modifier shortcuts; verify modifier
-  state during the action and after release, cancellation and script reset.
-  Include a following unmodified key to detect stuck modifiers.
+- Evidence: `hanabi/src/keys.h:84` accepts Ctrl as a substitute for Cmd because its scripted tests cannot reach the actual Cmd-only key-state path.
+- Library: `src/core/key_codes.h:302` maps `CMD+` to Ctrl, although `SUPER+` sets a distinct field. `src/plugins/e2e_testing/command_handlers.h:114` holds and schedules release for Ctrl/Shift/Alt only; it ignores `combo.super`.
+- Assumption: Cmd and Ctrl are interchangeable for every shortcut. Consumers inspect physical modifiers and distinguish those chords.
+- Change: inject and release Super faithfully, and explicitly define the platform meaning of Cmd aliases. Check existing scripts before changing aliases. An application can retain Ctrl shortcuts by choice.
+- Closure: Cmd-only, Ctrl-only and combined modifier shortcuts; verify modifier state during the action and after release, cancellation and script reset. Include a following unmodified key to detect stuck modifiers.
 
 ### UP-19: Parse quoted property values consistently in E2E commands
 
-- Consumer evidence: `floatinghotel/docs/afterhours-gaps.md:557` reports
-  `assert_ui file_header_label "text=a-small.cpp  +1  (new file)"` being parsed
-  as an unknown property beginning with a quote. Its current
-  `tests/review_50/item_21.e2e` uses space-free text properties instead.
-- Current boundary: the generic branch at
-  `src/plugins/e2e_testing/runner.h:245` splits arguments with stream extraction.
-  Specialized commands implement their own quoting rules, so a property value
-  containing spaces cannot be expressed consistently.
-- Wrong assumption: whitespace always separates arguments, even inside quoted
-  text. This can prevent a test from naming the value visibly on screen.
-- Proposed scope: a shared argument tokenizer with a documented escape rule;
-  preserve commands intentionally consuming the rest of the line as free text.
-- Closure: quoted multiword values, embedded quotes, backslashes, empty values,
-  multiple properties, malformed input and existing scripts with literal text.
+- Evidence: `floatinghotel/docs/afterhours-gaps.md:557` reports `assert_ui file_header_label "text=a-small.cpp  +1  (new file)"` being parsed as an unknown property beginning with a quote. Its current `tests/review_50/item_21.e2e` uses space-free text properties instead.
+- Library: the generic branch at `src/plugins/e2e_testing/runner.h:245` splits arguments with stream extraction. Specialized commands implement their own quoting rules, so a property value containing spaces cannot be expressed consistently.
+- Assumption: whitespace always separates arguments, even inside quoted text. This can prevent a test from naming the value visibly on screen.
+- Change: a shared argument tokenizer with a documented escape rule; preserve commands intentionally consuming the rest of the line as free text.
+- Closure: quoted multiword values, embedded quotes, backslashes, empty values, multiple properties, malformed input and existing scripts with literal text.
 
 ### UP-20: Expose image and sprite tint through component configuration
 
-- Consumer evidence: `kart-afterhours/src/ui/ui_systems.cpp:425` draws kart
-  sprites through a custom Raylib callback to apply each driver's paint color.
-- Current boundary: `src/plugins/ui/components.h:264` gives `HasImage` no tint;
-  `src/plugins/ui/imm_components.h:812` sets texture/source/alignment only.
-  Both image-rendering paths start from white at
-  `src/plugins/ui/rendering.h:1784` and `:2526`, applying only opacity.
-- Wrong assumption: image color is always baked into the asset. Recolored game
-  sprites and monochrome toolbar icons need a foreground tint. Low-level
-  texture drawing already accepts one, so no new rendering backend is needed.
-- Proposed scope: a configuration-owned tint for native image/sprite controls,
-  composed with inherited opacity. Keep atlas selection and game paint policy
-  in consumers.
-- Closure: the same atlas frame with distinct tints in both renderers, nested
-  opacity, and resetting a reused widget to default white.
+- Evidence: `kart-afterhours/src/ui/ui_systems.cpp:425` draws kart sprites through a custom Raylib callback to apply each driver's paint color.
+- Library: `src/plugins/ui/components.h:264` gives `HasImage` no tint; `src/plugins/ui/imm_components.h:812` sets texture/source/alignment only. Both image-rendering paths start from white at `src/plugins/ui/rendering.h:1784` and `:2526`, applying only opacity.
+- Assumption: image color is always baked into the asset. Recolored game sprites and monochrome toolbar icons need a foreground tint. Low-level texture drawing already accepts one, so no new rendering backend is needed.
+- Change: a configuration-owned tint for native image/sprite controls, composed with inherited opacity. Keep atlas selection and game paint policy in consumers.
+- Closure: the same atlas frame with distinct tints in both renderers, nested opacity, and resetting a reused widget to default white.
 
 ### UP-21: Match E2E text visibility across immediate and batched rendering
 
-- Consumer evidence: `floatinghotel/src/main.cpp:1332` exposes an app assertion
-  checking whether a source row lies within its scrolling ancestor. Its report
-  describes a text assertion succeeding while the final rows were clipped.
-- Current boundary: the batched renderer now intersects ancestor clips before
-  registering the composed label at `src/plugins/ui/rendering.h:2477`.
-  Immediate `draw_text_in_rect` still registers using only the full-window
-  bounds at line 748. `src/plugins/e2e_testing/visible_text.h:46` knows no
-  ancestor clip. Do not reopen the already fixed batched path.
-- Wrong assumption: submitting a label within the window proves that the user
-  can see it. A scroll viewport can hide it, and tests should not change meaning
-  when the renderer changes.
-- Proposed scope: share clip-aware text registration and distinguish partial
-  visibility from full visibility where a test needs the latter. Preserve a
-  separate way to assert model/text existence without claiming visibility.
-- Closure: visible, partially clipped and fully clipped labels, nested clips
-  and overscan rows in both renderers. Use rendered pixels as the control for
-  the visibility assertions, not only the registry being tested.
+- Evidence: `floatinghotel/src/main.cpp:1332` exposes an app assertion checking whether a source row lies within its scrolling ancestor. Its report describes a text assertion succeeding while the final rows were clipped.
+- Library: the batched renderer now intersects ancestor clips before registering the composed label at `src/plugins/ui/rendering.h:2477`. Immediate `draw_text_in_rect` still registers using only the full-window bounds at line 748. `src/plugins/e2e_testing/visible_text.h:46` knows no ancestor clip. Do not reopen the already fixed batched path.
+- Assumption: submitting a label within the window proves that the user can see it. A scroll viewport can hide it, and tests should not change meaning when the renderer changes.
+- Change: share clip-aware text registration and distinguish partial visibility from full visibility where a test needs the latter. Preserve a separate way to assert model/text existence without claiming visibility.
+- Closure: visible, partially clipped and fully clipped labels, nested clips and overscan rows in both renderers. Use rendered pixels as the control for the visibility assertions, not only the registry being tested.
 
 ### UP-22: Resolve semantic font tiers through the selected scaling mode
 
-- Consumer evidence: `floatinghotel/docs/afterhours-gaps.md:667` reports text
-  remaining small while controls grow at 140% zoom. Current review/search
-  controls use logical pixel font sizes, for example
-  `floatinghotel/src/ui/repo_search.h:136`.
-- Current boundary: `src/plugins/ui/component_config.h:782` always converts
-  `FontSize` tiers to `h720`. `src/plugins/ui/layout_types.h:199` applies
-  Adaptive `ui_scale` to Pixels but not ScreenPercent, which is the unit of
-  `h720`. The tier has lost its semantic intent before the component's scaling
-  mode is resolved.
-- Wrong assumption: screen-relative font size and application zoom are the
-  same scale. A desktop window can keep its resolution while zoom changes.
-- Proposed scope: retain or resolve tier intent at the correct configuration
-  stage, respecting component, screen and application mode selection. Explicit
-  screen-relative font sizes should retain their requested meaning.
-- Closure: all tiers at multiple window heights and zoom factors, comparing
-  Proportional and Adaptive modes and their overrides. Include controls whose
-  dimensions use logical pixels.
+- Evidence: `floatinghotel/docs/afterhours-gaps.md:667` reports text remaining small while controls grow at 140% zoom. Current review/search controls use logical pixel font sizes, for example `floatinghotel/src/ui/repo_search.h:136`.
+- Library: `src/plugins/ui/component_config.h:782` always converts `FontSize` tiers to `h720`. `src/plugins/ui/layout_types.h:199` applies Adaptive `ui_scale` to Pixels but not ScreenPercent, which is the unit of `h720`. The tier has lost its semantic intent before the component's scaling mode is resolved.
+- Assumption: screen-relative font size and application zoom are the same scale. A desktop window can keep its resolution while zoom changes.
+- Change: retain or resolve tier intent at the correct configuration stage, respecting component, screen and application mode selection. Explicit screen-relative font sizes should retain their requested meaning.
+- Closure: all tiers at multiple window heights and zoom factors, comparing Proportional and Adaptive modes and their overrides. Include controls whose dimensions use logical pixels.
 
-## Cross-project upstream review, 2026-09-12
+## UI, layout and validation
 
-Reviewed the 38 other top-level project directories under `~/p` with three
-parallel source reviewers, plus the owned nested `armchair_coach/puzzle` project. Coverage, revisions, exclusions and adoption opportunities
-are recorded in [afterhours-upstream-review.md](afterhours-upstream-review.md).
-This was a source review, not an exhaustive line-by-line or runtime audit.
-No applications were run and no consumer or library code was changed.
+### Overflow mode changes retain scroll state
 
-Availability was checked against both local library copies: standalone
-`afterhours` at `19d6c97` and wm's newer frozen vendor at `fee03c2`.
-The former is an ancestor of the latter. A feature present in the newer copy
-is already implemented; publishing and consumer pin updates are separate work.
-These checks do not establish the current state of any remote branch.
+`component_init.h` adds `HasScrollView` but does not remove it on Auto/Scroll → Hidden/Visible. In `adaptive_scaling`, zoom 300%, scroll, then return to 50% leaves a scrollbar. WM removes stale state. Define config-owned cleanup without deleting manually installed state; test transitions and clamping.
 
-The source review initially proposed the requests below. The decision table
-records the user's subsequent selections; none are marked implemented here.
-P1 identifies shared correctness or test-isolation problems; P2 identifies
-reusable capabilities; P3 requires more evidence before extraction. Paths in
-source citations are relative to `~/p`. Library citations refer to wm's vendor
-unless stated otherwise. Line numbers describe the reviewed local snapshots.
+### Animation sequences ignore the first segment easing
 
-| ID | Priority | Request | Evidence class |
-|---|---|---|---|
-| UP-01 | P1 | Independent master/music/effects gain and correct late sound loading | Defect confirmed by source and independent review |
-| UP-02 | P1 | Settings writes preserve the last good file and report failure | Defect confirmed by source and independent review |
-| UP-03 | P1 | Scoped clipboard provider shared by apps and built-in widget tests | Missing test boundary; two consumer implementations |
-| UP-04 | P2 | Optional native open/save/directory dialogs | Repeated platform integration in two apps |
-| UP-05 | P2 | Lossless input-binding encoding and decoding | Repeated persistence; incomplete migration adapter |
-| UP-06 | P2 | Device-aware display of current action bindings | Live consumer formatter; mapping lookup already exists |
-| UP-07 | P2 | Accessible control semantics and announcements | Working browser pattern; native bridge absent in inspected source |
-| UP-08 | P2 | Mutable RGBA textures through a common backend API | Extension of the existing image-wrapper gap |
-| UP-09 | P3 | Optional filesystem watcher with explicit availability | One substantial implementation; confirm another consumer first |
-| UP-10 | P1 | Consistent in-memory render capture format | PNG on raylib, raw RGBA on sokol/Metal under the same API |
-| UP-11 | P2 | Useful default profiling UI with customization | User-requested addition; collection hooks and a wm demonstration already exist |
-| UP-12 | P2 | Chart set with an interactive wm test screen | User-expanded sparkline proposal; profiling supplies a concrete consumer |
+`AnimHandle::sequence()` omits the first `current_easing`, using linear or a previous segment's easing. At 0.5s a 0→1.15, 0.6s EaseOutQuad segment gives 0.958333 instead of 1.118056. WM uses chained `.to()`. Copy first-segment easing and test fresh/replayed sequences.
 
-### User decisions
+### Declarative animation timing depends on frame rate
 
-Follow-up design choices and implementation readiness are tracked in
-[gap-design-decisions.md](gap-design-decisions.md). Pending recommendations there
-are not accepted decisions.
+`apply_animations()` clamps dt to 5ms, so 60 frames advance only 0.3s. The assumption that clamping prevents stalls breaks ordinary durations. Consume the full elapsed time, using bounded substeps if needed; compare 60/120/240Hz.
 
-| Item | Decision | Scope / condition |
-|---|---|---|
-| UP-01 Audio gains | Implemented locally | Master scales music/effects while preserving their relative preferences. afterhours `1fce0d9`; validation below. |
-| UP-02 Settings saves | Implemented locally | afterhours `325caee`; preserve the previous file on failure and report failures accurately. |
-| UP-03 Test clipboard | Implemented locally | Scoped provider isolates app and built-in widget operations; 15/15 clipboard checks pass. |
-| UP-04 Native dialogs | Implemented locally | afterhours `544ea06`; queued open/save/folder dialogs with portable results and test responses, macOS first. |
-| UP-05 Binding persistence | Implemented locally | afterhours `00a6745`; versioned complete binding records without a JSON dependency. |
-| UP-06 Binding prompts | Implemented locally | afterhours `bcefe22`; current binding labels, automatic device preference, noise filtering and app override. |
-| UP-07 Screen-reader support | Deferred | Wait for a library consumer to need it, implement it and propose upstreaming. |
-| UP-08 Mutable RGBA textures | Deferred | Wait for an afterhours consumer implementation, then consider upstreaming. |
-| UP-09 Filesystem watcher | Implemented locally | afterhours `f4de4d3`; macOS FSEvents behind a portable API with bounded events, rescan hints and explicit unsupported result elsewhere. |
-| UP-10 Capture formats | Implemented locally | afterhours `6eea5bd`; explicit raw RGBA and PNG captures, with legacy PNG consistency. |
-| UP-11 Default profiling UI | Implemented locally | Useful defaults with customization; reuse existing profiling hooks. Cheap continuous recording independent of panel visibility, code controls and a compile-time off switch; measure overhead. |
-| UP-12 Chart set and test screen | Implemented, profiling first | Build charts needed by UP-11 and an interactive wm test screen first. Leave the broader chart set as TODOs. |
-| UI sound-feedback hooks | Skip for now | Use existing click callbacks. Revisit only if a consumer needs a missing focus-change notification. |
-| Periodic timer helper | Skip | No shared remainder-preserving timer requested. |
+### Declarative triggers share one track per property
 
-### Implementation status
+Hover and click definitions share one property track and `triggered` bit; an inactive definition can reverse the active one. WM uses separate properties. Define composition or precedence and test concurrent triggers and interruption.
 
-| Item | Local change | Validation |
-|---|---|---|
-| UP-01 | afterhours `1fce0d9`, included by wm's submodule pin | Regression failed before the fix with 7/34 checks passing. Afterward all 39 checks pass, including the new master getter. Full afterhours `make -C tests -j2 test` exits 0; no-backend compile check passes. |
-| UP-02 | afterhours `325caee` | JSON/raw failure regression failed before and passes after; atomic-file tests 29/29. Raw-only compilation passes. Bitsery 5.2.4 save/load round-trip passes. |
-| UP-03 | afterhours `b81173b` | Clipboard tests 15/15, including fresh writes, nested scope restoration after exceptions, reset, and single/multiline widget copy/paste. |
-| UP-04 | afterhours `544ea06` | Portable queue checks cover single consumption, Unicode paths, cancellation, errors and reentrant processing. Real macOS open/save/folder cancellation and off-main-thread rejection pass. |
-| UP-05 | afterhours `00a6745` | All binding alternatives, explicit modifiers, malformed records and atomic list decoding pass with no backend and raylib. |
-| UP-06 | afterhours `bcefe22` | Tests cover full modifiers, axis directions, drift/mouse-motion rejection, held-axis behavior, pinned preference, remapping and layer changes. |
-| UP-09 | afterhours `f4de4d3` | Real filesystem tests cover create/modify/rename/delete, Unicode paths, multiple roots, invalid roots, immediate destruction, restart, stop and bounded-buffer rescan. |
-| UP-10 | afterhours `6eea5bd` | Raylib/Metal nonsquare translucent captures match decoded PNG byte-for-byte. Legacy PNG, failed captures, Metal blend and HiDPI tests pass. |
-| UP-11 | afterhours `5a8e3be` | Bounded recording, runtime controls, independent legacy hooks, compile-out checks and the interactive panel pass. Measurements and limits are in `vendor/afterhours/docs/profiling-measurements.md`. |
-| UP-12 | afterhours `dff9c96` | Chart bounds and sample lookup tests, pointer and keyboard controls, hover inspection, live updates and 720p/1080p wm checks pass. |
+### Text-area scrolling, focus targets and scaled auto-grow padding
 
-All approved UP items in this batch are implemented locally. UP-07 and UP-08
-remain deferred; the wider chart set remains TODO. Nothing was pushed. Tests
-and builds use `nice -n 10`.
+Idle wheel scrolling is fixed; unchanged rebuilds no longer reveal the caret. Still open: returned wrapper is not the focus target; auto-grow adds fixed 8px despite scaled padding; `text_area.h` reads line-height `.value` without resolving Size. At 1080p five 30px rows get 158px instead of 162px. Provide supported focus targeting and resolve all units, including Adaptive zoom. Floatinghotel uses pixel line heights as a workaround.
+
+### Bracket decorations add padding to an already padded rectangle
+
+`with_brackets` expands a rectangle that already includes padding. WM moves padding to a child. Use one bounds contract for paint, decoration and interaction; test a padded filled panel.
+
+### Convenience dialogs do not expose presentation configuration
+
+`modal::confirm`, `confirm_danger`, `fyi`, `info`, and `prompt` hardcode presentation. WM's `DialogPresentation.h` edits returned descendants, depending on internal names/order. Expose font, dimensions, body/actions, padding and border configuration while retaining native modal behavior.
+
+### Menu dismissal, disabled focus targets and presentation options
+
+Outside press/Escape, opener restoration and disabled keyboard traversal are fixed. Text padding/shortcut style remain unexposed, and disabled rows can pass pointer presses to underlying controls. WM offsets labels and adds transparent shields. Test disabled-row hit ownership as well as presentation.
+
+### Text-input focus origin and generic SelectOnFocus conflict
+
+Native inputs select all on keyboard focus. Generic `with_select_on_focus(true)` synthesizes a click and clears that selection. Pointer focus observed a frame later can also look like keyboard focus after just-pressed state clears. WM removes the generic flag. Retain focus origin across frames; test click-away/back typing and keyboard selection.
+
+### Dashed polylines can stop advancing at fractional boundaries
+
+At 1024×768, dash 8/gap 5.6 produces period 13.6000004; at travelled=68 a 1.9073486e-6 run cannot change the float accumulator. `polyline.h:92/96` loops forever. WM quantizes dash/gap/phase. Guarantee progress at pattern/segment boundaries; the workaround completed 18,796 isolated combinations.
+
+### Dropdowns have no visible-row limit or scrolling configuration
+
+Available-space sizing, scrolling and keyboard reveal are fixed. Only an optional caller-specified visible-row cap remains; verify all options remain reachable.
+
+### Partial rounded outlines ignore corner masks
+
+Raylib rounded fills honor corner bits; rounded outlines round all four. `RoundedCorners::top_round` also rounds bottom-right. Make fill/outline masks agree and correct the helper; retain `example_borders` partial-corner fixtures.
+
+### Disabled controls depend on having a label component
+
+Pointer filtering and `HandleClicks` inspect disabled state only with `HasLabel`. Controls made from child labels remain clickable. WM removes the unavailable action's listener and guards it. Test disabled behavior on the parent with and without direct text.
+
+### Drag previews omit styling and viewport hit testing needs review
+
+Composite preview styling is fixed by drawing the source subtree with restored geometry, clips and opacity. Still open: `HandleDragGroups` uses unscrolled child rectangles and ignores viewport bounds. A click on visible DB schema moved Design mockups. WM pages three rows and translates indices. Test continuous scrolling, clipped cards and final-row reachability using rendered coordinates.
+
+### Native tree rows expose only a label callback
+
+`TreeViewConfig` has no accessory/row renderer. WM walks descendants to replace textual disclosure marks and add icons/guides/size columns. Expose a supported renderer without child-order assumptions; retain native selection, expansion and keyboard behavior.
+
+### Bare nine-slice borders do not enter native rendering
+
+The renderability gates in `rendering.h` omit `HasNineSliceBorder`; border-only divs remain blank. Transparent `HasColor` is WM's workaround. Recognize border visuals directly in both renderers; assert pixels, not only layout.
+
+### Slider keyboard repeat depends on frame frequency
+
+`HandleLeftRight` calls held listeners every update; a two-frame press changes 100% to 98%, and faster frames accelerate a hold. WM wraps callbacks with `pressed_or_repeat`. Use elapsed-time pacing with initial delay; verify exact steps and holds at multiple rates.
+
+### Gesture backend cannot report hardware capability
+
+No input means either idle or unsupported hardware. WM reports compiled macOS support separately from unknown device capability. Add a portable availability result before claiming hardware support.
+
+### Configuration-owned skip-tabbing flags persist after being disabled
+
+`apply_flags` adds `SkipWhenTabbing` for true but never removes it for false. An enabled pagination arrow stays outside `focused_ids`. WM removes the tag. Reconcile config-owned state while preserving manually installed flags; test true→false.
+
+### Styled labels cannot configure line spacing
+
+`draw_runs_in_rect` uses measured Ag height and ignores the text-area setting. Share a styled-label line-height option between measurement and drawing; test mixed sizes, wrapping and resize.
+
+### Nested scroll decorations escape ancestor clips
+
+Rows clip correctly, but `HasScrollView` backgrounds/borders and `RenderScrollbars` bypass ancestor intersection. `scroll_clip_bug` uses an inner viewport 1.5× the outer height. Clip decorations and scrollbars against ancestors without altering viewport geometry.
+
+### E2E typed input queues UTF-8 bytes instead of Unicode codepoints
+
+`HandleTypeCommand` queues chars, so signed bytes C3 A9 disappear and café becomes caf. Decode once into integer codepoints. WM's preset proves storage/caret handling, not Unicode typing. Test multibyte input, invalid sequences and subsequent ASCII.
+
+### Batched text overflow lacks clipping and debug parity
+
+Batched Clip lacks its own scissor; Ellipsis warns before intentional truncation; overflow debug primitives are absent. Keep `text_overflow` 150×40/90×34 fixtures. Add own-label clipping, suppress intended truncation warnings and match immediate debug output. Explicit text insets were fixed separately.
+
+### Pagination indices and icon-row container configuration
+
+Numbered page i+1 is used as a zero-based index; Previous subtracts twice. `icon_row` inherits config and loses absolute placement, gap and grid flags. WM remaps clicks and uses a wrapper. Fix index boundaries and preserve container configuration; test first/last/Previous.
+
+### Tooltip presentation is hardcoded
+
+Font inheritance and accurate measured wrapping/placement were fixed in the default-theme pass. Caller control of font size, padding and trigger gap remains open. Border-only guides also need recognized renderability without transparent HasColor.
+
+### Cross-axis Stretch does not participate in native sizing
+
+`AlignItems::Stretch` acts only like FlexStart in positioning. `children()` explicitly requests content size; `expand()` fills independently. Define unspecified cross-axis sizing and apply it during size calculation; do not relabel content sizing as CSS auto.
+
+### Checkbox external state is treated as initialization only
+
+The bool reference initializes `HasCheckboxState` once; retained state then overwrites app resets. WM synchronizes the component manually. Define controlled-value ownership and test external reset followed by pointer/keyboard changes.
+
+### Chart styling and axis-domain controls
+
+`line_chart.h` fixes stroke at 2px, uses data-only bounds and always shows hover values. Constant/single-value axes repeat endpoints. WM draws markers/readouts/budget lines and labels out-of-range thresholds. Expose stroke, hover visibility and explicit/expanded domains; test empty/constant/negative/live datasets.
+
+### Auto-text fallback differs by rendering backend
+
+Raylib UI_WHITE is #F5F5F5, not #FFFFFF. Against #737373 its fallbacks yield 4.35:1 and 4.43:1; true white yields 4.74:1. Use backend-independent fallback colors and test near the 4.5:1 threshold.
+
+### Contrast validation resolves a different foreground than rendering
+
+`ValidateComponentContrast` prefers background_hint before explicit_text_color; rendering reverses that precedence. Share foreground resolution, including disabled state. The explicit-red auto-text fixture must validate the color actually drawn.
+
+### Capture runner: multiple resolutions in one process
+
+The headless screenshot runner crashes on the second resolution in `invalidate_entity_slot_if_any`; separate invocations work. Repro: `--headless-screenshots --screen example_borders --resolution 720p,1080p`. Ownership between WM reset and library lifetime is unresolved; this is unrelated to cascade deletion.
+
+### Absolute horizontal positions resolve against screen height
+
+At the reviewed pin, `component_init.h` resolves both translate axes with screen height: w1280(1047) becomes 589px at 1280×720. WM uses explicitly scaled pixels. Verify axis/unit semantics at multiple aspect ratios before changing them.
+
+### Uniform solid borders ignore requested thickness
+
+The uniform branch omits `BorderSide::thickness`; rounded outlines become 1px, sharp outlines fixed 3px. WM uses a thickness-aware draw helper. Test requested thickness on sharp/rounded borders in both renderers.
+
+### Slider state does not follow external model changes
+
+Retained `HasSliderState` overwrites external values after initialization. Sports uses per-tab IDs plus synchronization. Decide controlled-value semantics; verify Reset/tab changes, labels, knob position and subsequent drag/key edits.
 
 ### Grid rounding in content-sized columns
 
-A `children()` column can underestimate its height when grid snapping rounds
-each running row position. With 20px profiler text at 1080p, six 28px table
-rows and a 6px gap produced a 498px content box whose final child ended 16px
-outside it. `compute_relative_positions` rounds the accumulated offsets after
-intrinsic content sizing has already summed the unrounded gaps. The profiler
-uses `expand()` to fill its available panel height, which avoids the overflow.
-The underlying content-sizing discrepancy remains open for a separate layout
-review; no global grid-snapping behavior was changed for this fix.
+Intrinsic size sums unrounded gaps, then placement snaps accumulated positions. Six 28px profiler rows with 6px gaps overflowed a 498px content box by 16px at 1080p. WM uses expand(). Reconcile size and placement arithmetic with a measured regression.
 
 ### E2E focus-state isolation
 
-`UIContext::reset()` retains `has_interacted`, and `focus_element` does not
-count as user interaction. A screenshot can therefore show a focus ring in a
-batch run but omit it when the same script runs alone. This is a test-isolation
-follow-up, not a request to clear interaction history on every screen change.
-
-The wm profiler test now sends Tab before placing focus explicitly. Its
-screenshot matches at 0.0000% both alone and after a keyboard test. A common
-E2E reset contract for interaction history remains open; no library behavior
-was changed for this finding.
-
-### UP-01: Independent audio gains
-
-Implemented locally in afterhours `1fce0d9`. Master gain is stored independently;
-both category getters retain user preferences, and `get_master_volume()` returns
-the master preference. Both helper setters and direct library volume updates
-apply master times category. Newly loaded sound effects and music inherit that
-combined gain, including a muted master.
-
-`tests/sound_volume_test.cpp` runs real afterhours code against instrumented
-raylib audio functions without opening an audio device. It checks setter order,
-preference retention, mute/unmute, direct category updates and late loading.
-The full library suite passes, as does compilation without an audio backend.
-This verifies backend gain requests, not subjective playback volume. Consumer
-apps that bypass this plugin remain unchanged.
-
-Source evidence from the pre-fix review follows.
-
-`pharmasea/src/engine/settings.cpp:110` sets music and effects levels before
-calling `sound_system::set_master_volume`. The shared implementation at
-`src/plugins/sound_system.h:344` overwrites both category levels. The setters
-at `:91` and `:152` replace stored preferences as well as backend gain. For
-example, effects 0.2, music 0.3, then master 0.5 produces 0.5 for both categories,
-rather than effective gains 0.1 and 0.15. Changing a category after muting
-master can also bypass that mute.
-
-`MyNameChef/src/settings.cpp:158`, `kart-afterhours/src/settings.cpp:122` and
-`afterhours-template/src/settings.cpp:150` bypass the helper with raylib master
-volume. `endless-dance-chaos/src/audio.h:198` and `:223` multiply gains locally.
-Those are demand/workaround evidence, not affected calls to the shared helper.
-A related inconsistency exists at `SoundLibrary::load`, line 39: newly loaded
-sounds do not inherit the saved category volume. Music loading already
-reapplies its volume at line 136. Both inspected revisions have these behaviors.
-
-Retain independent master and category preferences, apply their combined effect
-consistently, and apply the current gain to newly loaded sounds. Existing
-libraries and playback requests are sufficient; this does not need a new mixer
-or game cue system. Validate category getters, effective gain after changes in
-either order, mute/unmute, and loading after a volume change using an
-instrumented backend. The original review was source-only; the implementation
-and regression evidence are recorded above.
-
-### UP-02: Atomic settings saves and truthful results
-
-`kart-afterhours/src/settings.cpp:75` uses the shared JSON settings save path.
-In both revisions, `src/plugins/settings.h:178` opens and truncates the final
-file at line 181 before serializing at line 187. A serialization exception
-therefore destroys the previous file even though save returns false. The JSON,
-raw-string and conditionally compiled Bitsery writers also return success
-without checking write/close failure. Raw and Bitsery paths begin at lines 226
-and 201. The Bitsery configuration was not compiled during this review.
-
-Serialize completely before touching the destination, then reuse
-`src/plugins/files.h:133`, `files::write_string_atomic`, and propagate its
-result. Atomic-write support is already implemented; the gap is its integration
-into settings. `pharmasea/src/save_game/save_game.cpp:39` separately implements
-checked temporary-file replacement, while its engine settings and
-`floatinghotel/src/settings.cpp:103` still write settings directly. These
-callers can adopt the existing helper independently.
-
-Validate that a throwing serializer, failed write, or failed rename preserves
-a known good file and returns failure, and that a successful save reloads
-exactly. This requests atomic replacement, not power-loss durability or
-concurrent-writer coordination. Kart also ignores the result and updates
-`last_written_json` at line 76, suppressing retries; that is a separate
-consumer fix and must not be mistaken for an afterhours change.
-
-### UP-03: A scoped clipboard provider for tests
-
-`wordproc/src/util/clipboard.h:11` stores a test clipboard and switches local
-get/set calls to it; `wordproc/src/main.cpp:602` enables it for tests.
-`hanabi/src/util/clipboard.h:11` instead counts writes and still uses the host
-clipboard. Its assertion at `hanabi/src/ecs/e2e_commands.h:238` can accept a
-matching old value without proving a fresh write. Meanwhile
-`hanabi/src/ui/text_select.h:383` and the built-in text widgets call afterhours
-clipboard directly, bypassing app-only replacements.
-
-Both copies of `src/plugins/clipboard.h` call the platform directly, or return
-empty/no-op results without a backend. Place an optional scoped provider under
-the existing get/set/has operations, with a resettable in-memory implementation
-for tests. This must cover calls from `src/plugins/ui/text_input/component.h:574` and
-`src/plugins/ui/text_input/utils.h:547` as well as applications. Restore the prior provider
-on scope exit. A write generation can distinguish a fresh copy from stale text.
-
-Validate paste and copy through built-in single-line and multiline widgets,
-per-test reset, fresh-copy assertions, and restoration of normal behavior.
-Tests using the provider must not write the host clipboard. Editors, chat,
-consoles and game naming fields all benefit. Clipboard content should not be
-dumped as incidental test failure output.
-
-### UP-04: Optional native file dialogs
-
-`wordproc/src/util/file_dialog.mm:26` wraps NSOpenPanel/NSSavePanel;
-`wordproc/src/util/file_dialog.h:8` supplies filters and queued test results.
-`hanabi/src/native_extras.mm:961` independently implements directory selection,
-used at `hanabi/src/ecs/settings_system.h:902`. Wordproc defers these calls
-outside ECS execution at `wordproc/src/main.cpp:403` because a native modal loop can
-reenter frames and live queries. Its fallback also conflates cancellation with
-unsupported platforms by returning an empty string.
-
-Neither inspected library has a native picker. `src/plugins/files.h` supplies
-filesystem operations, and in-app modal widgets do not cover this boundary.
-Provide an optional file/save/directory picker with owned paths, filter/default
-name options, and distinct chosen/cancelled/unsupported/error outcomes. Define
-a safe completion boundary outside ECS iteration and queued responses for E2E.
-Document import/export and format handling stay with the application.
-
-Validate Unicode paths and spaces, cancellation without state changes, explicit
-unsupported outcomes, one-time consumption of queued results, and absence of
-nested ECS execution. Editors, attachment pickers, level tools and export flows
-are beneficiaries. Platform behavior still needs a later runtime prototype.
-
-### UP-05: Lossless input-binding persistence
-
-`pharmasea/src/engine/keymap.cpp:183` and `:222` encode/decode legacy inputs,
-with live loading/saving through `pharmasea/src/preload.cpp:240` and `:769`.
-`supermarket-engine/engine/keycodes.h:198` and `:216` independently persist
-name/key pairs. Pharmasea's newer afterhours adapter at
-`pharmasea/src/input_mapping_persistence.h:14` serializes only the key from a KeyChord,
-drops modifier fields, and branches on only three numeric variant positions.
-It is included by the app, but no active save/load call to this newer adapter
-was found; user-visible corruption through that path is not established.
-
-Both libraries define typed bindings but no persistence codec. The newer
-`src/plugins/input_system.h:857` defines chord modifiers and line 900 includes
-mouse axes in AnyInput. Provide an optional tagged codec owned with these
-binding types, preserving modifiers, explicit no-modifier chords, buttons and
-axis directions. Reject malformed/unknown values instead of producing key zero.
-Keep action/layer naming, file paths and file format integration caller-owned.
-JSON support need not become a mandatory input-plugin dependency.
-
-Validate round-trips for every binding alternative, plain versus explicitly
-modifier-free keys, combined modifiers, signed axes and remapping. Invalid data
-must not partially replace live mappings. This is a reusable migration aid,
-not a claim that input mapping itself is missing.
-
-### UP-06: Binding display and active-device prompts
-
-`cartographer/src/input_action.h:472` tracks the last input device; lines
-507-618 format keys/buttons and inspect mapping internals. The formatter at
-line 614 discards chord modifiers. It feeds live prompts in
-`cartographer/src/map_systems.cpp:1430` and `cartographer/src/gallery_systems.cpp:154`.
-Wordproc's menus at `wordproc/src/ui/menu_setup.h:17` and toolbar at
-`wordproc/src/ecs/toolbar_system.h:199` instead hard-code shortcut text. Its
-`wordproc/src/extracted/action_binding.h` is a draft, not proof of a live shared helper.
-
-`ProvidesLayeredInputMapping::get_bindings` already exists at
-`src/plugins/input_system.h:1248`; cartographer can stop walking maps today.
-The remaining request is a small typed binding formatter and optional
-last-meaningful-device preference. Preserve full modifiers and axis direction,
-return an explicit unbound result, and let apps choose text or artwork.
-Controller icon packs and game-specific wording stay out of the library.
-
-The user chose automatic hint switching on deliberate input, with an app
-override to pin the device. Ignore stick drift and incidental mouse movement.
-Pinning hint presentation must not disable input from other devices. See D-04
-in [gap-design-decisions.md](gap-design-decisions.md).
-
-Validate Ctrl+Shift and Super chords, signed axes, layer/remap changes and
-switching between keyboard and gamepad prompts. Sub-deadzone noise must not
-switch prompts. Keep this separate from UP-05 so formatting does not require
-persistence, or vice versa.
-
-### UP-07: Accessible semantics and announcements
-
-`scrubdaddy/src/components/GameCanvas.jsx:29` updates a polite live region when
-the rescued count increases. Lines 47-65 label the canvas and expose that
-region. `scrubdaddy/src/App.jsx:681` gives upgrade controls names, roles,
-keyboard activation and disabled state. The browser supplies the connection to
-assistive technology; this review did not test those controls with a reader.
-
-The inspected afterhours implementations have visual labels, contrast checks
-and minimum hit targets, but no semantic control tree or platform announcement
-bridge. See `src/plugins/ui/ui_core_components.h:483`, `src/plugins/ui/theme.h:391`, and the design-only
-`docs/plans/2026-07-24-accessible-settings-rfc.md`. Access-key underlines alone
-do not provide this capability.
-
-Add opt-in role/name/value/state/action metadata and an announcement queue;
-prove one native platform adapter before expanding platform coverage. Ordinary
-widgets should derive semantics, and custom drawn controls should supply them.
-Keep announcement text and event timing with apps. Validate focus descriptions,
-state changes, one announcement per event, disabled behavior, retired controls,
-and modal/resize behavior with an actual screen reader. This benefits both
-forms and game HUDs; adapter scope remains a design question.
-
-### UP-08: Mutable RGBA textures
-
-This extends the existing image-wrapper gap with local source evidence.
-`last_mile/src/Grid.tsx:1061` switches dense maps to a reused RGBA pixel buffer;
-lines 1104-1108 upload and scale it with nearest filtering.
-`gabeochoa.github.com/sand.html:1066` and `:1082` likewise read/write a pixel
-buffer. These are rendering techniques, not simulation rules to upstream.
-
-Render targets already exist. The newer sokol helper
-`src/backends/sokol/drawing_helpers.h:1431` uploads pixels into an immutable
-image at line 1440; neither library has a common mutable-texture update API.
-Provide backend-neutral RGBA8 creation and full-buffer update with explicit
-size, buffer-length/stride and filtering contracts. Preserve resource identity
-across updates. Subrectangle updates and a general image editor are unnecessary
-for the demonstrated uses.
-
-Validate repeated updates to a nonsquare image, transparency, changed edge
-pixels, orientation, nearest scaling, invalid lengths and cleanup on raylib
-and sokol. Verify visual results before making performance claims; this review
-did not benchmark the web or native paths. This is separate from the texture
-atlas TODO, since dynamic pixels and static sprite packing solve different needs.
-
-### UP-09: Optional filesystem change notifications
-
-`floatinghotel/src/platform/file_watcher.h:40` owns FSEvents and a background
-run loop. Lines 105-140 handle lifecycle races; lines 165-187 preserve rescan
-requirements after dropped events. Its fallback at line 209 silently reports
-no changes. `floatinghotel/src/ecs/file_watcher_system.h:27` watches roots and lines 48-59
-poll events before applying Git-specific refresh policy.
-
-Neither inspected library provides a watcher. An optional watch/replace-roots,
-stop and drain-events API could expose changed paths, rescan-required state,
-and explicit unsupported/error results. Keep Git filtering, debounce and
-refresh decisions in the app. This is a candidate for editors and asset reload,
-but only one substantial consumer was confirmed, so establish a second use
-before choosing a public interface. The subsequent user decision approves
-upstreaming now, with wordproc as a possible consumer to investigate.
-
-Validate multiple roots, create/modify/delete or rescan events, root replacement,
-immediate destruction after start, and no callbacks after stop. A portable
-polling fallback or an explicit unavailable result must replace silent success.
-Concurrent floatinghotel changes were observed; the cited watcher files were
-not among those changing during this review.
-
-### UP-10: Consistent in-memory capture format
-
-Puzzle's export and pixel-sampling code needs raw image bytes, as documented in
-the existing image-wrapper gap below. The shared
-`capture_render_texture_to_memory` operation already exists, but the backends
-return different representations. Raylib encodes PNG at
-`src/backends/raylib/drawing_helpers.h:565`; sokol forwards a byte buffer at
-`src/backends/sokol/drawing_helpers.h:1345`, and its Metal implementation at
-`src/backends/sokol/capture_impl.h:224` returns width × height × 4 raw RGBA
-bytes. This difference is confirmed by direct implementation reads, not a
-runtime reproduction. No affected portable caller was established.
-
-Define a consistent capture result across backends, distinguishing encoded PNG
-from owned raw RGBA pixels with dimensions and orientation. Review existing
-callers before changing either representation. Validate the same nonsquare,
-partly transparent render target on both backends: encoded results decode to
-the expected image, raw results have the expected length and pixel positions,
-and failed readback returns failure. Pixel inspection, export and visual tests
-benefit. Keep this contract correction separate from UP-08's mutable upload API.
-
-### UP-11: Useful default profiling UI
-
-The user requested a shared profiling UI because consumers build their own.
-Timing infrastructure already exists: `src/core/system.h:518` defines
-`SystemProfileHook`, and `src/plugins/e2e_testing/perf_commands.h:44` supplies
-built-in collection. wm's `src/systems/screens/SystemProfileLab.h:17` has a
-start/stop demonstration and a text table. The missing product is a useful,
-easy-to-enable default panel that apps can customize.
-
-Provide frame-time history, FPS and frame-time percentiles, a sortable list of
-expensive systems, and available process CPU/memory counters. Include pause,
-resume and reset with clear sampling windows and units. Missing counters must
-show as unavailable. The default setup should need no custom data provider for
-metrics already collected by the library. Apps can add named counters with
-units, select sections and history duration, and use their theme in an embedded
-panel or overlay. Drive UP-12's initial chart scope from this panel's needs.
-
-The user accepts continuous background recording and requires low overhead,
-code controls and the ability to compile the profiler out. Keep recording
-independent of panel visibility, with bounded history and runtime start/stop.
-Separate pausing a displayed snapshot from stopping collection. Avoid per-sample
-allocation after initialization and avoid UI work while hidden. A compile-time
-off switch must remove this profiler's instrumentation, collection, storage and
-UI, including evaluation of custom sample expressions, while preserving any
-independent consumer profiling hooks. See D-03 in
-[gap-design-decisions.md](gap-design-decisions.md) for implementation checks.
-
-Keep measurement meanings accurate. The current built-in collector sums elapsed
-wall time across calls and puts call counts in `PerfEntry::entity_count`; its
-dump labels the totals as averages and counts as entities. The default panel
-must distinguish total/mean/per-frame timings and invocation/entity counts.
-Elapsed system time must not be labeled CPU utilization or GPU time. Reuse or
-extract the existing collection path so normal apps do not need to register
-E2E commands merely to show diagnostics. Define how an existing app profiler
-can supply data without silently replacing its hooks.
-
-Validate the panel in wm with a repeatable workload and custom counters. Show
-that an intentionally slower system appears, history stays bounded, pause
-preserves the displayed snapshot, reset has clear behavior, and unavailable
-metrics stay honest. Check keyboard/mouse use and resizing. Compare compiled-out,
-compiled-in but stopped, background-recording and visible-panel runs of the same
-workload. Report frame-time distribution, CPU, memory and steady-state
-allocations; check sustained recording for memory growth. No numeric overhead
-budget is agreed yet. This is a performance requirement, not a measured claim
-that recording is cheap enough to leave on or an implemented feature.
-
-### UP-12: Chart set with an interactive test screen
-
-The user approved a chart set with a wm test screen, then narrowed the first
-implementation to charts needed by the profiling UI. Start with frame-time
-history and reuse that time-series rendering for other profiling histories
-where useful. Include hover values and changing datasets. Share axes, scales,
-labels and theme styling as needed by these actual consumers.
-
-The broader line/area/bar/scatter/sparkline set remains follow-up work where
-the profiling UI does not need it. Additional types and pan/zoom are possible
-extensions, not first-release requirements. Track them in the root TODO rather
-than making the profiling panel wait for a general chart suite.
-
-Keep data ownership and application-specific aggregation with callers. The wm
-test screen should exercise empty, single-value and constant datasets, negative
-values, multiple series, live updates and resizing. Validate finite coordinate
-mapping, clipping, readable labels, hover selection, and keyboard access to
-interactive controls. Apply these cases to the charts built for the profiler;
-extend coverage as the broader chart set is implemented.
-
-### Smaller opportunities and their decisions
-
-| Opportunity | Evidence | Why deferred / what would justify extraction |
-|---|---|---|
-| Sparkline helper, expanded to UP-12 | `scrubdaddy/src/components/StockSparkline.jsx:1`, used by `scrubdaddy/src/components/StockMarket.jsx:44`; independent chart code in `watching-a-movie-a-day-presentation/templates/reveal/js/charts.js:307` and `:443` | Originally deferred. The user subsequently requested a chart set and wm test screen; see UP-12. Existing line drawing remains the rendering foundation. |
-| UI activation/navigation feedback | `MyNameChef/src/sound_systems.cpp:18`, `afterhours-template/src/sound_systems.cpp:18`, `kart-afterhours/src/systems/sound_systems.cpp:19` scan listeners to request sounds | Click callbacks and playback already exist; these are closely related copied implementations. Consider a small optional activation/focus callback only if it removes scans and produces exactly one cue for nested controls and keyboard activation. |
-| Remainder-preserving periodic timer | `endless-dance-chaos/src/crowd_systems.cpp:153` and `endless-dance-chaos/src/schedule_systems.cpp:152` retain elapsed overshoot; `src/plugins/timer.h:51` and `:74` reset accumulated time | Timers already exist and cooldown semantics differ. A separate periodic helper could return elapsed ticks/remainder with an explicit catch-up policy; do not change every timer's semantics. |
-
-## Open, asked for by other projects
-
-### From floatinghotel's footguns list
-
-Their July list, rechecked against `main`. **All of it has now landed** --
-label word-wrap, `Dim::Text` as a measured-width unit, `with_corner_radius`,
-row-flex `expand()`, index-based tick iteration (their heap-use-after-free),
-the button-inside-a-clickable-row hit priority, the sokol group, and the
-absolute-stacking one via `with_overlay`.
-
-### From hanabi's triage
-
-The earlier statement that all ten ranked issues were closed was too broad.
-Hanabi's current index at `c031a6df9ba1` distinguishes landed capabilities from
-remaining contracts. In particular, an atlas-full warning does not provide
-per-measurement completeness: keep `src/util/atlas_guard.h` until UP-17 is
-resolved. UP-16 and UP-18 also have current consumer workarounds.
-
-Variable-height virtualization exists, but that alone does not prove every
-consumer memo or retained index is redundant. Likewise, a ring hidden at rest
-does not establish Hanabi's full keyboard-only visibility policy. Recheck the
-specific behavior before asking a consumer to delete either helper. The
-September 13 refresh is source review, not a runtime closure of their index.
-
-### Components
-
-- **access-key underlines** (wordproc) — per-character decoration, so `&File`
-  can underline the F. Needs the renderer to decorate one glyph in a run, which
-  the run machinery from the wrap work could carry. Filed as accessibility.
-
-### E2E
-
-- **command handlers are registered per SystemManager** (cartographer) — each
-  manager needs `register_all_handlers`. Not silent, as their doc says: the
-  runner blocks on an unconsumed command and times out, and the timeout now
-  names what stalled and points at an unregistered pack. The boilerplate
-  remains. Both automatic fixes were costed and rejected -- a registry of live
-  managers needs hand-written move members (`SystemManager` is returned by
-  value, wm builds ~92 a run), and lazy first-tick registration inverts the
-  documented order.
-
-### Harness
-
-- **`wait` resolution is quantised by the substep batch**
-  (endless-dance-chaos, minor) — a `wait` cannot land inside a batch of
-  substeps, so its resolution is the batch. They rated it low and documented it
-  on their side; keeping `sim_steps` small is the whole workaround.
-
-### Wrappers
-
-- **raw `raylib::` calls with no wrapper** (puzzle gap 18) — they count 79 raw
-  sites, but the count overstates it: the top entries are *types*
-  (`raylib::Color` x57, `Image` x18, `Vector` x10, `Font`, `Rectangle`,
-  `Camera`) and enum constants, which afterhours already aliases and they could
-  swap today. Rechecked across `backends/` and `plugins/`, what is genuinely
-  unwrapped is: the image pixel API (`ImageDrawRectangle`, `GenImageColor`,
-  `ImageFormat`, `GetPixelDataSize`, `GetImageColor`), plus
-  `ToggleBorderlessWindowed`, `IsAudioDeviceReady` and `GetKeyPressed`.
-  `LoadImageFromTexture` and `ImageFlipVertical` exist inside afterhours but
-  are not exposed.
-  Only the image group is a coherent abstraction; the rest are one-function
-  wrappers in unrelated areas. UP-08 above now supplies local consumer evidence
-  from last_mile and sand for mutable RGBA uploads. It narrows one part of this
-  request. A follow-up read of the nested puzzle project confirms native
-  consumers too: `armchair_coach/puzzle/src/gif_export.cpp:108` reads back,
-  flips, resizes and converts frames to RGBA for export;
-  `armchair_coach/puzzle/src/systems/node_feed.cpp:531` reads back and samples
-  pixels; `armchair_coach/puzzle/src/systems/systems_internal.h:445` generates
-  image pixels for a texture. Both libraries already expose
-  `capture_render_texture_to_memory`, but its format differs between raylib
-  and sokol/Metal, as recorded in UP-10. The narrower missing portable operation
-  is owned raw RGBA readback with defined dimensions and orientation. Validate export orientation, alpha, resize and pixel sampling
-  before broadening the CPU image API. GIF encoding and node logic stay local.
-  (Blend mode is *not* among them -- `set_blend_mode`/`blend_scope` are wrapped
-  in all three backends and raylib's reaches `rlSetBlendMode`.)
-
-### Diagnostics
-
-- **no lint for custom colours bypassing the theme** (cartographer) — theme
-  usage is easy to skip by accident and nothing catches it in shared UI.
-
-### Core
-
-- **relationship integrity depends on enumerating child types** (puzzle).
-  Current `armchair_coach/puzzle/src/systems/canvas_systems.cpp:666` explicitly
-  reaps ports, dropdowns, knobs, sliders and attached wires. The earlier orphan
-  bug is fixed in that source;
-  `armchair_coach/puzzle/src/e2e/e2e_commands.h:1101` provides an orphan assertion. Adding another child type still requires updating the deletion
-  list. Consider a declared ownership relationship that makes cleanup follow
-  that relationship, with separate treatment for non-owning links and cycles.
-  Validate all child types, unrelated-node survival, recycled handles after
-  undo/recreation, and unfinished wires before choosing a library contract.
-  This is a data-model candidate, not evidence that queries need to run faster.
-  The separate cascade-delete plan remains unstarted; this review only updates
-  the evidence and does not authorize or implement that plan.
-
-- **EntityQuery allocation and sorting** (MyNameChef) — mostly already done and
-  their doc predates it: `run_query` has a `stop_on_first` path that allocates
-  nothing, reserves upfront, and sorts only when `orderby` is set with more
-  than one result. Their remaining items are the smaller ones -- consolidating
-  the tag query methods, and the `permanant_ids` typo, which is fixed. They
-  also ask to remove the `OptEntity` wrapper, which is the opposite of the
-  direction this repo went.
-
-- **kart's remaining component extractions** — `HasLabels`, `CanWrapAround`,
-  `TeamID`, `ManagesAvailableColors`. Arguably game-specific; listed for
-  completeness, not recommended.
-
----
-
-## Known limitations (open, low priority)
-
-- **tab order is allocation order, not tree order** — `process_tabbing` moves
-  focus by setting it to `ROOT` and letting the next entity the iteration
-  reaches grab it, so Tab follows the entity collection's storage order rather
-  than the widget tree. Two widgets side by side tab in whatever order they
-  were allocated, which is build order today and need not stay that way; there
-  is no tab index and no way for a caller to state the order it wants.
-  Order-preserving `cleanup()` (`58e1613`) stops widget retirement from
-  reshuffling it, which **hides this rather than fixing it** — the order is
-  stable now, but it is still the wrong order to be deriving from. A real fix
-  sorts focusables by tree position, with an explicit override.
-
-- **a virtualized list still builds a real div for the rows above the fold** —
-  `virtual_list` folds the rows *below* the window straight into
-  `content_size` via `HasScrollView::unbuilt_content_size`, but the rows above
-  it are a `vlist_skipped_above` div of the right height. It cannot be folded
-  the same way because the scroll offset is applied when drawing rather than
-  when laying out: with nothing in front of it the first built row lays out at
-  the top of the content and is then drawn off screen. Folding it needs
-  children offset during the layout pass. One div, so the cost is negligible;
-  it is the asymmetry that will confuse the next reader.
-
-- **slider handle 0.75 compression** — the knob's center never quite reaches the
-  value position at 100% (cosmetic). `imm_components.h` `slider`. Revisit the
-  handle width/position model only if it becomes visible.
-- **crowded tab bars still need a smaller font at the call site** — `tab_container`
-  content-fit (`expand()` + `min_width = Dim::Text`) removes truncation only when
-  the labels *can* fit. A bar with many long labels (e.g. `flight_options`' 9 tabs
-  at the default font) still overflows; set a smaller font on the tab_container
-  config for those.
-- **word-wrap has no hard character break** — with `TextOverflow::Wrap`, a single
-  word wider than its box goes on its own line (not split), and wrap requires an
-  explicit font size (auto-fit + wrap is ambiguous).
-
-Batch/headless screenshot determinism is a wm-side tooling concern, not an
-afterhours gap. See the capture-runner focus-state finding in this file.
-
----
-
-## Resolved & upstreamed (merged into afterhours main, pinned `e348efb`)
-
-Six of hanabi's top ten are already in and they do not know it -- their pin is
-`428047e`. Worth telling them rather than waiting for the next bump:
-
-- **font atlas exhaustion** (their #1, #351/#350/#352/#353) —
-  `fonsSetErrorCallback` is registered and `FONS_ATLAS_FULL` is reported. Their
-  fifty-line `src/util/atlas_guard.h` can go.
-- **widget retirement** (#115) — the frame stamp and end-of-frame sweep landed
-- **GPU pool sizes** (#210) — `AFTERHOURS_SG_{PIPELINE,IMAGE,SAMPLER,BUFFER}_POOL_SIZE`
-- **parent containment** (#275) — `assert_within_parents`, which is the
-  assertion they asked for: `assert_no_overflow` measured against the viewport
-- **measure without building** (#224) — `plugins/ui/measure_config.h`
-- **diagnostics** (#192/#161/#113) — landed in `2caf525`
-
-- **`--headless` was parsed and then dropped** (endless-dance-chaos) —
-  `RunConfig::display` plus `E2EArgs::display_mode()`, and raylib's `run()`
-  skips window setup and teardown when headless. `Config::display` already
-  existed and `raylib_init` already honoured it, so backend selection worked
-  all along -- the `run()` path was the whole gap, which is why the flag looked
-  wired up. Worth 11.7x to them. Sokol is untouched: it has no headless backend
-  to select.
-- **no fixed timestep** (endless-dance-chaos) — `RunConfig::fixed_dt` and
-  `sim_steps`, with `frame_steps()` returning the schedule. The consumer still
-  writes the loop, because `RunConfig::frame` takes no dt and calling it N
-  times would render N times rather than simulate N times. `time_scale`
-  deliberately does not stretch a fixed step; doing so would silently put back
-  the frame-rate dependence the fixed step exists to remove.
-- **`synthetic_press_delay` was undocumented and load-bearing** (cartographer)
-  — an injected press is not readable on the frame it was injected, which
-  matches a real keyboard but read as a broken feature twice. Documented at the
-  field and at `set_key_down`, with the timing pinned by test.
-- **text editing opted into by enumerator name** (hanabi #255) —
-  `has_editing_action<InputAction>()` to static_assert on, and a run-once
-  warning naming whatever resolved to nothing.
-- **the label origin was an unnamed 5px literal** (hanabi #85) — `kTextInset`
-  and `text_inset_for()`. Padding on a label with no children still does
-  nothing -- measured, `pixels(12)` and `pixels(40)` give the same 75px box --
-  but it now says so once per run instead of never.
-- **nothing sized a box to its own text** (hanabi #136) —
-  `with_fit_content(max_w, font_size)`. `Dim::Text` and `max_width` already did
-  most of it; the gap was that it takes four settings that must agree and three
-  of four caps the width while silently not wrapping.
-
-- **an ordered `gen_first` sorted the whole list** (MyNameChef) — it scanned
-  and then `std::sort`ed to return one entity. Takes the minimum now, except
-  where a stateful mod like `take()` sits after the orderby and needs the real
-  order.
-- **absolute children stacking** (floatinghotel) — `with_overlay(levels)`:
-  absolute plus a layer relative to the parent, so a nested overlay clears the
-  one it sits in. Opt-in, because absolute is also how underlays are built --
-  a blanket default blanked `file_tree` and `islands_trains_settings`.
-- **card preset** — `with_card(pad)`: Surface, rounded corners, padding.
-- **font sizes off the type scale** — `ValidationConfig::enforce_font_size_tiers`,
-  opt-in.
-
-- **sokol headless, wheel injection, GPU sync** (floatinghotel) — all three
-  landed. `g_headless_rt` and the headless branches exist; `consume_wheel()`
-  does not consume (it flags `wheel_read`, every reader in a frame sees the
-  same value, cleared at the next `reset_frame`); `capture_impl.h` does the
-  blit-to-resolve. The wheel one keeps a misleading name, which is likely why
-  their doc still lists it.
-- **virtualization with variable row heights** (hanabi #326/#170/#224) —
-  `virtual_list` has a `height_of(index)` overload that binary-searches a
-  running total. They hand-rolled the same window three times.
-- **mouse delta through the action mapping** (cartographer) — `MouseAxisWithDir`,
-  normalised by `MOUSE_DELTA_SCALE`.
-- **advance vs ink measure** (hanabi #137) — sokol already returned the advance;
-  the raylib odd-one-out, `measure_text_internal`, is deleted.
-- **focus ring painted at rest** (hanabi #83) — off until first interaction.
-  Their hand-rolled `focus_visible.h` can go.
-
-- **the two floatinghotel blockers** — the sokol include-order break and the
-  flex solver budgeting raw child sizes. Both fixed, with a third snapping site
-  they had not found; `sokol_include_order_test` compiles `window_manager.h`
-  under `SOKOL_METAL`, which nothing did before.
-- **tooltip** — `plugins/ui/tooltip.h`, with `TooltipLab` and a baseline
-- **table / grid layout** — `plugins/ui/grid.h`; `RaceResults` and
-  `MinesweeperLab` converted to it, plus `GridLab`
-- **scrollbar colour and style** — track/thumb usages and explicit colour
-  overrides on `HasScrollView`, with `ScrollbarStyleLab`
-- **singleton-only systems skip the entity scan** — a system whose components
-  are all registered singletons resolves through the singleton map instead of
-  walking every entity (puzzle profiled that scan at 37% of a frame)
-- tab_container tab strip bounds under `with_absolute_position`
-- **render-command sort recycled-id tiebreak** (SEVERE — fixed 76/79 screens;
-  root cause behind the modals breakage, first-child-missing-control, and
-  cross-rebuild screenshot non-determinism)
-- progress_bar fill/label percent compounding, and track percent compounding
-- slider handle position on percent-sized tracks
-- stepper multi-visible label separation
-- tab_container equal-width → long-label ellipsize (now `expand()` + `Dim::Text`
-  min width; added `Dim::Text` to `resolve_constraint`)
-- static-label word-wrap — new `TextOverflow::Wrap` feature
-- `children()` sizing now includes `flex_gap`
-- checkbox/toggle focus ring — confirmed **handled**, not a bug (checkbox/toggle
-  are focus clusters via `FocusClusterRoot`/`InFocusCluster`; the ring render is
-  type-agnostic with an explicit cluster branch)
-- toggle_switch "sibling entities consume layout space" — **not a bug** (internal
-  entities are children, not siblings)
-
-Regression tests for these live in the afterhours `tests/` suite: `autolayout_test`,
-`progress_bar_test`, `slider_test`, `stepper_test`, `tab_container_test`,
-`text_wrap_test`, `render_order_test`.
-
-
-## wm resize findings during profiler integration (September 12, 2026)
-
-- **Resolved in wm: absolute-positioning corner panel at 1080p.** Once wm
-  synchronized its settings resolution on resize, the panel's fixed 96px
-  allowance no longer accommodated its scaled controls. Scale the allowance
-  with the controls. The complete `36a_parent_containment` script passes at
-  720p and 1080p; the 720p baseline is unchanged. No library change is needed.
-
-- **Resolved in wm: nested-scroll viewport dimensions scaled twice.** The demo
-  passed dimensions derived from the live window size into `with_720p_size`.
-  Use `pixels` for those already resolved values. The complete
-  `36c_parent_containment` script passes at 720p and 1080p. The small 720p
-  viewport change was inspected and its screenshot baseline refreshed.
-  No library change is needed.
-
-## Additional diagnostics found while checking startup warnings (September 12, 2026)
-
-The compiler override warnings, toast startup singleton warning, and implicit
-button-padding warning are resolved. The remaining diagnostics are now fixed:
-
-- Text fields mark their height-derived internal padding as widget defaults.
-  That padding is used by caret layout and pointer-to-character hit testing.
-  The leaf-label warning had assumed no children meant no padding consumer;
-  an unfocused field has no caret child but still uses the padding. The fix
-  keeps the diagnostic for ordinary labels with explicit ignored padding.
-- Native toast creation inherits the configured font and size, removing the
-  missing-font path without requiring every caller to style the returned entity.
-- Native toasts select a readable foreground against their actual background,
-  including the coral custom toast. The selection remains stable across screen
-  theme changes. See the toast gap above for the cause and earlier assumptions.
-
-Before the fixes, the focused regressions failed 11 toast checks and two
-text-field diagnostic checks. After the fixes: toast 11/11, text input 51/51,
-and label inset 9/9 pass. The toast, toast-design and live-profiler E2E scripts
-pass 3/3 without the padding, missing-font or toast-contrast diagnostics.
-Reviewed the coral toast and severity toasts at 1280×720, 1920×1080 and
-1024×768. The app builds without compiler warnings.
-
-## Focus, modal, and popup audit — September 2026
-
-The audit traversed Tab and Shift+Tab on all 117 registered screens. The first
-pass reached 1,092 focus targets and saved each target's component rectangle,
-scroll-adjusted rectangle, clipping rectangle, focus-ring geometry, and a crop
-of the rendered ring. Separate scripted passes open dialogs, menus, popovers,
-dropdowns, tutorials, tool panels, and the screen browser.
-
-These are library defects or missing contracts exposed by that audit. The fixes
-are local for review; none have been pushed. Geometry checks are paired with rendered screenshots
-and interaction tests; a clean geometry report alone does not establish visibility.
-
-| Gap | What was wrong and why | Assumption that missed it | Fix |
-| --- | --- | --- | --- |
-| Focus paint order | A ring followed its own background but preceded opaque children, images, and custom foreground drawing. Dropdowns, text fields, checkbox labels, and poster tiles covered it. | Checking the ring rectangle, or testing a childless button, was enough to prove visibility. | Both renderers paint the ring after the focused subtree, while preserving the order of later overlays. Tests cover opaque children and an overlapping higher layer. |
-| Incomplete recording backend | The batched fill primitive was a no-op in the recording backend, so tests could observe a ring without the opaque fill that would cover it. | Testing either renderer through that backend captured equivalent drawing operations. | Record batched rounded/rotated fill calls as well; the new paint-order test requires a recorded child fill, then the ring, then a higher overlay. Actual screenshots remain necessary for pixel appearance. |
-| Thin focus targets | A fixed 4px inset produced negative dimensions on 4px split handles and a 1px decorative rule. | Every focusable element was larger than twice the theme inset. | Clamp each axis independently; omit an inner contrast outline when it cannot fit. The decorative rule also explicitly opts out of Tab. Pointer passthrough alone is not a keyboard policy. |
-| Concentric corners | The fill's pixel radius was reused after insetting the ring, so their corner centers differed. | A fixed radius was correct for every rectangle associated with the component. | Subtract the inset before deriving the ring radius; retain concentric expansion for its contrast edges. |
-| Rotated focus targets | Batched rounded outlines had no rotation field, although fills and text could rotate. | Applying translation and scale to the ring rectangle also covered rotation. | Carry rotation through the outline primitive and rotate around the ring center in both renderers. |
-| Scroll extent disagreed between update and render | Neither path included container padding; only the update path included flex gaps. Rendering could clamp a correctly revealed last row back out of view. | Two copies of similar size arithmetic would stay equivalent. | Share the measurement routine, including padding, gaps, margins, and unbuilt virtual-list content. |
-| Keyboard scroll visibility | Tab could reach controls below a scroll viewport without revealing them. Forms and the scroll-click fixture visibly lost focus. | Being built and enabled meant the control was visible to the user. | Reveal a changed keyboard/programmatic focus target through its scroll ancestors. An unchanged focus does not undo manual wheel scrolling. |
-| Custom modal styling | AIM, media playback/settings, the race pause sheet, and the motorway tutorial used drawn panels instead of the modal plugin. Background controls remained keyboard reachable. | A scrim plus disabled background buttons was equivalent to a modal. Disabled buttons intentionally remain discoverable with Tab. | `ModalConfig::with_panel` accepts normal component styling while retaining the shared modal stack, dismissal, input gate, and focus restoration. The screens use that path. |
-| Modal viewport anchoring | A viewport-sized backdrop and centered panel were positioned relative to whichever parent called the modal. An offset/padded parent shifted the backdrop and left part of the window uncovered. | Every caller was the full-screen root at (0, 0). | Attach backdrops and default panels to the layout root; explicitly styled custom panels retain their caller-relative layout. Test an offset, padded parent. |
-| Modal transition timing | The input gate was installed by a system on a later frame. Closing a covered modal could also steal focus from the top dialog. | A one-frame delay was harmless, and every closing dialog owned focus. | Synchronize the gate at open/close transitions; only restore focus owned by the closing dialog. Retire omitted modal panels so conditional rendering cannot leave an invisible input gate. |
-| Backdrop press ownership | The watcher returned early for an empty modal stack without clearing its remembered press. A later dialog could immediately interpret the opening release as an outside click; a release could also cross between stacked dialogs. | A boolean saying that some modal was active was sufficient to authorize dismissal of whichever modal was on top later. | Bind a press to the modal already present before it began; reset ownership when the stack empties and after release. Tests cover reopening, stacking, opening presses, and a valid later backdrop click. |
-| Escape in modal text fields | A text field consumed Escape to blur, then the focus trap put focus back inside. A rename dialog could never close from its input field. | Local blur was the final handler of Escape, independent of an enclosing dialog. | Blur without consuming the enclosing dismissal action. Dropdowns still consume Escape locally, so their open list closes before its dialog. |
-| Stale actions | An unconsumed Escape survived indefinitely in `last_action`; a later popup could consume it. Screen resets did not clear it either. | A press was safe to retain until some future component handled it. | Initialize and expire the action at the next UI frame, clear input bits on reset, and deliver synthetic E2E actions through the existing next-frame queue. |
-| Popup dismissal | Menus, popovers, and dropdowns closed only when focus moved elsewhere. Clicking blank space did not move focus, and Escape was not handled. | Every outside click would focus another control. | Explicit outside-press and Escape dismissal, with focus restoration when the popup still owns focus. Cozy Cafe now uses the same popover behavior. |
-| Pending menu activation | Checking focus-loss dismissal before rebuilding menu rows discarded a click queued by the previous frame. | Closing and selecting were independent, so their order did not matter. | Read pending item selection before applying generic dismissal; cover selection after focus moves and retain real pointer-routing E2Es. |
-| E2E cancellation | Skipping a failed script left other pending assertions alive. They timed out against later screens and falsely blamed those scripts. | Moving the script cursor also cancelled already-dispatched work. | Consume pending commands without creating new failures before finalizing a skipped script, and clear its waits. Test cancellation and the following script. |
-| Disabled menu options | Tray traversal included unavailable menu actions. | A click listener meant an item was navigable. | Exclude disabled labeled items from tray traversal; ordinary disabled controls retain their existing Tab behavior. |
-| Dropdown trigger width | A dropdown copied its percentage width into its trigger, applying the percentage twice. The visible field was narrower than the focus-cluster rectangle. | Reusing a size configuration preserved its resolved size when moved under a new parent. | Size the trigger and optional label against the resolved holder; test both labeled and unlabeled percentage-width controls. |
-| Long dropdowns | A twelve-option list exceeded the available space around its trigger, and used unresolved style units to estimate height. | Flipping/clamping the origin could make an arbitrarily tall list fit. | Resolve row height from the trigger and limit the tray to available space, with scrolling and keyboard reveal. |
-| Corner-unit setter precedence | Calling `with_roundness(1)` after a base style with `with_corner_radius(0)` silently kept square corners. This occurred again while correcting the motorway rings. | The last explicit builder call would override the base style, as other style setters do. | Each setter clears the other unit; tests verify the rendered radius for both call orders. |
-| Custom painted shapes | Some circular or pill-shaped controls advertised square geometry, so a geometrically correct ring still looked wrong. | A custom draw callback communicated its shape to the renderer. | Supply matching corner geometry in the bird, motorway, and Kirby screens. File-tree rows also reserve the ring's full thickness and contrast edge inside their clip. |
-
-The audit distinguishes a popup that intentionally closes when Tab leaves it
-from an unreachable focus target. A changed candidate set is not by itself a
-navigation defect. Geometry dumps are evidence about coordinates, not proof of
-paint visibility: rendered crops and draw-order tests are required too.
-
-Desktop Escape handling also bypassed UI dismissal: the application loop quit
-before modal or screen navigation could handle the key. Headless E2E skipped
-that branch. All windowed runners now leave Escape to UI handling and retain
-window-close exit behavior.
-
-The live close probes also exposed a stale tree assumption: modal ownership walked child vectors during immediate UI construction, when those vectors had already been cleared. Focus restoration consequently failed for every opener except the first page control. Modal ownership now walks the retained parent links; the regression clears the child vector before closing, and the live audit checks the actual restored ID.
-
-Repeat the audits from the WM root after building:
-
-- `python3 scripts/audit_focus.py --output focus-results.json`: traverse both directions on all registered screens; report clipped/degenerate rings and persistent unreachable targets. Use `--screen NAME` for one screen.
-- `python3 scripts/audit_popups.py --output popup-results.json`: open the scripted dialog/popup cases, check modal focus containment and restoration, and retain a compact findings report.
-- Both commands run the app with `nice -n 10` and remove their temporary screenshots automatically. For visual popup review, pass `--capture-dir PATH` with a fresh directory; analyze it later with `--existing PATH`, then delete it after review.
-- To retain focus crops, run `nice -n 10 ./output/ui_tester.exe --focus-test --focus-audit --max-tabs 512 --image-output PATH`, inspect the crops, then use `python3 scripts/audit_focus.py --existing PATH`.
-
-Verification for this audit:
-
-- WM E2E: 280/280 pass in one complete run, including the self-contained stale-backdrop-press regression and failed-script cancellation case.
-- Focus traversal: 117 screens, 1,091 distinct forward targets, complete forward/reverse cycles, no remaining geometry or reachability findings. Reviewed the whole-app crop sheets and the corrected controls at full size.
-- Popups: 73 scripted cases, 2,636 snapshots, including 1,908 modal snapshots; no containment, opener-restoration, dismissal, or geometry findings. Reviewed all 73 open states, plus the corrected controls and existing wizard, validation, and tooltip captures.
-- Baselines: 117/117 comparisons pass after reviewing and updating the affected images. Changes record the newly visible text-field ring, initial rename selection, corrected scroll extents, and dropdown copy.
-- Library: the full library suite completed successfully. After the final refinements, the affected suites also passed: menu 68/68, dialogs 46/46, downstream gaps 96/96, overdraw 3/3, and command cancellation 7/7. The dialog watcher regressions failed three checks before the press-ownership fix.
-- The app build produced no compiler warnings. Builds and app runs used `nice -n 10`, with builds limited to two jobs.
-- Desktop Escape bypass was verified in the windowed loop code. Input, focus, dismissal, and resizing were exercised through the headless runtime; this does not claim a physical keyboard test on a desktop window.
-
-The combined Escape test initially suggested a short wait, but headless time steps are fixed. An isolated watcher test reproduced the stale press across dialog lifetimes. The fix changes press ownership; the test wait is unchanged.
-
-## September 13 consumer-gap fixes
-
-### UP-15: virtual-list zoom and row stride
-
-The list used physical scroll offsets to index logical row heights. Its generated
-children also lost component scaling overrides, while grid snapping changed row
-positions independently of the indexed stride. The fix resolves windowing metrics
-into physical pixels, keeps generated dimensions in the list’s logical units, and
-disables position snapping on those internal rows and spacers. Padding and gaps
-now contribute once to the content extent. Shrinking and empty lists clamp or
-clear stale scroll offsets.
-
-Validation: `virtual_list_test` passes 16,373 checks across 100%, 140%, and 200%
-zoom, uniform and variable heights, grid on/off, component/screen overrides,
-pixel/percent/screen-relative viewports, start/middle/end, and shrinking lists.
-The consumer no longer needs to scale row heights and then divide child heights.
-
-### UP-13: skipped UI renders
-
-`BeginUIContextManager` now clears only its context’s old submissions before
-running deferred work. Previously the renderers owned this cleanup, assuming
-every update rendered. Current-update overlays and deferred submissions survive;
-another context’s queue is untouched. Both renderers retain their post-draw clear.
-Toast positioning/submission now runs in the render phase: registering toast
-layout before UI initialization previously queued a current-frame toast that
-the next UI begin immediately discarded. The registration-order test covers
-that case after three skipped renders.
-
-Validation: `ui_update_lifecycle_test` and its single-collection build each pass
-39 checks. Twelve updates without rendering produce the same recorded text and
-command counts as one update/render cycle in both renderers. These are library
-recording-backend checks; Floatinghotel’s own idle loop was not changed or run.
-
-### UP-14: configuration-owned texture references
-
-Applying a texture now marks the reference as configuration-owned. A subsequent
-full widget rebuild without that setting removes the reference and marker.
-Manually attached textures survive unrelated widget configuration, and no GPU
-resource is unloaded by this reconciliation. This replaces the incorrect
-assumption that absent texture configuration means retaining the prior image.
-Applications still own resource lifetime: detach every remaining reference before
-unloading a shared texture.
-
-Validation: `ui_texture_lifecycle_test` passes 13 checks for the same widget ID
-transitioning image → text → replacement image, a second widget sharing the old
-texture, and manually attached texture preservation. Floatinghotel’s explicit
-resource-retirement code remains untouched.
-
-### UP-16: headless Metal resize
-
-`set_window_size` queues the latest valid headless dimensions. The next frame
-applies them before opening its pass, allocating a replacement before retiring
-the old target and preserving HiDPI scale. Requested dimensions do not become
-reported dimensions until applied. A request for the current size cancels a pending
-resize. Invalid or oversized requests leave the last valid request intact.
-
-Previously the setter assumed no render pass was active, immediately destroyed
-its attachments, and allocated logical dimensions without the render scale.
-Validation: real Metal `sokol_resize_test` passes 1,356 checks separately at 1×,
-2× and 3×, including framebuffer colors/dimensions, active-pass preservation,
-coalescing, cancellation, auxiliary targets, and 64 repeated resizes. Hanabi was
-not modified. Malformed initial graphics Config validation remains a separate
-initialization concern; this change validates resize requests.
-
-### Default-theme integration
-
-The old default palette, handwritten fallback font, and separately styled
-overlays made unstyled controls inconsistent. The new neutral theme supplies
-contrast-checked semantic colors, pixel radii, derived borders/elevation, and
-shared typography. WM aliases its fallback names to its existing 192px Atkinson
-regular/bold atlases rather than loading duplicate font textures. The new
-`default_theme` screen demonstrates settings, navigation, validation, disabled
-controls, confirmation, tooltips and toasts without custom colors or font faces.
-
-The integration pass found additional incorrect assumptions:
-
-- Slider thumb sizes and offsets inherited viewport-relative units, even though
-  the thumb belongs to a track. The track/label now divide their parent and the
-  thumb uses track-relative percentages, including drag updates. Stored slider
-  callbacks also captured temporary label/placement variables by reference;
-  those values now survive the builder call.
-- Native modal chrome mixed global proportional spacing with context-local
-  Adaptive panels. A fixed-height login panel at 1080p shrank its header beneath
-  its close button. Header, title, padding and the square close button now use
-  the resolved context/application mode. Title width consumes the remaining
-  header space instead of depending on stale child measurement.
-- Tooltip sizing guessed character widths and drew with whichever font was
-  active. It now measures and renders the configured family, wraps long text,
-  honors placement and clamps to the viewport.
-- Equal spacing tokens previously resolved horizontal values against screen
-  width and vertical values against height. Converting them eagerly to pixels
-  fixed that mismatch but froze saved configurations across resize. Height-based
-  proportional spacing must remain lazy; cached configuration is a supported
-  use case, not a reason to require applications to rebuild it.
-
-Explicit text-input autofit remains height-derived. Supplying a global font is
-not an instruction to override an explicit autofit request. Theme-file
-persistence for the new optional tokens and general styled-label line spacing
-remain recorded separately in `todo.md`.
-
-Library verification: default-theme contrast/draw capture 49/49, design defaults
-and persistent spacing 1,214/1,214, autolayout 358/358, modal layout 69/69, slider
-geometry 75/75, and virtual lists 16,373/16,373. The autolayout test source still
-emits nine pre-existing designated-initializer-order warnings; no new warning
-was introduced in the changed library code.
-
-Screenshot review also caught an error → normal transition retaining its red
-fill: `Usage::None` previously skipped color reconciliation. Explicit no-fill
-now clears the old color, including restyles and their text contrast hint.
-Native toasts gain text inset and a 48px default height; their desired sizes
-resolve again after resize, and edge/center anchoring uses their actual width.
-Customize toast dimensions through `UIComponent::set_desired_width/height`;
-computed dimensions belong to layout.
-
-A second screenshot check found that explicit text inset was measured but not
-applied at draw time. The immediate plain-text path substituted a legacy 5px
-margin; the batched path positioned text again using the uninset box. Both
-paths now draw inside the configured inset, and styled runs apply it once.
-The regression checks actual text coordinates for plain/styled labels in both
-renderers, rather than only asserting that the inset field was populated.
-
-Final WM verification: 15/15 E2E scripts passed after the renderer correction,
-covering the new page, advanced/native dialogs, context menus, popovers, both
-drag lists, text inputs/autofit, toasts, virtual lists and focus/Escape behavior.
-The WM build emitted no warnings. Fresh screenshots were inspected at 720p and
-1080p, including validation recovery, save confirmation, focus and the toast.
-The multiline rendering suite passes 62/62 checks.
-
-
-## Text measurement and rendering use different font inputs (September 13 follow-through)
-
-WM's mock export exposed a library contract mismatch. `AutoLayout::get_text_size_for_axis`
-uses `widget.font_name` directly and fixes spacing at `1.f` in
-`src/plugins/autolayout.h`. Rendering resolves `cmp.font_weight` through
-`FontManager::resolve_weighted` and uses `1.f + HasLabel::letter_spacing` in
-`src/plugins/ui/rendering.h`. A text-sized bold or letter-spaced label can therefore
-be sized with different advances from those used to draw it. This is source-confirmed;
-a minimal native regression test is still needed before an upstream implementation.
-
-My assumption was that a label's font, weight and spacing were one shared measurement
-contract. They are currently resolved separately. WM now exports these inputs and
-loads the same font files for its CSS comparison; it must not copy the native solved
-height or silently ignore weight to manufacture agreement.
-
-Needed upstream: resolve one text-measurement descriptor before both layout and
-rendering, including family variant, pixel size, letter spacing, wrapping and line
-metrics. Preserve the distinction between explicit font size and auto-fit. Test
-`Dim::Text` width and wrapped height with a registered regular/bold pair and nonzero
-letter spacing, then compare actual render bounds. Styled spans need the same rule
-per run. Keep existing explicit-size behavior and make backend limitations visible.
-No afterhours files were edited for this investigation.
-
-## Atlases alone do not reduce submitted draws in the measured screens
-
-The WM-only OpenGL probe measured both the original separate textures and the
-atlas-backed versions at swap interval 1. Cozy Cafe remained at 66 draw calls and
-68 texture-bind calls per settled frame; Images remained at 59 and 61. Two runs
-per version reproduced those counts. The complete method and frame-time results
-are in [the runtime report](reports/runtime-performance-2026-09-13.md).
-
-My assumption was that sharing an artwork texture would also join its draws.
-That is insufficient when intervening commands change render state. Source review
-shows that `RenderBatcher::render` in `src/plugins/ui/render_primitives.h` preserves
-command order, dispatches images individually and only groups adjacent compatible
-rectangle commands. Text and clipping commands can remain between image commands.
-Raylib may still batch compatible submissions internally. These source facts do
-not establish which boundaries caused every observed driver draw.
-
-Needed before an upstream optimization: attribute driver draws and state changes
-to the ordered command stream, including texture, scissor, shader and layer. Find
-avoidable boundaries with a small overlapping-image/text/clip fixture before
-changing scheduling. Any coalescing must preserve painter order, overlap and clip
-semantics. Do not globally sort by texture or call command counts GPU draw counts.
-This is a measured optimization opportunity, not evidence that the atlas API is
-broken. No afterhours code changed.
-
-## Rounded parent corners do not clip children to the curve
-
-`HasClipChildren` and scroll clipping use rectangle intersections and scissors in
-`src/plugins/ui/rendering.h`. The parent's corner radius is not part of that clip
-shape. A rectangular child can paint into the corners removed from a rounded
-parent's fill. The mistaken assumption is that setting the parent's radius also
-changes its child clipping geometry.
-
-This is an unsupported optional capability, not evidence that WM's square-framed
-fixtures are broken. Keep rectangular scissoring fast. If a consumer requires a
-rounded mask, it needs an explicit opt-in renderer contract with nested clipping
-and backend coverage. Do not conflate it with partial rounded outlines or the
-separately recorded nested scroll-decoration ancestor bypass. The documentation
-task is complete; a new masking backend remains deferred and was not implemented.
+`UIContext::reset()` retains `has_interacted`, while `focus_element` does not count as interaction. Alone/batch screenshots differ. WM clears capture state and explicitly sends Tab in focus tests. Define a common test-reset contract without clearing ordinary interaction history every screen change. AIM also had a 17×17 disabled-maximize fill difference between isolated and batch capture.
+
+### Validation and checkbox follow-ups
+
+`enforce_min_touch_target` is exposed but has no registered validator. `ClearViolations`/`RenderOverlay` use the default collection and miss markers on split UI children. Native checkmarks still depend on a V glyph; WM draws its own. Test flag off/on, split/single collection cleanup, and custom-font checked/disabled controls. See the root todo for source references.
+
+### Text measurement and rendering use different font inputs
+
+Autolayout uses widget.font_name and spacing 1; rendering resolves weight and `1 + letter_spacing`. The assumption of a shared descriptor was wrong. Resolve actual family variant, size, spacing and wrapping once; test Dim::Text and styled/wrapped bounds against drawing. Source-confirmed; native regression still needed.
+
+### Atlases alone do not reduce submitted draws in the measured screens
+
+Cozy Cafe stayed at 66 draws/68 binds and Images at 59/61 after packing. Sharing a texture does not merge commands separated by render state. Attribute texture/scissor/shader/layer boundaries before coalescing; preserve painter order. Counts are driver measurements, not proof of a broken atlas API. See [performance](performance.md).
+
+### Rounded parent corners do not clip children to the curve
+
+`HasClipChildren` uses rectangular scissors; parent radius changes fill only. Optional rounded masks need explicit nested/backend semantics. Keep rectangular clipping fast. This is a deferred capability, separate from partial outlines and scroll-decoration clipping.
+
+## Other consumer requests
+
+- Wordproc needs access-key underlines on individual characters.
+- E2E packs register per SystemManager. A missing pack times out with a named diagnostic;
+  automatic live-manager registries and first-tick registration were rejected for lifecycle/order cost.
+- `wait` resolves at the simulation batch boundary; keep `sim_steps` small when needed.
+- Puzzle's CPU image generation/conversion/sampling remains a wrapper candidate.
+  Raw RGBA capture is implemented. Mutable upload UP-08 awaits consumer implementation.
+  GIF encoding and node rules remain application-owned.
+- Custom-color lint could catch accidental theme bypass.
+- Puzzle cleanup enumerates child types. Declared ownership may avoid omissions, but
+  non-owning links, cycles, undo and recycled handles need a design. Cascade-delete
+  work remains unstarted.
+- Tab follows allocation order. Stable cleanup prevents reshuffling but does not
+  define tree order or a caller override.
+- Virtual lists retain one leading spacer div; removing it needs layout-offset support.
+  No measured performance reason to change it.
+- Slider knob compression, crowded tab labels and hard character breaks for long
+  words remain low-priority follow-ups. Wrap currently needs explicit font size.
+- UP-07 accessibility semantics and UP-08 mutable textures await consumer-led upstreaming.
+  Sound-feedback hooks and periodic timers remain skipped. Wider charts follow profiler needs.
+- Historical Sokol alpha, theme inheritance, empty `gen_first_enforce`, switch-during-iteration,
+  font-weight diagnostics and common E2E CLI requests remain in [todo.md](../todo.md).
+
+Do not remove consumer workarounds merely because a similar feature exists. Hanabi's
+atlas and keyboard-focus policies need consumer-specific checks. Query early-outs,
+variable-row virtualization, right-click injection, viewport transforms, tooltips,
+grids and native modal dismissal already exist; old missing-feature claims are stale.

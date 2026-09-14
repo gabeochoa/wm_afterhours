@@ -1,8 +1,7 @@
 # Project todo
 
-WM implementation items are complete. The remaining WM verification/research needs
-the external prerequisites listed below; library changes stay deferred. Completed
-work and scope decisions are recorded in [the WM pass](docs/plans/wm-only-todos.md).
+WM implementation work is complete. Remaining library work and external checks follow.
+See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) for completed work.
 
 ## New consumer gaps collected September 13
 
@@ -18,11 +17,9 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 ## Library follow-ups retained from earlier reviews
 
-- [ ] **Connect the advertised minimum touch-target validation option.** `vendor/afterhours/src/plugins/ui/validation_config.h:86–87` exposes `enforce_min_touch_target` and `min_touch_target_size`, and `any_enabled()` includes the flag. A complete source search finds no consumer of either setting outside that file; neither registration helper in `validation_systems.h:855–897` registers a corresponding check. Enabling the flag therefore silently does nothing. Implement an opt-in validator against actual interactive hit rectangles, respect visibility/disabled policy, and verify a too-small enabled control reports while an adequate control does not, with the flag off/on and split/single collection configurations. Keep the threshold configurable; 44px is a project/default guideline rather than an unconditional WCAG requirement.
-
-- [ ] **Make validation highlights and their lifecycle use the UI collection.** `validation_systems.h:47–51` registers `ClearViolations` as an ordinary system, so `SystemManager::tick()` runs it over the default collection (`core/system.h:631–637`). `RenderOverlay` then uses default `EntityQuery()` at `validation_systems.h:788–790`. In the default split-collection mode, validators add `ValidationViolation` to child widgets via `UICollectionHolder`, so those child markers are not visited for clearing or drawing. The root is shared into the default collection (`ui/utilities.h:217–225`), which makes the root-recursive checks work; the old audit's blanket claim that all root validators miss UI widgets is outdated. Route marker cleanup and overlay queries to the UI collection without double processing the shared root. Verify a violating child highlights and clears after correction, including default split and compatibility single-collection modes. Source-confirmed discrepancy; runtime reproduction remains to be added when implementing.
-
-- [ ] **Provide a native checkmark rendering option that does not depend on the active text font.** Current `component_config.h:178` still defines `DEFAULT_CHECKBOX_CHECKED = "V"`, and `imm_components.h:1112–1122` copies the indicator string into a label, with a symbol-font fallback only if no explicit font is provided. The WM Checkbox showcase suppresses the native indicator with `with_checkbox_indicators("", "")` and draws a square/check using `draw_mark()` locally. That solves the screen, not the previously accepted library item. Preserve the existing string override for intentional theme styles while providing a real built-in mark or configurable drawing hook. Verify checked/unchecked/disabled states, scaling, and custom fonts. The retained icon-registry proposal is broader and unimplemented; it does not make this native control fix complete. Do not reopen the WM screen audit.
+- [ ] Connect `enforce_min_touch_target` to an opt-in validator of interactive hit bounds; its current flag has no consumer. Cover visibility, disabled policy, configurable thresholds and both collection modes.
+- [ ] Use the UI collection for validation-marker cleanup and overlays; default-collection queries miss split UI children. Test highlights clearing after correction, without processing the shared root twice.
+- [ ] Provide a font-independent native checkmark or drawing hook while preserving string overrides. WM currently draws its own mark. Test custom fonts, scaling and disabled states.
 
 ## Afterhours-dependent work (deferred)
 
@@ -34,7 +31,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] Define and implement native cross-axis Stretch sizing for unspecified dimensions; see docs/AFTERHOURS_GAPS.md.
 
-- [ ] Investigate faster text layout using prepared text and cached measurements. Review [the plan](docs/plans/text-layout-performance.md) before implementation.
+- [ ] Investigate faster text layout using prepared text and cached measurements. Review [the plan](docs/architecture.md) before implementation.
 
 - [ ] Persist optional theme radius/color overrides and the panel radius through theme-file save/load. The serializer is `vendor/afterhours/src/plugins/ui/theme_io.h`; this needs a library change.
 
@@ -107,14 +104,14 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
   Reassess pie/donut, stacked charts, histograms and pan/zoom when a consumer
   needs them; these options are not individually approved requirements.
   Extend the interactive wm chart test screen with each implemented type.
-  See `docs/gap-design-decisions.md`, D-02.
+  See `docs/architecture.md`, D-02.
 
 ### WM verification and external review still pending
 
 - [ ] Review [chrstph-gg/sf-windows](https://github.com/chrstph-gg/sf-windows) and record useful ideas or limitations relevant to WM and afterhours before adopting anything. Blocked: the external source loader rejected this URL under its input-filtering policy. No source was retrieved, so there is no completed review.
 
-- [ ] Measure controlled cold launch and repeat the idle CPU measurement on an otherwise idle machine. Headless and verified-vsync startup, process-only idle/active CPU, RSS, settled frame timings and atlas driver counts are in [the runtime report](docs/reports/runtime-performance-2026-09-13.md). Shared-machine runs do not control other users or filesystem caches; do not relabel warm launches as cold. Deferred fonts load once and remain resident after visiting their consumer.
-- [ ] Refresh selected CSS/native comparisons when the required local browser is available. [The source review](mocks/REVIEW-2026-09-13.md) fixes double-counted absolute margins, explains intrinsic-text limitations, and identifies changed fixtures. Fresh selected native screenshots/trees and a font-aware viewer are ready at `output/wm-followthrough/mock-review/`. Font files, explicit sizes, wrapping intent, spans and intrinsic text participation are now represented. Browser mismatch counts remain unmeasured because the required local browser prerequisites are absent. Verify browser-vs-Raylib advances, fallback, line breaking and styled-run auto-fit before trusting text differences; absolute origins still replay native coordinates. Do not reuse August counts as current defects.
+- [ ] Measure controlled cold launch and repeat the idle CPU measurement on an otherwise idle machine. Headless and verified-vsync startup, process-only idle/active CPU, RSS, settled frame timings and atlas driver counts are in [the runtime report](docs/performance.md). Shared-machine runs do not control other users or filesystem caches; do not relabel warm launches as cold. Deferred fonts load once and remain resident after visiting their consumer.
+- [ ] Refresh selected CSS/native comparisons when the required local browser is available. [The source review](mocks/README.md) fixes double-counted absolute margins, explains intrinsic-text limitations, and identifies changed fixtures. Fresh selected native screenshots/trees and a font-aware viewer are ready at `output/wm-followthrough/mock-review/`. Font files, explicit sizes, wrapping intent, spans and intrinsic text participation are now represented. Browser mismatch counts remain unmeasured because the required local browser prerequisites are absent. Verify browser-vs-Raylib advances, fallback, line breaking and styled-run auto-fit before trusting text differences; absolute origins still replay native coordinates. Do not reuse August counts as current defects.
 
 ### Earlier library requests, still deferred
 
@@ -137,5 +134,3 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] floatinghotel: replace its five pixel-intended fractional-roundness calls during its next library bump.
 - [ ] Reconcile shipped API claims in the five historical gap documents across floatinghotel, hanabi and the other consumers. Those repositories are outside this WM-only pass.
-
-Completed WM screen, test and build work is recorded in [the WM-only pass](docs/plans/wm-only-todos.md). Historical August audit counts are not an active acceptance checklist for today's replacement screens.
