@@ -13,6 +13,13 @@ import tempfile
 import time
 
 
+def cpu_seconds(value):
+    days, separator, clock = value.rpartition('-')
+    total = float(days) * 86400 if separator else 0
+    parts = clock.split(':')
+    return total + sum(float(part) * 60 ** index for index, part in enumerate(reversed(parts)))
+
+
 def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False, windowed=False, gl_probe=None):
     run_dir = work / name
     run_dir.mkdir()
@@ -52,9 +59,9 @@ def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False, 
                 if elapsed > timeout:
                     process.kill()
                     raise TimeoutError(f'{name} exceeded {timeout}s; see {run_dir}/run.log')
-                result = subprocess.run(['ps', '-o', 'rss=,%cpu=', '-p', str(process.pid)], capture_output=True, text=True)
+                result = subprocess.run(['ps', '-o', 'rss=,%cpu=,time=', '-p', str(process.pid)], capture_output=True, text=True)
                 values = result.stdout.split()
-                sample = {'seconds': elapsed, 'rss_mib': float(values[0]) / 1024, 'cpu_percent': float(values[1])} if len(values) == 2 else {'seconds': elapsed}
+                sample = {'seconds': elapsed, 'rss_mib': float(values[0]) / 1024, 'cpu_percent': float(values[1]), 'process_cpu_seconds': cpu_seconds(values[2])} if len(values) == 3 else {'seconds': elapsed}
                 samples.append(sample)
                 while len(observations) < len(markers) and markers[len(observations)][1].exists():
                     phase, path, count = markers[len(observations)]
@@ -77,6 +84,19 @@ def run(binary, root, work, name, frames, cycles, timeout, frame_metrics=False, 
               'sampled_peak_rss_mib': max((sample.get('rss_mib', 0) for sample in samples), default=0),
               'first_usable_seconds_upper_bound': observations[0]['seconds'] if observations else None,
               'observations': observations, 'samples': samples}
+    record['cpu_phases'] = []
+    for previous, current in zip(observations, observations[1:]):
+        if current['phase'] not in ('idle', 'active', 'returned_idle'):
+            continue
+        settled = [sample for sample in samples if 'process_cpu_seconds' in sample and
+                   previous['seconds'] + 0.5 < sample['seconds'] < current['seconds'] - 0.5]
+        if len(settled) < 2:
+            continue
+        seconds = settled[-1]['seconds'] - settled[0]['seconds']
+        used = settled[-1]['process_cpu_seconds'] - settled[0]['process_cpu_seconds']
+        record['cpu_phases'].append({'phase': current['phase'], 'seconds': seconds,
+                                    'cpu_seconds': used, 'cpu_percent': 100 * used / seconds,
+                                    'rss_mib_start': settled[0]['rss_mib'], 'rss_mib_end': settled[-1]['rss_mib']})
     record['font_loads'] = [{'name': match[0], 'milliseconds': float(match[1]), 'glyphs': int(match[2])} for match in re.findall(r'\[startup\] font=(\S+) ms=([\d.e+-]+) glyphs=(\d+)', (run_dir / 'run.log').read_text())]
     profiler_path = run_dir / 'profiler.json'
     if profiler_path.exists():
@@ -137,7 +157,8 @@ def main():
     report = {'platform': platform.platform(), 'binary': str(args.binary.resolve()), 'windowed': args.windowed, 'runs': results,
               'notes': ['The first launch is filesystem-cache-uncontrolled, not a guaranteed cold launch. Later launches are warm repeats.',
                         'Startup ends at a UI audit after two rendered frames. Polling and audit overhead make it an upper bound.',
-                        'RSS is sampled every ~50ms plus ps overhead. Process CPU totals include ps sampler subprocesses.',
+                        'RSS is sampled every ~50ms plus ps overhead. Whole-run resource totals include ps sampler subprocesses.',
+                        'Phase CPU uses differences in the app process cumulative CPU time, excluding 0.5s around each audit boundary. ps time has 0.01s precision; sampler CPU is excluded, but shared-machine contention remains.',
                         'Windowed mode uses the app display; headless mode is uncapped. The optional GL probe requests swap interval 1 and logs the actual value.',
                         'Phase wall times include navigation, audit screenshots, E2E dispatch and polling. They are not isolated frame times.',
                         'Optional profiler timings cover the whole workload and include dispatch/audit frames, with collection enabled.',

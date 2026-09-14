@@ -184,3 +184,27 @@ nice -n 10 python3 scripts/profile_runtime.py --binary output/ui_tester.exe \
 Raw proof is in `output/wm-followthrough/windowed-verified/report.json` and each
 run's `gl.csv`. Invalid or missing instrumentation now fails the measurement
 instead of silently producing a supposedly vsynced result.
+
+## Process-only CPU during settled phases
+
+The sampler now also reads `ps time`, the app's cumulative process CPU time.
+Subtracting samples within each phase excludes CPU spent by the sampler itself.
+Intervals omit 0.5 seconds at each audit boundary. The `ps` counter has 0.01-second
+precision; timestamps include polling overhead. This measures the app while idle,
+not a guarantee that the shared machine is idle.
+
+A follow-up run used 600 frames per phase, one switch cycle, niceness 10 and
+verified swap interval 1. No build or other test of ours ran concurrently.
+
+| Phase | Sample interval | App CPU seconds | App CPU | Frame median / p95 |
+|---|---:|---:|---:|---:|
+| Buttons idle | 4.344 s | 3.010 s | 69.3% | 8.624 / 10.956 ms |
+| Chart Lab active | 4.166 s | 2.240 s | 53.8% | 8.833 / 11.489 ms |
+| Returned Buttons | 4.099 s | 2.470 s | 60.3% | 8.151 / 11.254 ms |
+
+100% means one core. Returned-idle RSS was 371.9 MiB at the start and 371.8 MiB
+at the end. This small interval cannot establish absence of leaks. These results
+show substantial ongoing work in the idle Buttons screen, but do not attribute
+that cost to a particular library system or establish a regression. Raw samples
+and phase summaries are in `output/wm-remaining/phase-cpu/report.json`.
+Use the windowed command above with `--frames 600` to repeat this measurement.
