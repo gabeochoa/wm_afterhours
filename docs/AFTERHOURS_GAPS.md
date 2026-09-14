@@ -15,13 +15,9 @@ Sokol measurement formerly packed glyphs and silently skipped advances when the 
 
 Missing-glyph drawing, automatic recovery and general error reporting remain deferred. Keep Hanabi's guard. See [measurement evidence](../vendor/afterhours/docs/font-atlas-measurement.md).
 
-### UP-18: Inject the actual Cmd/Super modifier in E2E chords
+### UP-18: Actual Cmd/Super injection — implemented
 
-- Evidence: `hanabi/src/keys.h:84` accepts Ctrl as a substitute for Cmd because its scripted tests cannot reach the actual Cmd-only key-state path.
-- Library: `src/core/key_codes.h:302` maps `CMD+` to Ctrl, although `SUPER+` sets a distinct field. `src/plugins/e2e_testing/command_handlers.h:114` holds and schedules release for Ctrl/Shift/Alt only; it ignores `combo.super`.
-- Assumption: Cmd and Ctrl are interchangeable for every shortcut. Consumers inspect physical modifiers and distinguish those chords.
-- Change: inject and release Super faithfully, and explicitly define the platform meaning of Cmd aliases. Check existing scripts before changing aliases. An application can retain Ctrl shortcuts by choice.
-- Closure: Cmd-only, Ctrl-only and combined modifier shortcuts; verify modifier state during the action and after release, cancellation and script reset. Include a following unmodified key to detect stuck modifiers.
+Cmd was incorrectly treated as Ctrl, and the handler ignored Super. Hanabi accepted Ctrl to work around this, masking physical-modifier differences. Cmd/Super/Win/Meta now inject Super; Ctrl stays distinct. Reset, skip and timeout also clear held keys. `e2e_key_command_test` covers aliases, combined chords, release and cancellation. Hanabi's workaround remains consumer-owned.
 
 ### UP-19: Parse quoted property values consistently in E2E commands
 
