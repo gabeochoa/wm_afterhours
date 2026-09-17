@@ -22,6 +22,8 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 ## Afterhours-dependent work (deferred)
 
+- [ ] Add an optional, easy-to-use in-game terminal plugin based on Cartographer (`src/terminal.h`, `src/terminal_systems.cpp`) and Puzzle (`src/components/terminal.h`, `src/console_commands.h`, `src/systems/console_systems.cpp`). Provide polished default UI, command registration with help and autocomplete, input editing, history and scrollable output. Keep game-specific commands app-owned, setup minimal and styling customizable. Add a WM demo with keyboard/E2E coverage.
+
 - [ ] Expand animations with fade, blur, unblur, lift, fall, scale, dissolve, wipe, raise, curtain, sweep, shear, stretch, iris, spotlight, swing, typewriter, zoom, recede, unroll, blinds, slide, flip, emerge, tumble, drop and cascade. Support each applicable effect on a whole item, individual words (`word-*`) or individual characters (`char-*`), with stagger, interruption and reduced-motion behavior. Preserve grapheme clusters when animating characters.
 
 - [ ] Add shader backgrounds per component. Review component-local coordinates, clipping, configurable uniforms and animation time, batching, and a fallback for unsupported renderers.
