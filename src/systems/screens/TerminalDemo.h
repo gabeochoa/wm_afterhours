@@ -12,6 +12,7 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     explicit CountCommand(int &value) : counter(value) {}
     std::string_view name() const override { return "count"; }
     std::string_view help() const override { return "Add to the counter: count [amount], default 1"; }
+    std::string_view usage() const override { return "count [amount]"; }
     afterhours::terminal::Result run(afterhours::terminal::Arguments args) override {
       if (args.size() > 1) return {"Usage: count [amount]", false};
       const auto amount = args.get<int>(0, 1);
@@ -46,6 +47,14 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       return Result{std::move(text)};
     }});
     console.add_command(std::make_unique<CountCommand>(counter));
+    console.add_command({"reset", "Reset a nonzero counter", [this](Arguments args) {
+      if (!args.empty()) return Result{"Usage: reset", false};
+      counter = 0;
+      return Result{"Counter reset"};
+    }, {}, {}, "reset", [this]() -> std::optional<std::string> {
+      if (counter == 0) return "Counter is already zero. Run count first.";
+      return {};
+    }});
     console.add_command({"accent", "Change color using the current palette", [this](Arguments args) {
       if (args.size() != 1 || std::find(palette.begin(), palette.end(), args[0]) == palette.end())
         return Result{"Choose an available accent color", false};

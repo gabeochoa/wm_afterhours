@@ -1,0 +1,58 @@
+goto_screen terminal
+resize 1280 720
+wait 0.3
+focus_ui terminal_input
+type "rese"
+wait 0.2
+expect_text "Usage: reset"
+expect_text "Unavailable: Counter is already zero. Run count first."
+key TAB
+wait 0.2
+expect_input_text terminal_input "reset "
+assert_within_parents
+screenshot terminal_unavailable
+key ENTER
+wait 0.3
+expect_input_text terminal_input ""
+expect_text "Unavailable: Counter is already zero. Run count first."
+expect_no_text "Counter reset"
+type "count "
+wait 0.2
+expect_text "Usage: count [amount]"
+type "3"
+key ENTER
+wait 0.3
+expect_text "Counter: 3"
+type "clear"
+key ENTER
+wait 0.2
+type "reset"
+wait 0.2
+expect_text "Usage: reset"
+expect_no_text "Unavailable: Counter is already zero. Run count first."
+screenshot terminal_available
+click_ui terminal_run
+wait 0.3
+expect_text "Counter reset"
+expect_text "Counter: 0"
+type "help reset"
+key ENTER
+wait 0.3
+expect_text "Usage: reset"
+expect_text "Unavailable: Counter is already zero. Run count first."
+key F2
+wait 0.2
+expect_focused terminal_overlay_input
+type "reset"
+wait 0.2
+expect_text "Usage: reset"
+key ENTER
+wait 0.3
+expect_input_text terminal_overlay_input ""
+expect_text "Counter: 0"
+resize 1920 1080
+wait 0.3
+type "rese"
+wait 0.2
+assert_within_parents
+screenshot terminal_unavailable_overlay
