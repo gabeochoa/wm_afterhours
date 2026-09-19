@@ -94,3 +94,42 @@ type "count"
 key ENTER
 wait 0.2
 expect_text "Counter: 5"
+type "c"
+wait 0.2
+expect_text "Clear output"
+expect_text "Add to the counter: count [amount], default 1"
+assert_within_parents
+screenshot terminal_autocomplete
+key DOWN
+key ENTER
+wait 0.2
+expect_input_text terminal_input "count "
+expect_no_text "Counter: 6"
+key ENTER
+wait 0.2
+expect_text "Counter: 6"
+type "c"
+wait 0.2
+click_ui terminal_suggestion_1
+wait 0.2
+expect_input_text terminal_input "count "
+key ENTER
+wait 0.2
+expect_text "Counter: 7"
+type "accent "
+wait 0.2
+assert_within_parents
+screenshot terminal_argument_autocomplete
+click_ui terminal_suggestion_2
+wait 0.2
+key ENTER
+wait 0.2
+expect_text "Accent: purple"
+type "c"
+wait 0.2
+key ESCAPE
+wait 0.2
+type "ount"
+key ENTER
+wait 0.2
+expect_text "Counter: 8"

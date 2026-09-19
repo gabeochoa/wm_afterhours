@@ -93,12 +93,19 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     label(1, "Developer terminal", 32, 34, foreground);
     label(2, "Custom commands, native text editing, and a console you can embed in your game.", 84, 20, muted);
     label(3, "Counter: " + std::to_string(counter) + "     Accent: " + accent, 134, 22, highlight);
+    afterhours::terminal::AutocompleteStyle autocomplete_style;
+    autocomplete_style.list.with_border_top({58, 73, 93, 255}, pixels(1.f));
+    autocomplete_style.row.with_custom_text_color({200, 210, 225, 255})
+        .with_custom_hover_bg({30, 43, 61, 255});
+    autocomplete_style.selected_row.with_custom_text_color(highlight)
+        .with_border_left(highlight, pixels(2.f * scale));
     afterhours::terminal::panel(ctx, mk(entity, 4), console, ComponentConfig{}
         .with_size({pixels(1184.f * scale), pixels(436.f * scale)})
         .with_absolute_position(left, 196.f * scale)
         .with_font("AtkinsonMock", pixels(20.f * scale))
-        .with_custom_background({25, 35, 51, 255}).with_corner_radius(12.f * scale));
-    label(5, "Enter: run   |   Up / Down: history   |   Tab: complete   |   Shift+Tab: move focus   |   Esc: leave input", 652, 18, muted);
+        .with_custom_background({25, 35, 51, 255}).with_corner_radius(12.f * scale),
+        autocomplete_style);
+    label(5, "Enter: accept / run   |   Up / Down: suggestions / history   |   Tab: complete   |   Esc: dismiss / leave", 652, 18, muted);
   }
 };
 
