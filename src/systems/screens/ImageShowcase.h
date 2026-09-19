@@ -19,6 +19,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
   int button_clicks = 0;
   std::string last_action = "None yet";
   bool show_bounds = false;
+  bool tint_images = false;
   artwork::Atlas atlas;
 
   void for_each_with(afterhours::Entity &entity,
@@ -33,6 +34,9 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     const afterhours::Color ink{236, 242, 250, 255};
     const afterhours::Color muted{175, 193, 216, 255};
     const afterhours::Color outline{94, 120, 154, 255};
+    const std::array<afterhours::Color, 5> tints{{
+        {113, 190, 255, 255}, {255, 204, 102, 255}, {160, 225, 171, 255},
+        {207, 164, 255, 255}, {255, 155, 155, 255}}};
     const auto box = [scale, left, top](float x, float y, float w, float h) {
       return ComponentConfig{}.with_size({pixels(w * scale), pixels(h * scale)})
           .with_absolute_position((left + x) * scale, (top + y) * scale)
@@ -94,6 +98,7 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
           .with_custom_background({35, 48, 66, 255}).with_corner_radius(6 * scale));
       auto config = box(x + 12, 158, 80, 80).with_ignore_pointer_events()
           .with_debug_name("sprite_icon_" + std::to_string(i + 1));
+      if (tint_images) config.with_image_tint(tints[i]);
       if (show_bounds) config.with_on_draw_fg([outline](RectangleType r) {
         afterhours::draw_rectangle_outline(r, outline, 1.f);
       });
@@ -118,9 +123,12 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
       const int specimen_index = button_indices[i];
       const auto &specimen = specimens[static_cast<size_t>(specimen_index)];
       const float x = 196 + static_cast<float>(specimen_index) * 124;
-      if (image_button(context, mk(root.ent(), 80 + static_cast<int>(i)), specimen.image.texture, specimen.image.source,
-          box(x + 20, 333, 64, 64).with_background(button_usage[i]).with_corner_radius(8 * scale)
-              .with_debug_name("imgbtn_" + std::to_string(i + 1)))) {
+      auto config = box(x + 20, 333, 64, 64)
+          .with_background(button_usage[i]).with_corner_radius(8 * scale)
+          .with_debug_name("imgbtn_" + std::to_string(i + 1));
+      if (tint_images) config.with_image_tint(tints[static_cast<size_t>(specimen_index)]);
+      if (image_button(context, mk(root.ent(), 80 + static_cast<int>(i)),
+          specimen.image.texture, specimen.image.source, config)) {
         ++button_clicks;
         last_action = specimen.action;
       }
@@ -135,7 +143,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
     label(113, "Last: " + last_action, 450, 408, 224, 25, 18, muted, "image_last_action");
     label(114, "Three theme variants", 844, 337, 280, 27, 22, ink);
     label(115, "Shared frame: " + size_text(64, 64), 844, 372, 280, 25, 19, muted);
-    label(116, "All three update one result.", 844, 405, 280, 25, 19, muted);
+    if (button(context, mk(root.ent(), 116), box(844, 402, 280, 42)
+        .with_label(tint_images ? "Reset image tint" : "Tint images")
+        .with_font("AtkinsonMock", pixels(21 * scale)).with_custom_text_color(ink)
+        .with_custom_background({49, 71, 100, 255}).with_corner_radius(7 * scale)
+        .with_debug_name("image_tint"))) tint_images = !tint_images;
     // Row 3: Image with background demo
     label(120, "Image + text", 20, 479, 166, 30, 24, ink);
     label(121, "Static compound", 20, 517, 166, 26, 18, muted);
@@ -156,9 +168,11 @@ struct ImageShowcase : ScreenSystem<UIContext<InputAction>> {
                                           r.width / 4, r.height / 4}, {148, 163, 183, 255});
             }
         }));
-    sprite(context, mk(root.ent(), 128), gear.texture, gear.source, box(844, 482, 64, 64)
-        .with_ignore_pointer_events().with_debug_name("image_light_sprite"));
-    label(129, "White + alpha", 920, 482, 204, 27, 21, ink);
+    auto light_image = box(844, 482, 64, 64)
+        .with_ignore_pointer_events().with_debug_name("image_light_sprite");
+    if (tint_images) light_image.with_image_tint({113, 190, 255, 128});
+    sprite(context, mk(root.ent(), 128), gear.texture, gear.source, light_image);
+    label(129, tint_images ? "Tint + 50% alpha" : "White + alpha", 920, 482, 204, 27, 21, ink);
     label(130, "Light checkerboard", 920, 516, 204, 25, 18, muted);
     // Row 4: Icon row demo with labels
     label(140, "Icon row", 20, 583, 166, 30, 24, ink);

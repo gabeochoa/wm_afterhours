@@ -31,6 +31,17 @@ assert_ui image_container x=264 y=482 w=260 h=64
 assert_ui image_light_sprite x=912 y=482 w=64 h=64
 assert_within_parents
 screenshot images_design
+click_ui image_tint
+wait 0.2
+expect_text "Reset image tint"
+expect_text "Tint + 50% alpha"
+assert_within_parents
+screenshot images_tinted
+click_ui image_tint
+wait 0.2
+expect_text "Tint images"
+expect_text "White + alpha"
+screenshot images_tint_reset
 click_ui sprite_icon_1
 wait 0.2
 expect_text "Clicks: 0"

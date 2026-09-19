@@ -20,7 +20,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 
 - [ ] **UP-17 follow-up:** Define missing-glyph rendering and atlas recovery. Atlas-independent measurement and its cache regression are now implemented; see `vendor/afterhours/docs/font-atlas-measurement.md`. Fallback drawing, automatic recovery and removal of Hanabi's guard remain deferred.
 - [x] **UP-19:** Shared E2E argument parsing handles quoted properties, escaped quotes/backslashes and empty values.
-- [ ] **UP-20:** Add native image/sprite tint configuration composed with opacity. Kart uses custom Raylib drawing for driver-colored sprites.
+- [x] **UP-20:** Native image/sprite tint configuration composes with opacity. WM Images demonstrates tint and reset; Kart can adopt it on its next library bump.
 - [ ] **UP-21:** Make immediate-renderer E2E text visibility respect ancestor clips, matching the already corrected batched path. Distinguish full visibility from partial visibility and text existence.
 - [ ] **UP-22:** Resolve semantic font tiers through the selected scaling mode so Adaptive zoom scales text with controls. Explicit screen-relative sizes should retain their meaning.
 

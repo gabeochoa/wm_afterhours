@@ -35,13 +35,11 @@ A shared reader now handles quoted arguments, escaped quotes/backslashes and emp
 
 On Floatinghotel's next library bump, remove its second parse with `std::quoted` in `HandleShowToast`, `HandleNativeMenuAction` and `HandleExpectReviewExport` (`src/ecs/e2e_command_handlers.h`). Arguments now arrive decoded; parsing them again truncates multiword values. Its separate pinned checkout is unchanged.
 
-### UP-20: Expose image and sprite tint through component configuration
+### UP-20: Image and sprite tint configuration implemented
 
-- Evidence: `kart-afterhours/src/ui/ui_systems.cpp:425` draws kart sprites through a custom Raylib callback to apply each driver's paint color.
-- Library: `src/plugins/ui/components.h:264` gives `HasImage` no tint; `src/plugins/ui/imm_components.h:812` sets texture/source/alignment only. Both image-rendering paths start from white at `src/plugins/ui/rendering.h:1784` and `:2526`, applying only opacity.
-- Assumption: image color is always baked into the asset. Recolored game sprites and monochrome toolbar icons need a foreground tint. Low-level texture drawing already accepts one, so no new rendering backend is needed.
-- Change: a configuration-owned tint for native image/sprite controls, composed with inherited opacity. Keep atlas selection and game paint policy in consumers.
-- Closure: the same atlas frame with distinct tints in both renderers, nested opacity, and resetting a reused widget to default white.
+Kart used custom Raylib drawing for driver colors because native images always drew with a fixed tint. I had assumed recoloring was baked into assets. That also hid a second issue: Raylib's `UI_WHITE` is off-white, so even untinted images were slightly darkened.
+
+`with_image_tint(Color)` now covers images, atlas sprites, image buttons and configured textures in both renderers. Tint alpha combines with widget and ancestor opacity; omitting the option restores neutral white on reused widgets. Pixel tests cover RGB multiplication, source rectangles, opacity and reset. Try **Images → Tint images** in WM.
 
 ### UP-21: Match E2E text visibility across immediate and batched rendering
 
