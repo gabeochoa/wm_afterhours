@@ -99,8 +99,6 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
         label(root.ent(), 30 + i, names[i], x, 296, 170, 24, 20, true);
         label(root.ent(), 40 + i, captions[i], x, 321, 172, 22, 17);
       }
-      label(root.ent(), 12, "Solid uniform borders currently draw at 1 screen px, including the 3px and 6px requests.",
-            0, 349, 1160, 23, 17);
       // Row 2: Rounded corners and shadows
       label(root.ent(), 13, "Corners / fraction of half the short side", 0, 382, 730, 27, 22, true);
       label(root.ent(), 14, "Shadows / neutral backdrop", 792, 382, 368, 27, 22, true);
@@ -134,8 +132,6 @@ struct ExampleBordersScreen : ScreenSystem<UIContext<InputAction>> {
       }
       label(root.ent(), 90, "0.5 is a rounded rectangle. The wider companion uses 1.0 for a true capsule.",
             400, 608, 750, 27, 18);
-      label(root.ent(), 91, "Labels name fill corners; native outlines round all four corners.",
-            400, 649, 750, 25, 18);
       return;
     }
     if (page == 1) {

@@ -185,7 +185,9 @@ At the reviewed pin, `component_init.h` resolves both translate axes with screen
 
 ### Uniform solid borders ignore requested thickness
 
-The uniform branch omits `BorderSide::thickness`; rounded outlines become 1px, sharp outlines fixed 3px. WM uses a thickness-aware draw helper. Test requested thickness on sharp/rounded borders in both renderers.
+Fixed: uniform borders resolve their requested width and draw inward in both renderers. The old branch assumed a generic outline respected border configuration; it drew fixed 1px or 3px strokes. Pixel tests cover scaling, fractional and oversized widths, transparency, and square/rounded/mixed corners. Focus rings retain their outward outlines.
+
+Remaining: Raylib and Metal fills map corner bits differently. Borders now follow each backend’s existing fill order. Standardize the mapping with a migration for callers; assuming the comments matched Raylib’s actual argument order produced detached corners.
 
 ### Slider state does not follow external model changes
 
@@ -204,8 +206,6 @@ Intrinsic size sums unrounded gaps, then placement snaps accumulated positions. 
 Fixed: minimum click/drag bounds validation, UI-collection marker cleanup, and overlay placement before frame completion. The faulty assumptions were that exposing a flag registered its validator and that UI children lived in the default collection. Both collection modes pass; try `touch_targets` for thresholds and correction/cleanup.
 
 Fixed: native checkbox marks now use drawn strokes in both renderers. A V glyph was assumed to be a checkmark across fonts. The checkbox also inherited its row’s left alignment and lost the caller’s text color role and inset; the indicator now receives those settings explicitly. WM uses the native mark, with custom text and empty overrides retained.
-
-Remaining: uniform borders discard configured thickness in both renderers (`draw_rectangle_rounded_lines` receives no width). WM’s native checkbox outlines are thinner than its old 2px drawing. Pass the resolved width through and test at multiple scales.
 
 ### Text measurement and rendering use different font inputs
 
