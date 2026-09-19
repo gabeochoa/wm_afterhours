@@ -47,13 +47,11 @@ Immediate rendering registered labels against the window alone; styled runs coul
 
 `expect_text` accepts partial label bounds; `expect_text_fully_visible` requires full bounds. `assert_ui name text="..."` checks existence/value independently. Pixel tests cover nested clips, scroll offsets and styled labels in both renderers. WM's scroll-clip test also checks an offscreen row's value without calling it visible.
 
-### UP-22: Resolve semantic font tiers through the selected scaling mode
+### UP-22: Font tiers follow the selected scaling mode
 
-- Evidence: `floatinghotel/docs/afterhours-gaps.md:667` reports text remaining small while controls grow at 140% zoom. Current review/search controls use logical pixel font sizes, for example `floatinghotel/src/ui/repo_search.h:136`.
-- Library: `src/plugins/ui/component_config.h:782` always converts `FontSize` tiers to `h720`. `src/plugins/ui/layout_types.h:199` applies Adaptive `ui_scale` to Pixels but not ScreenPercent, which is the unit of `h720`. The tier has lost its semantic intent before the component's scaling mode is resolved.
-- Assumption: screen-relative font size and application zoom are the same scale. A desktop window can keep its resolution while zoom changes.
-- Change: retain or resolve tier intent at the correct configuration stage, respecting component, screen and application mode selection. Explicit screen-relative font sizes should retain their requested meaning.
-- Closure: all tiers at multiple window heights and zoom factors, comparing Proportional and Adaptive modes and their overrides. Include controls whose dimensions use logical pixels.
+Tiers were converted to `h720` too early, losing their logical pixel size. The assumption was that resolution scaling and UI zoom were interchangeable. A `Size` now retains the Adaptive pixel value so config copies, layout and both renderers resolve the same size. Explicit screen-relative sizes keep their meaning.
+
+Config measurement now uses the selected mode, and text-area wrapping uses the same font size and mode as its line labels. Tests cover all tiers, window heights, zoom levels, overrides and both renderers. Try the blue **80px** sample in **Adaptive Scaling**; it now uses `FontSize::Medium` instead of manual font scaling.
 
 ## UI, layout and validation
 

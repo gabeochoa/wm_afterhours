@@ -22,7 +22,7 @@ causes, scope and closure checks are in [AFTERHOURS_GAPS.md](docs/AFTERHOURS_GAP
 - [x] **UP-19:** Shared E2E argument parsing handles quoted properties, escaped quotes/backslashes and empty values.
 - [x] **UP-20:** Native image/sprite tint configuration composes with opacity. WM Images demonstrates tint and reset; Kart can adopt it on its next library bump.
 - [x] **UP-21:** Both renderers respect ancestor clips for E2E text visibility; full label bounds and label-value assertions are separate.
-- [ ] **UP-22:** Resolve semantic font tiers through the selected scaling mode so Adaptive zoom scales text with controls. Explicit screen-relative sizes should retain their meaning.
+- [x] **UP-22:** Font tiers follow Adaptive zoom and Proportional resolution scaling, including config copies and measurement. Explicit screen-relative sizes retain their meaning.
 
 ## Library follow-ups retained from earlier reviews
 

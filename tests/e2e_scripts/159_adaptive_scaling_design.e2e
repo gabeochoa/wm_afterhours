@@ -7,6 +7,13 @@ assert_ui adaptive_pixels w=80
 assert_ui adaptive_screen_pct w=80
 expect_text "Viewport: 1280 x 720 px"
 expect_text "Widths at 100% -> current"
+assert_ui adaptive_viewport x=0 y=130 w=1280 h=590
+assert_ui adaptive_padding_0 x=16 y=582 w=14 h=1
+assert_ui adaptive_padding_1 x=282 y=582 w=14 h=1
+assert_ui adaptive_ruler_0 x=326
+assert_ui adaptive_ruler_1 x=406
+assert_ui adaptive_ruler_line w=320 h=1
+screenshot adaptive_scaling_100
 click_ui adaptive_button_a
 wait 0.2
 expect_text "A selected"
@@ -16,6 +23,11 @@ wait 0.2
 expect_text "B selected"
 click_ui adaptive_plus
 wait 0.2
+assert_ui adaptive_pixels w=100
+assert_ui adaptive_padding_0 x=20 y=695 w=18 h=1
+assert_ui adaptive_ruler_0 x=408
+assert_ui adaptive_ruler_1 x=488
+screenshot adaptive_scaling_125
 click_ui adaptive_plus
 wait 0.2
 click_ui adaptive_plus
@@ -28,6 +40,14 @@ expect_text "300%"
 assert_ui adaptive_mode w=200
 assert_ui adaptive_pixels w=240
 assert_ui adaptive_screen_pct w=80
+assert_ui adaptive_viewport x=0 y=130 w=1280 h=590
+assert_ui adaptive_padding_0 x=48 y=1486 w=42 h=3
+assert_ui adaptive_padding_1 x=846 y=1486 w=42 h=3
+assert_ui adaptive_padding_2 x=468 y=1306 w=3 h=42
+assert_ui adaptive_padding_3 x=468 y=1624 w=3 h=42
+assert_ui adaptive_ruler_0 x=978
+assert_ui adaptive_ruler_1 x=1058
+assert_ui adaptive_ruler_line w=320 h=1
 screenshot adaptive_scaling_300
 mouse_move 500 400
 scroll_wheel -10 -10
@@ -61,6 +81,11 @@ wait 0.2
 expect_text "50%"
 assert_ui adaptive_pixels w=40
 assert_ui adaptive_screen_pct w=80
+assert_ui adaptive_padding_0 x=8 y=356 w=7 h=1
+assert_ui adaptive_padding_1 x=141 y=356 w=7 h=1
+assert_ui adaptive_ruler_0 x=163
+assert_ui adaptive_ruler_1 x=243
+assert_ui adaptive_ruler_line w=320 h=1
 screenshot adaptive_scaling_50
 click_ui adaptive_plus
 wait 0.2
@@ -73,4 +98,14 @@ assert_ui adaptive_pixels w=80
 assert_ui adaptive_screen_pct w=120
 assert_ui adaptive_mode w=200
 expect_text "Viewport: 1920 x 1080 px"
+screenshot adaptive_scaling_adaptive_1080
+focus_element adaptive_mode
+key ENTER
+wait 0.3
+expect_text "Proportional >"
+assert_ui adaptive_pixels w=80
+screenshot adaptive_scaling_proportional_1080
+focus_element adaptive_mode
+key ENTER
+wait 0.3
 resize 1280 720
