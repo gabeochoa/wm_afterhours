@@ -11,7 +11,7 @@ See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) 
 - [x] Usage hints and command availability with an explanation; recheck before immediate or queued execution. WM demonstrates this with `reset`.
 - [x] Separate command-picker plugin with categories, shortcut labels, fuzzy search and a virtual list. Try the WM `command_picker` screen.
 
-- [ ] Respect render layers when drawing scrollbars over modal overlays; see [gap](docs/AFTERHOURS_GAPS.md#scrollbars-over-modal-overlays).
+- [x] Scrollbars respect modal layers; wheel and thumb input obey modal gates. See [gap](docs/AFTERHOURS_GAPS.md#scrollbars-over-modal-overlays--fixed).
 
 ## New consumer gaps collected September 13
 

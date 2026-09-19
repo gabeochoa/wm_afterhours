@@ -5,9 +5,13 @@ and closure checks. Source-only findings need reproduction before implementation
 old line numbers describe the reviewed snapshot. Completed fixes are summarized
 in [history](history.md). Consumer source paths are relative to `~/p/`.
 
-## Scrollbars over modal overlays
+## Scrollbars over modal overlays — fixed
 
-The terminal overlay screenshots exposed background scrollbars drawing over the modal. `RenderScrollbars` in `ui/rendering.h` runs after the content passes and ignores render layers; I had assumed a modal's higher layer covered all background visuals. The scrollbar pass now uses the existing ancestor-visibility check, so the demo can keep its embedded panel mounted but hidden while the overlay is open. A library fix should draw scrollbars in their owner's layer and test overlapping scroll views under stacked modals.
+I assumed modal layers covered every background visual and modal input gates covered every control. Scrollbars instead drew in a final pass above all layers; wheel and thumb handlers bypassed the input gate, including text-area wheel input.
+
+Scrollbars now draw after their layer's content, before higher layers, respecting ancestor clipping and opacity. Wheel input obeys the existing gate, and blocked thumb drags cancel. Regression tests cover both renderers, stacked layers, wheel input, drag cancellation and text areas.
+
+Try **Tools → scrollbar_layer_repro → Open dialog**: the bar stays behind the dialog, background scrolling is blocked, and scrolling resumes after closing.
 
 ## Consumer gap refresh, 2026-09-13
 

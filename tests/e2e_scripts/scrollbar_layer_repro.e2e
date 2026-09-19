@@ -1,0 +1,27 @@
+goto_screen scrollbar_layer_repro
+resize 1280 720
+wait 0.4
+expect_text "Background row 1"
+screenshot scrollbar_layer_background
+click_ui scrollbar_repro_open
+wait 0.3
+expect_text "Foreground dialog"
+screenshot scrollbar_layer_overlap
+mouse_move 600 320
+scroll_wheel 0 -4
+wait 0.3
+assert_ui scrollbar_repro_row_0 y=224
+mouse_down 717 270
+mouse_move 717 420
+wait 0.2
+mouse_up
+assert_ui scrollbar_repro_row_0 y=224
+click_ui scrollbar_repro_close
+wait 0.3
+expect_no_text "Foreground dialog"
+expect_text "Background row 1"
+mouse_move 400 350
+scroll_wheel 0 -2
+wait 0.4
+assert_ui scrollbar_repro_row_0 y=184
+screenshot scrollbar_layer_scrolled
