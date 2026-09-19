@@ -23,13 +23,13 @@ struct ProfilerOverlay : afterhours::System<afterhours::ui::UIContext<InputActio
 
   std::string shortcut() const {
     using namespace afterhours;
-    const auto *mapping = EntityHelper::get_singleton_cmp<input::ProvidesInputMapping>();
+    const auto *mapping = EntityHelper::get_singleton_cmp<ProvidesLayeredInputMapping<InputLayer>>();
     const auto *input = EntityHelper::get_singleton_cmp<input::InputCollector>();
     if (!mapping || !input) return {};
-    const auto binding = mapping->mapping.find(to_int(InputAction::ToggleProfiler));
-    if (binding == mapping->mapping.end()) return {};
-    auto prompt = input_prompts::prompt_for(binding->second, input->device_activity.preferred());
-    if (!prompt) prompt = input_prompts::prompt_for(binding->second, input_prompts::Device::KeyboardMouse);
+    const auto &binding = mapping->get_bindings(to_int(InputAction::ToggleProfiler));
+    if (binding.empty()) return {};
+    auto prompt = input_prompts::prompt_for(binding, input->device_activity.preferred());
+    if (!prompt) prompt = input_prompts::prompt_for(binding, input_prompts::Device::KeyboardMouse);
     return prompt ? prompt->label : std::string{};
   }
 

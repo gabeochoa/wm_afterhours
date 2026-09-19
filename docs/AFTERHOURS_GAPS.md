@@ -5,6 +5,10 @@ and closure checks. Source-only findings need reproduction before implementation
 old line numbers describe the reviewed snapshot. Completed fixes are summarized
 in [history](history.md). Consumer source paths are relative to `~/p/`.
 
+## Scrollbars over modal overlays
+
+The terminal overlay screenshots exposed background scrollbars drawing over the modal. `RenderScrollbars` in `ui/rendering.h` runs after the content passes and ignores render layers; I had assumed a modal's higher layer covered all background visuals. The scrollbar pass now uses the existing ancestor-visibility check, so the demo can keep its embedded panel mounted but hidden while the overlay is open. A library fix should draw scrollbars in their owner's layer and test overlapping scroll views under stacked modals.
+
 ## Consumer gap refresh, 2026-09-13
 
 Compared with afterhours `d90db15`; source review only. UP-13/14/15/16 later landed.

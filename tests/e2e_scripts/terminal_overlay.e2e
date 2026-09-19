@@ -1,0 +1,74 @@
+goto_screen terminal
+resize 1280 720
+wait 0.3
+focus_ui terminal_open_overlay
+key SPACE
+wait 0.2
+expect_text "Jumps: 1"
+key F2
+wait 0.2
+expect_focused terminal_overlay_input
+shift_tab
+wait 0.2
+expect_focused terminal_overlay_run
+shift_tab
+wait 0.2
+expect_focused terminal_overlay_input
+type "clear"
+key ENTER
+wait 0.2
+type "help "
+wait 0.2
+key ENTER
+wait 0.3
+expect_input_text terminal_overlay_input ""
+expect_text "echo - Print your text"
+expect_text "history - List recent commands"
+type "echo spaces stay in the terminal"
+key ENTER
+wait 0.3
+expect_text "spaces stay in the terminal"
+key SPACE
+wait 0.2
+expect_text "Jumps: 1"
+key PERIOD
+wait 0.2
+expect_text "Developer terminal"
+key F2
+wait 0.2
+expect_focused terminal_open_overlay
+key SPACE
+wait 0.2
+expect_text "Jumps: 2"
+click_ui terminal_open_overlay
+wait 0.2
+expect_focused terminal_overlay_input
+select_all
+key BACKSPACE
+type "h"
+key ESCAPE
+wait 0.2
+expect_focused terminal_overlay_input
+key ESCAPE
+wait 0.2
+expect_focused terminal_open_overlay
+key F2
+wait 0.2
+expect_focused terminal_overlay_input
+expect_input_text terminal_overlay_input "h"
+select_all
+key BACKSPACE
+type "count 5"
+key ENTER
+wait 0.3
+expect_text "Counter: 5"
+expect_text "Jumps: 2"
+screenshot terminal_overlay
+assert_within_parents
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot terminal_overlay_1080
+key F2
+wait 0.2
+expect_focused terminal_open_overlay

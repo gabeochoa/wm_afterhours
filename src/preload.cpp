@@ -171,7 +171,10 @@ void restore_ui_styling_defaults() {
 Preload &Preload::make_singleton() {
   auto &sophie = EntityHelper::createEntity();
   {
-    input::add_singleton_components(sophie, get_mapping());
+    layered_input<InputLayer>::add_singleton_components(
+        sophie, get_layered_mapping(), InputLayer::App);
+    sophie.addComponent<input::ProvidesInputConfig>();
+    EntityHelper::registerSingleton<input::ProvidesInputConfig>(sophie);
     window_manager::add_singleton_components(
         sophie,
         window_manager::Resolution{.width = Settings::get().get_screen_width(),

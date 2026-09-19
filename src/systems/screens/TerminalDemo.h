@@ -25,9 +25,13 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
   };
 
   int counter = 0;
+  int jumps = 0;
   std::string accent = "blue";
   std::vector<std::string> palette{"blue", "green", "purple"};
   afterhours::terminal::Console console;
+  afterhours::terminal::Overlay<InputLayer> terminal_overlay{
+      *afterhours::EntityHelper::get_singleton_cmp<afterhours::ProvidesLayeredInputMapping<InputLayer>>(),
+      InputLayer::Terminal};
 
   TerminalDemo() {
     using namespace afterhours::terminal;
@@ -101,6 +105,8 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
                      afterhours::ui::UIContext<InputAction> &ctx, float) override {
     using namespace afterhours::ui;
     using namespace afterhours::ui::imm;
+    if (ctx.pressed(InputAction::ToggleTerminal)) terminal_overlay.toggle();
+    if (ctx.pressed(InputAction::TerminalDemoJump)) ++jumps;
     const float scale = std::min(ctx.screen_width / 1280.f, ctx.screen_height / 720.f);
     const float left = (ctx.screen_width - 1184.f * scale) / 2.f;
     const afterhours::Color background{15, 22, 34, 255};
@@ -132,20 +138,32 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     };
     label(1, "Developer terminal", 32, 34, foreground);
     label(2, "Custom commands, native text editing, and a console you can embed in your game.", 84, 20, muted);
-    label(3, "Counter: " + std::to_string(counter) + "     Accent: " + accent, 134, 22, highlight);
+    label(3, "Counter: " + std::to_string(counter) + "     Accent: " + accent + "     Jumps: " + std::to_string(jumps), 134, 22, highlight);
     afterhours::terminal::AutocompleteStyle autocomplete_style;
     autocomplete_style.list.with_border_top({58, 73, 93, 255}, pixels(1.f));
     autocomplete_style.row.with_custom_text_color({200, 210, 225, 255})
         .with_custom_hover_bg({30, 43, 61, 255});
     autocomplete_style.selected_row.with_custom_text_color(highlight)
         .with_border_left(highlight, pixels(2.f * scale));
+    if (button(ctx, mk(entity, 6), ComponentConfig{}
+        .with_absolute_position(left + 964.f * scale, 134.f * scale)
+        .with_size({pixels(220.f * scale), pixels(42.f * scale)})
+        .with_font("AtkinsonMock", pixels(20.f * scale))
+        .with_label("Open overlay (F2)").with_debug_name("terminal_open_overlay")))
+      terminal_overlay.open();
+    afterhours::terminal::OverlayStyle overlay_style;
+    overlay_style.panel.with_font("AtkinsonMock", pixels(20.f * scale))
+        .with_debug_name("terminal_overlay");
+    overlay_style.autocomplete = autocomplete_style;
+    afterhours::terminal::overlay(ctx, mk(entity, 7), console, terminal_overlay, overlay_style);
     afterhours::terminal::panel(ctx, mk(entity, 4), console, ComponentConfig{}
+        .with_hidden(terminal_overlay.is_open())
         .with_size({pixels(1184.f * scale), pixels(436.f * scale)})
         .with_absolute_position(left, 196.f * scale)
         .with_font("AtkinsonMock", pixels(20.f * scale))
         .with_custom_background({25, 35, 51, 255}).with_corner_radius(12.f * scale),
         autocomplete_style);
-    label(5, "Enter: accept / run   |   Up / Down: suggestions / history   |   Tab: complete   |   Esc: dismiss / leave", 652, 18, muted);
+    label(5, "F2: overlay   |   Esc: dismiss / close   |   Space: test jump (blocked in overlay)", 652, 18, muted);
   }
 };
 

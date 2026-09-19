@@ -106,7 +106,10 @@ void setup_ecs_singletons(int screenshot_width, int screenshot_height) {
   // input)
   afterhours::Entity &input_entity =
       afterhours::EntityHelper::createPermanentEntity();
-  afterhours::input::add_singleton_components(input_entity, get_mapping());
+  afterhours::layered_input<InputLayer>::add_singleton_components(
+      input_entity, get_layered_mapping(), InputLayer::App);
+  input_entity.addComponent<afterhours::input::ProvidesInputConfig>();
+  afterhours::EntityHelper::registerSingleton<afterhours::input::ProvidesInputConfig>(input_entity);
 
   // Same defaults the app runs with, or the baselines are captured against a
   // theme no user ever sees.
@@ -208,11 +211,11 @@ create_screen_systems(const std::string &screen_name) {
   afterhours::SystemManager systems;
 
   afterhours::ui::enforce_singletons<InputAction>(systems);
-  afterhours::input::enforce_singletons(systems);
+  afterhours::layered_input<InputLayer>::enforce_singletons(systems);
   afterhours::toast::enforce_singletons(systems);
   afterhours::modal::enforce_singletons(systems);
 
-  afterhours::input::register_update_systems(systems);
+  afterhours::layered_input<InputLayer>::register_update_systems(systems);
   afterhours::toast::register_update_systems(systems);
   afterhours::toast::register_layout_systems<InputAction>(systems);
   afterhours::modal::register_update_systems<InputAction>(systems);
@@ -751,11 +754,11 @@ int run_all_tests_headless() {
     afterhours::SystemManager systems;
 
     afterhours::ui::enforce_singletons<InputAction>(systems);
-    afterhours::input::enforce_singletons(systems);
+    afterhours::layered_input<InputLayer>::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
     afterhours::modal::enforce_singletons(systems);
 
-    afterhours::input::register_update_systems(systems);
+    afterhours::layered_input<InputLayer>::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);

@@ -137,7 +137,7 @@ void game() {
   {
     afterhours::window_manager::enforce_singletons(systems);
     afterhours::ui::enforce_singletons<InputAction>(systems);
-    afterhours::input::enforce_singletons(systems);
+    afterhours::layered_input<InputLayer>::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
     afterhours::modal::enforce_singletons(systems);
   }
@@ -145,7 +145,7 @@ void game() {
   TestSystem *test_system_ptr = nullptr;
 
   {
-    afterhours::input::register_update_systems(systems);
+    afterhours::layered_input<InputLayer>::register_update_systems(systems);
     afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
@@ -219,7 +219,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   {
     afterhours::window_manager::enforce_singletons(systems);
     afterhours::ui::enforce_singletons<InputAction>(systems);
-    afterhours::input::enforce_singletons(systems);
+    afterhours::layered_input<InputLayer>::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
     afterhours::modal::enforce_singletons(systems);
   }
@@ -227,7 +227,7 @@ void run_test(const std::string &test_name, bool slow_mode, bool hold_on_end) {
   TestSystem *test_system_ptr = nullptr;
 
   {
-    afterhours::input::register_update_systems(systems);
+    afterhours::layered_input<InputLayer>::register_update_systems(systems);
     afterhours::window_manager::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
@@ -430,7 +430,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
   {
     afterhours::window_manager::enforce_singletons(systems);
     afterhours::ui::enforce_singletons<InputAction>(systems);
-    afterhours::input::enforce_singletons(systems);
+    afterhours::layered_input<InputLayer>::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
     afterhours::modal::enforce_singletons(systems);
   }
@@ -441,7 +441,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
     }
     systems.register_update_system(std::make_unique<afterhours::window_manager::CollectAvailableResolutions>());
     systems.register_update_system(std::make_unique<UpdateRenderTexture>());
-    afterhours::input::register_update_systems(systems);
+    afterhours::layered_input<InputLayer>::register_update_systems(systems);
     afterhours::toast::register_update_systems(systems);
     afterhours::toast::register_layout_systems<InputAction>(systems);
     afterhours::modal::register_update_systems<InputAction>(systems);
@@ -576,12 +576,12 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
 #endif
 
     // Screen navigation: . or PageDown = next, , or PageUp = previous
-    if (!navigator->visible && (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN) ||
+    if (!navigator->visible && !afterhours::modal::is_active() && (raylib::IsKeyPressed(raylib::KEY_PAGE_DOWN) ||
         raylib::IsKeyPressed(raylib::KEY_PERIOD))) {
       current_screen_index = (current_screen_index + 1) % screen_names.size();
       load_screen(current_screen_index);
     }
-    if (!navigator->visible && (raylib::IsKeyPressed(raylib::KEY_PAGE_UP) ||
+    if (!navigator->visible && !afterhours::modal::is_active() && (raylib::IsKeyPressed(raylib::KEY_PAGE_UP) ||
         raylib::IsKeyPressed(raylib::KEY_COMMA))) {
       current_screen_index = static_cast<int>(
           (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
@@ -589,7 +589,7 @@ void run_screen_demo(const std::string &screen_name, bool /* hold_on_end */,
       load_screen(current_screen_index);
     }
     // Backtick, out of the way of the filter box and of widget tabbing.
-    if (raylib::IsKeyPressed(raylib::KEY_GRAVE)) {
+    if (!afterhours::modal::is_active() && raylib::IsKeyPressed(raylib::KEY_GRAVE)) {
       if (navigator->visible) navigator->visible = false;
       else navigator->open();
     }
@@ -675,13 +675,13 @@ int run_e2e_tests(const e2e::E2EArgs &args,
   {
     afterhours::window_manager::enforce_singletons(systems);
     afterhours::ui::enforce_singletons<InputAction>(systems);
-    afterhours::input::enforce_singletons(systems);
+    afterhours::layered_input<InputLayer>::enforce_singletons(systems);
     afterhours::toast::enforce_singletons(systems);
     afterhours::modal::enforce_singletons(systems);
   }
 
   {
-    afterhours::input::register_update_systems(systems);
+    afterhours::layered_input<InputLayer>::register_update_systems(systems);
     // Skip CollectCurrentResolution in headless mode — Raylib's
     // GetRenderWidth() returns 0 without a window, which overwrites
     // the correct resolution set by make_singleton().
@@ -1044,13 +1044,13 @@ int run_e2e_tests(const e2e::E2EArgs &args,
     // Screen navigation via test input (AFTER E2E commands are processed)
     // Check the afterhours input_injector since E2E handlers use that
     namespace ah_input = afterhours::testing::input_injector;
-    if (!navigator->visible && (ah_input::consume_press(afterhours::keys::PAGE_DOWN) ||
+    if (!navigator->visible && !afterhours::modal::is_active() && (ah_input::consume_press(afterhours::keys::PAGE_DOWN) ||
         ah_input::consume_press(afterhours::keys::PERIOD))) {
       current_screen_index =
           (current_screen_index + 1) % static_cast<int>(screen_names.size());
       load_screen(current_screen_index);
     }
-    if (!navigator->visible && (ah_input::consume_press(afterhours::keys::PAGE_UP) ||
+    if (!navigator->visible && !afterhours::modal::is_active() && (ah_input::consume_press(afterhours::keys::PAGE_UP) ||
         ah_input::consume_press(afterhours::keys::COMMA))) {
       current_screen_index =
           (current_screen_index - 1 + static_cast<int>(screen_names.size())) %
@@ -1058,7 +1058,7 @@ int run_e2e_tests(const e2e::E2EArgs &args,
       load_screen(current_screen_index);
     }
 
-    if (ah_input::consume_press(afterhours::keys::GRAVE)) {
+    if (!afterhours::modal::is_active() && ah_input::consume_press(afterhours::keys::GRAVE)) {
       if (navigator->visible) navigator->visible = false;
       else navigator->open();
     }

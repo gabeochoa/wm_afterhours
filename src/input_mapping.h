@@ -2,6 +2,8 @@
 
 #include "rl.h"
 
+enum class InputLayer { App, Terminal };
+
 enum class InputAction {
   None,
   WidgetUp,
@@ -34,6 +36,8 @@ enum class InputAction {
   TextUndo,
   TextRedo,
   ToggleProfiler,
+  ToggleTerminal,
+  TerminalDemoJump,
 };
 
 inline int to_int(InputAction action) { return static_cast<int>(action); }
@@ -179,5 +183,16 @@ inline auto get_mapping() {
 
   mapping[to_int(InputAction::ToggleProfiler)] = {raylib::KEY_F3};
 
+  mapping[to_int(InputAction::ToggleTerminal)] = {raylib::KEY_F2};
+  mapping[to_int(InputAction::TerminalDemoJump)] = {raylib::KEY_SPACE};
+
   return mapping;
+}
+
+inline auto get_layered_mapping() {
+  auto terminal = get_mapping();
+  terminal.erase(to_int(InputAction::TerminalDemoJump));
+  terminal.erase(to_int(InputAction::ToggleProfiler));
+  return std::map<InputLayer, std::map<int, input::ValidInputs>>{
+      {InputLayer::App, get_mapping()}, {InputLayer::Terminal, std::move(terminal)}};
 }
