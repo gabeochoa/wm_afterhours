@@ -31,6 +31,8 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
 
   TerminalDemo() {
     using namespace afterhours::terminal;
+    console.execution = Execution::Queued;
+    console.enter_accepts_first_suggestion = false;
     console.add_command({"echo", "Print your text", [](Arguments args) {
       std::string text;
       for (const auto &arg : args) {
@@ -92,6 +94,8 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     console.print({"Welcome. Commands here are registered by the WM screen."});
     console.execute("help");
   }
+
+  void once(float) override { console.drain(); }
 
   void for_each_with(afterhours::Entity &entity,
                      afterhours::ui::UIContext<InputAction> &ctx, float) override {

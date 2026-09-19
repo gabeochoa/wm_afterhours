@@ -4,6 +4,16 @@ wait 0.5
 expect_text "Developer terminal"
 expect_text "count - Add to the counter: count [amount], default 1"
 focus_ui terminal_input
+type "clear"
+key ENTER
+wait 0.2
+type "help "
+wait 0.2
+key ENTER
+wait 0.3
+expect_input_text terminal_input ""
+expect_text "echo - Print your text"
+expect_text "history - List recent commands"
 type "count"
 key ENTER
 wait 0.3
