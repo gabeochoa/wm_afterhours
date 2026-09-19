@@ -26,6 +26,7 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
 
   int counter = 0;
   std::string accent = "blue";
+  std::vector<std::string> palette{"blue", "green", "purple"};
   afterhours::terminal::Console console;
 
   TerminalDemo() {
@@ -39,12 +40,46 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
       return Result{std::move(text)};
     }});
     console.add_command(std::make_unique<CountCommand>(counter));
-    console.add_command({"accent", "Change color: blue, green, or purple", [this](Arguments args) {
-      if (args.size() != 1 || (args[0] != "blue" && args[0] != "green" && args[0] != "purple"))
-        return Result{"Usage: accent blue|green|purple", false};
+    console.add_command({"accent", "Change color using the current palette", [this](Arguments args) {
+      if (args.size() != 1 || std::find(palette.begin(), palette.end(), args[0]) == palette.end())
+        return Result{"Choose an available accent color", false};
       accent = args[0];
       return Result{"Accent: " + accent};
-    }, {"blue", "green", "purple"}});
+    }, {}, [this](const CompletionRequest &request) {
+      return request.argument_index == 0 ? palette : std::vector<std::string>{};
+    }});
+    console.add_command({"palette", "Edit available colors: palette add|remove <color>", [this](Arguments args) {
+      if (args.size() != 2 || (args[0] != "add" && args[0] != "remove"))
+        return Result{"Usage: palette add|remove <color>", false};
+      const std::vector<std::string> colors{"amber", "blue", "green", "purple"};
+      if (std::find(colors.begin(), colors.end(), args[1]) == colors.end())
+        return Result{"Unknown color: " + args[1], false};
+      auto found = std::find(palette.begin(), palette.end(), args[1]);
+      if (args[0] == "add") {
+        if (found != palette.end()) return Result{"Color already available", false};
+        palette.push_back(args[1]);
+      } else {
+        if (args[1] == accent) return Result{"Choose another accent before removing this color", false};
+        if (found == palette.end()) return Result{"Color is not in the palette", false};
+        palette.erase(found);
+      }
+      console.invalidate_completions();
+      return Result{"Palette updated"};
+    }, {}, [this](const CompletionRequest &request) -> std::vector<std::string> {
+      if (request.argument_index == 0) return {"add", "remove"};
+      if (request.argument_index != 1) return {};
+      if (request.arguments[0] == "remove") {
+        auto colors = palette;
+        std::erase(colors, accent);
+        return colors;
+      }
+      if (request.arguments[0] != "add") return {};
+      std::vector<std::string> colors{"amber", "blue", "green", "purple"};
+      std::erase_if(colors, [this](const auto &color) {
+        return std::find(palette.begin(), palette.end(), color) != palette.end();
+      });
+      return colors;
+    }});
     console.add_command({"history", "List recent commands", [this](Arguments args) {
       if (!args.empty()) return Result{"Usage: history", false};
       std::string text;
@@ -67,7 +102,8 @@ struct TerminalDemo : ScreenSystem<afterhours::ui::UIContext<InputAction>> {
     const afterhours::Color background{15, 22, 34, 255};
     const afterhours::Color foreground{233, 239, 248, 255};
     const afterhours::Color muted{171, 185, 207, 255};
-    const afterhours::Color highlight = accent == "green" ? afterhours::Color{118, 224, 179, 255} :
+    const afterhours::Color highlight = accent == "amber" ? afterhours::Color{244, 195, 105, 255} :
+        accent == "green" ? afterhours::Color{118, 224, 179, 255} :
         accent == "purple" ? afterhours::Color{198, 172, 255, 255} : afterhours::Color{143, 193, 255, 255};
     ctx.theme = Theme{};
     ctx.theme.background = background;

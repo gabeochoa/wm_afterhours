@@ -133,3 +133,54 @@ type "ount"
 key ENTER
 wait 0.2
 expect_text "Counter: 8"
+type "pal"
+key TAB
+wait 0.2
+expect_text "palette add"
+expect_text "palette remove"
+key TAB
+wait 0.2
+expect_text "palette add amber"
+key TAB
+wait 0.2
+expect_input_text terminal_input "palette add amber "
+key ENTER
+wait 0.2
+expect_text "Palette updated"
+type "accent a"
+wait 0.2
+screenshot terminal_live_autocomplete
+key TAB
+key ENTER
+wait 0.2
+expect_text "Accent: amber"
+type "palette remove g"
+key TAB
+key ENTER
+wait 0.2
+expect_text "Palette updated"
+type "accent green"
+key ENTER
+wait 0.2
+expect_text "Choose an available accent color"
+type "palette add g"
+key TAB
+key ENTER
+wait 0.2
+type "accent g"
+key TAB
+key ENTER
+wait 0.2
+expect_text "Accent: green"
+type "pal"
+wait 0.2
+click_ui terminal_suggestion_0
+wait 0.2
+expect_input_text terminal_input "palette "
+expect_text "palette add"
+expect_text "palette remove"
+click_ui terminal_suggestion_1
+wait 0.2
+expect_text "palette remove amber"
+key ESCAPE
+wait 0.2

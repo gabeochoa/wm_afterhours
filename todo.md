@@ -1,7 +1,15 @@
 # Project todo
 
-WM implementation work is complete. Remaining library work and external checks follow.
+Remaining library work and external checks follow.
 See [gaps](docs/AFTERHOURS_GAPS.md) for evidence and [history](docs/history.md) for completed work.
+
+## Terminal consumer support
+
+- [x] Live, argument-aware completion callbacks with explicit refresh after app data changes. Puzzle needs level IDs after `reload_levels` and later-argument choices such as `juice bloom on`.
+- [ ] Optional queued execution: own submitted arguments, drain commands at an app-chosen safe point, and report results afterward. Cartographer and Puzzle dispatch through later systems.
+- [ ] Optional overlay controls: opening/closing, focus restoration, and an app-specified input layer so typing cannot trigger gameplay.
+- [ ] Usage hints and command availability with an explanation; recheck availability before execution. Hanabi already distinguishes unavailable commands.
+- [ ] Reusable command picker without the output log, supporting categories, shortcut labels, and fuzzy search for Hanabi and Wordproc.
 
 ## New consumer gaps collected September 13
 
