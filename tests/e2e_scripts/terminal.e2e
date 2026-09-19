@@ -1,0 +1,96 @@
+goto_screen terminal
+resize 1280 720
+wait 0.5
+expect_text "Developer terminal"
+expect_text "count - Add to the counter: count [amount], default 1"
+focus_ui terminal_input
+type "count"
+key ENTER
+wait 0.3
+expect_text "Counter: 1"
+expect_input_text terminal_input ""
+type "accent green"
+click_ui terminal_run
+wait 0.3
+expect_text "Accent: green"
+expect_input_text terminal_input ""
+key UP
+wait 0.2
+expect_input_text terminal_input "accent green"
+key DOWN
+wait 0.2
+expect_input_text terminal_input ""
+type "ec"
+key TAB
+wait 0.2
+expect_input_text terminal_input "echo "
+type "hello terminal"
+key ENTER
+wait 0.3
+expect_text "hello terminal"
+type "unknown"
+key ENTER
+wait 0.3
+expect_text "Unknown command: unknown. Type help."
+type "clear"
+key ENTER
+wait 0.3
+expect_no_text "Unknown command: unknown. Type help."
+type "help"
+key ENTER
+wait 0.3
+expect_text "echo - Print your text"
+type "history"
+key ENTER
+wait 0.3
+expect_text "unknown"
+type "help"
+key ENTER
+wait 0.3
+expect_text "history - List recent commands"
+mouse_move 600 320
+scroll_wheel 0 50
+wait 0.3
+expect_text "> help"
+scroll_wheel 0 -50
+wait 0.3
+expect_text "history - List recent commands"
+type "clear"
+key ENTER
+wait 0.2
+type "help"
+key ENTER
+wait 0.3
+screenshot terminal
+resize 1920 1080
+wait 0.3
+assert_within_parents
+screenshot terminal_1080
+key ESCAPE
+wait 0.2
+focus_ui terminal_input
+type "count"
+key ENTER
+wait 0.3
+expect_text "Counter: 2"
+type "count 5"
+key ENTER
+wait 0.2
+expect_text "Counter: 7"
+type "count -3"
+key ENTER
+wait 0.2
+expect_text "Counter: 4"
+type "count 12oops"
+key ENTER
+wait 0.2
+expect_text "Amount must be a whole number"
+expect_no_text "Counter: 16"
+type "count 2147483647"
+key ENTER
+wait 0.2
+expect_text "Counter would overflow"
+type "count"
+key ENTER
+wait 0.2
+expect_text "Counter: 5"
