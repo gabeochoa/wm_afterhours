@@ -1,7 +1,7 @@
 goto_screen scroll_clip_bug
 resize 1280 720
 wait 0.4
-expect_text "Nested Clip Container Regression Tests"
+expect_text_fully_visible "Nested Clip Container Regression Tests"
 expect_text "Normal rows / 20 rows"
 expect_text "Each row clips children / 20"
 expect_text "Scroll > clipped wrapper > 20 rows"
@@ -13,6 +13,8 @@ expect_text "Inner: 0px / height 585px"
 assert_ui bg x=0 y=0 w=1280 h=720
 assert_ui scroll_control x=15 y=260 w=301 h=390
 assert_ui ctrl_0 h=40
+expect_text_fully_visible "01 / Ctrl 1"
+assert_ui ctrl_19 text="20 / Ctrl 20"
 expect_no_text "Ctrl 20"
 expect_no_text "Inner 20"
 screenshot scroll_clip_design

@@ -41,13 +41,11 @@ Kart used custom Raylib drawing for driver colors because native images always d
 
 `with_image_tint(Color)` now covers images, atlas sprites, image buttons and configured textures in both renderers. Tint alpha combines with widget and ancestor opacity; omitting the option restores neutral white on reused widgets. Pixel tests cover RGB multiplication, source rectangles, opacity and reset. Try **Images → Tint images** in WM.
 
-### UP-21: Match E2E text visibility across immediate and batched rendering
+### UP-21: Clip-aware E2E text visibility implemented
 
-- Evidence: `floatinghotel/src/main.cpp:1332` exposes an app assertion checking whether a source row lies within its scrolling ancestor. Its report describes a text assertion succeeding while the final rows were clipped.
-- Library: the batched renderer now intersects ancestor clips before registering the composed label at `src/plugins/ui/rendering.h:2477`. Immediate `draw_text_in_rect` still registers using only the full-window bounds at line 748. `src/plugins/e2e_testing/visible_text.h:46` knows no ancestor clip. Do not reopen the already fixed batched path.
-- Assumption: submitting a label within the window proves that the user can see it. A scroll viewport can hide it, and tests should not change meaning when the renderer changes.
-- Change: share clip-aware text registration and distinguish partial visibility from full visibility where a test needs the latter. Preserve a separate way to assert model/text existence without claiming visibility.
-- Closure: visible, partially clipped and fully clipped labels, nested clips and overscan rows in both renderers. Use rendered pixels as the control for the visibility assertions, not only the registry being tested.
+Immediate rendering registered labels against the window alone; styled runs could also register separately and bypass the parent label's visibility. The assumption was that submitting text meant the user could see it. Both renderers now register the composed label against the same ancestor clips, including text offsets and scissor rounding.
+
+`expect_text` accepts partial label bounds; `expect_text_fully_visible` requires full bounds. `assert_ui name text="..."` checks existence/value independently. Pixel tests cover nested clips, scroll offsets and styled labels in both renderers. WM's scroll-clip test also checks an offscreen row's value without calling it visible.
 
 ### UP-22: Resolve semantic font tiers through the selected scaling mode
 
